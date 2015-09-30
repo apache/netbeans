@@ -33,7 +33,7 @@ public final class BuildKotlin implements ActionListener {
 
     
     private final List<KotlinProject> context;
-
+   
     
     public BuildKotlin(List<KotlinProject> context) {
         this.context = context;
@@ -41,15 +41,25 @@ public final class BuildKotlin implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ev) {
-        for (KotlinProject kotlinProject : context) {
-                
-            try {
+        for (final KotlinProject kotlinProject : context) {
+             
               //                NotifyDescriptor nd2 = new NotifyDescriptor.Message(context.get(0).getProjectDirectory().getPath()+"/build/output/hello.jar");
               //                DialogDisplayer.getDefault().notify(nd2);
-                KotlinCompiler.INSTANCE.compile(kotlinProject);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+                Thread newThread = new Thread(new Runnable(){
+
+                    @Override
+                    public void run() {
+                        try {
+                            KotlinCompiler.INSTANCE.compile(kotlinProject);
+                        } catch (IOException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                    }
+                    
+                });
+                
+                newThread.start();
+            
         }
     }
 

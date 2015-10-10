@@ -15,7 +15,7 @@ public class ProjectUtils {
     
     private static final String LIB_FOLDER = "lib";
     private static final String LIB_EXTENSION = "jar";
-    public static final String KT_HOME = "C:/kotlin/kotlinc/";
+    public static final String KT_HOME = System.getenv("KT_HOME") + "/";
     
     public static String findMain(FileObject[] files) throws FileNotFoundException, IOException {
         for (FileObject file : files) {

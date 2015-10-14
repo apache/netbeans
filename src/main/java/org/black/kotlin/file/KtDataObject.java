@@ -82,7 +82,7 @@ import org.openide.windows.TopComponent;
             position = 1400
     )
 })
-public class KtDataObject extends MultiDataObject {
+public class KtDataObject extends MultiDataObject{
 
     public KtDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);

@@ -1,5 +1,6 @@
 package org.black.kotlin.run;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -28,6 +29,11 @@ import org.jetbrains.kotlin.config.Services;
 import org.jetbrains.kotlin.config.Services.Builder;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.windows.IOColorLines;
+import org.openide.windows.IOProvider;
+import org.openide.windows.InputOutput;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -42,11 +48,32 @@ public class KotlinCompiler {
   
     
     public void compile(KotlinProject proj) throws IOException{
+        
+        InputOutput io = IOProvider.getDefault().getIO("Build ("+proj.getProjectDirectory().getName() +")", false);
+        
+        
+        
+        IOColorLines.println(io, "Build process started", Color.GREEN);
+        io.getOut().println();
+        
+        io.select();
+        
         output = execCompiler(configureArguments(proj));
+        
+        
         for (CompilerOutputElement el : output.getCompilerOutput().getList()){
-            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(el.getMessage()));
+            
+            io.getOut().println("[" +el.getMessageSeverity()+"] "+el.getMessage());
         }
-        DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(output.compiledCorrectly()));
+        
+        if (output.compiledCorrectly()){
+            io.getOut().println("Build process finished successfully");
+        } else{
+            io.getErr().println("Build process finished with errors");
+        }
+        
+        io.getOut().close();
+        io.getErr().close();
     }
     
     private String[] configureArguments(KotlinProject proj) throws IOException{

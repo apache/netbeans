@@ -168,7 +168,6 @@ public class KotlinProject implements Project{
                 DefaultProjectOperations.performDefaultCopyOperation(KotlinProject.this);
             }
             if (string.equalsIgnoreCase(ActionProvider.COMMAND_BUILD)) {
-                DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("BUILD"));
                 
                 Thread newThread = new Thread(new Runnable(){
 

@@ -2,15 +2,22 @@ package org.black.kotlin.project;
 
 import java.awt.Image;
 import java.beans.PropertyChangeListener; 
+import java.io.IOException;
 import javax.swing.Action;
 import javax.swing.Icon; 
 import javax.swing.ImageIcon; 
+import org.black.kotlin.run.KotlinCompiler;
 import org.netbeans.api.annotations.common.StaticResource; 
 import org.netbeans.api.project.Project; 
 import org.netbeans.api.project.ProjectInformation; 
+import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectState; 
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
+import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
+import org.netbeans.spi.project.ui.support.ProjectSensitiveActions;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject; 
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObjectNotFoundException;
@@ -29,7 +36,7 @@ import org.openide.util.lookup.ProxyLookup;
  * @author Александр
  */
 
-public class KotlinProject implements Project {
+public class KotlinProject implements Project{
 
     private final class Info implements ProjectInformation{
         
@@ -106,6 +113,8 @@ public class KotlinProject implements Project {
             @Override
             public Action[] getActions(boolean arg0){
                 return new Action[]{
+                    ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD,
+                            "Build Project", null),
                     CommonProjectActions.newFileAction(),
                     CommonProjectActions.copyProjectAction(),
                     CommonProjectActions.deleteProjectAction(),
@@ -137,6 +146,62 @@ public class KotlinProject implements Project {
         
     }
     
+    private final class ActionProviderImpl implements ActionProvider{
+        
+        private String[] supported = new String[]{
+            ActionProvider.COMMAND_DELETE,
+            ActionProvider.COMMAND_COPY,
+            ActionProvider.COMMAND_BUILD,
+        };
+        
+        @Override
+        public String[] getSupportedActions() {
+            return supported;
+        }
+        
+        @Override
+        public void invokeAction(String string, Lookup lookup) throws IllegalArgumentException {
+            if (string.equalsIgnoreCase(ActionProvider.COMMAND_DELETE)) {
+                DefaultProjectOperations.performDefaultDeleteOperation(KotlinProject.this);
+            }
+            if (string.equalsIgnoreCase(ActionProvider.COMMAND_COPY)) {
+                DefaultProjectOperations.performDefaultCopyOperation(KotlinProject.this);
+            }
+            if (string.equalsIgnoreCase(ActionProvider.COMMAND_BUILD)) {
+                DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("BUILD"));
+                
+                Thread newThread = new Thread(new Runnable(){
+
+                @Override
+                public void run() {
+                    try {
+                        KotlinCompiler.INSTANCE.compile(KotlinProject.this);
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+                    
+                });
+                
+                newThread.start();
+            }
+        }
+        
+        @Override
+        public boolean isActionEnabled(String command, Lookup lookup) throws IllegalArgumentException {
+            if ((command.equals(ActionProvider.COMMAND_DELETE))) {
+                return true;
+            } else if ((command.equals(ActionProvider.COMMAND_COPY))) {
+                return true;
+            } else if ((command.equals(ActionProvider.COMMAND_BUILD))) {
+                return true;
+            } else {
+                throw new IllegalArgumentException(command);
+            }
+        }
+            
+    }
+    
     private final FileObject projectDir;
     private final ProjectState state;
     private Lookup lkp;
@@ -156,7 +221,8 @@ public class KotlinProject implements Project {
         if (lkp == null){
             lkp = Lookups.fixed(new Object[]{
                 new Info(),
-                new KotlinProjectLogicalView(this)
+                new KotlinProjectLogicalView(this),
+                new ActionProviderImpl()
             });
         }
         return lkp;

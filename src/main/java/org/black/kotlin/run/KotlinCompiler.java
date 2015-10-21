@@ -50,9 +50,7 @@ public class KotlinCompiler {
     public void compile(KotlinProject proj) throws IOException{
         
         InputOutput io = IOProvider.getDefault().getIO("Build ("+proj.getProjectDirectory().getName() +")", false);
-        
-        
-        
+   
         IOColorLines.println(io, "Build process started", Color.GREEN);
         io.getOut().println();
         
@@ -60,9 +58,7 @@ public class KotlinCompiler {
         
         output = execCompiler(configureArguments(proj));
         
-        
         for (CompilerOutputElement el : output.getCompilerOutput().getList()){
-            
             io.getOut().println("[" +el.getMessageSeverity()+"] "+el.getMessage());
         }
         
@@ -81,13 +77,14 @@ public class KotlinCompiler {
         
         args.add("-kotlin-home");
         args.add(ProjectUtils.KT_HOME);
-        System.out.println(System.getenv("KT_HOME"));
+        args.add("-no-jdk");
+        //args.add("-no-stdlib");
         args.add(ProjectUtils.findMain(proj.getProjectDirectory().getChildren()));
-        args.add("-include-runtime");
         args.add("-d");
         args.add(ProjectUtils.getOutputDir(proj));
      
-        
+        for (String srcDirectory : ProjectUtils.getSrcDirectories(proj))
+            args.add(srcDirectory);
         
         return args.toArray(new String[args.size()]);
     }

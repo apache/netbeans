@@ -7,6 +7,7 @@ import com.google.common.collect.Sets;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +34,7 @@ public class ProjectUtils {
     
     private static final String LIB_FOLDER = "lib";
     private static final String LIB_EXTENSION = "jar";
-    public static final String KT_HOME = System.getenv("KT_HOME") + "/";
+    public static final String KT_HOME = System.getenv("KT_HOME") + "\\";
     
     public static String findMain(FileObject[] files) throws FileNotFoundException, IOException {
         for (FileObject file : files) {
@@ -56,14 +57,14 @@ public class ProjectUtils {
     
     public static String getOutputDir(KotlinProject proj){
         
-        File path = new File(proj.getProjectDirectory().getPath()+"/build/output");
+        File path = new File(proj.getProjectDirectory().getPath()+"/build");
         
         if (!path.exists()){
             path.mkdirs();
         }
                 
         
-        String dir = proj.getProjectDirectory().getPath()+"/build/output";
+        String dir = proj.getProjectDirectory().getPath()+"/build";
         String[] dirs = dir.split("/");
         StringBuilder outputDir = new StringBuilder("");
         
@@ -71,7 +72,7 @@ public class ProjectUtils {
             outputDir.append(str);
             outputDir.append("\\");
         }
-        outputDir.append("hello.jar");
+        outputDir.append(proj.getProjectDirectory().getName()).append(".jar");
         
         return outputDir.toString();
     }
@@ -95,16 +96,22 @@ public class ProjectUtils {
         Set<String> orderedFiles = Sets.newLinkedHashSet();
         
         findSrc(javaProject.getProjectDirectory(), orderedFiles);
-        
-//        for (String s : orderedFiles){
-//            DialogDisplayer.getDefault().notify(new NotifyDescriptor.
-//                Message(s));
-//        }
-            
+       
         
         return Lists.newArrayList(orderedFiles);
     }
     
+    @NotNull
+    public static List<String> getClasspath(){
+        List<String> classpath = new ArrayList(KotlinClasspath.getKotlinClasspath());
+        
+//        for (String s: classpath){
+//            DialogDisplayer.getDefault().notify(new NotifyDescriptor.
+//                Message(s));
+//        }
+        
+        return classpath;
+    }
     
     @Nullable
     public static String getPackageByFile(FileObject file) {

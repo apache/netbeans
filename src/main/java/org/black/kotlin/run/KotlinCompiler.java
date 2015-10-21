@@ -78,11 +78,23 @@ public class KotlinCompiler {
         args.add("-kotlin-home");
         args.add(ProjectUtils.KT_HOME);
         args.add("-no-jdk");
-        //args.add("-no-stdlib");
+        args.add("-no-stdlib");
         args.add(ProjectUtils.findMain(proj.getProjectDirectory().getChildren()));
+        
+        StringBuilder classPath = new StringBuilder();
+        String pathSeparator = System.getProperty("path.separator");
+        
+        for (String cp : ProjectUtils.getClasspath()){
+            classPath.append(cp).append(pathSeparator);
+        }
+        
+        args.add("-classpath");
+        args.add(classPath.toString());
+        
         args.add("-d");
         args.add(ProjectUtils.getOutputDir(proj));
      
+        
         for (String srcDirectory : ProjectUtils.getSrcDirectories(proj))
             args.add(srcDirectory);
         

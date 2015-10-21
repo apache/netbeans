@@ -7,6 +7,7 @@ import javax.swing.Action;
 import javax.swing.Icon; 
 import javax.swing.ImageIcon; 
 import org.black.kotlin.run.KotlinCompiler;
+import org.black.kotlin.utils.ProjectUtils;
 import org.netbeans.api.annotations.common.StaticResource; 
 import org.netbeans.api.project.Project; 
 import org.netbeans.api.project.ProjectInformation; 
@@ -115,6 +116,10 @@ public class KotlinProject implements Project{
                 return new Action[]{
                     ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD,
                             "Build Project", null),
+                    ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_CLEAN,
+                            "Clean Project", null),
+                    ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_REBUILD,
+                            "Rebuild Project", null),
                     CommonProjectActions.newFileAction(),
                     CommonProjectActions.copyProjectAction(),
                     CommonProjectActions.deleteProjectAction(),
@@ -152,6 +157,8 @@ public class KotlinProject implements Project{
             ActionProvider.COMMAND_DELETE,
             ActionProvider.COMMAND_COPY,
             ActionProvider.COMMAND_BUILD,
+            ActionProvider.COMMAND_CLEAN,
+            ActionProvider.COMMAND_REBUILD
         };
         
         @Override
@@ -184,6 +191,37 @@ public class KotlinProject implements Project{
                 
                 newThread.start();
             }
+            
+            if (string.equalsIgnoreCase(ActionProvider.COMMAND_CLEAN)) {
+                Thread newThread = new Thread(new Runnable(){
+
+                @Override
+                public void run() {
+                    ProjectUtils.clean(KotlinProject.this);
+                }
+                    
+                });
+                
+                newThread.start();
+            }
+            
+            if (string.equalsIgnoreCase(ActionProvider.COMMAND_REBUILD)) {
+                Thread newThread = new Thread(new Runnable(){
+
+                @Override
+                public void run() {
+                    try {
+                        ProjectUtils.clean(KotlinProject.this);
+                        KotlinCompiler.INSTANCE.compile(KotlinProject.this);
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+                    
+                });
+                
+                newThread.start();
+            }
         }
         
         @Override
@@ -193,6 +231,10 @@ public class KotlinProject implements Project{
             } else if ((command.equals(ActionProvider.COMMAND_COPY))) {
                 return true;
             } else if ((command.equals(ActionProvider.COMMAND_BUILD))) {
+                return true;
+            } else if ((command.equals(ActionProvider.COMMAND_CLEAN))) {
+                return true;
+            } else if ((command.equals(ActionProvider.COMMAND_REBUILD))) {
                 return true;
             } else {
                 throw new IllegalArgumentException(command);

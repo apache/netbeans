@@ -51,10 +51,11 @@ public class KotlinCompiler {
         
         InputOutput io = IOProvider.getDefault().getIO("Build ("+proj.getProjectDirectory().getName() +")", false);
    
+        io.select();
         IOColorLines.println(io, "Build process started", Color.GREEN);
         io.getOut().println();
         
-        io.select();
+        
         
         output = execCompiler(configureArguments(proj));
         

@@ -4,6 +4,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import java.nio.file.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.Exceptions;
 
 
 /**
@@ -77,6 +79,17 @@ public class ProjectUtils {
         return outputDir.toString();
     }
 
+    
+    public static void clean(KotlinProject proj){
+        
+        try {
+            proj.getProjectDirectory().getFileObject("build").delete();
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+    }
+    
     private static void findSrc(FileObject fo, Collection<String> files){
         if (fo.isFolder()){
             for (FileObject file : fo.getChildren()){

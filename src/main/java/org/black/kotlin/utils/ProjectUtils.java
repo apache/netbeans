@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import org.black.kotlin.project.KotlinProject;
+import org.black.kotlin.project.KotlinProjectConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.load.kotlin.PackageClassUtils;
@@ -37,6 +38,8 @@ public class ProjectUtils {
     private static final String LIB_FOLDER = "lib";
     private static final String LIB_EXTENSION = "jar";
     public static final String KT_HOME = System.getenv("KT_HOME") + "\\";
+    
+    private org.netbeans.api.project.ProjectUtils projUtils;
     
     public static String findMain(FileObject[] files) throws FileNotFoundException, IOException {
         for (FileObject file : files) {
@@ -90,30 +93,6 @@ public class ProjectUtils {
         
     }
     
-    private static void findSrc(FileObject fo, Collection<String> files){
-        if (fo.isFolder()){
-            for (FileObject file : fo.getChildren()){
-                findSrc(file,files);
-            }
-        } 
-        else {
-            if (fo.hasExt("kt")){
-                files.add(fo.getParent().getPath());
-            }
-        }
-    }
-    
-    
-    @NotNull
-    public static List<String> getSrcDirectories(@NotNull KotlinProject javaProject){
-        Set<String> orderedFiles = Sets.newLinkedHashSet();
-        
-        findSrc(javaProject.getProjectDirectory(), orderedFiles);
-       
-        
-        return Lists.newArrayList(orderedFiles);
-    }
-    
     @NotNull
     public static List<String> getClasspath(){
         List<String> classpath = new ArrayList(KotlinClasspath.getKotlinClasspath());
@@ -122,6 +101,7 @@ public class ProjectUtils {
 //            DialogDisplayer.getDefault().notify(new NotifyDescriptor.
 //                Message(s));
 //        }
+        
         
         return classpath;
     }
@@ -133,7 +113,7 @@ public class ProjectUtils {
 //        assert jetFile != null;
 //        
 //        return jetFile.getPackageFqName().asString();
-        return "stab";
+        return "stub";
     }
     
     public static FqName createPackageClassName(FileObject file) {
@@ -144,27 +124,6 @@ public class ProjectUtils {
         return PackageClassUtils.getPackageClassFqName(new FqName(filePackage));
     }
     
-//    public static List<File> collectClasspathWithDependenciesForBuild(@NotNull Project javaProject){
-//        return expandClasspath(javaProject, true, false, Predicates.<ClassPath.Entry>alwaysTrue());
-//    }
-    
-//    @NotNull
-//    private static List<File> expandClasspath(@NotNull Project javaProject, boolean includeDependencies,
-//            boolean includeBinFolders, @NotNull Predicate<ClassPath.Entry> entryPredicate){
-//        Set<File> orderedFiles = Sets.newLinkedHashSet();
-//        
-//        for (ClassPath.Entry classpathEntry : javaProject.getResolvedClasspath(true)) {
-//            if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_PROJECT && includeDependencies) {
-//                orderedFiles.addAll(expandDependentProjectClasspath(classpathEntry, includeBinFolders, entryPredicate));
-//            } else { // Source folder or library
-//                if (entryPredicate.apply(classpathEntry)) {
-//                    orderedFiles.addAll(getFileByEntry(classpathEntry, javaProject));
-//                }
-//            }
-//        }
-//        
-//        return Lists.newArrayList(orderedFiles);
-//    }
     
     public static String buildLibPath(String libName) {
         return KT_HOME + buildLibName(libName);

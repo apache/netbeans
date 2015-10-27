@@ -11,6 +11,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import org.black.kotlin.project.KotlinProject;
+import org.black.kotlin.project.KotlinProjectConstants;
 import org.black.kotlin.run.output.CompilerOutputData;
 import org.black.kotlin.run.output.CompilerOutputElement;
 import org.black.kotlin.run.output.CompilerOutputParser;
@@ -27,6 +28,8 @@ import org.jetbrains.kotlin.cli.jvm.compiler.CompileEnvironmentException;
 import org.jetbrains.kotlin.cli.jvm.compiler.CompilerJarLocator;
 import org.jetbrains.kotlin.config.Services;
 import org.jetbrains.kotlin.config.Services.Builder;
+import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.windows.IOColorLines;
@@ -80,7 +83,10 @@ public class KotlinCompiler {
         args.add(ProjectUtils.KT_HOME);
         args.add("-no-jdk");
         args.add("-no-stdlib");
-        args.add(ProjectUtils.findMain(proj.getProjectDirectory().getChildren()));
+//        args.add(ProjectUtils.findMain(proj.getProjectDirectory().getChildren()));
+ 
+        Sources sources = org.netbeans.api.project.ProjectUtils.getSources(proj);
+        
         
         StringBuilder classPath = new StringBuilder();
         String pathSeparator = System.getProperty("path.separator");
@@ -95,9 +101,9 @@ public class KotlinCompiler {
         args.add("-d");
         args.add(ProjectUtils.getOutputDir(proj));
      
-        
-        for (String srcDirectory : ProjectUtils.getSrcDirectories(proj))
-            args.add(srcDirectory);
+        for (SourceGroup srcGrp :sources.getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE.toString())){
+            args.add(srcGrp.getName());
+        }
         
         return args.toArray(new String[args.size()]);
     }

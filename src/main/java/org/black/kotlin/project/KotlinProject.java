@@ -26,6 +26,7 @@ import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
+import org.netbeans.spi.project.ui.support.NodeFactorySupport;
 import org.netbeans.spi.project.ui.support.ProjectSensitiveActions;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -113,7 +114,9 @@ public class KotlinProject implements Project {
 
             public ProjectNode(Node node, KotlinProject project) throws DataObjectNotFoundException {
                 super(node,
-                        new FilterNode.Children(node),
+                         NodeFactorySupport.createCompositeChildren(
+                             project, "Projects/org-black-kotlin/Nodes"),
+                        //new FilterNode.Children(node),
                         new ProxyLookup(
                                 new Lookup[]{
                                     Lookups.singleton(project),
@@ -385,10 +388,12 @@ public class KotlinProject implements Project {
     public Lookup getLookup() {
         if (lkp == null) {
             lkp = Lookups.fixed(new Object[]{
+                this,
                 new Info(),
                 new KotlinProjectLogicalView(this),
                 new KotlinSources(),
-                new ActionProviderImpl(),});
+                new ActionProviderImpl(),
+            });
         }
         return lkp;
     }

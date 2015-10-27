@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import java.awt.Image;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -134,6 +135,8 @@ public class KotlinProject implements Project {
                     "Clean Project", null),
                     ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_REBUILD,
                     "Rebuild Project", null),
+                    ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_RUN,
+                    "Run Project", null),
                     CommonProjectActions.newFileAction(),
                     CommonProjectActions.copyProjectAction(),
                     CommonProjectActions.deleteProjectAction(),
@@ -171,7 +174,8 @@ public class KotlinProject implements Project {
             ActionProvider.COMMAND_COPY,
             ActionProvider.COMMAND_BUILD,
             ActionProvider.COMMAND_CLEAN,
-            ActionProvider.COMMAND_REBUILD
+            ActionProvider.COMMAND_REBUILD,
+            ActionProvider.COMMAND_RUN
         };
 
         @Override
@@ -235,6 +239,24 @@ public class KotlinProject implements Project {
 
                 newThread.start();
             }
+            
+            if (string.equalsIgnoreCase(ActionProvider.COMMAND_RUN)) {
+                Thread newThread = new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            KotlinCompiler.INSTANCE.run(KotlinProject.this);
+                            
+                        } catch (IOException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                    }
+
+                });
+
+                newThread.start();
+            }
         }
 
         @Override
@@ -248,6 +270,8 @@ public class KotlinProject implements Project {
             } else if ((command.equals(ActionProvider.COMMAND_CLEAN))) {
                 return true;
             } else if ((command.equals(ActionProvider.COMMAND_REBUILD))) {
+                return true;
+            } else if ((command.equals(ActionProvider.COMMAND_RUN))) {
                 return true;
             } else {
                 throw new IllegalArgumentException(command);

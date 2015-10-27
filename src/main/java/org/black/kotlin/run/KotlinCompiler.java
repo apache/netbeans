@@ -1,14 +1,18 @@
 package org.black.kotlin.run;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.project.KotlinProjectConstants;
@@ -46,89 +50,117 @@ public class KotlinCompiler {
 
     public final static KotlinCompiler INSTANCE = new KotlinCompiler();
     private KotlinCompilerResult output;
-    
-    private KotlinCompiler(){}
-  
-    
-    public void compile(KotlinProject proj) throws IOException{
+
+    private KotlinCompiler() {
+    }
+
+    public void run(KotlinProject proj) throws IOException, InterruptedException {
+        compile(proj);
         
-        InputOutput io = IOProvider.getDefault().getIO("Build ("+proj.getProjectDirectory().getName() +")", false);
-   
+        File jar = new File(proj.getProjectDirectory().getFileObject("build").getPath()
+                + "/" );
+        Process runProcess = Runtime.getRuntime().exec("java -jar "+ proj.getProjectDirectory().getName() + ".jar", null, jar);
+        runProcess.waitFor();
+        
+        InputStream in = runProcess.getInputStream();
+        InputStream err = runProcess.getErrorStream();
+        
+        InputStreamReader inReader = new InputStreamReader(in);
+        InputStreamReader errReader = new InputStreamReader(err);
+        BufferedReader inBR = new BufferedReader(inReader);
+        BufferedReader errBR = new BufferedReader(errReader);
+//        Desktop.getDesktop().open(new File(proj.getProjectDirectory().getFileObject("build").getPath()
+//                + "/" + proj.getProjectDirectory().getName() + ".jar"));
+        InputOutput io = IOProvider.getDefault().getIO("Run (" + proj.getProjectDirectory().getName() + ")", false);
         io.select();
-        IOColorLines.println(io, "Build process started", Color.GREEN);
-        io.getOut().println();
-        
-        
-        
-        output = execCompiler(configureArguments(proj));
-        
-        for (CompilerOutputElement el : output.getCompilerOutput().getList()){
-            io.getOut().println("[" +el.getMessageSeverity()+"] "+el.getMessage());
+        String line;
+        while ((line = inBR.readLine()) != null) {
+            io.getOut().println(line);
         }
-        
-        if (output.compiledCorrectly()){
-            io.getOut().println("Build process finished successfully");
-        } else{
-            io.getErr().println("Build process finished with errors");
+        while ((line = errBR.readLine()) != null) {
+            io.getErr().println(line);
         }
         
         io.getOut().close();
         io.getErr().close();
     }
-    
-    private String[] configureArguments(KotlinProject proj) throws IOException{
+
+    public void compile(KotlinProject proj) throws IOException {
+
+        InputOutput io = IOProvider.getDefault().getIO("Build (" + proj.getProjectDirectory().getName() + ")", false);
+
+        io.select();
+//        IOColorLines.println(io, "Build process started", Color.GREEN);
+        io.getOut().println("Build process started");
+
+        output = execCompiler(configureArguments(proj));
+
+        for (CompilerOutputElement el : output.getCompilerOutput().getList()) {
+            io.getOut().println("[" + el.getMessageSeverity() + "] " + el.getMessage());
+        }
+
+        if (output.compiledCorrectly()) {
+            io.getOut().println("Build process finished successfully");
+        } else {
+            io.getErr().println("Build process finished with errors");
+        }
+
+        io.getOut().close();
+        io.getErr().close();
+    }
+
+    private String[] configureArguments(KotlinProject proj) throws IOException {
         List<String> args = new ArrayList<String>();
-        
+
         args.add("-kotlin-home");
         args.add(ProjectUtils.KT_HOME);
         args.add("-no-jdk");
         args.add("-no-stdlib");
 //        args.add(ProjectUtils.findMain(proj.getProjectDirectory().getChildren()));
- 
+
         Sources sources = org.netbeans.api.project.ProjectUtils.getSources(proj);
-        
-        
+
         StringBuilder classPath = new StringBuilder();
         String pathSeparator = System.getProperty("path.separator");
-        
-        for (String cp : ProjectUtils.getClasspath()){
+
+        for (String cp : ProjectUtils.getClasspath()) {
             classPath.append(cp).append(pathSeparator);
         }
-        
+
         args.add("-classpath");
         args.add(classPath.toString());
-        
+
         args.add("-d");
         args.add(ProjectUtils.getOutputDir(proj));
-     
-        for (SourceGroup srcGrp :sources.getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE.toString())){
+
+        for (SourceGroup srcGrp : sources.getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE.toString())) {
             args.add(srcGrp.getName());
         }
-        
+
         return args.toArray(new String[args.size()]);
     }
-    
-    private KotlinCompilerResult execCompiler(@NotNull String[] arguments){
-        
+
+    private KotlinCompilerResult execCompiler(@NotNull String[] arguments) {
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(outputStream);
-        
+
         doMain(new K2JVMCompiler(), out, arguments);
-    
+
         BufferedReader reader = new BufferedReader(new StringReader(outputStream.toString()));
         return parseCompilerOutput(reader);
     }
-    
+
     public int doMain(@NotNull CLICompiler<?> compiler, @NotNull PrintStream errorStream, @NotNull String[] args) {
         System.setProperty("java.awt.headless", "true");
         ExitCode exitCode = doMainNoExitWithHtmlOutput(compiler, errorStream, args);
-        
+
         return exitCode.getCode();
     }
-    
+
     private ExitCode doMainNoExitWithHtmlOutput(
-            @NotNull CLICompiler<?> compiler, 
-            @NotNull PrintStream errorStream, 
+            @NotNull CLICompiler<?> compiler,
+            @NotNull PrintStream errorStream,
             @NotNull String[] args) {
         try {
             Builder builder = new Services.Builder();
@@ -139,18 +171,18 @@ public class KotlinCompiler {
                     return new File(ProjectUtils.buildLibPath("kotlin-compiler"));
                 }
             });
-            
+
             return compiler.execAndOutputXml(errorStream, builder.build(), args);
         } catch (CompileEnvironmentException e) {
             errorStream.println(e.getMessage());
             return ExitCode.INTERNAL_ERROR;
         }
     }
-    
-        @NotNull
+
+    @NotNull
     private KotlinCompilerResult parseCompilerOutput(Reader reader) {
-        final CompilerOutputData compilerOutput = new CompilerOutputData(); 
-        
+        final CompilerOutputData compilerOutput = new CompilerOutputData();
+
         final List<CompilerMessageSeverity> severities = new ArrayList<CompilerMessageSeverity>();
         CompilerOutputParser.parseCompilerMessagesFromReader(
                 new MessageCollector() {
@@ -162,7 +194,7 @@ public class KotlinCompiler {
                     }
                 },
                 reader);
-        
+
         boolean result = true;
         for (CompilerMessageSeverity severity : severities) {
             if (severity.equals(CompilerMessageSeverity.ERROR) || severity.equals(CompilerMessageSeverity.EXCEPTION)) {
@@ -170,9 +202,8 @@ public class KotlinCompiler {
                 break;
             }
         }
-        
+
         return new KotlinCompilerResult(result, compilerOutput);
     }
 
-    
 }

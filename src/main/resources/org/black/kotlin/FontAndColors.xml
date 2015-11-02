@@ -1,0 +1,11 @@
+<!DOCTYPE fontscolors PUBLIC
+    "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN"
+    "https://netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+<fontscolors>
+    <fontcolor name="IDENTIFIER" default="identifier"/>
+    <fontcolor name="KEYWORD" default="keyword" foreColor="red"/>
+    <fontcolor name="SINGLE_LINE_COMMENT" default="comment"/>
+    <fontcolor name="MULTI_LINE_COMMENT" default="comment"/>
+    <fontcolor name="STRING" default="string"/>
+    <fontcolor name="WHITESPACE" default="whitespace"/>
+</fontscolors>

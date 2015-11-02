@@ -21,33 +21,25 @@ public class KotlinLexerProxy implements Lexer<KotlinTokenId> {
     
     public KotlinLexerProxy(LexerRestartInfo<KotlinTokenId> info){
         this.info = info;
-        //KotlinCharStream stream = new KotlinCharStream(info.input());
         input = info.input();
-        kotlinTokenScanner = new KotlinTokenScanner();
+        kotlinTokenScanner = new KotlinTokenScanner(input);
         
-//        input.backup(input.readLength());
     }
     
     @Override
     public Token<KotlinTokenId> nextToken(){
         KotlinToken token = kotlinTokenScanner.getNextToken();
-//        int ch = input.read();
-//        while (ch != 10 || ch != LexerInput.EOF){
-//            ch = input.read();
-//        }
-//        if (ch == LexerInput.EOF)
-//            return null;
-//        DialogDisplayer.getDefault().notify(new NotifyDescriptor.
-//            Message(input.readText()));
-//        if (input.readLength() < 1) {
-//            return null;
-//        }
-        input.read();
-        input.read();
-        input.read();
         
-        return info.tokenFactory().createToken(KotlinLanguageHierarchy.getToken(0));
-        //return token;
+            
+        if (input.readLength() < 1) {
+            return null;
+        }
+        
+        if (token == null)//token.getType().equals(TokenType.EOF))
+            return null;
+        
+        
+        return info.tokenFactory().createToken(KotlinLanguageHierarchy.getToken(token.id().ordinal()));
     }
     
     @Override

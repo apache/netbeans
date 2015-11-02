@@ -28,7 +28,8 @@ public class KotlinLanguageHierarchy extends LanguageHierarchy<KotlinTokenId> {
             new KotlinTokenId(TokenType.SINGLE_LINE_COMMENT.name(),TokenType.SINGLE_LINE_COMMENT.name(),3),
             new KotlinTokenId(TokenType.MULTI_LINE_COMMENT.name(),TokenType.MULTI_LINE_COMMENT.name(),4),
             new KotlinTokenId(TokenType.KDOC_TAG_NAME.name(),TokenType.KDOC_TAG_NAME.name(),5),
-            new KotlinTokenId(TokenType.WHITESPACE.name(),TokenType.WHITESPACE.name(),6)
+            new KotlinTokenId(TokenType.WHITESPACE.name(),TokenType.WHITESPACE.name(),6),
+            new KotlinTokenId(TokenType.UNDEFINED.name(),TokenType.UNDEFINED.name(),7)
         });
         idToToken = new HashMap<Integer, KotlinTokenId>();
         for (KotlinTokenId token : tokens) {

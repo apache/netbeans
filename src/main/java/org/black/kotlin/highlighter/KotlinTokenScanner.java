@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.text.JTextComponent;
+import org.black.kotlin.file.KtDataObject;
 
 import org.black.kotlin.highlighter.netbeans.KotlinCharStream;
 import org.black.kotlin.highlighter.netbeans.KotlinToken;
@@ -40,10 +41,14 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.spi.lexer.LexerInput;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -59,35 +64,36 @@ public class KotlinTokenScanner {
     private PsiElement lastElement = null;
     private List<KotlinToken> kotlinTokens = null;
     private int tokensNumber = 0;
+    private LexerInput input;
+    private File file;
     
     
-    public KotlinTokenScanner(){
+    public KotlinTokenScanner(LexerInput input){
         kotlinTokensFactory = new KotlinTokensFactory();
+        this.input = input;
+        file = new File(getOpenedFile());
+        FileObject fileObj = org.openide.filesystems.FileUtil.toFileObject(
+                org.openide.filesystems.FileUtil.normalizeFile(file));
 //        try {
-//            jetFile = parseFile(getOpenedFile());
-//            this.rangeEnd = jetFile.getTextLength();
-//            createListOfKotlinTokens();
-//
+//            DialogDisplayer.getDefault().notify(new NotifyDescriptor.
+//                    Message(fileObj.asText().length()));
 //        } catch (IOException ex) {
 //            Exceptions.printStackTrace(ex);
 //        }
+        try {
+            jetFile = parseFile(fileObj);
+            this.rangeEnd = fileObj.asText().length();
+            createListOfKotlinTokens();
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
-
-    private FileObject getOpenedFile(){
-        JTextComponent ed = EditorRegistry.lastFocusedComponent();
-        OpenProjects op = OpenProjects.getDefault();
-        Sources sources = org.netbeans.api.project.ProjectUtils.getSources(op.getOpenProjects()[0]);
-        for (SourceGroup srcGrp : sources.getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE.toString())) {
-               for (FileObject ktFile : srcGrp.getRootFolder().getChildren()){
-                   try {
-                       if (ktFile.asText().equals(ed.getText())){
-                           return ktFile;
-                       }
-                   } catch (IOException ex) {
-                       Exceptions.printStackTrace(ex);
-                   }
-               }
-            
+    
+    private String getOpenedFile(){
+        TopComponent topActive = TopComponent.getRegistry().getActivated();
+        if (WindowManager.getDefault().isOpenedEditorTopComponent(topActive)){
+            String path=topActive.getToolTipText();
+            return path;
         }
         return null;
     }
@@ -95,27 +101,28 @@ public class KotlinTokenScanner {
     private void createListOfKotlinTokens() {
         kotlinTokens = new ArrayList();
         for (;;) {
-
-            if (lastElement != null) {
-                if (lastElement.getTextOffset() > rangeEnd) {
-                    kotlinTokens.add(new KotlinToken(
-                            new KotlinTokenId(TokenType.EOF.name(), TokenType.EOF.name(), 6), "",
-                            lastElement.getTextOffset(), TokenType.EOF));
-                    tokensNumber = kotlinTokens.size();
-                    break;
-                }
-            }
+            
+            lastElement = jetFile.findElementAt(offset);
 
             if (jetFile == null) {
                 kotlinTokens.add(new KotlinToken(
-                        new KotlinTokenId(TokenType.EOF.name(), TokenType.EOF.name(), 6), "",
+                        new KotlinTokenId(TokenType.EOF.name(), TokenType.EOF.name(), 7), "",
                         0, TokenType.EOF));
                 tokensNumber = kotlinTokens.size();
                 break;
             }
 
-            lastElement = jetFile.findElementAt(offset);
+            
             if (lastElement != null) {
+                
+                if (lastElement.getTextOffset() > rangeEnd) {
+                    kotlinTokens.add(new KotlinToken(
+                            new KotlinTokenId(TokenType.EOF.name(), TokenType.EOF.name(), 7), lastElement.getText(),
+                            lastElement.getTextOffset(), TokenType.EOF));
+                    tokensNumber = kotlinTokens.size();
+                    break;
+                }
+                
                 offset = lastElement.getTextRange().getEndOffset();
                 TokenType tokenType = kotlinTokensFactory.getToken(lastElement);
 
@@ -123,8 +130,13 @@ public class KotlinTokenScanner {
                         new KotlinTokenId(tokenType.name(), tokenType.name(), tokenType.getId(tokenType)),
                         lastElement.getText(), lastElement.getTextOffset(),
                         tokenType));
-
+                tokensNumber = kotlinTokens.size();
             }
+            else {
+                tokensNumber = kotlinTokens.size();
+                break;
+            }
+            
         }
     }
     
@@ -151,35 +163,30 @@ public class KotlinTokenScanner {
     }
     
     
-        
-    public JetFile createJetFileFromCode(String code) {
-        OpenProjects op = OpenProjects.getDefault();
-        
-//         DialogDisplayer.getDefault().notify(new NotifyDescriptor.
-//                Message(op.getDefault().getMainProject().getProjectDirectory().getName()));
-        
-        KotlinEnvironment kotlinEnvironment = KotlinEnvironment.getEnvironment(op.getOpenProjects()[0]);
-        Document jetDocument = new DocumentImpl(code);
-        PsiFile psiFile = PsiDocumentManager.getInstance(kotlinEnvironment.getProject()).getPsiFile(jetDocument);
-        FileViewProvider viewProvider = psiFile.getViewProvider();
-        return new JetFile(viewProvider, false);
-    }
 
     public KotlinToken<KotlinTokenId> getNextToken() {
 
-//        KotlinToken ktToken = null;
-//        
-//        if (tokensNumber > 0){
-//            ktToken = kotlinTokens.get(kotlinTokens.size()-tokensNumber);
-//            tokensNumber--;
-//        }
-//            
-//        return ktToken;
+        KotlinToken ktToken = null;
         
-        return new KotlinToken(
-                        new KotlinTokenId(TokenType.KEYWORD.name(), TokenType.KEYWORD.name(), TokenType.KEYWORD.getId(TokenType.KEYWORD)),
-                        "", 0,
-                        TokenType.KEYWORD);
+        if (tokensNumber > 0){
+            ktToken = kotlinTokens.get(kotlinTokens.size()-tokensNumber);
+            tokensNumber--;
+        }else{
+            return new KotlinToken(
+                            new KotlinTokenId(TokenType.EOF.name(), TokenType.EOF.name(), 7), "",
+                            0, TokenType.EOF);
+        }
+        
+        if (ktToken != null){
+            int num = ktToken.length();
+        
+            while (num > 0){
+                input.read();
+                num--;
+            }
+            
+        }
+        return ktToken;
     }
 
 }

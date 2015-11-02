@@ -25,9 +25,10 @@ public enum TokenType{
             case KDOC_TAG_NAME:
                 return 5;
             case WHITESPACE:
+                return 6;
             case UNDEFINED:
             case EOF:
-                return 6;
+                return 7;
         }
         
         return 0;

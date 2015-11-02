@@ -22,7 +22,7 @@ import org.openide.windows.TopComponent;
 @MIMEResolver.ExtensionRegistration(
         displayName = "#LBL_Kt_LOADER",
         mimeType = "text/x-kt",
-        extension = {".kt", ".KT"}
+        extension = {"kt", "KT"}
 )
 @DataObject.Registration(
         mimeType = "text/x-kt",
@@ -82,7 +82,7 @@ import org.openide.windows.TopComponent;
             position = 1400
     )
 })
-public class KtDataObject extends MultiDataObject{
+public class KtDataObject extends MultiDataObject {
 
     public KtDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);

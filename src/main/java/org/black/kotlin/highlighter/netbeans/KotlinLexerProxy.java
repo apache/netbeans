@@ -1,13 +1,10 @@
 package org.black.kotlin.highlighter.netbeans;
 
 import org.black.kotlin.highlighter.KotlinTokenScanner;
-import org.black.kotlin.highlighter.TokenType;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerInput;
 import org.netbeans.spi.lexer.LexerRestartInfo;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 
 /**
  *
@@ -36,7 +33,7 @@ public class KotlinLexerProxy implements Lexer<KotlinTokenId> {
         }
         
         if (token == null)//token.getType().equals(TokenType.EOF))
-            return null;
+            return info.tokenFactory().createToken(KotlinLanguageHierarchy.getToken(7));//null;
         
         
         return info.tokenFactory().createToken(KotlinLanguageHierarchy.getToken(token.id().ordinal()));

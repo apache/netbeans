@@ -12,19 +12,14 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.asJava.KotlinLightClassForFacade;
 import org.jetbrains.kotlin.asJava.LightClassGenerationSupport;
 import org.jetbrains.kotlin.cli.jvm.compiler.CliLightClassGenerationSupport;
-import org.jetbrains.kotlin.cli.jvm.compiler.CoreExternalAnnotationsManager;
 import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles;
 import org.jetbrains.kotlin.codegen.extensions.ExpressionCodegenExtension;
 import org.jetbrains.kotlin.extensions.ExternalDeclarationsProvider;
-import org.jetbrains.kotlin.idea.JetFileType;
-import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory;
 import org.jetbrains.kotlin.load.kotlin.KotlinBinaryClassCache;
 import org.jetbrains.kotlin.parsing.JetParserDefinition;
 import org.jetbrains.kotlin.resolve.CodeAnalyzerInitializer;
-import org.jetbrains.kotlin.utils.PathUtil;
 
 import com.intellij.codeInsight.ContainerProvider;
-import com.intellij.codeInsight.ExternalAnnotationsManager;
 import com.intellij.codeInsight.NullableNotNullManager;
 import com.intellij.codeInsight.runner.JavaMainMethodProvider;
 import com.intellij.core.CoreApplicationEnvironment;
@@ -43,16 +38,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElementFinder;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.augment.PsiAugmentProvider;
-import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.compiled.ClassFileDecompilers;
 import com.intellij.psi.impl.PsiTreeChangePreprocessor;
 import com.intellij.psi.impl.compiled.ClsCustomNavigationPolicy;
 import com.intellij.psi.impl.file.impl.JavaFileManager;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.utils.ProjectUtils;
+import org.jetbrains.kotlin.idea.KotlinFileType;
 
 @SuppressWarnings("deprecation")
 public class KotlinEnvironment {
@@ -88,20 +80,15 @@ public class KotlinEnvironment {
         
         PsiManager psiManager = project.getComponent(PsiManager.class);
         assert (psiManager != null);
-        CoreExternalAnnotationsManager annotationsManager = new CoreExternalAnnotationsManager(psiManager);
-        project.registerService(ExternalAnnotationsManager.class, annotationsManager);
         project.registerService(CoreJavaFileManager.class,
                 (CoreJavaFileManager) ServiceManager.getService(project, JavaFileManager.class));
         
         CliLightClassGenerationSupport cliLightClassGenerationSupport = new CliLightClassGenerationSupport(project);
         project.registerService(LightClassGenerationSupport.class, cliLightClassGenerationSupport);
         project.registerService(CliLightClassGenerationSupport.class, cliLightClassGenerationSupport);
-        project.registerService(KotlinLightClassForFacade.PackageFacadeStubCache.class, new KotlinLightClassForFacade.PackageFacadeStubCache(project));
         project.registerService(KotlinLightClassForFacade.FacadeStubCache.class, new KotlinLightClassForFacade.FacadeStubCache(project));
         project.registerService(CodeAnalyzerInitializer.class, cliLightClassGenerationSupport);
         
-        VirtualFile ktJDKAnnotations = PathUtil.jarFileOrDirectoryToVirtualFile(new File(KT_JDK_ANNOTATIONS_PATH));
-        annotationsManager.addExternalAnnotationsRoot(ktJDKAnnotations);
 
         configureClasspath();
         
@@ -166,9 +153,9 @@ public class KotlinEnvironment {
         // ability to get text from annotations xml files
         javaApplicationEnvironment.registerFileType(PlainTextFileType.INSTANCE, "xml");
         
-        javaApplicationEnvironment.registerFileType(JetFileType.INSTANCE, "kt");
-        javaApplicationEnvironment.registerFileType(JetFileType.INSTANCE, "jet");
-        javaApplicationEnvironment.registerFileType(JetFileType.INSTANCE, "ktm");
+        javaApplicationEnvironment.registerFileType(KotlinFileType.INSTANCE, "kt");
+        javaApplicationEnvironment.registerFileType(KotlinFileType.INSTANCE, "jet");
+        javaApplicationEnvironment.registerFileType(KotlinFileType.INSTANCE, "ktm");
         
         javaApplicationEnvironment.registerParserDefinition(new JetParserDefinition());
         

@@ -1,51 +1,32 @@
 package org.black.kotlin.highlighter;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.impl.DocumentImpl;
-import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
-import com.intellij.openapi.editor.EditorBundle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFileSystem;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.impl.PsiFileFactoryImpl;
 import com.intellij.testFramework.LightVirtualFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.text.JTextComponent;
-import org.black.kotlin.file.KtDataObject;
 
-import org.black.kotlin.highlighter.netbeans.KotlinCharStream;
 import org.black.kotlin.highlighter.netbeans.KotlinToken;
 import org.black.kotlin.highlighter.netbeans.KotlinTokenId;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.model.KotlinLightVirtualFile;
-import org.black.kotlin.project.KotlinProjectConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.idea.JetLanguage;
-import org.jetbrains.kotlin.psi.JetFile;
-import org.netbeans.api.editor.EditorRegistry;
-import org.netbeans.api.lexer.Token;
-import org.netbeans.api.project.SourceGroup;
-import org.netbeans.api.project.Sources;
+import org.jetbrains.kotlin.idea.KotlinLanguage;
+import org.jetbrains.kotlin.psi.KtFile;
+//import org.jetbrains.kotlin.idea.JetLanguage;
+//import org.jetbrains.kotlin.psi.JetFile;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.lexer.LexerInput;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
-import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -58,7 +39,7 @@ public class KotlinTokenScanner {
 
     private final KotlinTokensFactory kotlinTokensFactory;
 
-    private JetFile jetFile = null;
+    private KtFile jetFile = null;
     private int offset = 0;
     private int rangeEnd = 0;
     private PsiElement lastElement = null;
@@ -142,13 +123,13 @@ public class KotlinTokenScanner {
     
     
     @Nullable
-    private JetFile parseFile(@NotNull FileObject file) throws IOException{
+    private KtFile parseFile(@NotNull FileObject file) throws IOException{
         File ioFile = new File(file.getPath());
         return parseText(FileUtil.loadFile(ioFile, null, true),file);
     }
     
     @Nullable
-    private JetFile parseText(@NotNull String text, @NotNull FileObject file){
+    private KtFile parseText(@NotNull String text, @NotNull FileObject file){
         StringUtil.assertValidSeparators(text);
         
         Project project = KotlinEnvironment.getEnvironment(
@@ -159,7 +140,7 @@ public class KotlinTokenScanner {
         
         PsiFileFactoryImpl psiFileFactory = (PsiFileFactoryImpl) PsiFileFactory.getInstance(project);
         
-        return (JetFile) psiFileFactory.trySetupPsiForFile(virtualFile, JetLanguage.INSTANCE, true, false);
+        return (KtFile) psiFileFactory.trySetupPsiForFile(virtualFile, KotlinLanguage.INSTANCE, true, false);
     }
     
     

@@ -1,7 +1,7 @@
 package org.black.kotlin.highlighter;
 
 
-import org.jetbrains.kotlin.lexer.JetTokens;
+import org.jetbrains.kotlin.lexer.KtTokens;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
@@ -26,22 +26,22 @@ public class KotlinTokensFactory {
             return TokenType.UNDEFINED;
         
         IElementType elementType = leafElement.getNode().getElementType();
-        if (JetTokens.KEYWORDS.contains(elementType) 
-                || JetTokens.SOFT_KEYWORDS.contains(elementType) 
-                        || JetTokens.MODIFIER_KEYWORDS.contains(elementType)){
+        if (KtTokens.KEYWORDS.contains(elementType) 
+                || KtTokens.SOFT_KEYWORDS.contains(elementType) 
+                        || KtTokens.MODIFIER_KEYWORDS.contains(elementType)){
             return keywordToken;
         } 
-        else if (JetTokens.STRINGS.contains(elementType) || elementType == JetTokens.OPEN_QUOTE
-                || elementType == JetTokens.CLOSING_QUOTE){
+        else if (KtTokens.STRINGS.contains(elementType) || elementType == KtTokens.OPEN_QUOTE
+                || elementType == KtTokens.CLOSING_QUOTE){
             return stringToken;
         }
-        else if (JetTokens.WHITESPACES.contains(elementType)){
+        else if (KtTokens.WHITESPACES.contains(elementType)){
             return whitespaceToken;
         }
-        else if (elementType == JetTokens.EOL_COMMENT){
+        else if (elementType == KtTokens.EOL_COMMENT){
             return singleLineCommentToken;
         }
-        else if (JetTokens.COMMENTS.contains(elementType) 
+        else if (KtTokens.COMMENTS.contains(elementType) 
                 || KDocTokens.KDOC_HIGHLIGHT_TOKENS.contains(elementType)){
             return multiLineCommentToken;
         }

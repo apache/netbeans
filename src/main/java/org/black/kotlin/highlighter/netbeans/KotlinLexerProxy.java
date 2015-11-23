@@ -8,34 +8,40 @@ import org.netbeans.spi.lexer.LexerRestartInfo;
 
 /**
  *
- * @author Александр
+ * @author РђР»РµРєСЃР°РЅРґСЂ
  */
 public class KotlinLexerProxy implements Lexer<KotlinTokenId> {
     
-    private LexerRestartInfo<KotlinTokenId> info;
+    private final LexerRestartInfo<KotlinTokenId> info;
     private KotlinTokenScanner kotlinTokenScanner;
-    private LexerInput input;
+    private final LexerInput input;
+    private boolean firstTime = true;
     
     public KotlinLexerProxy(LexerRestartInfo<KotlinTokenId> info){
         this.info = info;
         input = info.input();
-        kotlinTokenScanner = new KotlinTokenScanner(input);
-        
+        kotlinTokenScanner = null;
     }
     
     @Override
     public Token<KotlinTokenId> nextToken(){
+        if (firstTime == true){
+            kotlinTokenScanner = new KotlinTokenScanner(input);
+            firstTime = false;
+        }
+        
+        
         KotlinToken token = kotlinTokenScanner.getNextToken();
         
-            
         if (input.readLength() < 1) {
             return null;
         }
         
-        if (token == null)//token.getType().equals(TokenType.EOF))
-            return info.tokenFactory().createToken(KotlinLanguageHierarchy.getToken(7));//null;
         
+        if (token == null)
+            return info.tokenFactory().createToken(KotlinLanguageHierarchy.getToken(7));
         
+
         return info.tokenFactory().createToken(KotlinLanguageHierarchy.getToken(token.id().ordinal()));
     }
     
@@ -46,7 +52,6 @@ public class KotlinLexerProxy implements Lexer<KotlinTokenId> {
 
     @Override
     public void release() {
-   
     }
     
 }

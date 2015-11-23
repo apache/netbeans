@@ -8,9 +8,14 @@ import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.impl.PsiFileFactoryImpl;
 import com.intellij.testFramework.LightVirtualFile;
+import java.io.BufferedReader;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,17 +27,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.idea.KotlinLanguage;
 import org.jetbrains.kotlin.psi.KtFile;
-//import org.jetbrains.kotlin.idea.JetLanguage;
-//import org.jetbrains.kotlin.psi.JetFile;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.lexer.LexerInput;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
-import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
-
 /**
  *
  * @author Александр
@@ -42,51 +41,83 @@ public class KotlinTokenScanner {
     private final KotlinTokensFactory kotlinTokensFactory;
 
     private KtFile ktFile = null;
+    private File syntaxFile = null;
     private int offset = 0;
     private int rangeEnd = 0;
     private PsiElement lastElement = null;
     private List<KotlinToken> kotlinTokens = null;
     private int tokensNumber = 0;
     private LexerInput input;
-    private File file;
 
+    
     public KotlinTokenScanner(LexerInput input) {
         kotlinTokensFactory = new KotlinTokensFactory();
         this.input = input;
-        file = new File(getOpenedFile());
-//        FileObject fileObj = org.openide.filesystems.FileUtil.toFileObject(
-//                org.openide.filesystems.FileUtil.normalizeFile(file));
-//        DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(file.getName()));
+        createSyntaxFile();
+//        readSyntaxFile();
         try {
-            offset = 0;
-            ktFile = parseFile(file);
-            this.rangeEnd = (int) file.length();
+            ktFile = parseFile(syntaxFile);
+            this.rangeEnd = (int) syntaxFile.length();
             createListOfKotlinTokens();
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
-
-    private String getOpenedFile() {
-        TopComponent topActive = TopComponent.getRegistry().getActivated();
-        if (WindowManager.getDefault().isOpenedEditorTopComponent(topActive)) {
-            String path;
-            if (topActive.getToolTipText().split("\\(")[0] != null)
-                path = topActive.getToolTipText().split("\\(")[0];
-            else
-                path = topActive.getToolTipText();
-        
-            return path;
+    
+    private void createSyntaxFile(){
+        syntaxFile = new File("syntax");
+        StringBuilder builder = new StringBuilder("");
+        int num = -1000;
+        while (num != LexerInput.EOF){
+            num = input.read();
+            builder.append((char) num);
         }
-        return null;
+        
+        CharSequence readText = builder.toString();//input.readText();
+        input.backup(input.readLengthEOF());
+        
+        try {
+            PrintWriter writer = new PrintWriter(syntaxFile,"UTF-8");
+            writer.print(readText);
+//            DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.
+//                            Message(builder.toString()));
+            writer.close();
+            
+        } catch (FileNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (UnsupportedEncodingException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
-
+    
+    private void readSyntaxFile(){
+        try {
+            StringBuilder builder = new StringBuilder("");
+            String curLine;
+            BufferedReader br = null;
+            br = new BufferedReader(new FileReader(syntaxFile));
+            while((curLine = br.readLine()) != null){
+                builder.append(curLine);
+            }
+            DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.
+                            Message(builder.toString()));
+        } catch (FileNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+    
+    public void deleteSyntaxFile(){
+        syntaxFile.delete();
+    }
+    
     private void createListOfKotlinTokens() {
         kotlinTokens = new ArrayList();
         for (;;) {
 
             lastElement = ktFile.findElementAt(offset);
-
+            
             if (ktFile == null) {
                 kotlinTokens.add(new KotlinToken(
                         new KotlinTokenId(TokenType.EOF.name(), TokenType.EOF.name(), 7), "",
@@ -96,14 +127,6 @@ public class KotlinTokenScanner {
             }
 
             if (lastElement != null) {
-
-//                if (lastElement.getTextOffset() > rangeEnd) {
-//                    kotlinTokens.add(new KotlinToken(
-//                            new KotlinTokenId(TokenType.EOF.name(), TokenType.EOF.name(), 7), lastElement.getText(),
-//                            lastElement.getTextOffset(), TokenType.EOF));
-//                    tokensNumber = kotlinTokens.size();
-//                    break;
-//                }
 
                 offset = lastElement.getTextRange().getEndOffset();
                 TokenType tokenType = kotlinTokensFactory.getToken(lastElement);
@@ -119,12 +142,12 @@ public class KotlinTokenScanner {
             }
 
         }
+
     }
 
     @Nullable
     private KtFile parseFile(@NotNull File file) throws IOException {
-//        File ioFile = new File(file.getPath());
-        return parseText(FileUtil.loadFile(new File(file.getPath()), null, true), file);
+        return parseText(FileUtil.loadFile(file, null, true), file);
     }
 
     @Nullable
@@ -142,6 +165,7 @@ public class KotlinTokenScanner {
         return (KtFile) psiFileFactory.trySetupPsiForFile(virtualFile, KotlinLanguage.INSTANCE, true, false);
     }
 
+
     public KotlinToken<KotlinTokenId> getNextToken() {
 
         KotlinToken ktToken = null;
@@ -151,12 +175,12 @@ public class KotlinTokenScanner {
             tokensNumber--;
             if (ktToken != null) {
                 int num = ktToken.length();
-
+                
                 while (num > 0) {
                     input.read();
                     num--;
                 }
-
+                
             }
             return ktToken;
         } else {
@@ -168,4 +192,6 @@ public class KotlinTokenScanner {
 
     }
 
+    
 }
+

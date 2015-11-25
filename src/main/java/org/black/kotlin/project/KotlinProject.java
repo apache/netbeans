@@ -14,6 +14,7 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.event.ChangeListener;
+import org.black.kotlin.highlighter.netbeans.KotlinTokenId;
 import org.black.kotlin.run.KotlinCompiler;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.NotNull;
@@ -24,6 +25,9 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectState;
+import org.netbeans.spi.project.support.ant.AntBasedProjectRegistration;
+import org.netbeans.spi.project.support.ant.AntProjectHelper;
+import org.netbeans.spi.project.support.ant.ReferenceHelper;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
@@ -48,8 +52,18 @@ import org.openide.util.lookup.ProxyLookup;
  *
  * @author Александр
  */
+
+
+@AntBasedProjectRegistration(type = "org.black.kotlin.project.KotlinProject",
+                            iconResource = "org/black/kotlin/kotlin.png",
+                            sharedName = "data",
+                            sharedNamespace = "http://www.netbeans.org/ns/kotlin-project/1",
+                            privateName = "project-private",
+                            privateNamespace = "http://www.netbeans.org/ns/kotlin-project-private/1")
 public class KotlinProject implements Project {
 
+    final AntProjectHelper helper;
+    
     private final class Info implements ProjectInformation {
 
         @StaticResource()
@@ -57,7 +71,7 @@ public class KotlinProject implements Project {
 
         @Override
         public String getName() {
-            return getProjectDirectory().getName();
+            return helper.getProjectDirectory().getName();
         }
 
         @Override
@@ -85,87 +99,6 @@ public class KotlinProject implements Project {
 
     }
 
-    class KotlinProjectLogicalView implements LogicalViewProvider {
-
-        @StaticResource()
-        public static final String KOTLIN_ICON = "org/black/kotlin/kotlin.png";
-
-        private final KotlinProject project;
-
-        public KotlinProjectLogicalView(KotlinProject project) {
-            this.project = project;
-        }
-
-        @Override
-        public Node createLogicalView() {
-            try {
-                FileObject projectDirectory = project.getProjectDirectory();
-                DataFolder projectFolder = DataFolder.findFolder(projectDirectory);
-                Node nodeOfProjectFolder = projectFolder.getNodeDelegate();
-                return new ProjectNode(nodeOfProjectFolder, project);
-            } catch (DataObjectNotFoundException donfe) {
-                Exceptions.printStackTrace(donfe);
-                return new AbstractNode(Children.LEAF);
-            }
-        }
-
-        private final class ProjectNode extends FilterNode {
-
-            final KotlinProject project;
-
-            public ProjectNode(Node node, KotlinProject project) throws DataObjectNotFoundException {
-                super(node,
-                         NodeFactorySupport.createCompositeChildren(
-                             project, "Projects/org-black-kotlin/Nodes"),
-                        //new FilterNode.Children(node),
-                        new ProxyLookup(
-                                new Lookup[]{
-                                    Lookups.singleton(project),
-                                    node.getLookup()
-                                }));
-                this.project = project;
-            }
-
-            @Override
-            public Action[] getActions(boolean arg0) {
-                return new Action[]{
-                    ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_BUILD,
-                    "Build Project", null),
-                    ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_CLEAN,
-                    "Clean Project", null),
-                    ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_REBUILD,
-                    "Rebuild Project", null),
-                    ProjectSensitiveActions.projectCommandAction(ActionProvider.COMMAND_RUN,
-                    "Run Project", null),
-                    CommonProjectActions.newFileAction(),
-                    CommonProjectActions.copyProjectAction(),
-                    CommonProjectActions.deleteProjectAction(),
-                    CommonProjectActions.closeProjectAction()
-                };
-            }
-
-            @Override
-            public Image getIcon(int type) {
-                return ImageUtilities.loadImage(KOTLIN_ICON);
-            }
-
-            @Override
-            public Image getOpenedIcon(int type) {
-                return getIcon(type);
-            }
-
-            @Override
-            public String getDisplayName() {
-                return project.getProjectDirectory().getName();
-            }
-        }
-
-        @Override
-        public Node findPath(Node node, Object o) {
-            return null;
-        }
-
-    }
 
     private final class ActionProviderImpl implements ActionProvider {
 
@@ -249,6 +182,8 @@ public class KotlinProject implements Project {
                             KotlinCompiler.INSTANCE.run(KotlinProject.this);
                             
                         } catch (IOException ex) {
+                            Exceptions.printStackTrace(ex);
+                        } catch (InterruptedException ex) {
                             Exceptions.printStackTrace(ex);
                         }
                     }
@@ -394,18 +329,25 @@ public class KotlinProject implements Project {
 
     }
 
-    private final FileObject projectDir;
-    private final ProjectState state;
+    
+    
+//    private final FileObject projectDir;
+//    private final ProjectState state;
     private Lookup lkp;
 
-    public KotlinProject(FileObject dir, ProjectState state) {
-        this.projectDir = dir;
-        this.state = state;
+//    public KotlinProject(FileObject dir, ProjectState state) {
+//        this.projectDir = dir;
+//        this.state = state;
+//    }
+    
+    public KotlinProject(AntProjectHelper helper) {
+        this.helper = helper;
     }
 
     @Override
     public FileObject getProjectDirectory() {
-        return projectDir;
+        //return projectDir;
+        return helper.getProjectDirectory();
     }
 
     @Override
@@ -417,6 +359,8 @@ public class KotlinProject implements Project {
                 new KotlinProjectLogicalView(this),
                 new KotlinSources(),
                 new ActionProviderImpl(),
+              //  new KotlinDependenciesProvider()
+//                LibraryManager.getDefault()
             });
         }
         return lkp;

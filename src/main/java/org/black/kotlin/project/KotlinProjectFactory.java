@@ -14,26 +14,24 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Александр
  */
 
-@ServiceProvider(service=ProjectFactory.class)
-public class KotlinProjectFactory implements ProjectFactory {
-
-    public static final String PROJECT_FILE = "kotlin.ktproj";
-    
-    @Override
-    public boolean isProject(FileObject projDir) {
-        return projDir.getFileObject(PROJECT_FILE) != null;
-    }
-
-    @Override
-    public Project loadProject(FileObject dir, ProjectState state) throws IOException {
-        return isProject(dir) ? new KotlinProject(dir,state) : null;
-    }
-
-    @Override
-    public void saveProject(Project prjct) throws IOException, ClassCastException {
-        throw new UnsupportedOperationException("Not supported yet."); 
-    }
-
-    
-    
+//@ServiceProvider(service=ProjectFactory.class)
+public class KotlinProjectFactory {//implements ProjectFactory {
+//
+//    public static final String PROJECT_FILE = "kotlin.ktproj";
+//    
+//    @Override
+//    public boolean isProject(FileObject projDir) {
+//        return projDir.getFileObject(PROJECT_FILE) != null;
+//    }
+//
+//    @Override
+//    public Project loadProject(FileObject dir, ProjectState state) throws IOException {
+//        return isProject(dir) ? new KotlinProject(dir,state) : null;
+//    }
+//
+//    @Override
+//    public void saveProject(Project prjct) throws IOException, ClassCastException {
+//        throw new UnsupportedOperationException("Not supported yet."); 
+//    }
+// 
 }

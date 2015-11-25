@@ -13,32 +13,35 @@ import org.openide.util.ImageUtilities;
  *
  * @author Александр
  */
-public class KotlinFilterNode extends FilterNode{
+public class SourceNode extends FilterNode{
         
-    private static Image smallImage =
-            ImageUtilities.loadImage("org/black/kotlin/kotlin.png");
+    private static Image img =
+            ImageUtilities.loadImage("org/black/kotlin/src_packages.png");
         
-    public KotlinFilterNode(Project proj) throws DataObjectNotFoundException {
-        super(DataObject.find(proj.getProjectDirectory().getFileObject("nbproject")).getNodeDelegate());
+    public SourceNode(Project proj) throws DataObjectNotFoundException {
+        super(DataObject.find(proj.getProjectDirectory().getFileObject("src")).getNodeDelegate());
     }
     
     @Override
     public String getDisplayName() {
-        return "Important Files";
+        return "Source Packages";
     }
     
     @Override
     public Image getIcon(int type) {
         DataFolder root = DataFolder.findFolder(FileUtil.getConfigRoot());
-        Image original = root.getNodeDelegate().getIcon(type);
-        return ImageUtilities.mergeImages(original, smallImage, 7, 7);
+//        Image original = root.getNodeDelegate().getIcon(type);
+        return img;
+//        return ImageUtilities.mergeImages(original, smallImage, 7, 7);
     }
 
     @Override
     public Image getOpenedIcon(int type) {
         DataFolder root = DataFolder.findFolder(FileUtil.getConfigRoot());
-        Image original = root.getNodeDelegate().getIcon(type);
-        return ImageUtilities.mergeImages(original, smallImage, 7, 7);
+//        Image original = root.getNodeDelegate().getIcon(type);
+        return img;
+//    return ImageUtilities.mergeImages(original, smallImage, 7, 7);
     }
     
 }
+

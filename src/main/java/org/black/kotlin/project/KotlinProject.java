@@ -14,6 +14,7 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.event.ChangeListener;
+import org.apache.tools.ant.module.api.support.ActionUtils;
 import org.black.kotlin.highlighter.netbeans.KotlinTokenId;
 import org.black.kotlin.run.KotlinCompiler;
 import org.black.kotlin.utils.ProjectUtils;
@@ -125,21 +126,7 @@ public class KotlinProject implements Project {
                 DefaultProjectOperations.performDefaultCopyOperation(KotlinProject.this);
             }
             if (string.equalsIgnoreCase(ActionProvider.COMMAND_BUILD)) {
-
-                Thread newThread = new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        try {
-                            KotlinCompiler.INSTANCE.compile(KotlinProject.this);
-                        } catch (IOException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                    }
-
-                });
-
-                newThread.start();
+                KotlinCompiler.INSTANCE.antBuild(KotlinProject.this);
             }
 
             if (string.equalsIgnoreCase(ActionProvider.COMMAND_CLEAN)) {
@@ -156,41 +143,20 @@ public class KotlinProject implements Project {
             }
 
             if (string.equalsIgnoreCase(ActionProvider.COMMAND_REBUILD)) {
-                Thread newThread = new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        try {
-                            ProjectUtils.clean(KotlinProject.this);
-                            KotlinCompiler.INSTANCE.compile(KotlinProject.this);
-                        } catch (IOException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                    }
-
-                });
-
-                newThread.start();
+                ProjectUtils.clean(KotlinProject.this);
+                KotlinCompiler.INSTANCE.antBuild(KotlinProject.this);
             }
             
             if (string.equalsIgnoreCase(ActionProvider.COMMAND_RUN)) {
-                Thread newThread = new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        try {
-                            KotlinCompiler.INSTANCE.run(KotlinProject.this);
-                            
-                        } catch (IOException ex) {
-                            Exceptions.printStackTrace(ex);
-                        } catch (InterruptedException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                    }
-
-                });
-
-                newThread.start();
+                
+                try {
+                    KotlinCompiler.INSTANCE.antRun(KotlinProject.this);
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (InterruptedException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                
             }
         }
 
@@ -364,6 +330,10 @@ public class KotlinProject implements Project {
             });
         }
         return lkp;
+    }
+    
+    public AntProjectHelper getHelper(){
+        return helper;
     }
 
 }

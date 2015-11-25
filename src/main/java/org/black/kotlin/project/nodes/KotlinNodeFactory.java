@@ -24,8 +24,9 @@ public class KotlinNodeFactory implements NodeFactory {
 //        assert p != null;
 //        return new KotlinNodeList(p);
         try{
-            KotlinFilterNode nd = new KotlinFilterNode(project);
-            return NodeFactorySupport.fixedNodeList(nd);
+            SourceNode srcNode = new SourceNode(project);
+            ImportantFilesNode nd = new ImportantFilesNode(project);
+            return NodeFactorySupport.fixedNodeList(srcNode,nd);
         } catch (DataObjectNotFoundException ex) {
             Exceptions.printStackTrace(ex);
         }

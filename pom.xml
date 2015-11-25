@@ -196,6 +196,12 @@
             <version>RELEASE802</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-apache-tools-ant-module</artifactId>
+            <version>RELEASE802</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

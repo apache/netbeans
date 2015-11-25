@@ -1,7 +1,5 @@
 package org.black.kotlin.run;
 
-import java.awt.Color;
-import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -12,8 +10,8 @@ import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import org.apache.tools.ant.module.api.support.ActionUtils;
 import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.project.KotlinProjectConstants;
 import org.black.kotlin.run.output.CompilerOutputData;
@@ -36,11 +34,10 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.windows.IOColorLines;
+import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
-import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 
 /**
  *
@@ -54,17 +51,36 @@ public class KotlinCompiler {
     private KotlinCompiler() {
     }
 
+    public void antBuild(KotlinProject proj) {
+        try {
+            ProjectUtils.getOutputDir(proj);
+            FileObject buildImpl = proj.getHelper().getProjectDirectory().getFileObject("build.xml");
+            ActionUtils.runTarget(buildImpl, new String[]{"build"}, null);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
+    public void antRun(KotlinProject proj) throws IOException, InterruptedException {
+        try {
+            FileObject buildImpl = proj.getHelper().getProjectDirectory().getFileObject("build.xml");
+            ActionUtils.runTarget(buildImpl, new String[]{"run"}, null);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
     public void run(KotlinProject proj) throws IOException, InterruptedException {
         compile(proj);
-        
+
         File jar = new File(proj.getProjectDirectory().getFileObject("build").getPath()
-                + "/" );
-        Process runProcess = Runtime.getRuntime().exec("java -jar "+ proj.getProjectDirectory().getName() + ".jar", null, jar);
+                + "/");
+        Process runProcess = Runtime.getRuntime().exec("java -jar " + proj.getProjectDirectory().getName() + ".jar", null, jar);
         runProcess.waitFor();
-        
+
         InputStream in = runProcess.getInputStream();
         InputStream err = runProcess.getErrorStream();
-        
+
         InputStreamReader inReader = new InputStreamReader(in);
         InputStreamReader errReader = new InputStreamReader(err);
         BufferedReader inBR = new BufferedReader(inReader);
@@ -80,7 +96,7 @@ public class KotlinCompiler {
         while ((line = errBR.readLine()) != null) {
             io.getErr().println(line);
         }
-        
+
         io.getOut().close();
         io.getErr().close();
     }
@@ -90,7 +106,6 @@ public class KotlinCompiler {
         InputOutput io = IOProvider.getDefault().getIO("Build (" + proj.getProjectDirectory().getName() + ")", false);
 
         io.select();
-//        IOColorLines.println(io, "Build process started", Color.GREEN);
         io.getOut().println("Build process started");
 
         output = execCompiler(configureArguments(proj));
@@ -114,9 +129,10 @@ public class KotlinCompiler {
 
         args.add("-kotlin-home");
         args.add(ProjectUtils.KT_HOME);
-        args.add("-no-jdk");
-        args.add("-no-stdlib");
-//        args.add(ProjectUtils.findMain(proj.getProjectDirectory().getChildren()));
+
+        args.add("-include-runtime");
+//        args.add("-no-jdk");
+//        args.add("-no-stdlib");
 
         Sources sources = org.netbeans.api.project.ProjectUtils.getSources(proj);
 
@@ -126,9 +142,9 @@ public class KotlinCompiler {
         for (String cp : ProjectUtils.getClasspath()) {
             classPath.append(cp).append(pathSeparator);
         }
-
-        args.add("-classpath");
-        args.add(classPath.toString());
+//        
+//        args.add("-classpath");
+//        args.add(classPath.toString());
 
         args.add("-d");
         args.add(ProjectUtils.getOutputDir(proj));
@@ -136,6 +152,8 @@ public class KotlinCompiler {
         for (SourceGroup srcGrp : sources.getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE.toString())) {
             args.add(srcGrp.getName());
         }
+
+        DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(args.toString()));
 
         return args.toArray(new String[args.size()]);
     }

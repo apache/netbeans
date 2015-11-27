@@ -54,9 +54,9 @@ public class KotlinTokenScanner {
         kotlinTokensFactory = new KotlinTokensFactory();
         this.input = input;
         createSyntaxFile();
-//        readSyntaxFile();
         try {
             ktFile = parseFile(syntaxFile);
+            deleteSyntaxFile();
             this.rangeEnd = (int) syntaxFile.length();
             createListOfKotlinTokens();
         } catch (IOException ex) {
@@ -109,7 +109,8 @@ public class KotlinTokenScanner {
     }
     
     public void deleteSyntaxFile(){
-        syntaxFile.delete();
+        if (syntaxFile != null)
+            syntaxFile.deleteOnExit();
     }
     
     private void createListOfKotlinTokens() {

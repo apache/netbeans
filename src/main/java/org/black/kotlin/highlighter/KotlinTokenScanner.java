@@ -133,7 +133,7 @@ public class KotlinTokenScanner {
                 TokenType tokenType = kotlinTokensFactory.getToken(lastElement);
 
                 kotlinTokens.add(new KotlinToken(
-                        new KotlinTokenId(tokenType.name(), tokenType.name(), tokenType.getId(tokenType)),
+                        new KotlinTokenId(tokenType.name(), tokenType.name(), tokenType.getId()),
                         lastElement.getText(), lastElement.getTextOffset(),
                         tokenType));
                 tokensNumber = kotlinTokens.size();

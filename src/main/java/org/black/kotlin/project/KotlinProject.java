@@ -29,7 +29,9 @@ import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.support.ant.AntBasedProjectRegistration;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.netbeans.spi.project.support.ant.ReferenceHelper;
+import org.netbeans.spi.project.support.ant.SourcesHelper;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
+import org.netbeans.spi.project.ui.PrivilegedTemplates;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
@@ -64,6 +66,7 @@ import org.openide.util.lookup.ProxyLookup;
 public class KotlinProject implements Project {
 
     final AntProjectHelper helper;
+    private final SourcesHelper sourcesHelper; 
     
     private final class Info implements ProjectInformation {
 
@@ -182,7 +185,7 @@ public class KotlinProject implements Project {
     }
 
     private final class KotlinSources implements Sources {
-
+        
         private void findSrc(FileObject fo, Collection<FileObject> files, KotlinProjectConstants type ) {
             if (fo.isFolder()) {
                 for (FileObject file : fo.getChildren()) {
@@ -218,7 +221,7 @@ public class KotlinProject implements Project {
         @Override
         public SourceGroup[] getSourceGroups(String string) {
             List<SourceGroup> srcGroups = new ArrayList();
-            
+            srcGroups.add(new KotlinSourceGroup(KotlinProject.this.getProjectDirectory().getFileObject("src")));
             if (string.equals(KotlinProjectConstants.FOLDER.toString())){
                 
             } else if (string.equals(KotlinProjectConstants.JAR.toString())){
@@ -294,25 +297,30 @@ public class KotlinProject implements Project {
         }
 
     }
+    
+    private final class KotlinPrivilegedTemplates implements PrivilegedTemplates{
 
+    private final String[] PRIVILEGED_NAMES = new String[] {
+        "Templates/Classes/Class.java",
+        "Templates/Classes/Interface.java",
+        "text/x-kt"
+    };
+
+    public String[] getPrivilegedTemplates() {
+        return PRIVILEGED_NAMES;
+    }
+        
+    }
     
-    
-//    private final FileObject projectDir;
-//    private final ProjectState state;
     private Lookup lkp;
 
-//    public KotlinProject(FileObject dir, ProjectState state) {
-//        this.projectDir = dir;
-//        this.state = state;
-//    }
-    
     public KotlinProject(AntProjectHelper helper) {
         this.helper = helper;
+        sourcesHelper = new SourcesHelper(this,helper,helper.getStandardPropertyEvaluator());
     }
 
     @Override
     public FileObject getProjectDirectory() {
-        //return projectDir;
         return helper.getProjectDirectory();
     }
 
@@ -325,8 +333,7 @@ public class KotlinProject implements Project {
                 new KotlinProjectLogicalView(this),
                 new KotlinSources(),
                 new ActionProviderImpl(),
-              //  new KotlinDependenciesProvider()
-//                LibraryManager.getDefault()
+                new KotlinPrivilegedTemplates()
             });
         }
         return lkp;

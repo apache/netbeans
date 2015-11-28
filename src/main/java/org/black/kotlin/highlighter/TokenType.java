@@ -10,8 +10,8 @@ public enum TokenType{
     MULTI_LINE_COMMENT, KDOC_TAG_NAME, WHITESPACE,
     UNDEFINED, EOF;
     
-    public int getId(TokenType type){
-        switch(type){
+    public int getId(){
+        switch(this){
             case KEYWORD:
                 return 0;
             case IDENTIFIER:

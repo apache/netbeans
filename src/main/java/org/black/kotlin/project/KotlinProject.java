@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 import org.apache.tools.ant.module.api.support.ActionUtils;
 import org.black.kotlin.highlighter.netbeans.KotlinTokenId;
@@ -24,6 +25,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.api.project.libraries.LibraryChooser;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.support.ant.AntBasedProjectRegistration;
@@ -317,6 +319,12 @@ public class KotlinProject implements Project {
     public KotlinProject(AntProjectHelper helper) {
         this.helper = helper;
         sourcesHelper = new SourcesHelper(this,helper,helper.getStandardPropertyEvaluator());
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                KotlinProject.this.helper.setLibrariesLocation(KotlinProject.this.getProjectDirectory().getPath()+"/lib");
+            }
+        });
+    
     }
 
     @Override

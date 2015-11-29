@@ -50,6 +50,54 @@ public class ProjectUtils {
         return null;
     }
 
+        public static String findMainName(FileObject[] files) throws FileNotFoundException, IOException {
+        for (FileObject file : files) {
+            if (!file.isFolder()) {
+                for (String line : file.asLines()) {
+                    if (line.contains("fun main(")) {
+                        return file.getName();
+                    }
+                }
+            } else {
+                String main = findMainName(file.getChildren());
+                if (main != null) {
+                    return main;
+                }
+            }
+        }
+
+        return null;
+    }
+    
+    public static String getMainFileClass(FileObject[] files) throws IOException{
+        String name = findMainName(files);
+        String path = findMain(files);
+        String[] splitPath = path.split("/src/");//File.separator+"src"+File.separator);
+        String packagesWithKtFile = splitPath[1];
+        String[] packages = packagesWithKtFile.split("/");//File.separator);
+        
+        StringBuilder builder = new StringBuilder("");
+        
+        for (int i = 0; i < packages.length-1;i++){
+            builder.append(packages[i]);
+            builder.append(".");
+        }
+        
+        if (name != null){
+            char firstCharUpperCase = Character.toUpperCase(name.charAt(0));
+            StringBuilder mainFileClass = new StringBuilder("");
+            mainFileClass.append(firstCharUpperCase);
+            for (int i = 1; i < name.length();i++){
+                mainFileClass.append(name.charAt(i));
+            }
+            mainFileClass.append("Kt");
+            builder.append(mainFileClass.toString());
+            return builder.toString();
+        }
+
+        return null;
+    }
+    
     public static String getOutputDir(KotlinProject proj) {
         
         File path = new File(proj.getProjectDirectory().getPath() + "/build");
@@ -94,7 +142,15 @@ public class ProjectUtils {
         return classpath;
     }
 
-    
+    public static List<String> getLibs(KotlinProject proj){
+        List<String> libs = new ArrayList();
+        FileObject libFolder = proj.getProjectDirectory().getFileObject("lib");
+        for (FileObject fo : libFolder.getChildren()){
+            if (fo.hasExt("jar"))
+                libs.add(fo.getNameExt());
+        }
+        return libs;
+    }
 
     @Nullable
     public static String getPackageByFile(FileObject file) {

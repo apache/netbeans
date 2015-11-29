@@ -1,8 +1,14 @@
 package org.black.kotlin.utils;
 
+import com.google.common.io.Files;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JEditorPane;
@@ -72,16 +78,16 @@ public class ProjectUtils {
     public static String getMainFileClass(FileObject[] files) throws IOException{
         String name = findMainName(files);
         String path = findMain(files);
-        String[] splitPath = path.split("/src/");//File.separator+"src"+File.separator);
-        String packagesWithKtFile = splitPath[1];
-        String[] packages = packagesWithKtFile.split("/");//File.separator);
+
+        InputStream is = new FileInputStream(path);
+        BufferedReader br = new BufferedReader(new InputStreamReader(is,Charset.forName("UTF-8")));
+        String beginning = br.readLine().split(" ")[1].split(";")[0];
+        is.close();
         
         StringBuilder builder = new StringBuilder("");
         
-        for (int i = 0; i < packages.length-1;i++){
-            builder.append(packages[i]);
-            builder.append(".");
-        }
+        builder.append(beginning).append(".");
+        
         
         if (name != null){
             char firstCharUpperCase = Character.toUpperCase(name.charAt(0));

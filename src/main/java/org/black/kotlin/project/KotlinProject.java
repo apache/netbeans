@@ -21,11 +21,15 @@ import org.black.kotlin.run.KotlinCompiler;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.libraries.LibraryChooser;
+import org.netbeans.spi.java.classpath.ClassPathProvider;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.support.ant.AntBasedProjectRegistration;
@@ -55,7 +59,7 @@ import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
- * @author Александр
+ * @author РђР»РµРєСЃР°РЅРґСЂ
  */
 
 
@@ -69,6 +73,7 @@ public class KotlinProject implements Project {
 
     final AntProjectHelper helper;
     private final SourcesHelper sourcesHelper; 
+    private final GlobalPathRegistry pathRegistry = GlobalPathRegistry.getDefault();
     
     private final class Info implements ProjectInformation {
 
@@ -186,7 +191,7 @@ public class KotlinProject implements Project {
 
     }
 
-    private final class KotlinSources implements Sources {
+    public final class KotlinSources implements Sources {
         
         private void findSrc(FileObject fo, Collection<FileObject> files, KotlinProjectConstants type ) {
             if (fo.isFolder()) {
@@ -280,7 +285,7 @@ public class KotlinProject implements Project {
 
             @Override
             public Icon getIcon(boolean bln) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                return new ImageIcon("org/black/kotlinkt.png");
             }
 
             @Override
@@ -300,11 +305,24 @@ public class KotlinProject implements Project {
 
     }
     
+    public final class KotlinClasspathProvider implements ClassPathProvider{
+
+        @Override
+        public ClassPath findClassPath(FileObject fo, String string) {
+            if (!fo.isFolder())
+                return null;
+            else
+                return ClassPathSupport.createClassPath(fo);
+        }
+        
+    }
+    
     private final class KotlinPrivilegedTemplates implements PrivilegedTemplates{
 
     private final String[] PRIVILEGED_NAMES = new String[] {
         "Templates/Classes/Class.java",
         "Templates/Classes/Interface.java",
+        "Templates/Classes/Package",
         "text/x-kt"
     };
 
@@ -341,7 +359,9 @@ public class KotlinProject implements Project {
                 new KotlinProjectLogicalView(this),
                 new KotlinSources(),
                 new ActionProviderImpl(),
-                new KotlinPrivilegedTemplates()
+                new KotlinPrivilegedTemplates(),
+                new KotlinClasspathProvider(),
+                new KotlinProjectOpenedHook(this)
             });
         }
         return lkp;
@@ -351,4 +371,8 @@ public class KotlinProject implements Project {
         return helper;
     }
 
+    public GlobalPathRegistry getPathRegistry(){
+        return pathRegistry;
+    } 
+    
 }

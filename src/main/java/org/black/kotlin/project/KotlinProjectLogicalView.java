@@ -3,6 +3,9 @@ package org.black.kotlin.project;
 import java.awt.Image;
 import javax.swing.Action;
 import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
+import org.netbeans.spi.java.project.support.ui.PackageView;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
@@ -38,6 +41,12 @@ public class KotlinProjectLogicalView implements LogicalViewProvider {
         @Override
         public Node createLogicalView() {
             try {
+//                Sources sources = (Sources) project.getLookup().lookup(Sources.class);
+//                SourceGroup[] groups = sources.getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE.toString());
+//                for (SourceGroup gr : groups){
+//                    PackageView.createPackageView(gr);
+//                }
+                //PackageView.createPackageView({sources.getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE.toString()));
                 FileObject projectDirectory = project.getProjectDirectory();
                 DataFolder projectFolder = DataFolder.findFolder(projectDirectory);
                 Node nodeOfProjectFolder = projectFolder.getNodeDelegate();

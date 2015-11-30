@@ -53,7 +53,6 @@ public class NBAnalyzerFacadeForJVM {
 //        if (filesSet.size != filesToAnalyze.size) {
 //            KotlinLogger.logWarning("Analyzed files have duplicates")
 //        }
-        
 //        val allFiles = LinkedHashSet<KtFile>(filesSet)
 //        
 //        
@@ -67,12 +66,11 @@ public class NBAnalyzerFacadeForJVM {
 //        }
 //        
         MutableModuleContext moduleContext = TopDownAnalyzerFacadeForJVM.createContextWithSealedModule((com.intellij.openapi.project.Project) project, project.toString());
-        FileBasedDeclarationProviderFactory providerFactory = new FileBasedDeclarationProviderFactory(moduleContext.getStorageManager(), allFiles);
-       // val moduleContext = TopDownAnalyzerFacadeForJVM.createContextWithSealedModule(project, project.getName())
-        //val providerFactory = FileBasedDeclarationProviderFactory(moduleContext.storageManager, allFiles)
+     
         BindingTrace trace = new CliLightClassGenerationSupport.NoScopeRecordCliBindingTrace();
         
-        return TopDownAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegrationNoIncremental(
+        return TopDownAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegrationNoIncremental
+        (
                 moduleContext,
                 allFiles,
                 trace,

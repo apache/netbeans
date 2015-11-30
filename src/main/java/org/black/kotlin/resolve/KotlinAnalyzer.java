@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.jetbrains.annotations.NotNull;
-//import org.jetbrains.kotlin.core.model.KotlinAnalysisFileCache;
+///import org.jetbrains.kotlin.core.model.KotlinAnalysisFileCache;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.analyzer.AnalysisResult;
 
@@ -20,7 +20,8 @@ public class KotlinAnalyzer {
     
     @NotNull
     private static AnalysisResult analyzeFiles(@NotNull Project javaProject, @NotNull KotlinEnvironment kotlinEnvironment, 
-            @NotNull Collection<KtFile> filesToAnalyze) {
+            @NotNull Collection<KtFile> filesToAnalyze) 
+    {
         return NBAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration(
                 javaProject, 
                 //kotlinEnvironment.getProject(), 

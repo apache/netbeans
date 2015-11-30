@@ -23,6 +23,17 @@ public class KotlinCompiler {
     private KotlinCompiler() {
     }
 
+    public void antCompile(KotlinProject proj){
+        try {
+            makeBuildXml(proj);
+            ProjectUtils.getOutputDir(proj);
+            FileObject buildImpl = proj.getHelper().getProjectDirectory().getFileObject("build.xml");
+            ActionUtils.runTarget(buildImpl, new String[]{"compile"}, null);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+    
     public void antBuild(KotlinProject proj) {
         try {
             makeBuildXml(proj);
@@ -55,7 +66,7 @@ public class KotlinCompiler {
                 + "\n"
                 + "    <typedef resource=\"org/jetbrains/kotlin/ant/antlib.xml\" classpath=\"${kotlin.lib}/kotlin-ant.jar\"/>\n"
                 + "\n"
-                + "    <target name=\"build\">\n"
+                + "    <target name=\"compile\">\n"
                 + "        <delete dir=\"${build.dir}/classes\" failonerror=\"false\"/>\n"
                 + "        <mkdir dir=\"${build.dir}/classes\"/>\n"
                 + "        <javac destdir=\"${build.dir}/classes\" includeAntRuntime=\"false\" srcdir=\"src\">\n"
@@ -68,6 +79,9 @@ public class KotlinCompiler {
         build.append("</classpath>                \n"
                 + "		<withKotlin/>\n"
                 + "        </javac>\n"
+                + "</target>\n"
+                + "\n"
+                + "    <target name=\"build\" depends=\"compile\">"
                 + "        <jar destfile=\"${build.dir}/${ant.project.name}.jar\">\n"
                 + "    	    <zipgroupfileset dir=\"${kotlin.lib}\" includes=\"kotlin-runtime.jar\" />");
         build.append("<zipgroupfileset dir=\"lib\" includes=\"*.jar\" />\n"

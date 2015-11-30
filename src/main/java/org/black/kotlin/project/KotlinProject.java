@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
+import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.SourceGroup;
@@ -230,7 +231,7 @@ public class KotlinProject implements Project {
             List<SourceGroup> srcGroups = new ArrayList();
             srcGroups.add(new KotlinSourceGroup(KotlinProject.this.getProjectDirectory().getFileObject("src")));
             if (string.equals(KotlinProjectConstants.FOLDER.toString())){
-                
+            
             } else if (string.equals(KotlinProjectConstants.JAR.toString())){
                 List<FileObject> src = getSrcDirectories(KotlinProjectConstants.JAR);
                 for (FileObject srcFolder : src){
@@ -342,7 +343,8 @@ public class KotlinProject implements Project {
                 KotlinProject.this.helper.setLibrariesLocation(KotlinProject.this.getProjectDirectory().getPath()+"/lib");
             }
         });
-    
+        sourcesHelper.sourceRoot(KotlinProject.this.getProjectDirectory().getFileObject("src").getPath()).add().type("java").add();
+        sourcesHelper.createSources();
     }
 
     @Override
@@ -361,7 +363,8 @@ public class KotlinProject implements Project {
                 new ActionProviderImpl(),
                 new KotlinPrivilegedTemplates(),
                 new KotlinClasspathProvider(),
-                new KotlinProjectOpenedHook(this)
+                new KotlinProjectOpenedHook(this),
+                sourcesHelper.createSourceGroupModifierImplementation()
             });
         }
         return lkp;

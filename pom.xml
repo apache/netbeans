@@ -218,6 +218,11 @@
             <artifactId>org-netbeans-libs-javacapi</artifactId>
             <version>RELEASE802</version>
         </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-execution</artifactId>
+            <version>RELEASE802</version>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

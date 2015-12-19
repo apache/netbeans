@@ -1,5 +1,6 @@
 package org.black.kotlin.highlighter.netbeans;
 
+import org.black.kotlin.language.KotlinLanguageHierarchy;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenId;
 

@@ -2,8 +2,6 @@ package org.black.kotlin.project.nodes;
 
 import java.awt.Image;
 import org.netbeans.api.project.Project;
-import org.openide.filesystems.FileUtil;
-import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.FilterNode;
@@ -15,7 +13,7 @@ import org.openide.util.ImageUtilities;
  */
 public class SourceNode extends FilterNode{
         
-    private static Image img =
+    private final static Image IMG =
             ImageUtilities.loadImage("org/black/kotlin/src_packages.png");
         
     public SourceNode(Project proj) throws DataObjectNotFoundException {
@@ -29,18 +27,12 @@ public class SourceNode extends FilterNode{
     
     @Override
     public Image getIcon(int type) {
-        DataFolder root = DataFolder.findFolder(FileUtil.getConfigRoot());
-//        Image original = root.getNodeDelegate().getIcon(type);
-        return img;
-//        return ImageUtilities.mergeImages(original, smallImage, 7, 7);
+        return IMG;
     }
 
     @Override
     public Image getOpenedIcon(int type) {
-        DataFolder root = DataFolder.findFolder(FileUtil.getConfigRoot());
-//        Image original = root.getNodeDelegate().getIcon(type);
-        return img;
-//    return ImageUtilities.mergeImages(original, smallImage, 7, 7);
+        return IMG;
     }
     
 }

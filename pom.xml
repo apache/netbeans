@@ -10,7 +10,7 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <version>1.0.0-beta-1103</version>
+                <version>1.0.0-beta-2423</version>
 
                 <executions>
                     <execution>
@@ -61,7 +61,7 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-maven-plugin</artifactId>
-            <version>1.0.0-beta-1103</version>
+            <version>1.0.0-beta-2423</version>
             <type>jar</type>
         </dependency>
         
@@ -177,7 +177,7 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-compiler</artifactId>
-            <version>1.0.0-beta-1103</version>
+            <version>1.0.0-beta-2423</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -221,6 +221,16 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-execution</artifactId>
+            <version>RELEASE802</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-parsing-api</artifactId>
+            <version>RELEASE802</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-spi-editor-hints</artifactId>
             <version>RELEASE802</version>
         </dependency>
     </dependencies>

@@ -1,4 +1,4 @@
-package org.black.kotlin.diagnostics.indentation;
+package org.black.kotlin.diagnostics.netbeans.indentation;
 
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.editor.indent.spi.Context;

@@ -7,8 +7,6 @@ import java.util.List;
 import org.apache.tools.ant.module.api.support.ActionUtils;
 import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.utils.ProjectUtils;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -67,7 +65,7 @@ public class KotlinCompiler {
                 + "    <typedef resource=\"org/jetbrains/kotlin/ant/antlib.xml\" classpath=\"${kotlin.lib}/kotlin-ant.jar\"/>\n"
                 + "\n"
                 + "    <target name=\"compile\">\n"
-                + "        <delete dir=\"${build.dir}/classes\" failonerror=\"false\"/>\n"
+               // + "        <delete dir=\"${build.dir}/classes\" failonerror=\"false\"/>\n"
                 + "        <mkdir dir=\"${build.dir}/classes\"/>\n"
                 + "        <javac destdir=\"${build.dir}/classes\" includeAntRuntime=\"false\" srcdir=\"src\">\n"
                 + "		    <classpath>");
@@ -107,7 +105,6 @@ public class KotlinCompiler {
 
         buildXml.createNewFile();
         PrintWriter writer = new PrintWriter(buildXml);
-        // PrintWriter writer = new PrintWriter(proj.getProjectDirectory().getPath() + "/nbproject/build2.xml", "UTF-8");
         writer.print(build.toString());
         writer.close();
     }

@@ -2,66 +2,42 @@ package org.black.kotlin.project;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import java.awt.Image;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
-import org.apache.tools.ant.module.api.support.ActionUtils;
-import org.black.kotlin.highlighter.netbeans.KotlinTokenId;
 import org.black.kotlin.run.KotlinCompiler;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
-import org.netbeans.api.java.project.JavaProjectConstants;
+import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
-import org.netbeans.api.project.libraries.LibraryChooser;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation;
 import org.netbeans.spi.project.ActionProvider;
-import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.support.ant.AntBasedProjectRegistration;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
-import org.netbeans.spi.project.support.ant.ReferenceHelper;
 import org.netbeans.spi.project.support.ant.SourcesHelper;
-import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
-import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
-import org.netbeans.spi.project.ui.support.NodeFactorySupport;
-import org.netbeans.spi.project.ui.support.ProjectSensitiveActions;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
-import org.openide.loaders.DataFolder;
-import org.openide.loaders.DataObjectNotFoundException;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
-import org.openide.nodes.FilterNode;
-import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
-import org.openide.util.lookup.ProxyLookup;
-
-/**
- *
- * @author РђР»РµРєСЃР°РЅРґСЂ
- */
 
 
 @AntBasedProjectRegistration(type = "org.black.kotlin.project.KotlinProject",
@@ -200,19 +176,22 @@ public class KotlinProject implements Project {
                     findSrc(file, files, type);
                 }
             } else {
-                if (type == KotlinProjectConstants.KOTLIN_SOURCE){
-                    if (fo.hasExt("kt")) {
-                        files.add(fo.getParent());
-                    }
-                } else if (type == KotlinProjectConstants.JAVA_SOURCE){
-                    if (fo.hasExt("java")) {
-                        files.add(fo.getParent());
-                    }
-                } else if (type == KotlinProjectConstants.JAR){
-                    if (fo.hasExt("jar")) {
-                        if (!fo.getParent().getName().equals("build"))
+                if (null != type)switch (type) {
+                    case KOTLIN_SOURCE:
+                        if (fo.hasExt("kt")) {
                             files.add(fo.getParent());
-                    }
+                        }   break;
+                    case JAVA_SOURCE:
+                        if (fo.hasExt("java")) {
+                            files.add(fo.getParent());
+                        }   break;
+                    case JAR:
+                        if (fo.hasExt("jar")) {
+                            if (!fo.getParent().getName().equals("build"))
+                                files.add(fo.getParent());
+                        }   break;
+                    default:
+                        break;
                 }
             }
         }
@@ -262,7 +241,7 @@ public class KotlinProject implements Project {
 
         class KotlinSourceGroup implements SourceGroup {
 
-            private FileObject root;
+            private final FileObject root;
 
             public KotlinSourceGroup(FileObject root) {
                 this.root = root;
@@ -317,21 +296,39 @@ public class KotlinProject implements Project {
         }
         
     }
-    
-    private final class KotlinPrivilegedTemplates implements PrivilegedTemplates{
-
-    private final String[] PRIVILEGED_NAMES = new String[] {
-        "Templates/Classes/Class.java",
-        "Templates/Classes/Interface.java",
-        "Templates/Classes/Package",
-        "text/x-kt"
-    };
-
-    public String[] getPrivilegedTemplates() {
-        return PRIVILEGED_NAMES;
-    }
         
-    }
+    private final class KotlinSourceForBinaryQueryImplementation 
+            implements SourceForBinaryQueryImplementation{
+        
+        KotlinSourceForBinaryQueryResult res = new KotlinSourceForBinaryQueryResult();
+
+        @Override
+        public SourceForBinaryQuery.Result findSourceRoots(URL binaryRoot) {
+            return res;
+        }
+        
+        private final class KotlinSourceForBinaryQueryResult 
+            implements SourceForBinaryQuery.Result{
+
+            private FileObject root = KotlinProject.this.getProjectDirectory().getFileObject("src");
+            private FileObject[] roots = new FileObject[]{root};
+            
+            @Override
+            public FileObject[] getRoots() {
+                return roots;
+            }
+
+            @Override
+            public void addChangeListener(ChangeListener l) {
+            }
+
+            @Override
+            public void removeChangeListener(ChangeListener l) {
+            }
+            
+        } 
+    
+}
     
     private Lookup lkp;
 
@@ -339,11 +336,12 @@ public class KotlinProject implements Project {
         this.helper = helper;
         sourcesHelper = new SourcesHelper(this,helper,helper.getStandardPropertyEvaluator());
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 KotlinProject.this.helper.setLibrariesLocation(KotlinProject.this.getProjectDirectory().getPath()+"/lib");
             }
         });
-        sourcesHelper.sourceRoot(KotlinProject.this.getProjectDirectory().getFileObject("src").getPath()).add().type("java").add();
+        sourcesHelper.sourceRoot(KotlinProject.this.getProjectDirectory().getFileObject("src").getPath());
         sourcesHelper.createSources();
     }
 
@@ -361,9 +359,8 @@ public class KotlinProject implements Project {
                 new KotlinProjectLogicalView(this),
                 new KotlinSources(),
                 new ActionProviderImpl(),
-                new KotlinPrivilegedTemplates(),
-                new KotlinClasspathProvider(),
-                new KotlinProjectOpenedHook(this),
+            //    new KotlinPrivilegedTemplates(),
+            //    new KotlinProjectOpenedHook(this),
                 sourcesHelper.createSourceGroupModifierImplementation()
             });
         }

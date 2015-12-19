@@ -5,7 +5,6 @@ import javax.swing.Action;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
-import org.netbeans.spi.java.project.support.ui.PackageView;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
@@ -41,12 +40,6 @@ public class KotlinProjectLogicalView implements LogicalViewProvider {
         @Override
         public Node createLogicalView() {
             try {
-//                Sources sources = (Sources) project.getLookup().lookup(Sources.class);
-//                SourceGroup[] groups = sources.getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE.toString());
-//                for (SourceGroup gr : groups){
-//                    PackageView.createPackageView(gr);
-//                }
-                //PackageView.createPackageView({sources.getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE.toString()));
                 FileObject projectDirectory = project.getProjectDirectory();
                 DataFolder projectFolder = DataFolder.findFolder(projectDirectory);
                 Node nodeOfProjectFolder = projectFolder.getNodeDelegate();
@@ -57,15 +50,14 @@ public class KotlinProjectLogicalView implements LogicalViewProvider {
             }
         }
 
-        private final class ProjectNode extends AbstractNode { //FilterNode {
+        private final class ProjectNode extends AbstractNode { 
 
             final KotlinProject project;
 
             public ProjectNode(Node node, KotlinProject project) throws DataObjectNotFoundException {
-                super(//node,
+                super(
                          NodeFactorySupport.createCompositeChildren(
                              project, "Projects/org-black-kotlin/Nodes"),
-                        //new FilterNode.Children(node),
                         new ProxyLookup(
                                 new Lookup[]{
                                     Lookups.singleton(project),

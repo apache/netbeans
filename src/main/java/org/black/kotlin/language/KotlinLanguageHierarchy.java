@@ -1,4 +1,4 @@
-package org.black.kotlin.highlighter.netbeans;
+package org.black.kotlin.language;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,6 +10,8 @@ import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 
 import org.black.kotlin.highlighter.TokenType;
+import org.black.kotlin.highlighter.netbeans.KotlinLexerProxy;
+import org.black.kotlin.highlighter.netbeans.KotlinTokenId;
 
 /**
  *
@@ -37,7 +39,7 @@ public class KotlinLanguageHierarchy extends LanguageHierarchy<KotlinTokenId> {
         }
     }
 
-    static synchronized KotlinTokenId getToken(int id) {
+    public static synchronized KotlinTokenId getToken(int id) {
         if (idToToken == null) {
             init();
         }

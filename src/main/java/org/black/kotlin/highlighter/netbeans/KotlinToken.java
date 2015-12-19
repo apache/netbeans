@@ -14,9 +14,9 @@ public class KotlinToken<T extends TokenId>{
 
     private final T val;
     private final KotlinTokenId kotlinTokenId;
-    private String text;
-    private int offset;
-    private TokenType type;
+    private final String text;
+    private final int offset;
+    private final TokenType type;
 
     public KotlinToken(T val, String text, int offset, TokenType type){
         

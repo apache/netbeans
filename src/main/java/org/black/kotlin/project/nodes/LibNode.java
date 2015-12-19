@@ -1,29 +1,18 @@
 package org.black.kotlin.project.nodes;
 
 import com.google.common.io.Files;
-import java.awt.Event;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.StandardCopyOption;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.utils.ProjectUtils;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ant.AntBuildExtender;
-import org.netbeans.api.project.libraries.Library;
-import org.netbeans.api.project.libraries.LibraryManager;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.FilterNode;
@@ -36,10 +25,10 @@ import org.openide.util.ImageUtilities;
  */
 public class LibNode extends FilterNode{
         
-    private static Image img =
+    private final static Image IMG =
             ImageUtilities.loadImage("org/black/kotlin/lib.png");
         
-    private Project project;
+    private final Project project;
     
     public LibNode(Project proj) throws DataObjectNotFoundException {
         super(DataObject.find(proj.getProjectDirectory().getFileObject("lib")).getNodeDelegate());
@@ -53,18 +42,12 @@ public class LibNode extends FilterNode{
     
     @Override
     public Image getIcon(int type) {
-        DataFolder root = DataFolder.findFolder(FileUtil.getConfigRoot());
-//        Image original = root.getNodeDelegate().getIcon(type);
-        return img;
-//        return ImageUtilities.mergeImages(original, smallImage, 7, 7);
+        return IMG;
     }
 
     @Override
     public Image getOpenedIcon(int type) {
-        DataFolder root = DataFolder.findFolder(FileUtil.getConfigRoot());
-//        Image original = root.getNodeDelegate().getIcon(type);
-        return img;
-//    return ImageUtilities.mergeImages(original, smallImage, 7, 7);
+        return IMG;
     }
     
     @Override
@@ -73,22 +56,12 @@ public class LibNode extends FilterNode{
     }
     
     private class AddJarAction extends AbstractAction {
-
         public AddJarAction() {
-            putValue (NAME, "Add .JAR");
+            putValue(NAME,"Add .JAR");
         }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        
-//            try {
-//                DialogDisplayer.getDefault().notify(new NotifyDescriptor.
-//                        Message(ProjectUtils.getMainFileClass(project.getProjectDirectory().getChildren())));
-//            } catch (IOException ex) {
-//                Exceptions.printStackTrace(ex);
-//            }
-
-        
         JFileChooser fileChooser = new JFileChooser();
         FileFilter filter = new FileNameExtensionFilter("jar","JAR","jar");
         fileChooser.setAcceptAllFileFilterUsed(false);
@@ -97,7 +70,7 @@ public class LibNode extends FilterNode{
         if (ret == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             FileObject libDir = project.getProjectDirectory().getFileObject("lib");
-            String dest = libDir.getPath() + "\\" + file.getName();
+            String dest = libDir.getPath() + ProjectUtils.FILE_SEPARATOR + file.getName();
             File destFile = new File(dest);
             if (!destFile.exists()){
                 try {

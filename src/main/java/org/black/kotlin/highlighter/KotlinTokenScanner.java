@@ -32,24 +32,24 @@ import org.netbeans.spi.lexer.LexerInput;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
+
 /**
  *
  * @author Александр
  */
-public class KotlinTokenScanner {
+public final class KotlinTokenScanner {
 
     private final KotlinTokensFactory kotlinTokensFactory;
 
     private KtFile ktFile = null;
     private File syntaxFile = null;
-    private int offset = 0;
-    private int rangeEnd = 0;
     private PsiElement lastElement = null;
     private List<KotlinToken> kotlinTokens = null;
+    private int offset = 0;
+    private int rangeEnd = 0;
     private int tokensNumber = 0;
-    private LexerInput input;
+    private final LexerInput input;
 
-    
     public KotlinTokenScanner(LexerInput input) {
         kotlinTokensFactory = new KotlinTokensFactory();
         this.input = input;
@@ -63,62 +63,43 @@ public class KotlinTokenScanner {
             Exceptions.printStackTrace(ex);
         }
     }
-    
-    private void createSyntaxFile(){
+
+    private void createSyntaxFile() {
         syntaxFile = new File("syntax");
         StringBuilder builder = new StringBuilder("");
         int num = -1000;
-        while (num != LexerInput.EOF){
+        while (num != LexerInput.EOF) {
             num = input.read();
             builder.append((char) num);
         }
-        
+
         CharSequence readText = builder.toString();//input.readText();
         input.backup(input.readLengthEOF());
-        
+
         try {
-            PrintWriter writer = new PrintWriter(syntaxFile,"UTF-8");
+            PrintWriter writer = new PrintWriter(syntaxFile, "UTF-8");
             writer.print(readText);
-//            DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.
-//                            Message(builder.toString()));
             writer.close();
-            
+
         } catch (FileNotFoundException ex) {
             Exceptions.printStackTrace(ex);
         } catch (UnsupportedEncodingException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
-    
-    private void readSyntaxFile(){
-        try {
-            StringBuilder builder = new StringBuilder("");
-            String curLine;
-            BufferedReader br = null;
-            br = new BufferedReader(new FileReader(syntaxFile));
-            while((curLine = br.readLine()) != null){
-                builder.append(curLine);
-            }
-            DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.
-                            Message(builder.toString()));
-        } catch (FileNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+
+    public void deleteSyntaxFile() {
+        if (syntaxFile != null) {
+            syntaxFile.deleteOnExit();
         }
     }
-    
-    public void deleteSyntaxFile(){
-        if (syntaxFile != null)
-            syntaxFile.deleteOnExit();
-    }
-    
+
     private void createListOfKotlinTokens() {
         kotlinTokens = new ArrayList();
         for (;;) {
 
             lastElement = ktFile.findElementAt(offset);
-            
+
             if (ktFile == null) {
                 kotlinTokens.add(new KotlinToken(
                         new KotlinTokenId(TokenType.EOF.name(), TokenType.EOF.name(), 7), "",
@@ -128,7 +109,6 @@ public class KotlinTokenScanner {
             }
 
             if (lastElement != null) {
-
                 offset = lastElement.getTextRange().getEndOffset();
                 TokenType tokenType = kotlinTokensFactory.getToken(lastElement);
 
@@ -166,22 +146,21 @@ public class KotlinTokenScanner {
         return (KtFile) psiFileFactory.trySetupPsiForFile(virtualFile, KotlinLanguage.INSTANCE, true, false);
     }
 
-
     public KotlinToken<KotlinTokenId> getNextToken() {
 
-        KotlinToken ktToken = null;
+        KotlinToken ktToken;
 
         if (tokensNumber > 0) {
             ktToken = kotlinTokens.get(kotlinTokens.size() - tokensNumber);
             tokensNumber--;
             if (ktToken != null) {
                 int num = ktToken.length();
-                
+
                 while (num > 0) {
                     input.read();
                     num--;
                 }
-                
+
             }
             return ktToken;
         } else {
@@ -193,6 +172,4 @@ public class KotlinTokenScanner {
 
     }
 
-    
 }
-

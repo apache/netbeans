@@ -12,6 +12,7 @@ import org.openide.util.Exceptions;
 
 /**
  * Class that is responsible for Kotlin projects compiling.
+ *
  * @author Александр
  */
 public class KotlinCompiler {
@@ -23,9 +24,10 @@ public class KotlinCompiler {
 
     /**
      * This method runs compile target of ant build script.
-     * @param proj project to compile 
+     *
+     * @param proj project to compile
      */
-    public void antCompile(KotlinProject proj){
+    public void antCompile(KotlinProject proj) {
         try {
             makeBuildXml(proj);
             ProjectUtils.getOutputDir(proj);
@@ -36,9 +38,10 @@ public class KotlinCompiler {
         }
     }
 
-     /**
+    /**
      * This method runs build target of ant build script.
-     * @param proj project to compile 
+     *
+     * @param proj project to compile
      */
     public void antBuild(KotlinProject proj) {
         try {
@@ -51,12 +54,14 @@ public class KotlinCompiler {
         }
     }
 
-     /**
+    /**
      * This method runs run target of ant build script.
-     * @param proj project to compile 
+     *
+     * @param proj project to compile
      */
     public void antRun(KotlinProject proj) throws IOException, InterruptedException {
         try {
+//            ProjectUtils.findMainWithDetector(proj.getProjectDirectory().getFileObject("src").getChildren());
             makeBuildXml(proj);
             ProjectUtils.getOutputDir(proj);
             FileObject buildImpl = proj.getHelper().getProjectDirectory().getFileObject("build.xml");
@@ -67,12 +72,81 @@ public class KotlinCompiler {
     }
 
     /**
+     * This method returns ant compile target
+     *
+     * @param proj Kotlin project
+     * @return String with ant compile target
+     */
+    private String makeCompileTarget(KotlinProject proj) {
+        StringBuilder build = new StringBuilder("");
+        build.append("    <target name=\"compile\">\n"
+                + "        <mkdir dir=\"${build.dir}/classes\"/>\n"
+                + "        <javac destdir=\"${build.dir}/classes\" includeAntRuntime=\"false\" srcdir=\"src\">\n"
+                + "		    <classpath>\n");
+
+        List<String> libs = ProjectUtils.getLibs(proj);
+        for (String lib : libs) {
+            build.append("                        <pathelement path=\"lib/").append(lib).append("\"/>");
+            build.append("\n");
+        }
+        build.append("               </classpath>                \n"
+                   + "		     <withKotlin/>\n"
+                + "        </javac>\n"
+                + "    </target>\n");
+
+        return build.toString();
+    }
+
+    /**
+     * This method returns ant build target
+     *
+     * @param proj Kotlin project
+     * @return String with ant build target
+     */
+    private String makeBuildTarget(KotlinProject proj) throws IOException {
+        StringBuilder build = new StringBuilder("");
+        build.append("\n"
+                + "    <target name=\"build\" depends=\"compile\">\n"
+                + "        <jar destfile=\"${build.dir}/${ant.project.name}.jar\">\n"
+                + "    	    <zipgroupfileset dir=\"${kotlin.lib}\" includes=\"kotlin-runtime.jar\" />");
+        build.append("<zipgroupfileset dir=\"lib\" includes=\"*.jar\" />\n"
+                + "            <fileset dir=\"${build.dir}/classes\"/>\n"
+                + "	    <manifest>\n"
+                + "                <attribute name=\"Main-Class\" value=\"");
+        //TODO change getMainFileClass() method in the future
+        build.append(ProjectUtils.getMainFileClass(proj.getProjectDirectory().getChildren()));
+        build.append("\"/>\n"
+                + "            </manifest>\n"
+                + "        </jar>\n"
+                + "    </target>\n");
+
+        return build.toString();
+    }
+
+    /**
+     * This method returns ant run target
+     *
+     * @param proj Kotlin project
+     * @return String with ant run target
+     */
+    private String makeRunTarget(KotlinProject proj) {
+        StringBuilder build = new StringBuilder("");
+        build.append("    <target name=\"run\" depends=\"build\">\n"
+                + "        <java jar=\"${build.dir}/${ant.project.name}.jar\" fork=\"true\"/>\n"
+                + "    </target>\n");
+
+        return build.toString();
+    }
+
+    /**
      * This method creates ant build script.
+     *
      * @param proj target project.
-     * @throws IOException 
+     * @throws IOException
      */
     private void makeBuildXml(KotlinProject proj) throws IOException {
         StringBuilder build = new StringBuilder("");
+        
         build.append("<project name=\"Kotlin_Project-impl\" default=\"build\">\n"
                 + "    <property name=\"kotlin.lib\"  value=\"");
         build.append(ProjectUtils.KT_HOME).append("lib");
@@ -80,40 +154,14 @@ public class KotlinCompiler {
                 + "    <property name=\"build.dir\"   value=\"build\"/>\n"
                 + "\n"
                 + "    <typedef resource=\"org/jetbrains/kotlin/ant/antlib.xml\" classpath=\"${kotlin.lib}/kotlin-ant.jar\"/>\n"
-                + "\n"
-                + "    <target name=\"compile\">\n"
-               // + "        <delete dir=\"${build.dir}/classes\" failonerror=\"false\"/>\n"
-                + "        <mkdir dir=\"${build.dir}/classes\"/>\n"
-                + "        <javac destdir=\"${build.dir}/classes\" includeAntRuntime=\"false\" srcdir=\"src\">\n"
-                + "		    <classpath>");
+                + "\n");
 
-        List<String> libs = ProjectUtils.getLibs(proj);
-        for (String lib : libs) {
-            build.append("<pathelement path=\"lib/").append(lib).append("\"/>");
-        }
-        build.append("</classpath>                \n"
-                + "		<withKotlin/>\n"
-                + "        </javac>\n"
-                + "</target>\n"
-                + "\n"
-                + "    <target name=\"build\" depends=\"compile\">"
-                + "        <jar destfile=\"${build.dir}/${ant.project.name}.jar\">\n"
-                + "    	    <zipgroupfileset dir=\"${kotlin.lib}\" includes=\"kotlin-runtime.jar\" />");
-        build.append("<zipgroupfileset dir=\"lib\" includes=\"*.jar\" />\n"
-                + "            <fileset dir=\"${build.dir}/classes\"/>\n"
-                + "	    <manifest>\n"
-                + "                <attribute name=\"Main-Class\" value=\"");
-        build.append(ProjectUtils.getMainFileClass(proj.getProjectDirectory().getChildren()));
-        build.append("\"/>\n"
-                + "            </manifest>\n"
-                + "        </jar>\n"
-                + "    </target>");
+        build.append(makeCompileTarget(proj));
+        build.append(makeBuildTarget(proj));
+        build.append(makeRunTarget(proj));
 
-        build.append("<target name=\"run\" depends=\"build\">\n"
-                + "        <java jar=\"${build.dir}/${ant.project.name}.jar\" fork=\"true\"/>\n"
-                + "    </target>\n"
-                + "</project>");
-
+        build.append("</project>");
+        
         File buildXml = new File(proj.getProjectDirectory().getPath() + "/nbproject/build-impl.xml");
 
         if (buildXml.exists()) {

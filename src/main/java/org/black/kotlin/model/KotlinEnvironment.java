@@ -34,17 +34,27 @@ import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElementFinder;
+import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.augment.PsiAugmentProvider;
 import com.intellij.psi.compiled.ClassFileDecompilers;
+import com.intellij.psi.impl.PsiFileFactoryImpl;
 import com.intellij.psi.impl.PsiTreeChangePreprocessor;
 import com.intellij.psi.impl.compiled.ClsCustomNavigationPolicy;
 import com.intellij.psi.impl.file.impl.JavaFileManager;
+import com.intellij.testFramework.LightVirtualFile;
+import java.io.IOException;
 import java.util.List;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.idea.KotlinFileType;
+import org.jetbrains.kotlin.idea.KotlinLanguage;
+import org.jetbrains.kotlin.psi.KtFile;
+import org.netbeans.api.project.ui.OpenProjects;
 
 /**
  * This class creates Kotlin environment for Kotlin project.
@@ -226,4 +236,39 @@ public class KotlinEnvironment {
             roots.add(root);
         }
     }
+    
+        /**
+     * This method parses the input file. 
+     * @param file syntaxFile that was created with 
+     *              {@link #createSyntaxFile() createSyntaxFile} method
+     * @return the result of {@link #parseText(java.lang.String, java.io.File) parseText} method
+     * @throws IOException 
+     */
+    @Nullable
+    public static KtFile parseFile(@NotNull File file) throws IOException {
+        return parseText(FileUtil.loadFile(file, null, true), file);
+    }
+
+    /**
+     * This method parses text from the input file.
+     * @param text Text of temporary file.
+     * @param file syntaxFile that was created with 
+     *              {@link #createSyntaxFile() createSyntaxFile} method
+     * @return {@link KtFile}
+     */
+    @Nullable
+    public static KtFile parseText(@NotNull String text, @NotNull File file) {
+        StringUtil.assertValidSeparators(text);
+
+        Project project = KotlinEnvironment.getEnvironment(
+                OpenProjects.getDefault().getOpenProjects()[0]).getProject();
+
+        LightVirtualFile virtualFile = new KotlinLightVirtualFile(file, text);
+        virtualFile.setCharset(CharsetToolkit.UTF8_CHARSET);
+
+        PsiFileFactoryImpl psiFileFactory = (PsiFileFactoryImpl) PsiFileFactory.getInstance(project);
+
+        return (KtFile) psiFileFactory.trySetupPsiForFile(virtualFile, KotlinLanguage.INSTANCE, true, false);
+    }
+
 }

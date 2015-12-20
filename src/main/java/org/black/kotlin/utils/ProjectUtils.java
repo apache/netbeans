@@ -10,12 +10,18 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.project.KotlinProject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.load.kotlin.PackageClassUtils;
 import org.jetbrains.kotlin.name.FqName;
+import org.jetbrains.kotlin.psi.KtFile;
+import org.jetbrains.kotlin.psi.KtNamedFunction;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
 /**
@@ -67,6 +73,36 @@ public class ProjectUtils {
         return null;
     }
 
+    private static void makeFileCollection(FileObject[] files, List<FileObject> collection){
+        for (FileObject file : files) {
+            if (!file.isFolder()) {
+                collection.add(file);
+            } else {
+                makeFileCollection(file.getChildren(),collection);
+            }
+        }
+    }
+    
+    public static String findMainWithDetector(FileObject[] files) throws FileNotFoundException, IOException {
+        List<KtFile> ktFiles = new ArrayList();
+        List<FileObject> collection = new ArrayList();
+        makeFileCollection(files,collection);
+        for (FileObject file : collection) {
+            if (!file.isFolder()) {
+                ktFiles.add(KotlinEnvironment.parseFile(FileUtil.toFile(file)));
+            }
+        }
+        
+        KtFile main = KtMainDetector.getMainFunctionFile(ktFiles);
+        
+        DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(main.getName()));
+        DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(main.getPackageFqName().asString()));        
+
+        return "";
+    }
+
+    
+    
     /**
      * Finds file with main method.
      * @param files

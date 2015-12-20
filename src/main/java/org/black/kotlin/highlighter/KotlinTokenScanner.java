@@ -60,7 +60,7 @@ public final class KotlinTokenScanner {
         this.input = input;
         createSyntaxFile();
         try {
-            ktFile = parseFile(syntaxFile);
+            ktFile = KotlinEnvironment.parseFile(syntaxFile);
             deleteSyntaxFile();
             this.rangeEnd = (int) syntaxFile.length();
             createListOfKotlinTokens();
@@ -141,39 +141,6 @@ public final class KotlinTokenScanner {
 
     }
 
-    /**
-     * This method parses the input file. 
-     * @param file syntaxFile that was created with 
-     *              {@link #createSyntaxFile() createSyntaxFile} method
-     * @return the result of {@link #parseText(java.lang.String, java.io.File) parseText} method
-     * @throws IOException 
-     */
-    @Nullable
-    private KtFile parseFile(@NotNull File file) throws IOException {
-        return parseText(FileUtil.loadFile(file, null, true), file);
-    }
-
-    /**
-     * This method parses text from the input file.
-     * @param text Text of temporary file.
-     * @param file syntaxFile that was created with 
-     *              {@link #createSyntaxFile() createSyntaxFile} method
-     * @return {@link KtFile}
-     */
-    @Nullable
-    private KtFile parseText(@NotNull String text, @NotNull File file) {
-        StringUtil.assertValidSeparators(text);
-
-        Project project = KotlinEnvironment.getEnvironment(
-                OpenProjects.getDefault().getOpenProjects()[0]).getProject();
-
-        LightVirtualFile virtualFile = new KotlinLightVirtualFile(file, text);
-        virtualFile.setCharset(CharsetToolkit.UTF8_CHARSET);
-
-        PsiFileFactoryImpl psiFileFactory = (PsiFileFactoryImpl) PsiFileFactory.getInstance(project);
-
-        return (KtFile) psiFileFactory.trySetupPsiForFile(virtualFile, KotlinLanguage.INSTANCE, true, false);
-    }
 
     /**
      * Returns the next token from the kotlinTokens ArrayList.

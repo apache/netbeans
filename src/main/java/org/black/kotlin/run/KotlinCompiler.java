@@ -11,7 +11,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
 /**
- *
+ * Class that is responsible for Kotlin projects compiling.
  * @author Александр
  */
 public class KotlinCompiler {
@@ -21,6 +21,10 @@ public class KotlinCompiler {
     private KotlinCompiler() {
     }
 
+    /**
+     * This method runs compile target of ant build script.
+     * @param proj project to compile 
+     */
     public void antCompile(KotlinProject proj){
         try {
             makeBuildXml(proj);
@@ -31,7 +35,11 @@ public class KotlinCompiler {
             Exceptions.printStackTrace(ex);
         }
     }
-    
+
+     /**
+     * This method runs build target of ant build script.
+     * @param proj project to compile 
+     */
     public void antBuild(KotlinProject proj) {
         try {
             makeBuildXml(proj);
@@ -43,6 +51,10 @@ public class KotlinCompiler {
         }
     }
 
+     /**
+     * This method runs run target of ant build script.
+     * @param proj project to compile 
+     */
     public void antRun(KotlinProject proj) throws IOException, InterruptedException {
         try {
             makeBuildXml(proj);
@@ -54,6 +66,11 @@ public class KotlinCompiler {
         }
     }
 
+    /**
+     * This method creates ant build script.
+     * @param proj target project.
+     * @throws IOException 
+     */
     private void makeBuildXml(KotlinProject proj) throws IOException {
         StringBuilder build = new StringBuilder("");
         build.append("<project name=\"Kotlin_Project-impl\" default=\"build\">\n"

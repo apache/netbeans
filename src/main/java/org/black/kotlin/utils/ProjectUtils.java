@@ -38,6 +38,13 @@ public class ProjectUtils {
             KT_HOME = System.getenv("KT_HOME") + FILE_SEPARATOR;
     }
     
+    /**
+     * Finds file with main method.
+     * @param files
+     * @return path to file with main method.
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
     public static String findMain(FileObject[] files) throws FileNotFoundException, IOException {
         for (FileObject file : files) {
             if (!file.isFolder()) {
@@ -60,6 +67,13 @@ public class ProjectUtils {
         return null;
     }
 
+    /**
+     * Finds file with main method.
+     * @param files
+     * @return name of the file with main method.
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
     public static String findMainName(FileObject[] files) throws FileNotFoundException, IOException {
         for (FileObject file : files) {
             if (!file.isFolder()) {
@@ -115,6 +129,11 @@ public class ProjectUtils {
         return null;
     }
     
+    /**
+     * returns path to output directory.
+     * @param proj
+     * @return path to output directory 
+     */
     public static String getOutputDir(KotlinProject proj) {
         
         File path = new File(proj.getProjectDirectory().getPath() + FILE_SEPARATOR + "build");

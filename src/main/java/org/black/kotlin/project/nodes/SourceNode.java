@@ -8,7 +8,7 @@ import org.openide.nodes.FilterNode;
 import org.openide.util.ImageUtilities;
 
 /**
- *
+ * Node for source files.
  * @author Александр
  */
 public class SourceNode extends FilterNode{

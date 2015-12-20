@@ -7,7 +7,7 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 
 /**
- *
+ * Custom class for Kotlin token.
  * @author Александр
  */
 public class KotlinToken<T extends TokenId>{

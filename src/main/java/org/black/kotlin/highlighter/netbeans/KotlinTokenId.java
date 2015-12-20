@@ -5,7 +5,7 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenId;
 
 /**
- *
+ * Custom class for NetBeans {@link TokenId} class.
  * @author Александр
  */
 public class KotlinTokenId implements TokenId {
@@ -14,6 +14,12 @@ public class KotlinTokenId implements TokenId {
     private final String primaryCategory;
     private final int id;
     
+    /**
+     * Constructor.
+     * @param name token name.
+     * @param primaryCategory token category.
+     * @param id token id.
+     */
     public KotlinTokenId(String name, String primaryCategory, int id){
         this.name = name;
         this.primaryCategory = primaryCategory;

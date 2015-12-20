@@ -46,6 +46,10 @@ import java.util.List;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.idea.KotlinFileType;
 
+/**
+ * This class creates Kotlin environment for Kotlin project.
+ * @author Александр
+ */
 @SuppressWarnings("deprecation")
 public class KotlinEnvironment {
     

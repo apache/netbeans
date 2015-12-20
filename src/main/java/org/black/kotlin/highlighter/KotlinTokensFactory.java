@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import org.jetbrains.kotlin.kdoc.lexer.KDocTokens;
 /**
- *
+ * Factory of possible Kotlin tokens.
  * @author Александр
  */
 public class KotlinTokensFactory {
@@ -20,7 +20,11 @@ public class KotlinTokensFactory {
     TokenType kdocTagNameToken = TokenType.KDOC_TAG_NAME;
     TokenType whitespaceToken = TokenType.WHITESPACE;
     
-    
+    /**
+     * Returns {@link TokenType} based on input {@link PsiElement}.
+     * @param leafElement input PsiElement.
+     * @return {@link TokenType}
+     */
     TokenType getToken(PsiElement leafElement){
         if (!(leafElement instanceof LeafPsiElement))
             return TokenType.UNDEFINED;

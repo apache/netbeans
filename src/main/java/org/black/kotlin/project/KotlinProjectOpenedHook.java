@@ -28,19 +28,19 @@ import org.openide.util.Exceptions;
  *
  * @author Александр
  */
-public class KotlinProjectOpenedHook extends ProjectOpenedHook {
+public class KotlinProjectOpenedHook{// extends ProjectOpenedHook {
 
     private final KotlinProject proj;
     private final GlobalPathRegistry reg;
 
     public KotlinProjectOpenedHook(KotlinProject proj) {
-        super();
+        //super();
         this.proj = proj;
         reg = proj.getPathRegistry();
     }
 
-    @Override
-    protected void projectOpened() {
+    //@Override
+    public void projectOpened() {
         try {
             KotlinCompiler.INSTANCE.antCompile(proj);
             List<ClassPath> paths = new ArrayList();
@@ -95,7 +95,7 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
         return roots;
     }
 
-    @Override
+    //@Override
     protected void projectClosed() {
     }
 

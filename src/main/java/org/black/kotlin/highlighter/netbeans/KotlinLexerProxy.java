@@ -7,7 +7,10 @@ import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerInput;
 import org.netbeans.spi.lexer.LexerRestartInfo;
 
-
+/**
+ * This class parses code from editor. It uses {@link KotlinTokenScanner}.
+ * @author Александр
+ */
 public class KotlinLexerProxy implements Lexer<KotlinTokenId> {
     
     private final LexerRestartInfo<KotlinTokenId> info;
@@ -21,6 +24,11 @@ public class KotlinLexerProxy implements Lexer<KotlinTokenId> {
         kotlinTokenScanner = null;
     }
     
+    /**
+     * Returns a token to highlight. This method gets the token from 
+     * {@link KotlinTokenScanner#getNextToken() getNextToken} method.
+     * @return {@link Token}
+     */
     @Override
     public Token<KotlinTokenId> nextToken(){
         if (firstTime == true){

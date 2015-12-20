@@ -34,8 +34,9 @@ import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
 
 /**
- *
+ * KotlinTokenScanner parses kotlin code for tokens 
  * @author Александр
+ * 
  */
 public final class KotlinTokenScanner {
 
@@ -50,6 +51,10 @@ public final class KotlinTokenScanner {
     private int tokensNumber = 0;
     private final LexerInput input;
 
+    /**
+     * Class constructor
+     * @param input code that must be parsed
+     */
     public KotlinTokenScanner(LexerInput input) {
         kotlinTokensFactory = new KotlinTokensFactory();
         this.input = input;
@@ -64,6 +69,10 @@ public final class KotlinTokenScanner {
         }
     }
 
+    /**
+     * Creates temporary file for parsing from the input code.
+     * Temporary file name is syntaxFile.
+     */
     private void createSyntaxFile() {
         syntaxFile = new File("syntax");
         StringBuilder builder = new StringBuilder("");
@@ -88,12 +97,18 @@ public final class KotlinTokenScanner {
         }
     }
 
+    /**
+     * This method deletes temporary syntaxFile.
+     */
     public void deleteSyntaxFile() {
         if (syntaxFile != null) {
             syntaxFile.deleteOnExit();
         }
     }
 
+    /**
+     * This method creates the ArrayList of tokens from the parsed ktFile.
+     */
     private void createListOfKotlinTokens() {
         kotlinTokens = new ArrayList();
         for (;;) {
@@ -126,11 +141,25 @@ public final class KotlinTokenScanner {
 
     }
 
+    /**
+     * This method parses the input file. 
+     * @param file syntaxFile that was created with 
+     *              {@link #createSyntaxFile() createSyntaxFile} method
+     * @return the result of {@link #parseText(java.lang.String, java.io.File) parseText} method
+     * @throws IOException 
+     */
     @Nullable
     private KtFile parseFile(@NotNull File file) throws IOException {
         return parseText(FileUtil.loadFile(file, null, true), file);
     }
 
+    /**
+     * This method parses text from the input file.
+     * @param text Text of temporary file.
+     * @param file syntaxFile that was created with 
+     *              {@link #createSyntaxFile() createSyntaxFile} method
+     * @return {@link KtFile}
+     */
     @Nullable
     private KtFile parseText(@NotNull String text, @NotNull File file) {
         StringUtil.assertValidSeparators(text);
@@ -146,6 +175,10 @@ public final class KotlinTokenScanner {
         return (KtFile) psiFileFactory.trySetupPsiForFile(virtualFile, KotlinLanguage.INSTANCE, true, false);
     }
 
+    /**
+     * Returns the next token from the kotlinTokens ArrayList.
+     * @return {@link KotlinToken}
+     */
     public KotlinToken<KotlinTokenId> getNextToken() {
 
         KotlinToken ktToken;

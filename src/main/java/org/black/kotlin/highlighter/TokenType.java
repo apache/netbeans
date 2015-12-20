@@ -1,7 +1,7 @@
 package org.black.kotlin.highlighter;
 
 /**
- *
+ * Possible Kotlin token types.
  * @author Александр
  */
 
@@ -10,6 +10,10 @@ public enum TokenType{
     MULTI_LINE_COMMENT, KDOC_TAG_NAME, WHITESPACE,
     UNDEFINED, EOF;
     
+    /**
+     * Returns a token id number based on its' type.
+     * @return {@link TokenType}
+     */
     public int getId(){
         switch(this){
             case KEYWORD:

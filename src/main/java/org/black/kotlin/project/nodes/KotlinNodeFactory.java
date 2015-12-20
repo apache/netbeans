@@ -7,9 +7,18 @@ import org.netbeans.spi.project.ui.support.NodeList;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
 
+/**
+ * Kotlin project nodes factory.
+ * @author Александр
+ */
 @NodeFactory.Registration(projectType = "org-black-kotlin", position = 10)
 public class KotlinNodeFactory implements NodeFactory {
 
+    /**
+     * This method creates nodes of the project.
+     * @param project Kotlin project
+     * @return list of project nodes.
+     */
     @Override
     public NodeList<?> createNodes(Project project) {
         try{

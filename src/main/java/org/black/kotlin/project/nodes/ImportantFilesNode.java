@@ -8,7 +8,7 @@ import org.openide.nodes.FilterNode;
 import org.openide.util.ImageUtilities;
 
 /**
- *
+ * This class represents important files node.
  * @author Александр
  */
 public class ImportantFilesNode extends FilterNode{

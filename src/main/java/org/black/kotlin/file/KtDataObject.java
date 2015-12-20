@@ -16,6 +16,13 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 
+
+/**
+ * 
+ * @author Александр
+ * KtDataObject class represents .kt file in NetBeans IDE
+ */
+
 @Messages({
     "LBL_Kt_LOADER=Files of Kt"
 })

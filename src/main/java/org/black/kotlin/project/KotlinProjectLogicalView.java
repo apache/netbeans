@@ -23,7 +23,7 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
- *
+ * Creates a logical view of Kotlin project.
  * @author Александр
  */
 public class KotlinProjectLogicalView implements LogicalViewProvider {
@@ -37,6 +37,10 @@ public class KotlinProjectLogicalView implements LogicalViewProvider {
             this.project = project;
         }
 
+        /**
+         * Create a view of Kotlin project node. 
+         * @return {@link ProjectNode}
+         */
         @Override
         public Node createLogicalView() {
             try {
@@ -50,6 +54,9 @@ public class KotlinProjectLogicalView implements LogicalViewProvider {
             }
         }
 
+        /**
+         * Class that represents the root node of Kotlin project.
+         */
         private final class ProjectNode extends AbstractNode { 
 
             final KotlinProject project;
@@ -66,6 +73,11 @@ public class KotlinProjectLogicalView implements LogicalViewProvider {
                 this.project = project;
             }
 
+            /**
+             * Defines possible actions for Kotlin project.
+             * @param arg0
+             * @return Actions array 
+             */
             @Override
             public Action[] getActions(boolean arg0) {
                 return new Action[]{
@@ -85,6 +97,11 @@ public class KotlinProjectLogicalView implements LogicalViewProvider {
                 };
             }
 
+            /**
+             * Returnes project node icon.
+             * @param type
+             * @return {@link Image} 
+             */
             @Override
             public Image getIcon(int type) {
                 return ImageUtilities.loadImage(KOTLIN_ICON);

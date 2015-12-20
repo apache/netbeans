@@ -40,6 +40,10 @@ import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
 
+/**
+ * Class for ant-based Kotlin project.
+ * @author Александр
+ */
 @AntBasedProjectRegistration(type = "org.black.kotlin.project.KotlinProject",
                             iconResource = "org/black/kotlin/kotlin.png",
                             sharedName = "data",
@@ -52,6 +56,9 @@ public class KotlinProject implements Project {
     private final SourcesHelper sourcesHelper; 
     private final GlobalPathRegistry pathRegistry = GlobalPathRegistry.getDefault();
     
+    /**
+     * This class provides information about Kotlin project.
+     */
     private final class Info implements ProjectInformation {
 
         @StaticResource()
@@ -87,10 +94,15 @@ public class KotlinProject implements Project {
 
     }
 
-
+    /**
+     * Action provider class for Kotlin project.
+     */
     private final class ActionProviderImpl implements ActionProvider {
 
-        private String[] supported = new String[]{
+        /**
+         * Supported actions.
+         */
+        private final String[] supported = new String[]{
             ActionProvider.COMMAND_DELETE,
             ActionProvider.COMMAND_COPY,
             ActionProvider.COMMAND_BUILD,
@@ -99,11 +111,19 @@ public class KotlinProject implements Project {
             ActionProvider.COMMAND_RUN
         };
 
+        /**
+         * 
+         * @return supported actions. 
+         */
         @Override
         public String[] getSupportedActions() {
             return supported;
         }
 
+        /**
+         * Defines actions code. 
+         * @throws IllegalArgumentException 
+         */
         @Override
         public void invokeAction(String string, Lookup lookup) throws IllegalArgumentException {
             if (string.equalsIgnoreCase(ActionProvider.COMMAND_DELETE)) {
@@ -147,6 +167,11 @@ public class KotlinProject implements Project {
             }
         }
 
+        /**
+         * 
+         * @return is action enabled or not.
+         * @throws IllegalArgumentException 
+         */
         @Override
         public boolean isActionEnabled(String command, Lookup lookup) throws IllegalArgumentException {
             if ((command.equals(ActionProvider.COMMAND_DELETE))) {
@@ -168,6 +193,9 @@ public class KotlinProject implements Project {
 
     }
 
+    /**
+     * This class defines the location of Kotlin sources.
+     */
     public final class KotlinSources implements Sources {
         
         private void findSrc(FileObject fo, Collection<FileObject> files, KotlinProjectConstants type ) {
@@ -310,8 +338,8 @@ public class KotlinProject implements Project {
         private final class KotlinSourceForBinaryQueryResult 
             implements SourceForBinaryQuery.Result{
 
-            private FileObject root = KotlinProject.this.getProjectDirectory().getFileObject("src");
-            private FileObject[] roots = new FileObject[]{root};
+            private final FileObject root = KotlinProject.this.getProjectDirectory().getFileObject("src");
+            private final FileObject[] roots = new FileObject[]{root};
             
             @Override
             public FileObject[] getRoots() {

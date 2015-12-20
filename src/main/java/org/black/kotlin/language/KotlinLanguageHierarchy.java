@@ -14,7 +14,7 @@ import org.black.kotlin.highlighter.netbeans.KotlinLexerProxy;
 import org.black.kotlin.highlighter.netbeans.KotlinTokenId;
 
 /**
- *
+ * Kotlin language hierarchy.
  * @author Александр
  */
 public class KotlinLanguageHierarchy extends LanguageHierarchy<KotlinTokenId> {
@@ -22,6 +22,9 @@ public class KotlinLanguageHierarchy extends LanguageHierarchy<KotlinTokenId> {
     private static List<KotlinTokenId> tokens;
     private static Map<Integer, KotlinTokenId> idToToken;
 
+    /**
+     * Initializes all Kotlin token types.
+     */
     private static void init() {
         tokens = Arrays.<KotlinTokenId>asList(new KotlinTokenId[]{
             new KotlinTokenId(TokenType.KEYWORD.name(),TokenType.KEYWORD.name(),0),

@@ -20,7 +20,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 
 /**
- *
+ * Node for libraries.
  * @author Александр
  */
 public class LibNode extends FilterNode{

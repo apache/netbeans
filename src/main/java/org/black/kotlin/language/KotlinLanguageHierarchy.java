@@ -26,7 +26,7 @@ public class KotlinLanguageHierarchy extends LanguageHierarchy<KotlinTokenId> {
      * Initializes all Kotlin token types.
      */
     private static void init() {
-        tokens = Arrays.<KotlinTokenId>asList(new KotlinTokenId[]{
+        tokens = Arrays.asList(
             new KotlinTokenId(TokenType.KEYWORD.name(),TokenType.KEYWORD.name(),0),
             new KotlinTokenId(TokenType.IDENTIFIER.name(),TokenType.IDENTIFIER.name(),1),
             new KotlinTokenId(TokenType.STRING.name(),TokenType.STRING.name(),2),
@@ -35,7 +35,7 @@ public class KotlinLanguageHierarchy extends LanguageHierarchy<KotlinTokenId> {
             new KotlinTokenId(TokenType.KDOC_TAG_NAME.name(),TokenType.KDOC_TAG_NAME.name(),5),
             new KotlinTokenId(TokenType.WHITESPACE.name(),TokenType.WHITESPACE.name(),6),
             new KotlinTokenId(TokenType.UNDEFINED.name(),TokenType.UNDEFINED.name(),7)
-        });
+        );
         idToToken = new HashMap<Integer, KotlinTokenId>();
         for (KotlinTokenId token : tokens) {
             idToToken.put(token.ordinal(), token);

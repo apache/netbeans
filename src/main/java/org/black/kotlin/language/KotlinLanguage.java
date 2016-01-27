@@ -4,7 +4,6 @@ import org.black.kotlin.highlighter.netbeans.KotlinTokenId;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
-import org.netbeans.modules.parsing.spi.Parser;
 
 /**
  * Class that is responsible for Kotlin language registration.
@@ -23,9 +22,5 @@ public class KotlinLanguage extends DefaultLanguageConfig {
         return "KT";
     }
 
-//    @Override
-//    public Parser getParser(){
-//        return new KotlinParser();
-//    }
-    
+
 }

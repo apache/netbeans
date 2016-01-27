@@ -25,13 +25,13 @@ public class KotlinCompiler {
     /**
      * This method runs compile target of ant build script.
      *
-     * @param proj project to compile
+     * @param project project to compile
      */
-    public void antCompile(KotlinProject proj) {
+    public void antCompile(KotlinProject project) {
         try {
-            makeBuildXml(proj);
-            ProjectUtils.getOutputDir(proj);
-            FileObject buildImpl = proj.getHelper().getProjectDirectory().getFileObject("build.xml");
+            makeBuildXml(project);
+            ProjectUtils.getOutputDir(project);
+            FileObject buildImpl = project.getHelper().getProjectDirectory().getFileObject("build.xml");
             ActionUtils.runTarget(buildImpl, new String[]{"compile"}, null);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
@@ -41,13 +41,13 @@ public class KotlinCompiler {
     /**
      * This method runs build target of ant build script.
      *
-     * @param proj project to compile
+     * @param project project to compile
      */
-    public void antBuild(KotlinProject proj) {
+    public void antBuild(KotlinProject project) {
         try {
-            makeBuildXml(proj);
-            ProjectUtils.getOutputDir(proj);
-            FileObject buildImpl = proj.getHelper().getProjectDirectory().getFileObject("build.xml");
+            makeBuildXml(project);
+            ProjectUtils.getOutputDir(project);
+            FileObject buildImpl = project.getHelper().getProjectDirectory().getFileObject("build.xml");
             ActionUtils.runTarget(buildImpl, new String[]{"build"}, null);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
@@ -57,14 +57,14 @@ public class KotlinCompiler {
     /**
      * This method runs run target of ant build script.
      *
-     * @param proj project to compile
+     * @param project project to compile
      */
-    public void antRun(KotlinProject proj) throws IOException, InterruptedException {
+    public void antRun(KotlinProject project) throws IOException, InterruptedException {
         try {
-//            ProjectUtils.findMainWithDetector(proj.getProjectDirectory().getFileObject("src").getChildren());
-            makeBuildXml(proj);
-            ProjectUtils.getOutputDir(proj);
-            FileObject buildImpl = proj.getHelper().getProjectDirectory().getFileObject("build.xml");
+//            ProjectUtils.findMainWithDetector(project.getProjectDirectory().getFileObject("src").getChildren());
+            makeBuildXml(project);
+            ProjectUtils.getOutputDir(project);
+            FileObject buildImpl = project.getHelper().getProjectDirectory().getFileObject("build.xml");
             ActionUtils.runTarget(buildImpl, new String[]{"run"}, null);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
@@ -74,17 +74,17 @@ public class KotlinCompiler {
     /**
      * This method returns ant compile target
      *
-     * @param proj Kotlin project
+     * @param project Kotlin project
      * @return String with ant compile target
      */
-    private String makeCompileTarget(KotlinProject proj) {
+    private String makeCompileTarget(KotlinProject project) {
         StringBuilder build = new StringBuilder("");
         build.append("    <target name=\"compile\">\n"
                 + "        <mkdir dir=\"${build.dir}/classes\"/>\n"
                 + "        <javac destdir=\"${build.dir}/classes\" includeAntRuntime=\"false\" srcdir=\"src\">\n"
                 + "		    <classpath>\n");
 
-        List<String> libs = ProjectUtils.getLibs(proj);
+        List<String> libs = ProjectUtils.getLibs(project);
         for (String lib : libs) {
             build.append("                        <pathelement path=\"lib/").append(lib).append("\"/>");
             build.append("\n");
@@ -100,77 +100,70 @@ public class KotlinCompiler {
     /**
      * This method returns ant build target
      *
-     * @param proj Kotlin project
+     * @param project Kotlin project
      * @return String with ant build target
      */
-    private String makeBuildTarget(KotlinProject proj) throws IOException {
-        StringBuilder build = new StringBuilder("");
-        build.append("\n"
+    private String makeBuildTarget(KotlinProject project) throws IOException {
+        return "" + "\n"
                 + "    <target name=\"build\" depends=\"compile\">\n"
                 + "        <jar destfile=\"${build.dir}/${ant.project.name}.jar\">\n"
-                + "    	    <zipgroupfileset dir=\"${kotlin.lib}\" includes=\"kotlin-runtime.jar\" />");
-        build.append("<zipgroupfileset dir=\"lib\" includes=\"*.jar\" />\n"
+                + "    	    <zipgroupfileset dir=\"${kotlin.lib}\" includes=\"kotlin-runtime.jar\" />" +
+                "<zipgroupfileset dir=\"lib\" includes=\"*.jar\" />\n"
                 + "            <fileset dir=\"${build.dir}/classes\"/>\n"
                 + "	    <manifest>\n"
-                + "                <attribute name=\"Main-Class\" value=\"");
-        //TODO change getMainFileClass() method in the future
-        build.append(ProjectUtils.getMainFileClass(proj.getProjectDirectory().getChildren()));
-        build.append("\"/>\n"
+                + "                <attribute name=\"Main-Class\" value=\"" +
+                ProjectUtils.getMainFileClass(project.getProjectDirectory().getChildren()) +
+                "\"/>\n"
                 + "            </manifest>\n"
                 + "        </jar>\n"
-                + "    </target>\n");
-
-        return build.toString();
+                + "    </target>\n";
+        //TODO change getMainFileClass() method in the future
     }
 
     /**
      * This method returns ant run target
      *
-     * @param proj Kotlin project
      * @return String with ant run target
      */
-    private String makeRunTarget(KotlinProject proj) {
-        StringBuilder build = new StringBuilder("");
-        build.append("    <target name=\"run\" depends=\"build\">\n"
+    private String makeRunTarget() {
+        return "" + "    <target name=\"run\" depends=\"build\">\n"
                 + "        <java jar=\"${build.dir}/${ant.project.name}.jar\" fork=\"true\"/>\n"
-                + "    </target>\n");
-
-        return build.toString();
+                + "    </target>\n";
     }
 
     /**
      * This method creates ant build script.
      *
-     * @param proj target project.
+     * @param project target project.
      * @throws IOException
      */
-    private void makeBuildXml(KotlinProject proj) throws IOException {
-        StringBuilder build = new StringBuilder("");
-        
-        build.append("<project name=\"Kotlin_Project-impl\" default=\"build\">\n"
-                + "    <property name=\"kotlin.lib\"  value=\"");
-        build.append(ProjectUtils.KT_HOME).append("lib");
-        build.append("\"/> \n"
+    private void makeBuildXml(KotlinProject project) throws IOException {
+        String build = "" + "<project name=\"Kotlin_Project-impl\" default=\"build\">\n"
+                + "    <property name=\"kotlin.lib\"  value=\"" +
+                ProjectUtils.KT_HOME + "lib" +
+                "\"/> \n"
                 + "    <property name=\"build.dir\"   value=\"build\"/>\n"
                 + "\n"
                 + "    <typedef resource=\"org/jetbrains/kotlin/ant/antlib.xml\" classpath=\"${kotlin.lib}/kotlin-ant.jar\"/>\n"
-                + "\n");
+                + "\n" +
+                makeCompileTarget(project) +
+                makeBuildTarget(project) +
+                makeRunTarget() +
+                "</project>";
 
-        build.append(makeCompileTarget(proj));
-        build.append(makeBuildTarget(proj));
-        build.append(makeRunTarget(proj));
-
-        build.append("</project>");
-        
-        File buildXml = new File(proj.getProjectDirectory().getPath() + "/nbproject/build-impl.xml");
+        File buildXml = new File(project.getProjectDirectory().getPath() + "/nbproject/build-impl.xml");
 
         if (buildXml.exists()) {
-            buildXml.delete();
+            if (!buildXml.delete()){
+                System.err.println("Error while deleting build.xml");
+            }
         }
 
-        buildXml.createNewFile();
+        if (!buildXml.createNewFile()){
+            System.err.println("Error while creating build.xml");
+        }
         PrintWriter writer = new PrintWriter(buildXml);
-        writer.print(build.toString());
+        writer.print(build);
         writer.close();
     }
 

@@ -1,26 +1,14 @@
 package org.black.kotlin.project;
 
-//import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
-//import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
-//import java.util.Arrays;
 import java.util.List;
-import org.black.kotlin.project.KotlinProject.KotlinSources;
 import org.black.kotlin.run.KotlinCompiler;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
-import org.netbeans.api.project.ProjectUtils;
-//import org.netbeans.api.project.Sources;
-//import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-//import org.netbeans.spi.project.support.ant.PropertyUtils;
-//import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
-//import org.openide.DialogDisplayer;
-//import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -30,24 +18,24 @@ import org.openide.util.Exceptions;
  */
 public class KotlinProjectOpenedHook extends ProjectOpenedHook {
 
-    private final KotlinProject proj;
+    private final KotlinProject project;
     private final GlobalPathRegistry reg;
 
-    public KotlinProjectOpenedHook(KotlinProject proj) {
+    public KotlinProjectOpenedHook(KotlinProject project) {
         super();
-        this.proj = proj;
-        reg = proj.getPathRegistry();
+        this.project = project;
+        reg = project.getPathRegistry();
     }
 
     @Override
     public void projectOpened() {
         try {
-            KotlinCompiler.INSTANCE.antCompile(proj);
-            List<ClassPath> paths = new ArrayList();
+            KotlinCompiler.INSTANCE.antCompile(project);
+            List<ClassPath> paths = new ArrayList<ClassPath>();
             FileObject classesRoot = null;
             
             while (classesRoot == null)
-                classesRoot = proj.getProjectDirectory().getFileObject("build").getFileObject("classes");
+                classesRoot = project.getProjectDirectory().getFileObject("build").getFileObject("classes");
             
             List<URL> jars = getJars();
             
@@ -59,14 +47,12 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
 //            reg.register(ClassPath.COMPILE, paths.toArray(new ClassPath[paths.size()]));
 
             
-            FileObject srcRoot = proj.getProjectDirectory().getFileObject("src");
+            FileObject srcRoot = project.getProjectDirectory().getFileObject("src");
             reg.register(ClassPath.SOURCE, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
             reg.register(ClassPath.PROP_ROOTS, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
             reg.register(ClassPath.PROP_INCLUDES, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
             
         } catch (MalformedURLException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         } catch (UnsupportedOperationException ex) {
             Exceptions.printStackTrace(ex);
@@ -75,25 +61,14 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
     }
 
     private List<URL> getJars() throws MalformedURLException {
-        FileObject libs = proj.getProjectDirectory().getFileObject("lib");
-        List<URL> jars = new ArrayList();
+        FileObject libs = project.getProjectDirectory().getFileObject("lib");
+        List<URL> jars = new ArrayList<URL>();
         for (FileObject fo : libs.getChildren()) {
             jars.add(new URL("jar:file:///" + fo.getPath() + "!/"));
         }
         return jars;
     }
-    
-    private List<URL> getRoots() throws MalformedURLException{
-        List<URL> roots = new ArrayList();
-        KotlinSources src = (KotlinSources) ProjectUtils.getSources(proj);
-        List<FileObject> files = src.getSrcDirectories(KotlinProjectConstants.KOTLIN_SOURCE);
-        files.addAll(src.getSrcDirectories(KotlinProjectConstants.JAVA_SOURCE));
-        for (FileObject fo : files){
-//            roots.add(new URL("file://"+fo.getPath()+"/"));
-        }
-//        roots.add(new URL("file://C:/Users/Александр/Documents/NetBeansProjects/KotlinJMapViewer/src/"));
-        return roots;
-    }
+
 
     @Override
     protected void projectClosed() {

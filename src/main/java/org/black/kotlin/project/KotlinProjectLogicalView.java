@@ -3,8 +3,6 @@ package org.black.kotlin.project;
 import java.awt.Image;
 import javax.swing.Action;
 import org.netbeans.api.annotations.common.StaticResource;
-import org.netbeans.api.project.SourceGroup;
-import org.netbeans.api.project.Sources;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
@@ -18,7 +16,6 @@ import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
@@ -66,16 +63,15 @@ public class KotlinProjectLogicalView implements LogicalViewProvider {
                          NodeFactorySupport.createCompositeChildren(
                              project, "Projects/org-black-kotlin/Nodes"),
                         new ProxyLookup(
-                                new Lookup[]{
                                     Lookups.singleton(project),
                                     node.getLookup()
-                                }));
+                                ));
                 this.project = project;
             }
 
             /**
              * Defines possible actions for Kotlin project.
-             * @param arg0
+             * @param arg0 standard argument
              * @return Actions array 
              */
             @Override
@@ -99,7 +95,7 @@ public class KotlinProjectLogicalView implements LogicalViewProvider {
 
             /**
              * Returnes project node icon.
-             * @param type
+             * @param type icon type
              * @return {@link Image} 
              */
             @Override

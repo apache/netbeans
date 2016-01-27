@@ -13,7 +13,6 @@ import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.editor.hints.HintsController;
-import org.netbeans.spi.project.ui.ProjectProblemsProvider.Severity;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
 

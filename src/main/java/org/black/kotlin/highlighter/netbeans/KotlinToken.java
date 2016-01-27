@@ -2,7 +2,6 @@ package org.black.kotlin.highlighter.netbeans;
 
 import org.black.kotlin.highlighter.TokenType;
 import org.netbeans.api.lexer.PartType;
-import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 

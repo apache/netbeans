@@ -3,7 +3,6 @@ package org.black.kotlin.model;
 import com.intellij.testFramework.LightVirtualFile;
 import java.io.File;
 import org.jetbrains.kotlin.idea.KotlinLanguage;
-import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -11,7 +10,7 @@ import org.openide.filesystems.FileObject;
  */
 public class KotlinLightVirtualFile extends LightVirtualFile {
    
-    private String path;
+    private final String path;
     
     public KotlinLightVirtualFile(File file, String text){
         super(file.getName(),KotlinLanguage.INSTANCE, text);

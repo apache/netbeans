@@ -1,18 +1,9 @@
 package org.black.kotlin.highlighter;
 
 import com.intellij.psi.PsiElement;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
-import com.intellij.psi.PsiFileFactory;
-import com.intellij.psi.impl.PsiFileFactoryImpl;
-import com.intellij.testFramework.LightVirtualFile;
-import java.io.BufferedReader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -22,21 +13,15 @@ import java.util.List;
 import org.black.kotlin.highlighter.netbeans.KotlinToken;
 import org.black.kotlin.highlighter.netbeans.KotlinTokenId;
 import org.black.kotlin.model.KotlinEnvironment;
-import org.black.kotlin.model.KotlinLightVirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.idea.KotlinLanguage;
 import org.jetbrains.kotlin.psi.KtFile;
-import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.lexer.LexerInput;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
 
 /**
- * KotlinTokenScanner parses kotlin code for tokens 
+ * KotlinTokenScanner parses kotlin code for tokens
+ *
  * @author Александр
- * 
+ *
  */
 public final class KotlinTokenScanner {
 
@@ -47,12 +32,12 @@ public final class KotlinTokenScanner {
     private PsiElement lastElement = null;
     private List<KotlinToken> kotlinTokens = null;
     private int offset = 0;
-    private int rangeEnd = 0;
     private int tokensNumber = 0;
     private final LexerInput input;
 
     /**
      * Class constructor
+     *
      * @param input code that must be parsed
      */
     public KotlinTokenScanner(LexerInput input) {
@@ -62,7 +47,6 @@ public final class KotlinTokenScanner {
         try {
             ktFile = KotlinEnvironment.parseFile(syntaxFile);
             deleteSyntaxFile();
-            this.rangeEnd = (int) syntaxFile.length();
             createListOfKotlinTokens();
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
@@ -70,19 +54,21 @@ public final class KotlinTokenScanner {
     }
 
     /**
-     * Creates temporary file for parsing from the input code.
-     * Temporary file name is syntaxFile.
+     * Creates temporary file for parsing from the input code. Temporary file
+     * name is syntaxFile.
      */
     private void createSyntaxFile() {
         syntaxFile = new File("syntax");
         StringBuilder builder = new StringBuilder("");
-        int num = -1000;
-        while (num != LexerInput.EOF) {
-            num = input.read();
-            builder.append((char) num);
-        }
 
-        CharSequence readText = builder.toString();//input.readText();
+        int character;
+
+        do {
+            character = input.read();
+            builder.append((char) character);
+        } while (character != LexerInput.EOF);
+
+        CharSequence readText = builder.toString();
         input.backup(input.readLengthEOF());
 
         try {
@@ -107,21 +93,13 @@ public final class KotlinTokenScanner {
     }
 
     /**
-     * This method creates the ArrayList of tokens from the parsed ktFile.
+     * This method creates an ArrayList of tokens from the parsed ktFile.
      */
     private void createListOfKotlinTokens() {
         kotlinTokens = new ArrayList();
         for (;;) {
 
             lastElement = ktFile.findElementAt(offset);
-
-            if (ktFile == null) {
-                kotlinTokens.add(new KotlinToken(
-                        new KotlinTokenId(TokenType.EOF.name(), TokenType.EOF.name(), 7), "",
-                        0, TokenType.EOF));
-                tokensNumber = kotlinTokens.size();
-                break;
-            }
 
             if (lastElement != null) {
                 offset = lastElement.getTextRange().getEndOffset();
@@ -133,6 +111,9 @@ public final class KotlinTokenScanner {
                         tokenType));
                 tokensNumber = kotlinTokens.size();
             } else {
+                kotlinTokens.add(new KotlinToken(
+                        new KotlinTokenId(TokenType.EOF.name(), TokenType.EOF.name(), 7), "",
+                        0, TokenType.EOF));
                 tokensNumber = kotlinTokens.size();
                 break;
             }
@@ -141,9 +122,9 @@ public final class KotlinTokenScanner {
 
     }
 
-
     /**
      * Returns the next token from the kotlinTokens ArrayList.
+     *
      * @return {@link KotlinToken}
      */
     public KotlinToken<KotlinTokenId> getNextToken() {
@@ -151,16 +132,13 @@ public final class KotlinTokenScanner {
         KotlinToken ktToken;
 
         if (tokensNumber > 0) {
-            ktToken = kotlinTokens.get(kotlinTokens.size() - tokensNumber);
-            tokensNumber--;
+            ktToken = kotlinTokens.get(kotlinTokens.size() - tokensNumber--);
             if (ktToken != null) {
-                int num = ktToken.length();
-
-                while (num > 0) {
+                int tokenLength = ktToken.length();
+                while (tokenLength > 0) {
                     input.read();
-                    num--;
+                    tokenLength--;
                 }
-
             }
             return ktToken;
         } else {

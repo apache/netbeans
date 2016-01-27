@@ -27,17 +27,5 @@
         </folder>
     </folder>
 
-<!--<folder name="Templates">
-    <folder name="Project">
-        <folder name="Samples">
-            <file name="DemoProject.zip" url="DemoProject.zip">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.black.kotlin.samples.kotlin1.Bundle"/>
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/black/kotlin/samples/kotlin1/Kotlin_Project1.png"/>
-                <attr name="instantiatingIterator" methodvalue="org.black.kotlin.samples.kotlin1.Kotlin_ProjectWizardIterator.createIterator"/>
-                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/black/kotlin/samples/kotlin1/Kotlin_ProjectDescription.html"/>
-                <attr name="template" boolvalue="true"/>
-            </file>
-        </folder>
-    </folder>
-</folder>-->
+
 </filesystem>

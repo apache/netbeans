@@ -21,7 +21,6 @@ public class KotlinLexerProxy implements Lexer<KotlinTokenId> {
     public KotlinLexerProxy(LexerRestartInfo<KotlinTokenId> info){
         this.info = info;
         input = info.input();
-        kotlinTokenScanner = null;
     }
     
     /**
@@ -31,7 +30,7 @@ public class KotlinLexerProxy implements Lexer<KotlinTokenId> {
      */
     @Override
     public Token<KotlinTokenId> nextToken(){
-        if (firstTime == true){
+        if (firstTime){
             kotlinTokenScanner = new KotlinTokenScanner(input);
             firstTime = false;
         }

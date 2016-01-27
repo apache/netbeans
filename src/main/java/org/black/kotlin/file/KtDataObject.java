@@ -9,7 +9,6 @@ import org.openide.awt.ActionReferences;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObject;
-import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
 import org.openide.util.Lookup;
@@ -91,7 +90,7 @@ import org.openide.windows.TopComponent;
 })
 public class KtDataObject extends MultiDataObject {
 
-    public KtDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
+    public KtDataObject(FileObject pf, MultiFileLoader loader) throws IOException {
         super(pf, loader);
         registerEditor("text/x-kt", true);
     }

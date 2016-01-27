@@ -358,6 +358,22 @@ public class KotlinProject implements Project {
     
 }
     
+    private static final class KotlinPrivilegedTemplates implements PrivilegedTemplates{
+
+        private static final String[] PRIVILEGED_NAMES = new String[] {
+                "text/x-kt",
+                "Templates/Classes/Class.java",
+                "Templates/Classes/Interface.java",
+                "Templates/Classes/Package"
+            };
+        
+        @Override
+        public String[] getPrivilegedTemplates() {
+            return PRIVILEGED_NAMES; 
+        }
+    
+}
+    
     private Lookup lkp;
 
     public KotlinProject(AntProjectHelper helper) {
@@ -387,9 +403,9 @@ public class KotlinProject implements Project {
                 new KotlinProjectLogicalView(this),
                 new KotlinSources(),
                 new ActionProviderImpl(),
-            //    new KotlinPrivilegedTemplates(),
-            //    new KotlinProjectOpenedHook(this),
-                sourcesHelper.createSourceGroupModifierImplementation()
+                new KotlinPrivilegedTemplates(),
+                new KotlinProjectOpenedHook(this),
+                //sourcesHelper.createSourceGroupModifierImplementation()
             });
         }
         return lkp;

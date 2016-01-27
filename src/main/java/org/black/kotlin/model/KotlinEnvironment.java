@@ -66,8 +66,8 @@ public class KotlinEnvironment {
     public final static String KT_JDK_ANNOTATIONS_PATH = ProjectUtils.buildLibPath("kotlin-jdk-annotations");
     public final static String KOTLIN_COMPILER_PATH = ProjectUtils.buildLibPath("kotlin-compiler");
     
-    private static final Map<org.netbeans.api.project.Project, KotlinEnvironment> cachedEnvironment = new HashMap();
-    private static final Object environmentLock = new Object();
+    private static final Map<org.netbeans.api.project.Project, KotlinEnvironment> CACHED_ENVIRONMENT = new HashMap();
+    private static final Object ENVIRONMENT_LOCK = new Object();
     
     private final JavaCoreApplicationEnvironment applicationEnvironment;
     private final JavaCoreProjectEnvironment projectEnvironment;
@@ -115,7 +115,7 @@ public class KotlinEnvironment {
             registerApplicationExtensionPointsAndExtensionsFrom(config);
         }
         
-        cachedEnvironment.put(kotlinProject, this);
+        CACHED_ENVIRONMENT.put(kotlinProject, this);
     }
     
     private static void registerProjectExtensionPoints(ExtensionsArea area) {
@@ -130,22 +130,22 @@ public class KotlinEnvironment {
     
     @NotNull
     public static KotlinEnvironment getEnvironment(@NotNull org.netbeans.api.project.Project kotlinProject) {
-        synchronized (environmentLock) {
-            if (!cachedEnvironment.containsKey(kotlinProject)) {
-                cachedEnvironment.put(kotlinProject, new KotlinEnvironment(kotlinProject, Disposer.newDisposable()));
+        synchronized (ENVIRONMENT_LOCK) {
+            if (!CACHED_ENVIRONMENT.containsKey(kotlinProject)) {
+                CACHED_ENVIRONMENT.put(kotlinProject, new KotlinEnvironment(kotlinProject, Disposer.newDisposable()));
             }
             
-            return cachedEnvironment.get(kotlinProject);
+            return CACHED_ENVIRONMENT.get(kotlinProject);
         }
     }
     
     public static void updateKotlinEnvironment(@NotNull org.netbeans.api.project.Project kotlinProject) {
-        synchronized (environmentLock) {
-            if (cachedEnvironment.containsKey(kotlinProject)) {
-                KotlinEnvironment environment = cachedEnvironment.get(kotlinProject);
+        synchronized (ENVIRONMENT_LOCK) {
+            if (CACHED_ENVIRONMENT.containsKey(kotlinProject)) {
+                KotlinEnvironment environment = CACHED_ENVIRONMENT.get(kotlinProject);
                 Disposer.dispose(environment.getJavaApplicationEnvironment().getParentDisposable());
             }
-            cachedEnvironment.put(kotlinProject, new KotlinEnvironment(kotlinProject, Disposer.newDisposable()));
+            CACHED_ENVIRONMENT.put(kotlinProject, new KotlinEnvironment(kotlinProject, Disposer.newDisposable()));
         }
     }
     
@@ -239,8 +239,7 @@ public class KotlinEnvironment {
     
         /**
      * This method parses the input file. 
-     * @param file syntaxFile that was created with 
-     *              {@link #createSyntaxFile() createSyntaxFile} method
+     * @param file syntaxFile that was created with createSyntaxFile method
      * @return the result of {@link #parseText(java.lang.String, java.io.File) parseText} method
      * @throws IOException 
      */
@@ -252,8 +251,7 @@ public class KotlinEnvironment {
     /**
      * This method parses text from the input file.
      * @param text Text of temporary file.
-     * @param file syntaxFile that was created with 
-     *              {@link #createSyntaxFile() createSyntaxFile} method
+     * @param file syntaxFile that was created with createSyntaxFile method
      * @return {@link KtFile}
      */
     @Nullable

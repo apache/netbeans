@@ -23,8 +23,8 @@ import org.openide.windows.TopComponent;
 @Messages("LBL_Kt_VISUAL=Visual")
 public final class KtVisualElement extends JPanel implements MultiViewElement {
 
-    private KtDataObject obj;
-    private JToolBar toolbar = new JToolBar();
+    private final KtDataObject obj;
+    private final JToolBar toolbar = new JToolBar();
     private transient MultiViewElementCallback callback;
 
     public KtVisualElement(Lookup lkp) {

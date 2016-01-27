@@ -1,6 +1,5 @@
 package org.black.kotlin.language;
 
-import org.black.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.black.kotlin.highlighter.netbeans.KotlinTokenId;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;

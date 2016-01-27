@@ -32,10 +32,9 @@ public enum TokenType{
                 return 6;
             case UNDEFINED:
             case EOF:
+            default:
                 return 7;
         }
-        
-        return 0;
     }
     
 }

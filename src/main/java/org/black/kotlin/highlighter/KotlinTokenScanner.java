@@ -107,13 +107,12 @@ public final class KotlinTokenScanner {
 
                 kotlinTokens.add(new KotlinToken<KotlinTokenId>(
                         new KotlinTokenId(tokenType.name(), tokenType.name(), tokenType.getId()),
-                        lastElement.getText(), lastElement.getTextOffset(),
-                        tokenType));
+                        lastElement.getText(), tokenType));
                 tokensNumber = kotlinTokens.size();
             } else {
                 kotlinTokens.add(new KotlinToken<KotlinTokenId>(
                         new KotlinTokenId(TokenType.EOF.name(), TokenType.EOF.name(), 7), "",
-                        0, TokenType.EOF));
+                        TokenType.EOF));
                 tokensNumber = kotlinTokens.size();
                 break;
             }
@@ -145,7 +144,7 @@ public final class KotlinTokenScanner {
             input.read();
             return new KotlinToken<KotlinTokenId>(
                     new KotlinTokenId(TokenType.EOF.name(), TokenType.EOF.name(), 7), "",
-                    0, TokenType.EOF);
+                    TokenType.EOF);
         }
 
     }

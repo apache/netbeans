@@ -2,7 +2,7 @@
     "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN"
     "https://netbeans.org/dtds/EditorFontsColors-1_1.dtd">
 <fontscolors>
-    <fontcolor name="IDENTIFIER" default="identifier" foreColor="red"/>
+    <fontcolor name="IDENTIFIER" default="identifier"/>
     <fontcolor name="KEYWORD" default="keyword" foreColor="blue"/>
     <fontcolor name="SINGLE_LINE_COMMENT" default="comment"/>
     <fontcolor name="MULTI_LINE_COMMENT" default="comment"/>

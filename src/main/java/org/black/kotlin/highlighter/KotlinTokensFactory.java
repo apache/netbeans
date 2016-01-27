@@ -39,6 +39,9 @@ public class KotlinTokensFactory {
                 || elementType == KtTokens.CLOSING_QUOTE){
             return stringToken;
         }
+        else if (elementType == KtTokens.IDENTIFIER){
+            return identifierToken;
+        }
         else if (KtTokens.WHITESPACES.contains(elementType)){
             return whitespaceToken;
         }

@@ -5,6 +5,8 @@ import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiModifierListOwner;
 import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 import org.netbeans.api.project.Project;
 
 /**
@@ -27,7 +29,7 @@ public class KotlinNullableNotNullManager extends NullableNotNullManager {
     }
     
     @Override
-    public boolean isNotNull(PsiModifierListOwner owner, boolean checkBases){
+    public boolean isNotNull(@NotNull PsiModifierListOwner owner, boolean checkBases){
         List<String> notNullAnnotations = getNotNulls();
         PsiAnnotation[] annotations = owner.getModifierList().getAnnotations();
         for (PsiAnnotation an : annotations){
@@ -37,9 +39,10 @@ public class KotlinNullableNotNullManager extends NullableNotNullManager {
         }
         return false;
     }
-    
+
+
     @Override
-    public boolean isNullable(PsiModifierListOwner owner, boolean checkBases){
+    public boolean isNullable(@NotNull PsiModifierListOwner owner, boolean checkBases){
         return !isNotNull(owner,checkBases);
     }
     

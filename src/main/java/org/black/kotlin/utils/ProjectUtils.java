@@ -17,9 +17,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.load.kotlin.PackageClassUtils;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.psi.KtFile;
-import org.jetbrains.kotlin.psi.KtNamedFunction;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -34,8 +31,7 @@ public class ProjectUtils {
     private static final String LIB_EXTENSION = "jar";
     public static final String FILE_SEPARATOR = System.getProperty("file.separator");
     public static final String KT_HOME;
-    
-    private org.netbeans.api.project.ProjectUtils projUtils;
+
 
     static {
         if (System.getenv("KOTLIN_HOME") != null)
@@ -46,12 +42,11 @@ public class ProjectUtils {
     
     /**
      * Finds file with main method.
-     * @param files
+     * @param files project files
      * @return path to file with main method.
-     * @throws FileNotFoundException
      * @throws IOException 
      */
-    public static String findMain(FileObject[] files) throws FileNotFoundException, IOException {
+    public static String findMain(FileObject[] files) throws IOException {
         for (FileObject file : files) {
             if (!file.isFolder()) {
                 for (String line : file.asLines()) {
@@ -83,9 +78,9 @@ public class ProjectUtils {
         }
     }
     
-    public static String findMainWithDetector(FileObject[] files) throws FileNotFoundException, IOException {
-        List<KtFile> ktFiles = new ArrayList();
-        List<FileObject> collection = new ArrayList();
+    public static String findMainWithDetector(FileObject[] files) throws IOException {
+        List<KtFile> ktFiles = new ArrayList<KtFile>();
+        List<FileObject> collection = new ArrayList<FileObject>();
         makeFileCollection(files,collection);
         for (FileObject file : collection) {
             if (!file.isFolder()) {
@@ -95,8 +90,8 @@ public class ProjectUtils {
         
         KtFile main = KtMainDetector.getMainFunctionFile(ktFiles);
         
-        DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(main.getName()));
-        DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(main.getPackageFqName().asString()));        
+    //    DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(main.getName()));
+    //    DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(main.getPackageFqName().asString()));
 
         return "";
     }
@@ -105,12 +100,12 @@ public class ProjectUtils {
     
     /**
      * Finds file with main method.
-     * @param files
+     * @param files project files
      * @return name of the file with main method.
      * @throws FileNotFoundException
      * @throws IOException 
      */
-    public static String findMainName(FileObject[] files) throws FileNotFoundException, IOException {
+    public static String findMainName(FileObject[] files) throws IOException {
         for (FileObject file : files) {
             if (!file.isFolder()) {
                 for (String line : file.asLines()) {
@@ -135,39 +130,40 @@ public class ProjectUtils {
         String name = findMainName(files);
         String path = findMain(files);
 
-        InputStream is = new FileInputStream(path);
-        BufferedReader br = new BufferedReader(new InputStreamReader(is,Charset.forName("UTF-8")));
-        String beginning = br.readLine().split(" ")[1].split(";")[0];
-        is.close();
-        
-        StringBuilder builder = new StringBuilder("");
-        
-        builder.append(beginning).append(".");
-        
-        
-        if (name != null){
-            if (path.endsWith("kt")){
-                char firstCharUpperCase = Character.toUpperCase(name.charAt(0));
-                StringBuilder mainFileClass = new StringBuilder("");
-                mainFileClass.append(firstCharUpperCase);
-                for (int i = 1; i < name.length();i++){
-                    mainFileClass.append(name.charAt(i));
+        if (path != null) {
+            InputStream is = new FileInputStream(path);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            String beginning = br.readLine().split(" ")[1].split(";")[0];
+            is.close();
+
+            StringBuilder builder = new StringBuilder("");
+
+            builder.append(beginning).append(".");
+
+
+            if (name != null) {
+                if (path.endsWith("kt")) {
+                    char firstCharUpperCase = Character.toUpperCase(name.charAt(0));
+                    StringBuilder mainFileClass = new StringBuilder("");
+                    mainFileClass.append(firstCharUpperCase);
+                    for (int i = 1; i < name.length(); i++) {
+                        mainFileClass.append(name.charAt(i));
+                    }
+                    mainFileClass.append("Kt");
+                    builder.append(mainFileClass.toString());
+                    return builder.toString();
+                } else if (path.endsWith("java")) {
+                    builder.append(name);
+                    return builder.toString();
                 }
-                mainFileClass.append("Kt");
-                builder.append(mainFileClass.toString());
-                return builder.toString();
-            } else if (path.endsWith("java")){
-                builder.append(name);
-                return builder.toString();
             }
         }
-
         return null;
     }
     
     /**
      * returns path to output directory.
-     * @param proj
+     * @param proj Kotlin project
      * @return path to output directory 
      */
     public static String getOutputDir(KotlinProject proj) {
@@ -175,7 +171,9 @@ public class ProjectUtils {
         File path = new File(proj.getProjectDirectory().getPath() + FILE_SEPARATOR + "build");
 
         if (!path.exists()) {
-            path.mkdirs();
+            if(!path.mkdirs()){
+                System.err.println("Cannot create a directory");
+            }
         }
 
         String dir = proj.getProjectDirectory().getPath() + FILE_SEPARATOR + "build";
@@ -209,12 +207,11 @@ public class ProjectUtils {
 
     @NotNull
     public static List<String> getClasspath() {
-        List<String> classpath = new ArrayList(KotlinClasspath.getKotlinClasspath());
-        return classpath;
+        return new ArrayList<String>(KotlinClasspath.getKotlinClasspath());
     }
 
     public static List<String> getLibs(KotlinProject proj){
-        List<String> libs = new ArrayList();
+        List<String> libs = new ArrayList<String>();
         FileObject libFolder = proj.getProjectDirectory().getFileObject("lib");
         for (FileObject fo : libFolder.getChildren()){
             if (fo.hasExt("jar"))

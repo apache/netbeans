@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -17,16 +16,11 @@ import org.black.kotlin.run.KotlinCompiler;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.netbeans.api.annotations.common.StaticResource;
-import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
-import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
-import org.netbeans.spi.java.classpath.ClassPathProvider;
-import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.support.ant.AntBasedProjectRegistration;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
@@ -53,7 +47,6 @@ import org.openide.util.lookup.Lookups;
 public class KotlinProject implements Project {
 
     final AntProjectHelper helper;
-    private final SourcesHelper sourcesHelper; 
     private final GlobalPathRegistry pathRegistry = GlobalPathRegistry.getDefault();
     
     /**
@@ -235,11 +228,9 @@ public class KotlinProject implements Project {
 
         @Override
         public SourceGroup[] getSourceGroups(String string) {
-            List<SourceGroup> srcGroups = new ArrayList();
+            List<SourceGroup> srcGroups = new ArrayList<SourceGroup>();
             srcGroups.add(new KotlinSourceGroup(KotlinProject.this.getProjectDirectory().getFileObject("src")));
-            if (string.equals(KotlinProjectConstants.FOLDER.toString())){
-            
-            } else if (string.equals(KotlinProjectConstants.JAR.toString())){
+            if (string.equals(KotlinProjectConstants.JAR.toString())){
                 List<FileObject> src = getSrcDirectories(KotlinProjectConstants.JAR);
                 for (FileObject srcFolder : src){
                     srcGroups.add(new KotlinSourceGroup(srcFolder));
@@ -312,51 +303,7 @@ public class KotlinProject implements Project {
         }
 
     }
-    
-    public final class KotlinClasspathProvider implements ClassPathProvider{
 
-        @Override
-        public ClassPath findClassPath(FileObject fo, String string) {
-            if (!fo.isFolder())
-                return null;
-            else
-                return ClassPathSupport.createClassPath(fo);
-        }
-        
-    }
-        
-    private final class KotlinSourceForBinaryQueryImplementation 
-            implements SourceForBinaryQueryImplementation{
-        
-        KotlinSourceForBinaryQueryResult res = new KotlinSourceForBinaryQueryResult();
-
-        @Override
-        public SourceForBinaryQuery.Result findSourceRoots(URL binaryRoot) {
-            return res;
-        }
-        
-        private final class KotlinSourceForBinaryQueryResult 
-            implements SourceForBinaryQuery.Result{
-
-            private final FileObject root = KotlinProject.this.getProjectDirectory().getFileObject("src");
-            private final FileObject[] roots = new FileObject[]{root};
-            
-            @Override
-            public FileObject[] getRoots() {
-                return roots;
-            }
-
-            @Override
-            public void addChangeListener(ChangeListener l) {
-            }
-
-            @Override
-            public void removeChangeListener(ChangeListener l) {
-            }
-            
-        } 
-    
-}
     
     private static final class KotlinPrivilegedTemplates implements PrivilegedTemplates{
 
@@ -378,7 +325,7 @@ public class KotlinProject implements Project {
 
     public KotlinProject(AntProjectHelper helper) {
         this.helper = helper;
-        sourcesHelper = new SourcesHelper(this,helper,helper.getStandardPropertyEvaluator());
+        SourcesHelper sourcesHelper = new SourcesHelper(this,helper,helper.getStandardPropertyEvaluator());
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -397,16 +344,15 @@ public class KotlinProject implements Project {
     @Override
     public Lookup getLookup() {
         if (lkp == null) {
-            lkp = Lookups.fixed(new Object[]{
+            lkp = Lookups.fixed(
                 this,
                 new Info(),
                 new KotlinProjectLogicalView(this),
                 new KotlinSources(),
                 new ActionProviderImpl(),
                 new KotlinPrivilegedTemplates(),
-                new KotlinProjectOpenedHook(this),
-                //sourcesHelper.createSourceGroupModifierImplementation()
-            });
+                new KotlinProjectOpenedHook(this)
+            );
         }
         return lkp;
     }

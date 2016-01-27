@@ -66,7 +66,8 @@ public class KotlinEnvironment {
     public final static String KT_JDK_ANNOTATIONS_PATH = ProjectUtils.buildLibPath("kotlin-jdk-annotations");
     public final static String KOTLIN_COMPILER_PATH = ProjectUtils.buildLibPath("kotlin-compiler");
     
-    private static final Map<org.netbeans.api.project.Project, KotlinEnvironment> CACHED_ENVIRONMENT = new HashMap();
+    private static final Map<org.netbeans.api.project.Project, KotlinEnvironment> CACHED_ENVIRONMENT =
+            new HashMap<org.netbeans.api.project.Project, KotlinEnvironment>();
     private static final Object ENVIRONMENT_LOCK = new Object();
     
     private final JavaCoreApplicationEnvironment applicationEnvironment;

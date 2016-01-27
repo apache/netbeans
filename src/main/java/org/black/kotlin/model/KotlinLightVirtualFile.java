@@ -2,6 +2,8 @@ package org.black.kotlin.model;
 
 import com.intellij.testFramework.LightVirtualFile;
 import java.io.File;
+
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.idea.KotlinLanguage;
 
 /**
@@ -18,6 +20,7 @@ public class KotlinLightVirtualFile extends LightVirtualFile {
     }
     
     @Override
+    @NotNull
     public String getPath(){
         return path;
     }

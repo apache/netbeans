@@ -27,10 +27,9 @@ public final class KotlinTokenScanner {
 
     private final KotlinTokensFactory kotlinTokensFactory;
 
-    private KtFile ktFile = null;
-    private File syntaxFile = null;
-    private PsiElement lastElement = null;
-    private List<KotlinToken> kotlinTokens = null;
+    private KtFile ktFile;
+    private File syntaxFile;
+    private List<KotlinToken<KotlinTokenId>> kotlinTokens;
     private int offset = 0;
     private int tokensNumber = 0;
     private final LexerInput input;
@@ -96,7 +95,8 @@ public final class KotlinTokenScanner {
      * This method creates an ArrayList of tokens from the parsed ktFile.
      */
     private void createListOfKotlinTokens() {
-        kotlinTokens = new ArrayList();
+        kotlinTokens = new ArrayList<KotlinToken<KotlinTokenId>>();
+        PsiElement lastElement;
         for (;;) {
 
             lastElement = ktFile.findElementAt(offset);
@@ -105,13 +105,13 @@ public final class KotlinTokenScanner {
                 offset = lastElement.getTextRange().getEndOffset();
                 TokenType tokenType = kotlinTokensFactory.getToken(lastElement);
 
-                kotlinTokens.add(new KotlinToken(
+                kotlinTokens.add(new KotlinToken<KotlinTokenId>(
                         new KotlinTokenId(tokenType.name(), tokenType.name(), tokenType.getId()),
                         lastElement.getText(), lastElement.getTextOffset(),
                         tokenType));
                 tokensNumber = kotlinTokens.size();
             } else {
-                kotlinTokens.add(new KotlinToken(
+                kotlinTokens.add(new KotlinToken<KotlinTokenId>(
                         new KotlinTokenId(TokenType.EOF.name(), TokenType.EOF.name(), 7), "",
                         0, TokenType.EOF));
                 tokensNumber = kotlinTokens.size();
@@ -129,7 +129,7 @@ public final class KotlinTokenScanner {
      */
     public KotlinToken<KotlinTokenId> getNextToken() {
 
-        KotlinToken ktToken;
+        KotlinToken<KotlinTokenId> ktToken;
 
         if (tokensNumber > 0) {
             ktToken = kotlinTokens.get(kotlinTokens.size() - tokensNumber--);
@@ -143,7 +143,7 @@ public final class KotlinTokenScanner {
             return ktToken;
         } else {
             input.read();
-            return new KotlinToken(
+            return new KotlinToken<KotlinTokenId>(
                     new KotlinTokenId(TokenType.EOF.name(), TokenType.EOF.name(), 7), "",
                     0, TokenType.EOF);
         }

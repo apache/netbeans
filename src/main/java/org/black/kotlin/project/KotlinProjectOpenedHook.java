@@ -1,10 +1,12 @@
 package org.black.kotlin.project;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import org.black.kotlin.run.KotlinCompiler;
+import static org.black.kotlin.utils.ProjectUtils.FILE_SEPARATOR;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -25,6 +27,12 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
         super();
         this.project = project;
         reg = project.getPathRegistry();
+        File path = new File(project.getProjectDirectory().getPath() + FILE_SEPARATOR + "build" + FILE_SEPARATOR + "classes");
+        if (!path.exists()) {
+            if(!path.mkdirs()){
+                System.err.println("Cannot create a directory");
+            }
+        }
     }
 
     @Override
@@ -32,10 +40,7 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
         try {
             KotlinCompiler.INSTANCE.antCompile(project);
             List<ClassPath> paths = new ArrayList<ClassPath>();
-            FileObject classesRoot = null;
-            
-            while (classesRoot == null)
-                classesRoot = project.getProjectDirectory().getFileObject("build").getFileObject("classes");
+            FileObject classesRoot = project.getProjectDirectory().getFileObject("build").getFileObject("classes");
             
             List<URL> jars = getJars();
             
@@ -43,12 +48,15 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
             paths.add(ClassPathSupport.createClassPath(classesRoot.toURL()));
             
             reg.register(ClassPath.SOURCE, paths.toArray(new ClassPath[paths.size()]));
-//            reg.register(ClassPath.BOOT, paths.toArray(new ClassPath[paths.size()]));
-//            reg.register(ClassPath.COMPILE, paths.toArray(new ClassPath[paths.size()]));
-
+            reg.register(ClassPath.BOOT, paths.toArray(new ClassPath[paths.size()]));
+            reg.register(ClassPath.COMPILE, paths.toArray(new ClassPath[paths.size()]));
+            reg.register(ClassPath.EXECUTE, paths.toArray(new ClassPath[paths.size()]));
             
             FileObject srcRoot = project.getProjectDirectory().getFileObject("src");
             reg.register(ClassPath.SOURCE, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
+            reg.register(ClassPath.BOOT, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
+            reg.register(ClassPath.COMPILE, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
+            reg.register(ClassPath.EXECUTE, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
             reg.register(ClassPath.PROP_ROOTS, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
             reg.register(ClassPath.PROP_INCLUDES, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
             

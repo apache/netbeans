@@ -1,7 +1,6 @@
 package org.black.kotlin.utils;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,7 +8,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.project.KotlinProject;
 import org.jetbrains.annotations.NotNull;
@@ -129,7 +127,16 @@ public class ProjectUtils {
 
         try {
             if (proj.getProjectDirectory().getFileObject("build") != null) {
-                proj.getProjectDirectory().getFileObject("build").delete();
+                for (FileObject fo : proj.getProjectDirectory().getFileObject("build").getChildren()){
+                    if (!fo.getName().equals("classes"))
+                        fo.delete();
+                }
+                FileObject classesDir = proj.getProjectDirectory().getFileObject("build").getFileObject("classes");
+                if (classesDir != null){
+                    for (FileObject fo : classesDir.getChildren())
+                        fo.delete();
+                }
+                
             }
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);

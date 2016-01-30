@@ -1,7 +1,6 @@
 package org.black.kotlin.model;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -62,8 +61,7 @@ import org.netbeans.api.project.ui.OpenProjects;
  */
 @SuppressWarnings("deprecation")
 public class KotlinEnvironment {
-    
-    public final static String KT_JDK_ANNOTATIONS_PATH = ProjectUtils.buildLibPath("kotlin-jdk-annotations");
+
     public final static String KOTLIN_COMPILER_PATH = ProjectUtils.buildLibPath("kotlin-compiler");
     
     private static final Map<org.netbeans.api.project.Project, KotlinEnvironment> CACHED_ENVIRONMENT =
@@ -73,12 +71,10 @@ public class KotlinEnvironment {
     private final JavaCoreApplicationEnvironment applicationEnvironment;
     private final JavaCoreProjectEnvironment projectEnvironment;
     private final MockProject project;
-    private final org.netbeans.api.project.Project kotlinProject;
-    private final Set<VirtualFile> roots = new LinkedHashSet();
+    private final Set<VirtualFile> roots = new LinkedHashSet<VirtualFile>();
     
     private KotlinEnvironment(@NotNull org.netbeans.api.project.Project kotlinProject, @NotNull Disposable disposable) {
-        this.kotlinProject = kotlinProject;
-        
+
         applicationEnvironment = createJavaCoreApplicationEnvironment(disposable);
         
         projectEnvironment = new JavaCoreProjectEnvironment(disposable, applicationEnvironment) {
@@ -139,17 +135,7 @@ public class KotlinEnvironment {
             return CACHED_ENVIRONMENT.get(kotlinProject);
         }
     }
-    
-    public static void updateKotlinEnvironment(@NotNull org.netbeans.api.project.Project kotlinProject) {
-        synchronized (ENVIRONMENT_LOCK) {
-            if (CACHED_ENVIRONMENT.containsKey(kotlinProject)) {
-                KotlinEnvironment environment = CACHED_ENVIRONMENT.get(kotlinProject);
-                Disposer.dispose(environment.getJavaApplicationEnvironment().getParentDisposable());
-            }
-            CACHED_ENVIRONMENT.put(kotlinProject, new KotlinEnvironment(kotlinProject, Disposer.newDisposable()));
-        }
-    }
-    
+
     private void configureClasspath() {
         List<String> classpath = ProjectUtils.getClasspath();
         
@@ -197,30 +183,8 @@ public class KotlinEnvironment {
     public Project getProject() {
         return project;
     }
-    
-    @NotNull
-    public JavaCoreApplicationEnvironment getJavaApplicationEnvironment() {
-        return applicationEnvironment;
-    }
-    
-    @Nullable
-    public VirtualFile getVirtualFile(@NotNull String location) {
-        return applicationEnvironment.getLocalFileSystem().findFileByIoFile(new File(location));
-    }
-    
-    public VirtualFile getVirtualFileInJar(@NotNull String pathToJar, @NotNull String relativePath) {
-        return applicationEnvironment.getJarFileSystem().findFileByPath(pathToJar + "!/" + relativePath);
-    }
-    
-    public boolean isJarFile(@NotNull String pathToJar) {
-        VirtualFile jarFile = applicationEnvironment.getJarFileSystem().findFileByPath(pathToJar + "!/");
-        return jarFile != null && jarFile.isValid();
-    }
-    
-    public Set<VirtualFile> getRoots() {
-        return Collections.unmodifiableSet(roots);
-    }
-    
+
+
     private void addToClasspath(File path){
         if (path.isFile()) {
             VirtualFile jarFile = applicationEnvironment.getJarFileSystem().findFileByPath(path + "!/");

@@ -74,7 +74,9 @@ public class LibNode extends FilterNode{
             File destFile = new File(dest);
             if (!destFile.exists()){
                 try {
-                    destFile.createNewFile();
+                    if (!destFile.createNewFile()){
+                        System.err.println("Cannot create new file");
+                    }
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }

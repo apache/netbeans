@@ -4,7 +4,6 @@ import javax.swing.text.BadLocationException;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.IndentTask;
-//import org.openide.awt.StatusDisplayer;
 
 /**
  *
@@ -20,7 +19,7 @@ public class KotlinIndentTask implements IndentTask {
 
     @Override
     public void reindent() throws BadLocationException {
-    //TODO make indentation here
+        //TODO make indentation here
     }
 
     @Override

@@ -15,10 +15,6 @@ public class KtMainDetector {
     private KtMainDetector() {
     }
 
-    public static boolean hasMain(@NotNull List<KtDeclaration> declarations) {
-        return findMainFunction(declarations) != null;
-    }
-
     public static boolean isMain(@NotNull KtNamedFunction function) {
         if ("main".equals(function.getName())) {
             List<KtParameter> parameters = function.getValueParameters();
@@ -33,17 +29,6 @@ public class KtMainDetector {
         return false;
     }
 
-    @Nullable
-    public static KtNamedFunction getMainFunction(@NotNull Collection<KtFile> files) {
-        for (KtFile file : files) {
-            KtNamedFunction mainFunction = findMainFunction(file.getDeclarations());
-            if (mainFunction != null) {
-                return mainFunction;
-            }
-        }
-        
-        return null;
-    }
     
     @Nullable
     public static KtFile getMainFunctionFile(@NotNull Collection<KtFile> files) {

@@ -45,6 +45,7 @@ public class KotlinCompiler {
      */
     public void antBuild(KotlinProject project) {
         try {
+            ProjectUtils.findKotlinMain(project.getProjectDirectory().getChildren());
             makeBuildXml(project);
             ProjectUtils.getOutputDir(project);
             FileObject buildImpl = project.getHelper().getProjectDirectory().getFileObject("build.xml");

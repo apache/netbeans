@@ -30,7 +30,6 @@ public class KotlinCompiler {
     public void antCompile(KotlinProject project) {
         try {
             makeBuildXml(project);
-            ProjectUtils.getOutputDir(project);
             FileObject buildImpl = project.getHelper().getProjectDirectory().getFileObject("build.xml");
             ActionUtils.runTarget(buildImpl, new String[]{"compile"}, null);
         } catch (IOException ex) {
@@ -45,9 +44,7 @@ public class KotlinCompiler {
      */
     public void antBuild(KotlinProject project) {
         try {
-            ProjectUtils.findKotlinMain(project.getProjectDirectory().getChildren());
             makeBuildXml(project);
-            ProjectUtils.getOutputDir(project);
             FileObject buildImpl = project.getHelper().getProjectDirectory().getFileObject("build.xml");
             ActionUtils.runTarget(buildImpl, new String[]{"build"}, null);
         } catch (IOException ex) {
@@ -62,9 +59,7 @@ public class KotlinCompiler {
      */
     public void antRun(KotlinProject project) throws IOException, InterruptedException {
         try {
-//            ProjectUtils.findMainWithDetector(project.getProjectDirectory().getFileObject("src").getChildren());
             makeBuildXml(project);
-            ProjectUtils.getOutputDir(project);
             FileObject buildImpl = project.getHelper().getProjectDirectory().getFileObject("build.xml");
             ActionUtils.runTarget(buildImpl, new String[]{"run"}, null);
         } catch (IOException ex) {
@@ -118,7 +113,6 @@ public class KotlinCompiler {
                 + "            </manifest>\n"
                 + "        </jar>\n"
                 + "    </target>\n";
-        //TODO change getMainFileClass() method in the future
     }
 
     /**

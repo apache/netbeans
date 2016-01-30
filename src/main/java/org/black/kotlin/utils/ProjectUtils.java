@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.project.KotlinProject;
 import org.jetbrains.annotations.NotNull;
@@ -123,39 +124,6 @@ public class ProjectUtils {
         return null;
     }
 
-    /**
-     * returns path to output directory.
-     *
-     * @param proj Kotlin project
-     * @return path to output directory
-     */
-    public static String getOutputDir(KotlinProject proj) {
-
-        File path = new File(proj.getProjectDirectory().getPath() + FILE_SEPARATOR + "build");
-
-        if (!path.exists()) {
-            if (!path.mkdirs()) {
-                System.err.println("Cannot create a directory");
-            }
-        }
-
-        String dir = proj.getProjectDirectory().getPath() + FILE_SEPARATOR + "build";
-        String[] dirs;
-        if (FILE_SEPARATOR.equals("\\")) {
-            dirs = dir.split("\\\\");
-        } else {
-            dirs = dir.split(FILE_SEPARATOR);
-        }
-        StringBuilder outputDir = new StringBuilder("");
-
-        for (String str : dirs) {
-            outputDir.append(str);
-            outputDir.append(FILE_SEPARATOR);
-        }
-        outputDir.append(proj.getProjectDirectory().getName()).append(".jar");
-
-        return outputDir.toString();
-    }
 
     public static void clean(KotlinProject proj) {
 

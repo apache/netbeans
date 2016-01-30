@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.black</groupId>
     <artifactId>Kotlin</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>nbm</packaging>
     <build>
         <plugins>
@@ -216,6 +216,12 @@
             <artifactId>org-netbeans-api-java</artifactId>
             <version>RELEASE81</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-execution</artifactId>
+            <version>RELEASE81</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
     <properties>

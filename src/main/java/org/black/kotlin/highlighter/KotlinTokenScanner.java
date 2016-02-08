@@ -57,27 +57,31 @@ public final class KotlinTokenScanner {
      * name is syntaxFile.
      */
     private void createSyntaxFile() {
-        syntaxFile = new File("syntax");
-        StringBuilder builder = new StringBuilder("");
-
-        int character;
-
-        do {
-            character = input.read();
-            builder.append((char) character);
-        } while (character != LexerInput.EOF);
-
-        CharSequence readText = builder.toString();
-        input.backup(input.readLengthEOF());
-
         try {
-            PrintWriter writer = new PrintWriter(syntaxFile, "UTF-8");
-            writer.print(readText);
-            writer.close();
-
-        } catch (FileNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (UnsupportedEncodingException ex) {
+            syntaxFile = File.createTempFile("syntax", "");
+            StringBuilder builder = new StringBuilder("");
+            
+            int character;
+            
+            do {
+                character = input.read();
+                builder.append((char) character);
+            } while (character != LexerInput.EOF);
+            
+            CharSequence readText = builder.toString();
+            input.backup(input.readLengthEOF());
+            
+            try {
+                PrintWriter writer = new PrintWriter(syntaxFile, "UTF-8");
+                writer.print(readText);
+                writer.close();
+                
+            } catch (FileNotFoundException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (UnsupportedEncodingException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
     }

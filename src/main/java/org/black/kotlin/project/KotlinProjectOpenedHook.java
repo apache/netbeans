@@ -35,6 +35,7 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
         }
     }
 
+    
     @Override
     public void projectOpened() {
         try {

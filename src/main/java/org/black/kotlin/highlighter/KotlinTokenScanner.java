@@ -1,21 +1,13 @@
 package org.black.kotlin.highlighter;
 
 import com.intellij.psi.PsiElement;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.black.kotlin.highlighter.netbeans.KotlinToken;
 import org.black.kotlin.highlighter.netbeans.KotlinTokenId;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.spi.lexer.LexerInput;
-import org.openide.util.Exceptions;
 
 /**
  * KotlinTokenScanner parses kotlin code for tokens
@@ -27,8 +19,7 @@ public final class KotlinTokenScanner {
 
     private final KotlinTokensFactory kotlinTokensFactory;
 
-    private KtFile ktFile;
-    private File syntaxFile;
+    private final KtFile ktFile;
     private List<KotlinToken<KotlinTokenId>> kotlinTokens;
     private int offset = 0;
     private int tokensNumber = 0;
@@ -42,57 +33,23 @@ public final class KotlinTokenScanner {
     public KotlinTokenScanner(LexerInput input) {
         kotlinTokensFactory = new KotlinTokensFactory();
         this.input = input;
-        createSyntaxFile();
-        try {
-            ktFile = KotlinEnvironment.parseFile(syntaxFile);
-            deleteSyntaxFile();
-            createListOfKotlinTokens();
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        ktFile = KotlinEnvironment.getParsedKtFile(getTextToParse());
+        createListOfKotlinTokens();
     }
 
-    /**
-     * Creates temporary file for parsing from the input code. Temporary file
-     * name is syntaxFile.
-     */
-    private void createSyntaxFile() {
-        try {
-            syntaxFile = File.createTempFile("syntax", "");
-            StringBuilder builder = new StringBuilder("");
-            
-            int character;
-            
-            do {
-                character = input.read();
-                builder.append((char) character);
-            } while (character != LexerInput.EOF);
-            
-            CharSequence readText = builder.toString();
-            input.backup(input.readLengthEOF());
-            
-            try {
-                PrintWriter writer = new PrintWriter(syntaxFile, "UTF-8");
-                writer.print(readText);
-                writer.close();
-                
-            } catch (FileNotFoundException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (UnsupportedEncodingException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-    }
+    private String getTextToParse() {
+        StringBuilder builder = new StringBuilder("");
 
-    /**
-     * This method deletes temporary syntaxFile.
-     */
-    public void deleteSyntaxFile() {
-        if (syntaxFile != null) {
-            syntaxFile.deleteOnExit();
-        }
+        int character;
+
+        do {
+            character = input.read();
+            builder.append((char) character);
+        } while (character != LexerInput.EOF);
+
+        input.backup(input.readLengthEOF());
+
+        return builder.toString();
     }
 
     /**

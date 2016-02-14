@@ -230,8 +230,20 @@ public class KotlinEnvironment {
         virtualFile.setCharset(CharsetToolkit.UTF8_CHARSET);
 
         PsiFileFactoryImpl psiFileFactory = (PsiFileFactoryImpl) PsiFileFactory.getInstance(project);
-
+        
         return (KtFile) psiFileFactory.trySetupPsiForFile(virtualFile, KotlinLanguage.INSTANCE, true, false);
+    }
+    
+    @Nullable
+    public static KtFile getParsedKtFile(@NotNull String text){
+        StringUtil.assertValidSeparators(text);
+
+        Project project = KotlinEnvironment.getEnvironment(
+                OpenProjects.getDefault().getOpenProjects()[0]).getProject();
+
+        PsiFileFactoryImpl psiFileFactory = (PsiFileFactoryImpl) PsiFileFactory.getInstance(project);
+        
+        return (KtFile) psiFileFactory.createFileFromText(KotlinLanguage.INSTANCE, text);
     }
 
 }

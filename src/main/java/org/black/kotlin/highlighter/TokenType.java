@@ -8,7 +8,7 @@ package org.black.kotlin.highlighter;
 public enum TokenType{
     KEYWORD, IDENTIFIER, STRING, SINGLE_LINE_COMMENT,
     MULTI_LINE_COMMENT, KDOC_TAG_NAME, WHITESPACE,
-    UNDEFINED, EOF;
+    ANNOTATION, KDOC_LINK, UNDEFINED, EOF;
     
     /**
      * Returns a token id number based on its' type.
@@ -30,6 +30,10 @@ public enum TokenType{
                 return 5;
             case WHITESPACE:
                 return 6;
+            case ANNOTATION:
+                return 8;
+            case KDOC_LINK:
+                return 9;
             case UNDEFINED:
             case EOF:
             default:

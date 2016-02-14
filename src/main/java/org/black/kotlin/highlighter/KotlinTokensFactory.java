@@ -19,6 +19,8 @@ public class KotlinTokensFactory {
     TokenType multiLineCommentToken = TokenType.MULTI_LINE_COMMENT;
     TokenType kdocTagNameToken = TokenType.KDOC_TAG_NAME;
     TokenType whitespaceToken = TokenType.WHITESPACE;
+    TokenType annotationToken = TokenType.ANNOTATION;
+    TokenType kdocLink = TokenType.KDOC_LINK;
     
     /**
      * Returns {@link TokenType} based on input {@link PsiElement}.
@@ -54,6 +56,13 @@ public class KotlinTokensFactory {
         }
         else if (elementType == KDocTokens.TAG_NAME){
             return kdocTagNameToken;
+        }
+        else if (elementType == KtTokens.ANNOTATION_KEYWORD ){
+            return annotationToken;
+        }
+        else if (elementType == KDocTokens.MARKDOWN_INLINE_LINK ||
+                elementType == KDocTokens.MARKDOWN_LINK){
+            return kdocLink;
         }
         else 
             return TokenType.UNDEFINED;

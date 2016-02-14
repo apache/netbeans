@@ -3,9 +3,18 @@
     "https://netbeans.org/dtds/EditorFontsColors-1_1.dtd">
 <fontscolors>
     <fontcolor name="IDENTIFIER" default="identifier"/>
-    <fontcolor name="KEYWORD" default="keyword" foreColor="blue"/>
+    <fontcolor name="KEYWORD" default="keyword" foreColor="blue">
+        <font style="bold"/>
+    </fontcolor>
     <fontcolor name="SINGLE_LINE_COMMENT" default="comment"/>
     <fontcolor name="MULTI_LINE_COMMENT" default="comment"/>
     <fontcolor name="STRING" default="string"/>
     <fontcolor name="WHITESPACE" default="whitespace"/>
+    <fontcolor name="ANNOTATION" default="annotation" foreColor="red"/>
+    <fontcolor name="KDOC_TAG_NAME" default="comment" underline="gray">
+        <font style="bold, italic"/>
+    </fontcolor>
+    <fontcolor name="KDOC_LINK" default="comment" underline="black">
+        <font style="bold, italic"/>
+    </fontcolor>
 </fontscolors>

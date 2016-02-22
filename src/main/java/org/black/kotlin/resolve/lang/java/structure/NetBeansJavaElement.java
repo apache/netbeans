@@ -3,7 +3,6 @@ package org.black.kotlin.resolve.lang.java.structure;
 import javax.lang.model.type.TypeMirror;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaElement;
-
 /**
  *
  * @author Александр

@@ -1,8 +1,11 @@
 package org.black.kotlin.resolve.lang.java.structure;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 import org.jetbrains.kotlin.descriptors.Visibility;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
@@ -21,9 +24,9 @@ import org.jetbrains.kotlin.name.Name;
  *
  * @author Александр
  */
-public class NetBeansJavaClass extends NetBeansJavaClassifier<TypeMirror> implements JavaClass {
+public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implements JavaClass {
     
-    public NetBeansJavaClass(TypeMirror javaElement){
+    public NetBeansJavaClass(Element javaElement){
         super(javaElement);
     }
 
@@ -49,7 +52,9 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<TypeMirror> implem
 
     @Override
     public Collection<JavaClass> getInnerClasses() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        Class[] classes = getBinding().getKind().getDeclaringClass().getDeclaredClasses();
+//        classes[0].getTypeParameters();
+        return null;
     }
 
     @Override
@@ -85,7 +90,15 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<TypeMirror> implem
 
     @Override
     public Collection<JavaMethod> getMethods() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Method[] methods = getBinding().getKind().getDeclaringClass().getDeclaredMethods();
+        List<JavaMethod> methodsList = new ArrayList<JavaMethod>();
+        for (Method method : methods){
+//            if (method.getReturnType() != null)
+//                methodsList.add(new NetBeansJavaMethod(method));
+//TODO
+        }
+        
+        return methodsList;
     }
 
     @Override
@@ -115,7 +128,7 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<TypeMirror> implem
 
     @Override
     public List<JavaTypeParameter> getTypeParameters() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;//typeParameters(getBinding().getKind().getDeclaringClass().getTypeParameters());
     }
 
     @Override

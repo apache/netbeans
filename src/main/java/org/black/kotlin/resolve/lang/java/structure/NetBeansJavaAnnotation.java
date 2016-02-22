@@ -1,6 +1,7 @@
 package org.black.kotlin.resolve.lang.java.structure;
 
 import java.util.Collection;
+import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationArgument;
@@ -15,11 +16,11 @@ import org.netbeans.api.project.ui.OpenProjects;
  *
  * @author Александр
  */
-public class NetBeansJavaAnnotation extends NetBeansJavaElement<TypeMirror> implements JavaAnnotation{
+public class NetBeansJavaAnnotation extends NetBeansJavaElement<Element> implements JavaAnnotation{
 
     private final Project javaProject;
     
-    protected NetBeansJavaAnnotation(TypeMirror javaAnnotation){
+    protected NetBeansJavaAnnotation(Element javaAnnotation){
         super(javaAnnotation);
         this.javaProject = OpenProjects.getDefault().getOpenProjects()[0];
     }

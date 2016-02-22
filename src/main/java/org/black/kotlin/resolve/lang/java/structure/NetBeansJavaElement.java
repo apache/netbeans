@@ -1,13 +1,13 @@
 package org.black.kotlin.resolve.lang.java.structure;
 
-import javax.lang.model.type.TypeMirror;
+import javax.lang.model.element.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaElement;
 /**
  *
  * @author Александр
  */
-public abstract class NetBeansJavaElement<T extends TypeMirror> implements JavaElement {
+public abstract class NetBeansJavaElement<T extends Element> implements JavaElement {
     
     private final T binding;
     

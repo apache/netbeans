@@ -33,7 +33,7 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implement
 
     @Override
     public Name getName() {
-        return Name.guess(getBinding().getKind().getDeclaringClass().getName());
+        return Name.guess(getBinding().getSimpleName().toString());
     }
 
     @Override
@@ -48,7 +48,7 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implement
 
     @Override
     public boolean isDeprecatedInJavaDoc() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;//temporary
     }
 
     @Override
@@ -57,7 +57,8 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implement
         List<JavaClass> innerClasses = Lists.newArrayList();
         
         for (Element element : enclosedElements){
-            innerClasses.add(new NetBeansJavaClass(element));
+            if (element.getKind().isClass())
+                innerClasses.add(new NetBeansJavaClass(element));
         }
         return innerClasses;
     }

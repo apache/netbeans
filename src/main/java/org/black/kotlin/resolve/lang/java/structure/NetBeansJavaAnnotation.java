@@ -2,7 +2,7 @@ package org.black.kotlin.resolve.lang.java.structure;
 
 import java.util.Collection;
 import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationArgument;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
@@ -26,7 +26,7 @@ public class NetBeansJavaAnnotation extends NetBeansJavaElement<Element> impleme
     }
     
     @Override
-    public JavaAnnotationArgument findArgument(Name name) {
+    public JavaAnnotationArgument findArgument(@NotNull Name name) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

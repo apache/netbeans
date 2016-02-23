@@ -1,0 +1,32 @@
+package org.black.kotlin.resolve.lang.java.structure;
+
+import javax.lang.model.element.Element;
+import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
+import org.jetbrains.kotlin.load.java.structure.JavaAnnotationAsAnnotationArgument;
+import org.jetbrains.kotlin.name.Name;
+
+/**
+ *
+ * @author Александр
+ */
+public class NetBeansJavaAnnotationAsAnnotationArgument implements JavaAnnotationAsAnnotationArgument {
+
+    private final Element annotation;
+    private final Name name;
+    
+    public NetBeansJavaAnnotationAsAnnotationArgument(Element annotation, Name name){
+        this.annotation = annotation;
+        this.name = name;
+    }
+    
+    @Override
+    public JavaAnnotation getAnnotation() {
+        return new NetBeansJavaAnnotation(annotation);
+    }
+
+    @Override
+    public Name getName() {
+        return name;
+    }
+    
+}

@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import org.jetbrains.kotlin.descriptors.Visibility;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;

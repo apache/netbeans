@@ -8,7 +8,6 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
 import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.descriptors.Visibility;

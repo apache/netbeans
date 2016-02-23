@@ -6,7 +6,6 @@ import java.util.List;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeVariable;
-import javax.lang.model.util.Types;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifier;
@@ -23,7 +22,7 @@ public abstract class NetBeansJavaClassifier<T extends Element> extends
         super(javaType);
     }
     
-    public JavaClassifier create(Element element){
+    public static JavaClassifier create(Element element){
         if (element.asType() instanceof TypeVariable){
             return new NetBeansJavaTypeParameter(element);
         }

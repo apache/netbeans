@@ -6,6 +6,11 @@ import java.util.List;
 import javax.lang.model.element.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
+import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
+import org.jetbrains.kotlin.load.java.structure.JavaField;
+import org.jetbrains.kotlin.load.java.structure.JavaMethod;
+import org.jetbrains.kotlin.load.java.structure.JavaType;
+import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 
 /**
  *
@@ -28,6 +33,47 @@ public class NetBeansJavaElementFactory {
                 return new NetBeansJavaAnnotation(binding);
             }
         };
+        
+        private static final Factory<Element, JavaType> TYPES = 
+                new Factory<Element, JavaType>() {
+            @Override
+            public JavaType create(Element binding) {
+                return NetBeansJavaType.create(binding);
+            }
+        };
+        
+        private static final Factory<Element, JavaClassifierType> CLASSIFIER_TYPES =
+                new Factory<Element, JavaClassifierType>() {
+            @Override
+            public JavaClassifierType create(Element binding) {
+                return new NetBeansJavaClassifierType(binding);
+            }
+        };
+        
+        private static final Factory<Element, JavaMethod> METHODS =
+                new Factory<Element, JavaMethod>() {
+            @Override
+            public JavaMethod create(Element binding) {
+                return new NetBeansJavaMethod(binding);
+            }
+        };
+        
+        private static final Factory<Element, JavaField> FIELDS =
+                new Factory<Element, JavaField>() {
+            @Override
+            public JavaField create(Element binding) {
+                return new NetBeansJavaField(binding);
+            }
+        };
+        
+        private static final Factory<Element, JavaTypeParameter> TYPE_PARAMETERS =
+                new Factory<Element, JavaTypeParameter>() {
+            @Override
+            public JavaTypeParameter create(Element binding) {
+                return new NetBeansJavaTypeParameter(binding);
+            }
+        };
+        
     }
 
     @NotNull
@@ -46,6 +92,31 @@ public class NetBeansJavaElementFactory {
     @NotNull
     public static List<JavaAnnotation> annotations(@NotNull Element[] annotations){
         return convert(annotations, Factories.ANNOTATIONS);
+    }
+    
+    @NotNull
+    public static List<JavaType> types(@NotNull Element[] types) {
+        return convert(types, Factories.TYPES);
+    }
+    
+    @NotNull
+    public static List<JavaClassifierType> classifierTypes(@NotNull Element[] classTypes){
+        return convert(classTypes, Factories.CLASSIFIER_TYPES);
+    }
+    
+    @NotNull
+    public static List<JavaMethod> methods(@NotNull Element[] methods){
+        return convert(methods, Factories.METHODS);
+    }
+    
+    @NotNull
+    public static List<JavaField> fields(@NotNull Element[] variables){
+        return convert(variables, Factories.FIELDS);
+    }
+    
+    @NotNull
+    public static List<JavaTypeParameter> typeParameters(@NotNull Element[] typeParameters){
+        return convert(typeParameters, Factories.TYPE_PARAMETERS);
     }
     
 }

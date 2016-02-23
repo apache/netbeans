@@ -1,12 +1,13 @@
 package org.black.kotlin.resolve.lang.java.structure;
 
+import com.google.common.collect.Lists;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
+import javax.lang.model.element.ElementKind;
 import org.jetbrains.kotlin.descriptors.Visibility;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
@@ -52,9 +53,13 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implement
 
     @Override
     public Collection<JavaClass> getInnerClasses() {
-//        Class[] classes = getBinding().getKind().getDeclaringClass().getDeclaredClasses();
-//        classes[0].getTypeParameters();
-        return null;
+        List<? extends Element> enclosedElements = getBinding().getEnclosedElements();
+        List<JavaClass> innerClasses = Lists.newArrayList();
+        
+        for (Element element : enclosedElements){
+            innerClasses.add(new NetBeansJavaClass(element));
+        }
+        return innerClasses;
     }
 
     @Override
@@ -90,15 +95,16 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implement
 
     @Override
     public Collection<JavaMethod> getMethods() {
-        Method[] methods = getBinding().getKind().getDeclaringClass().getDeclaredMethods();
-        List<JavaMethod> methodsList = new ArrayList<JavaMethod>();
-        for (Method method : methods){
-//            if (method.getReturnType() != null)
-//                methodsList.add(new NetBeansJavaMethod(method));
-//TODO
-        }
         
-        return methodsList;
+        List<? extends Element> declaredElements = getBinding().getEnclosedElements();
+        List<JavaMethod> javaMethods = Lists.newArrayList();
+        
+        for (Element element : declaredElements){
+            if (element.getKind().equals(ElementKind.METHOD)){
+                javaMethods.add(new NetBeansJavaMethod(element));
+            }
+        }
+        return javaMethods;
     }
 
     @Override

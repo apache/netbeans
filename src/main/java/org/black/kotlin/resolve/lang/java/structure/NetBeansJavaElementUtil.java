@@ -1,9 +1,13 @@
 package org.black.kotlin.resolve.lang.java.structure;
 
+import com.google.common.collect.Lists;
+import com.intellij.psi.CommonClassNames;
 import java.lang.reflect.Modifier;
 import java.lang.annotation.Annotation;
+import java.util.List;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +18,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.name.ClassId;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ui.OpenProjects;
 /**
  *
  * @author Александр
@@ -58,5 +64,45 @@ public class NetBeansJavaElementUtil {
         
         return null;
     }
+    
+    private static List<Element> getSuperTypes(@NotNull Element typeBinding){
+        List<Element> superTypes = Lists.newArrayList();
+        for (Element superInterface : typeBinding.getEnclosedElements()){
+            if (superInterface.getKind().isInterface()){
+                superTypes.add(superInterface);
+            }
+        }
+        Element packageElement = typeBinding.getEnclosingElement();
+        for (Element elem : packageElement.getEnclosedElements()){
+            if (elem.getKind().equals(ElementKind.CLASS)){
+                superTypes.add(elem); //searching for a superclass
+            }
+        }
+        return superTypes;
+    }
+    
+    public static Element[] getSuperTypesWithObject(@NotNull Element typeBinding){
+        List<Element> allSuperTypes = Lists.newArrayList();
+        
+        boolean javaLangObjectInSuperTypes = false;
+        for (Element superType : getSuperTypes(typeBinding)){
+            javaLangObjectInSuperTypes = superType.getKind().getDeclaringClass().
+                    getCanonicalName().equals(CommonClassNames.JAVA_LANG_OBJECT);
+            allSuperTypes.add(superType);
+        }
+        
+        if (!javaLangObjectInSuperTypes && !typeBinding.getKind().getDeclaringClass().getCanonicalName().
+                equals(CommonClassNames.JAVA_LANG_OBJECT)){
+        //    allSuperTypes.add(getJavaLangObjectBinding(OpenProjects.getDefault().getOpenProjects()[0]));
+        }
+        
+        return allSuperTypes.toArray(new Element[allSuperTypes.size()]);
+    }
+    
+    
+//    @NotNull
+//    private static Element getJavaLangObjectBinding(@NotNull Project project){
+//        
+//    }
     
 }

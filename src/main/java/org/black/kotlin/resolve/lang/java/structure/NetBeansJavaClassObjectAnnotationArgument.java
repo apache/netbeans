@@ -30,7 +30,7 @@ public class NetBeansJavaClassObjectAnnotationArgument implements JavaClassObjec
         Element typeBinding = NetBeansJavaClassFinder.findType(
                 new FqName(javaClass.getCanonicalName()), javaProject);
         assert typeBinding != null;
-        return NetBeansJavaType.create(typeBinding);
+        return NetBeansJavaType.create(typeBinding.asType());
     }
 
     @Override

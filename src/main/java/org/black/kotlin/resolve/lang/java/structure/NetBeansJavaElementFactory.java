@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
 import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
@@ -34,10 +35,10 @@ public class NetBeansJavaElementFactory {
             }
         };
         
-        private static final Factory<Element, JavaType> TYPES = 
-                new Factory<Element, JavaType>() {
+        private static final Factory<TypeMirror, JavaType> TYPES = 
+                new Factory<TypeMirror, JavaType>() {
             @Override
-            public JavaType create(Element binding) {
+            public JavaType create(TypeMirror binding) {
                 return NetBeansJavaType.create(binding);
             }
         };
@@ -95,7 +96,7 @@ public class NetBeansJavaElementFactory {
     }
     
     @NotNull
-    public static List<JavaType> types(@NotNull Element[] types) {
+    public static List<JavaType> types(@NotNull TypeMirror[] types) {
         return convert(types, Factories.TYPES);
     }
     

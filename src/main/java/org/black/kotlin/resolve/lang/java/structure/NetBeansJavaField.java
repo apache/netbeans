@@ -28,6 +28,6 @@ public class NetBeansJavaField extends NetBeansJavaMember<Element> implements Ja
 
     @Override
     public JavaType getType() {
-        return NetBeansJavaType.create(getBinding());
+        return NetBeansJavaType.create(getBinding().asType());
     }
 }

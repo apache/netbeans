@@ -4,17 +4,21 @@ import com.google.common.collect.Lists;
 import com.intellij.psi.CommonClassNames;
 import java.lang.reflect.Modifier;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.descriptors.Visibilities;
 import org.jetbrains.kotlin.descriptors.Visibility;
 import org.jetbrains.kotlin.load.java.JavaVisibilities;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
+import org.jetbrains.kotlin.load.java.structure.JavaValueParameter;
 import org.jetbrains.kotlin.name.ClassId;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
@@ -54,8 +58,8 @@ public class NetBeansJavaElementUtil {
         return fqName == null ? null : ClassId.topLevel(new FqName(fqName));
     }
     
-    public static JavaAnnotation findAnnotation(@NotNull Element bindings, @NotNull FqName fqName){
-        for (AnnotationMirror annotation : bindings.getAnnotationMirrors()){//.getKind().getDeclaringClass().getAnnotations()){
+    public static JavaAnnotation findAnnotation(@NotNull Element binding, @NotNull FqName fqName){
+        for (AnnotationMirror annotation : binding.getAnnotationMirrors()){//.getKind().getDeclaringClass().getAnnotations()){
             String annotationFQName = annotation.getClass().getCanonicalName();//.annotationType().getCanonicalName(); //not sure
             if (fqName.asString().equals(annotationFQName)){
                 return new NetBeansJavaAnnotation(annotation.getAnnotationType().asElement());
@@ -74,7 +78,7 @@ public class NetBeansJavaElementUtil {
         }
         Element packageElement = typeBinding.getEnclosingElement();
         for (Element elem : packageElement.getEnclosedElements()){
-            if (elem.getKind().equals(ElementKind.CLASS)){
+            if (elem.getKind() == ElementKind.CLASS){
                 superTypes.add(elem); //searching for a superclass
             }
         }
@@ -99,10 +103,40 @@ public class NetBeansJavaElementUtil {
         return allSuperTypes.toArray(new Element[allSuperTypes.size()]);
     }
     
+    @NotNull
+    static List<JavaValueParameter> getValueParameters(@NotNull ExecutableElement method){
+        List<JavaValueParameter> parameters = new ArrayList<JavaValueParameter>();
+        List<? extends VariableElement> valueParameters = method.getParameters();
+        String[] parameterNames = getParametersNames(method);
+        int parameterTypesCount = valueParameters.size();
+        
+        for (int i = 0; i < parameterTypesCount; i++){
+            boolean isLastParameter = i == parameterTypesCount-1;
+            parameters.add(new NetBeansJavaValueParameter(valueParameters.get(i), 
+                    parameterNames[i], isLastParameter ? method.isVarArgs() : false));
+            
+        }
+        
+        return parameters;
+    }
     
-//    @NotNull
-//    private static Element getJavaLangObjectBinding(@NotNull Project project){
-//        
-//    }
+    
+    @NotNull
+    private static String[] getParametersNames(@NotNull ExecutableElement method){
+        List<? extends VariableElement> valueParameters = method.getParameters();
+        List<String> parameterNames = Lists.newArrayList();
+        
+        for (VariableElement elem : valueParameters){
+            parameterNames.add(elem.getSimpleName().toString());
+        }
+        
+        return parameterNames.toArray(new String[parameterNames.size()]);
+        
+    } 
+    
+    
+    
+    
+    
     
 }

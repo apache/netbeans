@@ -1,19 +1,17 @@
 package org.black.kotlin.resolve.lang.java.structure;
 
-import java.lang.reflect.Method;
-import java.util.Collection;
+import static org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.typeParameters;
+
 import java.util.List;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import org.jetbrains.kotlin.descriptors.Visibility;
-import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeParameterElement;
+import static org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.typeParameters;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaMethod;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 import org.jetbrains.kotlin.load.java.structure.JavaValueParameter;
-import org.jetbrains.kotlin.name.FqName;
-import org.jetbrains.kotlin.name.Name;
 
 /**
  *
@@ -26,66 +24,27 @@ public class NetBeansJavaMethod extends NetBeansJavaMember<Element> implements J
 
     @Override
     public List<JavaValueParameter> getValueParameters() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NetBeansJavaElementUtil.getValueParameters((ExecutableElement)getBinding());
     }
 
     @Override
     public boolean hasAnnotationParameterDefaultValue() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return ((ExecutableElement) getBinding()).getDefaultValue() != null;
     }
 
     @Override
     public JavaType getReturnType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NetBeansJavaType.create(((ExecutableElement) getBinding()).getReturnType());
     }
 
     @Override
     public JavaClass getContainingClass() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Collection<JavaAnnotation> getAnnotations() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public JavaAnnotation findAnnotation(FqName fqName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean isDeprecatedInJavaDoc() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean isAbstract() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean isStatic() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean isFinal() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Visibility getVisibility() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Name getName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new NetBeansJavaClass(getBinding().getEnclosingElement());
     }
 
     @Override
     public List<JavaTypeParameter> getTypeParameters() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<? extends TypeParameterElement> valueParameters = ((ExecutableElement) getBinding()).getTypeParameters();
+        return typeParameters(valueParameters.toArray(new Element[valueParameters.size()]));
     }
 }

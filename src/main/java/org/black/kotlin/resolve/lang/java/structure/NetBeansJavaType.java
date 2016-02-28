@@ -2,6 +2,7 @@ package org.black.kotlin.resolve.lang.java.structure;
 
 import java.util.Collection;
 import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeMirror;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner;
@@ -13,7 +14,7 @@ import org.jetbrains.kotlin.name.FqName;
  *
  * @author Александр
  */
-public class NetBeansJavaType<T extends Element> implements JavaType, JavaAnnotationOwner {
+public class NetBeansJavaType<T extends TypeMirror> implements JavaType, JavaAnnotationOwner {
 
     private final T binding;
     
@@ -21,7 +22,7 @@ public class NetBeansJavaType<T extends Element> implements JavaType, JavaAnnota
         this.binding = binding;
     }
     
-    public static NetBeansJavaType<?> create(@NotNull Element typeBinding){
+    public static NetBeansJavaType<?> create(@NotNull TypeMirror typeBinding){
         if (typeBinding.getKind().getDeclaringClass().isPrimitive()){
             return new NetBeansJavaPrimitiveType(typeBinding);
         } else {

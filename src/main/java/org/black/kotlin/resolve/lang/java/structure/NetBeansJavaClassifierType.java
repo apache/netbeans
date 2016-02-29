@@ -30,7 +30,7 @@ import org.jetbrains.kotlin.load.java.structure.impl.JavaTypeSubstitutorImpl;
  */
 public class NetBeansJavaClassifierType extends NetBeansJavaType<TypeMirror> implements JavaClassifierType {
     
-    private Element typeBinding;
+    private final Element typeBinding;
     
     public NetBeansJavaClassifierType(Element typeBinding){
         super(typeBinding.asType());
@@ -77,6 +77,7 @@ public class NetBeansJavaClassifierType extends NetBeansJavaType<TypeMirror> imp
 
     @Override
     public boolean isRaw() {
+        
         return typeBinding instanceof ReferenceType;
     }
 

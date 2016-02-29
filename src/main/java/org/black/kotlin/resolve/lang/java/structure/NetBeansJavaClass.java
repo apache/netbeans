@@ -1,15 +1,17 @@
 package org.black.kotlin.resolve.lang.java.structure;
 
+import static org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.typeParameters;
+import static org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.classifierTypes;
+
 import com.google.common.collect.Lists;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
 import org.jetbrains.kotlin.descriptors.Visibility;
-import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
 import org.jetbrains.kotlin.load.java.structure.JavaConstructor;
@@ -37,21 +39,6 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implement
     }
 
     @Override
-    public Collection<JavaAnnotation> getAnnotations() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public JavaAnnotation findAnnotation(FqName fqName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean isDeprecatedInJavaDoc() {
-        return false;//temporary
-    }
-
-    @Override
     public Collection<JavaClass> getInnerClasses() {
         List<? extends Element> enclosedElements = getBinding().getEnclosedElements();
         List<JavaClass> innerClasses = Lists.newArrayList();
@@ -65,33 +52,33 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implement
 
     @Override
     public FqName getFqName() {
-        return new FqName(getBinding().getKind().getDeclaringClass().getCanonicalName()); // not sure again
+        return new FqName(((TypeElement) getBinding()).getQualifiedName().toString());
     }
 
     @Override
     public boolean isInterface() {
-        return getBinding().getKind().getDeclaringClass().isInterface();
+        return ((TypeElement) getBinding()).getKind().isInterface();
     }
 
     @Override
     public boolean isAnnotationType() {
-        return getBinding().getKind().getDeclaringClass().isAnnotation();
+        return ((TypeElement) getBinding()).getKind() == ElementKind.ANNOTATION_TYPE;
     }
 
     @Override
     public boolean isEnum() {
-        return getBinding().getKind().getDeclaringClass().isEnum();
+        return ((TypeElement) getBinding()).getKind() == ElementKind.ENUM;
     }
 
     @Override
     public JavaClass getOuterClass() {
-        Class outerClass = getBinding().getKind().getDeclaringClass();
-        return outerClass != null ? new NetBeansJavaClass(getBinding()) : null;
+        Element outerClass = ((TypeElement) getBinding()).getEnclosingElement();
+        return outerClass != null ? new NetBeansJavaClass(outerClass) : null;
     }
 
     @Override
     public Collection<JavaClassifierType> getSupertypes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return classifierTypes(NetBeansJavaElementUtil.getSuperTypesWithObject(getBinding()));
     }
 
     @Override
@@ -101,7 +88,7 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implement
         List<JavaMethod> javaMethods = Lists.newArrayList();
         
         for (Element element : declaredElements){
-            if (element.getKind().equals(ElementKind.METHOD)){
+            if (element.getKind() == ElementKind.METHOD){
                 javaMethods.add(new NetBeansJavaMethod(element));
             }
         }
@@ -110,36 +97,61 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implement
 
     @Override
     public Collection<JavaField> getFields() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<? extends Element> declaredElements = getBinding().getEnclosedElements();
+        List<JavaField> javaFields = Lists.newArrayList();
+        
+        for (Element element : declaredElements){
+            if (element.getKind() == ElementKind.FIELD){
+                String name = element.getSimpleName().toString();
+                if (name != null && Name.isValidIdentifier(name)){
+                    javaFields.add(new NetBeansJavaField(element));
+                }
+            }
+        }
+        
+        return javaFields;
     }
 
     @Override
     public Collection<JavaConstructor> getConstructors() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<? extends Element> declaredElements = getBinding().getEnclosedElements();
+        List<JavaConstructor> javaConstructors = Lists.newArrayList();
+        
+        for (Element element : declaredElements){
+            if (element.getKind().equals(ElementKind.CONSTRUCTOR)){
+                javaConstructors.add(new NetBeansJavaConstructor(element));
+            }
+        }
+        return javaConstructors;
     }
 
     @Override
     public JavaClassifierType getDefaultType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new NetBeansJavaClassifierType(getBinding());
     }
 
     @Override
     public OriginKind getOriginKind() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (NetBeansJavaElementUtil.isKotlinLightClass(getBinding())){
+            return OriginKind.KOTLIN_LIGHT_CLASS;
+        } else // to add OriginKind.COMPILED
+            return OriginKind.SOURCE;
     }
 
     @Override
     public JavaType createImmediateType(JavaTypeSubstitutor substitutor) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new NetBeansJavaImmediateClass(this, substitutor);
     }
 
     @Override
     public List<JavaTypeParameter> getTypeParameters() {
-        return null;//typeParameters(getBinding().getKind().getDeclaringClass().getTypeParameters());
+        List<? extends TypeParameterElement> typeParameters = ((TypeElement) getBinding()).getTypeParameters();
+        return typeParameters(typeParameters.toArray(new TypeParameterElement[typeParameters.size()]));
     }
 
     @Override
     public boolean isAbstract() {
+//        ((TypeElement) getBinding()).getModifiers().
         return Modifier.isAbstract(getBinding().getKind().getDeclaringClass().getModifiers());
     }
 

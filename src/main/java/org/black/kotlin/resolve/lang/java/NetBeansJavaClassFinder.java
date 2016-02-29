@@ -1,6 +1,8 @@
 package org.black.kotlin.resolve.lang.java;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.PackageElement;
+import javax.lang.model.type.TypeMirror;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.load.java.JavaClassFinder;
@@ -29,6 +31,17 @@ public class NetBeansJavaClassFinder implements JavaClassFinder{
     @Nullable
     public static Element findType(@NotNull FqName fqName, @NotNull Project project){
         return null;//temporary
+    }
+
+    public static Element createTypeBinding(TypeMirror type){
+        return null;
+    }
+    
+    @Nullable 
+    public static PackageElement[] findPackageFragments(Project javaProject, String name,
+            boolean partialMatch, boolean patternMatch){
+        
+        return null;
     }
     
 }

@@ -10,6 +10,7 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import org.jetbrains.annotations.Nullable;
@@ -76,7 +77,10 @@ public class NetBeansJavaElementUtil {
                 superTypes.add(superInterface);
             }
         }
-        Element packageElement = typeBinding.getEnclosingElement();
+        
+        PackageElement packageElement = (PackageElement) typeBinding.getEnclosingElement();
+        
+//        Element packageElement = typeBinding.getEnclosingElement();
         for (Element elem : packageElement.getEnclosedElements()){
             if (elem.getKind() == ElementKind.CLASS){
                 superTypes.add(elem); //searching for a superclass
@@ -135,7 +139,9 @@ public class NetBeansJavaElementUtil {
     } 
     
     
-    
+    public static boolean isKotlinLightClass(@NotNull Element element ){
+        return false;
+    }
     
     
     

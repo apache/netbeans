@@ -55,7 +55,7 @@ public class NetBeansJavaValueParameter extends NetBeansJavaElement<VariableElem
 
     @Override
     public JavaAnnotation findAnnotation(FqName fqName) {
-        return NetBeansJavaElementUtil.findAnnotation(getBinding(), fqName);
+        return NetBeansJavaElementUtil.findAnnotation(getBinding().asType(), fqName);
     }
 
     @Override

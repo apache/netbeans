@@ -43,10 +43,10 @@ public class NetBeansJavaElementFactory {
             }
         };
         
-        private static final Factory<Element, JavaClassifierType> CLASSIFIER_TYPES =
-                new Factory<Element, JavaClassifierType>() {
+        private static final Factory<TypeMirror, JavaClassifierType> CLASSIFIER_TYPES =
+                new Factory<TypeMirror, JavaClassifierType>() {
             @Override
-            public JavaClassifierType create(Element binding) {
+            public JavaClassifierType create(TypeMirror binding) {
                 return new NetBeansJavaClassifierType(binding);
             }
         };
@@ -101,7 +101,7 @@ public class NetBeansJavaElementFactory {
     }
     
     @NotNull
-    public static List<JavaClassifierType> classifierTypes(@NotNull Element[] classTypes){
+    public static List<JavaClassifierType> classifierTypes(@NotNull TypeMirror[] classTypes){
         return convert(classTypes, Factories.CLASSIFIER_TYPES);
     }
     

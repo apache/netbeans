@@ -13,6 +13,8 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.descriptors.Visibilities;
@@ -59,7 +61,8 @@ public class NetBeansJavaElementUtil {
         return fqName == null ? null : ClassId.topLevel(new FqName(fqName));
     }
     
-    public static JavaAnnotation findAnnotation(@NotNull Element binding, @NotNull FqName fqName){
+    public static JavaAnnotation findAnnotation(@NotNull TypeMirror binding, @NotNull FqName fqName){
+        
         for (AnnotationMirror annotation : binding.getAnnotationMirrors()){//.getKind().getDeclaringClass().getAnnotations()){
             String annotationFQName = annotation.getClass().getCanonicalName();//.annotationType().getCanonicalName(); //not sure
             if (fqName.asString().equals(annotationFQName)){
@@ -89,14 +92,14 @@ public class NetBeansJavaElementUtil {
         return superTypes;
     }
     
-    public static Element[] getSuperTypesWithObject(@NotNull Element typeBinding){
-        List<Element> allSuperTypes = Lists.newArrayList();
+    public static TypeMirror[] getSuperTypesWithObject(@NotNull Element typeBinding){
+        List<TypeMirror> allSuperTypes = Lists.newArrayList();
         
         boolean javaLangObjectInSuperTypes = false;
         for (Element superType : getSuperTypes(typeBinding)){
             javaLangObjectInSuperTypes = superType.getKind().getDeclaringClass().
                     getCanonicalName().equals(CommonClassNames.JAVA_LANG_OBJECT);
-            allSuperTypes.add(superType);
+            allSuperTypes.add(superType.asType());
         }
         
         if (!javaLangObjectInSuperTypes && !typeBinding.getKind().getDeclaringClass().getCanonicalName().
@@ -104,7 +107,7 @@ public class NetBeansJavaElementUtil {
         //    allSuperTypes.add(getJavaLangObjectBinding(OpenProjects.getDefault().getOpenProjects()[0]));
         }
         
-        return allSuperTypes.toArray(new Element[allSuperTypes.size()]);
+        return allSuperTypes.toArray(new TypeMirror[allSuperTypes.size()]);
     }
     
     @NotNull

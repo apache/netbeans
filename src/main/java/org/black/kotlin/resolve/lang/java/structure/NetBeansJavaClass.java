@@ -127,7 +127,7 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implement
 
     @Override
     public JavaClassifierType getDefaultType() {
-        return new NetBeansJavaClassifierType(getBinding());
+        return new NetBeansJavaClassifierType(getBinding().asType());
     }
 
     @Override

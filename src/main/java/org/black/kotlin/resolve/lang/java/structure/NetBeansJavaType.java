@@ -1,7 +1,13 @@
 package org.black.kotlin.resolve.lang.java.structure;
 
+import com.google.common.collect.Lists;
+import static org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.annotations;
+
 import java.util.Collection;
+import java.util.List;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
@@ -22,10 +28,28 @@ public class NetBeansJavaType<T extends TypeMirror> implements JavaType, JavaAnn
         this.binding = binding;
     }
     
+    @Override
+    public int hashCode(){
+        return getBinding().hashCode();
+    }
+    
+    @Override
+    public boolean equals(Object obj){
+        return obj instanceof NetBeansJavaType && getBinding().equals(((NetBeansJavaType<?>) obj).getBinding());
+    }
+    
     public static NetBeansJavaType<?> create(@NotNull TypeMirror typeBinding){
-        if (typeBinding.getKind().getDeclaringClass().isPrimitive()){
+        if (typeBinding.getKind().isPrimitive()){
             return new NetBeansJavaPrimitiveType(typeBinding);
-        } else {
+        } else if (typeBinding.getKind() == TypeKind.ARRAY){
+            return new NetBeansJavaArrayType(typeBinding);
+        } else if (typeBinding.getKind() == TypeKind.DECLARED || 
+                typeBinding.getKind() == TypeKind.TYPEVAR){
+            return new NetBeansJavaClassifierType(typeBinding);
+        } else if (typeBinding.getKind() == TypeKind.WILDCARD){
+            return new NetBeansJavaWildcardType(typeBinding);
+        }
+        else {
             throw new UnsupportedOperationException("Unsupported NetBeans type: " + typeBinding);
         }
         
@@ -33,22 +57,29 @@ public class NetBeansJavaType<T extends TypeMirror> implements JavaType, JavaAnn
     
     @Override
     public JavaArrayType createArrayType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new NetBeansJavaArrayType(getBinding());
     }
 
     @Override
     public Collection<JavaAnnotation> getAnnotations() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<? extends AnnotationMirror> annotations = getBinding().getAnnotationMirrors();
+        List<Element> elems = Lists.newArrayList();
+        
+        for (AnnotationMirror annotation : annotations){
+            elems.add(annotation.getAnnotationType().asElement());
+        }
+        
+        return annotations(elems.toArray(new Element[elems.size()]));
     }
 
     @Override
     public JavaAnnotation findAnnotation(FqName fqName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NetBeansJavaElementUtil.findAnnotation(binding, fqName);
     }
 
     @Override
     public boolean isDeprecatedInJavaDoc() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
     
     @NotNull

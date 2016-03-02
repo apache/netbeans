@@ -37,7 +37,7 @@ public abstract class NetBeansJavaMember<T extends Element>
     @Override
     @Nullable
     public JavaAnnotation findAnnotation(@NotNull FqName fqName){
-        return NetBeansJavaElementUtil.findAnnotation(getBinding(), fqName);
+        return NetBeansJavaElementUtil.findAnnotation(getBinding().asType(), fqName);
     }
     
     @Override

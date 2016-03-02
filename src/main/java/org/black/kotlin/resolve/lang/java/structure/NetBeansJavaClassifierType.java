@@ -14,7 +14,9 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ReferenceType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifier;
@@ -30,23 +32,24 @@ import org.jetbrains.kotlin.load.java.structure.impl.JavaTypeSubstitutorImpl;
  */
 public class NetBeansJavaClassifierType extends NetBeansJavaType<TypeMirror> implements JavaClassifierType {
     
-    private final Element typeBinding;
+//    private final Element typeBinding;
     
-    public NetBeansJavaClassifierType(Element typeBinding){
-        super(typeBinding.asType());
-        this.typeBinding = typeBinding;
+    public NetBeansJavaClassifierType(TypeMirror typeBinding){
+        super(typeBinding);
+//        this.typeBinding = typeBinding;
     }
 
     @Override
     public JavaClassifier getClassifier() {
-        return NetBeansJavaClassifier.create(typeBinding);
+//        return NetBeansJavaClassifier.create(typeBinding);
+        return null;
     }
 
     @Override
     public JavaTypeSubstitutor getSubstitutor() {
         JavaClassifier resolvedType = getClassifier();
 //        if (resolvedType instanceof JavaClass && getBinding() instanceof TypeParameterElement){
-        if (resolvedType instanceof JavaClass && typeBinding.getKind() == ElementKind.TYPE_PARAMETER){
+        if (resolvedType instanceof JavaClass && ((DeclaredType) getBinding()).asElement().getKind() == ElementKind.TYPE_PARAMETER){
             JavaClass javaClass = (JavaClass) resolvedType;
             List<JavaType> substitutedTypeArguments = getTypeArguments();
             
@@ -67,7 +70,8 @@ public class NetBeansJavaClassifierType extends NetBeansJavaType<TypeMirror> imp
 
     @Override
     public Collection<JavaClassifierType> getSupertypes() {
-        return classifierTypes(NetBeansJavaElementUtil.getSuperTypesWithObject(typeBinding));
+//        return classifierTypes(NetBeansJavaElementUtil.getSuperTypesWithObject(typeBinding));
+        return null;
     }
 
     @Override
@@ -77,18 +81,17 @@ public class NetBeansJavaClassifierType extends NetBeansJavaType<TypeMirror> imp
 
     @Override
     public boolean isRaw() {
-        
-        return typeBinding instanceof ReferenceType;
+        return getBinding() instanceof ReferenceType;
     }
 
     @Override
     public List<JavaType> getTypeArguments() {
         List<TypeMirror> typeArgs = Lists.newArrayList();
         
-//        if (getBinding() instanceof TypeElement){
-        if (typeBinding.getKind().isClass() || typeBinding.getKind().isInterface()){
-            for (TypeParameterElement elem : ((TypeElement) typeBinding).getTypeParameters()){
-                typeArgs.add(elem.asType());
+        if (getBinding().getKind() == TypeKind.DECLARED){
+            
+            for (TypeMirror elem : ((DeclaredType) getBinding()).getTypeArguments()){
+                typeArgs.add(elem);
             }
             return types(typeArgs.toArray(new TypeMirror[typeArgs.size()]));
         }

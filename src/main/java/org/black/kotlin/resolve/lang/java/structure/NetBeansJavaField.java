@@ -23,7 +23,7 @@ public class NetBeansJavaField extends NetBeansJavaMember<Element> implements Ja
 
     @Override
     public boolean isEnumEntry() {
-        return getBinding().getKind().equals(ElementKind.ENUM_CONSTANT);
+        return getBinding().getKind() == ElementKind.ENUM_CONSTANT;
     }
 
     @Override

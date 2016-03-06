@@ -156,14 +156,6 @@ public class KotlinProject implements Project {
                 DialogDisplayer.getDefault().notifyLater(
                         new NotifyDescriptor.Message(KotlinProject.this.getLookup().lookup(ClassPath.class).toString(),
                                 NotifyDescriptor.INFORMATION_MESSAGE));
-//                The following code is for checking analyzeFile method
-//                String kotlinCode = "package hello\n" +
-//                    "\n" +
-//                    "fun main(args : Array<String>) {\n" +
-//                    "    println(\"Hello, world!\")\n" +
-//                    "}";
-//                
-//                KotlinAnalyzer.analyzeFile(KotlinProject.this, KotlinEnvironment.getParsedKtFile(kotlinCode));
                 newThread.start();
             }
 

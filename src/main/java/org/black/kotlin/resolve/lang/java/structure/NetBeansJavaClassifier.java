@@ -6,6 +6,7 @@ import java.util.List;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.TypeVariable;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner;
@@ -26,7 +27,7 @@ public abstract class NetBeansJavaClassifier<T extends Element> extends
     public static JavaClassifier create(Element element){
         if (element.getKind() == ElementKind.LOCAL_VARIABLE){
 //        if (element.asType() instanceof TypeVariable){
-            return new NetBeansJavaTypeParameter(element);
+            return new NetBeansJavaTypeParameter((TypeParameterElement) element);
         }
         
         if (element.getKind().isClass() || element.getKind().isInterface() 

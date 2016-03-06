@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.TypeMirror;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
@@ -67,10 +68,10 @@ public class NetBeansJavaElementFactory {
             }
         };
         
-        private static final Factory<Element, JavaTypeParameter> TYPE_PARAMETERS =
-                new Factory<Element, JavaTypeParameter>() {
+        private static final Factory<TypeParameterElement, JavaTypeParameter> TYPE_PARAMETERS =
+                new Factory<TypeParameterElement, JavaTypeParameter>() {
             @Override
-            public JavaTypeParameter create(Element binding) {
+            public JavaTypeParameter create(TypeParameterElement binding) {
                 return new NetBeansJavaTypeParameter(binding);
             }
         };
@@ -116,7 +117,7 @@ public class NetBeansJavaElementFactory {
     }
     
     @NotNull
-    public static List<JavaTypeParameter> typeParameters(@NotNull Element[] typeParameters){
+    public static List<JavaTypeParameter> typeParameters(@NotNull TypeParameterElement[] typeParameters){
         return convert(typeParameters, Factories.TYPE_PARAMETERS);
     }
     

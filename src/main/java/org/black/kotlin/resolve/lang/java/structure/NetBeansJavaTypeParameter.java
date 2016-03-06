@@ -1,21 +1,28 @@
 package org.black.kotlin.resolve.lang.java.structure;
 
+import com.google.common.collect.Lists;
 import java.util.Collection;
+import java.util.List;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.type.TypeMirror;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameterListOwner;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeProvider;
 import org.jetbrains.kotlin.name.Name;
+import org.netbeans.api.project.ui.OpenProjects;
 
 /**
  *
  * @author Александр
  */
-public class NetBeansJavaTypeParameter extends NetBeansJavaClassifier<Element> implements JavaTypeParameter {
+public class NetBeansJavaTypeParameter extends NetBeansJavaClassifier<TypeParameterElement> implements JavaTypeParameter {
     
-    public NetBeansJavaTypeParameter(Element binding){
+    public NetBeansJavaTypeParameter(TypeParameterElement binding){
         super(binding);
     }
 
@@ -26,22 +33,41 @@ public class NetBeansJavaTypeParameter extends NetBeansJavaClassifier<Element> i
 
     @Override
     public Collection<JavaClassifierType> getUpperBounds() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<JavaClassifierType> bounds = Lists.newArrayList();
+        
+        for (TypeMirror bound : getBinding().getBounds()){
+            bounds.add(new NetBeansJavaClassifierType(bound));
+        }
+        
+        return bounds;
     }
 
     @Override
     public JavaTypeParameterListOwner getOwner() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Element owner = getBinding().getEnclosingElement();
+        if (owner != null){
+            switch (owner.getKind()) {
+                case CONSTRUCTOR:
+                    return new NetBeansJavaConstructor(owner);
+                case METHOD:
+                    return new NetBeansJavaMethod(owner);
+                case CLASS:
+                    return new NetBeansJavaClass(owner);
+                default:
+                    return null;
+            }
+        }
+        return null;
     }
 
     @Override
     public JavaType getType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NetBeansJavaType.create(getBinding().asType());
     }
 
     @Override
     public JavaTypeProvider getTypeProvider() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new NetBeansJavaTypeProvider(OpenProjects.getDefault().getOpenProjects()[0]);
     }
     
 }

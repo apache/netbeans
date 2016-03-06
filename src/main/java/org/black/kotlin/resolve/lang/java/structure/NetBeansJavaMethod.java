@@ -45,6 +45,6 @@ public class NetBeansJavaMethod extends NetBeansJavaMember<Element> implements J
     @Override
     public List<JavaTypeParameter> getTypeParameters() {
         List<? extends TypeParameterElement> valueParameters = ((ExecutableElement) getBinding()).getTypeParameters();
-        return typeParameters(valueParameters.toArray(new Element[valueParameters.size()]));
+        return typeParameters(valueParameters.toArray(new TypeParameterElement[valueParameters.size()]));
     }
 }

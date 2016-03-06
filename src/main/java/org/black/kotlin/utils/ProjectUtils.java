@@ -8,10 +8,15 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.project.KotlinProject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.psi.KtFile;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.GlobalPathRegistry;
+import org.netbeans.api.project.Project;
+import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -145,7 +150,14 @@ public class ProjectUtils {
     }
 
     @NotNull
-    public static List<String> getClasspath() {
+    public static List<String> getClasspath(Project project) {
+//        Set<ClassPath> boot = GlobalPathRegistry.getDefault().getPaths(ClassPath.BOOT);
+//        Set<ClassPath> execute = GlobalPathRegistry.getDefault().getPaths(ClassPath.EXECUTE);
+//        Set<ClassPath> source = GlobalPathRegistry.getDefault().getPaths(ClassPath.SOURCE);
+//        Set<ClassPath> compile = GlobalPathRegistry.getDefault().getPaths(ClassPath.COMPILE);
+        
+//        List<ClassPath.Entry> entries = project.getLookup().lookup(ClassPathProvider.class);
+        
         return new ArrayList<String>(KotlinClasspath.getKotlinClasspath());
     }
 

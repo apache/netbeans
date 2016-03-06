@@ -50,14 +50,16 @@ public class NetBeansJavaElementUtil {
     }
     
     @Nullable
-    public static ClassId computeClassId(Class classBinding){
-        Class container = classBinding.getDeclaringClass();
+    public static ClassId computeClassId(@NotNull TypeElement classBinding){
+        TypeElement container = (TypeElement) classBinding.getEnclosingElement();
+        
         if (container != null){
             ClassId parentClassId = computeClassId(container);
-            return parentClassId == null ? null : parentClassId.createNestedClassId(Name.identifier(classBinding.getName()));
+            return parentClassId == null ? null : parentClassId.createNestedClassId(
+                    Name.identifier(classBinding.getSimpleName().toString()));
         }
         
-        String fqName = classBinding.getCanonicalName(); //Not sure
+        String fqName = classBinding.getQualifiedName().toString();
         return fqName == null ? null : ClassId.topLevel(new FqName(fqName));
     }
     

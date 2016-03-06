@@ -1,5 +1,6 @@
 package org.black.kotlin.model;
 
+import org.black.kotlin.resolve.lang.kotlin.NetBeansVirtualFileFinder;
 import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -52,6 +53,7 @@ import java.util.List;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.idea.KotlinFileType;
 import org.jetbrains.kotlin.idea.KotlinLanguage;
+import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.project.ui.OpenProjects;
 
@@ -101,9 +103,9 @@ public class KotlinEnvironment {
         project.registerService(CodeAnalyzerInitializer.class, cliLightClassGenerationSupport);
         
 
-        configureClasspath();
+        configureClasspath(kotlinProject);
         
-        //project.registerService(JvmVirtualFileFinderFactory.class, new EclipseVirtualFileFinder(javaProject));
+        project.registerService(JvmVirtualFileFinderFactory.class, new NetBeansVirtualFileFinder(kotlinProject));
         
         ExternalDeclarationsProvider.Companion.registerExtensionPoint(project);
         ExpressionCodegenExtension.Companion.registerExtensionPoint(project);
@@ -136,8 +138,8 @@ public class KotlinEnvironment {
         }
     }
 
-    private void configureClasspath() {
-        List<String> classpath = ProjectUtils.getClasspath();
+    private void configureClasspath(@NotNull org.netbeans.api.project.Project kotlinProject) {
+        List<String> classpath = ProjectUtils.getClasspath(kotlinProject);
         
             for (String s : classpath) {
                 File file = new File(s);
@@ -195,7 +197,8 @@ public class KotlinEnvironment {
             roots.add(jarFile);
         } else {
             VirtualFile root = applicationEnvironment.getLocalFileSystem().findFileByPath(path.getAbsolutePath());
-            if (root == null) {return;
+            if (root == null) {
+                return;
             }
             projectEnvironment.addSourcesToClasspath(root);
             roots.add(root);
@@ -245,5 +248,18 @@ public class KotlinEnvironment {
         
         return (KtFile) psiFileFactory.createFileFromText(KotlinLanguage.INSTANCE, text);
     }
+    
+    public boolean isJarFile(@NotNull String pathToJar){
+        VirtualFile jarFile = applicationEnvironment.getJarFileSystem().findFileByPath(pathToJar + "!/");
+        return jarFile != null && jarFile.isValid();
+    }
 
+    @Nullable
+    public VirtualFile getVirtualFile(@NotNull String location) {
+        return applicationEnvironment.getLocalFileSystem().findFileByPath(location);
+    }
+    
+    public VirtualFile getVirtualFileInJar(@NotNull String pathToJar, @NotNull String relativePath) {
+        return applicationEnvironment.getJarFileSystem().findFileByPath(pathToJar + "!/" + relativePath);
+    }
 }

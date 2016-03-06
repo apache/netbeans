@@ -3,6 +3,7 @@ package org.black.kotlin.resolve.lang.java.structure;
 import java.util.Collection;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationArgument;
@@ -38,9 +39,8 @@ public class NetBeansJavaAnnotation extends NetBeansJavaElement<Element> impleme
 
     @Override
     public ClassId getClassId() {
-        Class cl = getBinding().getKind().getDeclaringClass();
-        return cl.isAnnotation() == true ? 
-                NetBeansJavaElementUtil.computeClassId(cl) : null;
+       
+        return NetBeansJavaElementUtil.computeClassId((TypeElement)getBinding());
     }
 
     @Override

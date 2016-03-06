@@ -16,6 +16,8 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
+import org.black.kotlin.diagnostics.analyzer.KotlinAnalyzer;
+import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.run.KotlinCompiler;
 import org.black.kotlin.utils.KotlinClasspath;
 import org.black.kotlin.utils.ProjectUtils;
@@ -35,6 +37,8 @@ import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.netbeans.spi.project.support.ant.SourcesHelper;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -149,7 +153,17 @@ public class KotlinProject implements Project {
                     }
 
                 });
-
+                DialogDisplayer.getDefault().notifyLater(
+                        new NotifyDescriptor.Message(KotlinProject.this.getLookup().lookup(ClassPath.class).toString(),
+                                NotifyDescriptor.INFORMATION_MESSAGE));
+//                The following code is for checking analyzeFile method
+//                String kotlinCode = "package hello\n" +
+//                    "\n" +
+//                    "fun main(args : Array<String>) {\n" +
+//                    "    println(\"Hello, world!\")\n" +
+//                    "}";
+//                
+//                KotlinAnalyzer.analyzeFile(KotlinProject.this, KotlinEnvironment.getParsedKtFile(kotlinCode));
                 newThread.start();
             }
 

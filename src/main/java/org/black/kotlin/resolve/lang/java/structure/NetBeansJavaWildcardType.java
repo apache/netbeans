@@ -12,22 +12,21 @@ import org.netbeans.api.project.ui.OpenProjects;
  *
  * @author Александр
  */
-public class NetBeansJavaWildcardType extends NetBeansJavaType<TypeMirror> implements JavaWildcardType {
+public class NetBeansJavaWildcardType extends NetBeansJavaType<WildcardType> implements JavaWildcardType {
     
-    public NetBeansJavaWildcardType(@NotNull TypeMirror typeBinding){
+    public NetBeansJavaWildcardType(@NotNull WildcardType typeBinding){
         super(typeBinding);
     }
 
     @Override
     public JavaType getBound() {
-        TypeMirror bound = ((WildcardType) getBinding()).getSuperBound();
+        TypeMirror bound = getBinding().getSuperBound();
         return bound != null ? NetBeansJavaType.create(bound) : null;//temp
     }
 
     @Override
     public boolean isExtends() {
-//        ((WildcardType) getBinding()).getExtendsBound();
-        return false;
+        return getBinding().getExtendsBound() != null;
     }
 
     @Override

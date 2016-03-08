@@ -1,6 +1,7 @@
 package org.black.kotlin.resolve.lang.java.structure;
 
-import javax.lang.model.element.Element;
+
+import javax.lang.model.element.VariableElement;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.load.java.structure.JavaEnumValueAnnotationArgument;
 import org.jetbrains.kotlin.load.java.structure.JavaField;
@@ -9,10 +10,10 @@ import org.jetbrains.kotlin.load.java.structure.JavaField;
  *
  * @author Александр
  */
-public class NetBeansJavaReferenceAnnotationArgument extends NetBeansJavaAnnotationArgument<Element> 
+public class NetBeansJavaReferenceAnnotationArgument extends NetBeansJavaAnnotationArgument<VariableElement> 
         implements JavaEnumValueAnnotationArgument{
     
-    protected NetBeansJavaReferenceAnnotationArgument(Element javaElement){
+    protected NetBeansJavaReferenceAnnotationArgument(VariableElement javaElement){
         super(javaElement);
     }
     

@@ -46,16 +46,13 @@ public class NetBeansJavaValueParameter extends NetBeansJavaElement<VariableElem
 
     @Override
     public Collection<JavaAnnotation> getAnnotations() {
-        List<Element> annotations = Lists.newArrayList();
-        for (AnnotationMirror elem : getBinding().getAnnotationMirrors()){
-            annotations.add(elem.getAnnotationType().asElement());// maybe incorrect, to fix in future
-        }
-        return annotations(annotations.toArray(new Element[annotations.size()]));
+        List<? extends AnnotationMirror> annotations = getBinding().getAnnotationMirrors();
+        return annotations(annotations.toArray(new AnnotationMirror[annotations.size()]));
     }
 
     @Override
     public JavaAnnotation findAnnotation(FqName fqName) {
-        return NetBeansJavaElementUtil.findAnnotation(getBinding().asType(), fqName);
+        return NetBeansJavaElementUtil.findAnnotation(getBinding().getAnnotationMirrors(), fqName);
     }
 
     @Override

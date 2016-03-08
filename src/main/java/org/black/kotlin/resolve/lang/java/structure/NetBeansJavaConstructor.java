@@ -1,14 +1,11 @@
 package org.black.kotlin.resolve.lang.java.structure;
 
-import com.google.common.collect.Lists;
-import java.lang.reflect.TypeVariable;
 import static org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.typeParameters;
 
 import java.util.List;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.element.VariableElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaConstructor;
@@ -19,25 +16,25 @@ import org.jetbrains.kotlin.load.java.structure.JavaValueParameter;
  *
  * @author Александр
  */
-public class NetBeansJavaConstructor extends NetBeansJavaMember<Element> implements JavaConstructor {
+public class NetBeansJavaConstructor extends NetBeansJavaMember<ExecutableElement> implements JavaConstructor {
 
-    public NetBeansJavaConstructor(@NotNull Element methodBinding){
+    public NetBeansJavaConstructor(@NotNull ExecutableElement methodBinding){
         super(methodBinding);
     }
     
     @Override
     public JavaClass getContainingClass() {
-        return new NetBeansJavaClass(getBinding().getEnclosingElement());
+        return new NetBeansJavaClass((TypeElement) getBinding().getEnclosingElement());
     }
 
     @Override
     public List<JavaValueParameter> getValueParameters() {
-        return NetBeansJavaElementUtil.getValueParameters((ExecutableElement) getBinding());
+        return NetBeansJavaElementUtil.getValueParameters(getBinding());
     }
 
     @Override
     public List<JavaTypeParameter> getTypeParameters() {
-        List<? extends TypeParameterElement> valueParameters = ((ExecutableElement) getBinding()).getTypeParameters();
+        List<? extends TypeParameterElement> valueParameters = getBinding().getTypeParameters();
         return typeParameters(valueParameters.toArray(new TypeParameterElement[valueParameters.size()]));
     }
     

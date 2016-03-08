@@ -9,6 +9,7 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.WildcardType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner;
@@ -47,7 +48,7 @@ public class NetBeansJavaType<T extends TypeMirror> implements JavaType, JavaAnn
                 typeBinding.getKind() == TypeKind.TYPEVAR){
             return new NetBeansJavaClassifierType(typeBinding);
         } else if (typeBinding.getKind() == TypeKind.WILDCARD){
-            return new NetBeansJavaWildcardType(typeBinding);
+            return new NetBeansJavaWildcardType((WildcardType) typeBinding);
         }
         else {
             throw new UnsupportedOperationException("Unsupported NetBeans type: " + typeBinding);
@@ -63,18 +64,12 @@ public class NetBeansJavaType<T extends TypeMirror> implements JavaType, JavaAnn
     @Override
     public Collection<JavaAnnotation> getAnnotations() {
         List<? extends AnnotationMirror> annotations = getBinding().getAnnotationMirrors();
-        List<Element> elems = Lists.newArrayList();
-        
-        for (AnnotationMirror annotation : annotations){
-            elems.add(annotation.getAnnotationType().asElement());
-        }
-        
-        return annotations(elems.toArray(new Element[elems.size()]));
+        return annotations(annotations.toArray(new AnnotationMirror[annotations.size()]));
     }
 
     @Override
     public JavaAnnotation findAnnotation(FqName fqName) {
-        return NetBeansJavaElementUtil.findAnnotation(binding, fqName);
+        return NetBeansJavaElementUtil.findAnnotation(binding.getAnnotationMirrors(), fqName);
     }
 
     @Override

@@ -2,19 +2,20 @@ package org.black.kotlin.resolve.lang.java.structure;
 
 import com.google.common.collect.Lists;
 import com.intellij.psi.CommonClassNames;
-import java.lang.reflect.Modifier;
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import org.black.kotlin.resolve.lang.java.NetBeansJavaClassFinder;
+import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementFinder;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.descriptors.Visibilities;
@@ -33,16 +34,68 @@ import org.netbeans.api.project.ui.OpenProjects;
  */
 public class NetBeansJavaElementUtil {
 
+    public static boolean isPublic(Set<Modifier> modifiers){
+        for (Modifier modifier : modifiers){
+            if (modifier == Modifier.PUBLIC){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public static boolean isPrivate(Set<Modifier> modifiers){
+        for (Modifier modifier : modifiers){
+            if (modifier == Modifier.PRIVATE){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public static boolean isProtected(Set<Modifier> modifiers){
+        for (Modifier modifier : modifiers){
+            if (modifier == Modifier.PROTECTED){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public static boolean isStatic(Set<Modifier> modifiers){
+        for (Modifier modifier : modifiers){
+            if (modifier == Modifier.STATIC){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public static boolean isAbstract(Set<Modifier> modifiers){
+        for (Modifier modifier : modifiers){
+            if (modifier == Modifier.ABSTRACT){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public static boolean isFinal(Set<Modifier> modifiers){
+        for (Modifier modifier : modifiers){
+            if (modifier == Modifier.FINAL){
+                return true;
+            }
+        }
+        return false;
+    }
+    
     @NotNull
     static Visibility getVisibility(@NotNull Element member){
-        int flags = member.getKind().getDeclaringClass().getModifiers();
-        
-        if (Modifier.isPublic(flags)){
+        if (isPublic(member.getModifiers())){
             return Visibilities.PUBLIC;
-        } else if (Modifier.isPrivate(flags)){
+        } else if (isPrivate(member.getModifiers())){
             return Visibilities.PRIVATE;
-        } else if (Modifier.isProtected(flags)){
-            return Modifier.isStatic(flags) ? JavaVisibilities.PROTECTED_STATIC_VISIBILITY :
+        } else if (isProtected(member.getModifiers())){
+            return isStatic(member.getModifiers()) ? JavaVisibilities.PROTECTED_STATIC_VISIBILITY :
                     JavaVisibilities.PROTECTED_AND_PACKAGE;
         }
         
@@ -53,7 +106,7 @@ public class NetBeansJavaElementUtil {
     public static ClassId computeClassId(@NotNull TypeElement classBinding){
         TypeElement container = (TypeElement) classBinding.getEnclosingElement();
         
-        if (container != null){
+        if (container.getKind() != ElementKind.PACKAGE){
             ClassId parentClassId = computeClassId(container);
             return parentClassId == null ? null : parentClassId.createNestedClassId(
                     Name.identifier(classBinding.getSimpleName().toString()));
@@ -63,53 +116,59 @@ public class NetBeansJavaElementUtil {
         return fqName == null ? null : ClassId.topLevel(new FqName(fqName));
     }
     
-    public static JavaAnnotation findAnnotation(@NotNull TypeMirror binding, @NotNull FqName fqName){
+    public static JavaAnnotation findAnnotation(@NotNull List<? extends AnnotationMirror> annotations, @NotNull FqName fqName){
         
-        for (AnnotationMirror annotation : binding.getAnnotationMirrors()){//.getKind().getDeclaringClass().getAnnotations()){
-            String annotationFQName = annotation.getClass().getCanonicalName();//.annotationType().getCanonicalName(); //not sure
+        for (AnnotationMirror annotation : annotations){
+            String annotationFQName = annotation.getAnnotationType().toString();
             if (fqName.asString().equals(annotationFQName)){
-                return new NetBeansJavaAnnotation(annotation.getAnnotationType().asElement());
+                return new NetBeansJavaAnnotation(annotation);
             }
         }
         
         return null;
     }
     
-    private static List<Element> getSuperTypes(@NotNull Element typeBinding){
-        List<Element> superTypes = Lists.newArrayList();
-        for (Element superInterface : typeBinding.getEnclosedElements()){
-            if (superInterface.getKind().isInterface()){
-                superTypes.add(superInterface);
-            }
+    private static List<TypeMirror> getSuperTypes(@NotNull TypeElement typeBinding){
+        List<TypeMirror> superTypes = Lists.newArrayList();
+        for (TypeMirror superInterface : typeBinding.getInterfaces()){
+            superTypes.add(superInterface);
         }
         
-        PackageElement packageElement = (PackageElement) typeBinding.getEnclosingElement();
-        
-//        Element packageElement = typeBinding.getEnclosingElement();
-        for (Element elem : packageElement.getEnclosedElements()){
-            if (elem.getKind() == ElementKind.CLASS){
-                superTypes.add(elem); //searching for a superclass
-            }
+        TypeMirror superClass = typeBinding.getSuperclass();
+        if (superClass != null){
+            superTypes.add(superClass);
         }
+        
         return superTypes;
     }
     
-    public static TypeMirror[] getSuperTypesWithObject(@NotNull Element typeBinding){
+    public static TypeMirror[] getSuperTypesWithObject(@NotNull TypeElement typeBinding){
         List<TypeMirror> allSuperTypes = Lists.newArrayList();
         
         boolean javaLangObjectInSuperTypes = false;
-        for (Element superType : getSuperTypes(typeBinding)){
-            javaLangObjectInSuperTypes = superType.getKind().getDeclaringClass().
-                    getCanonicalName().equals(CommonClassNames.JAVA_LANG_OBJECT);
-            allSuperTypes.add(superType.asType());
+        for (TypeMirror superType : getSuperTypes(typeBinding)){
+            
+            if (superType.toString().equals(CommonClassNames.JAVA_LANG_OBJECT)){
+                javaLangObjectInSuperTypes = true;
+            }
+            
+            allSuperTypes.add(superType);
+            
         }
         
-        if (!javaLangObjectInSuperTypes && !typeBinding.getKind().getDeclaringClass().getCanonicalName().
+        if (!javaLangObjectInSuperTypes && !typeBinding.toString().
                 equals(CommonClassNames.JAVA_LANG_OBJECT)){
-        //    allSuperTypes.add(getJavaLangObjectBinding(OpenProjects.getDefault().getOpenProjects()[0]));
+            allSuperTypes.add(getJavaLangObjectBinding(OpenProjects.getDefault().getOpenProjects()[0]));
         }
         
         return allSuperTypes.toArray(new TypeMirror[allSuperTypes.size()]);
+    }
+    
+    @NotNull
+    private static TypeMirror getJavaLangObjectBinding(@NotNull Project project){
+        TypeMirror javaType = NetBeansJavaProjectElementFinder.findElement(
+                project, CommonClassNames.JAVA_LANG_OBJECT).asType();
+        return NetBeansJavaClassFinder.createTypeBinding(javaType).asType();
     }
     
     @NotNull

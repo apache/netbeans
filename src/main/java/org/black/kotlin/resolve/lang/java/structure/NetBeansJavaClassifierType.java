@@ -10,10 +10,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ReferenceType;
 import javax.lang.model.type.TypeKind;
@@ -32,24 +30,22 @@ import org.jetbrains.kotlin.load.java.structure.impl.JavaTypeSubstitutorImpl;
  */
 public class NetBeansJavaClassifierType extends NetBeansJavaType<TypeMirror> implements JavaClassifierType {
     
-//    private final Element typeBinding;
-    
     public NetBeansJavaClassifierType(TypeMirror typeBinding){
         super(typeBinding);
-//        this.typeBinding = typeBinding;
     }
 
     @Override
     public JavaClassifier getClassifier() {
-//        return NetBeansJavaClassifier.create(typeBinding);
-        return null;
+        return NetBeansJavaClassifier.create(((DeclaredType)getBinding()).asElement());
     }
 
     @Override
     public JavaTypeSubstitutor getSubstitutor() {
         JavaClassifier resolvedType = getClassifier();
 //        if (resolvedType instanceof JavaClass && getBinding() instanceof TypeParameterElement){
-        if (resolvedType instanceof JavaClass && ((DeclaredType) getBinding()).asElement().getKind() == ElementKind.TYPE_PARAMETER){
+        if (resolvedType instanceof JavaClass && 
+                ((DeclaredType) getBinding()).asElement().getKind() == ElementKind.TYPE_PARAMETER){
+            
             JavaClass javaClass = (JavaClass) resolvedType;
             List<JavaType> substitutedTypeArguments = getTypeArguments();
             
@@ -70,13 +66,13 @@ public class NetBeansJavaClassifierType extends NetBeansJavaType<TypeMirror> imp
 
     @Override
     public Collection<JavaClassifierType> getSupertypes() {
-//        return classifierTypes(NetBeansJavaElementUtil.getSuperTypesWithObject(typeBinding));
-        return null;
+        return classifierTypes(NetBeansJavaElementUtil.getSuperTypesWithObject(
+                (TypeElement)((DeclaredType)getBinding()).asElement()));
     }
 
     @Override
     public String getPresentableText() {
-        return getBinding().getKind().getDeclaringClass().getCanonicalName();
+        return getBinding().toString();
     }
 
     @Override

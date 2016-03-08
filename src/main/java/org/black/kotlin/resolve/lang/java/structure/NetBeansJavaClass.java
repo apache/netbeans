@@ -9,8 +9,11 @@ import java.util.Collection;
 import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
 import org.jetbrains.kotlin.descriptors.Visibility;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
@@ -27,9 +30,9 @@ import org.jetbrains.kotlin.name.Name;
  *
  * @author Александр
  */
-public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implements JavaClass {
+public class NetBeansJavaClass extends NetBeansJavaClassifier<TypeElement> implements JavaClass {
     
-    public NetBeansJavaClass(Element javaElement){
+    public NetBeansJavaClass(TypeElement javaElement){
         super(javaElement);
     }
 
@@ -42,38 +45,37 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implement
     public Collection<JavaClass> getInnerClasses() {
         List<? extends Element> enclosedElements = getBinding().getEnclosedElements();
         List<JavaClass> innerClasses = Lists.newArrayList();
-        
         for (Element element : enclosedElements){
-            if (element.getKind().isClass())
-                innerClasses.add(new NetBeansJavaClass(element));
+            if (element.asType().getKind() == TypeKind.DECLARED)
+                innerClasses.add(new NetBeansJavaClass((TypeElement) element));
         }
         return innerClasses;
     }
 
     @Override
     public FqName getFqName() {
-        return new FqName(((TypeElement) getBinding()).getQualifiedName().toString());
+        return new FqName(getBinding().getQualifiedName().toString());
     }
 
     @Override
     public boolean isInterface() {
-        return ((TypeElement) getBinding()).getKind().isInterface();
+        return getBinding().getKind().isInterface();
     }
 
     @Override
     public boolean isAnnotationType() {
-        return ((TypeElement) getBinding()).getKind() == ElementKind.ANNOTATION_TYPE;
+        return getBinding().getKind() == ElementKind.ANNOTATION_TYPE;
     }
 
     @Override
     public boolean isEnum() {
-        return ((TypeElement) getBinding()).getKind() == ElementKind.ENUM;
+        return getBinding().getKind() == ElementKind.ENUM;
     }
 
     @Override
     public JavaClass getOuterClass() {
-        Element outerClass = ((TypeElement) getBinding()).getEnclosingElement();
-        return outerClass != null ? new NetBeansJavaClass(outerClass) : null;
+        Element outerClass = getBinding().getEnclosingElement();
+        return outerClass != null ? new NetBeansJavaClass((TypeElement) outerClass) : null;
     }
 
     @Override
@@ -83,15 +85,15 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implement
 
     @Override
     public Collection<JavaMethod> getMethods() {
-        
         List<? extends Element> declaredElements = getBinding().getEnclosedElements();
         List<JavaMethod> javaMethods = Lists.newArrayList();
         
         for (Element element : declaredElements){
             if (element.getKind() == ElementKind.METHOD){
-                javaMethods.add(new NetBeansJavaMethod(element));
+                javaMethods.add(new NetBeansJavaMethod((ExecutableElement) element));
             }
         }
+        
         return javaMethods;
     }
 
@@ -104,7 +106,7 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implement
             if (element.getKind() == ElementKind.FIELD){
                 String name = element.getSimpleName().toString();
                 if (name != null && Name.isValidIdentifier(name)){
-                    javaFields.add(new NetBeansJavaField(element));
+                    javaFields.add(new NetBeansJavaField((VariableElement) element));
                 }
             }
         }
@@ -119,7 +121,7 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implement
         
         for (Element element : declaredElements){
             if (element.getKind().equals(ElementKind.CONSTRUCTOR)){
-                javaConstructors.add(new NetBeansJavaConstructor(element));
+                javaConstructors.add(new NetBeansJavaConstructor((ExecutableElement) element));
             }
         }
         return javaConstructors;
@@ -145,24 +147,23 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<Element> implement
 
     @Override
     public List<JavaTypeParameter> getTypeParameters() {
-        List<? extends TypeParameterElement> typeParameters = ((TypeElement) getBinding()).getTypeParameters();
+        List<? extends TypeParameterElement> typeParameters = getBinding().getTypeParameters();
         return typeParameters(typeParameters.toArray(new TypeParameterElement[typeParameters.size()]));
     }
 
     @Override
     public boolean isAbstract() {
-//        ((TypeElement) getBinding()).getModifiers().
-        return Modifier.isAbstract(getBinding().getKind().getDeclaringClass().getModifiers());
+        return NetBeansJavaElementUtil.isAbstract(getBinding().getModifiers());
     }
 
     @Override
     public boolean isStatic() {
-        return Modifier.isStatic(getBinding().getKind().getDeclaringClass().getModifiers());
+        return NetBeansJavaElementUtil.isStatic(getBinding().getModifiers());
     }
 
     @Override
     public boolean isFinal() {
-        return Modifier.isFinal(getBinding().getKind().getDeclaringClass().getModifiers());
+        return NetBeansJavaElementUtil.isFinal(getBinding().getModifiers());
     }
 
     @Override

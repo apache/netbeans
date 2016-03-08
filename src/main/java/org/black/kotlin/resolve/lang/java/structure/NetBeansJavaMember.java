@@ -4,10 +4,11 @@ package org.black.kotlin.resolve.lang.java.structure;
 import com.google.common.collect.Lists;
 import static org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.annotations;
 
-import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.Modifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.descriptors.Visibility;
@@ -30,29 +31,29 @@ public abstract class NetBeansJavaMember<T extends Element>
     @Override
     @NotNull
     public Collection<JavaAnnotation> getAnnotations(){
-        List<Element> list = Lists.newArrayList((Element) getBinding());
-        return annotations(list.toArray(new Element[list.size()]));
+        List<? extends AnnotationMirror> annotations = getBinding().getAnnotationMirrors();
+        return annotations(annotations.toArray(new AnnotationMirror[annotations.size()]));
     }
     
     @Override
     @Nullable
     public JavaAnnotation findAnnotation(@NotNull FqName fqName){
-        return NetBeansJavaElementUtil.findAnnotation(getBinding().asType(), fqName);
+        return NetBeansJavaElementUtil.findAnnotation(getBinding().getAnnotationMirrors(), fqName);
     }
     
     @Override
     public boolean isAbstract(){
-        return Modifier.isAbstract(getBinding().getKind().getDeclaringClass().getModifiers());
+        return NetBeansJavaElementUtil.isAbstract(getBinding().getModifiers());
     }
     
     @Override
     public boolean isStatic(){
-        return Modifier.isStatic(getBinding().getKind().getDeclaringClass().getModifiers());
+        return NetBeansJavaElementUtil.isStatic(getBinding().getModifiers());
     }
     
     @Override
     public boolean isFinal(){
-        return Modifier.isFinal(getBinding().getKind().getDeclaringClass().getModifiers());
+        return NetBeansJavaElementUtil.isFinal(getBinding().getModifiers());
     }
     
     @Override
@@ -64,12 +65,11 @@ public abstract class NetBeansJavaMember<T extends Element>
     @Override
     @NotNull
     public Name getName(){
-        return Name.guess(getBinding().getKind().getDeclaringClass().getName());
+        return Name.guess(getBinding().getSimpleName().toString());// or getBinding().toString()
     }
     
     @Override 
     public boolean isDeprecatedInJavaDoc(){
-//        return getBinding().getKind().getDeclaringClass().
         return false;
     }
     

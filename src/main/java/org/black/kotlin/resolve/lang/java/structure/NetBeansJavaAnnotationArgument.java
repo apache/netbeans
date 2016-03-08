@@ -1,8 +1,10 @@
 package org.black.kotlin.resolve.lang.java.structure;
 
 import java.util.Collection;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.VariableElement;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationArgument;
 import org.jetbrains.kotlin.name.Name;
 import org.netbeans.api.project.Project;
@@ -25,11 +27,17 @@ public class NetBeansJavaAnnotationArgument<T extends Element> extends NetBeansJ
     
     public static JavaAnnotationArgument create(Object value, Name name, Project project){
         
-        if (((Element) value).getKind() == ElementKind.ANNOTATION_TYPE){
-            return new NetBeansJavaAnnotationAsAnnotationArgument((Element) value, name);
+        if (value instanceof AnnotationMirror){
+            return new NetBeansJavaAnnotationAsAnnotationArgument((AnnotationMirror) value, name);
         }
-        else if (((Element) value).getKind() == ElementKind.FIELD || ((Element) value).getKind() == ElementKind.LOCAL_VARIABLE){
-            return new NetBeansJavaReferenceAnnotationArgument((Element) value);
+        else if (/*((Element) value).getKind() == ElementKind.FIELD || 
+                ((Element) value).getKind() == ElementKind.LOCAL_VARIABLE ||
+                ((Element) value).getKind() == ElementKind.ENUM_CONSTANT ||
+                ((Element) value).getKind() == ElementKind.EXCEPTION_PARAMETER ||
+                ((Element) value).getKind() == ElementKind.RESOURCE_VARIABLE ||
+                ((Element) value).getKind() == ElementKind.PARAMETER*/
+                value instanceof VariableElement){
+            return new NetBeansJavaReferenceAnnotationArgument((VariableElement) value);
         }
         else if (value instanceof String){
             return new NetBeansJavaLiteralAnnotationArgument(value, name);

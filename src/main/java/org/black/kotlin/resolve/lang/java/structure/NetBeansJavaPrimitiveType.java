@@ -1,6 +1,6 @@
 package org.black.kotlin.resolve.lang.java.structure;
 
-import javax.lang.model.element.Element;
+
 import javax.lang.model.type.TypeMirror;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.builtins.PrimitiveType;

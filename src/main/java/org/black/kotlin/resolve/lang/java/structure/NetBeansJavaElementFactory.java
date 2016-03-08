@@ -3,8 +3,11 @@ package org.black.kotlin.resolve.lang.java.structure;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
@@ -28,10 +31,10 @@ public class NetBeansJavaElementFactory {
     }
     
     private static class Factories {
-        private static final Factory<Element, JavaAnnotation> ANNOTATIONS =
-                new Factory<Element, JavaAnnotation>() {
+        private static final Factory<AnnotationMirror, JavaAnnotation> ANNOTATIONS =
+                new Factory<AnnotationMirror, JavaAnnotation>() {
             @Override
-            public JavaAnnotation create(Element binding) {
+            public JavaAnnotation create(AnnotationMirror binding) {
                 return new NetBeansJavaAnnotation(binding);
             }
         };
@@ -52,18 +55,18 @@ public class NetBeansJavaElementFactory {
             }
         };
         
-        private static final Factory<Element, JavaMethod> METHODS =
-                new Factory<Element, JavaMethod>() {
+        private static final Factory<ExecutableElement, JavaMethod> METHODS =
+                new Factory<ExecutableElement, JavaMethod>() {
             @Override
-            public JavaMethod create(Element binding) {
+            public JavaMethod create(ExecutableElement binding) {
                 return new NetBeansJavaMethod(binding);
             }
         };
         
-        private static final Factory<Element, JavaField> FIELDS =
-                new Factory<Element, JavaField>() {
+        private static final Factory<VariableElement, JavaField> FIELDS =
+                new Factory<VariableElement, JavaField>() {
             @Override
-            public JavaField create(Element binding) {
+            public JavaField create(VariableElement binding) {
                 return new NetBeansJavaField(binding);
             }
         };
@@ -92,7 +95,7 @@ public class NetBeansJavaElementFactory {
     
     
     @NotNull
-    public static List<JavaAnnotation> annotations(@NotNull Element[] annotations){
+    public static List<JavaAnnotation> annotations(@NotNull AnnotationMirror[] annotations){
         return convert(annotations, Factories.ANNOTATIONS);
     }
     
@@ -107,12 +110,12 @@ public class NetBeansJavaElementFactory {
     }
     
     @NotNull
-    public static List<JavaMethod> methods(@NotNull Element[] methods){
+    public static List<JavaMethod> methods(@NotNull ExecutableElement[] methods){
         return convert(methods, Factories.METHODS);
     }
     
     @NotNull
-    public static List<JavaField> fields(@NotNull Element[] variables){
+    public static List<JavaField> fields(@NotNull VariableElement[] variables){
         return convert(variables, Factories.FIELDS);
     }
     

@@ -6,8 +6,9 @@ import java.util.List;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.type.TypeVariable;
+import javax.lang.model.type.TypeKind;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifier;
@@ -25,14 +26,13 @@ public abstract class NetBeansJavaClassifier<T extends Element> extends
     }
     
     public static JavaClassifier create(Element element){
-        if (element.getKind() == ElementKind.LOCAL_VARIABLE){
-//        if (element.asType() instanceof TypeVariable){
+        if (element.asType().getKind() == TypeKind.TYPEVAR){
             return new NetBeansJavaTypeParameter((TypeParameterElement) element);
         }
         
         if (element.getKind().isClass() || element.getKind().isInterface() 
                 || element.getKind() == ElementKind.ENUM){
-            return new NetBeansJavaClass(element);
+            return new NetBeansJavaClass((TypeElement) element);
         }
         else
             throw new IllegalArgumentException("Element" + element.getSimpleName().toString() + "is not JavaClassifier");
@@ -42,14 +42,14 @@ public abstract class NetBeansJavaClassifier<T extends Element> extends
     public Collection<JavaAnnotation> getAnnotations(){
         List<JavaAnnotation> annotations = Lists.newArrayList();
         for ( AnnotationMirror annotation : getBinding().getAnnotationMirrors()){
-            annotations.add(new NetBeansJavaAnnotation(annotation.getAnnotationType().asElement()));
+            annotations.add(new NetBeansJavaAnnotation(annotation));
         }
         return annotations;
     }
     
     @Override 
     public JavaAnnotation findAnnotation(FqName fqName){
-        return NetBeansJavaElementUtil.findAnnotation(getBinding().asType(), fqName);
+        return NetBeansJavaElementUtil.findAnnotation(getBinding().getAnnotationMirrors(), fqName);
     }
     
     @Override

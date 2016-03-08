@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.List;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.TypeMirror;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
@@ -48,11 +48,11 @@ public class NetBeansJavaTypeParameter extends NetBeansJavaClassifier<TypeParame
         if (owner != null){
             switch (owner.getKind()) {
                 case CONSTRUCTOR:
-                    return new NetBeansJavaConstructor(owner);
+                    return new NetBeansJavaConstructor((ExecutableElement) owner);
                 case METHOD:
-                    return new NetBeansJavaMethod(owner);
+                    return new NetBeansJavaMethod((ExecutableElement) owner);
                 case CLASS:
-                    return new NetBeansJavaClass(owner);
+                    return new NetBeansJavaClass((TypeElement) owner);
                 default:
                     return null;
             }

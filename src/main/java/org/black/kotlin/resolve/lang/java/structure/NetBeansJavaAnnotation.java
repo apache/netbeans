@@ -1,9 +1,14 @@
 package org.black.kotlin.resolve.lang.java.structure;
 
+import com.google.common.collect.Lists;
 import java.util.Collection;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
+import java.util.List;
+import java.util.Map;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationArgument;
@@ -11,6 +16,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.name.ClassId;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.kotlin.load.java.structure.JavaElement;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 
@@ -18,36 +24,70 @@ import org.netbeans.api.project.ui.OpenProjects;
  *
  * @author Александр
  */
-public class NetBeansJavaAnnotation extends NetBeansJavaElement<Element> implements JavaAnnotation{
+public class NetBeansJavaAnnotation /*extends NetBeansJavaElement<Element>*/ implements JavaAnnotation, JavaElement{
 
     private final Project javaProject;
+    private final AnnotationMirror binding;
     
-    protected NetBeansJavaAnnotation(Element javaAnnotation){
-        super(javaAnnotation);
+    protected NetBeansJavaAnnotation(AnnotationMirror javaAnnotation){
+        this.binding = javaAnnotation;
         this.javaProject = OpenProjects.getDefault().getOpenProjects()[0];
     }
     
     @Override
     public JavaAnnotationArgument findArgument(@NotNull Name name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
+                getBinding().getElementValues().entrySet()){
+            if (name.asString().equals(entry.getKey().getSimpleName().toString())){
+                return NetBeansJavaAnnotationArgument.create(entry.getValue().getValue(),
+                        name,
+                        javaProject);
+            }
+        }
+        
+        return null;
     }
 
     @Override
     public Collection<JavaAnnotationArgument> getArguments() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<JavaAnnotationArgument> arguments = Lists.newArrayList();
+        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
+                getBinding().getElementValues().entrySet()){
+            arguments.add(NetBeansJavaAnnotationArgument.create(entry.getValue().getValue(), 
+                    Name.identifier(entry.getKey().getSimpleName().toString()), 
+                    javaProject));
+        }
+        return arguments;
     }
 
     @Override
     public ClassId getClassId() {
-       
-        return NetBeansJavaElementUtil.computeClassId((TypeElement)getBinding());
+        DeclaredType annotationType = getBinding().getAnnotationType();
+        return annotationType != null ? 
+                NetBeansJavaElementUtil.computeClassId((TypeElement) annotationType.asElement()) : null;
     }
 
     @Override
     @Nullable
     public JavaClass resolve() {
-        return getBinding().getKind() == ElementKind.ANNOTATION_TYPE ? 
-                new NetBeansJavaClass(getBinding()) : null;
+        DeclaredType annotationType = getBinding().getAnnotationType();
+        return annotationType != null ? 
+                new NetBeansJavaClass((TypeElement) annotationType.asElement()) : null;
+    }
+    
+    @NotNull
+    public AnnotationMirror getBinding(){
+        return binding;
+    }
+    
+    @Override
+    public int hashCode(){
+        return getBinding().hashCode();
+    }
+    
+    @Override
+    public boolean equals(Object obj){
+        return obj instanceof NetBeansJavaAnnotation && getBinding().equals(((NetBeansJavaAnnotation)obj).getBinding());
     }
     
 }

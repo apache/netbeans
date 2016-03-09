@@ -179,5 +179,18 @@ public class ProjectUtils {
     private static String buildLibName(String libName) {
         return LIB_FOLDER + FILE_SEPARATOR + libName + "." + LIB_EXTENSION;
     }
+    
+    @NotNull
+    public static List<KtFile> getSourceFiles(@NotNull Project project){
+        List<KtFile> ktFiles = new ArrayList<KtFile>();
+        //TODO
+        return null; 
+    }
+    
+    @NotNull
+    public static List<KtFile> getSourceFilesWithDependencies(@NotNull Project project){
+        //TODO
+        return null;
+    }
 
 }

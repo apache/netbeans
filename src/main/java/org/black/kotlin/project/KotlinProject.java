@@ -16,7 +16,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
-import org.black.kotlin.diagnostics.analyzer.KotlinAnalyzer;
+import org.black.kotlin.resolve.KotlinAnalyzer;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.run.KotlinCompiler;
 import org.black.kotlin.utils.KotlinClasspath;

@@ -9,10 +9,12 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.TypeKind;
+import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifier;
 import org.jetbrains.kotlin.name.FqName;
+import org.netbeans.api.project.ui.OpenProjects;
 
 /**
  *
@@ -54,6 +56,6 @@ public abstract class NetBeansJavaClassifier<T extends Element> extends
     
     @Override
     public boolean isDeprecatedInJavaDoc(){
-        return false;//TODO in future
+        return NetBeansJavaProjectElementUtils.isDeprecated(OpenProjects.getDefault().getOpenProjects()[0], getBinding());
     }
 }

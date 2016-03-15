@@ -5,7 +5,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import org.black.kotlin.model.KotlinEnvironment;
-import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementFinder;
+import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.black.kotlin.resolve.lang.java.structure.NetBeansJavaClassifier;
 import org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElementUtil;
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinder;
@@ -52,7 +52,7 @@ public class NetBeansVirtualFileFinder extends VirtualFileKotlinClassFinder impl
     
     @Override
     public VirtualFile findVirtualFileWithHeader(ClassId classId) {
-        TypeElement type = NetBeansJavaProjectElementFinder.findElement(project,
+        TypeElement type = NetBeansJavaProjectElementUtils.findElement(project,
                 classId.asSingleFqName().toString());//not sure
         if (type == null || !isBinaryKotlinClass(type)){
             return null;

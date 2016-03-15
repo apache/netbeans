@@ -9,6 +9,7 @@ import java.util.List;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.descriptors.Visibility;
@@ -16,6 +17,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaMember;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
+import org.netbeans.api.project.ui.OpenProjects;
 
 /**
  *
@@ -70,7 +72,7 @@ public abstract class NetBeansJavaMember<T extends Element>
     
     @Override 
     public boolean isDeprecatedInJavaDoc(){
-        return false;
+        return NetBeansJavaProjectElementUtils.isDeprecated(OpenProjects.getDefault().getOpenProjects()[0], getBinding());
     }
     
 }

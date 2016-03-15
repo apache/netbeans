@@ -4,7 +4,7 @@ import com.intellij.psi.CommonClassNames;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaClassFinder;
-import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementFinder;
+import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeProvider;
@@ -27,9 +27,9 @@ public class NetBeansJavaTypeProvider implements JavaTypeProvider {
     @Override
     @NotNull
     public JavaType createJavaLangObjectType() { 
-        TypeMirror type = NetBeansJavaProjectElementFinder.findElement(
-                javaProject, CommonClassNames.JAVA_LANG_OBJECT).asType();
-        Element typeBinding = NetBeansJavaClassFinder.createTypeBinding(type);
+        Element typeBinding = NetBeansJavaProjectElementUtils.findElement(
+                javaProject, CommonClassNames.JAVA_LANG_OBJECT);
+//        Element typeBinding = NetBeansJavaClassFinder.createTypeBinding(type);
         assert typeBinding != null : "Type binding for java.lang.Object cannot be null";
         
         return NetBeansJavaType.create(typeBinding.asType());

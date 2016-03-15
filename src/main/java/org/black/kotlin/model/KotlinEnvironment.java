@@ -49,6 +49,7 @@ import com.intellij.psi.impl.compiled.ClsCustomNavigationPolicy;
 import com.intellij.psi.impl.file.impl.JavaFileManager;
 import com.intellij.testFramework.LightVirtualFile;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.idea.KotlinFileType;
@@ -262,4 +263,9 @@ public class KotlinEnvironment {
     public VirtualFile getVirtualFileInJar(@NotNull String pathToJar, @NotNull String relativePath) {
         return applicationEnvironment.getJarFileSystem().findFileByPath(pathToJar + "!/" + relativePath);
     }
+    
+    public Set<VirtualFile> getRoots(){
+        return Collections.unmodifiableSet(roots);
+    }
+    
 }

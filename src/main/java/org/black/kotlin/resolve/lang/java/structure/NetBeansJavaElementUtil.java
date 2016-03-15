@@ -15,7 +15,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaClassFinder;
-import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementFinder;
+import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.descriptors.Visibilities;
@@ -166,9 +166,9 @@ public class NetBeansJavaElementUtil {
     
     @NotNull
     private static TypeMirror getJavaLangObjectBinding(@NotNull Project project){
-        TypeMirror javaType = NetBeansJavaProjectElementFinder.findElement(
+        TypeMirror javaType = NetBeansJavaProjectElementUtils.findElement(
                 project, CommonClassNames.JAVA_LANG_OBJECT).asType();
-        return NetBeansJavaClassFinder.createTypeBinding(javaType).asType();
+        return javaType;
     }
     
     @NotNull

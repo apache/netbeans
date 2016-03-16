@@ -39,7 +39,7 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
     @Override
     public void projectOpened() {
         try {
-            KotlinCompiler.INSTANCE.antCompile(project);
+//            KotlinCompiler.INSTANCE.antCompile(project);
             List<ClassPath> paths = new ArrayList<ClassPath>();
             FileObject classesRoot = project.getProjectDirectory().getFileObject("build").getFileObject("classes");
             
@@ -60,6 +60,7 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
             reg.register(ClassPath.EXECUTE, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
             reg.register(ClassPath.PROP_ROOTS, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
             reg.register(ClassPath.PROP_INCLUDES, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
+            
             
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);

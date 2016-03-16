@@ -27,6 +27,7 @@ public class NetBeansJavaProjectElementUtils {
         ClassPath compile = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
         
         ClasspathInfo ci = ClasspathInfo.create(boot, src, compile);
+        
         JavaSource js = JavaSource.create(ci);
         ElementSearcher searcher = new ElementSearcher(fqName);
         try {

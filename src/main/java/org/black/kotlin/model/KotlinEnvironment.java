@@ -206,50 +206,6 @@ public class KotlinEnvironment {
         }
     }
     
-        /**
-     * This method parses the input file. 
-     * @param file syntaxFile that was created with createSyntaxFile method
-     * @return the result of {@link #parseText(java.lang.String, java.io.File) parseText} method
-     * @throws IOException 
-     */
-    @Nullable
-    public static KtFile parseFile(@NotNull File file) throws IOException {
-        return parseText(FileUtil.loadFile(file, null, true), file);
-    }
-
-    /**
-     * This method parses text from the input file.
-     * @param text Text of temporary file.
-     * @param file syntaxFile that was created with createSyntaxFile method
-     * @return {@link KtFile}
-     */
-    @Nullable
-    public static KtFile parseText(@NotNull String text, @NotNull File file) {
-        StringUtil.assertValidSeparators(text);
-
-        Project project = KotlinEnvironment.getEnvironment(
-                OpenProjects.getDefault().getOpenProjects()[0]).getProject();
-
-        LightVirtualFile virtualFile = new KotlinLightVirtualFile(file, text);
-        virtualFile.setCharset(CharsetToolkit.UTF8_CHARSET);
-
-        PsiFileFactoryImpl psiFileFactory = (PsiFileFactoryImpl) PsiFileFactory.getInstance(project);
-        
-        return (KtFile) psiFileFactory.trySetupPsiForFile(virtualFile, KotlinLanguage.INSTANCE, true, false);
-    }
-    
-    @Nullable
-    public static KtFile getParsedKtFile(@NotNull String text){
-        StringUtil.assertValidSeparators(text);
-
-        Project project = KotlinEnvironment.getEnvironment(
-                OpenProjects.getDefault().getOpenProjects()[0]).getProject();
-
-        PsiFileFactoryImpl psiFileFactory = (PsiFileFactoryImpl) PsiFileFactory.getInstance(project);
-        
-        return (KtFile) psiFileFactory.createFileFromText(KotlinLanguage.INSTANCE, text);
-    }
-    
     public boolean isJarFile(@NotNull String pathToJar){
         VirtualFile jarFile = applicationEnvironment.getJarFileSystem().findFileByPath(pathToJar + "!/");
         return jarFile != null && jarFile.isValid();

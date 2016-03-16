@@ -16,8 +16,10 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
+import org.black.kotlin.builder.KotlinPsiManager;
 import org.black.kotlin.resolve.KotlinAnalyzer;
 import org.black.kotlin.model.KotlinEnvironment;
+import org.black.kotlin.resolve.NetBeansAnalyzerFacadeForJVM;
 import org.black.kotlin.run.KotlinCompiler;
 import org.black.kotlin.utils.KotlinClasspath;
 import org.black.kotlin.utils.ProjectUtils;
@@ -153,9 +155,6 @@ public class KotlinProject implements Project {
                     }
 
                 });
-                DialogDisplayer.getDefault().notifyLater(
-                        new NotifyDescriptor.Message(KotlinProject.this.getLookup().lookup(ClassPath.class).toString(),
-                                NotifyDescriptor.INFORMATION_MESSAGE));
                 newThread.start();
             }
 
@@ -216,7 +215,7 @@ public class KotlinProject implements Project {
             } else if (type != null) {
                 switch (type) {
                     case KOTLIN_SOURCE:
-                        if (fo.hasExt("kt")) {
+                        if (KotlinPsiManager.INSTANCE.isKotlinFile(fo)) {
                             files.add(fo.getParent());
                         }
                         break;
@@ -242,7 +241,7 @@ public class KotlinProject implements Project {
         public List<FileObject> getSrcDirectories(KotlinProjectConstants type) {
             Set<FileObject> orderedFiles = Sets.newLinkedHashSet();
 
-            findSrc(KotlinProject.this.getProjectDirectory(), orderedFiles, type);
+            findSrc(KotlinProject.this.getProjectDirectory().getFileObject("src"), orderedFiles, type);
             return Lists.newArrayList(orderedFiles);
 
         }
@@ -250,7 +249,6 @@ public class KotlinProject implements Project {
         @Override
         public SourceGroup[] getSourceGroups(String string) {
             List<SourceGroup> srcGroups = new ArrayList<SourceGroup>();
-            srcGroups.add(new KotlinSourceGroup(KotlinProject.this.getProjectDirectory().getFileObject("src")));
             if (string.equals(KotlinProjectConstants.JAR.toString())) {
                 List<FileObject> src = getSrcDirectories(KotlinProjectConstants.JAR);
                 for (FileObject srcFolder : src) {
@@ -289,7 +287,6 @@ public class KotlinProject implements Project {
 
             @Override
             public FileObject getRootFolder() {
-                //return KotlinProject.this.getProjectDirectory().getFileObject("src");
                 return root;
             }
 
@@ -310,7 +307,12 @@ public class KotlinProject implements Project {
 
             @Override
             public boolean contains(FileObject fo) {
-                return root.getFileObject(fo.getName()) != null;
+                for (FileObject file : root.getChildren()){
+                    if (file.getPath().equals(fo.getPath())){
+                        return true;
+                    }
+                }
+                return false;
             }
 
             @Override

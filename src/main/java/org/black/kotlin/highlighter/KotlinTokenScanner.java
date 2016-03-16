@@ -3,9 +3,9 @@ package org.black.kotlin.highlighter;
 import com.intellij.psi.PsiElement;
 import java.util.ArrayList;
 import java.util.List;
+import org.black.kotlin.builder.KotlinPsiManager;
 import org.black.kotlin.highlighter.netbeans.KotlinToken;
 import org.black.kotlin.highlighter.netbeans.KotlinTokenId;
-import org.black.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.spi.lexer.LexerInput;
 
@@ -33,7 +33,7 @@ public final class KotlinTokenScanner {
     public KotlinTokenScanner(LexerInput input) {
         kotlinTokensFactory = new KotlinTokensFactory();
         this.input = input;
-        ktFile = KotlinEnvironment.getParsedKtFile(getTextToParse());
+        ktFile = KotlinPsiManager.INSTANCE.getParsedKtFile(getTextToParse());
         createListOfKotlinTokens();
     }
 

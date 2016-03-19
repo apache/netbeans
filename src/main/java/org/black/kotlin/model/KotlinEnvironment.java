@@ -57,6 +57,8 @@ import org.jetbrains.kotlin.idea.KotlinLanguage;
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 
 /**
  * This class creates Kotlin environment for Kotlin project.
@@ -143,9 +145,11 @@ public class KotlinEnvironment {
         List<String> classpath = ProjectUtils.getClasspath(kotlinProject);
         
             for (String s : classpath) {
-                File file = new File(s);
-                
-                addToClasspath(file);
+                if (s.endsWith("!/")){
+                    addToClasspath(s.split("!/")[0].split("file:")[1]);
+                } else {
+                    addToClasspath(s);
+                }
             }
     }
     
@@ -188,16 +192,19 @@ public class KotlinEnvironment {
     }
 
 
-    private void addToClasspath(File path){
-        if (path.isFile()) {
-            VirtualFile jarFile = applicationEnvironment.getJarFileSystem().findFileByPath(path + "!/");
+    private void addToClasspath(String path){
+        File file = new File(path);
+        if (file.isFile()) {
+            VirtualFile jarFile = applicationEnvironment.getJarFileSystem().findFileByPath(path+"!/");
+            
             if (jarFile == null) {
                 return;
             }
-            projectEnvironment.addJarToClassPath(path);
+            
+            projectEnvironment.addJarToClassPath(file);
             roots.add(jarFile);
         } else {
-            VirtualFile root = applicationEnvironment.getLocalFileSystem().findFileByPath(path.getAbsolutePath());
+            VirtualFile root = applicationEnvironment.getLocalFileSystem().findFileByPath(path);
             if (root == null) {
                 return;
             }

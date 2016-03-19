@@ -52,7 +52,7 @@ public class NetBeansVirtualFileFinder extends VirtualFileKotlinClassFinder impl
     
     @Override
     public VirtualFile findVirtualFileWithHeader(ClassId classId) {
-        TypeElement type = NetBeansJavaProjectElementUtils.findElement(project,
+        TypeElement type = NetBeansJavaProjectElementUtils.findTypeElement(project,
                 classId.asSingleFqName().toString());//not sure
         if (type == null || !isBinaryKotlinClass(type)){
             return null;

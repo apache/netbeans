@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.regex.Pattern;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -19,11 +20,13 @@ import javax.swing.event.ChangeListener;
 import org.black.kotlin.builder.KotlinPsiManager;
 import org.black.kotlin.resolve.KotlinAnalyzer;
 import org.black.kotlin.model.KotlinEnvironment;
+import org.black.kotlin.resolve.AnalysisResultWithProvider;
 import org.black.kotlin.resolve.NetBeansAnalyzerFacadeForJVM;
 import org.black.kotlin.run.KotlinCompiler;
 import org.black.kotlin.utils.KotlinClasspath;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.kotlin.diagnostics.Diagnostic;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
@@ -148,7 +151,7 @@ public class KotlinProject implements Project {
 
             if (string.equalsIgnoreCase(ActionProvider.COMMAND_CLEAN)) {
                 Thread newThread = new Thread(new Runnable() {
-
+                    
                     @Override
                     public void run() {
                         ProjectUtils.clean(KotlinProject.this);

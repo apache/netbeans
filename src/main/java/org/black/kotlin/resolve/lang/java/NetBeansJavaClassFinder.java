@@ -36,9 +36,9 @@ public class NetBeansJavaClassFinder implements JavaClassFinder {
     @Override
     @Nullable
     public JavaClass findClass(ClassId classId) {
-        Element element = findType(classId.asSingleFqName(), javaProject);
+        TypeElement element = findType(classId.asSingleFqName(), javaProject);
         if (element != null) {
-            return new NetBeansJavaClass((TypeElement) element);
+            return new NetBeansJavaClass(element);
         }
         
         return null;
@@ -46,17 +46,17 @@ public class NetBeansJavaClassFinder implements JavaClassFinder {
 
     @Override
     public JavaPackage findPackage(FqName fqName) {
-        Element packageEl = NetBeansJavaProjectElementUtils.findElement(javaProject, fqName.asString());
+        PackageElement packageEl = NetBeansJavaProjectElementUtils.findPackageElement(javaProject, fqName.asString());
         if (packageEl != null){
-            return new NetBeansJavaPackage((PackageElement) packageEl);
+            return new NetBeansJavaPackage(packageEl);
         }
         
         return null;
     }
 
     @Nullable
-    public static Element findType(@NotNull FqName fqName, @NotNull org.netbeans.api.project.Project project){
-        Element type = NetBeansJavaProjectElementUtils.findElement(project, fqName.asString());
+    public static TypeElement findType(@NotNull FqName fqName, @NotNull org.netbeans.api.project.Project project){
+        TypeElement type = NetBeansJavaProjectElementUtils.findTypeElement(project, fqName.asString());
         if (type != null){
             return !isInKotlinBinFolder(type) ? type : null;
         }
@@ -68,7 +68,7 @@ public class NetBeansJavaClassFinder implements JavaClassFinder {
     @Nullable 
     public static PackageElement[] findPackageFragments(org.netbeans.api.project.Project javaProject, String name,
             boolean partialMatch, boolean patternMatch){
-        PackageElement pack = (PackageElement) NetBeansJavaProjectElementUtils.findElement(javaProject, name);
+        PackageElement pack = (PackageElement) NetBeansJavaProjectElementUtils.findTypeElement(javaProject, name);
         
         return null;
     }

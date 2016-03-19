@@ -2,6 +2,7 @@ package org.black.kotlin.resolve.lang.java;
 
 import java.io.IOException;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.CancellableTask;
@@ -21,7 +22,7 @@ public class NetBeansJavaProjectElementUtils {
     private static boolean isDeprecated = false;
     private static String binaryName = null;
     
-    public static TypeElement findElement(Project javaProject, String fqName){
+    public static TypeElement findTypeElement(Project javaProject, String fqName){
         ClassPath boot = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
         ClassPath src = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
         ClassPath compile = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
@@ -29,7 +30,7 @@ public class NetBeansJavaProjectElementUtils {
         ClasspathInfo ci = ClasspathInfo.create(boot, src, compile);
         
         JavaSource js = JavaSource.create(ci);
-        ElementSearcher searcher = new ElementSearcher(fqName);
+        TypeElementSearcher searcher = new TypeElementSearcher(fqName);
         try {
             js.runUserActionTask(searcher, true);
         } catch (IOException ex) {
@@ -38,6 +39,24 @@ public class NetBeansJavaProjectElementUtils {
         
         return searcher.getElement();
     }
+    
+    public static PackageElement findPackageElement(Project javaProject, String fqName){
+        ClassPath boot = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
+        ClassPath src = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
+        ClassPath compile = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
+        
+        ClasspathInfo ci = ClasspathInfo.create(boot, src, compile);
+        
+        JavaSource js = JavaSource.create(ci);
+        PackageElementSearcher searcher = new PackageElementSearcher(fqName);
+        try {
+            js.runUserActionTask(searcher, true);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        return searcher.getElement();
+    } 
     
     public static boolean isDeprecated(Project javaProject, final Element element){
         ClassPath boot = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
@@ -92,12 +111,12 @@ public class NetBeansJavaProjectElementUtils {
         return binaryName;
     }
     
-    private static class ElementSearcher implements CancellableTask<CompilationController>{
+    private static class TypeElementSearcher implements CancellableTask<CompilationController>{
 
         private TypeElement element;
         private final String fqName;
         
-        public ElementSearcher(String fqName){
+        public TypeElementSearcher(String fqName){
             this.fqName = fqName;
         }
         
@@ -116,6 +135,28 @@ public class NetBeansJavaProjectElementUtils {
         
     }
     
-    
+    private static class PackageElementSearcher implements CancellableTask<CompilationController>{
+
+        private PackageElement element;
+        private final String fqName;
+        
+        public PackageElementSearcher(String fqName){
+            this.fqName = fqName;
+        }
+        
+        @Override
+        public void cancel() {
+        }
+
+        @Override
+        public void run(CompilationController info) throws Exception {
+            element = info.getElements().getPackageElement(fqName);
+        }
+        
+        public PackageElement getElement(){
+            return element;
+        }
+        
+    }
     
 }

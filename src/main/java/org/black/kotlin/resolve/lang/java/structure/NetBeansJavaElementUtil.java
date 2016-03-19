@@ -104,10 +104,10 @@ public class NetBeansJavaElementUtil {
     
     @Nullable
     public static ClassId computeClassId(@NotNull TypeElement classBinding){
-        TypeElement container = (TypeElement) classBinding.getEnclosingElement();
+        Element container = classBinding.getEnclosingElement();
         
         if (container.getKind() != ElementKind.PACKAGE){
-            ClassId parentClassId = computeClassId(container);
+            ClassId parentClassId = computeClassId((TypeElement) container);
             return parentClassId == null ? null : parentClassId.createNestedClassId(
                     Name.identifier(classBinding.getSimpleName().toString()));
         }
@@ -166,7 +166,7 @@ public class NetBeansJavaElementUtil {
     
     @NotNull
     private static TypeMirror getJavaLangObjectBinding(@NotNull Project project){
-        TypeMirror javaType = NetBeansJavaProjectElementUtils.findElement(
+        TypeMirror javaType = NetBeansJavaProjectElementUtils.findTypeElement(
                 project, CommonClassNames.JAVA_LANG_OBJECT).asType();
         return javaType;
     }

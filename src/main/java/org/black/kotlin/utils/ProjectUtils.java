@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,7 @@ import org.black.kotlin.project.KotlinProject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.openide.filesystems.FileObject;
@@ -157,23 +160,35 @@ public class ProjectUtils {
         List<String> classpath = Lists.newArrayList();
         
         for (ClassPath.Entry entry : boot.entries()){
-            String path = entry.getURL().getPath();
+            String path = entry.getURL().getFile();
             if (path != null){
-                classpath.add(path);
+                try {
+                    classpath.add(URLDecoder.decode(path, "UTF-8"));
+                } catch (UnsupportedEncodingException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
         
         for (ClassPath.Entry entry : src.entries()){
             String path = entry.getURL().getPath();
             if (path != null){
-                classpath.add(path);
+                try {
+                    classpath.add(URLDecoder.decode(path, "UTF-8"));
+                } catch (UnsupportedEncodingException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
         
         for (ClassPath.Entry entry : compile.entries()){
             String path = entry.getURL().getPath();
             if (path != null){
-                classpath.add(path);
+                try {
+                    classpath.add(URLDecoder.decode(path, "UTF-8"));
+                } catch (UnsupportedEncodingException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
         

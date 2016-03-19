@@ -75,7 +75,10 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<TypeElement> imple
     @Override
     public JavaClass getOuterClass() {
         Element outerClass = getBinding().getEnclosingElement();
-        return outerClass != null ? new NetBeansJavaClass((TypeElement) outerClass) : null;
+        if (outerClass == null || outerClass.asType().getKind() != TypeKind.DECLARED){
+            return null;
+        }
+        return new NetBeansJavaClass((TypeElement) outerClass);
     }
 
     @Override

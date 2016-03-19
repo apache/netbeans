@@ -27,7 +27,7 @@ public class NetBeansJavaTypeProvider implements JavaTypeProvider {
     @Override
     @NotNull
     public JavaType createJavaLangObjectType() { 
-        Element typeBinding = NetBeansJavaProjectElementUtils.findElement(
+        Element typeBinding = NetBeansJavaProjectElementUtils.findTypeElement(
                 javaProject, CommonClassNames.JAVA_LANG_OBJECT);
 //        Element typeBinding = NetBeansJavaClassFinder.createTypeBinding(type);
         assert typeBinding != null : "Type binding for java.lang.Object cannot be null";

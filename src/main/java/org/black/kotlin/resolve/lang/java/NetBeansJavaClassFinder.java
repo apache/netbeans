@@ -68,7 +68,7 @@ public class NetBeansJavaClassFinder implements JavaClassFinder {
     @Nullable 
     public static PackageElement[] findPackageFragments(org.netbeans.api.project.Project javaProject, String name,
             boolean partialMatch, boolean patternMatch){
-        PackageElement pack = (PackageElement) NetBeansJavaProjectElementUtils.findTypeElement(javaProject, name);
+        PackageElement pack = NetBeansJavaProjectElementUtils.findPackageElement(javaProject, name);
         
         return null;
     }

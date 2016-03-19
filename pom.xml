@@ -70,6 +70,7 @@
             <artifactId>kotlin-compiler</artifactId>
             <version>1.0.0</version>
         </dependency>
+        
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -239,7 +240,7 @@
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-libs-javacapi</artifactId>
             <version>RELEASE81</version>
-            <scope>runtime</scope>
+            <!--<scope>runtime</scope>-->
         </dependency>
         <dependency>
             <groupId>org.netbeans.external</groupId>

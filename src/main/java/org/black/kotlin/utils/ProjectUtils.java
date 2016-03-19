@@ -214,6 +214,16 @@ public class ProjectUtils {
         return LIB_FOLDER + FILE_SEPARATOR + libName + "." + LIB_EXTENSION;
     }
     
+    public static KtFile getKtFile(FileObject file){
+        try {
+            return KotlinPsiManager.INSTANCE.parseFile(FileUtil.toFile(file));
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        return null;
+    }
+    
     @NotNull
     public static List<KtFile> getSourceFiles(@NotNull KotlinProject project){
         List<KtFile> ktFiles = new ArrayList<KtFile>();

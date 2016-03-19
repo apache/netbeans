@@ -240,11 +240,15 @@
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-libs-javacapi</artifactId>
             <version>RELEASE81</version>
-            <!--<scope>runtime</scope>-->
         </dependency>
         <dependency>
             <groupId>org.netbeans.external</groupId>
             <artifactId>nb-javac-api</artifactId>
+            <version>RELEASE81</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-text</artifactId>
             <version>RELEASE81</version>
         </dependency>
     </dependencies>

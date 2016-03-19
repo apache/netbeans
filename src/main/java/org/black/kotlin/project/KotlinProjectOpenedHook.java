@@ -5,7 +5,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import org.black.kotlin.run.KotlinCompiler;
+import org.black.kotlin.resolve.KotlinAnalyzer;
+import org.black.kotlin.utils.ProjectUtils;
 import static org.black.kotlin.utils.ProjectUtils.FILE_SEPARATOR;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
@@ -60,7 +61,7 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
             reg.register(ClassPath.EXECUTE, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
             reg.register(ClassPath.PROP_ROOTS, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
             reg.register(ClassPath.PROP_INCLUDES, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
-            
+            //KotlinAnalyzer.analyzeFiles(project, ProjectUtils.getSourceFilesWithDependencies(project));
             
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);

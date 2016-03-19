@@ -215,7 +215,7 @@ public class ProjectUtils {
     }
     
     @NotNull
-    public static List<KtFile> getSourceFiles(@NotNull Project project){
+    public static List<KtFile> getSourceFiles(@NotNull KotlinProject project){
         List<KtFile> ktFiles = new ArrayList<KtFile>();
         
         for (FileObject file : KotlinPsiManager.INSTANCE.getFilesByProject(project)){
@@ -231,7 +231,7 @@ public class ProjectUtils {
     }
     
     @NotNull
-    public static List<KtFile> getSourceFilesWithDependencies(@NotNull Project project){
+    public static List<KtFile> getSourceFilesWithDependencies(@NotNull KotlinProject project){
         //TODO
         return getSourceFiles(project);
     }

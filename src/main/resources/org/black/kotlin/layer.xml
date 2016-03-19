@@ -28,4 +28,13 @@
     </folder>
 
 
+    <folder name="Templates">
+        <folder name="Kotlin">
+            <file name="Kotlin.kt" url="Kotlin file">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.black.kotlin.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+        </folder>
+    </folder>
+
 </filesystem>

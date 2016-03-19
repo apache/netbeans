@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Set;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.model.KotlinLightVirtualFile;
+import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.project.KotlinProjectConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,10 +32,10 @@ public class KotlinPsiManager {
     private KotlinPsiManager(){}
     
     @NotNull
-    public Set<FileObject> getFilesByProject(Project project){
+    public Set<FileObject> getFilesByProject(KotlinProject project){
         Set<FileObject> ktFiles = Sets.newLinkedHashSet();
         
-        for (SourceGroup srcGroup : ProjectUtils.getSources(project).
+        for (SourceGroup srcGroup : project.getKotlinSources().
                 getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE.toString())){
             for (FileObject file : srcGroup.getRootFolder().getChildren()){
                 if (isKotlinFile(file)){

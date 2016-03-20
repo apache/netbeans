@@ -46,8 +46,9 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<TypeElement> imple
         List<? extends Element> enclosedElements = getBinding().getEnclosedElements();
         List<JavaClass> innerClasses = Lists.newArrayList();
         for (Element element : enclosedElements){
-            if (element.asType().getKind() == TypeKind.DECLARED)
+            if (element.asType().getKind() == TypeKind.DECLARED && element instanceof TypeElement){
                 innerClasses.add(new NetBeansJavaClass((TypeElement) element));
+            }
         }
         return innerClasses;
     }

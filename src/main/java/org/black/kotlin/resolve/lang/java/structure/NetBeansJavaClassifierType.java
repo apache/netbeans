@@ -36,7 +36,10 @@ public class NetBeansJavaClassifierType extends NetBeansJavaType<TypeMirror> imp
 
     @Override
     public JavaClassifier getClassifier() {
-        return NetBeansJavaClassifier.create(((DeclaredType)getBinding()).asElement());
+        if (getBinding().getKind() == TypeKind.DECLARED){
+            return NetBeansJavaClassifier.create(((DeclaredType)getBinding()).asElement());
+        } else 
+            return null;
     }
 
     @Override

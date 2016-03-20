@@ -49,7 +49,7 @@ public class NetBeansJavaType<T extends TypeMirror> implements JavaType, JavaAnn
             return new NetBeansJavaClassifierType(typeBinding);
         } else if (typeBinding.getKind() == TypeKind.WILDCARD){
             return new NetBeansJavaWildcardType((WildcardType) typeBinding);
-        }
+        } 
         else {
             throw new UnsupportedOperationException("Unsupported NetBeans type: " + typeBinding);
         }

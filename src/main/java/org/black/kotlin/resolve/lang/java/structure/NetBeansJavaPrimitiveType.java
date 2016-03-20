@@ -20,8 +20,8 @@ public class NetBeansJavaPrimitiveType extends NetBeansJavaType<TypeMirror> impl
     @Override
     @Nullable
     public PrimitiveType getType(){
-        String text = getBinding().getKind().name();//maybe it should not be simple TO FIX IN FUTURE
-        return "void".equals(text) ? null : JvmPrimitiveType.get(text).getPrimitiveType();
+        String text = getBinding().toString();
+        return text.equals("void") ? null : JvmPrimitiveType.get(text).getPrimitiveType();
     }
     
 }

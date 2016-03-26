@@ -1,12 +1,11 @@
 package org.black.kotlin.resolve.lang.java.structure;
 
-import com.google.common.collect.Lists;
 import static org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.annotations;
 
 import java.util.Collection;
 import java.util.List;
 import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
@@ -40,10 +39,10 @@ public class NetBeansJavaType<T extends TypeMirror> implements JavaType, JavaAnn
     }
     
     public static NetBeansJavaType<?> create(@NotNull TypeMirror typeBinding){
-        if (typeBinding.getKind().isPrimitive()){
+        if (typeBinding.getKind().isPrimitive() || typeBinding.toString().equals("void")){
             return new NetBeansJavaPrimitiveType(typeBinding);
         } else if (typeBinding.getKind() == TypeKind.ARRAY){
-            return new NetBeansJavaArrayType(typeBinding);
+            return new NetBeansJavaArrayType((ArrayType) typeBinding);
         } else if (typeBinding.getKind() == TypeKind.DECLARED || 
                 typeBinding.getKind() == TypeKind.TYPEVAR){
             return new NetBeansJavaClassifierType(typeBinding);
@@ -58,7 +57,7 @@ public class NetBeansJavaType<T extends TypeMirror> implements JavaType, JavaAnn
     
     @Override
     public JavaArrayType createArrayType() {
-        return new NetBeansJavaArrayType(getBinding());
+        return new NetBeansJavaArrayType((ArrayType) getBinding());
     }
 
     @Override

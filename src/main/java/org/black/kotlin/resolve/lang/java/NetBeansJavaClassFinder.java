@@ -4,7 +4,6 @@ import javax.inject.Inject;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
 import org.black.kotlin.resolve.lang.java.structure.NetBeansJavaClass;
 import org.black.kotlin.resolve.lang.java.structure.NetBeansJavaPackage;
 import org.jetbrains.annotations.NotNull;
@@ -68,8 +67,8 @@ public class NetBeansJavaClassFinder implements JavaClassFinder {
     @Nullable 
     public static PackageElement[] findPackageFragments(org.netbeans.api.project.Project javaProject, String name,
             boolean partialMatch, boolean patternMatch){
-        PackageElement pack = NetBeansJavaProjectElementUtils.findPackageElement(javaProject, name);
-        
+        //PackageElement pack = NetBeansJavaProjectElementUtils.findPackageElement(javaProject, name);
+        //TODO
         return null;
     }
     

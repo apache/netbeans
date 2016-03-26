@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.regex.Pattern;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.run.KotlinCompiler;
 import org.black.kotlin.utils.KotlinClasspath;
 import org.black.kotlin.utils.ProjectUtils;
@@ -285,6 +286,7 @@ public class KotlinProject implements Project {
     public KotlinProject(AntProjectHelper helper) {
         this.helper = helper;
         kotlinSources = new KotlinSources(this);
+        KotlinEnvironment.getEnvironment(this);
     }
 
     @Override

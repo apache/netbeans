@@ -10,11 +10,9 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
-import org.black.kotlin.resolve.lang.java.NetBeansJavaClassFinder;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
@@ -113,7 +111,7 @@ public class NetBeansJavaElementUtil {
         }
         
         String fqName = classBinding.getQualifiedName().toString();
-        return fqName == null ? null : ClassId.topLevel(new FqName(fqName));
+        return ClassId.topLevel(new FqName(fqName));
     }
     
     public static JavaAnnotation findAnnotation(@NotNull List<? extends AnnotationMirror> annotations, @NotNull FqName fqName){

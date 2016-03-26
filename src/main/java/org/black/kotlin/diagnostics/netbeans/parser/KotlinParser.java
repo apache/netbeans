@@ -1,7 +1,6 @@
 package org.black.kotlin.diagnostics.netbeans.parser;
 
 import com.google.common.collect.Lists;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.event.ChangeListener;
 import org.black.kotlin.project.KotlinProject;
@@ -22,7 +21,6 @@ import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 import org.openide.filesystems.FileObject;
-
 /**
  *
  * @author Александр
@@ -117,7 +115,7 @@ public class KotlinParser extends Parser {
 
         @Override
         public String getDescription() {
-            return "";//diagnostic.toString();
+            return "";
         }
 
         @Override

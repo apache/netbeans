@@ -4,7 +4,6 @@ import static org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElementFa
 import static org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.classifierTypes;
 
 import com.google.common.collect.Lists;
-import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.List;
 import javax.lang.model.element.Element;
@@ -109,7 +108,7 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<TypeElement> imple
         for (Element element : declaredElements){
             if (element.getKind() == ElementKind.FIELD){
                 String name = element.getSimpleName().toString();
-                if (name != null && Name.isValidIdentifier(name)){
+                if (Name.isValidIdentifier(name)){
                     javaFields.add(new NetBeansJavaField((VariableElement) element));
                 }
             }

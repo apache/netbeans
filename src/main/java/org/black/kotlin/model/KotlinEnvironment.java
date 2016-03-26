@@ -34,31 +34,21 @@ import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElementFinder;
-import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.augment.PsiAugmentProvider;
 import com.intellij.psi.compiled.ClassFileDecompilers;
-import com.intellij.psi.impl.PsiFileFactoryImpl;
 import com.intellij.psi.impl.PsiTreeChangePreprocessor;
 import com.intellij.psi.impl.compiled.ClsCustomNavigationPolicy;
 import com.intellij.psi.impl.file.impl.JavaFileManager;
-import com.intellij.testFramework.LightVirtualFile;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import org.black.kotlin.resolve.BuiltInsReferenceResolver;
+import org.black.kotlin.resolve.KotlinSourceIndex;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.idea.KotlinFileType;
-import org.jetbrains.kotlin.idea.KotlinLanguage;
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory;
-import org.jetbrains.kotlin.psi.KtFile;
-import org.netbeans.api.project.ui.OpenProjects;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 
 /**
  * This class creates Kotlin environment for Kotlin project.
@@ -104,8 +94,9 @@ public class KotlinEnvironment {
         project.registerService(CliLightClassGenerationSupport.class, cliLightClassGenerationSupport);
         project.registerService(KtLightClassForFacade.FacadeStubCache.class, new KtLightClassForFacade.FacadeStubCache(project));
         project.registerService(CodeAnalyzerInitializer.class, cliLightClassGenerationSupport);
+        project.registerService(BuiltInsReferenceResolver.class, new BuiltInsReferenceResolver(project));
+        project.registerService(KotlinSourceIndex.class, new KotlinSourceIndex());
         
-
         configureClasspath(kotlinProject);
         
         project.registerService(JvmVirtualFileFinderFactory.class, new NetBeansVirtualFileFinder(kotlinProject));

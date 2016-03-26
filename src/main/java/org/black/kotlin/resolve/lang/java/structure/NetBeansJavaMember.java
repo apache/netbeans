@@ -1,14 +1,11 @@
 package org.black.kotlin.resolve.lang.java.structure;
 
-
-import com.google.common.collect.Lists;
 import static org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.annotations;
 
 import java.util.Collection;
 import java.util.List;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.Modifier;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -2,8 +2,6 @@ package org.black.kotlin.resolve.lang.java.structure;
 
 import com.intellij.psi.CommonClassNames;
 import javax.lang.model.element.Element;
-import javax.lang.model.type.TypeMirror;
-import org.black.kotlin.resolve.lang.java.NetBeansJavaClassFinder;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaType;

@@ -6,7 +6,7 @@ import java.util.List;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
-import static org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.typeParameters;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaMethod;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
@@ -33,6 +33,7 @@ public class NetBeansJavaMethod extends NetBeansJavaMember<ExecutableElement> im
     }
 
     @Override
+    @NotNull
     public JavaType getReturnType() {
         return NetBeansJavaType.create(getBinding().getReturnType());
     }

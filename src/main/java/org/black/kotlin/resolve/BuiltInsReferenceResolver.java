@@ -1,5 +1,6 @@
 package org.black.kotlin.resolve;
 
+import com.google.common.collect.Sets;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -57,7 +58,8 @@ import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.utils.ProjectUtils;
 
 public class BuiltInsReferenceResolver {
-    private static final String RUNTIME_SRC_DIR = "jar:file:"+ ProjectUtils.buildLibPath("kotlin-runtime-sources")+ "!/kotlin";
+    private static final String RUNTIME_SRC_DIR = 
+            "jar:file:"+ ProjectUtils.buildLibPath("kotlin-runtime-sources")+ "!/kotlin";
 
     private volatile ModuleDescriptor moduleDescriptor;
     private volatile PackageFragmentDescriptor builtinsPackageFragment = null;
@@ -110,7 +112,7 @@ public class BuiltInsReferenceResolver {
     }
 
     @Nullable
-    private Set<KtFile> getBuiltInSourceFiles() {
+    public Set<KtFile> getBuiltInSourceFiles() {
         URL url;
         try {
             url = new URL(RUNTIME_SRC_DIR);
@@ -128,6 +130,34 @@ public class BuiltInsReferenceResolver {
                 return file instanceof KtFile ? (KtFile) file : null;
             }
         }));
+    }
+    
+    private void addFilesFromFolder(Set<KtFile> files, VirtualFile root){
+        
+        for (VirtualFile child : root.getChildren()){
+            if (child.isDirectory()){
+                addFilesFromFolder(files, child);
+            }
+        }
+        
+        PsiDirectory psiDirectory = PsiManager.getInstance(myProject).findDirectory(root);
+        assert psiDirectory != null : "No PsiDirectory for " + root;
+        files.addAll(ContainerUtil.mapNotNull(psiDirectory.getFiles(), new Function<PsiFile, KtFile>() {
+            @Override
+            public KtFile fun(PsiFile file) {
+                return file instanceof KtFile ? (KtFile) file : null;
+            }
+        }));
+        
+    }
+    
+    public Set<KtFile> getAllFilesInKotlinSourceJar(){
+        Set<KtFile> files = Sets.newHashSet();
+        VirtualFile runtimeSrc = getSourceVirtualFile();
+        
+        addFilesFromFolder(files, runtimeSrc);
+        
+        return files;
     }
     
     @Nullable

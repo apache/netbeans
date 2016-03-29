@@ -17,7 +17,7 @@ import org.openide.util.Exceptions;
 
 /**
  *
- * @author РђР»РµРєСЃР°РЅРґСЂ
+ * @author Александр
  */
 public class KotlinPackagePartProvider implements PackagePartProvider{
 
@@ -27,30 +27,36 @@ public class KotlinPackagePartProvider implements PackagePartProvider{
         Set<VirtualFile> tempRoots = KotlinEnvironment.getEnvironment(project).getRoots();
         
         for (VirtualFile root : tempRoots){
-            if (root.findChild("META_INF") != null){
+            if (root.findChild("META-INF") != null){
                 roots.add(root);
             }
         }
+        
     }
     
     @Override
     public List<String> findPackageParts(String packageFqName) {
-        String[] pathParts = packageFqName.split(".");
+        String[] pathParts = packageFqName.split("\\.");
         
         ArrayList<ModuleMapping> mappings = Lists.newArrayList();
         
         mainloop:
         for (VirtualFile root : roots){
-            VirtualFile parent = root.getParent();
+            VirtualFile parent = root;
+            
             for (String part : pathParts){
                 if (!part.isEmpty()){
                     parent = parent.findChild(part);
-                    if (parent == null)
+                    if (parent == null){
                         continue mainloop;
+                    }
                 }
             }
-            if (root.findChild("META_INF") != null){
-                for (VirtualFile child : root.getChildren()){
+            
+            VirtualFile metaInf = root.findChild("META-INF");
+            
+            if (metaInf != null){
+                for (VirtualFile child : metaInf.getChildren()){
                     if (child.getName().endsWith(ModuleMapping.MAPPING_FILE_EXT)){
                         try {
                             mappings.add(ModuleMapping.Companion.create(child.contentsToByteArray()));

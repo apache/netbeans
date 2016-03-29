@@ -210,7 +210,7 @@ public class KotlinEnvironment {
     }
 
     @Nullable
-    public VirtualFile getVirtualFile(@NotNull String location) {
+    public VirtualFile getVirtualFile(@NotNull String location) { 
         return applicationEnvironment.getLocalFileSystem().findFileByPath(location);
     }
     

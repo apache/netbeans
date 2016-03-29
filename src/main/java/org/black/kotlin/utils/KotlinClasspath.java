@@ -21,4 +21,8 @@ public class KotlinClasspath {
         return classpath;
     }
     
+    public static String getKotlinBootClasspath(){
+        return ProjectUtils.KT_HOME + "lib\\"+LIB_RUNTIME_NAME;
+    }
+    
 }

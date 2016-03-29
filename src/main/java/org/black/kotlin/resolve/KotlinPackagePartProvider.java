@@ -17,7 +17,7 @@ import org.openide.util.Exceptions;
 
 /**
  *
- * @author Александр
+ * @author РђР»РµРєСЃР°РЅРґСЂ
  */
 public class KotlinPackagePartProvider implements PackagePartProvider{
 

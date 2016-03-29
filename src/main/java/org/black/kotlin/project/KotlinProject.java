@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -193,8 +194,11 @@ public class KotlinProject implements Project {
         private ClassPath getBootClassPath() {
             String bootClassPath = System.getProperty("sun.boot.class.path");
             List<URL> urls = new ArrayList<URL>();
-            String[] paths = bootClassPath.split(Pattern.quote(System.getProperty("path.separator")));
-
+//            String[] paths = bootClassPath.split(Pattern.quote(System.getProperty("path.separator")));
+            List<String> paths = new ArrayList<String>();
+            paths.add(KotlinClasspath.getKotlinBootClasspath());
+            paths.addAll(Arrays.asList(bootClassPath.split(
+                    Pattern.quote(System.getProperty("path.separator")))));
             for (String path : paths) {
                 File file = new File(path);
                 if (!file.canRead()) {

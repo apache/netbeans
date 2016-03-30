@@ -108,7 +108,7 @@ public class KotlinCompiler {
                 + "            <fileset dir=\"${build.dir}/classes\"/>\n"
                 + "	    <manifest>\n"
                 + "                <attribute name=\"Main-Class\" value=\"" +
-                ProjectUtils.getMainFileClass(project.getProjectDirectory().getChildren()) +
+                ProjectUtils.getMainFileClass(project) +
                 "\"/>\n"
                 + "            </manifest>\n"
                 + "        </jar>\n"

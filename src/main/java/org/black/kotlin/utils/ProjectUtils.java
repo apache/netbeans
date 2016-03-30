@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.black.kotlin.builder.KotlinPsiManager;
 import org.black.kotlin.project.KotlinProject;
+import org.black.kotlin.project.KotlinProjectConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -47,21 +48,23 @@ public class ProjectUtils {
      * @return file with main method.
      * @throws IOException
      */
-    public static FileObject findJavaMain(FileObject[] files) throws IOException {
-        for (FileObject file : files) {
-            if (!file.isFolder()) {
-                for (String line : file.asLines()) {
-                    if (line.contains("public static void main(")) {
-                        return file;
+    public static FileObject findJavaMain(KotlinProject project) throws IOException {
+        for (FileObject javaFolder : project.getKotlinSources().
+                getSrcDirectories(KotlinProjectConstants.JAVA_SOURCE)){
+            for (FileObject file : javaFolder.getChildren()){
+                if (!file.isFolder()) {
+                    for (String line : file.asLines()) {
+                        if (line.contains("public static void main(")) {
+                            String lineBeginning = line.split("main")[0];
+                            if (!lineBeginning.contains("/")){
+                                return file;
+                            }
+                        }
                     }
-                }
-            } else {
-                FileObject main = findJavaMain(file.getChildren());
-                if (main != null) {
-                    return main;
                 }
             }
         }
+        
         return null;
     }
     
@@ -75,21 +78,23 @@ public class ProjectUtils {
         }
     }
 
-    public static KtFile findKotlinMain(FileObject[] files) throws IOException {
+    public static KtFile findKotlinMain(KotlinProject project) throws IOException {
         List<KtFile> ktFiles = new ArrayList<KtFile>();
-        List<FileObject> collection = new ArrayList<FileObject>();
-        makeFileCollection(files, collection);
-        for (FileObject file : collection) {
-            if (!file.isFolder()) {
-                ktFiles.add(KotlinPsiManager.INSTANCE.parseFile(file));
+        List<FileObject> kotlinFolders = project.getKotlinSources().
+                getSrcDirectories(KotlinProjectConstants.KOTLIN_SOURCE);
+        for (FileObject folder : kotlinFolders) {
+            for (FileObject file : folder.getChildren()){
+                if (!file.isFolder() && KotlinPsiManager.INSTANCE.isKotlinFile(file)){
+                    ktFiles.add(KotlinPsiManager.INSTANCE.parseFile(file));
+                }
             }
         }
 
         return KtMainDetector.getMainFunctionFile(ktFiles);
     }
 
-    public static String getMainFileClass(FileObject[] files) throws IOException {
-        KtFile main = findKotlinMain(files);
+    public static String getMainFileClass(KotlinProject project) throws IOException {
+        KtFile main = findKotlinMain(project);
         if (main != null) {
             String name = main.getName().split(".kt")[0];
             String path = main.getViewProvider().getVirtualFile().getCanonicalPath();
@@ -113,7 +118,7 @@ public class ProjectUtils {
                 return builder.toString();
             }
         } else {
-            FileObject javaMain = findJavaMain(files);
+            FileObject javaMain = findJavaMain(project);
             if (javaMain != null) {
                 String name = javaMain.getName();
                 String path = javaMain.getPath();

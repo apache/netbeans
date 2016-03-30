@@ -65,7 +65,6 @@ public class NetBeansJavaProjectElementUtils {
         
         ClasspathInfo ci = ClasspathInfo.create(boot, src, compile);
         JavaSource js = JavaSource.create(ci);
-        
         try {
             js.runUserActionTask(new CancellableTask<CompilationController>(){
                 @Override

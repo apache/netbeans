@@ -12,19 +12,13 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import org.black.kotlin.builder.KotlinPsiManager;
-import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.project.KotlinProject;
-import org.black.kotlin.resolve.BuiltInsReferenceResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
 /**
@@ -87,7 +81,7 @@ public class ProjectUtils {
         makeFileCollection(files, collection);
         for (FileObject file : collection) {
             if (!file.isFolder()) {
-                ktFiles.add(KotlinPsiManager.INSTANCE.parseFile(FileUtil.toFile(file)));
+                ktFiles.add(KotlinPsiManager.INSTANCE.parseFile(file));
             }
         }
 
@@ -220,7 +214,8 @@ public class ProjectUtils {
     
     public static KtFile getKtFile(FileObject file){
         try {
-            return KotlinPsiManager.INSTANCE.parseFile(FileUtil.toFile(file));
+            return KotlinPsiManager.INSTANCE.getParsedFile(file);
+        //    return KotlinPsiManager.INSTANCE.parseFile(file);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }

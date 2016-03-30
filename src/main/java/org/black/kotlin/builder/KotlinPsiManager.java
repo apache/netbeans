@@ -1,14 +1,17 @@
 package org.black.kotlin.builder;
 
 import com.google.common.collect.Sets;
-import com.intellij.openapi.util.io.FileUtil;
+//import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.CharsetToolkit;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.impl.PsiFileFactoryImpl;
 import com.intellij.testFramework.LightVirtualFile;
-import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.model.KotlinLightVirtualFile;
@@ -19,8 +22,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.idea.KotlinFileType;
 import org.jetbrains.kotlin.idea.KotlinLanguage;
 import org.jetbrains.kotlin.psi.KtFile;
-import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.openide.filesystems.FileObject;
@@ -28,6 +29,9 @@ import org.openide.filesystems.FileObject;
 public class KotlinPsiManager {
     
     public static final KotlinPsiManager INSTANCE = new KotlinPsiManager();
+    
+    private final Map<FileObject, KtFile> cachedKtFiles = 
+            new HashMap<FileObject, KtFile>();
     
     private KotlinPsiManager(){}
     
@@ -54,8 +58,8 @@ public class KotlinPsiManager {
      * @throws IOException 
      */
     @Nullable
-    public KtFile parseFile(@NotNull File file) throws IOException {
-        return parseText(FileUtil.loadFile(file, null, true), file);
+    public KtFile parseFile(@NotNull FileObject file) throws IOException {
+        return parseText(StringUtilRt.convertLineSeparators(file.asText()), file);
     }
 
     /**
@@ -65,7 +69,7 @@ public class KotlinPsiManager {
      * @return {@link KtFile}
      */
     @Nullable
-    public KtFile parseText(@NotNull String text, @NotNull File file) {
+    public KtFile parseText(@NotNull String text, @NotNull FileObject file) {
         StringUtil.assertValidSeparators(text);
 
         com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(
@@ -77,6 +81,28 @@ public class KotlinPsiManager {
         PsiFileFactoryImpl psiFileFactory = (PsiFileFactoryImpl) PsiFileFactory.getInstance(project);
         
         return (KtFile) psiFileFactory.trySetupPsiForFile(virtualFile, KotlinLanguage.INSTANCE, true, false);
+    }
+    
+    @NotNull
+    public KtFile getParsedFile(@NotNull FileObject file) throws IOException {
+        if (!cachedKtFiles.containsKey(file)) {
+            KtFile ktFile = parseFile(file);
+            cachedKtFiles.put(file, ktFile);
+        } else {
+            updatePsiFile(file);
+        }
+            
+        return cachedKtFiles.get(file);
+    }
+    
+    private void updatePsiFile(@NotNull FileObject file) throws IOException{
+        String code = file.asText();
+        String sourceCodeWithouCR = StringUtilRt.convertLineSeparators(code);
+        PsiFile currentParsedFile = cachedKtFiles.get(file);
+        if (!currentParsedFile.getText().equals(sourceCodeWithouCR)) {
+            KtFile ktFile = parseText(sourceCodeWithouCR, file);
+            cachedKtFiles.put(file, ktFile);
+        }
     }
     
     @Nullable

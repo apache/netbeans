@@ -5,6 +5,7 @@ import java.io.File;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.idea.KotlinLanguage;
+import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -14,7 +15,7 @@ public class KotlinLightVirtualFile extends LightVirtualFile {
    
     private final String path;
     
-    public KotlinLightVirtualFile(File file, String text){
+    public KotlinLightVirtualFile(FileObject file, String text){
         super(file.getName(),KotlinLanguage.INSTANCE, text);
         path = file.getPath();
     }

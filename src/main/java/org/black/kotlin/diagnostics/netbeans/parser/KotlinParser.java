@@ -36,7 +36,6 @@ public class KotlinParser extends Parser {
         parserResult = 
                 KotlinAnalyzer.analyzeFile((KotlinProject) OpenProjects.getDefault().getOpenProjects()[0], fileToAnalyze);
         
-
     }
 
     @Override
@@ -81,11 +80,8 @@ public class KotlinParser extends Parser {
             List<KotlinError> errors = Lists.newArrayList();
             for (Diagnostic diagnostic : analysisResult.getAnalysisResult().
                     getBindingContext().getDiagnostics().all()) {
-                if (diagnostic.getSeverity() == org.jetbrains.kotlin.diagnostics.Severity.ERROR ||
-                        diagnostic.getSeverity() == org.jetbrains.kotlin.diagnostics.Severity.WARNING) {
-                    KotlinError error = new KotlinError(diagnostic, file);
-                    errors.add(error);
-                }
+                KotlinError error = new KotlinError(diagnostic, file);
+                errors.add(error);
             }
             return errors;
         }
@@ -145,8 +141,16 @@ public class KotlinParser extends Parser {
 
         @Override
         public Severity getSeverity() {
-            return diagnostic.getSeverity() == 
-                    org.jetbrains.kotlin.diagnostics.Severity.ERROR ? Severity.ERROR : Severity.WARNING;
+            switch (diagnostic.getSeverity()){
+                case ERROR:
+                    return Severity.ERROR;
+                case WARNING:
+                    return Severity.WARNING;
+                case INFO:
+                    return Severity.INFO;
+                default:
+                    return null;
+            }
         }
 
         @Override

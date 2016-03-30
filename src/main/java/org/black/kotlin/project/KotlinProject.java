@@ -214,6 +214,13 @@ public class KotlinProject implements Project {
                 }
             }
 
+            FileObject libDir = KotlinProject.this.getProjectDirectory().getFileObject("lib");
+            for (FileObject file : libDir.getChildren()) {
+                if ("jar".equals(file.getExt().toLowerCase())) {
+                    urls.add(FileUtil.getArchiveRoot(file.toURL()));
+                }
+            }
+            
             return ClassPathSupport.createClassPath(urls.toArray(new URL[urls.size()]));
         }
 

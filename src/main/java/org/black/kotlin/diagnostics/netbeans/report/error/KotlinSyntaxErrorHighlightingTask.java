@@ -1,16 +1,11 @@
 package org.black.kotlin.diagnostics.netbeans.report.error;
 
-import com.intellij.openapi.util.TextRange;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.black.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult;
-import org.jetbrains.kotlin.diagnostics.Diagnostic;
-import org.netbeans.modules.parsing.spi.ParseException;
-import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.ParserResultTask;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
@@ -20,62 +15,61 @@ import org.netbeans.spi.editor.hints.HintsController;
 import org.netbeans.spi.editor.hints.Severity;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
+import org.netbeans.modules.csl.api.Error;
 
 /**
  *
  * @author Александр
  */
-public class KotlinSyntaxErrorHighlightingTask extends ParserResultTask {
+public class KotlinSyntaxErrorHighlightingTask extends ParserResultTask<KotlinParserResult> {
 
     @Override
-    public void run(Result result, SchedulerEvent event) {
+    public void run(KotlinParserResult result, SchedulerEvent event) {
         try {
-            KotlinParserResult parserResult = (KotlinParserResult) result;
+            KotlinParserResult parserResult = result;
             Document document = result.getSnapshot().getSource().getDocument(false);
-            List<ErrorDescription> errors = new ArrayList<ErrorDescription>();
-            Collection<Diagnostic> diagnostics = parserResult.getAnalysisResult().getAnalysisResult().getBindingContext().getDiagnostics().all();
-            for (Diagnostic diagnostic : diagnostics) {
-                List<TextRange> textRanges = diagnostic.getTextRanges();
+            List<ErrorDescription> errorDescriptions = new ArrayList<ErrorDescription>();
+            List<? extends Error> errors = 
+                    parserResult.getDiagnostics();
+            for (Error error : errors){
+                Severity severity;
+                switch (error.getSeverity()){
+                    case ERROR:
+                        severity = Severity.ERROR;
+                        break;
+                    case WARNING:
+                        severity = Severity.WARNING;
+                        break;
+                    case INFO:
+                    default:
+                        severity = Severity.HINT;
+                }
                 
-                int startBeginLine = NbDocument.findLineNumber((StyledDocument) document, textRanges.get(0).getStartOffset());
-                int startBeginColumn = NbDocument.findLineColumn((StyledDocument) document, textRanges.get(0).getStartOffset());
+                int startBeginLine = NbDocument.findLineNumber((StyledDocument) document, error.getStartPosition());
+                int startBeginColumn = NbDocument.findLineColumn((StyledDocument) document, error.getStartPosition());
 
-                int endBeginLine = NbDocument.findLineNumber((StyledDocument) document, textRanges.get(0).getEndOffset());
-                int endBeginColumn = NbDocument.findLineColumn((StyledDocument) document, textRanges.get(0).getEndOffset());
+                int endBeginLine = NbDocument.findLineNumber((StyledDocument) document, error.getEndPosition());
+                int endBeginColumn = NbDocument.findLineColumn((StyledDocument) document, error.getEndPosition());
 
                 int start = NbDocument.findLineOffset((StyledDocument) document, startBeginLine)
                         + startBeginColumn;
                 int end = NbDocument.findLineOffset((StyledDocument) document, endBeginLine)
                         + endBeginColumn;
                 
-                if (diagnostic.getSeverity() == org.jetbrains.kotlin.diagnostics.Severity.ERROR){
-                    ErrorDescription errorDescription = ErrorDescriptionFactory.createErrorDescription(
-                            Severity.ERROR,
-                            diagnostic.toString(),
-                            document,
-                            document.createPosition(start),
-                            document.createPosition(end)
-                    );
-                    errors.add(errorDescription);
-                } 
-                else if (diagnostic.getSeverity() == org.jetbrains.kotlin.diagnostics.Severity.WARNING){
-                    ErrorDescription errorDescription = ErrorDescriptionFactory.createErrorDescription(
-                            Severity.WARNING,
-                            diagnostic.toString(),
-                            document,
-                            document.createPosition(start),
-                            document.createPosition(end)
-                    );
-                    errors.add(errorDescription);
-                }
-
+                ErrorDescription errorDescription = ErrorDescriptionFactory.createErrorDescription(
+                        severity,
+                        "",
+                        document,
+                        document.createPosition(start),
+                        document.createPosition(end)
+                );
+                
+                errorDescriptions.add(errorDescription);
             }
-            HintsController.setErrors(document, "kotlin", errors);
+            HintsController.setErrors(document, "kotlin", errorDescriptions);
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
-        } catch (ParseException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        } 
     }
 
     @Override

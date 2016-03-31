@@ -220,12 +220,15 @@ public class ProjectUtils {
     public static KtFile getKtFile(FileObject file){
         try {
             return KotlinPsiManager.INSTANCE.getParsedFile(file);
-        //    return KotlinPsiManager.INSTANCE.parseFile(file);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
         
         return null;
+    }
+    
+    public static KtFile getKtFile(String code, FileObject file){
+        return KotlinPsiManager.INSTANCE.parseTextForDiagnostic(code, file);
     }
     
     @NotNull
@@ -244,10 +247,6 @@ public class ProjectUtils {
     public static List<KtFile> getSourceFilesWithDependencies(@NotNull KotlinProject project){
         //TODO
         List<KtFile> files = getSourceFiles(project);
-//        BuiltInsReferenceResolver referenceResolver = BuiltInsReferenceResolver.getInstance(project);
-//        files.addAll(referenceResolver.getAllFilesInKotlinSourceJar());
-//        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(
-//            files, NotifyDescriptor.INFORMATION_MESSAGE));
         return files;
     }
 

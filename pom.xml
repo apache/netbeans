@@ -251,6 +251,12 @@
             <artifactId>org-openide-text</artifactId>
             <version>RELEASE81</version>
         </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-editor-bracesmatching</artifactId>
+            <version>RELEASE81</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

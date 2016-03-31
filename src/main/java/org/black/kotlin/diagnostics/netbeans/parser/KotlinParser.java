@@ -37,9 +37,11 @@ public class KotlinParser extends Parser {
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) {
         this.snapshot = snapshot;
-        fileToAnalyze = ProjectUtils.getKtFile(snapshot.getSource().getFileObject());
-        parserResult = 
-                KotlinAnalyzer.analyzeFile((KotlinProject) OpenProjects.getDefault().getOpenProjects()[0], fileToAnalyze);
+        fileToAnalyze = ProjectUtils.getKtFile(snapshot.getText().toString(),snapshot.getSource().getFileObject());
+        parserResult =
+            KotlinAnalyzer.analyzeFile((KotlinProject) OpenProjects.getDefault().getOpenProjects()[0], 
+                    fileToAnalyze);
+        
         
     }
 

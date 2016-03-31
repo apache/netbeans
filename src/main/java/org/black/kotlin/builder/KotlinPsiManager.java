@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 
 public class KotlinPsiManager {
     
@@ -83,6 +84,35 @@ public class KotlinPsiManager {
         return (KtFile) psiFileFactory.trySetupPsiForFile(virtualFile, KotlinLanguage.INSTANCE, true, false);
     }
     
+    public KtFile parseTextForDiagnostic(@NotNull String text, @NotNull FileObject file) {
+        StringUtil.assertValidSeparators(text);
+
+        if (cachedKtFiles.containsKey(file)) {
+            if (cachedKtFiles.get(file).getText().equals(text)){
+                return cachedKtFiles.get(file);
+            } else {
+                updatePsiFile(text, file);
+            }
+        } else {
+            try {
+                KtFile ktFile = parseFile(file);
+                cachedKtFiles.put(file, ktFile);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        
+        com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(
+                OpenProjects.getDefault().getOpenProjects()[0]).getProject();
+
+        LightVirtualFile virtualFile = new KotlinLightVirtualFile(file, text);
+        virtualFile.setCharset(CharsetToolkit.UTF8_CHARSET);
+
+        PsiFileFactoryImpl psiFileFactory = (PsiFileFactoryImpl) PsiFileFactory.getInstance(project);
+        
+        return (KtFile) psiFileFactory.trySetupPsiForFile(virtualFile, KotlinLanguage.INSTANCE, true, false);
+    }
+    
     @NotNull
     public KtFile getParsedFile(@NotNull FileObject file) throws IOException {
         if (!cachedKtFiles.containsKey(file)) {
@@ -97,24 +127,33 @@ public class KotlinPsiManager {
     
     private void updatePsiFile(@NotNull FileObject file) throws IOException{
         String code = file.asText();
-        String sourceCodeWithouCR = StringUtilRt.convertLineSeparators(code);
+        String sourceCodeWithoutCR = StringUtilRt.convertLineSeparators(code);
         PsiFile currentParsedFile = cachedKtFiles.get(file);
-        if (!currentParsedFile.getText().equals(sourceCodeWithouCR)) {
-            KtFile ktFile = parseText(sourceCodeWithouCR, file);
+        if (!currentParsedFile.getText().equals(sourceCodeWithoutCR)) {
+            KtFile ktFile = parseText(sourceCodeWithoutCR, file);
+            cachedKtFiles.put(file, ktFile);
+        }
+    }
+    
+    private void updatePsiFile(@NotNull String sourceCode, @NotNull FileObject file){
+        String sourceCodeWithoutCR = StringUtilRt.convertLineSeparators(sourceCode);
+        PsiFile currentParsedFile = cachedKtFiles.get(file);
+        if (!currentParsedFile.getText().equals(sourceCodeWithoutCR)) {
+            KtFile ktFile = parseText(sourceCodeWithoutCR, file);
             cachedKtFiles.put(file, ktFile);
         }
     }
     
     @Nullable
     public KtFile getParsedKtFile(@NotNull String text){
-        StringUtil.assertValidSeparators(text);
-
+//        StringUtil.assertValidSeparators(text);
+        String sourceCode = StringUtilRt.convertLineSeparators(text);
         com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(
                 OpenProjects.getDefault().getOpenProjects()[0]).getProject();
 
         PsiFileFactoryImpl psiFileFactory = (PsiFileFactoryImpl) PsiFileFactory.getInstance(project);
         
-        return (KtFile) psiFileFactory.createFileFromText(KotlinLanguage.INSTANCE, text);
+        return (KtFile) psiFileFactory.createFileFromText(KotlinLanguage.INSTANCE, sourceCode);
     }
     
     public boolean isKotlinFile(@NotNull FileObject file){

@@ -1,6 +1,7 @@
 package org.black.kotlin.diagnostics.netbeans.parser;
 
 import com.google.common.collect.Lists;
+import com.intellij.psi.PsiErrorElement;
 import java.util.List;
 import javax.swing.event.ChangeListener;
 import org.black.kotlin.project.KotlinProject;
@@ -8,7 +9,9 @@ import org.black.kotlin.resolve.AnalysisResultWithProvider;
 import org.black.kotlin.resolve.KotlinAnalyzer;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.diagnostics.Diagnostic;
+import org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages;
 import org.jetbrains.kotlin.psi.KtFile;
+import org.jetbrains.kotlin.resolve.AnalyzingUtils;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Error.Badging;
@@ -29,10 +32,12 @@ public class KotlinParser extends Parser {
 
     private Snapshot snapshot;
     private AnalysisResultWithProvider parserResult;
-
+    private KtFile fileToAnalyze;
+    
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) {
-        this.snapshot = snapshot;KtFile fileToAnalyze = ProjectUtils.getKtFile(snapshot.getSource().getFileObject());
+        this.snapshot = snapshot;
+        fileToAnalyze = ProjectUtils.getKtFile(snapshot.getSource().getFileObject());
         parserResult = 
                 KotlinAnalyzer.analyzeFile((KotlinProject) OpenProjects.getDefault().getOpenProjects()[0], fileToAnalyze);
         
@@ -40,7 +45,7 @@ public class KotlinParser extends Parser {
 
     @Override
     public Result getResult(Task task) {
-        return new KotlinParserResult(snapshot, parserResult);
+        return new KotlinParserResult(snapshot, parserResult, fileToAnalyze);
     }
 
     @Override
@@ -56,11 +61,13 @@ public class KotlinParser extends Parser {
         private boolean valid = true;
         private final AnalysisResultWithProvider analysisResult;
         private final FileObject file;
+        private final KtFile ktFile;
         
-        KotlinParserResult(Snapshot snapshot, AnalysisResultWithProvider analysisResult) {
+        KotlinParserResult(Snapshot snapshot, AnalysisResultWithProvider analysisResult, KtFile ktFile) {
             super(snapshot);
             this.analysisResult = analysisResult;
             file = snapshot.getSource().getFileObject();
+            this.ktFile = ktFile;
         }
 
         @Override
@@ -77,12 +84,17 @@ public class KotlinParser extends Parser {
 
         @Override
         public List<? extends Error> getDiagnostics() {
-            List<KotlinError> errors = Lists.newArrayList();
+            List<Error> errors = Lists.newArrayList();
             for (Diagnostic diagnostic : analysisResult.getAnalysisResult().
                     getBindingContext().getDiagnostics().all()) {
                 KotlinError error = new KotlinError(diagnostic, file);
                 errors.add(error);
             }
+            for (PsiErrorElement psiError : AnalyzingUtils.getSyntaxErrorRanges(ktFile)){
+                KotlinSyntaxError syntaxError = new KotlinSyntaxError(psiError, file);
+                errors.add(syntaxError);
+            }
+            
             return errors;
         }
 
@@ -106,7 +118,7 @@ public class KotlinParser extends Parser {
 
         @Override
         public String getDisplayName() {
-            return diagnostic.toString();
+            return DefaultErrorMessages.render(diagnostic);
         }
 
         @Override
@@ -151,6 +163,68 @@ public class KotlinParser extends Parser {
                 default:
                     return null;
             }
+        }
+
+        @Override
+        public Object[] getParameters() {
+            return null;
+        }
+        
+    }
+    
+    public static class KotlinSyntaxError implements Badging {
+
+        private final PsiErrorElement psiError;
+        private final FileObject file;
+        
+        public KotlinSyntaxError(PsiErrorElement psiError, FileObject file){
+            this.psiError = psiError;
+            this.file = file;
+        }
+        
+        @Override
+        public boolean showExplorerBadge() {
+            return true;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return psiError.getErrorDescription();
+        }
+
+        @Override
+        public String getDescription() {
+            return "";
+        }
+
+        @Override
+        public String getKey() {
+            return "";
+        }
+
+        @Override
+        public FileObject getFile() {
+            return file;
+        }
+
+        @Override
+        public int getStartPosition() {
+            return psiError.getTextRange().getStartOffset();
+        }
+
+        @Override
+        public int getEndPosition() {
+            return psiError.getTextRange().getEndOffset();
+        }
+
+        @Override
+        public boolean isLineError() {
+            return false;
+        }
+
+        @Override
+        public Severity getSeverity() {
+            return Severity.ERROR;
         }
 
         @Override

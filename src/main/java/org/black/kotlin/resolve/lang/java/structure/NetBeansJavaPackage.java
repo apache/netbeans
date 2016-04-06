@@ -16,7 +16,6 @@ import org.jetbrains.kotlin.load.java.structure.JavaPackage;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ui.OpenProjects;
 
 /**
  *
@@ -25,15 +24,15 @@ import org.netbeans.api.project.ui.OpenProjects;
 public class NetBeansJavaPackage implements JavaElement, JavaPackage{
     
     private final List<PackageElement> packages = Lists.newArrayList();
-    private final Project javaProject;
+    private final Project kotlinProject;
     
-    public NetBeansJavaPackage(List<PackageElement> packages){
+    public NetBeansJavaPackage(List<PackageElement> packages, Project project){
         this.packages.addAll(packages);
-        this.javaProject = OpenProjects.getDefault().getOpenProjects()[0];
+        this.kotlinProject = project; 
     }
     
-    public NetBeansJavaPackage(PackageElement pack){
-        this(Collections.singletonList(pack));
+    public NetBeansJavaPackage(PackageElement pack, Project project){
+        this(Collections.singletonList(pack), project);
     }
 
     @Override
@@ -42,8 +41,7 @@ public class NetBeansJavaPackage implements JavaElement, JavaPackage{
         String thisPackageName = getFqName().asString();
         String pattern = thisPackageName.isEmpty() ? "*" : thisPackageName + ".";
         
-        PackageElement[] packageFragments = NetBeansJavaClassFinder.findPackageFragments(
-                javaProject, pattern, true, true);
+        PackageElement[] packageFragments = NetBeansJavaClassFinder.findPackageFragments(kotlinProject, pattern, true, true);
         
         int thisNestedLevel = thisPackageName.split("\\.").length;
         List<JavaPackage> javaPackages = Lists.newArrayList();
@@ -53,7 +51,7 @@ public class NetBeansJavaPackage implements JavaElement, JavaPackage{
                 boolean applicableForRootPackage = thisNestedLevel == 1 && thisNestedLevel == subNestedLevel;
                 if (!packageFragment.getQualifiedName().toString().isEmpty() &&
                         (applicableForRootPackage || (thisNestedLevel + 1 == subNestedLevel))){
-                    javaPackages.add(new NetBeansJavaPackage(packageFragment));
+                    javaPackages.add(new NetBeansJavaPackage(packageFragment, kotlinProject));
                 }
             }
         }

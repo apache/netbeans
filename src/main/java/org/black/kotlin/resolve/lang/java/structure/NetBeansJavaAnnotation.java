@@ -9,6 +9,7 @@ import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
+import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationArgument;
@@ -24,14 +25,14 @@ import org.netbeans.api.project.ui.OpenProjects;
  *
  * @author Александр
  */
-public class NetBeansJavaAnnotation /*extends NetBeansJavaElement<Element>*/ implements JavaAnnotation, JavaElement{
+public class NetBeansJavaAnnotation implements JavaAnnotation, JavaElement{
 
-    private final Project javaProject;
+    private final Project kotlinProject;
     private final AnnotationMirror binding;
     
     protected NetBeansJavaAnnotation(AnnotationMirror javaAnnotation){
         this.binding = javaAnnotation;
-        this.javaProject = OpenProjects.getDefault().getOpenProjects()[0];
+        this.kotlinProject = NetBeansJavaProjectElementUtils.getProject(binding.getAnnotationType().asElement());
     }
     
     @Override
@@ -41,7 +42,7 @@ public class NetBeansJavaAnnotation /*extends NetBeansJavaElement<Element>*/ imp
             if (name.asString().equals(entry.getKey().getSimpleName().toString())){
                 return NetBeansJavaAnnotationArgument.create(entry.getValue().getValue(),
                         name,
-                        javaProject);
+                        kotlinProject);
             }
         }
         
@@ -55,7 +56,7 @@ public class NetBeansJavaAnnotation /*extends NetBeansJavaElement<Element>*/ imp
                 getBinding().getElementValues().entrySet()){
             arguments.add(NetBeansJavaAnnotationArgument.create(entry.getValue().getValue(), 
                     Name.identifier(entry.getKey().getSimpleName().toString()), 
-                    javaProject));
+                    kotlinProject));
         }
         return arguments;
     }

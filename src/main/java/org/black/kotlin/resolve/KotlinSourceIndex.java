@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.lang.model.element.PackageElement;
 import org.black.kotlin.model.KotlinEnvironment;
+import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.black.kotlin.resolve.sources.LibrarySourcesIndex;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.idea.KotlinFileType;
-import org.netbeans.api.project.ui.OpenProjects;
 
 public class KotlinSourceIndex {
     
@@ -28,10 +28,10 @@ public class KotlinSourceIndex {
     
     @Nullable
     public static char[] getSource(PackageElement packageElement, String simpleName){
-        KotlinSourceIndex index = KotlinSourceIndex.getInstance(OpenProjects.getDefault().getOpenProjects()[0]);
+        KotlinProject project = NetBeansJavaProjectElementUtils.getProject(packageElement);
+        KotlinSourceIndex index = KotlinSourceIndex.getInstance(project);
         String resolvedPath = index.resolvePath(packageElement, simpleName);
-        return NetBeansJavaProjectElementUtils.toBinaryName(OpenProjects.getDefault().getOpenProjects()[0], 
-                resolvedPath).toCharArray();
+        return NetBeansJavaProjectElementUtils.toBinaryName(project, resolvedPath).toCharArray();
     }
     
     

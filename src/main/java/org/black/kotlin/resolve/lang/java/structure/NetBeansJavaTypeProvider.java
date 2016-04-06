@@ -2,12 +2,14 @@ package org.black.kotlin.resolve.lang.java.structure;
 
 import com.intellij.psi.CommonClassNames;
 import javax.lang.model.element.Element;
+import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeProvider;
 import org.jetbrains.kotlin.load.java.structure.JavaWildcardType;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ui.OpenProjects;
 
 /**
  *
@@ -15,19 +17,22 @@ import org.netbeans.api.project.Project;
  */
 public class NetBeansJavaTypeProvider implements JavaTypeProvider {
     
-    private final Project javaProject;
-    
-    public NetBeansJavaTypeProvider(@NotNull Project javaProject){
-        this.javaProject = javaProject;
-    }
-        
     
     @Override
     @NotNull
     public JavaType createJavaLangObjectType() { 
-        Element typeBinding = NetBeansJavaProjectElementUtils.findTypeElement(
-                javaProject, CommonClassNames.JAVA_LANG_OBJECT);
-//        Element typeBinding = NetBeansJavaClassFinder.createTypeBinding(type);
+        Project[] projects = OpenProjects.getDefault().getOpenProjects();
+        Project kotlinProject = null;
+        
+        for (Project project : projects){
+            if (project instanceof KotlinProject){
+                kotlinProject = project;
+                break;
+            }
+        }
+        
+        Element typeBinding = NetBeansJavaProjectElementUtils.findTypeElement(kotlinProject, CommonClassNames.JAVA_LANG_OBJECT);
+        
         assert typeBinding != null : "Type binding for java.lang.Object cannot be null";
         
         return NetBeansJavaType.create(typeBinding.asType());

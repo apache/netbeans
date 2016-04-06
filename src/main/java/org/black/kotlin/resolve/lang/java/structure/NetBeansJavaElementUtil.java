@@ -13,6 +13,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
@@ -156,14 +157,23 @@ public class NetBeansJavaElementUtil {
         
         if (!javaLangObjectInSuperTypes && !typeBinding.toString().
                 equals(CommonClassNames.JAVA_LANG_OBJECT)){
-            allSuperTypes.add(getJavaLangObjectBinding(OpenProjects.getDefault().getOpenProjects()[0]));
+            allSuperTypes.add(getJavaLangObjectBinding());
         }
         
         return allSuperTypes.toArray(new TypeMirror[allSuperTypes.size()]);
     }
     
     @NotNull
-    private static TypeMirror getJavaLangObjectBinding(@NotNull Project project){
+    private static TypeMirror getJavaLangObjectBinding(){
+        Project project = null;
+        
+        for (Project pr : OpenProjects.getDefault().getOpenProjects()){
+            if (pr instanceof KotlinProject){
+                project = pr;
+                break;
+            }
+        }
+        
         TypeMirror javaType = NetBeansJavaProjectElementUtils.findTypeElement(
                 project, CommonClassNames.JAVA_LANG_OBJECT).asType();
         return javaType;

@@ -1,7 +1,6 @@
 package org.black.kotlin.builder;
 
 import com.google.common.collect.Sets;
-//import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.CharsetToolkit;
@@ -17,6 +16,7 @@ import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.model.KotlinLightVirtualFile;
 import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.project.KotlinProjectConstants;
+import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.idea.KotlinFileType;
@@ -74,7 +74,7 @@ public class KotlinPsiManager {
         StringUtil.assertValidSeparators(text);
 
         com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(
-                OpenProjects.getDefault().getOpenProjects()[0]).getProject();
+                ProjectUtils.getProjectFromFileObject(file)).getProject();
 
         LightVirtualFile virtualFile = new KotlinLightVirtualFile(file, text);
         virtualFile.setCharset(CharsetToolkit.UTF8_CHARSET);
@@ -103,7 +103,7 @@ public class KotlinPsiManager {
         }
         
         com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(
-                OpenProjects.getDefault().getOpenProjects()[0]).getProject();
+                ProjectUtils.getProjectFromFileObject(file)).getProject();
 
         LightVirtualFile virtualFile = new KotlinLightVirtualFile(file, text);
         virtualFile.setCharset(CharsetToolkit.UTF8_CHARSET);

@@ -103,8 +103,8 @@ public class KotlinCompiler {
         return "" + "\n"
                 + "    <target name=\"build\" depends=\"compile\">\n"
                 + "        <jar destfile=\"${build.dir}/${ant.project.name}.jar\">\n"
-                + "    	    <zipgroupfileset dir=\"${kotlin.lib}\" includes=\"kotlin-runtime.jar\" />" +
-                "<zipgroupfileset dir=\"lib\" includes=\"*.jar\" />\n"
+                + "    	    <zipgroupfileset dir=\"${kotlin.lib}\" includes=\"kotlin-runtime.jar\" />" 
+                + "<zipgroupfileset dir=\"lib\" includes=\"*.jar\" />\n"
                 + "            <fileset dir=\"${build.dir}/classes\"/>\n"
                 + "	    <manifest>\n"
                 + "                <attribute name=\"Main-Class\" value=\"" +
@@ -133,9 +133,13 @@ public class KotlinCompiler {
      * @throws IOException
      */
     private void makeBuildXml(KotlinProject project) throws IOException {
-        String build = "" + "<project name=\"Kotlin_Project-impl\" default=\"build\">\n"
+//        String ktHome = new String(ProjectUtils.KT_HOME.getBytes("UTF-8"));
+        String ktHome = ProjectUtils.KT_HOME;
+        String build = "" 
+                + "<?xml version=\"1.0\" encoding=\"utf-8\" ?>"
+                + "<project name=\"Kotlin_Project-impl\" default=\"build\">\n"
                 + "    <property name=\"kotlin.lib\"  value=\"" +
-                ProjectUtils.KT_HOME + "lib" +
+                /*ktHome + */ProjectUtils.KT_HOME + "lib" +
                 "\"/> \n"
                 + "    <property name=\"build.dir\"   value=\"build\"/>\n"
                 + "\n"

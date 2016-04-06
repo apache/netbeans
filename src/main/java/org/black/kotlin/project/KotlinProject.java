@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import org.black.kotlin.bundledcompiler.BundledCompiler;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.run.KotlinCompiler;
 import org.black.kotlin.utils.KotlinClasspath;
@@ -20,6 +21,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -32,9 +34,11 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.Mutex;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 
@@ -141,6 +145,8 @@ public class KotlinProject implements Project {
                     
                     @Override
                     public void run() {
+                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(
+                            ProjectUtils.KT_HOME, NotifyDescriptor.INFORMATION_MESSAGE));
                         ProjectUtils.clean(KotlinProject.this);
                     }
 
@@ -299,8 +305,9 @@ public class KotlinProject implements Project {
 
     public KotlinProject(AntProjectHelper helper) {
         this.helper = helper;
+        //ProjectUtils.checkKtHome();
         kotlinSources = new KotlinSources(this);
-        KotlinEnvironment.getEnvironment(this);
+        KotlinEnvironment.getEnvironment(KotlinProject.this);
     }
 
     @Override

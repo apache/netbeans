@@ -47,7 +47,7 @@ public class NetBeansJavaClassFinder implements JavaClassFinder {
     public JavaPackage findPackage(FqName fqName) {
         PackageElement packageEl = NetBeansJavaProjectElementUtils.findPackageElement(javaProject, fqName.asString());
         if (packageEl != null){
-            return new NetBeansJavaPackage(packageEl);
+            return new NetBeansJavaPackage(packageEl, javaProject);
         }
         
         return null;

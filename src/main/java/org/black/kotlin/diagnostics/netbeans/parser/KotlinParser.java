@@ -12,7 +12,6 @@ import org.jetbrains.kotlin.diagnostics.Diagnostic;
 import org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.AnalyzingUtils;
-import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Error.Badging;
 import org.netbeans.modules.csl.api.Severity;
@@ -37,11 +36,10 @@ public class KotlinParser extends Parser {
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) {
         this.snapshot = snapshot;
+        KotlinProject project = ProjectUtils.getProjectFromFileObject(snapshot.getSource().getFileObject());
         fileToAnalyze = ProjectUtils.getKtFile(snapshot.getText().toString(),snapshot.getSource().getFileObject());
         parserResult =
-            KotlinAnalyzer.analyzeFile((KotlinProject) OpenProjects.getDefault().getOpenProjects()[0], 
-                    fileToAnalyze);
-        
+            KotlinAnalyzer.analyzeFile(project, fileToAnalyze);
         
     }
 

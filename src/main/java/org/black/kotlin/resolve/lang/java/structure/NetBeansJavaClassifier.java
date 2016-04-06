@@ -14,7 +14,6 @@ import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifier;
 import org.jetbrains.kotlin.name.FqName;
-import org.netbeans.api.project.ui.OpenProjects;
 
 /**
  *
@@ -56,6 +55,6 @@ public abstract class NetBeansJavaClassifier<T extends Element> extends
     
     @Override
     public boolean isDeprecatedInJavaDoc(){
-        return NetBeansJavaProjectElementUtils.isDeprecated(OpenProjects.getDefault().getOpenProjects()[0], getBinding());
+        return NetBeansJavaProjectElementUtils.isDeprecated(getBinding());
     }
 }

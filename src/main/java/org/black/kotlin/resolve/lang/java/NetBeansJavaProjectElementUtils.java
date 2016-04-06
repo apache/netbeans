@@ -4,13 +4,18 @@ import java.io.IOException;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import org.black.kotlin.project.KotlinProject;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
 /**
@@ -22,12 +27,19 @@ public class NetBeansJavaProjectElementUtils {
     private static boolean isDeprecated = false;
     private static String binaryName = null;
     
-    public static TypeElement findTypeElement(Project javaProject, String fqName){
-        ClassPath boot = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
-        ClassPath src = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
-        ClassPath compile = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
+    private static ClasspathInfo getClasspathInfo(Project kotlinProject){
         
-        ClasspathInfo ci = ClasspathInfo.create(boot, src, compile);
+        assert kotlinProject != null : "Project cannot be null";
+        
+        ClassPath boot = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
+        ClassPath src = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
+        ClassPath compile = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
+        
+        return ClasspathInfo.create(boot, src, compile);
+    }
+    
+    public static TypeElement findTypeElement(Project kotlinProject, String fqName){
+        ClasspathInfo ci = getClasspathInfo(kotlinProject);
         
         JavaSource js = JavaSource.create(ci);
         TypeElementSearcher searcher = new TypeElementSearcher(fqName);
@@ -40,12 +52,8 @@ public class NetBeansJavaProjectElementUtils {
         return searcher.getElement();
     }
     
-    public static PackageElement findPackageElement(Project javaProject, String fqName){
-        ClassPath boot = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
-        ClassPath src = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
-        ClassPath compile = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
-        
-        ClasspathInfo ci = ClasspathInfo.create(boot, src, compile);
+    public static PackageElement findPackageElement(Project kotlinProject, String fqName){
+        ClasspathInfo ci = getClasspathInfo(kotlinProject);
         
         JavaSource js = JavaSource.create(ci);
         PackageElementSearcher searcher = new PackageElementSearcher(fqName);
@@ -56,12 +64,40 @@ public class NetBeansJavaProjectElementUtils {
         }
         
         return searcher.getElement();
-    } 
+    }
     
-    public static boolean isDeprecated(Project javaProject, final Element element){
-        ClassPath boot = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
-        ClassPath src = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
-        ClassPath compile = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
+    public static KotlinProject getProject(Element element){
+        Project[] projects = OpenProjects.getDefault().getOpenProjects();
+        
+        if (projects.length == 1){
+            return (KotlinProject) projects[0];
+        }
+        
+        for (Project project : projects){
+            if (!(project instanceof KotlinProject)){
+                continue;
+            }
+            ClasspathInfo ci = getClasspathInfo(project);
+            
+            FileObject file = SourceUtils.getFile(ElementHandle.create(element), ci);
+
+            if (file != null){
+                return (KotlinProject) project;
+            }
+        }
+        return null;
+    }
+    
+    public static boolean isDeprecated(final Element element){
+        Project kotlinProject = NetBeansJavaProjectElementUtils.getProject(element);
+        
+        if (kotlinProject == null){
+            return false;
+        }
+        
+        ClassPath boot = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
+        ClassPath src = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
+        ClassPath compile = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
         
         ClasspathInfo ci = ClasspathInfo.create(boot, src, compile);
         JavaSource js = JavaSource.create(ci);
@@ -83,12 +119,9 @@ public class NetBeansJavaProjectElementUtils {
         return isDeprecated;
     }
     
-    public static String toBinaryName(Project javaProject, final String name){
-        ClassPath boot = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
-        ClassPath src = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
-        ClassPath compile = javaProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
+    public static String toBinaryName(Project kotlinProject, final String name){
+        ClasspathInfo ci = getClasspathInfo(kotlinProject);
         
-        ClasspathInfo ci = ClasspathInfo.create(boot, src, compile);
         JavaSource js = JavaSource.create(ci);
         
         try {

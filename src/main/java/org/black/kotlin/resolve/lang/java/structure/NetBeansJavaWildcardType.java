@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeProvider;
 import org.jetbrains.kotlin.load.java.structure.JavaWildcardType;
-import org.netbeans.api.project.ui.OpenProjects;
 
 /**
  *
@@ -31,7 +30,7 @@ public class NetBeansJavaWildcardType extends NetBeansJavaType<WildcardType> imp
 
     @Override
     public JavaTypeProvider getTypeProvider() {
-        return new NetBeansJavaTypeProvider(OpenProjects.getDefault().getOpenProjects()[0]);
+        return new NetBeansJavaTypeProvider();
     }
     
     

@@ -12,14 +12,19 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import org.black.kotlin.builder.KotlinPsiManager;
+import org.black.kotlin.bundledcompiler.BundledCompiler;
 import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.project.KotlinProjectConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
+import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 
 /**
@@ -31,7 +36,7 @@ public class ProjectUtils {
     private static final String LIB_FOLDER = "lib";
     private static final String LIB_EXTENSION = "jar";
     public static final String FILE_SEPARATOR = System.getProperty("file.separator");
-    public static final String KT_HOME;
+    public static String KT_HOME;
 
     static {
         if (System.getenv("KOTLIN_HOME") != null) {
@@ -41,6 +46,16 @@ public class ProjectUtils {
         }
     }
 
+    public static void checkKtHome(){
+        if (KT_HOME == null){
+            FileObject dir = FileUtil.toFileObject(Places.getUserDirectory());
+            if (dir.getFileObject("kotlinc") == null){
+                BundledCompiler.getBundledCompiler();
+            }
+            KT_HOME = Places.getUserDirectory().getAbsolutePath() + FILE_SEPARATOR + "kotlinc" + FILE_SEPARATOR;
+        }
+    }
+    
     /**
      * Finds java file with main method.
      *
@@ -250,4 +265,39 @@ public class ProjectUtils {
         return files;
     }
 
+    public static KotlinProject getProjectFromFileObject(FileObject file){
+        FileObject packageName = file;
+        FileObject projectDir = null;
+        
+        while (!packageName.getName().equals("src")){
+            if (packageName.getParent() == null){
+                try {
+                    if (packageName.getCanonicalFileObject().hasExt("jar") || packageName.getName().equals("")){
+                        projectDir = packageName.getCanonicalFileObject().getParent().getParent();
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                break;
+            }
+            
+            packageName = packageName.getParent();
+        }
+        
+        if (projectDir == null){
+            projectDir = packageName.getParent();
+        }
+        
+        
+        for (Project project : OpenProjects.getDefault().getOpenProjects()){
+            if (!(project instanceof KotlinProject) || project.getProjectDirectory() != projectDir){
+                continue;
+            }
+            
+            return (KotlinProject) project; 
+        }
+        
+        return null;
+    }
+    
 }

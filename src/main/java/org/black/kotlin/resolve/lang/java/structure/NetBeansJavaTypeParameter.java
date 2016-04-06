@@ -8,13 +8,13 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.TypeMirror;
+import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameterListOwner;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeProvider;
 import org.jetbrains.kotlin.name.Name;
-import org.netbeans.api.project.ui.OpenProjects;
 
 /**
  *
@@ -67,7 +67,7 @@ public class NetBeansJavaTypeParameter extends NetBeansJavaClassifier<TypeParame
 
     @Override
     public JavaTypeProvider getTypeProvider() {
-        return new NetBeansJavaTypeProvider(OpenProjects.getDefault().getOpenProjects()[0]);
+        return new NetBeansJavaTypeProvider();
     }
     
 }

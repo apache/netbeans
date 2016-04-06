@@ -15,16 +15,13 @@ public class KotlinClasspath {
     public static List<String> getKotlinClasspath(){
         List<String> classpath = new ArrayList<String>();
         
-//        classpath.add(ProjectUtils.KT_HOME + LIB_RUNTIME_NAME);
-        classpath.add(ProjectUtils.KT_HOME + "lib\\"+LIB_RUNTIME_NAME);
-        //classpath.add(ProjectUtils.KT_HOME + "lib\\"+LIB_RUNTIME_SRC_NAME);
+        classpath.add(ProjectUtils.KT_HOME + "lib\\" + LIB_RUNTIME_NAME);
         
         return classpath;
     }
     
     public static String getKotlinBootClasspath(){
-//        return ProjectUtils.KT_HOME + LIB_RUNTIME_NAME;
-        return ProjectUtils.KT_HOME + "lib\\"+LIB_RUNTIME_NAME;
+        return ProjectUtils.KT_HOME + "lib\\" + LIB_RUNTIME_NAME;
     }
     
 }

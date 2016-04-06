@@ -133,13 +133,11 @@ public class KotlinCompiler {
      * @throws IOException
      */
     private void makeBuildXml(KotlinProject project) throws IOException {
-//        String ktHome = new String(ProjectUtils.KT_HOME.getBytes("UTF-8"));
-        String ktHome = ProjectUtils.KT_HOME;
+        String ktHome = new String(ProjectUtils.KT_HOME.getBytes("UTF-8"));
         String build = "" 
-                + "<?xml version=\"1.0\" encoding=\"utf-8\" ?>"
                 + "<project name=\"Kotlin_Project-impl\" default=\"build\">\n"
                 + "    <property name=\"kotlin.lib\"  value=\"" +
-                /*ktHome + */ProjectUtils.KT_HOME + "lib" +
+                ktHome + "lib" +
                 "\"/> \n"
                 + "    <property name=\"build.dir\"   value=\"build\"/>\n"
                 + "\n"

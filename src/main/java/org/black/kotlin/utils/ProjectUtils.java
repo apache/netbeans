@@ -21,7 +21,6 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
-import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
@@ -47,13 +46,14 @@ public class ProjectUtils {
     }
 
     public static void checkKtHome(){
-        if (KT_HOME == null){
+//        if (KT_HOME == null){
             FileObject dir = FileUtil.toFileObject(Places.getUserDirectory());
             if (dir.getFileObject("kotlinc") == null){
                 BundledCompiler.getBundledCompiler();
             }
-            KT_HOME = Places.getUserDirectory().getAbsolutePath() + FILE_SEPARATOR + "kotlinc" + FILE_SEPARATOR;
-        }
+            KT_HOME = Places.getUserDirectory().getAbsolutePath() + FILE_SEPARATOR + "kotlinc"
+                    + FILE_SEPARATOR;// + "lib";
+//        }
     }
     
     /**
@@ -268,6 +268,15 @@ public class ProjectUtils {
     public static KotlinProject getProjectFromFileObject(FileObject file){
         FileObject packageName = file;
         FileObject projectDir = null;
+        
+//        String path = file.getPath();
+//        String canonicalPath = null;
+//        
+//        try {
+//            canonicalPath = file.getCanonicalFileObject().getPath();
+//        } catch (IOException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
         
         while (!packageName.getName().equals("src")){
             if (packageName.getParent() == null){

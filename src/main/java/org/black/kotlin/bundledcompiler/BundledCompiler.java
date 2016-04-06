@@ -45,7 +45,6 @@ public class BundledCompiler {
 
     private static String makeBuildScript() throws UnsupportedEncodingException {
         String targetDir = Places.getUserDirectory().getAbsolutePath().replace("\\","/");
-//        String targetDir = Places.getUserDirectory().toURI().getPath();
         return "<project default=\"get_bundled\">\n"
                 + "    <property name=\"compiler.tag\" value=\"for_eclipse\" />\n"
                 + "    <property name=\"bootstrap_branch\" value=\"1.0.1\"/>\n"
@@ -65,7 +64,7 @@ public class BundledCompiler {
                 + "    <property name=\"project.name\" value=\"kotlin-bundled-compiler\" />\n"
                 + "		\n"
                 + "    <condition property=\"target.dir\" value=\"${teamcity.build.workingDir}/lib\" else=\"" +
-                targetDir + "/kotlinc\">\n"
+                targetDir + "/kotlinc/lib\">\n"
                 + "        <isset property=\"teamcity.build.workingDir\"/>\n"
                 + "    </condition>\n"
                 + "		\n"
@@ -89,12 +88,6 @@ public class BundledCompiler {
                 + "        <unzip src=\"${download.dir}/${compiler-artifact-file}\" dest=\"${target.dir}\">\n"
                 + "            <patternset>\n"
                 + "                <include name=\"Kotlin/kotlinc/lib/**/*.jar\" />\n"
-//                + "                <include name=\"Kotlin/kotlinc/lib/kotlin-compiler.jar\" />\n"
-//                + "                <include name=\"Kotlin/kotlinc/lib/kotlin-runtime.jar\" />\n"
-//                + "                <include name=\"Kotlin/kotlinc/lib/kotlin-reflect.jar\" />\n"
-//                + "                <include name=\"Kotlin/kotlinc/lib/kotlin-jdk-annotations.jar\" />\n"
-//                + "                <include name=\"Kotlin/kotlinc/lib/kotlin-runtime-sources.jar\" />\n"
-//                + "                <include name=\"Kotlin/kotlinc/lib/kotlin-ant.jar\" />\n"
                 + "            </patternset>\n"
                 + "            <mapper type=\"flatten\"/>\n"
                 + "        </unzip>\n"

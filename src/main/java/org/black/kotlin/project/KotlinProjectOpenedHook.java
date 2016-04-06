@@ -5,11 +5,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import org.black.kotlin.resolve.KotlinAnalyzer;
+import org.black.kotlin.model.KotlinEnvironment;
+import org.black.kotlin.project.KotlinProject.KotlinClassPathProvider;
 import org.black.kotlin.utils.ProjectUtils;
 import static org.black.kotlin.utils.ProjectUtils.FILE_SEPARATOR;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
+import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
@@ -34,6 +36,7 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
                 System.err.println("Cannot create a directory");
             }
         }
+        
     }
 
     
@@ -41,6 +44,8 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
     public void projectOpened() {
         try {
             ProjectUtils.checkKtHome();
+            ((KotlinClassPathProvider) project.getLookup().lookup(ClassPathProvider.class)).updateClassPathProvider();
+            KotlinEnvironment.getEnvironment(project);
             List<ClassPath> paths = new ArrayList<ClassPath>();
             FileObject classesRoot = project.getProjectDirectory().getFileObject("build").getFileObject("classes");
             

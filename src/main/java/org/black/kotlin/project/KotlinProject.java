@@ -11,8 +11,6 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import org.black.kotlin.bundledcompiler.BundledCompiler;
-import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.run.KotlinCompiler;
 import org.black.kotlin.utils.KotlinClasspath;
 import org.black.kotlin.utils.ProjectUtils;
@@ -21,8 +19,6 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
-import org.netbeans.api.project.ProjectManager;
-import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ActionProvider;
@@ -30,15 +26,11 @@ import org.netbeans.spi.project.support.ant.AntBasedProjectRegistration;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
 import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
-import org.openide.util.Mutex;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 
@@ -145,8 +137,6 @@ public class KotlinProject implements Project {
                     
                     @Override
                     public void run() {
-                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(
-                            ProjectUtils.KT_HOME, NotifyDescriptor.INFORMATION_MESSAGE));
                         ProjectUtils.clean(KotlinProject.this);
                     }
 
@@ -198,8 +188,17 @@ public class KotlinProject implements Project {
 
     }
 
-    private final class KotlinClassPathProvider implements ClassPathProvider {
+    final class KotlinClassPathProvider implements ClassPathProvider {
 
+        ClassPath boot = null;
+        ClassPath compile = null;
+        ClassPath source = null;
+        
+        public void updateClassPathProvider() {
+            boot = getBootClassPath();
+            compile = getCompileAndExecuteClassPath();
+        }
+        
         private ClassPath getBootClassPath() {
             String bootClassPath = System.getProperty("sun.boot.class.path");
             List<URL> urls = new ArrayList<URL>();
@@ -229,6 +228,7 @@ public class KotlinProject implements Project {
                     urls.add(FileUtil.getArchiveRoot(file.toURL()));
                 }
             }
+            
             
             return ClassPathSupport.createClassPath(urls.toArray(new URL[urls.size()]));
         }
@@ -269,13 +269,22 @@ public class KotlinProject implements Project {
         @Override
         public ClassPath findClassPath(FileObject fo, String type) {
             if (type.equals(ClassPath.BOOT)) {
-                return getBootClassPath();
+                if (boot == null){
+                    boot = getBootClassPath();
+                }
+                return boot;
             } else if (type.equals(ClassPath.COMPILE) || type.equals(ClassPath.EXECUTE)) {
-                return getCompileAndExecuteClassPath();
+                if (compile == null){
+                    compile = getCompileAndExecuteClassPath();
+                }
+                return compile;
             } else if (type.equals(ClassPath.SOURCE)) {
-                return ClassPathSupport.createClassPath(KotlinProject.this.
+                if (source == null){
+                    source = ClassPathSupport.createClassPath(KotlinProject.this.
                         getProjectDirectory().getFileObject("src"), 
                         KotlinProject.this.getProjectDirectory().getFileObject("build").getFileObject("classes"));
+                }
+                return source;
             } else if (!fo.isFolder()) {
                 return null;
             } else {
@@ -305,9 +314,7 @@ public class KotlinProject implements Project {
 
     public KotlinProject(AntProjectHelper helper) {
         this.helper = helper;
-        //ProjectUtils.checkKtHome();
         kotlinSources = new KotlinSources(this);
-        KotlinEnvironment.getEnvironment(KotlinProject.this);
     }
 
     @Override
@@ -324,8 +331,9 @@ public class KotlinProject implements Project {
                     new KotlinProjectLogicalView(this),
                     new ActionProviderImpl(),
                     new KotlinPrivilegedTemplates(),
-                    new KotlinClassPathProvider(),
-                    new KotlinProjectOpenedHook(this)
+                    new KotlinProjectOpenedHook(this),
+                    new KotlinClassPathProvider()
+                    
             );
         }
         return lkp;

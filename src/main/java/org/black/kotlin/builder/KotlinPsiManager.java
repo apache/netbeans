@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.idea.KotlinFileType;
 import org.jetbrains.kotlin.idea.KotlinLanguage;
 import org.jetbrains.kotlin.psi.KtFile;
+import org.netbeans.api.project.Project;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.openide.filesystems.FileObject;
@@ -73,8 +74,11 @@ public class KotlinPsiManager {
     public KtFile parseText(@NotNull String text, @NotNull FileObject file) {
         StringUtil.assertValidSeparators(text);
 
+//        com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(
+//                ProjectUtils.getProjectFromFileObject(file)).getProject();
+
         com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(
-                ProjectUtils.getProjectFromFileObject(file)).getProject();
+                ProjectUtils.getKotlinProjectForFileObject(file)).getProject();
 
         LightVirtualFile virtualFile = new KotlinLightVirtualFile(file, text);
         virtualFile.setCharset(CharsetToolkit.UTF8_CHARSET);
@@ -102,9 +106,12 @@ public class KotlinPsiManager {
             }
         }
         
-        com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(
-                ProjectUtils.getProjectFromFileObject(file)).getProject();
+//        com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(
+//                ProjectUtils.getProjectFromFileObject(file)).getProject();
 
+        com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(
+                ProjectUtils.getKotlinProjectForFileObject(file)).getProject();
+        
         LightVirtualFile virtualFile = new KotlinLightVirtualFile(file, text);
         virtualFile.setCharset(CharsetToolkit.UTF8_CHARSET);
 
@@ -148,8 +155,17 @@ public class KotlinPsiManager {
     public KtFile getParsedKtFile(@NotNull String text){
 //        StringUtil.assertValidSeparators(text);
         String sourceCode = StringUtilRt.convertLineSeparators(text);
-        com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(
-                OpenProjects.getDefault().getOpenProjects()[0]).getProject();
+        
+        KotlinProject kotlinProject = null;
+        
+        for (Project proj : OpenProjects.getDefault().getOpenProjects()){
+            if (proj instanceof KotlinProject){
+                kotlinProject = (KotlinProject) proj;
+                break;
+            }
+        }
+        
+        com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(kotlinProject).getProject();
 
         PsiFileFactoryImpl psiFileFactory = (PsiFileFactoryImpl) PsiFileFactory.getInstance(project);
         

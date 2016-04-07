@@ -46,14 +46,14 @@ public class ProjectUtils {
     }
 
     public static void checkKtHome(){
-//        if (KT_HOME == null){
+        if (KT_HOME == null){
             FileObject dir = FileUtil.toFileObject(Places.getUserDirectory());
             if (dir.getFileObject("kotlinc") == null){
                 BundledCompiler.getBundledCompiler();
             }
             KT_HOME = Places.getUserDirectory().getAbsolutePath() + FILE_SEPARATOR + "kotlinc"
-                    + FILE_SEPARATOR;// + "lib";
-//        }
+                    + FILE_SEPARATOR;
+        }
     }
     
     /**
@@ -265,48 +265,20 @@ public class ProjectUtils {
         return files;
     }
 
-    public static KotlinProject getProjectFromFileObject(FileObject file){
-        FileObject packageName = file;
-        FileObject projectDir = null;
-        
-//        String path = file.getPath();
-//        String canonicalPath = null;
-//        
-//        try {
-//            canonicalPath = file.getCanonicalFileObject().getPath();
-//        } catch (IOException ex) {
-//            Exceptions.printStackTrace(ex);
-//        }
-        
-        while (!packageName.getName().equals("src")){
-            if (packageName.getParent() == null){
-                try {
-                    if (packageName.getCanonicalFileObject().hasExt("jar") || packageName.getName().equals("")){
-                        projectDir = packageName.getCanonicalFileObject().getParent().getParent();
-                    }
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-                break;
-            }
-            
-            packageName = packageName.getParent();
-        }
-        
-        if (projectDir == null){
-            projectDir = packageName.getParent();
-        }
-        
+    public static KotlinProject getKotlinProjectForFileObject(FileObject file){
         
         for (Project project : OpenProjects.getDefault().getOpenProjects()){
-            if (!(project instanceof KotlinProject) || project.getProjectDirectory() != projectDir){
+            if (!(project instanceof KotlinProject)){
                 continue;
             }
             
-            return (KotlinProject) project; 
+            if (file.toURI().toString().contains(project.getProjectDirectory().toURI().toString())){
+                return (KotlinProject) project;
+            }
         }
         
         return null;
+        
     }
     
 }

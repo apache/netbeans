@@ -1,6 +1,12 @@
 package org.black.kotlin.completion;
 
+import com.google.common.collect.Lists;
+import com.intellij.openapi.util.text.StringUtilRt;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.TypeElement;
 import javax.swing.text.BadLocationException;
@@ -8,6 +14,12 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
+import kotlin.jvm.functions.Function1;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
+import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.psi.KtSimpleNameExpression;
+import org.jetbrains.kotlin.renderer.DescriptorRenderer;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClassIndex;
@@ -18,6 +30,8 @@ import org.netbeans.spi.editor.completion.CompletionResultSet;
 import org.netbeans.spi.editor.completion.CompletionTask;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
@@ -29,6 +43,8 @@ import org.openide.util.Exceptions;
 @MimeRegistration(mimeType = "text/x-kt", service = CompletionProvider.class)
 public class KotlinCompletionProvider implements CompletionProvider {
 
+    private final List<DeclarationDescriptor> cachedDescriptors = Lists.newArrayList();
+    
     @Override
     public CompletionTask createTask(int queryType, final JTextComponent jtc) {
 
@@ -39,46 +55,18 @@ public class KotlinCompletionProvider implements CompletionProvider {
         return new AsyncCompletionTask(new AsyncCompletionQuery() {
             @Override
             protected void query(CompletionResultSet resultSet, Document doc, int caretOffset) {
-
-                String filter = "";
-                int startOffset = caretOffset - 1;
+                
                 try {
-                    final StyledDocument bDoc = (StyledDocument) doc;
-                    final int lineStartOffset = getRowFirstNonWhite(bDoc, caretOffset);
-                    final char[] line = bDoc.getText(lineStartOffset, caretOffset - lineStartOffset).toCharArray();
-                    final int whiteOffset = indexOfWhite(line);
-                    filter = new String(line, whiteOffset + 1, line.length - whiteOffset - 1);
-                    if (whiteOffset > 0) {
-                        startOffset = lineStartOffset + whiteOffset + 1;
-                    } else {
-                        startOffset = lineStartOffset;
-                    }
+                    resultSet.addAllItems(createItems(doc, caretOffset));
+                    
+                    resultSet.finish();
+                    
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
                 } catch (BadLocationException ex) {
                     Exceptions.printStackTrace(ex);
                 }
-                FileObject fo = getFO(doc);
 
-                ClassPath bootCp = ClassPath.getClassPath(fo, ClassPath.BOOT);
-                ClassPath compileCp = ClassPath.getClassPath(fo, ClassPath.COMPILE);
-                ClassPath sourceCp = ClassPath.getClassPath(fo, ClassPath.SOURCE);
-
-                if (bootCp != null && compileCp != null && sourceCp != null) {
-
-                    final ClasspathInfo info = ClasspathInfo.create(bootCp, compileCp, sourceCp);
-                    final Set<ElementHandle<TypeElement>> result = info.getClassIndex().getDeclaredTypes(
-                            "", ClassIndex.NameKind.PREFIX, EnumSet.of(ClassIndex.SearchScope.SOURCE,
-                                    ClassIndex.SearchScope.DEPENDENCIES));
-
-                    for (ElementHandle<TypeElement> te : result) {
-                        String binaryName = te.getBinaryName();
-
-                        if (!binaryName.equals("") && binaryName.startsWith(filter)) {
-                            resultSet.addItem(new KotlinCompletionItem(te.getQualifiedName(), startOffset, caretOffset));
-                        }
-                    }
-
-                    resultSet.finish();
-                }
             }
 
         }, jtc);
@@ -131,4 +119,64 @@ public class KotlinCompletionProvider implements CompletionProvider {
         return -1;
     }
 
+    private List<KotlinCompletionItem> createItems(Document doc, int caretOffset) throws IOException, BadLocationException{
+        List<KotlinCompletionItem> proposals = Lists.newArrayList();
+        FileObject file = getFO(doc);
+        StyledDocument styledDoc = (StyledDocument) doc;
+        String fileText = styledDoc.getText(0, styledDoc.getLength());
+        
+        int identOffset = getIdentifierStartOffset(fileText, caretOffset);
+        
+        String identifierPart = fileText.substring(identOffset, caretOffset);
+        
+        cachedDescriptors.clear();
+        cachedDescriptors.addAll(generateBasicCompletionProposals(file, identifierPart, identOffset));
+        
+        
+        Collection<DeclarationDescriptor> descriptors = 
+                KotlinCompletionUtils.INSTANCE.filterCompletionProposals(cachedDescriptors, identifierPart);
+        
+        for (DeclarationDescriptor descriptor : descriptors){
+            proposals.add(new KotlinCompletionItem(
+                descriptor.getName().getIdentifier(),
+                identOffset, caretOffset,
+                DescriptorRenderer.SHORT_NAMES_IN_TYPES.render(descriptor)));
+            
+        }
+    
+        return proposals;
+        
+    }
+    
+    @NotNull
+    private Collection<DeclarationDescriptor> generateBasicCompletionProposals(
+        final FileObject file, final String identifierPart, int identOffset) throws IOException{
+        
+        KtSimpleNameExpression simpleNameExpression = 
+                KotlinCompletionUtils.INSTANCE.getSimpleNameExpression(file, identOffset);
+        if (simpleNameExpression == null){
+            return Collections.emptyList();
+        }
+        
+        Function1<Name, Boolean> nameFilter = new Function1<Name, Boolean>(){
+            @Override
+            public Boolean invoke(Name name) {
+                return KotlinCompletionUtils.INSTANCE.applicableNameFor(identifierPart, name);
+            }
+        };
+        
+        return KotlinCompletionUtils.INSTANCE.getReferenceVariants(simpleNameExpression,
+                nameFilter, file);
+    }
+    
+    private int getIdentifierStartOffset(String text, int offset){
+        int identStartOffset = offset;
+        
+        while ((identStartOffset != 0) && Character.isUnicodeIdentifierPart(text.charAt(identStartOffset - 1))){
+            identStartOffset--;
+        }
+        
+        return identStartOffset;
+    }
+    
 }

@@ -3,6 +3,7 @@ package org.black.kotlin.completion;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
@@ -21,16 +22,17 @@ import org.openide.util.ImageUtilities;
  */
 public class KotlinCompletionItem implements CompletionItem {
 
-    private final String text; 
+    private final String text, proposal; 
     private static final ImageIcon FIELD_ICON = new ImageIcon(
             ImageUtilities.loadImage("org/black/kotlin/kt.png")); 
     private static final Color FIELD_COLOR = Color.decode("0x0000B2"); 
-    private final int caretOffset, dotOffset; 
+    private final int caretOffset, idenStartOffset; 
     
-    public KotlinCompletionItem(String text, int dotOffset, int caretOffset) { 
+    public KotlinCompletionItem(String text, int idenStartOffset, int caretOffset, String proposal) { 
         this.text = text; 
-        this.dotOffset = dotOffset;
+        this.idenStartOffset = idenStartOffset;
         this.caretOffset = caretOffset; 
+        this.proposal = proposal;
     }
     
     
@@ -38,7 +40,8 @@ public class KotlinCompletionItem implements CompletionItem {
     public void defaultAction(JTextComponent jtc) {
         try {
             StyledDocument doc = (StyledDocument) jtc.getDocument();
-            doc.insertString(caretOffset, text, null);
+            doc.remove(idenStartOffset, caretOffset - idenStartOffset);
+            doc.insertString(idenStartOffset, text, null);
             Completion.get().hideAll();
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
@@ -51,13 +54,13 @@ public class KotlinCompletionItem implements CompletionItem {
 
     @Override
     public int getPreferredWidth(Graphics graphics, Font font) {
-        return CompletionUtilities.getPreferredWidth(text, null, graphics, font);
+        return CompletionUtilities.getPreferredWidth(proposal, null, graphics, font);
     }
 
     @Override
     public void render(Graphics g, Font defaultFont, Color defaultColor,
             Color backgroundColor, int width, int height, boolean selected) {
-        CompletionUtilities.renderHtml(FIELD_ICON, text, null, g, defaultFont, 
+        CompletionUtilities.renderHtml(FIELD_ICON, text, proposal, g, defaultFont, 
                 (selected ? Color.white : FIELD_COLOR), width, height, selected);
     }
 
@@ -83,7 +86,7 @@ public class KotlinCompletionItem implements CompletionItem {
 
     @Override
     public CharSequence getSortText() {
-        return text;
+        return proposal;
     }
 
     @Override

@@ -45,10 +45,14 @@ import com.intellij.psi.impl.file.impl.JavaFileManager;
 import java.util.Collections;
 import java.util.List;
 import org.black.kotlin.resolve.BuiltInsReferenceResolver;
+import org.black.kotlin.resolve.KotlinCacheServiceImpl;
 import org.black.kotlin.resolve.KotlinSourceIndex;
 import org.black.kotlin.utils.ProjectUtils;
+import org.jetbrains.kotlin.caches.resolve.KotlinCacheService;
+import org.jetbrains.kotlin.cli.common.CliModuleVisibilityManagerImpl;
 import org.jetbrains.kotlin.idea.KotlinFileType;
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory;
+import org.jetbrains.kotlin.load.kotlin.ModuleVisibilityManager;
 
 /**
  * This class creates Kotlin environment for Kotlin project.
@@ -81,6 +85,8 @@ public class KotlinEnvironment {
         
         project = projectEnvironment.getProject();
 
+        project.registerService(ModuleVisibilityManager.class, new CliModuleVisibilityManagerImpl());
+        
 //        For j2k converter
         project.registerService(NullableNotNullManager.class, new KotlinNullableNotNullManager(kotlinProject)); 
         
@@ -96,6 +102,7 @@ public class KotlinEnvironment {
         project.registerService(CodeAnalyzerInitializer.class, cliLightClassGenerationSupport);
         project.registerService(BuiltInsReferenceResolver.class, new BuiltInsReferenceResolver(project));
         project.registerService(KotlinSourceIndex.class, new KotlinSourceIndex());
+        project.registerService(KotlinCacheService.class, new KotlinCacheServiceImpl());
         
         configureClasspath(kotlinProject);
         

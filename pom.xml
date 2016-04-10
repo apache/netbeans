@@ -56,6 +56,10 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>local-maven-repo</id>
+            <url>file:///${project.parent.basedir}/local-maven-repo</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -268,6 +272,14 @@
             <version>RELEASE81</version>
             <type>jar</type>
         </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-ide-common</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+        </dependency>
+
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -67,7 +67,7 @@ public class KotlinCompletionUtils {
         
     }
     
-    public Collection<DeclarationDescriptor> filterCompletionProposals(List<DeclarationDescriptor> descriptors,
+    public Collection<DeclarationDescriptor> filterCompletionProposals(Collection<DeclarationDescriptor> descriptors,
             String prefix){
         Collection<DeclarationDescriptor> filteredDescriptors = Lists.newArrayList();
         

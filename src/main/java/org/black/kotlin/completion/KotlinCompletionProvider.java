@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.text.Element;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
 import kotlin.jvm.functions.Function1;
@@ -33,8 +32,6 @@ import org.openide.util.Exceptions;
  */
 @MimeRegistration(mimeType = "text/x-kt", service = CompletionProvider.class)
 public class KotlinCompletionProvider implements CompletionProvider {
-
-    private final List<DeclarationDescriptor> cachedDescriptors = Lists.newArrayList();
     
     @Override
     public CompletionTask createTask(int queryType, final JTextComponent jtc) {
@@ -86,51 +83,23 @@ public class KotlinCompletionProvider implements CompletionProvider {
         return null;
     }
 
-    static int getRowFirstNonWhite(StyledDocument doc, int offset) throws BadLocationException {
-        Element lineElement = doc.getParagraphElement(offset);
-        int start = lineElement.getStartOffset();
-        while (start + 1 < lineElement.getEndOffset()) {
-            try {
-                if (doc.getText(start, 1).charAt(0) != ' ') {
-                    break;
-                }
-            } catch (BadLocationException ex) {
-                throw (BadLocationException) new BadLocationException("calling getText(" + start + ", " + (start + 1) + ") on doc of length: " + doc.getLength(), start).initCause(ex);
-            }
-            start++;
-        }
-        return start;
-    }
-
-    static int indexOfWhite(char[] line) {
-        int i = line.length;
-        while (--i > -1) {
-            final char c = line[i];
-            if (Character.isWhitespace(c)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private List<KotlinCompletionItem> createItems(Document doc, int caretOffset) throws IOException, BadLocationException{
+    private Collection<KotlinCompletionItem> createItems(Document doc, int caretOffset) throws IOException, BadLocationException{
         List<KotlinCompletionItem> proposals = Lists.newArrayList();
         FileObject file = getFO(doc);
         StyledDocument styledDoc = (StyledDocument) doc;
-        String fileText = styledDoc.getText(0, styledDoc.getLength());
+        String editorText = styledDoc.getText(0, styledDoc.getLength());
         
-        int identOffset = getIdentifierStartOffset(fileText, caretOffset);
+        int identOffset = getIdentifierStartOffset(editorText, caretOffset);
         
-        String identifierPart = fileText.substring(identOffset, caretOffset);
-        
-        cachedDescriptors.clear();
-        cachedDescriptors.addAll(generateBasicCompletionProposals(file, identifierPart, identOffset, fileText));
-        
+        String identifierPart = editorText.substring(identOffset, caretOffset);
         
         Collection<DeclarationDescriptor> descriptors = 
-                KotlinCompletionUtils.INSTANCE.filterCompletionProposals(cachedDescriptors, identifierPart);
+                generateBasicCompletionProposals(file, identifierPart, identOffset, editorText);
         
-        for (DeclarationDescriptor descriptor : descriptors){
+        Collection<DeclarationDescriptor> filteredDescriptors = 
+                KotlinCompletionUtils.INSTANCE.filterCompletionProposals(descriptors, identifierPart);
+        
+        for (DeclarationDescriptor descriptor : filteredDescriptors){
             proposals.add(new KotlinCompletionItem(
                 descriptor.getName().getIdentifier(),
                 identOffset, caretOffset,

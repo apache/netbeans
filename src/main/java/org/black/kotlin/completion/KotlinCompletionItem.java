@@ -22,17 +22,25 @@ import org.openide.util.ImageUtilities;
  */
 public class KotlinCompletionItem implements CompletionItem {
 
-    private final String text, proposal; 
-    private static final ImageIcon FIELD_ICON = new ImageIcon(
-            ImageUtilities.loadImage("org/black/kotlin/kt.png")); 
+    private final String text, proposal;
+    private final String type, name;
+    private final ImageIcon FIELD_ICON; 
     private static final Color FIELD_COLOR = Color.decode("0x0000B2"); 
     private final int caretOffset, idenStartOffset; 
     
-    public KotlinCompletionItem(String text, int idenStartOffset, int caretOffset, String proposal) { 
+    public KotlinCompletionItem(String text, int idenStartOffset, int caretOffset, String proposal, ImageIcon icon) { 
         this.text = text; 
         this.idenStartOffset = idenStartOffset;
         this.caretOffset = caretOffset; 
         this.proposal = proposal;
+        this.FIELD_ICON = icon;
+        String[] splitted = proposal.split(":");
+        name = splitted[0];
+        if (splitted.length > 1){
+            type = splitted[1];
+        } else {
+            type = "";
+        }
     }
     
     
@@ -60,7 +68,7 @@ public class KotlinCompletionItem implements CompletionItem {
     @Override
     public void render(Graphics g, Font defaultFont, Color defaultColor,
             Color backgroundColor, int width, int height, boolean selected) {
-        CompletionUtilities.renderHtml(FIELD_ICON, text, proposal, g, defaultFont, 
+        CompletionUtilities.renderHtml(FIELD_ICON, name, type, g, defaultFont, 
                 (selected ? Color.white : FIELD_COLOR), width, height, selected);
     }
 
@@ -91,7 +99,7 @@ public class KotlinCompletionItem implements CompletionItem {
 
     @Override
     public CharSequence getInsertPrefix() {
-        return text;
+        return proposal;
     }
     
 }

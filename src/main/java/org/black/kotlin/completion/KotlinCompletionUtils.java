@@ -118,13 +118,13 @@ public class KotlinCompletionUtils {
                 false,false,false,null);
     }
     
-    public KtSimpleNameExpression getSimpleNameExpression(FileObject file, int identOffset) throws IOException{
-        String sourceCode = file.asText();
-        String sourceCodeWithMarker = new StringBuilder(sourceCode).
+    public KtSimpleNameExpression getSimpleNameExpression(FileObject file, int identOffset, String editorText) throws IOException{
+        String sourceCodeWithMarker = new StringBuilder(editorText).
                 insert(identOffset, KOTLIN_DUMMY_IDENTIFIER).toString();
     
         KtFile ktFile = KotlinPsiManager.INSTANCE.parseText(StringUtilRt.convertLineSeparators(sourceCodeWithMarker),
                 file);
+        
         
         if (ktFile == null){
             return null;

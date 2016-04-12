@@ -1,37 +1,28 @@
 package org.black.kotlin.completion;
 
 import com.google.common.collect.Lists;
-import com.intellij.openapi.util.text.StringUtilRt;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
-import javax.lang.model.element.TypeElement;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
 import kotlin.jvm.functions.Function1;
+import org.black.kotlin.utils.KotlinImageProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.psi.KtSimpleNameExpression;
 import org.jetbrains.kotlin.renderer.DescriptorRenderer;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
-import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.source.ClassIndex;
-import org.netbeans.api.java.source.ClasspathInfo;
-import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
 import org.netbeans.spi.editor.completion.CompletionTask;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
@@ -73,8 +64,11 @@ public class KotlinCompletionProvider implements CompletionProvider {
     }
 
     @Override
-    public int getAutoQueryTypes(JTextComponent jtc, String string) {
-        return 0;
+    public int getAutoQueryTypes(JTextComponent jtc, String typedText) {
+        if (typedText.endsWith("."))
+            return 1;
+        else 
+            return 0;
     }
 
     private FileObject getFO(Document doc) {
@@ -130,7 +124,7 @@ public class KotlinCompletionProvider implements CompletionProvider {
         String identifierPart = fileText.substring(identOffset, caretOffset);
         
         cachedDescriptors.clear();
-        cachedDescriptors.addAll(generateBasicCompletionProposals(file, identifierPart, identOffset));
+        cachedDescriptors.addAll(generateBasicCompletionProposals(file, identifierPart, identOffset, fileText));
         
         
         Collection<DeclarationDescriptor> descriptors = 
@@ -140,8 +134,8 @@ public class KotlinCompletionProvider implements CompletionProvider {
             proposals.add(new KotlinCompletionItem(
                 descriptor.getName().getIdentifier(),
                 identOffset, caretOffset,
-                DescriptorRenderer.SHORT_NAMES_IN_TYPES.render(descriptor)));
-            
+                DescriptorRenderer.ONLY_NAMES_WITH_SHORT_TYPES.render(descriptor),
+                KotlinImageProvider.INSTANCE.getImage(descriptor)));
         }
     
         return proposals;
@@ -150,10 +144,10 @@ public class KotlinCompletionProvider implements CompletionProvider {
     
     @NotNull
     private Collection<DeclarationDescriptor> generateBasicCompletionProposals(
-        final FileObject file, final String identifierPart, int identOffset) throws IOException{
+        final FileObject file, final String identifierPart, int identOffset, String editorText) throws IOException{
         
         KtSimpleNameExpression simpleNameExpression = 
-                KotlinCompletionUtils.INSTANCE.getSimpleNameExpression(file, identOffset);
+                KotlinCompletionUtils.INSTANCE.getSimpleNameExpression(file, identOffset, editorText);
         if (simpleNameExpression == null){
             return Collections.emptyList();
         }

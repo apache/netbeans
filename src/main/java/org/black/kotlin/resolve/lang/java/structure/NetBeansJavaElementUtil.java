@@ -131,7 +131,7 @@ public class NetBeansJavaElementUtil {
         List<TypeMirror> superTypes = Lists.newArrayList();
         for (TypeMirror superInterface : typeBinding.getInterfaces()){
             superTypes.add(superInterface);
-        }
+        }        
         
         TypeMirror superClass = typeBinding.getSuperclass();
         if (superClass != null){

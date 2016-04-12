@@ -33,7 +33,7 @@ public final class KotlinTokenScanner {
     public KotlinTokenScanner(LexerInput input) {
         kotlinTokensFactory = new KotlinTokensFactory();
         this.input = input;
-        ktFile = KotlinPsiManager.INSTANCE.getParsedKtFile(getTextToParse());
+        ktFile = KotlinPsiManager.INSTANCE.getParsedKtFileForSyntaxHighlighting(getTextToParse());
         createListOfKotlinTokens();
     }
 

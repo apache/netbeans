@@ -100,7 +100,7 @@ public class ProjectUtils {
         for (FileObject folder : kotlinFolders) {
             for (FileObject file : folder.getChildren()){
                 if (!file.isFolder() && KotlinPsiManager.INSTANCE.isKotlinFile(file)){
-                    ktFiles.add(KotlinPsiManager.INSTANCE.parseFile(file));
+                    ktFiles.add(KotlinPsiManager.INSTANCE.getParsedFile(file));
                 }
             }
         }

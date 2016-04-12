@@ -60,7 +60,7 @@ public class KotlinPsiManager {
      * @throws IOException 
      */
     @Nullable
-    public KtFile parseFile(@NotNull FileObject file) throws IOException {
+    private KtFile parseFile(@NotNull FileObject file) throws IOException {
         return parseText(StringUtilRt.convertLineSeparators(file.asText()), file);
     }
 
@@ -73,9 +73,6 @@ public class KotlinPsiManager {
     @Nullable
     public KtFile parseText(@NotNull String text, @NotNull FileObject file) {
         StringUtil.assertValidSeparators(text);
-
-//        com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(
-//                ProjectUtils.getProjectFromFileObject(file)).getProject();
 
         com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(
                 ProjectUtils.getKotlinProjectForFileObject(file)).getProject();
@@ -92,11 +89,7 @@ public class KotlinPsiManager {
         StringUtil.assertValidSeparators(text);
 
         if (cachedKtFiles.containsKey(file)) {
-            if (cachedKtFiles.get(file).getText().equals(text)){
-                return cachedKtFiles.get(file);
-            } else {
-                updatePsiFile(text, file);
-            }
+            updatePsiFile(text, file);
         } else {
             try {
                 KtFile ktFile = parseFile(file);
@@ -106,18 +99,7 @@ public class KotlinPsiManager {
             }
         }
         
-//        com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(
-//                ProjectUtils.getProjectFromFileObject(file)).getProject();
-
-        com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(
-                ProjectUtils.getKotlinProjectForFileObject(file)).getProject();
-        
-        LightVirtualFile virtualFile = new KotlinLightVirtualFile(file, text);
-        virtualFile.setCharset(CharsetToolkit.UTF8_CHARSET);
-
-        PsiFileFactoryImpl psiFileFactory = (PsiFileFactoryImpl) PsiFileFactory.getInstance(project);
-        
-        return (KtFile) psiFileFactory.trySetupPsiForFile(virtualFile, KotlinLanguage.INSTANCE, true, false);
+        return cachedKtFiles.get(file);
     }
     
     @NotNull
@@ -152,8 +134,7 @@ public class KotlinPsiManager {
     }
     
     @Nullable
-    public KtFile getParsedKtFile(@NotNull String text){
-//        StringUtil.assertValidSeparators(text);
+    public KtFile getParsedKtFileForSyntaxHighlighting(@NotNull String text){
         String sourceCode = StringUtilRt.convertLineSeparators(text);
         
         KotlinProject kotlinProject = null;

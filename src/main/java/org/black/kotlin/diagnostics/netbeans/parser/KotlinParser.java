@@ -38,8 +38,7 @@ public class KotlinParser extends Parser {
         this.snapshot = snapshot;
         
         KotlinProject project = ProjectUtils.getKotlinProjectForFileObject(snapshot.getSource().getFileObject());
-//        KotlinProject project = ProjectUtils.getProjectFromFileObject(snapshot.getSource().getFileObject());
-        
+
         fileToAnalyze = ProjectUtils.getKtFile(snapshot.getText().toString(),snapshot.getSource().getFileObject());
         parserResult =
             KotlinAnalyzer.analyzeFile(project, fileToAnalyze);

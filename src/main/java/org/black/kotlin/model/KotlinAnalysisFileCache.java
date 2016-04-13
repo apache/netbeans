@@ -7,7 +7,7 @@ import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.resolve.AnalysisResultWithProvider;
 import org.black.kotlin.resolve.NetBeansAnalyzerFacadeForJVM;
 import org.jetbrains.kotlin.psi.KtFile;
-import org.netbeans.api.project.Project;
+
 
 public class KotlinAnalysisFileCache {
     

@@ -13,11 +13,9 @@ import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
-import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
@@ -46,11 +44,13 @@ public class KotlinProjectLogicalView implements LogicalViewProvider {
                 FileObject projectDirectory = project.getProjectDirectory();
                 DataFolder projectFolder = DataFolder.findFolder(projectDirectory);
                 Node nodeOfProjectFolder = projectFolder.getNodeDelegate();
+                
                 return new ProjectNode(nodeOfProjectFolder, project);
             } catch (DataObjectNotFoundException donfe) {
                 Exceptions.printStackTrace(donfe);
                 return new AbstractNode(Children.LEAF);
             }
+//            return new AbstractNode(NodeFactorySupport.createCompositeChildren(project, "Projects/org-netbeans-moduled-java-j2seproject/Nodes"));
         }
 
         
@@ -69,12 +69,6 @@ public class KotlinProjectLogicalView implements LogicalViewProvider {
                                     Lookups.singleton(project),
                                     node.getLookup()
                                 ));
-//                        new FilterNode.Children(node),
-//                        new ProxyLookup(
-//                            new Lookup[]{
-//                                Lookups.singleton(project),
-//                                node.getLookup()
-//                        }));
                         this.project = project;
             }
 

@@ -92,13 +92,17 @@ import org.openide.filesystems.FileObject;
             return srcGroups.toArray(new SourceGroup[srcGroups.size()]);
         }
 
+        public SourceGroup getSourceGroupForFileObject(FileObject fo){
+            return new KotlinSourceGroup(fo);
+        }
+        
         public void addChangeListener(ChangeListener cl) {
         }
 
         public void removeChangeListener(ChangeListener cl) {
         }
 
-        class KotlinSourceGroup implements SourceGroup {
+        public class KotlinSourceGroup implements SourceGroup {
 
             private final FileObject root;
 
@@ -123,17 +127,12 @@ import org.openide.filesystems.FileObject;
 
             @Override
             public Icon getIcon(boolean bln) {
-                return new ImageIcon("org/black/kotlinkt.png");
+                return new ImageIcon("org/black/kotlin.png");
             }
 
             @Override
             public boolean contains(FileObject fo) {
-                for (FileObject file : root.getChildren()){
-                    if (file.getPath().equals(fo.getPath())){
-                        return true;
-                    }
-                }
-                return false;
+                return fo.toURI().toString().startsWith(root.toURI().toString());
             }
 
             @Override

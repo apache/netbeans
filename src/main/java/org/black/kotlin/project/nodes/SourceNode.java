@@ -1,7 +1,10 @@
 package org.black.kotlin.project.nodes;
 
 import java.awt.Image;
+import org.black.kotlin.project.KotlinProject;
+import org.black.kotlin.project.KotlinSources;
 import org.netbeans.api.project.Project;
+import org.netbeans.spi.java.project.support.ui.PackageView;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.FilterNode;
@@ -17,7 +20,9 @@ public class SourceNode extends FilterNode{
             ImageUtilities.loadImage("org/black/kotlin/src_packages.png");
         
     public SourceNode(Project proj) throws DataObjectNotFoundException {
-        super(DataObject.find(proj.getProjectDirectory().getFileObject("src")).getNodeDelegate());
+        super(PackageView.createPackageView((new KotlinSources((KotlinProject) proj))
+                .getSourceGroupForFileObject(
+                proj.getProjectDirectory().getFileObject("src"))));
     }
     
     @Override

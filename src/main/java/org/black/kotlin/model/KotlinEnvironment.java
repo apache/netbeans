@@ -60,7 +60,6 @@ import org.jetbrains.kotlin.load.kotlin.ModuleVisibilityManager;
  */
 @SuppressWarnings("deprecation")
 public class KotlinEnvironment {
-
     public final static String KOTLIN_COMPILER_PATH = ProjectUtils.buildLibPath("kotlin-compiler");
     
     private static final Map<org.netbeans.api.project.Project, KotlinEnvironment> CACHED_ENVIRONMENT =
@@ -115,7 +114,7 @@ public class KotlinEnvironment {
             registerApplicationExtensionPointsAndExtensionsFrom(config);
         }
         
-        CACHED_ENVIRONMENT.put(kotlinProject, this);
+        CACHED_ENVIRONMENT.put(kotlinProject, KotlinEnvironment.this);
     }
     
     private static void registerProjectExtensionPoints(ExtensionsArea area) {

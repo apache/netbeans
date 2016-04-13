@@ -10,12 +10,10 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
 import kotlin.jvm.functions.Function1;
-import org.black.kotlin.utils.KotlinImageProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.psi.KtSimpleNameExpression;
-import org.jetbrains.kotlin.renderer.DescriptorRenderer;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.spi.editor.completion.CompletionProvider;
 import org.netbeans.spi.editor.completion.CompletionResultSet;
@@ -100,11 +98,7 @@ public class KotlinCompletionProvider implements CompletionProvider {
                 KotlinCompletionUtils.INSTANCE.filterCompletionProposals(descriptors, identifierPart);
         
         for (DeclarationDescriptor descriptor : filteredDescriptors){
-            proposals.add(new KotlinCompletionItem(
-                descriptor.getName().getIdentifier(),
-                identOffset, caretOffset,
-                DescriptorRenderer.ONLY_NAMES_WITH_SHORT_TYPES.render(descriptor),
-                KotlinImageProvider.INSTANCE.getImage(descriptor)));
+            proposals.add(new KotlinCompletionItem(identOffset, caretOffset, descriptor));
         }
     
         return proposals;

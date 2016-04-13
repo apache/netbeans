@@ -3,18 +3,24 @@ package org.black.kotlin.completion;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
+import org.black.kotlin.utils.KotlinImageProvider;
+import org.jetbrains.kotlin.descriptors.ClassDescriptor;
+import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
+import org.jetbrains.kotlin.descriptors.FunctionDescriptor;
+import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor;
+import org.jetbrains.kotlin.descriptors.PackageViewDescriptor;
+import org.jetbrains.kotlin.descriptors.VariableDescriptor;
+import org.jetbrains.kotlin.renderer.DescriptorRenderer;
 import org.netbeans.api.editor.completion.Completion;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionTask;
 import org.netbeans.spi.editor.completion.support.CompletionUtilities;
 import org.openide.util.Exceptions;
-import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -27,13 +33,15 @@ public class KotlinCompletionItem implements CompletionItem {
     private final ImageIcon FIELD_ICON; 
     private static final Color FIELD_COLOR = Color.decode("0x0000B2"); 
     private final int caretOffset, idenStartOffset; 
+    private final DeclarationDescriptor descriptor;
     
-    public KotlinCompletionItem(String text, int idenStartOffset, int caretOffset, String proposal, ImageIcon icon) { 
-        this.text = text; 
+    public KotlinCompletionItem(int idenStartOffset, int caretOffset, DeclarationDescriptor descriptor) { 
+        this.text = descriptor.getName().getIdentifier(); 
         this.idenStartOffset = idenStartOffset;
         this.caretOffset = caretOffset; 
-        this.proposal = proposal;
-        this.FIELD_ICON = icon;
+        this.proposal = DescriptorRenderer.ONLY_NAMES_WITH_SHORT_TYPES.render(descriptor);
+        this.FIELD_ICON = KotlinImageProvider.INSTANCE.getImage(descriptor);
+        this.descriptor = descriptor;
         String[] splitted = proposal.split(":");
         name = splitted[0];
         if (splitted.length > 1){
@@ -49,7 +57,11 @@ public class KotlinCompletionItem implements CompletionItem {
         try {
             StyledDocument doc = (StyledDocument) jtc.getDocument();
             doc.remove(idenStartOffset, caretOffset - idenStartOffset);
-            doc.insertString(idenStartOffset, text, null);
+            if (descriptor instanceof FunctionDescriptor){
+                doc.insertString(idenStartOffset, text + "()", null);
+            } else{
+                doc.insertString(idenStartOffset, text, null);
+            }
             Completion.get().hideAll();
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
@@ -89,12 +101,23 @@ public class KotlinCompletionItem implements CompletionItem {
 
     @Override
     public int getSortPriority() {
-        return 0;
+        if (descriptor instanceof VariableDescriptor){
+            return 20;
+        } else if (descriptor instanceof FunctionDescriptor){
+            return 30;
+        } else if (descriptor instanceof ClassDescriptor){
+            return 40;
+        } else if (descriptor instanceof PackageFragmentDescriptor 
+                || descriptor instanceof PackageViewDescriptor){
+            return 10;
+        } else {
+            return 150;
+        }
     }
 
     @Override
     public CharSequence getSortText() {
-        return proposal;
+        return name;
     }
 
     @Override

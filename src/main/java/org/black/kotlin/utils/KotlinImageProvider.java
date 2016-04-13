@@ -6,6 +6,7 @@ import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.descriptors.FunctionDescriptor;
 import org.jetbrains.kotlin.descriptors.VariableDescriptor;
 import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor;
+import org.jetbrains.kotlin.descriptors.PackageViewDescriptor;
 import org.openide.util.ImageUtilities;
 
 /**
@@ -44,7 +45,8 @@ public class KotlinImageProvider {
         } else if (descriptor instanceof VariableDescriptor){
             return new ImageIcon(ImageUtilities.loadImage(imagesLocation + 
                             "field.png"));
-        } else if (descriptor instanceof PackageFragmentDescriptor){
+        } else if (descriptor instanceof PackageFragmentDescriptor || 
+                descriptor instanceof PackageViewDescriptor){
             return new ImageIcon(ImageUtilities.loadImage(imagesLocation + 
                             "package.png"));
         } else

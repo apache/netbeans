@@ -40,7 +40,7 @@ public class ProjectUtils {
     static {
         if (System.getenv("KOTLIN_HOME") != null) {
             KT_HOME = System.getenv("KOTLIN_HOME") + FILE_SEPARATOR;
-        } else {
+        } else if (System.getenv("KT_HOME") != null) {
             KT_HOME = System.getenv("KT_HOME") + FILE_SEPARATOR;
         }
     }
@@ -54,6 +54,7 @@ public class ProjectUtils {
             KT_HOME = Places.getUserDirectory().getAbsolutePath() + FILE_SEPARATOR + "kotlinc"
                     + FILE_SEPARATOR;
         }
+        System.out.println();
     }
     
     /**

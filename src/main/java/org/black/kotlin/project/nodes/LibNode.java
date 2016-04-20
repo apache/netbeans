@@ -10,8 +10,11 @@ import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.black.kotlin.model.KotlinEnvironment;
+import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.utils.ProjectUtils;
 import org.netbeans.api.project.Project;
+import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
@@ -86,6 +89,9 @@ public class LibNode extends FilterNode{
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
+            
+            ((KotlinProject.KotlinClassPathProvider) project.getLookup().lookup(ClassPathProvider.class)).updateClassPathProvider();
+            KotlinEnvironment.updateKotlinEnvironment(project);
         }
     }
 }

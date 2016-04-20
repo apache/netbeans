@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.black</groupId>
     <artifactId>Kotlin</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.0.1</version>
     <packaging>nbm</packaging>
     <build>
         <plugins>
@@ -79,6 +79,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>

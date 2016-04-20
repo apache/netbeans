@@ -35,6 +35,7 @@ import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.impl.ZipHandler;
 import com.intellij.psi.PsiElementFinder;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.augment.PsiAugmentProvider;
@@ -64,7 +65,8 @@ public class KotlinEnvironment {
     
     private static final Map<org.netbeans.api.project.Project, KotlinEnvironment> CACHED_ENVIRONMENT =
             new HashMap<org.netbeans.api.project.Project, KotlinEnvironment>();
-    private static final Object ENVIRONMENT_LOCK = new Object();
+    private static final Object ENVIRONMENT_LOCK = new Object(){};
+    
     
     private final JavaCoreApplicationEnvironment applicationEnvironment;
     private final JavaCoreProjectEnvironment projectEnvironment;
@@ -113,7 +115,7 @@ public class KotlinEnvironment {
         for (String config : EnvironmentConfigFiles.JVM_CONFIG_FILES) {
             registerApplicationExtensionPointsAndExtensionsFrom(config);
         }
-        
+
         CACHED_ENVIRONMENT.put(kotlinProject, KotlinEnvironment.this);
     }
     
@@ -137,7 +139,23 @@ public class KotlinEnvironment {
             return CACHED_ENVIRONMENT.get(kotlinProject);
         }
     }
+    
+    public static void updateKotlinEnvironment(@NotNull org.netbeans.api.project.Project kotlinProject) {
+        synchronized (ENVIRONMENT_LOCK) {
+            if (CACHED_ENVIRONMENT.containsKey(kotlinProject)) {
+                KotlinEnvironment environment = CACHED_ENVIRONMENT.get(kotlinProject);
+                Disposer.dispose(environment.getJavaApplicationEnvironment().getParentDisposable());
+                ZipHandler.clearFileAccessorCache();
+            }
+            CACHED_ENVIRONMENT.put(kotlinProject, new KotlinEnvironment(kotlinProject, Disposer.newDisposable()));
+        }
+    }
 
+    @NotNull
+    public JavaCoreApplicationEnvironment getJavaApplicationEnvironment() {
+        return applicationEnvironment;
+    }
+    
     private void configureClasspath(@NotNull org.netbeans.api.project.Project kotlinProject) {
         List<String> classpath = ProjectUtils.getClasspath(kotlinProject);
         

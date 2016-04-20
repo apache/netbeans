@@ -188,7 +188,7 @@ public class KotlinProject implements Project {
 
     }
 
-    final class KotlinClassPathProvider implements ClassPathProvider {
+    public final class KotlinClassPathProvider implements ClassPathProvider {
 
         ClassPath boot = null;
         ClassPath compile = null;

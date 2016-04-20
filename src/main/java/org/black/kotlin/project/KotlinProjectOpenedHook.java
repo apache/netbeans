@@ -45,7 +45,7 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
         try {
             ProjectUtils.checkKtHome();
             ((KotlinClassPathProvider) project.getLookup().lookup(ClassPathProvider.class)).updateClassPathProvider();
-            KotlinEnvironment.getEnvironment(project);
+            //KotlinEnvironment.getEnvironment(project);
             List<ClassPath> paths = new ArrayList<ClassPath>();
             FileObject classesRoot = project.getProjectDirectory().getFileObject("build").getFileObject("classes");
             

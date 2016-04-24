@@ -11,6 +11,7 @@ import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.text.Document;
 import org.black.kotlin.builder.KotlinPsiManager;
 import org.black.kotlin.bundledcompiler.BundledCompiler;
 import org.black.kotlin.project.KotlinProject;
@@ -23,6 +24,7 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataObject;
 import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 
@@ -54,7 +56,6 @@ public class ProjectUtils {
             KT_HOME = Places.getUserDirectory().getAbsolutePath() + FILE_SEPARATOR + "kotlinc"
                     + FILE_SEPARATOR;
         }
-        System.out.println();
     }
     
     /**
@@ -280,6 +281,21 @@ public class ProjectUtils {
         
         return null;
         
+    }
+    
+    public static FileObject getFileObjectForDocument(Document doc) {
+        Object sdp = doc.getProperty(Document.StreamDescriptionProperty);
+
+        if (sdp instanceof FileObject) {
+            return (FileObject) sdp;
+        }
+
+        if (sdp instanceof DataObject) {
+            DataObject dobj = (DataObject) sdp;
+            return dobj.getPrimaryFile();
+        }
+
+        return null;
     }
     
 }

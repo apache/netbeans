@@ -10,6 +10,7 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
 import kotlin.jvm.functions.Function1;
+import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.name.Name;
@@ -66,24 +67,10 @@ public class KotlinCompletionProvider implements CompletionProvider {
             return 0;
     }
 
-    private FileObject getFO(Document doc) {
-        Object sdp = doc.getProperty(Document.StreamDescriptionProperty);
-
-        if (sdp instanceof FileObject) {
-            return (FileObject) sdp;
-        }
-
-        if (sdp instanceof DataObject) {
-            DataObject dobj = (DataObject) sdp;
-            return dobj.getPrimaryFile();
-        }
-
-        return null;
-    }
 
     private Collection<KotlinCompletionItem> createItems(Document doc, int caretOffset) throws IOException, BadLocationException{
         List<KotlinCompletionItem> proposals = Lists.newArrayList();
-        FileObject file = getFO(doc);
+        FileObject file = ProjectUtils.getFileObjectForDocument(doc);
         StyledDocument styledDoc = (StyledDocument) doc;
         String editorText = styledDoc.getText(0, styledDoc.getLength());
         

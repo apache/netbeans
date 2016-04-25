@@ -29,4 +29,9 @@ public class KotlinLanguage extends DefaultLanguageConfig {
         return new KotlinParser();
     }
 
+    @Override
+    public String getLineCommentPrefix() {
+        return "//";
+    } 
+    
 }

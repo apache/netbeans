@@ -48,7 +48,7 @@ public class DiagnosticsTest extends NbTestCase {
         Diagnostic diagnostic = 
                 result.getAnalysisResult().getBindingContext().getDiagnostics().iterator().next();
         
-        assertEquals(diagnostic.getSeverity(), Severity.WARNING);
+        assertEquals(Severity.WARNING, diagnostic.getSeverity());
         
         int startPosition = diagnostic.getTextRanges().get(0).getStartOffset();
         int endPosition = diagnostic.getTextRanges().get(0).getEndOffset();

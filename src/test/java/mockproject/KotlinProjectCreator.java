@@ -19,6 +19,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.parsing.impl.indexing.implspi.ActiveDocumentProvider;
 import org.netbeans.modules.project.ant.AntBasedProjectFactorySingleton;
 import static org.netbeans.modules.project.ant.AntBasedProjectFactorySingleton.HELPER_CALLBACK;
 import static org.netbeans.modules.project.ant.AntBasedProjectFactorySingleton.LOG;
@@ -105,6 +106,10 @@ public class KotlinProjectCreator extends NbTestCase {
             MockServices.setServices(MockOpenProjectsTrampoline.class);
             MockServices.setServices(AntBasedProjectFactorySingleton.class);
             MockServices.setServices(org.netbeans.modules.project.ant.StandardAntArtifactQueryImpl.class);
+            MockServices.setServices(TestEnvironmentFactory.class);
+            MockServices.setServices(MockKotlinParserFactory.class);
+//            MockServices.setServices(org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater.class);
+            MockServices.setServices(MockActiveDocumentProvider.class);
             try {
                 createProject();
             } catch (IOException ex) {

@@ -84,6 +84,10 @@ public class KotlinCompletionUtils {
             Function1<Name, Boolean> nameFilter, FileObject file){
         KotlinProject project = ProjectUtils.getKotlinProjectForFileObject(file);
         
+        if (project == null){
+            return Collections.emptyList();
+        }
+        
         AnalysisResultWithProvider resultWithProvider = 
                 KotlinAnalyzer.analyzeFile(project, simpleNameExpression.getContainingKtFile());
         

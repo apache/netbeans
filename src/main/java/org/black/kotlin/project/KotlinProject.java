@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.black.kotlin.run.KotlinCompiler;
 import org.black.kotlin.utils.KotlinClasspath;
 import org.black.kotlin.utils.ProjectUtils;
@@ -197,6 +198,7 @@ public class KotlinProject implements Project {
         public void updateClassPathProvider() {
             boot = getBootClassPath();
             compile = getCompileAndExecuteClassPath();
+            NetBeansJavaProjectElementUtils.updateClasspathInfo(KotlinProject.this);
         }
         
         private ClassPath getBootClassPath() {

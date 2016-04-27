@@ -14,7 +14,10 @@ import java.util.zip.ZipInputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.project.KotlinProject;
+import org.black.kotlin.project.KotlinProjectOpenedHook;
+import org.black.kotlin.utils.ProjectUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.MockServices;
@@ -27,6 +30,7 @@ import static org.netbeans.modules.project.ant.AntBasedProjectFactorySingleton.P
 import static org.netbeans.modules.project.ant.AntBasedProjectFactorySingleton.PROJECT_XML_PATH;
 import org.netbeans.modules.project.ant.ProjectXMLCatalogReader;
 import org.netbeans.modules.project.ant.ProjectXMLKnownChecksums;
+import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.support.ant.AntBasedProjectType;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
@@ -107,14 +111,15 @@ public class KotlinProjectCreator extends NbTestCase {
             MockServices.setServices(AntBasedProjectFactorySingleton.class);
             MockServices.setServices(org.netbeans.modules.project.ant.StandardAntArtifactQueryImpl.class);
             MockServices.setServices(TestEnvironmentFactory.class);
-            MockServices.setServices(MockKotlinParserFactory.class);
-//            MockServices.setServices(org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater.class);
-            MockServices.setServices(MockActiveDocumentProvider.class);
+            MockServices.setServices(MockKotlinParserFactory.class);MockServices.setServices(MockActiveDocumentProvider.class);
             try {
                 createProject();
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
+            KotlinProjectOpenedHook hook = new KotlinProjectOpenedHook(project);
+            hook.projectOpened();
+            KotlinEnvironment.updateKotlinEnvironment(project);
         }
         return project;
     }

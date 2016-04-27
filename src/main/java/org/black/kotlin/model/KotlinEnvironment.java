@@ -205,8 +205,7 @@ public class KotlinEnvironment {
     public Project getProject() {
         return project;
     }
-
-
+    
     private void addToClasspath(String path){
         File file = new File(path);
         if (file.isFile()) {

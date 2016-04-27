@@ -101,8 +101,6 @@ public class KotlinIndentTask implements IndentTask {
         int indent = computeIndent(offset);
         String stringToInsert = IndenterUtil.createWhiteSpace(indent, 0, "\n");
         
-        
-
         if (isBeforeCloseBrace(offset)) {
             int braceIndent = indent - 1;
             String spacesBeforeBrace = IndenterUtil.createWhiteSpace(braceIndent, 0, "\n");
@@ -160,8 +158,12 @@ public class KotlinIndentTask implements IndentTask {
         int offset = startOffset;
         String text = doc.getText(0, doc.getLength());
 
-        while (text.charAt(offset) != '\n') {
-            offset++;
+        while (offset < doc.getLength()){
+            if (text.charAt(offset) == '\n'){
+                break;
+            } else{
+                offset++;
+            }
         }
 
         return offset;

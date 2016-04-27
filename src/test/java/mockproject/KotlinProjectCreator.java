@@ -8,9 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -19,7 +16,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.black.kotlin.project.KotlinProject;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
@@ -30,18 +26,14 @@ import static org.netbeans.modules.project.ant.AntBasedProjectFactorySingleton.P
 import static org.netbeans.modules.project.ant.AntBasedProjectFactorySingleton.PROJECT_XML_PATH;
 import org.netbeans.modules.project.ant.ProjectXMLCatalogReader;
 import org.netbeans.modules.project.ant.ProjectXMLKnownChecksums;
-import org.netbeans.modules.projectapi.nb.NbProjectManager;
-import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.support.ant.AntBasedProjectType;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
-import org.netbeans.spi.project.support.ant.ProjectGenerator;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.xml.XMLUtil;
 import org.w3c.dom.Document;
@@ -103,25 +95,13 @@ public class KotlinProjectCreator extends NbTestCase {
         assertTrue(destFileObj.isValid());
         FileObject testApp = destFileObj.getFileObject("projForTest");
         
-        project = doABPFS();
+        project = generateAntHelperAndProject(testApp);
         
-//        FileObject projectXml = testApp.getFileObject("nbproject").getFileObject("project.xml");
-//        if (projectXml != null){
-//            projectXml.delete();
-//        }
-//        AntProjectHelper helper = ProjectGenerator.createProject(testApp,
-//                "org.black.kotlin.project.KotlinProject");
-//        
-//        assertNotNull(helper);
-
-//        Project proj = ProjectManager.getDefault().findProject(testApp);
-//        assertNotNull(proj);
         OpenProjects.getDefault().open(new Project[]{project}, false);
     }
 
     public KotlinProject getProject() {
         if (project == null) {
-//            MockServices.setServices(MockAntBasedProjectType.class);
             MockServices.setServices(MockOpenProjectsTrampoline.class);
             MockServices.setServices(AntBasedProjectFactorySingleton.class);
             MockServices.setServices(org.netbeans.modules.project.ant.StandardAntArtifactQueryImpl.class);
@@ -134,9 +114,7 @@ public class KotlinProjectCreator extends NbTestCase {
         return project;
     }
 
-    private KotlinProject doABPFS() throws IOException{
-        File file = new File("C:\\Users\\Александр\\Documents\\NetBeansProjects\\kotlin\\Kotlin\\src\\test\\resources\\projForTest");
-        FileObject app = FileUtil.toFileObject(file);
+    private KotlinProject generateAntHelperAndProject(FileObject app) throws IOException{
         
         FileObject projectFile = app.getFileObject(PROJECT_XML_PATH);
         assertNotNull(projectFile);

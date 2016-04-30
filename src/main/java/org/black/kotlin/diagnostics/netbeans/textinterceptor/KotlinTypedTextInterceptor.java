@@ -23,10 +23,7 @@ public class KotlinTypedTextInterceptor implements TypedTextInterceptor{
                 break;
             }
             case ')': {
-                char nextChar = context.getDocument().getText(context.getOffset(), 1).charAt(0);
-                if (nextChar == ')') {
-                    context.getDocument().remove(context.getOffset(), 1);
-                }
+                checkNextChar(context, ')');
                 break;
             }
             case '{': {
@@ -34,12 +31,21 @@ public class KotlinTypedTextInterceptor implements TypedTextInterceptor{
                 break;
             }
             case '}': {
-                char nextChar = context.getDocument().getText(context.getOffset(), 1).charAt(0);
-                if (nextChar == '}') {
-                    context.getDocument().remove(context.getOffset(), 1);
-                }
+                checkNextChar(context, '}');
                 break;
             }
+            case '<':
+                context.setText("<>", 1);
+                break;
+            case '>':
+                checkNextChar(context, '>');
+                break;
+            case '[':
+                context.setText("[]", 1);
+                break;
+            case ']':
+                checkNextChar(context, ']');
+                break;
             case '"':
                 context.setText("\"\"", 1);
                 break;
@@ -49,6 +55,13 @@ public class KotlinTypedTextInterceptor implements TypedTextInterceptor{
         }
     }
 
+    private void checkNextChar(MutableContext context, char character) throws BadLocationException{
+        char nextChar = context.getDocument().getText(context.getOffset(), 1).charAt(0);
+        if (nextChar == character) {
+            context.getDocument().remove(context.getOffset(), 1);
+        }
+    }
+    
     @Override
     public void afterInsert(Context context) throws BadLocationException {
     }

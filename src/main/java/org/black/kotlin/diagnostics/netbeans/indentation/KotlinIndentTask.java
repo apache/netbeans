@@ -4,15 +4,12 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.StyledDocument;
+import javax.swing.text.Document;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.lexer.KtTokens;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.IndentTask;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
-import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -27,12 +24,12 @@ public class KotlinIndentTask implements IndentTask {
     private final String CLOSING_BRACE_STRING = Character.toString(CLOSING_BRACE_CHAR);
 
     private final Context context;
-    private final StyledDocument doc;
+    private final Document doc;
     private final FileObject file;
 
     KotlinIndentTask(Context context) {
         this.context = context;
-        this.doc = (StyledDocument) context.document();
+        this.doc = context.document();
         this.file = ProjectUtils.getFileObjectForDocument(doc);
     }
 

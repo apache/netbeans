@@ -111,7 +111,8 @@ public class KotlinProjectCreator extends NbTestCase {
             MockServices.setServices(AntBasedProjectFactorySingleton.class);
             MockServices.setServices(org.netbeans.modules.project.ant.StandardAntArtifactQueryImpl.class);
             MockServices.setServices(TestEnvironmentFactory.class);
-            MockServices.setServices(MockKotlinParserFactory.class);MockServices.setServices(MockActiveDocumentProvider.class);
+            MockServices.setServices(MockKotlinParserFactory.class);
+            MockServices.setServices(MockActiveDocumentProvider.class);
             try {
                 createProject();
             } catch (IOException ex) {

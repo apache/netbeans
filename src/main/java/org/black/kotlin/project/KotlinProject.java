@@ -299,7 +299,7 @@ public class KotlinProject implements Project {
     private static final class KotlinPrivilegedTemplates implements PrivilegedTemplates {
 
         private static final String[] PRIVILEGED_NAMES = new String[]{
-            "Templates/Kotlin/Kotlin.kt",
+            "Templates/Kotlin/content.kt",
             "Templates/Classes/Class.java",
             "Templates/Classes/Interface.java",
             "Templates/Classes/Package"

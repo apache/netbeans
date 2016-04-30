@@ -2,7 +2,7 @@ package org.black.kotlin.diagnostics.netbeans.reformatter;
 
 import com.intellij.psi.PsiFile;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.StyledDocument;
+import javax.swing.text.Document;
 import org.black.kotlin.diagnostics.netbeans.indentation.AlignmentStrategy;
 import org.black.kotlin.utils.ProjectUtils;
 import org.netbeans.modules.editor.indent.spi.Context;
@@ -20,11 +20,12 @@ public class KotlinReformatTask implements ReformatTask {
 
     @Override
     public void reformat() throws BadLocationException {
-        StyledDocument document = (StyledDocument) context.document();
+        Document document = context.document();
         FileObject file = ProjectUtils.getFileObjectForDocument(document);
         
         if (file != null){
-            PsiFile parsedFile = ProjectUtils.getKtFile(file);
+            PsiFile parsedFile = ProjectUtils.getKtFile(context.document().
+                    getText(0, context.document().getLength()), file);
             if (parsedFile == null) {
                 return;
             }

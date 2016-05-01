@@ -30,7 +30,8 @@ public class KotlinFoldManager implements FoldManager {
 
     private FoldOperation operation;
     public static final FoldType COMMENT_FOLD_TYPE = new FoldType("/*...*/");
-    public static final FoldType IMPORT_LIST_FOLD_TYPE = new FoldType("import...");
+    public static final FoldType IMPORT_LIST_FOLD_TYPE = new FoldType("...");
+    public static final FoldType FUNCTION_FOLD_TYPE = new FoldType("{...}");
     private FoldHierarchy hierarchy;
     
     private final Map<TextRange, FoldType> cache = new HashMap<TextRange, FoldType>();
@@ -99,9 +100,9 @@ public class KotlinFoldManager implements FoldManager {
         
         for (PsiElement elem : elements){
             FoldType type = getFoldType(elem);
-            int start = elem.getTextRange().getStartOffset();
+            int start = getStartOffset(elem, type);
             int end = elem.getTextRange().getEndOffset();
-            if (start == end){
+            if (start >= end){
                 continue;
             }
             
@@ -114,6 +115,8 @@ public class KotlinFoldManager implements FoldManager {
             cache.put(elem.getTextRange(), type);
             
             FoldTemplate template = new FoldTemplate(0,0,type.toString());
+            
+            
             
             operation.addToHierarchy(type, 
                     start, 
@@ -133,8 +136,20 @@ public class KotlinFoldManager implements FoldManager {
         } else if (element instanceof PsiCoreCommentImpl){
             return COMMENT_FOLD_TYPE;
         } else if (element instanceof KtNamedFunction){
-            return new FoldType(((KtNamedFunction) element).getText().split("\n")[0]);
+            return FUNCTION_FOLD_TYPE;
         } else return new FoldType("");
+    }
+    
+    private int getStartOffset(PsiElement elem, FoldType type){
+        int start = elem.getTextRange().getStartOffset();
+        if (type == FUNCTION_FOLD_TYPE){
+            String name = elem.getText().split("\\{")[0];
+            return start + name.length();
+        } else if (type == IMPORT_LIST_FOLD_TYPE){
+            return start + "import ".length();
+        } else {
+            return start;
+        }
     }
     
 }

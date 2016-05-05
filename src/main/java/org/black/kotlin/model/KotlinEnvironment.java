@@ -45,6 +45,10 @@ import com.intellij.psi.impl.compiled.ClsCustomNavigationPolicy;
 import com.intellij.psi.impl.file.impl.JavaFileManager;
 import java.util.Collections;
 import java.util.List;
+import org.black.kotlin.filesystem.KotlinLightClassManager;
+import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
+import org.black.kotlin.project.KotlinProject;
+import org.black.kotlin.project.KotlinSources;
 import org.black.kotlin.resolve.BuiltInsReferenceResolver;
 import org.black.kotlin.resolve.KotlinCacheServiceImpl;
 import org.black.kotlin.resolve.KotlinSourceIndex;
@@ -54,6 +58,7 @@ import org.jetbrains.kotlin.cli.common.CliModuleVisibilityManagerImpl;
 import org.jetbrains.kotlin.idea.KotlinFileType;
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory;
 import org.jetbrains.kotlin.load.kotlin.ModuleVisibilityManager;
+import org.openide.filesystems.FileObject;
 
 /**
  * This class creates Kotlin environment for Kotlin project.
@@ -101,6 +106,7 @@ public class KotlinEnvironment {
         project.registerService(CliLightClassGenerationSupport.class, cliLightClassGenerationSupport);
         project.registerService(KtLightClassForFacade.FacadeStubCache.class, new KtLightClassForFacade.FacadeStubCache(project));
         project.registerService(CodeAnalyzerInitializer.class, cliLightClassGenerationSupport);
+        project.registerService(KotlinLightClassManager.class, new KotlinLightClassManager((KotlinProject) kotlinProject));
         project.registerService(BuiltInsReferenceResolver.class, new BuiltInsReferenceResolver(project));
         project.registerService(KotlinSourceIndex.class, new KotlinSourceIndex());
         project.registerService(KotlinCacheService.class, new KotlinCacheServiceImpl());
@@ -117,6 +123,12 @@ public class KotlinEnvironment {
         }
 
         CACHED_ENVIRONMENT.put(kotlinProject, KotlinEnvironment.this);
+        
+        KotlinSources sources = new KotlinSources((KotlinProject) kotlinProject);
+        for (FileObject file : sources.getAllKtFiles()){
+            KotlinLightClassGeneration.INSTANCE.generate(file);
+        }
+        
     }
     
     private static void registerProjectExtensionPoints(ExtensionsArea area) {

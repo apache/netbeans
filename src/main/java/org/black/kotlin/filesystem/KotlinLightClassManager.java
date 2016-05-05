@@ -62,7 +62,7 @@ public class KotlinLightClassManager {
             
             for (String path : lightClassesPaths){
                 LightClassFile lightClassFile = new LightClassFile(project, path);
-                
+                File f = lightClassFile.asFile();
                 Set<FileObject> newSourceFiles = newSourceFilesMap.get(lightClassFile.asFile());
                 if (newSourceFiles == null){
                     newSourceFiles = new HashSet<FileObject>();
@@ -74,10 +74,11 @@ public class KotlinLightClassManager {
         
         sourceFiles.clear();
         sourceFiles.putAll(newSourceFilesMap);
+        System.out.println();
     }
 
     @NotNull
-    private List<String> getLightClassesPaths(FileObject sourceFile) {
+    public List<String> getLightClassesPaths(FileObject sourceFile) {
         List<String> lightClasses = new ArrayList<String>();
         
         KtFile ktFile = ProjectUtils.getKtFile(sourceFile);

@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.black.kotlin.run.KotlinCompiler;
 import org.black.kotlin.utils.KotlinClasspath;
@@ -135,7 +136,7 @@ public class KotlinProject implements Project {
 
             if (string.equalsIgnoreCase(ActionProvider.COMMAND_CLEAN)) {
                 Thread newThread = new Thread(new Runnable() {
-                    
+
                     @Override
                     public void run() {
                         ProjectUtils.clean(KotlinProject.this);
@@ -194,13 +195,13 @@ public class KotlinProject implements Project {
         ClassPath boot = null;
         ClassPath compile = null;
         ClassPath source = null;
-        
+
         public void updateClassPathProvider() {
             boot = getBootClassPath();
             compile = getCompileAndExecuteClassPath();
             NetBeansJavaProjectElementUtils.updateClasspathInfo(KotlinProject.this);
         }
-        
+
         private ClassPath getBootClassPath() {
             String bootClassPath = System.getProperty("sun.boot.class.path");
             List<URL> urls = new ArrayList<URL>();
@@ -230,12 +231,11 @@ public class KotlinProject implements Project {
                     urls.add(FileUtil.getArchiveRoot(file.toURL()));
                 }
             }
-            
-            
+
             return ClassPathSupport.createClassPath(urls.toArray(new URL[urls.size()]));
         }
 
-        private ClassPath getCompileAndExecuteClassPath(){
+        private ClassPath getCompileAndExecuteClassPath() {
             List<URL> classPathList = new ArrayList<URL>();
             FileObject libDir = KotlinProject.this.getProjectDirectory().getFileObject("lib");
             for (FileObject file : libDir.getChildren()) {
@@ -243,19 +243,20 @@ public class KotlinProject implements Project {
                     classPathList.add(file.toURL());
                 }
             }
-            
-            for (String kotlinClasspath : KotlinClasspath.getKotlinClasspath()){
+
+            for (String kotlinClasspath : KotlinClasspath.getKotlinClasspath()) {
                 File kotlinLib = new File(kotlinClasspath);
-                if (!kotlinLib.canRead())
+                if (!kotlinLib.canRead()) {
                     continue;
+                }
                 try {
                     classPathList.add(Utilities.toURI(kotlinLib).toURL());
                 } catch (MalformedURLException ex) {
                     Exceptions.printStackTrace(ex);
                 }
             }
-            
-            URL[] classPathArray = new URL[classPathList.size()+1];
+
+            URL[] classPathArray = new URL[classPathList.size() + 1];
             int index = 0;
             for (URL url : classPathList) {
                 if (FileUtil.isArchiveFile(url)) {
@@ -267,24 +268,24 @@ public class KotlinProject implements Project {
             classPathArray[index] = KotlinProject.this.getProjectDirectory().getFileObject("build").getFileObject("classes").toURL();
             return ClassPathSupport.createClassPath(classPathArray);
         }
-        
+
         @Override
         public ClassPath findClassPath(FileObject fo, String type) {
             if (type.equals(ClassPath.BOOT)) {
-                if (boot == null){
+                if (boot == null) {
                     boot = getBootClassPath();
                 }
                 return boot;
             } else if (type.equals(ClassPath.COMPILE) || type.equals(ClassPath.EXECUTE)) {
-                if (compile == null){
+                if (compile == null) {
                     compile = getCompileAndExecuteClassPath();
                 }
                 return compile;
             } else if (type.equals(ClassPath.SOURCE)) {
-                if (source == null){
+                if (source == null) {
                     source = ClassPathSupport.createClassPath(KotlinProject.this.
-                        getProjectDirectory().getFileObject("src"), 
-                        KotlinProject.this.getProjectDirectory().getFileObject("build").getFileObject("classes"));
+                            getProjectDirectory().getFileObject("src"),
+                            KotlinProject.this.getProjectDirectory().getFileObject("build").getFileObject("classes"));
                 }
                 return source;
             } else if (!fo.isFolder()) {
@@ -335,7 +336,6 @@ public class KotlinProject implements Project {
                     new KotlinPrivilegedTemplates(),
                     new KotlinProjectOpenedHook(this),
                     new KotlinClassPathProvider()
-                    
             );
         }
         return lkp;
@@ -349,8 +349,8 @@ public class KotlinProject implements Project {
         return pathRegistry;
     }
 
-    public KotlinSources getKotlinSources(){
+    public KotlinSources getKotlinSources() {
         return kotlinSources;
     }
-    
+
 }

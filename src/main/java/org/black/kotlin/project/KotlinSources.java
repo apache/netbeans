@@ -70,6 +70,20 @@ import org.openide.filesystems.FileObject;
 
         }
 
+        public List<FileObject> getAllKtFiles(){
+            List<FileObject> srcDirs = getSrcDirectories(KotlinProjectConstants.KOTLIN_SOURCE);
+            List<FileObject> ktFiles = new ArrayList<FileObject>();
+            for (FileObject srcDir : srcDirs){
+                for (FileObject file : srcDir.getChildren()){
+                    if (!file.hasExt("kt")){
+                        continue;
+                    }
+                    ktFiles.add(file);
+                }
+            }
+            return ktFiles;
+        }
+        
         public SourceGroup[] getSourceGroups(String string) {
             List<SourceGroup> srcGroups = new ArrayList<SourceGroup>();
             if (string.equals(KotlinProjectConstants.JAR.toString())) {

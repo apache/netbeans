@@ -16,7 +16,6 @@ import org.openide.util.Exceptions;
  */
 public final class LightClassFile {
     private final FileObject fileObject;
-    private File file;
     
     public LightClassFile(KotlinProject project, String path){
         FileObject f = project.getProjectDirectory().getFileObject("build").
@@ -51,19 +50,23 @@ public final class LightClassFile {
         
         File f = new File(project.getProjectDirectory().getFileObject("build").
                         getFileObject("classes").getPath() + ProjectUtils.FILE_SEPARATOR + packages.toString());
-        
-        f.mkdirs();
+        if (!f.exists()){
+            f.mkdirs();
+        }
         
         f = new File(project.getProjectDirectory().getFileObject("build").
                         getFileObject("classes").getPath() + ProjectUtils.FILE_SEPARATOR + path);
         
         try {
+            if (f.exists()){
+                f.delete();
+            }
             f.createNewFile();
+            
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
         
-        this.file = f;
         
         return FileUtil.toFileObject(f);
     }
@@ -74,8 +77,7 @@ public final class LightClassFile {
     
     @NotNull
     public File asFile(){
-        return file;
-//        return FileUtil.toFile(fileObject);
+        return FileUtil.toFile(fileObject);
     }
     
     @NotNull

@@ -1,11 +1,17 @@
 package org.black.kotlin.file;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
+import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObject;
@@ -15,13 +21,10 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 
-
 /**
- * 
- * @author Александр
- * KtDataObject class represents .kt file in NetBeans IDE
+ *
+ * @author Александр KtDataObject class represents .kt file in NetBeans IDE
  */
-
 @Messages({
     "LBL_Kt_LOADER=Files of Kt"
 })
@@ -90,9 +93,17 @@ import org.openide.windows.TopComponent;
 })
 public class KtDataObject extends MultiDataObject {
 
-    public KtDataObject(FileObject pf, MultiFileLoader loader) throws IOException {
-        super(pf, loader);
+    public KtDataObject(final FileObject file, MultiFileLoader loader) throws IOException {
+        super(file, loader);
         registerEditor("text/x-kt", true);
+        this.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName().equals(DataObject.PROP_MODIFIED)) {
+                    KotlinLightClassGeneration.INSTANCE.generate(file);
+                } 
+            }
+        });
     }
 
     @Override

@@ -17,4 +17,25 @@
     <fontcolor name="KDOC_LINK" default="comment" underline="black">
         <font style="bold, italic"/>
     </fontcolor>
+    
+    <!--"semantic" highlighting:-->
+    <fontcolor name="mod-field" />
+    <fontcolor name="mod-local-variable" default="field"/>
+    <fontcolor name="mod-parameter" default="field"/> 
+    <fontcolor name="mod-static" >
+        <font style="bold+italic" />
+    </fontcolor>
+    <fontcolor name="mod-type-parameter-use" foreColor="20999D" />
+    <fontcolor name="mod-annotation-type" foreColor="blue"/>
+    <fontcolor name="mod-enum">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="mod-interface"/>
+    <fontcolor name="mod-class" default="class"/>
+    <fontcolor name="mod-declaration">
+        <font style="bold" />
+    </fontcolor>
+    <fontcolor name="mod-deprecated" strikeThrough="404040" />
+    <fontcolor name="mark-occurrences" bgColor="ECEBA3"/>
+    
 </fontscolors>

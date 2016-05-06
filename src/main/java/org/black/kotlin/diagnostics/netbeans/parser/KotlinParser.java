@@ -87,6 +87,10 @@ public class KotlinParser extends Parser {
             }
             return analysisResult;
         }
+        
+        public KtFile getKtFile(){
+            return ktFile;
+        }
 
         @Override
         public List<? extends Error> getDiagnostics() {

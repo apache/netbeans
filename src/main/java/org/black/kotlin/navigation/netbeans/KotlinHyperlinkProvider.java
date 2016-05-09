@@ -2,6 +2,7 @@ package org.black.kotlin.navigation.netbeans;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import kotlin.Pair;
 import org.black.kotlin.navigation.NavigationUtil;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider;
@@ -28,7 +29,11 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
     @Override
     public int[] getHyperlinkSpan(Document doc, int offset) {
         if (isHyperlinkPoint(doc,offset)){
-            return new int[]{offset,offset+5};
+            Pair<Integer, Integer> span = NavigationUtil.getSpan();
+            if (span == null){
+                return null;
+            }
+            return new int[]{span.getFirst(),span.getSecond()};
         }
         return null;
     }

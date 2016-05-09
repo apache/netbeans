@@ -259,7 +259,8 @@ public class KotlinSemanticHighlightingVisitor extends KtVisitorVoid {
         } else if (descriptor instanceof ValueParameterDescriptor){
             attributes = KotlinHighlightingAttributesGetter.INSTANCE.PARAMETER_VARIABLE;
         } else {
-            throw new IllegalStateException("Highlight attributes error");
+            attributes = KotlinHighlightingAttributesGetter.INSTANCE.LOCAL_VARIABLE;
+//            throw new IllegalStateException("Highlight attributes error");
         }
         
         if (typeName != null){

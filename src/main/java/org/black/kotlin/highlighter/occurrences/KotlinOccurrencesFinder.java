@@ -32,7 +32,7 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
     @Override
     public void run(KotlinParserResult result, SchedulerEvent event) {
         cancel = false;
-    
+        
     }
 
     @Override

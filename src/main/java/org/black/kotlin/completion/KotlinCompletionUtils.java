@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import kotlin.jvm.functions.Function1;
 import org.black.kotlin.builder.KotlinPsiManager;
 import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.resolve.AnalysisResultWithProvider;
 import org.black.kotlin.resolve.KotlinAnalyzer;
 import org.black.kotlin.resolve.KotlinResolutionFacade;
+import org.black.kotlin.utils.LineEndUtil;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.analyzer.AnalysisResult;
 import org.jetbrains.kotlin.container.ComponentProvider;
@@ -134,34 +134,10 @@ public class KotlinCompletionUtils {
             return null;
         }
         
-        int offsetWithoutCR = convertCrToDocumentOffset(sourceCodeWithMarker, identOffset);
+        int offsetWithoutCR = LineEndUtil.convertCrToDocumentOffset(sourceCodeWithMarker, identOffset);
         PsiElement psiElement = ktFile.findElementAt(offsetWithoutCR);
         
         return PsiTreeUtil.getParentOfType(psiElement, KtSimpleNameExpression.class);
-    }
-    
-    private int convertCrToDocumentOffset(String crText, int crOffset) {
-        return crOffset - countCrToLineNumber(crText, crOffset);
-    }
-    
-    private int countCrToLineNumber(String lfText, int offset) {
-        int countCR = 0;
-        int curOffset = 0;
-        
-        while (curOffset < offset) {
-            if (curOffset == lfText.length()) {
-                break;
-            }
-            
-            char c = lfText.charAt(curOffset);
-            if (c == '\r') {
-                countCR++;
-            } 
-            
-            curOffset++;
-        }
-        
-        return countCR;  
     }
     
     private LexicalScope getResolutionScope(PsiElement psiElement, BindingContext bindingContext){

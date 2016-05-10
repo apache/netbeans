@@ -1,13 +1,18 @@
 package org.black.kotlin.navigation;
 
 import com.intellij.psi.PsiElement;
+import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import kotlin.Pair;
 import org.black.kotlin.navigation.references.ReferenceUtils;
+import org.black.kotlin.project.KotlinProject;
+import org.black.kotlin.resolve.NetBeansDescriptorUtils;
 import org.black.kotlin.utils.LineEndUtil;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
+import org.jetbrains.kotlin.descriptors.SourceElement;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.openide.filesystems.FileObject;
@@ -47,5 +52,17 @@ public class NavigationUtil {
         int end = psiExpression.getTextRange().getEndOffset();
         
         return new Pair<Integer, Integer>(start, end);
+    }
+    
+    @Nullable
+    public static SourceElement getElementWithSource(DeclarationDescriptor descriptor, KotlinProject project){
+        List<SourceElement> sourceElements = NetBeansDescriptorUtils.descriptorToDeclarations(descriptor, project);
+        for (SourceElement element : sourceElements){
+            if (element != SourceElement.NO_SOURCE){
+                return element;
+            }
+        }
+        
+        return null;
     }
 }

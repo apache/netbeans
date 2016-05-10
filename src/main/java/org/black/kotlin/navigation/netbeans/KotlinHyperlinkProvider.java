@@ -77,7 +77,7 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
         }
         
         NavigationUtil.gotoElement(navigationData.getSourceElement(), navigationData.getDeclarationDescriptor(),
-                referenceExpression, project, (StyledDocument) doc);
+                referenceExpression, project, file);
   }
     
     @Nullable

@@ -1,6 +1,9 @@
 package org.black.kotlin.navigation;
 
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -23,6 +26,7 @@ import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.text.Line;
@@ -79,12 +83,12 @@ public class NavigationUtil {
     }
 
     public static void gotoElement(SourceElement element, DeclarationDescriptor descriptor,
-            KtElement fromElement, KotlinProject project, StyledDocument currentDocument){
+            KtElement fromElement, KotlinProject project, FileObject currentFile){
         
         if (element instanceof NetBeansJavaSourceElement){
             
         } else if (element instanceof KotlinSourceElement){
-            gotoKotlinDeclaration(((KotlinSourceElement) element).getPsi(), fromElement, project, currentDocument);
+            gotoKotlinDeclaration(((KotlinSourceElement) element).getPsi(), fromElement, project, currentFile);
         } else if (element instanceof KotlinJvmBinarySourceElement){
             
         } else if (element instanceof KotlinJvmBinaryPackageSourceElement){
@@ -94,29 +98,50 @@ public class NavigationUtil {
     }
 
     private static void gotoKotlinDeclaration(PsiElement element, KtElement fromElement, 
-            KotlinProject project, StyledDocument currentDocument) {
+            KotlinProject project, FileObject currentFile) {
         FileObject declarationFile = findFileObjectForReferencedElement(
-                element, fromElement, project, currentDocument);
+                element, fromElement, project, currentFile);
         if (declarationFile == null){
+            return;
+        }
+        
+        StyledDocument document = null;
+        try {
+            document = ProjectUtils.getDocumentFromFileObject(declarationFile);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        if (document == null){
             return;
         }
         
         int startOffset = LineEndUtil.convertCrToDocumentOffset(
                 element.getContainingFile().getText(), element.getTextOffset());
-        openFileAtOffset(currentDocument, declarationFile, startOffset);
+        openFileAtOffset(document, declarationFile, startOffset);
     }
 
     private static FileObject findFileObjectForReferencedElement(PsiElement element, 
-            KtElement fromElement, KotlinProject project, StyledDocument currentDocument){
-        FileObject currentFile = ProjectUtils.getFileObjectForDocument(currentDocument);
-        if (currentFile == null){
-            return null;
-        }
+            KtElement fromElement, KotlinProject project, FileObject currentFile){
+        
         if (fromElement.getContainingFile() == element.getContainingFile()){
             return currentFile;
         }
         
-        return null;//TODO
+        VirtualFile virtualFile = element.getContainingFile().getVirtualFile();
+        if (virtualFile == null){
+            return null;
+        }
+        
+        String path = virtualFile.getPath();
+        File file = new File(path);
+        currentFile = FileUtil.toFileObject(file);
+        if (currentFile == null){
+            return null;
+        } 
+        
+        //TODO
+        
+        return currentFile;
     }
     
     private static void openFileAtOffset(StyledDocument doc, FileObject file, int offset){

@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
 import org.black.kotlin.builder.KotlinPsiManager;
 import org.black.kotlin.bundledcompiler.BundledCompiler;
 import org.black.kotlin.project.KotlinProject;
@@ -22,9 +23,11 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
+import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 
@@ -298,4 +301,23 @@ public class ProjectUtils {
         return null;
     }
     
+    public static StyledDocument getDocumentFromFileObject(FileObject file) throws IOException{
+        DataObject dataObject = null;
+        try {
+            dataObject = DataObject.find(file);
+        } catch (DataObjectNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        if (dataObject == null){
+            return null;
+        }
+        
+        EditorCookie editorCookie = (EditorCookie) dataObject.getLookup().lookup(EditorCookie.class);
+        if (editorCookie == null){
+            return null;
+        }
+        
+        editorCookie.open();
+        return editorCookie.openDocument();
+    }
 }

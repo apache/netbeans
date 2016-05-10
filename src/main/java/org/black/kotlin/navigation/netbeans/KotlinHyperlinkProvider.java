@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
 import kotlin.Pair;
 import org.black.kotlin.navigation.NavigationUtil;
 import org.black.kotlin.navigation.references.KotlinReference;
@@ -19,6 +20,7 @@ import org.jetbrains.kotlin.resolve.BindingContext;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider;
 import org.openide.awt.StatusDisplayer;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
 /**
@@ -59,8 +61,12 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
             return;
         }
         
-        KotlinProject project = ProjectUtils.getKotlinProjectForFileObject(
-            ProjectUtils.getFileObjectForDocument(doc));
+        FileObject file = ProjectUtils.getFileObjectForDocument(doc);
+        if (file == null){
+            return;
+        }
+        
+        KotlinProject project = ProjectUtils.getKotlinProjectForFileObject(file);
         if (project == null){
             return;
         }
@@ -70,8 +76,9 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
             return;
         }
         
-        StatusDisplayer.getDefault().setStatusText(navigationData.getDeclarationDescriptor().getName().asString());
-    }
+        NavigationUtil.gotoElement(navigationData.getSourceElement(), navigationData.getDeclarationDescriptor(),
+                referenceExpression, project, (StyledDocument) doc);
+  }
     
     @Nullable
     private NavigationData getNavigationData(KtReferenceExpression referenceExpression,

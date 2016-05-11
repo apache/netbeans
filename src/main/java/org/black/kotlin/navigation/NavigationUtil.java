@@ -164,7 +164,7 @@ public class NavigationUtil {
             return currentFile;
         } 
         
-        currentFile = JarNavigationUtil.getFileObjectFromJar(file);
+        currentFile = JarNavigationUtil.getFileObjectFromJar(path);
         if (currentFile != null){
             return currentFile;
         }

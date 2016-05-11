@@ -34,6 +34,10 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
     
     @Override
     public boolean isHyperlinkPoint(Document doc, int offset) {
+        FileObject fo = ProjectUtils.getFileObjectForDocument(doc);
+        if (ProjectUtils.getKotlinProjectForFileObject(fo) == null){
+            return false;
+        }
         try {
             referenceExpression = NavigationUtil.getReferenceExpression(doc, offset);
             return referenceExpression != null;

@@ -92,6 +92,9 @@ public class KotlinFoldManager implements FoldManager {
     private void checkCode(FoldHierarchyTransaction transaction) throws BadLocationException{
         Document document = hierarchy.getComponent().getDocument();
         FileObject file = ProjectUtils.getFileObjectForDocument(document);
+        if (file == null || ProjectUtils.getKotlinProjectForFileObject(file) == null){
+            return;
+        }
         KtFile ktFile = ProjectUtils.getKtFile(document.getText(0, document.getLength()), file);
         
         Collection<? extends PsiElement> elements =

@@ -32,12 +32,13 @@ public class KotlinParser extends Parser {
     private Snapshot snapshot;
     private AnalysisResultWithProvider parserResult;
     private KtFile fileToAnalyze;
+    private KotlinProject project;
     
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) {
         this.snapshot = snapshot;
         
-        KotlinProject project = ProjectUtils.getKotlinProjectForFileObject(snapshot.getSource().getFileObject());
+        project = ProjectUtils.getKotlinProjectForFileObject(snapshot.getSource().getFileObject());
 
         if (project == null){
             return;
@@ -51,7 +52,10 @@ public class KotlinParser extends Parser {
 
     @Override
     public Result getResult(Task task) {
-        return new KotlinParserResult(snapshot, parserResult, fileToAnalyze);
+        if (project != null){
+            return new KotlinParserResult(snapshot, parserResult, fileToAnalyze);
+        }
+        return null;
     }
 
     @Override

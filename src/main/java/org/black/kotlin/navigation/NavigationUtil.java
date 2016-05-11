@@ -4,7 +4,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
@@ -12,7 +17,9 @@ import kotlin.Pair;
 import org.black.kotlin.navigation.references.ReferenceUtils;
 import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.resolve.NetBeansDescriptorUtils;
+import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.black.kotlin.resolve.lang.java.resolver.NetBeansJavaSourceElement;
+import org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElement;
 import org.black.kotlin.utils.LineEndUtil;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +31,7 @@ import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;
+import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -32,6 +40,7 @@ import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.text.Line;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
+import org.openide.util.Utilities;
 
 public class NavigationUtil {
     
@@ -86,7 +95,9 @@ public class NavigationUtil {
             KtElement fromElement, KotlinProject project, FileObject currentFile){
         
         if (element instanceof NetBeansJavaSourceElement){
-            
+            Element binding = ((NetBeansJavaElement)((NetBeansJavaSourceElement) element).
+                    getJavaElement()).getBinding();
+            gotoJavaDeclaration(binding, project);
         } else if (element instanceof KotlinSourceElement){
             gotoKotlinDeclaration(((KotlinSourceElement) element).getPsi(), fromElement, project, currentFile);
         } else if (element instanceof KotlinJvmBinarySourceElement){
@@ -120,6 +131,19 @@ public class NavigationUtil {
         openFileAtOffset(document, declarationFile, startOffset);
     }
 
+    
+    private static void gotoJavaDeclaration(Element binding, KotlinProject project) {
+        Element javaElement = binding;
+        if (binding.getKind() == ElementKind.CONSTRUCTOR){
+            javaElement = ((ExecutableElement) binding).getEnclosingElement();
+        }
+        
+        if (javaElement != null){
+            NetBeansJavaProjectElementUtils.openElementInEditor(javaElement, project);
+        }
+        
+    }
+    
     private static FileObject findFileObjectForReferencedElement(PsiElement element, 
             KtElement fromElement, KotlinProject project, FileObject currentFile){
         
@@ -133,15 +157,19 @@ public class NavigationUtil {
         }
         
         String path = virtualFile.getPath();
+        
         File file = new File(path);
         currentFile = FileUtil.toFileObject(file);
-        if (currentFile == null){
-            return null;
+        if (currentFile != null){
+            return currentFile;
         } 
         
-        //TODO
+        currentFile = JarNavigationUtil.getFileObjectFromJar(file);
+        if (currentFile != null){
+            return currentFile;
+        }
         
-        return currentFile;
+        return null;
     }
     
     private static void openFileAtOffset(StyledDocument doc, FileObject file, int offset){

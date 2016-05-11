@@ -19,9 +19,9 @@
     </fontcolor>
     
     <!--"semantic" highlighting:-->
-    <fontcolor name="mod-field" />
-    <fontcolor name="mod-local-variable" default="field"/>
-    <fontcolor name="mod-parameter" default="field"/> 
+    <fontcolor name="mod-field" default="field"/>
+    <fontcolor name="mod-local-variable"/>
+    <fontcolor name="mod-parameter"/> 
     <fontcolor name="mod-static" >
         <font style="bold+italic" />
     </fontcolor>

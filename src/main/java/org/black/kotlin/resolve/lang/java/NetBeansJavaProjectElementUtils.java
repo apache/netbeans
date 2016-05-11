@@ -14,6 +14,7 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
@@ -158,6 +159,16 @@ public class NetBeansJavaProjectElementUtils {
         }
         
         return binaryName;
+    }
+    
+    public static FileObject getFileObjectForElement(Element element, KotlinProject kotlinProject){
+        ElementHandle<? extends Element> handle = ElementHandle.create(element);
+        return SourceUtils.getFile(handle, ci.get(kotlinProject));
+    }
+    
+    public static void openElementInEditor(Element element, KotlinProject kotlinProject){
+        ElementHandle<? extends Element> handle = ElementHandle.create(element);
+        ElementOpen.open(ci.get(kotlinProject), handle);
     }
     
     private static class TypeElementSearcher implements CancellableTask<CompilationController>{

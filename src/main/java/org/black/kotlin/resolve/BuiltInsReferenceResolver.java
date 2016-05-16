@@ -71,8 +71,8 @@ public class BuiltInsReferenceResolver {
     }
     
     @NotNull
-    public static BuiltInsReferenceResolver getInstance(@NotNull org.netbeans.api.project.Project javaProject) {
-        Project ideaProject = KotlinEnvironment.getEnvironment(javaProject).getProject();
+    public static BuiltInsReferenceResolver getInstance(@NotNull org.netbeans.api.project.Project kotlinProject) {
+        Project ideaProject = KotlinEnvironment.getEnvironment(kotlinProject).getProject();
         return ServiceManager.getService(ideaProject, BuiltInsReferenceResolver.class);
     }
 
@@ -81,10 +81,10 @@ public class BuiltInsReferenceResolver {
             return;
         }
         
-        Set<KtFile> jetBuiltInsFiles = getBuiltInSourceFiles();
+        Set<KtFile> ktBuiltInsFiles = getBuiltInSourceFiles();
         
         //if the sources are present, then the value cannot be null
-        assert (jetBuiltInsFiles != null);
+        assert (ktBuiltInsFiles != null);
         
         MutableModuleContext newModuleContext = ContextKt.ContextForNewModule(myProject,
                 Name.special("<built-ins resolver module>"), 
@@ -96,7 +96,7 @@ public class BuiltInsReferenceResolver {
         newModuleContext.setDependencies(newModuleContext.getModule());
         
         FileBasedDeclarationProviderFactory declarationFactory = new FileBasedDeclarationProviderFactory(
-                newModuleContext.getStorageManager(), jetBuiltInsFiles);
+                newModuleContext.getStorageManager(), ktBuiltInsFiles);
         
         ResolveSession resolveSession = InjectionKt.createLazyResolveSession(newModuleContext, declarationFactory,
                 new BindingTraceContext(), TargetPlatform.Default.INSTANCE);

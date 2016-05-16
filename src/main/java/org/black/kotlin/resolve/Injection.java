@@ -75,7 +75,7 @@ public class Injection {
                     final ModuleContext moduleContext, final BindingTrace bindingTrace,
                     final DeclarationProviderFactory declarationProviderFactory,
                     final GlobalSearchScope moduleContentScope,
-                    final org.netbeans.api.project.Project javaProject,
+                    final org.netbeans.api.project.Project kotlinProject,
                     final LookupTracker lookupTracker,
                     final PackagePartProvider packagePartProvider) {
 
@@ -88,7 +88,7 @@ public class Injection {
                 InjectionKt.configureModule(container, moduleContext, JvmPlatform.INSTANCE, bindingTrace);
                 configureJavaTopDownAnalysis(container, moduleContentScope, moduleContext.getProject(), lookupTracker);
 
-                DslKt.useInstance(container, javaProject);
+                DslKt.useInstance(container, kotlinProject);
                 DslKt.useInstance(container, declarationProviderFactory);
 
                 CompilerEnvironment.INSTANCE.configure(container);

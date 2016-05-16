@@ -29,6 +29,7 @@ import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;
+import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -97,9 +98,9 @@ public class NavigationUtil {
         } else if (element instanceof KotlinSourceElement){
             gotoKotlinDeclaration(((KotlinSourceElement) element).getPsi(), fromElement, project, currentFile);
         } else if (element instanceof KotlinJvmBinarySourceElement){
-            
+        
         } else if (element instanceof KotlinJvmBinaryPackageSourceElement){
-            
+        
         }
         
     }
@@ -168,7 +169,7 @@ public class NavigationUtil {
         return null;
     }
     
-    private static void openFileAtOffset(StyledDocument doc, FileObject file, int offset){
+    public static void openFileAtOffset(StyledDocument doc, FileObject file, int offset){
         DataObject dataObject = null;
         try {
             dataObject = DataObject.find(file);

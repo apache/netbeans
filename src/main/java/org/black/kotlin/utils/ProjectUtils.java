@@ -320,4 +320,10 @@ public class ProjectUtils {
         editorCookie.open();
         return editorCookie.openDocument();
     }
+    
+    public static String getKotlinProjectClassesPath(KotlinProject project){
+        return project.getProjectDirectory().
+                    getFileObject("build").getFileObject("classes").getPath();
+    }
+    
 }

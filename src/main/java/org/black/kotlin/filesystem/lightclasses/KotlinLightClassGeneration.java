@@ -127,8 +127,7 @@ public class KotlinLightClassGeneration {
         List<String> lightClassesPaths = manager.getLightClassesPaths(file);
 
         for (String path : lightClassesPaths) {
-            File lightClass = new File(project.getProjectDirectory().
-                    getFileObject("build").getFileObject("classes").getPath() + "/" + path);
+            File lightClass = new File(ProjectUtils.getKotlinProjectClassesPath(project) + "/" + path);
 
             List<KtFile> ktFiles = manager.getSourceFiles(lightClass);
             String[] pathParts = path.split("/");

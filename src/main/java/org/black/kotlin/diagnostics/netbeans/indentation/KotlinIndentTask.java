@@ -5,6 +5,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
+import org.black.kotlin.navigation.NavigationUtil;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.lexer.KtTokens;
 import org.netbeans.modules.editor.indent.spi.Context;
@@ -21,7 +23,6 @@ public class KotlinIndentTask implements IndentTask {
 
     private final char OPENING_BRACE_CHAR = '{';
     private final char CLOSING_BRACE_CHAR = '}';
-    private final String CLOSING_BRACE_STRING = Character.toString(CLOSING_BRACE_CHAR);
 
     private final Context context;
     private final Document doc;

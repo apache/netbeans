@@ -34,7 +34,7 @@ public class NetBeansAnalyzerFacadeForJVM {
     
     private NetBeansAnalyzerFacadeForJVM(){}
     
-    public AnalysisResultWithProvider analyzeFilesWithJavaIntegration(KotlinProject javaProject,
+    public AnalysisResultWithProvider analyzeFilesWithJavaIntegration(KotlinProject kotlinProject,
             Project project, Collection<KtFile> filesToAnalyze){
         
         Set<KtFile> filesSet = Sets.newLinkedHashSet(filesToAnalyze);
@@ -44,8 +44,6 @@ public class NetBeansAnalyzerFacadeForJVM {
         
         Set<KtFile> allFiles = Sets.newLinkedHashSet(filesSet);
         
-        
-        
         Set<String> addedFiles = Sets.newLinkedHashSet();
         for (KtFile file : filesSet){
             if (getPath(file) != null){
@@ -53,7 +51,7 @@ public class NetBeansAnalyzerFacadeForJVM {
             }
         }
         
-        for (KtFile file : ProjectUtils.getSourceFilesWithDependencies(javaProject)){
+        for (KtFile file : ProjectUtils.getSourceFilesWithDependencies(kotlinProject)){
             if (!addedFiles.contains(getPath(file))){
                 allFiles.add(file);
             }
@@ -67,10 +65,9 @@ public class NetBeansAnalyzerFacadeForJVM {
                 new CliLightClassGenerationSupport.CliBindingTrace();
                 
         Pair<ContainerForTopDownAnalyzerForJvm, StorageComponentContainer> containerAndProvider =
-                Injection.createContainerForTopDownAnalyzerForJvm(
-                        moduleContext, trace, providerFactory, 
-                        GlobalSearchScope.allScope(project), javaProject, LookupTracker.Companion.getDO_NOTHING(), 
-                        new KotlinPackagePartProvider(javaProject));
+                Injection.createContainerForTopDownAnalyzerForJvm(moduleContext, trace, providerFactory, 
+                        GlobalSearchScope.allScope(project), kotlinProject, LookupTracker.Companion.getDO_NOTHING(), 
+                        new KotlinPackagePartProvider(kotlinProject));
         
         ContainerForTopDownAnalyzerForJvm container = containerAndProvider.getFirst();
         List<LazyJavaPackageFragmentProvider> additionalProviders = 

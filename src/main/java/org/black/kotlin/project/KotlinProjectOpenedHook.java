@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.project.KotlinProject.KotlinClassPathProvider;
 import org.black.kotlin.utils.ProjectUtils;
 import static org.black.kotlin.utils.ProjectUtils.FILE_SEPARATOR;
@@ -45,7 +44,7 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
         try {
             ProjectUtils.checkKtHome();
             ((KotlinClassPathProvider) project.getLookup().lookup(ClassPathProvider.class)).updateClassPathProvider();
-            //KotlinEnvironment.getEnvironment(project);
+            
             List<ClassPath> paths = new ArrayList<ClassPath>();
             FileObject classesRoot = project.getProjectDirectory().getFileObject("build").getFileObject("classes");
             
@@ -54,18 +53,12 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
             paths.add(ClassPathSupport.createClassPath(jars.toArray(new URL[jars.size()])));
             paths.add(ClassPathSupport.createClassPath(classesRoot.toURL()));
             
-            reg.register(ClassPath.SOURCE, paths.toArray(new ClassPath[paths.size()]));
             reg.register(ClassPath.BOOT, paths.toArray(new ClassPath[paths.size()]));
             reg.register(ClassPath.COMPILE, paths.toArray(new ClassPath[paths.size()]));
             reg.register(ClassPath.EXECUTE, paths.toArray(new ClassPath[paths.size()]));
             
             FileObject srcRoot = project.getProjectDirectory().getFileObject("src");
             reg.register(ClassPath.SOURCE, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
-            reg.register(ClassPath.BOOT, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
-            reg.register(ClassPath.COMPILE, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
-            reg.register(ClassPath.EXECUTE, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
-            reg.register(ClassPath.PROP_ROOTS, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
-            reg.register(ClassPath.PROP_INCLUDES, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
             
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);

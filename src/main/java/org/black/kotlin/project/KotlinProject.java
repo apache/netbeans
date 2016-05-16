@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.black.kotlin.run.KotlinCompiler;
 import org.black.kotlin.utils.KotlinClasspath;
@@ -205,7 +204,6 @@ public class KotlinProject implements Project {
         private ClassPath getBootClassPath() {
             String bootClassPath = System.getProperty("sun.boot.class.path");
             List<URL> urls = new ArrayList<URL>();
-//            String[] paths = bootClassPath.split(Pattern.quote(System.getProperty("path.separator")));
             List<String> paths = new ArrayList<String>();
             paths.add(KotlinClasspath.getKotlinBootClasspath());
             paths.addAll(Arrays.asList(bootClassPath.split(
@@ -237,24 +235,6 @@ public class KotlinProject implements Project {
 
         private ClassPath getCompileAndExecuteClassPath() {
             List<URL> classPathList = new ArrayList<URL>();
-            FileObject libDir = KotlinProject.this.getProjectDirectory().getFileObject("lib");
-            for (FileObject file : libDir.getChildren()) {
-                if ("jar".equals(file.getExt().toLowerCase())) {
-                    classPathList.add(file.toURL());
-                }
-            }
-
-            for (String kotlinClasspath : KotlinClasspath.getKotlinClasspath()) {
-                File kotlinLib = new File(kotlinClasspath);
-                if (!kotlinLib.canRead()) {
-                    continue;
-                }
-                try {
-                    classPathList.add(Utilities.toURI(kotlinLib).toURL());
-                } catch (MalformedURLException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
 
             URL[] classPathArray = new URL[classPathList.size() + 1];
             int index = 0;
@@ -284,8 +264,7 @@ public class KotlinProject implements Project {
             } else if (type.equals(ClassPath.SOURCE)) {
                 if (source == null) {
                     source = ClassPathSupport.createClassPath(KotlinProject.this.
-                            getProjectDirectory().getFileObject("src"),
-                            KotlinProject.this.getProjectDirectory().getFileObject("build").getFileObject("classes"));
+                            getProjectDirectory().getFileObject("src"));
                 }
                 return source;
             } else if (!fo.isFolder()) {

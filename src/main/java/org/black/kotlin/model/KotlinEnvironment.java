@@ -93,7 +93,6 @@ public class KotlinEnvironment {
 
         project.registerService(ModuleVisibilityManager.class, new CliModuleVisibilityManagerImpl());
         
-//        For j2k converter
         project.registerService(NullableNotNullManager.class, new KotlinNullableNotNullManager(kotlinProject)); 
         
         PsiManager psiManager = project.getComponent(PsiManager.class);

@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.text.StyledDocument;
 import kotlin.Pair;
 import org.black.kotlin.navigation.NavigationUtil;
 import org.black.kotlin.navigation.references.KotlinReference;

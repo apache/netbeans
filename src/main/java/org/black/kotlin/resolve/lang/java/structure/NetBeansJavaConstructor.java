@@ -12,10 +12,6 @@ import org.jetbrains.kotlin.load.java.structure.JavaConstructor;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 import org.jetbrains.kotlin.load.java.structure.JavaValueParameter;
 
-/**
- *
- * @author Александр
- */
 public class NetBeansJavaConstructor extends NetBeansJavaMember<ExecutableElement> implements JavaConstructor {
 
     public NetBeansJavaConstructor(@NotNull ExecutableElement methodBinding){

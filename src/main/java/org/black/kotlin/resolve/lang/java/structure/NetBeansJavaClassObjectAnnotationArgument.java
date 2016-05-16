@@ -15,20 +15,19 @@ import org.netbeans.api.project.Project;
 public class NetBeansJavaClassObjectAnnotationArgument implements JavaClassObjectAnnotationArgument {
 
     private final Class<?> javaClass;
-    private final Project javaProject;
+    private final Project kotlinProject;
     private final Name name;
     
     protected NetBeansJavaClassObjectAnnotationArgument(Class<?> javaClass,
             @NotNull Name name, @NotNull Project project){
         this.javaClass = javaClass;
-        this.javaProject = project;
+        this.kotlinProject = project;
         this.name = name;
     }
     
     @Override
     public JavaType getReferencedType() {
-        Element typeBinding = NetBeansJavaClassFinder.findType(
-                new FqName(javaClass.getCanonicalName()), javaProject);
+        Element typeBinding = NetBeansJavaClassFinder.findType(new FqName(javaClass.getCanonicalName()), kotlinProject);
         assert typeBinding != null;
         return NetBeansJavaType.create(typeBinding.asType());
     }

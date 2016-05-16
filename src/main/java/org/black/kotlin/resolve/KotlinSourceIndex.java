@@ -17,8 +17,8 @@ public class KotlinSourceIndex {
     private final Map<PackageElement, LibrarySourcesIndex> packageIndexes = 
             new HashMap<PackageElement, LibrarySourcesIndex>();
     
-    public static KotlinSourceIndex getInstance(org.netbeans.api.project.Project javaProject){
-        Project ideaProject = KotlinEnvironment.getEnvironment(javaProject).getProject();
+    public static KotlinSourceIndex getInstance(org.netbeans.api.project.Project kotlinProject){
+        Project ideaProject = KotlinEnvironment.getEnvironment(kotlinProject).getProject();
         return ServiceManager.getService(ideaProject, KotlinSourceIndex.class);
     }
     

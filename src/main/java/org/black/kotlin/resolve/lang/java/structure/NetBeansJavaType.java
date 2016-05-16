@@ -57,6 +57,9 @@ public class NetBeansJavaType<T extends TypeMirror> implements JavaType, JavaAnn
     
     @Override
     public JavaArrayType createArrayType() {
+        if (getBinding().getKind() != TypeKind.ARRAY){
+            return null;
+        }
         return new NetBeansJavaArrayType((ArrayType) getBinding());
     }
 

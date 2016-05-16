@@ -94,7 +94,6 @@ public class NetBeansJavaProjectElementUtils {
                 continue;
             }
 //            ClasspathInfo ci = getClasspathInfo(project);
-            
             FileObject file = SourceUtils.getFile(ElementHandle.create(element), ci.get(project));
 
             if (file != null){
@@ -162,6 +161,9 @@ public class NetBeansJavaProjectElementUtils {
     }
     
     public static FileObject getFileObjectForElement(Element element, KotlinProject kotlinProject){
+        if (element == null){
+            return null;
+        }
         ElementHandle<? extends Element> handle = ElementHandle.create(element);
         return SourceUtils.getFile(handle, ci.get(kotlinProject));
     }

@@ -80,10 +80,10 @@ public class KotlinCompletionProvider implements CompletionProvider {
         Collection<DeclarationDescriptor> descriptors = 
                 generateBasicCompletionProposals(file, identifierPart, identOffset, editorText);
         
-        Collection<DeclarationDescriptor> filteredDescriptors = 
-                KotlinCompletionUtils.INSTANCE.filterCompletionProposals(descriptors, identifierPart);
+//        Collection<DeclarationDescriptor> filteredDescriptors = 
+//                KotlinCompletionUtils.INSTANCE.filterCompletionProposals(descriptors, identifierPart);
         
-        for (DeclarationDescriptor descriptor : filteredDescriptors){
+        for (DeclarationDescriptor descriptor : descriptors){
             proposals.add(new KotlinCompletionItem(identOffset, caretOffset, descriptor));
         }
     

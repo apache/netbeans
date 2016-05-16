@@ -8,10 +8,6 @@ import org.jetbrains.kotlin.load.java.structure.JavaAnnotationArgument;
 import org.jetbrains.kotlin.name.Name;
 import org.netbeans.api.project.Project;
 
-/**
- *
- * @author Александр
- */
 public class NetBeansJavaAnnotationArgument<T extends Element> extends NetBeansJavaElement<T> 
         implements JavaAnnotationArgument {
     
@@ -21,7 +17,7 @@ public class NetBeansJavaAnnotationArgument<T extends Element> extends NetBeansJ
 
     @Override
     public Name getName() {
-        return Name.identifier(getBinding().getSimpleName().toString());//maybe it requires canonical name
+        return Name.identifier(getBinding().getSimpleName().toString());
     }
     
     public static JavaAnnotationArgument create(Object value, Name name, Project project){

@@ -10,25 +10,24 @@ import org.jetbrains.kotlin.psi.KtFile;
 public class KotlinAnalyzer {
         
     @NotNull
-    public static AnalysisResultWithProvider analyzeFile(@NotNull KotlinProject javaProject, @NotNull KtFile ktFile){
-        return KotlinAnalysisFileCache.INSTANCE.getAnalysisResult(ktFile, javaProject);
+    public static AnalysisResultWithProvider analyzeFile(@NotNull KotlinProject kotlinProject, @NotNull KtFile ktFile){
+        return KotlinAnalysisFileCache.INSTANCE.getAnalysisResult(ktFile, kotlinProject);
     }
 
     @NotNull
-    private static AnalysisResultWithProvider analyzeFiles(@NotNull KotlinProject javaProject, 
+    private static AnalysisResultWithProvider analyzeFiles(@NotNull KotlinProject kotlinProject, 
             @NotNull KotlinEnvironment kotlinEnvironment, @NotNull Collection<KtFile> filesToAnalyze){
-        return NetBeansAnalyzerFacadeForJVM.INSTANCE.analyzeFilesWithJavaIntegration(
-                javaProject, kotlinEnvironment.getProject(), filesToAnalyze);
+        return NetBeansAnalyzerFacadeForJVM.INSTANCE.analyzeFilesWithJavaIntegration(kotlinProject, kotlinEnvironment.getProject(), filesToAnalyze);
     }
     
-    public static AnalysisResultWithProvider analyzeFiles(@NotNull KotlinProject javaProject, 
+    public static AnalysisResultWithProvider analyzeFiles(@NotNull KotlinProject kotlinProject, 
             @NotNull Collection<KtFile> filesToAnalyze){
         if (filesToAnalyze.size() == 1){
-            return analyzeFile(javaProject, filesToAnalyze.iterator().next());
+            return analyzeFile(kotlinProject, filesToAnalyze.iterator().next());
         }
         
-        KotlinEnvironment kotlinEnvironment = KotlinEnvironment.getEnvironment(javaProject);
-        return analyzeFiles(javaProject, kotlinEnvironment, filesToAnalyze);
+        KotlinEnvironment kotlinEnvironment = KotlinEnvironment.getEnvironment(kotlinProject);
+        return analyzeFiles(kotlinProject, kotlinEnvironment, filesToAnalyze);
     }
     
 }

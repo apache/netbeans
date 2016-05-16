@@ -97,6 +97,7 @@ public class NavigationUtil {
             gotoJavaDeclaration(binding, project);
         } else if (element instanceof KotlinSourceElement){
             gotoKotlinDeclaration(((KotlinSourceElement) element).getPsi(), fromElement, project, currentFile);
+        
         } else if (element instanceof KotlinJvmBinarySourceElement){
         
         } else if (element instanceof KotlinJvmBinaryPackageSourceElement){

@@ -30,7 +30,7 @@ public class KotlinCompiler {
     public void antCompile(KotlinProject project) {
         try {
             makeBuildXml(project);
-            FileObject buildImpl = project.getHelper().getProjectDirectory().getFileObject("build.xml");
+            FileObject buildImpl = project.getAntProjectHelper().getProjectDirectory().getFileObject("build.xml");
             ActionUtils.runTarget(buildImpl, new String[]{"compile"}, null);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
@@ -45,7 +45,7 @@ public class KotlinCompiler {
     public void antBuild(KotlinProject project) {
         try {
             makeBuildXml(project);
-            FileObject buildImpl = project.getHelper().getProjectDirectory().getFileObject("build.xml");
+            FileObject buildImpl = project.getAntProjectHelper().getProjectDirectory().getFileObject("build.xml");
             ActionUtils.runTarget(buildImpl, new String[]{"build"}, null);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
@@ -60,7 +60,7 @@ public class KotlinCompiler {
     public void antRun(KotlinProject project) throws IOException, InterruptedException {
         try {
             makeBuildXml(project);
-            FileObject buildImpl = project.getHelper().getProjectDirectory().getFileObject("build.xml");
+            FileObject buildImpl = project.getAntProjectHelper().getProjectDirectory().getFileObject("build.xml");
             ActionUtils.runTarget(buildImpl, new String[]{"run"}, null);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);

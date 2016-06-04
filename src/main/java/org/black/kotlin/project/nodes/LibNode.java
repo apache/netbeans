@@ -11,6 +11,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.black.kotlin.model.KotlinEnvironment;
+import org.black.kotlin.project.KotlinClassPathProvider;
 import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.utils.ProjectUtils;
 import org.netbeans.api.project.Project;
@@ -90,7 +91,7 @@ public class LibNode extends FilterNode{
                 Exceptions.printStackTrace(ex);
             }
             
-            ((KotlinProject.KotlinClassPathProvider) project.getLookup().lookup(ClassPathProvider.class)).updateClassPathProvider();
+            ((KotlinClassPathProvider) project.getLookup().lookup(ClassPathProvider.class)).updateClassPathProvider();
             KotlinEnvironment.updateKotlinEnvironment(project);
         }
     }

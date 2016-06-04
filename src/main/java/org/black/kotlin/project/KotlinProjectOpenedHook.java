@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import org.black.kotlin.project.KotlinProject.KotlinClassPathProvider;
 import org.black.kotlin.utils.ProjectUtils;
 import static org.black.kotlin.utils.ProjectUtils.FILE_SEPARATOR;
 import org.netbeans.api.java.classpath.ClassPath;

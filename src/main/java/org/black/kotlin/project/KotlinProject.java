@@ -1,38 +1,22 @@
 package org.black.kotlin.project;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.regex.Pattern;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
-import org.black.kotlin.run.KotlinCompiler;
-import org.black.kotlin.utils.KotlinClasspath;
-import org.black.kotlin.utils.ProjectUtils;
-import org.netbeans.api.annotations.common.StaticResource;
-import org.netbeans.api.java.classpath.ClassPath;
+import java.util.Collections;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectInformation;
-import org.netbeans.spi.java.classpath.ClassPathProvider;
-import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.AuxiliaryConfiguration;
 import org.netbeans.spi.project.support.ant.AntBasedProjectRegistration;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
+import org.netbeans.spi.project.support.ant.FilterPropertyProvider;
+import org.netbeans.spi.project.support.ant.PropertyEvaluator;
+import org.netbeans.spi.project.support.ant.PropertyProvider;
+import org.netbeans.spi.project.support.ant.PropertyUtils;
+import org.netbeans.spi.project.support.ant.ReferenceHelper;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
-import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
-import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
-import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -51,231 +35,122 @@ public class KotlinProject implements Project {
     private final AntProjectHelper helper;
     private final KotlinSources kotlinSources;
     private final GlobalPathRegistry pathRegistry = GlobalPathRegistry.getDefault();
-
-    /**
-     * This class provides information about Kotlin project.
-     */
-    private final class Info implements ProjectInformation {
-
-        @StaticResource()
-        public static final String KOTLIN_ICON = "org/black/kotlin/kotlin.png";
-
-        @Override
-        public String getName() {
-            return helper.getProjectDirectory().getName();
-        }
-
-        @Override
-        public String getDisplayName() {
-            return getName();
-        }
-
-        @Override
-        public Icon getIcon() {
-            return new ImageIcon(ImageUtilities.loadImage(KOTLIN_ICON));
-        }
-
-        @Override
-        public Project getProject() {
-            return KotlinProject.this;
-        }
-
-        @Override
-        public void addPropertyChangeListener(PropertyChangeListener pl) {
-        }
-
-        @Override
-        public void removePropertyChangeListener(PropertyChangeListener pl) {
-        }
-
+    private final AuxiliaryConfiguration auxiliaryConfig;
+    private final PropertyEvaluator propertyEvaluator;
+    private final ReferenceHelper referenceHelper;
+    private Lookup lkp;
+    
+    public KotlinProject(AntProjectHelper helper) {
+        this.helper = helper;
+        kotlinSources = new KotlinSources(this);
+        propertyEvaluator = createEvaluator();
+        auxiliaryConfig = helper.createAuxiliaryConfiguration();
+        referenceHelper = new ReferenceHelper(helper, auxiliaryConfig, propertyEvaluator);
+        
     }
 
-    /**
-     * Action provider class for Kotlin project.
-     */
-    private final class ActionProviderImpl implements ActionProvider {
+    @Override
+    public FileObject getProjectDirectory() {
+        return helper.getProjectDirectory();
+    }
 
-        /**
-         * Supported actions.
-         */
-        private final String[] supported = new String[]{
-            ActionProvider.COMMAND_DELETE,
-            ActionProvider.COMMAND_COPY,
-            ActionProvider.COMMAND_BUILD,
-            ActionProvider.COMMAND_CLEAN,
-            ActionProvider.COMMAND_REBUILD,
-            ActionProvider.COMMAND_RUN
-        };
-
-        /**
-         *
-         * @return supported actions.
-         */
-        @Override
-        public String[] getSupportedActions() {
-            return supported;
+    @Override
+    public Lookup getLookup() {
+        if (lkp == null) {
+            lkp = Lookups.fixed(
+                    KotlinProject.this,
+                    auxiliaryConfig,
+                    helper.createAuxiliaryProperties(),
+                    helper.createCacheDirectoryProvider(),
+                    new KotlinProjectInfo(this),
+                    new KotlinProjectLogicalView(this),
+                    new KotlinActionProvider(this),
+                    new KotlinPrivilegedTemplates(),
+                    new KotlinProjectOpenedHook(this),
+                    new KotlinClassPathProvider(this)
+            );
         }
+        return lkp;
+    }
 
-        /**
-         * Defines actions code.
-         *
-         * @throws IllegalArgumentException
-         */
+    public AntProjectHelper getAntProjectHelper() {
+        return helper;
+    }
+
+    public PropertyEvaluator getPropertEvaluator(){
+        return propertyEvaluator;
+    }
+    
+    public AuxiliaryConfiguration getAuxiliaryConfiguration(){
+        return auxiliaryConfig;
+    }
+    
+    public ReferenceHelper getReferenceHelper(){
+        return referenceHelper;
+    }
+    
+    public GlobalPathRegistry getPathRegistry() {
+        return pathRegistry;
+    }
+
+    public KotlinSources getKotlinSources() {
+        return kotlinSources;
+    }
+    
+    private PropertyEvaluator createEvaluator(){
+        PropertyEvaluator baseEval1 = PropertyUtils.sequentialPropertyEvaluator(
+                helper.getStockPropertyPreprovider(), 
+                helper.getPropertyProvider("nbproject/private/config.properties"));
+        PropertyEvaluator baseEval2 = PropertyUtils.sequentialPropertyEvaluator(
+                helper.getStockPropertyPreprovider(), 
+                helper.getPropertyProvider(AntProjectHelper.PRIVATE_PROPERTIES_PATH));
+        ConfigPropertyProvider configPropertyProvider1 = 
+                new ConfigPropertyProvider(baseEval1, "nbproject/private/configs", helper);
+        baseEval1.addPropertyChangeListener(configPropertyProvider1);
+        ConfigPropertyProvider configPropertyProvider2 = new ConfigPropertyProvider(baseEval1, "nbproject/configs", helper); // NOI18N
+        baseEval1.addPropertyChangeListener(configPropertyProvider2);
+        
+        return PropertyUtils.sequentialPropertyEvaluator(
+                helper.getStockPropertyPreprovider(),
+                helper.getPropertyProvider("nbproject/private/config.properties"),
+                configPropertyProvider1,
+                helper.getPropertyProvider(AntProjectHelper.PRIVATE_PROPERTIES_PATH),
+                helper.getProjectLibrariesPropertyProvider(),
+                PropertyUtils.userPropertiesProvider(baseEval2, "user.properties.file", FileUtil.toFile(getProjectDirectory())),
+                configPropertyProvider2,
+helper.getPropertyProvider(AntProjectHelper.PROJECT_PROPERTIES_PATH));
+    }
+    
+    private static final class ConfigPropertyProvider extends FilterPropertyProvider implements PropertyChangeListener{
+        private final PropertyEvaluator baseEval;
+        private final String prefix;
+        private final AntProjectHelper helper;
+        
+        public ConfigPropertyProvider(PropertyEvaluator baseEval, String prefix, AntProjectHelper helper){
+            super(computeDelegate(baseEval, prefix, helper));
+            this.baseEval = baseEval;
+            this.prefix = prefix;
+            this.helper = helper;
+        }
+        
         @Override
-        public void invokeAction(String string, Lookup lookup) throws IllegalArgumentException {
-            if (string.equalsIgnoreCase(ActionProvider.COMMAND_DELETE)) {
-                DefaultProjectOperations.performDefaultDeleteOperation(KotlinProject.this);
-            }
-            if (string.equalsIgnoreCase(ActionProvider.COMMAND_COPY)) {
-                DefaultProjectOperations.performDefaultCopyOperation(KotlinProject.this);
-            }
-            if (string.equalsIgnoreCase(ActionProvider.COMMAND_BUILD)) {
-                KotlinCompiler.INSTANCE.antBuild(KotlinProject.this);
-            }
-
-            if (string.equalsIgnoreCase(ActionProvider.COMMAND_CLEAN)) {
-                Thread newThread = new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        ProjectUtils.clean(KotlinProject.this);
-                    }
-
-                });
-                newThread.start();
-            }
-
-            if (string.equalsIgnoreCase(ActionProvider.COMMAND_REBUILD)) {
-                ProjectUtils.clean(KotlinProject.this);
-                KotlinCompiler.INSTANCE.antBuild(KotlinProject.this);
-            }
-
-            if (string.equalsIgnoreCase(ActionProvider.COMMAND_RUN)) {
-
-                try {
-                    KotlinCompiler.INSTANCE.antRun(KotlinProject.this);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                } catch (InterruptedException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-
+        public void propertyChange(PropertyChangeEvent event){
+            if (event.getPropertyName().equals("config")){
+                setDelegate(computeDelegate(baseEval,prefix,helper));
             }
         }
-
-        /**
-         *
-         * @return is action enabled or not.
-         * @throws IllegalArgumentException
-         */
-        @Override
-        public boolean isActionEnabled(String command, Lookup lookup) throws IllegalArgumentException {
-            if ((command.equals(ActionProvider.COMMAND_DELETE))) {
-                return true;
-            } else if ((command.equals(ActionProvider.COMMAND_COPY))) {
-                return true;
-            } else if ((command.equals(ActionProvider.COMMAND_BUILD))) {
-                return true;
-            } else if ((command.equals(ActionProvider.COMMAND_CLEAN))) {
-                return true;
-            } else if ((command.equals(ActionProvider.COMMAND_REBUILD))) {
-                return true;
-            } else if ((command.equals(ActionProvider.COMMAND_RUN))) {
-                return true;
+        
+        private static PropertyProvider computeDelegate(PropertyEvaluator baseEval, 
+                String prefix, AntProjectHelper helper){
+            String config = baseEval.getProperty("config");
+            if (config != null){
+                return helper.getPropertyProvider(prefix + "/" + config + ".properties");
             } else {
-                throw new IllegalArgumentException(command);
+                return PropertyUtils.fixedPropertyProvider(Collections.<String,String>emptyMap());
             }
         }
-
     }
-
-    public final class KotlinClassPathProvider implements ClassPathProvider {
-
-        ClassPath boot = null;
-        ClassPath compile = null;
-        ClassPath source = null;
-
-        public void updateClassPathProvider() {
-            boot = getBootClassPath();
-            compile = getCompileAndExecuteClassPath();
-            NetBeansJavaProjectElementUtils.updateClasspathInfo(KotlinProject.this);
-        }
-
-        private ClassPath getBootClassPath() {
-            String bootClassPath = System.getProperty("sun.boot.class.path");
-            List<URL> urls = new ArrayList<URL>();
-            List<String> paths = new ArrayList<String>();
-            paths.add(KotlinClasspath.getKotlinBootClasspath());
-            paths.addAll(Arrays.asList(bootClassPath.split(
-                    Pattern.quote(System.getProperty("path.separator")))));
-            for (String path : paths) {
-                File file = new File(path);
-                if (!file.canRead()) {
-                    continue;
-                }
-
-                FileObject fileObject = FileUtil.toFileObject(file);
-                if (FileUtil.isArchiveFile(fileObject)) {
-                    fileObject = FileUtil.getArchiveRoot(fileObject);
-                }
-                if (fileObject != null) {
-                    urls.add(fileObject.toURL());
-                }
-            }
-
-            FileObject libDir = KotlinProject.this.getProjectDirectory().getFileObject("lib");
-            for (FileObject file : libDir.getChildren()) {
-                if ("jar".equals(file.getExt().toLowerCase())) {
-                    urls.add(FileUtil.getArchiveRoot(file.toURL()));
-                }
-            }
-
-            return ClassPathSupport.createClassPath(urls.toArray(new URL[urls.size()]));
-        }
-
-        private ClassPath getCompileAndExecuteClassPath() {
-            List<URL> classPathList = new ArrayList<URL>();
-
-            URL[] classPathArray = new URL[classPathList.size() + 1];
-            int index = 0;
-            for (URL url : classPathList) {
-                if (FileUtil.isArchiveFile(url)) {
-                    classPathArray[index++] = FileUtil.getArchiveRoot(url);
-                } else {
-                    classPathArray[index++] = url;
-                }
-            }
-            classPathArray[index] = KotlinProject.this.getProjectDirectory().getFileObject("build").getFileObject("classes").toURL();
-            return ClassPathSupport.createClassPath(classPathArray);
-        }
-
-        @Override
-        public ClassPath findClassPath(FileObject fo, String type) {
-            if (type.equals(ClassPath.BOOT)) {
-                if (boot == null) {
-                    boot = getBootClassPath();
-                }
-                return boot;
-            } else if (type.equals(ClassPath.COMPILE) || type.equals(ClassPath.EXECUTE)) {
-                if (compile == null) {
-                    compile = getCompileAndExecuteClassPath();
-                }
-                return compile;
-            } else if (type.equals(ClassPath.SOURCE)) {
-                if (source == null) {
-                    source = ClassPathSupport.createClassPath(KotlinProject.this.
-                            getProjectDirectory().getFileObject("src"));
-                }
-                return source;
-            } else if (!fo.isFolder()) {
-                return null;
-            } else {
-                return ClassPathSupport.createClassPath(fo);
-            }
-        }
-
-    }
-
+    
     private static final class KotlinPrivilegedTemplates implements PrivilegedTemplates {
 
         private static final String[] PRIVILEGED_NAMES = new String[]{
@@ -291,45 +166,5 @@ public class KotlinProject implements Project {
         }
 
     }
-
-    private Lookup lkp;
-
-    public KotlinProject(AntProjectHelper helper) {
-        this.helper = helper;
-        kotlinSources = new KotlinSources(this);
-    }
-
-    @Override
-    public FileObject getProjectDirectory() {
-        return helper.getProjectDirectory();
-    }
-
-    @Override
-    public Lookup getLookup() {
-        if (lkp == null) {
-            lkp = Lookups.fixed(
-                    this,
-                    new Info(),
-                    new KotlinProjectLogicalView(this),
-                    new ActionProviderImpl(),
-                    new KotlinPrivilegedTemplates(),
-                    new KotlinProjectOpenedHook(this),
-                    new KotlinClassPathProvider()
-            );
-        }
-        return lkp;
-    }
-
-    public AntProjectHelper getHelper() {
-        return helper;
-    }
-
-    public GlobalPathRegistry getPathRegistry() {
-        return pathRegistry;
-    }
-
-    public KotlinSources getKotlinSources() {
-        return kotlinSources;
-    }
-
+    
 }

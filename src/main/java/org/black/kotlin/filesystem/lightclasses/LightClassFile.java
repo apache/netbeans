@@ -18,8 +18,9 @@ public final class LightClassFile {
     private final FileObject fileObject;
     
     public LightClassFile(KotlinProject project, String path){
-        FileObject f = project.getProjectDirectory().getFileObject("build").
-                        getFileObject("classes").getFileObject(path);
+//        FileObject f = project.getProjectDirectory().getFileObject("build").
+//                        getFileObject("classes").getFileObject(path);
+        FileObject f = project.getLightClassesDirectory().getFileObject(path);
         this.fileObject = createIfNotExists(f, project, path);
     }
     
@@ -48,15 +49,13 @@ public final class LightClassFile {
             packages.append(pathParts[i]).append(ProjectUtils.FILE_SEPARATOR);
         }
         
-        File f = new File(project.getProjectDirectory().getFileObject("build").
-                        getFileObject("classes").getPath() + ProjectUtils.FILE_SEPARATOR + packages.toString());
+        File f = new File(project.getLightClassesDirectory().getPath() + ProjectUtils.FILE_SEPARATOR + packages.toString());
         if (!f.exists()){
             f.mkdirs();
         }
         
-        f = new File(project.getProjectDirectory().getFileObject("build").
-                        getFileObject("classes").getPath() + ProjectUtils.FILE_SEPARATOR + path);
-        
+        f = new File(project.getLightClassesDirectory().getPath() + ProjectUtils.FILE_SEPARATOR + path);  
+
         try {
             if (f.exists()){
                 f.delete();

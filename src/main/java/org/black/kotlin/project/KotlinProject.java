@@ -2,6 +2,7 @@ package org.black.kotlin.project;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +22,8 @@ import org.netbeans.spi.project.support.ant.ReferenceHelper;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.modules.Places;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
@@ -43,7 +46,8 @@ public class KotlinProject implements Project {
     private final AuxiliaryConfiguration auxiliaryConfig;
     private final PropertyEvaluator propertyEvaluator;
     private final ReferenceHelper referenceHelper;
-    private AntBuildExtender buildExtender;
+    private final AntBuildExtender buildExtender;
+    private final FileObject lightClassesDir;
     private Lookup lkp;
     
     public KotlinProject(AntProjectHelper helper) {
@@ -54,8 +58,30 @@ public class KotlinProject implements Project {
         referenceHelper = new ReferenceHelper(helper, auxiliaryConfig, propertyEvaluator);
         buildExtender = AntBuildExtenderFactory.createAntExtender(new KotlinExtenderImplementation(),
                 referenceHelper);
+        lightClassesDir = setLightClassesDir();
     }
 
+    public FileObject getLightClassesDirectory(){
+        return lightClassesDir;
+    }
+    
+    private FileObject setLightClassesDir(){
+        if (Places.getUserDirectory() == null){
+            return getProjectDirectory().
+                    getFileObject("build").getFileObject("classes");
+        }
+        FileObject userDirectory = FileUtil.toFileObject(Places.getUserDirectory());
+        String projectName = KotlinProject.this.getProjectDirectory().getName();
+        if (userDirectory.getFileObject(projectName) == null){
+            try {
+                userDirectory.createFolder(projectName);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        return userDirectory.getFileObject(projectName);
+    }
+    
     @Override
     public FileObject getProjectDirectory() {
         return helper.getProjectDirectory();
@@ -126,7 +152,7 @@ public class KotlinProject implements Project {
                 helper.getProjectLibrariesPropertyProvider(),
                 PropertyUtils.userPropertiesProvider(baseEval2, "user.properties.file", FileUtil.toFile(getProjectDirectory())),
                 configPropertyProvider2,
-helper.getPropertyProvider(AntProjectHelper.PROJECT_PROPERTIES_PATH));
+                helper.getPropertyProvider(AntProjectHelper.PROJECT_PROPERTIES_PATH));
     }
     
     private static final class ConfigPropertyProvider extends FilterPropertyProvider implements PropertyChangeListener{

@@ -127,8 +127,11 @@ public class KotlinLightClassGeneration {
         List<String> lightClassesPaths = manager.getLightClassesPaths(file);
 
         for (String path : lightClassesPaths) {
-            File lightClass = new File(ProjectUtils.getKotlinProjectClassesPath(project) + "/" + path);
-
+            File lightClass = new File(ProjectUtils.getKotlinProjectLightClassesPath(project) + "/" + path);
+            if (!lightClass.exists()){
+                lightClass.mkdirs();
+            }    
+            
             List<KtFile> ktFiles = manager.getSourceFiles(lightClass);
             String[] pathParts = path.split("/");
             String className = pathParts[pathParts.length-1];

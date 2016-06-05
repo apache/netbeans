@@ -280,6 +280,10 @@ public class ProjectUtils {
             if (file.toURI().toString().contains(project.getProjectDirectory().toURI().toString())){
                 return (KotlinProject) project;
             }
+            
+            if (file.toURI().toString().contains(((KotlinProject) project).getLightClassesDirectory().toURI().toString())){
+                return (KotlinProject) project;
+            }
         }
         
         return null;
@@ -319,6 +323,10 @@ public class ProjectUtils {
         
         editorCookie.open();
         return editorCookie.openDocument();
+    }
+    
+    public static String getKotlinProjectLightClassesPath(KotlinProject project){
+        return project.getLightClassesDirectory().getPath();
     }
     
     public static String getKotlinProjectClassesPath(KotlinProject project){

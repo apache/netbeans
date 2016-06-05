@@ -67,7 +67,7 @@ public final class KotlinClassPathProvider implements ClassPathProvider {
     private ClassPath getCompileAndExecuteClassPath() {
         List<URL> classPathList = new ArrayList<URL>();
 
-        URL[] classPathArray = new URL[classPathList.size() + 1];
+        URL[] classPathArray = new URL[classPathList.size() + 2];
         int index = 0;
         for (URL url : classPathList) {
             if (FileUtil.isArchiveFile(url)) {
@@ -76,7 +76,8 @@ public final class KotlinClassPathProvider implements ClassPathProvider {
                 classPathArray[index++] = url;
             }
         }
-        classPathArray[index] = project.getProjectDirectory().getFileObject("build").getFileObject("classes").toURL();
+        classPathArray[index++] = project.getProjectDirectory().getFileObject("build").getFileObject("classes").toURL();
+        classPathArray[index] = project.getLightClassesDirectory().toURL();
         return ClassPathSupport.createClassPath(classPathArray);
     }
 

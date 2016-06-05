@@ -2,10 +2,15 @@ package org.black.kotlin.project;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ant.AntBuildExtender;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
+import org.netbeans.spi.project.ant.AntBuildExtenderFactory;
+import org.netbeans.spi.project.ant.AntBuildExtenderImplementation;
 import org.netbeans.spi.project.support.ant.AntBasedProjectRegistration;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.netbeans.spi.project.support.ant.FilterPropertyProvider;
@@ -38,6 +43,7 @@ public class KotlinProject implements Project {
     private final AuxiliaryConfiguration auxiliaryConfig;
     private final PropertyEvaluator propertyEvaluator;
     private final ReferenceHelper referenceHelper;
+    private AntBuildExtender buildExtender;
     private Lookup lkp;
     
     public KotlinProject(AntProjectHelper helper) {
@@ -46,7 +52,8 @@ public class KotlinProject implements Project {
         propertyEvaluator = createEvaluator();
         auxiliaryConfig = helper.createAuxiliaryConfiguration();
         referenceHelper = new ReferenceHelper(helper, auxiliaryConfig, propertyEvaluator);
-        
+        buildExtender = AntBuildExtenderFactory.createAntExtender(new KotlinExtenderImplementation(),
+                referenceHelper);
     }
 
     @Override
@@ -62,6 +69,7 @@ public class KotlinProject implements Project {
                     auxiliaryConfig,
                     helper.createAuxiliaryProperties(),
                     helper.createCacheDirectoryProvider(),
+                    buildExtender,
                     new KotlinProjectInfo(this),
                     new KotlinProjectLogicalView(this),
                     new KotlinActionProvider(this),
@@ -167,4 +175,22 @@ helper.getPropertyProvider(AntProjectHelper.PROJECT_PROPERTIES_PATH));
 
     }
     
+    private class KotlinExtenderImplementation implements AntBuildExtenderImplementation {
+        
+        @Override
+        public List<String> getExtensibleTargets() {
+            String[] targets = new String[]{
+                "-do-init", "-init-check", 
+                "-post-clean", "jar", 
+                "-pre-pre-compile", "-do-compile", 
+                "-do-compile-single"
+            };
+            return Arrays.asList(targets);
+        }
+
+        @Override
+        public Project getOwningProject() {
+            return KotlinProject.this;
+        }
+    }
 }

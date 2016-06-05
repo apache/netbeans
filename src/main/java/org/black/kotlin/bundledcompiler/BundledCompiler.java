@@ -1,13 +1,18 @@
 package org.black.kotlin.bundledcompiler;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import org.apache.tools.ant.module.api.support.ActionUtils;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.execution.ExecutorTask;
+import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
@@ -99,4 +104,43 @@ public class BundledCompiler {
                 + "</project>";
     }
 
+    private static void unZipFile(File archiveFile, FileObject destDir) throws IOException {
+        FileInputStream fis = new FileInputStream(archiveFile);
+        try {
+            ZipInputStream str = new ZipInputStream(fis);
+            ZipEntry entry;
+            while ((entry = str.getNextEntry()) != null) {
+                if (entry.isDirectory()) {
+                    FileUtil.createFolder(destDir, entry.getName());
+                } else {
+                    FileObject fo = FileUtil.createData(destDir, entry.getName());
+                    FileLock lock = fo.lock();
+                    try {
+                        OutputStream out = fo.getOutputStream(lock);
+                        try {
+                            FileUtil.copy(str, out);
+                        } finally {
+                            out.close();
+                        }
+                    } finally {
+                        lock.releaseLock();
+                    }
+                }
+            }
+        } finally {
+            fis.close();
+        }
+    }
+    
+    public static void getKotlinc() {
+        try {
+            String zipPath = ".\\src\\main\\resources\\org\\black\\kotlin\\kotlinc\\kotlinc.zip";
+            File archiveFile = new File(zipPath);
+            FileObject destFileObj = FileUtil.toFileObject(Places.getUserDirectory());
+            unZipFile(archiveFile, destFileObj);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+    
 }

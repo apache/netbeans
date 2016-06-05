@@ -54,7 +54,7 @@ public class ProjectUtils {
         if (KT_HOME == null){
             FileObject dir = FileUtil.toFileObject(Places.getUserDirectory());
             if (dir.getFileObject("kotlinc") == null){
-                BundledCompiler.getBundledCompiler();
+                BundledCompiler.getKotlinc();
             }
             KT_HOME = Places.getUserDirectory().getAbsolutePath() + FILE_SEPARATOR + "kotlinc"
                     + FILE_SEPARATOR;

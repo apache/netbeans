@@ -64,7 +64,7 @@ import org.openide.filesystems.FileObject;
         @NotNull
         public List<FileObject> getSrcDirectories(KotlinProjectConstants type) {
             Set<FileObject> orderedFiles = Sets.newLinkedHashSet();
-
+            
             findSrc(kotlinProject.getProjectDirectory().getFileObject("src"), orderedFiles, type);
             return Lists.newArrayList(orderedFiles);
 

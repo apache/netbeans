@@ -79,7 +79,8 @@ public class KotlinEnvironment {
     private final Set<VirtualFile> roots = new LinkedHashSet<VirtualFile>();
     
     private KotlinEnvironment(@NotNull org.netbeans.api.project.Project kotlinProject, @NotNull Disposable disposable) {
-
+//        ProjectUtils.checkKtHome();
+        
         applicationEnvironment = createJavaCoreApplicationEnvironment(disposable);
         
         projectEnvironment = new JavaCoreProjectEnvironment(disposable, applicationEnvironment) {
@@ -123,11 +124,6 @@ public class KotlinEnvironment {
 
         CACHED_ENVIRONMENT.put(kotlinProject, KotlinEnvironment.this);
         
-        KotlinSources sources = new KotlinSources((KotlinProject) kotlinProject);
-        for (FileObject file : sources.getAllKtFiles()){
-            KotlinLightClassGeneration.INSTANCE.generate(file);
-        }
-        
     }
     
     private static void registerProjectExtensionPoints(ExtensionsArea area) {
@@ -168,7 +164,7 @@ public class KotlinEnvironment {
     }
     
     private void configureClasspath(@NotNull org.netbeans.api.project.Project kotlinProject) {
-        List<String> classpath = ProjectUtils.getClasspath(kotlinProject);
+        List<String> classpath = ProjectUtils.getClasspath((KotlinProject) kotlinProject);
         
             for (String s : classpath) {
                 if (s.endsWith("!/")){

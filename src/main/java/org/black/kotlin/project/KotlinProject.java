@@ -6,9 +6,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
+import org.black.kotlin.model.KotlinEnvironment;
+import org.black.kotlin.utils.ProjectUtils;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ant.AntBuildExtender;
+import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
 import org.netbeans.spi.project.ant.AntBuildExtenderFactory;
 import org.netbeans.spi.project.ant.AntBuildExtenderImplementation;
@@ -20,6 +24,7 @@ import org.netbeans.spi.project.support.ant.PropertyProvider;
 import org.netbeans.spi.project.support.ant.PropertyUtils;
 import org.netbeans.spi.project.support.ant.ReferenceHelper;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
+import org.netbeans.spi.project.ui.support.UILookupMergerSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
@@ -48,9 +53,11 @@ public class KotlinProject implements Project {
     private final ReferenceHelper referenceHelper;
     private final AntBuildExtender buildExtender;
     private final FileObject lightClassesDir;
+//    private final ClassPathProvider classPathProvider;
     private Lookup lkp;
     
     public KotlinProject(AntProjectHelper helper) {
+//        ProjectUtils.checkKtHome();
         this.helper = helper;
         kotlinSources = new KotlinSources(this);
         propertyEvaluator = createEvaluator();
@@ -59,6 +66,7 @@ public class KotlinProject implements Project {
         buildExtender = AntBuildExtenderFactory.createAntExtender(new KotlinExtenderImplementation(),
                 referenceHelper);
         lightClassesDir = setLightClassesDir();
+//        classPathProvider = new KotlinClassPathProvider(this);
     }
 
     public FileObject getLightClassesDirectory(){
@@ -100,28 +108,33 @@ public class KotlinProject implements Project {
                     new KotlinProjectLogicalView(this),
                     new KotlinActionProvider(this),
                     new KotlinPrivilegedTemplates(),
-                    new KotlinProjectOpenedHook(this),
-                    new KotlinClassPathProvider(this)
+//                    classPathProvider,
+                    new KotlinClassPathProvider(this),
+                    new KotlinProjectOpenedHook(this)
             );
         }
         return lkp;
     }
 
+//    public ClassPathProvider getClassPathProvider(){
+//        return classPathProvider;
+//    }
+    
     public AntProjectHelper getAntProjectHelper() {
         return helper;
     }
 
-    public PropertyEvaluator getPropertEvaluator(){
-        return propertyEvaluator;
-    }
-    
-    public AuxiliaryConfiguration getAuxiliaryConfiguration(){
-        return auxiliaryConfig;
-    }
-    
-    public ReferenceHelper getReferenceHelper(){
-        return referenceHelper;
-    }
+//    public PropertyEvaluator getPropertEvaluator(){
+//        return propertyEvaluator;
+//    }
+//    
+//    public AuxiliaryConfiguration getAuxiliaryConfiguration(){
+//        return auxiliaryConfig;
+//    }
+//    
+//    public ReferenceHelper getReferenceHelper(){
+//        return referenceHelper;
+//    }
     
     public GlobalPathRegistry getPathRegistry() {
         return pathRegistry;

@@ -5,11 +5,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import org.black.kotlin.utils.ProjectUtils;
+import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
+import org.black.kotlin.model.KotlinEnvironment;
 import static org.black.kotlin.utils.ProjectUtils.FILE_SEPARATOR;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
-import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
@@ -36,31 +36,40 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
         }
         
     }
-
     
     @Override
     public void projectOpened() {
         try {
-            ProjectUtils.checkKtHome();
-            ((KotlinClassPathProvider) project.getLookup().lookup(ClassPathProvider.class)).updateClassPathProvider();
-            
-            List<ClassPath> paths = new ArrayList<ClassPath>();
-            FileObject classesRoot = project.getProjectDirectory().getFileObject("build").getFileObject("classes");
-            
-            List<URL> jars = getJars();
-            
-            paths.add(ClassPathSupport.createClassPath(jars.toArray(new URL[jars.size()])));
-            paths.add(ClassPathSupport.createClassPath(classesRoot.toURL()));
-            
-            reg.register(ClassPath.BOOT, paths.toArray(new ClassPath[paths.size()]));
-            reg.register(ClassPath.COMPILE, paths.toArray(new ClassPath[paths.size()]));
-            reg.register(ClassPath.EXECUTE, paths.toArray(new ClassPath[paths.size()]));
-            
-            FileObject srcRoot = project.getProjectDirectory().getFileObject("src");
-            reg.register(ClassPath.SOURCE, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
-            
-        } catch (MalformedURLException ex) {
-            Exceptions.printStackTrace(ex);
+            Thread thread = new Thread(){
+                @Override
+                public void run(){
+                    try {
+                        KotlinEnvironment.getEnvironment(project);
+                        KotlinSources sources = new KotlinSources(project);
+                        for (FileObject file : sources.getAllKtFiles()){
+                            KotlinLightClassGeneration.INSTANCE.generate(file);
+                        }
+                        
+                        List<ClassPath> paths = new ArrayList<ClassPath>();
+                        FileObject classesRoot = project.getProjectDirectory().getFileObject("build").getFileObject("classes");
+                        
+                        List<URL> jars = getJars();
+                        
+                        paths.add(ClassPathSupport.createClassPath(jars.toArray(new URL[jars.size()])));
+                        paths.add(ClassPathSupport.createClassPath(classesRoot.toURL()));
+                        
+                        reg.register(ClassPath.BOOT, paths.toArray(new ClassPath[paths.size()]));
+                        reg.register(ClassPath.COMPILE, paths.toArray(new ClassPath[paths.size()]));
+                        reg.register(ClassPath.EXECUTE, paths.toArray(new ClassPath[paths.size()]));
+                        
+                        FileObject srcRoot = project.getProjectDirectory().getFileObject("src");
+                        reg.register(ClassPath.SOURCE, new ClassPath[]{ClassPathSupport.createClassPath(srcRoot.toURL())});
+                    } catch (MalformedURLException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            };
+            thread.start();
         } catch (UnsupportedOperationException ex) {
             Exceptions.printStackTrace(ex);
         }

@@ -144,6 +144,7 @@ public class KotlinPsiManager {
         
         KotlinProject kotlinProject = null;
         
+        
         for (Project proj : OpenProjects.getDefault().getOpenProjects()){
             if (proj instanceof KotlinProject){
                 kotlinProject = (KotlinProject) proj;

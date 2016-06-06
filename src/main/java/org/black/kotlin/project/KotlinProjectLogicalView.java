@@ -2,6 +2,7 @@ package org.black.kotlin.project;
 
 import java.awt.Image;
 import javax.swing.Action;
+import org.black.kotlin.model.KotlinEnvironment;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
@@ -29,7 +30,8 @@ public class KotlinProjectLogicalView implements LogicalViewProvider {
         public static final String KOTLIN_ICON = "org/black/kotlin/kotlin.png";
 
         private final KotlinProject project;
-
+        private ProjectNode projectNode;
+        
         public KotlinProjectLogicalView(KotlinProject project) {
             this.project = project;
         }
@@ -40,12 +42,16 @@ public class KotlinProjectLogicalView implements LogicalViewProvider {
          */
         @Override
         public Node createLogicalView() {
+            if (projectNode != null){
+                return projectNode;
+            }
             try {
                 FileObject projectDirectory = project.getProjectDirectory();
                 DataFolder projectFolder = DataFolder.findFolder(projectDirectory);
                 Node nodeOfProjectFolder = projectFolder.getNodeDelegate();
                 
-                return new ProjectNode(nodeOfProjectFolder, project);
+                projectNode = new ProjectNode(nodeOfProjectFolder, project);
+                return projectNode;
             } catch (DataObjectNotFoundException donfe) {
                 Exceptions.printStackTrace(donfe);
                 return new AbstractNode(Children.LEAF);

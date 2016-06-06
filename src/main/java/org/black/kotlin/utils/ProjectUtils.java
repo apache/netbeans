@@ -175,10 +175,15 @@ public class ProjectUtils {
     }
 
     @NotNull
-    public static List<String> getClasspath(Project project) {
+    public static List<String> getClasspath(KotlinProject project) {
         ClassPath boot = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
         ClassPath src = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
         ClassPath compile = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
+        
+//        ClassPath boot = project.getClassPathProvider().findClassPath(null, ClassPath.BOOT);
+//        ClassPath src = project.getClassPathProvider().findClassPath(null, ClassPath.SOURCE);
+//        ClassPath compile = project.getClassPathProvider().findClassPath(null, ClassPath.COMPILE);
+        
         
         List<String> classpath = Lists.newArrayList();
         

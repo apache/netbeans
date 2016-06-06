@@ -4,6 +4,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
+import org.black.kotlin.project.KotlinProject;
+import org.black.kotlin.utils.ProjectUtils;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.DialogDisplayer;
@@ -17,6 +19,7 @@ import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
@@ -104,13 +107,14 @@ public class KtDataObject extends MultiDataObject {
                 } 
             }
         });
+        
     }
 
     @Override
     protected int associateLookup() {
         return 1;
     }
-
+    
     @MultiViewElement.Registration(
             displayName = "#LBL_Kt_EDITOR",
             iconBase = "org/black/kotlin/kt.png",

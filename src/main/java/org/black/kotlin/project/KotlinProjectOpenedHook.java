@@ -10,10 +10,13 @@ import org.black.kotlin.model.KotlinEnvironment;
 import static org.black.kotlin.utils.ProjectUtils.FILE_SEPARATOR;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -44,7 +47,20 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
                 @Override
                 public void run(){
                     try {
-                        KotlinEnvironment.getEnvironment(project);
+                        
+                        Runnable run = new Runnable(){
+                            @Override
+                            public void run(){
+                                final ProgressHandle progressbar = 
+                                    ProgressHandleFactory.createHandle("Loading Kotlin environment");
+                                progressbar.start();
+                                KotlinEnvironment.getEnvironment(project);
+                                progressbar.finish();
+                            }
+                        };
+                        
+                        RequestProcessor.getDefault().post(run);
+                        
                         KotlinSources sources = new KotlinSources(project);
                         for (FileObject file : sources.getAllKtFiles()){
                             KotlinLightClassGeneration.INSTANCE.generate(file);
@@ -69,6 +85,7 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
                     }
                 }
             };
+            
             thread.start();
         } catch (UnsupportedOperationException ex) {
             Exceptions.printStackTrace(ex);

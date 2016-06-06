@@ -57,7 +57,6 @@ public class KotlinProject implements Project {
     private Lookup lkp;
     
     public KotlinProject(AntProjectHelper helper) {
-//        ProjectUtils.checkKtHome();
         this.helper = helper;
         kotlinSources = new KotlinSources(this);
         propertyEvaluator = createEvaluator();
@@ -124,17 +123,17 @@ public class KotlinProject implements Project {
         return helper;
     }
 
-//    public PropertyEvaluator getPropertEvaluator(){
-//        return propertyEvaluator;
-//    }
-//    
-//    public AuxiliaryConfiguration getAuxiliaryConfiguration(){
-//        return auxiliaryConfig;
-//    }
-//    
-//    public ReferenceHelper getReferenceHelper(){
-//        return referenceHelper;
-//    }
+    public PropertyEvaluator getPropertEvaluator(){
+        return propertyEvaluator;
+    }
+    
+    public AuxiliaryConfiguration getAuxiliaryConfiguration(){
+        return auxiliaryConfig;
+    }
+    
+    public ReferenceHelper getReferenceHelper(){
+        return referenceHelper;
+    }
     
     public GlobalPathRegistry getPathRegistry() {
         return pathRegistry;

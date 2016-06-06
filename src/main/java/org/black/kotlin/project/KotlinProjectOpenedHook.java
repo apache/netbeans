@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.black.kotlin.model.KotlinEnvironment;
+import org.black.kotlin.utils.ProjectUtils;
 import static org.black.kotlin.utils.ProjectUtils.FILE_SEPARATOR;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
+import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
@@ -47,7 +49,8 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
                 @Override
                 public void run(){
                     try {
-                        
+                        ClassLoader cl = this.getClass().getClassLoader();
+                        ProjectUtils.checkKtHome(cl);
                         Runnable run = new Runnable(){
                             @Override
                             public void run(){
@@ -60,6 +63,8 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
                         };
                         
                         RequestProcessor.getDefault().post(run);
+                        
+                        ((KotlinClassPathProvider) project.getLookup().lookup(ClassPathProvider.class)).updateClassPathProvider();
                         
                         KotlinSources sources = new KotlinSources(project);
                         for (FileObject file : sources.getAllKtFiles()){

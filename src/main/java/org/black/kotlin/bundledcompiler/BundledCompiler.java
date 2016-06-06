@@ -3,9 +3,12 @@ package org.black.kotlin.bundledcompiler;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.tools.ant.module.api.support.ActionUtils;
@@ -104,8 +107,9 @@ public class BundledCompiler {
                 + "</project>";
     }
 
-    private static void unZipFile(File archiveFile, FileObject destDir) throws IOException {
-        FileInputStream fis = new FileInputStream(archiveFile);
+//    private static void unZipFile(File archiveFile, FileObject destDir) throws IOException {
+    private static void unZipFile(InputStream fis, FileObject destDir) throws IOException {
+//        FileInputStream fis = new FileInputStream(archiveFile);
         try {
             ZipInputStream str = new ZipInputStream(fis);
             ZipEntry entry;
@@ -132,12 +136,12 @@ public class BundledCompiler {
         }
     }
     
-    public static void getKotlinc() {
+    public static void getKotlinc(ClassLoader cl) {
         try {
-            String zipPath = ".\\src\\main\\resources\\org\\black\\kotlin\\kotlinc\\kotlinc.zip";
-            File archiveFile = new File(zipPath);
+            InputStream inputStream = cl.getResourceAsStream("org/black/kotlin/kotlinc/kotlinc.zip");
+
             FileObject destFileObj = FileUtil.toFileObject(Places.getUserDirectory());
-            unZipFile(archiveFile, destFileObj);
+            unZipFile(inputStream, destFileObj);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }

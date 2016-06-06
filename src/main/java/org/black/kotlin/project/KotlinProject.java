@@ -53,7 +53,6 @@ public class KotlinProject implements Project {
     private final ReferenceHelper referenceHelper;
     private final AntBuildExtender buildExtender;
     private final FileObject lightClassesDir;
-//    private final ClassPathProvider classPathProvider;
     private Lookup lkp;
     
     public KotlinProject(AntProjectHelper helper) {
@@ -65,7 +64,6 @@ public class KotlinProject implements Project {
         buildExtender = AntBuildExtenderFactory.createAntExtender(new KotlinExtenderImplementation(),
                 referenceHelper);
         lightClassesDir = setLightClassesDir();
-//        classPathProvider = new KotlinClassPathProvider(this);
     }
 
     public FileObject getLightClassesDirectory(){
@@ -107,7 +105,6 @@ public class KotlinProject implements Project {
                     new KotlinProjectLogicalView(this),
                     new KotlinActionProvider(this),
                     new KotlinPrivilegedTemplates(),
-//                    classPathProvider,
                     new KotlinClassPathProvider(this),
                     new KotlinProjectOpenedHook(this)
             );

@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
-
+    <!-- J2SEProject extension -->
+    <folder name="Projects">
+        <folder name="org-netbeans-modules-java-j2seproject">
+            <folder name="Lookup">
+                <file name="org.black.kotlin.j2seprojectextension.lookup.LookupProviderExtension.instance"/>
+            </folder>
+        </folder>
+    </folder>
+    
 <folder name="Editors">
         <folder name="text">
             <folder name="x-kt">

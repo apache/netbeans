@@ -15,13 +15,14 @@ import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.black.kotlin.builder.KotlinPsiManager;
 import org.black.kotlin.bundledcompiler.BundledCompiler;
-import org.black.kotlin.project.KotlinProject;
+import org.black.kotlin.j2seprojectextension.lookup.KotlinProjectHelper;
 import org.black.kotlin.project.KotlinProjectConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.j2seproject.J2SEProject;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -68,8 +69,8 @@ public class ProjectUtils {
      * @return file with main method.
      * @throws IOException
      */
-    public static FileObject findJavaMain(KotlinProject project) throws IOException {
-        for (FileObject javaFolder : project.getKotlinSources().
+    public static FileObject findJavaMain(Project project) throws IOException {
+        for (FileObject javaFolder : KotlinProjectHelper.INSTANCE.getKotlinSources(project).//project.getKotlinSources().
                 getSrcDirectories(KotlinProjectConstants.JAVA_SOURCE)){
             for (FileObject file : javaFolder.getChildren()){
                 if (!file.isFolder()) {
@@ -98,9 +99,9 @@ public class ProjectUtils {
         }
     }
 
-    public static KtFile findKotlinMain(KotlinProject project) throws IOException {
+    public static KtFile findKotlinMain(Project project) throws IOException {
         List<KtFile> ktFiles = new ArrayList<KtFile>();
-        List<FileObject> kotlinFolders = project.getKotlinSources().
+        List<FileObject> kotlinFolders = KotlinProjectHelper.INSTANCE.getKotlinSources(project).//project.getKotlinSources().
                 getSrcDirectories(KotlinProjectConstants.KOTLIN_SOURCE);
         for (FileObject folder : kotlinFolders) {
             for (FileObject file : folder.getChildren()){
@@ -113,7 +114,7 @@ public class ProjectUtils {
         return KtMainDetector.getMainFunctionFile(ktFiles);
     }
 
-    public static String getMainFileClass(KotlinProject project) throws IOException {
+    public static String getMainFileClass(Project project) throws IOException {
         KtFile main = findKotlinMain(project);
         if (main != null) {
             String name = main.getName().split(".kt")[0];
@@ -153,7 +154,7 @@ public class ProjectUtils {
     }
 
 
-    public static void clean(KotlinProject proj) {
+    public static void clean(Project proj) {
 
         try {
             if (proj.getProjectDirectory().getFileObject("build") != null) {
@@ -175,7 +176,7 @@ public class ProjectUtils {
     }
 
     @NotNull
-    public static List<String> getClasspath(KotlinProject project) {
+    public static List<String> getClasspath(Project project) {
         ClassPath boot = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
         ClassPath src = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
         ClassPath compile = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
@@ -223,7 +224,7 @@ public class ProjectUtils {
         return classpath;
     }
 
-    public static List<String> getLibs(KotlinProject proj) {
+    public static List<String> getLibs(Project proj) {
         List<String> libs = new ArrayList<String>();
         FileObject libFolder = proj.getProjectDirectory().getFileObject("lib");
         for (FileObject fo : libFolder.getChildren()) {
@@ -257,7 +258,7 @@ public class ProjectUtils {
     }
     
     @NotNull
-    public static List<KtFile> getSourceFiles(@NotNull KotlinProject project){
+    public static List<KtFile> getSourceFiles(@NotNull Project project){
         List<KtFile> ktFiles = new ArrayList<KtFile>();
         
         for (FileObject file : KotlinPsiManager.INSTANCE.getFilesByProject(project)){
@@ -269,25 +270,25 @@ public class ProjectUtils {
     }
     
     @NotNull
-    public static List<KtFile> getSourceFilesWithDependencies(@NotNull KotlinProject project){
+    public static List<KtFile> getSourceFilesWithDependencies(@NotNull Project project){
         //TODO
         List<KtFile> files = getSourceFiles(project);
         return files;
     }
 
-    public static KotlinProject getKotlinProjectForFileObject(FileObject file){
+    public static Project getKotlinProjectForFileObject(FileObject file){
         
         for (Project project : OpenProjects.getDefault().getOpenProjects()){
-            if (!(project instanceof KotlinProject)){
+            if (!(project instanceof J2SEProject)){
                 continue;
             }
             
             if (file.toURI().toString().contains(project.getProjectDirectory().toURI().toString())){
-                return (KotlinProject) project;
+                return project;
             }
             
-            if (file.toURI().toString().contains(((KotlinProject) project).getLightClassesDirectory().toURI().toString())){
-                return (KotlinProject) project;
+            if (file.toURI().toString().contains(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).toURI().toString())){
+                return project;
             }
         }
         
@@ -330,11 +331,11 @@ public class ProjectUtils {
         return editorCookie.openDocument();
     }
     
-    public static String getKotlinProjectLightClassesPath(KotlinProject project){
-        return project.getLightClassesDirectory().getPath();
+    public static String getKotlinProjectLightClassesPath(Project project){
+        return KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).getPath();
     }
     
-    public static String getKotlinProjectClassesPath(KotlinProject project){
+    public static String getKotlinProjectClassesPath(Project project){
         return project.getProjectDirectory().
                     getFileObject("build").getFileObject("classes").getPath();
     }

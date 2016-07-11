@@ -12,9 +12,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.black.kotlin.j2seprojectextension.lookup.KotlinProjectHelper;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.model.KotlinLightVirtualFile;
-import org.black.kotlin.project.KotlinProject;
+//import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.project.KotlinProjectConstants;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +26,7 @@ import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.j2seproject.J2SEProject;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -38,10 +40,10 @@ public class KotlinPsiManager {
     private KotlinPsiManager(){}
     
     @NotNull
-    public Set<FileObject> getFilesByProject(KotlinProject project){
+    public Set<FileObject> getFilesByProject(Project project){
         Set<FileObject> ktFiles = Sets.newLinkedHashSet();
         
-        for (SourceGroup srcGroup : project.getKotlinSources().
+        for (SourceGroup srcGroup : KotlinProjectHelper.INSTANCE.getKotlinSources(project).//project.getKotlinSources().
                 getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE.toString())){
             for (FileObject file : srcGroup.getRootFolder().getChildren()){
                 if (isKotlinFile(file)){
@@ -74,7 +76,7 @@ public class KotlinPsiManager {
     public KtFile parseText(@NotNull String text, @NotNull FileObject file) {
         StringUtil.assertValidSeparators(text);
 
-        KotlinProject kotlinProject = ProjectUtils.getKotlinProjectForFileObject(file);
+        Project kotlinProject = ProjectUtils.getKotlinProjectForFileObject(file);
         if (kotlinProject == null){
             return null;
         }
@@ -142,12 +144,12 @@ public class KotlinPsiManager {
     public KtFile getParsedKtFileForSyntaxHighlighting(@NotNull String text){
         String sourceCode = StringUtilRt.convertLineSeparators(text);
         
-        KotlinProject kotlinProject = null;
+        Project kotlinProject = null;
         
         
         for (Project proj : OpenProjects.getDefault().getOpenProjects()){
-            if (proj instanceof KotlinProject){
-                kotlinProject = (KotlinProject) proj;
+            if (proj instanceof J2SEProject){
+                kotlinProject = proj;
                 break;
             }
         }

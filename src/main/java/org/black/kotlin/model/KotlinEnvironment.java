@@ -47,7 +47,6 @@ import java.util.Collections;
 import java.util.List;
 import org.black.kotlin.filesystem.KotlinLightClassManager;
 import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
-import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.project.KotlinSources;
 import org.black.kotlin.resolve.BuiltInsReferenceResolver;
 import org.black.kotlin.resolve.KotlinCacheServiceImpl;
@@ -106,7 +105,7 @@ public class KotlinEnvironment {
         project.registerService(CliLightClassGenerationSupport.class, cliLightClassGenerationSupport);
         project.registerService(KtLightClassForFacade.FacadeStubCache.class, new KtLightClassForFacade.FacadeStubCache(project));
         project.registerService(CodeAnalyzerInitializer.class, cliLightClassGenerationSupport);
-        project.registerService(KotlinLightClassManager.class, new KotlinLightClassManager((KotlinProject) kotlinProject));
+        project.registerService(KotlinLightClassManager.class, new KotlinLightClassManager(kotlinProject));
         project.registerService(BuiltInsReferenceResolver.class, new BuiltInsReferenceResolver(project));
         project.registerService(KotlinSourceIndex.class, new KotlinSourceIndex());
         project.registerService(KotlinCacheService.class, new KotlinCacheServiceImpl());
@@ -164,7 +163,7 @@ public class KotlinEnvironment {
     }
     
     private void configureClasspath(@NotNull org.netbeans.api.project.Project kotlinProject) {
-        List<String> classpath = ProjectUtils.getClasspath((KotlinProject) kotlinProject);
+        List<String> classpath = ProjectUtils.getClasspath(kotlinProject);
         
             for (String s : classpath) {
                 if (s.endsWith("!/")){

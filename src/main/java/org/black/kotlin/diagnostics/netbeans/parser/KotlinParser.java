@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.intellij.psi.PsiErrorElement;
 import java.util.List;
 import javax.swing.event.ChangeListener;
-import org.black.kotlin.project.KotlinProject;
+//import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.resolve.AnalysisResultWithProvider;
 import org.black.kotlin.resolve.KotlinAnalyzer;
 import org.black.kotlin.utils.ProjectUtils;
@@ -12,6 +12,7 @@ import org.jetbrains.kotlin.diagnostics.Diagnostic;
 import org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.AnalyzingUtils;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Error.Badging;
 import org.netbeans.modules.csl.api.Severity;
@@ -32,7 +33,7 @@ public class KotlinParser extends Parser {
     private Snapshot snapshot;
     private AnalysisResultWithProvider parserResult;
     private KtFile fileToAnalyze;
-    private KotlinProject project;
+    private Project project;
     
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) {

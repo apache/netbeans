@@ -3,9 +3,11 @@ package org.black.kotlin.filesystem.lightclasses;
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
-import org.black.kotlin.project.KotlinProject;
+import org.black.kotlin.j2seprojectextension.lookup.KotlinProjectHelper;
+//import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.NotNull;
+import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -17,10 +19,10 @@ import org.openide.util.Exceptions;
 public final class LightClassFile {
     private final FileObject fileObject;
     
-    public LightClassFile(KotlinProject project, String path){
+    public LightClassFile(Project project, String path){
 //        FileObject f = project.getProjectDirectory().getFileObject("build").
 //                        getFileObject("classes").getFileObject(path);
-        FileObject f = project.getLightClassesDirectory().getFileObject(path);
+        FileObject f = KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).getFileObject(path);
         this.fileObject = createIfNotExists(f, project, path);
     }
     
@@ -33,7 +35,7 @@ public final class LightClassFile {
         return FileUtil.toFile(fileObject).exists();
     }
 
-    public FileObject createIfNotExists(FileObject file, KotlinProject project, String path) {
+    public FileObject createIfNotExists(FileObject file, Project project, String path) {
         if (file != null){
             return file;
         } 
@@ -49,12 +51,12 @@ public final class LightClassFile {
             packages.append(pathParts[i]).append(ProjectUtils.FILE_SEPARATOR);
         }
         
-        File f = new File(project.getLightClassesDirectory().getPath() + ProjectUtils.FILE_SEPARATOR + packages.toString());
+        File f = new File(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).getPath() + ProjectUtils.FILE_SEPARATOR + packages.toString());
         if (!f.exists()){
             f.mkdirs();
         }
         
-        f = new File(project.getLightClassesDirectory().getPath() + ProjectUtils.FILE_SEPARATOR + path);  
+        f = new File(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).getPath() + ProjectUtils.FILE_SEPARATOR + path);  
 
         try {
             if (f.exists()){

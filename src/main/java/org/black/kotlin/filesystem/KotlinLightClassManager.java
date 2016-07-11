@@ -17,7 +17,6 @@ import java.util.concurrent.ConcurrentMap;
 import org.black.kotlin.builder.KotlinPsiManager;
 import org.black.kotlin.filesystem.lightclasses.LightClassFile;
 import org.black.kotlin.model.KotlinEnvironment;
-import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,18 +39,18 @@ import org.openide.filesystems.FileUtil;
  */
 public class KotlinLightClassManager {
     
-    private final KotlinProject project;
+    private final org.netbeans.api.project.Project project;
     
     private final ConcurrentMap<File, Set<FileObject>> sourceFiles = 
             new ConcurrentHashMap<File, Set<FileObject>>();
     
     @NotNull
-    public static KotlinLightClassManager getInstance(@NotNull KotlinProject project){
+    public static KotlinLightClassManager getInstance(@NotNull org.netbeans.api.project.Project project){
         Project ideaProject = KotlinEnvironment.getEnvironment(project).getProject();
         return ServiceManager.getService(ideaProject, KotlinLightClassManager.class);
     }
     
-    public KotlinLightClassManager(@NotNull KotlinProject project){
+    public KotlinLightClassManager(@NotNull org.netbeans.api.project.Project project){
         this.project = project;
     }
     

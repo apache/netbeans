@@ -29,6 +29,12 @@
                 <extensions>true</extensions>
                 <configuration>
                     <verifyRuntime>warn</verifyRuntime>
+                    <moduleDependencies>
+                        <dependency>
+                            <id>org.netbeans.modules:org-netbeans-modules-java-j2seproject</id>
+                            <type>impl</type>
+                        </dependency>
+                </moduleDependencies>
                 </configuration>
             </plugin>
             <plugin>
@@ -430,6 +436,12 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-api-progress-nb</artifactId>
+            <version>RELEASE81</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.modules</groupId>
+            <artifactId>org-netbeans-modules-java-j2seproject</artifactId>
             <version>RELEASE81</version>
             <type>jar</type>
         </dependency>

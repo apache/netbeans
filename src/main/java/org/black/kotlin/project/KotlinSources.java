@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.event.ChangeListener;
 import org.black.kotlin.builder.KotlinPsiManager;
 import org.jetbrains.annotations.NotNull;
+import org.netbeans.api.project.Project;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.openide.filesystems.FileObject;
@@ -25,9 +26,9 @@ import org.openide.filesystems.FileObject;
      */
     public final class KotlinSources {
 
-        private final KotlinProject kotlinProject;
+        private final Project kotlinProject;
         
-        public KotlinSources(KotlinProject kotlinProject){
+        public KotlinSources(Project kotlinProject){
             this.kotlinProject = kotlinProject;
         }
         

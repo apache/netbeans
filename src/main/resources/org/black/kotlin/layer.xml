@@ -44,6 +44,7 @@
         <folder name="Kotlin">
             <file name="Kotlin.kt" url="Kotlin file">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.black.kotlin.Bundle"/>
+                <attr name="instantiatingIterator" newvalue="org.black.kotlin.file.wizard.KtFileWizardIterator"/>
                 <attr name="template" boolvalue="true"/>
             </file>
         </folder>

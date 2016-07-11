@@ -1,5 +1,8 @@
 package org.black.kotlin.j2seprojectextension.lookup;
 
+import org.black.kotlin.j2seprojectextension.buildextender.KotlinBuildExtender;
+import org.black.kotlin.project.KotlinProjectOpenedHook;
+import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.LookupProvider;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
 import org.openide.util.Lookup;
@@ -13,7 +16,11 @@ public class LookupProviderExtension implements LookupProvider{
 
     @Override
     public Lookup createAdditionalLookup(Lookup lkp) {
-        return Lookups.fixed(new KotlinPrivilegedTemplates());
+        
+        return Lookups.fixed(
+                new KotlinPrivilegedTemplates(),
+                new KotlinBuildExtender(lkp.lookup(Project.class)));
+//                new KotlinProjectOpenedHook(lkp.lookup(Project.class)));
     }
     
     private static final class KotlinPrivilegedTemplates implements PrivilegedTemplates {

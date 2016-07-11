@@ -4,8 +4,10 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
+import org.black.kotlin.j2seprojectextension.lookup.KotlinProjectHelper;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.utils.ProjectUtils;
 import static org.black.kotlin.utils.ProjectUtils.FILE_SEPARATOR;
@@ -13,6 +15,8 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ant.AntBuildExtender;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
@@ -26,13 +30,13 @@ import org.openide.util.RequestProcessor;
  */
 public class KotlinProjectOpenedHook extends ProjectOpenedHook {
 
-    private final KotlinProject project;
+    private final Project project;
     private final GlobalPathRegistry reg;
 
-    public KotlinProjectOpenedHook(KotlinProject project) {
+    public KotlinProjectOpenedHook(Project project) {
         super();
         this.project = project;
-        reg = project.getPathRegistry();
+        reg = GlobalPathRegistry.getDefault();
         File path = new File(project.getProjectDirectory().getPath() + FILE_SEPARATOR + "build" + FILE_SEPARATOR + "classes");
         if (!path.exists()) {
             if(!path.mkdirs()){
@@ -64,7 +68,9 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
                         
                         RequestProcessor.getDefault().post(run);
                         
-                        ((KotlinClassPathProvider) project.getLookup().lookup(ClassPathProvider.class)).updateClassPathProvider();
+                        KotlinProjectHelper.INSTANCE.getKotlinClassPathProvider(project).updateClassPathProvider();
+                        
+//                        ((KotlinClassPathProvider) project.getLookup().lookup(ClassPathProvider.class)).updateClassPathProvider();
                         
                         KotlinSources sources = new KotlinSources(project);
                         for (FileObject file : sources.getAllKtFiles()){
@@ -100,6 +106,9 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
 
     private List<URL> getJars() throws MalformedURLException {
         FileObject libs = project.getProjectDirectory().getFileObject("lib");
+        if (libs == null){
+            return Collections.EMPTY_LIST;
+        }
         List<URL> jars = new ArrayList<URL>();
         for (FileObject fo : libs.getChildren()) {
             jars.add(new URL("jar:file:///" + fo.getPath() + "!/"));

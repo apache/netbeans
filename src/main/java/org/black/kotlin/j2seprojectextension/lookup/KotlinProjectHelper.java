@@ -3,6 +3,7 @@ package org.black.kotlin.j2seprojectextension.lookup;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.black.kotlin.project.KotlinClassPathProvider;
 import org.black.kotlin.project.KotlinSources;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.j2seproject.J2SEProject;
@@ -23,6 +24,7 @@ public class KotlinProjectHelper {
     
     private final Map<Project, KotlinSources> kotlinSources = new HashMap<Project, KotlinSources>();
     private final Map<Project, FileObject> lightClassesDirs = new HashMap<Project, FileObject>();
+    private final Map<Project, KotlinClassPathProvider> classpaths = new HashMap<Project, KotlinClassPathProvider>();
     
     public boolean checkProject(Project project){
         if (!(project instanceof J2SEProject)){
@@ -56,7 +58,7 @@ public class KotlinProjectHelper {
         return lightClassesDirs.get(project);
     }
     
-       private FileObject setLightClassesDir(Project project){
+    private FileObject setLightClassesDir(Project project){
         if (Places.getUserDirectory() == null){
             return project.getProjectDirectory().
                     getFileObject("build").getFileObject("classes");
@@ -71,6 +73,18 @@ public class KotlinProjectHelper {
             }
         }
         return userDirectory.getFileObject(projectName);
+    }
+    
+    public KotlinClassPathProvider getKotlinClassPathProvider(Project project){
+        if (!(checkProject(project))){
+            return null;
+        }
+        
+        if (!classpaths.containsKey(project)){
+            classpaths.put(project, new KotlinClassPathProvider(project));
+        }
+        
+        return classpaths.get(project);
     }
     
 }

@@ -16,6 +16,7 @@ import javax.swing.text.StyledDocument;
 import org.black.kotlin.builder.KotlinPsiManager;
 import org.black.kotlin.bundledcompiler.BundledCompiler;
 import org.black.kotlin.j2seprojectextension.lookup.KotlinProjectHelper;
+import org.black.kotlin.project.KotlinClassPathProvider;
 import org.black.kotlin.project.KotlinProjectConstants;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.psi.KtFile;
@@ -177,14 +178,15 @@ public class ProjectUtils {
 
     @NotNull
     public static List<String> getClasspath(Project project) {
-        ClassPath boot = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
-        ClassPath src = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
-        ClassPath compile = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
+        KotlinClassPathProvider kotlinClassPath = KotlinProjectHelper.INSTANCE.getKotlinClassPathProvider(project);
+  
+        ClassPath boot = kotlinClassPath.findClassPath(null, ClassPath.BOOT);
+        ClassPath src = kotlinClassPath.findClassPath(null, ClassPath.SOURCE);
+        ClassPath compile = kotlinClassPath.findClassPath(null, ClassPath.COMPILE);
         
-//        ClassPath boot = project.getClassPathProvider().findClassPath(null, ClassPath.BOOT);
-//        ClassPath src = project.getClassPathProvider().findClassPath(null, ClassPath.SOURCE);
-//        ClassPath compile = project.getClassPathProvider().findClassPath(null, ClassPath.COMPILE);
-        
+//        ClassPath boot = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
+//        ClassPath src = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
+//        ClassPath compile = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
         
         List<String> classpath = Lists.newArrayList();
         

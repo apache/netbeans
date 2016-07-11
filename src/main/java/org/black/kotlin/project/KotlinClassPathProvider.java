@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
+import org.black.kotlin.j2seprojectextension.lookup.KotlinProjectHelper;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.black.kotlin.utils.KotlinClasspath;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -17,12 +19,12 @@ import org.openide.filesystems.FileUtil;
 public final class KotlinClassPathProvider implements ClassPathProvider {
 
     
-    private final KotlinProject project;
+    private final Project project;
     private ClassPath boot = null;
     private ClassPath compile = null;
     private ClassPath source = null;
 
-    public KotlinClassPathProvider(KotlinProject project){
+    public KotlinClassPathProvider(Project project){
         this.project = project;
     }
     
@@ -77,7 +79,7 @@ public final class KotlinClassPathProvider implements ClassPathProvider {
             }
         }
         classPathArray[index++] = project.getProjectDirectory().getFileObject("build").getFileObject("classes").toURL();
-        classPathArray[index] = project.getLightClassesDirectory().toURL();
+        classPathArray[index] = KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).toURL();
         return ClassPathSupport.createClassPath(classPathArray);
     }
 

@@ -28,10 +28,13 @@
                 <version>4.1</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <verifyRuntime>warn</verifyRuntime>
                     <moduleDependencies>
                         <dependency>
                             <id>org.netbeans.modules:org-netbeans-modules-java-j2seproject</id>
+                            <type>impl</type>
+                        </dependency>
+                        <dependency>
+                            <id>org.netbeans.modules:org-netbeans-modules-java-preprocessorbridge</id>
                             <type>impl</type>
                         </dependency>
                 </moduleDependencies>

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.black.kotlin.project.KotlinClassPathProvider;
+import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.project.KotlinSources;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.j2seproject.J2SEProject;
@@ -27,6 +28,11 @@ public class KotlinProjectHelper {
     private final Map<Project, KotlinClassPathProvider> classpaths = new HashMap<Project, KotlinClassPathProvider>();
     
     public boolean checkProject(Project project){
+        //TEMPORARY FOR TESTS. REDO IN THE FUTURE
+        if (project instanceof KotlinProject) {
+            return true;
+        }
+        
         if (!(project instanceof J2SEProject)){
             return false;
         }

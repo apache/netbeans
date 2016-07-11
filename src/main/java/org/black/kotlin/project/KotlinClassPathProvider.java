@@ -57,12 +57,13 @@ public final class KotlinClassPathProvider implements ClassPathProvider {
         }
 
         FileObject libDir = project.getProjectDirectory().getFileObject("lib");
-        for (FileObject file : libDir.getChildren()) {
-            if ("jar".equals(file.getExt().toLowerCase())) {
-                urls.add(FileUtil.getArchiveRoot(file.toURL()));
+        if (libDir != null){
+            for (FileObject file : libDir.getChildren()) {
+                if ("jar".equals(file.getExt().toLowerCase())) {
+                    urls.add(FileUtil.getArchiveRoot(file.toURL()));
+                }
             }
         }
-
         return ClassPathSupport.createClassPath(urls.toArray(new URL[urls.size()]));
     }
 

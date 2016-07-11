@@ -26,7 +26,7 @@ public class DiagnosticsTest extends NbTestCase {
     
     public DiagnosticsTest() throws Exception {
         super("Diagnostics test");
-        kotlinProject = KotlinProjectCreator.INSTANCE.getProject();
+//        kotlinProject = KotlinProjectCreator.INSTANCE.getProject();
         if (kotlinProject != null){
             diagnosticsDir = kotlinProject.getProjectDirectory().
                 getFileObject("src").getFileObject("diagnostics");

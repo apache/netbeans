@@ -7,6 +7,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import org.black.kotlin.j2seprojectextension.lookup.KotlinProjectHelper;
+import org.black.kotlin.project.KotlinClassPathProvider;
 //import org.black.kotlin.project.KotlinProject;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.CancellableTask;
@@ -37,9 +38,15 @@ public class NetBeansJavaProjectElementUtils {
         
         assert kotlinProject != null : "Project cannot be null";
         
-        ClassPath boot = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
-        ClassPath src = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
-        ClassPath compile = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
+        KotlinClassPathProvider kotlinClassPath = KotlinProjectHelper.INSTANCE.getKotlinClassPathProvider(kotlinProject);
+  
+        ClassPath boot = kotlinClassPath.findClassPath(null, ClassPath.BOOT);
+        ClassPath src = kotlinClassPath.findClassPath(null, ClassPath.SOURCE);
+        ClassPath compile = kotlinClassPath.findClassPath(null, ClassPath.COMPILE);
+        
+//        ClassPath boot = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
+//        ClassPath src = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
+//        ClassPath compile = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
         
         return ClasspathInfo.create(boot, src, compile);
     }

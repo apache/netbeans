@@ -70,7 +70,7 @@ public class NetBeansJavaClassFinder implements JavaClassFinder {
 
     
     @Nullable 
-    public static PackageElement[] findPackageFragments(KotlinProject kotlinProject, String name,
+    public static PackageElement[] findPackageFragments(org.netbeans.api.project.Project kotlinProject, String name,
             boolean partialMatch, boolean patternMatch){
         if (name.endsWith(".")){
             name = name.substring(0, name.length()-1);

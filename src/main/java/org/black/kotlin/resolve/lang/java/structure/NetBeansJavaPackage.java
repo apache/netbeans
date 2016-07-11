@@ -8,7 +8,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import kotlin.jvm.functions.Function1;
-import org.black.kotlin.project.KotlinProject;
+//import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaClassFinder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
@@ -42,7 +42,7 @@ public class NetBeansJavaPackage implements JavaElement, JavaPackage{
         String thisPackageName = getFqName().asString();
         String pattern = thisPackageName.isEmpty() ? "*" : thisPackageName + ".";
         
-        PackageElement[] packageFragments = NetBeansJavaClassFinder.findPackageFragments((KotlinProject) kotlinProject, pattern, true, true);
+        PackageElement[] packageFragments = NetBeansJavaClassFinder.findPackageFragments(kotlinProject, pattern, true, true);
         
         int thisNestedLevel = thisPackageName.split("\\.").length;
         List<JavaPackage> javaPackages = Lists.newArrayList();

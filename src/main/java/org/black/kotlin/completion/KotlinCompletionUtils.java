@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import kotlin.jvm.functions.Function1;
 import org.black.kotlin.builder.KotlinPsiManager;
-import org.black.kotlin.project.KotlinProject;
+//import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.resolve.AnalysisResultWithProvider;
 import org.black.kotlin.resolve.KotlinAnalyzer;
 import org.black.kotlin.resolve.KotlinResolutionFacade;
@@ -41,6 +41,7 @@ import org.jetbrains.kotlin.types.KotlinType;
 import org.jetbrains.kotlin.resolve.scopes.utils.ScopeUtilsKt;
 import org.jetbrains.kotlin.idea.codeInsight.ReferenceVariantsHelper;
 import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter;
+import org.netbeans.api.project.Project;
 
 /**
  *
@@ -82,7 +83,7 @@ public class KotlinCompletionUtils {
     
     public Collection<DeclarationDescriptor> getReferenceVariants(final KtSimpleNameExpression simpleNameExpression,
             Function1<Name, Boolean> nameFilter, FileObject file){
-        KotlinProject project = ProjectUtils.getKotlinProjectForFileObject(file);
+        Project project = ProjectUtils.getKotlinProjectForFileObject(file);
         
         if (project == null){
             return Collections.emptyList();

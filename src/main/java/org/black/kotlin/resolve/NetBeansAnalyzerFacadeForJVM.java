@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import kotlin.Pair;
-import org.black.kotlin.project.KotlinProject;
+//import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.analyzer.AnalysisResult;
 import org.jetbrains.kotlin.cli.jvm.compiler.CliLightClassGenerationSupport;
@@ -34,7 +34,7 @@ public class NetBeansAnalyzerFacadeForJVM {
     
     private NetBeansAnalyzerFacadeForJVM(){}
     
-    public AnalysisResultWithProvider analyzeFilesWithJavaIntegration(KotlinProject kotlinProject,
+    public AnalysisResultWithProvider analyzeFilesWithJavaIntegration(org.netbeans.api.project.Project kotlinProject,
             Project project, Collection<KtFile> filesToAnalyze){
         
         Set<KtFile> filesSet = Sets.newLinkedHashSet(filesToAnalyze);

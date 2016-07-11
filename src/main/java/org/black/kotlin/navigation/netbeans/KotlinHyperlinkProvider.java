@@ -8,7 +8,7 @@ import kotlin.Pair;
 import org.black.kotlin.navigation.NavigationUtil;
 import org.black.kotlin.navigation.references.KotlinReference;
 import org.black.kotlin.navigation.references.ReferenceUtils;
-import org.black.kotlin.project.KotlinProject;
+//import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.resolve.KotlinAnalyzer;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +17,7 @@ import org.jetbrains.kotlin.descriptors.SourceElement;
 import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.BindingContext;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.project.Project;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
@@ -69,7 +70,7 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
             return;
         }
         
-        KotlinProject project = ProjectUtils.getKotlinProjectForFileObject(file);
+        Project project = ProjectUtils.getKotlinProjectForFileObject(file);
         if (project == null){
             return;
         }
@@ -85,7 +86,7 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
     
     @Nullable
     private NavigationData getNavigationData(KtReferenceExpression referenceExpression,
-            KotlinProject project) {
+            Project project) {
         BindingContext context = KotlinAnalyzer.analyzeFile(project, referenceExpression.getContainingKtFile()).
                 getAnalysisResult().getBindingContext();
         List<KotlinReference> refs = ReferenceUtils.createReferences(referenceExpression);

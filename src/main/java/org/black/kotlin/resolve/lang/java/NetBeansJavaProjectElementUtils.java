@@ -6,7 +6,8 @@ import java.util.Map;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
-import org.black.kotlin.project.KotlinProject;
+import org.black.kotlin.j2seprojectextension.lookup.KotlinProjectHelper;
+//import org.black.kotlin.project.KotlinProject;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -82,23 +83,24 @@ public class NetBeansJavaProjectElementUtils {
         return searcher.getElement();
     }
     
-    public static KotlinProject getProject(Element element){
+    public static Project getProject(Element element){
         Project[] projects = OpenProjects.getDefault().getOpenProjects();
         
         if (projects.length == 1){
-            return (KotlinProject) projects[0];
+            return projects[0];
         }
         
         for (Project project : projects){
-            if (!(project instanceof KotlinProject)){
+            if (!KotlinProjectHelper.INSTANCE.checkProject(project)){//(project instanceof KotlinProject)){
                 continue;
             }
 //            ClasspathInfo ci = getClasspathInfo(project);
             FileObject file = SourceUtils.getFile(ElementHandle.create(element), ci.get(project));
 
             if (file != null){
-                return (KotlinProject) project;
+                return project;
             }
+            
         }
         return null;
     }
@@ -160,7 +162,7 @@ public class NetBeansJavaProjectElementUtils {
         return binaryName;
     }
     
-    public static FileObject getFileObjectForElement(Element element, KotlinProject kotlinProject){
+    public static FileObject getFileObjectForElement(Element element, Project kotlinProject){
         if (element == null){
             return null;
         }
@@ -168,7 +170,7 @@ public class NetBeansJavaProjectElementUtils {
         return SourceUtils.getFile(handle, ci.get(kotlinProject));
     }
     
-    public static void openElementInEditor(Element element, KotlinProject kotlinProject){
+    public static void openElementInEditor(Element element, Project kotlinProject){
         ElementHandle<? extends Element> handle = ElementHandle.create(element);
         ElementOpen.open(ci.get(kotlinProject), handle);
     }

@@ -13,7 +13,7 @@ import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import kotlin.Pair;
 import org.black.kotlin.navigation.references.ReferenceUtils;
-import org.black.kotlin.project.KotlinProject;
+//import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.resolve.NetBeansDescriptorUtils;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.black.kotlin.resolve.lang.java.resolver.NetBeansJavaSourceElement;
@@ -29,6 +29,7 @@ import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;
+import org.netbeans.api.project.Project;
 import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
@@ -77,7 +78,7 @@ public class NavigationUtil {
     }
     
     @Nullable
-    public static SourceElement getElementWithSource(DeclarationDescriptor descriptor, KotlinProject project){
+    public static SourceElement getElementWithSource(DeclarationDescriptor descriptor, Project project){
         List<SourceElement> sourceElements = NetBeansDescriptorUtils.descriptorToDeclarations(descriptor, project);
         for (SourceElement element : sourceElements){
             if (element != SourceElement.NO_SOURCE){
@@ -89,7 +90,7 @@ public class NavigationUtil {
     }
 
     public static void gotoElement(SourceElement element, DeclarationDescriptor descriptor,
-            KtElement fromElement, KotlinProject project, FileObject currentFile){
+            KtElement fromElement, Project project, FileObject currentFile){
         
         if (element instanceof NetBeansJavaSourceElement){
             Element binding = ((NetBeansJavaElement)((NetBeansJavaSourceElement) element).
@@ -107,7 +108,7 @@ public class NavigationUtil {
     }
 
     private static void gotoKotlinDeclaration(PsiElement element, KtElement fromElement, 
-            KotlinProject project, FileObject currentFile) {
+            Project project, FileObject currentFile) {
         FileObject declarationFile = findFileObjectForReferencedElement(
                 element, fromElement, project, currentFile);
         if (declarationFile == null){
@@ -130,7 +131,7 @@ public class NavigationUtil {
     }
 
     
-    private static void gotoJavaDeclaration(Element binding, KotlinProject project) {
+    private static void gotoJavaDeclaration(Element binding, Project project) {
         Element javaElement = binding;
         if (binding.getKind() == ElementKind.CONSTRUCTOR){
             javaElement = ((ExecutableElement) binding).getEnclosingElement();
@@ -143,7 +144,7 @@ public class NavigationUtil {
     }
     
     private static FileObject findFileObjectForReferencedElement(PsiElement element, 
-            KtElement fromElement, KotlinProject project, FileObject currentFile){
+            KtElement fromElement, Project project, FileObject currentFile){
         
         if (fromElement.getContainingFile() == element.getContainingFile()){
             return currentFile;

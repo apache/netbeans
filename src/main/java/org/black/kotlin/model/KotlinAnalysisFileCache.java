@@ -3,10 +3,11 @@ package org.black.kotlin.model;
 import com.google.common.collect.Lists;
 import kotlin.jvm.Synchronized;
 import kotlin.jvm.Volatile;
-import org.black.kotlin.project.KotlinProject;
+//import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.resolve.AnalysisResultWithProvider;
 import org.black.kotlin.resolve.NetBeansAnalyzerFacadeForJVM;
 import org.jetbrains.kotlin.psi.KtFile;
+import org.netbeans.api.project.Project;
 
 
 public class KotlinAnalysisFileCache {
@@ -36,7 +37,7 @@ public class KotlinAnalysisFileCache {
     
     private KotlinAnalysisFileCache(){}
     
-    public @Synchronized AnalysisResultWithProvider getAnalysisResult(KtFile file, KotlinProject project){
+    public @Synchronized AnalysisResultWithProvider getAnalysisResult(KtFile file, Project project){
         if (lastAnalysedFileCache != null && lastAnalysedFileCache.getFile() == file){
             return lastAnalysedFileCache.getAnalysisResult();
         } else {

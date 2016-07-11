@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import java.util.Collection;
 import org.black.kotlin.model.KotlinEnvironment;
-import org.black.kotlin.project.KotlinProject;
+//import org.black.kotlin.project.KotlinProject;
 import org.jetbrains.kotlin.analyzer.AnalysisResult;
 import org.jetbrains.kotlin.container.ComponentProvider;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
@@ -22,11 +22,11 @@ import org.jetbrains.kotlin.container.DslKt;
  */
 public class KotlinResolutionFacade implements ResolutionFacade {
     
-    private final KotlinProject kotlinProject;
+    private final org.netbeans.api.project.Project kotlinProject;
     private final ComponentProvider componentProvider;
     private final ModuleDescriptor modDesc;
     
-    public KotlinResolutionFacade(KotlinProject kotlinProject, ComponentProvider componentProvider, 
+    public KotlinResolutionFacade(org.netbeans.api.project.Project kotlinProject, ComponentProvider componentProvider, 
             ModuleDescriptor moduleDescriptor){
         this.kotlinProject = kotlinProject;
         this.componentProvider = componentProvider;

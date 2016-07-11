@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 import org.black.kotlin.filesystem.KotlinLightClassManager;
 import org.black.kotlin.model.KotlinEnvironment;
-import org.black.kotlin.project.KotlinProject;
+//import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.resolve.KotlinAnalyzer;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.analyzer.AnalysisResult;
@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.psi.KtClassOrObject;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtScript;
+import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -34,12 +35,12 @@ public class KotlinLightClassGeneration {
     private KotlinLightClassGeneration() {
     }
 
-    public void updateLightClasses(KotlinProject kotlinProject, Set<FileObject> affectedFiles) {
+    public void updateLightClasses(Project kotlinProject, Set<FileObject> affectedFiles) {
         KotlinLightClassManager.getInstance(kotlinProject).computeLightClassesSources();
         KotlinLightClassManager.getInstance(kotlinProject).updateLightClasses(affectedFiles);
     }
 
-    public GenerationState buildLightClasses(AnalysisResult analysisResult, KotlinProject project,
+    public GenerationState buildLightClasses(AnalysisResult analysisResult, Project project,
             List<KtFile> ktFiles, final String requestedClassName) {
 
         GenerationState.GenerateClassFilter generateDeclaredClassFilter
@@ -120,7 +121,7 @@ public class KotlinLightClassGeneration {
     }
 
     public void generate(FileObject file) {
-        KotlinProject project = ProjectUtils.getKotlinProjectForFileObject(file);
+        Project project = ProjectUtils.getKotlinProjectForFileObject(file);
 
         KotlinLightClassManager manager = KotlinLightClassManager.getInstance(project);
         manager.computeLightClassesSources();

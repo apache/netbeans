@@ -3,7 +3,6 @@ package org.black.kotlin.j2seprojectextension.lookup;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.project.KotlinSources;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.j2seproject.J2SEProject;

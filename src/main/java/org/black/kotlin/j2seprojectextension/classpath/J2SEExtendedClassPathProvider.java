@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import org.black.kotlin.j2seprojectextension.lookup.KotlinProjectHelper;
+import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -344,7 +345,7 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
 
     public synchronized void propertyChange(PropertyChangeEvent evt) {
         dirCache.remove(evt.getPropertyName());
-        
+        NetBeansJavaProjectElementUtils.updateClasspathInfo(project);
     }
 
     public String[] getPropertyName(final SourceRoots roots, final String type) {

@@ -61,7 +61,7 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
         this.sourceRoots = this.project.getSourceRoots();
         this.testSourceRoots = this.project.getTestSourceRoots();
         this.bootClassPathImpl = new BootClassPathImplementation(project, evaluator);
-        evaluator.addPropertyChangeListener(WeakListeners.propertyChange(this, evaluator));
+        evaluator.addPropertyChangeListener(WeakListeners.propertyChange(J2SEExtendedClassPathProvider.this, evaluator));
     }
 
     private FileObject getDir(final String propname) {
@@ -117,15 +117,13 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
      */
     public int getType(FileObject file) {
         FileObject[] srcPath = getPrimarySrcPath();
-        for (int i = 0; i < srcPath.length; i++) {
-            FileObject root = srcPath[i];
+        for (FileObject root : srcPath) {
             if (root.equals(file) || FileUtil.isParentOf(root, file)) {
                 return 0;
             }
         }
         srcPath = getTestSrcDir();
-        for (int i = 0; i < srcPath.length; i++) {
-            FileObject root = srcPath[i];
+        for (FileObject root : srcPath) {
             if (root.equals(file) || FileUtil.isParentOf(root, file)) {
                 return 1;
             }
@@ -300,6 +298,7 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
     public ClassPath[] getProjectClassPaths(final String type) {
         return ProjectManager.mutex().readAccess(new Mutex.Action<ClassPath[]>() {
 
+            @Override
             public ClassPath[] run() {
                 if (ClassPath.BOOT.equals(type)) {
                     return new ClassPath[]{getBootClassPath()};
@@ -372,8 +371,8 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
     public String[] getPropertyName(SourceGroup sg, String type) {
         FileObject root = sg.getRootFolder();
         FileObject[] path = getPrimarySrcPath();
-        for (int i = 0; i < path.length; i++) {
-            if (root.equals(path[i])) {
+        for (FileObject path1 : path) {
+            if (root.equals(path1)) {
                 if (ClassPath.COMPILE.equals(type)) {
                     return new String[]{JAVAC_CLASSPATH};
                 } else if (ClassPath.EXECUTE.equals(type)) {
@@ -384,8 +383,8 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
             }
         }
         path = getTestSrcDir();
-        for (int i = 0; i < path.length; i++) {
-            if (root.equals(path[i])) {
+        for (FileObject path1 : path) {
+            if (root.equals(path1)) {
                 if (ClassPath.COMPILE.equals(type)) {
                     return new String[]{JAVAC_TEST_CLASSPATH};
                 } else if (ClassPath.EXECUTE.equals(type)) {

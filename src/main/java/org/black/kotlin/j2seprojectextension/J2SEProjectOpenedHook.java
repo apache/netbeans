@@ -1,6 +1,5 @@
 package org.black.kotlin.j2seprojectextension;
 
-import java.net.MalformedURLException;
 import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.project.KotlinSources;
@@ -10,7 +9,6 @@ import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 
 /**

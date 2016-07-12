@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import org.black.kotlin.j2seprojectextension.classpath.J2SEExtendedClassPathProvider;
 import org.black.kotlin.j2seprojectextension.lookup.KotlinProjectHelper;
 import org.black.kotlin.project.KotlinClassPathProvider;
 //import org.black.kotlin.project.KotlinProject;
@@ -38,11 +39,12 @@ public class NetBeansJavaProjectElementUtils {
         
         assert kotlinProject != null : "Project cannot be null";
         
-        KotlinClassPathProvider kotlinClassPath = KotlinProjectHelper.INSTANCE.getKotlinClassPathProvider(kotlinProject);
-  
-        ClassPath boot = kotlinClassPath.findClassPath(null, ClassPath.BOOT);
-        ClassPath src = kotlinClassPath.findClassPath(null, ClassPath.SOURCE);
-        ClassPath compile = kotlinClassPath.findClassPath(null, ClassPath.COMPILE);
+        J2SEExtendedClassPathProvider extendedProvider = KotlinProjectHelper.INSTANCE.getJ2SEExtendedClassPathProvider(kotlinProject);
+        
+        ClassPath boot = extendedProvider.getProjectSourcesClassPath(ClassPath.BOOT);
+        ClassPath src = extendedProvider.getProjectSourcesClassPath(ClassPath.SOURCE);
+        ClassPath compile = extendedProvider.getProjectSourcesClassPath(ClassPath.COMPILE);
+        
         
 //        ClassPath boot = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
 //        ClassPath src = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);

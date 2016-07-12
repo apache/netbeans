@@ -15,6 +15,7 @@ import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.black.kotlin.builder.KotlinPsiManager;
 import org.black.kotlin.bundledcompiler.BundledCompiler;
+import org.black.kotlin.j2seprojectextension.classpath.J2SEExtendedClassPathProvider;
 import org.black.kotlin.j2seprojectextension.lookup.KotlinProjectHelper;
 import org.black.kotlin.project.KotlinClassPathProvider;
 import org.black.kotlin.project.KotlinProjectConstants;
@@ -176,18 +177,7 @@ public class ProjectUtils {
 
     }
 
-    @NotNull
-    public static List<String> getClasspath(Project project) {
-        KotlinClassPathProvider kotlinClassPath = KotlinProjectHelper.INSTANCE.getKotlinClassPathProvider(project);
-  
-        ClassPath boot = kotlinClassPath.findClassPath(null, ClassPath.BOOT);
-        ClassPath src = kotlinClassPath.findClassPath(null, ClassPath.SOURCE);
-        ClassPath compile = kotlinClassPath.findClassPath(null, ClassPath.COMPILE);
-        
-//        ClassPath boot = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
-//        ClassPath src = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
-//        ClassPath compile = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
-        
+    private static List<String> createListOfClassPaths(ClassPath boot, ClassPath src, ClassPath compile) {
         List<String> classpath = Lists.newArrayList();
         
         for (ClassPath.Entry entry : boot.entries()){
@@ -224,6 +214,38 @@ public class ProjectUtils {
         }
         
         return classpath;
+    }
+    
+    @NotNull
+    private static List<String> getJ2SEProjectClassPath(Project project) {
+        J2SEExtendedClassPathProvider extendedProvider = KotlinProjectHelper.INSTANCE.getJ2SEExtendedClassPathProvider(project);
+        ClassPath boot = extendedProvider.getProjectSourcesClassPath(ClassPath.BOOT);
+        ClassPath src = extendedProvider.getProjectSourcesClassPath(ClassPath.SOURCE);
+        ClassPath compile = extendedProvider.getProjectSourcesClassPath(ClassPath.COMPILE);
+        
+        return createListOfClassPaths(boot, src, compile);
+    }
+    
+    
+    
+    @NotNull
+    public static List<String> getClasspath(Project project) {
+        if (project instanceof J2SEProject) {
+            return getJ2SEProjectClassPath(project);
+        }
+        
+        
+        KotlinClassPathProvider kotlinClassPath = KotlinProjectHelper.INSTANCE.getKotlinClassPathProvider(project);
+  
+        ClassPath boot = kotlinClassPath.findClassPath(null, ClassPath.BOOT);
+        ClassPath src = kotlinClassPath.findClassPath(null, ClassPath.SOURCE);
+        ClassPath compile = kotlinClassPath.findClassPath(null, ClassPath.COMPILE);
+        
+//        ClassPath boot = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
+//        ClassPath src = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
+//        ClassPath compile = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
+        
+        return createListOfClassPaths(boot, src, compile);
     }
 
     public static List<String> getLibs(Project proj) {

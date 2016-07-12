@@ -24,8 +24,7 @@ public class LookupProviderExtension implements LookupProvider{
         J2SEProject j2seProject = lkp.lookup(J2SEProject.class);
         
         ClassPathProviderImpl provider = j2seProject.getClassPathProvider();
-        J2SEExtendedClassPathProvider myProvider = new J2SEExtendedClassPathProvider(j2seProject, j2seProject.getAntProjectHelper(), j2seProject.evaluator(),
-            j2seProject.getSourceRoots(), j2seProject.getTestSourceRoots());
+        J2SEExtendedClassPathProvider myProvider = new J2SEExtendedClassPathProvider(j2seProject);
         
         return Lookups.fixed(
                 new KotlinPrivilegedTemplates(),

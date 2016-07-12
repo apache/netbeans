@@ -15,6 +15,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.java.api.common.SourceRoots;
+import org.netbeans.modules.java.j2seproject.J2SEProject;
 import org.netbeans.spi.java.classpath.ClassPathFactory;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
@@ -49,17 +50,16 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
     private final ClassPath[] cache = new ClassPath[8];
     private final Map<String, FileObject> dirCache = new HashMap<String, FileObject>();
     private final BootClassPathImplementation bootClassPathImpl;
-    private final Project project;
+    private final J2SEProject project;
     
-    public J2SEExtendedClassPathProvider(Project project, AntProjectHelper helper, PropertyEvaluator evaluator, SourceRoots sourceRoots,
-            SourceRoots testSourceRoots) {
-        this.project = project;
-        this.helper = helper;
+    public J2SEExtendedClassPathProvider(Project project) {
+        this.project = (J2SEProject) project;
+        this.helper = this.project.getAntProjectHelper();
         this.projectDirectory = FileUtil.toFile(helper.getProjectDirectory());
         assert this.projectDirectory != null;
-        this.evaluator = evaluator;
-        this.sourceRoots = sourceRoots;
-        this.testSourceRoots = testSourceRoots;
+        this.evaluator = this.project.evaluator();
+        this.sourceRoots = this.project.getSourceRoots();
+        this.testSourceRoots = this.project.getTestSourceRoots();
         this.bootClassPathImpl = new BootClassPathImplementation(project, evaluator);
         evaluator.addPropertyChangeListener(WeakListeners.propertyChange(this, evaluator));
     }

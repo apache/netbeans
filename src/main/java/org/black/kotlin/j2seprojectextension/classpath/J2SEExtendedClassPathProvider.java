@@ -343,6 +343,7 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
         return null;
     }
 
+    @Override
     public synchronized void propertyChange(PropertyChangeEvent evt) {
         dirCache.remove(evt.getPropertyName());
         NetBeansJavaProjectElementUtils.updateClasspathInfo(project);

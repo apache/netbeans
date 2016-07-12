@@ -22,8 +22,6 @@ public class LookupProviderExtension implements LookupProvider{
     public Lookup createAdditionalLookup(Lookup lkp) {
         
         J2SEProject j2seProject = lkp.lookup(J2SEProject.class);
-        
-        ClassPathProviderImpl provider = j2seProject.getClassPathProvider();
         J2SEExtendedClassPathProvider myProvider = new J2SEExtendedClassPathProvider(j2seProject);
         
         return Lookups.fixed(

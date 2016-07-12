@@ -7,9 +7,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import org.black.kotlin.j2seprojectextension.classpath.J2SEExtendedClassPathProvider;
-import org.black.kotlin.j2seprojectextension.lookup.KotlinProjectHelper;
-import org.black.kotlin.project.KotlinClassPathProvider;
-//import org.black.kotlin.project.KotlinProject;
+import org.black.kotlin.j2seprojectextension.KotlinProjectHelper;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -20,7 +18,6 @@ import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -44,11 +41,6 @@ public class NetBeansJavaProjectElementUtils {
         ClassPath boot = extendedProvider.getProjectSourcesClassPath(ClassPath.BOOT);
         ClassPath src = extendedProvider.getProjectSourcesClassPath(ClassPath.SOURCE);
         ClassPath compile = extendedProvider.getProjectSourcesClassPath(ClassPath.COMPILE);
-        
-        
-//        ClassPath boot = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
-//        ClassPath src = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.SOURCE);
-//        ClassPath compile = kotlinProject.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.COMPILE);
         
         // temporary hack (should be boot, src, compile)
         return ClasspathInfo.create(compile, src, compile);

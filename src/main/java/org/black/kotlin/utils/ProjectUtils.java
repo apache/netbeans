@@ -16,7 +16,7 @@ import javax.swing.text.StyledDocument;
 import org.black.kotlin.builder.KotlinPsiManager;
 import org.black.kotlin.bundledcompiler.BundledCompiler;
 import org.black.kotlin.j2seprojectextension.classpath.J2SEExtendedClassPathProvider;
-import org.black.kotlin.j2seprojectextension.lookup.KotlinProjectHelper;
+import org.black.kotlin.j2seprojectextension.KotlinProjectHelper;
 import org.black.kotlin.project.KotlinClassPathProvider;
 import org.black.kotlin.project.KotlinProjectConstants;
 import org.jetbrains.annotations.NotNull;

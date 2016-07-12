@@ -1,5 +1,6 @@
 package org.black.kotlin.j2seprojectextension.lookup;
 
+import org.black.kotlin.j2seprojectextension.J2SEProjectOpenedHook;
 import org.black.kotlin.j2seprojectextension.buildextender.KotlinBuildExtender;
 import org.black.kotlin.j2seprojectextension.classpath.J2SEExtendedClassPathProvider;
 import org.black.kotlin.project.KotlinProjectOpenedHook;
@@ -26,9 +27,9 @@ public class LookupProviderExtension implements LookupProvider{
         
         return Lookups.fixed(
                 new KotlinPrivilegedTemplates(),
-                new KotlinBuildExtender(lkp.lookup(Project.class)),
-                myProvider);
-//                new KotlinProjectOpenedHook(lkp.lookup(Project.class)));
+                new KotlinBuildExtender(j2seProject),
+                myProvider,
+                new J2SEProjectOpenedHook(j2seProject));
     }
     
     private static final class KotlinPrivilegedTemplates implements PrivilegedTemplates {

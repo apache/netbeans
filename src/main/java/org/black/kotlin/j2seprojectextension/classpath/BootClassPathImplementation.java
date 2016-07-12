@@ -12,7 +12,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
-import org.black.kotlin.j2seprojectextension.lookup.KotlinProjectHelper;
+import org.black.kotlin.j2seprojectextension.KotlinProjectHelper;
 import org.black.kotlin.utils.KotlinClasspath;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;

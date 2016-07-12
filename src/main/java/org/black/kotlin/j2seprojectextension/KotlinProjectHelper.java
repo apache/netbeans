@@ -1,4 +1,4 @@
-package org.black.kotlin.j2seprojectextension.lookup;
+package org.black.kotlin.j2seprojectextension;
 
 import java.io.IOException;
 import java.util.HashMap;

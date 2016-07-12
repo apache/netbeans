@@ -1,8 +1,12 @@
 package org.black.kotlin.j2seprojectextension.lookup;
 
 import org.black.kotlin.j2seprojectextension.buildextender.KotlinBuildExtender;
+import org.black.kotlin.j2seprojectextension.classpath.J2SEExtendedClassPathProvider;
 import org.black.kotlin.project.KotlinProjectOpenedHook;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.java.api.common.classpath.ClassPathProviderImpl;
+import org.netbeans.modules.java.j2seproject.J2SEProject;
+import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.project.LookupProvider;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
 import org.openide.util.Lookup;
@@ -17,9 +21,16 @@ public class LookupProviderExtension implements LookupProvider{
     @Override
     public Lookup createAdditionalLookup(Lookup lkp) {
         
+        J2SEProject j2seProject = lkp.lookup(J2SEProject.class);
+        
+        ClassPathProviderImpl provider = j2seProject.getClassPathProvider();
+        J2SEExtendedClassPathProvider myProvider = new J2SEExtendedClassPathProvider(j2seProject, j2seProject.getAntProjectHelper(), j2seProject.evaluator(),
+            j2seProject.getSourceRoots(), j2seProject.getTestSourceRoots());
+        
         return Lookups.fixed(
                 new KotlinPrivilegedTemplates(),
-                new KotlinBuildExtender(lkp.lookup(Project.class)));
+                new KotlinBuildExtender(lkp.lookup(Project.class)),
+                myProvider);
 //                new KotlinProjectOpenedHook(lkp.lookup(Project.class)));
     }
     

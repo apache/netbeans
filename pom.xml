@@ -37,6 +37,10 @@
                             <id>org.netbeans.modules:org-netbeans-modules-java-preprocessorbridge</id>
                             <type>impl</type>
                         </dependency>
+                        <dependency>
+                            <id>org.netbeans.modules:org-netbeans-modules-java-api-common</id>
+                            <type>impl</type>
+                        </dependency>
                 </moduleDependencies>
                 </configuration>
             </plugin>
@@ -451,6 +455,18 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-modules-java-project</artifactId>
+            <version>RELEASE81</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.modules</groupId>
+            <artifactId>org-netbeans-modules-java-api-common</artifactId>
+            <version>RELEASE81</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-java-platform</artifactId>
             <version>RELEASE81</version>
             <type>jar</type>
         </dependency>

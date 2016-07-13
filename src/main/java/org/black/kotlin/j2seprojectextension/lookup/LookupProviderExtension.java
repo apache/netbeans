@@ -1,11 +1,16 @@
 package org.black.kotlin.j2seprojectextension.lookup;
 
+import java.util.Map;
 import org.black.kotlin.j2seprojectextension.J2SEProjectOpenedHook;
+import org.black.kotlin.j2seprojectextension.J2SEProjectPropertiesModifier;
 import org.black.kotlin.j2seprojectextension.buildextender.KotlinBuildExtender;
 import org.black.kotlin.j2seprojectextension.classpath.J2SEExtendedClassPathProvider;
 import org.netbeans.modules.java.j2seproject.J2SEProject;
 import org.netbeans.spi.project.LookupProvider;
+import org.netbeans.spi.project.support.ant.PropertyEvaluator;
+import org.netbeans.spi.project.support.ant.PropertyUtils;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
@@ -20,11 +25,13 @@ public class LookupProviderExtension implements LookupProvider{
         
         J2SEProject j2seProject = lkp.lookup(J2SEProject.class);
         J2SEExtendedClassPathProvider myProvider = new J2SEExtendedClassPathProvider(j2seProject);
+        J2SEProjectPropertiesModifier propertiesModifier = new J2SEProjectPropertiesModifier(j2seProject);
+        
         
         return Lookups.fixed(
                 new KotlinPrivilegedTemplates(),
-                new KotlinBuildExtender(j2seProject),
                 myProvider,
+                propertiesModifier,
                 new J2SEProjectOpenedHook(j2seProject));
     }
     

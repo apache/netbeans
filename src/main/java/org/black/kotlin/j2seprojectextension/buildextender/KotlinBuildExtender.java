@@ -23,18 +23,20 @@ import org.openide.util.Exceptions;
  */
 public class KotlinBuildExtender {
     
+    private Project project = null;
+    
     public KotlinBuildExtender(Project project) {
         if (!(project instanceof J2SEProject)) {
             return;
         }
-        J2SEProject j2seProject = (J2SEProject) project;
-        
-        addKotlinTasksToScript(project);
+        this.project = project;
     }
 
     public void addKotlinTasksToScript(Project project) {
         FileObject buildImpl = getBuildImplXml(project);
-        
+        if (buildImpl == null) {
+            return;
+        }
         try {
             addKotlinAnt(buildImpl);
             addKotlinLibProperty(buildImpl);

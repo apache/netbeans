@@ -1,6 +1,7 @@
 package org.black.kotlin.j2seprojectextension;
 
 import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
+import org.black.kotlin.j2seprojectextension.buildextender.KotlinBuildExtender;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.project.KotlinSources;
 import org.black.kotlin.utils.ProjectUtils;
@@ -47,7 +48,12 @@ public class J2SEProjectOpenedHook extends ProjectOpenedHook{
                         for (FileObject file : sources.getAllKtFiles()){
                             KotlinLightClassGeneration.INSTANCE.generate(file);
                         }
-                    
+                        
+                        KotlinProjectHelper.INSTANCE.updateJ2SEExtendedClassPathProvider(project);
+                        KotlinBuildExtender extender = new KotlinBuildExtender(project);
+                        extender.addKotlinTasksToScript(project);
+                        
+                        project.getLookup().lookup(J2SEProjectPropertiesModifier.class).turnOffCompileOnSave();
                     }
             };
         thread.start();

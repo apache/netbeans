@@ -42,9 +42,7 @@ public class NetBeansJavaProjectElementUtils {
         ClassPath src = extendedProvider.getProjectSourcesClassPath(ClassPath.SOURCE);
         ClassPath compile = extendedProvider.getProjectSourcesClassPath(ClassPath.COMPILE);
         
-        // temporary hack (should be boot, src, compile)
-        return ClasspathInfo.create(compile, src, compile);
-//        return ClasspathInfo.create(boot, src, compile);
+        return ClasspathInfo.create(boot, src, compile);
     }
     
     public static void updateClasspathInfo(Project kotlinProject){

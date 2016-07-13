@@ -89,17 +89,36 @@ public class KotlinProjectCreator extends NbTestCase {
         }
 
     }
-
-    private void createProject() throws IOException {
-        String zipPath = ".\\src\\test\\resources\\projForTest.zip";
-        assertNotNull(zipPath);
-        File archiveFile = new File(zipPath);
-
-        FileObject destFileObj = FileUtil.toFileObject(getWorkDir());
-        unZipFile(archiveFile, destFileObj);
-        assertTrue(destFileObj.isValid());
-        FileObject testApp = destFileObj.getFileObject("projForTest");
+    
+    private FileObject getUnzippedFolder(String path) throws IOException {
+        assertNotNull(path);
+        File archiveFile = new File(path);
         
+        FileObject destFileObject = FileUtil.toFileObject(getWorkDir());
+        unZipFile(archiveFile, destFileObject);
+        assertTrue(destFileObject.isValid());
+        
+        String folderName = null;
+        String[] pathParts = path.split("\\\\");
+        folderName = pathParts[pathParts.length-1].replace(".zip", "");
+        
+        FileObject unzippedFolder = destFileObject.getFileObject(folderName);
+        assertNotNull(unzippedFolder);
+        
+        return unzippedFolder;
+    }
+    
+    private void getKtHomeForTests() throws IOException {
+        FileObject kotlincFolder = getUnzippedFolder(".\\src\\main\\resources\\org\\black\\kotlin\\kotlinc\\kotlinc.zip");
+        
+        ProjectUtils.KT_HOME = kotlincFolder.getPath() + ProjectUtils.FILE_SEPARATOR;
+        
+    }
+    
+    private void createProject() throws IOException {
+        getKtHomeForTests();
+        FileObject testApp = getUnzippedFolder(".\\src\\test\\resources\\projForTest.zip");
+
         project = generateAntHelperAndProject(testApp);
         
         OpenProjects.getDefault().open(new Project[]{project}, false);

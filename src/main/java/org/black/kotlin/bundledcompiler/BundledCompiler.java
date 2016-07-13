@@ -1,14 +1,11 @@
 package org.black.kotlin.bundledcompiler;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.tools.ant.module.api.support.ActionUtils;

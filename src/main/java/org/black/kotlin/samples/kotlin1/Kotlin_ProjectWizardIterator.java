@@ -38,8 +38,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 // TODO define position attribute
-@TemplateRegistration(folder = "Project/Kotlin", displayName = "#Kotlin_Project_displayName", description = "Kotlin_ProjectDescription.html", iconBase = "org/black/kotlin/samples/kotlin1/Kotlin_Project.png", content = "Kotlin_ProjectProject.zip")
-@Messages("Kotlin_Project_displayName=Kotlin Project")
+//@TemplateRegistration(folder = "Project/Kotlin", displayName = "#Kotlin_Project_displayName", description = "Kotlin_ProjectDescription.html", iconBase = "org/black/kotlin/samples/kotlin1/Kotlin_Project.png", content = "Kotlin_ProjectProject.zip")
+//@Messages("Kotlin_Project_displayName=Kotlin Project")
 public class Kotlin_ProjectWizardIterator implements WizardDescriptor./*Progress*/InstantiatingIterator {
 
     private int index;

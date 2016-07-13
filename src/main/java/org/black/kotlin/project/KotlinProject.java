@@ -37,12 +37,12 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Александр
  */
-@AntBasedProjectRegistration(type = "org.black.kotlin.project.KotlinProject",
-        iconResource = "org/black/kotlin/kotlin.png",
-        sharedName = "data",
-        sharedNamespace = "http://www.netbeans.org/ns/kotlin-project/1",
-        privateName = "project-private",
-        privateNamespace = "http://www.netbeans.org/ns/kotlin-project-private/1")
+//@AntBasedProjectRegistration(type = "org.black.kotlin.project.KotlinProject",
+//        iconResource = "org/black/kotlin/kotlin.png",
+//        sharedName = "data",
+//        sharedNamespace = "http://www.netbeans.org/ns/kotlin-project/1",
+//        privateName = "project-private",
+//        privateNamespace = "http://www.netbeans.org/ns/kotlin-project-private/1")
 public class KotlinProject implements Project {
 
     private final AntProjectHelper helper;

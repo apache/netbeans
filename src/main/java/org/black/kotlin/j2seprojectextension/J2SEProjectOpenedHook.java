@@ -1,13 +1,17 @@
 package org.black.kotlin.j2seprojectextension;
 
+import java.io.File;
 import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.black.kotlin.j2seprojectextension.buildextender.KotlinBuildExtender;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.project.KotlinSources;
+import org.black.kotlin.utils.KotlinClasspath;
 import org.black.kotlin.utils.ProjectUtils;
+import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.java.j2seproject.J2SEProject;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
 import org.openide.util.RequestProcessor;
@@ -53,7 +57,9 @@ public class J2SEProjectOpenedHook extends ProjectOpenedHook{
                         KotlinBuildExtender extender = new KotlinBuildExtender(project);
                         extender.addKotlinTasksToScript(project);
                         
-                        project.getLookup().lookup(J2SEProjectPropertiesModifier.class).turnOffCompileOnSave();
+                        J2SEProjectPropertiesModifier propsModifier = project.getLookup().lookup(J2SEProjectPropertiesModifier.class);
+                        propsModifier.turnOffCompileOnSave();
+                        propsModifier.addKotlinRuntime();
                     }
             };
         thread.start();

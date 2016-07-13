@@ -67,6 +67,7 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
     private FileObject getDir(final String propname) {
         return ProjectManager.mutex().readAccess(new Mutex.Action<FileObject>() {
 
+            @Override
             public FileObject run() {
                 synchronized (J2SEExtendedClassPathProvider.this) {
                     FileObject fo = (FileObject) J2SEExtendedClassPathProvider.this.dirCache.get(propname);
@@ -223,8 +224,6 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
                                     projectDirectory, evaluator, new String[]{RUN_TEST_CLASSPATH, KOTLINC_CLASSPATH})); // NOI18N
                     break;
                 case 2:
-                    //Only to make the CompiledDataNode hapy
-                    //Todo: Strictly it should return ${run.classpath} - ${build.classes.dir} + ${dist.jar}
                     cp = ClassPathFactory.createClassPath(
                             ProjectClassPathSupport.createPropertyBasedClassPathImplementation(
                                     projectDirectory, evaluator, new String[]{DIST_JAR, KOTLINC_CLASSPATH})); // NOI18N

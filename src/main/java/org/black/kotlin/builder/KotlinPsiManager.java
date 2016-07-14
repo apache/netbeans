@@ -148,7 +148,7 @@ public class KotlinPsiManager {
         
         
         for (Project proj : OpenProjects.getDefault().getOpenProjects()){
-            if (proj instanceof J2SEProject){
+            if (KotlinProjectHelper.INSTANCE.checkProject(proj)){
                 kotlinProject = proj;
                 break;
             }

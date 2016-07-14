@@ -88,9 +88,20 @@
     </build>
     <repositories>
         <repository>
-            <id>netbeans</id>
+            <id>netbeans-modules</id>
             <name>Repository hosting NetBeans modules</name>
             <url>http://bits.netbeans.org/nexus/content/groups/netbeans</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>netbeans-api-artifacts</id>
+            <name>Repository hosting netbeans.org api artifacts</name>
+            <url>http://bits.netbeans.org/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>

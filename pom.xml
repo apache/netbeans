@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.black</groupId>
     <artifactId>Kotlin</artifactId>
-    <version>0.0.0.1</version>
+    <version>0.1-SNAPSHOT</version>
     <packaging>nbm</packaging>
     <build>
         <plugins>

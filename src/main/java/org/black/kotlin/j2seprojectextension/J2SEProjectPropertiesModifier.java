@@ -91,9 +91,10 @@ public class J2SEProjectPropertiesModifier {
             return;
         }
         
-        Properties props = PropertyUtils.loadProperties(privateProperties.toURL());
-        props.setProperty("compile.on.save", "false");
+        
         try {
+            Properties props = PropertyUtils.loadProperties(privateProperties.toURL());
+            props.setProperty("compile.on.save", "false");
             FileWriter writer = new FileWriter(privateProperties.getPath());
             writer.write("");
             writer.flush();

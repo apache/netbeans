@@ -67,6 +67,11 @@
                             <id>org.netbeans.modules:org-netbeans-modules-maven</id>
                             <type>impl</type>
                         </dependency>
+                        
+                        <dependency>
+                            <id>org.netbeans.modules:org-netbeans-modules-maven-embedder</id>
+                            <type>impl</type>
+                        </dependency>
                 </moduleDependencies>
                 </configuration>
             </plugin>
@@ -521,43 +526,11 @@
             <version>RELEASE81</version>
             <type>jar</type>
         </dependency>
-        
         <dependency>
-            <groupId>org.sonatype.aether</groupId>
-            <artifactId>aether-spi</artifactId>
-            <version>1.13.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.sonatype.plexus</groupId>
-            <artifactId>plexus-cipher</artifactId>
-            <version>1.7</version>
-        </dependency>
-        <dependency>
-            <groupId>org.sonatype.sisu</groupId>
-            <artifactId>sisu-inject-bean</artifactId>
-            <version>2.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.sonatype.sisu</groupId>
-            <artifactId>sisu-guice</artifactId>
-            <version>3.1.0</version>
-            <classifier>no_aop</classifier>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-interpolation</artifactId>
-            <version>1.22</version>
-        </dependency>
-        <dependency>
-            <groupId>org.sonatype.aether</groupId>
-            <artifactId>aether-api</artifactId>
-            <version>1.13.1</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.netbeans.external</groupId>
-            <artifactId>org-apache-commons-logging</artifactId>
+            <groupId>org.netbeans.modules</groupId>
+            <artifactId>org-netbeans-modules-maven-embedder</artifactId>
             <version>RELEASE81</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
    

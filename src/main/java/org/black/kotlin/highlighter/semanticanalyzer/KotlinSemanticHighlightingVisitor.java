@@ -3,6 +3,7 @@ package org.black.kotlin.highlighter.semanticanalyzer;
 import com.google.common.collect.Sets;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -16,6 +17,7 @@ import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor;
 import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor;
 import org.jetbrains.kotlin.descriptors.VariableDescriptor;
 import org.jetbrains.kotlin.descriptors.impl.LocalVariableDescriptor;
+import org.jetbrains.kotlin.psi.KtAnnotationEntry;
 import org.jetbrains.kotlin.psi.KtClassOrObject;
 import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
@@ -27,13 +29,14 @@ import org.jetbrains.kotlin.psi.KtSimpleNameExpression;
 import org.jetbrains.kotlin.psi.KtSuperExpression;
 import org.jetbrains.kotlin.psi.KtThisExpression;
 import org.jetbrains.kotlin.psi.KtTypeParameter;
+import org.jetbrains.kotlin.psi.KtValueArgumentList;
 import org.jetbrains.kotlin.psi.KtVisitorVoid;
 import org.jetbrains.kotlin.renderer.DescriptorRenderer;
 import org.jetbrains.kotlin.resolve.BindingContext;
 import org.jetbrains.kotlin.types.KotlinType;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.OffsetRange;
-import static org.jetbrains.kotlin.psi.psiUtil.KtPsiUtilKt.getCalleeHighlightingRange;
+//import static org.jetbrains.kotlin.psi.psiUtil.KtPsiUtilKt.getCalleeHighlightingRange;
 import org.jetbrains.kotlin.resolve.DescriptorUtils;
 /**
  *
@@ -193,19 +196,28 @@ public class KotlinSemanticHighlightingVisitor extends KtVisitorVoid {
         highlight(KotlinHighlightingAttributesGetter.INSTANCE.TYPE_PARAMETER, element.getTextRange());
     }
 
+    private void highlightAnnotation(PsiElement expression) {
+        TextRange range = expression.getTextRange();
+        KtAnnotationEntry annotationEntry = PsiTreeUtil.getParentOfType(expression, KtAnnotationEntry.class,false,KtValueArgumentList.class);
+        
+        if (annotationEntry != null) {
+            PsiElement atSymbol = annotationEntry.getAtSymbol();
+            if (atSymbol != null) {
+                range = new TextRange(atSymbol.getTextRange().getStartOffset(), expression.getTextRange().getEndOffset());
+            }
+        }
+        
+        highlight(KotlinHighlightingAttributesGetter.INSTANCE.ANNOTATION, range);
+    }
+    
+    
     private void highlightClassDescriptor(PsiElement element, ClassDescriptor target) {
         switch (target.getKind()){
             case INTERFACE:
                 highlight(KotlinHighlightingAttributesGetter.INSTANCE.INTERFACE, element.getTextRange());
                 break;
             case ANNOTATION_CLASS:
-                TextRange range;
-                if (element instanceof KtElement){
-                    range = getCalleeHighlightingRange((KtElement) element);
-                } else {
-                    range = element.getTextRange();
-                }
-                highlight(KotlinHighlightingAttributesGetter.INSTANCE.ANNOTATION, range);
+                highlightAnnotation(element);
                 break;
             case ENUM_ENTRY:
                 highlight(KotlinHighlightingAttributesGetter.INSTANCE.STATIC_FINAL_FIELD, element.getTextRange());

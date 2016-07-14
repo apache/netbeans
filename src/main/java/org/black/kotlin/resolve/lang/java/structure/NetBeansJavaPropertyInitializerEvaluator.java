@@ -3,7 +3,7 @@ package org.black.kotlin.resolve.lang.java.structure;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.descriptors.PropertyDescriptor;
 import org.jetbrains.kotlin.load.java.structure.JavaField;
-import org.jetbrains.kotlin.load.java.structure.JavaPropertyInitializerEvaluator;
+import org.jetbrains.kotlin.load.java.components.JavaPropertyInitializerEvaluator;
 import org.jetbrains.kotlin.resolve.constants.ConstantValue;
 
 /**

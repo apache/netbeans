@@ -28,7 +28,7 @@ public class NetBeansJavaMethod extends NetBeansJavaMember<ExecutableElement> im
     }
 
     @Override
-    public boolean hasAnnotationParameterDefaultValue() {
+    public boolean getHasAnnotationParameterDefaultValue() {
         return getBinding().getDefaultValue() != null;
     }
 

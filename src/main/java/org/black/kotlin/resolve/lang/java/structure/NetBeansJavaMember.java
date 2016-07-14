@@ -63,7 +63,7 @@ public abstract class NetBeansJavaMember<T extends Element>
     @Override
     @NotNull
     public Name getName(){
-        return Name.guess(getBinding().getSimpleName().toString());// or getBinding().toString()
+        return Name.identifier(getBinding().getSimpleName().toString());
     }
     
     @Override 

@@ -35,7 +35,6 @@ public class NetBeansJavaAnnotation implements JavaAnnotation, JavaElement{
         this.kotlinProject = NetBeansJavaProjectElementUtils.getProject(binding.getAnnotationType().asElement());
     }
     
-    @Override
     public JavaAnnotationArgument findArgument(@NotNull Name name) {
         for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
                 getBinding().getElementValues().entrySet()){

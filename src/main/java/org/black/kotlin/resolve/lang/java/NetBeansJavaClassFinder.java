@@ -2,6 +2,7 @@ package org.black.kotlin.resolve.lang.java;
 
 import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
@@ -114,6 +115,11 @@ public class NetBeansJavaClassFinder implements JavaClassFinder {
     public static boolean isInKotlinBinFolder(@NotNull Element element){
         
         return false;
+    }
+
+    @Override
+    public Set<String> knownClassNamesInPackage(FqName packageFqName) {
+        return null;
     }
     
 }

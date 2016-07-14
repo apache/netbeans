@@ -20,11 +20,5 @@ public class NetBeansExternalAnnotationResolver implements ExternalAnnotationRes
     public JavaAnnotation findExternalAnnotation(JavaAnnotationOwner jao, FqName fqname) {
         return null;
     }
-
-    @Override
-    @NotNull
-    public Collection<JavaAnnotation> findExternalAnnotations(JavaAnnotationOwner jao) {
-        return Collections.emptyList();
-    }
     
 }

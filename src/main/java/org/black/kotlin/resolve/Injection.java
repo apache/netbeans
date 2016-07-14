@@ -19,7 +19,7 @@ import org.jetbrains.kotlin.resolve.lazy.declarations.DeclarationProviderFactory
 import org.jetbrains.kotlin.container.DslKt;
 import org.jetbrains.kotlin.container.ContainerKt;
 import org.jetbrains.kotlin.frontend.di.InjectionKt;
-import org.jetbrains.kotlin.load.java.JavaFlexibleTypeCapabilitiesProvider;
+//import org.jetbrains.kotlin.load.java.JavaFlexibleTypeCapabilitiesProvider;
 import org.jetbrains.kotlin.load.java.components.SignaturePropagatorImpl;
 import org.jetbrains.kotlin.load.java.components.TraceBasedErrorReporter;
 import org.jetbrains.kotlin.load.java.lazy.SingleModuleClassResolver;
@@ -36,6 +36,8 @@ import org.jetbrains.kotlin.resolve.jvm.platform.JvmPlatform;
 import org.jetbrains.kotlin.resolve.lazy.FileScopeProviderImpl;
 import org.jetbrains.kotlin.resolve.lazy.ResolveSession;
 import kotlin.jvm.functions.Function1;
+import org.jetbrains.kotlin.config.LanguageFeatureSettings;
+import org.jetbrains.kotlin.load.java.InternalFlexibleTypeTransformer;
 
 /**
  *
@@ -44,7 +46,8 @@ import kotlin.jvm.functions.Function1;
 public class Injection {
 
     public static void configureJavaTopDownAnalysis(StorageComponentContainer container,
-            GlobalSearchScope moduleContentScope, Project project, LookupTracker lookupTracker) {
+            GlobalSearchScope moduleContentScope, Project project, LookupTracker lookupTracker, 
+            LanguageFeatureSettings languageFeatureSettings) {
         DslKt.useInstance(container, moduleContentScope);
         DslKt.useInstance(container, lookupTracker);
 
@@ -66,7 +69,9 @@ public class Injection {
         DslKt.useInstance(container, SamConversionResolverImpl.INSTANCE);
         ContainerKt.registerSingleton(container, NetBeansJavaSourceElementFactory.class);
         ContainerKt.registerSingleton(container, JavaLazyAnalyzerPostConstruct.class);
-        ContainerKt.registerSingleton(container, JavaFlexibleTypeCapabilitiesProvider.class);
+        DslKt.useInstance(container, InternalFlexibleTypeTransformer.class);
+        
+        DslKt.useInstance(container, languageFeatureSettings);
 
     }
 
@@ -77,7 +82,8 @@ public class Injection {
                     final GlobalSearchScope moduleContentScope,
                     final org.netbeans.api.project.Project kotlinProject,
                     final LookupTracker lookupTracker,
-                    final PackagePartProvider packagePartProvider) {
+                    final PackagePartProvider packagePartProvider,
+                    final LanguageFeatureSettings languageFeatureSettings) {
 
         StorageComponentContainer container = DslKt.createContainer("TopDownAnalyzerForJvm", 
                 new Function1<StorageComponentContainer, Unit>(){
@@ -86,7 +92,7 @@ public class Injection {
                 DslKt.useInstance(container, packagePartProvider);
 
                 InjectionKt.configureModule(container, moduleContext, JvmPlatform.INSTANCE, bindingTrace);
-                configureJavaTopDownAnalysis(container, moduleContentScope, moduleContext.getProject(), lookupTracker);
+                configureJavaTopDownAnalysis(container, moduleContentScope, moduleContext.getProject(), lookupTracker, languageFeatureSettings);
 
                 DslKt.useInstance(container, kotlinProject);
                 DslKt.useInstance(container, declarationProviderFactory);

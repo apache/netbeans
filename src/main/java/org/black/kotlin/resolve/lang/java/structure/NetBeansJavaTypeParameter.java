@@ -12,8 +12,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameterListOwner;
-import org.jetbrains.kotlin.load.java.structure.JavaTypeProvider;
 import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.name.SpecialNames;
 
 /**
  *
@@ -27,7 +27,7 @@ public class NetBeansJavaTypeParameter extends NetBeansJavaClassifier<TypeParame
 
     @Override
     public Name getName() {
-        return Name.identifier(getBinding().getSimpleName().toString());
+        return SpecialNames.safeIdentifier(getBinding().getSimpleName().toString());
     }
 
     @Override
@@ -39,34 +39,6 @@ public class NetBeansJavaTypeParameter extends NetBeansJavaClassifier<TypeParame
         }
         
         return bounds;
-    }
-
-    @Override
-    public JavaTypeParameterListOwner getOwner() {
-        Element owner = getBinding().getEnclosingElement();
-        if (owner != null){
-            switch (owner.getKind()) {
-                case CONSTRUCTOR:
-                    return new NetBeansJavaConstructor((ExecutableElement) owner);
-                case METHOD:
-                    return new NetBeansJavaMethod((ExecutableElement) owner);
-                case CLASS:
-                    return new NetBeansJavaClass((TypeElement) owner);
-                default:
-                    return null;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public JavaType getType() {
-        return NetBeansJavaType.create(getBinding().asType());
-    }
-
-    @Override
-    public JavaTypeProvider getTypeProvider() {
-        return new NetBeansJavaTypeProvider();
     }
     
 }

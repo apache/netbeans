@@ -21,8 +21,6 @@ import org.jetbrains.kotlin.load.java.structure.JavaClassifier;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
-import org.jetbrains.kotlin.load.java.structure.JavaTypeSubstitutor;
-import org.jetbrains.kotlin.load.java.structure.impl.JavaTypeSubstitutorImpl;
 
 /**
  *
@@ -40,37 +38,6 @@ public class NetBeansJavaClassifierType extends NetBeansJavaType<TypeMirror> imp
             return NetBeansJavaClassifier.create(((DeclaredType)getBinding()).asElement());
         } else 
             return null;
-    }
-
-    @Override
-    public JavaTypeSubstitutor getSubstitutor() {
-        JavaClassifier resolvedType = getClassifier();
-//        if (resolvedType instanceof JavaClass && getBinding() instanceof TypeParameterElement){
-        if (resolvedType instanceof JavaClass && 
-                ((DeclaredType) getBinding()).asElement().getKind() == ElementKind.TYPE_PARAMETER){
-            
-            JavaClass javaClass = (JavaClass) resolvedType;
-            List<JavaType> substitutedTypeArguments = getTypeArguments();
-            
-            int i = 0;
-            Map<JavaTypeParameter, JavaType> substitutionMap = 
-                    new HashMap<JavaTypeParameter, JavaType>();
-            boolean isThisRawType = isRaw();
-            for (JavaTypeParameter typeParameter : javaClass.getTypeParameters()){
-                substitutionMap.put(typeParameter, !isThisRawType ? substitutedTypeArguments.get(i) : null);
-                i++;
-            }
-            
-            return new JavaTypeSubstitutorImpl(substitutionMap);
-        }
-        
-        return JavaTypeSubstitutor.EMPTY;
-    }
-
-    @Override
-    public Collection<JavaClassifierType> getSupertypes() {
-        return classifierTypes(NetBeansJavaElementUtil.getSuperTypesWithObject(
-                (TypeElement)((DeclaredType)getBinding()).asElement()));
     }
 
     @Override
@@ -95,6 +62,11 @@ public class NetBeansJavaClassifierType extends NetBeansJavaType<TypeMirror> imp
             return types(typeArgs.toArray(new TypeMirror[typeArgs.size()]));
         }
         return Collections.EMPTY_LIST;
+    }
+    
+    @Override
+    public String getCanonicalText() {
+        return getBinding().toString();
     }
     
 }

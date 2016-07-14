@@ -190,7 +190,7 @@ public class KotlinCompletionUtils {
     private boolean isVisible(DeclarationDescriptorWithVisibility declarationDescriptorWithVisibility,
             DeclarationDescriptor from, BindingContext bindingContext, 
             KtSimpleNameExpression element){
-        if (Visibilities.isVisibleWithIrrelevantReceiver(declarationDescriptorWithVisibility, from)){
+        if (Visibilities.isVisibleWithAnyReceiver(declarationDescriptorWithVisibility, from)){
             return true;
         }
         

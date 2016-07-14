@@ -32,7 +32,7 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <version>1.0.1-2</version>
+                <version>1.0.3</version>
 
                 <executions>
                     <execution>
@@ -115,14 +115,14 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-maven-plugin</artifactId>
-            <version>1.0.1-2</version>
+            <version>1.0.3</version>
             <type>jar</type>
         </dependency>
         
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-compiler</artifactId>
-            <version>1.0.1-2</version>
+            <version>1.0.3</version>
         </dependency>
         
         <dependency>

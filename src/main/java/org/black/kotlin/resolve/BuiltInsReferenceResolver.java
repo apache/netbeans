@@ -56,6 +56,7 @@ import com.intellij.util.io.URLUtil;
 import kotlin.collections.CollectionsKt;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.utils.ProjectUtils;
+import org.jetbrains.kotlin.config.LanguageVersion;
 
 public class BuiltInsReferenceResolver {
     private static final String RUNTIME_SRC_DIR = 
@@ -99,7 +100,7 @@ public class BuiltInsReferenceResolver {
                 newModuleContext.getStorageManager(), ktBuiltInsFiles);
         
         ResolveSession resolveSession = InjectionKt.createLazyResolveSession(newModuleContext, declarationFactory,
-                new BindingTraceContext(), TargetPlatform.Default.INSTANCE);
+                new BindingTraceContext(), TargetPlatform.Default.INSTANCE, LanguageVersion.LATEST);
         
         newModuleContext.initializeModuleContents(resolveSession.getPackageFragmentProvider());
         

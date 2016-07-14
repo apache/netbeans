@@ -12,7 +12,6 @@ import javax.lang.model.type.WildcardType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner;
-import org.jetbrains.kotlin.load.java.structure.JavaArrayType;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.name.FqName;
 
@@ -53,14 +52,6 @@ public class NetBeansJavaType<T extends TypeMirror> implements JavaType, JavaAnn
             throw new UnsupportedOperationException("Unsupported NetBeans type: " + typeBinding);
         }
         
-    }
-    
-    @Override
-    public JavaArrayType createArrayType() {
-        if (getBinding().getKind() != TypeKind.ARRAY){
-            return null;
-        }
-        return new NetBeansJavaArrayType((ArrayType) getBinding());
     }
 
     @Override

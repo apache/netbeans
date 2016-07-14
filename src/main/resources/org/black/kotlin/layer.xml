@@ -8,6 +8,11 @@
                 <file name="org.black.kotlin.j2seprojectextension.lookup.LookupProviderExtension.instance"/>
             </folder>
         </folder>
+        <folder name="org-netbeans-modules-maven">
+            <folder name="Lookup">
+                <file name="org.black.kotlin.mavenprojectextension.lookup.MavenProjectLookupProviderExtension.instance"/>
+            </folder>
+        </folder>
     </folder>
     
 <folder name="Editors">

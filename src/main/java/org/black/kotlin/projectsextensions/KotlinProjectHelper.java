@@ -115,7 +115,7 @@ public class KotlinProjectHelper {
         return extendedClassPaths.get(project);
     }
     
-    public void updateJ2SEExtendedClassPathProvider(Project project) {
+    public void updateExtendedClassPath(Project project) {
         if (project instanceof J2SEProject) {
             extendedClassPaths.put(project, new J2SEExtendedClassPathProvider(project));
         }

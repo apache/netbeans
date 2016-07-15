@@ -54,7 +54,7 @@ public class J2SEProjectOpenedHook extends ProjectOpenedHook{
                             KotlinLightClassGeneration.INSTANCE.generate(file);
                         }
                         
-                        KotlinProjectHelper.INSTANCE.updateJ2SEExtendedClassPathProvider(project);
+                        KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
                         KotlinBuildExtender extender = new KotlinBuildExtender(project);
                         extender.addKotlinTasksToScript(project);
                         

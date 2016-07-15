@@ -1,6 +1,8 @@
 package org.black.kotlin.projectsextensions.maven.buildextender;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,15 +29,25 @@ public class MavenExtendedClassPath implements ClassPathExtender {
         this.project = project;
     }
     
-    private ClassPath getClasspath(List<String> paths) throws DependencyResolutionRequiredException {
-        List<FileObject> classpaths = new ArrayList<FileObject>();
+    private ClassPath getClasspath(List<String> paths) throws DependencyResolutionRequiredException, MalformedURLException {
+        List<URL> classpaths = new ArrayList<URL>();
         
         for (String path : paths) {
             File file = new File(path);
-            classpaths.add(FileUtil.toFileObject(file));
+            if (!file.canRead()) {
+                continue;
+            }
+
+            FileObject fileObject = FileUtil.toFileObject(file);
+            if (FileUtil.isArchiveFile(fileObject)) {
+                fileObject = FileUtil.getArchiveRoot(fileObject);
+            }
+            if (fileObject != null) {
+                classpaths.add(fileObject.toURL());
+            }
         }
         
-        return ClassPathSupport.createClassPath(classpaths.toArray(new FileObject[classpaths.size()]));
+        return ClassPathSupport.createClassPath(classpaths.toArray(new URL[classpaths.size()]));
     }
     
     
@@ -46,17 +58,23 @@ public class MavenExtendedClassPath implements ClassPathExtender {
                 return getClasspath(project.getOriginalMavenProject().getCompileClasspathElements());
             } catch (DependencyResolutionRequiredException ex) {
                 Exceptions.printStackTrace(ex);
+            } catch (MalformedURLException ex) {
+                Exceptions.printStackTrace(ex);
             }
         } else if (type.equals(ClassPath.EXECUTE)) {
             try {
                 return getClasspath(project.getOriginalMavenProject().getRuntimeClasspathElements());
             } catch (DependencyResolutionRequiredException ex) {
                 Exceptions.printStackTrace(ex);
+            } catch (MalformedURLException ex) {
+                Exceptions.printStackTrace(ex);
             }
         } else if (type.equals(ClassPath.SOURCE)) {
             try {
                 return getClasspath(project.getOriginalMavenProject().getCompileSourceRoots());
             } catch (DependencyResolutionRequiredException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (MalformedURLException ex) {
                 Exceptions.printStackTrace(ex);
             }
         } else if (type.equals(ClassPath.BOOT)) {
@@ -67,6 +85,8 @@ public class MavenExtendedClassPath implements ClassPathExtender {
                 javaClasspathElements.addAll(project.getOriginalMavenProject().getSystemClasspathElements());
                 return getClasspath(javaClasspathElements);
             } catch (DependencyResolutionRequiredException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (MalformedURLException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }

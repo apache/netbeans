@@ -32,11 +32,6 @@ public class KotlinProjectHelper {
     private final Map<Project, ClassPathExtender> extendedClassPaths = new HashMap<Project, ClassPathExtender>();
     
     public boolean checkProject(Project project){
-        //TEMPORARY FOR TESTS. REDO IN THE FUTURE
-        if (project instanceof KotlinProject) {
-            return true;
-        }
-        
         if ((project instanceof J2SEProject) || (project instanceof NbMavenProjectImpl)){
              return true;
          }
@@ -44,7 +39,6 @@ public class KotlinProjectHelper {
         return false;
     }
     
-    //REDO!!!
     public KotlinSources getKotlinSources(Project project){
         if (!(checkProject(project))){
             return null;

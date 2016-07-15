@@ -1,11 +1,9 @@
 package org.black.kotlin.projectsextensions.maven.lookup;
 
-import java.util.List;
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.black.kotlin.projectsextensions.maven.MavenProjectOpenedHook;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.spi.project.LookupProvider;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
@@ -17,17 +15,11 @@ public class MavenProjectLookupProviderExtension implements LookupProvider {
 
     @Override
     public Lookup createAdditionalLookup(Lookup lkp) {
-        
-//        NbMavenProjectImpl impl = lkp.lookup(NbMavenProjectImpl.class);
-//        try {
-//            List<String> deps = impl.getOriginalMavenProject().getCompileClasspathElements();
-//            List<String> deps2 = impl.getOriginalMavenProject().getBuildExtensions();
-//        } catch (DependencyResolutionRequiredException ex) {
-//            Exceptions.printStackTrace(ex);
-//        }
-//        
+        NbMavenProjectImpl project = lkp.lookup(NbMavenProjectImpl.class);
+ 
         return Lookups.fixed(
-                new MavenProjectPrivilegedTemplates()
+                new MavenProjectPrivilegedTemplates(),
+                new MavenProjectOpenedHook(project)
         );
     }
     

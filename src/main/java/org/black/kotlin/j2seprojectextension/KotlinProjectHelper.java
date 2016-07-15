@@ -9,7 +9,7 @@ import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.project.KotlinSources;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.j2seproject.J2SEProject;
-import org.netbeans.modules.maven.NbMavenProjectImpl;
+//import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
@@ -36,7 +36,7 @@ public class KotlinProjectHelper {
             return true;
         }
         
-        if ((project instanceof J2SEProject) || (project instanceof NbMavenProjectImpl)){
+        if ((project instanceof J2SEProject)){// || (project instanceof NbMavenProjectImpl)){
              return true;
          }
         

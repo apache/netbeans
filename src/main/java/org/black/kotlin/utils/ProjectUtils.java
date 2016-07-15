@@ -28,7 +28,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.java.j2seproject.J2SEProject;
-import org.netbeans.modules.maven.NbMavenProjectImpl;
+//import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -220,27 +220,27 @@ public class ProjectUtils {
         return classpath;
     }
     
-    @NotNull
-    private static List<String> getMavenProjectClassPath(NbMavenProjectImpl project) {
-        List<String> classPath = new ArrayList<String>();
-        
-        try {
-            String bootClassPath = System.getProperty("sun.boot.class.path");
-            List<String> javaClasspathElements = new ArrayList<String>(Arrays.asList(bootClassPath.split(
-                Pattern.quote(System.getProperty("path.separator")))));
-            
-            classPath.addAll(project.getOriginalMavenProject().getCompileClasspathElements());
-            classPath.addAll(project.getOriginalMavenProject().getCompileSourceRoots());
-            classPath.addAll(project.getOriginalMavenProject().getRuntimeClasspathElements());
-            classPath.addAll(project.getOriginalMavenProject().getSystemClasspathElements());
-            classPath.addAll(javaClasspathElements);
-            
-        } catch (DependencyResolutionRequiredException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        
-        return classPath;
-}
+//    @NotNull
+//    private static List<String> getMavenProjectClassPath(NbMavenProjectImpl project) {
+//        List<String> classPath = new ArrayList<String>();
+//        
+////        try {
+//            String bootClassPath = System.getProperty("sun.boot.class.path");
+//            List<String> javaClasspathElements = new ArrayList<String>(Arrays.asList(bootClassPath.split(
+//                Pattern.quote(System.getProperty("path.separator")))));
+//            
+//            classPath.addAll(project.getOriginalMavenProject().getCompileClasspathElements());
+//            classPath.addAll(project.getOriginalMavenProject().getCompileSourceRoots());
+//            classPath.addAll(project.getOriginalMavenProject().getRuntimeClasspathElements());
+//            classPath.addAll(project.getOriginalMavenProject().getSystemClasspathElements());
+//            classPath.addAll(javaClasspathElements);
+//            
+////        } catch (DependencyResolutionRequiredException ex) {
+////            Exceptions.printStackTrace(ex);
+////        }
+//        
+//        return classPath;
+//}
     
     @NotNull
     private static List<String> getJ2SEProjectClassPath(Project project) {
@@ -260,9 +260,9 @@ public class ProjectUtils {
             return getJ2SEProjectClassPath(project);
         }
         
-        if (project instanceof NbMavenProjectImpl) {
-            return getMavenProjectClassPath((NbMavenProjectImpl) project);
-        }
+//        if (project instanceof NbMavenProjectImpl) {
+//            return getMavenProjectClassPath((NbMavenProjectImpl) project);
+//        }
         
         KotlinClassPathProvider kotlinClassPath = KotlinProjectHelper.INSTANCE.getKotlinClassPathProvider(project);
   

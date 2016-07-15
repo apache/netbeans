@@ -67,12 +67,11 @@
                             <id>org.netbeans.modules:org-netbeans-modules-maven</id>
                             <type>impl</type>
                         </dependency>
-                        
-                        <dependency>
+<!--                        <dependency>
                             <id>org.netbeans.modules:org-netbeans-modules-maven-embedder</id>
                             <type>impl</type>
-                        </dependency>
-                </moduleDependencies>
+                        </dependency>-->
+                    </moduleDependencies>
                 </configuration>
             </plugin>
             
@@ -128,18 +127,7 @@
             <type>jar</type>
         </dependency>
         
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-compiler</artifactId>
-            <version>1.0.3</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-modules-parsing-api</artifactId>
@@ -341,12 +329,6 @@
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-modules-nbjunit</artifactId>
-            <version>RELEASE81</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-modules-editor-fold</artifactId>
             <version>RELEASE81</version>
             <type>jar</type>
@@ -362,6 +344,101 @@
             <artifactId>org-netbeans-modules-editor-mimelookup</artifactId>
             <version>RELEASE81</version>
             <type>jar</type>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-api-templates</artifactId>
+            <version>RELEASE81</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.modules</groupId>
+            <artifactId>org-netbeans-modules-java-preprocessorbridge</artifactId>
+            <version>RELEASE81</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-editor-lib</artifactId>
+            <version>RELEASE81</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-java-sourceui</artifactId>
+            <version>RELEASE81</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-api-progress</artifactId>
+            <version>RELEASE81</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-api-progress-nb</artifactId>
+            <version>RELEASE81</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.modules</groupId>
+            <artifactId>org-netbeans-modules-java-j2seproject</artifactId>
+            <version>RELEASE81</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-java-project</artifactId>
+            <version>RELEASE81</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.modules</groupId>
+            <artifactId>org-netbeans-modules-java-api-common</artifactId>
+            <version>RELEASE81</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-java-platform</artifactId>
+            <version>RELEASE81</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+        
+        
+        <dependency>
+            <groupId>org.netbeans.modules</groupId>
+            <artifactId>org-netbeans-modules-maven</artifactId>
+            <version>RELEASE81</version>
+            <type>jar</type>
+            <exclusions>
+		<exclusion>
+			<groupId>org.netbeans.modules</groupId>
+			<artifactId>org-netbeans-modules-maven-embedder</artifactId>
+		</exclusion>
+            </exclusions>
+        </dependency>
+<!--        <dependency>
+            <groupId>org.netbeans.modules</groupId>
+            <artifactId>org-netbeans-modules-maven-embedder</artifactId>
+            <version>RELEASE81</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>-->
+
+        <!-- TEST DEPENDENCIES -->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.netbeans.modules</groupId>
@@ -456,82 +533,11 @@
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-api-templates</artifactId>
+            <artifactId>org-netbeans-modules-nbjunit</artifactId>
             <version>RELEASE81</version>
+            <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.netbeans.modules</groupId>
-            <artifactId>org-netbeans-modules-java-preprocessorbridge</artifactId>
-            <version>RELEASE81</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-modules-editor-lib</artifactId>
-            <version>RELEASE81</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-modules-java-sourceui</artifactId>
-            <version>RELEASE81</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-api-progress</artifactId>
-            <version>RELEASE81</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-api-progress-nb</artifactId>
-            <version>RELEASE81</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.modules</groupId>
-            <artifactId>org-netbeans-modules-java-j2seproject</artifactId>
-            <version>RELEASE81</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-modules-java-project</artifactId>
-            <version>RELEASE81</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.modules</groupId>
-            <artifactId>org-netbeans-modules-java-api-common</artifactId>
-            <version>RELEASE81</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-modules-java-platform</artifactId>
-            <version>RELEASE81</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-        
-        
-        <dependency>
-            <groupId>org.netbeans.modules</groupId>
-            <artifactId>org-netbeans-modules-maven</artifactId>
-            <version>RELEASE81</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.modules</groupId>
-            <artifactId>org-netbeans-modules-maven-embedder</artifactId>
-            <version>RELEASE81</version>
-            <type>jar</type>
-        </dependency>
+
     </dependencies>
    
 

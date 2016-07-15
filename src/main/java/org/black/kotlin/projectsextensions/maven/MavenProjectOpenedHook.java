@@ -1,5 +1,11 @@
 package org.black.kotlin.projectsextensions.maven;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.net.URI;
+import java.util.Collections;
+import org.apache.maven.model.Resource;
+import org.apache.maven.project.DefaultMavenProjectHelper;
 import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.project.KotlinSources;
@@ -49,6 +55,19 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                         for (FileObject file : sources.getAllKtFiles()){
                             KotlinLightClassGeneration.INSTANCE.generate(file);
                         }
+                        
+                        project.getOriginalMavenProject().addCompileSourceRoot(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).getPath());
+                        project.getProjectWatcher().addPropertyChangeListener(new PropertyChangeListener(){
+                            @Override
+                            public void propertyChange(PropertyChangeEvent evt) {
+                                KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
+                            }
+                        });
+                        
+                        
+//                        DefaultMavenProjectHelper helper = new DefaultMavenProjectHelper();
+//                        helper.addResource(project.getOriginalMavenProject(), KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).getPath(), 
+//                                Collections.emptyList(), Collections.emptyList());
                         
                         KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
                     }

@@ -1,4 +1,4 @@
-package org.black.kotlin.j2seprojectextension.classpath;
+package org.black.kotlin.projectsextensions.j2se.classpath;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import org.black.kotlin.j2seprojectextension.KotlinProjectHelper;
+import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;

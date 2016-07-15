@@ -1,4 +1,4 @@
-package org.black.kotlin.j2seprojectextension.classpath;
+package org.black.kotlin.projectsextensions.j2se.classpath;
 
 import java.beans.PropertyChangeEvent;
 import java.io.File;

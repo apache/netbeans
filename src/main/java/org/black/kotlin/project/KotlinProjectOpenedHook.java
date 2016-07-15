@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
-import org.black.kotlin.j2seprojectextension.KotlinProjectHelper;
+import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.utils.ProjectUtils;
 import static org.black.kotlin.utils.ProjectUtils.FILE_SEPARATOR;

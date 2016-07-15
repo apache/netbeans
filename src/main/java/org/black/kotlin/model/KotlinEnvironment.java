@@ -29,6 +29,7 @@ import com.intellij.core.JavaCoreProjectEnvironment;
 import com.intellij.mock.MockProject;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
@@ -131,8 +132,11 @@ public class KotlinEnvironment {
     }
     
     private static void registerApplicationExtensionPointsAndExtensionsFrom(String configFilePath) {
-        File pluginRoot = new File(KOTLIN_COMPILER_PATH);
-        CoreApplicationEnvironment.registerExtensionPointAndExtensions(pluginRoot, configFilePath, Extensions.getRootArea());
+//        ExtensionPoint[] points = Extensions.getRootArea().getExtensionPoints();
+//        System.out.println(configFilePath);
+//        File pluginRoot = new File(KOTLIN_COMPILER_PATH);
+//        Extensions.getRootArea().registerExtensionPoint("expressionCodegenExtension", "org.jetbrains.kotlin.codegen.extensions.ExpressionCodegenExtension", ExtensionPoint.Kind.BEAN_CLASS);
+//        CoreApplicationEnvironment.registerExtensionPointAndExtensions(pluginRoot, configFilePath, Extensions.getRootArea());
     }
     
     @NotNull

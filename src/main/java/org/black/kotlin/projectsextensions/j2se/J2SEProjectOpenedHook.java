@@ -1,8 +1,9 @@
-package org.black.kotlin.j2seprojectextension;
+package org.black.kotlin.projectsextensions.j2se;
 
+import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import java.io.File;
 import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
-import org.black.kotlin.j2seprojectextension.buildextender.KotlinBuildExtender;
+import org.black.kotlin.projectsextensions.j2se.buildextender.KotlinBuildExtender;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.project.KotlinSources;
 import org.black.kotlin.utils.KotlinClasspath;

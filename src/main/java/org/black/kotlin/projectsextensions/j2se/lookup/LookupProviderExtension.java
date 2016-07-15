@@ -1,8 +1,8 @@
-package org.black.kotlin.j2seprojectextension.lookup;
+package org.black.kotlin.projectsextensions.j2se.lookup;
 
-import org.black.kotlin.j2seprojectextension.J2SEProjectOpenedHook;
-import org.black.kotlin.j2seprojectextension.J2SEProjectPropertiesModifier;
-import org.black.kotlin.j2seprojectextension.classpath.J2SEExtendedClassPathProvider;
+import org.black.kotlin.projectsextensions.j2se.J2SEProjectOpenedHook;
+import org.black.kotlin.projectsextensions.j2se.J2SEProjectPropertiesModifier;
+import org.black.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider;
 import org.netbeans.modules.java.j2seproject.J2SEProject;
 import org.netbeans.spi.project.LookupProvider;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;

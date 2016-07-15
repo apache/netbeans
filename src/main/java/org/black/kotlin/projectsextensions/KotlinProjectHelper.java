@@ -1,15 +1,15 @@
-package org.black.kotlin.j2seprojectextension;
+package org.black.kotlin.projectsextensions;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.black.kotlin.j2seprojectextension.classpath.J2SEExtendedClassPathProvider;
+import org.black.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider;
 import org.black.kotlin.project.KotlinClassPathProvider;
 import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.project.KotlinSources;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.j2seproject.J2SEProject;
-//import org.netbeans.modules.maven.NbMavenProjectImpl;
+import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
@@ -36,7 +36,7 @@ public class KotlinProjectHelper {
             return true;
         }
         
-        if ((project instanceof J2SEProject)){// || (project instanceof NbMavenProjectImpl)){
+        if ((project instanceof J2SEProject) || (project instanceof NbMavenProjectImpl)){
              return true;
          }
         

@@ -1,4 +1,4 @@
-package org.black.kotlin.j2seprojectextension;
+package org.black.kotlin.projectsextensions.j2se;
 
 
 import java.io.BufferedOutputStream;

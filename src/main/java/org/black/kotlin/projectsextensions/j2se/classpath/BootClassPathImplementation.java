@@ -1,4 +1,4 @@
-package org.black.kotlin.j2seprojectextension.classpath;
+package org.black.kotlin.projectsextensions.j2se.classpath;
 
 import java.beans.PropertyChangeEvent;
 import org.netbeans.spi.java.classpath.ClassPathImplementation;
@@ -12,7 +12,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
-import org.black.kotlin.j2seprojectextension.KotlinProjectHelper;
+import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.black.kotlin.utils.KotlinClasspath;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;

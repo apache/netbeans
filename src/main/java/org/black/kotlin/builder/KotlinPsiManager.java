@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import org.black.kotlin.j2seprojectextension.KotlinProjectHelper;
+import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.model.KotlinLightVirtualFile;
 //import org.black.kotlin.project.KotlinProject;

@@ -5,12 +5,12 @@
     <folder name="Projects">
         <folder name="org-netbeans-modules-java-j2seproject">
             <folder name="Lookup">
-                <file name="org.black.kotlin.j2seprojectextension.lookup.LookupProviderExtension.instance"/>
+                <file name="org.black.kotlin.projectsextensions.j2se.lookup.LookupProviderExtension.instance"/>
             </folder>
         </folder>
         <folder name="org-netbeans-modules-maven">
             <folder name="Lookup">
-                <file name="org.black.kotlin.mavenprojectextension.lookup.MavenProjectLookupProviderExtension.instance"/>
+                <file name="org.black.kotlin.projectsextensions.maven.lookup.MavenProjectLookupProviderExtension.instance"/>
             </folder>
         </folder>
     </folder>

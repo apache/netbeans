@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
-import org.black.kotlin.j2seprojectextension.KotlinProjectHelper;
+import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.black.kotlin.utils.KotlinClasspath;
 import org.netbeans.api.java.classpath.ClassPath;

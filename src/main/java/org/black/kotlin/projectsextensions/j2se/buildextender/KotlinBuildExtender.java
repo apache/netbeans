@@ -1,4 +1,4 @@
-package org.black.kotlin.j2seprojectextension.buildextender;
+package org.black.kotlin.projectsextensions.j2se.buildextender;
 
 import java.io.FileWriter;
 import java.io.IOException;

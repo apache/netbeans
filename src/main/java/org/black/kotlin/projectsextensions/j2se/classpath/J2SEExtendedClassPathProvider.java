@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
+import org.black.kotlin.projectsextensions.ClassPathExtender;
 import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -32,7 +33,7 @@ import org.openide.util.WeakListeners;
  *
  * @author Alexander.Baratynski
  */
-public class J2SEExtendedClassPathProvider implements ClassPathProvider, PropertyChangeListener {
+public class J2SEExtendedClassPathProvider implements ClassPathProvider, PropertyChangeListener, ClassPathExtender {
 
     private static final String BUILD_CLASSES_DIR = "build.classes.dir"; // NOI18N
     private static final String DIST_JAR = "dist.jar"; // NOI18N
@@ -324,6 +325,7 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
      * Returns the given type of the classpath for the project sources
      * (i.e., excluding tests roots).
      */
+    @Override
     public ClassPath getProjectSourcesClassPath(String type) {
         if (ClassPath.BOOT.equals(type)) {
             return getBootClassPath();

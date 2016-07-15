@@ -7,6 +7,7 @@ import org.black.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathP
 import org.black.kotlin.project.KotlinClassPathProvider;
 import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.project.KotlinSources;
+import org.black.kotlin.projectsextensions.maven.buildextender.MavenExtendedClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.j2seproject.J2SEProject;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
@@ -28,7 +29,7 @@ public class KotlinProjectHelper {
     private final Map<Project, KotlinSources> kotlinSources = new HashMap<Project, KotlinSources>();
     private final Map<Project, FileObject> lightClassesDirs = new HashMap<Project, FileObject>();
     private final Map<Project, KotlinClassPathProvider> classpaths = new HashMap<Project, KotlinClassPathProvider>();
-    private final Map<Project, J2SEExtendedClassPathProvider> extendedClassPaths = new HashMap<Project, J2SEExtendedClassPathProvider>();
+    private final Map<Project, ClassPathExtender> extendedClassPaths = new HashMap<Project, ClassPathExtender>();
     
     public boolean checkProject(Project project){
         //TEMPORARY FOR TESTS. REDO IN THE FUTURE
@@ -43,6 +44,7 @@ public class KotlinProjectHelper {
         return false;
     }
     
+    //REDO!!!
     public KotlinSources getKotlinSources(Project project){
         if (!(checkProject(project))){
             return null;
@@ -96,20 +98,30 @@ public class KotlinProjectHelper {
         return classpaths.get(project);
     }
     
-    public J2SEExtendedClassPathProvider getJ2SEExtendedClassPathProvider(Project project) {
+    public ClassPathExtender getExtendedClassPath(Project project) {
         if (!(checkProject(project))){
             return null;
         }
         
         if (!extendedClassPaths.containsKey(project)){
-            extendedClassPaths.put(project, new J2SEExtendedClassPathProvider(project));
+            if (project instanceof J2SEProject) {
+                extendedClassPaths.put(project, new J2SEExtendedClassPathProvider(project));
+            }
+            if (project instanceof NbMavenProjectImpl) {
+                extendedClassPaths.put(project, new MavenExtendedClassPath((NbMavenProjectImpl) project));
+            }
         }
         
         return extendedClassPaths.get(project);
     }
     
     public void updateJ2SEExtendedClassPathProvider(Project project) {
-        extendedClassPaths.put(project, new J2SEExtendedClassPathProvider(project));
+        if (project instanceof J2SEProject) {
+            extendedClassPaths.put(project, new J2SEExtendedClassPathProvider(project));
+        }
+        if (project instanceof NbMavenProjectImpl) {
+            extendedClassPaths.put(project, new MavenExtendedClassPath((NbMavenProjectImpl) project));
+        }
     }
     
 }

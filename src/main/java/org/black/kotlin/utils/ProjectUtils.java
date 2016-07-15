@@ -22,6 +22,7 @@ import org.black.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathP
 import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.black.kotlin.project.KotlinClassPathProvider;
 import org.black.kotlin.project.KotlinProjectConstants;
+import org.black.kotlin.projectsextensions.ClassPathExtender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -240,11 +241,11 @@ public class ProjectUtils {
             Exceptions.printStackTrace(ex);
         }
         return classPath;
-}
+    }
     
     @NotNull
     private static List<String> getJ2SEProjectClassPath(Project project) {
-        J2SEExtendedClassPathProvider extendedProvider = KotlinProjectHelper.INSTANCE.getJ2SEExtendedClassPathProvider(project);
+        ClassPathExtender extendedProvider = KotlinProjectHelper.INSTANCE.getExtendedClassPath(project);
         ClassPath boot = extendedProvider.getProjectSourcesClassPath(ClassPath.BOOT);
         ClassPath src = extendedProvider.getProjectSourcesClassPath(ClassPath.SOURCE);
         ClassPath compile = extendedProvider.getProjectSourcesClassPath(ClassPath.COMPILE);

@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import org.black.kotlin.projectsextensions.ClassPathExtender;
 import org.black.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider;
 import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -36,7 +37,7 @@ public class NetBeansJavaProjectElementUtils {
         
         assert kotlinProject != null : "Project cannot be null";
         
-        J2SEExtendedClassPathProvider extendedProvider = KotlinProjectHelper.INSTANCE.getJ2SEExtendedClassPathProvider(kotlinProject);
+        ClassPathExtender extendedProvider = KotlinProjectHelper.INSTANCE.getExtendedClassPath(kotlinProject);
         
         ClassPath boot = extendedProvider.getProjectSourcesClassPath(ClassPath.BOOT);
         ClassPath src = extendedProvider.getProjectSourcesClassPath(ClassPath.SOURCE);

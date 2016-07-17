@@ -125,7 +125,6 @@ public class KotlinEnvironment {
         
         ExternalDeclarationsProvider.Companion.registerExtensionPoint(project);
         ExpressionCodegenExtension.Companion.registerExtensionPoint(project);
-        
 //        for (String config : EnvironmentConfigFiles.JVM_CONFIG_FILES) {
             registerApplicationExtensionPointsAndExtensionsFrom(/*config*/);
 //        }
@@ -140,18 +139,26 @@ public class KotlinEnvironment {
     }
     
     private static void getExtensionsFromCommonXml() {
-        CoreApplicationEnvironment.registerApplicationExtensionPoint(new ExtensionPointName<DiagnosticSuppressor>("diagnosticSuppressor"), DiagnosticSuppressor.class);
-        CoreApplicationEnvironment.registerApplicationExtensionPoint(new ExtensionPointName<DefaultErrorMessages.Extension>("defaultErrorMessages"), DefaultErrorMessages.Extension.class);
-        CoreApplicationEnvironment.registerApplicationExtensionPoint(new ExtensionPointName<SuppressStringProvider>("suppressStringProvider"), SuppressStringProvider.class);
-        CoreApplicationEnvironment.registerApplicationExtensionPoint(new ExtensionPointName<ExternalDeclarationsProvider>("externalDeclarationsProvider"), ExternalDeclarationsProvider.class);
-        CoreApplicationEnvironment.registerApplicationExtensionPoint(new ExtensionPointName<ExpressionCodegenExtension>(("expressionCodegenExtension")), ExpressionCodegenExtension.class);
-        CoreApplicationEnvironment.registerApplicationExtensionPoint(new ExtensionPointName<ClassBuilderInterceptorExtension>(("classBuilderFactoryInterceptorExtension")), ClassBuilderInterceptorExtension.class);
-        CoreApplicationEnvironment.registerApplicationExtensionPoint(new ExtensionPointName<PackageFragmentProviderExtension>(("packageFragmentProviderExtension")), PackageFragmentProviderExtension.class);
+        CoreApplicationEnvironment.registerApplicationExtensionPoint(
+                new ExtensionPointName<DiagnosticSuppressor>("org.jetbrains.kotlin.diagnosticSuppressor"), DiagnosticSuppressor.class);
+        CoreApplicationEnvironment.registerApplicationExtensionPoint(
+                new ExtensionPointName<DefaultErrorMessages.Extension>("org.jetbrains.kotlin.defaultErrorMessages"), DefaultErrorMessages.Extension.class);
+        CoreApplicationEnvironment.registerApplicationExtensionPoint(
+                new ExtensionPointName<SuppressStringProvider>("org.jetbrains.kotlin.suppressStringProvider"), SuppressStringProvider.class);
+        CoreApplicationEnvironment.registerApplicationExtensionPoint(
+                new ExtensionPointName<ExternalDeclarationsProvider>("org.jetbrains.kotlin.externalDeclarationsProvider"), ExternalDeclarationsProvider.class);
+        CoreApplicationEnvironment.registerApplicationExtensionPoint(
+                new ExtensionPointName<ExpressionCodegenExtension>(("org.jetbrains.kotlin.expressionCodegenExtension")), ExpressionCodegenExtension.class);
+        CoreApplicationEnvironment.registerApplicationExtensionPoint(
+                new ExtensionPointName<ClassBuilderInterceptorExtension>(("org.jetbrains.kotlin.classBuilderFactoryInterceptorExtension")), ClassBuilderInterceptorExtension.class);
+        CoreApplicationEnvironment.registerApplicationExtensionPoint(
+                new ExtensionPointName<PackageFragmentProviderExtension>(("org.jetbrains.kotlin.packageFragmentProviderExtension")), PackageFragmentProviderExtension.class);
     }
     
     private static void getExtensionsFromKotlin2JvmXml() {
         CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), 
-                new ExtensionPointName<DefaultErrorMessages.Extension>(("defaultErrorMessages")), DefaultErrorMessagesJvm.class);
+                new ExtensionPointName<DefaultErrorMessages.Extension>(
+                        ("org.jetbrains.kotlin.defaultErrorMessages")), DefaultErrorMessagesJvm.class);
     }
     
     private static void registerApplicationExtensionPointsAndExtensionsFrom(/*String configFilePath*/) {

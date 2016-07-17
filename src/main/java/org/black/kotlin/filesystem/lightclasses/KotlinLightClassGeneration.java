@@ -123,6 +123,10 @@ public class KotlinLightClassGeneration {
     public void generate(FileObject file) {
         Project project = ProjectUtils.getKotlinProjectForFileObject(file);
 
+        if (project == null) {
+            return;
+        }
+        
         KotlinLightClassManager manager = KotlinLightClassManager.getInstance(project);
         manager.computeLightClassesSources();
         List<String> lightClassesPaths = manager.getLightClassesPaths(file);

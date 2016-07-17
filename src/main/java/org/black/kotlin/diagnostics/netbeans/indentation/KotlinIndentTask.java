@@ -62,7 +62,7 @@ public class KotlinIndentTask implements IndentTask {
 
             PsiFile parsedDocument = ProjectUtils.getKtFile(doc.getText(0, doc.getLength()),
                     file);
-
+            
             if (parsedDocument == null) {
                 return 0;
             }

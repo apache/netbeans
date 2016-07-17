@@ -17,6 +17,7 @@ import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.model.KotlinLightVirtualFile;
 //import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.project.KotlinProjectConstants;
+import org.black.kotlin.utils.KotlinMockProject;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -100,6 +101,9 @@ public class KotlinPsiManager {
         } else {
             try {
                 KtFile ktFile = parseFile(file);
+                if (ktFile == null) {
+                    return null;
+                }
                 cachedKtFiles.put(file, ktFile);
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
@@ -152,6 +156,10 @@ public class KotlinPsiManager {
                 kotlinProject = proj;
                 break;
             }
+        }
+        
+        if (kotlinProject == null) {
+            kotlinProject =  KotlinMockProject.INSTANCE.getMockProject();
         }
         
         com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(kotlinProject).getProject();

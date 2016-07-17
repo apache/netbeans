@@ -24,6 +24,7 @@ public final class KotlinTokenScanner {
     private int offset = 0;
     private int tokensNumber = 0;
     private final LexerInput input;
+    private boolean initializedProperly = false;
 
     /**
      * Class constructor
@@ -34,6 +35,9 @@ public final class KotlinTokenScanner {
         kotlinTokensFactory = new KotlinTokensFactory();
         this.input = input;
         ktFile = KotlinPsiManager.INSTANCE.getParsedKtFileForSyntaxHighlighting(getTextToParse());
+        if (ktFile == null) {
+            return; 
+        }
         createListOfKotlinTokens();
     }
 

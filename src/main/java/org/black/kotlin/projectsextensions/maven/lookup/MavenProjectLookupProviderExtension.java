@@ -1,7 +1,9 @@
 package org.black.kotlin.projectsextensions.maven.lookup;
 
 import org.black.kotlin.projectsextensions.maven.MavenProjectOpenedHook;
+import org.black.kotlin.projectsextensions.maven.buildextender.PomXmlEditor;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
+import org.netbeans.spi.java.project.classpath.ProjectClassPathExtender;
 import org.netbeans.spi.project.LookupProvider;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
 import org.openide.util.Lookup;
@@ -16,10 +18,11 @@ public class MavenProjectLookupProviderExtension implements LookupProvider {
     @Override
     public Lookup createAdditionalLookup(Lookup lkp) {
         NbMavenProjectImpl project = lkp.lookup(NbMavenProjectImpl.class);
- 
+        
         return Lookups.fixed(
                 new MavenProjectPrivilegedTemplates(),
-                new MavenProjectOpenedHook(project)
+                new MavenProjectOpenedHook(project),
+                new PomXmlEditor(project)
         );
     }
     

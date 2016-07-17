@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.black.kotlin.projectsextensions.ClassPathExtender;
+import org.black.kotlin.utils.KotlinClasspath;
 import org.jetbrains.annotations.NotNull;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
@@ -31,8 +32,11 @@ public class MavenExtendedClassPath implements ClassPathExtender {
     
     private ClassPath getClasspath(List<String> paths) throws DependencyResolutionRequiredException, MalformedURLException {
         List<URL> classpaths = new ArrayList<URL>();
+        List<String> classpath = new ArrayList<String>();
+        classpath.addAll(paths);
+        classpath.add(KotlinClasspath.getKotlinBootClasspath());
         
-        for (String path : paths) {
+        for (String path : classpath) {
             File file = new File(path);
             if (!file.canRead()) {
                 continue;

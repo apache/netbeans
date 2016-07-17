@@ -4,6 +4,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
 import javax.lang.model.element.TypeElement;
 import org.black.kotlin.model.KotlinEnvironment;
+import org.black.kotlin.projectsextensions.ClassPathExtender;
+import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaClassFinder;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.black.kotlin.resolve.lang.java.structure.NetBeansJavaClassifier;
@@ -19,6 +21,7 @@ import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryClass;
 import org.jetbrains.kotlin.name.FqName;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -59,12 +62,17 @@ public class NetBeansVirtualFileFinder extends VirtualFileKotlinClassFinder impl
             return null;
         }
         
-        ClassPath boot = project.getLookup().lookup(ClassPathProvider.class).findClassPath(null, ClassPath.BOOT);
+        ClassPathExtender classpath = KotlinProjectHelper.INSTANCE.getExtendedClassPath(project);
+        ClassPath boot = classpath.getProjectSourcesClassPath(ClassPath.BOOT);
+        ClassPath compile = classpath.getProjectSourcesClassPath(ClassPath.COMPILE);
+        ClassPath source = classpath.getProjectSourcesClassPath(ClassPath.SOURCE);
+        
+        ClassPath proxy = ClassPathSupport.createProxyClassPath(boot, compile, source);
         
         String rPath = type.getQualifiedName().
                 toString().replace(".", "/")+".class";
         
-        FileObject resource = boot.findResource(rPath);
+        FileObject resource = proxy.findResource(rPath);
         
         String path;
         if (resource != null){

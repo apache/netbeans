@@ -2,6 +2,7 @@ package org.black.kotlin.projectsextensions.maven;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
 import org.apache.maven.model.Resource;
@@ -15,8 +16,10 @@ import org.black.kotlin.utils.ProjectUtils;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
+import org.netbeans.spi.java.project.classpath.ProjectClassPathExtender;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -65,10 +68,17 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                         });
                         
                         
-//                        DefaultMavenProjectHelper helper = new DefaultMavenProjectHelper();
-//                        helper.addResource(project.getOriginalMavenProject(), KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).getPath(), 
-//                                Collections.emptyList(), Collections.emptyList());
-                        
+//                    try {
+//                        //                        DefaultMavenProjectHelper helper = new DefaultMavenProjectHelper();
+////                        helper.addResource(project.getOriginalMavenProject(), KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).getPath(),
+////                                Collections.emptyList(), Collections.emptyList());
+//
+//                            project.getLookup().lookup(ProjectClassPathExtender.class)
+//                                .addArchiveFile(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project));
+//                        } catch (IOException ex) {
+//                            Exceptions.printStackTrace(ex);
+//                        }
+
                         KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
                     }
             };

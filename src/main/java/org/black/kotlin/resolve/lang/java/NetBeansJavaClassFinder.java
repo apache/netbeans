@@ -87,6 +87,7 @@ public class NetBeansJavaClassFinder implements JavaClassFinder {
         List<PackageElement> subpackageElements = Lists.newArrayList();
         
         if (name.equals("*")) {
+            name = "";
             children.addAll(roots);
         } else {
             mainloop:

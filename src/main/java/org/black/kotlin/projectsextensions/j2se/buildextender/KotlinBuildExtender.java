@@ -67,7 +67,6 @@ public class KotlinBuildExtender {
             }
         }
         
-        
         DefaultElement prop = new DefaultElement("property");
         prop.addAttribute("name", "kotlin.lib");
         prop.addAttribute("value", ProjectUtils.KT_HOME + "lib");

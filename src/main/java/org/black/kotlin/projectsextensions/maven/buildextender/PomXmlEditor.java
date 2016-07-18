@@ -1,13 +1,13 @@
 package org.black.kotlin.projectsextensions.maven.buildextender;
 
-import com.google.common.collect.Lists;
-import java.util.List;
-import org.apache.maven.model.Dependency;
-import org.apache.maven.model.DependencyManagement;
-import org.apache.maven.model.Plugin;
-import org.apache.maven.model.PluginExecution;
-import org.apache.maven.project.MavenProject;
+import java.io.File;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+import org.dom4j.tree.DefaultElement;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -16,54 +16,70 @@ import org.netbeans.modules.maven.NbMavenProjectImpl;
 public class PomXmlEditor {
 
     private final NbMavenProjectImpl project;
-    private final String compilerVersion = "1.0.3";
+    private final String kotlinVersion = "1.0.3";
+    private final String groupIdName = "org.jetbrains.kotlin";
     
     public PomXmlEditor(NbMavenProjectImpl project) {
         this.project = project;
-        
-//        addKotlinStdlibDependency();
+        try {
+            checkKotlinStdLibDependency();
+        } catch (DocumentException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 
-    
-    
-    private void addKotlinPlugin() {
-        Plugin plugin = new Plugin();
-        plugin.setArtifactId("kotlin-maven-plugin");
-        plugin.setGroupId("org.jetbrains.kotlin");
-        plugin.setVersion(compilerVersion);
+    private Element createDependenciesElement(Element root) {
+        DefaultElement dependenciesElement = new DefaultElement("dependencies");
+        root.content().add(dependenciesElement);
         
-        PluginExecution compileExec = new PluginExecution();
-        compileExec.setId("compile");
-        compileExec.setPhase("process-sources");
-        compileExec.setGoals(Lists.newArrayList("compile"));
-        
-        PluginExecution testCompileExec = new PluginExecution();
-        testCompileExec.setId("test-compile");
-        testCompileExec.setPhase("process-test-sources");
-        testCompileExec.setGoals(Lists.newArrayList("test-compile"));
-        
-        plugin.setExecutions(Lists.newArrayList(compileExec, testCompileExec));
-        
-        project.getOriginalMavenProject().addPlugin(plugin);
+        return root.element("dependencies");
     }
     
-    private void addKotlinStdlibDependency() {
-        Dependency dependency = new Dependency();
-        dependency.setGroupId("org.jetbrains.kotlin");
-        dependency.setArtifactId("kotlin-stdlib");
-        dependency.setVersion(compilerVersion);
+    private void createStdlibDependency(Element dependencies) {
+        DefaultElement dependency = new DefaultElement("dependency");
         
+        DefaultElement groupId = new DefaultElement("groupId");
+        groupId.addText(groupIdName);
         
+        DefaultElement artifactId = new DefaultElement("artifactId");
+        artifactId.addText("kotlin-stdlib");
         
-        MavenProject mavenProject = project.getOriginalMavenProject();
-//        DependencyManagement depMan = mavenProject.getDependencyManagement();
-//        if (depMan == null) {
-        List<Dependency> deps = mavenProject.getDependencies();
-        deps.add(dependency);
-        mavenProject.setDependencies(deps);
-//        }
-//        System.out.println();
-//        project.getOriginalMavenProject().getDependencyManagement().addDependency(dependency);
+        DefaultElement version = new DefaultElement("version");
+        version.addText(kotlinVersion);
+        
+        dependency.add(groupId);
+        dependency.add(artifactId);
+        dependency.add(version);
+        
+        dependencies.content().add(dependency);
     }
+    
+    private void checkKotlinStdLibDependency() throws DocumentException {
+        File pom = project.getPOMFile();
+        SAXReader reader = new SAXReader();
+        Document pomDocument = reader.read(pom);
+        
+        Element root = pomDocument.getRootElement();
+        Element dependencies = root.element("dependencies");
+        if (dependencies == null) {
+            dependencies = createDependenciesElement(root);
+        }
+        
+        Element stdlibDependency = null;
+        for (Object el : dependencies.elements("dependency")) {
+            Element dep = (Element) el;
+            if (dep.element("groupId").getText().equals("org.jetbrains.kotlin") && 
+                    dep.element("artifactId").getText().equals("kotlin-stdlib")) {
+                stdlibDependency = dep;
+                break;
+            }
+        }
+        
+        if (stdlibDependency == null) {
+            createStdlibDependency(dependencies);
+        }
+    }
+    
+
     
 }

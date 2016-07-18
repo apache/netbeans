@@ -50,8 +50,6 @@ public class NetBeansJavaProjectElementUtils {
     }
     
     public static void updateClasspathInfo(Project kotlinProject){
-        KotlinProjectHelper.INSTANCE.updateExtendedClassPath(kotlinProject);
-        
         ci.put(kotlinProject, getClasspathInfo(kotlinProject));
         js.put(kotlinProject, JavaSource.create(ci.get(kotlinProject)));
     }

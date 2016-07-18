@@ -346,7 +346,7 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
     @Override
     public synchronized void propertyChange(PropertyChangeEvent evt) {
         dirCache.remove(evt.getPropertyName());
-        NetBeansJavaProjectElementUtils.updateClasspathInfo(project);
+        KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
     }
 
     public String[] getPropertyName(final SourceRoots roots, final String type) {

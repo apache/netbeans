@@ -9,6 +9,7 @@ import org.black.kotlin.project.KotlinClassPathProvider;
 import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.project.KotlinSources;
 import org.black.kotlin.projectsextensions.maven.buildextender.MavenExtendedClassPath;
+import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.j2seproject.J2SEProject;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
@@ -117,6 +118,7 @@ public class KotlinProjectHelper {
         if (project instanceof NbMavenProjectImpl) {
             extendedClassPaths.put(project, new MavenExtendedClassPath((NbMavenProjectImpl) project));
         }
+        NetBeansJavaProjectElementUtils.updateClasspathInfo(project);
         KotlinEnvironment.updateKotlinEnvironment(project);
     }
     

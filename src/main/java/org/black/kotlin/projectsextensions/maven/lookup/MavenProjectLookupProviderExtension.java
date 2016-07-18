@@ -2,10 +2,14 @@ package org.black.kotlin.projectsextensions.maven.lookup;
 
 import org.black.kotlin.projectsextensions.maven.MavenProjectOpenedHook;
 import org.black.kotlin.projectsextensions.maven.buildextender.PomXmlModifier;
+import org.black.kotlin.projectsextensions.maven.classpath.MavenClassPathProviderImpl;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
+import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.project.classpath.ProjectClassPathExtender;
 import org.netbeans.spi.project.LookupProvider;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
@@ -21,10 +25,10 @@ public class MavenProjectLookupProviderExtension implements LookupProvider {
         
         return Lookups.fixed(new MavenProjectPrivilegedTemplates(),
                 new MavenProjectOpenedHook(project),
-                new PomXmlModifier(project)
+                new PomXmlModifier(project),
+                new MavenClassPathProviderImpl(project)
         );
     }
-    
     
     private static final class MavenProjectPrivilegedTemplates implements PrivilegedTemplates {
 

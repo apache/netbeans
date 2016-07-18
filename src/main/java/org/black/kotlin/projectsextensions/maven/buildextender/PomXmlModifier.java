@@ -143,6 +143,8 @@ public class PomXmlModifier {
         plugin.add(version);
         
         addExecutions(plugin);
+        
+        plugins.add(plugin);
     }
     
     private void checkKotlinStdLibDependency() throws DocumentException, IOException {
@@ -179,7 +181,7 @@ public class PomXmlModifier {
     }
     
 
-    private void checkKotlinPlugin() throws DocumentException {
+    private void checkKotlinPlugin() throws DocumentException, IOException {
         File pom = project.getPOMFile();
         SAXReader reader = new SAXReader();
         Document pomDocument = reader.read(pom);
@@ -209,6 +211,12 @@ public class PomXmlModifier {
             createPluginElement(plugins);
         }
         
+        OutputFormat format = OutputFormat.createPrettyPrint();
+        FileWriter out = new FileWriter(pom);
+        XMLWriter writer;
+        writer = new XMLWriter(out, format);
+        writer.write(pomDocument);
+        out.close();
     }
     
 }

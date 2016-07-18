@@ -156,8 +156,8 @@ public class KotlinEnvironment {
     }
     
     private static void getExtensionsFromKotlin2JvmXml() {
-        CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), 
-                new ExtensionPointName<DefaultErrorMessages.Extension>(
+        CoreApplicationEnvironment.registerApplicationExtensionPoint(
+                new ExtensionPointName<DefaultErrorMessagesJvm>(
                         ("org.jetbrains.kotlin.defaultErrorMessages")), DefaultErrorMessagesJvm.class);
     }
     

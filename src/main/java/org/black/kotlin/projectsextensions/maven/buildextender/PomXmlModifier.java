@@ -160,8 +160,13 @@ public class PomXmlModifier {
         Element stdlibDependency = null;
         for (Object el : dependencies.elements("dependency")) {
             Element dep = (Element) el;
-            if (dep.element("groupId").getText().equals(groupIdName) && 
-                    dep.element("artifactId").getText().equals("kotlin-stdlib")) {
+            Element groupId = dep.element("groupId");
+            Element artifactId = dep.element("artifactId");
+            if (groupId == null || artifactId == null) {
+                continue;
+            }
+            if (groupId.getText().equals(groupIdName) && 
+                    artifactId.getText().equals("kotlin-stdlib")) {
                 stdlibDependency = dep;
                 break;
             }
@@ -199,16 +204,23 @@ public class PomXmlModifier {
         Element plugin = null;
         for (Object el : plugins.elements("plugin")) {
             Element plug = (Element) el;
-            if (plug.element("groupId").getText().equals(groupIdName) && 
-                    plug.element("artifactId").getText().equals("kotlin-maven-plugin")) {
+            Element groupId = plug.element("groupId");
+            Element artifactId = plug.element("artifactId");
+            if (groupId == null || artifactId == null) {
+                continue;
+            }
+            if (groupId.getText().equals(groupIdName) && 
+                    artifactId.getText().equals("kotlin-maven-plugin")) {
                 plugin = plug;
                 break;
             }
         }
         
-        if (plugin == null) {
-            createPluginElement(plugins);
+        if (plugin != null) {
+            return;
         }
+        
+        createPluginElement(plugins);
         
         OutputFormat format = OutputFormat.createPrettyPrint();
         FileWriter out = new FileWriter(pom);

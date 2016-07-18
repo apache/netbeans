@@ -25,13 +25,7 @@ public class NetBeansJavaAnnotationArgument<T extends Element> extends NetBeansJ
         if (value instanceof AnnotationMirror){
             return new NetBeansJavaAnnotationAsAnnotationArgument((AnnotationMirror) value, name);
         }
-        else if (/*((Element) value).getKind() == ElementKind.FIELD || 
-                ((Element) value).getKind() == ElementKind.LOCAL_VARIABLE ||
-                ((Element) value).getKind() == ElementKind.ENUM_CONSTANT ||
-                ((Element) value).getKind() == ElementKind.EXCEPTION_PARAMETER ||
-                ((Element) value).getKind() == ElementKind.RESOURCE_VARIABLE ||
-                ((Element) value).getKind() == ElementKind.PARAMETER*/
-                value instanceof VariableElement){
+        else if (value instanceof VariableElement){
             return new NetBeansJavaReferenceAnnotationArgument((VariableElement) value);
         }
         else if (value instanceof String){
@@ -43,7 +37,7 @@ public class NetBeansJavaAnnotationArgument<T extends Element> extends NetBeansJ
         else if (value instanceof Collection<?>){
             return new NetBeansJavaArrayAnnotationArgument((Collection) value, name, project);
         }
-        else throw new IllegalArgumentException("Wrong annotation argument");
+        else return null;
     }
     
 }

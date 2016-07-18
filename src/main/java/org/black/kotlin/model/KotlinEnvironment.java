@@ -197,7 +197,7 @@ public class KotlinEnvironment {
     }
     
     private void configureClasspath(@NotNull org.netbeans.api.project.Project kotlinProject) {
-        List<String> classpath = ProjectUtils.getClasspath(kotlinProject);
+        Set<String> classpath = ProjectUtils.getClasspath(kotlinProject);
         
             for (String s : classpath) {
                 if (s.endsWith("!/")){

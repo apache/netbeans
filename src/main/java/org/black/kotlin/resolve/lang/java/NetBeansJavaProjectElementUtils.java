@@ -19,6 +19,7 @@ import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -43,7 +44,9 @@ public class NetBeansJavaProjectElementUtils {
         ClassPath src = extendedProvider.getProjectSourcesClassPath(ClassPath.SOURCE);
         ClassPath compile = extendedProvider.getProjectSourcesClassPath(ClassPath.COMPILE);
         
-        return ClasspathInfo.create(boot, src, compile);
+        ClassPath bootProxy = ClassPathSupport.createProxyClassPath(boot, compile);
+        
+        return ClasspathInfo.create(bootProxy, src, compile);
     }
     
     public static void updateClasspathInfo(Project kotlinProject){

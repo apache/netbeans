@@ -67,18 +67,6 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                             }
                         });
                         
-                        
-//                    try {
-//                        //                        DefaultMavenProjectHelper helper = new DefaultMavenProjectHelper();
-////                        helper.addResource(project.getOriginalMavenProject(), KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).getPath(),
-////                                Collections.emptyList(), Collections.emptyList());
-//
-//                            project.getLookup().lookup(ProjectClassPathExtender.class)
-//                                .addArchiveFile(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project));
-//                        } catch (IOException ex) {
-//                            Exceptions.printStackTrace(ex);
-//                        }
-
                         KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
                     }
             };

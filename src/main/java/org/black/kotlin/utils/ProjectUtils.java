@@ -1,6 +1,7 @@
 package org.black.kotlin.utils;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import edu.emory.mathcs.backport.java.util.Collections;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -12,6 +13,7 @@ import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.black.kotlin.builder.KotlinPsiManager;
@@ -24,6 +26,7 @@ import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -175,8 +178,8 @@ public class ProjectUtils {
 
     }
 
-    private static List<String> createListOfClassPaths(ClassPath boot, ClassPath src, ClassPath compile) {
-        List<String> classpath = Lists.newArrayList();
+    private static Set<String> createListOfClassPaths(ClassPath boot, ClassPath src, ClassPath compile) {
+        Set<String> classpath = Sets.newHashSet();
         
         for (ClassPath.Entry entry : boot.entries()){
             String path = entry.getURL().getFile();
@@ -214,7 +217,7 @@ public class ProjectUtils {
         return classpath;
     }
     
-    private static List<String> getProjectClassPath(Project project) {
+    private static Set<String> getProjectClassPath(Project project) {
         ClassPathExtender extendedProvider = KotlinProjectHelper.INSTANCE.getExtendedClassPath(project);
         ClassPath boot = extendedProvider.getProjectSourcesClassPath(ClassPath.BOOT);
         ClassPath src = extendedProvider.getProjectSourcesClassPath(ClassPath.SOURCE);
@@ -224,12 +227,12 @@ public class ProjectUtils {
     }
     
     @NotNull
-    public static List<String> getClasspath(Project project) {
+    public static Set<String> getClasspath(Project project) {
         if (KotlinProjectHelper.INSTANCE.checkProject(project)) {
             return getProjectClassPath(project);
         }
         
-        return Collections.emptyList();
+        return Collections.emptySet();
     }
 
     public static List<String> getLibs(Project proj) {

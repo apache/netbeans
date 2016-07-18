@@ -3,6 +3,7 @@ package org.black.kotlin.projectsextensions;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider;
 import org.black.kotlin.project.KotlinClassPathProvider;
 import org.black.kotlin.project.KotlinProject;
@@ -116,6 +117,7 @@ public class KotlinProjectHelper {
         if (project instanceof NbMavenProjectImpl) {
             extendedClassPaths.put(project, new MavenExtendedClassPath((NbMavenProjectImpl) project));
         }
+        KotlinEnvironment.updateKotlinEnvironment(project);
     }
     
 }

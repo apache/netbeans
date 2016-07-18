@@ -1,12 +1,16 @@
 package org.black.kotlin.resolve.lang.java;
 
 import com.google.common.collect.Lists;
+import com.intellij.openapi.vfs.VirtualFile;
+import edu.emory.mathcs.backport.java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.resolve.lang.java.structure.NetBeansJavaClass;
 import org.black.kotlin.resolve.lang.java.structure.NetBeansJavaPackage;
@@ -77,34 +81,45 @@ public class NetBeansJavaClassFinder implements JavaClassFinder {
             name = name.substring(0, name.length()-1);
         }
         
+        Set<VirtualFile> roots = KotlinEnvironment.getEnvironment(kotlinProject).getRoots();
+        List<VirtualFile> children = Lists.newArrayList();
+        String[] packageParts = name.split("\\.");
         List<PackageElement> subpackageElements = Lists.newArrayList();
-        PackageElement pack = NetBeansJavaProjectElementUtils.findPackageElement(kotlinProject, name);
-        if (pack == null){
-            return null;
-        }
         
-        FileObject packageFile = NetBeansJavaProjectElementUtils.getFileObjectForElement(pack, kotlinProject);
-        if (packageFile == null){
-            return null;
-        }
-        
-        for (FileObject subpackage : packageFile.getChildren()){
-            if (subpackage.isFolder()){
-                String path = subpackage.getPath();
-                
-                // fix in future
-                path.replace("\\", "/");
-                path.replace(ProjectUtils.FILE_SEPARATOR, "/");
-                
-                String[] pathParts = path.split("/");
-                PackageElement subpackageElement = NetBeansJavaProjectElementUtils.findPackageElement(kotlinProject,name + "." + pathParts[pathParts.length-1]);
-                if (subpackageElement == null){
-                    continue;
+        if (name.equals("*")) {
+            children.addAll(roots);
+        } else {
+            mainloop:
+            for (VirtualFile root : roots){
+                VirtualFile parent = root;
+
+                for (String part : packageParts){
+                    if (!part.isEmpty()){
+                        parent = parent.findChild(part);
+                        if (parent == null){
+                            continue mainloop;
+                        }
+                    }
                 }
-                subpackageElements.add(subpackageElement);
+
+                children.addAll(Arrays.asList(parent.getChildren()));
             }
         }
         
+        for (VirtualFile child : children) {
+            String path = child.getPath();
+            path.replace("\\", "/");
+            path.replace(ProjectUtils.FILE_SEPARATOR, "/");
+            
+            String[] pathParts = path.split("/");
+            PackageElement subpackageElement = NetBeansJavaProjectElementUtils.
+                    findPackageElement(kotlinProject,name + "." + pathParts[pathParts.length-1]);
+            if (subpackageElement == null){
+                continue;
+            }
+            subpackageElements.add(subpackageElement);
+        }
+   
         if (subpackageElements.isEmpty()){
             return null;
         }

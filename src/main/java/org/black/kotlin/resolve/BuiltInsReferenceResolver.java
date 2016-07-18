@@ -259,9 +259,9 @@ public class BuiltInsReferenceResolver {
     }
 
     public static boolean isFromBuiltinModule(@NotNull DeclarationDescriptor originalDescriptor) {
-        // TODO This is optimization only
-        // It should be rewritten by checking declarationDescriptor.getSource(), when the latter returns something non-trivial for builtins.
-        return JvmBuiltIns.getInstance().getBuiltInsModule().equals(DescriptorUtils.getContainingModule(originalDescriptor));
+        ModuleDescriptor module = DescriptorUtilsKt.getModule(originalDescriptor);
+        KotlinBuiltIns builtIns = module.getBuiltIns();
+        return module.equals(builtIns.getBuiltInsModule());
     }
 
     @Nullable

@@ -1,7 +1,7 @@
 package org.black.kotlin.projectsextensions.maven.lookup;
 
 import org.black.kotlin.projectsextensions.maven.MavenProjectOpenedHook;
-import org.black.kotlin.projectsextensions.maven.buildextender.PomXmlEditor;
+import org.black.kotlin.projectsextensions.maven.buildextender.PomXmlModifier;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.spi.java.project.classpath.ProjectClassPathExtender;
 import org.netbeans.spi.project.LookupProvider;
@@ -19,10 +19,9 @@ public class MavenProjectLookupProviderExtension implements LookupProvider {
     public Lookup createAdditionalLookup(Lookup lkp) {
         NbMavenProjectImpl project = lkp.lookup(NbMavenProjectImpl.class);
         
-        return Lookups.fixed(
-                new MavenProjectPrivilegedTemplates(),
+        return Lookups.fixed(new MavenProjectPrivilegedTemplates(),
                 new MavenProjectOpenedHook(project),
-                new PomXmlEditor(project)
+                new PomXmlModifier(project)
         );
     }
     

@@ -35,6 +35,7 @@ import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.ClassExtension;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.ZipHandler;
@@ -60,6 +61,7 @@ import org.jetbrains.kotlin.cli.common.CliModuleVisibilityManagerImpl;
 import org.jetbrains.kotlin.codegen.extensions.ClassBuilderInterceptorExtension;
 import org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages;
 import org.jetbrains.kotlin.idea.KotlinFileType;
+import org.jetbrains.kotlin.js.resolve.diagnostics.DefaultErrorMessagesJs;
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory;
 import org.jetbrains.kotlin.load.kotlin.ModuleVisibilityManager;
 import org.jetbrains.kotlin.resolve.diagnostics.DiagnosticSuppressor;
@@ -90,7 +92,6 @@ public class KotlinEnvironment {
 //        ProjectUtils.checkKtHome();
         
         applicationEnvironment = createJavaCoreApplicationEnvironment(disposable);
-        
         projectEnvironment = new JavaCoreProjectEnvironment(disposable, applicationEnvironment) {
             @Override
             protected void preregisterServices() {
@@ -125,8 +126,11 @@ public class KotlinEnvironment {
         
         ExternalDeclarationsProvider.Companion.registerExtensionPoint(project);
         ExpressionCodegenExtension.Companion.registerExtensionPoint(project);
+        
+        registerApplicationExtensionPointsAndExtensionsFrom();
+        
 //        for (String config : EnvironmentConfigFiles.JVM_CONFIG_FILES) {
-            registerApplicationExtensionPointsAndExtensionsFrom(/*config*/);
+//            registerApplicationExtensionPointsAndExtensionsFromConfigFile(config);
 //        }
 
         CACHED_ENVIRONMENT.put(kotlinProject, KotlinEnvironment.this);
@@ -156,17 +160,18 @@ public class KotlinEnvironment {
     }
     
     private static void getExtensionsFromKotlin2JvmXml() {
-        CoreApplicationEnvironment.registerApplicationExtensionPoint(
-                new ExtensionPointName<DefaultErrorMessagesJvm>(
-                        ("org.jetbrains.kotlin.defaultErrorMessages")), DefaultErrorMessagesJvm.class);
+        CoreApplicationEnvironment.registerComponentInstance(Extensions.getRootArea().getPicoContainer(), 
+                DefaultErrorMessages.Extension.class, new DefaultErrorMessagesJvm());
+    }
+    
+    private static void registerApplicationExtensionPointsAndExtensionsFromConfigFile(String configFilePath) {
+        File pluginRoot = new File(KOTLIN_COMPILER_PATH);
+        CoreApplicationEnvironment.registerExtensionPointAndExtensions(pluginRoot, configFilePath, Extensions.getRootArea());
     }
     
     private static void registerApplicationExtensionPointsAndExtensionsFrom(/*String configFilePath*/) {
         getExtensionsFromCommonXml();
         getExtensionsFromKotlin2JvmXml();
-        
-//        File pluginRoot = new File(KOTLIN_COMPILER_PATH);
-//        CoreApplicationEnvironment.registerExtensionPointAndExtensions(pluginRoot, configFilePath, Extensions.getRootArea());
     }
     
     @NotNull

@@ -133,7 +133,7 @@ public class KotlinParser extends Parser {
 
         @Override
         public String getDisplayName() {
-            return DefaultErrorMessages.render(diagnostic);
+            return ErrorMessages.render(diagnostic);
         }
 
         @Override

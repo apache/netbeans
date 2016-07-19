@@ -2,6 +2,7 @@ package org.black.kotlin.resolve.lang.java.structure;
 
 import java.util.Collection;
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.VariableElement;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationArgument;
@@ -36,8 +37,9 @@ public class NetBeansJavaAnnotationArgument<T extends Element> extends NetBeansJ
         }
         else if (value instanceof Collection<?>){
             return new NetBeansJavaArrayAnnotationArgument((Collection) value, name, project);
-        }
-        else return null;
+        } else if (value instanceof AnnotationValue){
+            return create(((AnnotationValue) value).getValue(), name, project);
+        } else return null;
     }
     
 }

@@ -4,17 +4,26 @@ import com.google.common.collect.Lists;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
+import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import org.black.kotlin.builder.KotlinPsiManager;
+import org.black.kotlin.resolve.KotlinAnalyzer;
+import org.black.kotlin.resolve.NetBeansDescriptorUtils;
+import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
+import org.jetbrains.kotlin.descriptors.SourceElement;
 import org.jetbrains.kotlin.lexer.KtTokens;
 import org.jetbrains.kotlin.psi.KtAnnotatedExpression;
 import org.jetbrains.kotlin.psi.KtBinaryExpression;
 import org.jetbrains.kotlin.psi.KtCallExpression;
 import org.jetbrains.kotlin.psi.KtConstructorDelegationReferenceExpression;
+import org.jetbrains.kotlin.psi.KtDeclaration;
+import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtExpression;
+import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtLabeledExpression;
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression;
 import org.jetbrains.kotlin.psi.KtParenthesizedExpression;
@@ -23,12 +32,67 @@ import org.jetbrains.kotlin.psi.KtSimpleNameExpression;
 import org.jetbrains.kotlin.psi.KtUnaryExpression;
 import org.jetbrains.kotlin.resolve.BindingContext;
 import org.jetbrains.kotlin.psi.psiUtil.KtPsiUtilKt;
+import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;
+import org.netbeans.api.project.Project;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 
 /**
  *
  * @author Александр
  */
 public class ReferenceUtils {
+    
+    private static List<SourceElement> resolveToSourceElements(List<KotlinReference> refs) {
+        if (refs.isEmpty()) {
+            return Lists.newArrayList();
+        }
+        
+        KtFile ktFile = refs.get(0).getReferenceExpression().getContainingKtFile();
+        String path = ktFile.getVirtualFile().getCanonicalPath();
+        File f = new File(path);
+        FileObject file = FileUtil.toFileObject(f);
+        if (file == null){
+            return Lists.newArrayList();
+        }
+        
+        Project project = ProjectUtils.getKotlinProjectForFileObject(file);
+        if (project == null) {
+            return Lists.newArrayList();
+        }
+        
+        return resolveToSourceElements(refs, 
+                KotlinAnalyzer.analyzeFile(project, ktFile).getAnalysisResult().getBindingContext(), project);
+    }
+    
+    private static List<SourceElement> resolveToSourceElements(List<KotlinReference> refs, BindingContext context, Project project) {
+        List<SourceElement> sourceElements = Lists.newArrayList();
+        List<DeclarationDescriptor> declarationDescriptors = Lists.newArrayList();
+        
+        for (KotlinReference ref : refs) {
+            declarationDescriptors.addAll(ref.getTargetDescriptors(context));
+        }
+        
+        for (DeclarationDescriptor declarationDescriptor : declarationDescriptors) {
+            sourceElements.addAll(NetBeansDescriptorUtils.descriptorToDeclarations(declarationDescriptor, project));
+        }
+        
+        return sourceElements;
+    }
+    
+    public static List<? extends SourceElement> resolveToSourceDeclaration(KtElement ktElement){
+        if (ktElement instanceof KtDeclaration) {
+            return Lists.newArrayList(new KotlinSourceElement(ktElement));
+        } else {
+            KtReferenceExpression referenceExpression = getReferenceExpression(ktElement);
+            if (referenceExpression == null) {
+                return Lists.newArrayList();
+            }
+            
+            List<KotlinReference> refs = createReferences(referenceExpression);
+            return resolveToSourceElements(refs);
+        }
+    }
     
     @Nullable
     public static KtReferenceExpression getReferenceExpression(PsiElement element) {

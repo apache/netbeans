@@ -1,8 +1,13 @@
 package org.black.kotlin.highlighter.occurrences;
 
+import com.google.common.collect.Lists;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.black.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult;
+import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.OccurrencesFinder;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -32,12 +37,25 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
     @Override
     public void run(KotlinParserResult result, SchedulerEvent event) {
         cancel = false;
+        highlighting.clear();
+        KtFile ktFile = result.getKtFile();
         
+        PsiElement psiElement = ktFile.findElementAt(caretPosition);
+        ktFile.accept(PsiElementVisitor.EMPTY_VISITOR);
+        
+        List<PsiElement> psiElements = findOccurrencesInFile(ktFile, psiElement);
+        psiElements.add(psiElement);
+        
+        for (PsiElement psi : psiElements){
+            ColoringAttributes attributes = ColoringAttributes.MARK_OCCURRENCES;
+            OffsetRange offset = new OffsetRange(psi.getTextRange().getStartOffset(), psi.getTextRange().getEndOffset());
+            highlighting.put(offset, attributes);
+        }
     }
 
     @Override
     public int getPriority() {
-        return 2;
+        return 0;
     }
 
     @Override
@@ -48,6 +66,30 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
     @Override
     public void cancel() {
         cancel = true;
+    }
+
+    private List<PsiElement> findOccurrencesInFile(KtFile ktFile, PsiElement psiElement) {
+        List<PsiElement> elements = Lists.newArrayList();
+        
+        for (PsiElement psi : ktFile.getChildren()){
+            elements.addAll(findOccurrencesInPsiElement(psiElement, psi));
+        }
+        
+        return elements;
+    }
+    
+    private List<PsiElement> findOccurrencesInPsiElement(PsiElement toFind, PsiElement psiElement) {
+        List<PsiElement> elements = Lists.newArrayList();
+        
+        if (psiElement.getText().equals(toFind.getText()) && psiElement.getUseScope().equals(toFind.getUseScope())){
+            elements.add(psiElement);
+        }
+        
+        for (PsiElement psi : psiElement.getChildren()){
+            elements.addAll(findOccurrencesInPsiElement(toFind, psi));
+        }
+        
+        return elements;
     }
     
 }

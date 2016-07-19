@@ -2,6 +2,7 @@ package org.black.kotlin.project;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import edu.emory.mathcs.backport.java.util.Collections;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,7 +67,12 @@ import org.openide.filesystems.FileObject;
         public List<FileObject> getSrcDirectories(KotlinProjectConstants type) {
             Set<FileObject> orderedFiles = Sets.newLinkedHashSet();
             
-            findSrc(kotlinProject.getProjectDirectory().getFileObject("src"), orderedFiles, type);
+            FileObject srcDir = kotlinProject.getProjectDirectory().getFileObject("src");
+            if (srcDir == null) {
+                return Lists.newArrayList();
+            }
+            
+            findSrc(srcDir, orderedFiles, type);
             return Lists.newArrayList(orderedFiles);
 
         }

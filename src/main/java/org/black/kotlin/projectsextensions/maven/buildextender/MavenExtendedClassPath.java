@@ -87,7 +87,7 @@ public class MavenExtendedClassPath implements ClassPathExtender {
                 List<String> javaClasspathElements = new ArrayList<String>(Arrays.asList(bootClassPath.split(
                         Pattern.quote(System.getProperty("path.separator")))));
                 javaClasspathElements.addAll(project.getOriginalMavenProject().getSystemClasspathElements());
-//                ClassPath boot = ClassPathSupport.createProxyClassPath(getClasspath(javaClasspathElements), getProjectSourcesClassPath(ClassPath.EXECUTE));
+                javaClasspathElements.addAll(project.getOriginalMavenProject().getTestClasspathElements());
                 return getClasspath(javaClasspathElements);
             } catch (DependencyResolutionRequiredException ex) {
                 Exceptions.printStackTrace(ex);

@@ -16,6 +16,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ReferenceType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifier;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
@@ -34,10 +35,14 @@ public class NetBeansJavaClassifierType extends NetBeansJavaType<TypeMirror> imp
 
     @Override
     public JavaClassifier getClassifier() {
-        if (getBinding().getKind() == TypeKind.DECLARED){
-            return NetBeansJavaClassifier.create(((DeclaredType)getBinding()).asElement());
-        } else 
-            return null;
+        switch (getBinding().getKind()) {
+            case DECLARED:
+                return NetBeansJavaClassifier.create(((DeclaredType)getBinding()).asElement());
+            case TYPEVAR:
+                return NetBeansJavaClassifier.create(((TypeVariable) getBinding()).asElement());
+            default:
+                return null;
+        }
     }
 
     @Override

@@ -12,6 +12,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.black.kotlin.project.KotlinProject;
@@ -132,11 +133,11 @@ public class NetBeansJavaElementUtil {
         List<TypeMirror> superTypes = Lists.newArrayList();
         for (TypeMirror superInterface : typeBinding.getInterfaces()){
             superTypes.add(superInterface);
-        }        
+        }
         
-        TypeMirror superClass = typeBinding.getSuperclass();
-        if (superClass != null){
-            superTypes.add(superClass);
+        TypeMirror superclass = typeBinding.getSuperclass();
+        if (!(superclass instanceof NoType)){
+            superTypes.add(superclass);
         }
         
         return superTypes;

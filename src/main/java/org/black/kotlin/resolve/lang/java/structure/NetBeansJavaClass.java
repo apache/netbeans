@@ -83,7 +83,8 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<TypeElement> imple
 
     @Override
     public Collection<JavaClassifierType> getSupertypes() {
-        return classifierTypes(NetBeansJavaElementUtil.getSuperTypesWithObject(getBinding()));
+        Collection<JavaClassifierType> types = classifierTypes(NetBeansJavaElementUtil.getSuperTypesWithObject(getBinding()));
+        return types;
     }
 
     @Override

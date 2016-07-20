@@ -128,7 +128,8 @@ public class NetBeansVirtualFileFinder extends VirtualFileKotlinClassFinder impl
         }
         
         if (javaClass.getOuterClass() != null){
-            file = file.getParent().findChild(classFileName(javaClass)+".class");
+            String classFileName = classFileName(javaClass)+".class";
+            file = file.getParent().findChild(classFileName);
             if (file != null){
                 throw new IllegalStateException("Virtual file not found");
             }

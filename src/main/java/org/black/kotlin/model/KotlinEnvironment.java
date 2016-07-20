@@ -283,7 +283,8 @@ public class KotlinEnvironment {
     }
     
     public VirtualFile getVirtualFileInJar(@NotNull String pathToJar, @NotNull String relativePath) {
-        return applicationEnvironment.getJarFileSystem().findFileByPath(pathToJar + "!/" + relativePath);
+        VirtualFile file = applicationEnvironment.getJarFileSystem().findFileByPath(pathToJar.replace("%20", " ") + "!/" + relativePath.replace("%20", " "));
+        return file;
     }
     
     public Set<VirtualFile> getRoots(){

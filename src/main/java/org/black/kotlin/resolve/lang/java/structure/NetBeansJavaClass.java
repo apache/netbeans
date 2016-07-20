@@ -59,7 +59,7 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<TypeElement> imple
 
     @Override
     public boolean isInterface() {
-        return getBinding().getKind().isInterface();
+        return getBinding().getKind() == ElementKind.INTERFACE;
     }
 
     @Override

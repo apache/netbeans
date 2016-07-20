@@ -2,6 +2,8 @@ package org.black.kotlin.projectsextensions.maven;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.ProjectBuildingException;
 import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.project.KotlinSources;
@@ -12,6 +14,7 @@ import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 
@@ -45,14 +48,19 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                             }
                         };
                         
+//                    try {
+//                        MavenProject parent = project.loadParentOf(project.getEmbedder(), project.getOriginalMavenProject());
+//                    } catch (ProjectBuildingException ex) {
+//                        Exceptions.printStackTrace(ex);
+//                    }
+                        
                         RequestProcessor.getDefault().post(run);
                         
                         KotlinSources sources = new KotlinSources(project);
                         for (FileObject file : sources.getAllKtFiles()){
-                            KotlinLightClassGeneration.INSTANCE.generate(file);
+                            KotlinLightClassGeneration.INSTANCE.generate(file, project);
                         }
                         
-                        Lookup lkp = project.getLookup();
                         
                         project.getProjectWatcher().addPropertyChangeListener(new PropertyChangeListener(){
                             @Override

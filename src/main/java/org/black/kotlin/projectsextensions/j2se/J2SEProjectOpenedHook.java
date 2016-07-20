@@ -51,7 +51,7 @@ public class J2SEProjectOpenedHook extends ProjectOpenedHook{
                         
                         KotlinSources sources = new KotlinSources(project);
                         for (FileObject file : sources.getAllKtFiles()){
-                            KotlinLightClassGeneration.INSTANCE.generate(file);
+                            KotlinLightClassGeneration.INSTANCE.generate(file, project);
                         }
                         
                         KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);

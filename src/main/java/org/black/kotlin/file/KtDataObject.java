@@ -4,6 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
+import org.black.kotlin.utils.ProjectUtils;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.awt.ActionID;
@@ -97,7 +98,7 @@ public class KtDataObject extends MultiDataObject {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals(DataObject.PROP_MODIFIED)) {
-                    KotlinLightClassGeneration.INSTANCE.generate(file);
+                    KotlinLightClassGeneration.INSTANCE.generate(file, ProjectUtils.getKotlinProjectForFileObject(file));
                 } 
             }
         });

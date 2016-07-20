@@ -74,7 +74,7 @@ public class KotlinProjectOpenedHook extends ProjectOpenedHook {
                         
                         KotlinSources sources = new KotlinSources(project);
                         for (FileObject file : sources.getAllKtFiles()){
-                            KotlinLightClassGeneration.INSTANCE.generate(file);
+                            KotlinLightClassGeneration.INSTANCE.generate(file, project);
                         }
                         
                         List<ClassPath> paths = new ArrayList<ClassPath>();

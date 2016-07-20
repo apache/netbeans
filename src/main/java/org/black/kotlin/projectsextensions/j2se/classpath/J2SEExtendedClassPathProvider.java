@@ -222,7 +222,8 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
                 case 1:
                     cp = ClassPathFactory.createClassPath(
                             ProjectClassPathSupport.createPropertyBasedClassPathImplementation(
-                                    projectDirectory, evaluator, new String[]{RUN_TEST_CLASSPATH, KOTLINC_CLASSPATH})); // NOI18N
+                                    projectDirectory, evaluator, new String[]{RUN_TEST_CLASSPATH, KOTLINC_CLASSPATH}));
+                    
                     break;
                 case 2:
                     cp = ClassPathFactory.createClassPath(

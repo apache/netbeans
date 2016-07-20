@@ -6,7 +6,6 @@ import java.util.Map;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider;
 import org.black.kotlin.project.KotlinClassPathProvider;
-import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.project.KotlinSources;
 import org.black.kotlin.projectsextensions.maven.buildextender.MavenExtendedClassPath;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;

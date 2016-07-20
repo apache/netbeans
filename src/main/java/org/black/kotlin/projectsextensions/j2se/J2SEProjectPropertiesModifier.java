@@ -31,6 +31,22 @@ public class J2SEProjectPropertiesModifier {
         this.project = project;     
     }
     
+    private String[] getModifiedClasspathProperty(EditableProperties editableProperties, String str) {
+        List<String> classpath = new ArrayList<String>();
+        boolean hasKotlincClasspath = false;
+        for (String item : Arrays.asList(editableProperties.getProperty(str).split(":"))) {
+            classpath.add(item + ":");
+            if (item.equals("${kotlinc.classpath}")) {
+                hasKotlincClasspath = true;
+            }
+        }
+        if (!hasKotlincClasspath) {
+            classpath.add("${kotlinc.classpath}");
+        }
+        
+        return classpath.toArray(new String[classpath.size()]);
+    }
+    
     public void addKotlinRuntime() {
         FileObject root = project.getProjectDirectory();
         FileObject nbproject = root.getFileObject("nbproject");
@@ -47,18 +63,8 @@ public class J2SEProjectPropertiesModifier {
         try {
             InputStream input = projectProps.getInputStream();
             editableProperties.load(input);
-            List<String> runClasspath = new ArrayList<String>();
-            boolean hasKotlincClasspath = false;
-            for (String item : Arrays.asList(editableProperties.getProperty("run.classpath").split(":"))) {
-                runClasspath.add(item + ":");
-                if (item.equals("${kotlinc.classpath}")) {
-                    hasKotlincClasspath = true;
-                }
-            }
-            if (!hasKotlincClasspath) {
-                runClasspath.add("${kotlinc.classpath}");
-            }
-            editableProperties.setProperty("run.classpath", runClasspath.toArray(new String[runClasspath.size()]));
+            editableProperties.setProperty("run.classpath", getModifiedClasspathProperty(editableProperties, "run.classpath"));
+            editableProperties.setProperty("javac.test.classpath", getModifiedClasspathProperty(editableProperties, "javac.test.classpath"));
             editableProperties.setProperty("file.reference.kotlin-runtime.jar", KotlinClasspath.getKotlinBootClasspath());
             editableProperties.setProperty("kotlinc.classpath", "${file.reference.kotlin-runtime.jar}");
             input.close();

@@ -6,6 +6,7 @@ import org.netbeans.modules.maven.NbMavenProjectFactory;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.spi.project.ProjectState;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -40,4 +41,16 @@ public class MavenHelper {
         return !project.getOriginalMavenProject().getModules().isEmpty();
     }
     
+    public static boolean isMavenMainModuledProject(NbMavenProjectImpl project) {
+        if (isModuled(project)) {
+            try {
+                if (getMavenProject(project.getProjectDirectory().getParent()) == null) {
+                    return true;
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        return false;
+    }
 }

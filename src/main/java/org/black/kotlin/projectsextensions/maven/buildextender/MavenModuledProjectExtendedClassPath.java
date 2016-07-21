@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.black.kotlin.projectsextensions.ClassPathExtender;
+import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.black.kotlin.projectsextensions.maven.MavenHelper;
 import org.black.kotlin.utils.KotlinClasspath;
 import org.netbeans.api.java.classpath.ClassPath;

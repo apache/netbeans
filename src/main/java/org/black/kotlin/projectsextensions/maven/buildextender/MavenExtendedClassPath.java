@@ -13,6 +13,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.project.ProjectBuildingException;
 import org.black.kotlin.projectsextensions.ClassPathExtender;
+import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.black.kotlin.projectsextensions.maven.MavenHelper;
 import org.black.kotlin.utils.KotlinClasspath;
 import org.jetbrains.annotations.NotNull;
@@ -32,19 +33,9 @@ import org.openide.util.Exceptions;
 public class MavenExtendedClassPath implements ClassPathExtender {
 
     private final NbMavenProjectImpl project;
-    private NbMavenProjectImpl parentProject = null;
-    private MavenModuledProjectExtendedClassPath parentClassPath = null;
     
     public MavenExtendedClassPath(NbMavenProjectImpl project) {
         this.project = project;
-        try {
-            parentProject = getMainParent(project);
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        if (parentProject != null) {
-            parentClassPath = new MavenModuledProjectExtendedClassPath(parentProject);
-        }
     }
     
     private NbMavenProjectImpl getParent(NbMavenProjectImpl proj, NbMavenProjectFactory projectFactory) throws IOException {
@@ -112,9 +103,6 @@ public class MavenExtendedClassPath implements ClassPathExtender {
                 Exceptions.printStackTrace(ex);
             }
         } else if (type.equals(ClassPath.SOURCE)) {
-            if (parentClassPath != null) {
-                return parentClassPath.getProjectSourcesClassPath(type);
-            }
             try {
                 return getClasspath(project.getOriginalMavenProject().getCompileSourceRoots());
             } catch (DependencyResolutionRequiredException ex) {

@@ -60,15 +60,14 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                             KotlinLightClassGeneration.INSTANCE.generate(file, project);
                         }
                         
-                        
-//                        project.getProjectWatcher().addPropertyChangeListener(new PropertyChangeListener(){
-//                            @Override
-//                            public void propertyChange(PropertyChangeEvent evt) {
-//                                KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
-//                            }
-//                        });
-                        
                         KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
+                        
+                        project.getProjectWatcher().addPropertyChangeListener(new PropertyChangeListener(){
+                            @Override
+                            public void propertyChange(PropertyChangeEvent evt) {
+                                KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
+                            }
+                        });
                     }
             };
         thread.start();

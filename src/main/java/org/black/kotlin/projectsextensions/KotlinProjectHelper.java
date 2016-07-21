@@ -105,11 +105,7 @@ public class KotlinProjectHelper {
                 extendedClassPaths.put(project, new J2SEExtendedClassPathProvider(project));
             }
             if (project instanceof NbMavenProjectImpl) {
-                if (!MavenHelper.isModuled((NbMavenProjectImpl)project)){
                     extendedClassPaths.put(project, new MavenExtendedClassPath((NbMavenProjectImpl) project));
-                } else {
-                    extendedClassPaths.put(project, new MavenModuledProjectExtendedClassPath((NbMavenProjectImpl) project));
-                }
             }
         }
         
@@ -121,11 +117,7 @@ public class KotlinProjectHelper {
             extendedClassPaths.put(project, new J2SEExtendedClassPathProvider(project));
         }
         if (project instanceof NbMavenProjectImpl) {
-            if (!MavenHelper.isModuled((NbMavenProjectImpl)project)){
                 extendedClassPaths.put(project, new MavenExtendedClassPath((NbMavenProjectImpl) project));
-            } else {
-                extendedClassPaths.put(project, new MavenModuledProjectExtendedClassPath((NbMavenProjectImpl) project));
-            }
         }
         NetBeansJavaProjectElementUtils.updateClasspathInfo(project);
         KotlinEnvironment.updateKotlinEnvironment(project);

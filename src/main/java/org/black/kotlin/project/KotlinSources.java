@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -63,13 +64,38 @@ import org.openide.filesystems.FileObject;
             }
         }
 
+        public boolean isMavenModuledProject() {
+            if (!(kotlinProject instanceof NbMavenProjectImpl)){
+                return false;
+            }
+            
+            NbMavenProjectImpl mavenProject = (NbMavenProjectImpl) kotlinProject;
+            
+            List modules = mavenProject.getOriginalMavenProject().getModules();
+            if (modules.isEmpty()) {
+                return false;
+            }
+            
+            return true;
+        }
+        
+        @NotNull
+        private Set<FileObject> getSrcDirectoriesOfMavenModules(KotlinProjectConstants type) {
+            //TODO
+            return Sets.newHashSet();
+        }
+        
         @NotNull
         public List<FileObject> getSrcDirectories(KotlinProjectConstants type) {
             Set<FileObject> orderedFiles = Sets.newLinkedHashSet();
             
             FileObject srcDir = kotlinProject.getProjectDirectory().getFileObject("src");
             if (srcDir == null) {
-                return Lists.newArrayList();
+                if (!isMavenModuledProject()){
+                    return Lists.newArrayList();
+                } else {
+                    return Lists.newArrayList(getSrcDirectoriesOfMavenModules(type));
+                }
             }
             
             findSrc(srcDir, orderedFiles, type);

@@ -52,12 +52,6 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                                 progressbar.finish();
                             }
                         };
-                        
-//                    try {
-//                        MavenProject parent = project.loadParentOf(project.getEmbedder(), project.getOriginalMavenProject());
-//                    } catch (ProjectBuildingException ex) {
-//                        Exceptions.printStackTrace(ex);
-//                    }
                       
                         RequestProcessor.getDefault().post(run);
                         
@@ -67,12 +61,12 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                         }
                         
                         
-                        project.getProjectWatcher().addPropertyChangeListener(new PropertyChangeListener(){
-                            @Override
-                            public void propertyChange(PropertyChangeEvent evt) {
-                                KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
-                            }
-                        });
+//                        project.getProjectWatcher().addPropertyChangeListener(new PropertyChangeListener(){
+//                            @Override
+//                            public void propertyChange(PropertyChangeEvent evt) {
+//                                KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
+//                            }
+//                        });
                         
                         KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
                     }

@@ -7,7 +7,9 @@ import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider;
 import org.black.kotlin.project.KotlinClassPathProvider;
 import org.black.kotlin.project.KotlinSources;
+import org.black.kotlin.projectsextensions.maven.MavenHelper;
 import org.black.kotlin.projectsextensions.maven.buildextender.MavenExtendedClassPath;
+import org.black.kotlin.projectsextensions.maven.buildextender.MavenModuledProjectExtendedClassPath;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.j2seproject.J2SEProject;
@@ -103,7 +105,11 @@ public class KotlinProjectHelper {
                 extendedClassPaths.put(project, new J2SEExtendedClassPathProvider(project));
             }
             if (project instanceof NbMavenProjectImpl) {
-                extendedClassPaths.put(project, new MavenExtendedClassPath((NbMavenProjectImpl) project));
+                if (!MavenHelper.isModuled((NbMavenProjectImpl)project)){
+                    extendedClassPaths.put(project, new MavenExtendedClassPath((NbMavenProjectImpl) project));
+                } else {
+                    extendedClassPaths.put(project, new MavenModuledProjectExtendedClassPath((NbMavenProjectImpl) project));
+                }
             }
         }
         
@@ -115,7 +121,11 @@ public class KotlinProjectHelper {
             extendedClassPaths.put(project, new J2SEExtendedClassPathProvider(project));
         }
         if (project instanceof NbMavenProjectImpl) {
-            extendedClassPaths.put(project, new MavenExtendedClassPath((NbMavenProjectImpl) project));
+            if (!MavenHelper.isModuled((NbMavenProjectImpl)project)){
+                extendedClassPaths.put(project, new MavenExtendedClassPath((NbMavenProjectImpl) project));
+            } else {
+                extendedClassPaths.put(project, new MavenModuledProjectExtendedClassPath((NbMavenProjectImpl) project));
+            }
         }
         NetBeansJavaProjectElementUtils.updateClasspathInfo(project);
         KotlinEnvironment.updateKotlinEnvironment(project);

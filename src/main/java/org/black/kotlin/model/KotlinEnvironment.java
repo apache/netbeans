@@ -46,12 +46,14 @@ import com.intellij.psi.compiled.ClassFileDecompilers;
 import com.intellij.psi.impl.PsiTreeChangePreprocessor;
 import com.intellij.psi.impl.compiled.ClsCustomNavigationPolicy;
 import com.intellij.psi.impl.file.impl.JavaFileManager;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.black.kotlin.filesystem.KotlinLightClassManager;
 import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.black.kotlin.project.KotlinSources;
+import org.black.kotlin.projectsextensions.maven.MavenHelper;
 import org.black.kotlin.resolve.BuiltInsReferenceResolver;
 import org.black.kotlin.resolve.KotlinCacheServiceImpl;
 import org.black.kotlin.resolve.KotlinSourceIndex;
@@ -68,7 +70,9 @@ import org.jetbrains.kotlin.resolve.diagnostics.DiagnosticSuppressor;
 import org.jetbrains.kotlin.resolve.diagnostics.SuppressStringProvider;
 import org.jetbrains.kotlin.resolve.jvm.diagnostics.DefaultErrorMessagesJvm;
 import org.jetbrains.kotlin.resolve.jvm.extensions.PackageFragmentProviderExtension;
+import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 
 /**
  * This class creates Kotlin environment for Kotlin project.
@@ -177,6 +181,16 @@ public class KotlinEnvironment {
     @NotNull
     public static KotlinEnvironment getEnvironment(@NotNull org.netbeans.api.project.Project kotlinProject) {
         synchronized (ENVIRONMENT_LOCK) {
+//            org.netbeans.api.project.Project kotlinProject = p;
+            
+//            if (kotlinProject instanceof NbMavenProjectImpl) {
+//                try {
+//                    kotlinProject = MavenHelper.getMainParent((NbMavenProjectImpl) kotlinProject);
+//                } catch (IOException ex) {
+//                    Exceptions.printStackTrace(ex);
+//                }
+//            }
+            
             if (!CACHED_ENVIRONMENT.containsKey(kotlinProject)) {
                 CACHED_ENVIRONMENT.put(kotlinProject, new KotlinEnvironment(kotlinProject, Disposer.newDisposable()));
             }

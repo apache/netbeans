@@ -18,6 +18,10 @@ public class MavenHelper {
     
     private static NbMavenProjectFactory projectFactory = new NbMavenProjectFactory();
     
+    public static boolean hasParent(NbMavenProjectImpl project) {
+        return getParentProjectDirectory(project.getProjectDirectory()) != null;
+    }
+    
     @Nullable
     public static NbMavenProjectImpl getMavenProject(FileObject dir) throws IOException {
         if (dir == null) {

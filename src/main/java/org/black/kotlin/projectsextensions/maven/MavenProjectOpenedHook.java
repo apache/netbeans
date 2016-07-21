@@ -12,6 +12,7 @@ import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.project.KotlinSources;
 import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.black.kotlin.projectsextensions.maven.buildextender.MavenExtendedClassPath;
+import org.black.kotlin.projectsextensions.maven.buildextender.PomXmlModifier;
 import org.black.kotlin.utils.ProjectUtils;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.progress.ProgressHandle;
@@ -55,20 +56,24 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                       
                         RequestProcessor.getDefault().post(run);
                         
-//                        KotlinSources sources = new KotlinSources(project);
                         KotlinSources sources = KotlinProjectHelper.INSTANCE.getKotlinSources(project);
-                        for (FileObject file : sources.getAllKtFiles()){
-                            KotlinLightClassGeneration.INSTANCE.generate(file, project);
+                        if (!sources.hasLightClasses()) {
+                            for (FileObject file : sources.getAllKtFiles()){
+                                KotlinLightClassGeneration.INSTANCE.generate(file, project);
+                            }
+                            sources.lightClassesGenerated();
                         }
-                        
+                        if (!MavenHelper.hasParent(project)){
+                            new PomXmlModifier(project);
+                        }
 //                        KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
                         
-//                        project.getProjectWatcher().addPropertyChangeListener(new PropertyChangeListener(){
-//                            @Override
-//                            public void propertyChange(PropertyChangeEvent evt) {
-//                                KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
-//                            }
-//                        });
+                        project.getProjectWatcher().addPropertyChangeListener(new PropertyChangeListener(){
+                            @Override
+                            public void propertyChange(PropertyChangeEvent evt) {
+                                KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
+                            }
+                        });
                     }
             };
         thread.start();

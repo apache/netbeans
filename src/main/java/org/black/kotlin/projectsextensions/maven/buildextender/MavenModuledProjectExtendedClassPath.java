@@ -31,6 +31,9 @@ public class MavenModuledProjectExtendedClassPath implements ClassPathExtender{
     private final NbMavenProjectImpl project;
     private final List<NbMavenProjectImpl> children = new ArrayList<NbMavenProjectImpl>();
     private final Set<ClassPath> sourceClasspath = Sets.newHashSet();
+    private final Set<ClassPath> compileClasspath = Sets.newHashSet();
+    private final Set<ClassPath> executeClasspath = Sets.newHashSet();
+    private final Set<ClassPath> bootClasspath = Sets.newHashSet();
     
     public MavenModuledProjectExtendedClassPath(NbMavenProjectImpl project) {
         this.project = project;
@@ -56,10 +59,21 @@ public class MavenModuledProjectExtendedClassPath implements ClassPathExtender{
     private void addClassPathFromChildren(){
         for (NbMavenProjectImpl child : children) {
             if (MavenHelper.isModuled(child)) {
-                sourceClasspath.add(new MavenModuledProjectExtendedClassPath(child).getProjectSourcesClassPath(ClassPath.SOURCE));
+                MavenModuledProjectExtendedClassPath extendedClasspath = new MavenModuledProjectExtendedClassPath(child);
+                sourceClasspath.add(extendedClasspath.getProjectSourcesClassPath(ClassPath.SOURCE));
+                bootClasspath.add(extendedClasspath.getProjectSourcesClassPath(ClassPath.BOOT));
+                executeClasspath.add(extendedClasspath.getProjectSourcesClassPath(ClassPath.EXECUTE));
+                compileClasspath.add(extendedClasspath.getProjectSourcesClassPath(ClassPath.COMPILE));
             } else {
                 try {
                     sourceClasspath.add(getClasspath(child.getOriginalMavenProject().getCompileSourceRoots()));
+                    
+                    bootClasspath.add(getClasspath(child.getOriginalMavenProject().getSystemClasspathElements()));
+                    bootClasspath.add(getClasspath(child.getOriginalMavenProject().getTestClasspathElements()));
+                    
+                    compileClasspath.add(getClasspath(project.getOriginalMavenProject().getCompileClasspathElements()));
+                    
+                    executeClasspath.add(getClasspath(project.getOriginalMavenProject().getRuntimeClasspathElements()));
                 } catch (DependencyResolutionRequiredException ex) {
                     Exceptions.printStackTrace(ex);
                 } catch (MalformedURLException ex) {
@@ -73,7 +87,6 @@ public class MavenModuledProjectExtendedClassPath implements ClassPathExtender{
         List<URL> classpaths = new ArrayList<URL>();
         List<String> classpath = new ArrayList<String>();
         classpath.addAll(paths);
-        classpath.add(KotlinClasspath.getKotlinBootClasspath());
         
         for (String path : classpath) {
             File file = new File(path);
@@ -97,7 +110,10 @@ public class MavenModuledProjectExtendedClassPath implements ClassPathExtender{
     public ClassPath getProjectSourcesClassPath(String type) {
         if (type.equals(ClassPath.COMPILE)) {
             try {
-                return getClasspath(project.getOriginalMavenProject().getCompileClasspathElements());
+                ClassPath compile = getClasspath(project.getOriginalMavenProject().getCompileClasspathElements());
+                compileClasspath.add(compile);
+                
+                return ClassPathSupport.createProxyClassPath(compileClasspath.toArray(new ClassPath[compileClasspath.size()]));
             } catch (DependencyResolutionRequiredException ex) {
                 Exceptions.printStackTrace(ex);
             } catch (MalformedURLException ex) {
@@ -105,7 +121,10 @@ public class MavenModuledProjectExtendedClassPath implements ClassPathExtender{
             }
         } else if (type.equals(ClassPath.EXECUTE)) {
             try {
-                return getClasspath(project.getOriginalMavenProject().getRuntimeClasspathElements());
+                ClassPath execute = getClasspath(project.getOriginalMavenProject().getRuntimeClasspathElements());
+                executeClasspath.add(execute);
+                
+                return ClassPathSupport.createProxyClassPath(executeClasspath.toArray(new ClassPath[executeClasspath.size()]));
             } catch (DependencyResolutionRequiredException ex) {
                 Exceptions.printStackTrace(ex);
             } catch (MalformedURLException ex) {
@@ -129,7 +148,11 @@ public class MavenModuledProjectExtendedClassPath implements ClassPathExtender{
                         Pattern.quote(System.getProperty("path.separator")))));
                 javaClasspathElements.addAll(project.getOriginalMavenProject().getSystemClasspathElements());
                 javaClasspathElements.addAll(project.getOriginalMavenProject().getTestClasspathElements());
-                return getClasspath(javaClasspathElements);
+                javaClasspathElements.add(KotlinClasspath.getKotlinBootClasspath());
+                ClassPath boot = getClasspath(javaClasspathElements);
+                bootClasspath.add(boot);
+                
+                return ClassPathSupport.createProxyClassPath(bootClasspath.toArray(new ClassPath[bootClasspath.size()]));
             } catch (DependencyResolutionRequiredException ex) {
                 Exceptions.printStackTrace(ex);
             } catch (MalformedURLException ex) {

@@ -32,9 +32,18 @@ import org.openide.filesystems.FileObject;
     public final class KotlinSources {
 
         private final Project kotlinProject;
+        private boolean lightClasses = false;
         
         public KotlinSources(Project kotlinProject){
             this.kotlinProject = kotlinProject;
+        }
+        
+        public void lightClassesGenerated(){
+            lightClasses = true;
+        }
+        
+        public boolean hasLightClasses(){
+            return lightClasses;
         }
         
         private void findSrc(FileObject fo, Collection<FileObject> files, KotlinProjectConstants type) {

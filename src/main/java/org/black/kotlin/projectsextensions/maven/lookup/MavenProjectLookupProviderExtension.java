@@ -25,7 +25,6 @@ public class MavenProjectLookupProviderExtension implements LookupProvider {
         
         return Lookups.fixed(new MavenProjectPrivilegedTemplates(),
                 new MavenProjectOpenedHook(project),
-                new PomXmlModifier(project),
                 new MavenClassPathProviderImpl(project)
         );
     }

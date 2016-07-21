@@ -2,16 +2,19 @@ package org.black.kotlin.project;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.intellij.util.containers.HashSet;
 import edu.emory.mathcs.backport.java.util.Collections;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.event.ChangeListener;
 import org.black.kotlin.builder.KotlinPsiManager;
+import org.black.kotlin.projectsextensions.maven.MavenHelper;
 import org.jetbrains.annotations.NotNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.SourceGroup;
@@ -21,7 +24,7 @@ import org.openide.filesystems.FileObject;
 
 /**
  *
- * @author Александр
+ * @author РђР»РµРєСЃР°РЅРґСЂ
  */
 /**
      * This class defines the location of Kotlin sources.
@@ -81,8 +84,13 @@ import org.openide.filesystems.FileObject;
         
         @NotNull
         private Set<FileObject> getSrcDirectoriesOfMavenModules(KotlinProjectConstants type) {
-            //TODO
-            return Sets.newHashSet();
+            Set<FileObject> src = new LinkedHashSet<FileObject>();
+            
+            for (FileObject file : MavenHelper.getAllChildrenSrcDirectoriesOfProject((NbMavenProjectImpl) kotlinProject)) {
+                findSrc(file, src, type);
+            }
+            
+            return src;
         }
         
         @NotNull

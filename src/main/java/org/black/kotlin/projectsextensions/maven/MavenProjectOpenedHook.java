@@ -55,19 +55,20 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                       
                         RequestProcessor.getDefault().post(run);
                         
-                        KotlinSources sources = new KotlinSources(project);
+//                        KotlinSources sources = new KotlinSources(project);
+                        KotlinSources sources = KotlinProjectHelper.INSTANCE.getKotlinSources(project);
                         for (FileObject file : sources.getAllKtFiles()){
                             KotlinLightClassGeneration.INSTANCE.generate(file, project);
                         }
                         
-                        KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
+//                        KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
                         
-                        project.getProjectWatcher().addPropertyChangeListener(new PropertyChangeListener(){
-                            @Override
-                            public void propertyChange(PropertyChangeEvent evt) {
-                                KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
-                            }
-                        });
+//                        project.getProjectWatcher().addPropertyChangeListener(new PropertyChangeListener(){
+//                            @Override
+//                            public void propertyChange(PropertyChangeEvent evt) {
+//                                KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
+//                            }
+//                        });
                     }
             };
         thread.start();

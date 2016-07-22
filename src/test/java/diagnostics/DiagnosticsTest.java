@@ -1,8 +1,6 @@
 package diagnostics;
 
 import com.intellij.psi.PsiErrorElement;
-import mockproject.KotlinProjectCreator;
-import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.resolve.AnalysisResultWithProvider;
 import org.black.kotlin.resolve.KotlinAnalyzer;

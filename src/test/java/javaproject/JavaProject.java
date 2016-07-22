@@ -1,12 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package javaproject;
 
+import java.io.IOException;
+import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.j2seproject.J2SEProject;
+import org.netbeans.spi.project.ProjectFactory;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -15,18 +13,24 @@ import org.netbeans.modules.java.j2seproject.J2SEProject;
 public class JavaProject extends NbTestCase {
     
     public static JavaProject INSTANCE = new JavaProject();
-    private final J2SEProject project;
+    private Project project = null;
     
     private JavaProject(){
         super("Java project");
-        project = createJavaProject();
+        try {
+            project = createJavaProject();
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
     
-    private J2SEProject createJavaProject() {
+    private Project createJavaProject() throws IOException {
+        ProjectFactory projectFactory = new JavaProjectFactory();
         
-        
-        
-        return null;
+        return projectFactory.loadProject(JavaProjectUnzipper.INSTANCE.getProjectFolder(), new JavaProjectState());
     }
     
+    public Project getJavaProject() {
+        return project;
+    }
 }

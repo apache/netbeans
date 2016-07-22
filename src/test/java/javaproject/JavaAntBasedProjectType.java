@@ -1,21 +1,16 @@
-package mockproject;
+package javaproject;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import javax.swing.Icon;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.j2seproject.J2SEProject;
-import org.netbeans.modules.project.spi.intern.ProjectIDEServices;
 import org.netbeans.spi.project.support.ant.AntBasedProjectType;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
-import org.openide.util.Lookup;
 
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
-public class MockAntBasedProjectType implements AntBasedProjectType {
+public class JavaAntBasedProjectType implements AntBasedProjectType{
     
     private static final String TYPE = "org.netbeans.modules.java.j2seproject"; 
     private static final String PROJECT_CONFIGURATION_NAME = "data"; 
@@ -42,4 +37,5 @@ public class MockAntBasedProjectType implements AntBasedProjectType {
     public String getPrimaryConfigurationDataElementNamespace(boolean shared) {
         return shared ? PROJECT_CONFIGURATION_NAMESPACE : PRIVATE_CONFIGURATION_NAMESPACE;
     }
+    
 }

@@ -16,6 +16,8 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
+import org.black.kotlin.file.wizard.packagechooser.PackageChooser;
+import org.black.kotlin.file.wizard.packagechooser.TargetChooserPanel;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.SourceGroup;
@@ -43,14 +45,15 @@ public final class KtWizardIterator implements WizardDescriptor.InstantiatingIte
     private int index;
 
     private WizardDescriptor wizard;
-    private WizardDescriptor.Panel packageChooserPanel;
+    private TargetChooserPanel packageChooserPanel;
     private List<WizardDescriptor.Panel<WizardDescriptor>> panels;
 
     private List<WizardDescriptor.Panel<WizardDescriptor>> getPanels() {
         Project project = Templates.getProject(wizard);
         Sources sources = (Sources) project.getLookup().lookup(Sources.class);
         SourceGroup[] groups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-        packageChooserPanel = JavaTemplates.createPackageChooser(project, groups, new KtWizardPanel1());
+        packageChooserPanel = PackageChooser.createPackageChooser(project, groups, new KtWizardPanel1());
+//        packageChooserPanel = JavaTemplates.createPackageChooser(project, groups, new KtWizardPanel1());
     
         if (panels == null) {
             panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
@@ -84,7 +87,8 @@ public final class KtWizardIterator implements WizardDescriptor.InstantiatingIte
         
 //        JavaTargetChooserPanelGUI gui = (JavaTargetChooserPanelGUI) packageChooserPanel.getComponent();
 //        String packageName = gui.getPackageFileName().replace('/','.');
-        String packageName = "pack";
+
+        String packageName = packageChooserPanel.getPackageFqName();
         args.put("package", packageName);
         
         FileObject template = Templates.getTemplate(wizard);

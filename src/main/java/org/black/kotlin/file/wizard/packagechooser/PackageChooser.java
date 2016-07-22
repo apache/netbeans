@@ -13,11 +13,11 @@ public class PackageChooser {
     public static String pack = null;
     
     public static TargetChooserPanel createPackageChooser(Project project, SourceGroup[] folders, 
-        WizardDescriptor.Panel<WizardDescriptor> bottomPanel) {
+        WizardDescriptor.Panel<WizardDescriptor> bottomPanel, String type) {
         if (folders.length == 0) {
             throw new IllegalArgumentException("No folders selected");
         }
-        return new TargetChooserPanel(project, folders, bottomPanel, Type.FILE, false);
+        return new TargetChooserPanel(project, folders, bottomPanel, Type.FILE, false, type);
     }
     
 }

@@ -291,13 +291,6 @@ public class ProjectUtils {
     public static Project getKotlinProjectForFileObject(FileObject file){
         
         for (Project project : OpenProjects.getDefault().getOpenProjects()){
-//            if (!KotlinProjectHelper.INSTANCE.checkProject(project)){
-//                continue;
-//            }
-//            
-//            if (file.toURI().toString().contains(project.getProjectDirectory().toURI().toString())){
-//                return project;
-//            }
             
             if (file.toURI().toString().contains(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).toURI().toString())){
                 return project;

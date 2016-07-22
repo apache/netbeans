@@ -57,13 +57,15 @@ private static final String DEFAULT_NEW_PACKAGE_NAME =
     private boolean ignoreRootCombo;
     private boolean wasPreviouslyFQN = false;
     private String originalPackageName;
+    private final String fileType;
     
     /** Creates new form SimpleTargetChooserGUI */
-    public TargetChooserPanelGUI(Project p, SourceGroup[] groups, Component bottomPanel, Type type) {
+    public TargetChooserPanelGUI(Project p, SourceGroup[] groups, Component bottomPanel, Type type, String fileType) {
         this.type = type;
         this.project = p;
         this.groups = groups;
         this.ignoreChange = new ThreadLocal<Boolean>();
+        this.fileType = fileType;
         for (SourceGroup sourceGroup : groups)
             if (sourceGroup == null)
                 throw new NullPointerException ();
@@ -318,7 +320,9 @@ private static final String DEFAULT_NEW_PACKAGE_NAME =
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
         documentNameLabel.setLabelFor(documentNameTextField);
-        org.openide.awt.Mnemonics.setLocalizedText(documentNameLabel, org.openide.util.NbBundle.getMessage(TargetChooserPanelGUI.class, "LBL_JavaTargetChooserPanelGUI_ClassName_Label")); // NOI18N
+        
+        org.openide.awt.Mnemonics.
+                setLocalizedText(documentNameLabel, fileType + ":"); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel1.add(documentNameLabel, gridBagConstraints);

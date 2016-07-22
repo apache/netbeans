@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.black.kotlin.file.wizard;
+package org.black.kotlin.file.wizard.classwizard;
 
 import java.awt.Component;
 import java.io.IOException;
@@ -16,6 +16,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
+import org.black.kotlin.file.wizard.KtWizardPanel1;
 import org.black.kotlin.file.wizard.packagechooser.PackageChooser;
 import org.black.kotlin.file.wizard.packagechooser.TargetChooserPanel;
 import org.netbeans.api.java.project.JavaProjectConstants;
@@ -30,15 +31,14 @@ import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.util.NbBundle.Messages;
 
-// TODO define position attribute
 @TemplateRegistration(folder = "Kotlin", 
-        displayName = "#KtWizardIterator_displayName",
-        content = "content.kt", 
+        displayName = "#KtClassWizardIterator_displayName", 
+        content = "class.kt",
         iconBase = "org/black/kotlin/kt.png", 
-        description = "kt.html",
+        description = "ktClass.html",
         scriptEngine="freemarker")
-@Messages("KtWizardIterator_displayName=Simple Kotlin File")
-public final class KtWizardIterator implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
+@Messages("KtClassWizardIterator_displayName=Kotlin class")
+public final class KtClassWizardIterator implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
 
     private int index;
 
@@ -50,8 +50,8 @@ public final class KtWizardIterator implements WizardDescriptor.InstantiatingIte
         Project project = Templates.getProject(wizard);
         Sources sources = (Sources) project.getLookup().lookup(Sources.class);
         SourceGroup[] groups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-        packageChooserPanel = PackageChooser.createPackageChooser(project, groups, new KtWizardPanel1(), "File name");
-    
+        packageChooserPanel = PackageChooser.createPackageChooser(project, groups, new KtWizardPanel1(), "Class name");
+        
         if (panels == null) {
             panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
             panels.add(packageChooserPanel);

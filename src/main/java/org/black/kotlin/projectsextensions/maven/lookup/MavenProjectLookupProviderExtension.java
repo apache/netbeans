@@ -32,6 +32,7 @@ public class MavenProjectLookupProviderExtension implements LookupProvider {
     private static final class MavenProjectPrivilegedTemplates implements PrivilegedTemplates {
 
         private static final String[] PRIVILEGED_NAMES = new String[]{
+            "Templates/Kotlin/class.kt",
             "Templates/Kotlin/content.kt",
             "Templates/Classes/Class.java",
             "Templates/Classes/Package", 

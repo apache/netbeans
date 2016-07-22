@@ -47,12 +47,14 @@ private static final String FOLDER_TO_DELETE = "folderToDelete";    //NOI18N
     private SourceGroup folders[];
     private final Type type;
     private boolean isValidPackageRequired;
+    private final String fileType;
 
-    public TargetChooserPanel(Project project, SourceGroup folders[], WizardDescriptor.Panel<WizardDescriptor> bottomPanel, Type type, boolean isValidPackageRequired) {
+    public TargetChooserPanel(Project project, SourceGroup folders[], WizardDescriptor.Panel<WizardDescriptor> bottomPanel, Type type, boolean isValidPackageRequired, String fileType) {
         this.project = project;
         this.folders = folders;
         this.bottomPanel = bottomPanel;
         this.type = type;
+        this.fileType = fileType;
         if ( bottomPanel != null ) {
             bottomPanel.addChangeListener( this );
         }
@@ -62,7 +64,7 @@ private static final String FOLDER_TO_DELETE = "folderToDelete";    //NOI18N
     @Override
     public Component getComponent() {
         if (gui == null) {
-            gui = new TargetChooserPanelGUI( project, folders, bottomPanel == null ? null : bottomPanel.getComponent(), type );
+            gui = new TargetChooserPanelGUI( project, folders, bottomPanel == null ? null : bottomPanel.getComponent(), type, fileType);
             gui.addChangeListener(this);
         }
         return gui;

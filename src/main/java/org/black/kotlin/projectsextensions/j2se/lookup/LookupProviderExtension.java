@@ -32,6 +32,7 @@ public class LookupProviderExtension implements LookupProvider{
     private static final class KotlinPrivilegedTemplates implements PrivilegedTemplates {
 
         private static final String[] PRIVILEGED_NAMES = new String[]{
+            "Templates/Kotlin/class.kt",
             "Templates/Kotlin/content.kt",
             "Templates/Classes/Class.java",
             "Templates/Classes/Package", 

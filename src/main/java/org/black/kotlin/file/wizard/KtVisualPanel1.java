@@ -7,12 +7,12 @@ package org.black.kotlin.file.wizard;
 
 import javax.swing.JPanel;
 
-public final class KtFileVisualPanel1 extends JPanel {
+public final class KtVisualPanel1 extends JPanel {
 
     /**
-     * Creates new form KtFileVisualPanel1
+     * Creates new form KtVisualPanel1
      */
-    public KtFileVisualPanel1() {
+    public KtVisualPanel1() {
         initComponents();
     }
 

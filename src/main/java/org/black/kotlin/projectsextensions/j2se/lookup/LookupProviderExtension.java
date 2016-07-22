@@ -22,7 +22,6 @@ public class LookupProviderExtension implements LookupProvider{
         J2SEExtendedClassPathProvider myProvider = new J2SEExtendedClassPathProvider(j2seProject);
         J2SEProjectPropertiesModifier propertiesModifier = new J2SEProjectPropertiesModifier(j2seProject);
         
-        
         return Lookups.fixed(
                 new KotlinPrivilegedTemplates(),
                 myProvider,

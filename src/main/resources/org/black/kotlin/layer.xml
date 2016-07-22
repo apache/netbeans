@@ -45,14 +45,16 @@
     </folder>
 
 
-    <folder name="Templates">
+<!--    <folder name="Templates">
         <folder name="Kotlin">
-            <file name="Kotlin.kt" url="Kotlin file">
+            <file name="Kotlin Class" url="content.kt">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.black.kotlin.Bundle"/>
-                <attr name="instantiatingIterator" newvalue="org.black.kotlin.file.wizard.KtFileWizardIterator"/>
+                <attr name="instantiatingIterator" newvalue="org.black.kotlin.file.wizard.KtWizardIterator"/>
                 <attr name="template" boolvalue="true"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/black/kotlin/file/wizard/kt.html"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
             </file>
         </folder>
-    </folder>
+    </folder>-->
 
 </filesystem>

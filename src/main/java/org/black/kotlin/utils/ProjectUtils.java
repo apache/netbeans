@@ -24,6 +24,7 @@ import org.black.kotlin.projectsextensions.ClassPathExtender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -290,21 +291,20 @@ public class ProjectUtils {
     public static Project getKotlinProjectForFileObject(FileObject file){
         
         for (Project project : OpenProjects.getDefault().getOpenProjects()){
-            if (!KotlinProjectHelper.INSTANCE.checkProject(project)){
-                continue;
-            }
-            
-            if (file.toURI().toString().contains(project.getProjectDirectory().toURI().toString())){
-                return project;
-            }
+//            if (!KotlinProjectHelper.INSTANCE.checkProject(project)){
+//                continue;
+//            }
+//            
+//            if (file.toURI().toString().contains(project.getProjectDirectory().toURI().toString())){
+//                return project;
+//            }
             
             if (file.toURI().toString().contains(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).toURI().toString())){
                 return project;
             }
         }
         
-        return null;
-        
+        return FileOwnerQuery.getOwner(file);
     }
     
     public static FileObject getFileObjectForDocument(Document doc) {

@@ -35,7 +35,7 @@ import org.openide.util.Utilities;
  */
 public class TargetChooserPanel implements WizardDescriptor.Panel<WizardDescriptor>, ChangeListener {
 
-    private static final String FOLDER_TO_DELETE = "folderToDelete";    //NOI18N
+private static final String FOLDER_TO_DELETE = "folderToDelete";    //NOI18N
 
     private final SpecificationVersion JDK_14 = new SpecificationVersion ("1.4");   //NOI18N
     private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
@@ -68,12 +68,6 @@ public class TargetChooserPanel implements WizardDescriptor.Panel<WizardDescript
         return gui;
     }
 
-    public String getPackageFqName(){
-        getComponent();
-        
-        return gui.getPackageName();
-    }
-    
     @Override
     public HelpCtx getHelp() {
         return bottomPanel != null ?
@@ -81,7 +75,6 @@ public class TargetChooserPanel implements WizardDescriptor.Panel<WizardDescript
                 null;
     }
 
-    @NbBundle.Messages("ERR_JavaTargetChooser_WrongPlatform=Wrong source level of the project. You will not be able to compile this file since it contains Java 5 features.")
     @Override
     public boolean isValid() {              
         if (gui == null) {
@@ -311,6 +304,10 @@ public class TargetChooserPanel implements WizardDescriptor.Panel<WizardDescript
             folder = rootFolder;
         }
         return folder;
+    }
+    
+    public String getPackageName(){
+        return gui.getPackageName();
     }
     
     // Nice copy of useful methods (Taken from JavaModule)

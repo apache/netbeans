@@ -18,6 +18,7 @@ import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import org.black.kotlin.file.wizard.packagechooser.PackageChooser;
 import org.black.kotlin.file.wizard.packagechooser.TargetChooserPanel;
+import org.black.kotlin.file.wizard.packagechooser.TargetChooserPanelGUI;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.SourceGroup;
@@ -88,7 +89,7 @@ public final class KtWizardIterator implements WizardDescriptor.InstantiatingIte
 //        JavaTargetChooserPanelGUI gui = (JavaTargetChooserPanelGUI) packageChooserPanel.getComponent();
 //        String packageName = gui.getPackageFileName().replace('/','.');
 
-        String packageName = packageChooserPanel.getPackageFqName();
+        String packageName = PackageChooser.pack;
         args.put("package", packageName);
         
         FileObject template = Templates.getTemplate(wizard);
@@ -113,7 +114,7 @@ public final class KtWizardIterator implements WizardDescriptor.InstantiatingIte
 
     @Override
     public void uninitialize(WizardDescriptor wizard) {
-        panels = null;
+//        panels = null;
     }
 
     @Override

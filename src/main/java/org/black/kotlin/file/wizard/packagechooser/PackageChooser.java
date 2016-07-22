@@ -10,6 +10,8 @@ import org.openide.WizardDescriptor;
  */
 public class PackageChooser {
     
+    public static String pack = null;
+    
     public static TargetChooserPanel createPackageChooser(Project project, SourceGroup[] folders, 
         WizardDescriptor.Panel<WizardDescriptor> bottomPanel) {
         if (folders.length == 0) {

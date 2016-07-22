@@ -39,8 +39,7 @@ import org.openide.util.RequestProcessor;
  * @author Alexander.Baratynski
  */
 public class TargetChooserPanelGUI extends javax.swing.JPanel implements ActionListener, DocumentListener {
-  
-    private static final String DEFAULT_NEW_PACKAGE_NAME = 
+private static final String DEFAULT_NEW_PACKAGE_NAME = 
         NbBundle.getMessage( TargetChooserPanelGUI.class, "LBL_JavaTargetChooserPanelGUI_DefaultNewPackageName" ); // NOI18N
     private static final String NEW_CLASS_PREFIX = 
         NbBundle.getMessage( TargetChooserPanelGUI.class, "LBL_JavaTargetChooserPanelGUI_NewJavaClassPrefix" ); // NOI18N
@@ -71,21 +70,18 @@ public class TargetChooserPanelGUI extends javax.swing.JPanel implements ActionL
         
         initComponents();        
                 
-        if (null != type) switch (type) {
-            case PACKAGE:
-                packageComboBox.setVisible( false );
-                packageLabel.setVisible( false );
-                Mnemonics.setLocalizedText (fileLabel, NbBundle.getMessage (TargetChooserPanelGUI.class, "LBL_JavaTargetChooserPanelGUI_CreatedFolder_Label")); // NOI18N
-                Mnemonics.setLocalizedText (documentNameLabel, NbBundle.getMessage (TargetChooserPanelGUI.class, "LBL_JavaTargetChooserPanelGUI_PackageName_Label")); // NOI18N
-                documentNameTextField.getDocument().addDocumentListener( this );
-                break;
-            case PKG_INFO:
-                documentNameTextField.setEditable (false);
-                break;
-            default:
-                packageComboBox.getEditor().addActionListener( this );
-                documentNameTextField.getDocument().addDocumentListener( this );
-                break;
+        if (type == Type.PACKAGE) {
+            packageComboBox.setVisible( false );
+            packageLabel.setVisible( false );
+            Mnemonics.setLocalizedText (fileLabel, NbBundle.getMessage (TargetChooserPanelGUI.class, "LBL_JavaTargetChooserPanelGUI_CreatedFolder_Label")); // NOI18N
+            Mnemonics.setLocalizedText (documentNameLabel, NbBundle.getMessage (TargetChooserPanelGUI.class, "LBL_JavaTargetChooserPanelGUI_PackageName_Label")); // NOI18N
+            documentNameTextField.getDocument().addDocumentListener( this );
+        } else if (type == Type.PKG_INFO) {
+            documentNameTextField.setEditable (false);
+        }
+        else {
+            packageComboBox.getEditor().addActionListener( this );
+            documentNameTextField.getDocument().addDocumentListener( this );
         }
         
                 
@@ -110,7 +106,7 @@ public class TargetChooserPanelGUI extends javax.swing.JPanel implements ActionL
         rootComboBox.addActionListener( this );
         
         setPreferredSize( PREF_DIM );
-        setName( NbBundle.getBundle(TargetChooserPanelGUI.class).getString("LBL_JavaTargetChooserPanelGUI_Name") ); // NOI18N
+        setName( NbBundle.getBundle (TargetChooserPanelGUI.class).getString ("LBL_JavaTargetChooserPanelGUI_Name") ); // NOI18N
     }
             
     @Override
@@ -175,6 +171,7 @@ public class TargetChooserPanelGUI extends javax.swing.JPanel implements ActionL
             if (preselectedPackage != null) {
                 // packageComboBox.setSelectedItem( preselectedPackage );
                 packageComboBox.getEditor().setItem( preselectedPackage );
+                PackageChooser.pack = (String) preselectedPackage;
             }
             if (template != null) {
             	if ( documentNameTextField.getText().trim().length() == 0 ) { // To preserve the class name on back in the wiazard
@@ -264,6 +261,9 @@ public class TargetChooserPanelGUI extends javax.swing.JPanel implements ActionL
     }
     
     private void fireChange() {
+        if (packageComboBox.getSelectedItem() != null) {
+            PackageChooser.pack = packageComboBox.getSelectedItem().toString();
+        }
         ChangeEvent e = new ChangeEvent(this);
         for (ChangeListener l : listeners) {
             l.stateChanged(e);
@@ -318,7 +318,7 @@ public class TargetChooserPanelGUI extends javax.swing.JPanel implements ActionL
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
         documentNameLabel.setLabelFor(documentNameTextField);
-        org.openide.awt.Mnemonics.setLocalizedText(documentNameLabel, org.openide.util.NbBundle.getMessage(TargetChooserPanelGUI.class, "LBL_JavaTargetChooserPanelGUI_ClassName_Label"));
+        org.openide.awt.Mnemonics.setLocalizedText(documentNameLabel, org.openide.util.NbBundle.getMessage(TargetChooserPanelGUI.class, "LBL_JavaTargetChooserPanelGUI_ClassName_Label")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanel1.add(documentNameLabel, gridBagConstraints);
@@ -328,8 +328,8 @@ public class TargetChooserPanelGUI extends javax.swing.JPanel implements ActionL
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 0);
         jPanel1.add(documentNameTextField, gridBagConstraints);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/black/kotlin/file/wizard/packagechooser/Bundle");
-        documentNameTextField.getAccessibleContext().setAccessibleDescription(bundle.getString("AD_documentNameTextField")); 
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/black/kotlin/file/wizard/packagechooser/Bundle"); // NOI18N
+        documentNameTextField.getAccessibleContext().setAccessibleDescription(bundle.getString("AD_documentNameTextField")); // NOI18N
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
@@ -481,7 +481,7 @@ public class TargetChooserPanelGUI extends javax.swing.JPanel implements ActionL
     
     private static final ComboBoxModel WAIT_MODEL = new DefaultComboBoxModel( 
         new String[] {
-            NbBundle.getMessage(TargetChooserPanelGUI.class, "LBL_JavaTargetChooserPanelGUI_PackageName_PleaseWait" ) // NOI18N
+            NbBundle.getMessage(TargetChooserPanelGUI.class, "LBL_JavaTargetChooserPanelGUI_PackageName_PleaseWait") // NOI18N
         } 
     ); 
     
@@ -555,7 +555,8 @@ public class TargetChooserPanelGUI extends javax.swing.JPanel implements ActionL
                 ( packageName.endsWith("/") || packageName.endsWith( File.separator ) || packageName.length() == 0 ? "" : "/" ) + // NOI18N
                 documentName;
         } else {
-            createdFileName = "";
+            //May be null iff nothing selected
+            createdFileName = "";   //NOI18N
         }
         fileTextField.setText( createdFileName.replace( '/', File.separatorChar ) ); // NOI18N
     }
@@ -584,10 +585,24 @@ public class TargetChooserPanelGUI extends javax.swing.JPanel implements ActionL
         String relPath = FileUtil.getRelativePath( root, folder );
         
         if ( relPath == null ) {
+            // Group Root folder is no a parent of the preselected folder
+            // No package should be selected
             return null; 
         }        
-        else {       
+        else {
+            // Find the right item.            
             String name = relPath.replace('/', '.');
+            /*
+            int max = model.getSize();
+            for (int i = 0; i < max; i++) {
+                Object item = model.getElementAt(i);
+                if (item.toString().equals(name)) {
+                    return item;
+                }
+            }
+             */
+            // Didn't find it.
+            // #49954: should nonetheless show something in the combo box.
             return name;
         }        
     }
@@ -630,6 +645,7 @@ public class TargetChooserPanelGUI extends javax.swing.JPanel implements ActionL
         }
         
     }
+    
     
 }
 

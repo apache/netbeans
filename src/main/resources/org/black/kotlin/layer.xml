@@ -6,6 +6,7 @@
         <folder name="org-netbeans-modules-java-j2seproject">
             <folder name="Lookup">
                 <file name="org.black.kotlin.projectsextensions.j2se.lookup.LookupProviderExtension.instance"/>
+                <file name="org.black.kotlin.projectsextensions.j2se.lookup.LookupProviderExtension.instance_hidden"/>
             </folder>
         </folder>
         <folder name="org-netbeans-modules-maven">

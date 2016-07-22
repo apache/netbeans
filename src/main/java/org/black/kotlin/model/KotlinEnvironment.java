@@ -12,7 +12,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.asJava.KtLightClassForFacade;
 import org.jetbrains.kotlin.asJava.LightClassGenerationSupport;
 import org.jetbrains.kotlin.cli.jvm.compiler.CliLightClassGenerationSupport;
-import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles;
 import org.jetbrains.kotlin.codegen.extensions.ExpressionCodegenExtension;
 import org.jetbrains.kotlin.extensions.ExternalDeclarationsProvider;
 import org.jetbrains.kotlin.load.kotlin.KotlinBinaryClassCache;
@@ -29,13 +28,11 @@ import com.intellij.core.JavaCoreProjectEnvironment;
 import com.intellij.mock.MockProject;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.extensions.ExtensionPoint;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.extensions.ExtensionsArea;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ClassExtension;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.impl.ZipHandler;
@@ -46,14 +43,9 @@ import com.intellij.psi.compiled.ClassFileDecompilers;
 import com.intellij.psi.impl.PsiTreeChangePreprocessor;
 import com.intellij.psi.impl.compiled.ClsCustomNavigationPolicy;
 import com.intellij.psi.impl.file.impl.JavaFileManager;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import org.black.kotlin.filesystem.KotlinLightClassManager;
-import org.black.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
-import org.black.kotlin.project.KotlinSources;
-import org.black.kotlin.projectsextensions.maven.MavenHelper;
+import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.black.kotlin.resolve.BuiltInsReferenceResolver;
 import org.black.kotlin.resolve.KotlinCacheServiceImpl;
 import org.black.kotlin.resolve.KotlinSourceIndex;
@@ -63,7 +55,6 @@ import org.jetbrains.kotlin.cli.common.CliModuleVisibilityManagerImpl;
 import org.jetbrains.kotlin.codegen.extensions.ClassBuilderInterceptorExtension;
 import org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages;
 import org.jetbrains.kotlin.idea.KotlinFileType;
-import org.jetbrains.kotlin.js.resolve.diagnostics.DefaultErrorMessagesJs;
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory;
 import org.jetbrains.kotlin.load.kotlin.ModuleVisibilityManager;
 import org.jetbrains.kotlin.resolve.diagnostics.DiagnosticSuppressor;
@@ -71,8 +62,6 @@ import org.jetbrains.kotlin.resolve.diagnostics.SuppressStringProvider;
 import org.jetbrains.kotlin.resolve.jvm.diagnostics.DefaultErrorMessagesJvm;
 import org.jetbrains.kotlin.resolve.jvm.extensions.PackageFragmentProviderExtension;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
-import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 
 /**
  * This class creates Kotlin environment for Kotlin project.
@@ -217,14 +206,17 @@ public class KotlinEnvironment {
     
     private void configureClasspath(@NotNull org.netbeans.api.project.Project kotlinProject) {
         Set<String> classpath = ProjectUtils.getClasspath(kotlinProject);
+        String lightClassesDir = KotlinProjectHelper.INSTANCE.getLightClassesDirectory(kotlinProject).toURI().toString();
         
-            for (String s : classpath) {
-                if (s.endsWith("!/")){
-                    addToClasspath(s.split("!/")[0].split("file:")[1]);
-                } else {
+        for (String s : classpath) {
+            if (s.endsWith("!/")){
+                addToClasspath(s.split("!/")[0].split("file:")[1]);
+            } else {
+                if (!lightClassesDir.contains(s)){
                     addToClasspath(s);
                 }
             }
+        }
     }
     
     private JavaCoreApplicationEnvironment createJavaCoreApplicationEnvironment(@NotNull Disposable disposable) {

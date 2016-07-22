@@ -13,7 +13,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Alexander.Baratynski
  */
-public class LookupProviderExtension implements LookupProvider{
+public class J2SEProjectLookupProviderExtension implements LookupProvider{
 
     @Override
     public Lookup createAdditionalLookup(Lookup lkp) {

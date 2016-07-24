@@ -10,7 +10,11 @@ import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
+import org.openide.filesystems.FileAttributeEvent;
+import org.openide.filesystems.FileChangeListener;
+import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.MultiDataObject;
@@ -94,13 +98,32 @@ public class KtDataObject extends MultiDataObject {
     public KtDataObject(final FileObject file, MultiFileLoader loader) throws IOException {
         super(file, loader);
         registerEditor("text/x-kt", true);
-        this.addPropertyChangeListener(new PropertyChangeListener() {
+        file.addFileChangeListener(new FileChangeListener(){
             @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName().equals(DataObject.PROP_MODIFIED)) {
-                    KotlinLightClassGeneration.INSTANCE.generate(file, ProjectUtils.getKotlinProjectForFileObject(file));
-                } 
+            public void fileFolderCreated(FileEvent fe) {
             }
+
+            @Override
+            public void fileDataCreated(FileEvent fe) {
+            }
+
+            @Override
+            public void fileChanged(FileEvent fe) {
+                KotlinLightClassGeneration.INSTANCE.generate(file, ProjectUtils.getKotlinProjectForFileObject(file));
+            }
+
+            @Override
+            public void fileDeleted(FileEvent fe) {
+            }
+
+            @Override
+            public void fileRenamed(FileRenameEvent fre) {
+            }
+
+            @Override
+            public void fileAttributeChanged(FileAttributeEvent fae) {
+            }
+            
         });
         
     }

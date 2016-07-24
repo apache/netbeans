@@ -36,14 +36,22 @@ public class MavenModuledProjectExtendedClassPath implements ClassPathExtender{
     private final Set<ClassPath> executeClasspath = Sets.newHashSet();
     private final Set<ClassPath> bootClasspath = Sets.newHashSet();
     
+    private ClassPath compile = null;
+    private ClassPath execute = null;
+    private ClassPath source = null;
+    private ClassPath boot = null;
+    
     public MavenModuledProjectExtendedClassPath(NbMavenProjectImpl project) {
         this.project = project;
         try {
             addChildrenOfMavenProject();
+            addClassPathFromChildren();
+            createClasspath();
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
+        } catch (DependencyResolutionRequiredException ex) {
+            Exceptions.printStackTrace(ex);
         }
-        addClassPathFromChildren();
     }
     
     private void addChildrenOfMavenProject() throws IOException {
@@ -84,6 +92,27 @@ public class MavenModuledProjectExtendedClassPath implements ClassPathExtender{
         }
     }
     
+    private void createClasspath() throws DependencyResolutionRequiredException, MalformedURLException {
+        compileClasspath.add(getClasspath(project.getOriginalMavenProject().getCompileClasspathElements()));
+        compile = ClassPathSupport.createProxyClassPath(
+                compileClasspath.toArray(new ClassPath[compileClasspath.size()]));
+        executeClasspath.add(getClasspath(project.getOriginalMavenProject().getRuntimeClasspathElements()));
+        execute =  ClassPathSupport.createProxyClassPath(
+                executeClasspath.toArray(new ClassPath[executeClasspath.size()]));
+        sourceClasspath.add(getClasspath(project.getOriginalMavenProject().getCompileSourceRoots()));
+        source = ClassPathSupport.createProxyClassPath(
+                sourceClasspath.toArray(new ClassPath[sourceClasspath.size()]));
+        String bootClassPath = System.getProperty("sun.boot.class.path");
+        List<String> javaClasspathElements = new ArrayList<String>(Arrays.asList(bootClassPath.split(
+                Pattern.quote(System.getProperty("path.separator")))));
+        javaClasspathElements.addAll(project.getOriginalMavenProject().getSystemClasspathElements());
+        javaClasspathElements.addAll(project.getOriginalMavenProject().getTestClasspathElements());
+        javaClasspathElements.add(KotlinClasspath.getKotlinBootClasspath());
+        bootClasspath.add(getClasspath(javaClasspathElements));
+        boot = ClassPathSupport.createProxyClassPath(
+                bootClasspath.toArray(new ClassPath[bootClasspath.size()]));
+    }
+    
     private ClassPath getClasspath(List<String> paths) throws DependencyResolutionRequiredException, MalformedURLException {
         Set<URL> classpaths = new HashSet<URL>();
         Set<String> classpath = new HashSet<String>();
@@ -110,55 +139,13 @@ public class MavenModuledProjectExtendedClassPath implements ClassPathExtender{
     @Override
     public ClassPath getProjectSourcesClassPath(String type) {
         if (type.equals(ClassPath.COMPILE)) {
-            try {
-                ClassPath compile = getClasspath(project.getOriginalMavenProject().getCompileClasspathElements());
-                compileClasspath.add(compile);
-                
-                return ClassPathSupport.createProxyClassPath(compileClasspath.toArray(new ClassPath[compileClasspath.size()]));
-            } catch (DependencyResolutionRequiredException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (MalformedURLException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            return compile;
         } else if (type.equals(ClassPath.EXECUTE)) {
-            try {
-                ClassPath execute = getClasspath(project.getOriginalMavenProject().getRuntimeClasspathElements());
-                executeClasspath.add(execute);
-                
-                return ClassPathSupport.createProxyClassPath(executeClasspath.toArray(new ClassPath[executeClasspath.size()]));
-            } catch (DependencyResolutionRequiredException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (MalformedURLException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            return execute;
         } else if (type.equals(ClassPath.SOURCE)) {
-            try {
-                ClassPath source = getClasspath(project.getOriginalMavenProject().getCompileSourceRoots());
-                sourceClasspath.add(source);
-                
-                return ClassPathSupport.createProxyClassPath(sourceClasspath.toArray(new ClassPath[sourceClasspath.size()]));
-            } catch (DependencyResolutionRequiredException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (MalformedURLException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            return source;
         } else if (type.equals(ClassPath.BOOT)) {
-            try {
-                String bootClassPath = System.getProperty("sun.boot.class.path");
-                List<String> javaClasspathElements = new ArrayList<String>(Arrays.asList(bootClassPath.split(
-                        Pattern.quote(System.getProperty("path.separator")))));
-                javaClasspathElements.addAll(project.getOriginalMavenProject().getSystemClasspathElements());
-                javaClasspathElements.addAll(project.getOriginalMavenProject().getTestClasspathElements());
-                javaClasspathElements.add(KotlinClasspath.getKotlinBootClasspath());
-                ClassPath boot = getClasspath(javaClasspathElements);
-                bootClasspath.add(boot);
-                
-                return ClassPathSupport.createProxyClassPath(bootClasspath.toArray(new ClassPath[bootClasspath.size()]));
-            } catch (DependencyResolutionRequiredException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (MalformedURLException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            return boot;
         }
         
         return null;

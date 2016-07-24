@@ -57,7 +57,6 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                         if (!MavenHelper.hasParent(project)){
                             new PomXmlModifier(project).checkPom();
                         }
-//                        KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
                         
                         project.getProjectWatcher().addPropertyChangeListener(new PropertyChangeListener(){
                             @Override

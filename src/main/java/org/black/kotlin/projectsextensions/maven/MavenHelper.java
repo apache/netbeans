@@ -2,7 +2,9 @@ package org.black.kotlin.projectsextensions.maven;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.modules.maven.NbMavenProjectFactory;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
@@ -16,7 +18,10 @@ import org.openide.util.Exceptions;
  */
 public class MavenHelper {
     
-    private static NbMavenProjectFactory projectFactory = new NbMavenProjectFactory();
+    private static final Map<NbMavenProjectImpl, NbMavenProjectImpl> PARENTS = 
+            new HashMap<NbMavenProjectImpl, NbMavenProjectImpl>();
+    private static final NbMavenProjectFactory PROJECT_FACTORY = 
+            new NbMavenProjectFactory();
     
     public static boolean hasParent(NbMavenProjectImpl project) {
         return getParentProjectDirectory(project.getProjectDirectory()) != null;
@@ -27,15 +32,15 @@ public class MavenHelper {
         if (dir == null) {
             return null;
         }
-        if (projectFactory.isProject(dir)){
-            NbMavenProjectImpl project = (NbMavenProjectImpl) projectFactory.loadProject(
+        if (PROJECT_FACTORY.isProject(dir)){
+            NbMavenProjectImpl project = (NbMavenProjectImpl) PROJECT_FACTORY.loadProject(
                     dir, 
                     new ProjectState(){
-                @Override
-                public void markModified() {}
-                @Override
-                public void notifyDeleted() throws IllegalStateException {}
-            });
+                        @Override
+                        public void markModified() {}
+                        @Override
+                        public void notifyDeleted() throws IllegalStateException {}
+                    });
             
             return project;
         }
@@ -61,7 +66,7 @@ public class MavenHelper {
     }
     
     private static FileObject getParentProjectDirectory(FileObject proj) {
-        if (projectFactory.isProject(proj.getParent())) {
+        if (PROJECT_FACTORY.isProject(proj.getParent())) {
             FileObject parent = getParentProjectDirectory(proj.getParent());
             
             if (parent != null) {
@@ -74,7 +79,11 @@ public class MavenHelper {
     }
     
     public static NbMavenProjectImpl getMainParent(NbMavenProjectImpl proj) throws IOException {
-        NbMavenProjectImpl parent = getMavenProject(getParentProjectDirectory(proj.getProjectDirectory()));
+        NbMavenProjectImpl parent = PARENTS.get(proj);
+        if (parent == null){
+            parent = getMavenProject(getParentProjectDirectory(proj.getProjectDirectory()));
+            PARENTS.put(proj, parent);
+        }
         
         return parent != null ? parent : proj;
     }
@@ -84,7 +93,7 @@ public class MavenHelper {
         List<FileObject> srcDirs = new ArrayList<FileObject>();
         
         for (Object module : modules) {
-            if (projectFactory.isProject(project.getProjectDirectory().getFileObject((String) module))) {
+            if (PROJECT_FACTORY.isProject(project.getProjectDirectory().getFileObject((String) module))) {
                 try {
                     NbMavenProjectImpl child = MavenHelper.getMavenProject(project.getProjectDirectory().getFileObject((String) module));
                     if (isModuled(child)){

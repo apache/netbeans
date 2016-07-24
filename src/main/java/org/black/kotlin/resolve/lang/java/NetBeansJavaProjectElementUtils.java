@@ -7,7 +7,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import org.black.kotlin.projectsextensions.ClassPathExtender;
-import org.black.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider;
 import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.CancellableTask;
@@ -31,8 +30,8 @@ public class NetBeansJavaProjectElementUtils {
     
     private static boolean isDeprecated = false;
     private static String binaryName = null;
-    private static final Map<Project,JavaSource> js = new HashMap<Project,JavaSource>();
-    private static final Map<Project,ClasspathInfo> ci = new HashMap<Project,ClasspathInfo>();
+    private static final Map<Project,JavaSource> JAVA_SOURCE = new HashMap<Project,JavaSource>();
+    private static final Map<Project,ClasspathInfo> CLASSPATH_INFO = new HashMap<Project,ClasspathInfo>();
     
     private static ClasspathInfo getClasspathInfo(Project kotlinProject){
         
@@ -50,20 +49,20 @@ public class NetBeansJavaProjectElementUtils {
     }
     
     public static void updateClasspathInfo(Project kotlinProject){
-        ci.put(kotlinProject, getClasspathInfo(kotlinProject));
-        js.put(kotlinProject, JavaSource.create(ci.get(kotlinProject)));
+        CLASSPATH_INFO.put(kotlinProject, getClasspathInfo(kotlinProject));
+        JAVA_SOURCE.put(kotlinProject, JavaSource.create(CLASSPATH_INFO.get(kotlinProject)));
     }
     
     public static TypeElement findTypeElement(Project kotlinProject, String fqName){
-        if (!ci.containsKey(kotlinProject)){
-            ci.put(kotlinProject, getClasspathInfo(kotlinProject));
+        if (!CLASSPATH_INFO.containsKey(kotlinProject)){
+            CLASSPATH_INFO.put(kotlinProject, getClasspathInfo(kotlinProject));
         }
-        if (!js.containsKey(kotlinProject)){
-            js.put(kotlinProject,JavaSource.create(ci.get(kotlinProject)));
+        if (!JAVA_SOURCE.containsKey(kotlinProject)){
+            JAVA_SOURCE.put(kotlinProject,JavaSource.create(CLASSPATH_INFO.get(kotlinProject)));
         }
         TypeElementSearcher searcher = new TypeElementSearcher(fqName);
         try {
-            js.get(kotlinProject).runUserActionTask(searcher, true);
+            JAVA_SOURCE.get(kotlinProject).runUserActionTask(searcher, true);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -72,15 +71,15 @@ public class NetBeansJavaProjectElementUtils {
     }
     
     public static PackageElement findPackageElement(Project kotlinProject, String fqName){
-        if (!ci.containsKey(kotlinProject)){
-            ci.put(kotlinProject, getClasspathInfo(kotlinProject));
+        if (!CLASSPATH_INFO.containsKey(kotlinProject)){
+            CLASSPATH_INFO.put(kotlinProject, getClasspathInfo(kotlinProject));
         }
-        if (!js.containsKey(kotlinProject)){
-            js.put(kotlinProject,JavaSource.create(ci.get(kotlinProject)));
+        if (!JAVA_SOURCE.containsKey(kotlinProject)){
+            JAVA_SOURCE.put(kotlinProject,JavaSource.create(CLASSPATH_INFO.get(kotlinProject)));
         }
         PackageElementSearcher searcher = new PackageElementSearcher(fqName);
         try {
-            js.get(kotlinProject).runUserActionTask(searcher, true);
+            JAVA_SOURCE.get(kotlinProject).runUserActionTask(searcher, true);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -96,11 +95,11 @@ public class NetBeansJavaProjectElementUtils {
         }
         
         for (Project project : projects){
-            if (!KotlinProjectHelper.INSTANCE.checkProject(project)){//(project instanceof KotlinProject)){
+            if (!KotlinProjectHelper.INSTANCE.checkProject(project)){
                 continue;
             }
-//            ClasspathInfo ci = getClasspathInfo(project);
-            FileObject file = SourceUtils.getFile(ElementHandle.create(element), ci.get(project));
+            
+            FileObject file = SourceUtils.getFile(ElementHandle.create(element), CLASSPATH_INFO.get(project));
 
             if (file != null){
                 return project;
@@ -117,14 +116,14 @@ public class NetBeansJavaProjectElementUtils {
             return false;
         }
         
-        if (!ci.containsKey(kotlinProject)){
-            ci.put(kotlinProject, getClasspathInfo(kotlinProject));
+        if (!CLASSPATH_INFO.containsKey(kotlinProject)){
+            CLASSPATH_INFO.put(kotlinProject, getClasspathInfo(kotlinProject));
         }
-        if (!js.containsKey(kotlinProject)){
-            js.put(kotlinProject,JavaSource.create(ci.get(kotlinProject)));
+        if (!JAVA_SOURCE.containsKey(kotlinProject)){
+            JAVA_SOURCE.put(kotlinProject,JavaSource.create(CLASSPATH_INFO.get(kotlinProject)));
         }
         try {
-            js.get(kotlinProject).runUserActionTask(new CancellableTask<CompilationController>(){
+            JAVA_SOURCE.get(kotlinProject).runUserActionTask(new CancellableTask<CompilationController>(){
                 @Override
                 public void cancel() {
                 }
@@ -142,14 +141,14 @@ public class NetBeansJavaProjectElementUtils {
     }
     
     public static String toBinaryName(Project kotlinProject, final String name){
-        if (!ci.containsKey(kotlinProject)){
-            ci.put(kotlinProject, getClasspathInfo(kotlinProject));
+        if (!CLASSPATH_INFO.containsKey(kotlinProject)){
+            CLASSPATH_INFO.put(kotlinProject, getClasspathInfo(kotlinProject));
         }
-        if (!js.containsKey(kotlinProject)){
-            js.put(kotlinProject,JavaSource.create(ci.get(kotlinProject)));
+        if (!JAVA_SOURCE.containsKey(kotlinProject)){
+            JAVA_SOURCE.put(kotlinProject,JavaSource.create(CLASSPATH_INFO.get(kotlinProject)));
         }
         try {
-            js.get(kotlinProject).runUserActionTask(new CancellableTask<CompilationController>(){
+            JAVA_SOURCE.get(kotlinProject).runUserActionTask(new CancellableTask<CompilationController>(){
                 @Override
                 public void cancel() {
                 }
@@ -172,12 +171,12 @@ public class NetBeansJavaProjectElementUtils {
             return null;
         }
         ElementHandle<? extends Element> handle = ElementHandle.create(element);
-        return SourceUtils.getFile(handle, ci.get(kotlinProject));
+        return SourceUtils.getFile(handle, CLASSPATH_INFO.get(kotlinProject));
     }
     
     public static void openElementInEditor(Element element, Project kotlinProject){
         ElementHandle<? extends Element> handle = ElementHandle.create(element);
-        ElementOpen.open(ci.get(kotlinProject), handle);
+        ElementOpen.open(CLASSPATH_INFO.get(kotlinProject), handle);
     }
     
     private static class TypeElementSearcher implements CancellableTask<CompilationController>{

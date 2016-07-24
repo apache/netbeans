@@ -1,16 +1,10 @@
 package org.black.kotlin.utils;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import edu.emory.mathcs.backport.java.util.Collections;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -19,15 +13,15 @@ import javax.swing.text.StyledDocument;
 import org.black.kotlin.builder.KotlinPsiManager;
 import org.black.kotlin.bundledcompiler.BundledCompiler;
 import org.black.kotlin.projectsextensions.KotlinProjectHelper;
-import org.black.kotlin.project.KotlinProjectConstants;
 import org.black.kotlin.projectsextensions.ClassPathExtender;
+import org.black.kotlin.projectsextensions.maven.MavenHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -173,7 +167,17 @@ public class ProjectUtils {
             }
         }
         
-        return FileOwnerQuery.getOwner(file);
+        Project project = FileOwnerQuery.getOwner(file);
+        
+        if (project instanceof NbMavenProjectImpl) {
+            try {
+                project = MavenHelper.getMainParent((NbMavenProjectImpl) project);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        
+        return project;
     }
     
     public static FileObject getFileObjectForDocument(Document doc) {

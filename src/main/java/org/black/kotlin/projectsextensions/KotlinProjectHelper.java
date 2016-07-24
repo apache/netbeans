@@ -49,13 +49,13 @@ public class KotlinProjectHelper {
             return null;
         }
         
-        if (p instanceof NbMavenProjectImpl) {
-            try {
-                p = MavenHelper.getMainParent((NbMavenProjectImpl) p);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
+//        if (p instanceof NbMavenProjectImpl) {
+//            try {
+//                p = MavenHelper.getMainParent((NbMavenProjectImpl) p);
+//            } catch (IOException ex) {
+//                Exceptions.printStackTrace(ex);
+//            }
+//        }
         
         if (!kotlinSources.containsKey(p)) {
             kotlinSources.put(p, new KotlinSources(p));
@@ -71,13 +71,13 @@ public class KotlinProjectHelper {
             return null;
         }
         
-        if (p instanceof NbMavenProjectImpl) {
-            try {
-                p = MavenHelper.getMainParent((NbMavenProjectImpl) p);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
+//        if (p instanceof NbMavenProjectImpl) {
+//            try {
+//                p = MavenHelper.getMainParent((NbMavenProjectImpl) p);
+//            } catch (IOException ex) {
+//                Exceptions.printStackTrace(ex);
+//            }
+//        }
         
         if (!(lightClassesDirs.containsKey(p))) {
             lightClassesDirs.put(p, setLightClassesDir(p));
@@ -127,16 +127,16 @@ public class KotlinProjectHelper {
                 extendedClassPaths.put(p, new J2SEExtendedClassPathProvider(p));
             }
             if (p instanceof NbMavenProjectImpl) {
-                try {
-                    p = MavenHelper.getMainParent((NbMavenProjectImpl) p);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-                if (!MavenHelper.isModuled((NbMavenProjectImpl) p)){
+//                try {
+//                    p = MavenHelper.getMainParent((NbMavenProjectImpl) p);
+//                } catch (IOException ex) {
+//                    Exceptions.printStackTrace(ex);
+//                }
+//                if (!MavenHelper.isModuled((NbMavenProjectImpl) p)){
                     extendedClassPaths.put(p, new MavenExtendedClassPath((NbMavenProjectImpl) p));
-                } else {
-                    extendedClassPaths.put(p, new MavenModuledProjectExtendedClassPath((NbMavenProjectImpl) p));
-                }
+//                } else {
+//                    extendedClassPaths.put(p, new MavenModuledProjectExtendedClassPath((NbMavenProjectImpl) p));
+//                }
             }
         }
         
@@ -149,16 +149,16 @@ public class KotlinProjectHelper {
             extendedClassPaths.put(p, new J2SEExtendedClassPathProvider(p));
         }
         if (p instanceof NbMavenProjectImpl) {
-            try {
-                p = MavenHelper.getMainParent((NbMavenProjectImpl) p);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            if (!MavenHelper.isModuled((NbMavenProjectImpl) p)){
+//            try {
+//                p = MavenHelper.getMainParent((NbMavenProjectImpl) p);
+//            } catch (IOException ex) {
+//                Exceptions.printStackTrace(ex);
+//            }
+//            if (!MavenHelper.isModuled((NbMavenProjectImpl) p)){
                 extendedClassPaths.put(p, new MavenExtendedClassPath((NbMavenProjectImpl) p));
-            } else {
-                extendedClassPaths.put(p, new MavenModuledProjectExtendedClassPath((NbMavenProjectImpl) p));
-            }
+//            } else {
+//                extendedClassPaths.put(p, new MavenModuledProjectExtendedClassPath((NbMavenProjectImpl) p));
+//            }
         }
         NetBeansJavaProjectElementUtils.updateClasspathInfo(p);
         KotlinEnvironment.updateKotlinEnvironment(p);

@@ -123,17 +123,6 @@ public class ProjectUtils {
         return Collections.emptySet();
     }
 
-    public static List<String> getLibs(Project proj) {
-        List<String> libs = new ArrayList<String>();
-        FileObject libFolder = proj.getProjectDirectory().getFileObject("lib");
-        for (FileObject fo : libFolder.getChildren()) {
-            if (fo.hasExt("jar")) {
-                libs.add(fo.getNameExt());
-            }
-        }
-        return libs;
-    }
-
     public static String buildLibPath(String libName) {
         return KT_HOME + buildLibName(libName);
     }
@@ -224,11 +213,6 @@ public class ProjectUtils {
     
     public static String getKotlinProjectLightClassesPath(Project project){
         return KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).getPath();
-    }
-    
-    public static String getKotlinProjectClassesPath(Project project){
-        return project.getProjectDirectory().
-                    getFileObject("build").getFileObject("classes").getPath();
     }
     
 }

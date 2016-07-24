@@ -26,6 +26,9 @@ public class PomXmlModifier {
     
     public PomXmlModifier(NbMavenProjectImpl project) {
         this.project = project;
+    }
+
+    public void checkPom() {
         try {
             checkKotlinStdLibDependency();
             checkKotlinPlugin();
@@ -35,7 +38,7 @@ public class PomXmlModifier {
             Exceptions.printStackTrace(ex);
         }
     }
-
+    
     private Element createDependenciesElement(Element root) {
         QName qname = new QName("dependencies", root.getQName().getNamespace());
         DefaultElement dependenciesElement = new DefaultElement(qname);

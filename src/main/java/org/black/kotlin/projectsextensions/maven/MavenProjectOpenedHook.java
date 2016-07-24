@@ -55,7 +55,7 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                             sources.lightClassesGenerated();
                         }
                         if (!MavenHelper.hasParent(project)){
-                            new PomXmlModifier(project);
+                            new PomXmlModifier(project).checkPom();
                         }
 //                        KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
                         

@@ -1,4 +1,4 @@
-package org.black.kotlin.diagnostics.netbeans.codefolding;
+package org.black.kotlin.structurescanner;
 
 import com.google.common.collect.Lists;
 import com.intellij.psi.PsiElement;
@@ -6,11 +6,11 @@ import com.intellij.psi.impl.source.tree.PsiCoreCommentImpl;
 import com.intellij.psi.util.PsiTreeUtil;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.ImageIcon;
-import javax.swing.text.Document;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
@@ -32,33 +32,24 @@ import org.jetbrains.kotlin.psi.KtNamedFunction;
  */
 public class KotlinStructureScanner implements StructureScanner{
     
-    private final String COMMENT_FOLD = "/*...*/";
-    private final String IMPORT_LIST_FOLD = "...";
-    private final String FUNCTION_FOLD = "{...}";
-    
-    private final List<StructureItem> items = Lists.newArrayList();
-    
     @Override
     public List<? extends StructureItem> scan(ParserResult info) {
-        checkCode(info);
-        return items;
+        return Collections.emptyList();
     }
 
     @Override
     public Map<String, List<OffsetRange>> folds(ParserResult info) {
-        return Collections.emptyMap();
-    }
-
-    @Override
-    public Configuration getConfiguration() {
-        return null;
-    }
-    
-    private void checkCode(ParserResult info){
         FileObject file = info.getSnapshot().getSource().getFileObject();
         if (file == null || ProjectUtils.getKotlinProjectForFileObject(file) == null){
-            return;
+            return Collections.emptyMap();
         }
+        
+        Map<String, List<OffsetRange>> folds = new HashMap<String, List<OffsetRange>>();
+        
+        List<OffsetRange> comments = Lists.newArrayList();
+        List<OffsetRange> imports = Lists.newArrayList();
+        List<OffsetRange> functions = Lists.newArrayList();
+        
         KtFile ktFile = ProjectUtils.getKtFile(file);
         
         Collection<? extends PsiElement> elements =
@@ -66,39 +57,41 @@ public class KotlinStructureScanner implements StructureScanner{
                 KtImportList.class, PsiCoreCommentImpl.class, KtNamedFunction.class);
         
         for (PsiElement elem : elements){
-            String type = getFoldType(elem);
-            int start = getStartOffset(elem, type);
+            int start = getStartOffset(elem);
             int end = elem.getTextRange().getEndOffset();
             if (start >= end){
                 continue;
             }
+            
             OffsetRange range = new OffsetRange(start, end);
-            StructureItem item = new KotlinStructureItem(type, range);
             
-            if (!items.contains(item)){
-                items.add(item);
+            if (elem instanceof PsiCoreCommentImpl) {
+                comments.add(range);
+            } else if (elem instanceof KtNamedFunction) {
+                functions.add(range);
+            } else if (elem instanceof KtImportList) {
+                imports.add(range);
             }
-            
         }
         
+        folds.put("comments", comments);
+        folds.put("codeblocks", functions);
+        folds.put("imports", imports);
+        
+        return folds;
+    }
+
+    @Override
+    public Configuration getConfiguration() {
+        return new Configuration(true, true);
     }
     
-    private String getFoldType(PsiElement element){
-        if (element instanceof KtImportList){
-            return IMPORT_LIST_FOLD;
-        } else if (element instanceof PsiCoreCommentImpl){
-            return COMMENT_FOLD;
-        } else if (element instanceof KtNamedFunction){
-            return FUNCTION_FOLD;
-        } else return "";
-    }
-    
-    private int getStartOffset(PsiElement elem, String type){
+    private int getStartOffset(PsiElement elem){
         int start = elem.getTextRange().getStartOffset();
-        if (type.equals(FUNCTION_FOLD)){
+        if (elem instanceof KtNamedFunction){
             String name = elem.getText().split("\\{")[0];
             return start + name.length();
-        } else if (type.equals(IMPORT_LIST_FOLD)){
+        } else if (elem instanceof KtImportList){
             return start + "import ".length();
         } else {
             return start;

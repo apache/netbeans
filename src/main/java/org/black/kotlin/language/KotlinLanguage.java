@@ -1,6 +1,6 @@
 package org.black.kotlin.language;
 
-import org.black.kotlin.diagnostics.netbeans.codefolding.KotlinStructureScanner;
+import org.black.kotlin.structurescanner.KotlinStructureScanner;
 import org.black.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.black.kotlin.highlighter.netbeans.KotlinTokenId;
 import org.black.kotlin.highlighter.occurrences.KotlinOccurrencesFinder;
@@ -45,15 +45,15 @@ public class KotlinLanguage extends DefaultLanguageConfig {
         return new KotlinSemanticAnalyzer();
     }
     
-//    @Override
-//    public boolean hasStructureScanner(){
-//        return true;
-//    }
-//    
-//    @Override
-//    public StructureScanner getStructureScanner(){
-//        return new KotlinStructureScanner();
-//    }
+    @Override
+    public boolean hasStructureScanner(){
+        return true;
+    }
+    
+    @Override
+    public StructureScanner getStructureScanner(){
+        return new KotlinStructureScanner();
+    }
     
 //    @Override
 //    public boolean hasOccurrencesFinder() {

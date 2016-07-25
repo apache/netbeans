@@ -533,6 +533,12 @@
       <artifactId>kotlin-stdlib</artifactId>  
       <version>1.0.3</version> 
     </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-netbeans-modules-refactoring-api</artifactId>
+      <version>RELEASE81</version>
+      <type>jar</type>
+    </dependency>
   </dependencies>  
   <properties> 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 

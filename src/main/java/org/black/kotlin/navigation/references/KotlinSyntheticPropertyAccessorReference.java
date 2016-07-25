@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.descriptors.FunctionDescriptor;
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression;
 import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.BindingContext;
+import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedSimpleFunctionDescriptor;
 import org.jetbrains.kotlin.synthetic.SyntheticJavaPropertyDescriptor;
 
 public class KotlinSyntheticPropertyAccessorReference extends KotlinSimpleNameReference {
@@ -30,17 +31,6 @@ public class KotlinSyntheticPropertyAccessorReference extends KotlinSimpleNameRe
         Collection<? extends DeclarationDescriptor> descriptors = 
                 super.getTargetDescriptors(context);
         
-        boolean hasSyntheticJavaProperty = false;
-        for (DeclarationDescriptor descriptor : descriptors){
-            if (descriptor instanceof SyntheticJavaPropertyDescriptor){
-                hasSyntheticJavaProperty = true;
-            }
-        }
-        
-        if (!hasSyntheticJavaProperty){
-            return Collections.emptyList();
-        }
-        
         List<FunctionDescriptor> result = new SmartList<FunctionDescriptor>();
         for (DeclarationDescriptor descriptor : descriptors){
             if (descriptor instanceof SyntheticJavaPropertyDescriptor){
@@ -52,7 +42,7 @@ public class KotlinSyntheticPropertyAccessorReference extends KotlinSimpleNameRe
                         result.add(setMethod);
                     }
                 }
-            }
+            } 
         }
         
         return result;

@@ -101,15 +101,7 @@ public class ReferenceUtils {
     
     public static List<KotlinReference> createReferences(KtReferenceExpression element){
         List<KotlinReference> refs = Lists.newArrayList();
-        
-        if (element instanceof KtSimpleNameExpression){
-            refs.add(new KotlinSimpleNameReference((KtSimpleNameExpression) element));
-        } else if (element instanceof KtCallExpression){
-            refs.add(new KotlinInvokeFunctionReference(((KtCallExpression)element)));
-        } else if (element instanceof KtConstructorDelegationReferenceExpression){
-            refs.add(new KotlinConstructorDelegationReference((
-                    (KtConstructorDelegationReferenceExpression) element)));
-        } else if (element instanceof KtNameReferenceExpression){
+        if (element instanceof KtNameReferenceExpression){
             if (((KtNameReferenceExpression) element).getReferencedNameElementType() != KtTokens.IDENTIFIER){
                 return Collections.emptyList();
             }
@@ -132,7 +124,14 @@ public class ReferenceUtils {
                     break;
             }
             
-        }
+        } else if (element instanceof KtSimpleNameExpression){
+            refs.add(new KotlinSimpleNameReference((KtSimpleNameExpression) element));
+        } else if (element instanceof KtCallExpression){
+            refs.add(new KotlinInvokeFunctionReference(((KtCallExpression)element)));
+        } else if (element instanceof KtConstructorDelegationReferenceExpression){
+            refs.add(new KotlinConstructorDelegationReference((
+                    (KtConstructorDelegationReferenceExpression) element)));
+        } 
         
         return refs;
     }

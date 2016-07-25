@@ -100,10 +100,8 @@ public class NavigationUtil {
             gotoKotlinDeclaration(((KotlinSourceElement) element).getPsi(), fromElement, project, currentFile);
         
         } else if (element instanceof KotlinJvmBinarySourceElement){
-        
         } else if (element instanceof KotlinJvmBinaryPackageSourceElement){
-        
-        }
+        } 
         
     }
 

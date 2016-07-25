@@ -4,18 +4,25 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
 import org.black.kotlin.utils.KotlinImageProvider;
 import org.jetbrains.kotlin.descriptors.ClassDescriptor;
+import org.jetbrains.kotlin.descriptors.ClassifierDescriptor;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.descriptors.FunctionDescriptor;
 import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor;
 import org.jetbrains.kotlin.descriptors.PackageViewDescriptor;
+import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor;
 import org.jetbrains.kotlin.descriptors.VariableDescriptor;
+import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.renderer.DescriptorRenderer;
+import org.jetbrains.kotlin.types.KotlinType;
+import org.jetbrains.kotlin.types.TypeSubstitution;
 import org.netbeans.api.editor.completion.Completion;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionTask;
@@ -51,6 +58,28 @@ public class KotlinCompletionItem implements CompletionItem {
         }
     }
     
+    private String getValueParameter(ValueParameterDescriptor desc) {
+        KotlinType kotlinType = desc.getType();
+        ClassifierDescriptor classifierDescriptor = kotlinType.getConstructor().getDeclarationDescriptor();
+        if (classifierDescriptor == null) {
+            return desc.getName().asString();
+        }
+        
+        String typeName = classifierDescriptor.getName().asString();
+        
+        if (typeName.equals("Int")  || typeName.equals("Long") || typeName.equals("Short")) {
+            return "0";
+        } else if (typeName.equals("Double") || typeName.equals("Float")) {
+            return "0.0";
+        } else if (typeName.equals("String")) {
+            return "\"" + desc.getName().asString() + "\"";
+        } else if (typeName.equals("Char")) {
+            return "\"\"";
+        }
+        else if (typeName.equals("Boolean")) {
+            return "true";
+        } else return desc.getName().asString();
+    }
     
     @Override
     public void defaultAction(JTextComponent jtc) {
@@ -58,7 +87,15 @@ public class KotlinCompletionItem implements CompletionItem {
             StyledDocument doc = (StyledDocument) jtc.getDocument();
             doc.remove(idenStartOffset, caretOffset - idenStartOffset);
             if (descriptor instanceof FunctionDescriptor){
-                doc.insertString(idenStartOffset, text + "()", null);
+                List<ValueParameterDescriptor> params = ((FunctionDescriptor) descriptor).getValueParameters();
+                StringBuilder functionParams = new StringBuilder();
+                functionParams.append("(");
+                for (ValueParameterDescriptor desc : params) {
+                    functionParams.append(getValueParameter(desc));
+                    functionParams.append(",");
+                }
+                functionParams.deleteCharAt(functionParams.length()-1).append(")");
+                doc.insertString(idenStartOffset, text + functionParams.toString(), null);
             } else{
                 doc.insertString(idenStartOffset, text, null);
             }

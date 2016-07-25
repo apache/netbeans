@@ -16,6 +16,7 @@ import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.descriptors.SourceElement;
 import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.BindingContext;
+import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedSimpleFunctionDescriptor;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.project.Project;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider;

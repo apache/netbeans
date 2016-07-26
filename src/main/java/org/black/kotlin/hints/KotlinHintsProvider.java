@@ -1,12 +1,16 @@
 package org.black.kotlin.hints;
 
 import com.google.common.collect.Lists;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import java.util.ArrayList;
 import java.util.List;
 import org.black.kotlin.diagnostics.netbeans.parser.KotlinParser;
+import org.black.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinError;
 import org.black.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult;
 import org.black.kotlin.resolve.AnalysisResultWithProvider;
+import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
+import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.diagnostics.Diagnostic;
 import org.jetbrains.kotlin.resolve.AnalyzingUtils;
 import org.netbeans.modules.csl.api.Error;
@@ -34,8 +38,19 @@ public class KotlinHintsProvider implements HintsProvider{
         List<? extends Error> errors = parserResult.getDiagnostics();
         for (Error error : errors) {
             if (error.toString().startsWith("UNRESOLVED_REFERENCE")) {
+                
+                PsiElement psi = ((KotlinError) error).getPsi();
+                String simpleName = psi.getText();
+                List<String> suggestions = NetBeansJavaProjectElementUtils.findFQName(
+                        ProjectUtils.getKotlinProjectForFileObject(file), simpleName);
+                List<HintFix> fixes = new ArrayList<HintFix>();
+                for (String suggestion : suggestions) {
+                    KotlinAutoImportFix fix = new KotlinAutoImportFix(suggestion);
+                    fixes.add(fix);
+                }
+                
                 Hint hint = new Hint(new KotlinAutoImportRule(), "Class not found", file, 
-                    new OffsetRange(error.getStartPosition(), error.getEndPosition()), new ArrayList<HintFix>(), 10);
+                    new OffsetRange(error.getStartPosition(), error.getEndPosition()), fixes, 10);
                 hints.add(hint);
             }
         }

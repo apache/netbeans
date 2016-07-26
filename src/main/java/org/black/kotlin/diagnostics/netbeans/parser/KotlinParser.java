@@ -1,6 +1,7 @@
 package org.black.kotlin.diagnostics.netbeans.parser;
 
 import com.google.common.collect.Lists;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import java.util.List;
 import javax.swing.event.ChangeListener;
@@ -123,6 +124,10 @@ public class KotlinParser extends Parser {
         public KotlinError(Diagnostic diagnostic, FileObject file){
             this.diagnostic = diagnostic;
             this.file = file;
+        }
+        
+        public PsiElement getPsi(){
+            return diagnostic.getPsiElement();
         }
         
         @Override

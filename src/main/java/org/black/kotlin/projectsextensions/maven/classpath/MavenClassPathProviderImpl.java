@@ -16,22 +16,22 @@ import org.openide.filesystems.FileObject;
 public final class MavenClassPathProviderImpl implements ClassPathProvider{
 
     private final Project project;
+    private ClassPathProviderImpl impl;
     
     public MavenClassPathProviderImpl(Project project){
         this.project = project;
+        this.impl = new ClassPathProviderImpl(project);
     }
     
     @Override
     public ClassPath findClassPath(FileObject fo, String type) {
-        ClassPathProviderImpl impl = new ClassPathProviderImpl(project);
-        
         ClassPath cp = impl.findClassPath(fo, type);
         if (cp == null) {
             return null;
         }
         
         List<PathResourceImplementation> resources = new ArrayList<PathResourceImplementation>();
-        if (type == ClassPath.BOOT){
+        if (type.equals(ClassPath.BOOT)){
             resources.add(ClassPathSupport.createResource(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).toURL()));
         }
         ClassPath lightClasses = ClassPathSupport.createClassPath(resources);
@@ -39,5 +39,8 @@ public final class MavenClassPathProviderImpl implements ClassPathProvider{
         return ClassPathSupport.createProxyClassPath(cp, lightClasses);
     }
     
+    public void updateClassPath() {
+        impl = new ClassPathProviderImpl(project);
+    }
    
 }

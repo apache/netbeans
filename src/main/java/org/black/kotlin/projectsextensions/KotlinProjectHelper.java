@@ -10,6 +10,7 @@ import org.black.kotlin.project.KotlinSources;
 import org.black.kotlin.projectsextensions.maven.MavenHelper;
 import org.black.kotlin.projectsextensions.maven.buildextender.MavenExtendedClassPath;
 import org.black.kotlin.projectsextensions.maven.buildextender.MavenModuledProjectExtendedClassPath;
+import org.black.kotlin.projectsextensions.maven.classpath.MavenClassPathProviderImpl;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.j2seproject.J2SEProject;
@@ -115,11 +116,19 @@ public class KotlinProjectHelper {
         return classpaths.get(project);
     }
     
-    public ClassPathExtender getExtendedClassPath(Project project) {
+        public ClassPathExtender getExtendedClassPath(Project project) {
         Project p = project;
         
         if (!(checkProject(p))){
             return null;
+        }
+        
+        if (p instanceof NbMavenProjectImpl) {
+                try {
+                    p = MavenHelper.getMainParent((NbMavenProjectImpl) p);
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
         }
         
         if (!extendedClassPaths.containsKey(p)){
@@ -127,11 +136,6 @@ public class KotlinProjectHelper {
                 extendedClassPaths.put(p, new J2SEExtendedClassPathProvider(p));
             }
             if (p instanceof NbMavenProjectImpl) {
-                try {
-                    p = MavenHelper.getMainParent((NbMavenProjectImpl) p);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
                 if (!MavenHelper.isModuled((NbMavenProjectImpl) p)){
                     extendedClassPaths.put(p, new MavenExtendedClassPath((NbMavenProjectImpl) p));
                 } else {
@@ -142,13 +146,17 @@ public class KotlinProjectHelper {
         
         return extendedClassPaths.get(p);
     }
-    
+
     public void updateExtendedClassPath(Project project) {
         Project p = project;
         if (p instanceof J2SEProject) {
             extendedClassPaths.put(p, new J2SEExtendedClassPathProvider(p));
         }
         if (p instanceof NbMavenProjectImpl) {
+            MavenClassPathProviderImpl impl = p.getLookup().lookup(MavenClassPathProviderImpl.class);
+            if (impl != null) {
+                impl.updateClassPath();
+            }
             try {
                 p = MavenHelper.getMainParent((NbMavenProjectImpl) p);
             } catch (IOException ex) {
@@ -161,7 +169,7 @@ public class KotlinProjectHelper {
             }
         }
         NetBeansJavaProjectElementUtils.updateClasspathInfo(p);
-        KotlinEnvironment.updateKotlinEnvironment(p);
+        KotlinEnvironment.updateKotlinEnvironment(project);
     }
     
 }

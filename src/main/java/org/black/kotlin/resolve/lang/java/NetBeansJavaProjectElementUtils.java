@@ -1,8 +1,13 @@
 package org.black.kotlin.resolve.lang.java;
 
+import com.sun.source.util.TreePath;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
@@ -10,10 +15,12 @@ import org.black.kotlin.projectsextensions.ClassPathExtender;
 import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.CancellableTask;
+import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.project.Project;
@@ -85,6 +92,26 @@ public class NetBeansJavaProjectElementUtils {
         }
         
         return searcher.getElement();
+    }
+    
+    public static List<String> findFQName(Project kotlinProject, String name) {
+        if (!CLASSPATH_INFO.containsKey(kotlinProject)){
+            CLASSPATH_INFO.put(kotlinProject, getClasspathInfo(kotlinProject));
+        }
+        if (!JAVA_SOURCE.containsKey(kotlinProject)){
+            JAVA_SOURCE.put(kotlinProject,JavaSource.create(CLASSPATH_INFO.get(kotlinProject)));
+        }
+        List<String> fqNames = new ArrayList<String>();
+        
+        final Set<ElementHandle<TypeElement>> result = 
+                CLASSPATH_INFO.get(kotlinProject).getClassIndex().
+                        getDeclaredTypes(name, ClassIndex.NameKind.SIMPLE_NAME, EnumSet.of(ClassIndex.SearchScope.SOURCE, ClassIndex.SearchScope.DEPENDENCIES));
+        
+        for (ElementHandle<TypeElement> handle : result) {
+            fqNames.add(handle.getQualifiedName());
+        }
+        
+        return fqNames;
     }
     
     public static Project getProject(Element element){

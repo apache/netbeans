@@ -37,7 +37,7 @@ public class KotlinCompletionProvider implements CompletionProvider {
         if (queryType != CompletionProvider.COMPLETION_QUERY_TYPE) {
             return null;
         }
-
+        
         return new AsyncCompletionTask(new AsyncCompletionQuery() {
             @Override
             protected void query(CompletionResultSet resultSet, Document doc, int caretOffset) {

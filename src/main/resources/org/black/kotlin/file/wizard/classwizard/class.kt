@@ -13,6 +13,6 @@ package ${package}
   Created on ${date}
 */
 
-public class ${name} {
+class ${name} {
 
 }

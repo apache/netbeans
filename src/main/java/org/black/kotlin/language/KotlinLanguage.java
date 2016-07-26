@@ -57,15 +57,15 @@ public class KotlinLanguage extends DefaultLanguageConfig {
         return new KotlinStructureScanner();
     }
     
-//    @Override
-//    public boolean hasHintsProvider() {
-//        return true;
-//    }
-//    
-//    @Override 
-//    public HintsProvider getHintsProvider() {
-//        return new KotlinHintsProvider();
-//    }
+    @Override
+    public boolean hasHintsProvider() {
+        return true;
+    }
+    
+    @Override 
+    public HintsProvider getHintsProvider() {
+        return new KotlinHintsProvider();
+    }
     
 //    @Override
 //    public boolean hasOccurrencesFinder() {

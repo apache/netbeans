@@ -126,6 +126,11 @@ public class KotlinParser extends Parser {
         }
         
         @Override
+        public String toString() {
+            return diagnostic.toString();
+        }
+        
+        @Override
         public boolean showExplorerBadge() {
             return diagnostic.getSeverity() == 
                     org.jetbrains.kotlin.diagnostics.Severity.ERROR;

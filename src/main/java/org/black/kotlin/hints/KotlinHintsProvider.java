@@ -1,13 +1,24 @@
 package org.black.kotlin.hints;
 
 import com.google.common.collect.Lists;
+import com.intellij.psi.PsiErrorElement;
+import java.util.ArrayList;
 import java.util.List;
+import org.black.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.black.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult;
+import org.black.kotlin.resolve.AnalysisResultWithProvider;
+import org.jetbrains.kotlin.diagnostics.Diagnostic;
+import org.jetbrains.kotlin.resolve.AnalyzingUtils;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Hint;
+import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.HintsProvider;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.Rule;
 import org.netbeans.modules.csl.api.RuleContext;
+import org.netbeans.modules.parsing.spi.ParseException;
+import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -16,12 +27,17 @@ import org.netbeans.modules.csl.api.RuleContext;
 public class KotlinHintsProvider implements HintsProvider{
 
     @Override
-    public void computeHints(HintsManager hm, RuleContext rc, List<Hint> list) {
+    public void computeHints(HintsManager hm, RuleContext rc, List<Hint> hints) {
         KotlinParserResult parserResult = (KotlinParserResult) rc.parserResult;
+        FileObject file = parserResult.getSnapshot().getSource().getFileObject();
+        
         List<? extends Error> errors = parserResult.getDiagnostics();
         for (Error error : errors) {
-            String name = error.toString();
-            System.out.println();
+            if (error.toString().startsWith("UNRESOLVED_REFERENCE")) {
+                Hint hint = new Hint(new KotlinAutoImportRule(), "Class not found", file, 
+                    new OffsetRange(error.getStartPosition(), error.getEndPosition()), new ArrayList<HintFix>(), 10);
+                hints.add(hint);
+            }
         }
     }
 
@@ -34,7 +50,27 @@ public class KotlinHintsProvider implements HintsProvider{
     }
 
     @Override
-    public void computeErrors(HintsManager hm, RuleContext rc, List<Hint> list, List<Error> list1) {
+    public void computeErrors(HintsManager hm, RuleContext rc, List<Hint> list, List<Error> errors) {
+        KotlinParserResult parserResult = (KotlinParserResult) rc.parserResult;
+        FileObject file = parserResult.getSnapshot().getSource().getFileObject();
+        
+        AnalysisResultWithProvider analysisResult = null;
+        try {
+            analysisResult = parserResult.getAnalysisResult();
+        } catch (ParseException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        if (analysisResult != null) {
+            for (Diagnostic diagnostic : analysisResult.getAnalysisResult().
+                        getBindingContext().getDiagnostics().all()) {
+                KotlinParser.KotlinError error = new KotlinParser.KotlinError(diagnostic, file);
+                errors.add(error);
+            }
+            for (PsiErrorElement psiError : AnalyzingUtils.getSyntaxErrorRanges(parserResult.getKtFile())){
+                KotlinParser.KotlinSyntaxError syntaxError = new KotlinParser.KotlinSyntaxError(psiError, file);
+                errors.add(syntaxError);
+            }
+        }
     }
 
     @Override

@@ -5,7 +5,9 @@ import org.black.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.black.kotlin.highlighter.netbeans.KotlinTokenId;
 import org.black.kotlin.highlighter.occurrences.KotlinOccurrencesFinder;
 import org.black.kotlin.highlighter.semanticanalyzer.KotlinSemanticAnalyzer;
+import org.black.kotlin.hints.KotlinHintsProvider;
 import org.netbeans.api.lexer.Language;
+import org.netbeans.modules.csl.api.HintsProvider;
 import org.netbeans.modules.csl.api.OccurrencesFinder;
 import org.netbeans.modules.csl.api.SemanticAnalyzer;
 import org.netbeans.modules.csl.api.StructureScanner;
@@ -54,6 +56,16 @@ public class KotlinLanguage extends DefaultLanguageConfig {
     public StructureScanner getStructureScanner(){
         return new KotlinStructureScanner();
     }
+    
+//    @Override
+//    public boolean hasHintsProvider() {
+//        return true;
+//    }
+//    
+//    @Override 
+//    public HintsProvider getHintsProvider() {
+//        return new KotlinHintsProvider();
+//    }
     
 //    @Override
 //    public boolean hasOccurrencesFinder() {

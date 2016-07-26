@@ -3,6 +3,7 @@ package org.black.kotlin.resolve.lang.java.structure;
 
 import com.google.common.collect.Lists;
 import static org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.types;
+import static org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.typeParameters;
 import static org.black.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.classifierTypes;
 
 import java.util.Collection;
@@ -52,7 +53,9 @@ public class NetBeansJavaClassifierType extends NetBeansJavaType<TypeMirror> imp
 
     @Override
     public boolean isRaw() {
-        return getBinding() instanceof ReferenceType;
+        if (getBinding().getKind() == TypeKind.DECLARED) {
+                return ((DeclaredType) getBinding()).getTypeArguments().isEmpty();
+        } else return true;
     }
 
     @Override

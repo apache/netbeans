@@ -5,6 +5,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.text.Document;
 import org.black.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.black.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinError;
 import org.black.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult;
@@ -12,6 +13,7 @@ import org.black.kotlin.resolve.AnalysisResultWithProvider;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.diagnostics.Diagnostic;
+import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.AnalyzingUtils;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Hint;
@@ -45,7 +47,7 @@ public class KotlinHintsProvider implements HintsProvider{
                         ProjectUtils.getKotlinProjectForFileObject(file), simpleName);
                 List<HintFix> fixes = new ArrayList<HintFix>();
                 for (String suggestion : suggestions) {
-                    KotlinAutoImportFix fix = new KotlinAutoImportFix(suggestion);
+                    KotlinAutoImportFix fix = new KotlinAutoImportFix(suggestion, parserResult);
                     fixes.add(fix);
                 }
                 

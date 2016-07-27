@@ -8,6 +8,7 @@ import javax.lang.model.element.Element;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
+import kotlin.Pair;
 import org.black.kotlin.navigation.NavigationUtil;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.psi.KtFile;
@@ -54,14 +55,16 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
                 }
                 FileObject file = ProjectUtils.getFileObjectForDocument(doc);
                 Project project = ProjectUtils.getKotlinProjectForFileObject(file);
-                KtFile ktFile = FromJavaToKotlinNavigationUtils.findKotlinFileToNavigate(element, project);
+                Pair<KtFile, Integer> pair = FromJavaToKotlinNavigationUtils.findKotlinFileToNavigate(element, project);
+                KtFile ktFile = pair.getFirst();
+                int offsetToOpen = pair.getSecond();
                 
                 if (ktFile != null) {
                     String filePath = ktFile.getVirtualFile().getPath();
                     FileObject fileToOpen = FileUtil.toFileObject(new File(filePath));
                     try {
                         StyledDocument docToOpen = ProjectUtils.getDocumentFromFileObject(fileToOpen);
-                        NavigationUtil.openFileAtOffset(docToOpen, fileToOpen, 0);
+                        NavigationUtil.openFileAtOffset(docToOpen, fileToOpen, offsetToOpen);
                     } catch (IOException ex) {
                         Exceptions.printStackTrace(ex);
                     }

@@ -63,13 +63,14 @@ public class FromJavaToKotlinNavigationUtils {
         return element;
     }
     
-    public static KtFile findKotlinFileToNavigate(Element element, Project project) {
+    public static Pair<KtFile, Integer> findKotlinFileToNavigate(Element element, Project project) {
         List<KtFile> ktFiles = ProjectUtils.getSourceFiles(project);
         
         for (KtFile ktFile : ktFiles) {
             KtElement ktElement = findKotlinDeclaration(element, ktFile);
             if (ktElement != null) {
-                return ktFile;
+                int offset = ktElement.getTextOffset();
+                return new Pair(ktFile, offset);
             }
         }
         
@@ -190,6 +191,7 @@ public class FromJavaToKotlinNavigationUtils {
         while (it.hasNext()) {
             Pair<String, String> pair = it.next();
             String first = pair.getFirst();
+            String elText = element.getSimpleName().toString();
             String second = pair.getSecond();
         }
         

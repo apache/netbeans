@@ -1,9 +1,11 @@
 package org.black.kotlin.hints;
 
+import java.util.List;
 import javax.swing.text.Document;
 import org.black.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtImportDirective;
+import org.jetbrains.kotlin.psi.KtPackageDirective;
 import org.netbeans.modules.csl.api.HintFix;
 import org.openide.filesystems.FileObject;
 
@@ -32,11 +34,26 @@ public class KotlinAutoImportFix implements HintFix {
         Document doc = parserResult.getSnapshot().getSource().getDocument(false);
         KtFile ktFile = parserResult.getKtFile();
         
-        KtImportDirective importDirective = 
-                ktFile.getImportDirectives().get(ktFile.getImportDirectives().size()-1);
-        int placeToInsert = importDirective.getTextOffset() + importDirective.getTextLength();
+        List<KtImportDirective> importDirectives = ktFile.getImportDirectives();
+        KtPackageDirective packageDirective = ktFile.getPackageDirective();
+        int placeToInsert;
+        String newImport;
         
-        doc.insertString(placeToInsert, "\nimport " + fqName + "\n", null);
+        if (importDirectives.size() > 0) {
+            KtImportDirective importDirective = 
+                importDirectives.get(importDirectives.size()-1);
+            placeToInsert = importDirective.getTextOffset() + importDirective.getTextLength();
+            newImport = "\nimport " + fqName;
+        } else if (packageDirective != null) {
+            placeToInsert = packageDirective.getTextOffset() + packageDirective.getTextLength();
+            newImport = "\n\nimport " + fqName;
+        } else {
+            placeToInsert = 0;
+            newImport = "import " + fqName;
+        }
+        
+        
+        doc.insertString(placeToInsert, newImport, null);
     }
 
     @Override

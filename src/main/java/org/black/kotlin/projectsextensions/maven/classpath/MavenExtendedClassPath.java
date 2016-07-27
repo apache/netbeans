@@ -1,4 +1,4 @@
-package org.black.kotlin.projectsextensions.maven.buildextender;
+package org.black.kotlin.projectsextensions.maven.classpath;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.regex.Pattern;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.black.kotlin.projectsextensions.ClassPathExtender;
+import org.black.kotlin.projectsextensions.KotlinProjectHelper;
 import org.black.kotlin.utils.KotlinClasspath;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
+import org.netbeans.spi.java.classpath.PathResourceImplementation;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -68,7 +70,12 @@ public class MavenExtendedClassPath implements ClassPathExtender {
                         Pattern.quote(System.getProperty("path.separator")))));
             javaClasspathElements.addAll(project.getOriginalMavenProject().getSystemClasspathElements());
             javaClasspathElements.addAll(project.getOriginalMavenProject().getTestClasspathElements());
-            boot = getClasspath(javaClasspathElements);
+            
+            List<PathResourceImplementation> resources = new ArrayList<PathResourceImplementation>();
+            resources.add(ClassPathSupport.createResource(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).toURL()));
+            ClassPath lightClasses = ClassPathSupport.createClassPath(resources);
+            
+            boot = ClassPathSupport.createProxyClassPath(getClasspath(javaClasspathElements), lightClasses);
             
         } catch (DependencyResolutionRequiredException ex) {
             Exceptions.printStackTrace(ex);

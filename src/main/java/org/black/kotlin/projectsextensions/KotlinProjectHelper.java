@@ -8,7 +8,7 @@ import org.black.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathP
 import org.black.kotlin.project.KotlinClassPathProvider;
 import org.black.kotlin.project.KotlinSources;
 import org.black.kotlin.projectsextensions.maven.MavenHelper;
-import org.black.kotlin.projectsextensions.maven.buildextender.MavenExtendedClassPath;
+import org.black.kotlin.projectsextensions.maven.classpath.MavenExtendedClassPath;
 import org.black.kotlin.projectsextensions.maven.buildextender.MavenModuledProjectExtendedClassPath;
 import org.black.kotlin.projectsextensions.maven.classpath.MavenClassPathProviderImpl;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;

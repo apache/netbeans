@@ -71,6 +71,10 @@
               <id>org.netbeans.modules:org-netbeans-modules-maven-embedder</id>  
               <type>impl</type> 
             </dependency> 
+            <dependency>
+                <id>org.netbeans.modules:org-netbeans-modules-java-editor</id>
+                <type>impl</type>
+            </dependency>
           </moduleDependencies> 
         </configuration> 
       </plugin>  
@@ -536,6 +540,12 @@
     <dependency>
       <groupId>org.netbeans.api</groupId>
       <artifactId>org-netbeans-modules-refactoring-api</artifactId>
+      <version>RELEASE81</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.modules</groupId>
+      <artifactId>org-netbeans-modules-java-editor</artifactId>
       <version>RELEASE81</version>
       <type>jar</type>
     </dependency>

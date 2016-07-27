@@ -50,12 +50,15 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
         switch (type) {
             case GO_TO_DECLARATION:
                 Element element = FromJavaToKotlinNavigationUtils.getElement(doc, offset);
-                if (element == null) {
-                    GoToSupport.goTo(doc, offset, false);
-                }
                 FileObject file = ProjectUtils.getFileObjectForDocument(doc);
                 Project project = ProjectUtils.getKotlinProjectForFileObject(file);
                 Pair<KtFile, Integer> pair = FromJavaToKotlinNavigationUtils.findKotlinFileToNavigate(element, project);
+                
+                if (pair == null) {
+                    GoToSupport.goTo(doc, offset, false);
+                    break;
+                }
+                
                 KtFile ktFile = pair.getFirst();
                 int offsetToOpen = pair.getSecond();
                 

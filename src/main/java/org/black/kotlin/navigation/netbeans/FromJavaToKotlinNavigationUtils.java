@@ -64,6 +64,9 @@ public class FromJavaToKotlinNavigationUtils {
     }
     
     public static Pair<KtFile, Integer> findKotlinFileToNavigate(Element element, Project project) {
+        if (element == null) {
+            return null;
+        }
         List<KtFile> ktFiles = ProjectUtils.getSourceFiles(project);
         
         for (KtFile ktFile : ktFiles) {
@@ -89,137 +92,117 @@ public class FromJavaToKotlinNavigationUtils {
     
     
     private static KtVisitorVoid makeVisitor(final Element element, final List<KtElement> result) {
-        if (element.getKind() ==  ElementKind.CLASS 
-                || element.getKind() ==  ElementKind.INTERFACE
-                || element.getKind() ==  ElementKind.ENUM) {
-            return new KtAllVisitor() {  
-                @Override
-                public void visitClassOrObject(KtClassOrObject ktClassOrObject) {
-                    if (ktClassOrObject.getFqName().asString().equals(((TypeElement) element).getQualifiedName().toString())) {
-                        result.add(ktClassOrObject);
-                        return;
-                    }
-                    
-                    ktClassOrObject.acceptChildren(this);
-                }  
-            };
-        } else if (element.getKind() == ElementKind.FIELD) {
-            return new KtAllVisitor() {
-                @Override
-                public void visitObjectDeclaration(KtObjectDeclaration declaration) {
-                    visitExplicitDeclaration(declaration);
-                    declaration.acceptChildren(this);
-                }
-                
-                @Override
-                public void visitEnumEntry(KtEnumEntry enumEntry) {
-                    visitExplicitDeclaration(enumEntry);
-                }
-                
-                @Override
-                public void visitProperty(KtProperty property) {
-                    visitExplicitDeclaration(property);
-                }
-                
-                private void visitExplicitDeclaration(KtDeclaration declaration) {
-                    if (equalsJvmSignature(declaration, element)){
-                        result.add(declaration);
-                    }
-                }
-            };
-        } if (element.getKind() == ElementKind.METHOD || element.getKind() == ElementKind.CONSTRUCTOR) {
-            return new KtAllVisitor() {
-                
-                @Override
-                public void visitNamedFunction(KtNamedFunction function) {
-                    visitExplicitDeclaration(function);
-                }
-                
-                @Override
-                public void visitProperty(KtProperty property) {
-                    visitExplicitDeclaration(property);
-                    property.acceptChildren(this);
-                }
-                
-                @Override
-                public void visitPropertyAccessor(KtPropertyAccessor accessor) {
-                    visitExplicitDeclaration(accessor);
-                }
-                
-                @Override
-                public void visitSecondaryConstructor(KtSecondaryConstructor constructor) {
-                    visitExplicitDeclaration(constructor);
-                }
-                
-                @Override
-                public void visitPrimaryConstructor(KtPrimaryConstructor constructor) {
-                    visitExplicitDeclaration(constructor);
-                }
-                
-                @Override
-                public void visitClass(KtClass ktClass) {
-                    Element enclosingElement = element.getEnclosingElement();
-                    if (enclosingElement == null || !enclosingElement.getKind().isClass()
-                        || !enclosingElement.getKind().isInterface()) {
-                        return;
-                    }
-                    String fqName = ((TypeElement) enclosingElement).getQualifiedName().toString();
-                    if (equalsJvmSignature(ktClass, element) && (ktClass.getFqName().asString().equals(fqName))) {
-                        result.add(ktClass);
-                        return;
-                    }
-                    
-                    ktClass.acceptChildren(this);
-                }
-                
-                private void visitExplicitDeclaration(KtDeclaration declaration) {
-                    if (equalsJvmSignature(declaration, element) && equalsDeclaringTypes(declaration, (ExecutableElement) element)) {
-                        result.add(declaration);
-                    }
-                }
-                
-            };
-        } else return null;
-    }
-    
-    public static boolean equalsJvmSignature(KtElement ktElement, Element element) {
-        Set<Pair<String,String>> ktSignatures = ktElement.getUserData(LightClassBuilderFactory.JVM_SIGNATURE);
-        if (ktSignatures == null) {
-            return false;
-        }
-        Iterator<Pair<String, String>> it = ktSignatures.iterator();
-        while (it.hasNext()) {
-            Pair<String, String> pair = it.next();
-            String first = pair.getFirst();
-            String elText = element.getSimpleName().toString();
-            String second = pair.getSecond();
-        }
-        
-        String elementSignature;
         switch (element.getKind()) {
+            case CLASS:
+            case INTERFACE:
+            case ENUM:
+                return new KtAllVisitor() {  
+                    @Override
+                    public void visitClassOrObject(KtClassOrObject ktClassOrObject) {
+                        if (ktClassOrObject.getFqName().asString().equals(((TypeElement) element).getQualifiedName().toString())) {
+                            result.add(ktClassOrObject);
+                            return;
+                        }
+
+                        ktClassOrObject.acceptChildren(this);
+                    }  
+                };
             case FIELD:
-                break;
+                return new KtAllVisitor() {
+                    @Override
+                    public void visitObjectDeclaration(KtObjectDeclaration declaration) {
+                        visitExplicitDeclaration(declaration);
+                        declaration.acceptChildren(this);
+                    }
+
+                    @Override
+                    public void visitEnumEntry(KtEnumEntry enumEntry) {
+                        visitExplicitDeclaration(enumEntry);
+                    }
+
+                    @Override
+                    public void visitProperty(KtProperty property) {
+                        visitExplicitDeclaration(property);
+                    }
+
+                    private void visitExplicitDeclaration(KtDeclaration declaration) {
+                        if (equalsNames(declaration, element) &&
+                            declaration.getName().toString().equals(((VariableElement)element).getSimpleName().toString())){
+                            result.add(declaration);
+                        }
+                    }
+                };
             case METHOD:
             case CONSTRUCTOR:
-                break;
+                return new KtAllVisitor() {
+                
+                    @Override
+                    public void visitNamedFunction(KtNamedFunction function) {
+                        visitExplicitDeclaration(function);
+                    }
+
+                    @Override
+                    public void visitProperty(KtProperty property) {
+                        visitExplicitDeclaration(property);
+                        property.acceptChildren(this);
+                    }
+
+                    @Override
+                    public void visitPropertyAccessor(KtPropertyAccessor accessor) {
+                        visitExplicitDeclaration(accessor);
+                    }
+
+                    @Override
+                    public void visitSecondaryConstructor(KtSecondaryConstructor constructor) {
+                        visitExplicitDeclaration(constructor);
+                    }
+
+                    @Override
+                    public void visitPrimaryConstructor(KtPrimaryConstructor constructor) {
+                        visitExplicitDeclaration(constructor);
+                    }
+
+                    @Override
+                    public void visitClass(KtClass ktClass) {
+                        Element enclosingElement = element.getEnclosingElement();
+
+                        String fqName = ((TypeElement) enclosingElement).getQualifiedName().toString();
+                        if (equalsNames(ktClass, element) &&
+                                (ktClass.getFqName().asString().equals(fqName))) {
+                            result.add(ktClass);
+                            return;
+                        }
+
+                        ktClass.acceptChildren(this);
+                    }
+
+                    private void visitExplicitDeclaration(KtDeclaration declaration) {
+                        if (equalsNames(declaration, element) &&
+                                equalsDeclaringTypes(declaration, (ExecutableElement) element)) {
+                            result.add(declaration);
+                        }
+                    }
+
+                };
             default:
-                elementSignature = null;
+                return null;
         }
-        
-        return true;
     }
     
+    public static boolean equalsNames(KtElement ktElement, Element element) {
+        String first = ktElement.getName();
+        String second = element.getSimpleName().toString();
+        
+        return first.equals(second);
+    }
+
     public static boolean equalsDeclaringTypes(KtElement ktElement, ExecutableElement element) {
         FqName typeNameInfo = getDeclaringTypeFqName(ktElement);
         Element enclosingElement = element.getEnclosingElement();
-        if (enclosingElement == null || !enclosingElement.getKind().isClass()
-                || !enclosingElement.getKind().isInterface()) {
-            return false;
-        }
         
         String fqName = ((TypeElement) enclosingElement).getQualifiedName().toString();
         
-        return typeNameInfo.asString().equals(fqName);
+        return typeNameInfo.asString().equals(fqName) || typeNameInfo.asString().equals(fqName+"Kt");
     }
     
     private static FqName getDeclaringTypeFqName(KtElement ktElement) {

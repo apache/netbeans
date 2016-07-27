@@ -5,9 +5,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -15,9 +13,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.swing.text.Document;
 import kotlin.Pair;
-import org.black.kotlin.builder.KotlinPsiManager;
-import org.black.kotlin.filesystem.lightclasses.LightClassBuilderFactory;
-import org.black.kotlin.project.KotlinSources;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider;
 import org.jetbrains.kotlin.name.FqName;
@@ -29,6 +24,7 @@ import org.jetbrains.kotlin.psi.KtEnumEntry;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtNamedFunction;
 import org.jetbrains.kotlin.psi.KtObjectDeclaration;
+import org.jetbrains.kotlin.psi.KtParameter;
 import org.jetbrains.kotlin.psi.KtPrimaryConstructor;
 import org.jetbrains.kotlin.psi.KtProperty;
 import org.jetbrains.kotlin.psi.KtPropertyAccessor;
@@ -36,11 +32,8 @@ import org.jetbrains.kotlin.psi.KtSecondaryConstructor;
 import org.jetbrains.kotlin.psi.KtVisitorVoid;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.CompilationController;
-import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.editor.java.GoToSupport;
-import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
 /**
@@ -193,7 +186,31 @@ public class FromJavaToKotlinNavigationUtils {
         String first = ktElement.getName();
         String second = element.getSimpleName().toString();
         
-        return first.equals(second);
+        if (!first.equals(second)) {
+            return false;
+        }
+        
+        if (element.getKind() == ElementKind.METHOD) {
+            return equalsFunctions(ktElement, (ExecutableElement) element);
+        }
+        
+        return true;
+    }
+    
+    private static boolean equalsFunctions(KtElement ktElement, ExecutableElement element) {
+        if (!(ktElement instanceof KtNamedFunction)) {
+            return false;
+        }
+        List<KtParameter> ktParameters = ((KtNamedFunction) ktElement).getValueParameters();
+        List<? extends VariableElement> parameters = element.getParameters();
+        
+        if (ktParameters.size() != parameters.size()) {
+            return false;
+        }
+        
+        //TODO
+        
+        return true;
     }
 
     public static boolean equalsDeclaringTypes(KtElement ktElement, ExecutableElement element) {

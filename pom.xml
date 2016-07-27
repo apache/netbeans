@@ -75,6 +75,10 @@
                 <id>org.netbeans.modules:org-netbeans-modules-java-editor</id>
                 <type>impl</type>
             </dependency>
+            <dependency>
+                <id>org.netbeans.api:org-netbeans-modules-csl-api</id>
+                <type>impl</type>
+            </dependency>
           </moduleDependencies> 
         </configuration> 
       </plugin>  

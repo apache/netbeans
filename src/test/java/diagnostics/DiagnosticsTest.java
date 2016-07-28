@@ -46,10 +46,10 @@ public class DiagnosticsTest extends NbTestCase {
         return KotlinAnalyzer.analyzeFile(project, ktFile);
     }
     
-    private void doTest(String fileName, int numberOfDiagnostics, 
-            List<Pair<Integer,Integer>> diagnosticsRanges, 
-            List<Severity> diagnosticsSeverity, int numberOfSyntaxErrors,
-            List<Pair<Integer, Integer>> syntaxErrorsRanges) {
+    private void doTest(String fileName, List<Pair<Integer,Integer>> diagnosticsRanges, 
+            List<Severity> diagnosticsSeverity, List<Pair<Integer, Integer>> syntaxErrorsRanges) {
+        int numberOfDiagnostics = diagnosticsRanges.size();
+        int numberOfSyntaxErrors = syntaxErrorsRanges.size();
         
         AnalysisResultWithProvider result = getAnalysisResult(fileName);
         FileObject fileToAnalyze = diagnosticsDir.getFileObject(fileName);
@@ -91,21 +91,19 @@ public class DiagnosticsTest extends NbTestCase {
         }
     }
     
-    private void doTest(String fileName, int numberOfDiagnostics, 
-            List<Pair<Integer,Integer>> diagnosticsRanges, 
+    private void doTest(String fileName, List<Pair<Integer,Integer>> diagnosticsRanges, 
             List<Severity> diagnosticsSeverity) {
-        doTest(fileName, numberOfDiagnostics, diagnosticsRanges, diagnosticsSeverity,
-                0, new ArrayList<Pair<Integer, Integer>>());
+        doTest(fileName, diagnosticsRanges, diagnosticsSeverity, 
+                new ArrayList<Pair<Integer, Integer>>());
     }
     
-    private void doTest(String fileName, int numberOfSyntaxErrors,
-            List<Pair<Integer, Integer>> syntaxErrorsRanges) {
-        doTest(fileName, 0, new ArrayList<Pair<Integer, Integer>>(), 
-                null, numberOfSyntaxErrors, syntaxErrorsRanges);
+    private void doTest(String fileName, List<Pair<Integer, Integer>> syntaxErrorsRanges) {
+        doTest(fileName, new ArrayList<Pair<Integer, Integer>>(), 
+                null, syntaxErrorsRanges);
     }
     
     private void doTest(String fileName) {
-        doTest(fileName, 0, new ArrayList<Pair<Integer, Integer>>());
+        doTest(fileName, new ArrayList<Pair<Integer, Integer>>());
     }
     
     @Test
@@ -128,7 +126,7 @@ public class DiagnosticsTest extends NbTestCase {
         List<Severity> severityList = new ArrayList<Severity>();
         severityList.add(Severity.WARNING);
         
-        doTest("parameterIsNeverUsed.kt", 1, diagnosticsRanges, severityList);
+        doTest("parameterIsNeverUsed.kt", diagnosticsRanges, severityList);
     }
     
     @Test
@@ -137,7 +135,7 @@ public class DiagnosticsTest extends NbTestCase {
                 new ArrayList<Pair<Integer, Integer>>();
         errorsRanges.add(new Pair<Integer, Integer>(21,31));
         
-        doTest("expectingATopLevelDeclaration.kt", 1, errorsRanges);
+        doTest("expectingATopLevelDeclaration.kt", errorsRanges);
     }
     
     @Test
@@ -154,7 +152,7 @@ public class DiagnosticsTest extends NbTestCase {
         List<Severity> severityList = new ArrayList<Severity>();
         severityList.add(Severity.ERROR);
         
-        doTest("checkTypeMismatch.kt", 1, diagnosticsRanges, severityList);
+        doTest("checkTypeMismatch.kt", diagnosticsRanges, severityList);
     }
     
     @Test
@@ -166,7 +164,7 @@ public class DiagnosticsTest extends NbTestCase {
         List<Severity> severityList = new ArrayList<Severity>();
         severityList.add(Severity.ERROR);
         
-        doTest("checkNoValuePassed.kt", 1, diagnosticsRanges, severityList);
+        doTest("checkNoValuePassed.kt", diagnosticsRanges, severityList);
     }
     
     @Test
@@ -178,7 +176,7 @@ public class DiagnosticsTest extends NbTestCase {
         List<Severity> severityList = new ArrayList<Severity>();
         severityList.add(Severity.ERROR);
         
-        doTest("checkWrongImport.kt", 1, diagnosticsRanges, severityList);        
+        doTest("checkWrongImport.kt", diagnosticsRanges, severityList);        
     }
     
     @Test
@@ -190,7 +188,7 @@ public class DiagnosticsTest extends NbTestCase {
         List<Severity> severityList = new ArrayList<Severity>();
         severityList.add(Severity.ERROR);
         
-        doTest("checkNullPointer.kt", 1, diagnosticsRanges, severityList);          
+        doTest("checkNullPointer.kt", diagnosticsRanges, severityList);          
     }
     
     @Test
@@ -202,7 +200,20 @@ public class DiagnosticsTest extends NbTestCase {
         List<Severity> severityList = new ArrayList<Severity>();
         severityList.add(Severity.ERROR);
         
-        doTest("checkReassignValue.kt", 1, diagnosticsRanges, severityList);         
+        doTest("checkReassignValue.kt", diagnosticsRanges, severityList);         
     }
     
+    @Test
+    public void testCastIsNeverSucceed(){
+        List<Pair<Integer,Integer>> diagnosticsRanges = 
+                new ArrayList<Pair<Integer,Integer>>();
+        diagnosticsRanges.add(new Pair<Integer, Integer>(95,97));
+        diagnosticsRanges.add(new Pair<Integer, Integer>(79,82));
+        
+        List<Severity> severityList = new ArrayList<Severity>();
+        severityList.add(Severity.WARNING);
+        severityList.add(Severity.WARNING);
+        
+        doTest("checkCastIsNeverSucceed.kt", diagnosticsRanges, severityList);        
+    }
 }

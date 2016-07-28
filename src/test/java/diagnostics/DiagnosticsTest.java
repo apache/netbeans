@@ -159,7 +159,7 @@ public class DiagnosticsTest extends NbTestCase {
     
     @Test
     public void testNoValuePassed(){
-         List<Pair<Integer,Integer>> diagnosticsRanges = 
+        List<Pair<Integer,Integer>> diagnosticsRanges = 
                 new ArrayList<Pair<Integer,Integer>>();
         diagnosticsRanges.add(new Pair<Integer, Integer>(80,81));
         
@@ -168,4 +168,29 @@ public class DiagnosticsTest extends NbTestCase {
         
         doTest("checkNoValuePassed.kt", 1, diagnosticsRanges, severityList);
     }
+    
+    @Test
+    public void testWrongImport(){
+        List<Pair<Integer,Integer>> diagnosticsRanges = 
+                new ArrayList<Pair<Integer,Integer>>();
+        diagnosticsRanges.add(new Pair<Integer, Integer>(28,32));
+        
+        List<Severity> severityList = new ArrayList<Severity>();
+        severityList.add(Severity.ERROR);
+        
+        doTest("checkWrongImport.kt", 1, diagnosticsRanges, severityList);        
+    }
+    
+    @Test
+    public void testCheckNullPointer(){
+        List<Pair<Integer,Integer>> diagnosticsRanges = 
+                new ArrayList<Pair<Integer,Integer>>();
+        diagnosticsRanges.add(new Pair<Integer, Integer>(86,90));
+        
+        List<Severity> severityList = new ArrayList<Severity>();
+        severityList.add(Severity.ERROR);
+        
+        doTest("checkNullPointer.kt", 1, diagnosticsRanges, severityList);          
+    }
+    
 }

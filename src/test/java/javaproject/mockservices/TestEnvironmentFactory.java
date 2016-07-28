@@ -1,5 +1,6 @@
-package mockproject;
+package javaproject.mockservices;
 
+import javaproject.mockservices.MockParser;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;

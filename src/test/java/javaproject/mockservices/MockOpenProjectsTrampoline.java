@@ -1,4 +1,4 @@
-package mockproject;
+package javaproject.mockservices;
 
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;

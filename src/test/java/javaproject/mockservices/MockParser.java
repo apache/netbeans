@@ -1,4 +1,4 @@
-package mockproject;
+package javaproject.mockservices;
 
 import javax.swing.event.ChangeListener;
 import org.netbeans.modules.parsing.api.Snapshot;

@@ -1,4 +1,4 @@
-package mockproject;
+package javaproject.mockservices;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

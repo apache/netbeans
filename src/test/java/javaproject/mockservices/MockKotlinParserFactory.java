@@ -1,4 +1,4 @@
-package mockproject;
+package javaproject.mockservices;
 
 import java.util.Collection;
 import org.black.kotlin.diagnostics.netbeans.parser.KotlinParser;

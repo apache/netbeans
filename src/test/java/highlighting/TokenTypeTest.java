@@ -1,5 +1,6 @@
-package org.black.kotlin.highlighter;
+package highlighting;
 
+import org.black.kotlin.highlighter.TokenType;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

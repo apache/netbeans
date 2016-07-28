@@ -1,7 +1,10 @@
 package diagnostics;
 
 import com.intellij.psi.PsiErrorElement;
-import org.black.kotlin.project.KotlinProject;
+import org.junit.Test;
+import org.netbeans.api.project.Project;
+import org.netbeans.junit.NbTestCase;
+import javaproject.JavaProject;
 import org.black.kotlin.resolve.AnalysisResultWithProvider;
 import org.black.kotlin.resolve.KotlinAnalyzer;
 import org.black.kotlin.utils.ProjectUtils;
@@ -9,40 +12,49 @@ import org.jetbrains.kotlin.diagnostics.Diagnostic;
 import org.jetbrains.kotlin.diagnostics.Severity;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.AnalyzingUtils;
-import org.junit.Test;
-import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
 public class DiagnosticsTest extends NbTestCase {
     
-    private KotlinProject kotlinProject = null;
-    private FileObject diagnosticsDir;
+    private final Project project;
+    private final FileObject diagnosticsDir;
     
-    public DiagnosticsTest() throws Exception {
-        super("Diagnostics test");
-//        kotlinProject = KotlinProjectCreator.INSTANCE.getProject();
-        if (kotlinProject != null){
-            diagnosticsDir = kotlinProject.getProjectDirectory().
-                getFileObject("src").getFileObject("diagnostics");
-        }
+    public DiagnosticsTest() {
+        super("First test");
+        project = JavaProject.INSTANCE.getJavaProject();
+        diagnosticsDir = project.getProjectDirectory().
+                getFileObject("src").getFileObject("diagnostics");  
     }
+ 
     
     private AnalysisResultWithProvider getAnalysisResult(String fileName){
         FileObject fileToAnalyze = diagnosticsDir.getFileObject(fileName);
+        
+        assertNotNull(fileToAnalyze);
+        
         KtFile ktFile = ProjectUtils.getKtFile(fileToAnalyze);
-        return KotlinAnalyzer.analyzeFile(kotlinProject, ktFile);
+        return KotlinAnalyzer.analyzeFile(project, ktFile);
+    }
+    
+    @Test
+    public void testProjectCreation() {
+        assertNotNull(project);
+        assertNotNull(diagnosticsDir);
+    }
+    
+    @Test 
+    public void testKtHome() {
+        assertNotNull(ProjectUtils.KT_HOME);
     }
     
     @Test
     public void testParameterIsNeverUsedWarning(){
-        if (kotlinProject == null){
-            return;
-        }
-        
         AnalysisResultWithProvider result = getAnalysisResult("parameterIsNeverUsed.kt");
         
         Diagnostic diagnostic = 
@@ -59,10 +71,6 @@ public class DiagnosticsTest extends NbTestCase {
     
     @Test
     public void testExpectingATopLevelDeclarationError(){
-        if (kotlinProject == null){
-            return;
-        }
-        
         AnalysisResultWithProvider result = getAnalysisResult("expectingATopLevelDeclaration.kt");
         FileObject fileToAnalyze = diagnosticsDir.getFileObject("expectingATopLevelDeclaration.kt");
         KtFile ktFile = ProjectUtils.getKtFile(fileToAnalyze);
@@ -75,13 +83,6 @@ public class DiagnosticsTest extends NbTestCase {
         
         assertEquals(49,startPosition);
         assertEquals(59,endPosition);
-        
-//        for (Diagnostic diag : result.getAnalysisResult().getBindingContext().getDiagnostics().all()){
-//            System.out.println(diag);
-//            System.out.println(diag.getTextRanges());
-//        }
-//        
-//        assertEquals(0, result.getAnalysisResult().getBindingContext().getDiagnostics().all().size());
     }
     
 }

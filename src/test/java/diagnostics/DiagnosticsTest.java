@@ -81,8 +81,15 @@ public class DiagnosticsTest extends NbTestCase {
         int startPosition = psiError.getTextRange().getStartOffset();
         int endPosition = psiError.getTextRange().getEndOffset();
         
-        assertEquals(49,startPosition);
-        assertEquals(59,endPosition);
+        assertEquals(21,startPosition);
+        assertEquals(31,endPosition);
+        assertTrue(result.getAnalysisResult().getBindingContext().getDiagnostics().isEmpty());
     }
     
+    @Test
+    public void testNoTypeMismatch(){
+        AnalysisResultWithProvider result = getAnalysisResult("checkNoTypeMismatch.kt");
+        
+        assertTrue(result.getAnalysisResult().getBindingContext().getDiagnostics().isEmpty());
+    }
 }

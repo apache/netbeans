@@ -85,6 +85,8 @@ public class DiagnosticsTest extends NbTestCase {
         
                 assertEquals(startPosition, syntaxErrorsRanges.get(i).getFirst());
                 assertEquals(endPosition, syntaxErrorsRanges.get(i).getSecond());
+                
+                i++;
             }
         }
     }

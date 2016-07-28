@@ -193,4 +193,16 @@ public class DiagnosticsTest extends NbTestCase {
         doTest("checkNullPointer.kt", 1, diagnosticsRanges, severityList);          
     }
     
+    @Test
+    public void testReassignValue(){
+        List<Pair<Integer,Integer>> diagnosticsRanges = 
+                new ArrayList<Pair<Integer,Integer>>();
+        diagnosticsRanges.add(new Pair<Integer, Integer>(61,66));
+        
+        List<Severity> severityList = new ArrayList<Severity>();
+        severityList.add(Severity.ERROR);
+        
+        doTest("checkReassignValue.kt", 1, diagnosticsRanges, severityList);         
+    }
+    
 }

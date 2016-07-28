@@ -62,9 +62,7 @@ public class JavaProjectUnzipper extends NbTestCase {
         unZipFile(archiveFile, destFileObject);
         assertTrue(destFileObject.isValid());
         
-        String folderName = null;
-        String[] pathParts = path.split("\\\\");
-        folderName = pathParts[pathParts.length-1].replace(".zip", "");
+        String folderName = "kotlinc";
         
         FileObject unzippedFolder = destFileObject.getFileObject(folderName);
         assertNotNull(unzippedFolder);
@@ -74,7 +72,10 @@ public class JavaProjectUnzipper extends NbTestCase {
     
     public FileObject getTestProject() throws IOException {
         getKtHomeForTests();
-        File projectFile = new File(".\\src\\test\\resources\\projForTest");
+        String path = "." + ProjectUtils.FILE_SEPARATOR + "src" + ProjectUtils.FILE_SEPARATOR +
+                "test" + ProjectUtils.FILE_SEPARATOR + "resources" + ProjectUtils.FILE_SEPARATOR + "projForTest";
+        
+        File projectFile = new File(path);
         FileObject projectFileObject = FileUtil.toFileObject(FileUtil.normalizeFile(projectFile));
         FileObject destFileObject = FileUtil.toFileObject(getWorkDir());
         
@@ -89,7 +90,11 @@ public class JavaProjectUnzipper extends NbTestCase {
     }
     
     private void getKtHomeForTests() throws IOException {
-        FileObject kotlincFolder = getUnzippedFolder(".\\src\\main\\resources\\org\\black\\kotlin\\kotlinc\\kotlinc.zip");
+        String path = "." + ProjectUtils.FILE_SEPARATOR + "src" + ProjectUtils.FILE_SEPARATOR + "main" +
+                ProjectUtils.FILE_SEPARATOR + "resources" + ProjectUtils.FILE_SEPARATOR + "org" +
+                ProjectUtils.FILE_SEPARATOR + "black" + ProjectUtils.FILE_SEPARATOR + "kotlin" + ProjectUtils.FILE_SEPARATOR +
+                "kotlinc" + ProjectUtils.FILE_SEPARATOR + "kotlinc.zip";
+        FileObject kotlincFolder = getUnzippedFolder(path);
         
         ProjectUtils.KT_HOME = kotlincFolder.getPath() + ProjectUtils.FILE_SEPARATOR;
     }

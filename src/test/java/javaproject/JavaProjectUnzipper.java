@@ -79,9 +79,11 @@ public class JavaProjectUnzipper extends NbTestCase {
         FileObject destFileObject = FileUtil.toFileObject(getWorkDir());
         
         FileObject testProject = destFileObject.getFileObject("projForTest");
-        if (testProject == null) {
-            testProject = FileUtil.copyFile(projectFileObject, destFileObject, "projForTest");
+        if (testProject != null) {
+            testProject.delete();
         }
+        
+        testProject = FileUtil.copyFile(projectFileObject, destFileObject, "projForTest");
         
         return testProject;
     }

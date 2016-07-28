@@ -156,4 +156,16 @@ public class DiagnosticsTest extends NbTestCase {
         
         doTest("checkTypeMismatch.kt", 1, diagnosticsRanges, severityList);
     }
+    
+    @Test
+    public void testNoValuePassed(){
+         List<Pair<Integer,Integer>> diagnosticsRanges = 
+                new ArrayList<Pair<Integer,Integer>>();
+        diagnosticsRanges.add(new Pair<Integer, Integer>(80,81));
+        
+        List<Severity> severityList = new ArrayList<Severity>();
+        severityList.add(Severity.ERROR);
+        
+        doTest("checkNoValuePassed.kt", 1, diagnosticsRanges, severityList);
+    }
 }

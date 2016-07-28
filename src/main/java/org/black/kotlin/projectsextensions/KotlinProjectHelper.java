@@ -89,8 +89,7 @@ public class KotlinProjectHelper {
     
     private FileObject setLightClassesDir(Project project){
         if (Places.getUserDirectory() == null){
-            return project.getProjectDirectory().
-                    getFileObject("build").getFileObject("classes");
+            return project.getProjectDirectory();
         }
         FileObject userDirectory = FileUtil.toFileObject(Places.getUserDirectory());
         String projectName = project.getProjectDirectory().getName();

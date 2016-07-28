@@ -161,7 +161,6 @@ public class ProjectUtils {
     public static Project getKotlinProjectForFileObject(FileObject file){
         
         for (Project project : OpenProjects.getDefault().getOpenProjects()){
-            
             if (file.toURI().toString().contains(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).toURI().toString())){
                 return project;
             }

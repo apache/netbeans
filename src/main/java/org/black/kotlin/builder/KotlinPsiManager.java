@@ -76,7 +76,7 @@ public class KotlinPsiManager {
     @Nullable
     public KtFile parseText(@NotNull String text, @NotNull FileObject file) {
         StringUtil.assertValidSeparators(text);
-
+        
         Project kotlinProject = ProjectUtils.getKotlinProjectForFileObject(file);
         if (kotlinProject == null){
             return null;

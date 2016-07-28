@@ -5,6 +5,7 @@ import mockproject.MockActiveDocumentProvider;
 import mockproject.MockKotlinParserFactory;
 import mockproject.MockOpenProjectsTrampoline;
 import mockproject.TestEnvironmentFactory;
+import org.black.kotlin.projectsextensions.j2se.J2SEProjectOpenedHook;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.MockServices;

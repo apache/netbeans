@@ -35,12 +35,10 @@ public final class MockOpenProjectsTrampoline implements OpenProjectsTrampoline 
 
     @Override
     public void addPropertyChangeListenerAPI(PropertyChangeListener listener, Object source) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void removePropertyChangeListenerAPI(PropertyChangeListener listener) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
     private Project mainProject;
 
@@ -70,11 +68,9 @@ public final class MockOpenProjectsTrampoline implements OpenProjectsTrampoline 
 
     @Override
     public void addProjectGroupChangeListenerAPI(ProjectGroupChangeListener pl) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void removeProjectGroupChangeListenerAPI(ProjectGroupChangeListener pl) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

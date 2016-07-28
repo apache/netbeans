@@ -4,9 +4,12 @@ import org.junit.Test;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import javaproject.JavaProject;
+import static junit.framework.TestCase.assertEquals;
 import org.black.kotlin.resolve.AnalysisResultWithProvider;
 import org.black.kotlin.resolve.KotlinAnalyzer;
 import org.black.kotlin.utils.ProjectUtils;
+import org.jetbrains.kotlin.diagnostics.Diagnostic;
+import org.jetbrains.kotlin.diagnostics.Severity;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.openide.filesystems.FileObject;
 
@@ -17,13 +20,16 @@ import org.openide.filesystems.FileObject;
 public class NewDiagnosticsTest extends NbTestCase {
     
     private final Project project;
-    private FileObject diagnosticsDir;
+    private final FileObject diagnosticsDir;
     
     public NewDiagnosticsTest() {
         super("First test");
         project = JavaProject.INSTANCE.getJavaProject();
+        diagnosticsDir = project.getProjectDirectory().
+                getFileObject("src").getFileObject("diagnostics");  
     }
  
+    
     private AnalysisResultWithProvider getAnalysisResult(String fileName){
         FileObject fileToAnalyze = diagnosticsDir.getFileObject(fileName);
         
@@ -36,8 +42,6 @@ public class NewDiagnosticsTest extends NbTestCase {
     @Test
     public void testProjectCreation() {
         assertNotNull(project);
-        diagnosticsDir = project.getProjectDirectory().
-                getFileObject("src").getFileObject("diagnostics");
         assertNotNull(diagnosticsDir);
     }
     
@@ -46,5 +50,24 @@ public class NewDiagnosticsTest extends NbTestCase {
         assertNotNull(ProjectUtils.KT_HOME);
     }
     
+    @Test
+    public void testParameterIsNeverUsedWarning(){
+        if (project == null){
+            return;
+        }
+        
+        AnalysisResultWithProvider result = getAnalysisResult("parameterIsNeverUsed.kt");
+        
+        Diagnostic diagnostic = 
+                result.getAnalysisResult().getBindingContext().getDiagnostics().iterator().next();
+        
+        assertEquals(Severity.WARNING, diagnostic.getSeverity());
+        
+        int startPosition = diagnostic.getTextRanges().get(0).getStartOffset();
+        int endPosition = diagnostic.getTextRanges().get(0).getEndOffset();
+        
+        assertEquals(startPosition, 30);
+        assertEquals(endPosition, 33);
+    }
     
 }

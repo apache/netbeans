@@ -59,8 +59,8 @@ public class DiagnosticsTest extends NbTestCase {
                 result.getAnalysisResult().getBindingContext().getDiagnostics().all();
         Collection<PsiErrorElement> syntaxErrors = AnalyzingUtils.getSyntaxErrorRanges(ktFile);
         
-        assertEquals(diagnostics.size(), numberOfDiagnostics);
-        assertEquals(syntaxErrors.size(), numberOfSyntaxErrors);
+        assertEquals(numberOfDiagnostics, diagnostics.size());
+        assertEquals(numberOfSyntaxErrors, syntaxErrors.size());
         
         if (numberOfDiagnostics > 0) {
             int i = 0;
@@ -70,8 +70,8 @@ public class DiagnosticsTest extends NbTestCase {
                 Integer startPosition = diagnostic.getTextRanges().get(0).getStartOffset();
                 Integer endPosition = diagnostic.getTextRanges().get(0).getEndOffset();
                 
-                assertEquals(startPosition, diagnosticsRanges.get(i).getFirst());
-                assertEquals(endPosition, diagnosticsRanges.get(i).getSecond());
+                assertEquals(diagnosticsRanges.get(i).getFirst(), startPosition);
+                assertEquals(diagnosticsRanges.get(i).getSecond(), endPosition);
                 
                 i++;
             }
@@ -83,8 +83,8 @@ public class DiagnosticsTest extends NbTestCase {
                 Integer startPosition = syntaxError.getTextRange().getStartOffset();
                 Integer endPosition = syntaxError.getTextRange().getEndOffset();
         
-                assertEquals(startPosition, syntaxErrorsRanges.get(i).getFirst());
-                assertEquals(endPosition, syntaxErrorsRanges.get(i).getSecond());
+                assertEquals(syntaxErrorsRanges.get(i).getFirst(), startPosition);
+                assertEquals(syntaxErrorsRanges.get(i).getSecond(), endPosition);
                 
                 i++;
             }
@@ -143,5 +143,17 @@ public class DiagnosticsTest extends NbTestCase {
     @Test
     public void testNoTypeMismatch(){
         doTest("checkNoTypeMismatch.kt");
+    }
+    
+    @Test
+    public void testTypeMismatch(){
+        List<Pair<Integer,Integer>> diagnosticsRanges = 
+                new ArrayList<Pair<Integer,Integer>>();
+        diagnosticsRanges.add(new Pair<Integer, Integer>(151,172));
+        
+        List<Severity> severityList = new ArrayList<Severity>();
+        severityList.add(Severity.ERROR);
+        
+        doTest("checkTypeMismatch.kt", 1, diagnosticsRanges, severityList);
     }
 }

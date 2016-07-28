@@ -1,3 +1,5 @@
+[![TeamCity (simple build status)](https://img.shields.io/teamcity/http/teamcity.jetbrains.com/s/Kotlin_NetBeansPlugin.svg)](https://teamcity.jetbrains.com/viewType.html?buildTypeId=Kotlin_NetBeansPlugin&branch_Kotlin=%3Cdefault%3E&tab=buildTypeStatusDiv)
+
 # Kotlin plugin for NetBeans IDE
 
 ## Installing Kotlin plugin

@@ -36,7 +36,7 @@ public class JavaProject extends NbTestCase {
     private Project createJavaProject() throws IOException {
         ProjectFactory projectFactory = new JavaProjectFactory();
         
-        return projectFactory.loadProject(JavaProjectUnzipper.INSTANCE.getProjectFolder(), new JavaProjectState());
+        return projectFactory.loadProject(JavaProjectUnzipper.INSTANCE.getTestProject(), new JavaProjectState());
     }
     
     private void createMockLookup() {

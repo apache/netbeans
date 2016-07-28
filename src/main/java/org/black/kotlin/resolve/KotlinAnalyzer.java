@@ -3,7 +3,6 @@ package org.black.kotlin.resolve;
 import java.util.Collection;
 import org.black.kotlin.model.KotlinAnalysisFileCache;
 import org.black.kotlin.model.KotlinEnvironment;
-//import org.black.kotlin.project.KotlinProject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.project.Project;

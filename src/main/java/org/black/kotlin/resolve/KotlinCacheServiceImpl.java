@@ -5,7 +5,6 @@ import com.intellij.psi.PsiElement;
 import java.util.Collection;
 import java.util.List;
 import org.black.kotlin.model.KotlinAnalysisFileCache;
-import org.black.kotlin.project.KotlinProject;
 import org.jetbrains.kotlin.analyzer.AnalysisResult;
 import org.jetbrains.kotlin.caches.resolve.KotlinCacheService;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
@@ -37,11 +36,11 @@ public class KotlinCacheServiceImpl implements KotlinCacheService {
             @Override
             public BindingContext analyze(KtElement element, BodyResolveMode bodyResolveMode) {
                 KtFile ktFile = element.getContainingKtFile();
-                KotlinProject kotlinProject = null;
+                org.netbeans.api.project.Project kotlinProject = null;
                 for (org.netbeans.api.project.Project project : OpenProjects.getDefault().getOpenProjects()){
                     if (ktFile.getVirtualFile().getUrl().contains(
                             project.getProjectDirectory().toURL().toString())){
-                        kotlinProject = (KotlinProject) project;
+                        kotlinProject = project;
                         break;
                     }
                 }

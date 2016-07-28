@@ -2,7 +2,6 @@ package org.black.kotlin.resolve.lang.java;
 
 import com.google.common.collect.Lists;
 import com.intellij.openapi.vfs.VirtualFile;
-import edu.emory.mathcs.backport.java.util.Collections;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -11,7 +10,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import org.black.kotlin.model.KotlinEnvironment;
-import org.black.kotlin.project.KotlinProject;
 import org.black.kotlin.resolve.lang.java.structure.NetBeansJavaClass;
 import org.black.kotlin.resolve.lang.java.structure.NetBeansJavaPackage;
 import org.black.kotlin.utils.ProjectUtils;

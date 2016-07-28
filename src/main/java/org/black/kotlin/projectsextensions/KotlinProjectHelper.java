@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider;
-import org.black.kotlin.project.KotlinClassPathProvider;
 import org.black.kotlin.project.KotlinSources;
 import org.black.kotlin.projectsextensions.maven.MavenHelper;
 import org.black.kotlin.projectsextensions.maven.classpath.MavenExtendedClassPath;
@@ -32,7 +31,6 @@ public class KotlinProjectHelper {
     
     private final Map<Project, KotlinSources> kotlinSources = new HashMap<Project, KotlinSources>();
     private final Map<Project, FileObject> lightClassesDirs = new HashMap<Project, FileObject>();
-    private final Map<Project, KotlinClassPathProvider> classpaths = new HashMap<Project, KotlinClassPathProvider>();
     private final Map<Project, ClassPathExtender> extendedClassPaths = new HashMap<Project, ClassPathExtender>();
     
     public boolean checkProject(Project project){
@@ -103,19 +101,7 @@ public class KotlinProjectHelper {
         return userDirectory.getFileObject(projectName);
     }
     
-    public KotlinClassPathProvider getKotlinClassPathProvider(Project project){
-        if (!(checkProject(project))){
-            return null;
-        }
-        
-        if (!classpaths.containsKey(project)){
-            classpaths.put(project, new KotlinClassPathProvider(project));
-        }
-        
-        return classpaths.get(project);
-    }
-    
-        public ClassPathExtender getExtendedClassPath(Project project) {
+    public ClassPathExtender getExtendedClassPath(Project project) {
         Project p = project;
         
         if (!(checkProject(p))){

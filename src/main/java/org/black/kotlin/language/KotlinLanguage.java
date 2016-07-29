@@ -67,14 +67,14 @@ public class KotlinLanguage extends DefaultLanguageConfig {
         return new KotlinHintsProvider();
     }
     
-//    @Override
-//    public boolean hasOccurrencesFinder() {
-//        return true;
-//    }
-//    
-//    @Override
-//    public OccurrencesFinder getOccurrencesFinder() {
-//        return new KotlinOccurrencesFinder();
-//    }
+    @Override
+    public boolean hasOccurrencesFinder() {
+        return true;
+    }
+    
+    @Override
+    public OccurrencesFinder getOccurrencesFinder() {
+        return new KotlinOccurrencesFinder();
+    }
     
 }

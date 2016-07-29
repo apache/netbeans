@@ -5,6 +5,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.jetbrains.kotlin.lexer.KtTokens;
 import org.jetbrains.kotlin.psi.KtAnnotatedExpression;
 import org.jetbrains.kotlin.psi.KtBinaryExpression;
 import org.jetbrains.kotlin.psi.KtCallExpression;
+import org.jetbrains.kotlin.psi.KtConstructor;
 import org.jetbrains.kotlin.psi.KtConstructorDelegationReferenceExpression;
 import org.jetbrains.kotlin.psi.KtDeclaration;
 import org.jetbrains.kotlin.psi.KtElement;
@@ -184,6 +186,21 @@ public class ReferenceUtils {
             
         return ReferenceAccess.READ;
         
+    }
+    
+    public static List<SourceElement> getContainingClassOrObjectForConstructor(List<? extends SourceElement> sourceElements) {
+        List<SourceElement> elementsToReturn = new ArrayList<SourceElement>();
+        
+        for (SourceElement sourceElement : sourceElements) {
+            if (sourceElement instanceof KotlinSourceElement) {
+                KtElement psi = ((KotlinSourceElement) sourceElement).getPsi();
+                if (psi instanceof KtConstructor) {
+                    elementsToReturn.add(new KotlinSourceElement(((KtConstructor) psi).getContainingClassOrObject()));
+                }
+            }
+        }
+        
+        return elementsToReturn;
     }
     
 }

@@ -112,6 +112,10 @@ public class NavigationUtil {
     }
 
     public static boolean gotoKotlinStdlib(VirtualFile virtFile, DeclarationDescriptor desc) {
+        if (virtFile == null) {
+            return false;
+        }
+        
         FileObject declarationFile = JarNavigationUtil.getFileObjectFromJar(virtFile.getPath());
         if (declarationFile == null) {
             return false;

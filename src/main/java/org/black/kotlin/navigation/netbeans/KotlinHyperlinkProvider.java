@@ -20,7 +20,6 @@ import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.BindingContext;
 import org.jetbrains.kotlin.resolve.jvm.JvmClassName;
 import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedCallableMemberDescriptor;
-import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedSimpleFunctionDescriptor;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.project.Project;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider;

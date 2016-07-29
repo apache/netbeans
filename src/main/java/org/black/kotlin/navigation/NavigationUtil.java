@@ -6,6 +6,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import javax.lang.model.element.Element;
@@ -16,6 +19,7 @@ import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import kotlin.Pair;
 import org.black.kotlin.builder.KotlinPsiManager;
+import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.navigation.references.ReferenceUtils;
 import org.black.kotlin.resolve.NetBeansDescriptorUtils;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
@@ -26,8 +30,10 @@ import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.descriptors.SourceElement;
+import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryClass;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryPackageSourceElement;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinarySourceElement;
+import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.psi.KtDeclaration;
 import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
@@ -36,6 +42,7 @@ import org.jetbrains.kotlin.psi.KtParameter;
 import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.DescriptorUtils;
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;
+import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedCallableMemberDescriptor;
 import org.netbeans.api.project.Project;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
@@ -106,11 +113,57 @@ public class NavigationUtil {
             gotoKotlinDeclaration(((KotlinSourceElement) element).getPsi(), fromElement, project, currentFile);
         
         } else if (element instanceof KotlinJvmBinarySourceElement){
+            gotoElementInBinaryClass(((KotlinJvmBinarySourceElement) element).getBinaryClass(), descriptor, project);
         } else if (element instanceof KotlinJvmBinaryPackageSourceElement){
         } 
         
     }
 
+    public static void gotoElementInBinaryClass(KotlinJvmBinaryClass binaryClass,
+            DeclarationDescriptor descriptor, Project project) {
+        String path = binaryClass.getLocation().replace(".class", ".kt");
+        String[] internalPath = path.split("!/");
+        if (internalPath.length == 1) {
+            return;
+        }
+        
+        VirtualFile virtFile = KotlinEnvironment.getEnvironment(project).
+                    getVirtualFileInJar(ProjectUtils.buildLibPath("kotlin-runtime-sources"), internalPath[1]);
+        
+        gotoKotlinStdlib(virtFile, descriptor);
+    }
+    
+    
+    
+    public static Name getImplClassName(DeserializedCallableMemberDescriptor memberDescriptor) {
+        int nameIndex = 0;
+        
+        try {
+            Method getProtoMethod = DeserializedCallableMemberDescriptor.class.getMethod("getProto");
+            Object proto = getProtoMethod.invoke(memberDescriptor);
+            Field implClassNameField = Class.forName("org.jetbrains.kotlin.serialization.jvm.JvmProtoBuf").getField("implClassName");
+            Object implClassName = implClassNameField.get(null);
+            Class protobufCallable = Class.forName("org.jetbrains.kotlin.serialization.ProtoBuf\\$Callable");
+            Method getExtensionMethod = protobufCallable.getMethod("getExtension", implClassName.getClass());
+            Object indexObj = getExtensionMethod.invoke(proto, implClassName);
+            
+            if (!(indexObj instanceof Integer)) {
+                return null;
+            }
+            
+            nameIndex = (Integer) indexObj;
+            
+        } catch (ReflectiveOperationException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (SecurityException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (IllegalArgumentException ex) {
+            Exceptions.printStackTrace(ex);
+        } 
+        
+        return memberDescriptor.getNameResolver().getName(nameIndex);
+    }
+    
     public static boolean gotoKotlinStdlib(VirtualFile virtFile, DeclarationDescriptor desc) {
         if (virtFile == null) {
             return false;

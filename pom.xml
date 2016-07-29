@@ -79,6 +79,10 @@
                 <id>org.netbeans.api:org-netbeans-modules-csl-api</id>
                 <type>impl</type>
             </dependency>
+            <dependency>
+                <id>org.netbeans.modules:org-netbeans-modules-jumpto</id>
+                <type>impl</type>
+            </dependency>
           </moduleDependencies> 
         </configuration> 
       </plugin>  
@@ -552,6 +556,17 @@
       <artifactId>org-netbeans-modules-java-editor</artifactId>
       <version>RELEASE81</version>
       <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.modules</groupId>
+      <artifactId>org-netbeans-modules-jumpto</artifactId>
+      <version>RELEASE81</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-netbeans-spi-quicksearch</artifactId>
+      <version>RELEASE81</version>
     </dependency>
   </dependencies>  
   <properties> 

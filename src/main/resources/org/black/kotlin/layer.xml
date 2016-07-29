@@ -44,17 +44,22 @@
         </folder>
     </folder>
 
-
-<!--    <folder name="Templates">
-        <folder name="Kotlin">
-            <file name="Kotlin Class" url="content.kt">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.black.kotlin.Bundle"/>
-                <attr name="instantiatingIterator" newvalue="org.black.kotlin.file.wizard.KtWizardIterator"/>
-                <attr name="template" boolvalue="true"/>
-                <attr name="templateWizardURL" urlvalue="nbresloc:/org/black/kotlin/file/wizard/kt.html"/>
-                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+    <folder name="Menu">
+        <folder name = "GoTo">
+            <file name="org-netbeans-modules-jumpto-type-GoToType.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-black-kotlin-navigation-JavaKotlinTypeSearchProvider.instance"/>
+                <attr name="position" intvalue="150"/>
             </file>
         </folder>
-    </folder>-->
+    </folder>
+
+    <folder name="QuickSearch">
+        <folder name="GoToType">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.black.kotlin.navigation.Bundle"/>
+            <attr name="command" stringvalue="t"/>
+            <attr name="position" intvalue="300"/>
+            <file name="org-black-kotlin-navigation-JavaKotlinTypeSearchProvider.instance"/>
+        </folder>
+    </folder>
 
 </filesystem>

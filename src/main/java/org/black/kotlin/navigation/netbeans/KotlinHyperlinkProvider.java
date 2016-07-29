@@ -1,20 +1,32 @@
 package org.black.kotlin.navigation.netbeans;
 
+import com.intellij.openapi.vfs.VirtualFile;
 import java.util.Collection;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import kotlin.Pair;
+import kotlin.sequences.Sequence;
+import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.navigation.NavigationUtil;
 import org.black.kotlin.navigation.references.KotlinReference;
 import org.black.kotlin.navigation.references.ReferenceUtils;
 import org.black.kotlin.resolve.KotlinAnalyzer;
+import org.black.kotlin.resolve.lang.kotlin.NetBeansVirtualFileFinder;
 import org.black.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.kotlin.descriptors.ClassDescriptor;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
+import org.jetbrains.kotlin.descriptors.FunctionDescriptor;
+import org.jetbrains.kotlin.descriptors.ModuleDescriptor;
+import org.jetbrains.kotlin.descriptors.SimpleFunctionDescriptor;
 import org.jetbrains.kotlin.descriptors.SourceElement;
+import org.jetbrains.kotlin.descriptors.SourceFile;
+import org.jetbrains.kotlin.name.ClassId;
 import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.BindingContext;
+import org.jetbrains.kotlin.resolve.DescriptorUtils;
+import org.jetbrains.kotlin.resolve.descriptorUtil.DescriptorUtilsKt;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.project.Project;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider;
@@ -75,12 +87,31 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
         
         NavigationData navigationData = getNavigationData(referenceExpression, project);
         if (navigationData == null){
+            gotoKotlinStdlib(referenceExpression, project);
             return;
         }
         
         NavigationUtil.gotoElement(navigationData.getSourceElement(), navigationData.getDeclarationDescriptor(),
                 referenceExpression, project, file);
   }
+    
+    private void gotoKotlinStdlib(KtReferenceExpression referenceExpression, Project project) {
+        BindingContext context = KotlinAnalyzer.analyzeFile(project, referenceExpression.getContainingKtFile()).
+            getAnalysisResult().getBindingContext();
+        List<KotlinReference> refs = ReferenceUtils.createReferences(referenceExpression);
+        for (KotlinReference ref : refs){
+            Collection<? extends DeclarationDescriptor> descriptors = ref.getTargetDescriptors(context);
+            for (DeclarationDescriptor desc : descriptors) {
+                //TODO get file name!!!
+                VirtualFile virtFile = KotlinEnvironment.getEnvironment(project).
+                    getVirtualFileInJar(ProjectUtils.buildLibPath("kotlin-runtime-sources"), "kotlin/io/Console.kt");
+            
+                if (NavigationUtil.gotoKotlinStdlib(virtFile, desc)) {
+                    return;
+                }
+            }
+        }
+    }
     
     @Nullable
     private NavigationData getNavigationData(KtReferenceExpression referenceExpression,

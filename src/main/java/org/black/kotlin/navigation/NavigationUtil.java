@@ -1,9 +1,12 @@
 package org.black.kotlin.navigation;
 
+import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -12,6 +15,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import kotlin.Pair;
+import org.black.kotlin.builder.KotlinPsiManager;
 import org.black.kotlin.navigation.references.ReferenceUtils;
 import org.black.kotlin.resolve.NetBeansDescriptorUtils;
 import org.black.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
@@ -24,12 +28,15 @@ import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.descriptors.SourceElement;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryPackageSourceElement;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinarySourceElement;
+import org.jetbrains.kotlin.psi.KtDeclaration;
 import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
+import org.jetbrains.kotlin.psi.KtFunction;
+import org.jetbrains.kotlin.psi.KtParameter;
 import org.jetbrains.kotlin.psi.KtReferenceExpression;
+import org.jetbrains.kotlin.resolve.DescriptorUtils;
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;
 import org.netbeans.api.project.Project;
-import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -104,6 +111,68 @@ public class NavigationUtil {
         
     }
 
+    public static boolean gotoKotlinStdlib(VirtualFile virtFile, DeclarationDescriptor desc) {
+        FileObject declarationFile = JarNavigationUtil.getFileObjectFromJar(virtFile.getPath());
+        if (declarationFile == null) {
+            return false;
+        }
+        
+        KtFile file = null;
+        try {
+            file = KotlinPsiManager.INSTANCE.
+                    getParsedKtFileForSyntaxHighlighting(StringUtilRt.convertLineSeparators(declarationFile.asText()));
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        if (file == null) {
+            return false;
+        }
+        
+        Collection<KtDeclaration> declarations = PsiTreeUtil.findChildrenOfType(file, KtDeclaration.class);
+        
+        int startOffset = 0;
+        for (KtDeclaration declaration : declarations) {
+            String declarationName = declaration.getName();
+            if (declarationName == null) {
+                continue;
+            }
+            String fqNameDesc = DescriptorUtils.getFqNameFromTopLevelClass(desc).asString();
+            if (declarationName.equals(fqNameDesc)) {
+                if (declaration instanceof KtFunction 
+                        && desc instanceof KtFunction) {
+                    List<KtParameter> parameters1 = ((KtFunction) declaration).getValueParameters();
+                    List<KtParameter> parameters2 = ((KtFunction) desc).getValueParameters();
+                    
+                    if (parameters1.equals(parameters2)) {
+                        startOffset = declaration.getTextOffset();
+                        break;
+                    }
+                    
+                    
+                } else {
+                    startOffset = declaration.getTextOffset();
+                    break;
+                }
+            }
+        }
+        
+        StyledDocument document = null;
+        try {
+            document = ProjectUtils.getDocumentFromFileObject(declarationFile);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        if (document == null){
+            return false;
+        }
+        
+        
+        openFileAtOffset(document, declarationFile, startOffset);
+        
+        return true;
+    }
+    
     private static void gotoKotlinDeclaration(PsiElement element, KtElement fromElement, 
             Project project, FileObject currentFile) {
         FileObject declarationFile = findFileObjectForReferencedElement(

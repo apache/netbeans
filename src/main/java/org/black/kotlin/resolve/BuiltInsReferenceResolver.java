@@ -56,6 +56,7 @@ import com.intellij.util.io.URLUtil;
 import kotlin.collections.CollectionsKt;
 import org.black.kotlin.model.KotlinEnvironment;
 import org.black.kotlin.utils.ProjectUtils;
+import org.jetbrains.kotlin.builtins.BuiltInsPackageFragment;
 import org.jetbrains.kotlin.config.LanguageVersion;
 
 public class BuiltInsReferenceResolver {

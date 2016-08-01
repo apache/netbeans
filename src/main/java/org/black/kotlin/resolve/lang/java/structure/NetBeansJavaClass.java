@@ -107,7 +107,7 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier<TypeElement> imple
         List<JavaField> javaFields = Lists.newArrayList();
         
         for (Element element : declaredElements){
-            if (element.getKind() == ElementKind.FIELD){
+            if (element.getKind().isField()){
                 String name = element.getSimpleName().toString();
                 if (Name.isValidIdentifier(name)){
                     javaFields.add(new NetBeansJavaField((VariableElement) element));

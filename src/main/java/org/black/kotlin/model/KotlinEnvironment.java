@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright 2000-2016 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ *******************************************************************************/
 package org.black.kotlin.model;
 
 import org.black.kotlin.resolve.lang.kotlin.NetBeansVirtualFileFinder;
@@ -43,11 +59,9 @@ import com.intellij.psi.compiled.ClassFileDecompilers;
 import com.intellij.psi.impl.PsiTreeChangePreprocessor;
 import com.intellij.psi.impl.compiled.ClsCustomNavigationPolicy;
 import com.intellij.psi.impl.file.impl.JavaFileManager;
-import java.io.IOException;
 import java.util.Collections;
 import org.black.kotlin.filesystem.KotlinLightClassManager;
 import org.black.kotlin.projectsextensions.KotlinProjectHelper;
-import org.black.kotlin.projectsextensions.maven.MavenHelper;
 import org.black.kotlin.resolve.BuiltInsReferenceResolver;
 import org.black.kotlin.resolve.KotlinCacheServiceImpl;
 import org.black.kotlin.resolve.KotlinSourceIndex;
@@ -63,8 +77,6 @@ import org.jetbrains.kotlin.resolve.diagnostics.DiagnosticSuppressor;
 import org.jetbrains.kotlin.resolve.diagnostics.SuppressStringProvider;
 import org.jetbrains.kotlin.resolve.jvm.diagnostics.DefaultErrorMessagesJvm;
 import org.jetbrains.kotlin.resolve.jvm.extensions.PackageFragmentProviderExtension;
-import org.netbeans.modules.maven.NbMavenProjectImpl;
-import org.openide.util.Exceptions;
 
 /**
  * This class creates Kotlin environment for Kotlin project.
@@ -85,8 +97,6 @@ public class KotlinEnvironment {
     private final Set<VirtualFile> roots = new LinkedHashSet<VirtualFile>();
     
     private KotlinEnvironment(@NotNull org.netbeans.api.project.Project kotlinProject, @NotNull Disposable disposable) {
-//        ProjectUtils.checkKtHome();
-        
         applicationEnvironment = createJavaCoreApplicationEnvironment(disposable);
         projectEnvironment = new JavaCoreProjectEnvironment(disposable, applicationEnvironment) {
             @Override

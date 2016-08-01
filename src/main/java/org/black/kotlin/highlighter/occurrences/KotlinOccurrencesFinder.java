@@ -57,30 +57,16 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
            highlighting.put(range, ColoringAttributes.MARK_OCCURRENCES);
        }
     }
-
-    private List<PsiElement> findOccurrences(KtFile ktFile, KtElement ktElement) {
-        List<? extends SourceElement> sourceElements = ReferenceUtils.resolveToSourceDeclaration(ktElement);
-        
-        if (sourceElements.isEmpty()) {
-            return null;
-        }
-        
-        List<? extends SourceElement> searchingElements = getSearchingElements(sourceElements);
-        
-        
-        return new ArrayList<PsiElement>();
-    }
     
     public List<KtElement> searchTextOccurrences(KtFile ktFile, KtElement sourceElement) {
         List<KtElement> elements = new ArrayList<KtElement>();
         List<KtElement> elementsToReturn = new ArrayList<KtElement>();
-        for (PsiElement psi : ktFile.getChildren()) {
-            if (psi.textMatches(sourceElement)) {
-                KtElement el = PsiTreeUtil.getNonStrictParentOfType(psi, KtElement.class);
+        
+        for (PsiElement psi : findOccurrencesInFile(ktFile, sourceElement.getName())) {
+            KtElement el = PsiTreeUtil.getNonStrictParentOfType(psi, KtElement.class);
                 if (el != null) {
                     elements.add(el);
                 }
-            }
         }
         
         List<SearchFilter> beforeResolveFilters = SearchUtils.getBeforeResolveFilters();
@@ -116,6 +102,29 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
         }
         
         return elementsToReturn;
+    }
+    
+    private List<PsiElement> findOccurrencesInFile(KtFile ktFile, String text) {
+        List<PsiElement> elements = Lists.newArrayList();
+        
+        for (PsiElement psi : ktFile.getChildren()){
+            elements.addAll(findOccurrencesInPsiElement(text, psi));
+        }
+        
+        return elements;
+    }
+    
+    private List<PsiElement> findOccurrencesInPsiElement(String toFind, PsiElement psiElement) {
+        List<PsiElement> elements = Lists.newArrayList();
+        
+        if (psiElement.getText().equals(toFind)){
+            elements.add(psiElement);
+        }
+        
+        for (PsiElement psi : psiElement.getChildren()){
+             elements.addAll(findOccurrencesInPsiElement(toFind, psi));
+        }        
+        return elements;
     }
     
     public List<? extends SourceElement> getSearchingElements(List<? extends SourceElement> sourceElements) {

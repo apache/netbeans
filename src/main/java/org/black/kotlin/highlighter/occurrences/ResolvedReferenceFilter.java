@@ -1,8 +1,10 @@
 package org.black.kotlin.highlighter.occurrences;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.kotlin.descriptors.SourceElement;
 import org.jetbrains.kotlin.psi.KtElement;
+import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;
 
 /**
  *
@@ -17,7 +19,26 @@ public class ResolvedReferenceFilter implements SearchFilterAfterResolve {
 
     @Override
     public boolean isApplicable(List<? extends SourceElement> sourceElements, KtElement originElement) {
+        
+        for (KtElement element : getKotlinElements(sourceElements)) {
+            if (isApplicable(element, originElement)) {
+                return true;
+            }
+        }
         return false;
     }
+    
+    public List<KtElement> getKotlinElements(List<? extends SourceElement> sourceElements) {
+        List<KtElement> elements = new ArrayList<KtElement>();
+        
+        for (SourceElement element : sourceElements) {
+            if (element instanceof KotlinSourceElement) {
+                elements.add(((KotlinSourceElement) element).getPsi());
+            }
+        }
+        
+        return elements;
+    }
+        
     
 }

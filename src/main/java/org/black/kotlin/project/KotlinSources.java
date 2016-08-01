@@ -108,11 +108,12 @@ import org.openide.filesystems.FileObject;
             
             FileObject srcDir = kotlinProject.getProjectDirectory().getFileObject("src");
             if (srcDir == null) {
-                if (!isMavenModuledProject()){
-                    return Lists.newArrayList();
-                } else {
-                    return Lists.newArrayList(getSrcDirectoriesOfMavenModules(type));
-                }
+//                if (!isMavenModuledProject()){
+//                    return Lists.newArrayList();
+//                } else {
+//                    return Lists.newArrayList(getSrcDirectoriesOfMavenModules(type));
+//                }
+                return Lists.newArrayList();
             }
             
             findSrc(srcDir, orderedFiles, type);

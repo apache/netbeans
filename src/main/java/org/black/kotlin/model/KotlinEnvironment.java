@@ -84,19 +84,9 @@ public class KotlinEnvironment {
     private final MockProject project;
     private final Set<VirtualFile> roots = new LinkedHashSet<VirtualFile>();
     
-    private KotlinEnvironment(@NotNull org.netbeans.api.project.Project proj, @NotNull Disposable disposable) {
+    private KotlinEnvironment(@NotNull org.netbeans.api.project.Project kotlinProject, @NotNull Disposable disposable) {
 //        ProjectUtils.checkKtHome();
         
-        org.netbeans.api.project.Project kotlinProject = proj;
-        
-        if (proj instanceof NbMavenProjectImpl) {
-            try {
-                kotlinProject = MavenHelper.getMainParent((NbMavenProjectImpl) kotlinProject);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-
         applicationEnvironment = createJavaCoreApplicationEnvironment(disposable);
         projectEnvironment = new JavaCoreProjectEnvironment(disposable, applicationEnvironment) {
             @Override
@@ -181,18 +171,8 @@ public class KotlinEnvironment {
     }
     
     @NotNull
-    public static KotlinEnvironment getEnvironment(@NotNull org.netbeans.api.project.Project p) {
+    public static KotlinEnvironment getEnvironment(@NotNull org.netbeans.api.project.Project kotlinProject) {
         synchronized (ENVIRONMENT_LOCK) {
-            org.netbeans.api.project.Project kotlinProject = p;
-            
-            if (kotlinProject instanceof NbMavenProjectImpl) {
-                try {
-                    kotlinProject = MavenHelper.getMainParent((NbMavenProjectImpl) kotlinProject);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-            
             if (!CACHED_ENVIRONMENT.containsKey(kotlinProject)) {
                 CACHED_ENVIRONMENT.put(kotlinProject, new KotlinEnvironment(kotlinProject, Disposer.newDisposable()));
             }
@@ -201,19 +181,8 @@ public class KotlinEnvironment {
         }
     }
     
-    public static void updateKotlinEnvironment(@NotNull org.netbeans.api.project.Project p) {
+    public static void updateKotlinEnvironment(@NotNull org.netbeans.api.project.Project kotlinProject) {
         synchronized (ENVIRONMENT_LOCK) {
-            org.netbeans.api.project.Project kotlinProject = p;
-            
-            if (kotlinProject instanceof NbMavenProjectImpl) {
-                try {
-                    kotlinProject = MavenHelper.getMainParent((NbMavenProjectImpl) kotlinProject);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-            
-            
             if (CACHED_ENVIRONMENT.containsKey(kotlinProject)) {
                 KotlinEnvironment environment = CACHED_ENVIRONMENT.get(kotlinProject);
                 Disposer.dispose(environment.getJavaApplicationEnvironment().getParentDisposable());

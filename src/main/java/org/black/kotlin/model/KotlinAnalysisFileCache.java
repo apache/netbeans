@@ -1,6 +1,8 @@
 package org.black.kotlin.model;
 
 import com.google.common.collect.Lists;
+import java.util.HashMap;
+import java.util.Map;
 import kotlin.jvm.Synchronized;
 import kotlin.jvm.Volatile;
 //import org.black.kotlin.project.KotlinProject;
@@ -30,10 +32,33 @@ public class KotlinAnalysisFileCache {
             return analysisResult;
         }
         
-    } 
+    }
+    
+    class FilesAnalysisResults{
+        
+        private final Map<KtFile,FileAnalysisResults> results = 
+                new HashMap<KtFile, FileAnalysisResults>();
+        
+        public AnalysisResultWithProvider getAnalysisResult(KtFile ktFile, Project project){
+            FileAnalysisResults result = results.get(ktFile);
+            
+            if (result == null || result.getFile() != ktFile) {
+                KotlinEnvironment kotlinEnvironment = KotlinEnvironment.getEnvironment(project);
+                AnalysisResultWithProvider analysisResult = 
+                NetBeansAnalyzerFacadeForJVM.INSTANCE.analyzeFilesWithJavaIntegration(
+                        project, kotlinEnvironment.getProject(), Lists.newArrayList(ktFile));
+                results.put(ktFile, new FileAnalysisResults(ktFile, analysisResult));
+            }
+            
+            
+            return results.get(ktFile).getAnalysisResult();
+        }
+        
+    }
     
     public static KotlinAnalysisFileCache INSTANCE = new KotlinAnalysisFileCache();
     private @Volatile FileAnalysisResults lastAnalysedFileCache = null;
+//    private @Volatile FilesAnalysisResults cache = new FilesAnalysisResults();
     
     private KotlinAnalysisFileCache(){}
     
@@ -48,6 +73,7 @@ public class KotlinAnalysisFileCache {
             lastAnalysedFileCache = new FileAnalysisResults(file, analysisResult);
             return lastAnalysedFileCache.getAnalysisResult();
         }
+//        return cache.getAnalysisResult(file, project);
     }
     
     public void resetCache(){

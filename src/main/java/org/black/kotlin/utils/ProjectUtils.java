@@ -166,17 +166,7 @@ public class ProjectUtils {
             }
         }
         
-        Project project = FileOwnerQuery.getOwner(file);
-        
-        if (project instanceof NbMavenProjectImpl) {
-            try {
-                project = MavenHelper.getMainParent((NbMavenProjectImpl) project);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-        
-        return project;
+        return FileOwnerQuery.getOwner(file);
     }
     
     public static FileObject getFileObjectForDocument(Document doc) {

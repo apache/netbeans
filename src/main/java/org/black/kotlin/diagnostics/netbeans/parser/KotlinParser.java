@@ -37,7 +37,7 @@ public class KotlinParser extends Parser {
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) {
         this.snapshot = snapshot;
-        
+
         project = ProjectUtils.getKotlinProjectForFileObject(snapshot.getSource().getFileObject());
 
         if (project == null){

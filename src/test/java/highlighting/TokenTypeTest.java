@@ -1,6 +1,6 @@
 package highlighting;
 
-import org.black.kotlin.highlighter.TokenType;
+import org.jetbrains.kotlin.highlighter.TokenType;
 import org.junit.Test;
 import org.netbeans.junit.NbTestCase;
 

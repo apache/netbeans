@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import javax.swing.text.Document;
-import org.black.kotlin.diagnostics.netbeans.parser.KotlinParser;
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;

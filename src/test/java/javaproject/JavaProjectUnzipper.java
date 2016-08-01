@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import org.black.kotlin.utils.ProjectUtils;
+import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
@@ -92,7 +92,7 @@ public class JavaProjectUnzipper extends NbTestCase {
     private void getKtHomeForTests() throws IOException {
         String path = "." + ProjectUtils.FILE_SEPARATOR + "src" + ProjectUtils.FILE_SEPARATOR + "main" +
                 ProjectUtils.FILE_SEPARATOR + "resources" + ProjectUtils.FILE_SEPARATOR + "org" +
-                ProjectUtils.FILE_SEPARATOR + "black" + ProjectUtils.FILE_SEPARATOR + "kotlin" + ProjectUtils.FILE_SEPARATOR +
+                ProjectUtils.FILE_SEPARATOR + "jetbrains" + ProjectUtils.FILE_SEPARATOR + "kotlin" + ProjectUtils.FILE_SEPARATOR +
                 "kotlinc" + ProjectUtils.FILE_SEPARATOR + "kotlinc.zip";
         FileObject kotlincFolder = getUnzippedFolder(path);
         

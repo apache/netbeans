@@ -1,11 +1,16 @@
 package org.black.kotlin.projectsextensions.maven;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.model.Dependency;
 import org.jetbrains.annotations.Nullable;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.NbMavenProjectFactory;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.spi.project.ProjectState;
@@ -108,6 +113,28 @@ public class MavenHelper {
         }
         
         return srcDirs;
+    }
+    
+    public static List<? extends Project> getDependencyProjects(NbMavenProjectImpl project){
+        List<NbMavenProjectImpl> dependencyProjects = new ArrayList<NbMavenProjectImpl>();
+        try {
+            NbMavenProjectImpl mainProject = getMainParent(project);
+            List modules = mainProject.getOriginalMavenProject().getModules();
+            
+            List compileDependencies = project.getOriginalMavenProject().getCompileDependencies();
+            
+            for (Object dependency : compileDependencies) {
+                if (modules.contains(((Dependency) dependency).getArtifactId())){
+                    NbMavenProjectImpl depProject = getMavenProject(
+                            mainProject.getProjectDirectory().getFileObject(((Dependency) dependency).getArtifactId()));
+                    dependencyProjects.add(depProject);
+                }
+            }
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+       
+        return dependencyProjects;
     }
     
 }

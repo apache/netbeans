@@ -153,8 +153,18 @@ public class ProjectUtils {
     
     @NotNull
     public static List<KtFile> getSourceFilesWithDependencies(@NotNull Project project){
-        //TODO
+        List<KtFile> depFiles = new ArrayList<KtFile>();
+        if (project instanceof NbMavenProjectImpl) {
+            List<? extends Project> depProjects = MavenHelper.getDependencyProjects((NbMavenProjectImpl) project);
+            for (Project depProject : depProjects) {
+                for (FileObject file : KotlinPsiManager.INSTANCE.getFilesByProject(depProject)){
+                    depFiles.add(getKtFile(file));
+                }
+            }
+        }
         List<KtFile> files = getSourceFiles(project);
+        files.addAll(depFiles);
+        
         return files;
     }
 

@@ -50,19 +50,23 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
         
         KtElement ktElement = PsiTreeUtil.getNonStrictParentOfType(psiElement, KtElement.class);
         
-       List<KtElement> occurrences = searchTextOccurrences(ktFile, ktElement);
-       for (KtElement element : occurrences) {
-           OffsetRange range = new OffsetRange(element.getTextRange().getStartOffset(), 
-                   element.getTextRange().getEndOffset());
-           highlighting.put(range, ColoringAttributes.MARK_OCCURRENCES);
-       }
+        List<KtElement> occurrences = searchTextOccurrences(ktFile, ktElement);
+        for (KtElement element : occurrences) {
+            OffsetRange range = new OffsetRange(element.getTextRange().getStartOffset(), 
+                    element.getTextRange().getEndOffset());
+            highlighting.put(range, ColoringAttributes.MARK_OCCURRENCES);
+        }
     }
     
     public List<KtElement> searchTextOccurrences(KtFile ktFile, KtElement sourceElement) {
         List<KtElement> elements = new ArrayList<KtElement>();
         List<KtElement> elementsToReturn = new ArrayList<KtElement>();
         
-        for (PsiElement psi : findOccurrencesInFile(ktFile, sourceElement.getName())) {
+        String elementName = sourceElement.getName();
+        if (elementName == null) {
+            elementName = sourceElement.getText();
+        }
+        for (PsiElement psi : findOccurrencesInFile(ktFile, elementName)) {
             KtElement el = PsiTreeUtil.getNonStrictParentOfType(psi, KtElement.class);
                 if (el != null) {
                     elements.add(el);
@@ -89,12 +93,11 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
                 continue;
             }
             
-            List<SourceElement> additionalElements = 
-                    ReferenceUtils.getContainingClassOrObjectForConstructor(sourceElements);
+//            List<SourceElement> additionalElements = 
+//                    ReferenceUtils.getContainingClassOrObjectForConstructor(sourceElements);
             
             for (SearchFilterAfterResolve filter : afterResolveFilters) {
-                if (filter.isApplicable(sourceElements, sourceElement) 
-                        || filter.isApplicable(additionalElements, sourceElement)) {
+                if (filter.isApplicable(sourceElements, sourceElement)) {
                     elementsToReturn.add(element);
                 }
             }
@@ -105,7 +108,7 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
     }
     
     private List<PsiElement> findOccurrencesInFile(KtFile ktFile, String text) {
-        List<PsiElement> elements = Lists.newArrayList();
+        List<PsiElement> elements = Lists.newArrayList();       
         
         for (PsiElement psi : ktFile.getChildren()){
             elements.addAll(findOccurrencesInPsiElement(text, psi));
@@ -113,6 +116,7 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
         
         return elements;
     }
+    
     
     private List<PsiElement> findOccurrencesInPsiElement(String toFind, PsiElement psiElement) {
         List<PsiElement> elements = Lists.newArrayList();

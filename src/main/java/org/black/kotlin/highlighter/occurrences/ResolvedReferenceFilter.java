@@ -2,6 +2,7 @@ package org.black.kotlin.highlighter.occurrences;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.black.kotlin.navigation.references.ReferenceUtils;
 import org.jetbrains.kotlin.descriptors.SourceElement;
 import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;
@@ -14,7 +15,19 @@ public class ResolvedReferenceFilter implements SearchFilterAfterResolve {
 
     @Override
     public boolean isApplicable(KtElement sourceElement, KtElement originElement) {
-        return sourceElement == originElement;
+        boolean equals = sourceElement == originElement;
+        
+        if (!equals) {
+            for (KtElement ktElement : getKotlinElements(
+                    ReferenceUtils.resolveToSourceDeclaration(originElement))) {
+                if (sourceElement == ktElement) {
+                    equals = true;
+                    break;
+                }
+            }
+        }
+        
+        return equals;
     }
 
     @Override

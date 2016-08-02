@@ -24,7 +24,12 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
 import kotlin.jvm.functions.Function1;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.builder.KotlinPsiManager;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer;
@@ -236,6 +241,57 @@ public class KotlinCompletionUtils {
             return false;
         }
         
+    }
+    
+    public Collection<KotlinCompletionItem> createItems(Document doc, int caretOffset) throws IOException, BadLocationException{
+        List<KotlinCompletionItem> proposals = Lists.newArrayList();
+        FileObject file = ProjectUtils.getFileObjectForDocument(doc);
+        StyledDocument styledDoc = (StyledDocument) doc;
+        String editorText = styledDoc.getText(0, styledDoc.getLength());
+        
+        int identOffset = getIdentifierStartOffset(editorText, caretOffset);
+        
+        String identifierPart = editorText.substring(identOffset, caretOffset);
+        
+        Collection<DeclarationDescriptor> descriptors = 
+                generateBasicCompletionProposals(file, identifierPart, identOffset, editorText);
+        
+        for (DeclarationDescriptor descriptor : descriptors){
+            proposals.add(new KotlinCompletionItem(identOffset, caretOffset, descriptor));
+        }
+    
+        return proposals;   
+    }
+    
+    @NotNull
+    private Collection<DeclarationDescriptor> generateBasicCompletionProposals(
+        final FileObject file, final String identifierPart, int identOffset, String editorText) throws IOException{
+        
+        KtSimpleNameExpression simpleNameExpression = 
+                KotlinCompletionUtils.INSTANCE.getSimpleNameExpression(file, identOffset, editorText);
+        if (simpleNameExpression == null){
+            return Collections.emptyList();
+        }
+        
+        Function1<Name, Boolean> nameFilter = new Function1<Name, Boolean>(){
+            @Override
+            public Boolean invoke(Name name) {
+                return KotlinCompletionUtils.INSTANCE.applicableNameFor(identifierPart, name);
+            }
+        };
+        
+        return KotlinCompletionUtils.INSTANCE.getReferenceVariants(simpleNameExpression,
+                nameFilter, file);
+    }
+    
+    private int getIdentifierStartOffset(String text, int offset){
+        int identStartOffset = offset;
+        
+        while ((identStartOffset != 0) && Character.isUnicodeIdentifierPart(text.charAt(identStartOffset - 1))){
+            identStartOffset--;
+        }
+        
+        return identStartOffset;
     }
     
 }

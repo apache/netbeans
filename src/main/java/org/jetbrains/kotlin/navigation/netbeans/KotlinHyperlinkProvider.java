@@ -50,6 +50,7 @@ import org.openide.util.Exceptions;
 public class KotlinHyperlinkProvider implements HyperlinkProvider {
 
     private KtReferenceExpression referenceExpression;
+    private Pair<Document, Integer> navigationCache = null;
     
     @Override
     public boolean isHyperlinkPoint(Document doc, int offset) {
@@ -100,7 +101,7 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
             return;
         }
         
-        NavigationUtil.gotoElement(navigationData.getSourceElement(), navigationData.getDeclarationDescriptor(),
+        navigationCache = NavigationUtil.gotoElement(navigationData.getSourceElement(), navigationData.getDeclarationDescriptor(),
                 referenceExpression, project, file);
     }
     
@@ -184,6 +185,10 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
             return descriptor;
         }
     
-}
+    }
+    
+    public Pair<Document, Integer> getNavigationCache() {
+        return navigationCache;
+    }
     
 }

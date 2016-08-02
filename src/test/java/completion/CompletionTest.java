@@ -1,5 +1,6 @@
 package completion;
 
+import utils.TestUtils;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
+import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertNotNull;
 
 /**
@@ -56,7 +58,7 @@ public class CompletionTest extends NbTestCase {
         Collection<KotlinCompletionItem> completionItems = null;
         List<CharSequence> completions = new ArrayList<CharSequence>();
         
-        Integer caret = TestCompletionUtils.getCaret(doc);
+        Integer caret = TestUtils.getCaret(doc);
         assertNotNull(caret);
         
         try {

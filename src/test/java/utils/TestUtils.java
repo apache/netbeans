@@ -1,4 +1,4 @@
-package completion;
+package utils;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -8,7 +8,7 @@ import org.openide.util.Exceptions;
  *
  * @author Alexander.Baratynski
  */
-public class TestCompletionUtils {
+public class TestUtils {
     
     public static Integer getCaret(Document doc) {
         try {

@@ -117,7 +117,7 @@ public class NavigationUtil {
         return null;
     }
 
-    public static void gotoElement(SourceElement element, DeclarationDescriptor descriptor,
+    public static Pair<Document, Integer> gotoElement(SourceElement element, DeclarationDescriptor descriptor,
             KtElement fromElement, Project project, FileObject currentFile){
         
         if (element instanceof NetBeansJavaSourceElement){
@@ -125,13 +125,13 @@ public class NavigationUtil {
                     getJavaElement()).getBinding();
             gotoJavaDeclaration(binding, project);
         } else if (element instanceof KotlinSourceElement){
-            gotoKotlinDeclaration(((KotlinSourceElement) element).getPsi(), fromElement, project, currentFile);
+            return gotoKotlinDeclaration(((KotlinSourceElement) element).getPsi(), fromElement, project, currentFile);
         
         } else if (element instanceof KotlinJvmBinarySourceElement){
             gotoElementInBinaryClass(((KotlinJvmBinarySourceElement) element).getBinaryClass(), descriptor, project);
         } else if (element instanceof KotlinJvmBinaryPackageSourceElement){
         } 
-        
+        return null;
     }
 
     public static void gotoElementInBinaryClass(KotlinJvmBinaryClass binaryClass,
@@ -245,12 +245,12 @@ public class NavigationUtil {
         return true;
     }
     
-    private static void gotoKotlinDeclaration(PsiElement element, KtElement fromElement, 
+    private static Pair<Document, Integer> gotoKotlinDeclaration(PsiElement element, KtElement fromElement, 
             Project project, FileObject currentFile) {
         FileObject declarationFile = findFileObjectForReferencedElement(
                 element, fromElement, project, currentFile);
         if (declarationFile == null){
-            return;
+            return null;
         }
         
         StyledDocument document = null;
@@ -260,12 +260,13 @@ public class NavigationUtil {
             Exceptions.printStackTrace(ex);
         }
         if (document == null){
-            return;
+            return null;
         }
         
         int startOffset = LineEndUtil.convertCrToDocumentOffset(
                 element.getContainingFile().getText(), element.getTextOffset());
         openFileAtOffset(document, declarationFile, startOffset);
+        return new Pair<Document, Integer>(document, startOffset);
     }
 
     

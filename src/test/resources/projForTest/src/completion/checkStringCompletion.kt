@@ -1,5 +1,5 @@
 package completion
 
 fun checkStringCompletion() {
-    "String".tos
+    "String".tost
 }

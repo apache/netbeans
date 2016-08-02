@@ -61,7 +61,7 @@ public class CompletionTest extends NbTestCase {
         Collection<KotlinCompletionItem> items = null;
         
         try {
-            items = KotlinCompletionUtils.INSTANCE.createItems(doc, 66);
+            items = KotlinCompletionUtils.INSTANCE.createItems(doc, 67);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         } catch (BadLocationException ex) {
@@ -71,6 +71,31 @@ public class CompletionTest extends NbTestCase {
         assertNotNull(items);
 
         assertEquals(2, items.size());
+    }
+    
+    @Test
+    public void testBasicInt() {
+        Document doc = getDocumentForFileObject("checkBasicInt.kt");
+        Collection<KotlinCompletionItem> items = null;
+        
+        try {
+            items = KotlinCompletionUtils.INSTANCE.createItems(doc, 57);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (BadLocationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        assertNotNull(items);
+        
+        boolean hasInt = false;
+        for (KotlinCompletionItem item : items) {
+            if (item.getSortText().equals("Int")) {
+                hasInt = true;
+            }
+        }
+        
+        assertEquals(true, hasInt);
     }
     
 }

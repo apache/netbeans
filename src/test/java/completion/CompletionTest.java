@@ -8,10 +8,8 @@ import java.util.List;
 import javaproject.JavaProject;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import static junit.framework.TestCase.assertNotNull;
 import org.jetbrains.kotlin.completion.KotlinCompletionItem;
 import org.jetbrains.kotlin.completion.KotlinCompletionUtils;
-import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.junit.Test;
 import org.netbeans.api.project.Project;
@@ -107,5 +105,15 @@ public class CompletionTest extends NbTestCase {
     @Test
     public void testAutoCastAfterIf() {
         doTest("checkAutoCastAfterIf.kt", Lists.newArrayList("value"));
+    }
+    
+    @Test
+    public void testAutoCastAfterIfMethod() {
+        doTest("checkAutoCastAfterIfMethod.kt", Lists.newArrayList("test()"));
+    }
+    
+    @Test
+    public void testAutoCastForThis() {
+        doTest("checkAutoCastForThis.kt", Lists.newArrayList("destroy()"));
     }
 }

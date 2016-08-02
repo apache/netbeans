@@ -54,11 +54,7 @@ public class NetBeansAnalyzerFacadeForJVM {
             Project project, Collection<KtFile> filesToAnalyze){
         
         Set<KtFile> filesSet = Sets.newLinkedHashSet(filesToAnalyze);
-        if (filesSet.size() != filesToAnalyze.size()){
-            System.out.println("Files have duplicates");
-        }
-        
-        Set<KtFile> allFiles = Sets.newLinkedHashSet(filesSet);
+        Set<KtFile> allFiles = Sets.newLinkedHashSet(filesToAnalyze);
         
         Set<String> addedFiles = Sets.newLinkedHashSet();
         for (KtFile file : filesSet){

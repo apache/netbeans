@@ -268,7 +268,7 @@ public class KotlinCompletionUtils {
         final FileObject file, final String identifierPart, int identOffset, String editorText) throws IOException{
         
         KtSimpleNameExpression simpleNameExpression = 
-                KotlinCompletionUtils.INSTANCE.getSimpleNameExpression(file, identOffset, editorText);
+                getSimpleNameExpression(file, identOffset, editorText);
         if (simpleNameExpression == null){
             return Collections.emptyList();
         }
@@ -276,11 +276,11 @@ public class KotlinCompletionUtils {
         Function1<Name, Boolean> nameFilter = new Function1<Name, Boolean>(){
             @Override
             public Boolean invoke(Name name) {
-                return KotlinCompletionUtils.INSTANCE.applicableNameFor(identifierPart, name);
+                return applicableNameFor(identifierPart, name);
             }
         };
         
-        return KotlinCompletionUtils.INSTANCE.getReferenceVariants(simpleNameExpression,
+        return getReferenceVariants(simpleNameExpression,
                 nameFilter, file);
     }
     

@@ -8,6 +8,7 @@ import javax.swing.text.Document;
 import static junit.framework.TestCase.assertNotNull;
 import org.jetbrains.kotlin.completion.KotlinCompletionItem;
 import org.jetbrains.kotlin.completion.KotlinCompletionUtils;
+import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.junit.Test;
 import org.netbeans.api.project.Project;
@@ -60,7 +61,7 @@ public class CompletionTest extends NbTestCase {
         Collection<KotlinCompletionItem> items = null;
         
         try {
-            items = KotlinCompletionUtils.INSTANCE.createItems(doc, 65);
+            items = KotlinCompletionUtils.INSTANCE.createItems(doc, 66);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         } catch (BadLocationException ex) {
@@ -69,7 +70,7 @@ public class CompletionTest extends NbTestCase {
         
         assertNotNull(items);
 
-//        assertEquals(27, items.size());
+        assertEquals(2, items.size());
     }
     
 }

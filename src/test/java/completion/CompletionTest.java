@@ -1,7 +1,10 @@
 package completion;
 
+import com.google.common.collect.Lists;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javaproject.JavaProject;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -15,6 +18,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
+import static junit.framework.TestCase.assertNotNull;
 
 /**
  *
@@ -49,31 +53,34 @@ public class CompletionTest extends NbTestCase {
         return doc;
     }
     
-    private void doTest(String fileName, String item) {
+    private void doTest(String fileName, Collection<String> items) {
         Document doc = getDocumentForFileObject(fileName);
-        Collection<KotlinCompletionItem> items = null;
+        Collection<KotlinCompletionItem> completionItems = null;
+        List<CharSequence> completions = new ArrayList<CharSequence>();
         
         Integer caret = TestCompletionUtils.getCaret(doc);
         assertNotNull(caret);
         
         try {
-            items = KotlinCompletionUtils.INSTANCE.createItems(doc, caret);
+            completionItems = KotlinCompletionUtils.INSTANCE.createItems(doc, caret);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
         }
         
-        assertNotNull(items);
+        assertNotNull(completionItems);
 
-        boolean hasItem = false;
-        for (KotlinCompletionItem it : items) {
-            if (it.getSortText().equals(item)) {
-                hasItem = true;
-            }
+        for (KotlinCompletionItem it : completionItems) {
+            completions.add(it.getSortText());
         }
         
-        assertEquals(true, hasItem);
+        boolean contains = false;
+        if (completions.containsAll(items)) {
+            contains = true;
+        }
+        
+        assertEquals(true, contains);
     }
     
     @Test
@@ -84,12 +91,12 @@ public class CompletionTest extends NbTestCase {
     
     @Test
     public void testStringCompletion() {
-        doTest("checkStringCompletion.kt", "toString()");
+        doTest("checkStringCompletion.kt", Lists.newArrayList("toString()"));
     }
     
     @Test
     public void testBasicInt() throws BadLocationException {
-        doTest("checkBasicInt.kt", "Int");
+        doTest("checkBasicInt.kt", Lists.newArrayList("Int"));
     }
     
 }

@@ -58,12 +58,12 @@ public final class MockOpenProjectsTrampoline implements OpenProjectsTrampoline 
 
     @Override
     public Future<Project[]> openProjectsAPI() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     @Override
     public ProjectGroup getActiveProjectGroupAPI() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     @Override

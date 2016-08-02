@@ -107,7 +107,10 @@ public class KotlinCompletionItem implements CompletionItem {
                     functionParams.append(getValueParameter(desc));
                     functionParams.append(",");
                 }
-                functionParams.deleteCharAt(functionParams.length()-1).append(")");
+                if (params.size() > 0) {
+                    functionParams.deleteCharAt(functionParams.length()-1);
+                }
+                functionParams.append(")");
                 doc.insertString(idenStartOffset, text + functionParams.toString(), null);
             } else{
                 doc.insertString(idenStartOffset, text, null);

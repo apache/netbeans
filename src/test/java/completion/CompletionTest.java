@@ -93,7 +93,7 @@ public class CompletionTest extends NbTestCase {
     }
     
     @Test
-    public void testBasicInt() throws BadLocationException {
+    public void testBasicInt() {
         doTest("checkBasicInt.kt", Lists.newArrayList("Int"));
     }
     
@@ -126,6 +126,16 @@ public class CompletionTest extends NbTestCase {
     public void testCompletionBeforeDotInCall() {
         doTest("checkCompletionBeforeDotInCall.kt", 
                 Lists.newArrayList("TestSample", "testVar", "testTop()", "testFun()"));
+    }
+    
+    @Test
+    public void testLocalLambda() {
+        doTest("checkLocalLambda.kt", Lists.newArrayList("test()"));
+    }
+    
+    @Test
+    public void checkCompanion() {
+        doTest("checkCompanion.kt", Lists.newArrayList("companionVal", "companionFun()"));
     }
     
 }

@@ -99,4 +99,13 @@ public class CompletionTest extends NbTestCase {
         doTest("checkBasicInt.kt", Lists.newArrayList("Int"));
     }
     
+    @Test
+    public void testBasicAny() {
+        doTest("checkBasicAny.kt", Lists.newArrayList("Any"));
+    }
+    
+    @Test
+    public void testAutoCastAfterIf() {
+        doTest("checkAutoCastAfterIf.kt", Lists.newArrayList("value"));
+    }
 }

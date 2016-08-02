@@ -116,4 +116,16 @@ public class CompletionTest extends NbTestCase {
     public void testAutoCastForThis() {
         doTest("checkAutoCastForThis.kt", Lists.newArrayList("destroy()"));
     }
+    
+    @Test
+    public void testAutoCastInWhen() {
+        doTest("checkAutoCastInWhen.kt", Lists.newArrayList("left", "right"));
+    }
+    
+    @Test
+    public void testCompletionBeforeDotInCall() {
+        doTest("checkCompletionBeforeDotInCall.kt", 
+                Lists.newArrayList("TestSample", "testVar", "testTop()", "testFun()"));
+    }
+    
 }

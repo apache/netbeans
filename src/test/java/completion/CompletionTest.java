@@ -49,15 +49,8 @@ public class CompletionTest extends NbTestCase {
         return doc;
     }
     
-    @Test
-    public void testProjectCreation() {
-        assertNotNull(project);
-        assertNotNull(completionDir);
-    }
-    
-    @Test
-    public void testStringCompletion() {
-        Document doc = getDocumentForFileObject("checkStringCompletion.kt");
+    private void doTest(String fileName, String item) {
+        Document doc = getDocumentForFileObject(fileName);
         Collection<KotlinCompletionItem> items = null;
         
         Integer caret = TestCompletionUtils.getCaret(doc);
@@ -73,42 +66,30 @@ public class CompletionTest extends NbTestCase {
         
         assertNotNull(items);
 
-        boolean hasToString = false;
-        for (KotlinCompletionItem item : items) {
-            if (item.getSortText().equals("toString()")) {
-                hasToString = true;
+        boolean hasItem = false;
+        for (KotlinCompletionItem it : items) {
+            if (it.getSortText().equals(item)) {
+                hasItem = true;
             }
         }
         
-        assertEquals(true, hasToString);
+        assertEquals(true, hasItem);
+    }
+    
+    @Test
+    public void testProjectCreation() {
+        assertNotNull(project);
+        assertNotNull(completionDir);
+    }
+    
+    @Test
+    public void testStringCompletion() {
+        doTest("checkStringCompletion.kt", "toString()");
     }
     
     @Test
     public void testBasicInt() throws BadLocationException {
-        Document doc = getDocumentForFileObject("checkBasicInt.kt");
-        Collection<KotlinCompletionItem> items = null;
-        
-        Integer caret = TestCompletionUtils.getCaret(doc);
-        assertNotNull(caret);
-        
-        try {
-            items = KotlinCompletionUtils.INSTANCE.createItems(doc, caret);
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (BadLocationException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        
-        assertNotNull(items);
-        
-        boolean hasInt = false;
-        for (KotlinCompletionItem item : items) {
-            if (item.getSortText().equals("Int")) {
-                hasInt = true;
-            }
-        }
-        
-        assertEquals(true, hasInt);
+        doTest("checkBasicInt.kt", "Int");
     }
     
 }

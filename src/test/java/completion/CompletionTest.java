@@ -148,4 +148,29 @@ public class CompletionTest extends NbTestCase {
         doTest("checkImport.kt", Lists.newArrayList("Proxy"));
     }
     
+    @Test
+    public void testInCallExpression() {
+        doTest("checkInCallExpression.kt", Lists.newArrayList("func()"));
+    }
+    
+    @Test
+    public void testInClassInit() {
+        doTest("checkInClassInit.kt", Lists.newArrayList("valExternal", "valInternal"));
+    }
+    
+    @Test
+    public void testInClassPropertyAccessor() {
+        doTest("checkInClassPropertyAccessor.kt", Lists.newArrayList("test", "testParam"));
+    }
+    
+    @Test
+    public void testInImport() {
+        doTest("checkInImport.kt", Lists.newArrayList("Proxy", "Base"));
+    }
+    
+    @Test
+    public void testInParameterType() {
+        doTest("checkInParameterType.kt", Lists.newArrayList("Int"));
+    }
+    
 }

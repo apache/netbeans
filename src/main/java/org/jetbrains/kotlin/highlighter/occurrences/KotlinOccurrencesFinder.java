@@ -63,6 +63,9 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
         PsiElement psiElement = ktFile.findElementAt(caretPosition);
         
         KtElement ktElement = PsiTreeUtil.getNonStrictParentOfType(psiElement, KtElement.class);
+        if (ktElement == null) {
+            return;
+        }
         
         List<KtElement> occurrences = searchTextOccurrences(ktFile, ktElement);
         for (KtElement element : occurrences) {

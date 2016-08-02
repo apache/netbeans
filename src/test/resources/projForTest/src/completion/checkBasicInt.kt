@@ -1,5 +1,5 @@
 package completion
 
 fun checkBasicInt(){
-    var int : In
+    var int : In<caret>
 }

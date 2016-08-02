@@ -60,8 +60,11 @@ public class CompletionTest extends NbTestCase {
         Document doc = getDocumentForFileObject("checkStringCompletion.kt");
         Collection<KotlinCompletionItem> items = null;
         
+        Integer caret = TestCompletionUtils.getCaret(doc);
+        assertNotNull(caret);
+        
         try {
-            items = KotlinCompletionUtils.INSTANCE.createItems(doc, 67);
+            items = KotlinCompletionUtils.INSTANCE.createItems(doc, caret);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         } catch (BadLocationException ex) {
@@ -70,16 +73,26 @@ public class CompletionTest extends NbTestCase {
         
         assertNotNull(items);
 
-        assertEquals(2, items.size());
+        boolean hasToString = false;
+        for (KotlinCompletionItem item : items) {
+            if (item.getSortText().equals("toString()")) {
+                hasToString = true;
+            }
+        }
+        
+        assertEquals(true, hasToString);
     }
     
     @Test
-    public void testBasicInt() {
+    public void testBasicInt() throws BadLocationException {
         Document doc = getDocumentForFileObject("checkBasicInt.kt");
         Collection<KotlinCompletionItem> items = null;
         
+        Integer caret = TestCompletionUtils.getCaret(doc);
+        assertNotNull(caret);
+        
         try {
-            items = KotlinCompletionUtils.INSTANCE.createItems(doc, 57);
+            items = KotlinCompletionUtils.INSTANCE.createItems(doc, caret);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         } catch (BadLocationException ex) {

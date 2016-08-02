@@ -134,8 +134,18 @@ public class CompletionTest extends NbTestCase {
     }
     
     @Test
-    public void checkCompanion() {
+    public void testCompanion() {
         doTest("checkCompanion.kt", Lists.newArrayList("companionVal", "companionFun()"));
+    }
+    
+    @Test
+    public void testExtendsClass() {
+        doTest("checkExtendClass.kt", Lists.newArrayList("MyFirstClass", "MySecondClass"));
+    }
+    
+    @Test
+    public void testImport() {
+        doTest("checkImport.kt", Lists.newArrayList("Proxy"));
     }
     
 }

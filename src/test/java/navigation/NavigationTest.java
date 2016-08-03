@@ -58,6 +58,10 @@ public class NavigationTest extends NbTestCase {
         assertEquals(expectedOffset, navigationData.getSecond());
     }    
         
+    private void doTest(String name) {
+        doTest(name, name);
+    }
+    
     @Test
     public void testProjectCreation() {
         assertNotNull(project);
@@ -67,6 +71,16 @@ public class NavigationTest extends NbTestCase {
     @Test
     public void testNavigationToFunction() {
         doTest("checkNavigationToFunction.kt","functionToNavigate.kt");
+    }
+    
+    @Test
+    public void testNavigationToClass() {
+        doTest("checkNavigationToClass.kt", "KotlinClass.kt");
+    }
+    
+    @Test
+    public void testNavigationToVariable() {
+        doTest("checkNavigationToVariable.kt");
     }
     
 }

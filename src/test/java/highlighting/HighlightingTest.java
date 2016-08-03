@@ -49,7 +49,8 @@ public class HighlightingTest extends NbTestCase {
             TokenType type = kotlinToken.getType();
             if (type == TokenType.EOF || 
                     type == TokenType.WHITESPACE || 
-                    type == TokenType.UNDEFINED) {
+                    type == TokenType.UNDEFINED ||
+                    type == TokenType.IDENTIFIER) {
                 continue;
             }
             parsedTypes.add(type);
@@ -78,7 +79,34 @@ public class HighlightingTest extends NbTestCase {
     
     @Test
     public void testFunction() {
-        doTest("function.kt", TokenType.KEYWORD, TokenType.IDENTIFIER, 
-                TokenType.KEYWORD, TokenType.IDENTIFIER);
+        doTest("function.kt", TokenType.KEYWORD, TokenType.KEYWORD);
     }
+    
+    @Test
+    public void testGetterSetter() {
+        doTest("getterSetter.kt", TokenType.KEYWORD, TokenType.KEYWORD,
+                TokenType.KEYWORD, TokenType.KEYWORD);
+    }
+    
+    @Test
+    public void testCompanionObject() {
+        doTest("companionObject.kt", TokenType.KEYWORD, TokenType.KEYWORD, TokenType.KEYWORD);
+    }
+    
+    @Test
+    public void testImportKeyword() {
+        doTest("importKeyword.kt", TokenType.KEYWORD);
+    }
+    
+    @Test
+    public void testInKeyword() {
+        doTest("inKeyword.kt", TokenType.KEYWORD);
+    }
+    
+    @Test
+    public void testInterfaceKeyword() {
+        doTest("interfaceKeyword.kt", TokenType.KEYWORD);
+    }
+    
+    
 }

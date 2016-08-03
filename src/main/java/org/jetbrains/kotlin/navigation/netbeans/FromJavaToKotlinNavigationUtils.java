@@ -16,12 +16,14 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.navigation.netbeans;
 
+import com.google.common.collect.Lists;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -31,6 +33,7 @@ import javax.swing.text.Document;
 import kotlin.Pair;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider;
+import org.jetbrains.kotlin.filesystem.lightclasses.LightClassBuilderFactory;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.psi.KtClass;
 import org.jetbrains.kotlin.psi.KtClassOrObject;
@@ -48,7 +51,9 @@ import org.jetbrains.kotlin.psi.KtSecondaryConstructor;
 import org.jetbrains.kotlin.psi.KtVisitorVoid;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.Project;
 import org.openide.util.Exceptions;
 
@@ -206,27 +211,18 @@ public class FromJavaToKotlinNavigationUtils {
             return false;
         }
         
-        if (element.getKind() == ElementKind.METHOD) {
-            return equalsFunctions(ktElement, (ExecutableElement) element);
-        }
-        
-        return true;
-    }
-    
-    private static boolean equalsFunctions(KtElement ktElement, ExecutableElement element) {
-        if (!(ktElement instanceof KtNamedFunction)) {
+        Set<Pair<String,String>> ktSignatures = ktElement.getUserData(LightClassBuilderFactory.JVM_SIGNATURE);
+        if (ktSignatures == null) {
             return false;
         }
-        List<KtParameter> ktParameters = ((KtNamedFunction) ktElement).getValueParameters();
-        List<? extends VariableElement> parameters = element.getParameters();
-        
-        if (ktParameters.size() != parameters.size()) {
-            return false;
+        List<String> signatures = Lists.newArrayList(SourceUtils.getJVMSignature(ElementHandle.create(element)));
+        for (Pair<String, String> pair : ktSignatures) {
+            if (signatures.contains(pair.getFirst())) {
+                return true;
+            }
         }
         
-        //TODO
-        
-        return true;
+        return false;
     }
 
     public static boolean equalsDeclaringTypes(KtElement ktElement, ExecutableElement element) {

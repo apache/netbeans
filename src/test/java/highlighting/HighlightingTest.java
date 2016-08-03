@@ -108,5 +108,46 @@ public class HighlightingTest extends NbTestCase {
         doTest("interfaceKeyword.kt", TokenType.KEYWORD);
     }
     
+    @Test
+    public void testKeywordWithText() {
+        doTest("keywordWithText.kt", TokenType.KEYWORD);
+    }
+    
+    @Test
+    public void testOpenKeyword() {
+        doTest("openKeyword.kt", TokenType.KEYWORD, TokenType.KEYWORD);
+    }
+    
+    @Test
+    public void testSingleLineComment() {
+        doTest("singleLineComment.kt", TokenType.SINGLE_LINE_COMMENT);
+    }
+    
+    @Test
+    public void testSoftImportKeyword() {
+        doTest("softImportKeyword.kt", TokenType.KEYWORD);
+    }
+    
+    @Test
+    public void testSoftKeywords() {
+        doTest("softKeywords.kt", TokenType.KEYWORD, TokenType.KEYWORD,
+                TokenType.KEYWORD, TokenType.KEYWORD);
+    }
+    
+    @Test
+    public void testStringInterpolation() {
+        doTest("stringInterpolation.kt", TokenType.KEYWORD, TokenType.STRING,
+                TokenType.STRING, TokenType.STRING);
+    }
+    
+    @Test
+    public void testStringToken() {
+        doTest("stringToken.kt", TokenType.STRING, TokenType.STRING, TokenType.STRING);
+    }
+    
+    @Test
+    public void testTextWithTokenInside() {
+        doTest("textWithTokenInside.kt");
+    }
     
 }

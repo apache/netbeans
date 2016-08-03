@@ -57,6 +57,13 @@ public final class KotlinTokenScanner {
         createListOfKotlinTokens();
     }
 
+    public KotlinTokenScanner(String text) {
+        kotlinTokensFactory = new KotlinTokensFactory();
+        input = null;
+        ktFile = KotlinPsiManager.INSTANCE.getParsedKtFileForSyntaxHighlighting(text);
+        createListOfKotlinTokens();
+    }
+    
     private String getTextToParse() {
         StringBuilder builder = new StringBuilder("");
 
@@ -128,6 +135,10 @@ public final class KotlinTokenScanner {
                     TokenType.EOF);
         }
 
+    }
+    
+    public List<KotlinToken<KotlinTokenId>> getTokens(){
+        return kotlinTokens;
     }
 
 }

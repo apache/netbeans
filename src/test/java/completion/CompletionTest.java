@@ -11,13 +11,12 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.jetbrains.kotlin.completion.KotlinCompletionItem;
 import org.jetbrains.kotlin.completion.KotlinCompletionUtils;
-import org.jetbrains.kotlin.utils.ProjectUtils;
-import org.junit.Test;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import static junit.framework.TestCase.assertNotNull;
+import org.junit.Test;
 
 /**
  *

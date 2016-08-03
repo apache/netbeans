@@ -1,6 +1,5 @@
 package navigation;
 
-import java.io.IOException;
 import javaproject.JavaProject;
 import javax.swing.text.Document;
 import static junit.framework.TestCase.assertNotNull;
@@ -11,7 +10,6 @@ import org.junit.Test;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import utils.TestUtils;
 
 /**

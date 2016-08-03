@@ -1,5 +1,7 @@
 package highlighting;
 
+import com.google.common.collect.Lists;
+import java.util.ArrayList;
 import java.util.List;
 import javaproject.JavaProject;
 import javax.swing.text.BadLocationException;
@@ -42,11 +44,20 @@ public class HighlightingTest extends NbTestCase {
         
         assertNotNull(tokens);
         
-        int i = 0;
-        for (TokenType type : types) {
-            assertEquals(type, tokens.get(i).getType());
-            i++;
+        List<TokenType> parsedTypes = new ArrayList<TokenType>();
+        for (KotlinToken kotlinToken : tokens) {
+            TokenType type = kotlinToken.getType();
+            if (type == TokenType.EOF || 
+                    type == TokenType.WHITESPACE || 
+                    type == TokenType.UNDEFINED) {
+                continue;
+            }
+            parsedTypes.add(type);
         }
+        
+        List<TokenType> expectedTypes = Lists.newArrayList(types);
+        
+        assertEquals(parsedTypes, expectedTypes);
     }
     
     @Test
@@ -60,4 +71,14 @@ public class HighlightingTest extends NbTestCase {
         doTest("blockComment.kt", TokenType.MULTI_LINE_COMMENT);
     }
     
+    @Test
+    public void testForKeyword() {
+        doTest("forKeyword.kt", TokenType.KEYWORD);
+    }
+    
+    @Test
+    public void testFunction() {
+        doTest("function.kt", TokenType.KEYWORD, TokenType.IDENTIFIER, 
+                TokenType.KEYWORD, TokenType.IDENTIFIER);
+    }
 }

@@ -49,15 +49,8 @@ public class NavigationTest extends NbTestCase {
         return doc;
     }
     
-    @Test
-    public void testProjectCreation() {
-        assertNotNull(project);
-        assertNotNull(navigationDir);
-    }
-    
-    @Test
-    public void testNavigationToFunction() {
-        Document from = getDocumentForFileObject("checkNavigationToFunction.kt");
+    private void doTest(String fromName, String toName) {
+        Document from = getDocumentForFileObject(fromName);
         assertNotNull(from);
         
         Integer caret = TestUtils.getCaret(from);
@@ -74,12 +67,22 @@ public class NavigationTest extends NbTestCase {
         FileObject toFO = ProjectUtils.getFileObjectForDocument(to);
         assertNotNull(toFO);
         
-        FileObject expectedFO = navigationDir.getFileObject("functionToNavigate.kt");
+        FileObject expectedFO = navigationDir.getFileObject(toName);
         assertEquals(expectedFO.getPath(), toFO.getPath());
         
-        Integer expectedOffset = 24;
+        Integer expectedOffset = TestUtils.getCaret(getDocumentForFileObject(toName.replace(".kt", ".caret")));
         assertEquals(expectedOffset, navigationData.getSecond());
+    }    
         
+    @Test
+    public void testProjectCreation() {
+        assertNotNull(project);
+        assertNotNull(navigationDir);
+    }
+    
+    @Test
+    public void testNavigationToFunction() {
+        doTest("checkNavigationToFunction.kt","functionToNavigate.kt");
     }
     
 }

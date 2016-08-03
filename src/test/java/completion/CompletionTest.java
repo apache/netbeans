@@ -18,7 +18,6 @@ import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertNotNull;
 
 /**
  *

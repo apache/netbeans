@@ -35,25 +35,8 @@ public class CompletionTest extends NbTestCase {
                 getFileObject("src").getFileObject("completion");
     }
     
-    private Document getDocumentForFileObject(String fileName) {
-        FileObject file = completionDir.getFileObject(fileName);
-        
-        assertNotNull(file);
-        
-        Document doc = null;
-        try {
-            doc = ProjectUtils.getDocumentFromFileObject(file);
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        
-        assertNotNull(doc);
-        
-        return doc;
-    }
-    
     private void doTest(String fileName, Collection<String> items) {
-        Document doc = getDocumentForFileObject(fileName);
+        Document doc = TestUtils.getDocumentForFileObject(completionDir, fileName);
         Collection<KotlinCompletionItem> completionItems = null;
         List<CharSequence> completions = new ArrayList<CharSequence>();
         

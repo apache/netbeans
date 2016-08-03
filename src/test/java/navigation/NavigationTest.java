@@ -32,25 +32,8 @@ public class NavigationTest extends NbTestCase {
         hyperlinkProvider = new KotlinHyperlinkProvider();
     }
     
-        private Document getDocumentForFileObject(String fileName) {
-        FileObject file = navigationDir.getFileObject(fileName);
-        
-        assertNotNull(file);
-        
-        Document doc = null;
-        try {
-            doc = ProjectUtils.getDocumentFromFileObject(file);
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        
-        assertNotNull(doc);
-        
-        return doc;
-    }
-    
     private void doTest(String fromName, String toName) {
-        Document from = getDocumentForFileObject(fromName);
+        Document from = TestUtils.getDocumentForFileObject(navigationDir, fromName);
         assertNotNull(from);
         
         Integer caret = TestUtils.getCaret(from);
@@ -70,7 +53,8 @@ public class NavigationTest extends NbTestCase {
         FileObject expectedFO = navigationDir.getFileObject(toName);
         assertEquals(expectedFO.getPath(), toFO.getPath());
         
-        Integer expectedOffset = TestUtils.getCaret(getDocumentForFileObject(toName.replace(".kt", ".caret")));
+        Integer expectedOffset = TestUtils.getCaret(
+                TestUtils.getDocumentForFileObject(navigationDir, toName.replace(".kt", ".caret")));
         assertEquals(expectedOffset, navigationData.getSecond());
     }    
         

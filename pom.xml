@@ -10,7 +10,39 @@
   <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
       <netbeans.version>RELEASE81</netbeans.version>
+      <kotlin.version>1.0.3</kotlin.version>
   </properties>
+  
+  <name>
+      Kotlin Plugin for NetBeans IDE
+  </name>
+  
+  <description url="http://kotlinlang.org/">
+      Kotlin language support
+  </description>
+  
+  <organization>
+      <name>JetBrains</name>
+      <url>http://www.jetbrains.com/</url>
+  </organization>
+  
+  <licenses>
+      <license>
+          <url>
+            Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+            you may not use this file except in compliance with the License.
+            You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+            Unless required by applicable law or agreed to in writing, software
+            distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+            WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+            See the License for the specific language governing permissions and
+            limitations under the License.
+          </url>
+      </license>
+  </licenses>
   
   <build> 
     <plugins> 
@@ -39,7 +71,7 @@
       <plugin> 
         <groupId>org.jetbrains.kotlin</groupId>  
         <artifactId>kotlin-maven-plugin</artifactId>  
-        <version>1.0.3</version>  
+        <version>${kotlin.version}</version>  
         <executions> 
           <execution> 
             <id>compile</id>  
@@ -152,7 +184,7 @@
     <dependency> 
       <groupId>org.jetbrains.kotlin</groupId>  
       <artifactId>kotlin-maven-plugin</artifactId>  
-      <version>1.0.3</version>  
+      <version>${kotlin.version}</version>  
       <type>jar</type> 
     </dependency>  
     <dependency> 
@@ -439,7 +471,7 @@
     <dependency> 
       <groupId>org.jetbrains.kotlin</groupId>  
       <artifactId>kotlin-stdlib</artifactId>  
-      <version>1.0.3</version> 
+      <version>${kotlin.version}</version> 
     </dependency>
     <dependency>
       <groupId>org.netbeans.api</groupId>

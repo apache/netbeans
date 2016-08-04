@@ -15,26 +15,36 @@
         </folder>
     </folder>
     
-<folder name="Editors">
-        <folder name="text">
-            <folder name="x-kt">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.jetbrains.kotlin.Bundle"/>
-                <folder name="FontsColors">
-                    <folder name="NetBeans">
-                        <folder name="Defaults">
-                            <file name="FontAndColors.xml" url="FontAndColors.xml">
-                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.jetbrains.kotlin.Bundle"/>
-                            </file>
+    <folder name="Editors">
+            <folder name="text">
+                <folder name="x-kt">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.jetbrains.kotlin.Bundle"/>
+                    <folder name="FontsColors">
+                        <folder name="NetBeans">
+                            <folder name="Defaults">
+                                <file name="FontAndColors.xml" url="FontAndColors.xml">
+                                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.jetbrains.kotlin.Bundle"/>
+                                </file>
+                            </folder>
                         </folder>
                     </folder>
+                    
+                    <folder name="GlyphGutterActions">
+                        <file name="org-netbeans-modules-debugger-jpda-ui-actions-ToggleMethodFieldBreakpointAction.shadow">
+                            <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-jpda-ui-actions-ToggleMethodFieldBreakpointAction.instance"/>
+                            <attr name="position" intvalue="500"/>
+                        </file>
+                    </folder>
+<!--                    <folder name="GlyphGutterActions">
+                        <file name="org-jetbrains-kotlin-debugger-KotlinToggleBreakpointAction.instance">
+                            <attr name="originalFile" stringValue="Actions/Debug/org-jetbrains-kotlin-debugger-KotlinToggleBreakpointAction.instance"/>
+                            <attr name="position" intvalue="2500"/>
+                        </file>
+                    </folder>-->
+                    
                 </folder>
-                
-<!--                <file name="JavaIndexer.shadow">
-                    <attr name="originalFile" stringvalue="Editors/text/x-java/JavaIndexer.instance"/>
-                </file>-->
             </folder>
-        </folder>
-</folder>
+    </folder>
 
     <folder name="OptionsDialog">
         <folder name="PreviewExamples">
@@ -53,5 +63,12 @@
             </file>
         </folder>
     </folder>
+
+<!--    <folder name="Actions">
+        <folder name="Debug">
+            <file name="org-jetbrains-kotlin-debugger-KotlinToggleBreakpointAction.instance" 
+                  displayName="Toggle Kotlin breakpoint"/>
+        </folder>
+    </folder>-->
 
 </filesystem>

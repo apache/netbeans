@@ -47,6 +47,9 @@ public class KotlinSemanticAnalyzer extends SemanticAnalyzer<KotlinParserResult>
     public void run(KotlinParserResult result, SchedulerEvent event) {
         highlighting.clear();
         resumeCancel();
+        if (result == null) {
+            return;
+        }
         try {
             KotlinSemanticHighlightingVisitor highlightingVisitor =
                     new KotlinSemanticHighlightingVisitor(result.getKtFile(), 

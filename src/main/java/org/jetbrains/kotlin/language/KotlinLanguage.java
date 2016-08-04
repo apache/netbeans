@@ -38,6 +38,16 @@ import org.netbeans.modules.parsing.spi.Parser;
 @LanguageRegistration(mimeType = "text/x-kt")
 public class KotlinLanguage extends DefaultLanguageConfig {
 
+    private final Parser kotlinParser = new KotlinParser();
+    private final SemanticAnalyzer kotlinSemanticAnalyzer = 
+            new KotlinSemanticAnalyzer();
+    private final StructureScanner kotlinStructureScanner = 
+            new KotlinStructureScanner();
+    private final HintsProvider kotlinHintsProvider = 
+            new KotlinHintsProvider();
+    private final OccurrencesFinder kotlinOccurrencesFinder = 
+            new KotlinOccurrencesFinder();
+    
     @Override
     public Language getLexerLanguage() {
         return KotlinTokenId.getLanguage();
@@ -50,7 +60,7 @@ public class KotlinLanguage extends DefaultLanguageConfig {
 
     @Override
     public Parser getParser(){
-        return new KotlinParser();
+        return kotlinParser;
     }
 
     @Override
@@ -60,7 +70,7 @@ public class KotlinLanguage extends DefaultLanguageConfig {
     
     @Override
     public SemanticAnalyzer getSemanticAnalyzer() {
-        return new KotlinSemanticAnalyzer();
+        return kotlinSemanticAnalyzer;
     }
     
     @Override
@@ -70,7 +80,7 @@ public class KotlinLanguage extends DefaultLanguageConfig {
     
     @Override
     public StructureScanner getStructureScanner(){
-        return new KotlinStructureScanner();
+        return kotlinStructureScanner;
     }
     
     @Override
@@ -80,7 +90,7 @@ public class KotlinLanguage extends DefaultLanguageConfig {
     
     @Override 
     public HintsProvider getHintsProvider() {
-        return new KotlinHintsProvider();
+        return kotlinHintsProvider;
     }
     
     @Override
@@ -90,7 +100,7 @@ public class KotlinLanguage extends DefaultLanguageConfig {
     
     @Override
     public OccurrencesFinder getOccurrencesFinder() {
-        return new KotlinOccurrencesFinder();
+        return kotlinOccurrencesFinder;
     }
     
 }

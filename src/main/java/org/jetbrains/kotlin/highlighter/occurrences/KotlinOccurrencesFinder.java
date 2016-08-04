@@ -58,7 +58,13 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
     public void run(KotlinParserResult result, SchedulerEvent event) {
         cancel = false;
         highlighting.clear();
+        if (result == null) {
+            return;
+        }
         KtFile ktFile = result.getKtFile();
+        if (ktFile == null) {
+            return;
+        }
         
         PsiElement psiElement = ktFile.findElementAt(caretPosition);
         

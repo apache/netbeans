@@ -55,6 +55,9 @@ public class KotlinStructureScanner implements StructureScanner{
         List<StructureItem> items = Lists.newArrayList();
         
         KtFile ktFile = ProjectUtils.getKtFile(file);
+        if (ktFile == null){
+            return items;
+        }
         List<KtDeclaration> declarations = ktFile.getDeclarations();
         
         for (KtDeclaration declaration : declarations) {
@@ -84,7 +87,9 @@ public class KotlinStructureScanner implements StructureScanner{
         List<OffsetRange> functions = Lists.newArrayList();
         
         KtFile ktFile = ProjectUtils.getKtFile(file);
-        
+        if (ktFile == null) {
+            return folds;
+        }
         Collection<? extends PsiElement> elements =
             PsiTreeUtil.findChildrenOfAnyType(ktFile, 
                 KtImportList.class, PsiCoreCommentImpl.class, KtNamedFunction.class);

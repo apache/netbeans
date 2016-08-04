@@ -44,6 +44,9 @@ public class KotlinSyntaxErrorHighlightingTask extends ParserResultTask<KotlinPa
         try {
             KotlinParserResult parserResult = result;
             Document document = result.getSnapshot().getSource().getDocument(false);
+            if (document == null) {
+                return;
+            }
             List<ErrorDescription> errorDescriptions = new ArrayList<ErrorDescription>();
             List<? extends Error> errors = 
                     parserResult.getDiagnostics();

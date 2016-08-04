@@ -44,21 +44,13 @@
         </folder>
     </folder>
 
-    <folder name="Menu">
-        <folder name = "GoTo">
-            <file name="org-netbeans-modules-jumpto-type-GoToType.shadow">
-                <attr name="originalFile" stringvalue="Actions/Edit/org-jetbrains-kotlin-navigation-JavaKotlinTypeSearchProvider.instance"/>
-                <attr name="position" intvalue="150"/>
-            </file>
-        </folder>
-    </folder>
-
     <folder name="QuickSearch">
-        <folder name="GoToType">
-            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.jetbrains.kotlin.navigation.Bundle"/>
-            <attr name="command" stringvalue="t"/>
-            <attr name="position" intvalue="300"/>
-            <file name="org-jetbrains-kotlin-navigation-JavaKotlinTypeSearchProvider.instance"/>
+        <folder name="GoToKotlinType">
+            <attr name="command" stringvalue="kt"/>
+            <attr name="position" intvalue="0"/>
+            <file name="org-jetbrains-kotlin-search-GoToKotlinTypeProvider.instance">
+                <attr name="displayName" bundlevalue="org.jetbrains.kotlin.Bundle#QuickSearch/GoToKotlinType/org-jetbrains-kotlin-search-GoToKotlinTypeProvider.instance"/>
+            </file>
         </folder>
     </folder>
 

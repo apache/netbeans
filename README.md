@@ -4,7 +4,7 @@
 # Kotlin plugin for NetBeans IDE
 
 ## Installing Kotlin plugin
-1. Download [the latest release](https://github.com/Baratynskiy/kotlin-netbeans/releases/tag/v0.0.0.3)
+1. Download [the latest release](https://github.com/Baratynskiy/kotlin-netbeans/releases/tag/v0.1.0-alpha)
 2. Launch NetBeans IDE
 3. Choose **Tools** and then **Plugins** from the main menu
 4. Switch to **Downloaded** tab
@@ -18,12 +18,17 @@
 
 ## Plugin feature set
 
-1. Kotlin project type
-2. Syntax highlighting
-3. Semantics highlighting
-4. Diagnostics
-5. Code completion
-6. Navigation in Source Code
+1. Syntax highlighting
+2. Semantics highlighting
+3. Diagnostics
+4. Code completion
+5. Navigation in Source Code
+6. Automatic import
+7. Occurrences finder
+8. Code folding 
+9. Unit testing support
+10. Ant and Maven support
+11. Navigation by Kotlin class name
 
 ## For contributors
 

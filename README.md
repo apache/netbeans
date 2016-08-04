@@ -4,7 +4,7 @@
 # Kotlin plugin for NetBeans IDE
 
 ## Installing Kotlin plugin
-1. Download [the latest release](https://github.com/Baratynskiy/kotlin-netbeans/releases/tag/v0.1.0-alpha)
+1. Download the latest release: [0.1.0-alpha](https://github.com/Baratynskiy/kotlin-netbeans/releases/tag/v0.1.0-alpha)
 2. Launch NetBeans IDE
 3. Choose **Tools** and then **Plugins** from the main menu
 4. Switch to **Downloaded** tab

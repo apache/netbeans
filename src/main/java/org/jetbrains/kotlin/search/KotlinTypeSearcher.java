@@ -30,7 +30,7 @@ import org.netbeans.api.project.Project;
  */
 public class KotlinTypeSearcher {
     
-    public static List<Pair<KtFile, List<KtDeclaration>>> searchType(Project project, String fqName) {
+    public static List<Pair<KtFile, List<KtDeclaration>>> searchDeclaration(Project project, String fqName) {
         List<Pair<KtFile, List<KtDeclaration>>> found = new ArrayList<Pair<KtFile, List<KtDeclaration>>>();
         
         for (KtFile ktFile : ProjectUtils.getSourceFilesWithDependencies(project)) {

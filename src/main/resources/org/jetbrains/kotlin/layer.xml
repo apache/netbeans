@@ -45,7 +45,7 @@
     </folder>
 
     <folder name="QuickSearch">
-        <folder name="GoToKotlinType">
+        <folder name="GoToKotlinDeclaration">
             <attr name="command" stringvalue="kt"/>
             <attr name="position" intvalue="0"/>
             <file name="org-jetbrains-kotlin-search-GoToKotlinTypeProvider.instance">

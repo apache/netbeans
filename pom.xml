@@ -610,25 +610,14 @@
     <dependency>
       <groupId>org.netbeans.api</groupId>
       <artifactId>org-netbeans-api-debugger</artifactId>
-      <version>RELEASE81</version>
+      <version>${netbeans.version}</version>
     </dependency>
     <dependency>
       <groupId>org.netbeans.api</groupId>
       <artifactId>org-netbeans-api-debugger-jpda</artifactId>
-      <version>RELEASE81</version>
-    </dependency>
-    <dependency>
-      <groupId>org.netbeans.modules</groupId>
-      <artifactId>org-netbeans-modules-debugger-jpda</artifactId>
-      <version>RELEASE81</version>
+      <version>${netbeans.version}</version>
       <type>jar</type>
     </dependency>
-<!--    <dependency>
-      <groupId>org.netbeans.modules</groupId>
-      <artifactId>org-netbeans-modules-debugger-jpda-ui</artifactId>
-      <version>RELEASE81</version>
-      <type>jar</type>
-    </dependency>-->
   </dependencies>  
 
 </project>

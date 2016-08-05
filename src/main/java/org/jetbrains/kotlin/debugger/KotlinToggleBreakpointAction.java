@@ -21,7 +21,10 @@ package org.jetbrains.kotlin.debugger;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import org.netbeans.api.debugger.ActionsManager;
+import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.api.debugger.jpda.LineBreakpoint;
+//import org.netbeans.modules.debugger.jpda.EditorContextBridge;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 
@@ -35,7 +38,49 @@ public class KotlinToggleBreakpointAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        DebuggerManager.getDebuggerManager().getActionsManager().doAction(ActionsManager.ACTION_TOGGLE_BREAKPOINT);
+        if (!submitFieldOrMethodOrClassBreakpoint()) {
+            DebuggerManager.getDebuggerManager().getActionsManager().doAction(ActionsManager.ACTION_TOGGLE_BREAKPOINT);
+        }
+    }
+    
+    private boolean submitFieldOrMethodOrClassBreakpoint() {
+        DebuggerManager manager = DebuggerManager.getDebuggerManager();
+        int lineNumber = KotlinEditorContextBridge.getContext().getCurrentLineNumber();
+        String url = KotlinEditorContextBridge.getContext().getCurrentURL();
+        
+        if ("".equals(url.trim())) {
+            return true;
+        }
+        
+        LineBreakpoint lineBreakpoint = findBreakpoint(url, lineNumber);
+        if (lineBreakpoint != null) {
+            manager.removeBreakpoint(lineBreakpoint);
+            return true;
+        }
+        
+        lineBreakpoint = LineBreakpoint.create(url, lineNumber);
+        lineBreakpoint.setPrintText("breakpoint");
+        manager.addBreakpoint(lineBreakpoint);
+        
+        return false;
+    }
+    
+    private static LineBreakpoint findBreakpoint(String url, int lineNumber) {
+        Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager().getBreakpoints();
+        for (Breakpoint breakpoint : breakpoints) {
+            if (!(breakpoint instanceof LineBreakpoint)) {
+                continue;
+            }
+            LineBreakpoint lineBreakpoint = (LineBreakpoint) breakpoint;
+            if (!lineBreakpoint.getURL().equals(url)) {
+                continue;
+            }
+            if (lineBreakpoint.getLineNumber() == lineNumber) {
+                return lineBreakpoint;
+            }
+        }
+        
+        return null;
     }
     
 }

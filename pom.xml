@@ -623,12 +623,12 @@
       <version>RELEASE81</version>
       <type>jar</type>
     </dependency>
-    <dependency>
+<!--    <dependency>
       <groupId>org.netbeans.modules</groupId>
       <artifactId>org-netbeans-modules-debugger-jpda-ui</artifactId>
       <version>RELEASE81</version>
       <type>jar</type>
-    </dependency>
+    </dependency>-->
   </dependencies>  
 
 </project>

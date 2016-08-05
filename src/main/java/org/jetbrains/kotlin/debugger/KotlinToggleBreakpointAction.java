@@ -22,11 +22,15 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionRegistration;
 
 /**
  *
  * @author Alexander.Baratynski
  */
+@ActionID(id = "org.jetbrains.kotlin.debugger.KotlinToggleBreakpointAction", category = "Debug")
+@ActionRegistration(displayName = "KotlinBreakpoint", lazy = false)
 public class KotlinToggleBreakpointAction extends AbstractAction {
 
     @Override

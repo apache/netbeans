@@ -15,6 +15,8 @@
         </folder>
     </folder>
     
+    
+    
     <folder name="Editors">
             <folder name="text">
                 <folder name="x-kt">
@@ -29,18 +31,18 @@
                         </folder>
                     </folder>
                     
-                    <folder name="GlyphGutterActions">
+<!--                    <folder name="GlyphGutterActions">
                         <file name="org-netbeans-modules-debugger-jpda-ui-actions-ToggleMethodFieldBreakpointAction.shadow">
                             <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-jpda-ui-actions-ToggleMethodFieldBreakpointAction.instance"/>
                             <attr name="position" intvalue="500"/>
                         </file>
-                    </folder>
-<!--                    <folder name="GlyphGutterActions">
+                    </folder>-->
+                    <folder name="GlyphGutterActions">
                         <file name="org-jetbrains-kotlin-debugger-KotlinToggleBreakpointAction.instance">
-                            <attr name="originalFile" stringValue="Actions/Debug/org-jetbrains-kotlin-debugger-KotlinToggleBreakpointAction.instance"/>
+                            <!--<attr name="originalFile" stringValue="Actions/Debug/org-jetbrains-kotlin-debugger-KotlinToggleBreakpointAction.instance"/>-->
                             <attr name="position" intvalue="2500"/>
                         </file>
-                    </folder>-->
+                    </folder>
                     
                 </folder>
             </folder>
@@ -64,11 +66,16 @@
         </folder>
     </folder>
 
-<!--    <folder name="Actions">
-        <folder name="Debug">
-            <file name="org-jetbrains-kotlin-debugger-KotlinToggleBreakpointAction.instance" 
-                  displayName="Toggle Kotlin breakpoint"/>
-        </folder>
-    </folder>-->
+    <folder name="Debugger">
+        <file name="org-jetbrains-kotlin-debugger-KotlinToggleBreakpointActionProvider.instance">
+            <attr name="serviceName" stringvalue="org.jetbrains.kotlin.debugger.KotlinToggleBreakpointActionProvider"/>
+            <attr name="serviceClass" stringvalue="org.netbeans.spi.debugger.ActionsProvider"/>
+            <attr name="debugger_actions" stringvalue="[toggleBreakpoint]"/>
+            <attr name="debugger_activateForMIMETypes" stringvalue="[text/x-kt]"/>
+            <attr name="instanceOf" stringvalue="org.netbeans.spi.debugger.ActionsProvider"/>
+            <attr
+                methodvalue="org.netbeans.spi.debugger.ActionsProvider$ContextAware.createService" name="instanceCreate"/>
+        </file>
+    </folder>
 
 </filesystem>

@@ -23,10 +23,13 @@ import javax.swing.AbstractAction;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.api.debugger.jpda.FieldBreakpoint;
+import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
-//import org.netbeans.modules.debugger.jpda.EditorContextBridge;
+import org.netbeans.spi.debugger.jpda.EditorContext;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -36,14 +39,57 @@ import org.openide.awt.ActionRegistration;
 @ActionRegistration(displayName = "KotlinBreakpoint", lazy = false)
 public class KotlinToggleBreakpointAction extends AbstractAction {
 
+    private static final String[] BREAKPOINT_ANNOTATION_TYPES = new String[] {
+        "Breakpoint_broken",
+        "Breakpoint",
+        "CondBreakpoint_broken",
+        "CondBreakpoint",
+        "DisabledBreakpoint",
+        "DisabledCondBreakpoint",
+        "ClassBreakpoint",
+        "DisabledClassBreakpoint",
+        "DisabledFieldBreakpoint",
+        "DisabledMethodBreakpoint",
+        "FieldBreakpoint",
+        "MethodBreakpoint",
+    };
+    
+    private Object action;
+    private RequestProcessor postponedToggleRP;
+    
+    public KotlinToggleBreakpointAction() {
+        super.setEnabled (true);
+        super.putValue("default-action", true);
+        super.putValue("supported-annotation-types", BREAKPOINT_ANNOTATION_TYPES);
+        super.putValue("default-action-excluded-annotation-types", BREAKPOINT_ANNOTATION_TYPES);
+    }
+    
+    public Object getAction () {
+        return action;
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (!submitFieldOrMethodOrClassBreakpoint()) {
+//        if (!submitFieldOrMethodOrClassBreakpoint()) {
+            int lineNumber = KotlinEditorContextBridge.getContext().getCurrentLineNumber();
+            String url = KotlinEditorContextBridge.getContext().getCurrentURL();
+//            submitFieldBreakpoint("[fordebug.ForDebug]", "field", url, lineNumber);
             DebuggerManager.getDebuggerManager().getActionsManager().doAction(ActionsManager.ACTION_TOGGLE_BREAKPOINT);
-        }
+//        }
     }
     
     private boolean submitFieldOrMethodOrClassBreakpoint() {
+        EditorContext cont = KotlinEditorContextBridge.getContext();
+//        String currentClassname = KotlinEditorContextBridge.getContext().getCurrentClassName();
+        
+        
+        
+        
+        
+        
+        
+        
+        
         DebuggerManager manager = DebuggerManager.getDebuggerManager();
         int lineNumber = KotlinEditorContextBridge.getContext().getCurrentLineNumber();
         String url = KotlinEditorContextBridge.getContext().getCurrentURL();
@@ -63,6 +109,15 @@ public class KotlinToggleBreakpointAction extends AbstractAction {
         manager.addBreakpoint(lineBreakpoint);
         
         return false;
+    }
+    
+    
+    private void submitFieldBreakpoint(String className, String fieldName, String url, int line) {
+        DebuggerManager d = DebuggerManager.getDebuggerManager();
+        JPDABreakpoint b = FieldBreakpoint.create(className, fieldName, FieldBreakpoint.TYPE_MODIFICATION | FieldBreakpoint.TYPE_ACCESS);
+        
+        b.setPrintText("SSSS");
+        d.addBreakpoint(b);
     }
     
     private static LineBreakpoint findBreakpoint(String url, int lineNumber) {

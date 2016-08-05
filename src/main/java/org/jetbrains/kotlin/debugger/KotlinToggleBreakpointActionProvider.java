@@ -27,8 +27,10 @@ import java.util.Set;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
+import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
+import org.netbeans.api.debugger.jpda.MethodBreakpoint;
 import org.netbeans.spi.debugger.ActionsProvider;
 import org.netbeans.spi.debugger.ActionsProviderSupport;
 import org.netbeans.spi.debugger.ContextProvider;
@@ -79,14 +81,16 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
             return;
         }
         
-        LineBreakpoint lineBreakpoint = findBreakpoint(url, lineNumber);
-        if (lineBreakpoint != null) {
-            manager.removeBreakpoint(lineBreakpoint);
-            return;
-        }
+        JPDABreakpoint lineBreakpoint = MethodBreakpoint.create("fordebug.ForDebug", "newDebug");
         
-        lineBreakpoint = LineBreakpoint.create(url, lineNumber);
-        lineBreakpoint.setPrintText("breakpoint");
+//        KotlinLineBreakpoint lineBreakpoint = findBreakpoint(url, lineNumber);
+//        if (lineBreakpoint != null) {
+//            manager.removeBreakpoint(lineBreakpoint);
+//            return;
+//        }
+//        
+//        lineBreakpoint = KotlinLineBreakpoint.create(url, lineNumber);
+//        lineBreakpoint.setPrintText("breakpoint");
         manager.addBreakpoint(lineBreakpoint);
     }
 
@@ -112,13 +116,13 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
         }
     }
     
-    private static LineBreakpoint findBreakpoint(String url, int lineNumber) {
+    private static KotlinLineBreakpoint findBreakpoint(String url, int lineNumber) {
         Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager().getBreakpoints();
         for (Breakpoint breakpoint : breakpoints) {
-            if (!(breakpoint instanceof LineBreakpoint)) {
+            if (!(breakpoint instanceof KotlinLineBreakpoint)) {
                 continue;
             }
-            LineBreakpoint lineBreakpoint = (LineBreakpoint) breakpoint;
+            KotlinLineBreakpoint lineBreakpoint = (KotlinLineBreakpoint) breakpoint;
             if (!lineBreakpoint.getURL().equals(url)) {
                 continue;
             }

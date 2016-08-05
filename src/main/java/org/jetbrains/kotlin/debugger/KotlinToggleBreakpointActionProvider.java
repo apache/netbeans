@@ -18,12 +18,25 @@
  */
 package org.jetbrains.kotlin.debugger;
 
+import com.intellij.psi.PsiElement;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import javax.swing.text.StyledDocument;
+import org.jetbrains.kotlin.builder.KotlinPsiManager;
+import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider;
+import org.jetbrains.kotlin.psi.KtDeclaration;
+import org.jetbrains.kotlin.psi.KtFile;
+import org.jetbrains.kotlin.psi.KtProperty;
+import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
@@ -31,11 +44,16 @@ import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
 import org.netbeans.api.debugger.jpda.MethodBreakpoint;
+import org.netbeans.api.project.Project;
 import org.netbeans.spi.debugger.ActionsProvider;
 import org.netbeans.spi.debugger.ActionsProviderSupport;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.text.NbDocument;
+import org.openide.util.Exceptions;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -70,18 +88,63 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
         KotlinEditorContextBridge.getContext().removePropertyChangeListener(this);
     }
     
+    private KtDeclaration findDeclarationAtLine(KtFile ktFile, StyledDocument doc, int line) {
+        int startOffset = NbDocument.findLineOffset(doc, line);
+        int endOffset = NbDocument.findLineOffset(doc, line + 1);
+        PsiElement psi = ktFile.findElementAt(startOffset);
+        if (psi != null && psi instanceof KtDeclaration) {
+            return (KtDeclaration) psi;
+        }
+        //TODO
+        
+//        KtPsiUtilKt.
+        
+        return null;
+    }
+    
     @Override
     public void doAction(Object o) {
         DebuggerManager manager = DebuggerManager.getDebuggerManager();
         
         int lineNumber = KotlinEditorContextBridge.getContext().getCurrentLineNumber();
-        String url = KotlinEditorContextBridge.getContext().getCurrentURL();
+        String urlStr = KotlinEditorContextBridge.getContext().getCurrentURL();
         
-        if ("".equals(url.trim())) {
+        if ("".equals(urlStr.trim())) {
             return;
         }
         
-        JPDABreakpoint lineBreakpoint = MethodBreakpoint.create("fordebug.ForDebug", "newDebug");
+        String name = null;
+        String classFqName = null;
+        
+        try {
+            URL url = new URL(urlStr);
+            File file = Utilities.toFile(url.toURI());
+            FileObject fo = FileUtil.toFileObject(file);
+            KtFile ktFile = KotlinPsiManager.INSTANCE.getParsedFile(fo);
+            StyledDocument doc = ProjectUtils.getDocumentFromFileObject(fo);
+            KtDeclaration declaration = findDeclarationAtLine(ktFile, doc, lineNumber);
+            if (declaration == null) {
+                return;
+            }
+            name = declaration.getName();
+            classFqName = NoResolveFileClassesProvider.INSTANCE.getFileClassInfo(ktFile).getFacadeClassFqName().toString();
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (URISyntaxException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        if (name == null || classFqName == null) {
+            return;
+        }
+        
+        if (classFqName.endsWith("Kt")) {
+            classFqName = classFqName.substring(0, classFqName.length()-2);
+        }
+        
+        JPDABreakpoint lineBreakpoint = MethodBreakpoint.create(classFqName, name);
         
 //        KotlinLineBreakpoint lineBreakpoint = findBreakpoint(url, lineNumber);
 //        if (lineBreakpoint != null) {

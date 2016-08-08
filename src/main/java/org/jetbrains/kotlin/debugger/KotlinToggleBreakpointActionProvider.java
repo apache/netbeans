@@ -19,6 +19,7 @@
 package org.jetbrains.kotlin.debugger;
 
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -33,9 +34,12 @@ import java.util.Set;
 import javax.swing.text.StyledDocument;
 import org.jetbrains.kotlin.builder.KotlinPsiManager;
 import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider;
+import org.jetbrains.kotlin.psi.KtClass;
 import org.jetbrains.kotlin.psi.KtDeclaration;
 import org.jetbrains.kotlin.psi.KtFile;
+import org.jetbrains.kotlin.psi.KtFunction;
 import org.jetbrains.kotlin.psi.KtProperty;
+import org.jetbrains.kotlin.psi.psiUtil.KtPsiUtilKt;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.Breakpoint;
@@ -88,18 +92,48 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
         KotlinEditorContextBridge.getContext().removePropertyChangeListener(this);
     }
     
-    private KtDeclaration findDeclarationAtLine(KtFile ktFile, StyledDocument doc, int line) {
-        int startOffset = NbDocument.findLineOffset(doc, line);
-        int endOffset = NbDocument.findLineOffset(doc, line + 1);
-        PsiElement psi = ktFile.findElementAt(startOffset);
-        if (psi != null && psi instanceof KtDeclaration) {
-            return (KtDeclaration) psi;
+    private KtDeclaration findDeclarationBeforeEndOffset(KtFile ktFile, StyledDocument doc, int startOffset, int endOffset){
+        PsiElement element = null;
+        if (startOffset > endOffset) {
+            return null;
         }
-        //TODO
+        
+        element = ktFile.findElementAt(startOffset);
+        if (element == null) {
+            return null;
+        }
+        
+        KtDeclaration declaration = PsiTreeUtil.getNonStrictParentOfType(element, KtDeclaration.class);
+        
+        if (declaration != null && declaration instanceof KtFunction) {
+            return declaration;
+        } 
+        
+        return findDeclarationBeforeEndOffset(ktFile, doc, element.getTextRange().getEndOffset() + 1, endOffset);
+    }
+    
+    private KtDeclaration findDeclarationAtLine(KtFile ktFile, StyledDocument doc, int line) {
+        int startOffset = NbDocument.findLineOffset(doc, line - 1);
+        int endOffset = NbDocument.findLineOffset(doc, line);
+        KtDeclaration declaration = null;
+        
+        PsiElement psi = ktFile.findElementAt(startOffset);
+        if (psi == null) {
+            return null;
+        }
+        
+        declaration = PsiTreeUtil.getNonStrictParentOfType(psi, KtDeclaration.class);
+        if (declaration != null && declaration instanceof KtFunction) {
+            return declaration;
+        }
+        
+        int psiEndOffset = psi.getTextRange().getEndOffset() + 1;
+        
+        declaration = findDeclarationBeforeEndOffset(ktFile, doc, psiEndOffset, endOffset);
         
 //        KtPsiUtilKt.
         
-        return null;
+        return declaration;
     }
     
     @Override
@@ -127,7 +161,12 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
                 return;
             }
             name = declaration.getName();
-            classFqName = NoResolveFileClassesProvider.INSTANCE.getFileClassInfo(ktFile).getFacadeClassFqName().toString();
+            KtClass containingClass = KtPsiUtilKt.containingClass(declaration);
+            if (containingClass != null){
+                classFqName = containingClass.getFqName().asString();
+            } else {
+                classFqName = NoResolveFileClassesProvider.INSTANCE.getFileClassInfo(ktFile).getFacadeClassFqName().toString();
+            }
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);
         } catch (URISyntaxException ex) {
@@ -140,9 +179,9 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
             return;
         }
         
-        if (classFqName.endsWith("Kt")) {
-            classFqName = classFqName.substring(0, classFqName.length()-2);
-        }
+//        if (classFqName.endsWith("Kt")) {
+//            classFqName = classFqName.substring(0, classFqName.length()-2);
+//        }
         
         JPDABreakpoint lineBreakpoint = MethodBreakpoint.create(classFqName, name);
         

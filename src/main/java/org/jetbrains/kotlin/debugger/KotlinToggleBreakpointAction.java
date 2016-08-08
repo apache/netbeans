@@ -71,25 +71,14 @@ public class KotlinToggleBreakpointAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
 //        if (!submitFieldOrMethodOrClassBreakpoint()) {
-            int lineNumber = KotlinEditorContextBridge.getContext().getCurrentLineNumber();
-            String url = KotlinEditorContextBridge.getContext().getCurrentURL();
+//            int lineNumber = KotlinEditorContextBridge.getContext().getCurrentLineNumber();
+//            String url = KotlinEditorContextBridge.getContext().getCurrentURL();
 //            submitFieldBreakpoint("[fordebug.ForDebug]", "field", url, lineNumber);
             DebuggerManager.getDebuggerManager().getActionsManager().doAction(ActionsManager.ACTION_TOGGLE_BREAKPOINT);
 //        }
     }
     
     private boolean submitFieldOrMethodOrClassBreakpoint() {
-        EditorContext cont = KotlinEditorContextBridge.getContext();
-//        String currentClassname = KotlinEditorContextBridge.getContext().getCurrentClassName();
-        
-        
-        
-        
-        
-        
-        
-        
-        
         DebuggerManager manager = DebuggerManager.getDebuggerManager();
         int lineNumber = KotlinEditorContextBridge.getContext().getCurrentLineNumber();
         String url = KotlinEditorContextBridge.getContext().getCurrentURL();

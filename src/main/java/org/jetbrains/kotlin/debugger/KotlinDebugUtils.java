@@ -28,6 +28,7 @@ import java.net.URL;
 import javax.swing.text.StyledDocument;
 import kotlin.Pair;
 import org.jetbrains.kotlin.builder.KotlinPsiManager;
+import static org.jetbrains.kotlin.debugger.KotlinEditorContextBridge.getContext;
 import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider;
 import org.jetbrains.kotlin.psi.KtClass;
 import org.jetbrains.kotlin.psi.KtDeclaration;
@@ -35,6 +36,12 @@ import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtFunction;
 import org.jetbrains.kotlin.psi.psiUtil.KtPsiUtilKt;
 import org.jetbrains.kotlin.utils.ProjectUtils;
+import org.netbeans.api.debugger.Breakpoint;
+import org.netbeans.api.debugger.jpda.FieldBreakpoint;
+import org.netbeans.api.debugger.jpda.JPDABreakpoint;
+import org.netbeans.api.debugger.jpda.LineBreakpoint;
+import org.netbeans.api.debugger.jpda.MethodBreakpoint;
+import org.netbeans.spi.debugger.jpda.EditorContext;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.text.NbDocument;
@@ -119,6 +126,30 @@ public class KotlinDebugUtils {
         }
         
         return new Pair<String, String>(classFqName, name);
+    }
+    
+    public static void annotate(JPDABreakpoint b, String url, int line) {
+        boolean isConditional = false;
+        String annotationType;
+        if (b instanceof LineBreakpoint) {
+            annotationType = b.isEnabled () ?
+            (isConditional ? EditorContext.CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE :
+                             EditorContext.BREAKPOINT_ANNOTATION_TYPE) :
+            (isConditional ? EditorContext.DISABLED_CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE :
+                             EditorContext.DISABLED_BREAKPOINT_ANNOTATION_TYPE);
+        } else if (b instanceof FieldBreakpoint) {
+            annotationType = b.isEnabled () ?
+                EditorContext.FIELD_BREAKPOINT_ANNOTATION_TYPE :
+                EditorContext.DISABLED_FIELD_BREAKPOINT_ANNOTATION_TYPE;
+        } else if (b instanceof MethodBreakpoint) {
+            annotationType = b.isEnabled () ?
+                EditorContext.METHOD_BREAKPOINT_ANNOTATION_TYPE :
+                EditorContext.DISABLED_METHOD_BREAKPOINT_ANNOTATION_TYPE;
+        } else {
+            return;
+        }
+        
+        getContext().annotate(url, line, annotationType, null);
     }
     
 }

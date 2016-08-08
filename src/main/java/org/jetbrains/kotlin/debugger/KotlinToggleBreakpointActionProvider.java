@@ -53,14 +53,14 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
     public KotlinToggleBreakpointActionProvider() {
         KotlinEditorContextBridge.getContext().
                 addPropertyChangeListener(KotlinToggleBreakpointActionProvider.this);
-        setEnabled(ActionsManager.ACTION_TOGGLE_BREAKPOINT, true);
+        enableAllActions();
     }
     
     public KotlinToggleBreakpointActionProvider(ContextProvider lookupProvider) {
         debugger = lookupProvider.lookupFirst(null, JPDADebugger.class);
         debugger.addPropertyChangeListener(JPDADebugger.PROP_STATE, 
                 KotlinToggleBreakpointActionProvider.this);
-        setEnabled(ActionsManager.ACTION_TOGGLE_BREAKPOINT, true);
+        enableAllActions();
         KotlinEditorContextBridge.getContext().
                 addPropertyChangeListener(KotlinToggleBreakpointActionProvider.this);
     }
@@ -89,7 +89,7 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
         } else {
             return;
         }
-        
+        KotlinDebugUtils.annotate(breakpoint, urlStr, lineNumber);
 //        KotlinLineBreakpoint lineBreakpoint = findBreakpoint(url, lineNumber);
 //        if (lineBreakpoint != null) {
 //            manager.removeBreakpoint(lineBreakpoint);
@@ -139,6 +139,27 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
         }
         
         return null;
+    }
+    
+    private void enableAllActions() {
+        setEnabled(ActionsManager.ACTION_TOGGLE_BREAKPOINT, true);
+        setEnabled(ActionsManager.ACTION_CONTINUE, true);
+        setEnabled(ActionsManager.ACTION_EVALUATE, true);
+        setEnabled(ActionsManager.ACTION_FIX, true);
+        setEnabled(ActionsManager.ACTION_KILL, true);
+        setEnabled(ActionsManager.ACTION_MAKE_CALLEE_CURRENT, true);
+        setEnabled(ActionsManager.ACTION_NEW_WATCH, true);
+        setEnabled(ActionsManager.ACTION_MAKE_CALLER_CURRENT, true);
+        setEnabled(ActionsManager.ACTION_PAUSE, true);
+        setEnabled(ActionsManager.ACTION_POP_TOPMOST_CALL, true);
+        setEnabled(ActionsManager.ACTION_RESTART, true);
+        setEnabled(ActionsManager.ACTION_RUN_INTO_METHOD, true);
+        setEnabled(ActionsManager.ACTION_RUN_TO_CURSOR, true);
+        setEnabled(ActionsManager.ACTION_START, true);
+        setEnabled(ActionsManager.ACTION_STEP_INTO, true);
+        setEnabled(ActionsManager.ACTION_STEP_OPERATION, true);
+        setEnabled(ActionsManager.ACTION_STEP_OUT, true);
+        setEnabled(ActionsManager.ACTION_STEP_OVER, true);
     }
     
 }

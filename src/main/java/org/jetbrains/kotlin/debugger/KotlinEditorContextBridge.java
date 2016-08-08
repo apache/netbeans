@@ -171,9 +171,7 @@ public class KotlinEditorContextBridge {
         return getContext().annotate(url, lineNumber, annotationType, null);
     }
     
-    public static Object[] annotate (
-        JPDABreakpoint b
-    ) {
+    public static Object[] annotate(JPDABreakpoint b) {
         String[] URLs;
         int[] lineNumbers;
         String condition;

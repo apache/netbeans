@@ -54,7 +54,7 @@ import org.openide.util.Utilities;
  */
 public class KotlinDebugUtils {
 
-    private static KtDeclaration findDeclarationBeforeEndOffset(KtFile ktFile, StyledDocument doc, int startOffset, int endOffset){
+    private static KtDeclaration findDeclarationBeforeEndOffset(KtFile ktFile, StyledDocument doc, int startOffset, int endOffset, int initialStartOffset){
         PsiElement element = null;
         if (startOffset > endOffset) {
             return null;
@@ -67,31 +67,19 @@ public class KotlinDebugUtils {
         
         KtDeclaration declaration = PsiTreeUtil.getNonStrictParentOfType(element, KtDeclaration.class);
         
-        if (declaration != null && declaration instanceof KtFunction) {
+        if (declaration != null && declaration instanceof KtFunction 
+                && declaration.getTextRange().getStartOffset() < endOffset &&
+                declaration.getTextRange().getStartOffset() > initialStartOffset) {
             return declaration;
         } 
         
-        return findDeclarationBeforeEndOffset(ktFile, doc, element.getTextRange().getEndOffset() + 1, endOffset);
+        return findDeclarationBeforeEndOffset(ktFile, doc, element.getTextRange().getEndOffset() + 1, endOffset, initialStartOffset);
     }
     
     private static KtDeclaration findDeclarationAtLine(KtFile ktFile, StyledDocument doc, int line) {
         int startOffset = NbDocument.findLineOffset(doc, line - 1);
         int endOffset = NbDocument.findLineOffset(doc, line);
-        KtDeclaration declaration = null;
-        
-        PsiElement psi = ktFile.findElementAt(startOffset);
-        if (psi == null) {
-            return null;
-        }
-        
-        declaration = PsiTreeUtil.getNonStrictParentOfType(psi, KtDeclaration.class);
-        if (declaration != null && declaration instanceof KtFunction) {
-            return declaration;
-        }
-        
-        int psiEndOffset = psi.getTextRange().getEndOffset() + 1;
-        
-        declaration = findDeclarationBeforeEndOffset(ktFile, doc, psiEndOffset, endOffset);
+        KtDeclaration declaration = findDeclarationBeforeEndOffset(ktFile, doc, startOffset, endOffset, startOffset);
         
         return declaration;
     }
@@ -128,13 +116,46 @@ public class KotlinDebugUtils {
         return new Pair<String, String>(classFqName, name);
     }
     
+    public static String getClassFqName(String urlStr, int line) {
+        String classFqName = null;
+        try {
+            URL url = new URL(urlStr);
+            File file = Utilities.toFile(url.toURI());
+            FileObject fo = FileUtil.toFileObject(file);
+            KtFile ktFile = KotlinPsiManager.INSTANCE.getParsedFile(fo);
+            classFqName = NoResolveFileClassesProvider.INSTANCE.getFileClassInfo(ktFile).getFacadeClassFqName().toString();
+            StyledDocument doc = ProjectUtils.getDocumentFromFileObject(fo);
+            int offset = NbDocument.findLineOffset(doc, line - 1);
+            PsiElement psi = ktFile.findElementAt(offset);
+            if (psi == null) {
+                return classFqName;
+            }
+            KtDeclaration declaration = PsiTreeUtil.getNonStrictParentOfType(psi, KtDeclaration.class);
+            if (declaration == null) {
+                return classFqName;
+            }
+            KtClass containingClass = KtPsiUtilKt.containingClass(declaration);
+            if (containingClass != null) {
+                classFqName = containingClass.getFqName().asString();
+            }  
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (URISyntaxException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        return classFqName;
+    }
+    
     public static void annotate(JPDABreakpoint b, String url, int line) {
         boolean isConditional = false;
         String annotationType;
         if (b instanceof LineBreakpoint) {
             annotationType = b.isEnabled () ?
             (isConditional ? EditorContext.CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE :
-                             EditorContext.BREAKPOINT_ANNOTATION_TYPE) :
+                             EditorContext.FIELD_BREAKPOINT_ANNOTATION_TYPE) :
             (isConditional ? EditorContext.DISABLED_CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE :
                              EditorContext.DISABLED_BREAKPOINT_ANNOTATION_TYPE);
         } else if (b instanceof FieldBreakpoint) {

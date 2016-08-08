@@ -50,7 +50,6 @@ public class KotlinToggleBreakpointAction extends AbstractAction {
     };
     
     private Object action;
-    private RequestProcessor postponedToggleRP;
     
     public KotlinToggleBreakpointAction() {
         super.setEnabled (true);

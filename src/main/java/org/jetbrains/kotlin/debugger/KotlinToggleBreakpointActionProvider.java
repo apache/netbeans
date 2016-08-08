@@ -30,7 +30,10 @@ import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.api.debugger.jpda.LineBreakpoint;
 import org.netbeans.api.debugger.jpda.MethodBreakpoint;
+import org.netbeans.api.debugger.jpda.event.JPDABreakpointEvent;
+import org.netbeans.api.debugger.jpda.event.JPDABreakpointListener;
 import org.netbeans.spi.debugger.ActionsProvider;
 import org.netbeans.spi.debugger.ActionsProviderSupport;
 import org.netbeans.spi.debugger.ContextProvider;
@@ -87,7 +90,12 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
             breakpoint = MethodBreakpoint.create(functionNameAndClassName.getFirst(), 
                     functionNameAndClassName.getSecond());
         } else {
-            return;
+            breakpoint = LineBreakpoint.create(urlStr, lineNumber);
+            String className = KotlinDebugUtils.getClassFqName(urlStr, lineNumber);
+            if (className == null) {
+                className = "";
+            }
+            ((LineBreakpoint) breakpoint).setPreferredClassName(className);
         }
         KotlinDebugUtils.annotate(breakpoint, urlStr, lineNumber);
 //        KotlinLineBreakpoint lineBreakpoint = findBreakpoint(url, lineNumber);
@@ -122,6 +130,22 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
             destroy();
         }
     }
+    
+//    private static Breakpoint findBreakpointAtLine(String url, int line) {
+//        Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager().getBreakpoints();
+//        for (Breakpoint breakpoint : breakpoints) {
+//            JPDABreakpoint br = (JPDABreakpoint) breakpoint;
+//            
+//            if (!breakpoint.getURL().equals(url)) {
+//                continue;
+//            }
+//            if (lineBreakpoint.getLineNumber() == lineNumber) {
+//                return lineBreakpoint;
+//            }
+//        }
+//        
+//        return null;
+//    }
     
     private static KotlinLineBreakpoint findBreakpoint(String url, int lineNumber) {
         Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager().getBreakpoints();

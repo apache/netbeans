@@ -266,7 +266,6 @@ public class KotlinEditorContextBridge {
                 lookup("netbeans-JPDASession", SourcePathProvider.class);
         for (Iterator it = providers.iterator(); it.hasNext(); ) {
             Object provider = it.next();
-            // Hack - find our provider:
             if (provider.getClass().getName().equals("org.netbeans.modules.debugger.jpda.projects.SourcePathProviderImpl")) {
                 return (SourcePathProvider) provider;
             }
@@ -284,15 +283,6 @@ public class KotlinEditorContextBridge {
             return new String[0];
         }
     }
-    
-//    public static String getRelativePath(JPDAThread thread, String stratumn) {
-//        return convertSlash(thread.getSourcePath(stratumn));
-//        
-//    }
-//
-//    public static String getRelativePath(CallStackFrame csf, String stratumn) {
-//        return convertSlash(csf.getSourcePath(stratumn)); 
-//    }
 
     public static String getRelativePath(String className) {
         int i = className.indexOf ('$');

@@ -125,6 +125,10 @@
                 <id>org.netbeans.modules:org-netbeans-modules-debugger-jpda</id>
                 <type>impl</type>
             </dependency>
+            <dependency>
+                <id>org.netbeans.modules:org-netbeans-modules-debugger-jpda-projects</id>
+                <type>impl</type>
+            </dependency>
           </moduleDependencies> 
         </configuration> 
       </plugin>  
@@ -639,6 +643,11 @@
     <dependency>
       <groupId>org.netbeans.api</groupId>
       <artifactId>org-netbeans-spi-debugger-ui</artifactId>
+      <version>RELEASE81</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.modules</groupId>
+      <artifactId>org-netbeans-modules-debugger-jpda-projects</artifactId>
       <version>RELEASE81</version>
     </dependency>
   </dependencies>  

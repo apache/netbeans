@@ -70,14 +70,16 @@
                 methodvalue="org.netbeans.spi.debugger.ActionsProvider$ContextAware.createService" name="instanceCreate"/>
         </file>
         
-<!--        <folder name="BreakpointsView">
-            <file name="org-jetbrains-kotlin-debugger-KotlinBreakpointViewActionProvider.instance">
-                <attr name="serviceName" stringvalue="org.jetbrains.kotlin.debugger.KotlinBreakpointViewActionProvider"/>
-                <attr name="instanceOf" stringvalue="org.netbeans.spi.viewmodel.NodeActionsProviderFilter"/>
+        <folder name="netbeans-JPDASession">
+            <file name="org-jetbrains-kotlin-debugger-KotlinSourcePathProvider.instance">
+                <attr name="serviceName" stringvalue="org.jetbrains.kotlin.debugger.KotlinSourcePathProvider"/>
+                <attr name="serviceClass" stringvalue="org.netbeans.spi.debugger.jpda.SourcePathProvider"/>
+                <attr name="instanceOf" stringvalue="org.netbeans.spi.debugger.jpda.SourcePathProvider"/>
                 <attr
-                    methodvalue="org.netbeans.spi.debugger.ContextAwareSupport.createService" name="instanceCreate"/>
+                    methodvalue="org.netbeans.spi.debugger.jpda.SourcePathProvider$ContextAware.createService" name="instanceCreate"/>
             </file>
-        </folder>-->
+        </folder>
+        
     </folder>
 
 </filesystem>

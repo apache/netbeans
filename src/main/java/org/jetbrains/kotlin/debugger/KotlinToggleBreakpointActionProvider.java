@@ -20,6 +20,7 @@ package org.jetbrains.kotlin.debugger;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeListenerProxy;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -121,7 +122,7 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
                 className = "";
             }
             ((LineBreakpoint) breakpoint).setPreferredClassName(className);
-        }   
+        }
         
         breakpoint.addJPDABreakpointListener(new JPDABreakpointListener() {
             @Override

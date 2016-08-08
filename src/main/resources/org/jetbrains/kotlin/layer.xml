@@ -30,13 +30,6 @@
                             </folder>
                         </folder>
                     </folder>
-                    
-<!--                    <folder name="GlyphGutterActions">
-                        <file name="org-netbeans-modules-debugger-jpda-ui-actions-ToggleMethodFieldBreakpointAction.shadow">
-                            <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-jpda-ui-actions-ToggleMethodFieldBreakpointAction.instance"/>
-                            <attr name="position" intvalue="500"/>
-                        </file>
-                    </folder>-->
                     <folder name="GlyphGutterActions">
                         <file name="org-jetbrains-kotlin-debugger-KotlinToggleBreakpointAction.instance">
                             <!--<attr name="originalFile" stringValue="Actions/Debug/org-jetbrains-kotlin-debugger-KotlinToggleBreakpointAction.instance"/>-->
@@ -76,6 +69,15 @@
             <attr
                 methodvalue="org.netbeans.spi.debugger.ActionsProvider$ContextAware.createService" name="instanceCreate"/>
         </file>
+        
+<!--        <folder name="BreakpointsView">
+            <file name="org-jetbrains-kotlin-debugger-KotlinBreakpointViewActionProvider.instance">
+                <attr name="serviceName" stringvalue="org.jetbrains.kotlin.debugger.KotlinBreakpointViewActionProvider"/>
+                <attr name="instanceOf" stringvalue="org.netbeans.spi.viewmodel.NodeActionsProviderFilter"/>
+                <attr
+                    methodvalue="org.netbeans.spi.debugger.ContextAwareSupport.createService" name="instanceCreate"/>
+            </file>
+        </folder>-->
     </folder>
 
 </filesystem>

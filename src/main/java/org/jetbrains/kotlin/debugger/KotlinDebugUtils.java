@@ -37,6 +37,7 @@ import org.jetbrains.kotlin.psi.KtFunction;
 import org.jetbrains.kotlin.psi.psiUtil.KtPsiUtilKt;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.debugger.Breakpoint;
+import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.jpda.FieldBreakpoint;
 import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
@@ -54,40 +55,40 @@ import org.openide.util.Utilities;
  */
 public class KotlinDebugUtils {
 
-    private static KtDeclaration findDeclarationBeforeEndOffset(KtFile ktFile, StyledDocument doc, int startOffset, int endOffset, int initialStartOffset){
+    private static KtDeclaration findDeclarationBeforeEndOffset(KtFile ktFile, StyledDocument doc, int startOffset, int endOffset, int initialStartOffset) {
         PsiElement element = null;
         if (startOffset > endOffset) {
             return null;
         }
-        
+
         element = ktFile.findElementAt(startOffset);
         if (element == null) {
             return null;
         }
-        
+
         KtDeclaration declaration = PsiTreeUtil.getNonStrictParentOfType(element, KtDeclaration.class);
-        
-        if (declaration != null && declaration instanceof KtFunction 
-                && declaration.getTextRange().getStartOffset() < endOffset &&
-                declaration.getTextRange().getStartOffset() > initialStartOffset) {
+
+        if (declaration != null && declaration instanceof KtFunction
+                && declaration.getTextRange().getStartOffset() < endOffset
+                && declaration.getTextRange().getStartOffset() > initialStartOffset) {
             return declaration;
-        } 
-        
+        }
+
         return findDeclarationBeforeEndOffset(ktFile, doc, element.getTextRange().getEndOffset() + 1, endOffset, initialStartOffset);
     }
-    
+
     private static KtDeclaration findDeclarationAtLine(KtFile ktFile, StyledDocument doc, int line) {
         int startOffset = NbDocument.findLineOffset(doc, line - 1);
         int endOffset = NbDocument.findLineOffset(doc, line);
         KtDeclaration declaration = findDeclarationBeforeEndOffset(ktFile, doc, startOffset, endOffset, startOffset);
-        
+
         return declaration;
     }
-    
+
     public static Pair<String, String> getFunctionNameAndContainingClass(String urlStr, int lineNumber) {
         String name = null;
         String classFqName = null;
-        
+
         try {
             URL url = new URL(urlStr);
             File file = Utilities.toFile(url.toURI());
@@ -100,7 +101,7 @@ public class KotlinDebugUtils {
             }
             name = declaration.getName();
             KtClass containingClass = KtPsiUtilKt.containingClass(declaration);
-            if (containingClass != null){
+            if (containingClass != null) {
                 classFqName = containingClass.getFqName().asString();
             } else {
                 classFqName = NoResolveFileClassesProvider.INSTANCE.getFileClassInfo(ktFile).getFacadeClassFqName().toString();
@@ -112,10 +113,10 @@ public class KotlinDebugUtils {
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
-        
+
         return new Pair<String, String>(classFqName, name);
     }
-    
+
     public static String getClassFqName(String urlStr, int line) {
         String classFqName = null;
         try {
@@ -137,7 +138,7 @@ public class KotlinDebugUtils {
             KtClass containingClass = KtPsiUtilKt.containingClass(declaration);
             if (containingClass != null) {
                 classFqName = containingClass.getFqName().asString();
-            }  
+            }
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);
         } catch (URISyntaxException ex) {
@@ -145,32 +146,80 @@ public class KotlinDebugUtils {
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
-        
+
         return classFqName;
     }
-    
-    public static void annotate(JPDABreakpoint b, String url, int line) {
+
+    public static Object annotate(JPDABreakpoint b, String url, int line) {
         boolean isConditional = false;
         String annotationType;
         if (b instanceof LineBreakpoint) {
-            annotationType = b.isEnabled () ?
-            (isConditional ? EditorContext.CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE :
-                             EditorContext.FIELD_BREAKPOINT_ANNOTATION_TYPE) :
-            (isConditional ? EditorContext.DISABLED_CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE :
-                             EditorContext.DISABLED_BREAKPOINT_ANNOTATION_TYPE);
+            annotationType = b.isEnabled()
+                    ? EditorContext.CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE
+                    : (isConditional ? EditorContext.DISABLED_CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE
+                            : EditorContext.DISABLED_BREAKPOINT_ANNOTATION_TYPE);
         } else if (b instanceof FieldBreakpoint) {
-            annotationType = b.isEnabled () ?
-                EditorContext.FIELD_BREAKPOINT_ANNOTATION_TYPE :
-                EditorContext.DISABLED_FIELD_BREAKPOINT_ANNOTATION_TYPE;
+            annotationType = b.isEnabled()
+                    ? EditorContext.FIELD_BREAKPOINT_ANNOTATION_TYPE
+                    : EditorContext.DISABLED_FIELD_BREAKPOINT_ANNOTATION_TYPE;
         } else if (b instanceof MethodBreakpoint) {
-            annotationType = b.isEnabled () ?
-                EditorContext.METHOD_BREAKPOINT_ANNOTATION_TYPE :
-                EditorContext.DISABLED_METHOD_BREAKPOINT_ANNOTATION_TYPE;
+            annotationType = b.isEnabled()
+                    ? EditorContext.METHOD_BREAKPOINT_ANNOTATION_TYPE
+                    : EditorContext.DISABLED_METHOD_BREAKPOINT_ANNOTATION_TYPE;
         } else {
-            return;
+            return null;
         }
-        
-        getContext().annotate(url, line, annotationType, null);
+
+        return getContext().annotate(url, line, annotationType, null);
     }
-    
+
+    public static MethodBreakpoint findMethodBreakpoint(DebuggerManager manager, String className, String functionName) {
+        Breakpoint[] breakpoints = manager.getBreakpoints();
+        for (Breakpoint breakpoint : breakpoints) {
+            if (!(breakpoint instanceof MethodBreakpoint)) {
+                continue;
+            }
+            MethodBreakpoint methodBreakpoint = (MethodBreakpoint) breakpoint;
+            if (methodBreakpoint.getMethodName().equals(functionName)) {
+                String[] classFilters = methodBreakpoint.getClassFilters();
+                for (String classFilter : classFilters) {
+                    if (match(classFilter, className)) {
+                        return methodBreakpoint;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static boolean match(String name, String pattern) {
+        if (pattern.startsWith("*")) {
+            return name.endsWith(pattern.substring(1));
+        } else if (pattern.endsWith("*")) {
+            return name.startsWith(
+                    pattern.substring(0, pattern.length() - 1)
+            );
+        }
+
+        return name.equals(pattern);
+    }
+
+    public static LineBreakpoint findBreakpoint(String url, int lineNumber) {
+        Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager().getBreakpoints();
+        for (Breakpoint breakpoint : breakpoints) {
+            if (!(breakpoint instanceof LineBreakpoint)) {
+                continue;
+            }
+            LineBreakpoint lb = (LineBreakpoint) breakpoint;
+            if (!lb.getURL().equals(url)) {
+                continue;
+            }
+            if (lb.getLineNumber() == lineNumber) {
+                return lb;
+            }
+        }
+        return null;
+    }
+
 }

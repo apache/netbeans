@@ -22,8 +22,13 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import javax.swing.SwingUtilities;
 import kotlin.Pair;
 import org.netbeans.api.debugger.ActionsManager;
 import org.netbeans.api.debugger.Breakpoint;
@@ -52,6 +57,7 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
     implements PropertyChangeListener {
 
     private JPDADebugger debugger;
+    private Map<Breakpoint, Object> annotations = new HashMap<Breakpoint, Object>();
     
     public KotlinToggleBreakpointActionProvider() {
         KotlinEditorContextBridge.getContext().
@@ -78,8 +84,8 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
         DebuggerManager manager = DebuggerManager.getDebuggerManager();
         JPDABreakpoint breakpoint;
         
-        int lineNumber = KotlinEditorContextBridge.getContext().getCurrentLineNumber();
-        String urlStr = KotlinEditorContextBridge.getContext().getCurrentURL();
+        final int lineNumber = KotlinEditorContextBridge.getContext().getCurrentLineNumber();
+        final String urlStr = KotlinEditorContextBridge.getContext().getCurrentURL();
         
         if ("".equals(urlStr.trim())) {
             return;
@@ -87,25 +93,50 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
         
         Pair<String, String> functionNameAndClassName = KotlinDebugUtils.getFunctionNameAndContainingClass(urlStr, lineNumber);
         if (functionNameAndClassName != null) {
+            MethodBreakpoint mBr = KotlinDebugUtils.findMethodBreakpoint(manager, functionNameAndClassName.getFirst(), 
+                    functionNameAndClassName.getSecond());
+            if (mBr != null) {
+                manager.removeBreakpoint(mBr);
+                Object annotation = annotations.get(mBr);
+                if (annotation != null) {
+                    KotlinEditorContextBridge.getContext().removeAnnotation(annotation);
+                }
+                return;
+            }
             breakpoint = MethodBreakpoint.create(functionNameAndClassName.getFirst(), 
                     functionNameAndClassName.getSecond());
         } else {
+            LineBreakpoint lBr = KotlinDebugUtils.findBreakpoint(urlStr, lineNumber);
+            if (lBr != null) {
+                manager.removeBreakpoint(lBr);
+                Object annotation = annotations.get(lBr);
+                if (annotation != null) {
+                    KotlinEditorContextBridge.getContext().removeAnnotation(annotation);
+                }
+                return;
+            }
             breakpoint = LineBreakpoint.create(urlStr, lineNumber);
             String className = KotlinDebugUtils.getClassFqName(urlStr, lineNumber);
             if (className == null) {
                 className = "";
             }
             ((LineBreakpoint) breakpoint).setPreferredClassName(className);
-        }
-        KotlinDebugUtils.annotate(breakpoint, urlStr, lineNumber);
-//        KotlinLineBreakpoint lineBreakpoint = findBreakpoint(url, lineNumber);
-//        if (lineBreakpoint != null) {
-//            manager.removeBreakpoint(lineBreakpoint);
-//            return;
-//        }
-//        
-//        lineBreakpoint = KotlinLineBreakpoint.create(url, lineNumber);
-//        lineBreakpoint.setPrintText("breakpoint");
+        }   
+        
+        breakpoint.addJPDABreakpointListener(new JPDABreakpointListener() {
+            @Override
+            public void breakpointReached(final JPDABreakpointEvent event) {
+                SwingUtilities.invokeLater(new Runnable(){
+                    @Override
+                    public void run() {
+                        KotlinEditorContextBridge.getContext().showSource(urlStr, lineNumber, null);
+//                        KotlinEditorContextBridge.getContext().annotate(urlStr, lineNumber, EditorContext.CURRENT_LINE_ANNOTATION_TYPE, null);  
+                    }
+                });
+            }
+        });
+        
+        annotations.put(breakpoint, KotlinDebugUtils.annotate(breakpoint, urlStr, lineNumber));
         manager.addBreakpoint(breakpoint);
     }
 
@@ -131,39 +162,16 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
         }
     }
     
-//    private static Breakpoint findBreakpointAtLine(String url, int line) {
-//        Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager().getBreakpoints();
-//        for (Breakpoint breakpoint : breakpoints) {
-//            JPDABreakpoint br = (JPDABreakpoint) breakpoint;
-//            
-//            if (!breakpoint.getURL().equals(url)) {
-//                continue;
-//            }
-//            if (lineBreakpoint.getLineNumber() == lineNumber) {
-//                return lineBreakpoint;
-//            }
-//        }
-//        
-//        return null;
-//    }
-    
-    private static KotlinLineBreakpoint findBreakpoint(String url, int lineNumber) {
-        Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager().getBreakpoints();
-        for (Breakpoint breakpoint : breakpoints) {
-            if (!(breakpoint instanceof KotlinLineBreakpoint)) {
-                continue;
-            }
-            KotlinLineBreakpoint lineBreakpoint = (KotlinLineBreakpoint) breakpoint;
-            if (!lineBreakpoint.getURL().equals(url)) {
-                continue;
-            }
-            if (lineBreakpoint.getLineNumber() == lineNumber) {
-                return lineBreakpoint;
-            }
+        @Override
+        public void postAction(final Object action, final Runnable actionPerformedNotifier) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    doAction(action);
+                    actionPerformedNotifier.run();
+                }
+            });
         }
-        
-        return null;
-    }
     
     private void enableAllActions() {
         setEnabled(ActionsManager.ACTION_TOGGLE_BREAKPOINT, true);
@@ -185,5 +193,7 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
         setEnabled(ActionsManager.ACTION_STEP_OUT, true);
         setEnabled(ActionsManager.ACTION_STEP_OVER, true);
     }
+    
+    
     
 }

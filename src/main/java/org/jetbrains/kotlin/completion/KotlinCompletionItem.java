@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.completion;
 
 import java.awt.Color;
@@ -25,6 +27,7 @@ import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
+import org.jetbrains.kotlin.descriptors.CallableDescriptor;
 import org.jetbrains.kotlin.utils.KotlinImageProvider;
 import org.jetbrains.kotlin.descriptors.ClassDescriptor;
 import org.jetbrains.kotlin.descriptors.ClassifierDescriptor;
@@ -34,8 +37,10 @@ import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor;
 import org.jetbrains.kotlin.descriptors.PackageViewDescriptor;
 import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor;
 import org.jetbrains.kotlin.descriptors.VariableDescriptor;
+import org.jetbrains.kotlin.psi.psiUtil.KtPsiUtilKt;
 import org.jetbrains.kotlin.renderer.DescriptorRenderer;
 import org.jetbrains.kotlin.types.KotlinType;
+import org.jetbrains.kotlin.types.TypeConstructor;
 import org.netbeans.api.editor.completion.Completion;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.editor.completion.CompletionTask;
@@ -50,69 +55,51 @@ public class KotlinCompletionItem implements CompletionItem {
 
     private final String text, proposal;
     private final String type, name;
-    private final ImageIcon FIELD_ICON; 
-    private static final Color FIELD_COLOR = Color.decode("0x0000B2"); 
-    private final int caretOffset, idenStartOffset; 
+    private final ImageIcon FIELD_ICON;
+    private static final Color FIELD_COLOR = Color.decode("0x0000B2");
+    private final int caretOffset, idenStartOffset;
     private final DeclarationDescriptor descriptor;
-    
-    public KotlinCompletionItem(int idenStartOffset, int caretOffset, DeclarationDescriptor descriptor) { 
-        this.text = descriptor.getName().getIdentifier(); 
+
+    public KotlinCompletionItem(int idenStartOffset, int caretOffset, DeclarationDescriptor descriptor) {
+        this.text = descriptor.getName().getIdentifier();
         this.idenStartOffset = idenStartOffset;
-        this.caretOffset = caretOffset; 
+        this.caretOffset = caretOffset;
         this.proposal = DescriptorRenderer.ONLY_NAMES_WITH_SHORT_TYPES.render(descriptor);
         this.FIELD_ICON = KotlinImageProvider.INSTANCE.getImage(descriptor);
         this.descriptor = descriptor;
         String[] splitted = proposal.split(":");
         name = splitted[0];
-        if (splitted.length > 1){
+        if (splitted.length > 1) {
             type = splitted[1];
         } else {
             type = "";
         }
     }
-    
+
     private String getValueParameter(ValueParameterDescriptor desc) {
         KotlinType kotlinType = desc.getType();
         ClassifierDescriptor classifierDescriptor = kotlinType.getConstructor().getDeclarationDescriptor();
         if (classifierDescriptor == null) {
             return desc.getName().asString();
         }
-        
+
         String typeName = classifierDescriptor.getName().asString();
-        
-        if (typeName.equals("Int")  || typeName.equals("Long") || typeName.equals("Short")) {
-            return "0";
-        } else if (typeName.equals("Double") || typeName.equals("Float")) {
-            return "0.0";
-        } else if (typeName.equals("String")) {
-            return "\"" + desc.getName().asString() + "\"";
-        } else if (typeName.equals("Char")) {
-            return "\"\"";
+        String value = KotlinCompletionUtils.INSTANCE.getValueForType(typeName);
+        if (value == null) {
+            value = desc.getName().asString();
         }
-        else if (typeName.equals("Boolean")) {
-            return "true";
-        } else return desc.getName().asString();
+
+        return value;
     }
-    
+
     @Override
     public void defaultAction(JTextComponent jtc) {
         try {
             StyledDocument doc = (StyledDocument) jtc.getDocument();
             doc.remove(idenStartOffset, caretOffset - idenStartOffset);
-            if (descriptor instanceof FunctionDescriptor){
-                List<ValueParameterDescriptor> params = ((FunctionDescriptor) descriptor).getValueParameters();
-                StringBuilder functionParams = new StringBuilder();
-                functionParams.append("(");
-                for (ValueParameterDescriptor desc : params) {
-                    functionParams.append(getValueParameter(desc));
-                    functionParams.append(",");
-                }
-                if (params.size() > 0) {
-                    functionParams.deleteCharAt(functionParams.length()-1);
-                }
-                functionParams.append(")");
-                doc.insertString(idenStartOffset, text + functionParams.toString(), null);
-            } else{
+            if (descriptor instanceof FunctionDescriptor) {
+                functionAction(doc);
+            } else {
                 doc.insertString(idenStartOffset, text, null);
             }
             Completion.get().hideAll();
@@ -133,7 +120,7 @@ public class KotlinCompletionItem implements CompletionItem {
     @Override
     public void render(Graphics g, Font defaultFont, Color defaultColor,
             Color backgroundColor, int width, int height, boolean selected) {
-        CompletionUtilities.renderHtml(FIELD_ICON, name, type, g, defaultFont, 
+        CompletionUtilities.renderHtml(FIELD_ICON, name, type, g, defaultFont,
                 (selected ? Color.white : FIELD_COLOR), width, height, selected);
     }
 
@@ -154,14 +141,14 @@ public class KotlinCompletionItem implements CompletionItem {
 
     @Override
     public int getSortPriority() {
-        if (descriptor instanceof VariableDescriptor){
+        if (descriptor instanceof VariableDescriptor) {
             return 20;
-        } else if (descriptor instanceof FunctionDescriptor){
+        } else if (descriptor instanceof FunctionDescriptor) {
             return 30;
-        } else if (descriptor instanceof ClassDescriptor){
+        } else if (descriptor instanceof ClassDescriptor) {
             return 40;
-        } else if (descriptor instanceof PackageFragmentDescriptor 
-                || descriptor instanceof PackageViewDescriptor){
+        } else if (descriptor instanceof PackageFragmentDescriptor
+                || descriptor instanceof PackageViewDescriptor) {
             return 10;
         } else {
             return 150;
@@ -177,5 +164,29 @@ public class KotlinCompletionItem implements CompletionItem {
     public CharSequence getInsertPrefix() {
         return proposal;
     }
-    
+
+    private void functionAction(StyledDocument doc) throws BadLocationException {
+        FunctionDescriptor functionDescriptor = (FunctionDescriptor) descriptor;
+        List<ValueParameterDescriptor> params = functionDescriptor.getValueParameters();
+        
+        if (params.size() == 1) {
+            if (name.contains("->")) {
+                doc.insertString(idenStartOffset, text + "{  }", null);
+                return;
+            }
+        }
+        
+        StringBuilder functionParams = new StringBuilder();
+        functionParams.append("(");
+        for (ValueParameterDescriptor desc : params) {
+            functionParams.append(getValueParameter(desc));
+            functionParams.append(",");
+        }
+        if (params.size() > 0) {
+            functionParams.deleteCharAt(functionParams.length() - 1);
+        }
+        functionParams.append(")");
+        doc.insertString(idenStartOffset, text + functionParams.toString(), null);
+    }
+
 }

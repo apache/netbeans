@@ -23,8 +23,10 @@ import com.intellij.psi.util.PsiTreeUtil;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
@@ -74,7 +76,11 @@ public class KotlinCompletionUtils {
     public static final KotlinCompletionUtils INSTANCE = 
             new KotlinCompletionUtils();
     
-    private KotlinCompletionUtils(){}
+    private KotlinCompletionUtils(){
+        createTypesToValuesMap();
+    }
+    
+    private final Map<String, String> typeToValues = new HashMap<String, String>();
     
     public boolean applicableNameFor(String prefix, Name name){
         if (!name.isSpecial()){
@@ -292,6 +298,21 @@ public class KotlinCompletionUtils {
         }
         
         return identStartOffset;
+    }
+    
+    private void createTypesToValuesMap() {
+        typeToValues.put("Int", "0");
+        typeToValues.put("Long", "0");
+        typeToValues.put("Short", "0");
+        typeToValues.put("Double", "0.0");
+        typeToValues.put("Float", "0.0");
+        typeToValues.put("String", "\"\"");
+        typeToValues.put("Char", "\"\"");
+        typeToValues.put("Boolean", "true");
+    }
+    
+    public String getValueForType(String type) {
+        return typeToValues.get(type);
     }
     
 }

@@ -140,7 +140,12 @@ public class NetBeansJavaProjectElementUtils {
                 continue;
             }
             
-            FileObject file = SourceUtils.getFile(ElementHandle.create(element), CLASSPATH_INFO.get(project));
+            ClasspathInfo cpInfo = CLASSPATH_INFO.get(project);
+            if (cpInfo == null) {
+                return null;
+            }
+            
+            FileObject file = SourceUtils.getFile(ElementHandle.create(element), cpInfo);
 
             if (file != null){
                 return project;

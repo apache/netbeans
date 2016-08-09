@@ -50,12 +50,6 @@ public class KotlinTypedTextInterceptor implements TypedTextInterceptor{
                 checkNextChar(context, '}');
                 break;
             }
-            case '<':
-                context.setText("<>", 1);
-                break;
-            case '>':
-                checkNextChar(context, '>');
-                break;
             case '[':
                 context.setText("[]", 1);
                 break;

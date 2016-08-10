@@ -26,8 +26,10 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.impl.DocumentImpl;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings.IndentOptions;
+import com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.kotlin.formatting.KotlinFormatter.KotlinSpacingBuilderUtilImpl;
 import org.jetbrains.kotlin.idea.formatter.KotlinSpacingRulesKt;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
@@ -48,7 +50,7 @@ public class KotlinFormatterUtils {
         return settings;
     }
     
-    private static KtPsiFactory createPsiFactory(Project project) {
+    public static KtPsiFactory createPsiFactory(Project project) {
         KotlinEnvironment environment = KotlinEnvironment.getEnvironment(project);
         return new KtPsiFactory(environment.getProject());
     }
@@ -116,6 +118,24 @@ public class KotlinFormatterUtils {
     
     public static KtFile createKtFile(String source, KtPsiFactory psiFactory, String fileName) {
         return psiFactory.createFile(fileName, StringUtil.convertLineSeparators(source));
+    }
+    
+    private static TextRange getSignificantRange(KtFile file, int offset) {
+        PsiElement elementAtOffset = file.findElementAt(offset);
+        if (elementAtOffset == null) {
+            int significantRangeStart = CharArrayUtil.shiftBackward(file.getText(), offset - 1, "\r\t ");
+            return new TextRange(Math.max(significantRangeStart, 0), offset);
+        }
+        
+        return elementAtOffset.getTextRange();
+    }
+    
+    public static void adjustIndent(KtFile containingFile, Block rootBlock,
+            CodeStyleSettings settings, int offset, String document) {
+        NetBeansDocumentFormattingModel model = 
+                buildModel(containingFile, rootBlock, settings, document, true);
+        new FormatterImpl().adjustLineIndent(model, settings, settings.getIndentOptions(), 
+                offset, getSignificantRange(containingFile, offset));
     }
     
     public static class NetBeansDocumentRange {

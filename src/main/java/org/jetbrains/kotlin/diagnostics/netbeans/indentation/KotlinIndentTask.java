@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.jetbrains.kotlin.formatting.KotlinIndentStrategy;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.lexer.KtTokens;
 import org.netbeans.modules.editor.indent.spi.Context;
@@ -51,7 +52,12 @@ public class KotlinIndentTask implements IndentTask {
     @Override
     public void reindent() {
         try {
-            addIndentToDocument();
+            KotlinIndentStrategy strategy = new KotlinIndentStrategy(context);
+            PsiFile parsedFile = ProjectUtils.getKtFile(context.document().
+                    getText(0, context.document().getLength()), file);
+            String line = strategy.getIndent(parsedFile.getText(), context.caretOffset());
+            doc.insertString(context.caretOffset(), line, null);
+//            addIndentToDocument();
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
         }

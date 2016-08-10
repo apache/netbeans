@@ -21,6 +21,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.jetbrains.kotlin.diagnostics.netbeans.indentation.AlignmentStrategy;
 import org.jetbrains.kotlin.formatting.KotlinFormatterUtils;
+import org.jetbrains.kotlin.formatting.NetBeansDocumentFormattingModel;
+import org.jetbrains.kotlin.formatting.NetBeansFormattingModel;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.editor.indent.spi.Context;
@@ -48,9 +50,9 @@ public class KotlinReformatTask implements ReformatTask {
                 return;
             }
             Project project = ProjectUtils.getKotlinProjectForFileObject(file);
-            String formattedCode = KotlinFormatterUtils.formatCode(parsedFile.getText(), parsedFile.getName(), project, "\n");
-            
-//            String formattedCode = AlignmentStrategy.alignCode(parsedFile.getNode(), "\n");
+            String code = parsedFile.getText();
+            KotlinFormatterUtils.formatCode(code, parsedFile.getName(), project, "\n");
+            String formattedCode = NetBeansDocumentFormattingModel.getNewText();
             document.remove(0, document.getLength());
             document.insertString(0, formattedCode, null);
             

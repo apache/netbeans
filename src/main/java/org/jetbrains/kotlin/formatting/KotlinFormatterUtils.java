@@ -88,9 +88,6 @@ public class KotlinFormatterUtils {
                 buildModel(containingFile, rootBlock, settings, source, false);
         FormatTextRanges ranges = new FormatTextRanges(range, true);
         new FormatterImpl().format(formattingModel, settings, settings.getIndentOptions(), ranges, false);
-//        new FormatterImpl().adjustLineIndent(
-//                formattingModel, settings, settings.getIndentOptions(), offset, getSignificantRange(ktFile, offset));
-        //TODO
     }
     
     private static void initializeSettings(IndentOptions options) {

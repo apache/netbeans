@@ -31,10 +31,10 @@ import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.impl.source.SourceTreeToPsiMap;
 
 import com.intellij.formatting.FormattingModelEx;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.utils.LineEndUtil;
 
 /**
  *
@@ -42,12 +42,14 @@ import org.jetbrains.kotlin.utils.LineEndUtil;
  */
 public class NetBeansDocumentFormattingModel implements FormattingModelEx {
 
+    private static String newText;
     private final Project myProject;
     private final ASTNode myASTNode;
     private final NetBeansFormattingModel myDocumentModel;
     private final Block myRootBlock;
     protected boolean myCanModifyAllWhiteSpaces = false;
     private final String source;
+    private final List<ReplaceEdit> edits = new ArrayList<ReplaceEdit>();
     private final CodeStyleSettings settings;
 
     public NetBeansDocumentFormattingModel(PsiFile file, Block rootBlock,
@@ -189,15 +191,60 @@ public class NetBeansDocumentFormattingModel implements FormattingModelEx {
         String convertedWhiteSpace = StringUtil.convertLineSeparators(whiteSpace, "\n");
         int startOffset = convertOffset(range.getStartOffset());
         int endOffset = convertOffset(range.getEndOffset());
-        //TODO
+        ReplaceEdit edit = new ReplaceEdit(startOffset, endOffset - startOffset, convertedWhiteSpace);
+        edits.add(edit);
     }
 
     private int convertOffset(int offset) {
-        return LineEndUtil.convertLfToDocumentOffset(myASTNode.getPsi().getContainingFile().getText(), offset);
+        return offset;
     }
 
     @Override
     public void commitChanges() {
-        //TODO
+        StringBuilder newTextBuilder = new StringBuilder();
+        int offset = 0;
+        if (edits.isEmpty()) {
+            newText = source;
+            return;
+        }
+        
+        for (ReplaceEdit edit : edits) {
+            newTextBuilder.append(source.substring(offset, edit.startOffset));
+            newTextBuilder.append(edit.replaceStr);
+            offset = edit.startOffset+edit.length;
+        }
+        
+        newTextBuilder.append(source.substring(offset));
+        
+        newText = newTextBuilder.toString();
     }
+
+    public static String getNewText() {
+        return newText;
+    }
+
+    private static class ReplaceEdit {
+
+        public int getStartOffset() {
+            return startOffset;
+        }
+
+        public int getLength() {
+            return length;
+        }
+
+        public String getReplaceStr() {
+            return replaceStr;
+        }
+        private final int startOffset;
+        private final int length;
+        private final String replaceStr;
+
+        public ReplaceEdit(int startOffset, int endOffset, String replaceStr) {
+            this.startOffset = startOffset;
+            this.length = endOffset;
+            this.replaceStr = replaceStr;
+        }
+    }
+
 }

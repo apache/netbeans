@@ -50,14 +50,6 @@
         <groupId>org.apache.maven.plugins</groupId>  
         <artifactId>maven-install-plugin</artifactId>  
         <version>2.5.2</version>  
-        <configuration> 
-          <file>${project.basedir}/lib/kotlin-ide-common.jar</file>  
-          <groupId>org.jetbrains.kotlin</groupId>  
-          <artifactId>kotlin-ide-common</artifactId>  
-          <version>1.0</version>  
-          <packaging>jar</packaging>  
-          <generatePom>true</generatePom> 
-        </configuration>  
         <executions> 
           <execution> 
             <id>inst1</id>  
@@ -65,7 +57,75 @@
             <goals> 
               <goal>install-file</goal> 
             </goals> 
+            <configuration> 
+                <file>${project.basedir}/lib/kotlin-ide-common.jar</file>  
+                <groupId>org.jetbrains.kotlin</groupId>  
+                <artifactId>kotlin-ide-common</artifactId>  
+                <version>1.0</version>  
+                <packaging>jar</packaging>  
+                <generatePom>true</generatePom> 
+            </configuration>  
           </execution> 
+          <execution>
+              <id>inst2</id>
+              <phase>validate</phase>
+              <goals>
+                  <goal>install-file</goal>
+              </goals>
+              <configuration>
+                <file>${project.basedir}/lib/openapi-formatter.jar</file>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>openapi-formatter</artifactId>
+                <version>1.0</version>
+                <packaging>jar</packaging>
+                <generatePom>true</generatePom>
+              </configuration>
+          </execution>
+          <execution>
+              <id>inst3</id>
+              <phase>validate</phase>
+              <goals>
+                  <goal>install-file</goal>
+              </goals>
+              <configuration>
+                <file>${project.basedir}/lib/kotlin-formatter.jar</file>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-formatter</artifactId>
+                <version>1.0</version>
+                <packaging>jar</packaging>
+                <generatePom>true</generatePom>
+              </configuration>
+          </execution>
+          <execution>
+              <id>inst4</id>
+              <phase>validate</phase>
+              <goals>
+                  <goal>install-file</goal>
+              </goals>
+              <configuration>
+                <file>${project.basedir}/lib/idea-formatter.jar</file>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>idea-formatter</artifactId>
+                <version>1.0</version>
+                <packaging>jar</packaging>
+                <generatePom>true</generatePom>
+              </configuration>
+          </execution>
+          <execution>
+              <id>inst5</id>
+              <phase>validate</phase>
+              <goals>
+                  <goal>install-file</goal>
+              </goals>
+              <configuration>
+                <file>${project.basedir}/lib/intellij-core.jar</file>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>intellij-core</artifactId>
+                <version>1.0</version>
+                <packaging>jar</packaging>
+                <generatePom>true</generatePom>
+              </configuration>
+          </execution>
         </executions> 
       </plugin>  
       <plugin> 
@@ -177,6 +237,36 @@
     </repository> 
   </repositories>  
   <dependencies> 
+    <dependency> 
+      <groupId>org.jetbrains.kotlin</groupId>  
+      <artifactId>kotlin-ide-common</artifactId>  
+      <version>1.0</version>  
+      <type>jar</type> 
+    </dependency>
+    <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>openapi-formatter</artifactId>
+        <version>1.0</version>
+        <type>jar</type>
+    </dependency>
+    <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-formatter</artifactId>
+        <version>1.0</version>
+        <type>jar</type>
+    </dependency>
+    <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>idea-formatter</artifactId>
+        <version>1.0</version>
+        <type>jar</type>
+    </dependency>
+    <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>intellij-core</artifactId>
+        <version>1.0</version>
+        <type>jar</type>
+    </dependency>
     <dependency> 
       <groupId>org.netbeans.modules</groupId>  
       <artifactId>org-netbeans-modules-maven</artifactId>  
@@ -381,13 +471,7 @@
       <artifactId>org-openide-modules</artifactId>  
       <version>${netbeans.version}</version>  
       <type>jar</type> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.jetbrains.kotlin</groupId>  
-      <artifactId>kotlin-ide-common</artifactId>  
-      <version>1.0</version>  
-      <type>jar</type> 
-    </dependency>  
+    </dependency>    
     <dependency> 
       <groupId>org.netbeans.api</groupId>  
       <artifactId>org-netbeans-modules-java-project-ui</artifactId>  

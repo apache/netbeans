@@ -55,6 +55,8 @@ import com.intellij.openapi.vfs.impl.ZipHandler;
 import com.intellij.psi.PsiElementFinder;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.augment.PsiAugmentProvider;
+import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
+import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
 import com.intellij.psi.compiled.ClassFileDecompilers;
 import com.intellij.psi.impl.PsiTreeChangePreprocessor;
 import com.intellij.psi.impl.compiled.ClsCustomNavigationPolicy;
@@ -70,6 +72,8 @@ import org.jetbrains.kotlin.caches.resolve.KotlinCacheService;
 import org.jetbrains.kotlin.cli.common.CliModuleVisibilityManagerImpl;
 import org.jetbrains.kotlin.codegen.extensions.ClassBuilderInterceptorExtension;
 import org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages;
+import com.intellij.formatting.KotlinLanguageCodeStyleSettingsProvider;
+import com.intellij.formatting.KotlinSettingsProvider;
 import org.jetbrains.kotlin.idea.KotlinFileType;
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory;
 import org.jetbrains.kotlin.load.kotlin.ModuleVisibilityManager;
@@ -163,6 +167,10 @@ public class KotlinEnvironment {
                 new ExtensionPointName<ClassBuilderInterceptorExtension>(("org.jetbrains.kotlin.classBuilderFactoryInterceptorExtension")), ClassBuilderInterceptorExtension.class);
         CoreApplicationEnvironment.registerApplicationExtensionPoint(
                 new ExtensionPointName<PackageFragmentProviderExtension>(("org.jetbrains.kotlin.packageFragmentProviderExtension")), PackageFragmentProviderExtension.class);
+        CoreApplicationEnvironment.registerApplicationExtensionPoint(CodeStyleSettingsProvider.EXTENSION_POINT_NAME, KotlinSettingsProvider.class);
+        CoreApplicationEnvironment.registerApplicationExtensionPoint(LanguageCodeStyleSettingsProvider.EP_NAME, KotlinLanguageCodeStyleSettingsProvider.class);
+        Extensions.getRootArea().getExtensionPoint(CodeStyleSettingsProvider.EXTENSION_POINT_NAME).registerExtension(new KotlinSettingsProvider());
+        Extensions.getRootArea().getExtensionPoint(LanguageCodeStyleSettingsProvider.EP_NAME).registerExtension(new KotlinLanguageCodeStyleSettingsProvider());
     }
     
     private static void getExtensionsFromKotlin2JvmXml() {

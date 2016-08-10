@@ -20,7 +20,9 @@ import com.intellij.psi.PsiFile;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.jetbrains.kotlin.diagnostics.netbeans.indentation.AlignmentStrategy;
+import org.jetbrains.kotlin.formatting.KotlinFormatterUtils;
 import org.jetbrains.kotlin.utils.ProjectUtils;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.ReformatTask;
@@ -45,8 +47,10 @@ public class KotlinReformatTask implements ReformatTask {
             if (parsedFile == null) {
                 return;
             }
+            Project project = ProjectUtils.getKotlinProjectForFileObject(file);
+            String formattedCode = KotlinFormatterUtils.formatCode(parsedFile.getText(), parsedFile.getName(), project, "\n");
             
-            String formattedCode = AlignmentStrategy.alignCode(parsedFile.getNode(), "\n");
+//            String formattedCode = AlignmentStrategy.alignCode(parsedFile.getNode(), "\n");
             document.remove(0, document.getLength());
             document.insertString(0, formattedCode, null);
             

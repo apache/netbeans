@@ -14,23 +14,43 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.diagnostics.netbeans.indentation;
+package org.jetbrains.kotlin.indentation;
 
-import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import org.jetbrains.kotlin.formatting.KotlinIndentStrategy;
 import org.netbeans.modules.editor.indent.spi.Context;
+import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.IndentTask;
+import org.openide.util.Exceptions;
 
 /**
  *
  * @author Александр
  */
+public class KotlinIndentTask implements IndentTask {
 
-@MimeRegistration(mimeType="text/x-kt",service=IndentTask.Factory.class)
-public class KotlinIndentTaskFactory implements IndentTask.Factory {
+    private final Context context;
+    private final Document doc;
+
+    KotlinIndentTask(Context context) {
+        this.context = context;
+        this.doc = context.document();
+    }
 
     @Override
-    public IndentTask createTask(Context context) {
-        return new KotlinIndentTask(context);
+    public void reindent() {
+        try {
+            KotlinIndentStrategy strategy = new KotlinIndentStrategy(context);
+            strategy.addIndent();
+        } catch (BadLocationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
+    @Override
+    public ExtraLock indentLock() {
+        return null;
     }
 
 }

@@ -14,18 +14,23 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.diagnostics.netbeans.reformatter;
+package org.jetbrains.kotlin.indentation;
 
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.editor.indent.spi.Context;
-import org.netbeans.modules.editor.indent.spi.ReformatTask;
+import org.netbeans.modules.editor.indent.spi.IndentTask;
 
-@MimeRegistration(mimeType="text/x-kt",service=ReformatTask.Factory.class)
-public class KotlinReformatTaskFactory implements ReformatTask.Factory {
+/**
+ *
+ * @author Александр
+ */
+
+@MimeRegistration(mimeType="text/x-kt",service=IndentTask.Factory.class)
+public class KotlinIndentTaskFactory implements IndentTask.Factory {
 
     @Override
-    public ReformatTask createTask(Context context) {
-        return new KotlinReformatTask(context);
+    public IndentTask createTask(Context context) {
+        return new KotlinIndentTask(context);
     }
-    
+
 }

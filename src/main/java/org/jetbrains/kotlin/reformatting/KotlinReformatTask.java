@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.diagnostics.netbeans.reformatter;
+package org.jetbrains.kotlin.reformatting;
 
 import com.intellij.psi.PsiFile;
 import javax.swing.text.BadLocationException;

@@ -19,11 +19,9 @@ package org.jetbrains.kotlin.diagnostics.netbeans.indentation;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.jetbrains.kotlin.formatting.KotlinIndentStrategy;
-import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.IndentTask;
-import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
 /**
@@ -32,17 +30,12 @@ import org.openide.util.Exceptions;
  */
 public class KotlinIndentTask implements IndentTask {
 
-    private final char OPENING_BRACE_CHAR = '{';
-    private final char CLOSING_BRACE_CHAR = '}';
-
     private final Context context;
     private final Document doc;
-    private final FileObject file;
 
     KotlinIndentTask(Context context) {
         this.context = context;
         this.doc = context.document();
-        this.file = ProjectUtils.getFileObjectForDocument(doc);
     }
 
     @Override

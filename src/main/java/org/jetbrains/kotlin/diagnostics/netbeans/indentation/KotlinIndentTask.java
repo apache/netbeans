@@ -53,10 +53,11 @@ public class KotlinIndentTask implements IndentTask {
     public void reindent() {
         try {
             KotlinIndentStrategy strategy = new KotlinIndentStrategy(context);
-            PsiFile parsedFile = ProjectUtils.getKtFile(context.document().
-                    getText(0, context.document().getLength()), file);
-            String line = strategy.getIndent(parsedFile.getText(), context.caretOffset());
-            doc.insertString(context.caretOffset(), line, null);
+//            PsiFile parsedFile = ProjectUtils.getKtFile(context.document().
+//                    getText(0, context.document().getLength()), file);
+            strategy.addIndent();
+//            String line = strategy.getIndent(parsedFile.getText(), context.caretOffset());
+//            doc.insertString(context.caretOffset(), line, null);
 //            addIndentToDocument();
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);

@@ -22,7 +22,6 @@ import com.intellij.formatting.FormatterImpl;
 import com.intellij.formatting.Indent;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.jetbrains.kotlin.idea.formatter.KotlinSpacingRulesKt;
 import org.jetbrains.kotlin.psi.KtFile;
@@ -30,8 +29,10 @@ import org.jetbrains.kotlin.psi.KtPsiFactory;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.editor.indent.spi.Context;
+import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.text.NbDocument;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -56,39 +57,53 @@ public class KotlinIndentStrategy {
         offset = context.caretOffset();
     }
 
-    private String autoEditAfterNewLine() throws BadLocationException {
-        StringBuilder newLine = new StringBuilder();
-        int p = offset == doc.getLength() ? offset - 1 : offset;
-        int lineNumber = NbDocument.findLineNumber(doc, p);
-        int length = 0;
-        
-        int start = NbDocument.findLineOffset(doc, lineNumber);
-        String text = doc.getText(0, doc.getLength() - 1);
-        int endOfLine = NbDocument.findLineOffset(doc, lineNumber + 1) - 1;
-        
-        boolean afterOpenBrace = isAfterOpenBrace(text, offset - 1, start);
-        boolean beforeCloseBrace = isBeforeCloseBrace(text, offset, endOfLine);
-        
-        int oldOffset = context.caretOffset();
-        int newOffset = findEndOfWhiteSpace(text, oldOffset - 1) + 1;
-        if (newOffset > 0 && !IndenterUtil.isWhiteSpaceOrNewLine(text.charAt(newOffset - 1))) {
-            offset = newOffset;
-            length = oldOffset - newOffset;
+    public void addIndent() throws BadLocationException {
+        if (offset == doc.getLength()) {
+            offset--;
         }
-        
-        
-        return null;
+        String text = doc.getText(0, doc.getLength());
+        String commandText = String.valueOf((text).charAt(offset));
+        if (isNewLine(commandText)) { // before new line
+            autoEdit(text);
+        } else if (CLOSING_BRACE_STRING.equals(commandText)) { // before closing brace
+            System.out.println();
+        }
     }
     
-    public String getIndent(String text, int offset) throws BadLocationException {
+    private void autoEdit(String text) throws BadLocationException {
+        offset--;
+        String indent = getIndent(text, context.caretOffset());
+        doc.insertString(context.caretOffset(), indent, null);
+    }
+    
+//    private void autoEditAfterNewLine(String text) throws BadLocationException {
+//        offset--;
+//        
+//        int lineNumber = NbDocument.findLineNumber(doc, offset);
+//        int start = NbDocument.findLineOffset(doc, lineNumber );
+//        int end = NbDocument.findLineOffset(doc, lineNumber + 1);
+
+//        boolean afterOpenBrace = isAfterOpenBrace(text, offset - 1, start);
+//        boolean beforeCloseBrace = isBeforeCloseBrace(text, offset, end);
+//        int oldOffset = offset;
+//        int newOffset = findEndOfWhiteSpace(text, offset - 1) + 1;
+//        int length = 1;
+//        if (newOffset > 0 && !IndenterUtil.isWhiteSpaceOrNewLine(text.charAt(newOffset - 1))) {
+//            offset = newOffset;
+//            length = oldOffset - newOffset;
+//        }
+//        
+//        String indent = getIndent(text, context.caretOffset());
+//        doc.insertString(context.caretOffset(), indent, null);
+//    }
+    
+    private String getIndent(String text, int offset) throws BadLocationException {
         Project project = ProjectUtils.getKotlinProjectForFileObject(file);
         if (project == null) {
             return "";
         }
         KtPsiFactory psiFactory = KotlinFormatterUtils.createPsiFactory(project);
         KtFile ktFile = KotlinFormatterUtils.createKtFile(text, psiFactory, file.getName());
-        char charAtOffset = text.charAt(offset);
-        
         
         CodeStyleSettings settings = KotlinFormatterUtils.getSettings();
         KotlinBlock rootBlock = new KotlinBlock(ktFile.getNode(),
@@ -98,19 +113,13 @@ public class KotlinIndentStrategy {
                 settings,
                 KotlinSpacingRulesKt.createSpacingBuilder(
                     settings, KotlinFormatter.KotlinSpacingBuilderUtilImpl.INSTANCE));
-        
         KotlinFormatterUtils.adjustIndent(ktFile, rootBlock, settings, offset, text);
+        String newText = NetBeansDocumentFormattingModel.getNewText().substring(offset);
         
-//        int lineNumber = NbDocument.findLineNumber(doc, offset);
-//        int line = NbDocument.findLineOffset(doc, lineNumber);
-//        int endOfLine = NbDocument.findLineOffset(doc, lineNumber + 1) - 1;
-//        
-//        int endOfWhitespace = findEndOfWhiteSpaceAfter(text, line, endOfLine);
+        int endOfWhiteSpace = findEndOfWhiteSpaceAfter(newText, 0, newText.length());
+        String toReturn = newText.substring(0, endOfWhiteSpace);
         
-        String substring = NetBeansDocumentFormattingModel.getNewText().substring(offset + 1);
-        int last = substring.indexOf(charAtOffset);
-
-        return NetBeansDocumentFormattingModel.getNewText().substring(offset + 1).substring(0, last);
+        return toReturn;
     }
     
     private static int findEndOfWhiteSpaceAfter(String document, int offset, int end) throws BadLocationException {
@@ -162,6 +171,10 @@ public class KotlinIndentStrategy {
         return containsNewLine(bufBefore.toString());
     }
 
+    private static boolean startsWithNewLine(String text) {
+        return text.startsWith("\n");
+    }
+    
     private static boolean containsNewLine(String text) {
         return text.contains("\n");
     }

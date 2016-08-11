@@ -76,4 +76,8 @@ public class IndentationTest extends NbTestCase {
         doTest("afterOneOpenBrace.kt");
     }
     
+    @Test
+    public void testBeforeFunctionStart() {
+        doTest("beforeFunctionStart.kt");
+    }
 }

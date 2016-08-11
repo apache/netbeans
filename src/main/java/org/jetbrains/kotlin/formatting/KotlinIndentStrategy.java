@@ -56,8 +56,8 @@ public class KotlinIndentStrategy {
 
     public void addIndent() throws BadLocationException {
         if (offset == doc.getLength()) {
-//            offset--;
-            return;
+            offset--;
+//            return;
         }
         String text = doc.getText(0, doc.getLength());
         String commandText = String.valueOf((text).charAt(offset));
@@ -91,9 +91,12 @@ public class KotlinIndentStrategy {
                 KotlinSpacingRulesKt.createSpacingBuilder(
                     settings, KotlinFormatter.KotlinSpacingBuilderUtilImpl.INSTANCE));
         int offsetForAdjust = offset;
-        if (isNewLine(String.valueOf(text.charAt(offset)))) {
-            offsetForAdjust = offset - 1;
+        if (offsetForAdjust == doc.getLength()) {
+            offsetForAdjust--;
         }
+//        if (isNewLine(String.valueOf(text.charAt(offsetForAdjust)))) {
+//            offsetForAdjust = offset - 1;
+//        }
         KotlinFormatterUtils.adjustIndent(ktFile, rootBlock, settings, offsetForAdjust, text);
         String newText = NetBeansDocumentFormattingModel.getNewText();
         if (newText == null) {

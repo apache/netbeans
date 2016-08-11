@@ -92,4 +92,29 @@ public class FormattingTest extends NbTestCase {
     public void testIndentInDoWhile() {
         doTest("indentInDoWhile.kt");
     }
+    
+    @Test
+    public void testIndentInIfExpressionBlock() {
+        doTest("indentInIfExpressionBlock.kt");
+    }
+    
+    @Test
+    public void testIndentInPropertyAccessor() {
+        doTest("indentInPropertyAccessor.kt");
+    }
+    
+    @Test
+    public void testIndentInWhenEntry() {
+        doTest("indentInWhenEntry.kt");
+    }
+    
+    @Test
+    public void testInitIndent() {
+        doTest("initIndent.kt");
+    }
+    
+    @Test
+    public void testLambdaInBlock() {
+        doTest("lambdaInBlock.kt");
+    }
 }

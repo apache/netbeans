@@ -30,13 +30,8 @@ import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.indent.spi.Context;
-import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
-import org.openide.loaders.DataObject;
-import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.text.Line;
-import org.openide.text.NbDocument;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -49,20 +44,24 @@ public class KotlinIndentStrategy {
     private static final String CLOSING_BRACE_STRING = Character.toString(CLOSING_BRACE_CHAR);
     private static final String OPENING_BRACE_STRING = Character.toString(OPENING_BRACE_CHAR);
 
-    private final Context context;
     private final StyledDocument doc;
     private final FileObject file;
+    private final int caretOffset;
     private int offset;
-
-    public KotlinIndentStrategy(Context context) {
+    
+    public KotlinIndentStrategy(StyledDocument doc, int offset) {
         new FormatterImpl();
-        this.context = context;
-        this.doc = (StyledDocument) context.document();
+        this.doc = doc;
         this.file = ProjectUtils.getFileObjectForDocument(doc);
-        offset = context.caretOffset();
+        this.offset = offset;
+        caretOffset = offset;
     }
 
-    public void addIndent() throws BadLocationException {
+    public KotlinIndentStrategy(Context context) {
+        this((StyledDocument) context.document(), context.caretOffset());
+    }
+
+    public int addIndent() throws BadLocationException {
         if (offset == doc.getLength()) {
             offset--;
         }
@@ -71,24 +70,27 @@ public class KotlinIndentStrategy {
         String openingChar = String.valueOf((text).charAt(offset - 2));
         if (CLOSING_BRACE_STRING.equals(commandText)
                 && OPENING_BRACE_STRING.equals(openingChar)) {
-            autoEditBeforeCloseBrace(text);
+            return autoEditBeforeCloseBrace(text);
         } else {
-            autoEdit(text);
+            return autoEdit(text);
         }
     }
 
-    private void autoEdit(String text) throws BadLocationException {
-        offset--;
-        String indent = getIndent(text, context.caretOffset());
-        doc.insertString(context.caretOffset(), indent, null);
+    private int autoEdit(String text) throws BadLocationException {
+        String indent = getIndent(text, caretOffset);
+        doc.insertString(caretOffset, indent, null);
+        
+        return caretOffset + indent.length();
     }
 
-    private void autoEditBeforeCloseBrace(String text) throws BadLocationException {
-        String indent = getIndent(text, context.caretOffset());
+    private int autoEditBeforeCloseBrace(String text) throws BadLocationException {
+        String indent = getIndent(text, caretOffset);
         StringBuilder builder = new StringBuilder();
         builder.append(indent).append("    ").append('\n').append(indent);
-        doc.insertString(context.caretOffset(), builder.toString(), null);
+        doc.insertString(caretOffset, builder.toString(), null);
         setDocumentOffset(indent.length() + 4);
+        
+        return indent.length() + 4;
     }
 
     private String getIndent(String text, int offset) throws BadLocationException {
@@ -111,9 +113,7 @@ public class KotlinIndentStrategy {
         if (offsetForAdjust == doc.getLength()) {
             offsetForAdjust--;
         }
-//        if (isNewLine(String.valueOf(text.charAt(offsetForAdjust)))) {
-//            offsetForAdjust = offset - 1;
-//        }
+        
         KotlinFormatterUtils.adjustIndent(ktFile, rootBlock, settings, offsetForAdjust, text);
         String newText = NetBeansDocumentFormattingModel.getNewText();
         if (newText == null) {

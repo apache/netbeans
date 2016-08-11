@@ -117,4 +117,50 @@ public class FormattingTest extends NbTestCase {
     public void testLambdaInBlock() {
         doTest("lambdaInBlock.kt");
     }
+    
+    @Test
+    public void testNewLineAfterImportsAndPackage() {
+        doTest("newLineAfterImportsAndPackage.kt");
+    }
+    
+    @Test
+    public void testObjectsAndLocalFunctionsFormat() {
+        doTest("objectsAndLocalFunctionsFormatTest.kt");
+    }
+    
+    @Test
+    public void testPackageFunctions() {
+        doTest("packageFunctionsFormatTest.kt");
+    }
+    
+    @Test
+    public void testClassInBlockComment() {
+        doTest("withBlockComments.kt");
+    }
+    
+    @Test
+    public void testJavaDoc() {
+        doTest("withJavaDoc.kt");
+    }
+    
+    @Test
+    public void testLineComments() {
+        doTest("withLineComments.kt");
+    }
+    
+    @Test
+    public void testMutableVariable() {
+        doTest("withMutableVariable.kt");
+    }
+    
+    @Test
+    public void testWhitespaceBeforeBrace() {
+        doTest("withWhitespaceBeforeBrace.kt");
+    }
+    
+    @Test
+    public void testWhithoutComments() {
+        doTest("withoutComments.kt");
+    }
+    
 }

@@ -1,0 +1,8 @@
+package formatting
+
+class Cl {
+    var someProp: Int
+        get() = throw UnsupportedOperationException()
+        set(value) {
+        }
+}

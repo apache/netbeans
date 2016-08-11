@@ -19,11 +19,17 @@
 package indentation;
 
 import javaproject.JavaProject;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
 import static junit.framework.TestCase.assertNotNull;
+import org.jetbrains.kotlin.formatting.KotlinIndentStrategy;
 import org.junit.Test;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
+import utils.TestUtils;
 
 /**
  *
@@ -42,13 +48,32 @@ public class IndentationTest extends NbTestCase {
     }
     
     private void doTest(String fileName) {
-        
+        try {
+            StyledDocument doc = (StyledDocument) TestUtils.getDocumentForFileObject(indentationDir, fileName);
+            int offset = TestUtils.getCaret(doc) + 1;
+            doc.insertString(offset - 1, "\n", null);
+            
+            KotlinIndentStrategy strategy = new KotlinIndentStrategy(doc, offset);
+            int newOffset = strategy.addIndent();
+            
+            StyledDocument doc2 = (StyledDocument) TestUtils.getDocumentForFileObject(indentationDir, fileName.replace(".kt", ".after"));
+            int expectedOffset = TestUtils.getCaret(doc2);
+            
+            assertEquals(expectedOffset, newOffset);
+        } catch (BadLocationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
     
     @Test
     public void testProjectCreation() {
         assertNotNull(project);
         assertNotNull(indentationDir);
+    }
+    
+    @Test
+    public void testAfterOneOpenBrace() {
+        doTest("afterOneOpenBrace.kt");
     }
     
 }

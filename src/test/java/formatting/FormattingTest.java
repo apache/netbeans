@@ -78,4 +78,18 @@ public class FormattingTest extends NbTestCase {
         doTest("blockCommentBeforeDeclaration.kt");
     }
     
+    @Test
+    public void testClassesAndPropertiesFormatTest() {
+        doTest("classesAndPropertiesFormatTest.kt");
+    }
+    
+    @Test
+    public void testCommentOnTheLastLineOfLambda() {
+        doTest("commentOnTheLastLineOfLambda.kt");
+    }
+    
+    @Test
+    public void testIndentInDoWhile() {
+        doTest("indentInDoWhile.kt");
+    }
 }

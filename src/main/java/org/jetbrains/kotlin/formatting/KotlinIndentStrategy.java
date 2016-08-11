@@ -40,7 +40,8 @@ public class KotlinIndentStrategy {
     private static final char OPENING_BRACE_CHAR = '{';
     private static final char CLOSING_BRACE_CHAR = '}';
     private static final String CLOSING_BRACE_STRING = Character.toString(CLOSING_BRACE_CHAR);
-
+    private static final String OPENING_BRACE_STRING = Character.toString(OPENING_BRACE_CHAR);
+    
     private final Context context;
     private final StyledDocument doc;
     private final FileObject file;
@@ -57,12 +58,13 @@ public class KotlinIndentStrategy {
     public void addIndent() throws BadLocationException {
         if (offset == doc.getLength()) {
             offset--;
-//            return;
         }
         String text = doc.getText(0, doc.getLength());
         String commandText = String.valueOf((text).charAt(offset));
-        if (CLOSING_BRACE_STRING.equals(commandText)) { // before closing brace
-            System.out.println();
+        String openingChar = String.valueOf((text).charAt(offset - 2));
+        if (CLOSING_BRACE_STRING.equals(commandText) && 
+                OPENING_BRACE_STRING.equals(openingChar)) { 
+            autoEditBeforeCloseBrace(text);
         } else {
             autoEdit(text);
         }
@@ -72,6 +74,13 @@ public class KotlinIndentStrategy {
         offset--;
         String indent = getIndent(text, context.caretOffset());
         doc.insertString(context.caretOffset(), indent, null);
+    }
+    
+    private void autoEditBeforeCloseBrace(String text) throws BadLocationException {
+        String indent = getIndent(text, context.caretOffset());
+        StringBuilder builder = new StringBuilder();
+        builder.append(indent).append("    ").append('\n').append(indent);
+        doc.insertString(context.caretOffset(), builder.toString(), null);
     }
     
     private String getIndent(String text, int offset) throws BadLocationException {

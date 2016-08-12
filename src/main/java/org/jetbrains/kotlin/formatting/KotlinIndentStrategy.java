@@ -111,7 +111,8 @@ public class KotlinIndentStrategy {
             StringBuilder oldText = new StringBuilder();
             
             oldText.append(text.substring(0, caretOffset - 1));
-            oldText.append(text.substring(caretOffset));
+            oldText.append(CLOSING_BRACE_STRING).append(" ");
+            oldText.append(text.substring(caretOffset + 1));
             
             if (oldText.charAt(caretOffset - 2) == '\n') {
                 return caretOffset;

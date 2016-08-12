@@ -136,4 +136,14 @@ public class IndentationTest extends NbTestCase {
         doTest("beforeNestedCloseBrace.kt");
     }
     
+    @Test
+    public void testBeforeTwiceNestedCloseBrace() {
+        doTest("beforeTwiceNestedCloseBrace.kt");
+    }
+    
+    @Test
+    public void testAfterEquals() {
+        doTest("afterEquals.kt");
+    }
+    
 }

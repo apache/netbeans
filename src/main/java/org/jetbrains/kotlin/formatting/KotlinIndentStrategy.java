@@ -21,8 +21,10 @@ package org.jetbrains.kotlin.formatting;
 import com.intellij.formatting.FormatterImpl;
 import com.intellij.formatting.Indent;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
+import java.io.IOException;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
+import org.jetbrains.kotlin.builder.KotlinPsiManager;
 import org.jetbrains.kotlin.idea.formatter.KotlinSpacingRulesKt;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtPsiFactory;
@@ -32,6 +34,7 @@ import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.openide.filesystems.FileObject;
 import org.openide.text.Line;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -70,6 +73,8 @@ public class KotlinIndentStrategy {
         String openingChar = String.valueOf((text).charAt(offset - 2));
         if (CLOSING_BRACE_STRING.equals(commandText)
                 && OPENING_BRACE_STRING.equals(openingChar)) {
+            return autoEditAfterOpenBraceAndBeforeCloseBrace(text);
+        } else if(CLOSING_BRACE_STRING.equals(commandText)) {
             return autoEditBeforeCloseBrace(text);
         } else {
             return autoEdit(text);
@@ -91,7 +96,7 @@ public class KotlinIndentStrategy {
         return caretOffset + indent.length();
     }
 
-    private int autoEditBeforeCloseBrace(String text) throws BadLocationException {
+    private int autoEditAfterOpenBraceAndBeforeCloseBrace(String text) throws BadLocationException {
         String indent = getIndent(text, caretOffset);
         StringBuilder builder = new StringBuilder();
         builder.append(indent).append("    ").append('\n').append(indent);
@@ -101,6 +106,52 @@ public class KotlinIndentStrategy {
         return caretOffset + indent.length() + 4;
     }
 
+    private int autoEditBeforeCloseBrace(String text) throws BadLocationException {
+        if (isNewLineBefore(text, caretOffset)) {
+            try {
+                KtFile ktFile = KotlinPsiManager.INSTANCE.getParsedFile(file);
+                String oldText = ktFile.getText();
+                String indent = getIndentBeforeCloseBrace(oldText, caretOffset, ktFile);
+                
+                doc.insertString(caretOffset, indent, null);
+                return caretOffset + indent.length();
+                
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        
+        return caretOffset;
+    }
+    
+    private String getIndentBeforeCloseBrace(String text, int offset, KtFile ktFile) throws BadLocationException {
+        CodeStyleSettings settings = KotlinFormatterUtils.getSettings();
+        KotlinBlock rootBlock = new KotlinBlock(ktFile.getNode(),
+                NodeAlignmentStrategy.getNullStrategy(),
+                Indent.getNoneIndent(),
+                null,
+                settings,
+                KotlinSpacingRulesKt.createSpacingBuilder(
+                        settings, KotlinFormatter.KotlinSpacingBuilderUtilImpl.INSTANCE));
+        
+        KotlinFormatterUtils.adjustIndent(ktFile, rootBlock, settings, offset, text);
+        String newText = NetBeansDocumentFormattingModel.getNewText();
+        if (newText == null) {
+            return "";
+        }
+
+        if (offset >= newText.length()) {
+            return "";
+        }
+        newText = newText.substring(offset);
+        newText = newText.replace("\n", "");
+        int endOfWhiteSpace = findEndOfWhiteSpaceAfter(newText, 0, newText.length());
+        
+        String toReturn = newText.substring(0, endOfWhiteSpace);
+        
+        return toReturn;
+    }
+    
     private String getIndent(String text, int offset) throws BadLocationException {
         Project project = ProjectUtils.getKotlinProjectForFileObject(file);
         if (project == null) {
@@ -117,22 +168,18 @@ public class KotlinIndentStrategy {
                 settings,
                 KotlinSpacingRulesKt.createSpacingBuilder(
                         settings, KotlinFormatter.KotlinSpacingBuilderUtilImpl.INSTANCE));
-        int offsetForAdjust = offset;
-        if (offsetForAdjust == doc.getLength()) {
-            offsetForAdjust--;
-        }
         
-        KotlinFormatterUtils.adjustIndent(ktFile, rootBlock, settings, offsetForAdjust, text);
+        KotlinFormatterUtils.adjustIndent(ktFile, rootBlock, settings, offset, text);
         String newText = NetBeansDocumentFormattingModel.getNewText();
         if (newText == null) {
             return "";
         }
 
-        if (offsetForAdjust >= newText.length()) {
+        if (offset >= newText.length()) {
             return "";
         }
-        newText = newText.substring(offsetForAdjust);
-
+        newText = newText.substring(offset);
+        
         int endOfWhiteSpace = findEndOfWhiteSpaceAfter(newText, 0, newText.length());
         String toReturn = newText.substring(0, endOfWhiteSpace);
 

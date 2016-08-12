@@ -82,16 +82,18 @@ public class KotlinIndentStrategy {
     }
 
     private int autoEdit(String text) throws BadLocationException {
-        boolean caretAtTheLastPosition = caretOffset == doc.getLength();
-        if (caretAtTheLastPosition) {
-            doc.insertString(doc.getLength(), " ", null);
-        }
-        String indent = getIndent(text, caretOffset);
-        doc.insertString(caretOffset, indent, null);
+        StringBuilder textToFormat = new StringBuilder();
+        textToFormat.append(text.substring(0, caretOffset));
         
-        if (caretAtTheLastPosition) {
-            doc.remove(doc.getLength() - 1, 1);
+        char charToInsert = ' ';
+        if (isAfterEqualityOrOpenBrace(textToFormat.toString(), textToFormat.length())) {
+            charToInsert = '1';
         }
+        textToFormat.append(charToInsert).
+                append(text.substring(caretOffset));
+        
+        String indent = getIndent(textToFormat.toString(), caretOffset);
+        doc.insertString(caretOffset, indent, null);
         
         return caretOffset + indent.length();
     }
@@ -184,6 +186,21 @@ public class KotlinIndentStrategy {
         return start;
     }
 
+    private boolean isAfterEqualityOrOpenBrace(String text, int offset) {
+        int curOffset = offset - 2;
+        while (curOffset > 0) {
+            char charAtCurrentOffset = text.charAt(curOffset);
+            if (charAtCurrentOffset == '=' || charAtCurrentOffset == '{') {
+                return true;
+            } else if (charAtCurrentOffset != ' ') {
+                return false;
+            }
+            curOffset--;
+        }
+        
+        return false;
+    }
+    
     private static boolean isAfterOpenBrace(String document, int offset, int startLineOffset) throws BadLocationException {
         int nonEmptyOffset = findEndOfWhiteSpaceBefore(document, offset, startLineOffset);
         return document.charAt(nonEmptyOffset) == OPENING_BRACE_CHAR;

@@ -146,4 +146,9 @@ public class IndentationTest extends NbTestCase {
         doTest("afterEquals.kt");
     }
     
+    @Test
+    public void testIndentBeforeWhile() {
+        doTest("indentBeforeWhile.kt");
+    }
+    
 }

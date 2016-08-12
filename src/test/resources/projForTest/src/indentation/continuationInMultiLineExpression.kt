@@ -1,0 +1,6 @@
+package indentation
+
+fun foo() {
+    "longstring".substring(
+            1,<caret>)
+}

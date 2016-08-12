@@ -110,4 +110,30 @@ public class IndentationTest extends NbTestCase {
     public void testBeforeCloseBrace() {
         doTest("beforeCloseBrace.kt");
     }
+    
+    @Test
+    public void testBetweenBracesOnOneLine() {
+        doTest("betweenBracesOnOneLine.kt");
+    }
+    
+    @Test
+    public void testContinuationAfterDotCall() {
+        doTest("continuationAfterDotCall.kt");
+    }
+    
+    @Test
+    public void testContinuationInMultiLineExpression() {
+        doTest("continuationInMultilineExpression.kt");
+    }
+    
+    @Test
+    public void testContinuationBeforeFunName() {
+        doTest("continuationBeforeFunName.kt");
+    }
+    
+    @Test
+    public void testBeforeNestedCloseBrace() {
+        doTest("beforeNestedCloseBrace.kt");
+    }
+    
 }

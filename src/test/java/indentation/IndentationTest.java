@@ -151,4 +151,24 @@ public class IndentationTest extends NbTestCase {
         doTest("indentBeforeWhile.kt");
     }
     
+    @Test
+    public void testLineBreakSaveIndent() {
+        doTest("lineBreakSaveIndent.kt");
+    }
+    
+    @Test
+    public void testNestedOperatorsWithBraces() {
+        doTest("nestedOperatorsWithBraces.kt");
+    }
+    
+    @Test
+    public void testNestedOperatorsWithoutBraces() {
+        doTest("nestedOperatorsWithoutBraces.kt");
+    }
+    
+    @Test
+    public void testNewLineInParameters() {
+        doTest("newLineInParameters.kt");
+    }
+    
 }

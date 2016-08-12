@@ -106,8 +106,8 @@ public class IndentationTest extends NbTestCase {
         doTest("afterOperatorWhileWithoutBraces.kt");
     }
     
-//    @Test
-//    public void testBeforeCloseBrace() {
-//        doTest("beforeCloseBrace.kt");
-//    }
+    @Test
+    public void testBeforeCloseBrace() {
+        doTest("beforeCloseBrace.kt");
+    }
 }

@@ -111,6 +111,9 @@ public class KotlinIndentStrategy {
             try {
                 KtFile ktFile = KotlinPsiManager.INSTANCE.getParsedFile(file);
                 String oldText = ktFile.getText();
+                if (oldText.charAt(caretOffset - 2) == '\n') {
+                    return caretOffset;
+                }
                 String indent = getIndentBeforeCloseBrace(oldText, caretOffset, ktFile);
                 
                 doc.insertString(caretOffset, indent, null);

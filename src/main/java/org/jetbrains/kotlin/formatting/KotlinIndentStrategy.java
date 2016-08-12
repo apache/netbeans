@@ -46,7 +46,7 @@ public class KotlinIndentStrategy {
 
     private final StyledDocument doc;
     private final FileObject file;
-    private final int caretOffset;
+    private int caretOffset;
     private int offset;
     
     public KotlinIndentStrategy(StyledDocument doc, int offset) {
@@ -77,8 +77,16 @@ public class KotlinIndentStrategy {
     }
 
     private int autoEdit(String text) throws BadLocationException {
+        boolean caretAtTheLastPosition = caretOffset == doc.getLength();
+        if (caretAtTheLastPosition) {
+            doc.insertString(doc.getLength(), " ", null);
+        }
         String indent = getIndent(text, caretOffset);
         doc.insertString(caretOffset, indent, null);
+        
+        if (caretAtTheLastPosition) {
+            doc.remove(doc.getLength() - 1, 1);
+        }
         
         return caretOffset + indent.length();
     }
@@ -120,6 +128,9 @@ public class KotlinIndentStrategy {
             return "";
         }
 
+        if (offsetForAdjust >= newText.length()) {
+            return "";
+        }
         newText = newText.substring(offsetForAdjust);
 
         int endOfWhiteSpace = findEndOfWhiteSpaceAfter(newText, 0, newText.length());

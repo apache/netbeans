@@ -20,7 +20,6 @@ package indentation;
 
 import javaproject.JavaProject;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import static junit.framework.TestCase.assertNotNull;
 import org.jetbrains.kotlin.formatting.KotlinIndentStrategy;
@@ -51,6 +50,7 @@ public class IndentationTest extends NbTestCase {
         try {
             StyledDocument doc = (StyledDocument) TestUtils.getDocumentForFileObject(indentationDir, fileName);
             int offset = TestUtils.getCaret(doc) + 1;
+            doc.remove(offset - 1, "<caret>".length());
             doc.insertString(offset - 1, "\n", null);
             
             KotlinIndentStrategy strategy = new KotlinIndentStrategy(doc, offset);
@@ -79,5 +79,20 @@ public class IndentationTest extends NbTestCase {
     @Test
     public void testBeforeFunctionStart() {
         doTest("beforeFunctionStart.kt");
+    }
+    
+    @Test
+    public void testBetweenBracesOnDifferentLines() {
+        doTest("betweenBracesOnDifferentLine.kt");
+    }
+    
+    @Test
+    public void testBreakLineAfterIfWithoutBraces() {
+        doTest("breakLineAfterIfWithoutBraces.kt");
+    }
+    
+    @Test
+    public void testAfterOperatorIfWithoutBraces() {
+        doTest("afterOperatorIfWithoutBraces.kt");
     }
 }

@@ -82,7 +82,7 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
                     FileObject fileToOpen = FileUtil.toFileObject(new File(filePath));
                     try {
                         StyledDocument docToOpen = ProjectUtils.getDocumentFromFileObject(fileToOpen);
-                        NavigationUtil.openFileAtOffset(docToOpen, fileToOpen, offsetToOpen);
+                        NavigationUtil.openFileAtOffset(docToOpen, offsetToOpen);
                     } catch (IOException ex) {
                         Exceptions.printStackTrace(ex);
                     }

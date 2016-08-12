@@ -59,6 +59,7 @@ import org.jetbrains.kotlin.resolve.DescriptorUtils;
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;
 import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedCallableMemberDescriptor;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.editor.NbEditorUtilities;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -79,7 +80,7 @@ public class NavigationUtil {
             return null;
         }
         
-        KtFile ktFile = ProjectUtils.getKtFile(doc.getText(0, doc.getLength()), file);
+        KtFile ktFile = KotlinPsiManager.INSTANCE.parseText(doc.getText(0, doc.getLength()), file);
         if (ktFile == null){
             return null;
         }
@@ -240,7 +241,7 @@ public class NavigationUtil {
         }
         
         
-        openFileAtOffset(document, declarationFile, startOffset);
+        openFileAtOffset(document, startOffset);
         
         return true;
     }
@@ -265,7 +266,7 @@ public class NavigationUtil {
         
         int startOffset = LineEndUtil.convertCrToDocumentOffset(
                 element.getContainingFile().getText(), element.getTextOffset());
-        openFileAtOffset(document, declarationFile, startOffset);
+        openFileAtOffset(document, startOffset);
         return new Pair<Document, Integer>(document, startOffset);
     }
 
@@ -310,25 +311,9 @@ public class NavigationUtil {
         return null;
     }
     
-    public static void openFileAtOffset(StyledDocument doc, FileObject file, int offset){
-        DataObject dataObject = null;
-        try {
-            dataObject = DataObject.find(file);
-        } catch (DataObjectNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        if (dataObject == null){
-            return;
-        }
-        LineCookie lineCookie = dataObject.getLookup().lookup(LineCookie.class);
-        if (lineCookie == null){
-            return;
-        }
-        
-        int lineNumber = NbDocument.findLineNumber(doc, offset);
+    public static void openFileAtOffset(StyledDocument doc, int offset){
+        Line line = NbEditorUtilities.getLine(doc, offset, false);
         int colNumber = NbDocument.findLineColumn(doc, offset);
-        
-        Line line = lineCookie.getLineSet().getOriginal(lineNumber);
         line.show(Line.ShowOpenType.OPEN,Line.ShowVisibilityType.FRONT, colNumber);
     }
     

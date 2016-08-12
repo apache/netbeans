@@ -83,7 +83,7 @@ public class GoToKotlinTypeProvider implements SearchProvider {
                 return;
             }
             
-            NavigationUtil.openFileAtOffset(doc, fo, declaration.getTextRange().getStartOffset());
+            NavigationUtil.openFileAtOffset(doc, declaration.getTextRange().getStartOffset());
         }
             
     }

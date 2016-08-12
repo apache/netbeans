@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.psi.KtClass;
@@ -75,6 +76,14 @@ public class KotlinSourcePathProvider extends SourcePathProvider {
                     return fo.toURL().toString();
                 }
             }
+            
+            String classFqName = NoResolveFileClassesProvider.INSTANCE.getFileClassInfo(ktFile).getFacadeClassFqName().toString();
+            if (classFqName.equals(fqName)) {
+                    String path = ktFile.getVirtualFile().getPath();
+                    File file = new File(path);
+                    FileObject fo = FileUtil.toFileObject(file);
+                    return fo.toURL().toString();
+                }
         }
         return null;
     }

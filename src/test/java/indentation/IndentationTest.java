@@ -95,4 +95,9 @@ public class IndentationTest extends NbTestCase {
     public void testAfterOperatorIfWithoutBraces() {
         doTest("afterOperatorIfWithoutBraces.kt");
     }
+    
+    @Test
+    public void testAfterOpenBraceWithShift() {
+        doTest("afterOpenBraceWithShift.kt");
+    }
 }

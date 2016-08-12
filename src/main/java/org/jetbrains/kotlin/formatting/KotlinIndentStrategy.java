@@ -98,7 +98,7 @@ public class KotlinIndentStrategy {
         doc.insertString(caretOffset, builder.toString(), null);
         setDocumentOffset(indent.length() + 4);
         
-        return indent.length() + 4;
+        return caretOffset + indent.length() + 4;
     }
 
     private String getIndent(String text, int offset) throws BadLocationException {

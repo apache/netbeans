@@ -46,11 +46,13 @@ public class KotlinPropertyStructureItem implements StructureItem {
     
     @Override
     public String getName() {
-        String type = "";
+        StringBuilder builder = new StringBuilder();
+        builder.append(property.getName());
         if (property.getTypeReference() != null) {
-            type = property.getTypeReference().getText();
+            builder.append(" : ").append(property.getTypeReference().getText());
         }
-        return property.getName() + " : " + type;
+        
+        return builder.toString();
     }
 
     @Override

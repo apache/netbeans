@@ -32,7 +32,7 @@ import org.openide.util.Exceptions;
  *
  * @author Александр
  */
-@MimeRegistration(mimeType = "text/x-kt", service = CompletionProvider.class)
+//@MimeRegistration(mimeType = "text/x-kt", service = CompletionProvider.class)
 public class KotlinCompletionProvider implements CompletionProvider {
     
     @Override

@@ -64,6 +64,7 @@ import org.jetbrains.kotlin.resolve.scopes.utils.ScopeUtilsKt;
 import org.jetbrains.kotlin.idea.codeInsight.ReferenceVariantsHelper;
 import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.csl.api.CompletionProposal;
 
 /**
  *
@@ -105,6 +106,45 @@ public class KotlinCompletionUtils {
         }
         
         return filteredDescriptors;
+    }
+    
+    public Collection<DeclarationDescriptor> getReferenceVariants(final KtSimpleNameExpression simpleNameExpression,
+            Function1<Name, Boolean> nameFilter, FileObject file, AnalysisResultWithProvider resultWithProvider){
+        Project project = ProjectUtils.getKotlinProjectForFileObject(file);
+        
+        if (project == null){
+            return Collections.emptyList();
+        }
+        
+        final AnalysisResult analysisResult = resultWithProvider.getAnalysisResult();
+        ComponentProvider container = resultWithProvider.getComponentProvider();
+        
+        final DeclarationDescriptor inDescriptor = getResolutionScope(simpleNameExpression.getReferencedNameElement(),
+                analysisResult.getBindingContext()).getOwnerDescriptor();
+    
+        Function1<DeclarationDescriptor, Boolean> visibilityFilter = 
+                new Function1<DeclarationDescriptor, Boolean>(){
+            @Override
+            public Boolean invoke(DeclarationDescriptor descriptor) {
+                if (descriptor instanceof TypeParameterDescriptor){
+                    return isVisible((TypeParameterDescriptor) descriptor, inDescriptor);
+                } 
+                else if (descriptor instanceof DeclarationDescriptorWithVisibility){
+                    return isVisible((DeclarationDescriptorWithVisibility) descriptor,
+                            inDescriptor, analysisResult.getBindingContext(),
+                            simpleNameExpression);
+                } else return true;
+            }
+        };
+        
+        ReferenceVariantsHelper helper = new ReferenceVariantsHelper(
+            analysisResult.getBindingContext(),
+            new KotlinResolutionFacade(project, container, analysisResult.getModuleDescriptor()),
+            analysisResult.getModuleDescriptor(),
+            visibilityFilter);
+        
+        return helper.getReferenceVariants(simpleNameExpression, DescriptorKindFilter.ALL, nameFilter,
+                false,false,false,null);
     }
     
     public Collection<DeclarationDescriptor> getReferenceVariants(final KtSimpleNameExpression simpleNameExpression,
@@ -247,6 +287,27 @@ public class KotlinCompletionUtils {
             return false;
         }
         
+    }
+    
+    public List<CompletionProposal> createProposals(Document doc, int caretOffset,
+            AnalysisResultWithProvider analysisResultWithProvider) throws BadLocationException, IOException {
+        List<CompletionProposal> proposals = Lists.newArrayList();
+        FileObject file = ProjectUtils.getFileObjectForDocument(doc);
+        StyledDocument styledDoc = (StyledDocument) doc;
+        String editorText = styledDoc.getText(0, styledDoc.getLength());
+        
+        int identOffset = getIdentifierStartOffset(editorText, caretOffset);
+        
+        String identifierPart = editorText.substring(identOffset, caretOffset);
+        
+        Collection<DeclarationDescriptor> descriptors = 
+                generateBasicCompletionProposals(file, identifierPart, identOffset, editorText);
+        
+        for (DeclarationDescriptor descriptor : descriptors){
+            proposals.add(new KotlinCompletionProposal(identOffset, caretOffset, descriptor, styledDoc));
+        }
+    
+        return proposals; 
     }
     
     public Collection<KotlinCompletionItem> createItems(Document doc, int caretOffset) throws IOException, BadLocationException{

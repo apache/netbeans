@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.diagnostics.netbeans.parser;
 import java.util.HashMap;
 import java.util.Map;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
+import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.jetbrains.kotlin.resolve.NetBeansAnalyzerFacadeForJVM;
 import org.jetbrains.kotlin.utils.ProjectUtils;

@@ -16,6 +16,7 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.language;
 
+import org.jetbrains.kotlin.completion.KotlinCodeCompletionHandler;
 import org.jetbrains.kotlin.structurescanner.KotlinStructureScanner;
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.jetbrains.kotlin.highlighter.netbeans.KotlinTokenId;
@@ -23,6 +24,7 @@ import org.jetbrains.kotlin.highlighter.occurrences.KotlinOccurrencesFinder;
 import org.jetbrains.kotlin.highlighter.semanticanalyzer.KotlinSemanticAnalyzer;
 import org.jetbrains.kotlin.hints.KotlinHintsProvider;
 import org.netbeans.api.lexer.Language;
+import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.HintsProvider;
 import org.netbeans.modules.csl.api.OccurrencesFinder;
 import org.netbeans.modules.csl.api.SemanticAnalyzer;
@@ -47,6 +49,8 @@ public class KotlinLanguage extends DefaultLanguageConfig {
             new KotlinHintsProvider();
     private final OccurrencesFinder kotlinOccurrencesFinder = 
             new KotlinOccurrencesFinder();
+    private final CodeCompletionHandler kotlinCompletionHandler =
+            new KotlinCodeCompletionHandler();
     
     @Override
     public Language getLexerLanguage() {
@@ -101,6 +105,11 @@ public class KotlinLanguage extends DefaultLanguageConfig {
     @Override
     public OccurrencesFinder getOccurrencesFinder() {
         return kotlinOccurrencesFinder;
+    }
+    
+    @Override
+    public CodeCompletionHandler getCompletionHandler() {
+        return kotlinCompletionHandler;
     }
     
 }

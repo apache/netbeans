@@ -81,7 +81,7 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
         }
     }
     
-    public List<KtElement> searchTextOccurrences(KtFile ktFile, KtElement sourceElement) {
+    public static List<KtElement> searchTextOccurrences(KtFile ktFile, KtElement sourceElement) {
         List<KtElement> elements = new ArrayList<KtElement>();
         List<KtElement> elementsToReturn = new ArrayList<KtElement>();
         
@@ -130,7 +130,7 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
         return elementsToReturn;
     }
     
-    private List<PsiElement> findOccurrencesInFile(KtFile ktFile, String text) {
+    private static List<PsiElement> findOccurrencesInFile(KtFile ktFile, String text) {
         List<PsiElement> elements = Lists.newArrayList();       
         
         for (PsiElement psi : ktFile.getChildren()){
@@ -141,7 +141,7 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
     }
     
     
-    private List<PsiElement> findOccurrencesInPsiElement(String toFind, PsiElement psiElement) {
+    private static List<PsiElement> findOccurrencesInPsiElement(String toFind, PsiElement psiElement) {
         List<PsiElement> elements = Lists.newArrayList();
         
         if (psiElement.getText().equals(toFind)){

@@ -16,12 +16,16 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.structurescanner;
 
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiWhiteSpace;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.ImageIcon;
 import org.jetbrains.kotlin.psi.KtNamedFunction;
+import org.jetbrains.kotlin.psi.KtParameter;
+import org.jetbrains.kotlin.psi.KtPsiUtil;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
@@ -45,7 +49,28 @@ public class KotlinFunctionStructureItem implements StructureItem {
     
     @Override
     public String getName() {
-        return function.getText().split("\\{")[0].split("=")[0];
+        StringBuilder builder = new StringBuilder();
+        builder.append(function.getName()).append("(");
+        List<KtParameter> valueParameters = function.getValueParameters();
+        for (KtParameter param : valueParameters) {
+            builder.append(param.getText()).append(",");
+        }
+        if (!valueParameters.isEmpty()) {
+            builder.deleteCharAt(builder.length() - 1);
+        }
+        builder.append(")");
+        PsiElement colon = function.getColon();
+        if (colon == null) {
+            return builder.toString();
+        }
+        
+        PsiElement returnType = colon.getNextSibling();
+        if (returnType instanceof PsiWhiteSpace) {
+            returnType = returnType.getNextSibling();
+        }
+        builder.append(" : ").append(returnType.getText());
+        
+        return builder.toString();
     }
 
     @Override

@@ -37,6 +37,7 @@ import org.openide.util.RequestProcessor;
  */
 public class MavenProjectOpenedHook extends ProjectOpenedHook{
 
+    private static volatile boolean progressHandleRun = false;
     private final NbMavenProjectImpl project;
     
     public MavenProjectOpenedHook(NbMavenProjectImpl project) {
@@ -53,16 +54,18 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                         Runnable run = new Runnable(){
                             @Override
                             public void run(){
+                                progressHandleRun = true;
                                 final ProgressHandle progressbar = 
                                     ProgressHandleFactory.createHandle("Loading Kotlin environment");
                                 progressbar.start();
                                 KotlinEnvironment.getEnvironment(project);
                                 progressbar.finish();
+                                progressHandleRun = false;
                             }
                         };
-                      
-                        RequestProcessor.getDefault().post(run);
-                        
+                        if (!progressHandleRun) {
+                            RequestProcessor.getDefault().post(run);
+                        }
                         KotlinSources sources = KotlinProjectHelper.INSTANCE.getKotlinSources(project);
                         if (!sources.hasLightClasses()) {
                             for (FileObject file : sources.getAllKtFiles()){

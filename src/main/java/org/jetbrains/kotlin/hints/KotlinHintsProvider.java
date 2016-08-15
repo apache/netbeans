@@ -94,8 +94,10 @@ public class KotlinHintsProvider implements HintsProvider{
         if (analysisResult != null) {
             for (Diagnostic diagnostic : analysisResult.getAnalysisResult().
                         getBindingContext().getDiagnostics().all()) {
-                KotlinParser.KotlinError error = new KotlinParser.KotlinError(diagnostic, file);
-                errors.add(error);
+                if (diagnostic.getPsiFile().getVirtualFile().getPath().equals(file.getPath())) {
+                    KotlinParser.KotlinError error = new KotlinParser.KotlinError(diagnostic, file);
+                    errors.add(error);
+                }
             }
             for (PsiErrorElement psiError : AnalyzingUtils.getSyntaxErrorRanges(parserResult.getKtFile())){
                 KotlinParser.KotlinSyntaxError syntaxError = new KotlinParser.KotlinSyntaxError(psiError, file);

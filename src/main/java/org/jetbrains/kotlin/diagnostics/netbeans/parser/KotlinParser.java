@@ -31,6 +31,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Error.Badging;
 import org.netbeans.modules.csl.api.Severity;
+import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
@@ -53,7 +54,7 @@ public class KotlinParser extends Parser {
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) {
         this.snapshot = snapshot;
-
+        
         project = ProjectUtils.getKotlinProjectForFileObject(snapshot.getSource().getFileObject());
 
         if (project == null){
@@ -61,9 +62,15 @@ public class KotlinParser extends Parser {
         }
         
         fileToAnalyze = ProjectUtils.getKtFile(snapshot.getText().toString(),snapshot.getSource().getFileObject());
+        int caretOffset = GsfUtilities.getLastKnownCaretOffset(snapshot, event);
+        
+        if (caretOffset <= 0) {
+            parserResult = KotlinAnalysisProjectCache.INSTANCE.getAnalysisResult(project);
+            return;
+        }
+        
         parserResult =
             KotlinAnalyzer.analyzeFile(project, fileToAnalyze);
-        
     }
 
     @Override
@@ -117,8 +124,10 @@ public class KotlinParser extends Parser {
             List<Error> errors = Lists.newArrayList();
             for (Diagnostic diagnostic : analysisResult.getAnalysisResult().
                     getBindingContext().getDiagnostics().all()) {
-                KotlinError error = new KotlinError(diagnostic, file);
-                errors.add(error);
+                if (diagnostic.getPsiFile().getVirtualFile().getPath().equals(file.getPath())) {
+                    KotlinError error = new KotlinError(diagnostic, file);
+                    errors.add(error);
+                }
             }
             for (PsiErrorElement psiError : AnalyzingUtils.getSyntaxErrorRanges(ktFile)){
                 KotlinSyntaxError syntaxError = new KotlinSyntaxError(psiError, file);

@@ -29,7 +29,6 @@ import org.jetbrains.kotlin.idea.resolve.ResolutionFacade;
 import org.jetbrains.kotlin.psi.KtDeclaration;
 import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
-import org.jetbrains.kotlin.resolve.BindingContext;
 import org.jetbrains.kotlin.resolve.diagnostics.KotlinSuppressCache;
 import org.jetbrains.kotlin.resolve.lazy.BodyResolveMode;
 import org.netbeans.api.project.ui.OpenProjects;

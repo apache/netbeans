@@ -75,6 +75,10 @@ public class KotlinSyntaxErrorHighlightingTask extends ParserResultTask<KotlinPa
                 int end = NbDocument.findLineOffset((StyledDocument) document, endBeginLine)
                         + endBeginColumn;
                 
+                if (start > document.getLength() || end > document.getLength()) {
+                    return;
+                }
+                
                 ErrorDescription errorDescription = ErrorDescriptionFactory.createErrorDescription(
                         severity,
                         "",

@@ -23,9 +23,6 @@ import java.io.IOException;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.text.StyledDocument;
-import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
-import org.jetbrains.kotlin.descriptors.FunctionDescriptor;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
 import org.netbeans.modules.csl.api.CompletionProposal;
@@ -38,10 +35,8 @@ import org.openide.util.Exceptions;
 public class KotlinCodeCompletionResult extends CodeCompletionResult {
 
     private List<CompletionProposal> proposals = Lists.newArrayList();
-    private final StyledDocument doc;
 
     public KotlinCodeCompletionResult(Document doc, int offset, AnalysisResultWithProvider analysisResultWithProvider) {
-        this.doc = (StyledDocument) doc;
         try {
             proposals = KotlinCompletionUtils.INSTANCE.createProposals(doc, offset, analysisResultWithProvider);
         } catch (BadLocationException ex) {

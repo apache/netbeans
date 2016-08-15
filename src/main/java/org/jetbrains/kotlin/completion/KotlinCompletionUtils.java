@@ -310,26 +310,6 @@ public class KotlinCompletionUtils {
         return proposals; 
     }
     
-    public Collection<KotlinCompletionItem> createItems(Document doc, int caretOffset) throws IOException, BadLocationException{
-        List<KotlinCompletionItem> proposals = Lists.newArrayList();
-        FileObject file = ProjectUtils.getFileObjectForDocument(doc);
-        StyledDocument styledDoc = (StyledDocument) doc;
-        String editorText = styledDoc.getText(0, styledDoc.getLength());
-        
-        int identOffset = getIdentifierStartOffset(editorText, caretOffset);
-        
-        String identifierPart = editorText.substring(identOffset, caretOffset);
-        
-        Collection<DeclarationDescriptor> descriptors = 
-                generateBasicCompletionProposals(file, identifierPart, identOffset, editorText);
-        
-        for (DeclarationDescriptor descriptor : descriptors){
-            proposals.add(new KotlinCompletionItem(identOffset, caretOffset, descriptor));
-        }
-    
-        return proposals;   
-    }
-    
     @NotNull
     private Collection<DeclarationDescriptor> generateBasicCompletionProposals(
         final FileObject file, final String identifierPart, int identOffset, String editorText) throws IOException{

@@ -29,7 +29,6 @@ import javax.swing.text.StyledDocument;
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.jetbrains.kotlin.utils.ProjectUtils;
-import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler2;
 import org.netbeans.modules.csl.api.CodeCompletionResult;

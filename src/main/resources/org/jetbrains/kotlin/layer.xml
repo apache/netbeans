@@ -15,7 +15,18 @@
         </folder>
     </folder>
     
-    
+    <folder name="Loaders">
+        <folder name="text">
+            <folder name="x-kt">
+                <folder name="Actions">
+                    <file name="TestFile.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-TestSingle.instance"/>
+                        <attr name="position" intvalue="1267"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
     
     <folder name="Editors">
             <folder name="text">

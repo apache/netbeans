@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.descriptors.SourceElement;
 import org.jetbrains.kotlin.load.kotlin.JvmPackagePartSource;
+import org.jetbrains.kotlin.navigation.JarNavigationUtil;
 import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.BindingContext;
 import org.jetbrains.kotlin.resolve.jvm.JvmClassName;
@@ -105,6 +106,19 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
                 referenceExpression, project, file);
     }
     
+    private String getDeclarationName(DeclarationDescriptor desc) {
+        String fileName = "";
+        JvmPackagePartSource src = (JvmPackagePartSource) ((DeserializedCallableMemberDescriptor) desc).getContainerSource();
+        JvmClassName facadeName = src.getFacadeClassName();
+        if (facadeName != null) {
+            fileName = facadeName.getInternalName();
+        } else {
+            fileName = src.getClassName().getInternalName();
+        }
+        
+        return fileName;
+    }
+    
     private String getStdFuncFileName(DeclarationDescriptor desc) {
         String fileName = "";
         JvmPackagePartSource src = (JvmPackagePartSource) ((DeserializedCallableMemberDescriptor) desc).getContainerSource();
@@ -133,13 +147,36 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
                     if (((DeserializedCallableMemberDescriptor) desc).getContainerSource() == null) {
                         continue;
                     }
-                    fileName = getStdFuncFileName(desc);
+                    fileName = getDeclarationName(desc);
                 } 
                 
+                int index = fileName.lastIndexOf("/");
+                String packages = fileName.substring(0, index);
+                String className = fileName.substring(index + 1);
+                
                 VirtualFile virtFile = KotlinEnvironment.getEnvironment(project).
-                    getVirtualFileInJar(ProjectUtils.buildLibPath("kotlin-runtime-sources"), fileName);
-            
-                if (NavigationUtil.gotoKotlinStdlib(virtFile, desc)) {
+                    getVirtualFileInJar(ProjectUtils.buildLibPath("kotlin-runtime-sources"), packages);
+                if (virtFile == null) {
+                    return;
+                }
+                
+                VirtualFile[] children = virtFile.getChildren();
+                String jvmName = "@file:JvmName(\"" + className + "\")";
+                
+                VirtualFile fileToNavigate = null;
+                
+                for (VirtualFile child : children) {
+                    FileObject fo = JarNavigationUtil.getFileObjectFromJar(child.getPath());
+                    // TODO: to get the text of file and check if it has specified JvmName annotation
+                }
+                
+                if (fileToNavigate == null) {
+                    fileName = getStdFuncFileName(desc);
+                    fileToNavigate = KotlinEnvironment.getEnvironment(project).
+                        getVirtualFileInJar(ProjectUtils.buildLibPath("kotlin-runtime-sources"), fileName);
+                }
+                
+                if (NavigationUtil.gotoKotlinStdlib(fileToNavigate, desc)) {
                     return;
                 }
             }

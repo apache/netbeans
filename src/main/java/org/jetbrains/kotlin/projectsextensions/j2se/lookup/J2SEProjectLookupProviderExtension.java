@@ -33,7 +33,6 @@ public class J2SEProjectLookupProviderExtension implements LookupProvider{
 
     @Override
     public Lookup createAdditionalLookup(Lookup lkp) {
-        
         J2SEProject j2seProject = lkp.lookup(J2SEProject.class);
         J2SEExtendedClassPathProvider myProvider = new J2SEExtendedClassPathProvider(j2seProject);
         J2SEProjectPropertiesModifier propertiesModifier = new J2SEProjectPropertiesModifier(j2seProject);

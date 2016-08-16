@@ -36,7 +36,12 @@
                             <attr name="position" intvalue="2500"/>
                         </file>
                     </folder>
-                    
+                    <folder name="Popup">
+                        <file name="org-netbeans-modules-project-ui-TestSingle.instance">
+                            <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-TestSingle.instance"/>
+                            <attr name="position" intvalue="1780"/>
+                        </file>
+                    </folder>
                 </folder>
             </folder>
     </folder>

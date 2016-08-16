@@ -43,8 +43,10 @@ import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElement;
 import org.jetbrains.kotlin.utils.LineEndUtil;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.descriptors.SourceElement;
+import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryClass;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryPackageSourceElement;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinarySourceElement;
@@ -212,20 +214,26 @@ public class NavigationUtil {
             }
             String fqNameDesc = DescriptorUtils.getFqNameFromTopLevelClass(desc).asString();
             if (declarationName.equals(fqNameDesc)) {
-                if (declaration instanceof KtFunction 
-                        && desc instanceof KtFunction) {
+                if (declaration instanceof KtFunction && desc instanceof CallableMemberDescriptor) {
                     List<KtParameter> parameters1 = ((KtFunction) declaration).getValueParameters();
-                    List<KtParameter> parameters2 = ((KtFunction) desc).getValueParameters();
-                    
-                    if (parameters1.equals(parameters2)) {
-                        startOffset = declaration.getTextOffset();
-                        break;
+                    List<ValueParameterDescriptor> parameters2 = ((CallableMemberDescriptor) desc).getValueParameters();
+                    parameters2.get(0).getName();
+                    parameters1.get(0).getNameAsName();
+                    if (parameters1.size() == parameters2.size()) {
+                        boolean isEqual = true;
+                        for (int i = 0; i < parameters1.size(); i++) {
+                            if (!parameters1.get(i).getNameAsName().equals(parameters2.get(i).getName())) {
+                                isEqual = false;
+                            }
+                        }
+                        if (isEqual) {
+                            startOffset = declaration.getTextOffset();
+                            break;
+                        }
                     }
-                    
                     
                 } else {
                     startOffset = declaration.getTextOffset();
-                    break;
                 }
             }
         }

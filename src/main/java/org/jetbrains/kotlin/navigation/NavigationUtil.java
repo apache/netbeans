@@ -217,8 +217,7 @@ public class NavigationUtil {
                 if (declaration instanceof KtFunction && desc instanceof CallableMemberDescriptor) {
                     List<KtParameter> parameters1 = ((KtFunction) declaration).getValueParameters();
                     List<ValueParameterDescriptor> parameters2 = ((CallableMemberDescriptor) desc).getValueParameters();
-                    parameters2.get(0).getName();
-                    parameters1.get(0).getNameAsName();
+                    
                     if (parameters1.size() == parameters2.size()) {
                         boolean isEqual = true;
                         for (int i = 0; i < parameters1.size(); i++) {
@@ -261,11 +260,14 @@ public class NavigationUtil {
         if (declarationFile == null){
             return null;
         }
-        
+        String text = null;
         StyledDocument document = null;
         try {
             document = ProjectUtils.getDocumentFromFileObject(declarationFile);
+            text = document.getText(0, document.getLength());
         } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
         }
         if (document == null){
@@ -274,10 +276,49 @@ public class NavigationUtil {
         
         int startOffset = LineEndUtil.convertCrToDocumentOffset(
                 element.getContainingFile().getText(), element.getTextOffset());
+        if (!element.getContainingFile().getText().equals(text)) {
+            PsiElement elementToNavigate = element.getContainingFile().findElementAt(startOffset);
+            if (elementToNavigate != null && text != null) {
+                return openFileDespiteOfEncoding(elementToNavigate, startOffset, text, document);
+            }
+        }
+        
         openFileAtOffset(document, startOffset);
         return new Pair<Document, Integer>(document, startOffset);
     }
 
+    private static Pair<Document, Integer> openFileDespiteOfEncoding(PsiElement elementToNavigate, int start, 
+            String text, StyledDocument document) {
+        int startOffset = start;
+        KtFile ktFile = KotlinPsiManager.INSTANCE.getParsedKtFileForSyntaxHighlighting(text);
+        Collection<PsiElement> elements1 = PsiTreeUtil.findChildrenOfType(ktFile, elementToNavigate.getClass());
+        for (PsiElement elem : elements1) {
+            if (elem.getText().equals(elementToNavigate.getText())) {
+                if (elem instanceof KtFunction && elementToNavigate instanceof KtFunction) {
+                    List<KtParameter> parameters1 = ((KtFunction) elem).getValueParameters();
+                    List<KtParameter> parameters2 = ((KtFunction) elementToNavigate).getValueParameters();
+                    if (parameters1.size() == parameters2.size()) {
+                        boolean isEqual = true;
+                        for (int i = 0; i < parameters1.size(); i++) {
+                            if (!parameters1.get(i).getName().equals(parameters2.get(i).getName())) {
+                                isEqual = false;
+                            }
+                        }
+                        if (isEqual) {
+                            startOffset = elem.getTextOffset();
+                            break;
+                        }
+                    }
+                } else {
+                    startOffset = elem.getTextOffset();
+                    break;
+                }
+            }
+        }
+        
+        openFileAtOffset(document, startOffset);
+        return new Pair<Document, Integer>(document, startOffset);
+    }
     
     private static void gotoJavaDeclaration(Element binding, Project project) {
         Element javaElement = binding;

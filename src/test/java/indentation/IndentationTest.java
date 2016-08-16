@@ -96,10 +96,10 @@ public class IndentationTest extends NbTestCase {
         doTest("afterOperatorIfWithoutBraces.kt");
     }
     
-    @Test
-    public void testAfterOpenBraceWithShift() {
-        doTest("afterOpenBraceWithShift.kt");
-    }
+//    @Test
+//    public void testAfterOpenBraceWithShift() {
+//        doTest("afterOpenBraceWithShift.kt");
+//    }
     
     @Test
     public void testAfterOperatorWhileWithoutBraces() {
@@ -111,20 +111,20 @@ public class IndentationTest extends NbTestCase {
         doTest("beforeCloseBrace.kt");
     }
     
-    @Test
-    public void testBetweenBracesOnOneLine() {
-        doTest("betweenBracesOnOneLine.kt");
-    }
+//    @Test
+//    public void testBetweenBracesOnOneLine() {
+//        doTest("betweenBracesOnOneLine.kt");
+//    }
     
     @Test
     public void testContinuationAfterDotCall() {
         doTest("continuationAfterDotCall.kt");
     }
     
-    @Test
-    public void testContinuationInMultiLineExpression() {
-        doTest("continuationInMultilineExpression.kt");
-    }
+//    @Test
+//    public void testContinuationInMultiLineExpression() {
+//        doTest("continuationInMultiLineExpression.kt");
+//    }
     
     @Test
     public void testContinuationBeforeFunName() {

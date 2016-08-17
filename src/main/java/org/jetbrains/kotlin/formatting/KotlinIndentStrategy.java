@@ -65,6 +65,9 @@ public class KotlinIndentStrategy {
     }
 
     public int addIndent() throws BadLocationException {
+        if (offset == 1) {
+            return offset;
+        }
         if (offset == doc.getLength()) {
             offset--;
         }

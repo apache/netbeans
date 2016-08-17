@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,10 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.navigation.netbeans;
 
 import com.intellij.openapi.vfs.VirtualFile;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import javax.swing.text.BadLocationException;
@@ -52,11 +55,11 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
 
     private KtReferenceExpression referenceExpression;
     private Pair<Document, Integer> navigationCache = null;
-    
+
     @Override
     public boolean isHyperlinkPoint(Document doc, int offset) {
         FileObject fo = ProjectUtils.getFileObjectForDocument(doc);
-        if (ProjectUtils.getKotlinProjectForFileObject(fo) == null){
+        if (ProjectUtils.getKotlinProjectForFileObject(fo) == null) {
             return false;
         }
         try {
@@ -70,42 +73,42 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
 
     @Override
     public int[] getHyperlinkSpan(Document doc, int offset) {
-        if (isHyperlinkPoint(doc,offset)){
+        if (isHyperlinkPoint(doc, offset)) {
             Pair<Integer, Integer> span = NavigationUtil.getSpan();
-            if (span == null){
+            if (span == null) {
                 return null;
             }
-            return new int[]{span.getFirst(),span.getSecond()};
+            return new int[]{span.getFirst(), span.getSecond()};
         }
         return null;
     }
 
     @Override
     public void performClickAction(Document doc, int offset) {
-        if (referenceExpression == null){
+        if (referenceExpression == null) {
             return;
         }
-        
+
         FileObject file = ProjectUtils.getFileObjectForDocument(doc);
-        if (file == null){
+        if (file == null) {
             return;
         }
-        
+
         Project project = ProjectUtils.getKotlinProjectForFileObject(file);
-        if (project == null){
+        if (project == null) {
             return;
         }
-        
+
         NavigationData navigationData = getNavigationData(referenceExpression, project);
-        if (navigationData == null){
+        if (navigationData == null) {
             gotoKotlinStdlib(referenceExpression, project);
             return;
         }
-        
+
         navigationCache = NavigationUtil.gotoElement(navigationData.getSourceElement(), navigationData.getDeclarationDescriptor(),
                 referenceExpression, project, file);
     }
-    
+
     private String getDeclarationName(DeclarationDescriptor desc) {
         String fileName = "";
         JvmPackagePartSource src = (JvmPackagePartSource) ((DeserializedCallableMemberDescriptor) desc).getContainerSource();
@@ -115,10 +118,10 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
         } else {
             fileName = src.getClassName().getInternalName();
         }
-        
+
         return fileName;
     }
-    
+
     private String getStdFuncFileName(DeclarationDescriptor desc) {
         String fileName = "";
         JvmPackagePartSource src = (JvmPackagePartSource) ((DeserializedCallableMemberDescriptor) desc).getContainerSource();
@@ -128,104 +131,119 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
         } else {
             fileName = src.getClassName().getInternalName();
         }
-        if (fileName.endsWith("Kt")){
-            fileName = fileName.substring(0, fileName.length()-2) + ".kt";
+        if (fileName.endsWith("Kt")) {
+            fileName = fileName.substring(0, fileName.length() - 2) + ".kt";
         }
         return fileName;
     }
-    
+
+    private VirtualFile findFileInStdlib(String fileName, Project project) {
+        if (fileName.equals("")) {
+            return null;
+        }
+        
+        int index = fileName.lastIndexOf("/");
+        String packages = fileName.substring(0, index);
+        String className = fileName.substring(index + 1);
+
+        VirtualFile virtFile = KotlinEnvironment.getEnvironment(project).
+                getVirtualFileInJar(ProjectUtils.buildLibPath("kotlin-runtime-sources"), packages);
+        if (virtFile == null) {
+            return null;
+        }
+
+        VirtualFile[] children = virtFile.getChildren();
+        String jvmName = "@file:JvmName(\"" + className + "\")";
+
+        for (VirtualFile child : children) {
+            FileObject fo = JarNavigationUtil.getFileObjectFromJar(child.getPath());
+            String text = null;
+            try {
+                text = fo.asText();
+            } catch (IOException ex) {
+            }
+            if (text != null && text.contains(jvmName)) {
+                return child;
+            }
+        }
+        
+        return null;
+    }
+
     private void gotoKotlinStdlib(KtReferenceExpression referenceExpression, Project project) {
         BindingContext context = KotlinAnalyzer.analyzeFile(project, referenceExpression.getContainingKtFile()).
-            getAnalysisResult().getBindingContext();
+                getAnalysisResult().getBindingContext();
         List<KotlinReference> refs = ReferenceUtils.createReferences(referenceExpression);
-        for (KotlinReference ref : refs){
+        for (KotlinReference ref : refs) {
             Collection<? extends DeclarationDescriptor> descriptors = ref.getTargetDescriptors(context);
             for (DeclarationDescriptor desc : descriptors) {
                 String fileName = "";
-                
+
                 if (desc instanceof DeserializedCallableMemberDescriptor) {
                     if (((DeserializedCallableMemberDescriptor) desc).getContainerSource() == null) {
                         continue;
                     }
                     fileName = getDeclarationName(desc);
-                } 
-                
-                int index = fileName.lastIndexOf("/");
-                String packages = fileName.substring(0, index);
-                String className = fileName.substring(index + 1);
-                
-                VirtualFile virtFile = KotlinEnvironment.getEnvironment(project).
-                    getVirtualFileInJar(ProjectUtils.buildLibPath("kotlin-runtime-sources"), packages);
-                if (virtFile == null) {
-                    return;
                 }
-                
-                VirtualFile[] children = virtFile.getChildren();
-                String jvmName = "@file:JvmName(\"" + className + "\")";
-                
-                VirtualFile fileToNavigate = null;
-                
-                for (VirtualFile child : children) {
-                    FileObject fo = JarNavigationUtil.getFileObjectFromJar(child.getPath());
-                    // TODO: to get the text of file and check if it has specified JvmName annotation
-                }
+
+                VirtualFile fileToNavigate = findFileInStdlib(fileName, project);
                 
                 if (fileToNavigate == null) {
                     fileName = getStdFuncFileName(desc);
                     fileToNavigate = KotlinEnvironment.getEnvironment(project).
-                        getVirtualFileInJar(ProjectUtils.buildLibPath("kotlin-runtime-sources"), fileName);
+                            getVirtualFileInJar(ProjectUtils.buildLibPath("kotlin-runtime-sources"), fileName);
                 }
-                
+
                 if (NavigationUtil.gotoKotlinStdlib(fileToNavigate, desc)) {
                     return;
                 }
             }
         }
     }
-    
+
     @Nullable
     private NavigationData getNavigationData(KtReferenceExpression referenceExpression,
             Project project) {
         BindingContext context = KotlinAnalyzer.analyzeFile(project, referenceExpression.getContainingKtFile()).
                 getAnalysisResult().getBindingContext();
         List<KotlinReference> refs = ReferenceUtils.createReferences(referenceExpression);
-        
-        for (KotlinReference ref : refs){
+
+        for (KotlinReference ref : refs) {
             Collection<? extends DeclarationDescriptor> descriptors = ref.getTargetDescriptors(context);
-            for (DeclarationDescriptor descriptor : descriptors){
+            for (DeclarationDescriptor descriptor : descriptors) {
                 SourceElement elementWithSource = NavigationUtil.getElementWithSource(descriptor, project);
-                if (elementWithSource != null){
+                if (elementWithSource != null) {
                     return new NavigationData(elementWithSource, descriptor);
                 }
             }
         }
-        
+
         return null;
-        
+
     }
-    
+
     private class NavigationData {
-        
+
         private final SourceElement sourceElement;
         private final DeclarationDescriptor descriptor;
-        
-        public NavigationData(SourceElement sourceElement, DeclarationDescriptor descriptor){
+
+        public NavigationData(SourceElement sourceElement, DeclarationDescriptor descriptor) {
             this.sourceElement = sourceElement;
             this.descriptor = descriptor;
         }
-        
-        public SourceElement getSourceElement(){
+
+        public SourceElement getSourceElement() {
             return sourceElement;
         }
-        
-        public DeclarationDescriptor getDeclarationDescriptor(){
+
+        public DeclarationDescriptor getDeclarationDescriptor() {
             return descriptor;
         }
-    
+
     }
-    
+
     public Pair<Document, Integer> getNavigationCache() {
         return navigationCache;
     }
-    
+
 }

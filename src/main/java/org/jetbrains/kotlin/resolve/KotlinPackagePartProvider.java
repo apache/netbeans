@@ -41,7 +41,6 @@ public class KotlinPackagePartProvider implements PackagePartProvider{
     
     public KotlinPackagePartProvider(Project project){
         Set<VirtualFile> tempRoots = KotlinEnvironment.getEnvironment(project).getRoots();
-        
         for (VirtualFile root : tempRoots){
             if (root.findChild("META-INF") != null){
                 roots.add(root);

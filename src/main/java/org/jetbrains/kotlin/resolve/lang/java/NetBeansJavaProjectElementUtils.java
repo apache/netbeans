@@ -69,6 +69,14 @@ public class NetBeansJavaProjectElementUtils {
         return ClasspathInfo.create(bootProxy, src, compile);
     }
     
+    public static Set<String> getPackages(Project project, String name) {
+        if (!CLASSPATH_INFO.containsKey(project)){
+            CLASSPATH_INFO.put(project, getClasspathInfo(project));
+        }
+        return CLASSPATH_INFO.get(project).getClassIndex().
+                getPackageNames(name, false, EnumSet.of(ClassIndex.SearchScope.SOURCE, ClassIndex.SearchScope.DEPENDENCIES));
+    }
+    
     public static void updateClasspathInfo(Project kotlinProject){
         CLASSPATH_INFO.put(kotlinProject, getClasspathInfo(kotlinProject));
         JAVA_SOURCE.put(kotlinProject, JavaSource.create(CLASSPATH_INFO.get(kotlinProject)));
@@ -142,7 +150,7 @@ public class NetBeansJavaProjectElementUtils {
             
             ClasspathInfo cpInfo = CLASSPATH_INFO.get(project);
             if (cpInfo == null) {
-                return null;
+                continue;
             }
             
             FileObject file = SourceUtils.getFile(ElementHandle.create(element), cpInfo);

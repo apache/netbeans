@@ -89,7 +89,6 @@ public class KotlinLightClassManager {
         
         sourceFiles.clear();
         sourceFiles.putAll(newSourceFilesMap);
-        System.out.println();
     }
 
     @NotNull

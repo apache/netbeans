@@ -98,15 +98,10 @@ public class NetBeansJavaPackage implements JavaElement, JavaPackage{
         List<? extends Element> classes = javaPackage.getEnclosedElements();
         
         for (Element cl : classes){
-//            TypeMirror type = cl.asType();
             if (isOuterClass((TypeElement) cl)){
-//                String elementName = type.toString();
                 String elementName = cl.getSimpleName().toString();
                 if (Name.isValidIdentifier(elementName) && nameFilter.invoke(Name.identifier(elementName))){
-//                    Element typeBinding = NetBeansJavaClassFinder.createTypeBinding(type);
-//                    if (typeBinding != null){
                         javaClasses.add(new NetBeansJavaClass((TypeElement) cl));
-//                    }
                 }
             }
         }

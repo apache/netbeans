@@ -36,6 +36,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaPackage;
 import org.jetbrains.kotlin.name.ClassId;
 import org.jetbrains.kotlin.name.FqName;
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.resolve.jvm.JavaClassFinderPostConstruct;
 
 /**
@@ -90,50 +91,17 @@ public class NetBeansJavaClassFinder implements JavaClassFinder {
     @Nullable 
     public static PackageElement[] findPackageFragments(org.netbeans.api.project.Project kotlinProject, String name,
             boolean partialMatch, boolean patternMatch){
-        if (name.endsWith(".")){
-            name = name.substring(0, name.length()-1);
-        }
-        
-        Set<VirtualFile> roots = KotlinEnvironment.getEnvironment(kotlinProject).getRoots();
-        List<VirtualFile> children = Lists.newArrayList();
-        String[] packageParts = name.split("\\.");
+        Set<String> packages = NetBeansJavaProjectElementUtils.getPackages(kotlinProject, name);
         List<PackageElement> subpackageElements = Lists.newArrayList();
-        
-        if (name.equals("*")) {
-            name = "";
-            children.addAll(roots);
-        } else {
-            mainloop:
-            for (VirtualFile root : roots){
-                VirtualFile parent = root;
-
-                for (String part : packageParts){
-                    if (!part.isEmpty()){
-                        parent = parent.findChild(part);
-                        if (parent == null){
-                            continue mainloop;
-                        }
-                    }
-                }
-
-                children.addAll(Arrays.asList(parent.getChildren()));
-            }
-        }
-        
-        for (VirtualFile child : children) {
-            String path = child.getPath();
-            path.replace("\\", "/");
-            path.replace(ProjectUtils.FILE_SEPARATOR, "/");
-            
-            String[] pathParts = path.split("/");
+        for (String pack : packages) {
             PackageElement subpackageElement = NetBeansJavaProjectElementUtils.
-                    findPackageElement(kotlinProject,name + "." + pathParts[pathParts.length-1]);
+                    findPackageElement(kotlinProject,pack);
             if (subpackageElement == null){
                 continue;
             }
             subpackageElements.add(subpackageElement);
         }
-   
+        
         if (subpackageElements.isEmpty()){
             return null;
         }

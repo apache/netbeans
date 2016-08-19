@@ -26,9 +26,11 @@ import org.jetbrains.kotlin.projectsextensions.maven.MavenHelper;
 import org.jetbrains.kotlin.projectsextensions.maven.classpath.MavenExtendedClassPath;
 import org.jetbrains.kotlin.projectsextensions.maven.classpath.MavenClassPathProviderImpl;
 import org.jetbrains.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.j2seproject.J2SEProject;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
@@ -47,6 +49,7 @@ public class KotlinProjectHelper {
     private final Map<Project, KotlinSources> kotlinSources = new HashMap<Project, KotlinSources>();
     private final Map<Project, FileObject> lightClassesDirs = new HashMap<Project, FileObject>();
     private final Map<Project, ClassPathExtender> extendedClassPaths = new HashMap<Project, ClassPathExtender>();
+    private final Map<Project, ClassPath> fullClasspaths = new HashMap<Project, ClassPath>();
     
     public boolean checkProject(Project project){
         if ((project instanceof J2SEProject) || (project instanceof NbMavenProjectImpl)){
@@ -136,6 +139,32 @@ public class KotlinProjectHelper {
         return extendedClassPaths.get(p);
     }
 
+    public ClassPath getFullClassPath(Project project) {
+        if (!fullClasspaths.containsKey(project)) {
+            ClassPathExtender classpath = getExtendedClassPath(project);
+
+            ClassPath boot = classpath.getProjectSourcesClassPath(ClassPath.BOOT);
+            ClassPath compile = classpath.getProjectSourcesClassPath(ClassPath.COMPILE);
+            ClassPath source = classpath.getProjectSourcesClassPath(ClassPath.SOURCE);
+
+            ClassPath proxy = ClassPathSupport.createProxyClassPath(boot, compile, source);
+            fullClasspaths.put(project, proxy);
+        }
+        
+        return fullClasspaths.get(project);
+    }
+    
+    private void updateFullClassPath(Project project) {
+        ClassPathExtender classpath = getExtendedClassPath(project);
+
+        ClassPath boot = classpath.getProjectSourcesClassPath(ClassPath.BOOT);
+        ClassPath compile = classpath.getProjectSourcesClassPath(ClassPath.COMPILE);
+        ClassPath source = classpath.getProjectSourcesClassPath(ClassPath.SOURCE);
+
+        ClassPath proxy = ClassPathSupport.createProxyClassPath(boot, compile, source);
+        fullClasspaths.put(project, proxy);
+    }
+    
     public void updateExtendedClassPath(Project project) {
         Project p = project;
         if (p instanceof J2SEProject) {
@@ -148,6 +177,7 @@ public class KotlinProjectHelper {
             }
             extendedClassPaths.put(p, new MavenExtendedClassPath((NbMavenProjectImpl) p));
         }
+        updateFullClassPath(project);
         NetBeansJavaProjectElementUtils.updateClasspathInfo(p);
         KotlinEnvironment.updateKotlinEnvironment(project);
     }

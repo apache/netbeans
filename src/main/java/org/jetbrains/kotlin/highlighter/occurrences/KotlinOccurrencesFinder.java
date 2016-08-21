@@ -97,8 +97,8 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
                 }
         }
         
-        List<SearchFilter> beforeResolveFilters = SearchUtils.getBeforeResolveFilters();
-        List<? extends SearchFilterAfterResolve> afterResolveFilters = SearchUtils.getAfterResolveFilters();
+        List<SearchFilter> beforeResolveFilters = SearchFiltersKt.getBeforeResolveFilters();
+        List<? extends SearchFilterAfterResolve> afterResolveFilters = SearchFiltersKt.getAfterResolveFilters();
         
         for (KtElement element : elements) {
             boolean beforeResolveCheck = true;

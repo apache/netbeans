@@ -51,6 +51,7 @@ import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryClass;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryPackageSourceElement;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinarySourceElement;
 import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.navigation.netbeans.KotlinHyperlinkProvider;
 import org.jetbrains.kotlin.psi.KtDeclaration;
 import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
@@ -128,11 +129,16 @@ public class NavigationUtil {
                     getJavaElement()).getBinding();
             gotoJavaDeclaration(binding, project);
         } else if (element instanceof KotlinSourceElement){
-            return gotoKotlinDeclaration(((KotlinSourceElement) element).getPsi(), fromElement, project, currentFile);
-        
+            return gotoKotlinDeclaration(((KotlinSourceElement) element).getPsi(), fromElement, project, currentFile);        
         } else if (element instanceof KotlinJvmBinarySourceElement){
-            gotoElementInBinaryClass(((KotlinJvmBinarySourceElement) element).getBinaryClass(), descriptor, project);
+            KotlinHyperlinkProvider.gotoKotlinStdlib(
+                    (KtReferenceExpression) fromElement, project);
+//            gotoElementInBinaryClass(((KotlinJvmBinarySourceElement) element).getBinaryClass(), descriptor, project);
         } else if (element instanceof KotlinJvmBinaryPackageSourceElement){
+            KotlinHyperlinkProvider.gotoKotlinStdlib(
+                    (KtReferenceExpression) fromElement, project);
+//            NavigationUtilsKt.gotoClassByPackageSourceElement(
+//                    (KotlinJvmBinaryPackageSourceElement) element, descriptor, project);
         } 
         return null;
     }
@@ -149,37 +155,6 @@ public class NavigationUtil {
                     getVirtualFileInJar(ProjectUtils.buildLibPath("kotlin-runtime-sources"), internalPath[1]);
         
         gotoKotlinStdlib(virtFile, descriptor);
-    }
-    
-    
-    
-    public static Name getImplClassName(DeserializedCallableMemberDescriptor memberDescriptor) {
-        int nameIndex = 0;
-        
-        try {
-            Method getProtoMethod = DeserializedCallableMemberDescriptor.class.getMethod("getProto");
-            Object proto = getProtoMethod.invoke(memberDescriptor);
-            Field implClassNameField = Class.forName("org.jetbrains.kotlin.serialization.jvm.JvmProtoBuf").getField("implClassName");
-            Object implClassName = implClassNameField.get(null);
-            Class protobufCallable = Class.forName("org.jetbrains.kotlin.serialization.ProtoBuf\\$Callable");
-            Method getExtensionMethod = protobufCallable.getMethod("getExtension", implClassName.getClass());
-            Object indexObj = getExtensionMethod.invoke(proto, implClassName);
-            
-            if (!(indexObj instanceof Integer)) {
-                return null;
-            }
-            
-            nameIndex = (Integer) indexObj;
-            
-        } catch (ReflectiveOperationException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (SecurityException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IllegalArgumentException ex) {
-            Exceptions.printStackTrace(ex);
-        } 
-        
-        return memberDescriptor.getNameResolver().getName(nameIndex);
     }
     
     public static boolean gotoKotlinStdlib(VirtualFile virtFile, DeclarationDescriptor desc) {

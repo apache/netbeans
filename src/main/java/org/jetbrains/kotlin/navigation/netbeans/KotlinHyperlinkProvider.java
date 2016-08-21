@@ -109,7 +109,7 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
                 referenceExpression, project, file);
     }
 
-    private String getDeclarationName(DeclarationDescriptor desc) {
+    private static String getDeclarationName(DeclarationDescriptor desc) {
         String fileName = "";
         JvmPackagePartSource src = (JvmPackagePartSource) ((DeserializedCallableMemberDescriptor) desc).getContainerSource();
         JvmClassName facadeName = src.getFacadeClassName();
@@ -122,7 +122,7 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
         return fileName;
     }
 
-    private String getStdFuncFileName(DeclarationDescriptor desc) {
+    private static String getStdFuncFileName(DeclarationDescriptor desc) {
         String fileName = "";
         JvmPackagePartSource src = (JvmPackagePartSource) ((DeserializedCallableMemberDescriptor) desc).getContainerSource();
         JvmClassName facadeName = src.getFacadeClassName();
@@ -137,7 +137,7 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
         return fileName;
     }
 
-    private VirtualFile findFileInStdlib(String fileName, Project project) {
+    private static VirtualFile findFileInStdlib(String fileName, Project project) {
         if (fileName.equals("")) {
             return null;
         }
@@ -170,7 +170,7 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
         return null;
     }
 
-    private void gotoKotlinStdlib(KtReferenceExpression referenceExpression, Project project) {
+    public static void gotoKotlinStdlib(KtReferenceExpression referenceExpression, Project project) {
         BindingContext context = KotlinAnalyzer.analyzeFile(project, referenceExpression.getContainingKtFile()).
                 getAnalysisResult().getBindingContext();
         List<KotlinReference> refs = ReferenceUtils.createReferences(referenceExpression);

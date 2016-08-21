@@ -332,6 +332,11 @@ public class KotlinEnvironment {
         return applicationEnvironment.getLocalFileSystem().findFileByPath(location);
     }
     
+    public VirtualFile getVirtualFileInJar(@NotNull String path) {
+        VirtualFile file = applicationEnvironment.getJarFileSystem().findFileByPath(path.replace("%20", " "));
+        return file;
+    }
+    
     public VirtualFile getVirtualFileInJar(@NotNull String pathToJar, @NotNull String relativePath) {
         VirtualFile file = applicationEnvironment.getJarFileSystem().findFileByPath(pathToJar.replace("%20", " ") + "!/" + relativePath.replace("%20", " "));
         return file;

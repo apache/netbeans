@@ -18,12 +18,15 @@ package org.jetbrains.kotlin.diagnostics.netbeans.parser;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.jetbrains.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
+import org.jetbrains.kotlin.project.KotlinSources;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.jetbrains.kotlin.resolve.NetBeansAnalyzerFacadeForJVM;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.project.Project;
+import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -36,13 +39,26 @@ public class KotlinAnalysisProjectCache {
     
     private final Map<Project, AnalysisResultWithProvider> cache = new HashMap<Project, AnalysisResultWithProvider>();
     
-    public AnalysisResultWithProvider getAnalysisResult(Project project) {
+    public AnalysisResultWithProvider getAnalysisResult(final Project project) {
         synchronized(project) {
             if (cache.get(project) == null) {
-                AnalysisResultWithProvider result = 
+                final AnalysisResultWithProvider result = 
                         NetBeansAnalyzerFacadeForJVM.INSTANCE.analyzeFilesWithJavaIntegration(project, 
                         KotlinEnvironment.getEnvironment(project).getProject(), ProjectUtils.getSourceFilesWithDependencies(project));
                 cache.put(project, result);
+                
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        KotlinSources sources = new KotlinSources(project);
+                        for (FileObject file : sources.getAllKtFiles()){
+                            KotlinLightClassGeneration.INSTANCE.generate(file, 
+                                    project, result.getAnalysisResult());
+                        }
+                    }
+                };
+                
+                new Thread(runnable).start();
             }
             
             return cache.get(project);

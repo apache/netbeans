@@ -61,11 +61,6 @@ public class J2SEProjectOpenedHook extends ProjectOpenedHook{
                         
                         RequestProcessor.getDefault().post(run);
                         
-                        KotlinSources sources = new KotlinSources(project);
-                        for (FileObject file : sources.getAllKtFiles()){
-                            KotlinLightClassGeneration.INSTANCE.generate(file, project);
-                        }
-                        
                         KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
                         KotlinBuildExtender extender = new KotlinBuildExtender(project);
                         extender.addKotlinTasksToScript(project);

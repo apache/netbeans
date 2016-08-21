@@ -136,8 +136,6 @@ public class KotlinLightClassGeneration {
     }
 
     public void generate(FileObject file, Project project) {
-//        Project project = ProjectUtils.getKotlinProjectForFileObject(file);
-
         if (project == null) {
             return;
         }
@@ -166,16 +164,23 @@ public class KotlinLightClassGeneration {
                     
                     if (lightClass.getAbsolutePath().replace('\\', '/').contains(
                             state.getFactory().asList().get(i).getRelativePath())) {
+                        OutputStream stream = null;
                         try {
-                            OutputStream stream = new BufferedOutputStream(new FileOutputStream(lightClass));
+                            stream = new BufferedOutputStream(new FileOutputStream(lightClass));
                             stream.write(lightClassText);
                             stream.flush();
-                            stream.close();
                         } catch (FileNotFoundException ex) {
-
                             Exceptions.printStackTrace(ex);
                         } catch (IOException ex) {
                             Exceptions.printStackTrace(ex);
+                        } finally {
+                            if (stream != null) {
+                                try {
+                                    stream.close();
+                                } catch (IOException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                }
+                            }
                         }
                     }
                 }
@@ -183,4 +188,55 @@ public class KotlinLightClassGeneration {
         }
     }
 
+    public void generate(FileObject file, Project project, AnalysisResult analysisResult) {
+        if (project == null) {
+            return;
+        }
+        
+        KotlinLightClassManager manager = KotlinLightClassManager.getInstance(project);
+        manager.computeLightClassesSources();
+        List<String> lightClassesPaths = manager.getLightClassesPaths(file);
+
+        for (String path : lightClassesPaths) {
+            File lightClass = new File(ProjectUtils.getKotlinProjectLightClassesPath(project) + "/" + path);
+            if (!lightClass.exists()){
+                lightClass.mkdirs();
+            }    
+            
+            List<KtFile> ktFiles = manager.getSourceFiles(lightClass);
+            String[] pathParts = path.split("/");
+            String className = pathParts[pathParts.length-1];
+            if (!ktFiles.isEmpty()) {
+                GenerationState state = KotlinLightClassGeneration.INSTANCE.
+                        buildLightClasses(analysisResult, project, ktFiles, className);
+                for (int i = 0; i < state.getFactory().asList().size(); i++) {
+                    
+                    byte[] lightClassText = state.getFactory().asList().get(i).asByteArray();
+                    
+                    if (lightClass.getAbsolutePath().replace('\\', '/').contains(
+                            state.getFactory().asList().get(i).getRelativePath())) {
+                        OutputStream stream = null;
+                        try {
+                            stream = new BufferedOutputStream(new FileOutputStream(lightClass));
+                            stream.write(lightClassText);
+                            stream.flush();
+                        } catch (FileNotFoundException ex) {
+                            Exceptions.printStackTrace(ex);
+                        } catch (IOException ex) {
+                            Exceptions.printStackTrace(ex);
+                        } finally {
+                            if (stream != null) {
+                                try {
+                                    stream.close();
+                                } catch (IOException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
 }

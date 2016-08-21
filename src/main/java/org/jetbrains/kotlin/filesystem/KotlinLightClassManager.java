@@ -77,7 +77,6 @@ public class KotlinLightClassManager {
             
             for (String path : lightClassesPaths){
                 LightClassFile lightClassFile = new LightClassFile(project, path);
-                File f = lightClassFile.asFile();
                 Set<FileObject> newSourceFiles = newSourceFilesMap.get(lightClassFile.asFile());
                 if (newSourceFiles == null){
                     newSourceFiles = new HashSet<FileObject>();

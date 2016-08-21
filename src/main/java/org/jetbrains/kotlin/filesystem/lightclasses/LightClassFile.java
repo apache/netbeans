@@ -79,7 +79,7 @@ public final class LightClassFile {
             
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
-        }
+        } 
         
         
         return FileUtil.toFileObject(f);

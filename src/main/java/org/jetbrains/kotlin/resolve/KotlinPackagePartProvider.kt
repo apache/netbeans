@@ -5,12 +5,12 @@ import org.jetbrains.kotlin.model.KotlinEnvironment
 import org.jetbrains.kotlin.descriptors.PackagePartProvider
 import org.jetbrains.kotlin.load.kotlin.ModuleMapping
 
-class KotlinPackagePartProvider(val project : Project) : PackagePartProvider {
+class KotlinPackagePartProvider(val project: Project) : PackagePartProvider {
     val roots = KotlinEnvironment.getEnvironment(project)
             .getRoots()
             .map { it.file }
             .filter { it.findChild("META-INF") != null }
-    
+
     override fun findPackageParts(packageFqName: String): List<String> {
         val pathParts = packageFqName.split('.')
         val mappings = roots.filter {
@@ -18,7 +18,7 @@ class KotlinPackagePartProvider(val project : Project) : PackagePartProvider {
             pathParts.fold(it) {
                 parent, part ->
                 if (part.isEmpty()) parent
-                else  parent.findChild(part) ?: return@filter false
+                else parent.findChild(part) ?: return@filter false
             }
             true
         }.mapNotNull {
@@ -32,5 +32,5 @@ class KotlinPackagePartProvider(val project : Project) : PackagePartProvider {
         return mappings.map { it.findPackageParts(packageFqName) }
                 .filterNotNull()
                 .flatMap { it.parts }.distinct()
-}
+    }
 }

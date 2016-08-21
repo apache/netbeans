@@ -18,9 +18,7 @@ package org.jetbrains.kotlin.projectsextensions.maven;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import org.jetbrains.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
-import org.jetbrains.kotlin.project.KotlinSources;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.projectsextensions.maven.buildextender.PomXmlModifier;
 import org.jetbrains.kotlin.utils.ProjectUtils;
@@ -28,7 +26,6 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
-import org.openide.filesystems.FileObject;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -66,13 +63,7 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                         if (!progressHandleRun) {
                             RequestProcessor.getDefault().post(run);
                         }
-                        KotlinSources sources = KotlinProjectHelper.INSTANCE.getKotlinSources(project);
-                        if (!sources.hasLightClasses()) {
-                            for (FileObject file : sources.getAllKtFiles()){
-                                KotlinLightClassGeneration.INSTANCE.generate(file, project);
-                            }
-                            sources.lightClassesGenerated();
-                        }
+                        
                         if (!MavenHelper.hasParent(project)){
                             new PomXmlModifier(project).checkPom();
                         }

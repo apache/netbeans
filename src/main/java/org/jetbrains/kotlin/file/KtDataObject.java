@@ -16,8 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.file;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import org.jetbrains.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.jetbrains.kotlin.utils.ProjectUtils;

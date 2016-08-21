@@ -59,6 +59,12 @@ public final class KotlinSources {
 
     private void findSrc(FileObject fo, Collection<FileObject> files, KotlinProjectConstants type) {
         if (fo.isFolder()) {
+            if (fo.getName().equals("resources")) {
+                if (fo.getParent().getName().equals("test") ||
+                        fo.getParent().getName().equals("main")) {
+                    return;
+                }
+            }
             for (FileObject file : fo.getChildren()) {
                 findSrc(file, files, type);
             }

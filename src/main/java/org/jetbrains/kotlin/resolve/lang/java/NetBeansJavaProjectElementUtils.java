@@ -28,11 +28,13 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import org.jetbrains.kotlin.projectsextensions.ClassPathExtender;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
+import org.jetbrains.kotlin.resolve.lang.java.Searchers.BinaryNameSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.Searchers.IsDeprecatedSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.Searchers.PackageElementSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.Searchers.TypeElementSearcher;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
-import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtils;
@@ -49,8 +51,6 @@ import org.openide.util.Exceptions;
  */
 public class NetBeansJavaProjectElementUtils {
     
-    private static boolean isDeprecated = false;
-    private static String binaryName = null;
     private static final Map<Project,JavaSource> JAVA_SOURCE = new HashMap<Project,JavaSource>();
     private static final Map<Project,ClasspathInfo> CLASSPATH_INFO = new HashMap<Project,ClasspathInfo>();
     
@@ -82,13 +82,17 @@ public class NetBeansJavaProjectElementUtils {
         JAVA_SOURCE.put(kotlinProject, JavaSource.create(CLASSPATH_INFO.get(kotlinProject)));
     }
     
-    public static TypeElement findTypeElement(Project kotlinProject, String fqName){
+    private static void checkJavaSource(Project kotlinProject) {
         if (!CLASSPATH_INFO.containsKey(kotlinProject)){
             CLASSPATH_INFO.put(kotlinProject, getClasspathInfo(kotlinProject));
         }
         if (!JAVA_SOURCE.containsKey(kotlinProject)){
             JAVA_SOURCE.put(kotlinProject,JavaSource.create(CLASSPATH_INFO.get(kotlinProject)));
         }
+    }
+    
+    public static TypeElement findTypeElement(Project kotlinProject, String fqName){
+        checkJavaSource(kotlinProject);
         TypeElementSearcher searcher = new TypeElementSearcher(fqName);
         try {
             JAVA_SOURCE.get(kotlinProject).runUserActionTask(searcher, true);
@@ -100,12 +104,7 @@ public class NetBeansJavaProjectElementUtils {
     }
     
     public static PackageElement findPackageElement(Project kotlinProject, String fqName){
-        if (!CLASSPATH_INFO.containsKey(kotlinProject)){
-            CLASSPATH_INFO.put(kotlinProject, getClasspathInfo(kotlinProject));
-        }
-        if (!JAVA_SOURCE.containsKey(kotlinProject)){
-            JAVA_SOURCE.put(kotlinProject,JavaSource.create(CLASSPATH_INFO.get(kotlinProject)));
-        }
+        checkJavaSource(kotlinProject);
         PackageElementSearcher searcher = new PackageElementSearcher(fqName);
         try {
             JAVA_SOURCE.get(kotlinProject).runUserActionTask(searcher, true);
@@ -117,12 +116,7 @@ public class NetBeansJavaProjectElementUtils {
     }
     
     public static List<String> findFQName(Project kotlinProject, String name) {
-        if (!CLASSPATH_INFO.containsKey(kotlinProject)){
-            CLASSPATH_INFO.put(kotlinProject, getClasspathInfo(kotlinProject));
-        }
-        if (!JAVA_SOURCE.containsKey(kotlinProject)){
-            JAVA_SOURCE.put(kotlinProject,JavaSource.create(CLASSPATH_INFO.get(kotlinProject)));
-        }
+        checkJavaSource(kotlinProject);
         List<String> fqNames = new ArrayList<String>();
         
         final Set<ElementHandle<TypeElement>> result = 
@@ -170,54 +164,29 @@ public class NetBeansJavaProjectElementUtils {
             return false;
         }
         
-        if (!CLASSPATH_INFO.containsKey(kotlinProject)){
-            CLASSPATH_INFO.put(kotlinProject, getClasspathInfo(kotlinProject));
-        }
-        if (!JAVA_SOURCE.containsKey(kotlinProject)){
-            JAVA_SOURCE.put(kotlinProject,JavaSource.create(CLASSPATH_INFO.get(kotlinProject)));
-        }
+        checkJavaSource(kotlinProject);
+        IsDeprecatedSearcher searcher = new IsDeprecatedSearcher(element);
         try {
-            JAVA_SOURCE.get(kotlinProject).runUserActionTask(new CancellableTask<CompilationController>(){
-                @Override
-                public void cancel() {
-                }
-                
-                @Override
-                public void run(CompilationController info) throws Exception {
-                    NetBeansJavaProjectElementUtils.isDeprecated = info.getElements().isDeprecated(element);
-                }
-            }, true);
+            JAVA_SOURCE.get(kotlinProject).runUserActionTask(searcher, true);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
         
-        return isDeprecated;
+        
+        return searcher.isDeprecated();
     }
     
     public static String toBinaryName(Project kotlinProject, final String name){
-        if (!CLASSPATH_INFO.containsKey(kotlinProject)){
-            CLASSPATH_INFO.put(kotlinProject, getClasspathInfo(kotlinProject));
-        }
-        if (!JAVA_SOURCE.containsKey(kotlinProject)){
-            JAVA_SOURCE.put(kotlinProject,JavaSource.create(CLASSPATH_INFO.get(kotlinProject)));
-        }
+        checkJavaSource(kotlinProject);
+        
+        BinaryNameSearcher searcher = new BinaryNameSearcher(name);
         try {
-            JAVA_SOURCE.get(kotlinProject).runUserActionTask(new CancellableTask<CompilationController>(){
-                @Override
-                public void cancel() {
-                }
-                
-                @Override
-                public void run(CompilationController info) throws Exception {
-                    TypeElement elem = info.getElements().getTypeElement(name);
-                    NetBeansJavaProjectElementUtils.binaryName = info.getElements().getBinaryName(elem).toString();
-                }
-            }, true);
+            JAVA_SOURCE.get(kotlinProject).runUserActionTask(searcher, true);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
         
-        return binaryName;
+        return searcher.getBinaryName();
     }
     
     public static FileObject getFileObjectForElement(Element element, Project kotlinProject){
@@ -231,54 +200,6 @@ public class NetBeansJavaProjectElementUtils {
     public static void openElementInEditor(Element element, Project kotlinProject){
         ElementHandle<? extends Element> handle = ElementHandle.create(element);
         ElementOpen.open(CLASSPATH_INFO.get(kotlinProject), handle);
-    }
-    
-    private static class TypeElementSearcher implements CancellableTask<CompilationController>{
-
-        private TypeElement element;
-        private final String fqName;
-        
-        public TypeElementSearcher(String fqName){
-            this.fqName = fqName;
-        }
-        
-        @Override
-        public void cancel() {
-        }
-
-        @Override
-        public void run(CompilationController info) throws Exception {
-            element = info.getElements().getTypeElement(fqName);
-        }
-        
-        public TypeElement getElement(){
-            return element;
-        }
-        
-    }
-    
-    private static class PackageElementSearcher implements CancellableTask<CompilationController>{
-
-        private PackageElement element;
-        private final String fqName;
-        
-        public PackageElementSearcher(String fqName){
-            this.fqName = fqName;
-        }
-        
-        @Override
-        public void cancel() {
-        }
-
-        @Override
-        public void run(CompilationController info) throws Exception {
-            element = info.getElements().getPackageElement(fqName);
-        }
-        
-        public PackageElement getElement(){
-            return element;
-        }
-        
     }
     
 }

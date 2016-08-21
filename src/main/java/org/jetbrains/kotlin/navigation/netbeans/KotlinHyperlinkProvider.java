@@ -40,6 +40,7 @@ import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.BindingContext;
 import org.jetbrains.kotlin.resolve.jvm.JvmClassName;
 import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedCallableMemberDescriptor;
+import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedClassDescriptor;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.project.Project;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider;
@@ -124,6 +125,9 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
 
     private static String getStdFuncFileName(DeclarationDescriptor desc) {
         String fileName = "";
+        if (!(desc instanceof DeserializedCallableMemberDescriptor)) {
+            return fileName;
+        }
         JvmPackagePartSource src = (JvmPackagePartSource) ((DeserializedCallableMemberDescriptor) desc).getContainerSource();
         JvmClassName facadeName = src.getFacadeClassName();
         if (facadeName != null) {

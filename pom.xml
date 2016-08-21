@@ -6,44 +6,22 @@
   <artifactId>kotlin.netbeans.plugin</artifactId>  
   <version>0.1.0-SNAPSHOT</version>  
   <packaging>nbm</packaging>  
-
-  <properties>
-      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
-      <netbeans.version>RELEASE81</netbeans.version>
-      <kotlin.version>1.0.3</kotlin.version>
-  </properties>
-  
-  <name>
-      Kotlin Plugin for NetBeans IDE
-  </name>
-  
-  <description url="http://kotlinlang.org/">
-      Kotlin language support
-  </description>
-  
-  <organization>
-      <name>JetBrains</name>
-      <url>http://www.jetbrains.com/</url>
-  </organization>
-  
-  <licenses>
-      <license>
-          <url>
-            Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
-            you may not use this file except in compliance with the License.
-            You may obtain a copy of the License at
-
-            http://www.apache.org/licenses/LICENSE-2.0
-
-            Unless required by applicable law or agreed to in writing, software
-            distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
-            WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-            See the License for the specific language governing permissions and
-            limitations under the License.
-          </url>
-      </license>
-  </licenses>
-  
+  <properties> 
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+    <netbeans.version>RELEASE81</netbeans.version>  
+    <kotlin.version>1.0.3</kotlin.version> 
+  </properties>  
+  <name>Kotlin Plugin for NetBeans IDE</name>  
+  <description url="http://kotlinlang.org/">Kotlin language support</description>  
+  <organization> 
+    <name>JetBrains</name>  
+    <url>http://www.jetbrains.com/</url> 
+  </organization>  
+  <licenses> 
+    <license> 
+      <url>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</url> 
+    </license> 
+  </licenses>  
   <build> 
     <plugins> 
       <plugin> 
@@ -56,76 +34,76 @@
             <phase>validate</phase>  
             <goals> 
               <goal>install-file</goal> 
-            </goals> 
+            </goals>  
             <configuration> 
-                <file>${project.basedir}/lib/kotlin-ide-common.jar</file>  
-                <groupId>org.jetbrains.kotlin</groupId>  
-                <artifactId>kotlin-ide-common</artifactId>  
-                <version>1.0</version>  
-                <packaging>jar</packaging>  
-                <generatePom>true</generatePom> 
-            </configuration>  
+              <file>${project.basedir}/lib/kotlin-ide-common.jar</file>  
+              <groupId>org.jetbrains.kotlin</groupId>  
+              <artifactId>kotlin-ide-common</artifactId>  
+              <version>1.0</version>  
+              <packaging>jar</packaging>  
+              <generatePom>true</generatePom> 
+            </configuration> 
+          </execution>  
+          <execution> 
+            <id>inst2</id>  
+            <phase>validate</phase>  
+            <goals> 
+              <goal>install-file</goal> 
+            </goals>  
+            <configuration> 
+              <file>${project.basedir}/lib/openapi-formatter.jar</file>  
+              <groupId>org.jetbrains.kotlin</groupId>  
+              <artifactId>openapi-formatter</artifactId>  
+              <version>1.0</version>  
+              <packaging>jar</packaging>  
+              <generatePom>true</generatePom> 
+            </configuration> 
+          </execution>  
+          <execution> 
+            <id>inst3</id>  
+            <phase>validate</phase>  
+            <goals> 
+              <goal>install-file</goal> 
+            </goals>  
+            <configuration> 
+              <file>${project.basedir}/lib/kotlin-formatter.jar</file>  
+              <groupId>org.jetbrains.kotlin</groupId>  
+              <artifactId>kotlin-formatter</artifactId>  
+              <version>1.0</version>  
+              <packaging>jar</packaging>  
+              <generatePom>true</generatePom> 
+            </configuration> 
+          </execution>  
+          <execution> 
+            <id>inst4</id>  
+            <phase>validate</phase>  
+            <goals> 
+              <goal>install-file</goal> 
+            </goals>  
+            <configuration> 
+              <file>${project.basedir}/lib/idea-formatter.jar</file>  
+              <groupId>org.jetbrains.kotlin</groupId>  
+              <artifactId>idea-formatter</artifactId>  
+              <version>1.0</version>  
+              <packaging>jar</packaging>  
+              <generatePom>true</generatePom> 
+            </configuration> 
+          </execution>  
+          <execution> 
+            <id>inst5</id>  
+            <phase>validate</phase>  
+            <goals> 
+              <goal>install-file</goal> 
+            </goals>  
+            <configuration> 
+              <file>${project.basedir}/lib/intellij-core.jar</file>  
+              <groupId>org.jetbrains.kotlin</groupId>  
+              <artifactId>intellij-core</artifactId>  
+              <version>1.0</version>  
+              <packaging>jar</packaging>  
+              <generatePom>true</generatePom> 
+            </configuration> 
           </execution> 
-          <execution>
-              <id>inst2</id>
-              <phase>validate</phase>
-              <goals>
-                  <goal>install-file</goal>
-              </goals>
-              <configuration>
-                <file>${project.basedir}/lib/openapi-formatter.jar</file>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>openapi-formatter</artifactId>
-                <version>1.0</version>
-                <packaging>jar</packaging>
-                <generatePom>true</generatePom>
-              </configuration>
-          </execution>
-          <execution>
-              <id>inst3</id>
-              <phase>validate</phase>
-              <goals>
-                  <goal>install-file</goal>
-              </goals>
-              <configuration>
-                <file>${project.basedir}/lib/kotlin-formatter.jar</file>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-formatter</artifactId>
-                <version>1.0</version>
-                <packaging>jar</packaging>
-                <generatePom>true</generatePom>
-              </configuration>
-          </execution>
-          <execution>
-              <id>inst4</id>
-              <phase>validate</phase>
-              <goals>
-                  <goal>install-file</goal>
-              </goals>
-              <configuration>
-                <file>${project.basedir}/lib/idea-formatter.jar</file>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>idea-formatter</artifactId>
-                <version>1.0</version>
-                <packaging>jar</packaging>
-                <generatePom>true</generatePom>
-              </configuration>
-          </execution>
-          <execution>
-              <id>inst5</id>
-              <phase>validate</phase>
-              <goals>
-                  <goal>install-file</goal>
-              </goals>
-              <configuration>
-                <file>${project.basedir}/lib/intellij-core.jar</file>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>intellij-core</artifactId>
-                <version>1.0</version>
-                <packaging>jar</packaging>
-                <generatePom>true</generatePom>
-              </configuration>
-          </execution>
         </executions> 
       </plugin>  
       <plugin> 
@@ -168,27 +146,27 @@
             <dependency> 
               <id>org.netbeans.modules:org-netbeans-modules-maven-embedder</id>  
               <type>impl</type> 
+            </dependency>  
+            <dependency> 
+              <id>org.netbeans.modules:org-netbeans-modules-java-editor</id>  
+              <type>impl</type> 
+            </dependency>  
+            <dependency> 
+              <id>org.netbeans.api:org-netbeans-modules-csl-api</id>  
+              <type>impl</type> 
+            </dependency>  
+            <dependency> 
+              <id>org.netbeans.modules:org-netbeans-modules-jumpto</id>  
+              <type>impl</type> 
+            </dependency>  
+            <dependency> 
+              <id>org.netbeans.modules:org-netbeans-modules-debugger-jpda</id>  
+              <type>impl</type> 
+            </dependency>  
+            <dependency> 
+              <id>org.netbeans.modules:org-netbeans-modules-debugger-jpda-projects</id>  
+              <type>impl</type> 
             </dependency> 
-            <dependency>
-                <id>org.netbeans.modules:org-netbeans-modules-java-editor</id>
-                <type>impl</type>
-            </dependency>
-            <dependency>
-                <id>org.netbeans.api:org-netbeans-modules-csl-api</id>
-                <type>impl</type>
-            </dependency>
-            <dependency>
-                <id>org.netbeans.modules:org-netbeans-modules-jumpto</id>
-                <type>impl</type>
-            </dependency>
-            <dependency>
-                <id>org.netbeans.modules:org-netbeans-modules-debugger-jpda</id>
-                <type>impl</type>
-            </dependency>
-            <dependency>
-                <id>org.netbeans.modules:org-netbeans-modules-debugger-jpda-projects</id>
-                <type>impl</type>
-            </dependency>
           </moduleDependencies> 
         </configuration> 
       </plugin>  
@@ -242,31 +220,31 @@
       <artifactId>kotlin-ide-common</artifactId>  
       <version>1.0</version>  
       <type>jar</type> 
-    </dependency>
-    <dependency>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>openapi-formatter</artifactId>
-        <version>1.0</version>
-        <type>jar</type>
-    </dependency>
-    <dependency>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-formatter</artifactId>
-        <version>1.0</version>
-        <type>jar</type>
-    </dependency>
-    <dependency>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>idea-formatter</artifactId>
-        <version>1.0</version>
-        <type>jar</type>
-    </dependency>
-    <dependency>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>intellij-core</artifactId>
-        <version>1.0</version>
-        <type>jar</type>
-    </dependency>
+    </dependency>  
+    <dependency> 
+      <groupId>org.jetbrains.kotlin</groupId>  
+      <artifactId>openapi-formatter</artifactId>  
+      <version>1.0</version>  
+      <type>jar</type> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.jetbrains.kotlin</groupId>  
+      <artifactId>kotlin-formatter</artifactId>  
+      <version>1.0</version>  
+      <type>jar</type> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.jetbrains.kotlin</groupId>  
+      <artifactId>idea-formatter</artifactId>  
+      <version>1.0</version>  
+      <type>jar</type> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.jetbrains.kotlin</groupId>  
+      <artifactId>intellij-core</artifactId>  
+      <version>1.0</version>  
+      <type>jar</type> 
+    </dependency>  
     <dependency> 
       <groupId>org.netbeans.modules</groupId>  
       <artifactId>org-netbeans-modules-maven</artifactId>  
@@ -277,7 +255,7 @@
       <groupId>org.netbeans.modules</groupId>  
       <artifactId>org-netbeans-modules-maven-embedder</artifactId>  
       <version>${netbeans.version}</version>  
-      <type>jar</type>  
+      <type>jar</type> 
     </dependency>  
     <dependency> 
       <groupId>org.jetbrains.kotlin</groupId>  
@@ -471,12 +449,12 @@
       <artifactId>org-openide-modules</artifactId>  
       <version>${netbeans.version}</version>  
       <type>jar</type> 
-    </dependency>    
+    </dependency>  
     <dependency> 
       <groupId>org.netbeans.api</groupId>  
       <artifactId>org-netbeans-modules-java-project-ui</artifactId>  
-      <version>${netbeans.version}</version>
-      <type>jar</type>
+      <version>${netbeans.version}</version>  
+      <type>jar</type> 
     </dependency>  
     <dependency> 
       <groupId>org.netbeans.api</groupId>  
@@ -564,33 +542,30 @@
       <groupId>org.jetbrains.kotlin</groupId>  
       <artifactId>kotlin-stdlib</artifactId>  
       <version>${kotlin.version}</version> 
-    </dependency>
-    <dependency>
-      <groupId>org.netbeans.api</groupId>
-      <artifactId>org-netbeans-modules-refactoring-api</artifactId>
-      <version>${netbeans.version}</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.netbeans.modules</groupId>
-      <artifactId>org-netbeans-modules-java-editor</artifactId>
-      <version>${netbeans.version}</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.netbeans.modules</groupId>
-      <artifactId>org-netbeans-modules-jumpto</artifactId>
-      <version>${netbeans.version}</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.netbeans.api</groupId>
-      <artifactId>org-netbeans-spi-quicksearch</artifactId>
-      <version>${netbeans.version}</version>
-    </dependency>
-    
-    
-    
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-modules-refactoring-api</artifactId>  
+      <version>${netbeans.version}</version>  
+      <type>jar</type> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.modules</groupId>  
+      <artifactId>org-netbeans-modules-java-editor</artifactId>  
+      <version>${netbeans.version}</version>  
+      <type>jar</type> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.modules</groupId>  
+      <artifactId>org-netbeans-modules-jumpto</artifactId>  
+      <version>${netbeans.version}</version>  
+      <type>jar</type> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-spi-quicksearch</artifactId>  
+      <version>${netbeans.version}</version> 
+    </dependency>  
     <!-- TEST DEPENDENCIES -->  
     <dependency> 
       <groupId>junit</groupId>  
@@ -694,51 +669,50 @@
       <artifactId>org-netbeans-modules-nbjunit</artifactId>  
       <version>${netbeans.version}</version>  
       <scope>test</scope> 
-    </dependency>
-    <dependency>
-      <groupId>org.netbeans.api</groupId>
-      <artifactId>org-netbeans-api-debugger</artifactId>
-      <version>${netbeans.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.netbeans.api</groupId>
-      <artifactId>org-netbeans-api-debugger-jpda</artifactId>
-      <version>${netbeans.version}</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.netbeans.api</groupId>
-      <artifactId>org-netbeans-spi-viewmodel</artifactId>
-      <version>RELEASE81</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.netbeans.modules</groupId>
-      <artifactId>org-netbeans-modules-debugger-jpda</artifactId>
-      <version>RELEASE81</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.netbeans.modules</groupId>
-      <artifactId>org-netbeans-modules-debugger-jpda-projectsui</artifactId>
-      <version>RELEASE81</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.netbeans.api</groupId>
-      <artifactId>org-netbeans-spi-debugger-ui</artifactId>
-      <version>RELEASE81</version>
-    </dependency>
-    <dependency>
-      <groupId>org.netbeans.modules</groupId>
-      <artifactId>org-netbeans-modules-debugger-jpda-projects</artifactId>
-      <version>RELEASE81</version>
-    </dependency>
-    <dependency>
-      <groupId>org.netbeans.api</groupId>
-      <artifactId>org-netbeans-modules-editor</artifactId>
-      <version>RELEASE81</version>
-    </dependency>
-  </dependencies>  
-
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-api-debugger</artifactId>  
+      <version>${netbeans.version}</version> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-api-debugger-jpda</artifactId>  
+      <version>${netbeans.version}</version>  
+      <type>jar</type> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-spi-viewmodel</artifactId>  
+      <version>RELEASE81</version>  
+      <type>jar</type> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.modules</groupId>  
+      <artifactId>org-netbeans-modules-debugger-jpda</artifactId>  
+      <version>RELEASE81</version>  
+      <type>jar</type> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.modules</groupId>  
+      <artifactId>org-netbeans-modules-debugger-jpda-projectsui</artifactId>  
+      <version>RELEASE81</version>  
+      <type>jar</type> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-spi-debugger-ui</artifactId>  
+      <version>RELEASE81</version> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.modules</groupId>  
+      <artifactId>org-netbeans-modules-debugger-jpda-projects</artifactId>  
+      <version>RELEASE81</version> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-modules-editor</artifactId>  
+      <version>RELEASE81</version> 
+    </dependency> 
+  </dependencies> 
 </project>

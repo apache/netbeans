@@ -74,6 +74,7 @@ import org.jetbrains.kotlin.codegen.extensions.ClassBuilderInterceptorExtension;
 import org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages;
 import com.intellij.formatting.KotlinLanguageCodeStyleSettingsProvider;
 import com.intellij.formatting.KotlinSettingsProvider;
+import org.jetbrains.kotlin.cli.jvm.compiler.JavaRoot;
 import org.jetbrains.kotlin.idea.KotlinFileType;
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory;
 import org.jetbrains.kotlin.load.kotlin.ModuleVisibilityManager;
@@ -98,7 +99,8 @@ public class KotlinEnvironment {
     private final JavaCoreApplicationEnvironment applicationEnvironment;
     private final JavaCoreProjectEnvironment projectEnvironment;
     private final MockProject project;
-    private final Set<VirtualFile> roots = new LinkedHashSet<VirtualFile>();
+//    private final Set<VirtualFile> roots = new LinkedHashSet<VirtualFile>();
+    private final Set<JavaRoot> roots = new LinkedHashSet<JavaRoot>();
     
     private KotlinEnvironment(@NotNull org.netbeans.api.project.Project kotlinProject, @NotNull Disposable disposable) {
         applicationEnvironment = createJavaCoreApplicationEnvironment(disposable);
@@ -221,10 +223,10 @@ public class KotlinEnvironment {
         
         for (String s : classpath) {
             if (s.endsWith("!/")){
-                addToClasspath(s.split("!/")[0].split("file:")[1]);
+                addToClasspath(s.split("!/")[0].split("file:")[1], null);
             } else {
                 if (!lightClassesDir.contains(s)){
-                    addToClasspath(s);
+                    addToClasspath(s, null);
                 }
             }
         }
@@ -268,7 +270,7 @@ public class KotlinEnvironment {
         return project;
     }
     
-    private void addToClasspath(String path){
+    private void addToClasspath(String path, JavaRoot.RootType rootType) {
         File file = new File(path);
         if (file.isFile()) {
             VirtualFile jarFile = applicationEnvironment.getJarFileSystem().findFileByPath(path+"!/");
@@ -278,16 +280,47 @@ public class KotlinEnvironment {
             }
             
             projectEnvironment.addJarToClassPath(file);
-            roots.add(jarFile);
+            
+            JavaRoot.RootType type = rootType;
+            if (type == null) {
+                type = JavaRoot.RootType.BINARY;
+            }
+            roots.add(new JavaRoot(jarFile, type, null));
         } else {
             VirtualFile root = applicationEnvironment.getLocalFileSystem().findFileByPath(path);
             if (root == null) {
                 return;
             }
             projectEnvironment.addSourcesToClasspath(root);
-            roots.add(root);
+            
+            JavaRoot.RootType type = rootType;
+            if (type == null) {
+                type = JavaRoot.RootType.SOURCE;
+            }
+            roots.add(new JavaRoot(root, type, null));
         }
     }
+    
+//    private void addToClasspath(String path){
+//        File file = new File(path);
+//        if (file.isFile()) {
+//            VirtualFile jarFile = applicationEnvironment.getJarFileSystem().findFileByPath(path+"!/");
+//            
+//            if (jarFile == null) {
+//                return;
+//            }
+//            
+//            projectEnvironment.addJarToClassPath(file);
+//            roots.add(jarFile);
+//        } else {
+//            VirtualFile root = applicationEnvironment.getLocalFileSystem().findFileByPath(path);
+//            if (root == null) {
+//                return;
+//            }
+//            projectEnvironment.addSourcesToClasspath(root);
+//            roots.add(root);
+//        }
+//    }
     
     public boolean isJarFile(@NotNull String pathToJar){
         VirtualFile jarFile = applicationEnvironment.getJarFileSystem().findFileByPath(pathToJar + "!/");
@@ -304,7 +337,8 @@ public class KotlinEnvironment {
         return file;
     }
     
-    public Set<VirtualFile> getRoots(){
+    @NotNull
+    public Set<JavaRoot> getRoots(){
         return Collections.unmodifiableSet(roots);
     }
     

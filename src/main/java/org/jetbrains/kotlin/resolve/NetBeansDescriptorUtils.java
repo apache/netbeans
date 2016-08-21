@@ -69,8 +69,8 @@ public class NetBeansDescriptorUtils {
             return new ArrayList<SourceElement>(result);
         }
         //TODO: this returns a source element for containing element with existing .class file. This logic should be moved to a caller.
-        if (DeserializedDescriptorUtils.isDeserialized(descriptor)) {
-            DeclarationDescriptor containing = DeserializedDescriptorUtils.getContainingClassOrPackage(descriptor);
+        if (DeserializedDescriptorUtilsKt.isDeserialized(descriptor)) {
+            DeclarationDescriptor containing = DeserializedDescriptorUtilsKt.getContainingClassOrPackage(descriptor);
             if (containing != null) {
                 return Lists.newArrayList(descriptorToDeclaration(containing));
             }

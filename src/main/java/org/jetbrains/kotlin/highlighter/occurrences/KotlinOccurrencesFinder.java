@@ -89,7 +89,8 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
         if (elementName == null) {
             elementName = sourceElement.getText();
         }
-        for (PsiElement psi : findOccurrencesInFile(ktFile, elementName)) {
+//        for (PsiElement psi : findOccurrencesInFile(ktFile, elementName)) {
+        for (PsiElement psi : getAllOccurrencesInFile(ktFile, elementName)) {
             KtElement el = PsiTreeUtil.getNonStrictParentOfType(psi, KtElement.class);
                 if (el != null) {
                     elements.add(el);
@@ -128,6 +129,24 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
         }
         
         return elementsToReturn;
+    }
+    
+    private static List<PsiElement> getAllOccurrencesInFile(KtFile ktFile, String text) {
+        List<PsiElement> elements = Lists.newArrayList();
+        
+        String source = ktFile.getText();
+        int start = 0;
+        
+        while (true) {
+            int index = source.indexOf(text, start);
+            if (index == -1) {
+                break;
+            }
+            elements.add(ktFile.findElementAt(index));
+            start = index + text.length();
+        }
+        
+        return elements;
     }
     
     private static List<PsiElement> findOccurrencesInFile(KtFile ktFile, String text) {

@@ -130,7 +130,7 @@ public class KotlinEnvironment {
         project.registerService(KotlinLightClassManager.class, new KotlinLightClassManager(kotlinProject));
         project.registerService(BuiltInsReferenceResolver.class, new BuiltInsReferenceResolver(project));
         project.registerService(KotlinSourceIndex.class, new KotlinSourceIndex());
-        project.registerService(KotlinCacheService.class, new KotlinCacheServiceImpl());
+        project.registerService(KotlinCacheService.class, new KotlinCacheServiceImpl(project, kotlinProject));
         
         configureClasspath(kotlinProject);
         

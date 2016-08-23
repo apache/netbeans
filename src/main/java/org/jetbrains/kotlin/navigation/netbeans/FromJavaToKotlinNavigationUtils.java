@@ -207,6 +207,10 @@ public class FromJavaToKotlinNavigationUtils {
         String first = ktElement.getName();
         String second = element.getSimpleName().toString();
         
+        if (first == null || second == null) {
+            return false;
+        }
+        
         if (!first.equals(second)) {
             return false;
         }

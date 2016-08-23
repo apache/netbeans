@@ -5,6 +5,8 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.Task;
 
 /**
@@ -24,6 +26,7 @@ public class Searchers {
 
         @Override
         public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
             element = info.getElements().getTypeElement(fqName);
         }
 
@@ -44,6 +47,7 @@ public class Searchers {
 
         @Override
         public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
             element = info.getElements().getPackageElement(fqName);
         }
 
@@ -64,6 +68,7 @@ public class Searchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
             TypeElement elem = info.getElements().getTypeElement(name);
             binaryName = info.getElements().getBinaryName(elem).toString();
         }
@@ -84,6 +89,7 @@ public class Searchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
             isDeprecated = info.getElements().isDeprecated(element);
         }
         

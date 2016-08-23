@@ -21,7 +21,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.jetbrains.kotlin.projectsextensions.ClassPathExtender;
@@ -51,8 +53,8 @@ public class MavenExtendedClassPath implements ClassPathExtender {
     }
     
     private ClassPath getClasspath(List<String> paths) throws DependencyResolutionRequiredException, MalformedURLException {
-        List<URL> classpaths = new ArrayList<URL>();
-        List<String> classpath = new ArrayList<String>();
+        Set<URL> classpaths = new HashSet<URL>();
+        Set<String> classpath = new HashSet<String>();
         classpath.addAll(paths);
         classpath.add(KotlinClasspath.getKotlinBootClasspath());
         

@@ -92,7 +92,7 @@ public class KotlinParser extends Parser {
     public static class KotlinParserResult extends ParserResult {
 
         private boolean valid = true;
-        private final AnalysisResultWithProvider analysisResult;
+        private AnalysisResultWithProvider analysisResult;
         private final FileObject file;
         private final KtFile ktFile;
         
@@ -106,6 +106,7 @@ public class KotlinParser extends Parser {
         @Override
         protected void invalidate() {
             valid = false;
+            analysisResult = null;
         }
 
         public AnalysisResultWithProvider getAnalysisResult() throws ParseException {

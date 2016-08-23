@@ -77,7 +77,7 @@ public class NetBeansAnalyzerFacadeForJVM {
                 new CliLightClassGenerationSupport.CliBindingTrace();
                 
         Pair<ContainerForTopDownAnalyzerForJvm, StorageComponentContainer> containerAndProvider =
-                Injection.createContainerForTopDownAnalyzerForJvm(moduleContext, trace, providerFactory, 
+                InjectionKt.createContainerForTopDownAnalyzerForJvm(moduleContext, trace, providerFactory, 
                         GlobalSearchScope.allScope(project), kotlinProject, LookupTracker.Companion.getDO_NOTHING(), 
                         new KotlinPackagePartProvider(kotlinProject), LanguageVersion.LATEST);
         

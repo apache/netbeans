@@ -16,13 +16,13 @@
  *
  ******************************************************************************
  */
-package org.jetbrains.kotlin.resolve.lang.java.structure2;
+package org.jetbrains.kotlin.resolve.lang.java2;
 
 import java.util.Collection;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
-import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 import org.jetbrains.kotlin.name.Name;
-import org.jetbrains.kotlin.resolve.lang.java2.NBParameterUtils;
+import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.TypeParameterNameSearcher;
+import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.UpperBoundsSearcher;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
 
@@ -30,20 +30,20 @@ import org.netbeans.api.project.Project;
  *
  * @author Alexander.Baratynski
  */
-public class NetBeansJavaTypeParameter extends NetBeansJavaClassifier implements JavaTypeParameter {
-
-    public NetBeansJavaTypeParameter(TypeMirrorHandle typeHandle, Project project) {
-        super(null, typeHandle, project);
+public class NBParameterUtils {
+    
+    public static Name getNameOfTypeParameter(TypeMirrorHandle handle, Project project) {
+        TypeParameterNameSearcher searcher = new TypeParameterNameSearcher(handle);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getName();
     }
-
-    @Override
-    public Name getName() {
-        return NBParameterUtils.getNameOfTypeParameter(getTypeHandle(), getProject());
-    }
-
-    @Override
-    public Collection<JavaClassifierType> getUpperBounds() {
-        return NBParameterUtils.getUpperBounds(getTypeHandle(), getProject());
+    
+    public static Collection<JavaClassifierType> getUpperBounds(TypeMirrorHandle handle, Project project) {
+        UpperBoundsSearcher searcher = new UpperBoundsSearcher(handle, project);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getUpperBounds();
     }
     
 }

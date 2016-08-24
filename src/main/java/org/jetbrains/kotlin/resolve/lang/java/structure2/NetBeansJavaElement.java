@@ -21,27 +21,34 @@ package org.jetbrains.kotlin.resolve.lang.java.structure2;
 import org.jetbrains.kotlin.load.java.structure.JavaElement;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.TypeMirrorHandle;
+import org.netbeans.api.project.Project;
 
 /**
  *
  * @author Alexander.Baratynski
  */
-public class NetBeansJavaElement implements JavaElement {
+public abstract class NetBeansJavaElement implements JavaElement {
     
+    private final Project project;
     private final ElementHandle elementHandle;
     private final TypeMirrorHandle typeHandle;
     
-    public NetBeansJavaElement(ElementHandle elementHandle, TypeMirrorHandle typeHandle) {
+    public NetBeansJavaElement(ElementHandle elementHandle, TypeMirrorHandle typeHandle, Project project) {
+        this.project = project;
         this.elementHandle = elementHandle;
         this.typeHandle = typeHandle;
     }
     
-    public NetBeansJavaElement(ElementHandle elementHandle) {
-        this(elementHandle, null);
+    public NetBeansJavaElement(ElementHandle elementHandle, Project project) {
+        this(elementHandle, null, project);
     }
     
-    public NetBeansJavaElement(TypeMirrorHandle typeHandle) {
-        this(null, typeHandle);
+    public NetBeansJavaElement(TypeMirrorHandle typeHandle, Project project) {
+        this(null, typeHandle, project);
+    }
+    
+    public Project getProject() {
+        return project;
     }
     
     public ElementHandle getElementHandle() {

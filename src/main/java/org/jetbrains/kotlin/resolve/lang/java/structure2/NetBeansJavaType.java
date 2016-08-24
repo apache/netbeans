@@ -54,14 +54,14 @@ public class NetBeansJavaType implements JavaType, JavaAnnotationOwner {
     public static NetBeansJavaType create(TypeMirrorHandle typeHandle, Project project) {
         if (typeHandle.getKind().isPrimitive() || NBTypeUtils.getName(typeHandle, 
                 project).equals("void")) {
-            
+            return new NetBeansJavaPrimitiveType(typeHandle, project);
         } else if (typeHandle.getKind() == TypeKind.ARRAY) {
             
         } else if (typeHandle.getKind() == TypeKind.DECLARED ||
                 typeHandle.getKind() == TypeKind.TYPEVAR) {
             
         } else if (typeHandle.getKind() == TypeKind.WILDCARD) {
-            
+            return new NetBeansJavaWildcardType(typeHandle, project);
         } else throw new UnsupportedOperationException("Unsupported NetBeans type: " + typeHandle);
     }
     

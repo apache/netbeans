@@ -19,10 +19,14 @@
 package org.jetbrains.kotlin.resolve.lang.java2;
 
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.WildcardType;
+import org.jetbrains.kotlin.load.java.structure.JavaType;
+import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaType;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TypeMirrorHandle;
+import org.netbeans.api.project.Project;
 
 /**
  *
@@ -52,6 +56,63 @@ public class TypeSearchers {
         
         public String getName() {
             return name;
+        }
+        
+    }
+    
+    public static class BoundSearcher implements Task<CompilationController> {
+
+        private final TypeMirrorHandle handle;
+        private final Project project;
+        private JavaType bound = null;
+        
+        public BoundSearcher(TypeMirrorHandle handle, Project project) {
+            this.handle = handle;
+            this.project = project;
+        }
+        
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeMirror type = handle.resolve(info);
+            if (type == null) {
+                return;
+            }
+            
+            TypeMirror boundMirror = ((WildcardType) type).getSuperBound();
+            bound = boundMirror != null ? NetBeansJavaType.create(
+                    TypeMirrorHandle.create(boundMirror), project) : null;
+        }
+        
+        public JavaType getBound() {
+            return bound;
+        }
+        
+    }
+    
+    public static class IsExtendsSearcher implements Task<CompilationController> {
+
+        private final TypeMirrorHandle handle;
+        private boolean isExtends = false;
+        
+        public IsExtendsSearcher(TypeMirrorHandle handle) {
+            this.handle = handle;
+        }
+        
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeMirror type = handle.resolve(info);
+            if (type == null) {
+                return;
+            }
+            
+            TypeMirror boundMirror = ((WildcardType) type).getExtendsBound();
+            isExtends = boundMirror != null;
+        }
+        
+        public boolean isExtends() {
+            return isExtends;
         }
         
     }

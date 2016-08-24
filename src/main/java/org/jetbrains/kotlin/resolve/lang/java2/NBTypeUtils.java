@@ -18,6 +18,9 @@
  */
 package org.jetbrains.kotlin.resolve.lang.java2;
 
+import org.jetbrains.kotlin.load.java.structure.JavaType;
+import org.jetbrains.kotlin.resolve.lang.java2.TypeSearchers.BoundSearcher;
+import org.jetbrains.kotlin.resolve.lang.java2.TypeSearchers.IsExtendsSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.TypeSearchers.TypeNameSearcher;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
@@ -33,6 +36,20 @@ public class NBTypeUtils {
         NBElementUtils.execute(searcher, project);
         
         return searcher.getName();
+    }
+    
+    public static JavaType getBound(TypeMirrorHandle handle, Project project) {
+        BoundSearcher searcher = new BoundSearcher(handle, project);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getBound();
+    }
+    
+    public static boolean isExtends(TypeMirrorHandle handle, Project project) {
+        IsExtendsSearcher searcher = new IsExtendsSearcher(handle);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.isExtends();
     }
     
 }

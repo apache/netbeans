@@ -53,7 +53,7 @@ public class NetBeansJavaPackage implements JavaPackage, JavaElement {
     
     @Override
     public FqName getFqName() {
-        return new FqName(packages.get(0).getQualifiedName());
+        return NBPackageUtils.getFqName(project, packages.get(0));
     }
 
     @Override

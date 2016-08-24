@@ -28,6 +28,7 @@ import javax.lang.model.element.TypeElement;
 import kotlin.jvm.functions.Function1;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaPackage;
+import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaClass;
 import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaPackage;
@@ -154,6 +155,31 @@ public class PackageSearchers {
             return classes;
         }
 
+    }
+    
+    public static class FqNameSearcher implements Task<CompilationController> {
+
+        private final ElementHandle<PackageElement> handle;
+        private FqName fqName = null;
+        
+        public FqNameSearcher(ElementHandle<PackageElement> handle) {
+            this.handle = handle;
+        }
+        
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            PackageElement pack = handle.resolve(info);
+            if (pack == null) {
+                return;
+            }
+            
+            fqName = new FqName(pack.getQualifiedName().toString());
+        }
+        
+        public FqName getFqName() {
+            return fqName;
+        }
     }
 
 }

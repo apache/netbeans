@@ -46,4 +46,9 @@ public class NetBeansJavaTypeParameter extends NetBeansJavaClassifier implements
         return NBParameterUtils.getUpperBounds(getTypeHandle(), getProject());
     }
     
+    @Override
+    public String toString() {
+        return getName().asString();
+    }
+    
 }

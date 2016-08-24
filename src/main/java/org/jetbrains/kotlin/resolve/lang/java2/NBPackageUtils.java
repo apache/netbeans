@@ -24,8 +24,10 @@ import javax.lang.model.element.PackageElement;
 import kotlin.jvm.functions.Function1;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaPackage;
+import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.resolve.lang.java2.PackageSearchers.ClassesSearcher;
+import org.jetbrains.kotlin.resolve.lang.java2.PackageSearchers.FqNameSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.PackageSearchers.SubPackagesSearcher;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
@@ -49,6 +51,13 @@ public class NBPackageUtils {
         NBElementUtils.execute(searcher, project);
         
         return searcher.getClasses();
+    }
+    
+    public static FqName getFqName(Project project, ElementHandle<PackageElement> handle) {
+        FqNameSearcher searcher = new FqNameSearcher(handle);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getFqName();
     }
     
 }

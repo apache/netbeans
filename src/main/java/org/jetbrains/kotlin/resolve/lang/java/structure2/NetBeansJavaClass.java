@@ -130,4 +130,9 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier implements JavaCla
         return NBClassUtils.getTypeParameters(getElementHandle(), getProject());
     }
     
+    @Override
+    public String toString() {
+        return getElementHandle().getQualifiedName();
+    }
+    
 }

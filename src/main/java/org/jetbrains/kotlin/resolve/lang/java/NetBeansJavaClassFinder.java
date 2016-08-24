@@ -26,8 +26,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
-import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass;
-import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaPackage;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +36,10 @@ import org.jetbrains.kotlin.name.ClassId;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.resolve.jvm.JavaClassFinderPostConstruct;
+import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaClass;
+import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaPackage;
+import org.jetbrains.kotlin.resolve.lang.java2.NBElementUtils;
+import org.netbeans.api.java.source.ElementHandle;
 
 /**
  *
@@ -59,9 +61,9 @@ public class NetBeansJavaClassFinder implements JavaClassFinder {
     @Override
     @Nullable
     public JavaClass findClass(ClassId classId) {
-        TypeElement element = findType(classId.asSingleFqName(), kotlinProject);
+        ElementHandle<TypeElement> element = NBElementUtils.findType(classId.asSingleFqName().asString(), kotlinProject);
         if (element != null) {
-            return new NetBeansJavaClass(element);
+            return new NetBeansJavaClass(element, kotlinProject);
         }
         
         return null;
@@ -69,23 +71,44 @@ public class NetBeansJavaClassFinder implements JavaClassFinder {
 
     @Override
     public JavaPackage findPackage(FqName fqName) {
-        PackageElement packageEl = NetBeansJavaProjectElementUtils.findPackageElement(kotlinProject, fqName.asString());
+        ElementHandle<PackageElement> packageEl = NBElementUtils.findPackage(fqName.asString(), kotlinProject);
         if (packageEl != null){
             return new NetBeansJavaPackage(packageEl, kotlinProject);
         } 
         
         return null;
     }
-
-    @Nullable
-    public static TypeElement findType(@NotNull FqName fqName, @NotNull org.netbeans.api.project.Project project){
-        TypeElement type = NetBeansJavaProjectElementUtils.findTypeElement(project, fqName.asString());
-        if (type != null){
-            return !isInKotlinBinFolder(type) ? type : null;
-        }
-        
-        return null;
-    }
+    
+//    @Override
+//    @Nullable
+//    public JavaClass findClass(ClassId classId) {
+//        TypeElement element = findType(classId.asSingleFqName(), kotlinProject);
+//        if (element != null) {
+//            return new NetBeansJavaClass(element);
+//        }
+//        
+//        return null;
+//    }
+//
+//    @Override
+//    public JavaPackage findPackage(FqName fqName) {
+//        PackageElement packageEl = NetBeansJavaProjectElementUtils.findPackageElement(kotlinProject, fqName.asString());
+//        if (packageEl != null){
+//            return new NetBeansJavaPackage(packageEl, kotlinProject);
+//        } 
+//        
+//        return null;
+//    }
+//
+//    @Nullable
+//    public static TypeElement findType(@NotNull FqName fqName, @NotNull org.netbeans.api.project.Project project){
+//        TypeElement type = NetBeansJavaProjectElementUtils.findTypeElement(project, fqName.asString());
+//        if (type != null){
+//            return !isInKotlinBinFolder(type) ? type : null;
+//        }
+//        
+//        return null;
+//    }
 
     
     @Nullable 

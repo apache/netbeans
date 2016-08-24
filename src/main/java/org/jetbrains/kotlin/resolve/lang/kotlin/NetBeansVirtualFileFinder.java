@@ -22,8 +22,8 @@ import javax.lang.model.element.TypeElement;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.resolve.lang.java.NetBeansJavaClassFinder;
-import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClassifier;
-import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElementUtil;
+//import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClassifier;
+//import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElementUtil;
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinder;
 import org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClassFinder;
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory;
@@ -33,6 +33,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.kotlin.KotlinBinaryClassCache;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryClass;
 import org.jetbrains.kotlin.name.FqName;
+import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaClassifier;
+import org.jetbrains.kotlin.resolve.lang.java2.NBElementUtils;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.filesystems.FileObject;
 
@@ -115,9 +117,8 @@ public class NetBeansVirtualFileFinder extends VirtualFileKotlinClassFinder impl
             return null;
         }
         
+        ClassId classId = NBElementUtils.computeClassId(((NetBeansJavaClassifier)javaClass).getElementHandle(), project);
         
-        ClassId classId = NetBeansJavaElementUtil.computeClassId(
-                (TypeElement)((NetBeansJavaClassifier)javaClass).getBinding());
         if (classId == null){
             return null;
         }

@@ -43,9 +43,10 @@ public class NetBeansJavaClassObjectAnnotationArgument implements JavaClassObjec
     
     @Override
     public JavaType getReferencedType() {
-        Element typeBinding = NetBeansJavaClassFinder.findType(new FqName(javaClass.getCanonicalName()), kotlinProject);
-        assert typeBinding != null;
-        return NetBeansJavaType.create(typeBinding.asType());
+        return null;
+//        Element typeBinding = NetBeansJavaClassFinder.findType(new FqName(javaClass.getCanonicalName()), kotlinProject);
+//        assert typeBinding != null;
+//        return NetBeansJavaType.create(typeBinding.asType());
     }
 
     @Override

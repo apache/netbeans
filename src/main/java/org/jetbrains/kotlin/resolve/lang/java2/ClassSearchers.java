@@ -23,16 +23,26 @@ import com.intellij.psi.CommonClassNames;
 import java.util.Collection;
 import java.util.List;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
+import org.jetbrains.kotlin.load.java.structure.JavaConstructor;
+import org.jetbrains.kotlin.load.java.structure.JavaField;
+import org.jetbrains.kotlin.load.java.structure.JavaMethod;
+import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.name.SpecialNames;
 import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaClass;
 import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaClassifierType;
+import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaConstructor;
+import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaField;
+import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaMethod;
+import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaTypeParameter;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource.Phase;
@@ -202,6 +212,144 @@ public class ClassSearchers {
 
         public JavaClass getOuterClass() {
             return outerClass;
+        }
+
+    }
+    
+    public static class MethodsSearcher implements Task<CompilationController> {
+
+        private final ElementHandle<TypeElement> handle;
+        private final Project project;
+        private final JavaClass containingClass;
+        private final Collection<JavaMethod> methods = Lists.newArrayList();
+
+        public MethodsSearcher(ElementHandle<TypeElement> handle, Project project, JavaClass javaClass) {
+            this.handle = handle;
+            this.project = project;
+            this.containingClass = javaClass;
+        }
+
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeElement elem = handle.resolve(info);
+            if (elem == null) {
+                return;
+            }
+
+            List<? extends Element> members = info.getElements().getAllMembers(elem);
+            for (Element member : members) {
+                if (member.getKind() == ElementKind.METHOD){
+                    methods.add(new NetBeansJavaMethod(ElementHandle.create(member), containingClass, project));
+                }
+            }
+        }
+
+        public Collection<JavaMethod> getMethods() {
+            return methods;
+        }
+
+    }
+    
+    public static class ConstructorsSearcher implements Task<CompilationController> {
+
+        private final ElementHandle<TypeElement> handle;
+        private final Project project;
+        private final JavaClass containingClass;
+        private final Collection<JavaConstructor> constructors = Lists.newArrayList();
+
+        public ConstructorsSearcher(ElementHandle<TypeElement> handle, Project project, JavaClass javaClass) {
+            this.handle = handle;
+            this.project = project;
+            this.containingClass = javaClass;
+        }
+
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeElement elem = handle.resolve(info);
+            if (elem == null) {
+                return;
+            }
+
+            List<? extends Element> members = info.getElements().getAllMembers(elem);
+            for (Element member : members) {
+                if (member.getKind() == ElementKind.CONSTRUCTOR){
+                    constructors.add(new NetBeansJavaConstructor(ElementHandle.create(member), containingClass, project));
+                }
+            }
+        }
+
+        public Collection<JavaConstructor> getConstructors() {
+            return constructors;
+        }
+
+    }
+    
+    public static class FieldsSearcher implements Task<CompilationController> {
+
+        private final ElementHandle<TypeElement> handle;
+        private final Project project;
+        private final JavaClass containingClass;
+        private final Collection<JavaField> fields = Lists.newArrayList();
+
+        public FieldsSearcher(ElementHandle<TypeElement> handle, Project project, JavaClass javaClass) {
+            this.handle = handle;
+            this.project = project;
+            this.containingClass = javaClass;
+        }
+
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeElement elem = handle.resolve(info);
+            if (elem == null) {
+                return;
+            }
+
+            List<? extends Element> members = info.getElements().getAllMembers(elem);
+            for (Element member : members) {
+                if (member.getKind().isField()){
+                    String name = member.getSimpleName().toString();
+                    if (Name.isValidIdentifier(name)){
+                        fields.add(new NetBeansJavaField(ElementHandle.create(member), containingClass, project));
+                    }
+                }
+            }
+        }
+
+        public Collection<JavaField> getFields() {
+            return fields;
+        }
+
+    }
+    
+    public static class TypeParametersSearcher implements Task<CompilationController> {
+
+        private final ElementHandle<TypeElement> handle;
+        private final Project project;
+        private final List<JavaTypeParameter> typeParameters = Lists.newArrayList();
+
+        public TypeParametersSearcher(ElementHandle<TypeElement> handle, Project project) {
+            this.handle = handle;
+            this.project = project;
+        }
+
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeElement elem = handle.resolve(info);
+            if (elem == null) {
+                return;
+            }
+
+            for (TypeParameterElement param : elem.getTypeParameters()) {
+                typeParameters.add(new NetBeansJavaTypeParameter(TypeMirrorHandle.create(param.asType()), project));
+            }
+        }
+
+        public List<JavaTypeParameter> getTypeParameters() {
+            return typeParameters;
         }
 
     }

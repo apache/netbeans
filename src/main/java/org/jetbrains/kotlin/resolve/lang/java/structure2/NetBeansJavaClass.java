@@ -31,6 +31,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.resolve.lang.java2.NBClassUtils;
+import org.jetbrains.kotlin.resolve.lang.java2.NBMemberUtils;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 
@@ -91,42 +92,42 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier implements JavaCla
 
     @Override
     public Collection<JavaMethod> getMethods() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NBClassUtils.getMethods(getElementHandle(), getProject(), this);
     }
 
     @Override
     public Collection<JavaField> getFields() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NBClassUtils.getFields(getElementHandle(), getProject(), this);
     }
 
     @Override
     public Collection<JavaConstructor> getConstructors() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NBClassUtils.getConstructors(getElementHandle(), getProject(), this);
     }
 
     @Override
     public boolean isAbstract() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NBMemberUtils.isAbstract(getElementHandle(), getProject());
     }
 
     @Override
     public boolean isStatic() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NBMemberUtils.isStatic(getElementHandle(), getProject());
     }
 
     @Override
     public boolean isFinal() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NBMemberUtils.isFinal(getElementHandle(), getProject());
     }
 
     @Override
     public Visibility getVisibility() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NBMemberUtils.getVisibility(getElementHandle(), getProject());
     }
 
     @Override
     public List<JavaTypeParameter> getTypeParameters() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NBClassUtils.getTypeParameters(getElementHandle(), getProject());
     }
     
 }

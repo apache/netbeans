@@ -19,14 +19,23 @@
 package org.jetbrains.kotlin.resolve.lang.java2;
 
 import java.util.Collection;
+import java.util.List;
 import javax.lang.model.element.TypeElement;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
+import org.jetbrains.kotlin.load.java.structure.JavaConstructor;
+import org.jetbrains.kotlin.load.java.structure.JavaField;
+import org.jetbrains.kotlin.load.java.structure.JavaMethod;
+import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.resolve.lang.java2.ClassSearchers.ConstructorsSearcher;
+import org.jetbrains.kotlin.resolve.lang.java2.ClassSearchers.FieldsSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.ClassSearchers.InnerClassesSearcher;
+import org.jetbrains.kotlin.resolve.lang.java2.ClassSearchers.MethodsSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.ClassSearchers.NameSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.ClassSearchers.OuterClassSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.ClassSearchers.SuperTypesSearcher;
+import org.jetbrains.kotlin.resolve.lang.java2.ClassSearchers.TypeParametersSearcher;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 
@@ -62,6 +71,34 @@ public class NBClassUtils {
         NBElementUtils.execute(searcher, project);
         
         return searcher.getOuterClass();
+    }
+    
+    public static Collection<JavaMethod> getMethods(ElementHandle<TypeElement> handle, Project project, JavaClass javaClass) {
+        MethodsSearcher searcher = new MethodsSearcher(handle, project, javaClass);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getMethods();
+    }
+    
+    public static Collection<JavaConstructor> getConstructors(ElementHandle<TypeElement> handle, Project project, JavaClass javaClass) {
+        ConstructorsSearcher searcher = new ConstructorsSearcher(handle, project, javaClass);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getConstructors();
+    }
+    
+    public static Collection<JavaField> getFields(ElementHandle<TypeElement> handle, Project project, JavaClass javaClass) {
+        FieldsSearcher searcher = new FieldsSearcher(handle, project, javaClass);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getFields();
+    }
+    
+    public static List<JavaTypeParameter> getTypeParameters(ElementHandle<TypeElement> handle, Project project) {
+        TypeParametersSearcher searcher = new TypeParametersSearcher(handle, project);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getTypeParameters();
     }
     
 }

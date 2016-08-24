@@ -59,7 +59,7 @@ public class NetBeansJavaType implements JavaType, JavaAnnotationOwner {
             return new NetBeansJavaArrayType(typeHandle, project);
         } else if (typeHandle.getKind() == TypeKind.DECLARED ||
                 typeHandle.getKind() == TypeKind.TYPEVAR) {
-            
+            return new NetBeansJavaClassifierType(typeHandle, project);
         } else if (typeHandle.getKind() == TypeKind.WILDCARD) {
             return new NetBeansJavaWildcardType(typeHandle, project);
         } else throw new UnsupportedOperationException("Unsupported NetBeans type: " + typeHandle);

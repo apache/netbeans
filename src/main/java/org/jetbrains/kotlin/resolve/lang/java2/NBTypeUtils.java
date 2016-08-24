@@ -18,10 +18,13 @@
  */
 package org.jetbrains.kotlin.resolve.lang.java2;
 
+import java.util.List;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.resolve.lang.java2.TypeSearchers.BoundSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.TypeSearchers.ComponentTypeSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.TypeSearchers.IsExtendsSearcher;
+import org.jetbrains.kotlin.resolve.lang.java2.TypeSearchers.IsRawSearcher;
+import org.jetbrains.kotlin.resolve.lang.java2.TypeSearchers.TypeArgumentsSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.TypeSearchers.TypeNameSearcher;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
@@ -58,6 +61,20 @@ public class NBTypeUtils {
         NBElementUtils.execute(searcher, project);
         
         return searcher.getComponentType();
+    }
+    
+    public static boolean isRaw(TypeMirrorHandle handle, Project project) {
+        IsRawSearcher searcher = new IsRawSearcher(handle);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.isRaw();
+    }
+    
+    public static List<JavaType> getTypeArguments(TypeMirrorHandle handle, Project project) {
+        TypeArgumentsSearcher searcher = new TypeArgumentsSearcher(handle, project);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getTypeArguments();
     }
     
 }

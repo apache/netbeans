@@ -18,12 +18,16 @@
  */
 package org.jetbrains.kotlin.resolve.lang.java2;
 
+import com.google.common.collect.Lists;
+import java.util.List;
 import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaType;
 import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TypeMirrorHandle;
@@ -144,6 +148,64 @@ public class TypeSearchers {
         
         public JavaType getComponentType() {
             return componentType;
+        }
+        
+    }
+    
+    public static class IsRawSearcher implements Task<CompilationController> {
+
+        private final TypeMirrorHandle handle;
+        private boolean isRaw = false;
+        
+        public IsRawSearcher(TypeMirrorHandle handle) {
+            this.handle = handle;
+        }
+        
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeMirror type = handle.resolve(info);
+            if (type == null) {
+                return;
+            }
+            
+            isRaw = ((DeclaredType) type).getTypeArguments().isEmpty();
+        }
+        
+        public boolean isRaw() {
+            return isRaw;
+        }
+        
+    }
+    
+    public static class TypeArgumentsSearcher implements Task<CompilationController> {
+
+        private final TypeMirrorHandle handle;
+        private final Project project;
+        private final List<JavaType> typeArguments = Lists.newArrayList();
+        
+        public TypeArgumentsSearcher(TypeMirrorHandle handle, Project project) {
+            this.handle = handle;
+            this.project = project;
+        }
+        
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeMirror type = handle.resolve(info);
+            if (type == null) {
+                return;
+            }
+            
+            List<? extends TypeMirror> argMirrors = ((DeclaredType) type).getTypeArguments();
+            for (TypeMirror mirror : argMirrors) {
+                TypeMirrorHandle mirrorHandle = TypeMirrorHandle.create(mirror);
+                typeArguments.add(NetBeansJavaType.create(mirrorHandle, project));
+            }
+        }
+        
+        public List<JavaType> getTypeArguments() {
+            return typeArguments;
         }
         
     }

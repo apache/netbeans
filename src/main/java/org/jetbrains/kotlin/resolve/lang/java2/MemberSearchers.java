@@ -21,14 +21,20 @@ package org.jetbrains.kotlin.resolve.lang.java2;
 import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 import org.jetbrains.kotlin.descriptors.Visibilities;
 import org.jetbrains.kotlin.descriptors.Visibility;
 import org.jetbrains.kotlin.load.java.JavaVisibilities;
+import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaType;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.Task;
+import org.netbeans.api.java.source.TypeMirrorHandle;
+import org.netbeans.api.project.Project;
 
 /**
  *
@@ -170,6 +176,35 @@ public class MemberSearchers {
         
         public Visibility getVisibility() {
             return visibility;
+        }
+        
+    }
+    
+    public static class FieldTypeSearcher implements Task<CompilationController> {
+
+        private final ElementHandle handle;
+        private final Project project;
+        private JavaType type = null;
+        
+        public FieldTypeSearcher(ElementHandle handle, Project project) {
+            this.handle = handle;
+            this.project = project;
+        }
+        
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            Element elem = handle.resolve(info);
+            if (elem == null) {
+                return;
+            }
+            
+            TypeMirror mirror = ((VariableElement) elem).asType();
+            type = NetBeansJavaType.create(TypeMirrorHandle.create(mirror), project);
+        }
+        
+        public JavaType getType() {
+            return type;
         }
         
     }

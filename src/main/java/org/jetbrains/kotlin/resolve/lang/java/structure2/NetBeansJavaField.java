@@ -18,9 +18,11 @@
  */
 package org.jetbrains.kotlin.resolve.lang.java.structure2;
 
+import javax.lang.model.element.ElementKind;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaField;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
+import org.jetbrains.kotlin.resolve.lang.java2.NBMemberUtils;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 
@@ -36,12 +38,12 @@ public class NetBeansJavaField extends NetBeansJavaMember implements JavaField {
 
     @Override
     public boolean isEnumEntry() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getElementHandle().getKind() == ElementKind.ENUM_CONSTANT;
     }
 
     @Override
     public JavaType getType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NBMemberUtils.getFieldType(getElementHandle(), getProject());
     }
     
 }

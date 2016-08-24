@@ -19,7 +19,9 @@
 package org.jetbrains.kotlin.resolve.lang.java2;
 
 import org.jetbrains.kotlin.descriptors.Visibility;
+import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.resolve.lang.java2.MemberSearchers.FieldTypeSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.MemberSearchers.IsAbstractSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.MemberSearchers.IsFinalSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.MemberSearchers.IsStaticSearcher;
@@ -67,6 +69,13 @@ public class NBMemberUtils {
         NBElementUtils.execute(searcher, project);
         
         return searcher.getVisibility();
+    }
+    
+    public static JavaType getFieldType(ElementHandle handle, Project project) {
+        FieldTypeSearcher searcher = new FieldTypeSearcher(handle, project);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getType();
     }
     
 }

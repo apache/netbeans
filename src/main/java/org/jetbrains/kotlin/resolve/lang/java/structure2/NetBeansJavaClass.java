@@ -20,6 +20,7 @@ package org.jetbrains.kotlin.resolve.lang.java.structure2;
 
 import java.util.Collection;
 import java.util.List;
+import javax.lang.model.element.ElementKind;
 import org.jetbrains.kotlin.descriptors.Visibility;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
@@ -29,8 +30,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaMethod;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.resolve.lang.java2.NBClassUtils;
 import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
 
 /**
@@ -45,47 +46,47 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier implements JavaCla
 
     @Override
     public Name getName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NBClassUtils.getName(getElementHandle(), getProject());
     }
 
     @Override
     public FqName getFqName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new FqName(getElementHandle().getQualifiedName());
     }
 
     @Override
     public Collection<JavaClassifierType> getSupertypes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NBClassUtils.getSuperTypes(getElementHandle(), getProject());
     }
 
     @Override
     public Collection<JavaClass> getInnerClasses() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NBClassUtils.getInnerClasses(getElementHandle(), getProject());
     }
 
     @Override
     public JavaClass getOuterClass() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NBClassUtils.getOuterClass(getElementHandle(), getProject());
     }
 
     @Override
     public boolean isInterface() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getElementHandle().getKind() == ElementKind.INTERFACE;
     }
 
     @Override
     public boolean isAnnotationType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getElementHandle().getKind() == ElementKind.ANNOTATION_TYPE;
     }
 
     @Override
     public boolean isEnum() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getElementHandle().getKind() == ElementKind.ENUM;
     }
 
     @Override
     public boolean isKotlinLightClass() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 
     @Override

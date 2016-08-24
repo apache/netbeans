@@ -23,6 +23,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaConstructor;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 import org.jetbrains.kotlin.load.java.structure.JavaValueParameter;
+import org.jetbrains.kotlin.resolve.lang.java2.NBExecutableUtils;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 
@@ -38,12 +39,12 @@ public class NetBeansJavaConstructor extends NetBeansJavaMember implements JavaC
 
     @Override
     public List<JavaValueParameter> getValueParameters() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NBExecutableUtils.getValueParameters(getElementHandle(), getProject());
     }
 
     @Override
     public List<JavaTypeParameter> getTypeParameters() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return NBExecutableUtils.getTypeParameters(getElementHandle(), getProject());
     }
     
 }

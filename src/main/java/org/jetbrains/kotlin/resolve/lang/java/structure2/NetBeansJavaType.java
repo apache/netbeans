@@ -56,7 +56,7 @@ public class NetBeansJavaType implements JavaType, JavaAnnotationOwner {
                 project).equals("void")) {
             return new NetBeansJavaPrimitiveType(typeHandle, project);
         } else if (typeHandle.getKind() == TypeKind.ARRAY) {
-            
+            return new NetBeansJavaArrayType(typeHandle, project);
         } else if (typeHandle.getKind() == TypeKind.DECLARED ||
                 typeHandle.getKind() == TypeKind.TYPEVAR) {
             

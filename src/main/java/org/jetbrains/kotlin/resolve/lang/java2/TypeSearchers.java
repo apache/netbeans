@@ -18,6 +18,7 @@
  */
 package org.jetbrains.kotlin.resolve.lang.java2;
 
+import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
@@ -113,6 +114,36 @@ public class TypeSearchers {
         
         public boolean isExtends() {
             return isExtends;
+        }
+        
+    }
+    
+    public static class ComponentTypeSearcher implements Task<CompilationController> {
+
+        private final TypeMirrorHandle handle;
+        private final Project project;
+        private JavaType componentType = null;
+        
+        public ComponentTypeSearcher(TypeMirrorHandle handle, Project project) {
+            this.handle = handle;
+            this.project = project;
+        }
+        
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeMirror type = handle.resolve(info);
+            if (type == null) {
+                return;
+            }
+            
+            TypeMirrorHandle componentTypeHandle = 
+                    TypeMirrorHandle.create(((ArrayType) type).getComponentType());
+            componentType = NetBeansJavaType.create(componentTypeHandle, project);
+        }
+        
+        public JavaType getComponentType() {
+            return componentType;
         }
         
     }

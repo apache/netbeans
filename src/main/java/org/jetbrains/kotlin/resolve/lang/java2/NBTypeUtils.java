@@ -20,6 +20,7 @@ package org.jetbrains.kotlin.resolve.lang.java2;
 
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.resolve.lang.java2.TypeSearchers.BoundSearcher;
+import org.jetbrains.kotlin.resolve.lang.java2.TypeSearchers.ComponentTypeSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.TypeSearchers.IsExtendsSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.TypeSearchers.TypeNameSearcher;
 import org.netbeans.api.java.source.TypeMirrorHandle;
@@ -50,6 +51,13 @@ public class NBTypeUtils {
         NBElementUtils.execute(searcher, project);
         
         return searcher.isExtends();
+    }
+    
+    public static JavaType getComponentType(TypeMirrorHandle handle, Project project) {
+        ComponentTypeSearcher searcher = new ComponentTypeSearcher(handle, project);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getComponentType();
     }
     
 }

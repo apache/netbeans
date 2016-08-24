@@ -88,13 +88,13 @@ public class KotlinProjectHelper {
             return null;
         }
         
-        if (p instanceof NbMavenProjectImpl) {
-            try {
-                p = MavenHelper.getMainParent((NbMavenProjectImpl) p);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
+//        if (p instanceof NbMavenProjectImpl) {
+//            try {
+//                p = MavenHelper.getMainParent((NbMavenProjectImpl) p);
+//            } catch (IOException ex) {
+//                Exceptions.printStackTrace(ex);
+//            }
+//        }
         
         if (!(lightClassesDirs.containsKey(p))) {
             lightClassesDirs.put(p, setLightClassesDir(p));

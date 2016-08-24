@@ -109,17 +109,6 @@ public final class KotlinSources {
     }
 
     @NotNull
-    private Set<FileObject> getSrcDirectoriesOfMavenModules(KotlinProjectConstants type) {
-        Set<FileObject> src = new LinkedHashSet<FileObject>();
-
-        for (FileObject file : MavenHelper.getAllChildrenSrcDirectoriesOfProject((NbMavenProjectImpl) kotlinProject)) {
-            findSrc(file, src, type);
-        }
-
-        return src;
-    }
-
-    @NotNull
     public List<FileObject> getSrcDirectories(KotlinProjectConstants type) {
         Set<FileObject> orderedFiles = Sets.newLinkedHashSet();
 

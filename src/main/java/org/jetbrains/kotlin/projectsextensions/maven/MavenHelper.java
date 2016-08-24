@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.maven.model.Dependency;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.NbMavenProjectFactory;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
@@ -36,8 +37,6 @@ import org.openide.util.Exceptions;
  */
 public class MavenHelper {
     
-    private static final Map<NbMavenProjectImpl, NbMavenProjectImpl> PARENTS = 
-            new HashMap<NbMavenProjectImpl, NbMavenProjectImpl>();
     private static final NbMavenProjectFactory PROJECT_FACTORY = 
             new NbMavenProjectFactory();
     
@@ -97,55 +96,28 @@ public class MavenHelper {
     }
     
     public static NbMavenProjectImpl getMainParent(NbMavenProjectImpl proj) throws IOException {
-        NbMavenProjectImpl parent = PARENTS.get(proj);
-        if (parent == null){
-            parent = getMavenProject(getParentProjectDirectory(proj.getProjectDirectory()));
-            PARENTS.put(proj, parent);
-        }
-        
+        NbMavenProjectImpl parent = getMavenProject(getParentProjectDirectory(proj.getProjectDirectory()));
         return parent != null ? parent : proj;
-    }
-    
-    public static List<FileObject> getAllChildrenSrcDirectoriesOfProject(NbMavenProjectImpl project) {
-        List modules = project.getOriginalMavenProject().getModules();
-        List<FileObject> srcDirs = new ArrayList<FileObject>();
-        
-        for (Object module : modules) {
-            if (PROJECT_FACTORY.isProject(project.getProjectDirectory().getFileObject((String) module))) {
-                try {
-                    NbMavenProjectImpl child = MavenHelper.getMavenProject(project.getProjectDirectory().getFileObject((String) module));
-                    if (isModuled(child)){
-                        srcDirs.addAll(getAllChildrenSrcDirectoriesOfProject(child));
-                    } else {
-                        srcDirs.add(child.getProjectDirectory().getFileObject("src"));
-                    }
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-        }
-        
-        return srcDirs;
     }
     
     public static List<? extends Project> getDependencyProjects(NbMavenProjectImpl project){
         List<NbMavenProjectImpl> dependencyProjects = new ArrayList<NbMavenProjectImpl>();
-        try {
-            NbMavenProjectImpl mainProject = getMainParent(project);
-            List modules = mainProject.getOriginalMavenProject().getModules();
-            
-            List compileDependencies = project.getOriginalMavenProject().getCompileDependencies();
-            
-            for (Object dependency : compileDependencies) {
-                if (modules.contains(((Dependency) dependency).getArtifactId())){
-                    NbMavenProjectImpl depProject = getMavenProject(
-                            mainProject.getProjectDirectory().getFileObject(((Dependency) dependency).getArtifactId()));
-                    dependencyProjects.add(depProject);
-                }
-            }
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+//        try {
+//            NbMavenProjectImpl mainProject = getMainParent(project);
+//            List modules = mainProject.getOriginalMavenProject().getModules();
+//            
+//            List compileDependencies = project.getOriginalMavenProject().getCompileDependencies();
+//            
+//            for (Object dependency : compileDependencies) {
+//                if (modules.contains(((Dependency) dependency).getArtifactId())){
+//                    NbMavenProjectImpl depProject = getMavenProject(
+//                            mainProject.getProjectDirectory().getFileObject(((Dependency) dependency).getArtifactId()));
+//                    dependencyProjects.add(depProject);
+//                }
+//            }
+//        } catch (IOException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
        
         return dependencyProjects;
     }

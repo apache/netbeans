@@ -47,18 +47,18 @@ public class KotlinAnalysisProjectCache {
                         KotlinEnvironment.getEnvironment(project).getProject(), ProjectUtils.getSourceFilesWithDependencies(project));
                 cache.put(project, result);
                 
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        KotlinSources sources = new KotlinSources(project);
-                        for (FileObject file : sources.getAllKtFiles()){
-                            KotlinLightClassGeneration.INSTANCE.generate(file, 
-                                    project, result.getAnalysisResult());
-                        }
-                    }
-                };
-                
-                new Thread(runnable).start();
+//                Runnable runnable = new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        KotlinSources sources = new KotlinSources(project);
+//                        for (FileObject file : sources.getAllKtFiles()){
+//                            KotlinLightClassGeneration.INSTANCE.generate(file, 
+//                                    project, result.getAnalysisResult());
+//                        }
+//                    }
+//                };
+//                
+//                new Thread(runnable).start();
             }
             
             return cache.get(project);

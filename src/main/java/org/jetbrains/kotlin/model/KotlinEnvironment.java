@@ -75,8 +75,6 @@ import org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages;
 import com.intellij.formatting.KotlinLanguageCodeStyleSettingsProvider;
 import com.intellij.formatting.KotlinSettingsProvider;
 import org.jetbrains.kotlin.cli.jvm.compiler.JavaRoot;
-import org.jetbrains.kotlin.config.CommonConfigurationKeys;
-import org.jetbrains.kotlin.config.CompilerConfiguration;
 import org.jetbrains.kotlin.idea.KotlinFileType;
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory;
 import org.jetbrains.kotlin.load.kotlin.ModuleVisibilityManager;

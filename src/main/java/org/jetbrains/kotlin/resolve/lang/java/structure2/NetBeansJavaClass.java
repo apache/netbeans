@@ -19,7 +19,6 @@
 package org.jetbrains.kotlin.resolve.lang.java.structure2;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import javax.lang.model.element.ElementKind;
 import org.jetbrains.kotlin.descriptors.Visibility;
@@ -128,7 +127,6 @@ public class NetBeansJavaClass extends NetBeansJavaClassifier implements JavaCla
 
     @Override
     public List<JavaTypeParameter> getTypeParameters() {
-//        return Collections.emptyList();
         return NBClassUtils.getTypeParameters(getElementHandle(), getProject());
     }
     

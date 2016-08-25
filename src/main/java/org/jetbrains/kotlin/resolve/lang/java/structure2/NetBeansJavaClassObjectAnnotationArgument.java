@@ -18,15 +18,10 @@
  */
 package org.jetbrains.kotlin.resolve.lang.java.structure2;
 
-import java.util.Collection;
-import java.util.Collections;
-import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
-import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner;
-import org.jetbrains.kotlin.load.java.structure.JavaClassifier;
-import org.jetbrains.kotlin.name.FqName;
+import org.jetbrains.kotlin.load.java.structure.JavaClassObjectAnnotationArgument;
+import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.name.Name;
-import org.jetbrains.kotlin.resolve.lang.java2.NBAnnotationUtils;
-import org.netbeans.api.java.source.ElementHandle;
+import org.jetbrains.kotlin.resolve.lang.java2.NBElementUtils;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
 
@@ -34,25 +29,28 @@ import org.netbeans.api.project.Project;
  *
  * @author Alexander.Baratynski
  */
-public abstract class NetBeansJavaClassifier extends NetBeansJavaElement implements JavaClassifier, JavaAnnotationOwner {
+public class NetBeansJavaClassObjectAnnotationArgument implements JavaClassObjectAnnotationArgument {
+
+    private final Class<?> javaClass;
+    private final Project project;
+    private final Name name;
     
-    public NetBeansJavaClassifier(ElementHandle elementHandle, TypeMirrorHandle typeHandle, Project project) {
-        super(elementHandle, typeHandle, project);
+    public NetBeansJavaClassObjectAnnotationArgument(Class<?> javaClass,
+            Name name, Project project){
+        this.javaClass = javaClass;
+        this.project = project;
+        this.name = name;
     }
     
     @Override
-    public Collection<JavaAnnotation> getAnnotations() {
-        return NBAnnotationUtils.getAnnotations(getElementHandle(), getProject());
+    public JavaType getReferencedType() {
+        TypeMirrorHandle handle = NBElementUtils.findTypeMirrorHandle(javaClass.getCanonicalName(), project);
+        return NetBeansJavaType.create(handle, project);
     }
 
     @Override
-    public JavaAnnotation findAnnotation(FqName fqname) {
-        return null; // temporary
-    }
-
-    @Override
-    public boolean isDeprecatedInJavaDoc() {
-        return false; // temporary
+    public Name getName() {
+        return name;
     }
     
 }

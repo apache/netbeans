@@ -49,7 +49,6 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ui.OpenProjects;
 
 /**
  *
@@ -73,7 +72,7 @@ public class ClassSearchers {
             if (elem == null) {
                 return;
             }
-
+            
             name = SpecialNames.safeIdentifier(elem.getSimpleName().toString());
         }
 

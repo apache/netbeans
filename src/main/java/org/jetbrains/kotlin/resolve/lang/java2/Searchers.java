@@ -33,6 +33,7 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.Task;
+import org.netbeans.api.java.source.TypeMirrorHandle;
 
 /**
  *
@@ -60,6 +61,30 @@ public class Searchers {
 
         public ElementHandle<TypeElement> getElement() {
             return element;
+        }
+
+    }
+    
+    public static class TypeMirrorHandleSearcher implements Task<CompilationController> {
+
+        private TypeMirrorHandle handle = null;
+        private final String fqName;
+
+        public TypeMirrorHandleSearcher(String fqName) {
+            this.fqName = fqName;
+        }
+
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(JavaSource.Phase.RESOLVED);
+            TypeElement elem = info.getElements().getTypeElement(fqName);
+            if (elem != null) {
+                handle = TypeMirrorHandle.create(elem.asType());
+            }
+        }
+
+        public TypeMirrorHandle getHandle() {
+            return handle;
         }
 
     }

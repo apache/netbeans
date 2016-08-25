@@ -32,6 +32,7 @@ import org.jetbrains.kotlin.resolve.lang.java2.Searchers.ClassIdComputer;
 import org.jetbrains.kotlin.resolve.lang.java2.Searchers.ElementSimpleNameSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.Searchers.PackageElementSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.Searchers.TypeElementSearcher;
+import org.jetbrains.kotlin.resolve.lang.java2.Searchers.TypeMirrorHandleSearcher;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -104,6 +105,13 @@ public class NBElementUtils {
         execute(searcher, project);
         
         return searcher.getElement();
+    }
+    
+    public static TypeMirrorHandle findTypeMirrorHandle(String fqName, Project project) {
+        TypeMirrorHandleSearcher searcher = new TypeMirrorHandleSearcher(fqName);
+        execute(searcher, project);
+        
+        return searcher.getHandle();
     }
     
     public static ElementHandle<PackageElement> findPackage(String fqName, Project project) {

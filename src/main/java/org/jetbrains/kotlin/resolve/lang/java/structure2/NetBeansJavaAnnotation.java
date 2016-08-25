@@ -36,13 +36,13 @@ import org.netbeans.api.project.Project;
 public class NetBeansJavaAnnotation implements JavaAnnotation, JavaElement {
 
     private final Project project;
-    private final ElementHandle fromElement;
     private final TypeMirrorHandle handle;
+    private final Collection<JavaAnnotationArgument> args;
     
-    public NetBeansJavaAnnotation(Project project, ElementHandle fromElement, TypeMirrorHandle handle) {
+    public NetBeansJavaAnnotation(Project project, TypeMirrorHandle handle, Collection<JavaAnnotationArgument> args) {
         this.project = project;
-        this.fromElement = fromElement;
         this.handle = handle;
+        this.args = args;
     }
     
     public TypeMirrorHandle getHandle() {
@@ -51,7 +51,7 @@ public class NetBeansJavaAnnotation implements JavaAnnotation, JavaElement {
     
     @Override
     public Collection<JavaAnnotationArgument> getArguments() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return args;
     }
 
     @Override

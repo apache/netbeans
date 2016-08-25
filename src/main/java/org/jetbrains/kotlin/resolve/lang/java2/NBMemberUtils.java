@@ -21,6 +21,7 @@ package org.jetbrains.kotlin.resolve.lang.java2;
 import org.jetbrains.kotlin.descriptors.Visibility;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.resolve.lang.java2.MemberSearchers.FieldContainingClassSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.MemberSearchers.FieldTypeSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.MemberSearchers.IsAbstractSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.MemberSearchers.IsFinalSearcher;
@@ -76,6 +77,13 @@ public class NBMemberUtils {
         NBElementUtils.execute(searcher, project);
         
         return searcher.getType();
+    }
+    
+    public static ElementHandle getContainingClass(ElementHandle handle, Project project) {
+        FieldContainingClassSearcher searcher = new FieldContainingClassSearcher(handle);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getContainingClass();
     }
     
 }

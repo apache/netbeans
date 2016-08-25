@@ -209,4 +209,30 @@ public class MemberSearchers {
         
     }
     
+    public static class FieldContainingClassSearcher implements Task<CompilationController> {
+
+        private final ElementHandle handle;
+        private ElementHandle containingClass = null;
+        
+        public FieldContainingClassSearcher(ElementHandle handle) {
+            this.handle = handle;
+        }
+        
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            Element elem = handle.resolve(info);
+            if (elem == null) {
+                return;
+            }
+            
+            containingClass = ElementHandle.create(elem.getEnclosingElement());
+        }
+        
+        public ElementHandle getContainingClass() {
+            return containingClass;
+        }
+        
+    }
+    
 }

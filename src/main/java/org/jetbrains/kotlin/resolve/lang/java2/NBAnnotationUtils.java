@@ -21,9 +21,12 @@ package org.jetbrains.kotlin.resolve.lang.java2;
 import java.util.Collection;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.name.FqName;
+import org.jetbrains.kotlin.resolve.lang.java2.AnnotationSearchers.AnnotationForTypeMirrorHandleSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.AnnotationSearchers.AnnotationSearcher;
+import org.jetbrains.kotlin.resolve.lang.java2.AnnotationSearchers.AnnotationsForTypeMirrorHandleSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.AnnotationSearchers.AnnotationsSearcher;
 import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
 
 /**
@@ -41,6 +44,20 @@ public class NBAnnotationUtils {
     
     public static JavaAnnotation getAnnotation(ElementHandle handle, Project project, FqName fqName) {
         AnnotationSearcher searcher = new AnnotationSearcher(handle, project, fqName);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getAnnotation();
+    }
+    
+    public static Collection<JavaAnnotation> getAnnotations(TypeMirrorHandle handle, Project project) {
+        AnnotationsForTypeMirrorHandleSearcher searcher = new AnnotationsForTypeMirrorHandleSearcher(handle, project);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getAnnotations();
+    }
+    
+    public static JavaAnnotation getAnnotation(TypeMirrorHandle handle, Project project, FqName fqName) {
+        AnnotationForTypeMirrorHandleSearcher searcher = new AnnotationForTypeMirrorHandleSearcher(handle, project, fqName);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getAnnotation();

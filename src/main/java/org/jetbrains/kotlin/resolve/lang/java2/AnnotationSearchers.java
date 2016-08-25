@@ -27,6 +27,7 @@ import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationArgument;
 import org.jetbrains.kotlin.load.java.structure.JavaArrayAnnotationArgument;
@@ -138,6 +139,41 @@ public class AnnotationSearchers {
 
     }
 
+    public static class AnnotationsForTypeMirrorHandleSearcher implements Task<CompilationController> {
+
+        private final Collection<JavaAnnotation> annotations = Lists.newArrayList();
+        private final TypeMirrorHandle handle;
+        private final Project project;
+
+        public AnnotationsForTypeMirrorHandleSearcher(TypeMirrorHandle handle, Project project) {
+            this.handle = handle;
+            this.project = project;
+        }
+
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeMirror elem = handle.resolve(info);
+            if (elem == null) {
+                return;
+            }
+
+            List<? extends AnnotationMirror> annotationMirrors = elem.getAnnotationMirrors();
+            for (AnnotationMirror mirror : annotationMirrors) {
+                TypeMirrorHandle mirrorHandle = TypeMirrorHandle.create(mirror.getAnnotationType());
+                JavaAnnotation annotation = new NetBeansJavaAnnotation(project, mirrorHandle,
+                        getMirrorArguments(mirror, info, project));
+                annotations.add(annotation);
+            }
+
+        }
+
+        public Collection<JavaAnnotation> getAnnotations() {
+            return annotations;
+        }
+
+    }
+    
     public static class AnnotationSearcher implements Task<CompilationController> {
 
         private JavaAnnotation annotation = null;
@@ -175,5 +211,41 @@ public class AnnotationSearchers {
         }
     }
     
+    public static class AnnotationForTypeMirrorHandleSearcher implements Task<CompilationController> {
+
+        private JavaAnnotation annotation = null;
+        private final TypeMirrorHandle handle;
+        private final Project project;
+        private final FqName fqName;
+
+        public AnnotationForTypeMirrorHandleSearcher(TypeMirrorHandle handle, Project project, FqName fqName) {
+            this.handle = handle;
+            this.project = project;
+            this.fqName = fqName;
+        }
+        
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeMirror elem = handle.resolve(info);
+            if (elem == null) {
+                return;
+            }
+
+            List<? extends AnnotationMirror> annotationMirrors = elem.getAnnotationMirrors();
+            for (AnnotationMirror mirror : annotationMirrors) {
+                String annotationFQName = mirror.getAnnotationType().toString();
+                if (fqName.asString().equals(annotationFQName)){
+                    TypeMirrorHandle mirrorHandle = TypeMirrorHandle.create(mirror.getAnnotationType());
+                    annotation = new NetBeansJavaAnnotation(project, mirrorHandle,
+                        getMirrorArguments(mirror, info, project));
+                }
+            }
+        }
+        
+        public JavaAnnotation getAnnotation() {
+            return annotation;
+        }
+    }
     
 }

@@ -21,7 +21,6 @@ import java.util.Map;
 import org.jetbrains.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.project.KotlinSources;
-import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.jetbrains.kotlin.resolve.NetBeansAnalyzerFacadeForJVM;
 import org.jetbrains.kotlin.utils.ProjectUtils;
@@ -50,11 +49,11 @@ public class KotlinAnalysisProjectCache {
 //                Runnable runnable = new Runnable() {
 //                    @Override
 //                    public void run() {
-//                        KotlinSources sources = new KotlinSources(project);
-//                        for (FileObject file : sources.getAllKtFiles()){
-//                            KotlinLightClassGeneration.INSTANCE.generate(file, 
-//                                    project, result.getAnalysisResult());
-//                        }
+                        KotlinSources sources = new KotlinSources(project);
+                        for (FileObject file : sources.getAllKtFiles()){
+                            KotlinLightClassGeneration.INSTANCE.generate(file, 
+                                    project, result.getAnalysisResult());
+                        }
 //                    }
 //                };
 //                

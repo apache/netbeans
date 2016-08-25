@@ -19,12 +19,12 @@
 package org.jetbrains.kotlin.resolve.lang.java.structure2;
 
 import java.util.Collection;
-import java.util.Collections;
 import javax.lang.model.type.TypeKind;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.name.FqName;
+import org.jetbrains.kotlin.resolve.lang.java2.NBAnnotationUtils;
 import org.jetbrains.kotlin.resolve.lang.java2.NBTypeUtils;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
@@ -67,12 +67,12 @@ public class NetBeansJavaType implements JavaType, JavaAnnotationOwner {
     
     @Override
     public Collection<JavaAnnotation> getAnnotations() {
-        return Collections.emptyList(); // temporary
+        return NBAnnotationUtils.getAnnotations(getHandle(), getProject());
     }
 
     @Override
-    public JavaAnnotation findAnnotation(FqName fqname) {
-        return null; // temporary
+    public JavaAnnotation findAnnotation(FqName fqName) {
+        return NBAnnotationUtils.getAnnotation(getHandle(), getProject(), fqName);
     }
 
     @Override

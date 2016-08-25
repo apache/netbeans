@@ -63,7 +63,9 @@ public abstract class NetBeansJavaElement implements JavaElement {
     public int hashCode() {
         if (elementHandle != null) {
             return elementHandle.hashCode();
-        } else return typeHandle.hashCode();
+        } else {
+            return typeHandle.hashCode();
+        }
     }
     
     @Override

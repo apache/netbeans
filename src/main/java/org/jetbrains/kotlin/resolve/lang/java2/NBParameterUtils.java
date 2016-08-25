@@ -21,6 +21,8 @@ package org.jetbrains.kotlin.resolve.lang.java2;
 import java.util.Collection;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
 import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.Equals;
+import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.TypeParameterHashCodeSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.TypeParameterNameSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.UpperBoundsSearcher;
 import org.netbeans.api.java.source.TypeMirrorHandle;
@@ -44,6 +46,20 @@ public class NBParameterUtils {
         NBElementUtils.execute(searcher, project);
         
         return searcher.getUpperBounds();
+    }
+    
+    public static int hashCode(TypeMirrorHandle handle, Project project) {
+        TypeParameterHashCodeSearcher searcher = new TypeParameterHashCodeSearcher(handle);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getHashCode();
+    }
+    
+    public static boolean equals(TypeMirrorHandle handle1, TypeMirrorHandle handle2, Project project) {
+        Equals searcher = new Equals(handle1, handle2);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.equals();
     }
     
 }

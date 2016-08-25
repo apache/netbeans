@@ -51,4 +51,20 @@ public class NetBeansJavaTypeParameter extends NetBeansJavaClassifier implements
         return getName().asString();
     }
     
+    @Override
+    public int hashCode() {
+        int hashCode = NBParameterUtils.hashCode(getTypeHandle(), getProject());
+        return hashCode;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof NetBeansJavaTypeParameter)) {
+            return false;
+        }
+        NetBeansJavaTypeParameter typeParameter = (NetBeansJavaTypeParameter) obj;
+        
+        return NBParameterUtils.equals(getTypeHandle(), typeParameter.getTypeHandle(), getProject());
+    }
+    
 }

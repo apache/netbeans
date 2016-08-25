@@ -66,6 +66,31 @@ public class ParameterSearchers {
         
     }
     
+    public static class TypeParameterHashCodeSearcher implements Task<CompilationController> {
+        private final TypeMirrorHandle handle;
+        private int hashCode = -1;
+        
+        public TypeParameterHashCodeSearcher(TypeMirrorHandle handle) {
+            this.handle = handle;
+        }
+        
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeMirror type = handle.resolve(info);
+            if (type == null) {
+                return;
+            }
+            
+            TypeParameterElement element = (TypeParameterElement) ((TypeVariable) type).asElement();
+            hashCode = element.hashCode();
+        }
+        
+        public int getHashCode() {
+            return hashCode;
+        }
+    }
+    
     public static class UpperBoundsSearcher implements Task<CompilationController> {
 
         private final TypeMirrorHandle handle;
@@ -96,6 +121,35 @@ public class ParameterSearchers {
             return upperBounds;
         }
         
+    }
+    
+    public static class Equals implements Task<CompilationController> {
+        private final TypeMirrorHandle handle;
+        private final TypeMirrorHandle handle2;
+        private boolean equals = false;
+        
+        public Equals(TypeMirrorHandle handle, TypeMirrorHandle handle2) {
+            this.handle = handle;
+            this.handle2 = handle2;
+        }
+        
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeMirror type = handle.resolve(info);
+            TypeMirror type2 = handle2.resolve(info);
+            if (type == null || type2 == null) {
+                return;
+            }
+            
+            TypeParameterElement element = (TypeParameterElement) ((TypeVariable) type).asElement();
+            TypeParameterElement element2 = (TypeParameterElement) ((TypeVariable) type2).asElement();
+            equals = element.equals(element2);
+        }
+        
+        public boolean equals() {
+            return equals;
+        }
     }
     
 }

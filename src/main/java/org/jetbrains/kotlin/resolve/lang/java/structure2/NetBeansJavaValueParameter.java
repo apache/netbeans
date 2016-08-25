@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.load.java.structure.JavaValueParameter;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.resolve.lang.java2.NBElementUtils;
 import org.jetbrains.kotlin.resolve.lang.java2.NBParameterUtils;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
@@ -76,7 +77,7 @@ public class NetBeansJavaValueParameter extends NetBeansJavaElement implements J
     
     @Override
     public int hashCode() {
-        int hashCode = NBParameterUtils.valueParameterHashCode(getTypeHandle(), getProject());
+        int hashCode = NBElementUtils.typeMirrorHandleHashCode(getTypeHandle(), getProject());
         return hashCode;
     }
     
@@ -87,7 +88,7 @@ public class NetBeansJavaValueParameter extends NetBeansJavaElement implements J
         }
         NetBeansJavaValueParameter typeParameter = (NetBeansJavaValueParameter) obj;
         
-        return NBParameterUtils.valueParametersEquals(getTypeHandle(), typeParameter.getTypeHandle(), getProject());
+        return NBElementUtils.typeMirrorHandleEquals(getTypeHandle(), typeParameter.getTypeHandle(), getProject());
     }
     
 }

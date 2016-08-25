@@ -39,6 +39,7 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
+import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.util.Exceptions;
@@ -124,6 +125,18 @@ public class NBElementUtils {
         execute(searcher, project);
         
         return searcher.getSimpleName();
+    }
+
+    public static int typeMirrorHandleHashCode(TypeMirrorHandle handle, Project project) {
+        ParameterSearchers.TypeMirrorHandleHashCodeSearcher searcher = new ParameterSearchers.TypeMirrorHandleHashCodeSearcher(handle);
+        NBElementUtils.execute(searcher, project);
+        return searcher.getHashCode();
+    }
+
+    public static boolean typeMirrorHandleEquals(TypeMirrorHandle handle1, TypeMirrorHandle handle2, Project project) {
+        ParameterSearchers.TypeMirrorHandleEquals searcher = new ParameterSearchers.TypeMirrorHandleEquals(handle1, handle2);
+        NBElementUtils.execute(searcher, project);
+        return searcher.equals();
     }
     
 }

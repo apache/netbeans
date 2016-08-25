@@ -91,11 +91,11 @@ public class ParameterSearchers {
         }
     }
     
-    public static class ValueParameterHashCodeSearcher implements Task<CompilationController> {
+    public static class TypeMirrorHandleHashCodeSearcher implements Task<CompilationController> {
         private final TypeMirrorHandle handle;
         private int hashCode = -1;
         
-        public ValueParameterHashCodeSearcher(TypeMirrorHandle handle) {
+        public TypeMirrorHandleHashCodeSearcher(TypeMirrorHandle handle) {
             this.handle = handle;
         }
         
@@ -176,12 +176,12 @@ public class ParameterSearchers {
         }
     }
     
-    public static class ValueParametersEquals implements Task<CompilationController> {
+    public static class TypeMirrorHandleEquals implements Task<CompilationController> {
         private final TypeMirrorHandle handle;
         private final TypeMirrorHandle handle2;
         private boolean equals = false;
         
-        public ValueParametersEquals(TypeMirrorHandle handle, TypeMirrorHandle handle2) {
+        public TypeMirrorHandleEquals(TypeMirrorHandle handle, TypeMirrorHandle handle2) {
             this.handle = handle;
             this.handle2 = handle2;
         }

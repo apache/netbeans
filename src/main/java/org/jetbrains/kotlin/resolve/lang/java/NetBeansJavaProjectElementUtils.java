@@ -197,8 +197,8 @@ public class NetBeansJavaProjectElementUtils {
         return SourceUtils.getFile(handle, CLASSPATH_INFO.get(kotlinProject));
     }
     
-    public static void openElementInEditor(Element element, Project kotlinProject){
-        ElementHandle<? extends Element> handle = ElementHandle.create(element);
+    public static void openElementInEditor(ElementHandle handle, Project kotlinProject){
+//        ElementHandle<? extends Element> handle = ElementHandle.create(element);
         ElementOpen.open(CLASSPATH_INFO.get(kotlinProject), handle);
     }
     

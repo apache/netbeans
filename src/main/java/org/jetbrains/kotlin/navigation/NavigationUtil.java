@@ -39,7 +39,6 @@ import org.jetbrains.kotlin.navigation.references.ReferenceUtils;
 import org.jetbrains.kotlin.resolve.NetBeansDescriptorUtils;
 import org.jetbrains.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.jetbrains.kotlin.resolve.lang.java.resolver.NetBeansJavaSourceElement;
-import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElement;
 import org.jetbrains.kotlin.utils.LineEndUtil;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.Nullable;
@@ -47,6 +46,7 @@ import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.descriptors.SourceElement;
 import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor;
+import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryClass;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryPackageSourceElement;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinarySourceElement;
@@ -59,8 +59,12 @@ import org.jetbrains.kotlin.psi.KtFunction;
 import org.jetbrains.kotlin.psi.KtParameter;
 import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.DescriptorUtils;
+import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaClass;
+import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaElement;
+import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaMember;
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;
 import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedCallableMemberDescriptor;
+import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.openide.cookies.LineCookie;
@@ -125,8 +129,17 @@ public class NavigationUtil {
             KtElement fromElement, Project project, FileObject currentFile){
         
         if (element instanceof NetBeansJavaSourceElement){
-            Element binding = ((NetBeansJavaElement)((NetBeansJavaSourceElement) element).
-                    getJavaElement()).getBinding();
+            ElementHandle binding = ((NetBeansJavaElement)((NetBeansJavaSourceElement) element).getJavaElement()).getElementHandle();
+            if (binding == null) {
+                return null;
+            }
+            
+            if (binding.getKind() == ElementKind.CONSTRUCTOR){
+                JavaClass containingClass = ((NetBeansJavaMember)((NetBeansJavaSourceElement) element).
+                        getJavaElement()).getContainingClass();
+                binding = ((NetBeansJavaClass) containingClass).getElementHandle();
+            }
+            
             gotoJavaDeclaration(binding, project);
         } else if (element instanceof KotlinSourceElement){
             return gotoKotlinDeclaration(((KotlinSourceElement) element).getPsi(), fromElement, project, currentFile);        
@@ -295,12 +308,7 @@ public class NavigationUtil {
         return new Pair<Document, Integer>(document, startOffset);
     }
     
-    private static void gotoJavaDeclaration(Element binding, Project project) {
-        Element javaElement = binding;
-        if (binding.getKind() == ElementKind.CONSTRUCTOR){
-            javaElement = ((ExecutableElement) binding).getEnclosingElement();
-        }
-        
+    private static void gotoJavaDeclaration(ElementHandle javaElement, Project project) {
         if (javaElement != null){
             NetBeansJavaProjectElementUtils.openElementInEditor(javaElement, project);
         }

@@ -91,6 +91,30 @@ public class ParameterSearchers {
         }
     }
     
+    public static class ValueParameterHashCodeSearcher implements Task<CompilationController> {
+        private final TypeMirrorHandle handle;
+        private int hashCode = -1;
+        
+        public ValueParameterHashCodeSearcher(TypeMirrorHandle handle) {
+            this.handle = handle;
+        }
+        
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeMirror type = handle.resolve(info);
+            if (type == null) {
+                return;
+            }
+            
+            hashCode = type.hashCode();
+        }
+        
+        public int getHashCode() {
+            return hashCode;
+        }
+    }
+    
     public static class UpperBoundsSearcher implements Task<CompilationController> {
 
         private final TypeMirrorHandle handle;
@@ -145,6 +169,33 @@ public class ParameterSearchers {
             TypeParameterElement element = (TypeParameterElement) ((TypeVariable) type).asElement();
             TypeParameterElement element2 = (TypeParameterElement) ((TypeVariable) type2).asElement();
             equals = element.equals(element2);
+        }
+        
+        public boolean equals() {
+            return equals;
+        }
+    }
+    
+    public static class ValueParametersEquals implements Task<CompilationController> {
+        private final TypeMirrorHandle handle;
+        private final TypeMirrorHandle handle2;
+        private boolean equals = false;
+        
+        public ValueParametersEquals(TypeMirrorHandle handle, TypeMirrorHandle handle2) {
+            this.handle = handle;
+            this.handle2 = handle2;
+        }
+        
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeMirror type = handle.resolve(info);
+            TypeMirror type2 = handle2.resolve(info);
+            if (type == null || type2 == null) {
+                return;
+            }
+            
+            equals = type.equals(type2);
         }
         
         public boolean equals() {

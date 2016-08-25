@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.load.java.structure.JavaValueParameter;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.resolve.lang.java2.NBParameterUtils;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
 
@@ -71,6 +72,22 @@ public class NetBeansJavaValueParameter extends NetBeansJavaElement implements J
     @Override
     public boolean isDeprecatedInJavaDoc() {
         return false; // temporary
+    }
+    
+    @Override
+    public int hashCode() {
+        int hashCode = NBParameterUtils.valueParameterHashCode(getTypeHandle(), getProject());
+        return hashCode;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof NetBeansJavaValueParameter)) {
+            return false;
+        }
+        NetBeansJavaValueParameter typeParameter = (NetBeansJavaValueParameter) obj;
+        
+        return NBParameterUtils.valueParametersEquals(getTypeHandle(), typeParameter.getTypeHandle(), getProject());
     }
     
 }

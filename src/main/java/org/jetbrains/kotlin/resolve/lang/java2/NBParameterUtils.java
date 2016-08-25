@@ -25,6 +25,8 @@ import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.Equals;
 import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.TypeParameterHashCodeSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.TypeParameterNameSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.UpperBoundsSearcher;
+import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.ValueParameterHashCodeSearcher;
+import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.ValueParametersEquals;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
 
@@ -57,6 +59,20 @@ public class NBParameterUtils {
     
     public static boolean equals(TypeMirrorHandle handle1, TypeMirrorHandle handle2, Project project) {
         Equals searcher = new Equals(handle1, handle2);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.equals();
+    }
+    
+    public static int valueParameterHashCode(TypeMirrorHandle handle, Project project) {
+        ValueParameterHashCodeSearcher searcher = new ValueParameterHashCodeSearcher(handle);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getHashCode();
+    }
+ 
+    public static boolean valueParametersEquals(TypeMirrorHandle handle1, TypeMirrorHandle handle2, Project project) {
+        ValueParametersEquals searcher = new ValueParametersEquals(handle1, handle2);
         NBElementUtils.execute(searcher, project);
         
         return searcher.equals();

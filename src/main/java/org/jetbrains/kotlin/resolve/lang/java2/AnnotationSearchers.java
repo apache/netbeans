@@ -29,9 +29,12 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationArgument;
+import org.jetbrains.kotlin.load.java.structure.JavaArrayAnnotationArgument;
+import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaAnnotation;
 import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaAnnotationAsAnnotationArgument;
+import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaArrayAnnotationArgument;
 import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaClassObjectAnnotationArgument;
 import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaLiteralAnnotationArgument;
 import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaReferenceAnnotationArgument;
@@ -47,52 +50,105 @@ import org.netbeans.api.project.Project;
  * @author Alexander.Baratynski
  */
 public class AnnotationSearchers {
-    
-    
-    public static class AnnotationSearcher implements Task<CompilationController> {
+
+    private static JavaArrayAnnotationArgument getArrayAnnotationArgument(Collection values, Name name, 
+            CompilationController info, Project project) {
+        List<JavaAnnotationArgument> args = Lists.newArrayList();
+
+        for (Object value : values) {
+            if (value instanceof Collection<?>) {
+                args.add(getArrayAnnotationArgument((Collection) value, name, info, project));
+            } else {
+                args.add(create(value, name, info, project));
+            }
+        }
+
+        return new NetBeansJavaArrayAnnotationArgument(args, name);
+    }
+
+    private static JavaAnnotationArgument create(Object value, Name name, CompilationController info, Project project) {
+        if (value instanceof AnnotationMirror) {
+            TypeMirrorHandle typeHandle = TypeMirrorHandle.create(
+                    ((AnnotationMirror) value).getAnnotationType());
+            return new NetBeansJavaAnnotationAsAnnotationArgument(project, name, typeHandle,
+                    getMirrorArguments((AnnotationMirror) value, info, project));
+        } else if (value instanceof VariableElement) {
+            return new NetBeansJavaReferenceAnnotationArgument(ElementHandle.create(((VariableElement) value)), project);
+        } else if (value instanceof String) {
+            return new NetBeansJavaLiteralAnnotationArgument(value, name);
+        } else if (value instanceof Class<?>) {
+            return new NetBeansJavaClassObjectAnnotationArgument((Class) value, name, project);
+        } else if (value instanceof Collection<?>) {
+            return getArrayAnnotationArgument((Collection) value, name, info, project);
+        } else if (value instanceof AnnotationValue) {
+            return create(((AnnotationValue) value).getValue(), name, info, project);
+        } else {
+            return null;
+        }
+    }
+
+    private static Collection<JavaAnnotationArgument> getMirrorArguments(AnnotationMirror mirror,
+            CompilationController info, Project project) {
+        Collection<JavaAnnotationArgument> arguments = Lists.newArrayList();
+
+        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry
+                : mirror.getElementValues().entrySet()) {
+
+            Object value = entry.getValue().getValue();
+            Name name = Name.identifier(entry.getKey().getSimpleName().toString());
+
+            arguments.add(create(value, name, info, project));
+        }
+
+        return arguments;
+    }
+
+    public static class AnnotationsSearcher implements Task<CompilationController> {
 
         private final Collection<JavaAnnotation> annotations = Lists.newArrayList();
         private final ElementHandle handle;
         private final Project project;
-        
-        public AnnotationSearcher(ElementHandle handle, Project project) {
+
+        public AnnotationsSearcher(ElementHandle handle, Project project) {
             this.handle = handle;
             this.project = project;
         }
-        
-        private JavaAnnotationArgument create(Object value, Name name, CompilationController info) {
-            if (value instanceof AnnotationMirror){
-                TypeMirrorHandle typeHandle = TypeMirrorHandle.create(
-                        ((AnnotationMirror) value).getAnnotationType());
-                return new NetBeansJavaAnnotationAsAnnotationArgument(project, name, typeHandle, 
-                        getMirrorArguments((AnnotationMirror) value, info));
-            } else if (value instanceof VariableElement){
-                return new NetBeansJavaReferenceAnnotationArgument(ElementHandle.create(((VariableElement) value)), project);
-            } else if (value instanceof String){
-                return new NetBeansJavaLiteralAnnotationArgument(value, name);
-            } else if (value instanceof Class<?>){
-                return new NetBeansJavaClassObjectAnnotationArgument((Class) value, name, project);
-            } else if (value instanceof Collection<?>){
-                
-            } else if (value instanceof AnnotationValue){
-                return create(((AnnotationValue) value).getValue(), name, info);
-            } else return null; 
-        }
-        
-        private Collection<JavaAnnotationArgument> getMirrorArguments(AnnotationMirror mirror, 
-                CompilationController info) {
-            Collection<JavaAnnotationArgument> arguments = Lists.newArrayList();
-            
-            for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
-                mirror.getElementValues().entrySet()){
-                
-                Object value = entry.getValue().getValue();
-                Name name = Name.identifier(entry.getKey().getSimpleName().toString());
-                
-                
+
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            Element elem = handle.resolve(info);
+            if (elem == null) {
+                return;
             }
-            
-            return arguments;
+
+            List<? extends AnnotationMirror> annotationMirrors = elem.getAnnotationMirrors();
+            for (AnnotationMirror mirror : annotationMirrors) {
+                TypeMirrorHandle mirrorHandle = TypeMirrorHandle.create(mirror.getAnnotationType());
+                JavaAnnotation annotation = new NetBeansJavaAnnotation(project, mirrorHandle,
+                        getMirrorArguments(mirror, info, project));
+                annotations.add(annotation);
+            }
+
+        }
+
+        public Collection<JavaAnnotation> getAnnotations() {
+            return annotations;
+        }
+
+    }
+
+    public static class AnnotationSearcher implements Task<CompilationController> {
+
+        private JavaAnnotation annotation = null;
+        private final ElementHandle handle;
+        private final Project project;
+        private final FqName fqName;
+
+        public AnnotationSearcher(ElementHandle handle, Project project, FqName fqName) {
+            this.handle = handle;
+            this.project = project;
+            this.fqName = fqName;
         }
         
         @Override
@@ -102,22 +158,22 @@ public class AnnotationSearchers {
             if (elem == null) {
                 return;
             }
-            
+
             List<? extends AnnotationMirror> annotationMirrors = elem.getAnnotationMirrors();
             for (AnnotationMirror mirror : annotationMirrors) {
-                TypeMirrorHandle mirrorHandle = TypeMirrorHandle.create(mirror.getAnnotationType());
-                JavaAnnotation annotation = new NetBeansJavaAnnotation(project, mirrorHandle, 
-                        getMirrorArguments(mirror, info));
-                annotations.add(annotation);
+                String annotationFQName = mirror.getAnnotationType().toString();
+                if (fqName.asString().equals(annotationFQName)){
+                    TypeMirrorHandle mirrorHandle = TypeMirrorHandle.create(mirror.getAnnotationType());
+                    annotation = new NetBeansJavaAnnotation(project, mirrorHandle,
+                        getMirrorArguments(mirror, info, project));
+                }
             }
-            
         }
         
-        public Collection<JavaAnnotation> getAnnotations() {
-            return annotations;
+        public JavaAnnotation getAnnotation() {
+            return annotation;
         }
-        
-    } 
+    }
     
     
 }

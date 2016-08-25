@@ -19,12 +19,10 @@
 package org.jetbrains.kotlin.resolve.lang.java.structure2;
 
 import java.util.Collection;
-import java.util.Collections;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifier;
 import org.jetbrains.kotlin.name.FqName;
-import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.resolve.lang.java2.NBAnnotationUtils;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.TypeMirrorHandle;
@@ -46,8 +44,8 @@ public abstract class NetBeansJavaClassifier extends NetBeansJavaElement impleme
     }
 
     @Override
-    public JavaAnnotation findAnnotation(FqName fqname) {
-        return null; // temporary
+    public JavaAnnotation findAnnotation(FqName fqName) {
+        return NBAnnotationUtils.getAnnotation(getElementHandle(), getProject(), fqName);
     }
 
     @Override

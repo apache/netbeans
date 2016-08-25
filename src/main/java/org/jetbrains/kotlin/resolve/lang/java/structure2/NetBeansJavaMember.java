@@ -26,6 +26,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaMember;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.resolve.lang.java2.NBAnnotationUtils;
 import org.jetbrains.kotlin.resolve.lang.java2.NBMemberUtils;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
@@ -50,12 +51,12 @@ public abstract class NetBeansJavaMember extends NetBeansJavaElement implements 
 
     @Override
     public Collection<JavaAnnotation> getAnnotations() {
-        return Collections.emptyList(); // temporary
+        return NBAnnotationUtils.getAnnotations(getElementHandle(), getProject());
     }
 
     @Override
-    public JavaAnnotation findAnnotation(FqName fqname) {
-        return null; // temporary
+    public JavaAnnotation findAnnotation(FqName fqName) {
+        return NBAnnotationUtils.getAnnotation(getElementHandle(), getProject(), fqName);
     }
 
     @Override

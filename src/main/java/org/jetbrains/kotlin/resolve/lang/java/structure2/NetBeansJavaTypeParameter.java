@@ -19,8 +19,11 @@
 package org.jetbrains.kotlin.resolve.lang.java.structure2;
 
 import java.util.Collection;
+import java.util.Collections;
+import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
+import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.resolve.lang.java2.NBParameterUtils;
 import org.netbeans.api.java.source.TypeMirrorHandle;
@@ -65,6 +68,16 @@ public class NetBeansJavaTypeParameter extends NetBeansJavaClassifier implements
         NetBeansJavaTypeParameter typeParameter = (NetBeansJavaTypeParameter) obj;
         
         return NBParameterUtils.equals(getTypeHandle(), typeParameter.getTypeHandle(), getProject());
+    }
+    
+    @Override
+    public Collection<JavaAnnotation> getAnnotations() {
+        return Collections.emptyList();
+    }
+    
+    @Override
+    public JavaAnnotation findAnnotation(FqName fqName) {
+        return null;
     }
     
 }

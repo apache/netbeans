@@ -18,10 +18,11 @@
  */
 package org.jetbrains.kotlin.resolve.lang.java2;
 
-import com.google.common.collect.Lists;
 import java.util.Collection;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
+import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.resolve.lang.java2.AnnotationSearchers.AnnotationSearcher;
+import org.jetbrains.kotlin.resolve.lang.java2.AnnotationSearchers.AnnotationsSearcher;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 
@@ -32,10 +33,17 @@ import org.netbeans.api.project.Project;
 public class NBAnnotationUtils {
     
     public static Collection<JavaAnnotation> getAnnotations(ElementHandle handle, Project project) {
-        AnnotationSearcher searcher = new AnnotationSearcher(handle, project);
+        AnnotationsSearcher searcher = new AnnotationsSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getAnnotations();
+    }
+    
+    public static JavaAnnotation getAnnotation(ElementHandle handle, Project project, FqName fqName) {
+        AnnotationSearcher searcher = new AnnotationSearcher(handle, project, fqName);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getAnnotation();
     }
     
 }

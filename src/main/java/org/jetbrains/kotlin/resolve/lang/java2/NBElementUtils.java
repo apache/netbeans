@@ -29,6 +29,7 @@ import org.jetbrains.kotlin.name.ClassId;
 import org.jetbrains.kotlin.projectsextensions.ClassPathExtender;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.resolve.lang.java2.Searchers.ClassIdComputer;
+import org.jetbrains.kotlin.resolve.lang.java2.Searchers.ElementSimpleNameSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.Searchers.PackageElementSearcher;
 import org.jetbrains.kotlin.resolve.lang.java2.Searchers.TypeElementSearcher;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -116,6 +117,13 @@ public class NBElementUtils {
         execute(computer, project);
         
         return computer.getClassId();
+    }
+    
+    public static String getSimpleName(ElementHandle handle, Project project) {
+        ElementSimpleNameSearcher searcher = new ElementSimpleNameSearcher(handle);
+        execute(searcher, project);
+        
+        return searcher.getSimpleName();
     }
     
 }

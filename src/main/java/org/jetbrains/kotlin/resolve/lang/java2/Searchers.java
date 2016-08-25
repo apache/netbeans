@@ -18,6 +18,7 @@
  */
 package org.jetbrains.kotlin.resolve.lang.java2;
 
+import com.sun.source.util.TreePath;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.PackageElement;
@@ -26,9 +27,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.name.ClassId;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
+import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.Task;
 
 /**
@@ -124,4 +127,65 @@ public class Searchers {
 
     }
 
+    public static class ElementSearcher implements CancellableTask<CompilationController>{
+
+        private Element element;
+        private final int offset;
+        
+        public ElementSearcher(int offset){
+            this.offset = offset;
+        }
+        
+        @Override
+        public void cancel() {
+        }
+
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TreePath treePath = info.getTreeUtilities().pathFor(offset);
+            Element elem = info.getTrees().getElement(treePath);
+            if (elem == null) {
+                return;
+            }
+            
+            element = elem;
+        }
+        
+        public Element getElement(){
+            return element;
+        }
+        
+    }
+    
+    public static class ElementSimpleNameSearcher implements CancellableTask<CompilationController>{
+
+        private final ElementHandle element;
+        private String simpleName = null;
+        
+        public ElementSimpleNameSearcher(ElementHandle element){
+            this.element = element;
+        }
+        
+        @Override
+        public void cancel() {
+        }
+
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            Element elem = element.resolve(info);
+            if (elem == null) {
+                return;
+            }
+            
+            simpleName = elem.getSimpleName().toString();
+        }
+        
+        public String getSimpleName(){
+            return simpleName;
+        }
+        
+    }
+    
 }

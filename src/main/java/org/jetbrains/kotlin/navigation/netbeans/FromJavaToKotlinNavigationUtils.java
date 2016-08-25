@@ -19,13 +19,11 @@ package org.jetbrains.kotlin.navigation.netbeans;
 import com.google.common.collect.Lists;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -43,19 +41,17 @@ import org.jetbrains.kotlin.psi.KtEnumEntry;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtNamedFunction;
 import org.jetbrains.kotlin.psi.KtObjectDeclaration;
-import org.jetbrains.kotlin.psi.KtParameter;
 import org.jetbrains.kotlin.psi.KtPrimaryConstructor;
 import org.jetbrains.kotlin.psi.KtProperty;
 import org.jetbrains.kotlin.psi.KtPropertyAccessor;
 import org.jetbrains.kotlin.psi.KtSecondaryConstructor;
 import org.jetbrains.kotlin.psi.KtVisitorVoid;
-import org.netbeans.api.java.source.CancellableTask;
-import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.Project;
 import org.openide.util.Exceptions;
+import org.jetbrains.kotlin.resolve.lang.java2.Searchers.ElementSearcher;
 
 /**
  *
@@ -81,6 +77,10 @@ public class FromJavaToKotlinNavigationUtils {
         if (element == null) {
             return null;
         }
+        if (project == null) {
+            return null;
+        }
+        
         List<KtFile> ktFiles = ProjectUtils.getSourceFiles(project);
         
         for (KtFile ktFile : ktFiles) {
@@ -261,31 +261,5 @@ public class FromJavaToKotlinNavigationUtils {
         }
         
     }
-    
-    private static class ElementSearcher implements CancellableTask<CompilationController>{
-
-        private Element element;
-        private final int offset;
-        
-        public ElementSearcher(int offset){
-            this.offset = offset;
-        }
-        
-        @Override
-        public void cancel() {
-        }
-
-        @Override
-        public void run(CompilationController info) throws Exception {
-            TreePath treePath = info.getTreeUtilities().pathFor(offset);
-            element = info.getTrees().getElement(treePath);
-        }
-        
-        public Element getElement(){
-            return element;
-        }
-        
-    }
-    
 }
 

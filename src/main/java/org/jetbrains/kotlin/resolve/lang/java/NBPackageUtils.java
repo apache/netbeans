@@ -16,20 +16,19 @@
  *
  ******************************************************************************
  */
-package org.jetbrains.kotlin.resolve.lang.java.structure2;
+package org.jetbrains.kotlin.resolve.lang.java;
 
-import com.google.common.collect.Lists;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import javax.lang.model.element.PackageElement;
 import kotlin.jvm.functions.Function1;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
-import org.jetbrains.kotlin.load.java.structure.JavaElement;
 import org.jetbrains.kotlin.load.java.structure.JavaPackage;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
-import org.jetbrains.kotlin.resolve.lang.java2.NBPackageUtils;
+import org.jetbrains.kotlin.resolve.lang.java.PackageSearchers.ClassesSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.PackageSearchers.FqNameSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.PackageSearchers.SubPackagesSearcher;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 
@@ -37,33 +36,28 @@ import org.netbeans.api.project.Project;
  *
  * @author Alexander.Baratynski
  */
-public class NetBeansJavaPackage implements JavaPackage, JavaElement {
-
-    private final List<ElementHandle<PackageElement>> packages = Lists.newArrayList();
-    private final Project project;
+public class NBPackageUtils {
     
-    public NetBeansJavaPackage(List<ElementHandle<PackageElement>> packages, Project project){
-        this.packages.addAll(packages);
-        this.project = project; 
+    public static Collection<JavaPackage> getSubPackages(Project project, JavaPackage pack) {
+        SubPackagesSearcher searcher = new SubPackagesSearcher(project, pack);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getSubPackages();
+    }
+ 
+    public static Collection<JavaClass> getClasses(Project project, 
+            Function1<? super Name, Boolean> nameFilter, List<ElementHandle<PackageElement>> packages) {
+        ClassesSearcher searcher = new ClassesSearcher(packages, project, nameFilter);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getClasses();
     }
     
-    public NetBeansJavaPackage(ElementHandle<PackageElement> pack, Project project){
-        this(Collections.singletonList(pack), project);
-    }
-    
-    @Override
-    public FqName getFqName() {
-        return NBPackageUtils.getFqName(project, packages.get(0));
-    }
-
-    @Override
-    public Collection<JavaPackage> getSubPackages() {
-        return NBPackageUtils.getSubPackages(project, this);
-    }
-
-    @Override
-    public Collection<JavaClass> getClasses(Function1<? super Name, Boolean> nameFilter) {
-        return NBPackageUtils.getClasses(project, nameFilter, packages);
+    public static FqName getFqName(Project project, ElementHandle<PackageElement> handle) {
+        FqNameSearcher searcher = new FqNameSearcher(handle);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getFqName();
     }
     
 }

@@ -22,13 +22,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
@@ -37,7 +33,6 @@ import org.jetbrains.kotlin.builder.KotlinPsiManager;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.navigation.references.ReferenceUtils;
 import org.jetbrains.kotlin.resolve.NetBeansDescriptorUtils;
-import org.jetbrains.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
 import org.jetbrains.kotlin.resolve.lang.java.resolver.NetBeansJavaSourceElement;
 import org.jetbrains.kotlin.utils.LineEndUtil;
 import org.jetbrains.kotlin.utils.ProjectUtils;
@@ -50,7 +45,6 @@ import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryClass;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryPackageSourceElement;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinarySourceElement;
-import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.navigation.netbeans.KotlinHyperlinkProvider;
 import org.jetbrains.kotlin.psi.KtDeclaration;
 import org.jetbrains.kotlin.psi.KtElement;
@@ -59,19 +53,16 @@ import org.jetbrains.kotlin.psi.KtFunction;
 import org.jetbrains.kotlin.psi.KtParameter;
 import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.DescriptorUtils;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaClass;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaElement;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaMember;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElement;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaMember;
+import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils;
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;
-import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedCallableMemberDescriptor;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.editor.NbEditorUtilities;
-import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.loaders.DataObject;
-import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.text.Line;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
@@ -310,7 +301,7 @@ public class NavigationUtil {
     
     private static void gotoJavaDeclaration(ElementHandle javaElement, Project project) {
         if (javaElement != null){
-            NetBeansJavaProjectElementUtils.openElementInEditor(javaElement, project);
+            NBElementUtils.openElementInEditor(javaElement, project);
         }
         
     }

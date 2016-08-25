@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,49 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.java.structure;
 
-import com.google.common.collect.Lists;
-import java.util.Collection;
 import java.util.List;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationArgument;
 import org.jetbrains.kotlin.load.java.structure.JavaArrayAnnotationArgument;
 import org.jetbrains.kotlin.name.Name;
-import org.netbeans.api.project.Project;
 
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
 public class NetBeansJavaArrayAnnotationArgument implements JavaArrayAnnotationArgument {
 
     private final Name name;
-    private final Project project;
-    private final Collection<?> arguments;
+    private final List<JavaAnnotationArgument> args;
     
-    public NetBeansJavaArrayAnnotationArgument(Collection<?> arguments, Name name, Project project){
+    public NetBeansJavaArrayAnnotationArgument(List<JavaAnnotationArgument> args, 
+            Name name){
         this.name = name;
-        this.project = project;
-        this.arguments = arguments;
+        this.args= args;
     }
     
     @Override
     public List<JavaAnnotationArgument> getElements() {
-        List<JavaAnnotationArgument> argumentList = Lists.newArrayList();
-        for (Object obj : arguments){
-            argumentList.add(NetBeansJavaAnnotationArgument.create(obj, name, project));
-        }
-        
-        return argumentList;
-        
+        return args;
     }
 
     @Override
     public Name getName() {
         return name;
     }
-    
-    
     
 }

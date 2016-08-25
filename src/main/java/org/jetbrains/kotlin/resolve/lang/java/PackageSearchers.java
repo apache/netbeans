@@ -16,7 +16,7 @@
  *
  ******************************************************************************
  */
-package org.jetbrains.kotlin.resolve.lang.java2;
+package org.jetbrains.kotlin.resolve.lang.java;
 
 import com.google.common.collect.Lists;
 import java.util.Collection;
@@ -30,8 +30,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaPackage;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaClass;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaPackage;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaPackage;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource.Phase;

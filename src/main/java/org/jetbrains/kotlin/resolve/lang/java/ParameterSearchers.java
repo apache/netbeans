@@ -16,7 +16,7 @@
  *
  ******************************************************************************
  */
-package org.jetbrains.kotlin.resolve.lang.java2;
+package org.jetbrains.kotlin.resolve.lang.java;
 
 import com.google.common.collect.Lists;
 import java.util.Collection;
@@ -26,7 +26,7 @@ import javax.lang.model.type.TypeVariable;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.name.SpecialNames;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaClassifierType;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClassifierType;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.Task;

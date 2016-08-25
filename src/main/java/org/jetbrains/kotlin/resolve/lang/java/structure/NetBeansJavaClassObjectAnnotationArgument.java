@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,47 +14,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.java.structure;
 
-import javax.lang.model.element.Element;
-import org.jetbrains.kotlin.resolve.lang.java.NetBeansJavaClassFinder;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaClassObjectAnnotationArgument;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
-import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils;
+import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
+
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
 public class NetBeansJavaClassObjectAnnotationArgument implements JavaClassObjectAnnotationArgument {
 
     private final Class<?> javaClass;
-    private final Project kotlinProject;
+    private final Project project;
     private final Name name;
     
-    protected NetBeansJavaClassObjectAnnotationArgument(Class<?> javaClass,
-            @NotNull Name name, @NotNull Project project){
+    public NetBeansJavaClassObjectAnnotationArgument(Class<?> javaClass,
+            Name name, Project project){
         this.javaClass = javaClass;
-        this.kotlinProject = project;
+        this.project = project;
         this.name = name;
     }
     
     @Override
     public JavaType getReferencedType() {
-        return null;
-//        Element typeBinding = NetBeansJavaClassFinder.findType(new FqName(javaClass.getCanonicalName()), kotlinProject);
-//        assert typeBinding != null;
-//        return NetBeansJavaType.create(typeBinding.asType());
+        TypeMirrorHandle handle = NBElementUtils.findTypeMirrorHandle(javaClass.getCanonicalName(), project);
+        return NetBeansJavaType.create(handle, project);
     }
 
     @Override
     public Name getName() {
         return name;
     }
-    
-    
     
 }

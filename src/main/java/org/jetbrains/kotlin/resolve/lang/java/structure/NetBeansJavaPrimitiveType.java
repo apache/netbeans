@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,29 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.java.structure;
 
-import javax.lang.model.type.TypeMirror;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.builtins.PrimitiveType;
 import org.jetbrains.kotlin.load.java.structure.JavaPrimitiveType;
 import org.jetbrains.kotlin.resolve.jvm.JvmPrimitiveType;
+import org.jetbrains.kotlin.resolve.lang.java.NBTypeUtils;
+import org.netbeans.api.java.source.TypeMirrorHandle;
+import org.netbeans.api.project.Project;
 
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
-public class NetBeansJavaPrimitiveType extends NetBeansJavaType<TypeMirror> implements JavaPrimitiveType {
+public class NetBeansJavaPrimitiveType extends NetBeansJavaType implements JavaPrimitiveType {
     
-    public NetBeansJavaPrimitiveType(TypeMirror typeBinding){
-        super(typeBinding);
+    public NetBeansJavaPrimitiveType(TypeMirrorHandle handle, Project project) {
+        super(handle, project);
     }
-    
+
     @Override
-    @Nullable
-    public PrimitiveType getType(){
-        String text = getBinding().toString();
+    public PrimitiveType getType() {
+        String text = NBTypeUtils.getName(getHandle(), getProject());
         return text.equals("void") ? null : JvmPrimitiveType.get(text).getPrimitiveType();
     }
     

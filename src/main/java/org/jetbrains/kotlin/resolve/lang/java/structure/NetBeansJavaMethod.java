@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,55 +14,48 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.java.structure;
 
-import static org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.typeParameters;
-
 import java.util.List;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaMethod;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 import org.jetbrains.kotlin.load.java.structure.JavaValueParameter;
+import org.jetbrains.kotlin.resolve.lang.java.NBExecutableUtils;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.project.Project;
 
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
-public class NetBeansJavaMethod extends NetBeansJavaMember<ExecutableElement> implements JavaMethod{
-    public NetBeansJavaMethod(ExecutableElement method){
-        super(method);
+public class NetBeansJavaMethod extends NetBeansJavaMember implements JavaMethod {
+
+    public NetBeansJavaMethod(ElementHandle handle, JavaClass containingClass, Project project) {
+        super(handle, containingClass, project);
     }
 
     @Override
     public List<JavaValueParameter> getValueParameters() {
-        return NetBeansJavaElementUtil.getValueParameters(getBinding());
+        return NBExecutableUtils.getValueParameters(getElementHandle(), getProject());
+    }
+
+    @Override
+    public JavaType getReturnType() {
+        return NBExecutableUtils.getReturnType(getElementHandle(), getProject());
     }
 
     @Override
     public boolean getHasAnnotationParameterDefaultValue() {
-        return getBinding().getDefaultValue() != null;
-    }
-
-    @Override
-    @NotNull
-    public JavaType getReturnType() {
-        return NetBeansJavaType.create(getBinding().getReturnType());
-    }
-
-    @Override
-    public JavaClass getContainingClass() {
-        return new NetBeansJavaClass((TypeElement) getBinding().getEnclosingElement());
+        return NBExecutableUtils.hasAnnotationParameterDefaultValue(getElementHandle(), getProject());
     }
 
     @Override
     public List<JavaTypeParameter> getTypeParameters() {
-        List<? extends TypeParameterElement> valueParameters = getBinding().getTypeParameters();
-        return typeParameters(valueParameters.toArray(new TypeParameterElement[valueParameters.size()]));
+        return NBExecutableUtils.getTypeParameters(getElementHandle(), getProject());
     }
+    
 }

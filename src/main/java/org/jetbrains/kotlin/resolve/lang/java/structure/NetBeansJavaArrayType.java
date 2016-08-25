@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,28 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.java.structure;
 
-import javax.lang.model.type.ArrayType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaArrayType;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
+import org.jetbrains.kotlin.resolve.lang.java.NBTypeUtils;
+import org.netbeans.api.java.source.TypeMirrorHandle;
+import org.netbeans.api.project.Project;
 
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
-public class NetBeansJavaArrayType extends NetBeansJavaType<ArrayType> implements JavaArrayType {
+public class NetBeansJavaArrayType extends NetBeansJavaType implements JavaArrayType {
     
-    public NetBeansJavaArrayType(@NotNull ArrayType typeBinding){
-        super(typeBinding);
+    public NetBeansJavaArrayType(TypeMirrorHandle handle, Project project) {
+        super(handle, project);
     }
-    
+
     @Override
-    @NotNull
-    public JavaType getComponentType(){
-        return NetBeansJavaType.create(getBinding().getComponentType());
+    public JavaType getComponentType() {
+        return NBTypeUtils.getComponentType(getHandle(), getProject());
     }
     
 }

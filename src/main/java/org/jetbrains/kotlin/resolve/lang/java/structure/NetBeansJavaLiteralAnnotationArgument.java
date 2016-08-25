@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,17 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.java.structure;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaLiteralAnnotationArgument;
 import org.jetbrains.kotlin.name.Name;
 
-/**
- *
- * @author Александр
- */
 public class NetBeansJavaLiteralAnnotationArgument implements JavaLiteralAnnotationArgument{
 
     private final Object value;

@@ -16,7 +16,7 @@
  *
  ******************************************************************************
  */
-package org.jetbrains.kotlin.resolve.lang.java2;
+package org.jetbrains.kotlin.resolve.lang.java;
 
 import com.google.common.collect.Lists;
 import java.util.List;
@@ -25,7 +25,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.WildcardType;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaType;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaType;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource.Phase;

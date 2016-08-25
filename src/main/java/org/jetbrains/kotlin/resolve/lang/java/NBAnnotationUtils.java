@@ -16,15 +16,15 @@
  *
  ******************************************************************************
  */
-package org.jetbrains.kotlin.resolve.lang.java2;
+package org.jetbrains.kotlin.resolve.lang.java;
 
 import java.util.Collection;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.name.FqName;
-import org.jetbrains.kotlin.resolve.lang.java2.AnnotationSearchers.AnnotationForTypeMirrorHandleSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.AnnotationSearchers.AnnotationSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.AnnotationSearchers.AnnotationsForTypeMirrorHandleSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.AnnotationSearchers.AnnotationsSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.AnnotationSearchers.AnnotationForTypeMirrorHandleSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.AnnotationSearchers.AnnotationSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.AnnotationSearchers.AnnotationsForTypeMirrorHandleSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.AnnotationSearchers.AnnotationsSearcher;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;

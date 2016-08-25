@@ -16,17 +16,17 @@
  *
  ******************************************************************************
  */
-package org.jetbrains.kotlin.resolve.lang.java2;
+package org.jetbrains.kotlin.resolve.lang.java;
 
 import java.util.List;
 import javax.lang.model.element.ExecutableElement;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 import org.jetbrains.kotlin.load.java.structure.JavaValueParameter;
-import org.jetbrains.kotlin.resolve.lang.java2.ExecutableSearchers.HasAnnotationParameterDefaultValueSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.ExecutableSearchers.ReturnTypeSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.ExecutableSearchers.TypeParametersSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.ExecutableSearchers.ValueParametersSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ExecutableSearchers.HasAnnotationParameterDefaultValueSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ExecutableSearchers.ReturnTypeSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ExecutableSearchers.TypeParametersSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ExecutableSearchers.ValueParametersSearcher;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 

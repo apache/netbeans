@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,75 +14,66 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.java.structure;
 
-
-import com.google.common.collect.Lists;
-import static org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.types;
-import static org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.typeParameters;
-import static org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.classifierTypes;
 import java.util.Collections;
 import java.util.List;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.TypeVariable;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifier;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
+import org.jetbrains.kotlin.resolve.lang.java.NBTypeUtils;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.TypeMirrorHandle;
+import org.netbeans.api.project.Project;
 
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
-public class NetBeansJavaClassifierType extends NetBeansJavaType<TypeMirror> implements JavaClassifierType {
+public class NetBeansJavaClassifierType extends NetBeansJavaType implements JavaClassifierType {
     
-    public NetBeansJavaClassifierType(TypeMirror typeBinding){
-        super(typeBinding);
+    public NetBeansJavaClassifierType(TypeMirrorHandle handle, Project project) {
+        super(handle, project);
     }
 
     @Override
     public JavaClassifier getClassifier() {
-        switch (getBinding().getKind()) {
+        switch (getHandle().getKind()) {
             case DECLARED:
-                return NetBeansJavaClassifier.create(((DeclaredType)getBinding()).asElement());
+                ElementHandle elementHandle = ElementHandle.from(getHandle());
+                return new NetBeansJavaClass(elementHandle, getProject());
             case TYPEVAR:
-                return NetBeansJavaClassifier.create(((TypeVariable) getBinding()).asElement());
+                return new NetBeansJavaTypeParameter(getHandle(), getProject());
             default:
                 return null;
         }
     }
 
     @Override
-    public String getPresentableText() {
-        return getBinding().toString();
+    public List<JavaType> getTypeArguments() {
+        if (getHandle().getKind() == TypeKind.DECLARED) {
+            return NBTypeUtils.getTypeArguments(getHandle(), getProject());
+        } else return Collections.emptyList();
     }
 
     @Override
     public boolean isRaw() {
-        if (getBinding().getKind() == TypeKind.DECLARED) {
-                return ((DeclaredType) getBinding()).getTypeArguments().isEmpty();
+        if (getHandle().getKind() == TypeKind.DECLARED) {
+            return NBTypeUtils.isRaw(getHandle(), getProject());
         } else return true;
     }
 
     @Override
-    public List<JavaType> getTypeArguments() {
-        List<TypeMirror> typeArgs = Lists.newArrayList();
-        
-        if (getBinding().getKind() == TypeKind.DECLARED){
-            
-            for (TypeMirror elem : ((DeclaredType) getBinding()).getTypeArguments()){
-                typeArgs.add(elem);
-            }
-            return types(typeArgs.toArray(new TypeMirror[typeArgs.size()]));
-        }
-        return Collections.EMPTY_LIST;
-    }
-    
-    @Override
     public String getCanonicalText() {
-        return getBinding().toString();
+        return NBTypeUtils.getName(getHandle(), getProject());
+    }
+
+    @Override
+    public String getPresentableText() {
+        return NBTypeUtils.getName(getHandle(), getProject());
     }
     
 }

@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,35 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.java.structure;
 
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.WildcardType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.load.java.structure.JavaWildcardType;
+import org.jetbrains.kotlin.resolve.lang.java.NBTypeUtils;
+import org.netbeans.api.java.source.TypeMirrorHandle;
+import org.netbeans.api.project.Project;
 
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
-public class NetBeansJavaWildcardType extends NetBeansJavaType<WildcardType> implements JavaWildcardType {
-    
-    public NetBeansJavaWildcardType(@NotNull WildcardType typeBinding){
-        super(typeBinding);
+public class NetBeansJavaWildcardType extends NetBeansJavaType implements JavaWildcardType {
+
+    public NetBeansJavaWildcardType(TypeMirrorHandle handle, Project project) {
+        super(handle, project);
     }
 
     @Override
     public JavaType getBound() {
-        TypeMirror bound = getBinding().getSuperBound();
-        return bound != null ? NetBeansJavaType.create(bound) : null;//temp
+        return NBTypeUtils.getBound(getHandle(), getProject());
     }
 
     @Override
     public boolean isExtends() {
-        return getBinding().getExtendsBound() != null;
+        return NBTypeUtils.isExtends(getHandle(), getProject());
     }
-    
     
 }

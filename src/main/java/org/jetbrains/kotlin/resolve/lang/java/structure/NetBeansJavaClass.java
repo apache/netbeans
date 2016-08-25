@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,22 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.java.structure;
 
-import static org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.typeParameters;
-import static org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.classifierTypes;
-
-import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.List;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
 import org.jetbrains.kotlin.descriptors.Visibility;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
@@ -38,143 +30,109 @@ import org.jetbrains.kotlin.load.java.structure.JavaMethod;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
-import org.jetbrains.kotlin.name.SpecialNames;
+import org.jetbrains.kotlin.resolve.lang.java.NBClassUtils;
+import org.jetbrains.kotlin.resolve.lang.java.NBMemberUtils;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.project.Project;
 
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
-public class NetBeansJavaClass extends NetBeansJavaClassifier<TypeElement> implements JavaClass {
-    
-    public NetBeansJavaClass(TypeElement javaElement){
-        super(javaElement);
+public class NetBeansJavaClass extends NetBeansJavaClassifier implements JavaClass {
+
+    public NetBeansJavaClass(ElementHandle elementHandle, Project project) {
+        super(elementHandle, null, project);
     }
 
     @Override
     public Name getName() {
-        return SpecialNames.safeIdentifier(getBinding().getSimpleName().toString());
-    }
-
-    @Override
-    public Collection<JavaClass> getInnerClasses() {
-        List<? extends Element> enclosedElements = getBinding().getEnclosedElements();
-        List<JavaClass> innerClasses = Lists.newArrayList();
-        for (Element element : enclosedElements){
-            if (element.asType().getKind() == TypeKind.DECLARED && element instanceof TypeElement){
-                innerClasses.add(new NetBeansJavaClass((TypeElement) element));
-            }
-        }
-        return innerClasses;
+        return NBClassUtils.getName(getElementHandle(), getProject());
     }
 
     @Override
     public FqName getFqName() {
-        return new FqName(getBinding().getQualifiedName().toString());
-    }
-
-    @Override
-    public boolean isInterface() {
-        return getBinding().getKind() == ElementKind.INTERFACE;
-    }
-
-    @Override
-    public boolean isAnnotationType() {
-        return getBinding().getKind() == ElementKind.ANNOTATION_TYPE;
-    }
-
-    @Override
-    public boolean isEnum() {
-        return getBinding().getKind() == ElementKind.ENUM;
-    }
-
-    @Override
-    public JavaClass getOuterClass() {
-        Element outerClass = getBinding().getEnclosingElement();
-        if (outerClass == null || outerClass.asType().getKind() != TypeKind.DECLARED){
-            return null;
-        }
-        return new NetBeansJavaClass((TypeElement) outerClass);
+        return new FqName(getElementHandle().getQualifiedName());
     }
 
     @Override
     public Collection<JavaClassifierType> getSupertypes() {
-        Collection<JavaClassifierType> types = classifierTypes(NetBeansJavaElementUtil.getSuperTypesWithObject(getBinding()));
-        return types;
+        return NBClassUtils.getSuperTypes(getElementHandle(), getProject());
+    }
+
+    @Override
+    public Collection<JavaClass> getInnerClasses() {
+        return NBClassUtils.getInnerClasses(getElementHandle(), getProject());
+    }
+
+    @Override
+    public JavaClass getOuterClass() {
+        return NBClassUtils.getOuterClass(getElementHandle(), getProject());
+    }
+
+    @Override
+    public boolean isInterface() {
+        return getElementHandle().getKind() == ElementKind.INTERFACE;
+    }
+
+    @Override
+    public boolean isAnnotationType() {
+        return getElementHandle().getKind() == ElementKind.ANNOTATION_TYPE;
+    }
+
+    @Override
+    public boolean isEnum() {
+        return getElementHandle().getKind() == ElementKind.ENUM;
+    }
+
+    @Override
+    public boolean isKotlinLightClass() {
+        return false;
     }
 
     @Override
     public Collection<JavaMethod> getMethods() {
-        List<? extends Element> declaredElements = getBinding().getEnclosedElements();
-        List<JavaMethod> javaMethods = Lists.newArrayList();
-        
-        for (Element element : declaredElements){
-            if (element.getKind() == ElementKind.METHOD){
-                javaMethods.add(new NetBeansJavaMethod((ExecutableElement) element));
-            }
-        }
-        
-        return javaMethods;
+        return NBClassUtils.getMethods(getElementHandle(), getProject(), this);
     }
 
     @Override
     public Collection<JavaField> getFields() {
-        List<? extends Element> declaredElements = getBinding().getEnclosedElements();
-        List<JavaField> javaFields = Lists.newArrayList();
-        
-        for (Element element : declaredElements){
-            if (element.getKind().isField()){
-                String name = element.getSimpleName().toString();
-                if (Name.isValidIdentifier(name)){
-                    javaFields.add(new NetBeansJavaField((VariableElement) element));
-                }
-            }
-        }
-        
-        return javaFields;
+        return NBClassUtils.getFields(getElementHandle(), getProject(), this);
     }
 
     @Override
     public Collection<JavaConstructor> getConstructors() {
-        List<? extends Element> declaredElements = getBinding().getEnclosedElements();
-        List<JavaConstructor> javaConstructors = Lists.newArrayList();
-        
-        for (Element element : declaredElements){
-            if (element.getKind().equals(ElementKind.CONSTRUCTOR)){
-                javaConstructors.add(new NetBeansJavaConstructor((ExecutableElement) element));
-            }
-        }
-        return javaConstructors;
-    }
-
-    @Override
-    public List<JavaTypeParameter> getTypeParameters() {
-        List<? extends TypeParameterElement> typeParameters = getBinding().getTypeParameters();
-        return typeParameters(typeParameters.toArray(new TypeParameterElement[typeParameters.size()]));
+        return NBClassUtils.getConstructors(getElementHandle(), getProject(), this);
     }
 
     @Override
     public boolean isAbstract() {
-        return NetBeansJavaElementUtil.isAbstract(getBinding().getModifiers());
+        return NBMemberUtils.isAbstract(getElementHandle(), getProject());
     }
 
     @Override
     public boolean isStatic() {
-        return NetBeansJavaElementUtil.isStatic(getBinding().getModifiers());
+        return NBMemberUtils.isStatic(getElementHandle(), getProject());
     }
 
     @Override
     public boolean isFinal() {
-        return NetBeansJavaElementUtil.isFinal(getBinding().getModifiers());
+        return NBMemberUtils.isFinal(getElementHandle(), getProject());
     }
 
     @Override
     public Visibility getVisibility() {
-        return NetBeansJavaElementUtil.getVisibility(getBinding());
+        return NBMemberUtils.getVisibility(getElementHandle(), getProject());
+    }
+
+    @Override
+    public List<JavaTypeParameter> getTypeParameters() {
+        return NBClassUtils.getTypeParameters(getElementHandle(), getProject());
     }
     
     @Override
-    public boolean isKotlinLightClass() {
-        return NetBeansJavaElementUtil.isKotlinLightClass(getBinding().getEnclosingElement());
+    public String toString() {
+        return getElementHandle().getQualifiedName();
     }
     
 }

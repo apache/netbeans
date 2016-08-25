@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,36 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.java.structure;
 
-import static org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.annotations;
-
 import java.util.Collection;
-import java.util.List;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.VariableElement;
+import java.util.Collections;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.load.java.structure.JavaValueParameter;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils;
+import org.jetbrains.kotlin.resolve.lang.java.NBParameterUtils;
+import org.netbeans.api.java.source.TypeMirrorHandle;
+import org.netbeans.api.project.Project;
 
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
-public class NetBeansJavaValueParameter extends NetBeansJavaElement<VariableElement> implements JavaValueParameter{
-
+public class NetBeansJavaValueParameter extends NetBeansJavaElement implements JavaValueParameter {
+    
     private final String name;
     private final boolean isVararg;
     
-    public NetBeansJavaValueParameter(VariableElement type, String name, boolean isVararg){
-        super(type);
+    public NetBeansJavaValueParameter(TypeMirrorHandle typeHandle, Project project, String name, boolean isVararg) {
+        super(typeHandle, project);
         this.name = name;
         this.isVararg = isVararg;
     }
-    
+
     @Override
     public Name getName() {
         return Name.identifier(name);
@@ -50,7 +52,7 @@ public class NetBeansJavaValueParameter extends NetBeansJavaElement<VariableElem
 
     @Override
     public JavaType getType() {
-        return NetBeansJavaType.create(getBinding().asType());
+        return NetBeansJavaType.create(getTypeHandle(), getProject());
     }
 
     @Override
@@ -60,18 +62,33 @@ public class NetBeansJavaValueParameter extends NetBeansJavaElement<VariableElem
 
     @Override
     public Collection<JavaAnnotation> getAnnotations() {
-        List<? extends AnnotationMirror> annotations = getBinding().getAnnotationMirrors();
-        return annotations(annotations.toArray(new AnnotationMirror[annotations.size()]));
+        return Collections.emptyList(); // temporary
     }
 
     @Override
-    public JavaAnnotation findAnnotation(FqName fqName) {
-        return NetBeansJavaElementUtil.findAnnotation(getBinding().getAnnotationMirrors(), fqName);
+    public JavaAnnotation findAnnotation(FqName fqname) {
+        return null; // temporary
     }
 
     @Override
     public boolean isDeprecatedInJavaDoc() {
-        return false;//temporary
+        return false; // temporary
+    }
+    
+    @Override
+    public int hashCode() {
+        int hashCode = NBElementUtils.typeMirrorHandleHashCode(getTypeHandle(), getProject());
+        return hashCode;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof NetBeansJavaValueParameter)) {
+            return false;
+        }
+        NetBeansJavaValueParameter typeParameter = (NetBeansJavaValueParameter) obj;
+        
+        return NBElementUtils.typeMirrorHandleEquals(getTypeHandle(), typeParameter.getTypeHandle(), getProject());
     }
     
 }

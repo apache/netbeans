@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,38 +14,69 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.java.structure;
 
-import javax.lang.model.element.Element;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaElement;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.TypeMirrorHandle;
+import org.netbeans.api.project.Project;
+
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
-public abstract class NetBeansJavaElement<T extends Element> implements JavaElement {
+public abstract class NetBeansJavaElement implements JavaElement {
     
-    private final T binding;
+    private final Project project;
+    private final ElementHandle elementHandle;
+    private final TypeMirrorHandle typeHandle;
     
-    protected NetBeansJavaElement(@NotNull T binding){
-        this.binding = binding;
+    public NetBeansJavaElement(ElementHandle elementHandle, TypeMirrorHandle typeHandle, Project project) {
+        this.project = project;
+        this.elementHandle = elementHandle;
+        this.typeHandle = typeHandle;
     }
     
-    @NotNull
-    public T getBinding(){
-        return binding;
+    public NetBeansJavaElement(ElementHandle elementHandle, Project project) {
+        this(elementHandle, null, project);
+    }
+    
+    public NetBeansJavaElement(TypeMirrorHandle typeHandle, Project project) {
+        this(null, typeHandle, project);
+    }
+    
+    public Project getProject() {
+        return project;
+    }
+    
+    public ElementHandle getElementHandle() {
+        return elementHandle;
+    }
+    
+    public TypeMirrorHandle getTypeHandle() {
+        return typeHandle;
     }
     
     @Override
-    public int hashCode(){
-        return getBinding().hashCode();
+    public int hashCode() {
+        if (elementHandle != null) {
+            return elementHandle.hashCode();
+        } else {
+            return typeHandle.hashCode();
+        }
     }
     
     @Override
-    public boolean equals(Object obj){
-        return obj instanceof NetBeansJavaElement && getBinding().equals(((NetBeansJavaElement<?>)obj).getBinding());
-    }
-    
+    public boolean equals(Object obj) {
+        if (!(obj instanceof NetBeansJavaElement)) {
+            return false;
+        }
+        
+        if (elementHandle != null) {
+            return elementHandle.equals(((NetBeansJavaElement) obj).getElementHandle());
+        } else return typeHandle.equals(((NetBeansJavaElement) obj).getTypeHandle());
+    } 
     
 }

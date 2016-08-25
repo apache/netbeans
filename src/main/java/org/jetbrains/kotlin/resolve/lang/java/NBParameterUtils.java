@@ -16,17 +16,17 @@
  *
  ******************************************************************************
  */
-package org.jetbrains.kotlin.resolve.lang.java2;
+package org.jetbrains.kotlin.resolve.lang.java;
 
 import java.util.Collection;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
 import org.jetbrains.kotlin.name.Name;
-import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.Equals;
-import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.TypeParameterHashCodeSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.TypeParameterNameSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.UpperBoundsSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.TypeMirrorHandleHashCodeSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.ParameterSearchers.TypeMirrorHandleEquals;
+import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.Equals;
+import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.TypeParameterHashCodeSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.TypeParameterNameSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.UpperBoundsSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.TypeMirrorHandleHashCodeSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.TypeMirrorHandleEquals;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
 

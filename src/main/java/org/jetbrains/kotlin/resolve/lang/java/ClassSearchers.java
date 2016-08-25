@@ -16,7 +16,7 @@
  *
  ******************************************************************************
  */
-package org.jetbrains.kotlin.resolve.lang.java2;
+package org.jetbrains.kotlin.resolve.lang.java;
 
 import com.google.common.collect.Lists;
 import com.intellij.psi.CommonClassNames;
@@ -37,12 +37,12 @@ import org.jetbrains.kotlin.load.java.structure.JavaMethod;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.name.SpecialNames;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaClass;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaClassifierType;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaConstructor;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaField;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaMethod;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaTypeParameter;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClassifierType;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaConstructor;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaField;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaMethod;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaTypeParameter;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource.Phase;

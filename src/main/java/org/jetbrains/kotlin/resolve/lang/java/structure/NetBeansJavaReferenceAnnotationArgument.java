@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,29 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.java.structure;
 
-import javax.lang.model.element.VariableElement;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.load.java.structure.JavaEnumValueAnnotationArgument;
 import org.jetbrains.kotlin.load.java.structure.JavaField;
+import org.jetbrains.kotlin.name.FqName;
+import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils;
+import org.jetbrains.kotlin.resolve.lang.java.NBMemberUtils;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.project.Project;
 
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
-public class NetBeansJavaReferenceAnnotationArgument extends NetBeansJavaAnnotationArgument<VariableElement> 
-        implements JavaEnumValueAnnotationArgument{
+public class NetBeansJavaReferenceAnnotationArgument extends NetBeansJavaAnnotationArgument 
+        implements JavaEnumValueAnnotationArgument {
+
+    private final ElementHandle handle;
+    private final Project project;
     
-    protected NetBeansJavaReferenceAnnotationArgument(VariableElement javaElement){
-        super(javaElement);
+    public NetBeansJavaReferenceAnnotationArgument(ElementHandle handle, Project project) {
+        super(new FqName(NBElementUtils.getSimpleName(handle, project)));
+        this.handle = handle;
+        this.project = project;
     }
     
     @Override
-    @Nullable
-    public JavaField resolve(){
-        return new NetBeansJavaField(getBinding());
+    public JavaField resolve() {
+        ElementHandle containingClass = NBMemberUtils.getContainingClass(handle, project);
+        return new NetBeansJavaField(handle, new NetBeansJavaClass(containingClass, project), project);
     }
     
 }

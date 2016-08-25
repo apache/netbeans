@@ -16,18 +16,18 @@
  *
  ******************************************************************************
  */
-package org.jetbrains.kotlin.resolve.lang.java2;
+package org.jetbrains.kotlin.resolve.lang.java;
 
 import org.jetbrains.kotlin.descriptors.Visibility;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.name.Name;
-import org.jetbrains.kotlin.resolve.lang.java2.MemberSearchers.FieldContainingClassSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.MemberSearchers.FieldTypeSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.MemberSearchers.IsAbstractSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.MemberSearchers.IsFinalSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.MemberSearchers.IsStaticSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.MemberSearchers.NameSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.MemberSearchers.VisibilitySearcher;
+import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.FieldContainingClassSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.FieldTypeSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.IsAbstractSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.IsFinalSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.IsStaticSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.NameSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.VisibilitySearcher;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 

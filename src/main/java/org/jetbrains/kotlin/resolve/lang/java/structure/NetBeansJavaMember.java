@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,78 +14,79 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.java.structure;
 
-import static org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElementFactory.annotations;
-
 import java.util.Collection;
-import java.util.List;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import org.jetbrains.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import java.util.Collections;
 import org.jetbrains.kotlin.descriptors.Visibility;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
+import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaMember;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.resolve.lang.java.NBAnnotationUtils;
+import org.jetbrains.kotlin.resolve.lang.java.NBMemberUtils;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.project.Project;
 
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
-public abstract class NetBeansJavaMember<T extends Element> 
-        extends NetBeansJavaElement<T> implements JavaMember {
+public abstract class NetBeansJavaMember extends NetBeansJavaElement implements JavaMember {
     
-    protected NetBeansJavaMember(@NotNull T javaElement){
-        super(javaElement);
+    private final JavaClass containingClass;
+    
+    public NetBeansJavaMember(ElementHandle handle, JavaClass containingClass, Project project) {
+        super(handle, project);
+        this.containingClass = containingClass;
     }
-    
+
     @Override
-    @NotNull
-    public Collection<JavaAnnotation> getAnnotations(){
-        List<? extends AnnotationMirror> annotations = getBinding().getAnnotationMirrors();
-        return annotations(annotations.toArray(new AnnotationMirror[annotations.size()]));
+    public JavaClass getContainingClass() {
+        return containingClass;
     }
-    
+
     @Override
-    @Nullable
-    public JavaAnnotation findAnnotation(@NotNull FqName fqName){
-        return NetBeansJavaElementUtil.findAnnotation(getBinding().getAnnotationMirrors(), fqName);
+    public Collection<JavaAnnotation> getAnnotations() {
+        return NBAnnotationUtils.getAnnotations(getElementHandle(), getProject());
     }
-    
+
     @Override
-    public boolean isAbstract(){
-        return NetBeansJavaElementUtil.isAbstract(getBinding().getModifiers());
+    public JavaAnnotation findAnnotation(FqName fqName) {
+        return NBAnnotationUtils.getAnnotation(getElementHandle(), getProject(), fqName);
     }
-    
+
     @Override
-    public boolean isStatic(){
-        return NetBeansJavaElementUtil.isStatic(getBinding().getModifiers());
+    public boolean isDeprecatedInJavaDoc() {
+        return false; // temporary
     }
-    
+
     @Override
-    public boolean isFinal(){
-        return NetBeansJavaElementUtil.isFinal(getBinding().getModifiers());
+    public boolean isAbstract() {
+        return NBMemberUtils.isAbstract(getElementHandle(), getProject());
     }
-    
+
     @Override
-    @NotNull
-    public Visibility getVisibility(){
-        return NetBeansJavaElementUtil.getVisibility(getBinding());
+    public boolean isStatic() {
+        return NBMemberUtils.isStatic(getElementHandle(), getProject());
     }
-    
+
     @Override
-    @NotNull
-    public Name getName(){
-        return Name.identifier(getBinding().getSimpleName().toString());
+    public boolean isFinal() {
+        return NBMemberUtils.isFinal(getElementHandle(), getProject());
     }
-    
-    @Override 
-    public boolean isDeprecatedInJavaDoc(){
-        return NetBeansJavaProjectElementUtils.isDeprecated(getBinding());
+
+    @Override
+    public Visibility getVisibility() {
+        return NBMemberUtils.getVisibility(getElementHandle(), getProject());
+    }
+
+    @Override
+    public Name getName() {
+        return NBMemberUtils.getName(getElementHandle(), getProject());
     }
     
 }

@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,43 +14,70 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.java.structure;
 
-import com.google.common.collect.Lists;
 import java.util.Collection;
-import java.util.List;
-import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.type.TypeMirror;
+import java.util.Collections;
+import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
+import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
-import org.jetbrains.kotlin.name.SpecialNames;
+import org.jetbrains.kotlin.resolve.lang.java.NBParameterUtils;
+import org.netbeans.api.java.source.TypeMirrorHandle;
+import org.netbeans.api.project.Project;
 
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
-public class NetBeansJavaTypeParameter extends NetBeansJavaClassifier<TypeParameterElement> implements JavaTypeParameter {
-    
-    public NetBeansJavaTypeParameter(TypeParameterElement binding){
-        super(binding);
+public class NetBeansJavaTypeParameter extends NetBeansJavaClassifier implements JavaTypeParameter {
+
+    public NetBeansJavaTypeParameter(TypeMirrorHandle typeHandle, Project project) {
+        super(null, typeHandle, project);
     }
 
     @Override
     public Name getName() {
-        return SpecialNames.safeIdentifier(getBinding().getSimpleName().toString());
+        return NBParameterUtils.getNameOfTypeParameter(getTypeHandle(), getProject());
     }
 
     @Override
     public Collection<JavaClassifierType> getUpperBounds() {
-        List<JavaClassifierType> bounds = Lists.newArrayList();
-        
-        for (TypeMirror bound : getBinding().getBounds()){
-            bounds.add(new NetBeansJavaClassifierType(bound));
+        return NBParameterUtils.getUpperBounds(getTypeHandle(), getProject());
+    }
+    
+    @Override
+    public String toString() {
+        return getName().asString();
+    }
+    
+    @Override
+    public int hashCode() {
+        int hashCode = NBParameterUtils.hashCode(getTypeHandle(), getProject());
+        return hashCode;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof NetBeansJavaTypeParameter)) {
+            return false;
         }
+        NetBeansJavaTypeParameter typeParameter = (NetBeansJavaTypeParameter) obj;
         
-        return bounds;
+        return NBParameterUtils.equals(getTypeHandle(), typeParameter.getTypeHandle(), getProject());
+    }
+    
+    @Override
+    public Collection<JavaAnnotation> getAnnotations() {
+        return Collections.emptyList();
+    }
+    
+    @Override
+    public JavaAnnotation findAnnotation(FqName fqName) {
+        return null;
     }
     
 }

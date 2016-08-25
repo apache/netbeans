@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,38 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.java.structure;
 
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.java.structure.JavaField;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
+import org.jetbrains.kotlin.resolve.lang.java.NBMemberUtils;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.project.Project;
 
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
-public class NetBeansJavaField extends NetBeansJavaMember<VariableElement> implements JavaField {
-    
-    public NetBeansJavaField(VariableElement javaField){
-        super(javaField);
-    }
+public class NetBeansJavaField extends NetBeansJavaMember implements JavaField {
 
-    @Override
-    public JavaClass getContainingClass() {
-        return new NetBeansJavaClass((TypeElement) getBinding().getEnclosingElement());
+    public NetBeansJavaField(ElementHandle handle, JavaClass containingClass, Project project) {
+        super(handle, containingClass, project);
     }
 
     @Override
     public boolean isEnumEntry() {
-        return getBinding().getKind() == ElementKind.ENUM_CONSTANT;
+        return getElementHandle().getKind() == ElementKind.ENUM_CONSTANT;
     }
 
     @Override
     public JavaType getType() {
-        return NetBeansJavaType.create(getBinding().asType());
+        return NBMemberUtils.getFieldType(getElementHandle(), getProject());
     }
+    
 }

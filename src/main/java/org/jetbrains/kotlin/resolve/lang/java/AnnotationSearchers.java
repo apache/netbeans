@@ -16,7 +16,7 @@
  *
  ******************************************************************************
  */
-package org.jetbrains.kotlin.resolve.lang.java2;
+package org.jetbrains.kotlin.resolve.lang.java;
 
 import com.google.common.collect.Lists;
 import java.util.Collection;
@@ -33,12 +33,12 @@ import org.jetbrains.kotlin.load.java.structure.JavaAnnotationArgument;
 import org.jetbrains.kotlin.load.java.structure.JavaArrayAnnotationArgument;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaAnnotation;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaAnnotationAsAnnotationArgument;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaArrayAnnotationArgument;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaClassObjectAnnotationArgument;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaLiteralAnnotationArgument;
-import org.jetbrains.kotlin.resolve.lang.java.structure2.NetBeansJavaReferenceAnnotationArgument;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaAnnotation;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaAnnotationAsAnnotationArgument;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaArrayAnnotationArgument;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClassObjectAnnotationArgument;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaLiteralAnnotationArgument;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaReferenceAnnotationArgument;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource.Phase;

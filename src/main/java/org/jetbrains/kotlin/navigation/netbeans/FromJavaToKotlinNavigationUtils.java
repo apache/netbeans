@@ -51,7 +51,7 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.Project;
 import org.openide.util.Exceptions;
-import org.jetbrains.kotlin.resolve.lang.java2.Searchers.ElementSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.Searchers.ElementSearcher;
 
 /**
  *

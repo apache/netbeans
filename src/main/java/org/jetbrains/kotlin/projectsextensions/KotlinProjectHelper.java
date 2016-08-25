@@ -22,10 +22,9 @@ import java.util.Map;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider;
 import org.jetbrains.kotlin.project.KotlinSources;
-import org.jetbrains.kotlin.projectsextensions.maven.MavenHelper;
 import org.jetbrains.kotlin.projectsextensions.maven.classpath.MavenExtendedClassPath;
 import org.jetbrains.kotlin.projectsextensions.maven.classpath.MavenClassPathProviderImpl;
-import org.jetbrains.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
+import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.j2seproject.J2SEProject;
@@ -178,7 +177,7 @@ public class KotlinProjectHelper {
             extendedClassPaths.put(p, new MavenExtendedClassPath((NbMavenProjectImpl) p));
         }
         updateFullClassPath(project);
-        NetBeansJavaProjectElementUtils.updateClasspathInfo(p);
+        NBElementUtils.updateClasspathInfo(p);
         KotlinEnvironment.updateKotlinEnvironment(project);
     }
     

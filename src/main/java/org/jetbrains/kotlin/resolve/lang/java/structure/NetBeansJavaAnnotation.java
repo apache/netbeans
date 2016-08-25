@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,96 +14,71 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.java.structure;
 
-import com.google.common.collect.Lists;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
-import org.jetbrains.kotlin.resolve.lang.java.NetBeansJavaProjectElementUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationArgument;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
-import org.jetbrains.kotlin.name.ClassId;
-import org.jetbrains.kotlin.name.Name;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.load.java.structure.JavaElement;
+import org.jetbrains.kotlin.name.ClassId;
+import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
 
 /**
  *
- * @author Александр
+ * @author Alexander.Baratynski
  */
-public class NetBeansJavaAnnotation implements JavaAnnotation, JavaElement{
+public class NetBeansJavaAnnotation implements JavaAnnotation, JavaElement {
 
-    private final Project kotlinProject;
-    private final AnnotationMirror binding;
+    private final Project project;
+    private final TypeMirrorHandle handle;
+    private final Collection<JavaAnnotationArgument> args;
     
-    protected NetBeansJavaAnnotation(AnnotationMirror javaAnnotation){
-        this.binding = javaAnnotation;
-        this.kotlinProject = NetBeansJavaProjectElementUtils.getProject(binding.getAnnotationType().asElement());
+    public NetBeansJavaAnnotation(Project project, TypeMirrorHandle handle, Collection<JavaAnnotationArgument> args) {
+        this.project = project;
+        this.handle = handle;
+        this.args = args;
     }
     
-    public JavaAnnotationArgument findArgument(@NotNull Name name) {
-        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
-                getBinding().getElementValues().entrySet()){
-            if (name.asString().equals(entry.getKey().getSimpleName().toString())){
-                return NetBeansJavaAnnotationArgument.create(entry.getValue().getValue(),
-                        name,
-                        kotlinProject);
-            }
-        }
-        
-        return null;
+    public TypeMirrorHandle getHandle() {
+        return handle;
     }
-
+    
     @Override
     public Collection<JavaAnnotationArgument> getArguments() {
-        List<JavaAnnotationArgument> arguments = Lists.newArrayList();
-        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
-                getBinding().getElementValues().entrySet()){
-            arguments.add(NetBeansJavaAnnotationArgument.create(entry.getValue().getValue(), 
-                    Name.identifier(entry.getKey().getSimpleName().toString()), 
-                    kotlinProject));
-        }
-        return arguments;
+        return args;
     }
 
     @Override
     public ClassId getClassId() {
-        DeclaredType annotationType = getBinding().getAnnotationType();
-        return annotationType != null ? 
-                NetBeansJavaElementUtil.computeClassId((TypeElement) annotationType.asElement()) : null;
+        ElementHandle elementHandle = ElementHandle.from(handle);
+        return NBElementUtils.computeClassId(elementHandle, project);
     }
 
     @Override
-    @Nullable
     public JavaClass resolve() {
-        DeclaredType annotationType = getBinding().getAnnotationType();
-        return annotationType != null ? 
-                new NetBeansJavaClass((TypeElement) annotationType.asElement()) : null;
-    }
-    
-    @NotNull
-    public AnnotationMirror getBinding(){
-        return binding;
+        ElementHandle elementHandle = ElementHandle.from(handle);
+        return new NetBeansJavaClass(elementHandle, project);
     }
     
     @Override
-    public int hashCode(){
-        return getBinding().hashCode();
+    public int hashCode() {
+        return NBElementUtils.typeMirrorHandleHashCode(handle, project);
     }
     
     @Override
-    public boolean equals(Object obj){
-        return obj instanceof NetBeansJavaAnnotation && getBinding().equals(((NetBeansJavaAnnotation)obj).getBinding());
+    public boolean equals(Object obj) {
+        if (!(obj instanceof NetBeansJavaAnnotation)) {
+            return false;
+        }
+        NetBeansJavaAnnotation annotation = (NetBeansJavaAnnotation) obj;
+        
+        return NBElementUtils.typeMirrorHandleEquals(handle, annotation.getHandle(), project);
     }
     
 }

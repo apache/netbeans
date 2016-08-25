@@ -16,7 +16,7 @@
  *
  ******************************************************************************
  */
-package org.jetbrains.kotlin.resolve.lang.java2;
+package org.jetbrains.kotlin.resolve.lang.java;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,14 +28,14 @@ import org.jetbrains.kotlin.load.java.structure.JavaField;
 import org.jetbrains.kotlin.load.java.structure.JavaMethod;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
 import org.jetbrains.kotlin.name.Name;
-import org.jetbrains.kotlin.resolve.lang.java2.ClassSearchers.ConstructorsSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.ClassSearchers.FieldsSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.ClassSearchers.InnerClassesSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.ClassSearchers.MethodsSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.ClassSearchers.NameSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.ClassSearchers.OuterClassSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.ClassSearchers.SuperTypesSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.ClassSearchers.TypeParametersSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.ConstructorsSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.FieldsSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.InnerClassesSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.MethodsSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.NameSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.OuterClassSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.SuperTypesSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.TypeParametersSearcher;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 

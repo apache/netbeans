@@ -16,11 +16,13 @@
  *
  ******************************************************************************
  */
-package org.jetbrains.kotlin.resolve.lang.java2;
+package org.jetbrains.kotlin.resolve.lang.java;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.lang.model.element.PackageElement;
@@ -28,11 +30,11 @@ import javax.lang.model.element.TypeElement;
 import org.jetbrains.kotlin.name.ClassId;
 import org.jetbrains.kotlin.projectsextensions.ClassPathExtender;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
-import org.jetbrains.kotlin.resolve.lang.java2.Searchers.ClassIdComputer;
-import org.jetbrains.kotlin.resolve.lang.java2.Searchers.ElementSimpleNameSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.Searchers.PackageElementSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.Searchers.TypeElementSearcher;
-import org.jetbrains.kotlin.resolve.lang.java2.Searchers.TypeMirrorHandleSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.Searchers.ClassIdComputer;
+import org.jetbrains.kotlin.resolve.lang.java.Searchers.ElementSimpleNameSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.Searchers.PackageElementSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.Searchers.TypeElementSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.Searchers.TypeMirrorHandleSearcher;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -41,6 +43,7 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TypeMirrorHandle;
+import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.util.Exceptions;
@@ -145,6 +148,25 @@ public class NBElementUtils {
         ParameterSearchers.TypeMirrorHandleEquals searcher = new ParameterSearchers.TypeMirrorHandleEquals(handle1, handle2);
         NBElementUtils.execute(searcher, project);
         return searcher.equals();
+    }
+    
+    public static List<String> findFQName(Project project, String name) {
+        checkJavaSource(project);
+        List<String> fqNames = new ArrayList<String>();
+        
+        final Set<ElementHandle<TypeElement>> result = 
+                CLASSPATH_INFO.get(project).getClassIndex().
+                        getDeclaredTypes(name, ClassIndex.NameKind.SIMPLE_NAME, EnumSet.of(ClassIndex.SearchScope.SOURCE, ClassIndex.SearchScope.DEPENDENCIES));
+        
+        for (ElementHandle<TypeElement> handle : result) {
+            fqNames.add(handle.getQualifiedName());
+        }
+        
+        return fqNames;
+    }
+    
+    public static void openElementInEditor(ElementHandle handle, Project kotlinProject){
+        ElementOpen.open(CLASSPATH_INFO.get(kotlinProject), handle);
     }
     
 }

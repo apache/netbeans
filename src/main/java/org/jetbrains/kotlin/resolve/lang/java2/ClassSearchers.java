@@ -168,7 +168,7 @@ public class ClassSearchers {
                 return;
             }
 
-            List<? extends Element> members = info.getElements().getAllMembers(elem);
+            List<? extends Element> members = elem.getEnclosedElements();//info.getElements().getAllMembers(elem);
             for (Element member : members) {
                 if (member.asType().getKind() == TypeKind.DECLARED && member instanceof TypeElement){
                     innerClasses.add(new NetBeansJavaClass(ElementHandle.create(member), project));
@@ -236,7 +236,7 @@ public class ClassSearchers {
                 return;
             }
 
-            List<? extends Element> members = info.getElements().getAllMembers(elem);
+            List<? extends Element> members = elem.getEnclosedElements();//info.getElements().getAllMembers(elem);
             for (Element member : members) {
                 if (member.getKind() == ElementKind.METHOD){
                     methods.add(new NetBeansJavaMethod(ElementHandle.create(member), containingClass, project));
@@ -271,7 +271,7 @@ public class ClassSearchers {
                 return;
             }
 
-            List<? extends Element> members = info.getElements().getAllMembers(elem);
+            List<? extends Element> members = elem.getEnclosedElements();//info.getElements().getAllMembers(elem);
             for (Element member : members) {
                 if (member.getKind() == ElementKind.CONSTRUCTOR){
                     constructors.add(new NetBeansJavaConstructor(ElementHandle.create(member), containingClass, project));
@@ -306,7 +306,7 @@ public class ClassSearchers {
                 return;
             }
 
-            List<? extends Element> members = info.getElements().getAllMembers(elem);
+            List<? extends Element> members = elem.getEnclosedElements();//info.getElements().getAllMembers(elem);
             for (Element member : members) {
                 if (member.getKind().isField()){
                     String name = member.getSimpleName().toString();

@@ -86,6 +86,9 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
         JPDABreakpoint breakpoint;
         
         final int lineNumber = KotlinEditorContextBridge.getContext().getCurrentLineNumber();
+        if (lineNumber < 0) {
+            return;
+        }
         final String urlStr = KotlinEditorContextBridge.getContext().getCurrentURL();
         
         if ("".equals(urlStr.trim())) {
@@ -137,7 +140,10 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
             }
         });
         
-        annotations.put(breakpoint, KotlinDebugUtils.annotate(breakpoint, urlStr, lineNumber));
+        Object annotation = KotlinDebugUtils.annotate(breakpoint, urlStr, lineNumber);
+        if (annotation != null) {
+            annotations.put(breakpoint, annotation);
+        }
         manager.addBreakpoint(breakpoint);
     }
 
@@ -169,7 +175,7 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
                 @Override
                 public void run() {
                     doAction(action);
-                    actionPerformedNotifier.run();
+//                    actionPerformedNotifier.run();
                 }
             });
         }

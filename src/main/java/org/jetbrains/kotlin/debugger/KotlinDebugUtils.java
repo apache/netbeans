@@ -151,14 +151,8 @@ public class KotlinDebugUtils {
     }
 
     public static Object annotate(JPDABreakpoint b, String url, int line) {
-        boolean isConditional = false;
         String annotationType;
-        if (b instanceof LineBreakpoint) {
-            annotationType = b.isEnabled()
-                    ? EditorContext.CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE
-                    : (isConditional ? EditorContext.DISABLED_CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE
-                            : EditorContext.DISABLED_BREAKPOINT_ANNOTATION_TYPE);
-        } else if (b instanceof FieldBreakpoint) {
+        if (b instanceof FieldBreakpoint) {
             annotationType = b.isEnabled()
                     ? EditorContext.FIELD_BREAKPOINT_ANNOTATION_TYPE
                     : EditorContext.DISABLED_FIELD_BREAKPOINT_ANNOTATION_TYPE;

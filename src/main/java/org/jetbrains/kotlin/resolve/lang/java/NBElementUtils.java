@@ -18,6 +18,7 @@
  */
 package org.jetbrains.kotlin.resolve.lang.java;
 
+import com.google.common.collect.Sets;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -32,6 +33,7 @@ import org.jetbrains.kotlin.projectsextensions.ClassPathExtender;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.ClassIdComputer;
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.ElementSimpleNameSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.Searchers.FileObjectForFqNameSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.PackageElementSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.TypeElementSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.TypeMirrorHandleSearcher;
@@ -46,6 +48,7 @@ import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
 /**
@@ -167,6 +170,25 @@ public class NBElementUtils {
     
     public static void openElementInEditor(ElementHandle handle, Project kotlinProject){
         ElementOpen.open(CLASSPATH_INFO.get(kotlinProject), handle);
+    }
+    
+    public static FileObject getFileObjectForFqName(String fqName, Project project) {
+//        checkJavaSource(project);
+//        FileObjectForFqNameSearcher searcher = new FileObjectForFqNameSearcher(fqName, CLASSPATH_INFO.get(project));
+//        execute(searcher, project);
+        
+//        return searcher.getFileObject();
+
+        ElementHandle<TypeElement> handle = findType(fqName, project);
+        Set<FileObject> fObjects = CLASSPATH_INFO.get(project).getClassIndex().getResources(handle, 
+                Sets.newHashSet(ClassIndex.SearchKind.IMPLEMENTORS), 
+                Sets.newHashSet(ClassIndex.SearchScope.DEPENDENCIES), 
+                Sets.newHashSet(ClassIndex.ResourceType.BINARY));
+        if (fObjects.isEmpty()) {
+            return null;
+        } else {
+            return fObjects.iterator().next();
+        }
     }
     
 }

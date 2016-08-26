@@ -18,12 +18,8 @@ package org.jetbrains.kotlin.projectsextensions.maven;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import org.apache.maven.model.Dependency;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.NbMavenProjectFactory;
 import org.netbeans.modules.maven.NbMavenProjectImpl;

@@ -28,12 +28,15 @@ import org.jetbrains.kotlin.name.ClassId;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
 import org.netbeans.api.java.source.CancellableTask;
+import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TypeMirrorHandle;
+import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -209,6 +212,37 @@ public class Searchers {
         
         public String getSimpleName(){
             return simpleName;
+        }
+        
+    }
+    
+    public static class FileObjectForFqNameSearcher implements CancellableTask<CompilationController>{
+
+        private final String fqName;
+        private final ClasspathInfo cpInfo;
+        private FileObject fo = null;
+        
+        public FileObjectForFqNameSearcher(String fqName, ClasspathInfo cpInfo) {
+            this.fqName = fqName;
+            this.cpInfo = cpInfo;
+        }
+        
+        @Override
+        public void cancel() {}
+
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeElement te = info.getElements().getTypeElement(fqName);
+            if (te == null) {
+                return;
+            }
+            ElementHandle<TypeElement> handle = ElementHandle.create(te);
+            fo = SourceUtils.getFile(handle, cpInfo);
+        }
+        
+        public FileObject getFileObject() {
+            return fo;
         }
         
     }

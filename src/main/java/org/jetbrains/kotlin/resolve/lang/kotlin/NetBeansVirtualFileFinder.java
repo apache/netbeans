@@ -69,7 +69,16 @@ public class NetBeansVirtualFileFinder extends VirtualFileKotlinClassFinder impl
     @Override
     public VirtualFile findVirtualFileWithHeader(ClassId classId) {
         ClassPath proxy = KotlinProjectHelper.INSTANCE.getFullClassPath(project);
-        String rPath = classId.asSingleFqName().asString().replace(".", "/")+".class";
+        String rPath; 
+        if (classId.isNestedClass()) {
+            String className = classId.getShortClassName().asString();
+            String fqName = classId.asSingleFqName().asString();
+            StringBuilder rightPath = new StringBuilder(fqName.substring(0, fqName.length() - className.length() - 1).replace(".", "/"));
+            rightPath.append("$").append(className).append(".class");
+            rPath = rightPath.toString();
+        } else {
+            rPath = classId.asSingleFqName().asString().replace(".", "/")+".class";
+        }
         
         FileObject resource = proxy.findResource(rPath);
         

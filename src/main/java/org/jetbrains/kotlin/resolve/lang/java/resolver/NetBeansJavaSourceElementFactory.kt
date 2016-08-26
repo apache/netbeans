@@ -14,24 +14,20 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.resolve.lang.java.resolver;
+package org.jetbrains.kotlin.resolve.lang.java.resolver
 
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.load.java.components.ExternalAnnotationResolver;
-import org.jetbrains.kotlin.load.java.structure.JavaAnnotation;
-import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner;
-import org.jetbrains.kotlin.name.FqName;
+import org.jetbrains.kotlin.load.java.sources.JavaSourceElement
+import org.jetbrains.kotlin.load.java.sources.JavaSourceElementFactory
+import org.jetbrains.kotlin.load.java.structure.JavaElement
 
-/**
- *
- * @author Александр
- */
-public class NetBeansExternalAnnotationResolver implements ExternalAnnotationResolver {
+/*
 
-    @Override
-    @Nullable
-    public JavaAnnotation findExternalAnnotation(JavaAnnotationOwner jao, FqName fqname) {
-        return null;
-    }
+  @author Alexander.Baratynski
+  Created on Aug 26, 2016
+*/
+
+class NetBeansJavaSourceElementFactory : JavaSourceElementFactory {
+
+    override fun source(javaElement : JavaElement) : JavaSourceElement = NetBeansJavaSourceElement(javaElement)
     
 }

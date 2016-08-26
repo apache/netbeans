@@ -45,6 +45,9 @@ public class NetBeansJavaMethod extends NetBeansJavaMember implements JavaMethod
 
     @Override
     public JavaType getReturnType() {
+        if (getContainingClass().getFqName().asString().equals("org.jetbrains.kotlin.model.KotlinEnvironment")) {
+            JavaType type = NBExecutableUtils.getReturnType(getElementHandle(), getProject());
+        }
         return NBExecutableUtils.getReturnType(getElementHandle(), getProject());
     }
 

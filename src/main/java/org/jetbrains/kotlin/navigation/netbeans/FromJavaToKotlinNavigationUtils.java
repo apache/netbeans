@@ -23,10 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 import javax.swing.text.Document;
 import kotlin.Pair;
 import org.jetbrains.kotlin.utils.ProjectUtils;
@@ -46,6 +42,10 @@ import org.jetbrains.kotlin.psi.KtProperty;
 import org.jetbrains.kotlin.psi.KtPropertyAccessor;
 import org.jetbrains.kotlin.psi.KtSecondaryConstructor;
 import org.jetbrains.kotlin.psi.KtVisitorVoid;
+import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers;
+import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils;
+import org.jetbrains.kotlin.resolve.lang.java.NBMemberUtils;
+import org.jetbrains.kotlin.resolve.lang.java.Searchers;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtils;
@@ -59,7 +59,7 @@ import org.jetbrains.kotlin.resolve.lang.java.Searchers.ElementSearcher;
  */
 public class FromJavaToKotlinNavigationUtils {
     
-    public static Element getElement(Document doc, int offset) {
+    public static ElementHandle getElement(Document doc, int offset) {
         JavaSource javaSource = JavaSource.forDocument(doc);
         ElementSearcher searcher = new ElementSearcher(offset);
         try {
@@ -68,12 +68,12 @@ public class FromJavaToKotlinNavigationUtils {
             Exceptions.printStackTrace(ex);
         }
         
-        Element element = searcher.getElement();
+        ElementHandle element = searcher.getElement();
         
         return element;
     }
     
-    public static Pair<KtFile, Integer> findKotlinFileToNavigate(Element element, Project project) {
+    public static Pair<KtFile, Integer> findKotlinFileToNavigate(ElementHandle element, Project project, Document doc) {
         if (element == null) {
             return null;
         }
@@ -84,7 +84,7 @@ public class FromJavaToKotlinNavigationUtils {
         List<KtFile> ktFiles = ProjectUtils.getSourceFiles(project);
         
         for (KtFile ktFile : ktFiles) {
-            KtElement ktElement = findKotlinDeclaration(element, ktFile);
+            KtElement ktElement = findKotlinDeclaration(element, ktFile, doc);
             if (ktElement != null) {
                 int offset = ktElement.getTextOffset();
                 return new Pair(ktFile, offset);
@@ -94,9 +94,9 @@ public class FromJavaToKotlinNavigationUtils {
         return null;
     }
     
-    private static KtElement findKotlinDeclaration(Element element, KtFile ktFile) {
+    private static KtElement findKotlinDeclaration(ElementHandle element, KtFile ktFile, Document doc) {
         List<KtElement> result = new ArrayList<KtElement>();
-        KtVisitorVoid visitor = makeVisitor(element, result);
+        KtVisitorVoid visitor = makeVisitor(element, result, doc);
         if (visitor != null) {
             ktFile.acceptChildren(visitor);
         }
@@ -105,7 +105,7 @@ public class FromJavaToKotlinNavigationUtils {
     }
     
     
-    private static KtVisitorVoid makeVisitor(final Element element, final List<KtElement> result) {
+    private static KtVisitorVoid makeVisitor(final ElementHandle element, final List<KtElement> result, final Document doc) {
         switch (element.getKind()) {
             case CLASS:
             case INTERFACE:
@@ -113,7 +113,7 @@ public class FromJavaToKotlinNavigationUtils {
                 return new KtAllVisitor() {  
                     @Override
                     public void visitClassOrObject(KtClassOrObject ktClassOrObject) {
-                        if (ktClassOrObject.getFqName().asString().equals(((TypeElement) element).getQualifiedName().toString())) {
+                        if (ktClassOrObject.getFqName().asString().equals(element.getQualifiedName())) {
                             result.add(ktClassOrObject);
                             return;
                         }
@@ -140,8 +140,16 @@ public class FromJavaToKotlinNavigationUtils {
                     }
 
                     private void visitExplicitDeclaration(KtDeclaration declaration) {
-                        if (equalsNames(declaration, element) &&
-                            declaration.getName().toString().equals(((VariableElement)element).getSimpleName().toString())){
+                        JavaSource javaSource = JavaSource.forDocument(doc);
+                        MemberSearchers.NameSearcher searcher = new MemberSearchers.NameSearcher(element);
+                        try {
+                            javaSource.runUserActionTask(searcher, true);
+                        } catch (IOException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                        
+                        if (equalsNames(declaration, element, doc) &&
+                            declaration.getName().toString().equals(searcher.getName().asString())){
                             result.add(declaration);
                         }
                     }
@@ -178,10 +186,16 @@ public class FromJavaToKotlinNavigationUtils {
 
                     @Override
                     public void visitClass(KtClass ktClass) {
-                        Element enclosingElement = element.getEnclosingElement();
-
-                        String fqName = ((TypeElement) enclosingElement).getQualifiedName().toString();
-                        if (equalsNames(ktClass, element) &&
+                        JavaSource javaSource = JavaSource.forDocument(doc);
+                        MemberSearchers.FieldContainingClassSearcher searcher = new MemberSearchers.FieldContainingClassSearcher(element);
+                        try {
+                            javaSource.runUserActionTask(searcher, true);
+                        } catch (IOException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                        ElementHandle containingClass = searcher.getContainingClass();
+                        String fqName = containingClass.getQualifiedName();
+                        if (equalsNames(ktClass, element, doc) &&
                                 (ktClass.getFqName().asString().equals(fqName))) {
                             result.add(ktClass);
                             return;
@@ -191,8 +205,8 @@ public class FromJavaToKotlinNavigationUtils {
                     }
 
                     private void visitExplicitDeclaration(KtDeclaration declaration) {
-                        if (equalsNames(declaration, element) &&
-                                equalsDeclaringTypes(declaration, (ExecutableElement) element)) {
+                        if (equalsNames(declaration, element, doc) &&
+                                equalsDeclaringTypes(declaration, element, doc)) {
                             result.add(declaration);
                         }
                     }
@@ -203,10 +217,16 @@ public class FromJavaToKotlinNavigationUtils {
         }
     }
     
-    public static boolean equalsNames(KtElement ktElement, Element element) {
+    public static boolean equalsNames(KtElement ktElement, ElementHandle element, Document doc) {
         String first = ktElement.getName();
-        String second = element.getSimpleName().toString();
-        
+        JavaSource javaSource = JavaSource.forDocument(doc);
+        Searchers.ElementSimpleNameSearcher searcher = new Searchers.ElementSimpleNameSearcher(element);
+        try {
+            javaSource.runUserActionTask(searcher, true);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        String second = searcher.getSimpleName();
         if (first == null || second == null) {
             return false;
         }
@@ -219,7 +239,7 @@ public class FromJavaToKotlinNavigationUtils {
         if (ktSignatures == null) {
             return false;
         }
-        List<String> signatures = Lists.newArrayList(SourceUtils.getJVMSignature(ElementHandle.create(element)));
+        List<String> signatures = Lists.newArrayList(SourceUtils.getJVMSignature(element));
         for (Pair<String, String> pair : ktSignatures) {
             if (signatures.contains(pair.getFirst())) {
                 return true;
@@ -229,11 +249,17 @@ public class FromJavaToKotlinNavigationUtils {
         return false;
     }
 
-    public static boolean equalsDeclaringTypes(KtElement ktElement, ExecutableElement element) {
+    public static boolean equalsDeclaringTypes(KtElement ktElement, ElementHandle element, Document doc) {
         FqName typeNameInfo = getDeclaringTypeFqName(ktElement);
-        Element enclosingElement = element.getEnclosingElement();
-        
-        String fqName = ((TypeElement) enclosingElement).getQualifiedName().toString();
+        JavaSource javaSource = JavaSource.forDocument(doc);
+        MemberSearchers.FieldContainingClassSearcher searcher = new MemberSearchers.FieldContainingClassSearcher(element);
+        try {
+            javaSource.runUserActionTask(searcher, true);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        ElementHandle containingClass = searcher.getContainingClass();
+        String fqName = containingClass.getQualifiedName();
         
         return typeNameInfo.asString().equals(fqName) || typeNameInfo.asString().equals(fqName+"Kt");
     }

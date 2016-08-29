@@ -4,11 +4,12 @@ import org.netbeans.api.project.Project
 import org.jetbrains.kotlin.model.KotlinEnvironment
 import org.jetbrains.kotlin.descriptors.PackagePartProvider
 import org.jetbrains.kotlin.load.kotlin.ModuleMapping
+import org.jetbrains.kotlin.cli.jvm.compiler.JavaRoot
 
 class KotlinPackagePartProvider(val project: Project) : PackagePartProvider {
     val roots = KotlinEnvironment.getEnvironment(project)
             .getRoots()
-            .map { it.file }
+            .map { (it as JavaRoot).file }
             .filter { it.findChild("META-INF") != null }
 
     override fun findPackageParts(packageFqName: String): List<String> {

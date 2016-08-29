@@ -157,7 +157,7 @@ public class Searchers {
 
     public static class ElementSearcher implements CancellableTask<CompilationController>{
 
-        private Element element;
+        private ElementHandle element;
         private final int offset;
         
         public ElementSearcher(int offset){
@@ -177,10 +177,10 @@ public class Searchers {
                 return;
             }
             
-            element = elem;
+            element = ElementHandle.create(elem);
         }
         
-        public Element getElement(){
+        public ElementHandle getElement(){
             return element;
         }
         

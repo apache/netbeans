@@ -55,6 +55,15 @@ public final class MavenClassPathProviderImpl implements ClassPathProvider{
         return ClassPathSupport.createProxyClassPath(cp, lightClasses);
     }
     
+    
+    public ClassPath[] getProjectClassPaths(String type) {
+        return impl.getProjectClassPaths(type);
+    }
+    
+    public ClassPath getProjectSourcesClassPath(String type) {
+        return impl.getProjectSourcesClassPath(type);
+    }
+    
     public void updateClassPath() {
         impl = new ClassPathProviderImpl(project);
     }

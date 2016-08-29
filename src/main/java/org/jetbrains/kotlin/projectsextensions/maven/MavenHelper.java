@@ -16,9 +16,15 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.projectsextensions.maven;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import org.apache.maven.model.Dependency;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.NbMavenProjectFactory;
@@ -35,6 +41,8 @@ public class MavenHelper {
     
     private static final NbMavenProjectFactory PROJECT_FACTORY = 
             new NbMavenProjectFactory();
+    private static final Map<Project, List<? extends Project>> depProjects = 
+            new HashMap<Project, List<? extends Project>>();
     
     public static boolean hasParent(NbMavenProjectImpl project) {
         return getParentProjectDirectory(project.getProjectDirectory()) != null;
@@ -91,29 +99,74 @@ public class MavenHelper {
         return null;
     }
     
+    private static FileObject getMainParentFolder(NbMavenProjectImpl proj) {
+        FileObject projDir = proj.getProjectDirectory();
+        FileObject parent = projDir;
+        while (projDir != null) {
+            projDir = getParentProjectDirectory(projDir);
+            if (projDir != null) {
+                parent = projDir;
+            }
+        }
+        
+        return parent;
+    }
+    
     public static NbMavenProjectImpl getMainParent(NbMavenProjectImpl proj) throws IOException {
         NbMavenProjectImpl parent = getMavenProject(getParentProjectDirectory(proj.getProjectDirectory()));
         return parent != null ? parent : proj;
     }
     
+    private static Set<FileObject> allModules(FileObject parent) {
+        Set<FileObject> modules = Sets.newHashSet();
+        modules.add(parent);
+        
+        for (FileObject fo : parent.getChildren()) {
+            if (fo.isFolder() && fo.getFileObject("pom.xml") != null) {
+                modules.addAll(allModules(fo));
+            }
+        }
+        
+        return modules;
+    }
+    
     public static List<? extends Project> getDependencyProjects(NbMavenProjectImpl project){
+        if (depProjects.get(project) == null) {
+            depProjects.put(project, findDependencyProjects(project));
+        }
+        
+        return depProjects.get(project);
+    }
+    
+    private static List<? extends Project> findDependencyProjects(NbMavenProjectImpl project){
         List<NbMavenProjectImpl> dependencyProjects = new ArrayList<NbMavenProjectImpl>();
-//        try {
-//            NbMavenProjectImpl mainProject = getMainParent(project);
-//            List modules = mainProject.getOriginalMavenProject().getModules();
-//            
-//            List compileDependencies = project.getOriginalMavenProject().getCompileDependencies();
-//            
-//            for (Object dependency : compileDependencies) {
-//                if (modules.contains(((Dependency) dependency).getArtifactId())){
-//                    NbMavenProjectImpl depProject = getMavenProject(
-//                            mainProject.getProjectDirectory().getFileObject(((Dependency) dependency).getArtifactId()));
-//                    dependencyProjects.add(depProject);
-//                }
-//            }
-//        } catch (IOException ex) {
-//            Exceptions.printStackTrace(ex);
-//        }
+        List compileDependencies = project.getOriginalMavenProject().getCompileDependencies();
+        List<String> dependencies = Lists.newArrayList();
+        
+        for (Object dependency : compileDependencies) {
+            dependencies.add(((Dependency) dependency).getArtifactId());
+        }
+        
+        FileObject mainParentFolder = getMainParentFolder(project);
+        Set<FileObject> allModules = allModules(mainParentFolder);
+        Set<FileObject> moduleDependencies = Sets.newHashSet();
+        
+        for (FileObject module : allModules) {
+            if (dependencies.contains(module.getName())) {
+                moduleDependencies.add(module);
+            }
+        }
+        
+        for (FileObject module : moduleDependencies) {
+            try {
+                NbMavenProjectImpl dep = getMavenProject(module);
+                if (dep != null) {
+                    dependencyProjects.add(dep);
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
        
         return dependencyProjects;
     }

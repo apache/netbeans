@@ -31,8 +31,8 @@ abstract class NetBeansJavaElement(val elementHandle : ElementHandle<*>?,
                                    val typeHandle : TypeMirrorHandle<*>?,
                                    val project : Project) : JavaElement {
     
-    constructor(elementHandle : ElementHandle<*>, project : Project) : this(elementHandle, null, project)
-    constructor(typeHandle : TypeMirrorHandle<*>, project : Project) : this(null, typeHandle, project)
+    constructor(elementHandle : ElementHandle<*>?, project : Project) : this(elementHandle, null, project)
+    constructor(typeHandle : TypeMirrorHandle<*>?, project : Project) : this(null, typeHandle, project)
     
     override fun hashCode() : Int = if (elementHandle != null) elementHandle.hashCode() else typeHandle!!.hashCode() 
     

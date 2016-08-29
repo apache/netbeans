@@ -127,7 +127,7 @@ public class NBElementUtils {
         return searcher.getPackage();
     }
     
-    public static ClassId computeClassId(ElementHandle<TypeElement> handle, Project project) {
+    public static ClassId computeClassId(ElementHandle handle, Project project) {
         ClassIdComputer computer = new ClassIdComputer(handle);
         execute(computer, project);
         

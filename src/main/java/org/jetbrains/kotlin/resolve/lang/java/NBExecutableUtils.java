@@ -36,28 +36,28 @@ import org.netbeans.api.project.Project;
  */
 public class NBExecutableUtils {
     
-    public static JavaType getReturnType(ElementHandle<ExecutableElement> handle, Project project) {
+    public static JavaType getReturnType(ElementHandle handle, Project project) {
         ReturnTypeSearcher searcher = new ReturnTypeSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getReturnType();
     }
     
-    public static boolean hasAnnotationParameterDefaultValue(ElementHandle<ExecutableElement> handle, Project project) {
+    public static boolean hasAnnotationParameterDefaultValue(ElementHandle handle, Project project) {
         HasAnnotationParameterDefaultValueSearcher searcher = new HasAnnotationParameterDefaultValueSearcher(handle);
         NBElementUtils.execute(searcher, project);
         
         return searcher.hasAnnotationParameterDefaultValue();
     }
     
-    public static List<JavaTypeParameter> getTypeParameters(ElementHandle<ExecutableElement> handle, Project project) {
+    public static List<JavaTypeParameter> getTypeParameters(ElementHandle handle, Project project) {
         TypeParametersSearcher searcher = new TypeParametersSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getTypeParameters();
     }
     
-    public static List<JavaValueParameter> getValueParameters(ElementHandle<ExecutableElement> handle, Project project) {
+    public static List<JavaValueParameter> getValueParameters(ElementHandle handle, Project project) {
         ValueParametersSearcher searcher = new ValueParametersSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         

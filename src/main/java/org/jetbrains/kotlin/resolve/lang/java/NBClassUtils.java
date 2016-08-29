@@ -45,56 +45,56 @@ import org.netbeans.api.project.Project;
  */
 public class NBClassUtils {
     
-    public static Name getName(ElementHandle<TypeElement> handle, Project project) {
+    public static Name getName(ElementHandle handle, Project project) {
         NameSearcher searcher = new NameSearcher(handle);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getName();
     }
     
-    public static Collection<JavaClassifierType> getSuperTypes(ElementHandle<TypeElement> handle, Project project) {
+    public static Collection<JavaClassifierType> getSuperTypes(ElementHandle handle, Project project) {
         SuperTypesSearcher searcher = new SuperTypesSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getSuperTypes();
     }
     
-    public static Collection<JavaClass> getInnerClasses(ElementHandle<TypeElement> handle, Project project) {
+    public static Collection<JavaClass> getInnerClasses(ElementHandle handle, Project project) {
         InnerClassesSearcher searcher = new InnerClassesSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getInnerClasses();
     }
     
-    public static JavaClass getOuterClass(ElementHandle<TypeElement> handle, Project project) {
+    public static JavaClass getOuterClass(ElementHandle handle, Project project) {
         OuterClassSearcher searcher = new OuterClassSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getOuterClass();
     }
     
-    public static Collection<JavaMethod> getMethods(ElementHandle<TypeElement> handle, Project project, JavaClass javaClass) {
+    public static Collection<JavaMethod> getMethods(ElementHandle handle, Project project, JavaClass javaClass) {
         MethodsSearcher searcher = new MethodsSearcher(handle, project, javaClass);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getMethods();
     }
     
-    public static Collection<JavaConstructor> getConstructors(ElementHandle<TypeElement> handle, Project project, JavaClass javaClass) {
+    public static Collection<JavaConstructor> getConstructors(ElementHandle handle, Project project, JavaClass javaClass) {
         ConstructorsSearcher searcher = new ConstructorsSearcher(handle, project, javaClass);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getConstructors();
     }
     
-    public static Collection<JavaField> getFields(ElementHandle<TypeElement> handle, Project project, JavaClass javaClass) {
+    public static Collection<JavaField> getFields(ElementHandle handle, Project project, JavaClass javaClass) {
         FieldsSearcher searcher = new FieldsSearcher(handle, project, javaClass);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getFields();
     }
     
-    public static List<JavaTypeParameter> getTypeParameters(ElementHandle<TypeElement> handle, Project project) {
+    public static List<JavaTypeParameter> getTypeParameters(ElementHandle handle, Project project) {
         TypeParametersSearcher searcher = new TypeParametersSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         

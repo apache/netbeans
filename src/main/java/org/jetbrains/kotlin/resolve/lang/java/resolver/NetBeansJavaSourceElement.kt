@@ -32,6 +32,6 @@ class NetBeansJavaSourceElement(override val javaElement : JavaElement) : JavaSo
 
     override fun getContainingFile() : SourceFile = SourceFile.NO_SOURCE_FILE
     
-    fun getElementBinding() : ElementHandle<*> = (javaElement as NetBeansJavaElement).elementHandle
+    fun getElementBinding() : ElementHandle<*>? = (javaElement as NetBeansJavaElement).elementHandle
     
 }

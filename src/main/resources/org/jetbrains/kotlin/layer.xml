@@ -24,6 +24,9 @@
                         <attr name="position" intvalue="1267"/>
                     </file>
                 </folder>
+                <file name="RefactoringAll.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.refactoring.api.ui.RefactoringActionsFactory.popupSubmenuAction"/>
+                </file>
             </folder>
         </folder>
     </folder>
@@ -51,6 +54,9 @@
                         <file name="org-netbeans-modules-project-ui-TestSingle.instance">
                             <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-TestSingle.instance"/>
                             <attr name="position" intvalue="1780"/>
+                        </file>
+                        <file name="RefactoringAll.instance">
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.refactoring.api.ui.RefactoringActionsFactory.editorSubmenuAction"/>
                         </file>
                     </folder>
                 </folder>

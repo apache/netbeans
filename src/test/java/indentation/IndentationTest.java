@@ -171,4 +171,9 @@ public class IndentationTest extends NbTestCase {
         doTest("newLineInParameters.kt");
     }
     
+    @Test
+    public void testNewLineWhenCaretAtPosition0() {
+        doTest("newLineWhenCaretAtPosition0.kt");
+    }
+    
 }

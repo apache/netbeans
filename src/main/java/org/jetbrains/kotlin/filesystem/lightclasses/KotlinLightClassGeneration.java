@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import org.jetbrains.kotlin.filesystem.KotlinLightClassManager;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer;
@@ -198,13 +199,13 @@ public class KotlinLightClassGeneration {
         List<String> lightClassesPaths = manager.getLightClassesPaths(file);
 
         for (String path : lightClassesPaths) {
-            File lightClass = new File(ProjectUtils.getKotlinProjectLightClassesPath(project) + "/" + path);
+            File lightClass = new File(ProjectUtils.getKotlinProjectLightClassesPath(project) + ProjectUtils.FILE_SEPARATOR + path);
             if (!lightClass.exists()){
                 lightClass.mkdirs();
             }    
             
             List<KtFile> ktFiles = manager.getSourceFiles(lightClass);
-            String[] pathParts = path.split("/");
+            String[] pathParts = path.split(Pattern.quote(ProjectUtils.FILE_SEPARATOR));
             String className = pathParts[pathParts.length-1];
             if (!ktFiles.isEmpty()) {
                 GenerationState state = KotlinLightClassGeneration.INSTANCE.

@@ -64,7 +64,7 @@ public class KotlinToggleBreakpointAction extends AbstractAction {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        DebuggerManager.getDebuggerManager().getActionsManager().postAction(ActionsManager.ACTION_TOGGLE_BREAKPOINT);
+        DebuggerManager.getDebuggerManager().getActionsManager().doAction(ActionsManager.ACTION_TOGGLE_BREAKPOINT);
     }
     
 }

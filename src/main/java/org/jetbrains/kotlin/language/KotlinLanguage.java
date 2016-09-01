@@ -23,6 +23,7 @@ import org.jetbrains.kotlin.highlighter.netbeans.KotlinTokenId;
 import org.jetbrains.kotlin.highlighter.occurrences.KotlinOccurrencesFinder;
 import org.jetbrains.kotlin.highlighter.semanticanalyzer.KotlinSemanticAnalyzer;
 import org.jetbrains.kotlin.hints.KotlinHintsProvider;
+import org.jetbrains.kotlin.indexer.KotlinIndexerFactory;
 import org.jetbrains.kotlin.refactorings.rename.KotlinInstantRenamer;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
@@ -34,6 +35,7 @@ import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
 
 /**
  * Class that is responsible for Kotlin language registration.
@@ -119,6 +121,9 @@ public class KotlinLanguage extends DefaultLanguageConfig {
         return new KotlinInstantRenamer();
     }
     
-    
+    @Override
+    public EmbeddingIndexerFactory getIndexerFactory() {
+        return new KotlinIndexerFactory();
+    }
     
 }

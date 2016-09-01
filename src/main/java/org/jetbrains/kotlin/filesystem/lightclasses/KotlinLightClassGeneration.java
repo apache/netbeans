@@ -68,22 +68,24 @@ public class KotlinLightClassGeneration {
 
             @Override
             public boolean shouldGenerateClass(KtClassOrObject classOrObject) {
-                String internalName = PsiCodegenPredictor.getPredefinedJvmInternalName(classOrObject, NoResolveFileClassesProvider.INSTANCE);
-                if (internalName == null) {
-                    return false;
-                }
-                internalName = internalName.replace('/', '.').replace('\\', '.').
-                        replace(ProjectUtils.FILE_SEPARATOR, ".");
-                FqName fqName = new FqName(internalName);
-                return checkByInternalName(fqName, requestedClassName);
+//                String internalName = PsiCodegenPredictor.getPredefinedJvmInternalName(classOrObject, NoResolveFileClassesProvider.INSTANCE);
+//                if (internalName == null) {
+//                    return false;
+//                }
+//                internalName = internalName.replace('/', '.').replace('\\', '.').
+//                        replace(ProjectUtils.FILE_SEPARATOR, ".");
+//                FqName fqName = new FqName(internalName);
+//                return checkByInternalName(fqName, requestedClassName);
+                return true;
             }
 
             @Override
             public boolean shouldGeneratePackagePart(KtFile ktFile) {
-                FqName internalName
-                        = NoResolveFileClassesProvider.INSTANCE.getFileClassInfo(ktFile).
-                        getFileClassFqName();
-                return checkByInternalName(internalName, requestedClassName);
+//                FqName internalName
+//                        = NoResolveFileClassesProvider.INSTANCE.getFileClassInfo(ktFile).
+//                        getFileClassFqName();
+//                return checkByInternalName(internalName, requestedClassName);
+                return true;
             }
 
             @Override

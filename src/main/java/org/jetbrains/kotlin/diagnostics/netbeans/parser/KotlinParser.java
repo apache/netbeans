@@ -76,7 +76,7 @@ public class KotlinParser extends Parser {
     @Override
     public Result getResult(Task task) {
         if (project != null){
-            return new KotlinParserResult(snapshot, parserResult, fileToAnalyze);
+            return new KotlinParserResult(snapshot, parserResult, fileToAnalyze, project);
         }
         return null;
     }
@@ -95,12 +95,14 @@ public class KotlinParser extends Parser {
         private AnalysisResultWithProvider analysisResult;
         private final FileObject file;
         private final KtFile ktFile;
+        private final Project project;
         
-        KotlinParserResult(Snapshot snapshot, AnalysisResultWithProvider analysisResult, KtFile ktFile) {
+        KotlinParserResult(Snapshot snapshot, AnalysisResultWithProvider analysisResult, KtFile ktFile, Project project) {
             super(snapshot);
             this.analysisResult = analysisResult;
             file = snapshot.getSource().getFileObject();
             this.ktFile = ktFile;
+            this.project = project;
         }
 
         @Override
@@ -120,6 +122,10 @@ public class KotlinParser extends Parser {
             return ktFile;
         }
 
+        public Project getProject() {
+            return project;
+        }
+        
         @Override
         public List<? extends Error> getDiagnostics() {
             List<Error> errors = Lists.newArrayList();

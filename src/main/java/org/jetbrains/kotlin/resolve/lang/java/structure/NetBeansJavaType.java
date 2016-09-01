@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.resolve.lang.java.NBAnnotationUtils;
+import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils;
 import org.jetbrains.kotlin.resolve.lang.java.NBTypeUtils;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
@@ -82,13 +83,13 @@ public class NetBeansJavaType implements JavaType, JavaAnnotationOwner {
     
     @Override
     public int hashCode() {
-        return handle.hashCode();
+        return NBElementUtils.typeMirrorHandleHashCode(handle, project);
     }
     
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof NetBeansJavaType &&
-                handle.equals(((NetBeansJavaType) obj).getHandle());
+        return obj instanceof NetBeansJavaType && 
+                NBElementUtils.typeMirrorHandleEquals(handle, ((NetBeansJavaType) obj).getHandle(), project);
     }
     
 }

@@ -20,13 +20,10 @@ package org.jetbrains.kotlin.debugger;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeListenerProxy;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.SwingUtilities;
@@ -40,6 +37,7 @@ import org.netbeans.api.debugger.jpda.LineBreakpoint;
 import org.netbeans.api.debugger.jpda.MethodBreakpoint;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointEvent;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointListener;
+import org.netbeans.modules.debugger.jpda.EditorContextBridge;
 import org.netbeans.spi.debugger.ActionsProvider;
 import org.netbeans.spi.debugger.ActionsProviderSupport;
 import org.netbeans.spi.debugger.ContextProvider;
@@ -61,7 +59,7 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
     private Map<Breakpoint, Object> annotations = new HashMap<Breakpoint, Object>();
     
     public KotlinToggleBreakpointActionProvider() {
-        KotlinEditorContextBridge.getContext().
+        EditorContextBridge.getContext().
                 addPropertyChangeListener(KotlinToggleBreakpointActionProvider.this);
         enableAllActions();
     }
@@ -71,13 +69,13 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
         debugger.addPropertyChangeListener(JPDADebugger.PROP_STATE, 
                 KotlinToggleBreakpointActionProvider.this);
         enableAllActions();
-        KotlinEditorContextBridge.getContext().
+        EditorContextBridge.getContext().
                 addPropertyChangeListener(KotlinToggleBreakpointActionProvider.this);
     }
     
     private void destroy() {
         debugger.removePropertyChangeListener(JPDADebugger.PROP_STATE, this);
-        KotlinEditorContextBridge.getContext().removePropertyChangeListener(this);
+        EditorContextBridge.getContext().removePropertyChangeListener(this);
     }
     
     @Override
@@ -85,11 +83,11 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
         DebuggerManager manager = DebuggerManager.getDebuggerManager();
         JPDABreakpoint breakpoint;
         
-        final int lineNumber = KotlinEditorContextBridge.getContext().getCurrentLineNumber();
+        final int lineNumber = EditorContextBridge.getContext().getCurrentLineNumber();
         if (lineNumber < 0) {
             return;
         }
-        final String urlStr = KotlinEditorContextBridge.getContext().getCurrentURL();
+        final String urlStr = EditorContextBridge.getContext().getCurrentURL();
         
         if ("".equals(urlStr.trim())) {
             return;
@@ -103,7 +101,7 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
                 manager.removeBreakpoint(mBr);
                 Object annotation = annotations.get(mBr);
                 if (annotation != null) {
-                    KotlinEditorContextBridge.getContext().removeAnnotation(annotation);
+                    EditorContextBridge.getContext().removeAnnotation(annotation);
                 }
                 return;
             }
@@ -115,7 +113,7 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
                 manager.removeBreakpoint(lBr);
                 Object annotation = annotations.get(lBr);
                 if (annotation != null) {
-                    KotlinEditorContextBridge.getContext().removeAnnotation(annotation);
+                    EditorContextBridge.getContext().removeAnnotation(annotation);
                 }
                 return;
             }
@@ -133,8 +131,7 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
                 SwingUtilities.invokeLater(new Runnable(){
                     @Override
                     public void run() {
-                        KotlinEditorContextBridge.getContext().showSource(urlStr, lineNumber, null);
-//                        KotlinEditorContextBridge.getContext().annotate(urlStr, lineNumber, EditorContext.CURRENT_LINE_ANNOTATION_TYPE, null);  
+                        EditorContextBridge.getContext().showSource(urlStr, lineNumber, null);
                     }
                 });
             }
@@ -154,7 +151,7 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        String url = KotlinEditorContextBridge.getContext().getCurrentURL();
+        String url = EditorContextBridge.getContext().getCurrentURL();
         FileObject fo;
         try {
             fo = URLMapper.findFileObject(new URL(url));
@@ -162,7 +159,7 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
             fo = null;
         }
         setEnabled(ActionsManager.ACTION_TOGGLE_BREAKPOINT,
-                (KotlinEditorContextBridge.getContext().getCurrentLineNumber() >= 0) &&
+                (EditorContextBridge.getContext().getCurrentLineNumber() >= 0) &&
                         (fo != null && "text/x-kt".equals(fo.getMIMEType())));
         if (debugger != null && debugger.getState() == JPDADebugger.STATE_DISCONNECTED) {
             destroy();

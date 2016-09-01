@@ -28,7 +28,6 @@ import java.net.URL;
 import javax.swing.text.StyledDocument;
 import kotlin.Pair;
 import org.jetbrains.kotlin.builder.KotlinPsiManager;
-import static org.jetbrains.kotlin.debugger.KotlinEditorContextBridge.getContext;
 import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider;
 import org.jetbrains.kotlin.psi.KtClass;
 import org.jetbrains.kotlin.psi.KtDeclaration;
@@ -42,6 +41,7 @@ import org.netbeans.api.debugger.jpda.FieldBreakpoint;
 import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
 import org.netbeans.api.debugger.jpda.MethodBreakpoint;
+import org.netbeans.modules.debugger.jpda.EditorContextBridge;
 import org.netbeans.spi.debugger.jpda.EditorContext;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -164,7 +164,7 @@ public class KotlinDebugUtils {
             return null;
         }
 
-        return getContext().annotate(url, line, annotationType, null);
+        return EditorContextBridge.getContext().annotate(url, line, annotationType, null);
     }
 
     public static MethodBreakpoint findMethodBreakpoint(DebuggerManager manager, String className, String functionName) {

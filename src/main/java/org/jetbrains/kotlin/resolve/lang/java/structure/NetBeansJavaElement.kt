@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaElement
 import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
+import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
 
 /*
 
@@ -34,14 +35,14 @@ abstract class NetBeansJavaElement(val elementHandle : ElementHandle<*>?,
     constructor(elementHandle : ElementHandle<*>?, project : Project) : this(elementHandle, null, project)
     constructor(typeHandle : TypeMirrorHandle<*>?, project : Project) : this(null, typeHandle, project)
     
-    override fun hashCode() : Int = if (elementHandle != null) elementHandle.hashCode() else typeHandle!!.hashCode() 
+    override fun hashCode() : Int = if (elementHandle != null) elementHandle.hashCode() else NBElementUtils.typeMirrorHandleHashCode(typeHandle, project)
     
     override fun equals(other : Any?) : Boolean {
         if (other !is NetBeansJavaElement) return false
         
         if (elementHandle != null) {
             return elementHandle.equals(other.elementHandle)
-        } else return typeHandle!!.equals(other.typeHandle)
+        } else return NBElementUtils.typeMirrorHandleEquals(typeHandle, other.typeHandle, project)
     }
     
 }

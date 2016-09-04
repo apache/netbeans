@@ -713,11 +713,11 @@
       <groupId>org.netbeans.api</groupId>  
       <artifactId>org-netbeans-modules-editor</artifactId>  
       <version>RELEASE81</version> 
-    </dependency>
-    <dependency>
-      <groupId>org.netbeans.api</groupId>
-      <artifactId>org-netbeans-modules-parsing-indexing</artifactId>
-      <version>RELEASE81</version>
-    </dependency>
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-modules-parsing-indexing</artifactId>  
+      <version>RELEASE81</version> 
+    </dependency> 
   </dependencies> 
 </project>

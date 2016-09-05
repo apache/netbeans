@@ -18,9 +18,11 @@
  */
 package org.jetbrains.kotlin.indexer;
 
+import org.jetbrains.kotlin.analyzer.AnalysisResult;
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult;
 import org.jetbrains.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.indexing.Context;
@@ -35,9 +37,11 @@ import org.openide.util.Exceptions;
  */
 public class KotlinIndexer extends EmbeddingIndexer {
 
+    private static final Object LOCK = new Object(){};
+    
     @Override
     protected void index(Indexable indexable, Parser.Result parserResult, Context context) {
-        KotlinParserResult result = (KotlinParserResult) parserResult;
+        final KotlinParserResult result = (KotlinParserResult) parserResult;
         AnalysisResultWithProvider analysisResult = null;
         try {
             analysisResult = result.getAnalysisResult();
@@ -47,8 +51,21 @@ public class KotlinIndexer extends EmbeddingIndexer {
         if (analysisResult == null) {
             return;
         }
-        FileObject fo = result.getSnapshot().getSource().getFileObject();
-        KotlinLightClassGeneration.INSTANCE.generate(fo, result.getProject(), analysisResult.getAnalysisResult());
+        final FileObject fo = result.getSnapshot().getSource().getFileObject();
+        final AnalysisResult res = analysisResult.getAnalysisResult();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                generateLightClass(fo, result.getProject(), res);
+            }
+        });
+        thread.start();
+    }
+    
+    private void generateLightClass(FileObject fo, Project project, AnalysisResult analysisResult) {
+        synchronized (LOCK) {
+            KotlinLightClassGeneration.INSTANCE.generate(fo, project, analysisResult);
+        }
     }
     
 }

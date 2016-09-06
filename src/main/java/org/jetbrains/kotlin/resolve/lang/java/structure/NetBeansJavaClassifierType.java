@@ -63,7 +63,7 @@ public class NetBeansJavaClassifierType extends NetBeansJavaType implements Java
     public boolean isRaw() {
         if (getHandle().getKind() == TypeKind.DECLARED) {
             return NBTypeUtils.isRaw(getHandle(), getProject());
-        } else return true;
+        } else return false;
     }
 
     @Override

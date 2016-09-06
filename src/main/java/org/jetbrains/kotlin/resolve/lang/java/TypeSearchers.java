@@ -20,6 +20,7 @@ package org.jetbrains.kotlin.resolve.lang.java;
 
 import com.google.common.collect.Lists;
 import java.util.List;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
@@ -164,6 +165,11 @@ public class TypeSearchers {
         @Override
         public void run(CompilationController info) throws Exception {
             info.toPhase(Phase.RESOLVED);
+            ElementHandle<TypeElement> elementHandle = ElementHandle.from(handle);
+            TypeElement element = elementHandle.resolve(info);
+            if (element != null && element.getTypeParameters().isEmpty()) {
+                return;
+            }
             TypeMirror type = handle.resolve(info);
             if (type == null) {
                 return;

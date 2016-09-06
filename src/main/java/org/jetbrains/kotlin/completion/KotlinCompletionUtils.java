@@ -62,6 +62,7 @@ import org.jetbrains.kotlin.resolve.scopes.receivers.ExpressionReceiver;
 import org.jetbrains.kotlin.types.KotlinType;
 import org.jetbrains.kotlin.resolve.scopes.utils.ScopeUtilsKt;
 import org.jetbrains.kotlin.idea.codeInsight.ReferenceVariantsHelper;
+import org.jetbrains.kotlin.load.java.descriptors.JavaConstructorDescriptor;
 import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.CompletionProposal;
@@ -304,6 +305,9 @@ public class KotlinCompletionUtils {
                 generateBasicCompletionProposals(file, identifierPart, identOffset, editorText);
         
         for (DeclarationDescriptor descriptor : descriptors){
+            if (descriptor instanceof JavaConstructorDescriptor) {
+                continue;
+            }
             proposals.add(new KotlinCompletionProposal(identOffset, caretOffset, descriptor, styledDoc));
         }
     

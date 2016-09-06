@@ -27,6 +27,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaConstructor;
 import org.jetbrains.kotlin.load.java.structure.JavaField;
 import org.jetbrains.kotlin.load.java.structure.JavaMethod;
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter;
+import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.ConstructorsSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.FieldsSearcher;
@@ -99,6 +100,11 @@ public class NBClassUtils {
         NBElementUtils.execute(searcher, project);
         
         return searcher.getTypeParameters();
+    }
+    
+    public static FqName getFqName(ElementHandle handle) {
+        FqName fqName = new FqName(handle.getQualifiedName());
+        return fqName;
     }
     
 }

@@ -44,7 +44,7 @@ class NetBeansJavaClass(elementHandle : ElementHandle<*>?, project : Project) :
         get() = NBClassUtils.getName(elementHandle, project)
     
     override val fqName : FqName 
-        get() = FqName(elementHandle!!.qualifiedName)
+        get() = NBClassUtils.getFqName(elementHandle)//FqName(elementHandle!!.qualifiedName)
     
     override val supertypes : Collection<JavaClassifierType>
         get() = NBClassUtils.getSuperTypes(elementHandle, project)

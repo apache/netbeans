@@ -271,7 +271,7 @@ public class ClassSearchers {
                 return;
             }
 
-            List<? extends Element> members = elem.getEnclosedElements();//info.getElements().getAllMembers(elem);
+            List<? extends Element> members = elem.getEnclosedElements();
             for (Element member : members) {
                 if (member.getKind() == ElementKind.CONSTRUCTOR){
                     constructors.add(new NetBeansJavaConstructor(ElementHandle.create(member), containingClass, project));
@@ -306,7 +306,7 @@ public class ClassSearchers {
                 return;
             }
 
-            List<? extends Element> members = elem.getEnclosedElements();//info.getElements().getAllMembers(elem);
+            List<? extends Element> members = elem.getEnclosedElements();
             for (Element member : members) {
                 if (member.getKind().isField()){
                     String name = member.getSimpleName().toString();

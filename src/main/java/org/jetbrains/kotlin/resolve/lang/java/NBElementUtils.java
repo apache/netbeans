@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.name.ClassId;
 import org.jetbrains.kotlin.projectsextensions.ClassPathExtender;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
@@ -37,6 +38,7 @@ import org.jetbrains.kotlin.resolve.lang.java.Searchers.FileObjectForFqNameSearc
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.PackageElementSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.TypeElementSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.TypeMirrorHandleSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -170,6 +172,11 @@ public class NBElementUtils {
     
     public static void openElementInEditor(ElementHandle handle, Project kotlinProject){
         ElementOpen.open(CLASSPATH_INFO.get(kotlinProject), handle);
+    }
+    
+    public static JavaClass getNetBeansJavaClassFromType(TypeMirrorHandle type, Project project) {
+        ElementHandle handle = ElementHandle.from(type);
+        return new NetBeansJavaClass(handle, project);
     }
     
     public static FileObject getFileObjectForFqName(String fqName, Project project) {

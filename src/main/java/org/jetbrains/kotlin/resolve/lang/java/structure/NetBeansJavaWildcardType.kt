@@ -30,7 +30,7 @@ import org.netbeans.api.project.Project
 
 class NetBeansJavaWildcardType(handle : TypeMirrorHandle<*>, project : Project) : NetBeansJavaType(handle, project), JavaWildcardType {
     
-    override val bound : JavaType
+    override val bound : JavaType?
         get() = NBTypeUtils.getBound(handle, project)
     
     override val isExtends : Boolean = NBTypeUtils.isExtends(handle, project)

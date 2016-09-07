@@ -143,7 +143,7 @@ public class TypeSearchers {
             info.toPhase(Phase.RESOLVED);
             TypeMirror type = handle.resolve(info);
             if (type == null) {
-                return;
+                throw new UnsupportedOperationException("Component type not found");
             }
             
             TypeMirrorHandle componentTypeHandle = 

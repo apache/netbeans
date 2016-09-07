@@ -43,7 +43,7 @@ public class NetBeansJavaClassifierType extends NetBeansJavaType implements Java
     public JavaClassifier getClassifier() {
         switch (getHandle().getKind()) {
             case DECLARED:
-                ElementHandle elementHandle = ElementHandle.from(getHandle());
+                ElementHandle elementHandle = ElementHandle.from((TypeMirrorHandle) getHandle());
                 return new NetBeansJavaClass(elementHandle, getProject());
             case TYPEVAR:
                 return new NetBeansJavaTypeParameter(getHandle(), getProject());

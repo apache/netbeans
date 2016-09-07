@@ -39,7 +39,7 @@ class NetBeansJavaValueParameter(typeHandle : TypeMirrorHandle<*>, project : Pro
     override val isDeprecatedInJavaDoc = false
     
     override val type : JavaType
-        get() = NetBeansJavaType.create(typeHandle, project)
+        get() = NetBeansJavaType.create(typeHandle!!, project)
     
     override val annotations : Collection<JavaAnnotation>
         get() = emptyList()

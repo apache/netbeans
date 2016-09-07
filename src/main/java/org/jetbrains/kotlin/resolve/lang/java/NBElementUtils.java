@@ -34,7 +34,6 @@ import org.jetbrains.kotlin.projectsextensions.ClassPathExtender;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.ClassIdComputer;
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.ElementSimpleNameSearcher;
-import org.jetbrains.kotlin.resolve.lang.java.Searchers.FileObjectForFqNameSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.PackageElementSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.TypeElementSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.TypeMirrorHandleSearcher;
@@ -177,6 +176,11 @@ public class NBElementUtils {
     public static JavaClass getNetBeansJavaClassFromType(TypeMirrorHandle type, Project project) {
         ElementHandle handle = ElementHandle.from(type);
         return new NetBeansJavaClass(handle, project);
+    }
+    
+    public static ClassId computeClassIdForType(TypeMirrorHandle handle, Project project) {
+        ElementHandle element = ElementHandle.from(handle);
+        return computeClassId(element, project);
     }
     
     public static FileObject getFileObjectForFqName(String fqName, Project project) {

@@ -14,29 +14,21 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.resolve.lang.java.structure;
+package org.jetbrains.kotlin.resolve.lang.java.structure
 
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.descriptors.PropertyDescriptor;
-import org.jetbrains.kotlin.load.java.structure.JavaField;
-import org.jetbrains.kotlin.load.java.components.JavaPropertyInitializerEvaluator;
-import org.jetbrains.kotlin.resolve.constants.ConstantValue;
+import org.jetbrains.kotlin.descriptors.PropertyDescriptor
+import org.jetbrains.kotlin.load.java.structure.JavaField
+import org.jetbrains.kotlin.load.java.components.JavaPropertyInitializerEvaluator
+import org.jetbrains.kotlin.resolve.constants.ConstantValue
 
-/**
- *
- * @author Александр
- */
-public class NetBeansJavaPropertyInitializerEvaluator implements JavaPropertyInitializerEvaluator {
+/*
 
-    @Override
-    @Nullable
-    public ConstantValue<?> getInitializerConstant(JavaField jf, PropertyDescriptor pd) {
-        return null;
-    }
+  @author Alexander.Baratynski
+  Created on Sep 7, 2016
+*/
 
-    @Override
-    public boolean isNotNullCompileTimeConstant(JavaField jf) {
-        return false;
-    }
+class NetBeansJavaPropertyInitializerEvaluator : JavaPropertyInitializerEvaluator {
     
+    override fun getInitializerConstant(field : JavaField, descriptor : PropertyDescriptor) : ConstantValue<*>? = null
+    override fun isNotNullCompileTimeConstant(field : JavaField) : Boolean = false
 }

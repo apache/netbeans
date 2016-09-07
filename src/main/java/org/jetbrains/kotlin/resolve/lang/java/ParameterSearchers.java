@@ -133,12 +133,7 @@ public class ParameterSearchers {
             if (type == null) {
                 return;
             }
-            
-            TypeParameterElement element = (TypeParameterElement) ((TypeVariable) type).asElement();
-            for (TypeMirror bound : element.getBounds()) {
-                upperBounds.add(new NetBeansJavaClassifierType(TypeMirrorHandle.create(bound), project));
-            }
-            
+            upperBounds.add(new NetBeansJavaClassifierType(TypeMirrorHandle.create(((TypeVariable) type).getUpperBound()), project));
         }
         
         public Collection<JavaClassifierType> getUpperBounds() {

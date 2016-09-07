@@ -9,7 +9,7 @@ import org.jetbrains.kotlin.cli.jvm.compiler.JavaRoot
 class KotlinPackagePartProvider(val project: Project) : PackagePartProvider {
     val roots = KotlinEnvironment.getEnvironment(project)
             .getRoots()
-            .map { (it as JavaRoot).file }
+            .map { it.file }
             .filter { it.findChild("META-INF") != null }
 
     override fun findPackageParts(packageFqName: String): List<String> {

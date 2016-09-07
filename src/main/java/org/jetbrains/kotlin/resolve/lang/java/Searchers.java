@@ -247,4 +247,37 @@ public class Searchers {
         
     }
     
+    public static class IsDeprecatedSearcher implements CancellableTask<CompilationController>{
+
+        private final ElementHandle element;
+        private boolean deprecated = false;
+        
+        public IsDeprecatedSearcher(ElementHandle element){
+            this.element = element;
+        }
+        
+        @Override
+        public void cancel() {
+        }
+
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            if (element == null) {
+                return;
+            }
+            Element elem = element.resolve(info);
+            if (elem == null) {
+                return;
+            }
+            
+            deprecated = info.getElements().isDeprecated(elem);
+        }
+        
+        public boolean isDeprecated(){
+            return deprecated;
+        }
+        
+    }
+    
 }

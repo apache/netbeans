@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.resolve.lang.java.NBAnnotationUtils
 import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
+import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
 
 /*
 
@@ -37,7 +38,7 @@ abstract class NetBeansJavaClassifier(elementHandle : ElementHandle<*>?, typeHan
     override val annotations : Collection<JavaAnnotation>
         get() = NBAnnotationUtils.getAnnotations(elementHandle, project)
     
-    override val isDeprecatedInJavaDoc : Boolean = false
+    override val isDeprecatedInJavaDoc : Boolean = NBElementUtils.isDeprecated(elementHandle, project)
     
     override fun findAnnotation(fqName : FqName) = NBAnnotationUtils.getAnnotation(elementHandle, project, fqName)
     

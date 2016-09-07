@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.lang.java.NBAnnotationUtils
 import org.jetbrains.kotlin.resolve.lang.java.NBMemberUtils
+import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
 import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.project.Project
 
@@ -45,7 +46,7 @@ abstract class NetBeansJavaMember(elementHandle : ElementHandle<*>?, override va
     override val name : Name 
         get() = NBMemberUtils.getName(elementHandle, project)
     
-    override val isDeprecatedInJavaDoc : Boolean = false
+    override val isDeprecatedInJavaDoc : Boolean = NBElementUtils.isDeprecated(elementHandle, project)
     override val isAbstract : Boolean = NBMemberUtils.isAbstract(elementHandle, project)
     override val isStatic : Boolean = NBMemberUtils.isStatic(elementHandle, project)
     override val isFinal : Boolean = NBMemberUtils.isFinal(elementHandle, project)

@@ -10,6 +10,7 @@ import org.netbeans.spi.project.support.ant.AntProjectHelper;
  *
  * @author Alexander.Baratynski
  */
+@org.openide.util.lookup.ServiceProvider(service = AntBasedProjectType.class, position = 1)
 public class JavaAntBasedProjectType implements AntBasedProjectType{
     
     private static final String TYPE = "org.netbeans.modules.java.j2seproject"; 

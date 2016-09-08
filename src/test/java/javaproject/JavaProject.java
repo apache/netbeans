@@ -6,11 +6,11 @@ import javaproject.mockservices.MockKotlinParserFactory;
 import javaproject.mockservices.MockOpenProjectsTrampoline;
 import javaproject.mockservices.TestEnvironmentFactory;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.project.ant.AntBasedProjectFactorySingleton;
-import org.netbeans.spi.project.ProjectFactory;
 import org.openide.util.Exceptions;
 
 /**
@@ -34,12 +34,11 @@ public class JavaProject extends NbTestCase {
     }
     
     private Project createJavaProject() throws IOException {
-        ProjectFactory projectFactory = new JavaProjectFactory();
-        
-        return projectFactory.loadProject(JavaProjectUnzipper.INSTANCE.getTestProject(), new JavaProjectState());
+        return ProjectManager.getDefault().findProject(JavaProjectUnzipper.INSTANCE.getTestProject());
     }
     
     private void createMockLookup() {
+        MockServices.setServices(JavaAntBasedProjectType.class);
         MockServices.setServices(AntBasedProjectFactorySingleton.class);
         MockServices.setServices(org.netbeans.modules.project.ant.StandardAntArtifactQueryImpl.class);
         MockServices.setServices(TestEnvironmentFactory.class);

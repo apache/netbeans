@@ -1,8 +1,12 @@
 package diagnostics;
 
 import com.intellij.psi.PsiErrorElement;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 import org.netbeans.api.project.Project;
@@ -19,6 +23,14 @@ import org.openide.filesystems.FileObject;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import kotlin.Pair;
+import org.netbeans.modules.java.api.common.SourceRoots;
+import org.netbeans.modules.java.j2seproject.J2SEProject;
+import org.netbeans.modules.java.j2seproject.J2SEProjectGenerator;
+import org.netbeans.spi.project.support.ant.AntProjectHelper;
+import org.netbeans.spi.project.support.ant.ProjectGenerator;
+import org.openide.filesystems.FileUtil;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -216,4 +228,5 @@ public class DiagnosticsTest extends NbTestCase {
         
         doTest("checkCastIsNeverSucceed.kt", diagnosticsRanges, severityList);        
     }
+    
 }

@@ -5,6 +5,7 @@ import javaproject.mockservices.MockActiveDocumentProvider;
 import javaproject.mockservices.MockKotlinParserFactory;
 import javaproject.mockservices.MockOpenProjectsTrampoline;
 import javaproject.mockservices.TestEnvironmentFactory;
+import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -45,6 +46,7 @@ public class JavaProject extends NbTestCase {
         MockServices.setServices(MockKotlinParserFactory.class);
         MockServices.setServices(MockActiveDocumentProvider.class);
         MockServices.setServices(MockOpenProjectsTrampoline.class);
+        MockServices.setServices(JavaPlatformManager.class);
     }
     
     public Project getJavaProject() {

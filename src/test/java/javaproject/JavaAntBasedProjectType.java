@@ -13,11 +13,11 @@ import org.netbeans.spi.project.support.ant.AntProjectHelper;
 @org.openide.util.lookup.ServiceProvider(service = AntBasedProjectType.class, position = 1)
 public class JavaAntBasedProjectType implements AntBasedProjectType{
     
-    private static final String TYPE = "org.netbeans.modules.java.j2seproject"; 
-    private static final String PROJECT_CONFIGURATION_NAME = "data"; 
-    private static final String PROJECT_CONFIGURATION_NAMESPACE = "http://www.netbeans.org/ns/project/1"; 
-    private static final String PRIVATE_CONFIGURATION_NAME = "data"; 
-    private static final String PRIVATE_CONFIGURATION_NAMESPACE = "http://www.netbeans.org/ns/project-private/1"; 
+    public static final String TYPE = "org.netbeans.modules.java.j2seproject";
+    static final String PROJECT_CONFIGURATION_NAME = "data";
+    public static final String PROJECT_CONFIGURATION_NAMESPACE = "http://www.netbeans.org/ns/j2se-project/3";
+    static final String PRIVATE_CONFIGURATION_NAME = "data";
+    static final String PRIVATE_CONFIGURATION_NAMESPACE = "http://www.netbeans.org/ns/j2se-project-private/1";
 
     @Override
     public String getType() {

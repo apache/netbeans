@@ -26,6 +26,8 @@ import kotlin.Pair;
 import org.netbeans.modules.java.api.common.SourceRoots;
 import org.netbeans.modules.java.j2seproject.J2SEProject;
 import org.netbeans.modules.java.j2seproject.J2SEProjectGenerator;
+import org.netbeans.modules.java.j2seproject.api.J2SEProjectBuilder;
+import org.netbeans.modules.project.ant.AntBasedProjectFactorySingleton;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.netbeans.spi.project.support.ant.ProjectGenerator;
 import org.openide.filesystems.FileUtil;
@@ -228,5 +230,9 @@ public class DiagnosticsTest extends NbTestCase {
         
         doTest("checkCastIsNeverSucceed.kt", diagnosticsRanges, severityList);        
     }
+    
+//    public void testTypeParameterOfCollectionDeclaredInJava() {
+//        doTest("checkTypeParameterOfCollectionDeclaredInJava.kt");
+//    }
     
 }

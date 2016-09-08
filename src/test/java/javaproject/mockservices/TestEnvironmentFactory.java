@@ -12,6 +12,8 @@ import java.util.concurrent.Callable;
 import javax.swing.text.Document;
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.modules.java.source.parsing.JavacParserFactory;
+import org.netbeans.modules.masterfs.providers.ProvidedExtensions;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.implspi.EnvironmentFactory;
@@ -49,7 +51,8 @@ public class TestEnvironmentFactory implements EnvironmentFactory {
 
     @Override
     public <T> T runPriorityIO(Callable<T> r) throws Exception {
-        return null;//r.call();
+        assert r != null;
+        return ProvidedExtensions.priorityIO(r);
     }
 
     @Override
@@ -67,7 +70,8 @@ public class TestEnvironmentFactory implements EnvironmentFactory {
         if (p != null) {
             return p;
         }
-        ParserFactory f = MimeLookup.getLookup(mimeType).lookup(ParserFactory.class);
+        
+        ParserFactory f = new JavacParserFactory();//JavacParserFactory.getDefault();//MimeLookup.getLookup(mimeType).lookup(ParserFactory.class);
         if (f != null) {
             p = f.createParser(Collections.<Snapshot>emptyList());
         } else {

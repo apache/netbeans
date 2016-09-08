@@ -186,7 +186,12 @@
         <configuration> 
           <useDefaultManifestFile>true</useDefaultManifestFile> 
         </configuration> 
-      </plugin> 
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.15</version>
+      </plugin>
     </plugins> 
   </build>  
   <repositories> 
@@ -718,6 +723,6 @@
       <groupId>org.netbeans.api</groupId>  
       <artifactId>org-netbeans-modules-parsing-indexing</artifactId>  
       <version>RELEASE81</version> 
-    </dependency> 
+    </dependency>
   </dependencies> 
 </project>

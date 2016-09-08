@@ -11,6 +11,7 @@ import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.parsing.JavacParserFactory;
 import org.netbeans.modules.project.ant.AntBasedProjectFactorySingleton;
 import org.openide.util.Exceptions;
 
@@ -47,6 +48,7 @@ public class JavaProject extends NbTestCase {
         MockServices.setServices(MockActiveDocumentProvider.class);
         MockServices.setServices(MockOpenProjectsTrampoline.class);
         MockServices.setServices(JavaPlatformManager.class);
+        MockServices.setServices(JavacParserFactory.class);
     }
     
     public Project getJavaProject() {

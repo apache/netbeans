@@ -2,6 +2,7 @@ package javaproject;
 
 import java.io.IOException;
 import javaproject.mockservices.MockActiveDocumentProvider;
+import javaproject.mockservices.MockEditorMimeTypesImpl;
 import javaproject.mockservices.MockKotlinParserFactory;
 import javaproject.mockservices.MockOpenProjectsTrampoline;
 import javaproject.mockservices.TestEnvironmentFactory;
@@ -49,6 +50,7 @@ public class JavaProject extends NbTestCase {
         MockServices.setServices(MockOpenProjectsTrampoline.class);
         MockServices.setServices(JavaPlatformManager.class);
         MockServices.setServices(JavacParserFactory.class);
+        MockServices.setServices(MockEditorMimeTypesImpl.class);
     }
     
     public Project getJavaProject() {

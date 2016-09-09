@@ -23,6 +23,10 @@
                         <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-TestSingle.instance"/>
                         <attr name="position" intvalue="1267"/>
                     </file>
+                    <file name="org-netbeans-modules-debugger-ui-actions-DebugTestFileAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugTestFileAction.instance"/>
+                        <attr name="position" intvalue="1268"/>
+                    </file>
                 </folder>
                 <file name="RefactoringAll.instance">
                     <attr name="instanceCreate" methodvalue="org.netbeans.modules.refactoring.api.ui.RefactoringActionsFactory.popupSubmenuAction"/>
@@ -51,7 +55,7 @@
                         </file>
                     </folder>
                     <folder name="Popup">
-                        <file name="org-netbeans-modules-project-ui-TestSingle.instance">
+                        <file name="TestFile.shadow">
                             <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-TestSingle.instance"/>
                             <attr name="position" intvalue="1780"/>
                         </file>

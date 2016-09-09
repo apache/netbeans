@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.diagnostics.netbeans.bracesmatcher;
 
 import org.netbeans.api.editor.mimelookup.MimeRegistration; 

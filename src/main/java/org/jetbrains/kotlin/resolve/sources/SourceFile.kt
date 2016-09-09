@@ -14,18 +14,12 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.resolve.sources;
+package org.jetbrains.kotlin.resolve.sources
 
-import javax.lang.model.element.PackageElement;
+/*
 
-public class LibrarySourcesIndex {
+  @author Alexander.Baratynski
+  Created on Sep 9, 2016
+*/
 
-    public LibrarySourcesIndex(PackageElement packageRoot) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public String resolve(String simpleName, PackageElement packageElement) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-}
+data class SourceFile(val path : String) 

@@ -14,20 +14,17 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.resolve.sources;
+package org.jetbrains.kotlin.resolve.sources
 
-/**
- *
- * @author Александр
- */
-public class SourceFile {
+import javax.lang.model.element.PackageElement
+import org.netbeans.api.java.source.ElementHandle
 
-    public final String path;
-    public String effectivePackage;
-    
-    public SourceFile(String path){
-        this.path = path;
-        effectivePackage = null;
-    }
-    
+/*
+
+  @author Alexander.Baratynski
+  Created on Sep 9, 2016
+*/
+
+class LibrarySourcesIndex(val packageRoot : ElementHandle<PackageElement>) {
+    fun resolve(simpleName : String, packageElement : ElementHandle<PackageElement>) : String = throw UnsupportedOperationException()
 }

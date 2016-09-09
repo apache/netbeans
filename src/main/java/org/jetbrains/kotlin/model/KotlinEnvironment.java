@@ -99,7 +99,7 @@ public class KotlinEnvironment {
     private final JavaCoreApplicationEnvironment applicationEnvironment;
     private final JavaCoreProjectEnvironment projectEnvironment;
     private final MockProject project;
-//    private final Set<VirtualFile> roots = new LinkedHashSet<VirtualFile>();
+    
     private final Set<JavaRoot> roots = new LinkedHashSet<JavaRoot>();
     
     private KotlinEnvironment(@NotNull org.netbeans.api.project.Project kotlinProject, @NotNull Disposable disposable) {
@@ -300,27 +300,6 @@ public class KotlinEnvironment {
             roots.add(new JavaRoot(root, type, null));
         }
     }
-    
-//    private void addToClasspath(String path){
-//        File file = new File(path);
-//        if (file.isFile()) {
-//            VirtualFile jarFile = applicationEnvironment.getJarFileSystem().findFileByPath(path+"!/");
-//            
-//            if (jarFile == null) {
-//                return;
-//            }
-//            
-//            projectEnvironment.addJarToClassPath(file);
-//            roots.add(jarFile);
-//        } else {
-//            VirtualFile root = applicationEnvironment.getLocalFileSystem().findFileByPath(path);
-//            if (root == null) {
-//                return;
-//            }
-//            projectEnvironment.addSourcesToClasspath(root);
-//            roots.add(root);
-//        }
-//    }
     
     public boolean isJarFile(@NotNull String pathToJar){
         VirtualFile jarFile = applicationEnvironment.getJarFileSystem().findFileByPath(pathToJar + "!/");

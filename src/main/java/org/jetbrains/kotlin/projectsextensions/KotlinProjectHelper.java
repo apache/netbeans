@@ -65,14 +65,6 @@ public class KotlinProjectHelper {
             return null;
         }
         
-//        if (p instanceof NbMavenProjectImpl) {
-//            try {
-//                p = MavenHelper.getMainParent((NbMavenProjectImpl) p);
-//            } catch (IOException ex) {
-//                Exceptions.printStackTrace(ex);
-//            }
-//        }
-        
         if (!kotlinSources.containsKey(p)) {
             kotlinSources.put(p, new KotlinSources(p));
         }
@@ -86,14 +78,6 @@ public class KotlinProjectHelper {
         if (!(checkProject(p))){
             return null;
         }
-        
-//        if (p instanceof NbMavenProjectImpl) {
-//            try {
-//                p = MavenHelper.getMainParent((NbMavenProjectImpl) p);
-//            } catch (IOException ex) {
-//                Exceptions.printStackTrace(ex);
-//            }
-//        }
         
         if (!(lightClassesDirs.containsKey(p))) {
             lightClassesDirs.put(p, setLightClassesDir(p));

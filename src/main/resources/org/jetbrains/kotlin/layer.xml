@@ -55,6 +55,10 @@
                             <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-TestSingle.instance"/>
                             <attr name="position" intvalue="1780"/>
                         </file>
+                        <file name="org-netbeans-modules-debugger-ui-actions-DebugTestFileAction.shadow">
+                            <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugTestFileAction.instance"/>
+                            <attr name="position" intvalue="1790"/>
+                        </file>
                         <file name="RefactoringAll.instance">
                             <attr name="instanceCreate" methodvalue="org.netbeans.modules.refactoring.api.ui.RefactoringActionsFactory.editorSubmenuAction"/>
                         </file>

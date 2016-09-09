@@ -29,7 +29,9 @@ import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.jetbrains.kotlin.projectsextensions.ClassPathExtender;
 import org.jetbrains.kotlin.utils.KotlinClasspath;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.ClassPath.Entry;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
+import org.netbeans.modules.maven.classpath.ClassPathProviderImpl;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -56,7 +58,6 @@ public class MavenExtendedClassPath implements ClassPathExtender {
         Set<URL> classpaths = new HashSet<URL>();
         Set<String> classpath = new HashSet<String>();
         classpath.addAll(paths);
-        classpath.add(KotlinClasspath.getKotlinBootClasspath());
         
         for (String path : classpath) {
             File file = new File(path);
@@ -81,12 +82,14 @@ public class MavenExtendedClassPath implements ClassPathExtender {
             compile = getClasspath(project.getOriginalMavenProject().getCompileClasspathElements());
             execute = getClasspath(project.getOriginalMavenProject().getRuntimeClasspathElements());
             source = getClasspath(project.getOriginalMavenProject().getCompileSourceRoots());
-            String bootClassPath = System.getProperty("sun.boot.class.path");
-            List<String> javaClasspathElements = new ArrayList<String>(Arrays.asList(bootClassPath.split(
-                        Pattern.quote(System.getProperty("path.separator")))));
+            
+            ClassPathProviderImpl impl = new ClassPathProviderImpl(project);
+            ClassPath javaPlatform = impl.getJavaPlatform().getBootstrapLibraries();
+            
+            List<String> javaClasspathElements = new ArrayList<String>();
             javaClasspathElements.addAll(project.getOriginalMavenProject().getSystemClasspathElements());
             javaClasspathElements.addAll(project.getOriginalMavenProject().getTestClasspathElements());
-            boot = getClasspath(javaClasspathElements);
+            boot = ClassPathSupport.createProxyClassPath(getClasspath(javaClasspathElements), javaPlatform);
             
         } catch (DependencyResolutionRequiredException ex) {
             Exceptions.printStackTrace(ex);

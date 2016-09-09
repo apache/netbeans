@@ -78,6 +78,10 @@ public class KotlinDebugUtils {
     }
 
     private static KtDeclaration findDeclarationAtLine(KtFile ktFile, StyledDocument doc, int line) {
+        int lineNumber = NbDocument.findLineNumber(doc, doc.getLength());
+        if (lineNumber == line - 1) {
+            return null;
+        }
         int startOffset = NbDocument.findLineOffset(doc, line - 1);
         int endOffset = NbDocument.findLineOffset(doc, line);
         KtDeclaration declaration = findDeclarationBeforeEndOffset(ktFile, doc, startOffset, endOffset, startOffset);

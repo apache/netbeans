@@ -78,6 +78,11 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
         EditorContextBridge.getContext().removePropertyChangeListener(this);
     }
     
+    @Override 
+    public boolean isEnabled(Object action) {
+        return true;
+    }
+    
     @Override
     public void doAction(Object o) {
         DebuggerManager manager = DebuggerManager.getDebuggerManager();

@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>  
   <groupId>kotlin.netbeans</groupId>  
   <artifactId>kotlin.netbeans.plugin</artifactId>  
-  <version>0.1.0-SNAPSHOT</version>  
+  <version>0.1.0-beta</version>  
   <packaging>nbm</packaging>  
   <properties> 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
@@ -17,6 +17,16 @@
     <name>JetBrains</name>  
     <url>http://www.jetbrains.com/</url> 
   </organization>  
+  <developers>
+    <developer>
+      <name>Mikhail Glukhikh</name>
+      <email>mikhail.glukhikh [at] jetbrains.com</email>
+    </developer>
+    <developer>
+      <name>Alexander Baratynskiy</name>
+      <email>alexander.baratynskiy [at] jetbrains.com</email>
+    </developer>
+  </developers>
   <licenses> 
     <license> 
       <url>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</url> 
@@ -571,6 +581,55 @@
       <artifactId>org-netbeans-spi-quicksearch</artifactId>  
       <version>${netbeans.version}</version> 
     </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-api-debugger</artifactId>  
+      <version>${netbeans.version}</version> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-api-debugger-jpda</artifactId>  
+      <version>${netbeans.version}</version>  
+      <type>jar</type> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-spi-viewmodel</artifactId>  
+      <version>${netbeans.version}</version>  
+      <type>jar</type> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.modules</groupId>  
+      <artifactId>org-netbeans-modules-debugger-jpda</artifactId>  
+      <version>${netbeans.version}</version>  
+      <type>jar</type> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.modules</groupId>  
+      <artifactId>org-netbeans-modules-debugger-jpda-projectsui</artifactId>  
+      <version>${netbeans.version}</version>  
+      <type>jar</type> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-spi-debugger-ui</artifactId>  
+      <version>${netbeans.version}</version> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.modules</groupId>  
+      <artifactId>org-netbeans-modules-debugger-jpda-projects</artifactId>  
+      <version>${netbeans.version}</version> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-modules-editor</artifactId>  
+      <version>${netbeans.version}</version> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-modules-parsing-indexing</artifactId>  
+      <version>${netbeans.version}</version> 
+    </dependency>  
     <!-- TEST DEPENDENCIES -->  
     <dependency> 
       <groupId>junit</groupId>  
@@ -674,55 +733,6 @@
       <artifactId>org-netbeans-modules-nbjunit</artifactId>  
       <version>${netbeans.version}</version>  
       <scope>test</scope> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.netbeans.api</groupId>  
-      <artifactId>org-netbeans-api-debugger</artifactId>  
-      <version>${netbeans.version}</version> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.netbeans.api</groupId>  
-      <artifactId>org-netbeans-api-debugger-jpda</artifactId>  
-      <version>${netbeans.version}</version>  
-      <type>jar</type> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.netbeans.api</groupId>  
-      <artifactId>org-netbeans-spi-viewmodel</artifactId>  
-      <version>RELEASE81</version>  
-      <type>jar</type> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.netbeans.modules</groupId>  
-      <artifactId>org-netbeans-modules-debugger-jpda</artifactId>  
-      <version>RELEASE81</version>  
-      <type>jar</type> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.netbeans.modules</groupId>  
-      <artifactId>org-netbeans-modules-debugger-jpda-projectsui</artifactId>  
-      <version>RELEASE81</version>  
-      <type>jar</type> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.netbeans.api</groupId>  
-      <artifactId>org-netbeans-spi-debugger-ui</artifactId>  
-      <version>RELEASE81</version> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.netbeans.modules</groupId>  
-      <artifactId>org-netbeans-modules-debugger-jpda-projects</artifactId>  
-      <version>RELEASE81</version> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.netbeans.api</groupId>  
-      <artifactId>org-netbeans-modules-editor</artifactId>  
-      <version>RELEASE81</version> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.netbeans.api</groupId>  
-      <artifactId>org-netbeans-modules-parsing-indexing</artifactId>  
-      <version>RELEASE81</version> 
     </dependency> 
   </dependencies> 
 </project>

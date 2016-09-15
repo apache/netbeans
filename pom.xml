@@ -11,7 +11,7 @@
     <netbeans.version>RELEASE81</netbeans.version>  
     <kotlin.version>1.0.3</kotlin.version> 
   </properties>  
-  <name>Kotlin Plugin for NetBeans IDE</name>  
+  <name>Kotlin</name>  
   <description url="http://kotlinlang.org/">Kotlin language support</description>  
   <organization> 
     <name>JetBrains</name>  

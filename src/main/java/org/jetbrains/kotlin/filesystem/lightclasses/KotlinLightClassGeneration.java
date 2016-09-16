@@ -32,14 +32,12 @@ import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.analyzer.AnalysisResult;
 import org.jetbrains.kotlin.codegen.CompilationErrorHandler;
 import org.jetbrains.kotlin.codegen.KotlinCodegenFacade;
-import org.jetbrains.kotlin.codegen.binding.PsiCodegenPredictor;
 import org.jetbrains.kotlin.codegen.state.GenerationState;
-import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider;
-import org.jetbrains.kotlin.name.FqName;
-import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor;
 import org.jetbrains.kotlin.psi.KtClassOrObject;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtScript;
+import org.jetbrains.kotlin.resolve.BindingContext;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -68,22 +66,14 @@ public class KotlinLightClassGeneration {
 
             @Override
             public boolean shouldGenerateClass(KtClassOrObject classOrObject) {
-//                String internalName = PsiCodegenPredictor.getPredefinedJvmInternalName(classOrObject, NoResolveFileClassesProvider.INSTANCE);
-//                if (internalName == null) {
-//                    return false;
-//                }
-//                internalName = internalName.replace('/', '.').replace('\\', '.').
-//                        replace(ProjectUtils.FILE_SEPARATOR, ".");
-//                FqName fqName = new FqName(internalName);
-//                return checkByInternalName(fqName, requestedClassName);
+//                String internalName = KotlinLightClassManager.getInternalName(classOrObject);
+//                return checkByInternalName(internalName, requestedClassName);
                 return true;
             }
 
             @Override
             public boolean shouldGeneratePackagePart(KtFile ktFile) {
-//                FqName internalName
-//                        = NoResolveFileClassesProvider.INSTANCE.getFileClassInfo(ktFile).
-//                        getFileClassFqName();
+//                String internalName = FileClasses.getFileClassInternalName(NoResolveFileClassesProvider.INSTANCE, ktFile);
 //                return checkByInternalName(internalName, requestedClassName);
                 return true;
             }
@@ -104,6 +94,13 @@ public class KotlinLightClassGeneration {
                 true,
                 generateDeclaredClassFilter
         );
+        
+        for (KtFile ktFile : ktFiles) {
+            PackageFragmentDescriptor fragment = state.getBindingContext().get(BindingContext.FILE_TO_PACKAGE_FRAGMENT, ktFile);
+            if (fragment == null) {
+                return null;
+            }
+        }
 
         KotlinCodegenFacade.compileCorrectFiles(state, new CompilationErrorHandler() {
             @Override
@@ -115,27 +112,30 @@ public class KotlinLightClassGeneration {
         return state;
     }
 
-    private boolean checkByInternalName(FqName internalName, String requestedClassFileName) {
-        if (internalName.toString() == null) {
+    private boolean checkByInternalName(String internalName, String requestedClassFileName) {
+        if (internalName == null) {
             return false;
         }
-
-        List<Name> pathSegments = internalName.pathSegments();
-        String classFileName = pathSegments.get(pathSegments.size() - 1).asString();
-        String requestedInternalName = requestedClassFileName.
-                substring(0, requestedClassFileName.length() - ".class".length());
-
+        String classFileName = getLastSegment(internalName);
+        String requestedInternalName = requestedClassFileName.substring(0, requestedClassFileName.length() - ".class".length());
+        
         if (requestedInternalName.startsWith(classFileName)) {
             if (requestedInternalName.length() == classFileName.length()) {
                 return true;
             }
-
+            
             if (requestedInternalName.charAt(classFileName.length()) == '$') {
                 return true;
             }
         }
-
+        
         return false;
+    }
+    
+    private String getLastSegment(String path) {
+        String[] parts = path.split("/");
+        
+        return parts[parts.length - 1];
     }
 
     public void generate(FileObject file, Project project) {
@@ -161,6 +161,9 @@ public class KotlinLightClassGeneration {
                         = KotlinAnalyzer.analyzeFiles(project, ktFiles).getAnalysisResult();
                 GenerationState state = KotlinLightClassGeneration.INSTANCE.
                         buildLightClasses(analysisResult, project, ktFiles, className);
+                if (state == null) {
+                    return;
+                }
                 for (int i = 0; i < state.getFactory().asList().size(); i++) {
                     
                     byte[] lightClassText = state.getFactory().asList().get(i).asByteArray();
@@ -212,6 +215,9 @@ public class KotlinLightClassGeneration {
             if (!ktFiles.isEmpty()) {
                 GenerationState state = KotlinLightClassGeneration.INSTANCE.
                         buildLightClasses(analysisResult, project, ktFiles, className);
+                if (state == null) {
+                    return;
+                }
                 for (int i = 0; i < state.getFactory().asList().size(); i++) {
                     
                     byte[] lightClassText = state.getFactory().asList().get(i).asByteArray();

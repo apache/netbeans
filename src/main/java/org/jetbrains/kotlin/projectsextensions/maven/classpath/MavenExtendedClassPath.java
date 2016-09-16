@@ -52,12 +52,15 @@ public class MavenExtendedClassPath implements ClassPathExtender {
     
     private ClassPath getClasspath(List<String> paths) throws DependencyResolutionRequiredException, MalformedURLException {
         Set<URL> classpaths = new HashSet<URL>();
+        if (paths == null) {
+            return ClassPathSupport.createClassPath(classpaths.toArray(new URL[0]));
+        }
         Set<String> classpath = new HashSet<String>();
         classpath.addAll(paths);
         
         for (String path : classpath) {
             File file = new File(path);
-            if (!file.canRead()) {
+            if (!file.exists() || !file.canRead()) {
                 continue;
             }
 

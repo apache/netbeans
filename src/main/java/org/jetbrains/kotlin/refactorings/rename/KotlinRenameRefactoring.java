@@ -18,11 +18,18 @@
  */
 package org.jetbrains.kotlin.refactorings.rename;
 
+import com.intellij.psi.PsiElement;
+import java.util.List;
+import java.util.Map;
+import javax.swing.text.StyledDocument;
+import org.jetbrains.kotlin.utils.ProjectUtils;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RenameRefactoring;
 import org.netbeans.modules.refactoring.spi.ProgressProviderAdapter;
 import org.netbeans.modules.refactoring.spi.RefactoringElementsBag;
 import org.netbeans.modules.refactoring.spi.RefactoringPlugin;
+import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -30,10 +37,10 @@ import org.netbeans.modules.refactoring.spi.RefactoringPlugin;
  */
 public class KotlinRenameRefactoring extends ProgressProviderAdapter implements RefactoringPlugin {
 
-    private final RenameRefactoring refactoing;
+    private final RenameRefactoring refactoring;
     
     public KotlinRenameRefactoring(RenameRefactoring refactoring) {
-        this.refactoing = refactoring;
+        this.refactoring = refactoring;
     }
     
     @Override
@@ -57,7 +64,16 @@ public class KotlinRenameRefactoring extends ProgressProviderAdapter implements 
     }
 
     @Override
-    public Problem prepare(RefactoringElementsBag reb) {
+    public Problem prepare(RefactoringElementsBag bag) {
+        String newName = refactoring.getNewName();
+        FileObject fo = ProjectUtils.getFileObjectForDocument(refactoring.getRefactoringSource().lookup(StyledDocument.class));
+        PsiElement psi = refactoring.getRefactoringSource().lookup(PsiElement.class);
+        
+        Map<FileObject, List<OffsetRange>> renameMap = RenamePerformer.getRenameRefactoringMap(fo, psi, newName);
+        
+        bag.registerTransaction(new KotlinTransaction(renameMap, newName, psi.getText()));
+        
+        bag.getSession().doRefactoring(true);
         
         return null;
     }

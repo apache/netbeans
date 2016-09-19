@@ -57,16 +57,6 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
     public Map<OffsetRange, ColoringAttributes> getOccurrences() {
         return highlighting;
     }
-
-    private Pair<Integer, Integer> getLengthOfIdentifier(KtElement ktElement) {
-        if (ktElement instanceof KtNamedDeclaration) {
-            KtNamedDeclaration declaration = ((KtNamedDeclaration) ktElement);
-            return new Pair<Integer, Integer>(declaration.getNameIdentifier().getTextRange().getStartOffset(), 
-                    declaration.getNameIdentifier().getTextRange().getEndOffset());
-        } else if (ktElement instanceof KtReferenceExpression) {
-            return new Pair<Integer, Integer>(ktElement.getTextRange().getStartOffset(), ktElement.getTextRange().getEndOffset());
-        } else return null;
-    }
     
     private void findOccurrences(KtElement ktElement, KtFile ktFile) {
         List<? extends SourceElement> sourceElements = ReferenceUtils.resolveToSourceDeclaration(ktElement);
@@ -74,40 +64,11 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
             return;
         }
         
-        List<? extends SourceElement> searchingElements = getSearchingElements(sourceElements);
-        List<OffsetRange> ranges = search(searchingElements, ktFile);
+        List<? extends SourceElement> searchingElements = OccurrencesUtils.getSearchingElements(sourceElements);
+        List<OffsetRange> ranges = OccurrencesUtils.search(searchingElements, ktFile);
         for (OffsetRange range : ranges) {
             highlighting.put(range, ColoringAttributes.MARK_OCCURRENCES);
         }
-    }
-    
-    private List<OffsetRange> search(List<? extends SourceElement> searchingElements, KtFile ktFile) {
-        List<OffsetRange> offsets = Lists.newArrayList();
-        List<KtElement> searchElements = getKotlinElements(searchingElements);
-        if (searchElements.isEmpty()) return offsets;
-        
-        KtElement searchElement = searchElements.get(0);
-        List<KtElement> occurrences = searchTextOccurrences(ktFile, searchElement);
-        for (KtElement ktElement : occurrences) {
-            Pair<Integer, Integer> range = getLengthOfIdentifier(ktElement);
-            if (range != null) {
-                offsets.add(new OffsetRange(range.getFirst(), range.getSecond()));
-            }
-        }
-        
-        return offsets;
-    }
-    
-    private List<KtElement> getKotlinElements(List<? extends SourceElement> sourceElements) {
-        List<KtElement> kotlinElements = Lists.newArrayList();
-        
-        for (SourceElement sourceElement : sourceElements) {
-            if (sourceElement instanceof KotlinSourceElement) {
-                kotlinElements.add(((KotlinSourceElement) sourceElement).getPsi());
-            }
-        }
-        
-        return kotlinElements;
     }
     
     @Override
@@ -129,76 +90,6 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
         }
         findOccurrences(ktElement, ktFile);
     }
-    
-    public static List<KtElement> searchTextOccurrences(KtFile ktFile, KtElement sourceElement) {
-        List<KtElement> elements = new ArrayList<KtElement>();
-        List<KtElement> elementsToReturn = new ArrayList<KtElement>();
-        
-        String elementName = sourceElement.getName();
-        if (elementName == null) {
-            return elementsToReturn;
-        }
-        
-        for (PsiElement psi : getAllOccurrencesInFile(ktFile, elementName)) {
-            KtElement el = PsiTreeUtil.getNonStrictParentOfType(psi, KtElement.class);
-                if (el != null) {
-                    elements.add(el);
-                }
-        }
-        
-        List<SearchFilter> beforeResolveFilters = SearchFiltersKt.getBeforeResolveFilters();
-        List<? extends SearchFilterAfterResolve> afterResolveFilters = SearchFiltersKt.getAfterResolveFilters();
-        
-        for (KtElement element : elements) {
-            boolean beforeResolveCheck = true;
-            for (SearchFilter filter : beforeResolveFilters) {
-                if (!filter.isApplicable(element)) {
-                    beforeResolveCheck = false;
-                    break;
-                }
-            }
-            if (!beforeResolveCheck) {
-                continue;
-            }
-            
-            List<? extends SourceElement> sourceElements = ReferenceUtils.resolveToSourceDeclaration(element);
-            if (sourceElements.isEmpty()) {
-                continue;
-            }
-            
-            for (SearchFilterAfterResolve filter : afterResolveFilters) {
-                if (filter.isApplicable(sourceElements, sourceElement)) {
-                    elementsToReturn.add(element);
-                }
-            }
-            
-        }
-        
-        return elementsToReturn;
-    }
-    
-    private static List<PsiElement> getAllOccurrencesInFile(KtFile ktFile, String text) {
-        List<PsiElement> elements = Lists.newArrayList();
-        
-        String source = ktFile.getText();
-        int start = 0;
-        
-        while (true) {
-            int index = source.indexOf(text, start);
-            if (index == -1) {
-                break;
-            }
-            elements.add(ktFile.findElementAt(index));
-            start = index + text.length();
-        }
-        
-        return elements;
-    }
-    
-    public List<? extends SourceElement> getSearchingElements(List<? extends SourceElement> sourceElements) {
-        List<SourceElement> classOrObjects = ReferenceUtils.getContainingClassOrObjectForConstructor(sourceElements);
-        return classOrObjects.isEmpty() ? sourceElements : classOrObjects;
-    } 
     
     @Override
     public int getPriority() {

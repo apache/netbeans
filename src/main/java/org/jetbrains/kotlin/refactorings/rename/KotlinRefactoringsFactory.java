@@ -19,13 +19,11 @@
 package org.jetbrains.kotlin.refactorings.rename;
 
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
-import org.netbeans.modules.refactoring.api.Context;
 import org.netbeans.modules.refactoring.api.RenameRefactoring;
 import org.netbeans.modules.refactoring.spi.RefactoringPlugin;
 import org.netbeans.modules.refactoring.spi.RefactoringPluginFactory;
-import org.openide.filesystems.FileObject;
-import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
+
 
 /**
  *
@@ -36,8 +34,6 @@ public class KotlinRefactoringsFactory implements RefactoringPluginFactory {
 
     @Override
     public RefactoringPlugin createInstance(AbstractRefactoring refactoring) {
-        Lookup look = refactoring.getRefactoringSource();// TreePathHandle
-        Context context = refactoring.getContext();
         if (refactoring instanceof RenameRefactoring) {
             return new KotlinRenameRefactoring((RenameRefactoring) refactoring);
         }

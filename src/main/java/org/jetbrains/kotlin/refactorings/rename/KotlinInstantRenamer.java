@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.jetbrains.kotlin.highlighter.occurrences.KotlinOccurrencesFinder;
+import org.jetbrains.kotlin.highlighter.occurrences.OccurrencesUtils;
 import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.utils.ProjectUtils;
@@ -66,7 +67,7 @@ public class KotlinInstantRenamer implements InstantRenamer {
             return Sets.newHashSet();
         }
         
-        List<KtElement> occurrences = KotlinOccurrencesFinder.searchTextOccurrences(ktFile, ktElement);
+        List<KtElement> occurrences = OccurrencesUtils.searchTextOccurrences(ktFile, ktElement);
         for (KtElement element : occurrences) {
             OffsetRange range = new OffsetRange(element.getTextRange().getStartOffset(), 
                     element.getTextRange().getEndOffset());

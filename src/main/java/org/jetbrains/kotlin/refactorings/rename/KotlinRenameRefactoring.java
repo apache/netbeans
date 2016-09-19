@@ -19,9 +19,18 @@
 package org.jetbrains.kotlin.refactorings.rename;
 
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.text.StyledDocument;
+import org.jetbrains.kotlin.codegen.binding.PsiCodegenPredictor;
+import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider;
+import org.jetbrains.kotlin.psi.KtClass;
+import org.jetbrains.kotlin.psi.KtElement;
+import org.jetbrains.kotlin.psi.KtFile;
+import org.jetbrains.kotlin.psi.psiUtil.KtPsiUtilKt;
+import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.refactoring.api.Problem;

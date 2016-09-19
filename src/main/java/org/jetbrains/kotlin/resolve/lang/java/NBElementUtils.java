@@ -191,13 +191,16 @@ public class NBElementUtils {
         return searcher.isDeprecated();
     }
     
-    public static FileObject getFileObjectForFqName(String fqName, Project project) {
-//        checkJavaSource(project);
-//        FileObjectForFqNameSearcher searcher = new FileObjectForFqNameSearcher(fqName, CLASSPATH_INFO.get(project));
-//        execute(searcher, project);
+    public static Set<FileObject> findClassUsages(String className, Project project) {
+        ElementHandle<TypeElement> handle = findType(className, project);
+        Set<FileObject> fObjects = CLASSPATH_INFO.get(project).getClassIndex().getResources(handle, 
+                Sets.newHashSet(ClassIndex.SearchKind.values()), 
+                Sets.newHashSet(ClassIndex.SearchScope.SOURCE));
         
-//        return searcher.getFileObject();
-
+        return fObjects;
+    } 
+    
+    public static FileObject getFileObjectForFqName(String fqName, Project project) {
         ElementHandle<TypeElement> handle = findType(fqName, project);
         Set<FileObject> fObjects = CLASSPATH_INFO.get(project).getClassIndex().getResources(handle, 
                 Sets.newHashSet(ClassIndex.SearchKind.IMPLEMENTORS), 

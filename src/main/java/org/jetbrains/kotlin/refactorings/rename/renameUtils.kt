@@ -50,7 +50,7 @@ fun getRenameRefactoringMap(fo: FileObject, psi: PsiElement, newName: String): M
     
     val sourceElements = ReferenceUtils.resolveToSourceDeclaration(ktElement)
     if (sourceElements.isEmpty()) return ranges
-    
+     
     val searchingElements = OccurrencesUtils.getSearchingElements(sourceElements)
     val project = ProjectUtils.getKotlinProjectForFileObject(fo)
     if (project == null) return ranges

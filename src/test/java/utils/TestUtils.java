@@ -1,6 +1,8 @@
 package utils;
 
+import com.google.common.collect.Lists;
 import java.io.IOException;
+import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import static junit.framework.TestCase.assertNotNull;
@@ -24,14 +26,34 @@ public class TestUtils {
         return null;
     }
     
+    public static List<Integer> getCarets(Document doc, int startOffset) {
+        List<Integer> carets = Lists.newArrayList();
+        
+        try {
+            int caretOffset = doc.getText(startOffset, doc.getLength()).indexOf("<caret>");
+            if (caretOffset >=0) {
+                carets.add(caretOffset);
+                carets.addAll(getCarets(doc, caretOffset + "<caret>".length()));
+            }
+        } catch (BadLocationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        return carets;
+    }
+    
     public static Document getDocumentForFileObject(FileObject dir, String fileName) {
         FileObject file = dir.getFileObject(fileName);
         
         assertNotNull(file);
         
+        return getDocumentForFileObject(file);
+    }
+    
+    public static Document getDocumentForFileObject(FileObject fo) {
         Document doc = null;
         try {
-            doc = ProjectUtils.getDocumentFromFileObject(file);
+            doc = ProjectUtils.getDocumentFromFileObject(fo);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }

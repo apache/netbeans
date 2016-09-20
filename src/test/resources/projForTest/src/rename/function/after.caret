@@ -1,0 +1,7 @@
+package rename.function
+
+class Bar {
+     fun fooFunc() = println("bar")
+}
+
+fun main(args: Array<String>) = Bar().fooFunc()

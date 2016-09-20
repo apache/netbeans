@@ -108,4 +108,18 @@ public class RenameTest extends NbTestCase {
         doTest("properties", "before", "someValue");
     }
     
+    @Test
+    public void testThirdSimpleCase() {
+        doTest("simplesec", "before", "someValue");
+    }
+    
+    @Test
+    public void testFunctionParameterRenaming() {
+        doTest("functionparameter", "before", "someValue");
+    }
+    
+    @Test
+    public void testFunctionRenaming() {
+        doTest("function", "before", "fooFunc");
+    }
 }

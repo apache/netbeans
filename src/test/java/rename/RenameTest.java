@@ -103,4 +103,9 @@ public class RenameTest extends NbTestCase {
         doTest("simple", "before", "NewName");
     }
     
+    @Test
+    public void testSecondSimpleCase() {
+        doTest("properties", "before", "someValue");
+    }
+    
 }

@@ -132,4 +132,15 @@ public class RenameTest extends NbTestCase {
     public void testFunctionRenaming() {
         doTest("function", "file", "fooFunc");
     }
+    
+    @Test
+    public void testClassRenaming() {
+        doTest("classrename", "file", "NewName");
+    }
+    
+    @Test
+    public void testMethodRenaming() {
+        doTest("methodrename", "file", "notSoCoolFun");
+    }
+    
 }

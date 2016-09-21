@@ -38,10 +38,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import utils.TestUtils;
 
-/**
- *
- * @author Александр
- */
 public class RenameTest extends NbTestCase {
     
     private final Project project;
@@ -141,6 +137,21 @@ public class RenameTest extends NbTestCase {
     @Test
     public void testMethodRenaming() {
         doTest("methodrename", "file", "notSoCoolFun");
+    }
+    
+    @Test
+    public void testForLoop() {
+        doTest("forloop", "file", "arg1");
+    }
+    
+    @Test
+    public void testForLoop2() {
+        doTest("forloop2", "file", "arg1");
+    }
+
+    @Test
+    public void testRenameKotlinClassByConstructorRef() {
+        doTest("classbyconstructor", "file", "KotlinRules");
     }
     
 }

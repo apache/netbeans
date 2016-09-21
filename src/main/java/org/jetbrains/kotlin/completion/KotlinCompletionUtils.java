@@ -291,7 +291,7 @@ public class KotlinCompletionUtils {
     }
     
     public List<CompletionProposal> createProposals(Document doc, int caretOffset,
-            AnalysisResultWithProvider analysisResultWithProvider) throws BadLocationException, IOException {
+            AnalysisResultWithProvider analysisResultWithProvider, String prefix) throws BadLocationException, IOException {
         List<CompletionProposal> proposals = Lists.newArrayList();
         FileObject file = ProjectUtils.getFileObjectForDocument(doc);
         StyledDocument styledDoc = (StyledDocument) doc;
@@ -308,7 +308,7 @@ public class KotlinCompletionUtils {
             if (descriptor instanceof JavaConstructorDescriptor) {
                 continue;
             }
-            proposals.add(new KotlinCompletionProposal(identOffset, caretOffset, descriptor, styledDoc));
+            proposals.add(new KotlinCompletionProposal(identOffset, caretOffset, descriptor, styledDoc, prefix));
         }
     
         return proposals; 

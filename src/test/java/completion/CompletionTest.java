@@ -56,7 +56,7 @@ public class CompletionTest extends NbTestCase {
                     = KotlinAnalyzer.analyzeFile(project, ktFile);
 
             completionItems = KotlinCompletionUtils.INSTANCE.createProposals(doc,
-                    caret, resultWithProvider);
+                    caret, resultWithProvider, "");
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         } catch (BadLocationException ex) {

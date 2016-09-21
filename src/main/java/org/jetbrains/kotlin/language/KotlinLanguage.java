@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.language;
 import org.jetbrains.kotlin.completion.KotlinCodeCompletionHandler;
 import org.jetbrains.kotlin.structurescanner.KotlinStructureScanner;
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
+import org.jetbrains.kotlin.diagnostics.netbeans.textinterceptor.KotlinKeystrokeHandler;
 import org.jetbrains.kotlin.highlighter.netbeans.KotlinTokenId;
 import org.jetbrains.kotlin.highlighter.occurrences.KotlinOccurrencesFinder;
 import org.jetbrains.kotlin.highlighter.semanticanalyzer.KotlinSemanticAnalyzer;
@@ -29,6 +30,7 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.HintsProvider;
 import org.netbeans.modules.csl.api.InstantRenamer;
+import org.netbeans.modules.csl.api.KeystrokeHandler;
 import org.netbeans.modules.csl.api.OccurrencesFinder;
 import org.netbeans.modules.csl.api.SemanticAnalyzer;
 import org.netbeans.modules.csl.api.StructureScanner;
@@ -124,6 +126,11 @@ public class KotlinLanguage extends DefaultLanguageConfig {
     @Override
     public EmbeddingIndexerFactory getIndexerFactory() {
         return new KotlinIndexerFactory();
+    }
+    
+    @Override
+    public KeystrokeHandler getKeystrokeHandler() {
+        return new KotlinKeystrokeHandler();
     }
     
 }

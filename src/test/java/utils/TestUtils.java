@@ -62,5 +62,16 @@ public class TestUtils {
         
         return doc;
     }
+
+    public static List<FileObject> getAllKtFilesInFolder(FileObject folder) {
+        List<FileObject> ktFiles = Lists.newArrayList();
+        for (FileObject child : folder.getChildren()) {
+            if (child.hasExt("kt")) {
+                ktFiles.add(child);
+            }
+        }
+        
+        return ktFiles;
+    }
     
 }

@@ -59,11 +59,31 @@ public class RenameTest extends NbTestCase {
         Transaction transaction = new KotlinTransaction(renameMap, newName, psi.getText());
         transaction.commit();
     }
+  
+    private void checkTextsEquality(FileObject actual, FileObject supposed) {
+        String actualText = null;
+        String supposedText = null;
+        
+        Document beforeDoc = TestUtils.getDocumentForFileObject(actual);
+        Document afterDoc = TestUtils.getDocumentForFileObject(supposed);
+        
+        try {
+            actualText = beforeDoc.getText(0, beforeDoc.getLength());
+            supposedText = afterDoc.getText(0, afterDoc.getLength());
+        } catch (BadLocationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        assert actualText != null;
+        assert supposedText != null;
+        
+        assertEquals(supposedText, actualText);
+    }
     
     private void doTest(String pack, String name, String newName) {
-        FileObject before = renameDir.getFileObject(pack).getFileObject(name + ".kt");
-        FileObject beforeWithCaret = renameDir.getFileObject(pack).getFileObject(name + ".caret");
-        FileObject after = renameDir.getFileObject(pack).getFileObject("after.caret");
+        FileObject packFile = renameDir.getFileObject(pack);
+        FileObject before = packFile.getFileObject(name + ".kt");
+        FileObject beforeWithCaret = packFile.getFileObject(name + ".caret");
         
         Integer caretOffset = TestUtils.getCaret(TestUtils.getDocumentForFileObject(beforeWithCaret));
         assertNotNull(caretOffset);
@@ -79,47 +99,37 @@ public class RenameTest extends NbTestCase {
         
         doRefactoring(newName, before, psi);
         
-        String actualText = null;
-        String supposedText = null;
-        
-        Document beforeDoc = TestUtils.getDocumentForFileObject(before);
-        Document afterDoc = TestUtils.getDocumentForFileObject(after);
-        
-        try {
-            actualText = beforeDoc.getText(0, beforeDoc.getLength());
-            supposedText = afterDoc.getText(0, afterDoc.getLength());
-        } catch (BadLocationException ex) {
-            Exceptions.printStackTrace(ex);
+        for (FileObject ktFile : TestUtils.getAllKtFilesInFolder(packFile)) {
+            String fileName = ktFile.getName();
+            FileObject afterFile = packFile.getFileObject(fileName+".after");
+            assertNotNull(afterFile);
+            
+            checkTextsEquality(ktFile, afterFile);
         }
-
-        assert actualText != null;
-        assert supposedText != null;
-        
-        assertEquals(supposedText, actualText);
     }
     
     @Test
     public void testSimpleCase() {
-        doTest("simple", "before", "NewName");
+        doTest("simple", "file", "NewName");
     }
     
     @Test
     public void testSecondSimpleCase() {
-        doTest("properties", "before", "someValue");
+        doTest("properties", "file", "someValue");
     }
     
     @Test
     public void testThirdSimpleCase() {
-        doTest("simplesec", "before", "someValue");
+        doTest("simplesec", "file", "someValue");
     }
     
     @Test
     public void testFunctionParameterRenaming() {
-        doTest("functionparameter", "before", "someValue");
+        doTest("functionparameter", "file", "someValue");
     }
     
     @Test
     public void testFunctionRenaming() {
-        doTest("function", "before", "fooFunc");
+        doTest("function", "file", "fooFunc");
     }
 }

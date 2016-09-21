@@ -76,11 +76,11 @@ class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
         val functionDescriptor = descriptor as FunctionDescriptor
         val params = functionDescriptor.valueParameters
         
-        val insertText = text.substring(prefix.length)
+        doc.remove(idenStartOffset, prefix.length)
         
         if (params.size == 1) {
             if (name.contains("->")) {
-                doc.insertString(idenStartOffset + prefix.length, insertText + "{  }", null)
+                doc.insertString(idenStartOffset, text + "{  }", null)
                 return
             }
         }
@@ -92,7 +92,7 @@ class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
             functionParams.deleteCharAt(functionParams.length - 1)
         }
         functionParams.append(")")
-        doc.insertString(idenStartOffset + prefix.length, insertText + functionParams.toString(), null)
+        doc.insertString(idenStartOffset, text + functionParams.toString(), null)
     }
     
     private fun getValueParameter(desc: ValueParameterDescriptor): String {
@@ -109,8 +109,8 @@ class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
         if (descriptor is FunctionDescriptor) {
             functionAction(doc)
         } else {
-            val insertText = text.substring(prefix.length)
-            doc.insertString(idenStartOffset + prefix.length, insertText, null)
+            doc.remove(idenStartOffset, prefix.length)
+            doc.insertString(idenStartOffset, text, null)
         }
     }
     

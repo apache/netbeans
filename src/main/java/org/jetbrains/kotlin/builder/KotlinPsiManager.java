@@ -94,7 +94,10 @@ public class KotlinPsiManager {
         
         Project kotlinProject = ProjectUtils.getKotlinProjectForFileObject(file);
         if (kotlinProject == null){
-            return null;
+            kotlinProject = ProjectUtils.getValidProject();
+            if (kotlinProject == null) {
+                return null;
+            }
         }
         
         com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(

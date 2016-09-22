@@ -59,10 +59,6 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
 
     @Override
     public boolean isHyperlinkPoint(Document doc, int offset) {
-        FileObject fo = ProjectUtils.getFileObjectForDocument(doc);
-        if (ProjectUtils.getKotlinProjectForFileObject(fo) == null) {
-            return false;
-        }
         try {
             referenceExpression = NavigationUtil.getReferenceExpression(doc, offset);
             return referenceExpression != null;
@@ -95,7 +91,7 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
             return;
         }
 
-        Project project = ProjectUtils.getKotlinProjectForFileObject(file);
+        Project project = getProjectForNavigation(file);
         if (project == null) {
             return;
         }
@@ -226,6 +222,14 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
 
     }
 
+    private Project getProjectForNavigation(FileObject fo) {
+        Project project = ProjectUtils.getKotlinProjectForFileObject(fo);
+        if (project != null) {
+            return project;
+        }
+        return ProjectUtils.getValidProject();
+    }
+    
     private class NavigationData {
 
         private final SourceElement sourceElement;

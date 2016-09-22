@@ -234,4 +234,14 @@ public class ProjectUtils {
         return KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).getPath();
     }
     
+    public static Project getValidProject() {
+        for (Project project : OpenProjects.getDefault().getOpenProjects()) {
+            if (KotlinProjectHelper.INSTANCE.checkProject(project)) {
+                return project;
+            }
+        }
+        
+        return null;
+    }
+    
 }

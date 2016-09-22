@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
-import utils.TestUtils;
+import utils.TestUtilsKt;
 
 /**
  *
@@ -31,10 +31,10 @@ public class NavigationTest extends NbTestCase {
     }
     
     private void doTest(String fromName, String toName) {
-        Document from = TestUtils.getDocumentForFileObject(navigationDir, fromName);
+        Document from = TestUtilsKt.getDocumentForFileObject(navigationDir, fromName);
         assertNotNull(from);
         
-        Integer caret = TestUtils.getCaret(from);
+        Integer caret = TestUtilsKt.getCaret(from);
         assertNotNull(caret);
         
         int offset = caret + "<caret>".length() + 1;
@@ -51,8 +51,8 @@ public class NavigationTest extends NbTestCase {
         FileObject expectedFO = navigationDir.getFileObject(toName);
         assertEquals(expectedFO.getPath(), toFO.getPath());
         
-        Integer expectedOffset = TestUtils.getCaret(
-                TestUtils.getDocumentForFileObject(navigationDir, toName.replace(".kt", ".caret")));
+        Integer expectedOffset = TestUtilsKt.getCaret(
+                TestUtilsKt.getDocumentForFileObject(navigationDir, toName.replace(".kt", ".caret")));
         assertEquals(expectedOffset, navigationData.getSecond());
     }    
         

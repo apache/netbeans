@@ -36,7 +36,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.refactoring.spi.Transaction;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
-import utils.TestUtils;
+import utils.TestUtilsKt;
 
 public class RenameTest extends NbTestCase {
     
@@ -60,8 +60,8 @@ public class RenameTest extends NbTestCase {
         String actualText = null;
         String supposedText = null;
         
-        Document beforeDoc = TestUtils.getDocumentForFileObject(actual);
-        Document afterDoc = TestUtils.getDocumentForFileObject(supposed);
+        Document beforeDoc = TestUtilsKt.getDocumentForFileObject(actual);
+        Document afterDoc = TestUtilsKt.getDocumentForFileObject(supposed);
         
         try {
             actualText = beforeDoc.getText(0, beforeDoc.getLength());
@@ -81,7 +81,7 @@ public class RenameTest extends NbTestCase {
         FileObject before = packFile.getFileObject(name + ".kt");
         FileObject beforeWithCaret = packFile.getFileObject(name + ".caret");
         
-        Integer caretOffset = TestUtils.getCaret(TestUtils.getDocumentForFileObject(beforeWithCaret));
+        Integer caretOffset = TestUtilsKt.getCaret(TestUtilsKt.getDocumentForFileObject(beforeWithCaret));
         assertNotNull(caretOffset);
         PsiElement psi = null;
         try {
@@ -95,7 +95,7 @@ public class RenameTest extends NbTestCase {
         
         doRefactoring(newName, before, psi);
         
-        for (FileObject ktFile : TestUtils.getAllKtFilesInFolder(packFile)) {
+        for (FileObject ktFile : TestUtilsKt.getAllKtFilesInFolder(packFile)) {
             String fileName = ktFile.getName();
             FileObject afterFile = packFile.getFileObject(fileName+".after");
             assertNotNull(afterFile);

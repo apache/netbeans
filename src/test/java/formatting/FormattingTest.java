@@ -30,7 +30,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
-import utils.TestUtils;
+import utils.TestUtilsKt;
 
 /**
  *
@@ -50,7 +50,7 @@ public class FormattingTest extends NbTestCase {
     
     private void doTest(String fileName) {
         try {
-            Document doc = TestUtils.getDocumentForFileObject(formattingDir, fileName);
+            Document doc = TestUtilsKt.getDocumentForFileObject(formattingDir, fileName);
             FileObject file = ProjectUtils.getFileObjectForDocument(doc);
             PsiFile parsedFile = ProjectUtils.getKtFile(doc.getText(0, doc.getLength()), file);
             String code = parsedFile.getText();
@@ -58,7 +58,7 @@ public class FormattingTest extends NbTestCase {
             KotlinFormatterUtils.formatCode(code, parsedFile.getName(), project, "\n");
             String formattedCode = NetBeansDocumentFormattingModel.getNewText();
             
-            Document doc2 = TestUtils.getDocumentForFileObject(formattingDir, fileName.replace(".kt", ".after"));
+            Document doc2 = TestUtilsKt.getDocumentForFileObject(formattingDir, fileName.replace(".kt", ".after"));
             String after = doc2.getText(0, doc2.getLength());
             
             assertEquals(after, formattedCode);

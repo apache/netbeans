@@ -123,6 +123,13 @@
               <goal>compile</goal> 
             </goals> 
           </execution> 
+          <execution>
+            <id>test-compile</id>
+            <phase>process-test-sources</phase>
+            <goals>
+              <goal>test-compile</goal>
+            </goals>
+          </execution>
         </executions> 
       </plugin>  
       <plugin> 
@@ -279,6 +286,12 @@
       <version>${kotlin.version}</version>  
       <type>jar</type> 
     </dependency>  
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-test-junit</artifactId>
+      <version>${kotlin.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency> 
       <groupId>org.netbeans.api</groupId>  
       <artifactId>org-netbeans-modules-parsing-api</artifactId>  

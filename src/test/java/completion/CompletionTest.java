@@ -1,6 +1,6 @@
 package completion;
 
-import utils.TestUtils;
+import utils.TestUtilsKt;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,11 +40,11 @@ public class CompletionTest extends NbTestCase {
     }
 
     private void doTest(String fileName, Collection<String> items) {
-        Document doc = TestUtils.getDocumentForFileObject(completionDir, fileName);
+        Document doc = TestUtilsKt.getDocumentForFileObject(completionDir, fileName);
         Collection<CompletionProposal> completionItems = null;
         List<CharSequence> completions = new ArrayList<CharSequence>();
 
-        Integer caret = TestUtils.getCaret(doc);
+        Integer caret = TestUtilsKt.getCaret(doc);
         assertNotNull(caret);
 
         FileObject file = ProjectUtils.getFileObjectForDocument(doc);

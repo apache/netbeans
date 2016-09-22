@@ -28,7 +28,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
-import utils.TestUtils;
+import utils.TestUtilsKt;
 
 /**
  *
@@ -48,16 +48,16 @@ public class IndentationTest extends NbTestCase {
     
     private void doTest(String fileName) {
         try {
-            StyledDocument doc = (StyledDocument) TestUtils.getDocumentForFileObject(indentationDir, fileName);
-            int offset = TestUtils.getCaret(doc) + 1;
+            StyledDocument doc = (StyledDocument) TestUtilsKt.getDocumentForFileObject(indentationDir, fileName);
+            int offset = TestUtilsKt.getCaret(doc) + 1;
             doc.remove(offset - 1, "<caret>".length());
             doc.insertString(offset - 1, "\n", null);
             
             KotlinIndentStrategy strategy = new KotlinIndentStrategy(doc, offset);
             int newOffset = strategy.addIndent();
             
-            StyledDocument doc2 = (StyledDocument) TestUtils.getDocumentForFileObject(indentationDir, fileName.replace(".kt", ".after"));
-            int expectedOffset = TestUtils.getCaret(doc2);
+            StyledDocument doc2 = (StyledDocument) TestUtilsKt.getDocumentForFileObject(indentationDir, fileName.replace(".kt", ".after"));
+            int expectedOffset = TestUtilsKt.getCaret(doc2);
             
             assertEquals(expectedOffset, newOffset);
         } catch (BadLocationException ex) {

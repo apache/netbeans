@@ -15,7 +15,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
-import utils.TestUtils;
+import utils.TestUtilsKt;
 
 /**
  *
@@ -34,7 +34,7 @@ public class HighlightingTest extends NbTestCase {
     }
     
     private void doTest(String fileName, TokenType... types) {
-        Document doc = TestUtils.getDocumentForFileObject(highlightingDir, fileName);
+        Document doc = TestUtilsKt.getDocumentForFileObject(highlightingDir, fileName);
         List<KotlinToken<KotlinTokenId>> tokens = null;
         try {
             tokens = new KotlinTokenScanner(doc.getText(0, doc.getLength())).getTokens();

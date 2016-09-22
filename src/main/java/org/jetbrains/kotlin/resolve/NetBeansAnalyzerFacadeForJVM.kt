@@ -30,7 +30,7 @@ import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.api.project.Project as NBProject
 import com.intellij.openapi.project.Project
 import org.jetbrains.kotlin.config.CompilerConfiguration
-import org.jetbrains.kotlin.utils.KotlinFrontEndException
+import org.jetbrains.kotlin.util.KotlinFrontEndException
 import org.jetbrains.kotlin.incremental.components.LookupTracker
 
 object NetBeansAnalyzerFacadeForJVM {

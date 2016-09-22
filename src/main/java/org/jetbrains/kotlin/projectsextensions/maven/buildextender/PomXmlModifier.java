@@ -37,7 +37,7 @@ import org.openide.util.Exceptions;
 public class PomXmlModifier {
 
     private final NbMavenProjectImpl project;
-    private final String kotlinVersion = "1.0.3";
+    private final String kotlinVersion = "1.0.4";
     private final String groupIdName = "org.jetbrains.kotlin";
     
     public PomXmlModifier(NbMavenProjectImpl project) {

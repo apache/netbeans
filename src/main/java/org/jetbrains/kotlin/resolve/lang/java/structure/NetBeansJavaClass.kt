@@ -73,10 +73,11 @@ class NetBeansJavaClass(elementHandle : ElementHandle<*>?, project : Project) :
     override val isInterface : Boolean = elementHandle!!.kind == ElementKind.INTERFACE
     override val isAnnotationType : Boolean = elementHandle!!.kind == ElementKind.ANNOTATION_TYPE
     override val isEnum : Boolean = elementHandle!!.kind == ElementKind.ENUM
-    override val isKotlinLightClass : Boolean = false
     override val isAbstract : Boolean = NBMemberUtils.isAbstract(elementHandle, project)
     override val isStatic : Boolean = NBMemberUtils.isStatic(elementHandle, project) 
     override val isFinal : Boolean = NBMemberUtils.isFinal(elementHandle, project)
+    
+    override val lightClassOriginKind = null
     
     override fun toString() : String = elementHandle!!.qualifiedName
     

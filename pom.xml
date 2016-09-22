@@ -9,7 +9,7 @@
   <properties> 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
     <netbeans.version>RELEASE81</netbeans.version>  
-    <kotlin.version>1.0.3</kotlin.version> 
+    <kotlin.version>1.0.4</kotlin.version> 
   </properties>  
   <name>Kotlin</name>  
   <description url="http://kotlinlang.org/">Kotlin language support</description>  
@@ -747,6 +747,11 @@
       <artifactId>org-netbeans-modules-nbjunit</artifactId>  
       <version>${netbeans.version}</version>  
       <scope>test</scope> 
+    </dependency>  
+    <dependency> 
+      <groupId>commons-io</groupId>  
+      <artifactId>commons-io</artifactId>  
+      <version>2.4</version> 
     </dependency> 
   </dependencies> 
 </project>

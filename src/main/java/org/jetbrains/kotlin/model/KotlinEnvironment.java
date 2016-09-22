@@ -25,7 +25,7 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.asJava.KtLightClassForFacade;
+import org.jetbrains.kotlin.asJava.classes.KtLightClassForFacade;
 import org.jetbrains.kotlin.asJava.LightClassGenerationSupport;
 import org.jetbrains.kotlin.cli.jvm.compiler.CliLightClassGenerationSupport;
 import org.jetbrains.kotlin.codegen.extensions.ExpressionCodegenExtension;
@@ -76,6 +76,7 @@ import com.intellij.formatting.KotlinLanguageCodeStyleSettingsProvider;
 import com.intellij.formatting.KotlinSettingsProvider;
 import org.jetbrains.kotlin.cli.jvm.compiler.JavaRoot;
 import org.jetbrains.kotlin.idea.KotlinFileType;
+import org.jetbrains.kotlin.js.resolve.diagnostics.DefaultErrorMessagesJs;
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory;
 import org.jetbrains.kotlin.load.kotlin.ModuleVisibilityManager;
 import org.jetbrains.kotlin.resolve.diagnostics.DiagnosticSuppressor;
@@ -173,6 +174,8 @@ public class KotlinEnvironment {
         CoreApplicationEnvironment.registerApplicationExtensionPoint(LanguageCodeStyleSettingsProvider.EP_NAME, KotlinLanguageCodeStyleSettingsProvider.class);
         Extensions.getRootArea().getExtensionPoint(CodeStyleSettingsProvider.EXTENSION_POINT_NAME).registerExtension(new KotlinSettingsProvider());
         Extensions.getRootArea().getExtensionPoint(LanguageCodeStyleSettingsProvider.EP_NAME).registerExtension(new KotlinLanguageCodeStyleSettingsProvider());
+        Extensions.getRootArea().getExtensionPoint(DefaultErrorMessages.Extension.EP_NAME).registerExtension(new DefaultErrorMessagesJvm());
+        Extensions.getRootArea().getExtensionPoint(DefaultErrorMessages.Extension.EP_NAME).registerExtension(new DefaultErrorMessagesJs());
     }
     
     private static void getExtensionsFromKotlin2JvmXml() {

@@ -37,7 +37,6 @@ import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.codegen.binding.PsiCodegenPredictor;
 import org.jetbrains.kotlin.fileClasses.FileClasses;
 import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider;
 import org.jetbrains.kotlin.load.kotlin.PackagePartClassUtils;
@@ -98,8 +97,7 @@ public class KotlinLightClassManager {
         
         KtFile ktFile = ProjectUtils.getKtFile(sourceFile);
         for (KtClassOrObject classOrObject : findLightClasses(ktFile)){
-            String internalName = PsiCodegenPredictor.getPredefinedJvmInternalName(classOrObject,
-                    NoResolveFileClassesProvider.INSTANCE);
+            String internalName = getInternalName(classOrObject);
             if (internalName != null){
                 lightClasses.add(computePathByInternalName(internalName));
             }

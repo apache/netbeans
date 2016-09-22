@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.diagnostics.Diagnostic;
+import org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.AnalyzingUtils;
 import org.netbeans.api.project.Project;
@@ -173,7 +174,7 @@ public class KotlinParser extends Parser {
 
         @Override
         public String getDisplayName() {
-            return ErrorMessages.render(diagnostic);
+            return DefaultErrorMessages.render(diagnostic);
         }
 
         @Override

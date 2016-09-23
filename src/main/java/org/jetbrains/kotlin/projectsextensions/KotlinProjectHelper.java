@@ -27,7 +27,6 @@ import org.jetbrains.kotlin.projectsextensions.maven.classpath.MavenClassPathPro
 import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.java.j2seproject.J2SEProject;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -51,7 +50,11 @@ public class KotlinProjectHelper {
     private final Map<Project, ClassPath> fullClasspaths = new HashMap<Project, ClassPath>();
     
     public boolean checkProject(Project project){
-        if ((project instanceof J2SEProject) || (project instanceof NbMavenProjectImpl)){
+        if (project.getClass().getName().
+                equals("org.netbeans.modules.java.j2seproject.J2SEProject")) {
+            return true;
+        }
+        if ((project instanceof NbMavenProjectImpl)){
              return true;
          }
         
@@ -110,7 +113,8 @@ public class KotlinProjectHelper {
         }
         
         if (!extendedClassPaths.containsKey(p)){
-            if (p instanceof J2SEProject) {
+            if (project.getClass().getName().
+                equals("org.netbeans.modules.java.j2seproject.J2SEProject")) {
                 extendedClassPaths.put(p, new J2SEExtendedClassPathProvider(p));
             }
             if (p instanceof NbMavenProjectImpl) {
@@ -150,7 +154,8 @@ public class KotlinProjectHelper {
     
     public void updateExtendedClassPath(Project project) {
         Project p = project;
-        if (p instanceof J2SEProject) {
+        if (project.getClass().getName().
+                equals("org.netbeans.modules.java.j2seproject.J2SEProject")) {
             extendedClassPaths.put(p, new J2SEExtendedClassPathProvider(p));
         }
         if (p instanceof NbMavenProjectImpl) {

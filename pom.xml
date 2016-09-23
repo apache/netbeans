@@ -140,11 +140,7 @@
         <configuration> 
           <licenseFile>license.txt</licenseFile>  
           <licenseName>Apache License, Version 2.0</licenseName>  
-          <moduleDependencies> 
-            <dependency> 
-              <id>org.netbeans.modules:org-netbeans-modules-java-j2seproject</id>  
-              <type>impl</type> 
-            </dependency>  
+          <moduleDependencies>   
             <dependency> 
               <id>org.netbeans.modules:org-netbeans-modules-java-preprocessorbridge</id>  
               <type>impl</type> 
@@ -542,7 +538,8 @@
       <groupId>org.netbeans.modules</groupId>  
       <artifactId>org-netbeans-modules-java-j2seproject</artifactId>  
       <version>${netbeans.version}</version>  
-      <type>jar</type> 
+      <type>jar</type>  
+      <scope>test</scope> 
     </dependency>  
     <dependency> 
       <groupId>org.netbeans.api</groupId>  

@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Properties;
 import org.jetbrains.kotlin.utils.KotlinClasspath;
 import org.codehaus.plexus.util.PropertyUtils;
-import org.netbeans.modules.java.j2seproject.J2SEProject;
+import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.support.ant.EditableProperties;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -41,9 +41,9 @@ import org.openide.util.Exceptions;
  */
 public class J2SEProjectPropertiesModifier {
     
-    private final J2SEProject project;
+    private final Project project;
     
-    public J2SEProjectPropertiesModifier(J2SEProject project) {
+    public J2SEProjectPropertiesModifier(Project project) {
         this.project = project;     
     }
     

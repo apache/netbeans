@@ -17,6 +17,8 @@
 package org.jetbrains.kotlin.projectsextensions.maven.classpath;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.project.MavenProject;
 import org.jetbrains.kotlin.projectsextensions.ClassPathExtender;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
@@ -47,6 +50,22 @@ public class MavenExtendedClassPath implements ClassPathExtender {
     
     public MavenExtendedClassPath(NbMavenProjectImpl project) {
         this.project = project;
+//        Class projectClass = project.getClass();
+//        try {
+//            Method getOriginal = projectClass.getMethod("getOriginalMavenProject");
+//            MavenProject mavenProject = (MavenProject) getOriginal.invoke(project);
+//            System.out.println();
+//        } catch (NoSuchMethodException ex) {
+//            Exceptions.printStackTrace(ex);
+//        } catch (SecurityException ex) {
+//            Exceptions.printStackTrace(ex);
+//        } catch (IllegalAccessException ex) {
+//            Exceptions.printStackTrace(ex);
+//        } catch (IllegalArgumentException ex) {
+//            Exceptions.printStackTrace(ex);
+//        } catch (InvocationTargetException ex) {
+//            Exceptions.printStackTrace(ex);
+//        }
         createClasspath();
     }
     

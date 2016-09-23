@@ -2,7 +2,7 @@ package javaproject;
 
 import java.io.IOException;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.java.j2seproject.J2SEProject;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.support.ant.AntBasedProjectType;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
 
@@ -26,7 +26,7 @@ public class JavaAntBasedProjectType implements AntBasedProjectType{
 
     @Override
     public Project createProject(AntProjectHelper helper) throws IOException {
-        return new J2SEProject(helper);
+        return new org.netbeans.modules.java.j2seproject.J2SEProject(helper);
     }
 
     @Override

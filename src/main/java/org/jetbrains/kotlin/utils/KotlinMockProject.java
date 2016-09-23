@@ -17,7 +17,8 @@
 package org.jetbrains.kotlin.utils;
 
 import java.io.IOException;
-import org.netbeans.modules.java.j2seproject.J2SEProject;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.netbeans.spi.project.support.ant.ProjectGenerator;
 import org.openide.filesystems.FileObject;
@@ -31,7 +32,7 @@ import org.openide.util.Exceptions;
  */
 public class KotlinMockProject {
 
-    private J2SEProject project = null;
+    private Project project = null;
             
     public static KotlinMockProject INSTANCE = new KotlinMockProject();
     
@@ -61,10 +62,11 @@ public class KotlinMockProject {
         return helper;
     } 
     
-    public J2SEProject getMockProject() {
+    public Project getMockProject() {
         if (project == null) {
             try {
-                project = new J2SEProject(createHelper());
+                AntProjectHelper helper = createHelper();
+                project = ProjectManager.getDefault().findProject(helper.getProjectDirectory());
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }

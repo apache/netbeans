@@ -48,24 +48,25 @@ public class J2SEProjectOpenedHook extends ProjectOpenedHook{
                 public void run(){
                         ClassLoader cl = this.getClass().getClassLoader();
                         ProjectUtils.checkKtHome(cl);
-                        Runnable run = new Runnable(){
-                            @Override
-                            public void run(){
-                                final ProgressHandle progressbar = 
-                                    ProgressHandleFactory.createHandle("Loading Kotlin environment");
-                                progressbar.start();
-                                KotlinEnvironment.getEnvironment(project);
-                                progressbar.finish();
-                            }
-                        };
+//                        Runnable run = new Runnable(){
+//                            @Override
+//                            public void run(){
+//                                final ProgressHandle progressbar = 
+//                                    ProgressHandleFactory.createHandle("Loading Kotlin environment");
+//                                progressbar.start();
+//                                KotlinEnvironment.getEnvironment(project);
+//                                progressbar.finish();
+//                            }
+//                        };
+//                        
+//                        RequestProcessor.getDefault().post(run);
                         
-                        RequestProcessor.getDefault().post(run);
+//                        KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
+//                        KotlinBuildExtender extender = new KotlinBuildExtender(project);
+//                        extender.addKotlinTasksToScript(project);
                         
-                        KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
-                        KotlinBuildExtender extender = new KotlinBuildExtender(project);
-                        extender.addKotlinTasksToScript(project);
+                        J2SEProjectPropertiesModifier propsModifier = new J2SEProjectPropertiesModifier(project);
                         
-                        J2SEProjectPropertiesModifier propsModifier = project.getLookup().lookup(J2SEProjectPropertiesModifier.class);
                         propsModifier.turnOffCompileOnSave();
                         propsModifier.addKotlinRuntime();
                     }

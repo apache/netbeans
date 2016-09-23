@@ -29,7 +29,6 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.dom4j.tree.DefaultElement;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.java.j2seproject.J2SEProject;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -42,7 +41,8 @@ public class KotlinBuildExtender {
     private Project project = null;
     
     public KotlinBuildExtender(Project project) {
-        if (!(project instanceof J2SEProject)) {
+        if (!(project.getClass().getName().
+                equals("org.netbeans.modules.java.j2seproject.J2SEProject"))) {
             return;
         }
         this.project = project;

@@ -19,6 +19,8 @@ package org.jetbrains.kotlin.projectsextensions.j2se.classpath;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
@@ -31,7 +33,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.java.api.common.SourceRoots;
-import org.netbeans.modules.java.j2seproject.J2SEProject;
 import org.netbeans.spi.java.classpath.ClassPathFactory;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
@@ -41,6 +42,7 @@ import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.netbeans.spi.project.support.ant.PropertyEvaluator;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.util.WeakListeners;
 
@@ -66,20 +68,79 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
     private final ClassPath[] cache = new ClassPath[8];
     private final Map<String, FileObject> dirCache = new HashMap<String, FileObject>();
     private final BootClassPathImplementation bootClassPathImpl;
-    private final J2SEProject project;
+    private final Project project;
     
     public J2SEExtendedClassPathProvider(Project project) {
-        this.project = (J2SEProject) project;
-        this.helper = this.project.getAntProjectHelper();
+        Class projectClass = project.getClass();
+        this.project = project;
+        this.helper = getAntProjectHelper(projectClass, project);
         this.projectDirectory = FileUtil.toFile(helper.getProjectDirectory());
         assert this.projectDirectory != null;
-        this.evaluator = this.project.evaluator();
-        this.sourceRoots = this.project.getSourceRoots();
-        this.testSourceRoots = this.project.getTestSourceRoots();
+        this.evaluator = getEvaluator(projectClass, project);
+        this.sourceRoots = getSourceRoots(projectClass, project);
+        this.testSourceRoots = getTestSourceRoots(projectClass, project);
         this.bootClassPathImpl = new BootClassPathImplementation(project, evaluator);
         evaluator.addPropertyChangeListener(WeakListeners.propertyChange(J2SEExtendedClassPathProvider.this, evaluator));
     }
-
+    
+    private SourceRoots getTestSourceRoots(Class clazz, Project project) {
+        SourceRoots roots = null;
+        
+        try {
+            Method ev = clazz.getMethod("getTestSourceRoots");
+            roots = (SourceRoots) ev.invoke(project);
+        } catch (ReflectiveOperationException ex) {
+            Exceptions.printStackTrace(ex);
+        } 
+        
+        return roots;
+    }
+    
+    private SourceRoots getSourceRoots(Class clazz, Project project) {
+        SourceRoots roots = null;
+        
+        try {
+            Method ev = clazz.getMethod("getSourceRoots");
+            roots = (SourceRoots) ev.invoke(project);
+        } catch (ReflectiveOperationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        assert roots != null : "SourceRoots NPE";
+        
+        return roots;
+    }
+    
+    private PropertyEvaluator getEvaluator(Class clazz, Project project) {
+        PropertyEvaluator eval = null;
+        
+        try {
+            Method ev = clazz.getMethod("evaluator");
+            eval = (PropertyEvaluator) ev.invoke(project);
+        } catch (ReflectiveOperationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        assert eval != null : "PropertyEvaluator NPE";
+        
+        return eval;
+    }
+    
+    private AntProjectHelper getAntProjectHelper(Class clazz, Project project) {
+        AntProjectHelper helper = null;
+        
+        try {
+            Method getAntProjectHelper = clazz.getMethod("getAntProjectHelper");
+            helper = (AntProjectHelper) getAntProjectHelper.invoke(project);
+        } catch (ReflectiveOperationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        assert helper != null : "AntProjectHelper NPE";
+        
+        return helper;
+    }
+    
     private FileObject getDir(final String propname) {
         return ProjectManager.mutex().readAccess(new Mutex.Action<FileObject>() {
 

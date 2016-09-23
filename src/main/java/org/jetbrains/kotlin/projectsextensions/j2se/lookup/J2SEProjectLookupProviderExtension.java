@@ -17,10 +17,11 @@
 package org.jetbrains.kotlin.projectsextensions.j2se.lookup;
 
 import org.jetbrains.kotlin.projectsextensions.KotlinPrivilegedTemplates;
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.projectsextensions.j2se.J2SEProjectOpenedHook;
 import org.jetbrains.kotlin.projectsextensions.j2se.J2SEProjectPropertiesModifier;
 import org.jetbrains.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider;
-import org.netbeans.modules.java.j2seproject.J2SEProject;
+import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.LookupProvider;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
@@ -33,15 +34,16 @@ public class J2SEProjectLookupProviderExtension implements LookupProvider{
 
     @Override
     public Lookup createAdditionalLookup(Lookup lkp) {
-        J2SEProject j2seProject = lkp.lookup(J2SEProject.class);
+        Project j2seProject = lkp.lookup(Project.class);
+        if (!KotlinProjectHelper.INSTANCE.checkProject(j2seProject)) {
+            return Lookups.fixed();
+        }
         J2SEExtendedClassPathProvider myProvider = new J2SEExtendedClassPathProvider(j2seProject);
-        J2SEProjectPropertiesModifier propertiesModifier = new J2SEProjectPropertiesModifier(j2seProject);
         
         return Lookups.fixed(
-                new KotlinPrivilegedTemplates(),
-                myProvider,
-                propertiesModifier,
-                new J2SEProjectOpenedHook(j2seProject));
+                new KotlinPrivilegedTemplates());
+//                myProvider,
+//                new J2SEProjectOpenedHook(j2seProject));
     }
     
 }

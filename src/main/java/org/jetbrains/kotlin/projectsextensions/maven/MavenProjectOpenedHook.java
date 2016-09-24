@@ -18,14 +18,17 @@ package org.jetbrains.kotlin.projectsextensions.maven;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.Method;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.projectsextensions.maven.buildextender.PomXmlModifier;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
-import org.netbeans.modules.maven.NbMavenProjectImpl;
+import org.netbeans.api.project.Project;
+import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
+import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -35,9 +38,9 @@ import org.openide.util.RequestProcessor;
 public class MavenProjectOpenedHook extends ProjectOpenedHook{
 
     private static volatile boolean progressHandleRun = false;
-    private final NbMavenProjectImpl project;
+    private final Project project;
     
-    public MavenProjectOpenedHook(NbMavenProjectImpl project) {
+    public MavenProjectOpenedHook(Project project) {
         this.project = project;
     }
     
@@ -68,7 +71,12 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                             new PomXmlModifier(project).checkPom();
                         }
                         
-                        project.getProjectWatcher().addPropertyChangeListener(new PropertyChangeListener(){
+                        NbMavenProject projectWatcher = getProjectWatcher();
+                        if (projectWatcher == null) {
+                            return;
+                        }
+                        
+                        projectWatcher.addPropertyChangeListener(new PropertyChangeListener(){
                             @Override
                             public void propertyChange(PropertyChangeEvent evt) {
                                 KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
@@ -79,6 +87,18 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
         thread.start();
     }
 
+    private NbMavenProject getProjectWatcher() {
+        Class clazz = project.getClass();
+        try {
+            Method getProjectWatcher = clazz.getMethod("getProjectWatcher");
+            return (NbMavenProject) getProjectWatcher.invoke(project);
+        } catch (ReflectiveOperationException ex) {
+            Exceptions.printStackTrace(ex);
+        } 
+        
+        return null;
+    }
+    
     @Override
     protected void projectClosed() {
     }

@@ -19,17 +19,17 @@ package org.jetbrains.kotlin.projectsextensions.maven;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.maven.model.Dependency;
+import org.apache.maven.project.MavenProject;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.maven.NbMavenProjectFactory;
-import org.netbeans.modules.maven.NbMavenProjectImpl;
-import org.netbeans.spi.project.ProjectState;
+import org.netbeans.api.project.ProjectManager;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -39,41 +39,47 @@ import org.openide.util.Exceptions;
  */
 public class MavenHelper {
     
-    private static final NbMavenProjectFactory PROJECT_FACTORY = 
-            new NbMavenProjectFactory();
     private static final Map<Project, List<? extends Project>> depProjects = 
             new HashMap<Project, List<? extends Project>>();
     
-    public static boolean hasParent(NbMavenProjectImpl project) {
+    public static boolean hasParent(Project project) {
         return getParentProjectDirectory(project.getProjectDirectory()) != null;
     }
     
-    @Nullable
-    public static NbMavenProjectImpl getMavenProject(FileObject dir) throws IOException {
-        if (dir == null) {
-            return null;
-        }
-        if (PROJECT_FACTORY.isProject(dir)){
-            NbMavenProjectImpl project = (NbMavenProjectImpl) PROJECT_FACTORY.loadProject(
-                    dir, 
-                    new ProjectState(){
-                        @Override
-                        public void markModified() {}
-                        @Override
-                        public void notifyDeleted() throws IllegalStateException {}
-                    });
-            
-            return project;
+    public static MavenProject getOriginalMavenProject(Project proj) {
+        Class clazz = proj.getClass();
+        try {
+            Method getOriginalProject = clazz.getMethod("getOriginalMavenProject");
+            return (MavenProject) getOriginalProject.invoke(proj);
+        } catch (ReflectiveOperationException ex) {
+            Exceptions.printStackTrace(ex);
         }
         
         return null;
     }
     
-    public static boolean isModuled(NbMavenProjectImpl project) {
-        return !project.getOriginalMavenProject().getModules().isEmpty();
+    @Nullable
+    public static Project getMavenProject(FileObject dir) throws IOException {
+        if (dir == null) {
+            return null;
+        }
+        
+        if (ProjectManager.getDefault().isProject(dir)){
+            return ProjectManager.getDefault().findProject(dir);
+        }
+        
+        return null;
     }
     
-    public static boolean isMavenMainModuledProject(NbMavenProjectImpl project) {
+    public static boolean isModuled(Project project) {
+        MavenProject originalProject = getOriginalMavenProject(project);
+        if (originalProject == null) {
+            return false;
+        }
+        return !originalProject.getModules().isEmpty();
+    }
+    
+    public static boolean isMavenMainModuledProject(Project project) {
         if (isModuled(project)) {
             try {
                 if (getMavenProject(project.getProjectDirectory().getParent()) == null) {
@@ -87,7 +93,7 @@ public class MavenHelper {
     }
     
     private static FileObject getParentProjectDirectory(FileObject proj) {
-        if (PROJECT_FACTORY.isProject(proj.getParent())) {
+        if (ProjectManager.getDefault().isProject(proj.getParent())) {
             FileObject parent = getParentProjectDirectory(proj.getParent());
             
             if (parent != null) {
@@ -99,7 +105,7 @@ public class MavenHelper {
         return null;
     }
     
-    private static FileObject getMainParentFolder(NbMavenProjectImpl proj) {
+    private static FileObject getMainParentFolder(Project proj) {
         FileObject projDir = proj.getProjectDirectory();
         FileObject parent = projDir;
         while (projDir != null) {
@@ -112,8 +118,8 @@ public class MavenHelper {
         return parent;
     }
     
-    public static NbMavenProjectImpl getMainParent(NbMavenProjectImpl proj) throws IOException {
-        NbMavenProjectImpl parent = getMavenProject(getParentProjectDirectory(proj.getProjectDirectory()));
+    public static Project getMainParent(Project proj) throws IOException {
+        Project parent = getMavenProject(getParentProjectDirectory(proj.getProjectDirectory()));
         return parent != null ? parent : proj;
     }
     
@@ -130,7 +136,7 @@ public class MavenHelper {
         return modules;
     }
     
-    public static List<? extends Project> getDependencyProjects(NbMavenProjectImpl project){
+    public static List<? extends Project> getDependencyProjects(Project project){
         if (depProjects.get(project) == null) {
             depProjects.put(project, findDependencyProjects(project));
         }
@@ -138,9 +144,13 @@ public class MavenHelper {
         return depProjects.get(project);
     }
     
-    private static List<? extends Project> findDependencyProjects(NbMavenProjectImpl project){
-        List<NbMavenProjectImpl> dependencyProjects = new ArrayList<NbMavenProjectImpl>();
-        List compileDependencies = project.getOriginalMavenProject().getCompileDependencies();
+    private static List<? extends Project> findDependencyProjects(Project project){
+        List<Project> dependencyProjects = new ArrayList<Project>();
+        MavenProject originalProject = getOriginalMavenProject(project);
+        if (originalProject == null) {
+            return dependencyProjects;
+        }
+        List compileDependencies = originalProject.getCompileDependencies();
         List<String> dependencies = Lists.newArrayList();
         
         for (Object dependency : compileDependencies) {
@@ -159,7 +169,7 @@ public class MavenHelper {
         
         for (FileObject module : moduleDependencies) {
             try {
-                NbMavenProjectImpl dep = getMavenProject(module);
+                Project dep = getMavenProject(module);
                 if (dep != null) {
                     dependencyProjects.add(dep);
                 }

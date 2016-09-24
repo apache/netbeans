@@ -17,20 +17,20 @@
 package org.jetbrains.kotlin.projectsextensions.maven.classpath;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.project.MavenProject;
 import org.jetbrains.kotlin.projectsextensions.ClassPathExtender;
+import org.jetbrains.kotlin.projectsextensions.maven.MavenHelper;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.modules.maven.NbMavenProjectImpl;
-import org.netbeans.modules.maven.classpath.ClassPathProviderImpl;
+import org.netbeans.api.project.Project;
+import org.netbeans.modules.maven.api.execute.ActiveJ2SEPlatformProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -42,30 +42,14 @@ import org.openide.util.Exceptions;
  */
 public class MavenExtendedClassPath implements ClassPathExtender {
 
-    private final NbMavenProjectImpl project;
+    private final Project project;
     private ClassPath boot = null;
     private ClassPath compile = null;
     private ClassPath execute = null;
     private ClassPath source = null;
     
-    public MavenExtendedClassPath(NbMavenProjectImpl project) {
+    public MavenExtendedClassPath(Project project) {
         this.project = project;
-//        Class projectClass = project.getClass();
-//        try {
-//            Method getOriginal = projectClass.getMethod("getOriginalMavenProject");
-//            MavenProject mavenProject = (MavenProject) getOriginal.invoke(project);
-//            System.out.println();
-//        } catch (NoSuchMethodException ex) {
-//            Exceptions.printStackTrace(ex);
-//        } catch (SecurityException ex) {
-//            Exceptions.printStackTrace(ex);
-//        } catch (IllegalAccessException ex) {
-//            Exceptions.printStackTrace(ex);
-//        } catch (IllegalArgumentException ex) {
-//            Exceptions.printStackTrace(ex);
-//        } catch (InvocationTargetException ex) {
-//            Exceptions.printStackTrace(ex);
-//        }
         createClasspath();
     }
     
@@ -95,18 +79,63 @@ public class MavenExtendedClassPath implements ClassPathExtender {
         return ClassPathSupport.createClassPath(classpaths.toArray(new URL[classpaths.size()]));
     }
     
+    private List<String> getCompileClasspathElements(Project proj) throws DependencyResolutionRequiredException {
+        MavenProject mavenProj = MavenHelper.getOriginalMavenProject(proj);
+        if (mavenProj == null) {
+            return Collections.emptyList();
+        }
+        
+        return mavenProj.getCompileClasspathElements();
+    }
+    
+    private List<String> getRuntimeClasspathElements(Project proj) throws DependencyResolutionRequiredException {
+        MavenProject mavenProj = MavenHelper.getOriginalMavenProject(proj);
+        if (mavenProj == null) {
+            return Collections.emptyList();
+        }
+        
+        return mavenProj.getRuntimeClasspathElements();
+    }
+    
+    private List<String> getCompileSourceRoots(Project proj) throws DependencyResolutionRequiredException {
+        MavenProject mavenProj = MavenHelper.getOriginalMavenProject(proj);
+        if (mavenProj == null) {
+            return Collections.emptyList();
+        }
+        
+        return mavenProj.getCompileSourceRoots();
+    }
+    
+    private List<String> getSystemClasspathElements(Project proj) throws DependencyResolutionRequiredException {
+        MavenProject mavenProj = MavenHelper.getOriginalMavenProject(proj);
+        if (mavenProj == null) {
+            return Collections.emptyList();
+        }
+        
+        return mavenProj.getSystemClasspathElements();
+    }
+    
+    private List<String> getTestClasspathElements(Project proj) throws DependencyResolutionRequiredException {
+        MavenProject mavenProj = MavenHelper.getOriginalMavenProject(proj);
+        if (mavenProj == null) {
+            return Collections.emptyList();
+        }
+        
+        return mavenProj.getTestClasspathElements();
+    }
+    
     private void createClasspath() {
         try {
-            compile = getClasspath(project.getOriginalMavenProject().getCompileClasspathElements());
-            execute = getClasspath(project.getOriginalMavenProject().getRuntimeClasspathElements());
-            source = getClasspath(project.getOriginalMavenProject().getCompileSourceRoots());
+            compile = getClasspath(getCompileClasspathElements(project));
+            execute = getClasspath(getRuntimeClasspathElements(project));
+            source = getClasspath(getCompileSourceRoots(project));
             
-            ClassPathProviderImpl impl = new ClassPathProviderImpl(project);
-            ClassPath javaPlatform = impl.getJavaPlatform().getBootstrapLibraries();
+            ActiveJ2SEPlatformProvider platformProvider = project.getLookup().lookup(ActiveJ2SEPlatformProvider.class);
+            ClassPath javaPlatform = platformProvider.getJavaPlatform().getBootstrapLibraries();
             
             List<String> javaClasspathElements = new ArrayList<String>();
-            javaClasspathElements.addAll(project.getOriginalMavenProject().getSystemClasspathElements());
-            javaClasspathElements.addAll(project.getOriginalMavenProject().getTestClasspathElements());
+            javaClasspathElements.addAll(getSystemClasspathElements(project));
+            javaClasspathElements.addAll(getTestClasspathElements(project));
             boot = ClassPathSupport.createProxyClassPath(getClasspath(javaClasspathElements), javaPlatform);
             
         } catch (DependencyResolutionRequiredException ex) {

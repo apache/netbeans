@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.projectsextensions.maven.buildextender;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -27,7 +28,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.dom4j.tree.DefaultElement;
-import org.netbeans.modules.maven.NbMavenProjectImpl;
+import org.netbeans.api.project.Project;
 import org.openide.util.Exceptions;
 
 /**
@@ -36,11 +37,11 @@ import org.openide.util.Exceptions;
  */
 public class PomXmlModifier {
 
-    private final NbMavenProjectImpl project;
+    private final Project project;
     private final String kotlinVersion = "1.0.4";
     private final String groupIdName = "org.jetbrains.kotlin";
     
-    public PomXmlModifier(NbMavenProjectImpl project) {
+    public PomXmlModifier(Project project) {
         this.project = project;
     }
 
@@ -165,8 +166,23 @@ public class PomXmlModifier {
         plugins.add(plugin);
     }
     
+    private File getPOMFile(Project proj) {
+        Class clazz = proj.getClass();
+        try {
+            Method method = clazz.getMethod("getPOMFile");
+            return (File) method.invoke(proj);
+        } catch (ReflectiveOperationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        return null;
+    }
+    
     private void checkKotlinStdLibDependency() throws DocumentException, IOException {
-        File pom = project.getPOMFile();
+        File pom = getPOMFile(project);
+        if (pom == null) {
+            return;
+        }
         SAXReader reader = new SAXReader();
         Document pomDocument = reader.read(pom);
         
@@ -205,7 +221,10 @@ public class PomXmlModifier {
     
 
     private void checkKotlinPlugin() throws DocumentException, IOException {
-        File pom = project.getPOMFile();
+        File pom = getPOMFile(project);
+        if (pom == null) {
+            return;
+        }
         SAXReader reader = new SAXReader();
         Document pomDocument = reader.read(pom);
         

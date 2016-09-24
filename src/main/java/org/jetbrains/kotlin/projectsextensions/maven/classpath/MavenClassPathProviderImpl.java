@@ -21,7 +21,7 @@ import java.util.List;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.maven.classpath.ClassPathProviderImpl;
+//import org.netbeans.modules.maven.classpath.ClassPathProviderImpl;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -32,19 +32,19 @@ import org.openide.filesystems.FileObject;
 public final class MavenClassPathProviderImpl implements ClassPathProvider{
 
     private final Project project;
-    private ClassPathProviderImpl impl;
+//    private ClassPathProviderImpl impl;
     
     public MavenClassPathProviderImpl(Project project){
         this.project = project;
-        this.impl = new ClassPathProviderImpl(project);
+//        this.impl = new ClassPathProviderImpl(project);
     }
     
     @Override
     public ClassPath findClassPath(FileObject fo, String type) {
-        ClassPath cp = impl.findClassPath(fo, type);
-        if (cp == null) {
-            return null;
-        }
+//        ClassPath cp = impl.findClassPath(fo, type);
+//        if (cp == null) {
+//            return null;
+//        }
         
         List<PathResourceImplementation> resources = new ArrayList<PathResourceImplementation>();
         if (type.equals(ClassPath.BOOT)){
@@ -52,20 +52,20 @@ public final class MavenClassPathProviderImpl implements ClassPathProvider{
         }
         ClassPath lightClasses = ClassPathSupport.createClassPath(resources);
         
-        return ClassPathSupport.createProxyClassPath(cp, lightClasses);
+        return lightClasses;//ClassPathSupport.createProxyClassPath(cp, lightClasses);
     }
     
+    //find in project lookup and access via reflection
+//    public ClassPath[] getProjectClassPaths(String type) {
+//        return impl.getProjectClassPaths(type);
+//    }
     
-    public ClassPath[] getProjectClassPaths(String type) {
-        return impl.getProjectClassPaths(type);
-    }
-    
-    public ClassPath getProjectSourcesClassPath(String type) {
-        return impl.getProjectSourcesClassPath(type);
-    }
+//    public ClassPath getProjectSourcesClassPath(String type) {
+//        return impl.getProjectSourcesClassPath(type);
+//    }
     
     public void updateClassPath() {
-        impl = new ClassPathProviderImpl(project);
+//        impl = new ClassPathProviderImpl(project);
     }
    
 }

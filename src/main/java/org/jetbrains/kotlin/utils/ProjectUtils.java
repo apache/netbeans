@@ -37,7 +37,6 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -170,8 +169,9 @@ public class ProjectUtils {
     @NotNull
     public static List<KtFile> getSourceFilesWithDependencies(@NotNull Project project){
         List<KtFile> depFiles = new ArrayList<KtFile>();
-        if (project instanceof NbMavenProjectImpl) {
-            List<? extends Project> depProjects = MavenHelper.getDependencyProjects((NbMavenProjectImpl) project);
+        if (project.getClass().getName().
+                    equals("org.netbeans.modules.maven.NbMavenProjectImpl")) {
+            List<? extends Project> depProjects = MavenHelper.getDependencyProjects(project);
             for (Project depProject : depProjects) {
                 for (FileObject file : KotlinPsiManager.INSTANCE.getFilesByProject(depProject)){
                     depFiles.add(getKtFile(file));

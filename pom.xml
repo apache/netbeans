@@ -140,6 +140,7 @@
         <configuration> 
           <licenseFile>license.txt</licenseFile>  
           <licenseName>Apache License, Version 2.0</licenseName>  
+          <verifyRuntime>warn</verifyRuntime>
           <moduleDependencies>   
             <dependency> 
               <id>org.netbeans.modules:org-netbeans-modules-java-preprocessorbridge</id>  
@@ -149,14 +150,14 @@
               <id>org.netbeans.modules:org-netbeans-modules-java-api-common</id>  
               <type>impl</type> 
             </dependency>  
-            <dependency> 
+<!--            <dependency> 
               <id>org.netbeans.modules:org-netbeans-modules-maven</id>  
               <type>impl</type> 
             </dependency>  
             <dependency> 
               <id>org.netbeans.modules:org-netbeans-modules-maven-embedder</id>  
               <type>impl</type> 
-            </dependency>  
+            </dependency>  -->
             <dependency> 
               <id>org.netbeans.modules:org-netbeans-modules-java-editor</id>  
               <type>impl</type> 

@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+OpenIDE-Module-Install: org/jetbrains/kotlin/installer/KotlinInstaller.class
 OpenIDE-Module-Layer: org/jetbrains/kotlin/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jetbrains/kotlin/Bundle.properties
 OpenIDE-Module-Needs: org.netbeans.api.templates.wizard, javax.script.ScriptEngine.freemarker

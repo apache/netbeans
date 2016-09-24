@@ -23,18 +23,17 @@ import com.google.common.collect.Sets;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.event.ChangeListener;
+import org.apache.maven.project.MavenProject;
 import org.jetbrains.kotlin.builder.KotlinPsiManager;
 import org.jetbrains.kotlin.projectsextensions.maven.MavenHelper;
 import org.jetbrains.annotations.NotNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.SourceGroup;
-import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -94,18 +93,18 @@ public final class KotlinSources {
     }
 
     public boolean isMavenModuledProject() {
-        if (!(kotlinProject instanceof NbMavenProjectImpl)) {
+        if (!kotlinProject.getClass().getName().
+                    equals("org.netbeans.modules.maven.NbMavenProjectImpl")) {
             return false;
         }
 
-        NbMavenProjectImpl mavenProject = (NbMavenProjectImpl) kotlinProject;
-
-        List modules = mavenProject.getOriginalMavenProject().getModules();
-        if (modules.isEmpty()) {
+        MavenProject originalProject = MavenHelper.getOriginalMavenProject(kotlinProject);
+        if (originalProject == null) {
             return false;
         }
-
-        return true;
+        
+        List modules = originalProject.getModules();
+        return !modules.isEmpty();
     }
 
     @NotNull

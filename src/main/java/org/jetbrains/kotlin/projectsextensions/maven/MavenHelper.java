@@ -30,6 +30,7 @@ import org.apache.maven.project.MavenProject;
 import org.jetbrains.annotations.Nullable;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.modules.maven.api.NbMavenProject;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -51,6 +52,18 @@ public class MavenHelper {
         try {
             Method getOriginalProject = clazz.getMethod("getOriginalMavenProject");
             return (MavenProject) getOriginalProject.invoke(proj);
+        } catch (ReflectiveOperationException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        return null;
+    }
+    
+    public static NbMavenProject getProjectWatcher(Project proj) {
+        Class clazz = proj.getClass();
+        try {
+            Method getProjectWatcher = clazz.getMethod("getProjectWatcher");
+            return (NbMavenProject) getProjectWatcher.invoke(proj);
         } catch (ReflectiveOperationException ex) {
             Exceptions.printStackTrace(ex);
         }

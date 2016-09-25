@@ -28,9 +28,9 @@ import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.project.MavenProject;
 import org.jetbrains.kotlin.projectsextensions.ClassPathExtender;
 import org.jetbrains.kotlin.projectsextensions.maven.MavenHelper;
+import org.jetbrains.kotlin.projectsextensions.maven.classpath.classpath.ClassPathProviderImpl;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.maven.api.execute.ActiveJ2SEPlatformProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -130,8 +130,8 @@ public class MavenExtendedClassPath implements ClassPathExtender {
             execute = getClasspath(getRuntimeClasspathElements(project));
             source = getClasspath(getCompileSourceRoots(project));
             
-            ActiveJ2SEPlatformProvider platformProvider = project.getLookup().lookup(ActiveJ2SEPlatformProvider.class);
-            ClassPath javaPlatform = platformProvider.getJavaPlatform().getBootstrapLibraries();
+            ClassPathProviderImpl impl = new ClassPathProviderImpl(project);
+            ClassPath javaPlatform = impl.getJavaPlatform().getBootstrapLibraries();
             
             List<String> javaClasspathElements = new ArrayList<String>();
             javaClasspathElements.addAll(getSystemClasspathElements(project));

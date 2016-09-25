@@ -143,14 +143,6 @@
           <verifyRuntime>warn</verifyRuntime>  
           <moduleDependencies> 
             <dependency> 
-              <id>org.netbeans.modules:org-netbeans-modules-java-preprocessorbridge</id>  
-              <type>impl</type> 
-            </dependency>  
-            <dependency> 
-              <id>org.netbeans.modules:org-netbeans-modules-java-api-common</id>  
-              <type>impl</type> 
-            </dependency>  
-            <dependency> 
               <id>org.netbeans.modules:org-netbeans-modules-java-editor</id>  
               <type>impl</type> 
             </dependency>  

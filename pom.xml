@@ -633,7 +633,37 @@
       <groupId>org.netbeans.api</groupId>  
       <artifactId>org-netbeans-modules-parsing-indexing</artifactId>  
       <version>${netbeans.version}</version> 
+    </dependency>   
+    <dependency> 
+      <groupId>commons-io</groupId>  
+      <artifactId>commons-io</artifactId>  
+      <version>2.4</version> 
     </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.modules</groupId>  
+      <artifactId>org-netbeans-modules-maven-indexer</artifactId>  
+      <version>${netbeans.version}</version> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-modules-project-libraries</artifactId>  
+      <version>${netbeans.version}</version> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.modules</groupId>  
+      <artifactId>org-netbeans-modules-maven-model</artifactId>  
+      <version>${netbeans.version}</version> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-api-annotations-common</artifactId>  
+      <version>${netbeans.version}</version> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-modules-xml-xam</artifactId>  
+      <version>${netbeans.version}</version> 
+    </dependency> 
     <!-- TEST DEPENDENCIES -->  
     <dependency> 
       <groupId>junit</groupId>  
@@ -737,36 +767,6 @@
       <artifactId>org-netbeans-modules-nbjunit</artifactId>  
       <version>${netbeans.version}</version>  
       <scope>test</scope> 
-    </dependency>  
-    <dependency> 
-      <groupId>commons-io</groupId>  
-      <artifactId>commons-io</artifactId>  
-      <version>2.4</version> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.netbeans.modules</groupId>  
-      <artifactId>org-netbeans-modules-maven-indexer</artifactId>  
-      <version>RELEASE81</version> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.netbeans.api</groupId>  
-      <artifactId>org-netbeans-modules-project-libraries</artifactId>  
-      <version>RELEASE81</version> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.netbeans.modules</groupId>  
-      <artifactId>org-netbeans-modules-maven-model</artifactId>  
-      <version>RELEASE81</version> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.netbeans.api</groupId>  
-      <artifactId>org-netbeans-api-annotations-common</artifactId>  
-      <version>RELEASE81</version> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.netbeans.api</groupId>  
-      <artifactId>org-netbeans-modules-xml-xam</artifactId>  
-      <version>RELEASE81</version> 
     </dependency> 
   </dependencies> 
 </project>

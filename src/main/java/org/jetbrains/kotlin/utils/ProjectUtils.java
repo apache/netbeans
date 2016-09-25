@@ -195,6 +195,9 @@ public class ProjectUtils {
     }
     
     public static FileObject getFileObjectForDocument(Document doc) {
+        if (doc == null) {
+            return null;
+        }
         Object sdp = doc.getProperty(Document.StreamDescriptionProperty);
 
         if (sdp instanceof FileObject) {

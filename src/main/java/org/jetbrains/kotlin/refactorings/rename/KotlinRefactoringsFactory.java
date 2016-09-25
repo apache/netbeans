@@ -18,10 +18,13 @@
  */
 package org.jetbrains.kotlin.refactorings.rename;
 
+import javax.swing.text.StyledDocument;
+import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.RenameRefactoring;
 import org.netbeans.modules.refactoring.spi.RefactoringPlugin;
 import org.netbeans.modules.refactoring.spi.RefactoringPluginFactory;
+import org.openide.filesystems.FileObject;
 import org.openide.util.lookup.ServiceProvider;
 
 
@@ -34,6 +37,10 @@ public class KotlinRefactoringsFactory implements RefactoringPluginFactory {
 
     @Override
     public RefactoringPlugin createInstance(AbstractRefactoring refactoring) {
+        FileObject fo = ProjectUtils.getFileObjectForDocument(refactoring.getRefactoringSource().lookup(StyledDocument.class));
+        if (fo == null || !fo.hasExt("kt")) {
+            return null;
+        }
         if (refactoring instanceof RenameRefactoring) {
             return new KotlinRenameRefactoring((RenameRefactoring) refactoring);
         }

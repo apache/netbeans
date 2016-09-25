@@ -28,7 +28,11 @@ public class KotlinInstaller extends Yenta {
     @Override
     public Set<String> friends() {
         return Sets.newHashSet("org.netbeans.modules.maven",
-                "org.netbeans.modules.maven.embedder");
+                "org.netbeans.modules.maven.embedder",
+                "org.netbeans.modules.jumpto",
+                "org.netbeans.modules.debugger.jpda", 
+                "org.netbeans.modules.debugger.jpda.projects",
+                "org.netbeans.modules.refactoring.api");
     }
     
 }

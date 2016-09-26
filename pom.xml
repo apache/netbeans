@@ -140,7 +140,7 @@
         <configuration> 
           <licenseFile>license.txt</licenseFile>  
           <licenseName>Apache License, Version 2.0</licenseName>  
-          <verifyRuntime>warn</verifyRuntime>
+          <verifyRuntime>warn</verifyRuntime> 
         </configuration> 
       </plugin>  
       <plugin> 

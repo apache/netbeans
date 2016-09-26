@@ -212,6 +212,17 @@ public class ProjectUtils {
         return null;
     }
     
+    public static DataObject getDataObjectFromFileObject(FileObject file) {
+        DataObject dataObject = null;
+        try {
+            dataObject = DataObject.find(file);
+        } catch (DataObjectNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        return dataObject;
+    }
+    
     public static StyledDocument getDocumentFromFileObject(FileObject file) throws IOException{
         DataObject dataObject = null;
         try {

@@ -20,7 +20,6 @@ package org.jetbrains.kotlin.projectsextensions.j2se;
 
 import org.jetbrains.kotlin.projectsextensions.j2se.buildextender.KotlinBuildExtender;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
-import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
@@ -42,26 +41,24 @@ public class J2SEProjectOpenedHook extends ProjectOpenedHook {
 
     @Override
     protected void projectOpened() {
-        Runnable run = new Runnable() {
+        Thread thread = new Thread() {
             @Override
             public void run() {
-                final ProgressHandle progressbar
-                        = ProgressHandleFactory.createHandle("Loading Kotlin environment");
-                progressbar.start();
-                KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
-                KotlinEnvironment.getEnvironment(project);
-//                KotlinBuildExtender extender = new KotlinBuildExtender(project);
-//                extender.addKotlinTasksToScript(project);
-//                J2SEProjectPropertiesModifier propsModifier = new J2SEProjectPropertiesModifier(project);
-//
-//                propsModifier.turnOffCompileOnSave();
-//                propsModifier.addKotlinRuntime();
-                progressbar.finish();
+                ProjectUtils.checkKtHome();
+                Runnable run = new Runnable() {
+                    @Override
+                    public void run() {
+                        final ProgressHandle progressbar
+                                = ProgressHandleFactory.createHandle("Loading Kotlin environment");
+                        progressbar.start();
+                        KotlinEnvironment.getEnvironment(project);
+                        progressbar.finish();
+                    }
+                };
+                RequestProcessor.getDefault().post(run);
             }
         };
-
-        RequestProcessor.getDefault().post(run);
-
+        thread.start();
     }
 
     @Override

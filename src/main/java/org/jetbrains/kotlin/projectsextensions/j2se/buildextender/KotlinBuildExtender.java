@@ -41,10 +41,6 @@ public class KotlinBuildExtender {
     private Project project = null;
     
     public KotlinBuildExtender(Project project) {
-        if (!(project.getClass().getName().
-                equals("org.netbeans.modules.java.j2seproject.J2SEProject"))) {
-            return;
-        }
         this.project = project;
     }
 
@@ -97,6 +93,7 @@ public class KotlinBuildExtender {
         XMLWriter writer;
         writer = new XMLWriter(out, format);
         writer.write(document);
+        writer.close();
         out.close();
     }
     
@@ -125,6 +122,7 @@ public class KotlinBuildExtender {
         XMLWriter writer;
         writer = new XMLWriter(out, format);
         writer.write(document);
+        writer.close();
         out.close();
     }
     
@@ -177,6 +175,7 @@ public class KotlinBuildExtender {
         XMLWriter writer;
         writer = new XMLWriter(out, format);
         writer.write(document);
+        writer.close();
         out.close();      
     }
     

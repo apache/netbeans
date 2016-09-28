@@ -18,17 +18,14 @@
  */
 package org.jetbrains.kotlin.projectsextensions.j2se;
 
-import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
-import org.jetbrains.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.jetbrains.kotlin.projectsextensions.j2se.buildextender.KotlinBuildExtender;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
-import org.jetbrains.kotlin.project.KotlinSources;
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
-import org.openide.filesystems.FileObject;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -48,18 +45,17 @@ public class J2SEProjectOpenedHook extends ProjectOpenedHook {
         Runnable run = new Runnable() {
             @Override
             public void run() {
-                ProjectUtils.checkKtHome();
                 final ProgressHandle progressbar
                         = ProgressHandleFactory.createHandle("Loading Kotlin environment");
                 progressbar.start();
-                KotlinEnvironment.getEnvironment(project);
                 KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
+                KotlinEnvironment.getEnvironment(project);
 //                KotlinBuildExtender extender = new KotlinBuildExtender(project);
 //                extender.addKotlinTasksToScript(project);
-                J2SEProjectPropertiesModifier propsModifier = new J2SEProjectPropertiesModifier(project);
-
-                propsModifier.turnOffCompileOnSave();
-                propsModifier.addKotlinRuntime();
+//                J2SEProjectPropertiesModifier propsModifier = new J2SEProjectPropertiesModifier(project);
+//
+//                propsModifier.turnOffCompileOnSave();
+//                propsModifier.addKotlinRuntime();
                 progressbar.finish();
             }
         };

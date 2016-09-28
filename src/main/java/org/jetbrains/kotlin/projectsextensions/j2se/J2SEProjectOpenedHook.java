@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.projectsextensions.j2se;
 
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
@@ -33,49 +35,41 @@ import org.openide.util.RequestProcessor;
  *
  * @author Alexander.Baratynski
  */
-public class J2SEProjectOpenedHook extends ProjectOpenedHook{
+public class J2SEProjectOpenedHook extends ProjectOpenedHook {
 
     private final Project project;
-    
+
     public J2SEProjectOpenedHook(Project project) {
         this.project = project;
     }
-    
+
     @Override
     protected void projectOpened() {
-        Thread thread = new Thread(){
-                @Override
-                public void run(){
-                        ClassLoader cl = this.getClass().getClassLoader();
-                        ProjectUtils.checkKtHome(cl);
-//                        Runnable run = new Runnable(){
-//                            @Override
-//                            public void run(){
-//                                final ProgressHandle progressbar = 
-//                                    ProgressHandleFactory.createHandle("Loading Kotlin environment");
-//                                progressbar.start();
-//                                KotlinEnvironment.getEnvironment(project);
-//                                progressbar.finish();
-//                            }
-//                        };
-//                        
-//                        RequestProcessor.getDefault().post(run);
-                        
-//                        KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
-//                        KotlinBuildExtender extender = new KotlinBuildExtender(project);
-//                        extender.addKotlinTasksToScript(project);
-                        
-                        J2SEProjectPropertiesModifier propsModifier = new J2SEProjectPropertiesModifier(project);
-                        
-                        propsModifier.turnOffCompileOnSave();
-                        propsModifier.addKotlinRuntime();
-                    }
-            };
-        thread.start();
+        Runnable run = new Runnable() {
+            @Override
+            public void run() {
+                ProjectUtils.checkKtHome();
+                final ProgressHandle progressbar
+                        = ProgressHandleFactory.createHandle("Loading Kotlin environment");
+                progressbar.start();
+                KotlinEnvironment.getEnvironment(project);
+                KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
+//                KotlinBuildExtender extender = new KotlinBuildExtender(project);
+//                extender.addKotlinTasksToScript(project);
+                J2SEProjectPropertiesModifier propsModifier = new J2SEProjectPropertiesModifier(project);
+
+                propsModifier.turnOffCompileOnSave();
+                propsModifier.addKotlinRuntime();
+                progressbar.finish();
+            }
+        };
+
+        RequestProcessor.getDefault().post(run);
+
     }
 
     @Override
     protected void projectClosed() {
     }
-    
+
 }

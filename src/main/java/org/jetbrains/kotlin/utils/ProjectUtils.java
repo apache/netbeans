@@ -64,11 +64,11 @@ public class ProjectUtils {
         }
     }
 
-    public static void checkKtHome(ClassLoader cl){
+    public static void checkKtHome(){
         if (KT_HOME == null){
             FileObject dir = FileUtil.toFileObject(Places.getUserDirectory());
             if (dir.getFileObject("kotlinc") == null){
-                BundledCompiler.getKotlinc(cl);
+                BundledCompiler.getKotlinc();
             }
             KT_HOME = Places.getUserDirectory().getAbsolutePath() + FILE_SEPARATOR + "kotlinc"
                     + FILE_SEPARATOR;

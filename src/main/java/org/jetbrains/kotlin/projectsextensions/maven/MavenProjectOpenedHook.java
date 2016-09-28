@@ -49,8 +49,7 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
         Thread thread = new Thread(){
                 @Override
                 public void run(){
-                        ClassLoader cl = this.getClass().getClassLoader();
-                        ProjectUtils.checkKtHome(cl);
+                        ProjectUtils.checkKtHome();
                         Runnable run = new Runnable(){
                             @Override
                             public void run(){

@@ -56,6 +56,12 @@ public class J2SEProjectOpenedHook extends ProjectOpenedHook {
                     }
                 };
                 RequestProcessor.getDefault().post(run);
+                KotlinBuildExtender extender = new KotlinBuildExtender(project);
+                extender.addKotlinTasksToScript(project);
+
+                J2SEProjectPropertiesModifier propsModifier = new J2SEProjectPropertiesModifier(project);
+                propsModifier.turnOffCompileOnSave();
+                propsModifier.addKotlinRuntime();
             }
         };
         thread.start();

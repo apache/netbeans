@@ -23,6 +23,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaType
 import org.jetbrains.kotlin.resolve.lang.java.NBMemberUtils
 import org.netbeans.api.project.Project
 import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
+import javax.lang.model.element.VariableElement
 
 /*
 
@@ -30,8 +31,8 @@ import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
   Created on Aug 29, 2016
 */
 
-class NetBeansJavaField(elementHandle : ElemHandle<*>, containingClass : JavaClass, project : Project) : 
-        NetBeansJavaMember(elementHandle, containingClass, project), JavaField {
+class NetBeansJavaField(elementHandle : ElemHandle<VariableElement>, containingClass : JavaClass, project : Project) : 
+        NetBeansJavaMember<VariableElement>(elementHandle, containingClass, project), JavaField {
     
     override val isEnumEntry : Boolean = elementHandle.kind == ElementKind.ENUM_CONSTANT
     override val type : JavaType

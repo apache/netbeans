@@ -27,6 +27,7 @@ import org.jetbrains.kotlin.resolve.lang.java.NBMemberUtils
 import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
 import org.netbeans.api.project.Project
 import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
+import javax.lang.model.element.Element
 
 /*
 
@@ -34,8 +35,8 @@ import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
   Created on Aug 29, 2016
 */
 
-abstract class NetBeansJavaMember(elementHandle : ElemHandle<*>, override val containingClass : JavaClass, project : Project) : 
-        NetBeansJavaElement(elementHandle, project), JavaMember {
+abstract class NetBeansJavaMember<T: Element>(elementHandle : ElemHandle<T>, override val containingClass : JavaClass, project : Project) : 
+        NetBeansJavaElement<T>(elementHandle, project), JavaMember {
     
     override val annotations : Collection<JavaAnnotation>
         get() = NBAnnotationUtils.getAnnotations(elementHandle, project)

@@ -21,6 +21,7 @@ package org.jetbrains.kotlin.resolve.lang.java;
 import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import org.jetbrains.kotlin.descriptors.Visibilities;
@@ -239,7 +240,7 @@ public class MemberSearchers {
 
         private final ElemHandle handle;
         private final Project project;
-        private ElemHandle containingClass = null;
+        private ElemHandle<TypeElement> containingClass = null;
         
         public FieldContainingClassSearcher(ElemHandle handle, Project project) {
             this.handle = handle;
@@ -254,10 +255,10 @@ public class MemberSearchers {
                 return;
             }
             
-            containingClass = ElemHandle.create(elem.getEnclosingElement(), project);
+            containingClass = ElemHandle.create((TypeElement) elem.getEnclosingElement(), project);
         }
         
-        public ElemHandle getContainingClass() {
+        public ElemHandle<TypeElement> getContainingClass() {
             return containingClass;
         }
         

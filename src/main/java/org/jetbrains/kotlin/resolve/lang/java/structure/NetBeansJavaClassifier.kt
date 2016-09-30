@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.resolve.lang.java.NBAnnotationUtils
 import org.netbeans.api.project.Project
 import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
 import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
+import javax.lang.model.element.Element
 
 /*
 
@@ -31,8 +32,8 @@ import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
   Created on Aug 29, 2016
 */
 
-abstract class NetBeansJavaClassifier(elementHandle : ElemHandle<*>, project : Project) : 
-        NetBeansJavaElement(elementHandle, project), JavaClassifier, JavaAnnotationOwner {
+abstract class NetBeansJavaClassifier<T: Element>(elementHandle : ElemHandle<T>, project : Project) : 
+        NetBeansJavaElement<T>(elementHandle, project), JavaClassifier, JavaAnnotationOwner {
     
     override val annotations : Collection<JavaAnnotation>
         get() = NBAnnotationUtils.getAnnotations(elementHandle, project)

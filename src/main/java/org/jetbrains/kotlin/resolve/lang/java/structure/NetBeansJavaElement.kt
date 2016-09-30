@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaElement
 import org.netbeans.api.project.Project
 import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
 import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
+import javax.lang.model.element.Element
 
 /*
 
@@ -27,13 +28,13 @@ import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
   Created on Aug 29, 2016
 */
 
-abstract class NetBeansJavaElement(val elementHandle : ElemHandle<*>,
+abstract class NetBeansJavaElement<T: Element>(val elementHandle : ElemHandle<T>,
                                    val project : Project) : JavaElement {
     
     override fun hashCode() : Int = elementHandle.hashCode()
     
     override fun equals(other : Any?) : Boolean {
-        if (other !is NetBeansJavaElement) return false
+        if (other !is NetBeansJavaElement<*>) return false
         return elementHandle.equals(other.elementHandle)
     }
     

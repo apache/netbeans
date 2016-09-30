@@ -14,24 +14,13 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.resolve.lang.java.resolver
+package org.jetbrains.kotlin.resolve.lang.java
 
-import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElement
-import org.jetbrains.kotlin.descriptors.SourceFile
-import org.jetbrains.kotlin.load.java.sources.JavaSourceElement
-import org.jetbrains.kotlin.load.java.structure.JavaElement
-import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
+import org.netbeans.api.java.source.CompilationController
+import org.netbeans.api.java.source.Task
+import org.netbeans.api.project.Project
 
-/*
-
-  @author Alexander.Baratynski
-  Created on Aug 26, 2016
-*/
-
-class NetBeansJavaSourceElement(override val javaElement : JavaElement) : JavaSourceElement {
-
-    override fun getContainingFile() : SourceFile = SourceFile.NO_SOURCE_FILE
-    
-    fun getElementBinding() : ElemHandle<*> = (javaElement as NetBeansJavaElement<*>).elementHandle
-    
+fun <T: Task<CompilationController>> T.execute(project: Project): T {
+    NBElementUtils.execute(this, project) 
+    return this
 }

@@ -24,6 +24,8 @@ import org.jetbrains.kotlin.resolve.lang.java.NBMemberUtils
 import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.project.Project
 import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
+import javax.lang.model.element.TypeElement
+import javax.lang.model.element.VariableElement
 
 /*
 
@@ -31,7 +33,7 @@ import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaReferenceAnnotationArgument(val handle : ElemHandle<*>, val project : Project) : 
+class NetBeansJavaReferenceAnnotationArgument(val handle : ElemHandle<VariableElement>, val project : Project) : 
         NetBeansJavaAnnotationArgument(FqName(NBElementUtils.getSimpleName(handle, project))), JavaEnumValueAnnotationArgument {
     override fun resolve() : JavaField {
         val containingClass = NBMemberUtils.getContainingClass(handle, project)

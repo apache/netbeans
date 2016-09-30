@@ -18,6 +18,7 @@
  */
 package org.jetbrains.kotlin.resolve.lang.java;
 
+import javax.lang.model.element.TypeElement;
 import org.jetbrains.kotlin.descriptors.Visibility;
 import org.jetbrains.kotlin.load.java.structure.JavaType;
 import org.jetbrains.kotlin.name.Name;
@@ -79,7 +80,7 @@ public class NBMemberUtils {
         return searcher.getType();
     }
     
-    public static ElemHandle getContainingClass(ElemHandle handle, Project project) {
+    public static ElemHandle<TypeElement> getContainingClass(ElemHandle handle, Project project) {
         FieldContainingClassSearcher searcher = new FieldContainingClassSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         

@@ -19,6 +19,7 @@
 package org.jetbrains.kotlin.resolve.lang.java;
 
 import java.util.Collection;
+import javax.lang.model.element.TypeParameterElement;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.ElemHandleSearcher;
@@ -42,7 +43,7 @@ public class NBParameterUtils {
         return searcher.getName();
     }
     
-    public static ElemHandle getElemHandleFromTypeMirrorHandle(
+    public static ElemHandle<TypeParameterElement> getElemHandleFromTypeMirrorHandle(
             TypeMirrorHandle typeHandle, Project project) {
         ElemHandleSearcher searcher = new ElemHandleSearcher(typeHandle, project);
         NBElementUtils.execute(searcher, project);

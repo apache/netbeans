@@ -127,7 +127,7 @@ public class PackageSearchers {
                 if (isOuterClass((TypeElement) cl)) {
                     String elementName = cl.getSimpleName().toString();
                     if (Name.isValidIdentifier(elementName) && nameFilter.invoke(Name.identifier(elementName))) {
-                        javaClasses.add(new NetBeansJavaClass(ElemHandle.create(cl, project), project));
+                        javaClasses.add(new NetBeansJavaClass(ElemHandle.create((TypeElement) cl, project), project));
                     }
                 }
             }

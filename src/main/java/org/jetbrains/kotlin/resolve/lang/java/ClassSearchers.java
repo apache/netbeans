@@ -24,8 +24,10 @@ import java.util.Collection;
 import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -171,7 +173,7 @@ public class ClassSearchers {
             List<? extends Element> members = elem.getEnclosedElements();//info.getElements().getAllMembers(elem);
             for (Element member : members) {
                 if (member.asType().getKind() == TypeKind.DECLARED && member instanceof TypeElement){
-                    innerClasses.add(new NetBeansJavaClass(ElemHandle.create(member, project), project));
+                    innerClasses.add(new NetBeansJavaClass(ElemHandle.create((TypeElement) member, project), project));
                 }
             }
         }
@@ -206,7 +208,7 @@ public class ClassSearchers {
                 return;
             }
             
-            outerClass = new NetBeansJavaClass(ElemHandle.create(outer, project), project);
+            outerClass = new NetBeansJavaClass(ElemHandle.create((TypeElement) outer, project), project);
         }
 
         public JavaClass getOuterClass() {
@@ -239,7 +241,7 @@ public class ClassSearchers {
             List<? extends Element> members = elem.getEnclosedElements();//info.getElements().getAllMembers(elem);
             for (Element member : members) {
                 if (member.getKind() == ElementKind.METHOD){
-                    methods.add(new NetBeansJavaMethod(ElemHandle.create(member, project), containingClass, project));
+                    methods.add(new NetBeansJavaMethod(ElemHandle.create((ExecutableElement) member, project), containingClass, project));
                 }
             }
         }
@@ -274,7 +276,7 @@ public class ClassSearchers {
             List<? extends Element> members = elem.getEnclosedElements();
             for (Element member : members) {
                 if (member.getKind() == ElementKind.CONSTRUCTOR){
-                    constructors.add(new NetBeansJavaConstructor(ElemHandle.create(member, project), containingClass, project));
+                    constructors.add(new NetBeansJavaConstructor(ElemHandle.create((ExecutableElement) member, project), containingClass, project));
                 }
             }
         }
@@ -311,7 +313,7 @@ public class ClassSearchers {
                 if (member.getKind().isField()){
                     String name = member.getSimpleName().toString();
                     if (Name.isValidIdentifier(name)){
-                        fields.add(new NetBeansJavaField(ElemHandle.create(member, project), containingClass, project));
+                        fields.add(new NetBeansJavaField(ElemHandle.create((VariableElement) member, project), containingClass, project));
                     }
                 }
             }

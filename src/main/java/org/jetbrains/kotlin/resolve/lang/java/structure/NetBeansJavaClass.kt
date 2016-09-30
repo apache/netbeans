@@ -26,10 +26,11 @@ import org.jetbrains.kotlin.load.java.structure.JavaMethod
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.resolve.lang.java.NBClassUtils
 import org.jetbrains.kotlin.resolve.lang.java.NBMemberUtils
 import org.netbeans.api.project.Project
 import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
+import org.jetbrains.kotlin.resolve.lang.java.*
+import javax.lang.model.element.TypeElement
 
 /*
 
@@ -37,48 +38,47 @@ import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
   Created on Aug 29, 2016
 */
 
-class NetBeansJavaClass(elementHandle : ElemHandle<*>, project : Project) : 
-        NetBeansJavaClassifier(elementHandle, project), JavaClass {
-    
-    override val name : Name 
-        get() = NBClassUtils.getName(elementHandle, project)
-    
-    override val fqName : FqName 
-        get() = NBClassUtils.getFqName(elementHandle)//FqName(elementHandle!!.qualifiedName)
-    
-    override val supertypes : Collection<JavaClassifierType>
-        get() = NBClassUtils.getSuperTypes(elementHandle, project)
-    
-    override val innerClasses : Collection<JavaClass> 
-        get() = NBClassUtils.getInnerClasses(elementHandle, project)
-    
-    override val outerClass : JavaClass?
-        get() = NBClassUtils.getOuterClass(elementHandle, project)
-    
-    override val methods : Collection<JavaMethod>
-        get() = NBClassUtils.getMethods(elementHandle, project, this)
-    
-    override val constructors : Collection<JavaConstructor>
-        get() = NBClassUtils.getConstructors(elementHandle, project, this)
-    
-    override val fields : Collection<JavaField>
-        get() = NBClassUtils.getFields(elementHandle, project, this)
-    
-    override val visibility : Visibility
+class NetBeansJavaClass(elementHandle: ElemHandle<TypeElement>, project: Project) :
+        NetBeansJavaClassifier<TypeElement>(elementHandle, project), JavaClass {
+
+    override val name = elementHandle.getName(project)
+
+    override val fqName: FqName?
+        get() = elementHandle.getFqName()
+
+    override val supertypes: Collection<JavaClassifierType>
+        get() = elementHandle.getSuperTypes(project)
+
+    override val innerClasses: Collection<JavaClass>
+        get() = elementHandle.getInnerClasses(project)
+
+    override val outerClass: JavaClass?
+        get() = elementHandle.getOuterClass(project)
+
+    override val methods: Collection<JavaMethod>
+        get() = elementHandle.getMethods(project, this)
+
+    override val constructors: Collection<JavaConstructor>
+        get() = elementHandle.getConstructors(project, this)
+
+    override val fields: Collection<JavaField>
+        get() = elementHandle.getFields(project, this)
+
+    override val visibility: Visibility
         get() = NBMemberUtils.getVisibility(elementHandle, project)
-    
-    override val typeParameters : List<JavaTypeParameter>
-        get() = NBClassUtils.getTypeParameters(elementHandle, project)
-    
-    override val isInterface : Boolean = elementHandle.kind == ElementKind.INTERFACE
-    override val isAnnotationType : Boolean = elementHandle.kind == ElementKind.ANNOTATION_TYPE
-    override val isEnum : Boolean = elementHandle.kind == ElementKind.ENUM
-    override val isAbstract : Boolean = NBMemberUtils.isAbstract(elementHandle, project)
-    override val isStatic : Boolean = NBMemberUtils.isStatic(elementHandle, project) 
-    override val isFinal : Boolean = NBMemberUtils.isFinal(elementHandle, project)
-    
+
+    override val typeParameters: List<JavaTypeParameter>
+        get() = elementHandle.getTypeParameters(project)
+
+    override val isInterface: Boolean = elementHandle.kind == ElementKind.INTERFACE
+    override val isAnnotationType: Boolean = elementHandle.kind == ElementKind.ANNOTATION_TYPE
+    override val isEnum: Boolean = elementHandle.kind == ElementKind.ENUM
+    override val isAbstract: Boolean = NBMemberUtils.isAbstract(elementHandle, project)
+    override val isStatic: Boolean = NBMemberUtils.isStatic(elementHandle, project)
+    override val isFinal: Boolean = NBMemberUtils.isFinal(elementHandle, project)
+
     override val lightClassOriginKind = null
-    
-    override fun toString() : String = elementHandle.qualifiedName
-    
+
+    override fun toString(): String = elementHandle.qualifiedName
+
 }

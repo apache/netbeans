@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.lang.java.NBParameterUtils
 import org.netbeans.api.project.Project
 import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
+import javax.lang.model.element.TypeParameterElement
 
 /*
 
@@ -31,8 +32,8 @@ import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaTypeParameter(elementHandle : ElemHandle<*>, project : Project) : 
-        NetBeansJavaClassifier(elementHandle, project), JavaTypeParameter {
+class NetBeansJavaTypeParameter(elementHandle : ElemHandle<TypeParameterElement>, project : Project) : 
+        NetBeansJavaClassifier<TypeParameterElement>(elementHandle, project), JavaTypeParameter {
 
     override val name : Name
         get() = NBParameterUtils.getNameOfTypeParameter(elementHandle, project)

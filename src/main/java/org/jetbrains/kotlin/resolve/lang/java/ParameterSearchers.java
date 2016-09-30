@@ -119,7 +119,7 @@ public class ParameterSearchers {
 
         private final TypeMirrorHandle typeHandle;
         private final Project project;
-        private ElemHandle elemHandle = null;
+        private ElemHandle<TypeParameterElement> elemHandle = null;
         
         public ElemHandleSearcher(TypeMirrorHandle typeHandle, Project project) {
             this.typeHandle = typeHandle;
@@ -133,7 +133,7 @@ public class ParameterSearchers {
             if (mirror == null) {
                 return;
             }
-            elemHandle = ElemHandle.create(((TypeVariable)mirror).asElement(), project);
+            elemHandle = ElemHandle.create((TypeParameterElement)((TypeVariable) mirror).asElement(), project);
         }
         
         public ElemHandle getElemHandle() {

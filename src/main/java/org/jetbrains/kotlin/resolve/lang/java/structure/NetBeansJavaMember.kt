@@ -36,7 +36,7 @@ abstract class NetBeansJavaMember<T: Element>(elementHandle : ElemHandle<T>, ove
         NetBeansJavaElement<T>(elementHandle, project), JavaMember {
     
     override val annotations : Collection<JavaAnnotation>
-        get() = NBAnnotationUtils.getAnnotations(elementHandle, project)
+        get() = elementHandle.getAnnotations(project)
 
     override val visibility : Visibility 
         get() = elementHandle.getVisibility(project)
@@ -49,6 +49,6 @@ abstract class NetBeansJavaMember<T: Element>(elementHandle : ElemHandle<T>, ove
     override val isStatic : Boolean = elementHandle.isStatic(project)
     override val isFinal : Boolean = elementHandle.isFinal(project)
     
-    override fun findAnnotation(fqName : FqName) : JavaAnnotation? = NBAnnotationUtils.getAnnotation(elementHandle, project, fqName)
+    override fun findAnnotation(fqName : FqName) : JavaAnnotation? = elementHandle.getAnnotation(project, fqName)
     
 }

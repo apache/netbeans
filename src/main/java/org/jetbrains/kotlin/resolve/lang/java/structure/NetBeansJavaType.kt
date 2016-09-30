@@ -21,9 +21,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaAnnotation
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner
 import org.jetbrains.kotlin.load.java.structure.JavaType
 import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.resolve.lang.java.NBAnnotationUtils
-import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
-import org.jetbrains.kotlin.resolve.lang.java.NBTypeUtils
+import org.jetbrains.kotlin.resolve.lang.java.*
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
 import javax.lang.model.type.TypeMirror
@@ -59,9 +57,9 @@ abstract class NetBeansJavaType(val handle : TypeMirrorHandle<*>,
     override val isDeprecatedInJavaDoc = false
     
     override val annotations : Collection<JavaAnnotation>
-        get() = NBAnnotationUtils.getAnnotations(handle, project)
+        get() = handle.getAnnotations(project)
     
-    override fun findAnnotation(fqName : FqName) : JavaAnnotation? = NBAnnotationUtils.getAnnotation(handle, project, fqName)
+    override fun findAnnotation(fqName : FqName) : JavaAnnotation? = handle.getAnnotation(project, fqName)
     override fun hashCode() : Int = NBElementUtils.typeMirrorHandleHashCode(handle, project)
     override fun equals(other : Any?) : Boolean = other is NetBeansJavaType && NBElementUtils.typeMirrorHandleEquals(handle, other.handle, project)
     

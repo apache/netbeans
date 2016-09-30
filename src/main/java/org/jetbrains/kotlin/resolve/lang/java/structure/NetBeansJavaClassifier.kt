@@ -20,10 +20,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaAnnotation
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner
 import org.jetbrains.kotlin.load.java.structure.JavaClassifier
 import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.resolve.lang.java.NBAnnotationUtils
 import org.netbeans.api.project.Project
-import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
-import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
+import org.jetbrains.kotlin.resolve.lang.java.*
 import javax.lang.model.element.Element
 
 /*
@@ -36,10 +34,10 @@ abstract class NetBeansJavaClassifier<T: Element>(elementHandle : ElemHandle<T>,
         NetBeansJavaElement<T>(elementHandle, project), JavaClassifier, JavaAnnotationOwner {
     
     override val annotations : Collection<JavaAnnotation>
-        get() = NBAnnotationUtils.getAnnotations(elementHandle, project)
+        get() = elementHandle.getAnnotations(project)
     
     override val isDeprecatedInJavaDoc : Boolean = NBElementUtils.isDeprecated(elementHandle, project)
     
-    override fun findAnnotation(fqName : FqName) = NBAnnotationUtils.getAnnotation(elementHandle, project, fqName)
+    override fun findAnnotation(fqName : FqName) = elementHandle.getAnnotation(project, fqName)
     
 }

@@ -14,37 +14,23 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.resolve.lang.java.structure
+package org.jetbrains.kotlin.resolve.lang.java
 
-import com.google.common.collect.Lists
-import java.util.Collections
 import javax.lang.model.element.PackageElement
 import org.jetbrains.kotlin.load.java.structure.JavaClass
-import org.jetbrains.kotlin.load.java.structure.JavaElement
 import org.jetbrains.kotlin.load.java.structure.JavaPackage
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.resolve.lang.java.PackageSearchers.ClassesSearcher
+import org.jetbrains.kotlin.resolve.lang.java.PackageSearchers.FqNameSearcher
+import org.jetbrains.kotlin.resolve.lang.java.PackageSearchers.SubPackagesSearcher
 import org.netbeans.api.project.Project
-import org.jetbrains.kotlin.resolve.lang.java.*
 
-/*
+fun JavaPackage.getSubPackages(project: Project) = 
+        SubPackagesSearcher(project, this).execute(project).subPackages
 
-  @author Alexander.Baratynski
-  Created on Aug 29, 2016
-*/
+fun List<ElemHandle<PackageElement>>.getClasses(project: Project, nameFilter: (Name) -> Boolean) =
+        ClassesSearcher(this, project, nameFilter).execute(project).classes
 
-class NetBeansJavaPackage(val packages : List<ElemHandle<PackageElement>>, val project : Project) : 
-        JavaPackage, JavaElement {
-    
-    constructor(pack : ElemHandle<PackageElement>, project : Project) : this(Collections.singletonList(pack), project)
-    
-    override val fqName : FqName 
-        get() = packages[0].getFqName(project)
-    
-    override val subPackages : Collection<JavaPackage>
-        get() = this.getSubPackages(project)
-    
-    override fun getClasses(nameFilter : (Name) -> Boolean) = 
-            packages.getClasses(project, nameFilter)
-    
-}
+fun ElemHandle<PackageElement>.getFqName(project: Project) = 
+        FqNameSearcher(this).execute(project).fqName

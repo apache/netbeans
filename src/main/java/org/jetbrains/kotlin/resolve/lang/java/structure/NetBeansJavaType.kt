@@ -40,7 +40,7 @@ abstract class NetBeansJavaType(val handle : TypeMirrorHandle<*>,
         fun create(typeHandle : TypeMirrorHandle<*>, project : Project) : NetBeansJavaType {
             return when {
                 typeHandle.kind.isPrimitive || 
-                        NBTypeUtils.getName(typeHandle, project).equals("void") -> 
+                        typeHandle.getName(project).equals("void") -> 
                     NetBeansJavaPrimitiveType(typeHandle, project)
                 
                 typeHandle.kind == TypeKind.ARRAY -> NetBeansJavaArrayType(typeHandle, project)

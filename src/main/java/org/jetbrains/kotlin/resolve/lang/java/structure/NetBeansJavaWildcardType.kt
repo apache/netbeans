@@ -18,7 +18,7 @@ package org.jetbrains.kotlin.resolve.lang.java.structure
 
 import org.jetbrains.kotlin.load.java.structure.JavaType
 import org.jetbrains.kotlin.load.java.structure.JavaWildcardType
-import org.jetbrains.kotlin.resolve.lang.java.NBTypeUtils
+import org.jetbrains.kotlin.resolve.lang.java.*
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
 
@@ -31,8 +31,8 @@ import org.netbeans.api.project.Project
 class NetBeansJavaWildcardType(handle : TypeMirrorHandle<*>, project : Project) : NetBeansJavaType(handle, project), JavaWildcardType {
     
     override val bound : JavaType?
-        get() = NBTypeUtils.getBound(handle, project)
+        get() = handle.getBound(project)
     
-    override val isExtends : Boolean = NBTypeUtils.isExtends(handle, project)
+    override val isExtends : Boolean = handle.isExtends(project)
     
 }

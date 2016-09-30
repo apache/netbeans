@@ -20,7 +20,6 @@ import javax.lang.model.type.TypeKind
 import org.jetbrains.kotlin.load.java.structure.JavaClassifier
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType
 import org.jetbrains.kotlin.load.java.structure.JavaType
-import org.jetbrains.kotlin.resolve.lang.java.NBTypeUtils
 import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
@@ -35,14 +34,14 @@ import org.jetbrains.kotlin.resolve.lang.java.*
 class NetBeansJavaClassifierType(handle : TypeMirrorHandle<*>, project : Project) : 
         NetBeansJavaType(handle, project), JavaClassifierType {
 
-    override val presentableText : String = NBTypeUtils.getName(handle, project)
-    override val canonicalText : String = NBTypeUtils.getName(handle, project)
+    override val presentableText : String = handle.getName(project)
+    override val canonicalText : String = handle.getName(project)
     
     override val isRaw : Boolean
-        get() = if (handle.kind == TypeKind.DECLARED) NBTypeUtils.isRaw(handle, project) else false
+        get() = if (handle.kind == TypeKind.DECLARED) handle.isRaw(project) else false
     
     override val typeArguments : List<JavaType>
-        get() = if (handle.kind == TypeKind.DECLARED) NBTypeUtils.getTypeArguments(handle, project) else emptyList()
+        get() = if (handle.kind == TypeKind.DECLARED) handle.getTypeArguments(project) else emptyList()
     
     override val classifier : JavaClassifier? = when (handle.kind) {
             TypeKind.DECLARED -> NBElementUtils.getNetBeansJavaClassFromType(handle, project)

@@ -147,7 +147,7 @@ public class ElemHandle<T extends Element> {
         if (handle != null) {
             return handle.toString();
         } else {
-            return NBTypeUtils.getName(typeHandle, project);
+            return NbTypeUtilsKt.getName(typeHandle, project);
         }
     }
     

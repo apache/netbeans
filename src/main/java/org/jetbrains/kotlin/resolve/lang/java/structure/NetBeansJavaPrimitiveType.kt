@@ -19,7 +19,7 @@ package org.jetbrains.kotlin.resolve.lang.java.structure
 import org.jetbrains.kotlin.builtins.PrimitiveType
 import org.jetbrains.kotlin.load.java.structure.JavaPrimitiveType
 import org.jetbrains.kotlin.resolve.jvm.JvmPrimitiveType
-import org.jetbrains.kotlin.resolve.lang.java.NBTypeUtils
+import org.jetbrains.kotlin.resolve.lang.java.getName
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
 import javax.lang.model.type.TypeMirror
@@ -35,7 +35,7 @@ class NetBeansJavaPrimitiveType(handle : TypeMirrorHandle<*>, project : Project)
 
     override val type : PrimitiveType? 
         get() {
-            val text = NBTypeUtils.getName(handle, project)
+            val text = handle.getName(project)
             return if ("void".equals(text)) null else JvmPrimitiveType.get(text).primitiveType
         }
     

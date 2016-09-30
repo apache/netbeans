@@ -26,9 +26,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaMethod
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.resolve.lang.java.NBMemberUtils
 import org.netbeans.api.project.Project
-import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
 import org.jetbrains.kotlin.resolve.lang.java.*
 import javax.lang.model.element.TypeElement
 
@@ -65,7 +63,7 @@ class NetBeansJavaClass(elementHandle: ElemHandle<TypeElement>, project: Project
         get() = elementHandle.getFields(project, this)
 
     override val visibility: Visibility
-        get() = NBMemberUtils.getVisibility(elementHandle, project)
+        get() = elementHandle.getVisibility(project)
 
     override val typeParameters: List<JavaTypeParameter>
         get() = elementHandle.getTypeParameters(project)
@@ -73,9 +71,9 @@ class NetBeansJavaClass(elementHandle: ElemHandle<TypeElement>, project: Project
     override val isInterface: Boolean = elementHandle.kind == ElementKind.INTERFACE
     override val isAnnotationType: Boolean = elementHandle.kind == ElementKind.ANNOTATION_TYPE
     override val isEnum: Boolean = elementHandle.kind == ElementKind.ENUM
-    override val isAbstract: Boolean = NBMemberUtils.isAbstract(elementHandle, project)
-    override val isStatic: Boolean = NBMemberUtils.isStatic(elementHandle, project)
-    override val isFinal: Boolean = NBMemberUtils.isFinal(elementHandle, project)
+    override val isAbstract: Boolean = elementHandle.isAbstract(project)
+    override val isStatic: Boolean = elementHandle.isStatic(project)
+    override val isFinal: Boolean = elementHandle.isFinal(project)
 
     override val lightClassOriginKind = null
 

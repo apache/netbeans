@@ -22,11 +22,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaClass
 import org.jetbrains.kotlin.load.java.structure.JavaMember
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.resolve.lang.java.NBAnnotationUtils
-import org.jetbrains.kotlin.resolve.lang.java.NBMemberUtils
-import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
+import org.jetbrains.kotlin.resolve.lang.java.*
 import org.netbeans.api.project.Project
-import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
 import javax.lang.model.element.Element
 
 /*
@@ -42,15 +39,15 @@ abstract class NetBeansJavaMember<T: Element>(elementHandle : ElemHandle<T>, ove
         get() = NBAnnotationUtils.getAnnotations(elementHandle, project)
 
     override val visibility : Visibility 
-        get() = NBMemberUtils.getVisibility(elementHandle, project)
+        get() = elementHandle.getVisibility(project)
     
     override val name : Name
-        get() = NBMemberUtils.getName(elementHandle, project)
+        get() = elementHandle.getName(project)
     
     override val isDeprecatedInJavaDoc : Boolean = NBElementUtils.isDeprecated(elementHandle, project)
-    override val isAbstract : Boolean = NBMemberUtils.isAbstract(elementHandle, project)
-    override val isStatic : Boolean = NBMemberUtils.isStatic(elementHandle, project)
-    override val isFinal : Boolean = NBMemberUtils.isFinal(elementHandle, project)
+    override val isAbstract : Boolean = elementHandle.isAbstract(project)
+    override val isStatic : Boolean = elementHandle.isStatic(project)
+    override val isFinal : Boolean = elementHandle.isFinal(project)
     
     override fun findAnnotation(fqName : FqName) : JavaAnnotation? = NBAnnotationUtils.getAnnotation(elementHandle, project, fqName)
     

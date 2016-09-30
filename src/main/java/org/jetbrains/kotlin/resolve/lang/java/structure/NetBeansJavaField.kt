@@ -20,9 +20,8 @@ import javax.lang.model.element.ElementKind
 import org.jetbrains.kotlin.load.java.structure.JavaClass
 import org.jetbrains.kotlin.load.java.structure.JavaField
 import org.jetbrains.kotlin.load.java.structure.JavaType
-import org.jetbrains.kotlin.resolve.lang.java.NBMemberUtils
+import org.jetbrains.kotlin.resolve.lang.java.*
 import org.netbeans.api.project.Project
-import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
 import javax.lang.model.element.VariableElement
 
 /*
@@ -36,6 +35,6 @@ class NetBeansJavaField(elementHandle : ElemHandle<VariableElement>, containingC
     
     override val isEnumEntry : Boolean = elementHandle.kind == ElementKind.ENUM_CONSTANT
     override val type : JavaType
-        get() = NBMemberUtils.getFieldType(elementHandle, project)
+        get() = elementHandle.getFieldType(project)
     
 }

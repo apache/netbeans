@@ -33,7 +33,6 @@ import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass;
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaPackage;
 import org.netbeans.api.java.source.CompilationController;
-import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.project.Project;
@@ -89,7 +88,7 @@ public class PackageSearchers {
                     boolean applicableForRootPackage = thisNestedLevel == 1 && thisNestedLevel == subNestedLevel;
                     if (!packageFragment.getQualifiedName().toString().isEmpty()
                             && (applicableForRootPackage || (thisNestedLevel + 1 == subNestedLevel))) {
-                        subPackages.add(new NetBeansJavaPackage(ElementHandle.create(packageFragment), project));
+                        subPackages.add(new NetBeansJavaPackage(ElemHandle.create(packageFragment, project), project));
                     }
                 }
             }
@@ -104,11 +103,11 @@ public class PackageSearchers {
     public static class ClassesSearcher implements Task<CompilationController> {
 
         private final Project project;
-        private final List<ElementHandle<PackageElement>> packages;
+        private final List<ElemHandle<PackageElement>> packages;
         private final Function1<? super Name, Boolean> nameFilter;
         private final Collection<JavaClass> classes = Lists.newArrayList();
 
-        public ClassesSearcher(List<ElementHandle<PackageElement>> packages, Project project, 
+        public ClassesSearcher(List<ElemHandle<PackageElement>> packages, Project project, 
                 Function1<? super Name, Boolean> nameFilter) {
             this.packages = packages;
             this.project = project;
@@ -128,7 +127,7 @@ public class PackageSearchers {
                 if (isOuterClass((TypeElement) cl)) {
                     String elementName = cl.getSimpleName().toString();
                     if (Name.isValidIdentifier(elementName) && nameFilter.invoke(Name.identifier(elementName))) {
-                        javaClasses.add(new NetBeansJavaClass(ElementHandle.create(cl), project));
+                        javaClasses.add(new NetBeansJavaClass(ElemHandle.create(cl, project), project));
                     }
                 }
             }
@@ -140,13 +139,13 @@ public class PackageSearchers {
         public void run(CompilationController info) throws Exception {
             info.toPhase(Phase.RESOLVED);
             
-            for (ElementHandle<PackageElement> packHandle : packages) {
-                PackageElement elem = packHandle.resolve(info);
+            for (ElemHandle<PackageElement> packHandle : packages) {
+                Element elem = packHandle.resolve(info);
                 if (elem == null) {
                     continue;
                 }
                 
-                classes.addAll(getClassesInPackage(elem, nameFilter));
+                classes.addAll(getClassesInPackage((PackageElement) elem, nameFilter));
             }
             
         }
@@ -159,22 +158,22 @@ public class PackageSearchers {
     
     public static class FqNameSearcher implements Task<CompilationController> {
 
-        private final ElementHandle<PackageElement> handle;
+        private final ElemHandle<PackageElement> handle;
         private FqName fqName = null;
         
-        public FqNameSearcher(ElementHandle<PackageElement> handle) {
+        public FqNameSearcher(ElemHandle<PackageElement> handle) {
             this.handle = handle;
         }
         
         @Override
         public void run(CompilationController info) throws Exception {
             info.toPhase(Phase.RESOLVED);
-            PackageElement pack = handle.resolve(info);
+            Element pack = handle.resolve(info);
             if (pack == null) {
                 return;
             }
             
-            fqName = new FqName(pack.getQualifiedName().toString());
+            fqName = new FqName(((PackageElement) pack).getQualifiedName().toString());
         }
         
         public FqName getFqName() {

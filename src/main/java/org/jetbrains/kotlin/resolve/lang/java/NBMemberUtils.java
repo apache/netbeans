@@ -37,50 +37,50 @@ import org.netbeans.api.project.Project;
  */
 public class NBMemberUtils {
     
-    public static boolean isAbstract(ElementHandle handle, Project project) {
+    public static boolean isAbstract(ElemHandle handle, Project project) {
         IsAbstractSearcher searcher = new IsAbstractSearcher(handle);
         NBElementUtils.execute(searcher, project);
         
         return searcher.isAbstract();
     }
     
-    public static boolean isStatic(ElementHandle handle, Project project) {
+    public static boolean isStatic(ElemHandle handle, Project project) {
         IsStaticSearcher searcher = new IsStaticSearcher(handle);
         NBElementUtils.execute(searcher, project);
         
         return searcher.isStatic();
     }
     
-    public static boolean isFinal(ElementHandle handle, Project project) {
+    public static boolean isFinal(ElemHandle handle, Project project) {
         IsFinalSearcher searcher = new IsFinalSearcher(handle);
         NBElementUtils.execute(searcher, project);
         
         return searcher.isFinal();
     }
     
-    public static Name getName(ElementHandle handle, Project project) {
+    public static Name getName(ElemHandle handle, Project project) {
         NameSearcher searcher = new NameSearcher(handle);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getName();
     }
     
-    public static Visibility getVisibility(ElementHandle handle, Project project) {
+    public static Visibility getVisibility(ElemHandle handle, Project project) {
         VisibilitySearcher searcher = new VisibilitySearcher(handle);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getVisibility();
     }
     
-    public static JavaType getFieldType(ElementHandle handle, Project project) {
+    public static JavaType getFieldType(ElemHandle handle, Project project) {
         FieldTypeSearcher searcher = new FieldTypeSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getType();
     }
     
-    public static ElementHandle getContainingClass(ElementHandle handle, Project project) {
-        FieldContainingClassSearcher searcher = new FieldContainingClassSearcher(handle);
+    public static ElemHandle getContainingClass(ElemHandle handle, Project project) {
+        FieldContainingClassSearcher searcher = new FieldContainingClassSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getContainingClass();

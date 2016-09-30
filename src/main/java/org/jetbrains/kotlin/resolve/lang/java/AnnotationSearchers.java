@@ -74,7 +74,7 @@ public class AnnotationSearchers {
             return new NetBeansJavaAnnotationAsAnnotationArgument(project, name, typeHandle,
                     getMirrorArguments((AnnotationMirror) value, info, project));
         } else if (value instanceof VariableElement) {
-            return new NetBeansJavaReferenceAnnotationArgument(ElementHandle.create(((VariableElement) value)), project);
+            return new NetBeansJavaReferenceAnnotationArgument(ElemHandle.create(((VariableElement) value), project), project);
         } else if (value instanceof String) {
             return new NetBeansJavaLiteralAnnotationArgument(value, name);
         } else if (value instanceof Class<?>) {
@@ -107,10 +107,10 @@ public class AnnotationSearchers {
     public static class AnnotationsSearcher implements Task<CompilationController> {
 
         private final Collection<JavaAnnotation> annotations = Lists.newArrayList();
-        private final ElementHandle handle;
+        private final ElemHandle handle;
         private final Project project;
 
-        public AnnotationsSearcher(ElementHandle handle, Project project) {
+        public AnnotationsSearcher(ElemHandle handle, Project project) {
             this.handle = handle;
             this.project = project;
         }
@@ -177,11 +177,11 @@ public class AnnotationSearchers {
     public static class AnnotationSearcher implements Task<CompilationController> {
 
         private JavaAnnotation annotation = null;
-        private final ElementHandle handle;
+        private final ElemHandle handle;
         private final Project project;
         private final FqName fqName;
 
-        public AnnotationSearcher(ElementHandle handle, Project project, FqName fqName) {
+        public AnnotationSearcher(ElemHandle handle, Project project, FqName fqName) {
             this.handle = handle;
             this.project = project;
             this.fqName = fqName;

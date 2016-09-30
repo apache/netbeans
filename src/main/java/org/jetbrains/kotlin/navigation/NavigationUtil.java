@@ -120,7 +120,7 @@ public class NavigationUtil {
             KtElement fromElement, Project project, FileObject currentFile){
         
         if (element instanceof NetBeansJavaSourceElement){
-            ElementHandle binding = ((NetBeansJavaElement)((NetBeansJavaSourceElement) element).getJavaElement()).getElementHandle();
+            ElementHandle binding = ((NetBeansJavaElement)((NetBeansJavaSourceElement) element).getJavaElement()).getElementHandle().getElementHandle();
             if (binding == null) {
                 return null;
             }
@@ -128,7 +128,7 @@ public class NavigationUtil {
             if (binding.getKind() == ElementKind.CONSTRUCTOR){
                 JavaClass containingClass = ((NetBeansJavaMember)((NetBeansJavaSourceElement) element).
                         getJavaElement()).getContainingClass();
-                binding = ((NetBeansJavaClass) containingClass).getElementHandle();
+                binding = ((NetBeansJavaClass) containingClass).getElementHandle().getElementHandle();
             }
             
             gotoJavaDeclaration(binding, project);

@@ -21,8 +21,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaConstructor
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter
 import org.jetbrains.kotlin.load.java.structure.JavaValueParameter
 import org.jetbrains.kotlin.resolve.lang.java.NBExecutableUtils
-import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.project.Project
+import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
 
 /*
 
@@ -30,10 +30,10 @@ import org.netbeans.api.project.Project
   Created on Aug 29, 2016
 */
 
-class NetBeansJavaConstructor(elementHandle : ElementHandle<*>?, containingClass : JavaClass, project : Project) : 
+class NetBeansJavaConstructor(elementHandle : ElemHandle<*>, containingClass : JavaClass, project : Project) : 
         NetBeansJavaMember(elementHandle, containingClass, project), JavaConstructor {
 
-    override val valueParameters : List<JavaValueParameter> 
+    override val valueParameters : List<JavaValueParameter>
         get() = NBExecutableUtils.getValueParameters(elementHandle, project)
     
     override val typeParameters : List<JavaTypeParameter>

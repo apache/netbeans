@@ -36,6 +36,7 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TypeMirrorHandle;
+import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -46,11 +47,13 @@ public class Searchers {
 
     public static class TypeElementSearcher implements Task<CompilationController> {
 
-        private ElementHandle<TypeElement> element;
+        private ElemHandle<TypeElement> element;
         private final String fqName;
-
-        public TypeElementSearcher(String fqName) {
+        private final Project project;
+        
+        public TypeElementSearcher(String fqName, Project project) {
             this.fqName = fqName;
+            this.project = project;
         }
 
         @Override
@@ -58,11 +61,11 @@ public class Searchers {
             info.toPhase(JavaSource.Phase.RESOLVED);
             TypeElement elem = info.getElements().getTypeElement(fqName);
             if (elem != null) {
-                element = ElementHandle.create(elem);
+                element = ElemHandle.create(elem, project);
             }
         }
 
-        public ElementHandle<TypeElement> getElement() {
+        public ElemHandle<TypeElement> getElement() {
             return element;
         }
 
@@ -94,11 +97,13 @@ public class Searchers {
 
     public static class PackageElementSearcher implements Task<CompilationController> {
 
-        private ElementHandle<PackageElement> element;
+        private ElemHandle<PackageElement> element;
         private final String fqName;
-
-        public PackageElementSearcher(String fqName) {
+        private final Project project;
+        
+        public PackageElementSearcher(String fqName, Project project) {
             this.fqName = fqName;
+            this.project = project;
         }
 
         @Override
@@ -106,11 +111,11 @@ public class Searchers {
             info.toPhase(JavaSource.Phase.RESOLVED);
             PackageElement elem = info.getElements().getPackageElement(fqName);
             if (elem != null) {
-                element = ElementHandle.create(elem);
+                element = ElemHandle.create(elem, project);
             }
         }
 
-        public ElementHandle<PackageElement> getPackage() {
+        public ElemHandle<PackageElement> getPackage() {
             return element;
         }
 
@@ -118,10 +123,10 @@ public class Searchers {
 
     public static class ClassIdComputer implements Task<CompilationController> {
 
-        private final ElementHandle<TypeElement> handle;
+        private final ElemHandle<TypeElement> handle;
         private ClassId classId = null;
 
-        public ClassIdComputer(ElementHandle<TypeElement> handle) {
+        public ClassIdComputer(ElemHandle<TypeElement> handle) {
             this.handle = handle;
         }
 
@@ -141,12 +146,12 @@ public class Searchers {
         @Override
         public void run(CompilationController info) throws Exception {
             info.toPhase(JavaSource.Phase.RESOLVED);
-            TypeElement elem = handle.resolve(info);
+            Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
             }
             
-            classId = computeClassId(elem);
+            classId = computeClassId((TypeElement) elem);
         }
 
         public ClassId getClassId() {
@@ -188,10 +193,40 @@ public class Searchers {
     
     public static class ElementSimpleNameSearcher implements CancellableTask<CompilationController>{
 
+        private final ElemHandle element;
+        private String simpleName = null;
+        
+        public ElementSimpleNameSearcher(ElemHandle element){
+            this.element = element;
+        }
+        
+        @Override
+        public void cancel() {
+        }
+
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            Element elem = element.resolve(info);
+            if (elem == null) {
+                return;
+            }
+            
+            simpleName = elem.getSimpleName().toString();
+        }
+        
+        public String getSimpleName(){
+            return simpleName;
+        }
+        
+    }
+    
+    public static class ElementHandleSimpleNameSearcher implements CancellableTask<CompilationController>{
+
         private final ElementHandle element;
         private String simpleName = null;
         
-        public ElementSimpleNameSearcher(ElementHandle element){
+        public ElementHandleSimpleNameSearcher(ElementHandle element){
             this.element = element;
         }
         
@@ -249,10 +284,10 @@ public class Searchers {
     
     public static class IsDeprecatedSearcher implements CancellableTask<CompilationController>{
 
-        private final ElementHandle element;
+        private final ElemHandle element;
         private boolean deprecated = false;
         
-        public IsDeprecatedSearcher(ElementHandle element){
+        public IsDeprecatedSearcher(ElemHandle element){
             this.element = element;
         }
         

@@ -37,7 +37,6 @@ import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.NameSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.OuterClassSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.SuperTypesSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.TypeParametersSearcher;
-import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 
 /**
@@ -46,63 +45,63 @@ import org.netbeans.api.project.Project;
  */
 public class NBClassUtils {
     
-    public static Name getName(ElementHandle handle, Project project) {
+    public static Name getName(ElemHandle handle, Project project) {
         NameSearcher searcher = new NameSearcher(handle);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getName();
     }
     
-    public static Collection<JavaClassifierType> getSuperTypes(ElementHandle handle, Project project) {
+    public static Collection<JavaClassifierType> getSuperTypes(ElemHandle handle, Project project) {
         SuperTypesSearcher searcher = new SuperTypesSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getSuperTypes();
     }
     
-    public static Collection<JavaClass> getInnerClasses(ElementHandle handle, Project project) {
+    public static Collection<JavaClass> getInnerClasses(ElemHandle handle, Project project) {
         InnerClassesSearcher searcher = new InnerClassesSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getInnerClasses();
     }
     
-    public static JavaClass getOuterClass(ElementHandle handle, Project project) {
+    public static JavaClass getOuterClass(ElemHandle handle, Project project) {
         OuterClassSearcher searcher = new OuterClassSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getOuterClass();
     }
     
-    public static Collection<JavaMethod> getMethods(ElementHandle handle, Project project, JavaClass javaClass) {
+    public static Collection<JavaMethod> getMethods(ElemHandle handle, Project project, JavaClass javaClass) {
         MethodsSearcher searcher = new MethodsSearcher(handle, project, javaClass);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getMethods();
     }
     
-    public static Collection<JavaConstructor> getConstructors(ElementHandle handle, Project project, JavaClass javaClass) {
+    public static Collection<JavaConstructor> getConstructors(ElemHandle handle, Project project, JavaClass javaClass) {
         ConstructorsSearcher searcher = new ConstructorsSearcher(handle, project, javaClass);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getConstructors();
     }
     
-    public static Collection<JavaField> getFields(ElementHandle handle, Project project, JavaClass javaClass) {
+    public static Collection<JavaField> getFields(ElemHandle handle, Project project, JavaClass javaClass) {
         FieldsSearcher searcher = new FieldsSearcher(handle, project, javaClass);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getFields();
     }
     
-    public static List<JavaTypeParameter> getTypeParameters(ElementHandle handle, Project project) {
+    public static List<JavaTypeParameter> getTypeParameters(ElemHandle handle, Project project) {
         TypeParametersSearcher searcher = new TypeParametersSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getTypeParameters();
     }
     
-    public static FqName getFqName(ElementHandle handle) {
+    public static FqName getFqName(ElemHandle handle) {
         FqName fqName = new FqName(handle.getQualifiedName());
         return fqName;
     }

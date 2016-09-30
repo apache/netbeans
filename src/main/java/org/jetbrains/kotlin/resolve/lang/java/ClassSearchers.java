@@ -58,17 +58,17 @@ public class ClassSearchers {
 
     public static class NameSearcher implements Task<CompilationController> {
 
-        private final ElementHandle<TypeElement> handle;
+        private final ElemHandle<TypeElement> handle;
         private Name name = null;
 
-        public NameSearcher(ElementHandle<TypeElement> handle) {
+        public NameSearcher(ElemHandle<TypeElement> handle) {
             this.handle = handle;
         }
 
         @Override
         public void run(CompilationController info) throws Exception {
             info.toPhase(Phase.RESOLVED);
-            TypeElement elem = handle.resolve(info);
+            Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
             }
@@ -84,11 +84,11 @@ public class ClassSearchers {
 
     public static class SuperTypesSearcher implements Task<CompilationController> {
 
-        private final ElementHandle<TypeElement> handle;
+        private final ElemHandle<TypeElement> handle;
         private final Project project;
         private final Collection<JavaClassifierType> superTypes = Lists.newArrayList();
 
-        public SuperTypesSearcher(ElementHandle<TypeElement> handle, Project project) {
+        public SuperTypesSearcher(ElemHandle<TypeElement> handle, Project project) {
             this.handle = handle;
             this.project = project;
         }
@@ -132,12 +132,12 @@ public class ClassSearchers {
         @Override
         public void run(CompilationController info) throws Exception {
             info.toPhase(Phase.RESOLVED);
-            TypeElement elem = handle.resolve(info);
+            Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
             }
             
-            for (TypeMirror superType : getSuperTypesWithObject(elem, info)) {
+            for (TypeMirror superType : getSuperTypesWithObject((TypeElement) elem, info)) {
                 TypeMirrorHandle typeHandle = TypeMirrorHandle.create(superType);
                 superTypes.add(new NetBeansJavaClassifierType(typeHandle, project));
             }
@@ -151,11 +151,11 @@ public class ClassSearchers {
 
     public static class InnerClassesSearcher implements Task<CompilationController> {
 
-        private final ElementHandle<TypeElement> handle;
+        private final ElemHandle<TypeElement> handle;
         private final Project project;
         private final Collection<JavaClass> innerClasses = Lists.newArrayList();
 
-        public InnerClassesSearcher(ElementHandle<TypeElement> handle, Project project) {
+        public InnerClassesSearcher(ElemHandle<TypeElement> handle, Project project) {
             this.handle = handle;
             this.project = project;
         }
@@ -163,7 +163,7 @@ public class ClassSearchers {
         @Override
         public void run(CompilationController info) throws Exception {
             info.toPhase(Phase.RESOLVED);
-            TypeElement elem = handle.resolve(info);
+            Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
             }
@@ -171,7 +171,7 @@ public class ClassSearchers {
             List<? extends Element> members = elem.getEnclosedElements();//info.getElements().getAllMembers(elem);
             for (Element member : members) {
                 if (member.asType().getKind() == TypeKind.DECLARED && member instanceof TypeElement){
-                    innerClasses.add(new NetBeansJavaClass(ElementHandle.create(member), project));
+                    innerClasses.add(new NetBeansJavaClass(ElemHandle.create(member, project), project));
                 }
             }
         }
@@ -184,11 +184,11 @@ public class ClassSearchers {
     
     public static class OuterClassSearcher implements Task<CompilationController> {
 
-        private final ElementHandle<TypeElement> handle;
+        private final ElemHandle<TypeElement> handle;
         private final Project project;
         private JavaClass outerClass = null;
 
-        public OuterClassSearcher(ElementHandle<TypeElement> handle, Project project) {
+        public OuterClassSearcher(ElemHandle<TypeElement> handle, Project project) {
             this.handle = handle;
             this.project = project;
         }
@@ -196,7 +196,7 @@ public class ClassSearchers {
         @Override
         public void run(CompilationController info) throws Exception {
             info.toPhase(Phase.RESOLVED);
-            TypeElement elem = handle.resolve(info);
+            Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
             }
@@ -206,7 +206,7 @@ public class ClassSearchers {
                 return;
             }
             
-            outerClass = new NetBeansJavaClass(ElementHandle.create(outer), project);
+            outerClass = new NetBeansJavaClass(ElemHandle.create(outer, project), project);
         }
 
         public JavaClass getOuterClass() {
@@ -217,12 +217,12 @@ public class ClassSearchers {
     
     public static class MethodsSearcher implements Task<CompilationController> {
 
-        private final ElementHandle<TypeElement> handle;
+        private final ElemHandle<TypeElement> handle;
         private final Project project;
         private final JavaClass containingClass;
         private final Collection<JavaMethod> methods = Lists.newArrayList();
 
-        public MethodsSearcher(ElementHandle<TypeElement> handle, Project project, JavaClass javaClass) {
+        public MethodsSearcher(ElemHandle<TypeElement> handle, Project project, JavaClass javaClass) {
             this.handle = handle;
             this.project = project;
             this.containingClass = javaClass;
@@ -231,7 +231,7 @@ public class ClassSearchers {
         @Override
         public void run(CompilationController info) throws Exception {
             info.toPhase(Phase.RESOLVED);
-            TypeElement elem = handle.resolve(info);
+            Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
             }
@@ -239,7 +239,7 @@ public class ClassSearchers {
             List<? extends Element> members = elem.getEnclosedElements();//info.getElements().getAllMembers(elem);
             for (Element member : members) {
                 if (member.getKind() == ElementKind.METHOD){
-                    methods.add(new NetBeansJavaMethod(ElementHandle.create(member), containingClass, project));
+                    methods.add(new NetBeansJavaMethod(ElemHandle.create(member, project), containingClass, project));
                 }
             }
         }
@@ -252,12 +252,12 @@ public class ClassSearchers {
     
     public static class ConstructorsSearcher implements Task<CompilationController> {
 
-        private final ElementHandle<TypeElement> handle;
+        private final ElemHandle<TypeElement> handle;
         private final Project project;
         private final JavaClass containingClass;
         private final Collection<JavaConstructor> constructors = Lists.newArrayList();
 
-        public ConstructorsSearcher(ElementHandle<TypeElement> handle, Project project, JavaClass javaClass) {
+        public ConstructorsSearcher(ElemHandle<TypeElement> handle, Project project, JavaClass javaClass) {
             this.handle = handle;
             this.project = project;
             this.containingClass = javaClass;
@@ -266,7 +266,7 @@ public class ClassSearchers {
         @Override
         public void run(CompilationController info) throws Exception {
             info.toPhase(Phase.RESOLVED);
-            TypeElement elem = handle.resolve(info);
+            Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
             }
@@ -274,7 +274,7 @@ public class ClassSearchers {
             List<? extends Element> members = elem.getEnclosedElements();
             for (Element member : members) {
                 if (member.getKind() == ElementKind.CONSTRUCTOR){
-                    constructors.add(new NetBeansJavaConstructor(ElementHandle.create(member), containingClass, project));
+                    constructors.add(new NetBeansJavaConstructor(ElemHandle.create(member, project), containingClass, project));
                 }
             }
         }
@@ -287,12 +287,12 @@ public class ClassSearchers {
     
     public static class FieldsSearcher implements Task<CompilationController> {
 
-        private final ElementHandle<TypeElement> handle;
+        private final ElemHandle<TypeElement> handle;
         private final Project project;
         private final JavaClass containingClass;
         private final Collection<JavaField> fields = Lists.newArrayList();
 
-        public FieldsSearcher(ElementHandle<TypeElement> handle, Project project, JavaClass javaClass) {
+        public FieldsSearcher(ElemHandle<TypeElement> handle, Project project, JavaClass javaClass) {
             this.handle = handle;
             this.project = project;
             this.containingClass = javaClass;
@@ -301,7 +301,7 @@ public class ClassSearchers {
         @Override
         public void run(CompilationController info) throws Exception {
             info.toPhase(Phase.RESOLVED);
-            TypeElement elem = handle.resolve(info);
+            Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
             }
@@ -311,7 +311,7 @@ public class ClassSearchers {
                 if (member.getKind().isField()){
                     String name = member.getSimpleName().toString();
                     if (Name.isValidIdentifier(name)){
-                        fields.add(new NetBeansJavaField(ElementHandle.create(member), containingClass, project));
+                        fields.add(new NetBeansJavaField(ElemHandle.create(member, project), containingClass, project));
                     }
                 }
             }
@@ -325,11 +325,11 @@ public class ClassSearchers {
     
     public static class TypeParametersSearcher implements Task<CompilationController> {
 
-        private final ElementHandle<TypeElement> handle;
+        private final ElemHandle<TypeElement> handle;
         private final Project project;
         private final List<JavaTypeParameter> typeParameters = Lists.newArrayList();
 
-        public TypeParametersSearcher(ElementHandle<TypeElement> handle, Project project) {
+        public TypeParametersSearcher(ElemHandle<TypeElement> handle, Project project) {
             this.handle = handle;
             this.project = project;
         }
@@ -337,13 +337,13 @@ public class ClassSearchers {
         @Override
         public void run(CompilationController info) throws Exception {
             info.toPhase(Phase.RESOLVED);
-            TypeElement elem = handle.resolve(info);
+            Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
             }
 
-            for (TypeParameterElement param : elem.getTypeParameters()) {
-                typeParameters.add(new NetBeansJavaTypeParameter(TypeMirrorHandle.create(param.asType()), project));
+            for (TypeParameterElement param : ((TypeElement) elem).getTypeParameters()) {
+                typeParameters.add(new NetBeansJavaTypeParameter(ElemHandle.create(param, project), project));
             }
         }
 

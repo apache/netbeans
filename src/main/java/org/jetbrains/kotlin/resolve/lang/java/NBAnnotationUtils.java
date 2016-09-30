@@ -35,14 +35,14 @@ import org.netbeans.api.project.Project;
  */
 public class NBAnnotationUtils {
     
-    public static Collection<JavaAnnotation> getAnnotations(ElementHandle handle, Project project) {
+    public static Collection<JavaAnnotation> getAnnotations(ElemHandle handle, Project project) {
         AnnotationsSearcher searcher = new AnnotationsSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getAnnotations();
     }
     
-    public static JavaAnnotation getAnnotation(ElementHandle handle, Project project, FqName fqName) {
+    public static JavaAnnotation getAnnotation(ElemHandle handle, Project project, FqName fqName) {
         AnnotationSearcher searcher = new AnnotationSearcher(handle, project, fqName);
         NBElementUtils.execute(searcher, project);
         

@@ -44,10 +44,10 @@ public class MemberSearchers {
     
     public static class IsAbstractSearcher implements Task<CompilationController> {
 
-        private final ElementHandle handle;
+        private final ElemHandle handle;
         private boolean isAbstract = false;
         
-        public IsAbstractSearcher(ElementHandle handle) {
+        public IsAbstractSearcher(ElemHandle handle) {
             this.handle = handle;
         }
         
@@ -70,10 +70,10 @@ public class MemberSearchers {
     
     public static class IsStaticSearcher implements Task<CompilationController> {
 
-        private final ElementHandle handle;
+        private final ElemHandle handle;
         private boolean isStatic = false;
         
-        public IsStaticSearcher(ElementHandle handle) {
+        public IsStaticSearcher(ElemHandle handle) {
             this.handle = handle;
         }
         
@@ -96,10 +96,10 @@ public class MemberSearchers {
     
     public static class IsFinalSearcher implements Task<CompilationController> {
 
-        private final ElementHandle handle;
+        private final ElemHandle handle;
         private boolean isFinal = false;
         
-        public IsFinalSearcher(ElementHandle handle) {
+        public IsFinalSearcher(ElemHandle handle) {
             this.handle = handle;
         }
         
@@ -122,10 +122,36 @@ public class MemberSearchers {
     
     public static class NameSearcher implements Task<CompilationController> {
 
+        private final ElemHandle handle;
+        private Name name = null;
+        
+        public NameSearcher(ElemHandle handle) {
+            this.handle = handle;
+        }
+        
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            Element elem = handle.resolve(info);
+            if (elem == null) {
+                return;
+            }
+            
+            name = Name.identifier(elem.getSimpleName().toString());
+        }
+        
+        public Name getName() {
+            return name;
+        }
+        
+    }
+    
+    public static class ElementHandleNameSearcher implements Task<CompilationController> {
+
         private final ElementHandle handle;
         private Name name = null;
         
-        public NameSearcher(ElementHandle handle) {
+        public ElementHandleNameSearcher(ElementHandle handle) {
             this.handle = handle;
         }
         
@@ -148,10 +174,10 @@ public class MemberSearchers {
     
     public static class VisibilitySearcher implements Task<CompilationController> {
 
-        private final ElementHandle handle;
+        private final ElemHandle handle;
         private Visibility visibility = JavaVisibilities.PACKAGE_VISIBILITY;
         
-        public VisibilitySearcher(ElementHandle handle) {
+        public VisibilitySearcher(ElemHandle handle) {
             this.handle = handle;
         }
         
@@ -182,11 +208,11 @@ public class MemberSearchers {
     
     public static class FieldTypeSearcher implements Task<CompilationController> {
 
-        private final ElementHandle handle;
+        private final ElemHandle handle;
         private final Project project;
         private JavaType type = null;
         
-        public FieldTypeSearcher(ElementHandle handle, Project project) {
+        public FieldTypeSearcher(ElemHandle handle, Project project) {
             this.handle = handle;
             this.project = project;
         }
@@ -211,10 +237,38 @@ public class MemberSearchers {
     
     public static class FieldContainingClassSearcher implements Task<CompilationController> {
 
+        private final ElemHandle handle;
+        private final Project project;
+        private ElemHandle containingClass = null;
+        
+        public FieldContainingClassSearcher(ElemHandle handle, Project project) {
+            this.handle = handle;
+            this.project = project;
+        }
+        
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            Element elem = handle.resolve(info);
+            if (elem == null) {
+                return;
+            }
+            
+            containingClass = ElemHandle.create(elem.getEnclosingElement(), project);
+        }
+        
+        public ElemHandle getContainingClass() {
+            return containingClass;
+        }
+        
+    }
+    
+    public static class ElementHandleFieldContainingClassSearcher implements Task<CompilationController> {
+
         private final ElementHandle handle;
         private ElementHandle containingClass = null;
         
-        public FieldContainingClassSearcher(ElementHandle handle) {
+        public ElementHandleFieldContainingClassSearcher(ElementHandle handle) {
             this.handle = handle;
         }
         

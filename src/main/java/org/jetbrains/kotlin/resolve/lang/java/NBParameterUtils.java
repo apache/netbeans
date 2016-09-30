@@ -21,12 +21,11 @@ package org.jetbrains.kotlin.resolve.lang.java;
 import java.util.Collection;
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType;
 import org.jetbrains.kotlin.name.Name;
+import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.ElemHandleSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.Equals;
 import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.TypeParameterHashCodeSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.TypeParameterNameSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.UpperBoundsSearcher;
-import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.TypeMirrorHandleHashCodeSearcher;
-import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.TypeMirrorHandleEquals;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
 
@@ -36,14 +35,22 @@ import org.netbeans.api.project.Project;
  */
 public class NBParameterUtils {
     
-    public static Name getNameOfTypeParameter(TypeMirrorHandle handle, Project project) {
+    public static Name getNameOfTypeParameter(ElemHandle handle, Project project) {
         TypeParameterNameSearcher searcher = new TypeParameterNameSearcher(handle);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getName();
     }
     
-    public static Collection<JavaClassifierType> getUpperBounds(TypeMirrorHandle handle, Project project) {
+    public static ElemHandle getElemHandleFromTypeMirrorHandle(
+            TypeMirrorHandle typeHandle, Project project) {
+        ElemHandleSearcher searcher = new ElemHandleSearcher(typeHandle, project);
+        NBElementUtils.execute(searcher, project);
+        
+        return searcher.getElemHandle();
+    }
+    
+    public static Collection<JavaClassifierType> getUpperBounds(ElemHandle handle, Project project) {
         UpperBoundsSearcher searcher = new UpperBoundsSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         

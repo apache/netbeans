@@ -20,7 +20,7 @@ import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElement
 import org.jetbrains.kotlin.descriptors.SourceFile
 import org.jetbrains.kotlin.load.java.sources.JavaSourceElement
 import org.jetbrains.kotlin.load.java.structure.JavaElement
-import org.netbeans.api.java.source.ElementHandle
+import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
 
 /*
 
@@ -32,6 +32,6 @@ class NetBeansJavaSourceElement(override val javaElement : JavaElement) : JavaSo
 
     override fun getContainingFile() : SourceFile = SourceFile.NO_SOURCE_FILE
     
-    fun getElementBinding() : ElementHandle<*>? = (javaElement as NetBeansJavaElement).elementHandle
+    fun getElementBinding() : ElemHandle<*> = (javaElement as NetBeansJavaElement).elementHandle
     
 }

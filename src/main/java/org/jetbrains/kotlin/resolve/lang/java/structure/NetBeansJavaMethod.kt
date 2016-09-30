@@ -22,8 +22,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaType
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter
 import org.jetbrains.kotlin.load.java.structure.JavaValueParameter
 import org.jetbrains.kotlin.resolve.lang.java.NBExecutableUtils
-import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.project.Project
+import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
 
 /*
 
@@ -31,7 +31,7 @@ import org.netbeans.api.project.Project
   Created on Aug 29, 2016
 */
 
-class NetBeansJavaMethod(elementHandle : ElementHandle<*>?, containingClass : JavaClass, project : Project) : 
+class NetBeansJavaMethod(elementHandle : ElemHandle<*>, containingClass : JavaClass, project : Project) : 
         NetBeansJavaMember(elementHandle, containingClass, project), JavaMethod {
 
     override val valueParameters : List<JavaValueParameter>

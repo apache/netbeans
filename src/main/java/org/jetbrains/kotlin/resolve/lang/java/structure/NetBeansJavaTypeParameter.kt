@@ -22,8 +22,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.lang.java.NBParameterUtils
-import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
+import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
 
 /*
 
@@ -31,26 +31,18 @@ import org.netbeans.api.project.Project
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaTypeParameter(typeHandle : TypeMirrorHandle<*>, project : Project) : 
-        NetBeansJavaClassifier(null, typeHandle, project), JavaTypeParameter {
+class NetBeansJavaTypeParameter(elementHandle : ElemHandle<*>, project : Project) : 
+        NetBeansJavaClassifier(elementHandle, project), JavaTypeParameter {
 
     override val name : Name
-        get() = NBParameterUtils.getNameOfTypeParameter(typeHandle, project)
+        get() = NBParameterUtils.getNameOfTypeParameter(elementHandle, project)
     
     override val upperBounds : Collection<JavaClassifierType>
-        get() = NBParameterUtils.getUpperBounds(typeHandle, project)
+        get() = NBParameterUtils.getUpperBounds(elementHandle, project)
     
     override val annotations : Collection<JavaAnnotation>
         get() = emptyList()
     
     override fun findAnnotation(fqName : FqName) : JavaAnnotation? = null
     override fun toString() : String = name.asString()
-    override fun hashCode() : Int = NBParameterUtils.hashCode(typeHandle, project)
-    
-    override fun equals(other : Any?) : Boolean {
-        if (other !is NetBeansJavaTypeParameter) return false
-        
-        return NBParameterUtils.equals(typeHandle, other.typeHandle, project)
-    }
-    
 }

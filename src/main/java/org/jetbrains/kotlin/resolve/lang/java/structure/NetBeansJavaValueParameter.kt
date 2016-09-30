@@ -22,8 +22,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaValueParameter
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
-import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
+import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
 
 /*
 
@@ -31,26 +31,19 @@ import org.netbeans.api.project.Project
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaValueParameter(typeHandle : TypeMirrorHandle<*>, project : Project, name : String, isVararg : Boolean) : 
-        NetBeansJavaElement(typeHandle, project), JavaValueParameter {
+class NetBeansJavaValueParameter(elementHandle : ElemHandle<*>, project : Project, name : String, isVararg : Boolean) : 
+        NetBeansJavaElement(elementHandle, project), JavaValueParameter {
 
     override val name : Name = Name.identifier(name)
     override val isVararg : Boolean = isVararg
     override val isDeprecatedInJavaDoc = false
     
     override val type : JavaType
-        get() = NetBeansJavaType.create(typeHandle!!, project)
+        get() = NetBeansJavaType.create(elementHandle.typeMirrorHandle, project)
     
     override val annotations : Collection<JavaAnnotation>
         get() = emptyList()
     
     override fun findAnnotation(fqName : FqName) : JavaAnnotation? = null
-    
-    override fun hashCode() : Int = NBElementUtils.typeMirrorHandleHashCode(typeHandle, project)
-    
-    override fun equals(other : Any?) : Boolean {
-        if (other !is NetBeansJavaValueParameter) return false
-        return NBElementUtils.typeMirrorHandleEquals(typeHandle, other.typeHandle, project)
-    }
     
 }

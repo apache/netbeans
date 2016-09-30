@@ -25,8 +25,8 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.lang.java.NBAnnotationUtils
 import org.jetbrains.kotlin.resolve.lang.java.NBMemberUtils
 import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
-import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.project.Project
+import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
 
 /*
 
@@ -34,7 +34,7 @@ import org.netbeans.api.project.Project
   Created on Aug 29, 2016
 */
 
-abstract class NetBeansJavaMember(elementHandle : ElementHandle<*>?, override val containingClass : JavaClass, project : Project) : 
+abstract class NetBeansJavaMember(elementHandle : ElemHandle<*>, override val containingClass : JavaClass, project : Project) : 
         NetBeansJavaElement(elementHandle, project), JavaMember {
     
     override val annotations : Collection<JavaAnnotation>
@@ -43,7 +43,7 @@ abstract class NetBeansJavaMember(elementHandle : ElementHandle<*>?, override va
     override val visibility : Visibility 
         get() = NBMemberUtils.getVisibility(elementHandle, project)
     
-    override val name : Name 
+    override val name : Name
         get() = NBMemberUtils.getName(elementHandle, project)
     
     override val isDeprecatedInJavaDoc : Boolean = NBElementUtils.isDeprecated(elementHandle, project)

@@ -53,7 +53,7 @@ public class NetBeansJavaClassFinder implements JavaClassFinder {
     @Override
     @Nullable
     public JavaClass findClass(ClassId classId) {
-        ElementHandle<TypeElement> element = NBElementUtils.findType(classId.asSingleFqName().asString(), kotlinProject);
+        ElemHandle<TypeElement> element = NBElementUtils.findType(classId.asSingleFqName().asString(), kotlinProject);
         if (element != null) {
             return new NetBeansJavaClass(element, kotlinProject);
         }
@@ -63,7 +63,7 @@ public class NetBeansJavaClassFinder implements JavaClassFinder {
 
     @Override
     public JavaPackage findPackage(FqName fqName) {
-        ElementHandle<PackageElement> packageEl = NBElementUtils.findPackage(fqName.asString(), kotlinProject);
+        ElemHandle<PackageElement> packageEl = NBElementUtils.findPackage(fqName.asString(), kotlinProject);
         if (packageEl != null){
             return new NetBeansJavaPackage(packageEl, kotlinProject);
         } 

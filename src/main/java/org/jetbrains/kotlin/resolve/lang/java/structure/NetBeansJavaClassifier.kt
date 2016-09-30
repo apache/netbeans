@@ -21,10 +21,9 @@ import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner
 import org.jetbrains.kotlin.load.java.structure.JavaClassifier
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.resolve.lang.java.NBAnnotationUtils
-import org.netbeans.api.java.source.ElementHandle
-import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
 import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
+import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
 
 /*
 
@@ -32,8 +31,8 @@ import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
   Created on Aug 29, 2016
 */
 
-abstract class NetBeansJavaClassifier(elementHandle : ElementHandle<*>?, typeHandle : TypeMirrorHandle<*>?, project : Project) : 
-        NetBeansJavaElement(elementHandle, typeHandle, project), JavaClassifier, JavaAnnotationOwner {
+abstract class NetBeansJavaClassifier(elementHandle : ElemHandle<*>, project : Project) : 
+        NetBeansJavaElement(elementHandle, project), JavaClassifier, JavaAnnotationOwner {
     
     override val annotations : Collection<JavaAnnotation>
         get() = NBAnnotationUtils.getAnnotations(elementHandle, project)

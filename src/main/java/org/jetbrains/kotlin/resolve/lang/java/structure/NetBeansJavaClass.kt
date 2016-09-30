@@ -28,8 +28,8 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.lang.java.NBClassUtils
 import org.jetbrains.kotlin.resolve.lang.java.NBMemberUtils
-import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.project.Project
+import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
 
 /*
 
@@ -37,8 +37,8 @@ import org.netbeans.api.project.Project
   Created on Aug 29, 2016
 */
 
-class NetBeansJavaClass(elementHandle : ElementHandle<*>?, project : Project) : 
-        NetBeansJavaClassifier(elementHandle, null, project), JavaClass {
+class NetBeansJavaClass(elementHandle : ElemHandle<*>, project : Project) : 
+        NetBeansJavaClassifier(elementHandle, project), JavaClass {
     
     override val name : Name 
         get() = NBClassUtils.getName(elementHandle, project)
@@ -70,15 +70,15 @@ class NetBeansJavaClass(elementHandle : ElementHandle<*>?, project : Project) :
     override val typeParameters : List<JavaTypeParameter>
         get() = NBClassUtils.getTypeParameters(elementHandle, project)
     
-    override val isInterface : Boolean = elementHandle!!.kind == ElementKind.INTERFACE
-    override val isAnnotationType : Boolean = elementHandle!!.kind == ElementKind.ANNOTATION_TYPE
-    override val isEnum : Boolean = elementHandle!!.kind == ElementKind.ENUM
+    override val isInterface : Boolean = elementHandle.kind == ElementKind.INTERFACE
+    override val isAnnotationType : Boolean = elementHandle.kind == ElementKind.ANNOTATION_TYPE
+    override val isEnum : Boolean = elementHandle.kind == ElementKind.ENUM
     override val isAbstract : Boolean = NBMemberUtils.isAbstract(elementHandle, project)
     override val isStatic : Boolean = NBMemberUtils.isStatic(elementHandle, project) 
     override val isFinal : Boolean = NBMemberUtils.isFinal(elementHandle, project)
     
     override val lightClassOriginKind = null
     
-    override fun toString() : String = elementHandle!!.qualifiedName
+    override fun toString() : String = elementHandle.qualifiedName
     
 }

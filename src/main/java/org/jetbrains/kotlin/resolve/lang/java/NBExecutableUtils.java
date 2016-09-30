@@ -27,7 +27,6 @@ import org.jetbrains.kotlin.resolve.lang.java.ExecutableSearchers.HasAnnotationP
 import org.jetbrains.kotlin.resolve.lang.java.ExecutableSearchers.ReturnTypeSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.ExecutableSearchers.TypeParametersSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.ExecutableSearchers.ValueParametersSearcher;
-import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 
 /**
@@ -36,28 +35,28 @@ import org.netbeans.api.project.Project;
  */
 public class NBExecutableUtils {
     
-    public static JavaType getReturnType(ElementHandle handle, Project project) {
+    public static JavaType getReturnType(ElemHandle handle, Project project) {
         ReturnTypeSearcher searcher = new ReturnTypeSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getReturnType();
     }
     
-    public static boolean hasAnnotationParameterDefaultValue(ElementHandle handle, Project project) {
+    public static boolean hasAnnotationParameterDefaultValue(ElemHandle handle, Project project) {
         HasAnnotationParameterDefaultValueSearcher searcher = new HasAnnotationParameterDefaultValueSearcher(handle);
         NBElementUtils.execute(searcher, project);
         
         return searcher.hasAnnotationParameterDefaultValue();
     }
     
-    public static List<JavaTypeParameter> getTypeParameters(ElementHandle handle, Project project) {
+    public static List<JavaTypeParameter> getTypeParameters(ElemHandle handle, Project project) {
         TypeParametersSearcher searcher = new TypeParametersSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getTypeParameters();
     }
     
-    public static List<JavaValueParameter> getValueParameters(ElementHandle handle, Project project) {
+    public static List<JavaValueParameter> getValueParameters(ElemHandle handle, Project project) {
         ValueParametersSearcher searcher = new ValueParametersSearcher(handle, project);
         NBElementUtils.execute(searcher, project);
         

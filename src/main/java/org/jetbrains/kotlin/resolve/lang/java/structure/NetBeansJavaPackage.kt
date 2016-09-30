@@ -25,8 +25,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaPackage
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.lang.java.NBPackageUtils
-import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.project.Project
+import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
 
 /*
 
@@ -34,10 +34,10 @@ import org.netbeans.api.project.Project
   Created on Aug 29, 2016
 */
 
-class NetBeansJavaPackage(val packages : List<ElementHandle<PackageElement>>, val project : Project) : 
+class NetBeansJavaPackage(val packages : List<ElemHandle<PackageElement>>, val project : Project) : 
         JavaPackage, JavaElement {
     
-    constructor(pack : ElementHandle<PackageElement>, project : Project) : this(Collections.singletonList(pack), project)
+    constructor(pack : ElemHandle<PackageElement>, project : Project) : this(Collections.singletonList(pack), project)
     
     override val fqName : FqName 
         get() = NBPackageUtils.getFqName(project, packages[0])

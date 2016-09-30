@@ -20,6 +20,7 @@ package org.jetbrains.kotlin.resolve.lang.java;
 
 import com.google.common.collect.Lists;
 import java.util.Collection;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
@@ -41,23 +42,22 @@ public class ParameterSearchers {
     
     public static class TypeParameterNameSearcher implements Task<CompilationController> {
 
-        private final TypeMirrorHandle handle;
+        private final ElemHandle handle;
         private Name name = null;
         
-        public TypeParameterNameSearcher(TypeMirrorHandle handle) {
+        public TypeParameterNameSearcher(ElemHandle handle) {
             this.handle = handle;
         }
         
         @Override
         public void run(CompilationController info) throws Exception {
             info.toPhase(Phase.RESOLVED);
-            TypeMirror type = handle.resolve(info);
-            if (type == null) {
+            Element elem = handle.resolve(info);
+            if (elem == null) {
                 return;
             }
             
-            TypeParameterElement element = (TypeParameterElement) ((TypeVariable) type).asElement();
-            name = SpecialNames.safeIdentifier(element.getSimpleName().toString());
+            name = SpecialNames.safeIdentifier(elem.getSimpleName().toString());
         }
         
         public Name getName() {
@@ -115,13 +115,40 @@ public class ParameterSearchers {
         }
     }
     
+    public static class ElemHandleSearcher implements Task<CompilationController> {
+
+        private final TypeMirrorHandle typeHandle;
+        private final Project project;
+        private ElemHandle elemHandle = null;
+        
+        public ElemHandleSearcher(TypeMirrorHandle typeHandle, Project project) {
+            this.typeHandle = typeHandle;
+            this.project = project;
+        }
+        
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            TypeMirror mirror = typeHandle.resolve(info);
+            if (mirror == null) {
+                return;
+            }
+            elemHandle = ElemHandle.create(((TypeVariable)mirror).asElement(), project);
+        }
+        
+        public ElemHandle getElemHandle() {
+            return elemHandle;
+        }
+        
+    }
+    
     public static class UpperBoundsSearcher implements Task<CompilationController> {
 
-        private final TypeMirrorHandle handle;
+        private final ElemHandle handle;
         private final Project project;
         private final Collection<JavaClassifierType> upperBounds = Lists.newArrayList();
         
-        public UpperBoundsSearcher(TypeMirrorHandle handle, Project project) {
+        public UpperBoundsSearcher(ElemHandle handle, Project project) {
             this.handle = handle;
             this.project = project;
         }
@@ -129,10 +156,11 @@ public class ParameterSearchers {
         @Override
         public void run(CompilationController info) throws Exception {
             info.toPhase(Phase.RESOLVED);
-            TypeMirror type = handle.resolve(info);
-            if (type == null) {
+            Element elem = handle.resolve(info);
+            if (elem == null) {
                 return;
             }
+            TypeMirror type = ((TypeParameterElement) elem).asType();
             upperBounds.add(new NetBeansJavaClassifierType(TypeMirrorHandle.create(((TypeVariable) type).getUpperBound()), project));
         }
         

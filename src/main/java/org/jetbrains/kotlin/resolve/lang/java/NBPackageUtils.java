@@ -29,7 +29,6 @@ import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.resolve.lang.java.PackageSearchers.ClassesSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.PackageSearchers.FqNameSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.PackageSearchers.SubPackagesSearcher;
-import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 
 /**
@@ -46,14 +45,14 @@ public class NBPackageUtils {
     }
  
     public static Collection<JavaClass> getClasses(Project project, 
-            Function1<? super Name, Boolean> nameFilter, List<ElementHandle<PackageElement>> packages) {
+            Function1<? super Name, Boolean> nameFilter, List<ElemHandle<PackageElement>> packages) {
         ClassesSearcher searcher = new ClassesSearcher(packages, project, nameFilter);
         NBElementUtils.execute(searcher, project);
         
         return searcher.getClasses();
     }
     
-    public static FqName getFqName(Project project, ElementHandle<PackageElement> handle) {
+    public static FqName getFqName(Project project, ElemHandle<PackageElement> handle) {
         FqNameSearcher searcher = new FqNameSearcher(handle);
         NBElementUtils.execute(searcher, project);
         

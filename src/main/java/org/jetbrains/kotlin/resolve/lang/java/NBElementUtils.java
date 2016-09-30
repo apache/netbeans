@@ -108,8 +108,8 @@ public class NBElementUtils {
         }
     }
 
-    public static ElementHandle<TypeElement> findType(String fqName, Project project) {
-        TypeElementSearcher searcher = new TypeElementSearcher(fqName);
+    public static ElemHandle<TypeElement> findType(String fqName, Project project) {
+        TypeElementSearcher searcher = new TypeElementSearcher(fqName, project);
         execute(searcher, project);
         
         return searcher.getElement();
@@ -122,21 +122,21 @@ public class NBElementUtils {
         return searcher.getHandle();
     }
     
-    public static ElementHandle<PackageElement> findPackage(String fqName, Project project) {
-        PackageElementSearcher searcher = new PackageElementSearcher(fqName);
+    public static ElemHandle<PackageElement> findPackage(String fqName, Project project) {
+        PackageElementSearcher searcher = new PackageElementSearcher(fqName, project);
         execute(searcher, project);
         
         return searcher.getPackage();
     }
     
-    public static ClassId computeClassId(ElementHandle handle, Project project) {
+    public static ClassId computeClassId(ElemHandle handle, Project project) {
         ClassIdComputer computer = new ClassIdComputer(handle);
         execute(computer, project);
         
         return computer.getClassId();
     }
     
-    public static String getSimpleName(ElementHandle handle, Project project) {
+    public static String getSimpleName(ElemHandle handle, Project project) {
         ElementSimpleNameSearcher searcher = new ElementSimpleNameSearcher(handle);
         execute(searcher, project);
         
@@ -175,16 +175,16 @@ public class NBElementUtils {
     }
     
     public static JavaClass getNetBeansJavaClassFromType(TypeMirrorHandle type, Project project) {
-        ElementHandle handle = ElementHandle.from(type);
+        ElemHandle handle = ElemHandle.from(type, project);
         return new NetBeansJavaClass(handle, project);
     }
     
     public static ClassId computeClassIdForType(TypeMirrorHandle handle, Project project) {
-        ElementHandle element = ElementHandle.from(handle);
+        ElemHandle element = ElemHandle.from(handle, project);
         return computeClassId(element, project);
     }
     
-    public static boolean isDeprecated(ElementHandle handle, Project project) {
+    public static boolean isDeprecated(ElemHandle handle, Project project) {
         IsDeprecatedSearcher searcher = new IsDeprecatedSearcher(handle);
         execute(searcher, project);
         
@@ -192,8 +192,8 @@ public class NBElementUtils {
     }
     
     public static Set<FileObject> findClassUsages(String className, Project project) {
-        ElementHandle<TypeElement> handle = findType(className, project);
-        Set<FileObject> fObjects = CLASSPATH_INFO.get(project).getClassIndex().getResources(handle, 
+        ElemHandle<TypeElement> handle = findType(className, project);
+        Set<FileObject> fObjects = CLASSPATH_INFO.get(project).getClassIndex().getResources(handle.getElementHandle(), 
                 Sets.newHashSet(ClassIndex.SearchKind.values()), 
                 Sets.newHashSet(ClassIndex.SearchScope.SOURCE));
         
@@ -201,8 +201,8 @@ public class NBElementUtils {
     } 
     
     public static FileObject getFileObjectForFqName(String fqName, Project project) {
-        ElementHandle<TypeElement> handle = findType(fqName, project);
-        Set<FileObject> fObjects = CLASSPATH_INFO.get(project).getClassIndex().getResources(handle, 
+        ElemHandle<TypeElement> handle = findType(fqName, project);
+        Set<FileObject> fObjects = CLASSPATH_INFO.get(project).getClassIndex().getResources(handle.getElementHandle(), 
                 Sets.newHashSet(ClassIndex.SearchKind.IMPLEMENTORS), 
                 Sets.newHashSet(ClassIndex.SearchScope.DEPENDENCIES), 
                 Sets.newHashSet(ClassIndex.ResourceType.BINARY));

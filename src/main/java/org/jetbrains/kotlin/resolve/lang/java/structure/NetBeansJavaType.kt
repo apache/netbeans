@@ -26,6 +26,7 @@ import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
 import org.jetbrains.kotlin.resolve.lang.java.NBTypeUtils
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
+import javax.lang.model.type.TypeMirror
 
 /*
 
@@ -33,14 +34,16 @@ import org.netbeans.api.project.Project
   Created on Sep 7, 2016
 */
 
-abstract class NetBeansJavaType(val handle : TypeMirrorHandle<*>, val project : Project) : JavaType, JavaAnnotationOwner {
+abstract class NetBeansJavaType(val handle : TypeMirrorHandle<*>, 
+                                               val project : Project) : JavaType, JavaAnnotationOwner {
 
     companion object {
         @JvmStatic        
         fun create(typeHandle : TypeMirrorHandle<*>, project : Project) : NetBeansJavaType {
             return when {
                 typeHandle.kind.isPrimitive || 
-                        NBTypeUtils.getName(typeHandle, project).equals("void") -> NetBeansJavaPrimitiveType(typeHandle, project)
+                        NBTypeUtils.getName(typeHandle, project).equals("void") -> 
+                    NetBeansJavaPrimitiveType(typeHandle, project)
                 
                 typeHandle.kind == TypeKind.ARRAY -> NetBeansJavaArrayType(typeHandle, project)
                 

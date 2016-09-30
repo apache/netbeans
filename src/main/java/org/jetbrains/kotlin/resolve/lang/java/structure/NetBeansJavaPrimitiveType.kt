@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.resolve.jvm.JvmPrimitiveType
 import org.jetbrains.kotlin.resolve.lang.java.NBTypeUtils
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
+import javax.lang.model.type.TypeMirror
 
 /*
 

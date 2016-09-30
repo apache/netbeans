@@ -24,8 +24,7 @@ import org.jetbrains.kotlin.resolve.lang.java.NBTypeUtils
 import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
-import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
-import org.jetbrains.kotlin.resolve.lang.java.NBParameterUtils
+import org.jetbrains.kotlin.resolve.lang.java.*
 
 /*
 
@@ -47,8 +46,7 @@ class NetBeansJavaClassifierType(handle : TypeMirrorHandle<*>, project : Project
     
     override val classifier : JavaClassifier? = when (handle.kind) {
             TypeKind.DECLARED -> NBElementUtils.getNetBeansJavaClassFromType(handle, project)
-            TypeKind.TYPEVAR -> NetBeansJavaTypeParameter(
-                    NBParameterUtils.getElemHandleFromTypeMirrorHandle(handle, project), project)
+            TypeKind.TYPEVAR -> NetBeansJavaTypeParameter(handle.toElemHandle(project), project)
             else -> null
         }
     

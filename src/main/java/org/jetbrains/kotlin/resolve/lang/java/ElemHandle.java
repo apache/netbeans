@@ -22,7 +22,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -122,7 +121,7 @@ public class ElemHandle<T extends Element> {
                 return handle.equals(((ElemHandle) other).handle);
             } else {
                 if (kind == ElementKind.TYPE_PARAMETER) {
-                    return NBParameterUtils.equals(typeHandle, ((ElemHandle)other).typeHandle, project);
+                    return NbParameterUtilsKt.isEqual(typeHandle, ((ElemHandle)other).typeHandle, project);
                 } else
                     return NBElementUtils.typeMirrorHandleEquals(typeHandle, 
                         ((ElemHandle)other).typeHandle, project);
@@ -137,7 +136,7 @@ public class ElemHandle<T extends Element> {
             return handle.hashCode();
         } else {
             if (kind == ElementKind.TYPE_PARAMETER) {
-                return NBParameterUtils.hashCode(typeHandle, project);
+                return NbParameterUtilsKt.getHashCode(typeHandle, project);
             } else
                 return NBElementUtils.typeMirrorHandleHashCode(typeHandle, project);
         }

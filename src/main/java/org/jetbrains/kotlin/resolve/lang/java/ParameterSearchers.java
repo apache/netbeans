@@ -136,7 +136,7 @@ public class ParameterSearchers {
             elemHandle = ElemHandle.create((TypeParameterElement)((TypeVariable) mirror).asElement(), project);
         }
         
-        public ElemHandle getElemHandle() {
+        public ElemHandle<TypeParameterElement> getElemHandle() {
             return elemHandle;
         }
         

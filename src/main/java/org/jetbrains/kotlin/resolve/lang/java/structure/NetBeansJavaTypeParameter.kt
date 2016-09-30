@@ -21,9 +21,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaClassifierType
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.resolve.lang.java.NBParameterUtils
 import org.netbeans.api.project.Project
-import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
+import org.jetbrains.kotlin.resolve.lang.java.*
 import javax.lang.model.element.TypeParameterElement
 
 /*
@@ -36,10 +35,10 @@ class NetBeansJavaTypeParameter(elementHandle : ElemHandle<TypeParameterElement>
         NetBeansJavaClassifier<TypeParameterElement>(elementHandle, project), JavaTypeParameter {
 
     override val name : Name
-        get() = NBParameterUtils.getNameOfTypeParameter(elementHandle, project)
+        get() = elementHandle.getName(project)
     
     override val upperBounds : Collection<JavaClassifierType>
-        get() = NBParameterUtils.getUpperBounds(elementHandle, project)
+        get() = elementHandle.getUpperBounds(project)
     
     override val annotations : Collection<JavaAnnotation>
         get() = emptyList()

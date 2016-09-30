@@ -29,7 +29,6 @@ import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.IsFinalSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.IsStaticSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.NameSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.VisibilitySearcher;
-import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 
 /**

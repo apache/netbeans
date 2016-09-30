@@ -20,9 +20,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaClass
 import org.jetbrains.kotlin.load.java.structure.JavaConstructor
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter
 import org.jetbrains.kotlin.load.java.structure.JavaValueParameter
-import org.jetbrains.kotlin.resolve.lang.java.NBExecutableUtils
 import org.netbeans.api.project.Project
-import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
+import org.jetbrains.kotlin.resolve.lang.java.*
 import javax.lang.model.element.ExecutableElement
 
 /*
@@ -35,9 +34,9 @@ class NetBeansJavaConstructor(elementHandle : ElemHandle<ExecutableElement>, con
         NetBeansJavaMember<ExecutableElement>(elementHandle, containingClass, project), JavaConstructor {
 
     override val valueParameters : List<JavaValueParameter>
-        get() = NBExecutableUtils.getValueParameters(elementHandle, project)
+        get() = elementHandle.getValueParameters(project)
     
     override val typeParameters : List<JavaTypeParameter>
-        get() = NBExecutableUtils.getTypeParameters(elementHandle, project)
+        get() = elementHandle.getTypeParameters(project)
     
 }

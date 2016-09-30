@@ -21,9 +21,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaMethod
 import org.jetbrains.kotlin.load.java.structure.JavaType
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter
 import org.jetbrains.kotlin.load.java.structure.JavaValueParameter
-import org.jetbrains.kotlin.resolve.lang.java.NBExecutableUtils
 import org.netbeans.api.project.Project
-import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
+import org.jetbrains.kotlin.resolve.lang.java.*
 import javax.lang.model.element.ExecutableElement
 
 /*
@@ -36,14 +35,14 @@ class NetBeansJavaMethod(elementHandle : ElemHandle<ExecutableElement>, containi
         NetBeansJavaMember<ExecutableElement>(elementHandle, containingClass, project), JavaMethod {
 
     override val valueParameters : List<JavaValueParameter>
-        get() = NBExecutableUtils.getValueParameters(elementHandle, project)
+        get() = elementHandle.getValueParameters(project)
     
     override val returnType : JavaType
-        get() = NBExecutableUtils.getReturnType(elementHandle, project)
+        get() = elementHandle.getReturnType(project)
     
     override val hasAnnotationParameterDefaultValue : Boolean
-        get() = NBExecutableUtils.hasAnnotationParameterDefaultValue(elementHandle, project)
+        get() = elementHandle.hasAnnotationParameterDefaultValue(project)
     
     override val typeParameters : List<JavaTypeParameter>
-        get() = NBExecutableUtils.getTypeParameters(elementHandle, project)
+        get() = elementHandle.getTypeParameters(project)
 }

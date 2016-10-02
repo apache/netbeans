@@ -33,7 +33,7 @@ import javax.lang.model.element.VariableElement
 */
 
 class NetBeansJavaReferenceAnnotationArgument(val handle : ElemHandle<VariableElement>, val project : Project) : 
-        NetBeansJavaAnnotationArgument(FqName(NBElementUtils.getSimpleName(handle, project))), JavaEnumValueAnnotationArgument {
+        NetBeansJavaAnnotationArgument(FqName(handle.getSimpleName(project))), JavaEnumValueAnnotationArgument {
     override fun resolve() : JavaField {
         val containingClass = handle.getContainingClass(project)
         return NetBeansJavaField(handle, NetBeansJavaClass(containingClass, project), project)

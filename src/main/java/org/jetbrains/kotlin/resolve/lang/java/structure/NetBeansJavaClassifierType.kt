@@ -44,7 +44,7 @@ class NetBeansJavaClassifierType(handle : TypeMirrorHandle<*>, project : Project
         get() = if (handle.kind == TypeKind.DECLARED) handle.getTypeArguments(project) else emptyList()
     
     override val classifier : JavaClassifier? = when (handle.kind) {
-            TypeKind.DECLARED -> NBElementUtils.getNetBeansJavaClassFromType(handle, project)
+            TypeKind.DECLARED -> handle.getJavaClass(project)
             TypeKind.TYPEVAR -> NetBeansJavaTypeParameter(handle.toElemHandle(project), project)
             else -> null
         }

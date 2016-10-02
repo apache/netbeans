@@ -56,7 +56,7 @@ public class PackageSearchers {
 
         public PackageElement[] findPackageFragments(String name,
                 boolean partialMatch, boolean patternMatch, CompilationController info) {
-            Set<String> packages = NBElementUtils.getPackages(project, name);
+            Set<String> packages = NbElementUtilsKt.getPackages(name, project);
             List<PackageElement> subpackageElements = Lists.newArrayList();
             for (String pack : packages) {
                 PackageElement subpackageElement = info.getElements().getPackageElement(name);

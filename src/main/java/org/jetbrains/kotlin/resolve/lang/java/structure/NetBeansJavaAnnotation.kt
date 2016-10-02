@@ -21,10 +21,11 @@ import org.jetbrains.kotlin.load.java.structure.JavaAnnotationArgument
 import org.jetbrains.kotlin.load.java.structure.JavaClass
 import org.jetbrains.kotlin.load.java.structure.JavaElement
 import org.jetbrains.kotlin.name.ClassId
-import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
+import org.jetbrains.kotlin.resolve.lang.java.*
 import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
+import javax.lang.model.type.DeclaredType
 
 /*
 
@@ -32,19 +33,20 @@ import org.netbeans.api.project.Project
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaAnnotation(val project : Project, val handle : TypeMirrorHandle<*>, arguments : Collection<JavaAnnotationArgument>) : 
+class NetBeansJavaAnnotation(val project : Project, val handle : TypeMirrorHandle<DeclaredType>, 
+                             arguments : Collection<JavaAnnotationArgument>) : 
         JavaAnnotation, JavaElement{
     override val arguments : Collection<JavaAnnotationArgument> = arguments
     
     override val classId : ClassId? 
-        get() = NBElementUtils.computeClassIdForType(handle, project)
+        get() = handle.computeClassId(project)
     
-    override fun resolve() : JavaClass? = NBElementUtils.getNetBeansJavaClassFromType(handle, project)
-    override fun hashCode() : Int = NBElementUtils.typeMirrorHandleHashCode(handle, project)
+    override fun resolve() : JavaClass? = handle.getJavaClass(project)
+    override fun hashCode() : Int = handle.getHashCode(project)
     
     override fun equals(other : Any?) : Boolean {
         if (other !is NetBeansJavaAnnotation) return false
         
-        return NBElementUtils.typeMirrorHandleEquals(handle, other.handle, project)
+        return handle.isEqual(other.handle, project)
     }
 }

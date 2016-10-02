@@ -56,7 +56,7 @@ import org.jetbrains.kotlin.resolve.DescriptorUtils;
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass;
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElement;
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaMember;
-import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils;
+import org.jetbrains.kotlin.resolve.lang.java.NbElementUtilsKt;
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
@@ -301,7 +301,7 @@ public class NavigationUtil {
     
     private static void gotoJavaDeclaration(ElementHandle javaElement, Project project) {
         if (javaElement != null){
-            NBElementUtils.openElementInEditor(javaElement, project);
+            NbElementUtilsKt.openInEditor(javaElement, project);
         }
         
     }

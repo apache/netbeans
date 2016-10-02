@@ -24,7 +24,7 @@ import org.jetbrains.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassP
 import org.jetbrains.kotlin.project.KotlinSources;
 import org.jetbrains.kotlin.projectsextensions.maven.classpath.MavenExtendedClassPath;
 import org.jetbrains.kotlin.projectsextensions.maven.classpath.MavenClassPathProviderImpl;
-import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils;
+import org.jetbrains.kotlin.resolve.lang.java.JavaEnvironment;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -161,7 +161,7 @@ public class KotlinProjectHelper {
             extendedClassPaths.put(p, new MavenExtendedClassPath(p));
         }
         updateFullClassPath(project);
-        NBElementUtils.updateClasspathInfo(p);
+        JavaEnvironment.Companion.updateClasspathInfo(p);
         KotlinEnvironment.updateKotlinEnvironment(project);
     }
     

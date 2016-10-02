@@ -21,9 +21,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaType
 import org.jetbrains.kotlin.load.java.structure.JavaValueParameter
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
+import org.jetbrains.kotlin.resolve.lang.java.*
 import org.netbeans.api.project.Project
-import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
 import javax.lang.model.element.Element
 
 /*

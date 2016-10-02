@@ -44,7 +44,7 @@ abstract class NetBeansJavaMember<T: Element>(elementHandle : ElemHandle<T>, ove
     override val name : Name
         get() = elementHandle.getName(project)
     
-    override val isDeprecatedInJavaDoc : Boolean = NBElementUtils.isDeprecated(elementHandle, project)
+    override val isDeprecatedInJavaDoc : Boolean = elementHandle.isDeprecated(project)
     override val isAbstract : Boolean = elementHandle.isAbstract(project)
     override val isStatic : Boolean = elementHandle.isStatic(project)
     override val isFinal : Boolean = elementHandle.isFinal(project)

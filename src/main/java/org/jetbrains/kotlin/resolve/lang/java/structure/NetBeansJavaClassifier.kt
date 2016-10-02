@@ -36,7 +36,7 @@ abstract class NetBeansJavaClassifier<T: Element>(elementHandle : ElemHandle<T>,
     override val annotations : Collection<JavaAnnotation>
         get() = elementHandle.getAnnotations(project)
     
-    override val isDeprecatedInJavaDoc : Boolean = NBElementUtils.isDeprecated(elementHandle, project)
+    override val isDeprecatedInJavaDoc : Boolean = elementHandle.isDeprecated(project)
     
     override fun findAnnotation(fqName : FqName) = elementHandle.getAnnotation(project, fqName)
     

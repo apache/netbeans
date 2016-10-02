@@ -22,6 +22,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -32,11 +33,11 @@ import org.netbeans.api.project.Project;
 public class ElemHandle<T extends Element> {
     
     private ElementKind kind = null;
-    private ElementHandle handle = null;
+    private ElementHandle<T> handle = null;
     private TypeMirrorHandle typeHandle = null;
     private final Project project;
     
-    private ElemHandle(Element element, Project project) {
+    private ElemHandle(T element, Project project) {
         kind = element.getKind();
         this.project = project;
         if (kind == ElementKind.PARAMETER || kind == ElementKind.TYPE_PARAMETER) {
@@ -46,13 +47,13 @@ public class ElemHandle<T extends Element> {
         }
     }
 
-    private ElemHandle(ElementHandle handle, Project project) {
+    private ElemHandle(ElementHandle<T> handle, Project project) {
         this.handle = handle;
         this.project = project;
         kind = handle.getKind();
     }
 
-    public ElementHandle getElementHandle() {
+    public ElementHandle<T> getElementHandle() {
         return handle;
     }
     
@@ -108,7 +109,7 @@ public class ElemHandle<T extends Element> {
         return new ElemHandle(elemHandle, project);
     }
     
-    public static ElemHandle<? extends TypeElement> from(
+    public static ElemHandle<TypeElement> from(
             TypeMirrorHandle typeMirrorHandle, Project project) {
         ElementHandle elemHandle = ElementHandle.from(typeMirrorHandle);
         return new ElemHandle(elemHandle, project);
@@ -123,7 +124,7 @@ public class ElemHandle<T extends Element> {
                 if (kind == ElementKind.TYPE_PARAMETER) {
                     return NbParameterUtilsKt.isEqual(typeHandle, ((ElemHandle)other).typeHandle, project);
                 } else
-                    return NBElementUtils.typeMirrorHandleEquals(typeHandle, 
+                    return NbElementUtilsKt.isEqual(typeHandle, 
                         ((ElemHandle)other).typeHandle, project);
             }
         }
@@ -138,7 +139,7 @@ public class ElemHandle<T extends Element> {
             if (kind == ElementKind.TYPE_PARAMETER) {
                 return NbParameterUtilsKt.getHashCode(typeHandle, project);
             } else
-                return NBElementUtils.typeMirrorHandleHashCode(typeHandle, project);
+                return NbElementUtilsKt.getHashCode(typeHandle, project);
         }
     }
     

@@ -28,7 +28,7 @@ import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.diagnostics.Diagnostic;
 import org.jetbrains.kotlin.resolve.AnalyzingUtils;
-import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils;
+import org.jetbrains.kotlin.resolve.lang.java.NbElementUtilsKt;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
@@ -58,7 +58,7 @@ public class KotlinHintsProvider implements HintsProvider{
                 PsiElement psi = ((KotlinError) error).getPsi();
                 String simpleName = psi.getText();
                 
-                List<String> suggestions = NBElementUtils.findFQName(
+                List<String> suggestions = NbElementUtilsKt.findFQName(
                         ProjectUtils.getKotlinProjectForFileObject(file), simpleName);
                 List<HintFix> fixes = new ArrayList<HintFix>();
                 for (String suggestion : suggestions) {

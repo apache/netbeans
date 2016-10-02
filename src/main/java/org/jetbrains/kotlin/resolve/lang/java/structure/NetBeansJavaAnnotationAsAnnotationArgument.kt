@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaAnnotationAsAnnotationArgume
 import org.jetbrains.kotlin.name.Name
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
+import javax.lang.model.type.DeclaredType
 
 /*
 
@@ -30,7 +31,7 @@ import org.netbeans.api.project.Project
 */
 
 class NetBeansJavaAnnotationAsAnnotationArgument(val project : Project, name : Name, 
-                                                 val typeHandle : TypeMirrorHandle<*>, 
+                                                 val typeHandle : TypeMirrorHandle<DeclaredType>, 
                                                  val args : Collection<JavaAnnotationArgument>) : 
         JavaAnnotationAsAnnotationArgument {
     override val name : Name = name

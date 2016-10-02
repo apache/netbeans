@@ -60,7 +60,7 @@ abstract class NetBeansJavaType(val handle : TypeMirrorHandle<*>,
         get() = handle.getAnnotations(project)
     
     override fun findAnnotation(fqName : FqName) : JavaAnnotation? = handle.getAnnotation(project, fqName)
-    override fun hashCode() : Int = NBElementUtils.typeMirrorHandleHashCode(handle, project)
-    override fun equals(other : Any?) : Boolean = other is NetBeansJavaType && NBElementUtils.typeMirrorHandleEquals(handle, other.handle, project)
+    override fun hashCode() : Int = handle.getHashCode(project)
+    override fun equals(other : Any?) : Boolean = other is NetBeansJavaType && handle.isEqual(other.handle, project)
     
 }

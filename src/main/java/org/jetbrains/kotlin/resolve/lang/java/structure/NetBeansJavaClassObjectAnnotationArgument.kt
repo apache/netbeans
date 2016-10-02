@@ -19,7 +19,7 @@ package org.jetbrains.kotlin.resolve.lang.java.structure
 import org.jetbrains.kotlin.load.java.structure.JavaClassObjectAnnotationArgument
 import org.jetbrains.kotlin.load.java.structure.JavaType
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
+import org.jetbrains.kotlin.resolve.lang.java.*
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
 
@@ -34,7 +34,7 @@ class NetBeansJavaClassObjectAnnotationArgument(val javaClass : Class<*>, name :
     override val name : Name = name
     
     override fun getReferencedType() : JavaType {
-        val handle = NBElementUtils.findTypeMirrorHandle(javaClass.canonicalName, project)
+        val handle = project.findTypeMirrorHandle(javaClass.canonicalName)
         return NetBeansJavaType.create(handle, project)
     }
 }

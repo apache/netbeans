@@ -18,8 +18,7 @@ package org.jetbrains.kotlin.resolve.lang.java.structure
 
 import org.jetbrains.kotlin.load.java.structure.JavaElement
 import org.netbeans.api.project.Project
-import org.jetbrains.kotlin.resolve.lang.java.NBElementUtils
-import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
+import org.jetbrains.kotlin.resolve.lang.java.*
 import javax.lang.model.element.Element
 
 /*

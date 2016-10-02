@@ -24,14 +24,6 @@ import org.jetbrains.kotlin.load.java.structure.JavaMethod
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.ConstructorsSearcher
-import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.FieldsSearcher
-import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.InnerClassesSearcher
-import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.MethodsSearcher
-import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.NameSearcher
-import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.OuterClassSearcher
-import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.SuperTypesSearcher
-import org.jetbrains.kotlin.resolve.lang.java.ClassSearchers.TypeParametersSearcher
 import org.netbeans.api.project.Project
 import javax.lang.model.element.TypeElement
 

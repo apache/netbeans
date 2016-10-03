@@ -21,7 +21,9 @@ package org.jetbrains.kotlin.navigation.netbeans;
 import com.google.common.collect.Sets;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.sun.javadoc.Doc;
+import com.sun.javadoc.Tag;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -47,12 +49,15 @@ import org.jetbrains.kotlin.resolve.jvm.JvmClassName;
 import org.jetbrains.kotlin.resolve.lang.java.ElemHandle;
 import org.jetbrains.kotlin.resolve.lang.java.NbElementUtilsKt;
 import org.jetbrains.kotlin.resolve.lang.java.resolver.NetBeansJavaSourceElement;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass;
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaMember;
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;
 import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedCallableMemberDescriptor;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.project.Project;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
+import org.openide.awt.HtmlBrowser;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -147,10 +152,21 @@ public class KotlinHyperlinkProvider implements HyperlinkProviderExt {
         } 
         if (sourceElement instanceof NetBeansJavaSourceElement) {
             ElemHandle handle = ((NetBeansJavaSourceElement) sourceElement).getElementBinding();
-            Doc javaDoc = NbElementUtilsKt.getJavaDoc(handle, project);
+            Pair<Doc, URL> javaDoc = NbElementUtilsKt.getJavaDoc(handle, project);
             if (javaDoc == null) return "";
+            StringBuilder builder = new StringBuilder();
             
-            return javaDoc.commentText();
+            JavaElement javaElement = ((NetBeansJavaSourceElement) sourceElement).getJavaElement();
+            if (javaElement instanceof NetBeansJavaClass) {
+                builder.append(((NetBeansJavaClass) javaElement).getFqName().asString()).append('\n');
+            }
+            if (javaElement instanceof NetBeansJavaMember) {
+                builder.append(((NetBeansJavaMember) javaElement).getName().asString()).append('\n');
+            }
+            builder.append(javaDoc.getFirst().commentText());
+            
+//            HtmlBrowser.URLDisplayer.getDefault().showURL(javaDoc.getSecond());
+            return builder.toString();
         }
         
         

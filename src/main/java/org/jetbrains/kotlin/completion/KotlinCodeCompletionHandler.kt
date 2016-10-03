@@ -33,11 +33,16 @@ import org.netbeans.modules.csl.api.ParameterInfo
 import org.netbeans.modules.csl.spi.ParserResult
 import org.openide.filesystems.FileObject
 import org.netbeans.modules.csl.api.CodeCompletionHandler.QueryType
+import java.net.URL
 
 class KotlinCodeCompletionHandler : CodeCompletionHandler2 {
 
     override fun documentElement(info: ParserResult, element: ElementHandle, 
-                                 cancel: Callable<Boolean>) = Documentation.create("")
+                                 cancel: Callable<Boolean>): Documentation {
+        return if (element is ElementHandle.UrlHandle) 
+            return Documentation.create(element.url)
+        else Documentation.create("")
+    }
     
     override fun document(info: ParserResult, element: ElementHandle) = ""
     

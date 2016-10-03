@@ -733,11 +733,11 @@
       <artifactId>org-netbeans-modules-nbjunit</artifactId>  
       <version>${netbeans.version}</version>  
       <scope>test</scope> 
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>14.0</version>
-    </dependency>
+    </dependency>  
+    <dependency> 
+      <groupId>com.google.guava</groupId>  
+      <artifactId>guava</artifactId>  
+      <version>14.0</version> 
+    </dependency> 
   </dependencies> 
 </project>

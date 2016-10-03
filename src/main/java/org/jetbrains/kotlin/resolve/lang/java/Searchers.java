@@ -321,7 +321,7 @@ public class Searchers {
     public static class JavaDocSearcher implements CancellableTask<CompilationController>{
 
         private final ElemHandle element;
-        private Pair<Doc, URL> javaDoc = null;
+        private Doc javaDoc = null;
         
         public JavaDocSearcher(ElemHandle element){
             this.element = element;
@@ -342,11 +342,10 @@ public class Searchers {
                 return;
             }
             
-            javaDoc = new Pair(info.getElementUtilities().javaDocFor(elem),
-                SourceUtils.getPreferredJavadoc(elem));
+            javaDoc = info.getElementUtilities().javaDocFor(elem);
         }
         
-        public Pair<Doc, URL> getJavaDoc(){
+        public Doc getJavaDoc(){
             return javaDoc;
         }
         

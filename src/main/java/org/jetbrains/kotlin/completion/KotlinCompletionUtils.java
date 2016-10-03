@@ -300,7 +300,7 @@ public class KotlinCompletionUtils {
         int identOffset = getIdentifierStartOffset(editorText, caretOffset);
         
         String identifierPart = editorText.substring(identOffset, caretOffset);
-        
+        Project project = ProjectUtils.getKotlinProjectForFileObject(file);
         Collection<DeclarationDescriptor> descriptors = 
                 generateBasicCompletionProposals(file, identifierPart, identOffset, editorText);
         
@@ -308,7 +308,8 @@ public class KotlinCompletionUtils {
             if (descriptor instanceof JavaConstructorDescriptor) {
                 continue;
             }
-            proposals.add(new KotlinCompletionProposal(identOffset, caretOffset, descriptor, styledDoc, prefix));
+            proposals.add(new KotlinCompletionProposal(identOffset, caretOffset, 
+                    descriptor, styledDoc, prefix, project));
         }
     
         return proposals; 

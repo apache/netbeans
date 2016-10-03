@@ -32,10 +32,14 @@ import org.jetbrains.kotlin.utils.KotlinImageProvider
 import org.netbeans.modules.csl.api.ElementHandle
 import org.netbeans.modules.csl.api.HtmlFormatter
 import org.netbeans.modules.csl.spi.DefaultCompletionProposal
+import org.jetbrains.kotlin.navigation.NavigationUtil
+import org.jetbrains.kotlin.resolve.lang.java.resolver.NetBeansJavaSourceElement
+import org.netbeans.api.project.Project
+import org.jetbrains.kotlin.resolve.lang.java.getJavaDoc
 
 class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int, 
                                val descriptor: DeclarationDescriptor, val doc: StyledDocument,
-                               val prefix: String) : DefaultCompletionProposal() {
+                               val prefix: String, val project: Project) : DefaultCompletionProposal() {
 
     val text: String
     val proposal: String
@@ -52,7 +56,16 @@ class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
         type = if (splitted.size > 1) splitted[1] else ""
     }
     
-    override fun getElement() = null
+    override fun getElement(): ElementHandle? {
+        val source = NavigationUtil.getElementWithSource(descriptor, project);
+        if (source is NetBeansJavaSourceElement) {
+            val handle = source.getElementBinding()
+            val doc = handle.getJavaDoc(project)
+            return ElementHandle.UrlHandle(doc.rawCommentText)
+        }
+        
+        return null
+    }
     override fun getLhsHtml(formatter: HtmlFormatter) = proposalName
     override fun getRhsHtml(formatter: HtmlFormatter) = type
     override fun getName() = proposalName

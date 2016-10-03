@@ -18,6 +18,7 @@
  */
 package org.jetbrains.kotlin.resolve.lang.java;
 
+import com.sun.javadoc.Doc;
 import com.sun.source.util.TreePath;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -311,6 +312,39 @@ public class Searchers {
         
         public boolean isDeprecated(){
             return deprecated;
+        }
+        
+    }
+    
+    public static class JavaDocSearcher implements CancellableTask<CompilationController>{
+
+        private final ElemHandle element;
+        private Doc javaDoc = null;
+        
+        public JavaDocSearcher(ElemHandle element){
+            this.element = element;
+        }
+        
+        @Override
+        public void cancel() {
+        }
+
+        @Override
+        public void run(CompilationController info) throws Exception {
+            info.toPhase(Phase.RESOLVED);
+            if (element == null) {
+                return;
+            }
+            Element elem = element.resolve(info);
+            if (elem == null) {
+                return;
+            }
+            
+            javaDoc = info.getElementUtilities().javaDocFor(elem);
+        }
+        
+        public Doc getJavaDoc(){
+            return javaDoc;
         }
         
     }

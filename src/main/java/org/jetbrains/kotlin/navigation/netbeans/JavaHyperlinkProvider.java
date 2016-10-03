@@ -116,7 +116,6 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
     @Override
     public int[] getHyperlinkSpan(Document doc, int offset, HyperlinkType type) {
         return getIdentifierSpan(doc, offset, null);
-//        return GoToSupport.getIdentifierSpan(doc, offset, null);
     }
 
     @Override

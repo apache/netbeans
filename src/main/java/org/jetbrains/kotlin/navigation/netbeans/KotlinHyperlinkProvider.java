@@ -20,6 +20,7 @@ package org.jetbrains.kotlin.navigation.netbeans;
 
 import com.google.common.collect.Sets;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.sun.javadoc.Doc;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -36,11 +37,17 @@ import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.descriptors.SourceElement;
+import org.jetbrains.kotlin.load.java.structure.JavaClass;
+import org.jetbrains.kotlin.load.java.structure.JavaElement;
 import org.jetbrains.kotlin.load.kotlin.JvmPackagePartSource;
 import org.jetbrains.kotlin.navigation.JarNavigationUtil;
 import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.BindingContext;
 import org.jetbrains.kotlin.resolve.jvm.JvmClassName;
+import org.jetbrains.kotlin.resolve.lang.java.ElemHandle;
+import org.jetbrains.kotlin.resolve.lang.java.NbElementUtilsKt;
+import org.jetbrains.kotlin.resolve.lang.java.resolver.NetBeansJavaSourceElement;
+import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;
 import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedCallableMemberDescriptor;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.project.Project;
@@ -115,6 +122,38 @@ public class KotlinHyperlinkProvider implements HyperlinkProviderExt {
 
     @Override
     public String getTooltipText(Document doc, int offset, HyperlinkType type) {
+        if (referenceExpression == null) {
+            return "";
+        }
+
+        FileObject file = ProjectUtils.getFileObjectForDocument(doc);
+        if (file == null) {
+            return "";
+        }
+
+        Project project = getProjectForNavigation(file);
+        if (project == null) {
+            return "";
+        }
+
+        NavigationData navigationData = getNavigationData(referenceExpression, project);
+        if (navigationData == null) {
+            return "";
+        }
+        
+        SourceElement sourceElement = navigationData.getSourceElement();
+        if (sourceElement instanceof KotlinSourceElement) {
+            
+        } 
+        if (sourceElement instanceof NetBeansJavaSourceElement) {
+            ElemHandle handle = ((NetBeansJavaSourceElement) sourceElement).getElementBinding();
+            Doc javaDoc = NbElementUtilsKt.getJavaDoc(handle, project);
+            if (javaDoc == null) return "";
+            
+            return javaDoc.commentText();
+        }
+        
+        
         return "";
     }
     

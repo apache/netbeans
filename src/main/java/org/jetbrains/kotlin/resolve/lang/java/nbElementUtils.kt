@@ -44,6 +44,7 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport
 import org.openide.filesystems.FileObject
 import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.TypeMirrorHandleEquals
 import javax.lang.model.type.DeclaredType
+import org.jetbrains.kotlin.resolve.lang.java.Searchers.JavaDocSearcher
 
 class JavaEnvironment {
     companion object {
@@ -152,3 +153,6 @@ fun Project.getFileObjectForFqName(fqName: String): FileObject? {
     
     return fObjects.elementAt(0)?: null
 }
+
+fun ElemHandle<*>.getJavaDoc(project: Project) =
+        JavaDocSearcher(this).execute(project).javaDoc

@@ -18,10 +18,12 @@
  */
 package org.jetbrains.kotlin.navigation.netbeans;
 
+import com.google.common.collect.Sets;
 import com.intellij.openapi.vfs.VirtualFile;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import kotlin.Pair;
@@ -40,10 +42,10 @@ import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.BindingContext;
 import org.jetbrains.kotlin.resolve.jvm.JvmClassName;
 import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedCallableMemberDescriptor;
-import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedClassDescriptor;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.project.Project;
-import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider;
+import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
+import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -51,14 +53,14 @@ import org.openide.util.Exceptions;
  *
  * @author Александр
  */
-@MimeRegistration(mimeType = "text/x-kt", service = HyperlinkProvider.class)
-public class KotlinHyperlinkProvider implements HyperlinkProvider {
+@MimeRegistration(mimeType = "text/x-kt", service = HyperlinkProviderExt.class)
+public class KotlinHyperlinkProvider implements HyperlinkProviderExt {
 
     private KtReferenceExpression referenceExpression;
     private Pair<Document, Integer> navigationCache = null;
 
     @Override
-    public boolean isHyperlinkPoint(Document doc, int offset) {
+    public boolean isHyperlinkPoint(Document doc, int offset, HyperlinkType type) {
         try {
             referenceExpression = NavigationUtil.getReferenceExpression(doc, offset);
             return referenceExpression != null;
@@ -69,8 +71,8 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
     }
 
     @Override
-    public int[] getHyperlinkSpan(Document doc, int offset) {
-        if (isHyperlinkPoint(doc, offset)) {
+    public int[] getHyperlinkSpan(Document doc, int offset, HyperlinkType type) {
+        if (isHyperlinkPoint(doc, offset, type)) {
             Pair<Integer, Integer> span = NavigationUtil.getSpan();
             if (span == null) {
                 return null;
@@ -81,7 +83,7 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
     }
 
     @Override
-    public void performClickAction(Document doc, int offset) {
+    public void performClickAction(Document doc, int offset, HyperlinkType type) {
         if (referenceExpression == null) {
             return;
         }
@@ -106,6 +108,16 @@ public class KotlinHyperlinkProvider implements HyperlinkProvider {
                 referenceExpression, project, file);
     }
 
+    @Override
+    public Set<HyperlinkType> getSupportedHyperlinkTypes() {
+        return Sets.newHashSet(HyperlinkType.GO_TO_DECLARATION);
+    }
+
+    @Override
+    public String getTooltipText(Document doc, int offset, HyperlinkType type) {
+        return "";
+    }
+    
     private static String getDeclarationName(DeclarationDescriptor desc) {
         String fileName = "";
         JvmPackagePartSource src = (JvmPackagePartSource) ((DeserializedCallableMemberDescriptor) desc).getContainerSource();

@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.junit.Test;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.openide.filesystems.FileObject;
 import utils.TestUtilsKt;
 
@@ -38,8 +39,8 @@ public class NavigationTest extends NbTestCase {
         assertNotNull(caret);
         
         int offset = caret + "<caret>".length() + 1;
-        hyperlinkProvider.isHyperlinkPoint(from, offset);
-        hyperlinkProvider.performClickAction(from, offset);
+        hyperlinkProvider.isHyperlinkPoint(from, offset, HyperlinkType.GO_TO_DECLARATION);
+        hyperlinkProvider.performClickAction(from, offset, HyperlinkType.GO_TO_DECLARATION);
         
         Pair<Document, Integer> navigationData = hyperlinkProvider.getNavigationCache();
         assertNotNull(navigationData);

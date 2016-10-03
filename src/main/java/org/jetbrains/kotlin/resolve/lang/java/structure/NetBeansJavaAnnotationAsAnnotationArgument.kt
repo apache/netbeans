@@ -32,7 +32,7 @@ import javax.lang.model.type.DeclaredType
 
 class NetBeansJavaAnnotationAsAnnotationArgument(val project : Project, name : Name, 
                                                  val typeHandle : TypeMirrorHandle<DeclaredType>, 
-                                                 val args : Collection<JavaAnnotationArgument>) : 
+                                                 val args : List<JavaAnnotationArgument>) : 
         JavaAnnotationAsAnnotationArgument {
     override val name : Name = name
     override fun getAnnotation() : JavaAnnotation = NetBeansJavaAnnotation(project, typeHandle, args)

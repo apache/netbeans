@@ -14,36 +14,18 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.hints;
+package org.jetbrains.kotlin.hints
 
-import org.netbeans.modules.csl.api.HintSeverity;
-import org.netbeans.modules.csl.api.Rule;
-import org.netbeans.modules.csl.api.RuleContext;
+import org.netbeans.modules.csl.api.HintSeverity
+import org.netbeans.modules.csl.api.Rule
+import org.netbeans.modules.csl.api.RuleContext
 
-/**
- *
- * @author Alexander.Baratynski
- */
-public class KotlinAutoImportRule implements Rule {
-
-    @Override
-    public boolean appliesTo(RuleContext context) {
-        return context instanceof KotlinRuleContext; 
-    }
-
-    @Override
-    public String getDisplayName() {
-        return "Class not found";
-    }
-
-    @Override
-    public boolean showInTasklist() {
-        return false;
-    }
-
-    @Override
-    public HintSeverity getDefaultSeverity() {
-        return HintSeverity.ERROR;
-    }
+class KotlinRule : Rule {
     
+    override fun appliesTo(context: RuleContext) = context is KotlinRuleContext
+    override fun getDisplayName() = ""
+    override fun showInTasklist() = false
+    override fun getDefaultSeverity() = HintSeverity.ERROR
 }
+
+class KotlinRuleContext : RuleContext()

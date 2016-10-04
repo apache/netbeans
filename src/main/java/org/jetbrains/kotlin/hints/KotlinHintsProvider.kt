@@ -55,8 +55,8 @@ class KotlinHintsProvider : HintsProvider {
         
         val errors = parserResult.diagnostics
         for (error in errors) {
-            val psi = (error as KotlinError).psi
             if (error.toString().startsWith("UNRESOLVED_REFERENCE")) {
+                val psi = (error as KotlinError).psi
                 val simpleName = psi.text
                 
                 val suggestions = ProjectUtils.getKotlinProjectForFileObject(file).findFQName(simpleName)
@@ -66,6 +66,7 @@ class KotlinHintsProvider : HintsProvider {
                         OffsetRange(error.startPosition, error.endPosition), fixes, 10)
                 hints.add(hint)
             } else if (error.toString().startsWith("ABSTRACT_CLASS_MEMBER_NOT_IMPLEMENTED")) {
+                val psi = (error as KotlinError).psi
                 val fix = KotlinImplementMembersFix(parserResult, psi)
                 val hint = Hint(KotlinRule(), "Implement members", file,
                         OffsetRange(error.startPosition, error.endPosition), listOf(fix), 10)

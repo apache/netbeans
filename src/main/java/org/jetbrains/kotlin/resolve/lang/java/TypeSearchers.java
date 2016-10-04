@@ -30,6 +30,7 @@ import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaType;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
@@ -84,11 +85,8 @@ public class TypeSearchers {
             if (type == null) {
                 return;
             }
-            
-            TypeMirror boundMirror = ((WildcardType) type).getExtendsBound();
-            if (boundMirror == null) {
-                boundMirror = ((WildcardType) type).getSuperBound();
-            }
+            SourceUtils.getBound((WildcardType) type);
+            TypeMirror boundMirror = SourceUtils.getBound((WildcardType) type);
             
             bound = boundMirror != null ? NetBeansJavaType.create(
                     TypeMirrorHandle.create(boundMirror), project) : null;

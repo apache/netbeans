@@ -57,7 +57,8 @@ private fun create(value: Any, name: Name, info: CompilationController, project:
             is Class<*> -> NetBeansJavaClassObjectAnnotationArgument(value, name, project)
             is Collection<*> -> getArrayAnnotationArgument(value, name, info, project)
             is AnnotationValue -> create(value.value, name, info, project)
-            else -> throw UnsupportedOperationException()
+            is TypeMirror -> NetBeansJavaLiteralAnnotationArgument(value.toString(), name)
+            else -> NetBeansJavaLiteralAnnotationArgument(value.javaClass.toString(), name)
         }
 
 private fun getArrayAnnotationArgument(values: Collection<*>, name: Name,

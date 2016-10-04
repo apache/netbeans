@@ -20,6 +20,7 @@ import com.google.common.collect.Lists;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinError;
@@ -54,7 +55,6 @@ public class KotlinHintsProvider implements HintsProvider{
         List<? extends Error> errors = parserResult.getDiagnostics();
         for (Error error : errors) {
             if (error.toString().startsWith("UNRESOLVED_REFERENCE")) {
-                
                 PsiElement psi = ((KotlinError) error).getPsi();
                 String simpleName = psi.getText();
                 
@@ -68,6 +68,13 @@ public class KotlinHintsProvider implements HintsProvider{
                 
                 Hint hint = new Hint(new KotlinAutoImportRule(), "Class not found", file, 
                     new OffsetRange(error.getStartPosition(), error.getEndPosition()), fixes, 10);
+                hints.add(hint);
+            } else if (error.toString().startsWith("ABSTRACT_CLASS_MEMBER_NOT_IMPLEMENTED")) {
+                PsiElement psi = ((KotlinError) error).getPsi();
+                HintFix fix = new KotlinImplementMembersFix(parserResult, psi);
+                Hint hint = new Hint(new KotlinAutoImportRule(), "Implement members", file,
+                    new OffsetRange(error.getStartPosition(), error.getEndPosition()), 
+                        Collections.singletonList(fix), 10);
                 hints.add(hint);
             }
         }

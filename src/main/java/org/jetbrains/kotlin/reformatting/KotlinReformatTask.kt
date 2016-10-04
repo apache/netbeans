@@ -16,17 +16,9 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.reformatting
 
-import com.intellij.psi.PsiFile
-import javax.swing.text.BadLocationException
-import javax.swing.text.Document
-import org.jetbrains.kotlin.formatting.KotlinFormatterUtils
-import org.jetbrains.kotlin.formatting.NetBeansDocumentFormattingModel
-import org.jetbrains.kotlin.utils.ProjectUtils
-import org.netbeans.api.project.Project
 import org.netbeans.modules.editor.indent.spi.Context
 import org.netbeans.modules.editor.indent.spi.ExtraLock
 import org.netbeans.modules.editor.indent.spi.ReformatTask
-import org.openide.filesystems.FileObject
 
 
 /*
@@ -37,23 +29,8 @@ import org.openide.filesystems.FileObject
 
 class KotlinReformatTask(val context : Context) : ReformatTask {
     
-    override fun reformat() {
-        val document = context.document()
-        
-        val file = ProjectUtils.getFileObjectForDocument(document)
-        if (file == null) return
-        
-        val parsedFile = ProjectUtils.getKtFile(context.document().getText(0,context.document().length), file)
-        if (parsedFile == null) return
-        
-        val project = ProjectUtils.getKotlinProjectForFileObject(file)
-        val code = parsedFile.text
-        KotlinFormatterUtils.formatCode(code, parsedFile.name, project, "\n")
-        val formattedCode = NetBeansDocumentFormattingModel.getNewText()
-        document.remove(0, document.length)
-        document.insertString(0, formattedCode, null)
-    }
+    override fun reformat() = format(context.document())
     
-    override fun reformatLock() : ExtraLock? = null
+    override fun reformatLock() = null
     
 }

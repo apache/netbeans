@@ -48,6 +48,7 @@ import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.psi.psiUtil.getElementTextWithContext
 import org.netbeans.api.project.Project
 import javax.swing.text.Document
+import org.jetbrains.kotlin.reformatting.format
 
 class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: PsiElement) : HintFix {
 
@@ -65,7 +66,7 @@ class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: P
         if (missingImplementations.isEmpty()) return
         
         generateMethods(doc, classOrObject, missingImplementations)
-        
+        format(doc)
     }
 
     private val OVERRIDE_RENDERER = DescriptorRenderer.withOptions {

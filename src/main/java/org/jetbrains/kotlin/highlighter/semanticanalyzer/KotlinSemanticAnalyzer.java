@@ -62,7 +62,7 @@ public class KotlinSemanticAnalyzer extends SemanticAnalyzer<KotlinParserResult>
 
     @Override
     public int getPriority() {
-        return 1;
+        return 999;
     }
 
     @Override

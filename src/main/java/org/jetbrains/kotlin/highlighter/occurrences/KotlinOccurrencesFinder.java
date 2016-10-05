@@ -93,7 +93,7 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
     
     @Override
     public int getPriority() {
-        return 0;
+        return 1000;
     }
 
     @Override

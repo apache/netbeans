@@ -89,7 +89,7 @@ fun String.getPackages(project: Project): Set<String> {
 
 fun <T : Task<CompilationController>> T.execute(project: Project): T {
     JavaEnvironment.checkJavaSource(project)
-    JavaEnvironment.JAVA_SOURCE[project]?.runUserActionTask(this, true)
+    JavaEnvironment.JAVA_SOURCE[project]!!.runUserActionTask(this, true)
     
     return this
 }

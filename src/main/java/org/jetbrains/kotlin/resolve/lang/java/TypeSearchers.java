@@ -52,7 +52,7 @@ public class TypeSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             TypeMirror type = handle.resolve(info);
             if (type == null) {
                 return;
@@ -80,7 +80,7 @@ public class TypeSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             TypeMirror type = handle.resolve(info);
             if (type == null) {
                 return;
@@ -109,7 +109,7 @@ public class TypeSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             TypeMirror type = handle.resolve(info);
             if (type == null) {
                 return;
@@ -138,7 +138,7 @@ public class TypeSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             TypeMirror type = handle.resolve(info);
             if (type == null) {
                 throw new UnsupportedOperationException("Component type not found");
@@ -166,7 +166,7 @@ public class TypeSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             ElementHandle<TypeElement> elementHandle = ElementHandle.from(handle);
             TypeElement element = elementHandle.resolve(info);
             if (element != null && element.getTypeParameters().isEmpty()) {
@@ -199,7 +199,7 @@ public class TypeSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             TypeMirror type = handle.resolve(info);
             if (type == null) {
                 return;

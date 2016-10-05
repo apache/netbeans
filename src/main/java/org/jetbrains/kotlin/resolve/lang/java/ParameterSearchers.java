@@ -51,7 +51,7 @@ public class ParameterSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
@@ -76,7 +76,7 @@ public class ParameterSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             TypeMirror type = handle.resolve(info);
             if (type == null) {
                 return;
@@ -101,7 +101,7 @@ public class ParameterSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             TypeMirror type = handle.resolve(info);
             if (type == null) {
                 return;
@@ -128,7 +128,7 @@ public class ParameterSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             TypeMirror mirror = typeHandle.resolve(info);
             if (mirror == null) {
                 return;
@@ -155,7 +155,7 @@ public class ParameterSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
@@ -182,7 +182,7 @@ public class ParameterSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             TypeMirror type = handle.resolve(info);
             TypeMirror type2 = handle2.resolve(info);
             if (type == null || type2 == null) {
@@ -211,7 +211,7 @@ public class ParameterSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             TypeMirror type = handle.resolve(info);
             TypeMirror type2 = handle2.resolve(info);
             if (type == null || type2 == null) {

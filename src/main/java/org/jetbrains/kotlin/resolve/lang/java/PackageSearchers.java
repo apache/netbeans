@@ -75,7 +75,7 @@ public class PackageSearchers {
 
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             String thisPackageName = pack.getFqName().asString();
             String pattern = thisPackageName.isEmpty() ? "*" : thisPackageName + ".";
 
@@ -137,7 +137,7 @@ public class PackageSearchers {
 
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             
             for (ElemHandle<PackageElement> packHandle : packages) {
                 Element elem = packHandle.resolve(info);
@@ -167,7 +167,7 @@ public class PackageSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             Element pack = handle.resolve(info);
             if (pack == null) {
                 return;

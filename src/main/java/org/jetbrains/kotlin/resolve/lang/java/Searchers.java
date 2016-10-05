@@ -61,7 +61,7 @@ public class Searchers {
 
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(JavaSource.Phase.RESOLVED);
+            info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
             TypeElement elem = info.getElements().getTypeElement(fqName);
             if (elem != null) {
                 element = ElemHandle.create(elem, project);
@@ -85,7 +85,7 @@ public class Searchers {
 
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(JavaSource.Phase.RESOLVED);
+            info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
             TypeElement elem = info.getElements().getTypeElement(fqName);
             if (elem != null) {
                 handle = TypeMirrorHandle.create(elem.asType());
@@ -111,7 +111,7 @@ public class Searchers {
 
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(JavaSource.Phase.RESOLVED);
+            info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
             PackageElement elem = info.getElements().getPackageElement(fqName);
             if (elem != null) {
                 element = ElemHandle.create(elem, project);
@@ -148,7 +148,7 @@ public class Searchers {
 
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(JavaSource.Phase.RESOLVED);
+            info.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
             Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
@@ -178,7 +178,7 @@ public class Searchers {
 
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             TreePath treePath = info.getTreeUtilities().pathFor(offset);
             Element elem = info.getTrees().getElement(treePath);
             if (elem == null) {
@@ -209,7 +209,7 @@ public class Searchers {
 
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             Element elem = element.resolve(info);
             if (elem == null) {
                 return;
@@ -239,7 +239,7 @@ public class Searchers {
 
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             Element elem = element.resolve(info);
             if (elem == null) {
                 return;
@@ -270,7 +270,7 @@ public class Searchers {
 
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             TypeElement te = info.getElements().getTypeElement(fqName);
             if (te == null) {
                 return;
@@ -300,7 +300,7 @@ public class Searchers {
 
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             if (element == null) {
                 return;
             }
@@ -333,7 +333,7 @@ public class Searchers {
 
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             if (element == null) {
                 return;
             }

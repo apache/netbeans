@@ -55,7 +55,7 @@ public class ExecutableSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
@@ -82,7 +82,7 @@ public class ExecutableSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
@@ -110,7 +110,7 @@ public class ExecutableSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
@@ -142,7 +142,7 @@ public class ExecutableSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.RESOLVED);
+            info.toPhase(Phase.ELEMENTS_RESOLVED);
             Element elem = handle.resolve(info);
             if (elem == null) {
                 return;

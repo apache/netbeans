@@ -22,9 +22,12 @@ import org.jetbrains.kotlin.formatting.KotlinFormatterUtils
 import org.jetbrains.kotlin.formatting.NetBeansDocumentFormattingModel
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.api.project.Project
+import org.jetbrains.kotlin.navigation.NavigationUtil
+import javax.swing.text.StyledDocument
+import javax.swing.SwingUtilities
 
 
-fun format(doc: Document) {
+fun format(doc: Document, offset: Int) {
     val file = ProjectUtils.getFileObjectForDocument(doc)
     if (file == null) return
 
@@ -37,4 +40,5 @@ fun format(doc: Document) {
     val formattedCode = NetBeansDocumentFormattingModel.getNewText()
     doc.remove(0, doc.length)
     doc.insertString(0, formattedCode, null)
+    SwingUtilities.invokeLater(Runnable { NavigationUtil.openFileAtOffset(doc as StyledDocument, offset) })
 }

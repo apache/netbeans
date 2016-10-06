@@ -14,23 +14,18 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.reformatting
+package org.jetbrains.kotlin.indentation
 
+import org.jetbrains.kotlin.formatting.KotlinIndentStrategy
 import org.netbeans.modules.editor.indent.spi.Context
 import org.netbeans.modules.editor.indent.spi.ExtraLock
-import org.netbeans.modules.editor.indent.spi.ReformatTask
+import org.netbeans.modules.editor.indent.spi.IndentTask
 
-
-/*
-
-  @author Alexander.Baratynski
-  Created on Sep 9, 2016
-*/
-
-class KotlinReformatTask(val context : Context) : ReformatTask {
+class KotlinIndentTask(val context: Context) : IndentTask {
     
-    override fun reformat() = format(context.document(), context.caretOffset())
+    override fun reindent() { 
+        KotlinIndentStrategy(context).addIndent()
+    }
     
-    override fun reformatLock() = null
-    
+    override fun indentLock() = null
 }

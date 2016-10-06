@@ -66,7 +66,7 @@ class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: P
         if (missingImplementations.isEmpty()) return
         
         generateMethods(doc, classOrObject, missingImplementations)
-        format(doc)
+        format(doc, psi.textRange.startOffset)
     }
 
     private val OVERRIDE_RENDERER = DescriptorRenderer.withOptions {

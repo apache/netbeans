@@ -18,6 +18,7 @@ package org.jetbrains.kotlin.utils;
 
 import com.google.common.collect.Sets;
 import edu.emory.mathcs.backport.java.util.Collections;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -32,6 +33,7 @@ import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.projectsextensions.ClassPathExtender;
 import org.jetbrains.kotlin.projectsextensions.maven.MavenHelper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -70,7 +72,12 @@ public class ProjectUtils {
             if (dir.getFileObject("kotlinc") == null){
                 BundledCompiler.getKotlinc();
             }
-            KT_HOME = Places.getUserDirectory().getAbsolutePath() + FILE_SEPARATOR + "kotlinc"
+            File userDirectory = Places.getUserDirectory();
+            if (userDirectory == null) {
+                KotlinLogger.INSTANCE.logWarning("KT_HOME is null!");
+                return;
+            }
+            KT_HOME = userDirectory.getAbsolutePath() + FILE_SEPARATOR + "kotlinc"
                     + FILE_SEPARATOR;
         }
     }

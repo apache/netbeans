@@ -19,15 +19,11 @@ package org.jetbrains.kotlin.indentation;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.jetbrains.kotlin.formatting.KotlinIndentStrategy;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.IndentTask;
-import org.openide.util.Exceptions;
 
-/**
- *
- * @author Александр
- */
 public class KotlinIndentTask implements IndentTask {
 
     private final Context context;
@@ -44,7 +40,7 @@ public class KotlinIndentTask implements IndentTask {
             KotlinIndentStrategy strategy = new KotlinIndentStrategy(context);
             strategy.addIndent();
         } catch (BadLocationException ex) {
-            Exceptions.printStackTrace(ex);
+            KotlinLogger.INSTANCE.logException("", ex);
         }
     }
 

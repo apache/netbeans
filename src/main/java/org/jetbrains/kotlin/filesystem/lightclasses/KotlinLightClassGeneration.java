@@ -34,6 +34,7 @@ import org.jetbrains.kotlin.codegen.CompilationErrorHandler;
 import org.jetbrains.kotlin.codegen.KotlinCodegenFacade;
 import org.jetbrains.kotlin.codegen.state.GenerationState;
 import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.psi.KtClassOrObject;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtScript;
@@ -176,15 +177,15 @@ public class KotlinLightClassGeneration {
                             stream.write(lightClassText);
                             stream.flush();
                         } catch (FileNotFoundException ex) {
-                            Exceptions.printStackTrace(ex);
+                            KotlinLogger.INSTANCE.logException("", ex);
                         } catch (IOException ex) {
-                            Exceptions.printStackTrace(ex);
+                            KotlinLogger.INSTANCE.logException("", ex);
                         } finally {
                             if (stream != null) {
                                 try {
                                     stream.close();
                                 } catch (IOException ex) {
-                                    Exceptions.printStackTrace(ex);
+                                    KotlinLogger.INSTANCE.logException("", ex);
                                 }
                             }
                         }
@@ -230,15 +231,15 @@ public class KotlinLightClassGeneration {
                             stream.write(lightClassText);
                             stream.flush();
                         } catch (FileNotFoundException ex) {
-                            Exceptions.printStackTrace(ex);
+                            KotlinLogger.INSTANCE.logException("", ex);
                         } catch (IOException ex) {
-                            Exceptions.printStackTrace(ex);
+                            KotlinLogger.INSTANCE.logException("", ex);
                         } finally {
                             if (stream != null) {
                                 try {
                                     stream.close();
                                 } catch (IOException ex) {
-                                    Exceptions.printStackTrace(ex);
+                                    KotlinLogger.INSTANCE.logException("", ex);
                                 }
                             }
                         }

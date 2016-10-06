@@ -45,6 +45,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryClass;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryPackageSourceElement;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinarySourceElement;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.navigation.netbeans.KotlinHyperlinkProvider;
 import org.jetbrains.kotlin.psi.KtDeclaration;
 import org.jetbrains.kotlin.psi.KtElement;
@@ -65,7 +66,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.text.Line;
 import org.openide.text.NbDocument;
-import org.openide.util.Exceptions;
 
 public class NavigationUtil {
     
@@ -176,7 +176,7 @@ public class NavigationUtil {
             file = KotlinPsiManager.INSTANCE.
                     getParsedKtFileForSyntaxHighlighting(StringUtilRt.convertLineSeparators(declarationFile.asText()));
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            KotlinLogger.INSTANCE.logException("", ex);
         }
         
         if (file == null) {
@@ -220,7 +220,7 @@ public class NavigationUtil {
         try {
             document = ProjectUtils.getDocumentFromFileObject(declarationFile);
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            KotlinLogger.INSTANCE.logException("No document for " + declarationFile.getPath(), ex);
         }
         if (document == null){
             return false;
@@ -245,9 +245,9 @@ public class NavigationUtil {
             document = ProjectUtils.getDocumentFromFileObject(declarationFile);
             text = document.getText(0, document.getLength());
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            KotlinLogger.INSTANCE.logException("", ex);
         } catch (BadLocationException ex) {
-            Exceptions.printStackTrace(ex);
+            KotlinLogger.INSTANCE.logException("", ex);
         }
         if (document == null){
             return null;

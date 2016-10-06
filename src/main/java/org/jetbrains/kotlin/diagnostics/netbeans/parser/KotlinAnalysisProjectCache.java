@@ -18,6 +18,7 @@ package org.jetbrains.kotlin.diagnostics.netbeans.parser;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.jetbrains.kotlin.resolve.NetBeansAnalyzerFacadeForJVM;
@@ -42,6 +43,8 @@ public class KotlinAnalysisProjectCache {
                         NetBeansAnalyzerFacadeForJVM.INSTANCE.analyzeFilesWithJavaIntegration(project, 
                         KotlinEnvironment.getEnvironment(project).getProject(), ProjectUtils.getSourceFilesWithDependencies(project));
                 cache.put(project, result);
+                KotlinLogger.INSTANCE.logInfo("Project " + 
+                        project.getProjectDirectory().getPath() + " analysis result cached");
             }
             
             return cache.get(project);

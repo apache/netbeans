@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.idea.KotlinFileType;
 import org.jetbrains.kotlin.idea.KotlinLanguage;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.SourceGroup;
@@ -95,6 +96,7 @@ public class KotlinPsiManager {
         if (kotlinProject == null){
             kotlinProject = ProjectUtils.getValidProject();
             if (kotlinProject == null) {
+                KotlinLogger.INSTANCE.logWarning("Project is null");
                 return null;
             }
         }
@@ -123,7 +125,7 @@ public class KotlinPsiManager {
                 }
                 cachedKtFiles.put(file, ktFile);
             } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+                KotlinLogger.INSTANCE.logException("parseFile exception", ex);
             }
         }
         

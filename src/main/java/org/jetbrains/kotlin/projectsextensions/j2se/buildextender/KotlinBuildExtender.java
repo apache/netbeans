@@ -28,9 +28,9 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.dom4j.tree.DefaultElement;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -38,7 +38,7 @@ import org.openide.util.Exceptions;
  */
 public class KotlinBuildExtender {
     
-    private Project project = null;
+    private final Project project;
     
     public KotlinBuildExtender(Project project) {
         this.project = project;
@@ -54,9 +54,9 @@ public class KotlinBuildExtender {
             addKotlinLibProperty(buildImpl);
             insertWithKotlin(buildImpl);
         } catch (DocumentException ex) {
-            Exceptions.printStackTrace(ex);
+            KotlinLogger.INSTANCE.logException("No build-impl.xml!", ex);
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            KotlinLogger.INSTANCE.logException("", ex);
         }
     }
     

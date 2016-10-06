@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Properties;
 import org.jetbrains.kotlin.utils.KotlinClasspath;
 import org.codehaus.plexus.util.PropertyUtils;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.support.ant.EditableProperties;
 import org.openide.filesystems.FileObject;
@@ -90,9 +91,9 @@ public class J2SEProjectPropertiesModifier {
             editableProperties.store(out);
             out.close();
         } catch (FileNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
+            KotlinLogger.INSTANCE.logException("No project.properties file!", ex);
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            KotlinLogger.INSTANCE.logException("", ex);
         }
     }
     

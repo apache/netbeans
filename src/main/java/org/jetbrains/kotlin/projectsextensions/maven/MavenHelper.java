@@ -28,6 +28,7 @@ import java.util.Set;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.maven.api.NbMavenProject;
@@ -187,7 +188,7 @@ public class MavenHelper {
                     dependencyProjects.add(dep);
                 }
             } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+                KotlinLogger.INSTANCE.logException("Can't find module " + module.getName(), ex);
             }
         }
        

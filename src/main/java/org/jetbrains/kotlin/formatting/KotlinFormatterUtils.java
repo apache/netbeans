@@ -44,7 +44,7 @@ import org.netbeans.api.project.Project;
  */
 public class KotlinFormatterUtils {
     
-    private static CodeStyleSettings settings = new CodeStyleSettings(true);
+    private static final CodeStyleSettings settings = new CodeStyleSettings(true);
     
     public static CodeStyleSettings getSettings() {
         return settings;

@@ -22,7 +22,6 @@ import com.google.common.collect.Sets;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.sun.javadoc.Doc;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;

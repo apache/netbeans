@@ -20,7 +20,6 @@ import org.jetbrains.kotlin.projectsextensions.KotlinPrivilegedTemplates;
 import org.jetbrains.kotlin.projectsextensions.maven.MavenProjectOpenedHook;
 import org.jetbrains.kotlin.projectsextensions.maven.classpath.MavenClassPathProviderImpl;
 import org.netbeans.api.project.Project;
-//import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.spi.project.LookupProvider;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;

@@ -79,6 +79,7 @@ import org.jetbrains.kotlin.idea.KotlinFileType;
 import org.jetbrains.kotlin.js.resolve.diagnostics.DefaultErrorMessagesJs;
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory;
 import org.jetbrains.kotlin.load.kotlin.ModuleVisibilityManager;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.resolve.diagnostics.DiagnosticSuppressor;
 import org.jetbrains.kotlin.resolve.diagnostics.SuppressStringProvider;
 import org.jetbrains.kotlin.resolve.jvm.diagnostics.DefaultErrorMessagesJvm;
@@ -223,7 +224,8 @@ public class KotlinEnvironment {
     private void configureClasspath(@NotNull org.netbeans.api.project.Project kotlinProject) {
         Set<String> classpath = ProjectUtils.getClasspath(kotlinProject);
         String lightClassesDir = KotlinProjectHelper.INSTANCE.getLightClassesDirectory(kotlinProject).toURI().toString();
-        
+        KotlinLogger.INSTANCE.logInfo("Project " + kotlinProject.getProjectDirectory().getPath() +
+                " classpath is: " + classpath);
         for (String s : classpath) {
             if (s.endsWith("!/")){
                 addToClasspath(s.split("!/")[0].split("file:")[1], null);

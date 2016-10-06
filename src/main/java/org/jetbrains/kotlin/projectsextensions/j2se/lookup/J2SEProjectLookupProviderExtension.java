@@ -18,9 +18,7 @@
  */
 package org.jetbrains.kotlin.projectsextensions.j2se.lookup;
 
-import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.projectsextensions.KotlinPrivilegedTemplates;
-import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.projectsextensions.j2se.J2SEProjectOpenedHook;
 import org.jetbrains.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider;
 import org.jetbrains.kotlin.utils.ProjectUtils;

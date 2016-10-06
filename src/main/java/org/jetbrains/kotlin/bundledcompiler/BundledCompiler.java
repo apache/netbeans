@@ -16,16 +16,17 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.bundledcompiler;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
-import org.openide.util.Exceptions;
 
 public class BundledCompiler {
 
@@ -60,10 +61,15 @@ public class BundledCompiler {
         try {
             InputStream inputStream = BundledCompiler.class.getClassLoader().getResourceAsStream("/org/jetbrains/kotlin/kotlinc/kotlinc.zip");
 
-            FileObject destFileObj = FileUtil.toFileObject(Places.getUserDirectory());
+            File userDirectory = Places.getUserDirectory();
+            if (userDirectory == null) {
+                KotlinLogger.INSTANCE.logWarning("User directory is null");
+                return;
+            }
+            FileObject destFileObj = FileUtil.toFileObject(userDirectory);
             unZipFile(inputStream, destFileObj);
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            KotlinLogger.INSTANCE.logException("unZipFile() exception", ex);
         }
     }
     

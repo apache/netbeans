@@ -28,6 +28,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.dom4j.tree.DefaultElement;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.netbeans.api.project.Project;
 import org.openide.util.Exceptions;
 
@@ -50,9 +51,9 @@ public class PomXmlModifier {
             checkKotlinStdLibDependency();
             checkKotlinPlugin();
         } catch (DocumentException ex) {
-            Exceptions.printStackTrace(ex);
+            KotlinLogger.INSTANCE.logException("Cannot find pom.xml", ex);
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            KotlinLogger.INSTANCE.logException("", ex);
         }
     }
     

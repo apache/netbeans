@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.project.MavenProject;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.projectsextensions.ClassPathExtender;
 import org.jetbrains.kotlin.projectsextensions.maven.MavenHelper;
 import org.jetbrains.kotlin.projectsextensions.maven.classpath.classpath.ClassPathProviderImpl;
@@ -84,8 +85,12 @@ public class MavenExtendedClassPath implements ClassPathExtender {
         if (mavenProj == null) {
             return Collections.emptyList();
         }
-        
-        return mavenProj.getCompileClasspathElements();
+        List<String> compileClasspath = mavenProj.getCompileClasspathElements();
+        if (compileClasspath == null || compileClasspath.isEmpty()) {
+            KotlinLogger.INSTANCE.logInfo(proj.getProjectDirectory().getPath() + 
+                    " compile classpath is empty");
+        }
+        return compileClasspath;
     }
     
     private List<String> getRuntimeClasspathElements(Project proj) throws DependencyResolutionRequiredException {
@@ -93,8 +98,13 @@ public class MavenExtendedClassPath implements ClassPathExtender {
         if (mavenProj == null) {
             return Collections.emptyList();
         }
+        List<String> runtimeClasspath = mavenProj.getRuntimeClasspathElements();
+        if (runtimeClasspath == null || runtimeClasspath.isEmpty()) {
+            KotlinLogger.INSTANCE.logInfo(proj.getProjectDirectory().getPath() + 
+                    " runtime classpath is empty");
+        }
         
-        return mavenProj.getRuntimeClasspathElements();
+        return runtimeClasspath;
     }
     
     private List<String> getCompileSourceRoots(Project proj) throws DependencyResolutionRequiredException {
@@ -102,8 +112,13 @@ public class MavenExtendedClassPath implements ClassPathExtender {
         if (mavenProj == null) {
             return Collections.emptyList();
         }
+        List<String> compileClasspath = mavenProj.getCompileSourceRoots();
+        if (compileClasspath == null || compileClasspath.isEmpty()) {
+            KotlinLogger.INSTANCE.logInfo(proj.getProjectDirectory().getPath() + 
+                    " compile source roots are empty");
+        }
         
-        return mavenProj.getCompileSourceRoots();
+        return compileClasspath;
     }
     
     private List<String> getSystemClasspathElements(Project proj) throws DependencyResolutionRequiredException {
@@ -111,8 +126,13 @@ public class MavenExtendedClassPath implements ClassPathExtender {
         if (mavenProj == null) {
             return Collections.emptyList();
         }
+        List<String> systemClasspath = mavenProj.getSystemClasspathElements();
+        if (systemClasspath == null || systemClasspath.isEmpty()) {
+            KotlinLogger.INSTANCE.logInfo(proj.getProjectDirectory().getPath() + 
+                    " system classpath is empty");
+        }
         
-        return mavenProj.getSystemClasspathElements();
+        return systemClasspath;
     }
     
     private List<String> getTestClasspathElements(Project proj) throws DependencyResolutionRequiredException {
@@ -120,8 +140,13 @@ public class MavenExtendedClassPath implements ClassPathExtender {
         if (mavenProj == null) {
             return Collections.emptyList();
         }
+        List<String> testClasspath = mavenProj.getTestClasspathElements();
+        if (testClasspath == null || testClasspath.isEmpty()) {
+            KotlinLogger.INSTANCE.logInfo(proj.getProjectDirectory().getPath() + 
+                    " test classpath is empty");
+        }
         
-        return mavenProj.getTestClasspathElements();
+        return testClasspath;
     }
     
     private void createClasspath() {

@@ -18,8 +18,10 @@
  */
 package org.jetbrains.kotlin.projectsextensions.j2se;
 
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinAnalysisProjectCache;
 import org.jetbrains.kotlin.projectsextensions.j2se.buildextender.KotlinBuildExtender;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
@@ -69,6 +71,8 @@ public class J2SEProjectOpenedHook extends ProjectOpenedHook {
 
     @Override
     protected void projectClosed() {
+        KotlinAnalysisProjectCache.INSTANCE.removeProjectCache(project);
+        KotlinProjectHelper.INSTANCE.removeProjectCache(project);
     }
 
 }

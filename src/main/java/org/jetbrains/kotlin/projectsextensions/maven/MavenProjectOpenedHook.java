@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.projectsextensions.maven;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinAnalysisProjectCache;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.projectsextensions.maven.buildextender.PomXmlModifier;
@@ -100,6 +101,8 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
     
     @Override
     protected void projectClosed() {
+        KotlinAnalysisProjectCache.INSTANCE.removeProjectCache(project);
+        KotlinProjectHelper.INSTANCE.removeProjectCache(project);
     }
     
 }

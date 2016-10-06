@@ -50,5 +50,11 @@ public class KotlinAnalysisProjectCache {
             return cache.get(project);
         }
     }
+ 
+    public void removeProjectCache(Project project) {
+        synchronized(project) {
+            cache.remove(project);
+        }
+    }
     
 }

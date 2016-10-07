@@ -63,7 +63,8 @@ class KotlinHintsProvider : HintsProvider {
                                psi: PsiElement, offset: Int) = listOf<ApplicableFix>(
             KotlinRemoveExplicitTypeFix(parserResult, psi),
             KotlinSpecifyTypeFix(parserResult, psi),
-            KotlinConvertToBlockBodyFix(parserResult, psi))
+            KotlinConvertToBlockBodyFix(parserResult, psi),
+            KotlinChangeReturnTypeProposal(parserResult, psi))
             .filter { it.isApplicable(offset) }
 
     override fun computeSelectionHints(hintsManager: HintsManager, ruleContext: RuleContext,

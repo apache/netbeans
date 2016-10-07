@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.diagnostics.netbeans.parser;
 import com.google.common.collect.Lists;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
+import java.util.Collection;
 import java.util.List;
 import javax.swing.event.ChangeListener;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
@@ -155,6 +156,10 @@ public class KotlinParser extends Parser {
         public KotlinError(Diagnostic diagnostic, FileObject file){
             this.diagnostic = diagnostic;
             this.file = file;
+        }
+        
+        public Diagnostic getDiagnostic() {
+            return diagnostic;
         }
         
         public PsiElement getPsi(){

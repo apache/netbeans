@@ -109,14 +109,14 @@ public class KotlinParser extends Parser {
 
         @Override
         protected void invalidate() {
-            valid = false;
-            analysisResult = null;
+//            valid = false;
+//            analysisResult = null;
         }
 
         public AnalysisResultWithProvider getAnalysisResult() throws ParseException {
-            if (!valid) {
-                throw new ParseException();
-            }
+//            if (!valid) {
+//                throw new ParseException();
+//            }
             return analysisResult;
         }
         

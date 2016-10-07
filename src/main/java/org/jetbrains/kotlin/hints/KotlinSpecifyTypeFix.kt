@@ -18,59 +18,73 @@ package org.jetbrains.kotlin.hints
 
 import org.jetbrains.kotlin.psi.KtCallableDeclaration
 import org.jetbrains.kotlin.psi.KtCodeFragment
+import org.jetbrains.kotlin.psi.KtConstructor
+import org.jetbrains.kotlin.psi.KtFunction
+import org.jetbrains.kotlin.psi.KtFunctionLiteral
 import org.jetbrains.kotlin.psi.KtNamedFunction
 import org.jetbrains.kotlin.psi.KtParameter
 import org.jetbrains.kotlin.psi.KtProperty
-import org.jetbrains.kotlin.psi.KtTypeReference
 import org.jetbrains.kotlin.psi.KtWithExpressionInitializer
+import org.jetbrains.kotlin.resolve.BindingContext
+import org.jetbrains.kotlin.types.ErrorUtils
+import org.jetbrains.kotlin.types.KotlinType
 import org.netbeans.modules.csl.api.HintFix
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
+import org.jetbrains.kotlin.descriptors.CallableDescriptor
+import org.jetbrains.kotlin.idea.util.IdeDescriptorRenderers
 
-class KotlinRemoveExplicitTypeFix(val parserResult: KotlinParserResult, 
-                                  val psi: PsiElement) : ApplicableFix {
+class KotlinSpecifyTypeFix(val parserResult: KotlinParserResult, 
+                           val psi: PsiElement) : ApplicableFix {
+
+    private lateinit var displayString: String
 
     override fun isApplicable(caretOffset: Int): Boolean {
         val element = PsiTreeUtil.getNonStrictParentOfType(psi, KtCallableDeclaration::class.java)
         if (element == null) return false
 
         if (element.getContainingFile() is KtCodeFragment) return false
-        if (element.getTypeReference() == null) return false
+        if (element is KtFunctionLiteral) return false
+        if (element is KtConstructor<*>) return false
+        if (element.getTypeReference() != null) return false
 
         val initializer = (element as? KtWithExpressionInitializer)?.getInitializer()
         if (initializer != null && initializer.getTextRange().containsOffset(caretOffset)) return false
 
-        return when (element) {
-            is KtProperty -> initializer != null
-            is KtNamedFunction -> !element.hasBlockBody() && initializer != null
-            is KtParameter -> element.isLoopParameter()
-            else -> false
-        }
+        if (element is KtNamedFunction && element.hasBlockBody()) return false
+
+        if (getTypeForDeclaration(element, parserResult).isError) return false
+
+        displayString = if (element is KtFunction) "Specify return type explicitly" else "Specify type explicitly"
+
+        return true
     }
 
-    override fun getDescription() = "Remove explicit type specification"
+    private fun getTypeForDeclaration(declaration: KtCallableDeclaration, parserResult: KotlinParserResult): KotlinType {
+        val bindingContext = parserResult.analysisResult.analysisResult.bindingContext
+
+        val descriptor = bindingContext[BindingContext.DECLARATION_TO_DESCRIPTOR, declaration]
+        val type = (descriptor as? CallableDescriptor)?.getReturnType()
+        return type ?: ErrorUtils.createErrorType("null type")
+    }
+
+    override fun getDescription() = displayString
     override fun isSafe() = true
     override fun isInteractive() = false
 
     override fun implement() {
         val element = PsiTreeUtil.getNonStrictParentOfType(psi, KtCallableDeclaration::class.java)!!
+        val type = getTypeForDeclaration(element, parserResult)
         val anchor = getAnchor(element) ?: return
 
-        val doc = parserResult.snapshot.source.getDocument(false)
-        val endOffset = anchor.textRange.endOffset
-        val endOfType = element.getTypeReference()!!.textRange.endOffset
-
-        doc.remove(endOffset, endOfType - endOffset)
+        addTypeAnnotation(anchor, type)
     }
 
-}
+    private fun addTypeAnnotation(element: PsiElement, type: KotlinType) {
+        val text = ": ${IdeDescriptorRenderers.SOURCE_CODE_SHORT_NAMES_IN_TYPES.renderType(type)}"
+        val doc = parserResult.snapshot.source.getDocument(false)
 
-fun getAnchor(element: KtCallableDeclaration): PsiElement? {
-    return when (element) {
-        is KtProperty -> element.getNameIdentifier()
-        is KtNamedFunction -> element.getValueParameterList()
-        is KtParameter -> element.getNameIdentifier()
-        else -> null
+        doc.insertString(element.textRange.endOffset, text, null)
     }
 }

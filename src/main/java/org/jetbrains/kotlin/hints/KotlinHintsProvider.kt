@@ -42,65 +42,75 @@ import org.netbeans.modules.csl.api.HintSeverity
 
 
 class KotlinHintsProvider : HintsProvider {
-    
-    override fun computeSuggestions(hintsManager: HintsManager, ruleContext: RuleContext, 
+
+    override fun computeSuggestions(hintsManager: HintsManager, ruleContext: RuleContext,
                                     hints: MutableList<Hint>, offset: Int) {
         val parserResult = ruleContext.parserResult as KotlinParserResult
         val psi = parserResult.ktFile.findElementAt(offset) ?: return
-        
-        if (canRemoveExplicitType(parserResult, psi, offset))
-            hints.add(Hint(KotlinRule(HintSeverity.CURRENT_LINE_WARNING),
-                    "Remove explicit type specification",
-                    parserResult.snapshot.source.fileObject,
-                    OffsetRange(offset, offset), 
-                    listOf(KotlinRemoveExplicitTypeFix(parserResult, psi)), 
-                    20)
-            )
+
+        hints.addAll(getSuggestions(parserResult, psi, offset)
+                .map {
+                    Hint(KotlinRule(HintSeverity.CURRENT_LINE_WARNING),
+                            it.description,
+                            parserResult.snapshot.source.fileObject,
+                            OffsetRange(offset, offset),
+                            listOf(it), 20)
+                }
+        )
     }
-    
-    override fun computeSelectionHints(hintsManager: HintsManager, ruleContext: RuleContext, 
-                                    list: List<Hint>, i: Int, i2: Int) {}
-    
-    override fun cancel() {}
+
+    private fun getSuggestions(parserResult: KotlinParserResult,
+                               psi: PsiElement, offset: Int) = listOf<ApplicableFix>(
+            KotlinRemoveExplicitTypeFix(parserResult, psi),
+            KotlinSpecifyTypeFix(parserResult, psi))
+            .filter { it.isApplicable(offset) }
+
+    override fun computeSelectionHints(hintsManager: HintsManager, ruleContext: RuleContext,
+                                       list: List<Hint>, i: Int, i2: Int) {
+    }
+
+    override fun cancel() {
+    }
+
     override fun getBuiltinRules() = emptyList<Rule>()
     override fun createRuleContext() = KotlinRuleContext()
-    
+
     override fun computeHints(hintsManager: HintsManager, ruleContext: RuleContext, hints: MutableList<Hint>) {
         hints.addAll(getHints(ruleContext))
     }
-    
-    private fun getHints(ruleContext: RuleContext) = 
+
+    private fun getHints(ruleContext: RuleContext) =
             (ruleContext.parserResult as KotlinParserResult).diagnostics
-            .filterIsInstance(KotlinError::class.java)
-            .map { it.createHint(ruleContext.parserResult as KotlinParserResult) }
-            .filterNotNull()
-    
+                    .filterIsInstance(KotlinError::class.java)
+                    .map { it.createHint(ruleContext.parserResult as KotlinParserResult) }
+                    .filterNotNull()
+
     private fun KotlinError.createHint(parserResult: KotlinParserResult) =
             when (diagnostic.factory) {
                 Errors.UNRESOLVED_REFERENCE -> createHintForUnresolvedReference(parserResult)
                 Errors.ABSTRACT_CLASS_MEMBER_NOT_IMPLEMENTED -> createImplementMembersHint(parserResult)
                 else -> null
             }
-    
+
     private fun KotlinError.createHintForUnresolvedReference(parserResult: KotlinParserResult): Hint {
         val suggestions = parserResult.project.findFQName(this.psi.text)
         val fixes = suggestions.map { KotlinAutoImportFix(it, parserResult) }
-                
-        return Hint(KotlinRule(HintSeverity.ERROR), "Class not found", parserResult.snapshot.source.fileObject, 
+
+        return Hint(KotlinRule(HintSeverity.ERROR), "Class not found", parserResult.snapshot.source.fileObject,
                 OffsetRange(this.startPosition, this.endPosition), fixes, 10)
     }
-    
+
     private fun KotlinError.createImplementMembersHint(parserResult: KotlinParserResult): Hint {
         val fix = KotlinImplementMembersFix(parserResult, this.psi)
         return Hint(KotlinRule(HintSeverity.ERROR), "Implement members", parserResult.snapshot.source.fileObject,
                 OffsetRange(this.startPosition, this.endPosition), listOf(fix), 10)
     }
-    
-    override fun computeErrors(hintsManager: HintsManager, ruleContext: RuleContext, 
+
+    override fun computeErrors(hintsManager: HintsManager, ruleContext: RuleContext,
                                list: List<Hint>, errors: MutableList<Error>) {
         val parserResult = ruleContext.parserResult as KotlinParserResult
         val file = parserResult.snapshot.source.fileObject
-        
+
         val analysisResult = parserResult.analysisResult ?: return
         errors.addAll(analysisResult.analysisResult.bindingContext.diagnostics.all()
                 .filter { it.psiFile.virtualFile.path == file.path }
@@ -108,5 +118,9 @@ class KotlinHintsProvider : HintsProvider {
         errors.addAll(AnalyzingUtils.getSyntaxErrorRanges(parserResult.ktFile)
                 .map { KotlinParser.KotlinSyntaxError(it, file) })
     }
-    
+
+}
+
+interface ApplicableFix : HintFix {
+    fun isApplicable(caretOffset: Int): Boolean
 }

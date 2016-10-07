@@ -38,12 +38,25 @@ import org.netbeans.modules.csl.api.RuleContext
 import org.openide.filesystems.FileObject
 import org.netbeans.modules.csl.api.HintsProvider.HintsManager
 import org.jetbrains.kotlin.diagnostics.Errors
+import org.netbeans.modules.csl.api.HintSeverity
 
 
 class KotlinHintsProvider : HintsProvider {
     
     override fun computeSuggestions(hintsManager: HintsManager, ruleContext: RuleContext, 
-                                    list: List<Hint>, i: Int) {}
+                                    hints: MutableList<Hint>, offset: Int) {
+        val parserResult = ruleContext.parserResult as KotlinParserResult
+        val psi = parserResult.ktFile.findElementAt(offset) ?: return
+        
+        if (canRemoveExplicitType(parserResult, psi, offset))
+            hints.add(Hint(KotlinRule(HintSeverity.CURRENT_LINE_WARNING),
+                    "Remove explicit type specification",
+                    parserResult.snapshot.source.fileObject,
+                    OffsetRange(offset, offset), 
+                    listOf(KotlinRemoveExplicitTypeFix(parserResult, psi)), 
+                    20)
+            )
+    }
     
     override fun computeSelectionHints(hintsManager: HintsManager, ruleContext: RuleContext, 
                                     list: List<Hint>, i: Int, i2: Int) {}
@@ -73,13 +86,13 @@ class KotlinHintsProvider : HintsProvider {
         val suggestions = parserResult.project.findFQName(this.psi.text)
         val fixes = suggestions.map { KotlinAutoImportFix(it, parserResult) }
                 
-        return Hint(KotlinRule(), "Class not found", parserResult.snapshot.source.fileObject, 
+        return Hint(KotlinRule(HintSeverity.ERROR), "Class not found", parserResult.snapshot.source.fileObject, 
                 OffsetRange(this.startPosition, this.endPosition), fixes, 10)
     }
     
     private fun KotlinError.createImplementMembersHint(parserResult: KotlinParserResult): Hint {
         val fix = KotlinImplementMembersFix(parserResult, this.psi)
-        return Hint(KotlinRule(), "Implement members", parserResult.snapshot.source.fileObject,
+        return Hint(KotlinRule(HintSeverity.ERROR), "Implement members", parserResult.snapshot.source.fileObject,
                 OffsetRange(this.startPosition, this.endPosition), listOf(fix), 10)
     }
     

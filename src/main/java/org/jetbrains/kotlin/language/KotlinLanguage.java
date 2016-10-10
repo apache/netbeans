@@ -60,7 +60,7 @@ public class KotlinLanguage extends DefaultLanguageConfig {
     
     @Override
     public Language getLexerLanguage() {
-        return KotlinTokenId.getLanguage();
+        return KotlinTokenId.Companion.getLanguage();
     }
 
     @Override

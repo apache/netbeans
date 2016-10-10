@@ -49,7 +49,7 @@ abstract class NetBeansJavaType(val handle : TypeMirrorHandle<*>,
                 
                 typeHandle.kind == TypeKind.WILDCARD -> NetBeansJavaWildcardType(typeHandle, project)
                 
-                else  -> throw UnsupportedOperationException("Unsupported NetBeans type ${typeHandle}")
+                else  -> throw UnsupportedOperationException("Unsupported NetBeans type ${typeHandle.getName(project)}")
             }
         }
     }

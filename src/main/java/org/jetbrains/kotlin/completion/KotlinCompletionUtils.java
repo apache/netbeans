@@ -302,7 +302,8 @@ public class KotlinCompletionUtils {
         String identifierPart = editorText.substring(identOffset, caretOffset);
         Project project = ProjectUtils.getKotlinProjectForFileObject(file);
         Collection<DeclarationDescriptor> descriptors = 
-                generateBasicCompletionProposals(file, identifierPart, identOffset, editorText);
+                generateBasicCompletionProposals(file, identifierPart, 
+                        identOffset, editorText, analysisResultWithProvider);
         
         for (DeclarationDescriptor descriptor : descriptors){
             if (descriptor instanceof JavaConstructorDescriptor) {
@@ -317,7 +318,8 @@ public class KotlinCompletionUtils {
     
     @NotNull
     private Collection<DeclarationDescriptor> generateBasicCompletionProposals(
-        final FileObject file, final String identifierPart, int identOffset, String editorText) throws IOException{
+        final FileObject file, final String identifierPart, 
+            int identOffset, String editorText, AnalysisResultWithProvider analysisResultWithProvider) throws IOException{
         
         KtSimpleNameExpression simpleNameExpression = 
                 getSimpleNameExpression(file, identOffset, editorText);
@@ -336,7 +338,7 @@ public class KotlinCompletionUtils {
                 nameFilter, file);
     }
     
-    private int getIdentifierStartOffset(String text, int offset){
+    public int getIdentifierStartOffset(String text, int offset){
         int identStartOffset = offset;
         
         while ((identStartOffset != 0) && Character.isUnicodeIdentifierPart(text.charAt(identStartOffset - 1))){

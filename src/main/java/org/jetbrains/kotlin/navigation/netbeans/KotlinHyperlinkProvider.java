@@ -37,9 +37,11 @@ import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.descriptors.SourceElement;
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.jetbrains.kotlin.load.java.structure.JavaElement;
 import org.jetbrains.kotlin.load.kotlin.JvmPackagePartSource;
 import org.jetbrains.kotlin.navigation.JarNavigationUtil;
+import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtReferenceExpression;
 import org.jetbrains.kotlin.resolve.BindingContext;
 import org.jetbrains.kotlin.resolve.jvm.JvmClassName;
@@ -234,8 +236,7 @@ public class KotlinHyperlinkProvider implements HyperlinkProviderExt {
     }
 
     public static void gotoKotlinStdlib(KtReferenceExpression referenceExpression, Project project) {
-        BindingContext context = KotlinAnalyzer.analyzeFile(project, referenceExpression.getContainingKtFile()).
-                getAnalysisResult().getBindingContext();
+        BindingContext context = KotlinParser.getAnalysisResult().getAnalysisResult().getBindingContext();        
         List<KotlinReference> refs = ReferenceUtils.createReferences(referenceExpression);
         for (KotlinReference ref : refs) {
             Collection<? extends DeclarationDescriptor> descriptors = ref.getTargetDescriptors(context);
@@ -267,8 +268,8 @@ public class KotlinHyperlinkProvider implements HyperlinkProviderExt {
     @Nullable
     private NavigationData getNavigationData(KtReferenceExpression referenceExpression,
             Project project) {
-        BindingContext context = KotlinAnalyzer.analyzeFile(project, referenceExpression.getContainingKtFile()).
-                getAnalysisResult().getBindingContext();
+        KtFile kt = referenceExpression.getContainingKtFile();
+        BindingContext context = KotlinParser.getAnalysisResult().getAnalysisResult().getBindingContext();
         List<KotlinReference> refs = ReferenceUtils.createReferences(referenceExpression);
 
         for (KotlinReference ref : refs) {

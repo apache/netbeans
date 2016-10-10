@@ -41,6 +41,7 @@ import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.descriptors.SourceElement;
 import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor;
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryClass;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryPackageSourceElement;
@@ -73,12 +74,13 @@ public class NavigationUtil {
     
     @Nullable
     public static KtReferenceExpression getReferenceExpression(Document doc, int offset) throws BadLocationException{
-        FileObject file = ProjectUtils.getFileObjectForDocument(doc);
-        if (file == null){
-            return null;
-        }
-        
-        KtFile ktFile = KotlinPsiManager.INSTANCE.parseText(doc.getText(0, doc.getLength()), file);
+//        FileObject file = ProjectUtils.getFileObjectForDocument(doc);
+//        if (file == null){
+//            return null;
+//        }
+//        
+//        KtFile ktFile = KotlinPsiManager.INSTANCE.parseText(doc.getText(0, doc.getLength()), file);
+        KtFile ktFile = KotlinParser.getFile();
         if (ktFile == null){
             return null;
         }

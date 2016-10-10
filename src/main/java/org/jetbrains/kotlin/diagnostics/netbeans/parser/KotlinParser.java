@@ -19,7 +19,6 @@ package org.jetbrains.kotlin.diagnostics.netbeans.parser;
 import com.google.common.collect.Lists;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
-import java.util.Collection;
 import java.util.List;
 import javax.swing.event.ChangeListener;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
@@ -49,8 +48,8 @@ import org.openide.filesystems.FileObject;
 public class KotlinParser extends Parser {
 
     private Snapshot snapshot;
-    private AnalysisResultWithProvider parserResult;
-    private KtFile fileToAnalyze;
+    private static AnalysisResultWithProvider parserResult;
+    private static KtFile fileToAnalyze;
     private Project project;
     
     @Override
@@ -75,6 +74,14 @@ public class KotlinParser extends Parser {
             KotlinAnalyzer.analyzeFile(project, fileToAnalyze);
     }
 
+    public static AnalysisResultWithProvider getAnalysisResult() {
+        return parserResult;
+    }
+    
+    public static KtFile getFile() {
+        return fileToAnalyze;
+    }
+    
     @Override
     public Result getResult(Task task) {
         if (project != null){

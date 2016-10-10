@@ -45,7 +45,7 @@ class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
     val proposal: String
     val type: String
     val proposalName: String
-    val FIELD_ICON: ImageIcon
+    val FIELD_ICON: ImageIcon?
     
     init {
         text = descriptor.name.identifier

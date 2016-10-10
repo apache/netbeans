@@ -47,6 +47,7 @@ import org.jetbrains.kotlin.descriptors.DeclarationDescriptorWithVisibility;
 import org.jetbrains.kotlin.descriptors.ReceiverParameterDescriptor;
 import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor;
 import org.jetbrains.kotlin.descriptors.Visibilities;
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.psi.KtClassBody;
 import org.jetbrains.kotlin.psi.KtElement;
@@ -190,6 +191,13 @@ public class KotlinCompletionUtils {
                 false,false,false,null);
     }
     
+    public KtSimpleNameExpression getSimpleNameExpression(int identOffset) {
+        KtFile ktFile = KotlinParser.getFile();
+        PsiElement psi = ktFile.findElementAt(identOffset);
+        
+        return PsiTreeUtil.getParentOfType(psi, KtSimpleNameExpression.class);
+    }
+    
     public KtSimpleNameExpression getSimpleNameExpression(FileObject file, int identOffset, String editorText) throws IOException{
         String sourceCodeWithMarker = new StringBuilder(editorText).
                 insert(identOffset, KOTLIN_DUMMY_IDENTIFIER).toString();
@@ -320,19 +328,24 @@ public class KotlinCompletionUtils {
     private Collection<DeclarationDescriptor> generateBasicCompletionProposals(
         final FileObject file, final String identifierPart, 
             int identOffset, String editorText, AnalysisResultWithProvider analysisResultWithProvider) throws IOException{
-        
-        KtSimpleNameExpression simpleNameExpression = 
-                getSimpleNameExpression(file, identOffset, editorText);
-        if (simpleNameExpression == null){
-            return Collections.emptyList();
-        }
-        
         Function1<Name, Boolean> nameFilter = new Function1<Name, Boolean>(){
             @Override
             public Boolean invoke(Name name) {
                 return applicableNameFor(identifierPart, name);
             }
         };
+        
+        KtSimpleNameExpression simpleNameExpression = getSimpleNameExpression(identOffset);
+        if (simpleNameExpression != null) {
+            return getReferenceVariants(simpleNameExpression,
+                nameFilter, file, analysisResultWithProvider);
+        }
+        
+        simpleNameExpression = 
+                getSimpleNameExpression(file, identOffset, editorText);
+        if (simpleNameExpression == null){
+            return Collections.emptyList();
+        }
         
         return getReferenceVariants(simpleNameExpression,
                 nameFilter, file);

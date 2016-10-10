@@ -16,6 +16,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import static junit.framework.TestCase.assertNotNull;
 import org.jetbrains.kotlin.builder.KotlinPsiManager;
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer;
@@ -54,7 +55,8 @@ public class CompletionTest extends NbTestCase {
 
             AnalysisResultWithProvider resultWithProvider
                     = KotlinAnalyzer.analyzeFile(project, ktFile);
-
+            KotlinParser.setAnalysisResult(ktFile, resultWithProvider);
+            
             completionItems = KotlinCompletionUtils.INSTANCE.createProposals(doc,
                     caret, resultWithProvider, "");
         } catch (IOException ex) {

@@ -82,6 +82,12 @@ public class KotlinParser extends Parser {
         return fileToAnalyze;
     }
     
+    // for tests only
+    public static void setAnalysisResult(KtFile ktFile, AnalysisResultWithProvider analysisResult) {
+        parserResult = analysisResult;
+        fileToAnalyze = ktFile;
+    }
+    
     @Override
     public Result getResult(Task task) {
         if (project != null){

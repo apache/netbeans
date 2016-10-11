@@ -23,8 +23,9 @@ import org.netbeans.modules.csl.api.HtmlFormatter
 import com.intellij.psi.PsiElement
 import javax.swing.text.Document
 
-class KeywordCompletionProposal(val keyword: String, val identifierPart: String, 
-                                val expression: PsiElement) : DefaultCompletionProposal(), InsertableProposal {
+class KeywordCompletionProposal(val keyword: String, 
+                                val idenStartOffset: Int,
+                                val prefix: String) : DefaultCompletionProposal(), InsertableProposal {
     override fun getElement() = null
     
     override fun getSortPrioOverride() = 5
@@ -34,9 +35,9 @@ class KeywordCompletionProposal(val keyword: String, val identifierPart: String,
     override fun getInsertPrefix() = keyword
     override fun getName() = keyword
     override fun getSortText() = keyword
-    override fun getAnchorOffset() = expression.textRange.startOffset
+    override fun getAnchorOffset() = idenStartOffset
     override fun doInsert(document: Document) {
-        document.remove(anchorOffset, identifierPart.length)
-        document.insertString(anchorOffset, keyword, null)
+        document.remove(idenStartOffset, prefix.length)
+        document.insertString(idenStartOffset, keyword, null)
     }
 }

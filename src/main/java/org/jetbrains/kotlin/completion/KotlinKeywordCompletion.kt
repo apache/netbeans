@@ -457,7 +457,7 @@ inline fun <reified T : PsiElement> PsiElement.getParentOfType(strict: Boolean):
 }
 
 fun generateKeywordProposals(identifierPart: String, 
-                             expression: PsiElement): List<CompletionProposal> {
+                             expression: PsiElement, offset: Int, prefix: String): List<CompletionProposal> {
         val callTypeAndReceiver = if (expression is KtSimpleNameExpression) CallTypeAndReceiver.detect(expression) else null
         
         return arrayListOf<String>().apply {
@@ -486,5 +486,5 @@ fun generateKeywordProposals(identifierPart: String,
                     else -> add(keywordProposal)
                 }
             }
-        }.map { KeywordCompletionProposal(it, identifierPart, expression) }
+        }.map { KeywordCompletionProposal(it, offset, prefix) }
 }

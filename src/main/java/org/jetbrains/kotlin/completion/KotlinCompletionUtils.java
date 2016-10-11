@@ -331,7 +331,7 @@ public class KotlinCompletionUtils {
         }
         PsiElement psiElement = ktFile.findElementAt(identOffset);
         if (psiElement != null) {
-            proposals.addAll(KotlinKeywordCompletionKt.generateKeywordProposals(identifierPart, psiElement));
+            proposals.addAll(KotlinKeywordCompletionKt.generateKeywordProposals(identifierPart, psiElement, identOffset, prefix));
         }
         
         return proposals; 

@@ -33,7 +33,7 @@ import org.jetbrains.kotlin.psi.KtPsiUtil
 import org.jetbrains.kotlin.psi.KtReturnExpression
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.types.KotlinType
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 
 class KotlinConvertToBlockBodyFix(val parserResult: KotlinParserResult,

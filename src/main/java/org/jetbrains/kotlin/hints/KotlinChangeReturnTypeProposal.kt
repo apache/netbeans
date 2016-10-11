@@ -16,7 +16,7 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.hints
 
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil

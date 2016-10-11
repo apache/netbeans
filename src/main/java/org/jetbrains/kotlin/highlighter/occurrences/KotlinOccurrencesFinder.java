@@ -21,7 +21,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult;
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult;
 import org.jetbrains.kotlin.navigation.references.ReferenceUtils;
 import org.jetbrains.kotlin.descriptors.SourceElement;
 import org.jetbrains.kotlin.psi.KtElement;

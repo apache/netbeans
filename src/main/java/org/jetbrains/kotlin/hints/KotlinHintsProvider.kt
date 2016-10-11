@@ -19,8 +19,9 @@ package org.jetbrains.kotlin.hints
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinError
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinSyntaxError
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.diagnostics.Diagnostic
@@ -116,9 +117,9 @@ class KotlinHintsProvider : HintsProvider {
         val analysisResult = parserResult.analysisResult ?: return
         errors.addAll(analysisResult.analysisResult.bindingContext.diagnostics.all()
                 .filter { it.psiFile.virtualFile.path == file.path }
-                .map { KotlinParser.KotlinError(it, file) })
+                .map { KotlinError(it, file) })
         errors.addAll(AnalyzingUtils.getSyntaxErrorRanges(parserResult.ktFile)
-                .map { KotlinParser.KotlinSyntaxError(it, file) })
+                .map { KotlinSyntaxError(it, file) })
     }
 
 }

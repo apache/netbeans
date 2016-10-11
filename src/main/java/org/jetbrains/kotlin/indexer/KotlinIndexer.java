@@ -19,17 +19,15 @@
 package org.jetbrains.kotlin.indexer;
 
 import org.jetbrains.kotlin.analyzer.AnalysisResult;
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult;
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult;
 import org.jetbrains.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -42,15 +40,12 @@ public class KotlinIndexer extends EmbeddingIndexer {
     @Override
     protected void index(Indexable indexable, Parser.Result parserResult, Context context) {
         final KotlinParserResult result = (KotlinParserResult) parserResult;
-        AnalysisResultWithProvider analysisResult = null;
-        try {
-            analysisResult = result.getAnalysisResult();
-        } catch (ParseException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        AnalysisResultWithProvider analysisResult = result.getAnalysisResult();
+        
         if (analysisResult == null) {
             return;
         }
+        
         final FileObject fo = result.getSnapshot().getSource().getFileObject();
         final AnalysisResult res = analysisResult.getAnalysisResult();
         Thread thread = new Thread(new Runnable() {

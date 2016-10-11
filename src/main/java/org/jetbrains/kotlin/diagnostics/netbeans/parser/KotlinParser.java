@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.diagnostics.netbeans.parser;
 
 import com.google.common.collect.Lists;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import java.util.List;
 import javax.swing.event.ChangeListener;
@@ -25,13 +24,10 @@ import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.diagnostics.Diagnostic;
-import org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.AnalyzingUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.Error;
-import org.netbeans.modules.csl.api.Error.Badging;
-import org.netbeans.modules.csl.api.Severity;
 import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
@@ -104,208 +100,5 @@ public class KotlinParser extends Parser {
     public void removeChangeListener(ChangeListener changeListener) {
     }
 
-    public static class KotlinParserResult extends ParserResult {
-
-        private boolean valid = true;
-        private AnalysisResultWithProvider analysisResult;
-        private final FileObject file;
-        private final KtFile ktFile;
-        private final Project project;
-        
-        KotlinParserResult(Snapshot snapshot, AnalysisResultWithProvider analysisResult, KtFile ktFile, Project project) {
-            super(snapshot);
-            this.analysisResult = analysisResult;
-            file = snapshot.getSource().getFileObject();
-            this.ktFile = ktFile;
-            this.project = project;
-        }
-
-        @Override
-        protected void invalidate() {
-//            valid = false;
-//            analysisResult = null;
-        }
-
-        public AnalysisResultWithProvider getAnalysisResult() throws ParseException {
-//            if (!valid) {
-//                throw new ParseException();
-//            }
-            return analysisResult;
-        }
-        
-        public KtFile getKtFile(){
-            return ktFile;
-        }
-
-        public Project getProject() {
-            return project;
-        }
-        
-        @Override
-        public List<? extends Error> getDiagnostics() {
-            List<Error> errors = Lists.newArrayList();
-            for (Diagnostic diagnostic : analysisResult.getAnalysisResult().
-                    getBindingContext().getDiagnostics().all()) {
-                if (diagnostic.getPsiFile().getVirtualFile().getPath().equals(file.getPath())) {
-                    KotlinError error = new KotlinError(diagnostic, file);
-                    errors.add(error);
-                }
-            }
-            for (PsiErrorElement psiError : AnalyzingUtils.getSyntaxErrorRanges(ktFile)){
-                KotlinSyntaxError syntaxError = new KotlinSyntaxError(psiError, file);
-                errors.add(syntaxError);
-            }
-            
-            return errors;
-        }
-
-    }
-
-    public static class KotlinError implements Badging {
-
-        private final Diagnostic diagnostic;
-        private final FileObject file;
-        
-        public KotlinError(Diagnostic diagnostic, FileObject file){
-            this.diagnostic = diagnostic;
-            this.file = file;
-        }
-        
-        public Diagnostic getDiagnostic() {
-            return diagnostic;
-        }
-        
-        public PsiElement getPsi(){
-            return diagnostic.getPsiElement();
-        }
-        
-        @Override
-        public String toString() {
-            return diagnostic.toString();
-        }
-        
-        @Override
-        public boolean showExplorerBadge() {
-            return diagnostic.getSeverity() == 
-                    org.jetbrains.kotlin.diagnostics.Severity.ERROR;
-        }
-
-        @Override
-        public String getDisplayName() {
-            return DefaultErrorMessages.render(diagnostic);
-        }
-
-        @Override
-        public String getDescription() {
-            return "";
-        }
-
-        @Override
-        public String getKey() {
-            return "";
-        }
-
-        @Override
-        public FileObject getFile() {
-            return file;
-        }
-
-        @Override
-        public int getStartPosition() {
-            return diagnostic.getTextRanges().get(0).getStartOffset();
-        }
-
-        @Override
-        public int getEndPosition() {
-            return diagnostic.getTextRanges().get(0).getEndOffset();
-        }
-
-        @Override
-        public boolean isLineError() {
-            return false;
-        }
-
-        @Override
-        public Severity getSeverity() {
-            switch (diagnostic.getSeverity()){
-                case ERROR:
-                    return Severity.ERROR;
-                case WARNING:
-                    return Severity.WARNING;
-                case INFO:
-                    return Severity.INFO;
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public Object[] getParameters() {
-            return null;
-        }
-        
-    }
-    
-    public static class KotlinSyntaxError implements Badging {
-
-        private final PsiErrorElement psiError;
-        private final FileObject file;
-        
-        public KotlinSyntaxError(PsiErrorElement psiError, FileObject file){
-            this.psiError = psiError;
-            this.file = file;
-        }
-        
-        @Override
-        public boolean showExplorerBadge() {
-            return true;
-        }
-
-        @Override
-        public String getDisplayName() {
-            return psiError.getErrorDescription();
-        }
-
-        @Override
-        public String getDescription() {
-            return "";
-        }
-
-        @Override
-        public String getKey() {
-            return "";
-        }
-
-        @Override
-        public FileObject getFile() {
-            return file;
-        }
-
-        @Override
-        public int getStartPosition() {
-            return psiError.getTextRange().getStartOffset();
-        }
-
-        @Override
-        public int getEndPosition() {
-            return psiError.getTextRange().getEndOffset();
-        }
-
-        @Override
-        public boolean isLineError() {
-            return false;
-        }
-
-        @Override
-        public Severity getSeverity() {
-            return Severity.ERROR;
-        }
-
-        @Override
-        public Object[] getParameters() {
-            return null;
-        }
-        
-    }
     
 }

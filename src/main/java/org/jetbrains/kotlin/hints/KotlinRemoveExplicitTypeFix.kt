@@ -24,7 +24,7 @@ import org.jetbrains.kotlin.psi.KtProperty
 import org.jetbrains.kotlin.psi.KtTypeReference
 import org.jetbrains.kotlin.psi.KtWithExpressionInitializer
 import org.netbeans.modules.csl.api.HintFix
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 

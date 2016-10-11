@@ -20,7 +20,7 @@ import java.util.concurrent.Callable
 import javax.swing.text.Document
 import javax.swing.text.JTextComponent
 import javax.swing.text.StyledDocument
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.modules.csl.api.CodeCompletionContext

@@ -19,7 +19,7 @@ package org.jetbrains.kotlin.highlighter.semanticanalyzer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser.KotlinParserResult;
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.SemanticAnalyzer;
@@ -50,14 +50,11 @@ public class KotlinSemanticAnalyzer extends SemanticAnalyzer<KotlinParserResult>
         if (result == null) {
             return;
         }
-        try {
-            KotlinSemanticHighlightingVisitor highlightingVisitor =
-                    new KotlinSemanticHighlightingVisitor(result.getKtFile(), 
-                            result.getAnalysisResult().getAnalysisResult());
-            highlighting.putAll(highlightingVisitor.computeHighlightingRanges());
-        } catch (ParseException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        KotlinSemanticHighlightingVisitor highlightingVisitor
+                = new KotlinSemanticHighlightingVisitor(result.getKtFile(),
+                        result.getAnalysisResult().getAnalysisResult());
+        highlighting.putAll(highlightingVisitor.computeHighlightingRanges());
+        
     }
 
     @Override

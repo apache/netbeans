@@ -91,6 +91,7 @@ class KotlinHintsProvider : HintsProvider {
     private fun KotlinError.createHint(parserResult: KotlinParserResult) =
             when (diagnostic.factory) {
                 Errors.UNRESOLVED_REFERENCE -> createHintForUnresolvedReference(parserResult)
+                Errors.ABSTRACT_MEMBER_NOT_IMPLEMENTED, 
                 Errors.ABSTRACT_CLASS_MEMBER_NOT_IMPLEMENTED -> createImplementMembersHint(parserResult)
                 else -> null
             }

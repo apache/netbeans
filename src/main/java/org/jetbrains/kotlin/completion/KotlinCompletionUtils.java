@@ -94,7 +94,11 @@ public class KotlinCompletionUtils {
                     
             
         } else return false;
-        
+    }
+    
+    public boolean applicableNameFor(String prefix, String completion) {
+        return completion.startsWith(prefix) || 
+            completion.toLowerCase().startsWith(prefix);
     }
     
     public Collection<DeclarationDescriptor> filterCompletionProposals(Collection<DeclarationDescriptor> descriptors,
@@ -321,6 +325,15 @@ public class KotlinCompletionUtils {
                     descriptor, styledDoc, prefix, project));
         }
     
+        KtFile ktFile = KotlinParser.getFile();
+        if (ktFile == null) {
+            return proposals;
+        }
+        PsiElement psiElement = ktFile.findElementAt(identOffset);
+        if (psiElement != null) {
+            proposals.addAll(KotlinKeywordCompletionKt.generateKeywordProposals(identifierPart, psiElement));
+        }
+        
         return proposals; 
     }
     

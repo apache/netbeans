@@ -36,10 +36,11 @@ import org.jetbrains.kotlin.navigation.NavigationUtil
 import org.jetbrains.kotlin.resolve.lang.java.resolver.NetBeansJavaSourceElement
 import org.netbeans.api.project.Project
 import org.jetbrains.kotlin.resolve.lang.java.getJavaDoc
+import javax.swing.text.Document
 
 class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int, 
                                val descriptor: DeclarationDescriptor, val doc: StyledDocument,
-                               val prefix: String, val project: Project) : DefaultCompletionProposal() {
+                               val prefix: String, val project: Project) : DefaultCompletionProposal(), InsertableProposal {
 
     val text: String
     val proposal: String
@@ -118,13 +119,17 @@ class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
         return KotlinCompletionUtils.INSTANCE.getValueForType(typeName) ?: desc.name.asString()
     }
     
-    fun doInsert() {
+    override fun doInsert(document: Document) {
         if (descriptor is FunctionDescriptor) {
             functionAction(doc)
         } else {
-            doc.remove(idenStartOffset, prefix.length)
-            doc.insertString(idenStartOffset, text, null)
+            document.remove(idenStartOffset, prefix.length)
+            document.insertString(idenStartOffset, text, null)
         }
     }
     
+}
+
+interface InsertableProposal {
+    fun doInsert(document: Document)
 }

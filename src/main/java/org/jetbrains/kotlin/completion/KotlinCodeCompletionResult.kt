@@ -25,7 +25,7 @@ import org.netbeans.modules.csl.api.CompletionProposal
  *
  * @author Alexander.Baratynski
  */
-class KotlinCodeCompletionResult(doc: Document, offset: Int,
+class KotlinCodeCompletionResult(private val doc: Document, offset: Int,
                                  analysisResult: AnalysisResultWithProvider,
                                  prefix: String) : CodeCompletionResult() {
     
@@ -40,7 +40,7 @@ class KotlinCodeCompletionResult(doc: Document, offset: Int,
     override fun isFilterable() = false
     
     override fun insert(item: CompletionProposal): Boolean {
-        (item as KotlinCompletionProposal).doInsert()
+        (item as InsertableProposal).doInsert(doc)
         return true
     }
 }

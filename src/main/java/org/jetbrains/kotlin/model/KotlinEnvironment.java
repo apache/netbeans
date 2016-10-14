@@ -74,6 +74,8 @@ import org.jetbrains.kotlin.codegen.extensions.ClassBuilderInterceptorExtension;
 import org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages;
 import com.intellij.formatting.KotlinLanguageCodeStyleSettingsProvider;
 import com.intellij.formatting.KotlinSettingsProvider;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import org.jetbrains.kotlin.cli.jvm.compiler.JavaRoot;
 import org.jetbrains.kotlin.idea.KotlinFileType;
 import org.jetbrains.kotlin.js.resolve.diagnostics.DefaultErrorMessagesJs;
@@ -84,10 +86,11 @@ import org.jetbrains.kotlin.resolve.diagnostics.DiagnosticSuppressor;
 import org.jetbrains.kotlin.resolve.diagnostics.SuppressStringProvider;
 import org.jetbrains.kotlin.resolve.jvm.diagnostics.DefaultErrorMessagesJvm;
 import org.jetbrains.kotlin.resolve.jvm.extensions.PackageFragmentProviderExtension;
+import org.openide.util.Exceptions;
 
 /**
  * This class creates Kotlin environment for Kotlin project.
- * @author Александр
+ * @author РђР»РµРєСЃР°РЅРґСЂ
  */
 @SuppressWarnings("deprecation")
 public class KotlinEnvironment {
@@ -317,14 +320,28 @@ public class KotlinEnvironment {
     }
     
     public VirtualFile getVirtualFileInJar(@NotNull String path) {
-        VirtualFile file = applicationEnvironment.getJarFileSystem().
-                findFileByPath("/" + path.replace("%20", " "));
+        String decodedPath;
+        try {
+            decodedPath = URLDecoder.decode(path, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            decodedPath = path;
+            Exceptions.printStackTrace(ex);
+        }
+        VirtualFile file = applicationEnvironment.getJarFileSystem().findFileByPath(decodedPath);
         return file;
     }
     
     public VirtualFile getVirtualFileInJar(@NotNull String pathToJar, @NotNull String relativePath) {
+        String decodedPathToJar = pathToJar; 
+        String decodedRelativePath = relativePath;
+        try {
+            decodedPathToJar = URLDecoder.decode(pathToJar, "UTF-8");
+            decodedRelativePath = URLDecoder.decode(relativePath, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            Exceptions.printStackTrace(ex);
+        }
         VirtualFile file = applicationEnvironment.getJarFileSystem().
-                findFileByPath("/" + pathToJar.replace("%20", " ") + "!/" + relativePath.replace("%20", " "));
+                findFileByPath(decodedPathToJar + "!/" + decodedRelativePath);
         return file;
     }
     

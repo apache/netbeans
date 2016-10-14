@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,11 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *******************************************************************************/
+ ******************************************************************************
+ */
 package org.jetbrains.kotlin.resolve.lang.kotlin;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.GlobalSearchScope;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.file.Paths;
 import javax.lang.model.element.TypeElement;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
@@ -35,41 +42,53 @@ import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClassifier;
 import org.jetbrains.kotlin.resolve.lang.java.NbElementUtilsKt;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileStateInvalidException;
+import org.openide.filesystems.FileSystem;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 
 /**
  *
- * @author Александр
+ * @author РђР»РµРєСЃР°РЅРґСЂ
  */
 public class NetBeansVirtualFileFinder extends VirtualFileKotlinClassFinder implements JvmVirtualFileFinderFactory {
 
     Project project;
-    
-    public NetBeansVirtualFileFinder(Project project){
+
+    public NetBeansVirtualFileFinder(Project project) {
         this.project = project;
     }
-    
-    private boolean isClassFileName(String name){
+
+    private boolean isClassFileName(String name) {
         char[] suffixClass = ".class".toCharArray();
         char[] suffixClass2 = ".CLASS".toCharArray();
         int nameLength = name == null ? 0 : name.length();
         int suffixLength = suffixClass.length;
-        if (nameLength < suffixLength) return false;
-        
-        for (int i = 0; i < suffixLength; i++){
+        if (nameLength < suffixLength) {
+            return false;
+        }
+
+        for (int i = 0; i < suffixLength; i++) {
             char c = name.charAt(nameLength - i - 1);
             int suffixIndex = suffixLength - i - 1;
-            if (c != suffixClass[suffixIndex] && c != suffixClass2[suffixIndex]){
+            if (c != suffixClass[suffixIndex] && c != suffixClass2[suffixIndex]) {
                 return false;
             }
         }
-        
+
         return true;
+    }
+
+    private String getJarPath(FileObject file) throws FileStateInvalidException {
+        FileSystem fileSystem = file.getFileSystem();
+        
+        return fileSystem.getDisplayName();
     }
     
     @Override
     public VirtualFile findVirtualFileWithHeader(ClassId classId) {
         ClassPath proxy = KotlinProjectHelper.INSTANCE.getFullClassPath(project);
-        String rPath; 
+        String rPath;
         if (classId.isNestedClass()) {
             String className = classId.getShortClassName().asString();
             String fqName = classId.asSingleFqName().asString();
@@ -77,73 +96,78 @@ public class NetBeansVirtualFileFinder extends VirtualFileKotlinClassFinder impl
             rightPath.append("$").append(className).append(".class");
             rPath = rightPath.toString();
         } else {
-            rPath = classId.asSingleFqName().asString().replace(".", "/")+".class";
+            rPath = classId.asSingleFqName().asString().replace(".", "/") + ".class";
         }
-        
+
         FileObject resource = proxy.findResource(rPath);
-        
         String path;
-        if (resource != null){
+        if (resource != null) {
             path = resource.toURL().getPath();
+            if (path.contains("!/")) {
+                try {
+                    String pathToJar = getJarPath(resource);
+                    String relativePath = path.split("!/")[1];
+                    return KotlinEnvironment.getEnvironment(project).getVirtualFileInJar(pathToJar, relativePath);
+                } catch (FileStateInvalidException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+            
         } else {
             path = rPath;
         }
         
-        String[] splittedPath = path.split("!/");
-        if (splittedPath.length == 2){
-            String pathToJar = splittedPath[0].replace("file:/", "");
-            String classFile = splittedPath[1];
-            return KotlinEnvironment.getEnvironment(project).getVirtualFileInJar(pathToJar, classFile);
-        } else if (isClassFileName(path)){
+        if (isClassFileName(path)) {
             return KotlinEnvironment.getEnvironment(project).getVirtualFile(path);
-        } else{
-            throw new IllegalArgumentException("Virtual file not found for "+path);
+        } else {
+            throw new IllegalArgumentException("Virtual file not found for " + path);
         }
     }
 
     @Override
     public JvmVirtualFileFinder create(GlobalSearchScope gss) {
-        return new NetBeansVirtualFileFinder(project); 
+        return new NetBeansVirtualFileFinder(project);
     }
 
-    private boolean isBinaryKotlinClass(TypeElement type){
+    private boolean isBinaryKotlinClass(TypeElement type) {
         return !NetBeansJavaClassFinder.isInKotlinBinFolder(type);
     }
-    
-    private String classFileName(JavaClass jClass){
+
+    private String classFileName(JavaClass jClass) {
         JavaClass outerClass = jClass.getOuterClass();
-        if (outerClass == null)
+        if (outerClass == null) {
             return jClass.getName().asString();
+        }
         return classFileName(outerClass) + "$" + jClass.getName().asString();
     }
-    
+
     @Override
-    public KotlinJvmBinaryClass findKotlinClass(JavaClass javaClass){
+    public KotlinJvmBinaryClass findKotlinClass(JavaClass javaClass) {
         FqName fqName = javaClass.getFqName();
-        if (fqName == null){
+        if (fqName == null) {
             return null;
         }
-        
-        ClassId classId = NbElementUtilsKt.computeClassId(((NetBeansJavaClassifier)javaClass).getElementHandle(), project);
-        
-        if (classId == null){
+
+        ClassId classId = NbElementUtilsKt.computeClassId(((NetBeansJavaClassifier) javaClass).getElementHandle(), project);
+
+        if (classId == null) {
             return null;
         }
-        
+
         VirtualFile file = findVirtualFileWithHeader(classId);
-        if (file == null){
+        if (file == null) {
             return null;
         }
-        
-        if (javaClass.getOuterClass() != null){
-            String classFileName = classFileName(javaClass)+".class";
+
+        if (javaClass.getOuterClass() != null) {
+            String classFileName = classFileName(javaClass) + ".class";
             file = file.getParent().findChild(classFileName);
-            if (file != null){
+            if (file != null) {
                 throw new IllegalStateException("Virtual file not found");
             }
         }
-        
+
         return KotlinBinaryClassCache.Companion.getKotlinBinaryClass(file, null);
     }
-    
+
 }

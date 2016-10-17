@@ -630,10 +630,10 @@
       <artifactId>org-netbeans-modules-xml-xam</artifactId>  
       <version>${netbeans.version}</version> 
     </dependency>  
-    <dependency>
-      <groupId>org.netbeans.api</groupId>
-      <artifactId>org-netbeans-modules-csl-types</artifactId>
-      <version>${netbeans.version}</version>
+    <dependency> 
+      <groupId>org.netbeans.api</groupId>  
+      <artifactId>org-netbeans-modules-csl-types</artifactId>  
+      <version>${netbeans.version}</version> 
     </dependency>  
     <!-- TEST DEPENDENCIES -->  
     <dependency> 
@@ -743,6 +743,6 @@
       <groupId>com.google.guava</groupId>  
       <artifactId>guava</artifactId>  
       <version>14.0</version> 
-    </dependency>
+    </dependency> 
   </dependencies> 
 </project>

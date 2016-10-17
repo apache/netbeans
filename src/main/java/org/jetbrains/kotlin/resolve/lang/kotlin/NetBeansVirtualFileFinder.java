@@ -32,6 +32,7 @@ import org.netbeans.api.project.Project;
 import org.jetbrains.kotlin.load.java.structure.JavaClass;
 import org.jetbrains.kotlin.load.kotlin.KotlinBinaryClassCache;
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryClass;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClassifier;
 import org.jetbrains.kotlin.resolve.lang.java.NbElementUtilsKt;
@@ -39,7 +40,6 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileSystem;
-import org.openide.util.Exceptions;
 
 public class NetBeansVirtualFileFinder extends VirtualFileKotlinClassFinder implements JvmVirtualFileFinderFactory {
 
@@ -96,10 +96,15 @@ public class NetBeansVirtualFileFinder extends VirtualFileKotlinClassFinder impl
             if (path.contains("!/")) {
                 try {
                     String pathToJar = getJarPath(resource);
-                    String relativePath = path.split("!/")[1];
-                    return KotlinEnvironment.getEnvironment(project).getVirtualFileInJar(pathToJar, relativePath);
+                    String[] splittedPath = path.split("!/");
+                    if (splittedPath.length < 2) {
+                        return null;
+                    }
+                    return KotlinEnvironment.getEnvironment(project).
+                            getVirtualFileInJar(pathToJar, splittedPath[1]);
                 } catch (FileStateInvalidException ex) {
-                    Exceptions.printStackTrace(ex);
+                    KotlinLogger.INSTANCE.logException("Can't get file in jar", ex);
+                    return null;
                 }
             }
             

@@ -16,27 +16,21 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.diagnostics.netbeans.parser;
 
-import com.google.common.collect.Lists;
-import com.intellij.psi.PsiErrorElement;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.event.ChangeListener;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer;
 import org.jetbrains.kotlin.utils.ProjectUtils;
-import org.jetbrains.kotlin.diagnostics.Diagnostic;
 import org.jetbrains.kotlin.psi.KtFile;
-import org.jetbrains.kotlin.resolve.AnalyzingUtils;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.spi.GsfUtilities;
-import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
-import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
-import org.openide.filesystems.FileObject;
+
 /**
  *
  * @author Александр
@@ -44,9 +38,10 @@ import org.openide.filesystems.FileObject;
 public class KotlinParser extends Parser {
 
     private Snapshot snapshot;
-    private static AnalysisResultWithProvider parserResult;
     private static KtFile fileToAnalyze;
     private Project project;
+    private static final Map<String, AnalysisResultWithProvider> CACHE =
+            new HashMap<String, AnalysisResultWithProvider>();
     
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) {
@@ -55,6 +50,7 @@ public class KotlinParser extends Parser {
         project = ProjectUtils.getKotlinProjectForFileObject(snapshot.getSource().getFileObject());
 
         if (project == null){
+            fileToAnalyze = null;
             return;
         }
         
@@ -62,16 +58,19 @@ public class KotlinParser extends Parser {
         int caretOffset = GsfUtilities.getLastKnownCaretOffset(snapshot, event);
         
         if (caretOffset <= 0) {
-            parserResult = KotlinAnalysisProjectCache.INSTANCE.getAnalysisResult(project);
+            CACHE.put(fileToAnalyze.getVirtualFile().getPath(), KotlinAnalysisProjectCache.INSTANCE.getAnalysisResult(project));
             return;
         }
         
-        parserResult =
-            KotlinAnalyzer.analyzeFile(project, fileToAnalyze);
+        CACHE.put(fileToAnalyze.getVirtualFile().getPath(), KotlinAnalyzer.analyzeFile(project, fileToAnalyze));
     }
 
     public static AnalysisResultWithProvider getAnalysisResult() {
-        return parserResult;
+        return fileToAnalyze != null ? CACHE.get(fileToAnalyze.getVirtualFile().getPath()) : null;
+    }
+    
+    public static AnalysisResultWithProvider getAnalysisResult(KtFile ktFile) {
+        return CACHE.get(ktFile.getVirtualFile().getPath());
     }
     
     public static KtFile getFile() {
@@ -80,14 +79,15 @@ public class KotlinParser extends Parser {
     
     // for tests only
     public static void setAnalysisResult(KtFile ktFile, AnalysisResultWithProvider analysisResult) {
-        parserResult = analysisResult;
         fileToAnalyze = ktFile;
+        CACHE.put(ktFile.getVirtualFile().getPath(), analysisResult);
     }
     
     @Override
     public Result getResult(Task task) {
-        if (project != null){
-            return new KotlinParserResult(snapshot, parserResult, fileToAnalyze, project);
+        if (project != null && fileToAnalyze != null){
+            return new KotlinParserResult(snapshot, 
+                    CACHE.get(fileToAnalyze.getVirtualFile().getPath()), fileToAnalyze, project);
         }
         return null;
     }

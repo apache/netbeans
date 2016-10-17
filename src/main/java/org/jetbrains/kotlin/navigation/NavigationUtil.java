@@ -75,10 +75,13 @@ public class NavigationUtil {
     @Nullable
     public static KtReferenceExpression getReferenceExpression(Document doc, int offset) throws BadLocationException{
         KtFile ktFile = KotlinParser.getFile();
-        if (ktFile == null){
+        FileObject fo = ProjectUtils.getFileObjectForDocument(doc);
+        if (ktFile == null || !ktFile.getName().equals(fo.getName())){
+            ktFile = KotlinPsiManager.INSTANCE.parseText(doc.getText(0, doc.getLength()), fo);
+        }
+        if (ktFile == null) {
             return null;
         }
-        
         int documentOffset = LineEndUtil.convertCrToDocumentOffset(ktFile.getText(), offset);
         psiExpression = ktFile.findElementAt(documentOffset);
         if (psiExpression == null){

@@ -42,6 +42,7 @@ import org.jetbrains.kotlin.load.kotlin.JvmPackagePartSource;
 import org.jetbrains.kotlin.navigation.JarNavigationUtil;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtReferenceExpression;
+import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.jetbrains.kotlin.resolve.BindingContext;
 import org.jetbrains.kotlin.resolve.jvm.JvmClassName;
 import org.jetbrains.kotlin.resolve.lang.java.ElemHandle;
@@ -235,7 +236,12 @@ public class KotlinHyperlinkProvider implements HyperlinkProviderExt {
     }
 
     public static void gotoKotlinStdlib(KtReferenceExpression referenceExpression, Project project) {
-        BindingContext context = KotlinParser.getAnalysisResult().getAnalysisResult().getBindingContext();        
+        KtFile ktFile = referenceExpression.getContainingKtFile();
+        AnalysisResultWithProvider analysisResult = KotlinParser.getAnalysisResult(ktFile);
+        if (analysisResult == null) {
+            return;
+        }
+        BindingContext context = analysisResult.getAnalysisResult().getBindingContext();
         List<KotlinReference> refs = ReferenceUtils.createReferences(referenceExpression);
         for (KotlinReference ref : refs) {
             Collection<? extends DeclarationDescriptor> descriptors = ref.getTargetDescriptors(context);
@@ -267,8 +273,12 @@ public class KotlinHyperlinkProvider implements HyperlinkProviderExt {
     @Nullable
     private NavigationData getNavigationData(KtReferenceExpression referenceExpression,
             Project project) {
-        KtFile kt = referenceExpression.getContainingKtFile();
-        BindingContext context = KotlinParser.getAnalysisResult().getAnalysisResult().getBindingContext();
+        KtFile ktFile = referenceExpression.getContainingKtFile();
+        AnalysisResultWithProvider analysisResult = KotlinParser.getAnalysisResult(ktFile);
+        if (analysisResult == null) {
+            return null;
+        }
+        BindingContext context = analysisResult.getAnalysisResult().getBindingContext();
         List<KotlinReference> refs = ReferenceUtils.createReferences(referenceExpression);
 
         for (KotlinReference ref : refs) {

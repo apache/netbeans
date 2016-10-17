@@ -8,7 +8,7 @@
   <packaging>nbm</packaging>  
   <properties> 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
-    <netbeans.version>RELEASE81</netbeans.version>  
+    <netbeans.version>RELEASE82</netbeans.version>  
     <kotlin.version>1.0.4</kotlin.version> 
   </properties>  
   <name>Kotlin</name>  
@@ -291,7 +291,7 @@
     <dependency> 
       <groupId>org.netbeans.api</groupId>  
       <artifactId>org-netbeans-modules-project-ant</artifactId>  
-      <version>RELEASE81</version>  
+      <version>${netbeans.version}</version>  
       <type>jar</type> 
     </dependency>  
     <dependency> 
@@ -630,6 +630,11 @@
       <artifactId>org-netbeans-modules-xml-xam</artifactId>  
       <version>${netbeans.version}</version> 
     </dependency>  
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-netbeans-modules-csl-types</artifactId>
+      <version>${netbeans.version}</version>
+    </dependency>  
     <!-- TEST DEPENDENCIES -->  
     <dependency> 
       <groupId>junit</groupId>  
@@ -738,6 +743,6 @@
       <groupId>com.google.guava</groupId>  
       <artifactId>guava</artifactId>  
       <version>14.0</version> 
-    </dependency> 
+    </dependency>
   </dependencies> 
 </project>

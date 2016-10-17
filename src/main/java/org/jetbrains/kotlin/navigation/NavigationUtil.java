@@ -266,7 +266,7 @@ public class NavigationUtil {
             String text, StyledDocument document) {
         int startOffset = start;
         KtFile ktFile = KotlinPsiManager.INSTANCE.getParsedKtFileForSyntaxHighlighting(text);
-        Collection<PsiElement> elements1 = PsiTreeUtil.findChildrenOfType(ktFile, elementToNavigate.getClass());
+        Collection<? extends PsiElement> elements1 = PsiTreeUtil.findChildrenOfType(ktFile, elementToNavigate.getClass());
         for (PsiElement elem : elements1) {
             if (elem.getText().equals(elementToNavigate.getText())) {
                 if (elem instanceof KtFunction && elementToNavigate instanceof KtFunction) {

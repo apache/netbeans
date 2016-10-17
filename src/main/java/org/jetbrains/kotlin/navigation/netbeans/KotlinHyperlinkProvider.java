@@ -32,7 +32,6 @@ import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.navigation.NavigationUtil;
 import org.jetbrains.kotlin.navigation.references.KotlinReference;
 import org.jetbrains.kotlin.navigation.references.ReferenceUtils;
-import org.jetbrains.kotlin.resolve.KotlinAnalyzer;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;

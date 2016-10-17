@@ -63,6 +63,8 @@ public class MavenExtendedClassPath implements ClassPathExtender {
         classpath.addAll(paths);
         
         for (String path : classpath) {
+            if (path == null) continue;
+            
             File file = new File(path);
             if (!file.exists() || !file.canRead()) {
                 continue;

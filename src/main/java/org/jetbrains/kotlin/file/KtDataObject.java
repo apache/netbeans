@@ -17,6 +17,10 @@
 package org.jetbrains.kotlin.file;
 
 import java.io.IOException;
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
+import org.jetbrains.kotlin.projectsextensions.maven.MavenHelper;
+import org.jetbrains.kotlin.utils.ProjectUtils;
+import org.netbeans.api.project.Project;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.awt.ActionID;
@@ -106,6 +110,10 @@ public class KtDataObject extends MultiDataObject {
     public KtDataObject(final FileObject file, MultiFileLoader loader) throws IOException {
         super(file, loader);
         registerEditor("text/x-kt", true);
+        Project project = ProjectUtils.getKotlinProjectForFileObject(file);
+        if (KotlinProjectHelper.INSTANCE.isMavenProject(project)) {
+            MavenHelper.configure(project);
+        }
     }
 
     @Override

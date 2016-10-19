@@ -27,11 +27,15 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
+import org.dom4j.DocumentException;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.log.KotlinLogger;
+import org.jetbrains.kotlin.projectsextensions.maven.buildextender.PomXmlModifier;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.maven.api.NbMavenProject;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
@@ -43,6 +47,36 @@ public class MavenHelper {
     
     private static final Map<Project, List<? extends Project>> depProjects = 
             new HashMap<Project, List<? extends Project>>();
+    
+    private static final List<Project> askedToConfigure = new ArrayList<Project>();
+    
+    public static void configure(Project project) {
+        if (askedToConfigure.contains(project)) {
+            return;
+        }
+        
+        PomXmlModifier pomModifier = new PomXmlModifier(project);
+        boolean hasKotlinDep = true;
+        try {
+            hasKotlinDep = pomModifier.hasKotlinPluginInPom();
+        } catch (DocumentException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        if (!hasKotlinDep) {
+            NotifyDescriptor notifyDescriptor = 
+                    new NotifyDescriptor.Confirmation("Kotlin is not configured.", NotifyDescriptor.YES_NO_OPTION);
+            Object result = DialogDisplayer.getDefault().notify(notifyDescriptor);
+            if (result == NotifyDescriptor.OK_OPTION) {
+                pomModifier.checkPom();
+                askedToConfigure.add(project);
+            } else {
+                askedToConfigure.add(project);
+            }
+        } else {
+            askedToConfigure.add(project);
+        }
+    }
     
     public static boolean hasParent(Project project) {
         return getParentProjectDirectory(project.getProjectDirectory()) != null;

@@ -220,6 +220,46 @@ public class PomXmlModifier {
         out.close();
     }
     
+    public boolean hasKotlinPluginInPom() throws DocumentException {
+        File pom = getPOMFile(project);
+        if (pom == null) {
+            return false;
+        }
+        SAXReader reader = new SAXReader();
+        Document pomDocument = reader.read(pom);
+        
+        Element root = pomDocument.getRootElement();
+        Element build = root.element("build");
+        if (build == null) {
+            return false;
+        }
+        
+        Element plugins = build.element("plugins");
+        if (plugins == null) {
+            return false;
+        }
+        
+        Element plugin = null;
+        for (Object el : plugins.elements("plugin")) {
+            Element plug = (Element) el;
+            Element groupId = plug.element("groupId");
+            Element artifactId = plug.element("artifactId");
+            if (groupId == null || artifactId == null) {
+                continue;
+            }
+            if (groupId.getText().equals(groupIdName) && 
+                    artifactId.getText().equals("kotlin-maven-plugin")) {
+                plugin = plug;
+                break;
+            }
+        }
+        
+        if (plugin != null) {
+            return true;
+        }
+        
+        return false;
+    }
 
     private void checkKotlinPlugin() throws DocumentException, IOException {
         File pom = getPOMFile(project);

@@ -67,9 +67,9 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                             RequestProcessor.getDefault().post(run);
                         }
                         
-                        if (!MavenHelper.hasParent(project)){
-                            new PomXmlModifier(project).checkPom();
-                        }
+//                        if (!MavenHelper.hasParent(project)){
+//                            new PomXmlModifier(project).checkPom();
+//                        }
                         
                         NbMavenProject projectWatcher = getProjectWatcher();
                         if (projectWatcher == null) {

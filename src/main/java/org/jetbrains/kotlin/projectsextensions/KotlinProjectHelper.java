@@ -54,6 +54,10 @@ public class KotlinProjectHelper {
                 className.equals("org.netbeans.modules.maven.NbMavenProjectImpl");
     }
     
+    public boolean isMavenProject(Project project) {
+        return project.getClass().getName().equals("org.netbeans.modules.maven.NbMavenProjectImpl");
+    }
+    
     public void removeProjectCache(Project project) {
         kotlinSources.remove(project);
         lightClassesDirs.remove(project);

@@ -23,12 +23,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import javax.swing.text.StyledDocument;
 import kotlin.Pair;
 import org.jetbrains.kotlin.builder.KotlinPsiManager;
 import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider;
+import org.jetbrains.kotlin.navigation.JarNavigationUtil;
 import org.jetbrains.kotlin.psi.KtClass;
 import org.jetbrains.kotlin.psi.KtDeclaration;
 import org.jetbrains.kotlin.psi.KtFile;
@@ -89,14 +91,57 @@ public class KotlinDebugUtils {
         return declaration;
     }
 
+    private static FileObject getFileObjectFromJar(URL url){
+        String separator = "!/";
+        String[] pathParts = url.getPath().split(separator);
+        if (pathParts.length < 2){
+            return null;
+        }
+        
+        URL archiveFile = FileUtil.getArchiveFile(url);
+        File jar = FileUtil.archiveOrDirForURL(archiveFile);
+        jar = jar.getAbsoluteFile();
+        
+        FileObject fob = FileUtil.toFileObject(jar);
+        fob = FileUtil.getArchiveRoot(fob);
+        
+        String[] internalPathParts = pathParts[1].split("/");
+        for (String pathPart : internalPathParts){
+            fob = fob.getFileObject(pathPart);
+        }
+        return fob;
+    }
+    
+    private static FileObject getFileFromUrlString(String urlStr) {
+        try {
+            URL url = new URL(urlStr);
+            if (url.getProtocol().equals("jar")) {
+                FileObject fileObjectFromJar = getFileObjectFromJar(url);
+                return fileObjectFromJar;
+            }
+            File file = Utilities.toFile(url.toURI());
+            if (file == null) {
+                return null;
+            }
+            return FileUtil.toFileObject(file);
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (URISyntaxException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        return null;
+    }
+    
     public static Pair<String, String> getFunctionNameAndContainingClass(String urlStr, int lineNumber) {
         String name = null;
         String classFqName = null;
 
         try {
-            URL url = new URL(urlStr);
-            File file = Utilities.toFile(url.toURI());
-            FileObject fo = FileUtil.toFileObject(file);
+            FileObject fo = getFileFromUrlString(urlStr);
+            if (fo == null) {
+                return null;
+            }
             KtFile ktFile = KotlinPsiManager.INSTANCE.getParsedFile(fo);
             StyledDocument doc = ProjectUtils.getDocumentFromFileObject(fo);
             KtDeclaration declaration = findDeclarationAtLine(ktFile, doc, lineNumber);
@@ -110,12 +155,9 @@ public class KotlinDebugUtils {
             } else {
                 classFqName = NoResolveFileClassesProvider.INSTANCE.getFileClassInfo(ktFile).getFacadeClassFqName().toString();
             }
-        } catch (MalformedURLException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (URISyntaxException ex) {
-            Exceptions.printStackTrace(ex);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
+            return null;
         }
 
         return new Pair<String, String>(classFqName, name);
@@ -124,9 +166,10 @@ public class KotlinDebugUtils {
     public static String getClassFqName(String urlStr, int line) {
         String classFqName = null;
         try {
-            URL url = new URL(urlStr);
-            File file = Utilities.toFile(url.toURI());
-            FileObject fo = FileUtil.toFileObject(file);
+            FileObject fo = getFileFromUrlString(urlStr);
+            if (fo == null) {
+                return null;
+            }
             KtFile ktFile = KotlinPsiManager.INSTANCE.getParsedFile(fo);
             classFqName = NoResolveFileClassesProvider.INSTANCE.getFileClassInfo(ktFile).getFacadeClassFqName().toString();
             StyledDocument doc = ProjectUtils.getDocumentFromFileObject(fo);
@@ -143,10 +186,6 @@ public class KotlinDebugUtils {
             if (containingClass != null) {
                 classFqName = containingClass.getFqName().asString();
             }
-        } catch (MalformedURLException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (URISyntaxException ex) {
-            Exceptions.printStackTrace(ex);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }

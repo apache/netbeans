@@ -254,11 +254,7 @@ public class PomXmlModifier {
             }
         }
         
-        if (plugin != null) {
-            return true;
-        }
-        
-        return false;
+        return plugin != null;
     }
 
     private void checkKotlinPlugin() throws DocumentException, IOException {

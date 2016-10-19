@@ -22,7 +22,6 @@ import java.lang.reflect.Method;
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinAnalysisProjectCache;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
-import org.jetbrains.kotlin.projectsextensions.maven.buildextender.PomXmlModifier;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
@@ -66,10 +65,6 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                         if (!progressHandleRun) {
                             RequestProcessor.getDefault().post(run);
                         }
-                        
-//                        if (!MavenHelper.hasParent(project)){
-//                            new PomXmlModifier(project).checkPom();
-//                        }
                         
                         NbMavenProject projectWatcher = getProjectWatcher();
                         if (projectWatcher == null) {

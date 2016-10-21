@@ -72,7 +72,7 @@ final class BootClassPathImplementation implements ClassPathImplementation, Prop
         }
         
         JavaPlatform jp = findActivePlatform ();
-        final List<PathResourceImplementation> result = new ArrayList<PathResourceImplementation>();
+        final List<PathResourceImplementation> result = new ArrayList<>();
         if (jp != null) {
             //TODO: May also listen on CP, but from Platform it should be fixed.            
             final ClassPath cp = jp.getBootstrapLibraries();
@@ -116,8 +116,8 @@ final class BootClassPathImplementation implements ClassPathImplementation, Prop
     }
 
     public List<URL> getKotlinBootClassPath(){
-        List<String> paths = new ArrayList<String>();
-        List<URL> urls = new ArrayList<URL>();
+        List<String> paths = new ArrayList<>();
+        List<URL> urls = new ArrayList<>();
         paths.add(KotlinClasspath.getKotlinBootClasspath());
         for (String path : paths) {
             File file = new File(path);

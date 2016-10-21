@@ -48,7 +48,7 @@ public class NetBeansDocumentFormattingModel implements FormattingModelEx {
     private final Block myRootBlock;
     protected boolean myCanModifyAllWhiteSpaces = false;
     private final String source;
-    private final List<ReplaceEdit> edits = new ArrayList<ReplaceEdit>();
+    private final List<ReplaceEdit> edits = new ArrayList<>();
     private final CodeStyleSettings settings;
 
     public NetBeansDocumentFormattingModel(PsiFile file, Block rootBlock,

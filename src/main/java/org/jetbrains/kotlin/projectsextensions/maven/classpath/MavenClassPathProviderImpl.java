@@ -46,7 +46,7 @@ public final class MavenClassPathProviderImpl implements ClassPathProvider{
             return null;
         }
         
-        List<PathResourceImplementation> resources = new ArrayList<PathResourceImplementation>();
+        List<PathResourceImplementation> resources = new ArrayList<>();
         if (type.equals(ClassPath.BOOT)){
             resources.add(ClassPathSupport.createResource(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).toURL()));
         }

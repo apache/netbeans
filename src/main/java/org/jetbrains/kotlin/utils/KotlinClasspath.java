@@ -24,7 +24,7 @@ public class KotlinClasspath {
     private static final String LIB_RUNTIME_NAME = "kotlin-runtime.jar";
     
     public static List<String> getKotlinClasspath(){
-        List<String> classpath = new ArrayList<String>();
+        List<String> classpath = new ArrayList<>();
         
         classpath.add(ProjectUtils.KT_HOME + "lib\\" + LIB_RUNTIME_NAME);
         

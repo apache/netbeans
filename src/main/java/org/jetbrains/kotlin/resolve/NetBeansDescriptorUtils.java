@@ -55,7 +55,7 @@ public class NetBeansDescriptorUtils {
             
             Collection<DeclarationDescriptor> effectiveReferencedDescriptors = DescriptorToSourceUtils.getEffectiveReferencedDescriptors(descriptor);
             
-            HashSet<SourceElement> result = new HashSet<SourceElement>();
+            HashSet<SourceElement> result = new HashSet<>();
             BuiltInsReferenceResolver resolver = BuiltInsReferenceResolver.getInstance(project);
             for (DeclarationDescriptor effectiveReferenced: effectiveReferencedDescriptors) {
                 DeclarationDescriptor resultDescriptor = resolver.findCurrentDescriptor(effectiveReferenced);
@@ -66,7 +66,7 @@ public class NetBeansDescriptorUtils {
                     }
                 }
             }
-            return new ArrayList<SourceElement>(result);
+            return new ArrayList<>(result);
         }
         //TODO: this returns a source element for containing element with existing .class file. This logic should be moved to a caller.
         if (DeserializedDescriptorUtilsKt.isDeserialized(descriptor)) {

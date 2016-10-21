@@ -54,8 +54,7 @@ public class KotlinLightClassManager {
     
     private final org.netbeans.api.project.Project project;
     
-    private final ConcurrentMap<File, Set<FileObject>> sourceFiles = 
-            new ConcurrentHashMap<File, Set<FileObject>>();
+    private final ConcurrentMap<File, Set<FileObject>> sourceFiles = new ConcurrentHashMap<>();
     
     @NotNull
     public static KotlinLightClassManager getInstance(@NotNull org.netbeans.api.project.Project project){
@@ -68,7 +67,7 @@ public class KotlinLightClassManager {
     }
     
     public void computeLightClassesSources(){
-        Map<File, Set<FileObject>> newSourceFilesMap = new HashMap<File, Set<FileObject>>();
+        Map<File, Set<FileObject>> newSourceFilesMap = new HashMap<>();
         for (FileObject sourceFile : KotlinPsiManager.INSTANCE.getFilesByProject(project)){
             List<String> lightClassesPaths = getLightClassesPaths(sourceFile);
             
@@ -76,7 +75,7 @@ public class KotlinLightClassManager {
                 LightClassFile lightClassFile = new LightClassFile(project, path);
                 Set<FileObject> newSourceFiles = newSourceFilesMap.get(lightClassFile.asFile());
                 if (newSourceFiles == null){
-                    newSourceFiles = new HashSet<FileObject>();
+                    newSourceFiles = new HashSet<>();
                     newSourceFilesMap.put(lightClassFile.asFile(), newSourceFiles);
                 }
                 newSourceFiles.add(sourceFile);
@@ -89,7 +88,7 @@ public class KotlinLightClassManager {
 
     @NotNull
     public List<String> getLightClassesPaths(FileObject sourceFile) {
-        List<String> lightClasses = new ArrayList<String>();
+        List<String> lightClasses = new ArrayList<>();
         
         KtFile ktFile = ProjectUtils.getKtFile(sourceFile);
         for (KtClassOrObject classOrObject : findLightClasses(ktFile)){
@@ -109,7 +108,7 @@ public class KotlinLightClassManager {
     }
 
     private List<KtClassOrObject> findLightClasses(@NotNull KtFile ktFile) {
-        final List<KtClassOrObject> lightClasses = new ArrayList<KtClassOrObject>();
+        final List<KtClassOrObject> lightClasses = new ArrayList<>();
         ktFile.acceptChildren(new KtVisitorVoid(){
             @Override
             public void visitClassOrObject(@NotNull KtClassOrObject classOrObject){
@@ -155,7 +154,6 @@ public class KotlinLightClassManager {
             }
             
             LightClassFile lightClassFile = new LightClassFile(lightClassFileObject);
-//            lightClassFile.createIfNotExists(lightClassFileObject, project, path);
             
             for (FileObject sourceFile : entry.getValue()){
                 if (affectedFiles.contains(sourceFile)){
@@ -164,8 +162,6 @@ public class KotlinLightClassManager {
                 }
             }
         }
-        
-//        cleanOutdatedLightClasses(project);
     }
     
     public List<KtFile> getSourceFiles(@NotNull File file){

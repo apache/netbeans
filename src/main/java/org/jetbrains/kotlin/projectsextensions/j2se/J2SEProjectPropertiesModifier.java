@@ -49,7 +49,7 @@ public class J2SEProjectPropertiesModifier {
     }
     
     private String[] getModifiedClasspathProperty(EditableProperties editableProperties, String str) {
-        List<String> classpath = new ArrayList<String>();
+        List<String> classpath = new ArrayList<>();
         boolean hasKotlincClasspath = false;
         for (String item : Arrays.asList(editableProperties.getProperty(str).split(":"))) {
             classpath.add(item + ":");

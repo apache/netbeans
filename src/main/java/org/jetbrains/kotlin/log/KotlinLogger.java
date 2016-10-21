@@ -35,9 +35,7 @@ public class KotlinLogger {
         System.setProperty(KotlinLogger.class.getName(), "100");
         try {
             LogManager.getLogManager().readConfiguration();
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (SecurityException ex) {
+        } catch (IOException | SecurityException ex) {
             Exceptions.printStackTrace(ex);
         }
     }

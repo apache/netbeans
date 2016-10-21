@@ -79,7 +79,7 @@ public class KotlinCompletionUtils {
         createTypesToValuesMap();
     }
     
-    private final Map<String, String> typeToValues = new HashMap<String, String>();
+    private final Map<String, String> typeToValues = new HashMap<>();
     
     public boolean applicableNameFor(String prefix, Name name){
         if (!name.isSpecial()){

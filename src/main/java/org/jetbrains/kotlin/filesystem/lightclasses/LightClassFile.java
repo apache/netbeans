@@ -27,10 +27,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
-/**
- *
- * @author Александр
- */
 public final class LightClassFile {
     private final FileObject fileObject;
     

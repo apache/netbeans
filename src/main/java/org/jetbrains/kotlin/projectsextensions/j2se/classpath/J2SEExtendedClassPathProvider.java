@@ -65,7 +65,7 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
     private final SourceRoots sourceRoots;
     private final SourceRoots testSourceRoots;
     private final ClassPath[] cache = new ClassPath[8];
-    private final Map<String, FileObject> dirCache = new HashMap<String, FileObject>();
+    private final Map<String, FileObject> dirCache = new HashMap<>();
     private final BootClassPathImplementation bootClassPathImpl;
     private final Project project;
     
@@ -234,7 +234,7 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
 
         ClassPath cp = cache[2 + type];
         if (cp == null) {
-            List<PathResourceImplementation> resources = new ArrayList<PathResourceImplementation>();
+            List<PathResourceImplementation> resources = new ArrayList<>();
 
             
             List<URL> kotlinBoot = bootClassPathImpl.getKotlinBootClassPath();
@@ -281,7 +281,7 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
     private synchronized ClassPath getRunTimeClasspath(final int type) {
         ClassPath cp = cache[4 + type];
         if (cp == null) {
-            List<PathResourceImplementation> resources = new ArrayList<PathResourceImplementation>();
+            List<PathResourceImplementation> resources = new ArrayList<>();
 
             List<URL> kotlinBoot = bootClassPathImpl.getKotlinBootClassPath();
             for (URL url : kotlinBoot){

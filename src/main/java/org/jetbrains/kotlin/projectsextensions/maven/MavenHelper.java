@@ -48,10 +48,9 @@ import org.openide.util.ImageUtilities;
  */
 public class MavenHelper {
     
-    private static final Map<Project, List<? extends Project>> depProjects = 
-            new HashMap<Project, List<? extends Project>>();
+    private static final Map<Project, List<? extends Project>> depProjects = new HashMap<>();
     
-    private static final List<Project> askedToConfigure = new ArrayList<Project>();
+    private static final List<Project> askedToConfigure = new ArrayList<>();
     
     public static void configure(Project project) {
         if (askedToConfigure.contains(project)) {
@@ -195,7 +194,7 @@ public class MavenHelper {
     }
     
     private static List<? extends Project> findDependencyProjects(Project project){
-        List<Project> dependencyProjects = new ArrayList<Project>();
+        List<Project> dependencyProjects = new ArrayList<>();
         MavenProject originalProject = getOriginalMavenProject(project);
         if (originalProject == null) {
             return dependencyProjects;

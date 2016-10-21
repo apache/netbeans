@@ -25,12 +25,6 @@ import org.jetbrains.kotlin.highlighter.netbeans.KotlinTokenId;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.spi.lexer.LexerInput;
 
-/**
- * KotlinTokenScanner parses kotlin code for tokens
- *
- * @author Александр
- *
- */
 public final class KotlinTokenScanner {
 
     private final KotlinTokensFactory kotlinTokensFactory;
@@ -82,7 +76,7 @@ public final class KotlinTokenScanner {
      * This method creates an ArrayList of tokens from the parsed ktFile.
      */
     private void createListOfKotlinTokens() {
-        kotlinTokens = new ArrayList<KotlinToken<KotlinTokenId>>();
+        kotlinTokens = new ArrayList<>();
         PsiElement lastElement;
         for (;;) {
 
@@ -92,12 +86,12 @@ public final class KotlinTokenScanner {
                 offset = lastElement.getTextRange().getEndOffset();
                 TokenType tokenType = kotlinTokensFactory.getToken(lastElement);
 
-                kotlinTokens.add(new KotlinToken<KotlinTokenId>(
+                kotlinTokens.add(new KotlinToken<>(
                         new KotlinTokenId(tokenType.name(), tokenType.name(), tokenType.getId()),
                         lastElement.getText(), tokenType));
                 tokensNumber = kotlinTokens.size();
             } else {
-                kotlinTokens.add(new KotlinToken<KotlinTokenId>(
+                kotlinTokens.add(new KotlinToken<>(
                         new KotlinTokenId(TokenType.EOF.name(), TokenType.EOF.name(), 7), "",
                         TokenType.EOF));
                 tokensNumber = kotlinTokens.size();
@@ -129,7 +123,7 @@ public final class KotlinTokenScanner {
             return ktToken;
         } else {
             input.read();
-            return new KotlinToken<KotlinTokenId>(
+            return new KotlinToken<>(
                     new KotlinTokenId(TokenType.EOF.name(), TokenType.EOF.name(), 7), "",
                     TokenType.EOF);
         }

@@ -100,7 +100,7 @@ public class NavigationUtil {
         int start = psiExpression.getTextRange().getStartOffset();
         int end = psiExpression.getTextRange().getEndOffset();
         
-        return new Pair<Integer, Integer>(start, end);
+        return new Pair<>(start, end);
     }
     
     @Nullable
@@ -243,9 +243,7 @@ public class NavigationUtil {
         try {
             document = ProjectUtils.getDocumentFromFileObject(declarationFile);
             text = document.getText(0, document.getLength());
-        } catch (IOException ex) {
-            KotlinLogger.INSTANCE.logException("", ex);
-        } catch (BadLocationException ex) {
+        } catch (IOException | BadLocationException ex) {
             KotlinLogger.INSTANCE.logException("", ex);
         }
         if (document == null){

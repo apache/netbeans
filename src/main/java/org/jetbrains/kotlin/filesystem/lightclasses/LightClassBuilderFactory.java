@@ -73,7 +73,7 @@ public class LightClassBuilderFactory implements ClassBuilderFactory {
                         userData = Collections.newSetFromMap(new ConcurrentHashMap<Pair<String, String>, Boolean>());
                         element.putUserData(JVM_SIGNATURE, userData);
                     }
-                    userData.add(new Pair<String, String>(desc, name));
+                    userData.add(new Pair<>(desc, name));
                 }
             }
         };

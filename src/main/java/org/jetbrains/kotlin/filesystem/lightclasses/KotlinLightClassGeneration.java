@@ -175,8 +175,6 @@ public class KotlinLightClassGeneration {
                             stream = new BufferedOutputStream(new FileOutputStream(lightClass));
                             stream.write(lightClassText);
                             stream.flush();
-                        } catch (FileNotFoundException ex) {
-                            KotlinLogger.INSTANCE.logException("", ex);
                         } catch (IOException ex) {
                             KotlinLogger.INSTANCE.logException("", ex);
                         } finally {
@@ -229,8 +227,6 @@ public class KotlinLightClassGeneration {
                             stream = new BufferedOutputStream(new FileOutputStream(lightClass));
                             stream.write(lightClassText);
                             stream.flush();
-                        } catch (FileNotFoundException ex) {
-                            KotlinLogger.INSTANCE.logException("", ex);
                         } catch (IOException ex) {
                             KotlinLogger.INSTANCE.logException("", ex);
                         } finally {

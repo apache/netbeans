@@ -123,7 +123,7 @@ public final class KotlinSources {
 
     public List<FileObject> getAllKtFiles() {
         List<FileObject> srcDirs = getSrcDirectories(KotlinProjectConstants.KOTLIN_SOURCE);
-        List<FileObject> ktFiles = new ArrayList<FileObject>();
+        List<FileObject> ktFiles = new ArrayList<>();
         for (FileObject srcDir : srcDirs) {
             for (FileObject file : srcDir.getChildren()) {
                 if (!file.hasExt("kt")) {
@@ -136,7 +136,7 @@ public final class KotlinSources {
     }
 
     public SourceGroup[] getSourceGroups(String string) {
-        List<SourceGroup> srcGroups = new ArrayList<SourceGroup>();
+        List<SourceGroup> srcGroups = new ArrayList<>();
         if (string.equals(KotlinProjectConstants.JAR.toString())) {
             List<FileObject> src = getSrcDirectories(KotlinProjectConstants.JAR);
             for (FileObject srcFolder : src) {

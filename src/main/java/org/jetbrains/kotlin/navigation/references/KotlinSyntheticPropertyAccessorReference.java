@@ -45,7 +45,7 @@ public class KotlinSyntheticPropertyAccessorReference extends KotlinSimpleNameRe
         Collection<? extends DeclarationDescriptor> descriptors = 
                 super.getTargetDescriptors(context);
         
-        List<FunctionDescriptor> result = new SmartList<FunctionDescriptor>();
+        List<FunctionDescriptor> result = new SmartList<>();
         for (DeclarationDescriptor descriptor : descriptors){
             if (descriptor instanceof SyntheticJavaPropertyDescriptor){
                 if (getter){

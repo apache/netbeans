@@ -56,7 +56,7 @@ public class KotlinToggleBreakpointActionProvider extends ActionsProviderSupport
     implements PropertyChangeListener {
 
     private JPDADebugger debugger;
-    private Map<Breakpoint, Object> annotations = new HashMap<Breakpoint, Object>();
+    private Map<Breakpoint, Object> annotations = new HashMap<>();
     
     public KotlinToggleBreakpointActionProvider() {
         EditorContextBridge.getContext().

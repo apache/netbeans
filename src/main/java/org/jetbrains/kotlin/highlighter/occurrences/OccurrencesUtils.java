@@ -42,10 +42,10 @@ public class OccurrencesUtils {
     private static Pair<Integer, Integer> getLengthOfIdentifier(KtElement ktElement) {
         if (ktElement instanceof KtNamedDeclaration) {
             KtNamedDeclaration declaration = ((KtNamedDeclaration) ktElement);
-            return new Pair<Integer, Integer>(declaration.getNameIdentifier().getTextRange().getStartOffset(),
+            return new Pair<>(declaration.getNameIdentifier().getTextRange().getStartOffset(),
                     declaration.getNameIdentifier().getTextRange().getEndOffset());
         } else if (ktElement instanceof KtReferenceExpression) {
-            return new Pair<Integer, Integer>(ktElement.getTextRange().getStartOffset(), ktElement.getTextRange().getEndOffset());
+            return new Pair<>(ktElement.getTextRange().getStartOffset(), ktElement.getTextRange().getEndOffset());
         } else {
             return null;
         }
@@ -83,8 +83,8 @@ public class OccurrencesUtils {
     }
 
     public static List<KtElement> searchTextOccurrences(KtFile ktFile, KtElement sourceElement) {
-        List<KtElement> elements = new ArrayList<KtElement>();
-        List<KtElement> elementsToReturn = new ArrayList<KtElement>();
+        List<KtElement> elements = new ArrayList<>();
+        List<KtElement> elementsToReturn = new ArrayList<>();
 
         String elementName = sourceElement.getName();
         if (elementName == null) {

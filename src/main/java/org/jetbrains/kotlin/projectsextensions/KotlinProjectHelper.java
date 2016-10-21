@@ -43,10 +43,10 @@ public class KotlinProjectHelper {
     
     private KotlinProjectHelper(){}
     
-    private final Map<Project, KotlinSources> kotlinSources = new HashMap<Project, KotlinSources>();
-    private final Map<Project, FileObject> lightClassesDirs = new HashMap<Project, FileObject>();
-    private final Map<Project, ClassPathExtender> extendedClassPaths = new HashMap<Project, ClassPathExtender>();
-    private final Map<Project, ClassPath> fullClasspaths = new HashMap<Project, ClassPath>();
+    private final Map<Project, KotlinSources> kotlinSources = new HashMap<>();
+    private final Map<Project, FileObject> lightClassesDirs = new HashMap<>();
+    private final Map<Project, ClassPathExtender> extendedClassPaths = new HashMap<>();
+    private final Map<Project, ClassPath> fullClasspaths = new HashMap<>();
     
     public boolean checkProject(Project project){
         String className = project.getClass().getName();

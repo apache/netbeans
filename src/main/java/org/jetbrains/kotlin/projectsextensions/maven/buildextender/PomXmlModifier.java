@@ -46,10 +46,8 @@ public class PomXmlModifier {
         try {
             checkKotlinStdLibDependency();
             checkKotlinPlugin();
-        } catch (DocumentException ex) {
+        } catch (DocumentException | IOException ex) {
             KotlinLogger.INSTANCE.logException("Cannot find pom.xml", ex);
-        } catch (IOException ex) {
-            KotlinLogger.INSTANCE.logException("", ex);
         }
     }
     

@@ -59,7 +59,7 @@ public class KotlinSemanticHighlightingVisitor extends KtVisitorVoid {
     private final AnalysisResult result;
     private BindingContext bindingContext;
     private final Map<OffsetRange, Set<ColoringAttributes>> positions = 
-            new HashMap<OffsetRange, Set<ColoringAttributes>>();
+            new HashMap<>();
     
     public KotlinSemanticHighlightingVisitor(KtFile ktFile, AnalysisResult result){
         super();
@@ -283,7 +283,6 @@ public class KotlinSemanticHighlightingVisitor extends KtVisitorVoid {
             attributes = KotlinHighlightingAttributesGetter.INSTANCE.PARAMETER_VARIABLE;
         } else {
             attributes = KotlinHighlightingAttributesGetter.INSTANCE.LOCAL_VARIABLE;
-//            throw new IllegalStateException("Highlight attributes error");
         }
         
         if (typeName != null){

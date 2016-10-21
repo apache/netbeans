@@ -44,11 +44,11 @@ public class JarNavigationUtil {
     private static Pair<String,String> getJarAndInternalPaths(String path){
         String separator = "!/";
         String[] pathParts = path.split(separator);
-        if (pathParts.length == 1){
+        if (pathParts.length < 2){
             return null;
         }
         
-        return new Pair<String, String>(pathParts[0], pathParts[1]);
+        return new Pair<>(pathParts[0], pathParts[1]);
     }
     
 }

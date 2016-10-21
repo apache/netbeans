@@ -40,7 +40,7 @@ public class KotlinOccurrencesFinder extends OccurrencesFinder<KotlinParserResul
 
     private int caretPosition = 0;
     boolean cancel = false;
-    Map<OffsetRange, ColoringAttributes> highlighting = new HashMap<OffsetRange, ColoringAttributes>();
+    Map<OffsetRange, ColoringAttributes> highlighting = new HashMap<>();
     
     @Override
     public void setCaretPosition(int position) {

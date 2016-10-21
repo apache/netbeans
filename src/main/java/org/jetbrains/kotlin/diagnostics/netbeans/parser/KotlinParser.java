@@ -36,8 +36,7 @@ public class KotlinParser extends Parser {
     private Snapshot snapshot;
     private static KtFile fileToAnalyze;
     private Project project;
-    private static final Map<String, AnalysisResultWithProvider> CACHE =
-            new HashMap<String, AnalysisResultWithProvider>();
+    private static final Map<String, AnalysisResultWithProvider> CACHE = new HashMap<>();
     
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) {

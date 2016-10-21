@@ -34,7 +34,7 @@ public class KotlinAnalysisProjectCache {
     public static final KotlinAnalysisProjectCache INSTANCE = 
             new KotlinAnalysisProjectCache();
     
-    private final Map<Project, AnalysisResultWithProvider> cache = new HashMap<Project, AnalysisResultWithProvider>();
+    private final Map<Project, AnalysisResultWithProvider> cache = new HashMap<>();
     
     public AnalysisResultWithProvider getAnalysisResult(final Project project) {
         synchronized(project) {

@@ -35,7 +35,7 @@ public class AlignmentPerTypeStrategy extends KotlinAlignmentStrategy {
     private final boolean myAllowBackwardShift;
     private final Alignment.Anchor anchor;
     private final Map<IElementType, Alignment> myAlignments = 
-            new HashMap<IElementType, Alignment>();
+            new HashMap<>();
     
     public AlignmentPerTypeStrategy(Collection<IElementType> targetElementTypes,
             IElementType myParentType, boolean myAllowBackwardShift,

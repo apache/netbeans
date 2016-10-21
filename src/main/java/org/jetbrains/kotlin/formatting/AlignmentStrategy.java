@@ -35,7 +35,7 @@ import org.jetbrains.kotlin.psi.KtPropertyAccessor;
  */
 public class AlignmentStrategy {
 
-    private static final Set<String> BLOCK_ELEMENT_TYPES = new HashSet<String>(Arrays.asList(
+    private static final Set<String> BLOCK_ELEMENT_TYPES = new HashSet<>(Arrays.asList(
             "IF", "FOR", "WHILE", "CLASS_BODY", "FUNCTION_LITERAL_EXPRESSION",
             "WHEN", "WHEN_ENTRY", "DO_WHILE", "PROPERTY_ACCESSOR"));
 

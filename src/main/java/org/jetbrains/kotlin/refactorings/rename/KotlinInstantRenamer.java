@@ -53,7 +53,7 @@ public class KotlinInstantRenamer implements InstantRenamer {
 
     @Override
     public Set<OffsetRange> getRenameRegions(ParserResult info, int caretOffset) {
-        Set<OffsetRange> ranges = new HashSet<OffsetRange>();
+        Set<OffsetRange> ranges = new HashSet<>();
         FileObject fo = info.getSnapshot().getSource().getFileObject();
         KtFile ktFile = ProjectUtils.getKtFile(fo);
         if (ktFile == null) {

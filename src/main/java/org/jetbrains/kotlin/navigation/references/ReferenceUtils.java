@@ -200,7 +200,7 @@ public class ReferenceUtils {
     }
     
     public static List<SourceElement> getContainingClassOrObjectForConstructor(List<? extends SourceElement> sourceElements) {
-        List<SourceElement> elementsToReturn = new ArrayList<SourceElement>();
+        List<SourceElement> elementsToReturn = new ArrayList<>();
         
         for (SourceElement sourceElement : sourceElements) {
             if (sourceElement instanceof KotlinSourceElement) {

@@ -122,9 +122,7 @@ public class KotlinDebugUtils {
                 return null;
             }
             return FileUtil.toFileObject(file);
-        } catch (MalformedURLException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (URISyntaxException ex) {
+        } catch (MalformedURLException | URISyntaxException ex) {
             Exceptions.printStackTrace(ex);
         }
         
@@ -158,7 +156,7 @@ public class KotlinDebugUtils {
             return null;
         }
 
-        return new Pair<String, String>(classFqName, name);
+        return new Pair<>(classFqName, name);
     }
 
     public static String getClassFqName(String urlStr, int line) {

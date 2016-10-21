@@ -93,7 +93,7 @@ public class FromJavaToKotlinNavigationUtils {
     }
     
     private static KtElement findKotlinDeclaration(ElementHandle element, KtFile ktFile, Document doc) {
-        List<KtElement> result = new ArrayList<KtElement>();
+        List<KtElement> result = new ArrayList<>();
         KtVisitorVoid visitor = makeVisitor(element, result, doc);
         if (visitor != null) {
             ktFile.acceptChildren(visitor);
@@ -147,7 +147,7 @@ public class FromJavaToKotlinNavigationUtils {
                         }
                         
                         if (equalsNames(declaration, element, doc) &&
-                            declaration.getName().toString().equals(searcher.getName().asString())){
+                            declaration.getName().equals(searcher.getName().asString())){
                             result.add(declaration);
                         }
                     }

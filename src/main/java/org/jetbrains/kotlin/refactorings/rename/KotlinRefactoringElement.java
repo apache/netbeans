@@ -59,9 +59,7 @@ public class KotlinRefactoringElement extends SimpleRefactoringElementImplementa
     public void performChange() {
         try {
             bounds.setText(newName);
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (BadLocationException ex) {
+        } catch (IOException | BadLocationException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
@@ -70,9 +68,7 @@ public class KotlinRefactoringElement extends SimpleRefactoringElementImplementa
     public void undoChange() {
         try {
             bounds.setText(oldName);
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (BadLocationException ex) {
+        } catch (IOException | BadLocationException ex) {
             Exceptions.printStackTrace(ex);
         }
     }

@@ -159,7 +159,6 @@ public class KotlinHyperlinkProvider implements HyperlinkProviderExt {
             }
             builder.append(javaDoc.commentText());
             
-//            HtmlBrowser.URLDisplayer.getDefault().showURL(javaDoc.getSecond());
             return builder.toString();
         }
         

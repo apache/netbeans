@@ -55,11 +55,11 @@ public class MavenExtendedClassPath implements ClassPathExtender {
     }
     
     private ClassPath getClasspath(List<String> paths) throws DependencyResolutionRequiredException, MalformedURLException {
-        Set<URL> classpaths = new HashSet<URL>();
+        Set<URL> classpaths = new HashSet<>();
         if (paths == null) {
             return ClassPathSupport.createClassPath(classpaths.toArray(new URL[0]));
         }
-        Set<String> classpath = new HashSet<String>();
+        Set<String> classpath = new HashSet<>();
         classpath.addAll(paths);
         
         for (String path : classpath) {
@@ -165,27 +165,25 @@ public class MavenExtendedClassPath implements ClassPathExtender {
             javaClasspathElements.addAll(getTestClasspathElements(project));
             boot = ClassPathSupport.createProxyClassPath(getClasspath(javaClasspathElements), javaPlatform);
             
-        } catch (DependencyResolutionRequiredException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (MalformedURLException ex) {
+        } catch (DependencyResolutionRequiredException | MalformedURLException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
     
     @Override
     public ClassPath getProjectSourcesClassPath(String type) {
-
-        if (type.equals(ClassPath.COMPILE)) {
-            return compile;
-        } else if (type.equals(ClassPath.EXECUTE)) {
-            return execute;
-        } else if (type.equals(ClassPath.SOURCE)) {
-            return source;
-        } else if (type.equals(ClassPath.BOOT)) {
-            return boot;
+        switch (type) {
+            case ClassPath.COMPILE:
+                return compile;
+            case ClassPath.EXECUTE:
+                return execute;
+            case ClassPath.SOURCE:
+                return source;
+            case ClassPath.BOOT:
+                return boot;
+            default:
+                return null;
         }
-        
-        return null;
     }
     
 }

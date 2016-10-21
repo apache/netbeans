@@ -49,9 +49,7 @@ public class KotlinMockProject {
         
         try {
             helper =  ProjectGenerator.createProject(userDirectory, "org.netbeans.modules.java.j2seproject");
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IllegalArgumentException ex) {
+        } catch (IOException | IllegalArgumentException ex) {
             Exceptions.printStackTrace(ex);
         }
         

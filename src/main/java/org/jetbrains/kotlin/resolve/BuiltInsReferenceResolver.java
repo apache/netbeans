@@ -138,7 +138,7 @@ public class BuiltInsReferenceResolver {
         
         PsiDirectory psiDirectory = PsiManager.getInstance(myProject).findDirectory(vf);
         assert psiDirectory != null : "No PsiDirectory for " + vf;
-        return new HashSet<KtFile>(ContainerUtil.mapNotNull(psiDirectory.getFiles(), new Function<PsiFile, KtFile>() {
+        return new HashSet<>(ContainerUtil.mapNotNull(psiDirectory.getFiles(), new Function<PsiFile, KtFile>() {
             @Override
             public KtFile fun(PsiFile file) {
                 return file instanceof KtFile ? (KtFile) file : null;

@@ -31,12 +31,12 @@ import org.netbeans.api.project.Project;
 public class KotlinTypeSearcher {
     
     public static List<Pair<KtFile, List<KtDeclaration>>> searchDeclaration(Project project, String fqName) {
-        List<Pair<KtFile, List<KtDeclaration>>> found = new ArrayList<Pair<KtFile, List<KtDeclaration>>>();
+        List<Pair<KtFile, List<KtDeclaration>>> found = new ArrayList<>();
         
         for (KtFile ktFile : ProjectUtils.getSourceFilesWithDependencies(project)) {
             List<KtDeclaration> declarations = findDeclarationsInFile(ktFile, fqName);
             if (!declarations.isEmpty()) {
-                found.add(new Pair<KtFile, List<KtDeclaration>>(ktFile, declarations));
+                found.add(new Pair<>(ktFile, declarations));
             }
         }
         
@@ -45,7 +45,7 @@ public class KotlinTypeSearcher {
     
     private static List<KtDeclaration> findDeclarationsInFile(KtFile ktFile, String fqName) {
         List<KtDeclaration> declarations = ktFile.getDeclarations();
-        List<KtDeclaration> declarationsToReturn = new ArrayList<KtDeclaration>();
+        List<KtDeclaration> declarationsToReturn = new ArrayList<>();
         
         for (KtDeclaration declaration : declarations) {
             if (declaration.getName().contains(fqName)) {

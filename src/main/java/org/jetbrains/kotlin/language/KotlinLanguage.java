@@ -39,10 +39,6 @@ import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
 
-/**
- * Class that is responsible for Kotlin language registration.
- * @author Александр
- */
 @LanguageRegistration(mimeType = "text/x-kt")
 public class KotlinLanguage extends DefaultLanguageConfig {
 

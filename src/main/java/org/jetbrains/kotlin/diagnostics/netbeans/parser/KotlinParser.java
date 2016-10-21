@@ -31,10 +31,6 @@ import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 
-/**
- *
- * @author Александр
- */
 public class KotlinParser extends Parser {
 
     private Snapshot snapshot;

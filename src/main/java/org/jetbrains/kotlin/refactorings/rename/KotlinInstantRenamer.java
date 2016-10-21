@@ -24,7 +24,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.jetbrains.kotlin.highlighter.occurrences.KotlinOccurrencesFinder;
 import org.jetbrains.kotlin.highlighter.occurrences.OccurrencesUtils;
 import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;

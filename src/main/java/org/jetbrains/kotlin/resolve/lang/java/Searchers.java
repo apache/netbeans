@@ -20,12 +20,10 @@ package org.jetbrains.kotlin.resolve.lang.java;
 
 import com.sun.javadoc.Doc;
 import com.sun.source.util.TreePath;
-import java.net.URL;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
-import kotlin.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.name.ClassId;
 import org.jetbrains.kotlin.name.FqName;

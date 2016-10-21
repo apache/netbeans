@@ -20,7 +20,6 @@ package org.jetbrains.kotlin.refactorings.rename;
 
 import com.intellij.psi.PsiElement;
 import javax.swing.event.ChangeListener;
-import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RenameRefactoring;

@@ -19,7 +19,6 @@ package org.jetbrains.kotlin.highlighter.netbeans
 import org.jetbrains.kotlin.highlighter.TokenType
 import org.netbeans.api.lexer.TokenId
 
-
 class KotlinToken<T : TokenId>(val value: T, val text: String, val type: TokenType) {
     
     val kotlinTokenId = value as KotlinTokenId

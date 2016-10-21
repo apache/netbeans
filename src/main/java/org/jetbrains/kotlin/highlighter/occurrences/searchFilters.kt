@@ -8,7 +8,6 @@ import org.jetbrains.kotlin.psi.psiUtil.isImportDirectiveExpression
 import org.jetbrains.kotlin.descriptors.SourceElement
 import org.jetbrains.kotlin.psi.KtNamedDeclaration
 
-
 interface SearchFilter {
     fun isApplicable(jetElement: KtElement): Boolean
 }

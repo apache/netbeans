@@ -18,7 +18,6 @@ package org.jetbrains.kotlin.projectsextensions.maven;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -38,8 +37,6 @@ import org.jetbrains.kotlin.projectsextensions.maven.buildextender.PomXmlModifie
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.maven.api.NbMavenProject;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;

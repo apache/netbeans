@@ -20,10 +20,7 @@ import java.io.File;
 import kotlin.Pair;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-/**
- *
- * @author Александр
- */
+
 public class JarNavigationUtil {
     public static FileObject getFileObjectFromJar(String path){
         Pair<String, String> pathParts = getJarAndInternalPaths(path);

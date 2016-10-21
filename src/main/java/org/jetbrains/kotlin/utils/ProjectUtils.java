@@ -17,12 +17,12 @@
 package org.jetbrains.kotlin.utils;
 
 import com.google.common.collect.Sets;
-import edu.emory.mathcs.backport.java.util.Collections;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import javax.swing.text.Document;
@@ -47,10 +47,6 @@ import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 
-/**
- *
- * @author Александр
- */
 public class ProjectUtils {
 
     private static final String LIB_FOLDER = "lib";

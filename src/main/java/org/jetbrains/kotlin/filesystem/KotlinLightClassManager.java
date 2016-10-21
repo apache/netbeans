@@ -50,10 +50,6 @@ import org.jetbrains.kotlin.psi.KtVisitorVoid;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
-/**
- *
- * @author Александр
- */
 public class KotlinLightClassManager {
     
     private final org.netbeans.api.project.Project project;

@@ -68,10 +68,6 @@ import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.CompletionProposal;
 
-/**
- *
- * @author Александр
- */
 public class KotlinCompletionUtils {
 
     private final String KOTLIN_DUMMY_IDENTIFIER = "KotlinNetBeans";

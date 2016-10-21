@@ -21,10 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.idea.KotlinLanguage;
 import org.openide.filesystems.FileObject;
 
-/**
- *
- * @author Александр
- */
 public class KotlinLightVirtualFile extends LightVirtualFile {
    
     private final String path;

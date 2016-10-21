@@ -23,15 +23,9 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.SemanticAnalyzer;
-import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
-import org.openide.util.Exceptions;
 
-/**
- *
- * @author Александр
- */
 public class KotlinSemanticAnalyzer extends SemanticAnalyzer<KotlinParserResult> {
 
     boolean cancel = false;

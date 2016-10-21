@@ -59,10 +59,6 @@ import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
-/**
- *
- * @author Александр
- */
 @MimeRegistration(mimeType = "text/x-kt", service = HyperlinkProviderExt.class)
 public class KotlinHyperlinkProvider implements HyperlinkProviderExt {
 

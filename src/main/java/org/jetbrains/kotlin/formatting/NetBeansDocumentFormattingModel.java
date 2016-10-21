@@ -20,7 +20,6 @@ package org.jetbrains.kotlin.formatting;
  */
 import com.intellij.formatting.Block;
 import com.intellij.formatting.FormattingDocumentModel;
-import com.intellij.formatting.FormattingModelEx;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;

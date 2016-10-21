@@ -19,10 +19,6 @@ package org.jetbrains.kotlin.resolve;
 import org.jetbrains.kotlin.analyzer.AnalysisResult;
 import org.jetbrains.kotlin.container.ComponentProvider;
 
-/**
- *
- * @author Александр
- */
 public class AnalysisResultWithProvider {
 
     private final AnalysisResult analysisResult;

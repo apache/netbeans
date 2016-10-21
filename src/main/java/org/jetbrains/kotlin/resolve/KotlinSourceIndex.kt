@@ -22,4 +22,4 @@ package org.jetbrains.kotlin.resolve
   Created on Sep 9, 2016
 */
 
-class KotlinSourceIndex 
+class KotlinSourceIndex

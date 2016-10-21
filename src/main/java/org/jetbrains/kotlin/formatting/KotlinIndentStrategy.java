@@ -21,10 +21,8 @@ package org.jetbrains.kotlin.formatting;
 import com.intellij.formatting.FormatterImpl;
 import com.intellij.formatting.Indent;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import java.io.IOException;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
-import org.jetbrains.kotlin.builder.KotlinPsiManager;
 import org.jetbrains.kotlin.idea.formatter.KotlinSpacingRulesKt;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtPsiFactory;
@@ -34,7 +32,6 @@ import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.openide.filesystems.FileObject;
 import org.openide.text.Line;
-import org.openide.util.Exceptions;
 
 /**
  *

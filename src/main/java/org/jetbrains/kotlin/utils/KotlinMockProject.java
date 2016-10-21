@@ -26,10 +26,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 
-/**
- *
- * @author Александр
- */
 public class KotlinMockProject {
 
     private Project project = null;

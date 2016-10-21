@@ -29,11 +29,15 @@ import org.netbeans.modules.parsing.spi.indexing.Indexable
 */
 
 class KotlinIndexerFactory : EmbeddingIndexerFactory() {
-    override fun createIndexer(indexable: Indexable, snapshot : Snapshot) = KotlinIndexer()
-    
-    override fun filesDeleted(deleted : Iterable<Indexable>, context : Context) {}
-    override fun filesDirty(dirty : Iterable<Indexable>, context : Context) {}
-    
+
+    override fun createIndexer(indexable: Indexable, snapshot: Snapshot) = KotlinIndexer()
+
+    override fun filesDeleted(deleted: Iterable<*>, context: Context) {
+    }
+
+    override fun filesDirty(dirty: Iterable<*>, context: Context) {
+    }
+
     override fun getIndexerName() = "Kotlin Indexer"
     override fun getIndexVersion() = 1
 }

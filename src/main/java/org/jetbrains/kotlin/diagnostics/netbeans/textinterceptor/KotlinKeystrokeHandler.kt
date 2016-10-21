@@ -23,7 +23,6 @@ import org.netbeans.modules.csl.api.KeystrokeHandler
 import org.netbeans.modules.csl.api.OffsetRange
 import org.netbeans.modules.csl.spi.ParserResult
 
-
 class KotlinKeystrokeHandler : KeystrokeHandler {
     
     fun checkNextChar(doc: Document, caretOffset: Int, ch: String, 

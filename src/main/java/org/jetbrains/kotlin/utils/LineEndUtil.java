@@ -18,10 +18,6 @@
  */
 package org.jetbrains.kotlin.utils;
 
-/**
- *
- * @author Александр
- */
 public class LineEndUtil {
 
     public static final char CARRIAGE_RETURN_CHAR = '\r';

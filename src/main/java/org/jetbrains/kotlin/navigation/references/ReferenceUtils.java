@@ -54,10 +54,6 @@ import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
-/**
- *
- * @author Александр
- */
 public class ReferenceUtils {
     
     private static List<SourceElement> resolveToSourceElements(List<KotlinReference> refs) {

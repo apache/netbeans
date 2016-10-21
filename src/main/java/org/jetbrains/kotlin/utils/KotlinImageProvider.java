@@ -25,10 +25,6 @@ import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor;
 import org.jetbrains.kotlin.descriptors.PackageViewDescriptor;
 import org.openide.util.ImageUtilities;
 
-/**
- *
- * @author Александр
- */
 public class KotlinImageProvider {
 
     public static final KotlinImageProvider INSTANCE = new KotlinImageProvider();

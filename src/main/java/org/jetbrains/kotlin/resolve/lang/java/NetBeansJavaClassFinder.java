@@ -32,10 +32,6 @@ import org.jetbrains.kotlin.resolve.jvm.JavaClassFinderPostConstruct;
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass;
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaPackage;
 
-/**
- *
- * @author Александр
- */
 public class NetBeansJavaClassFinder implements JavaClassFinder {
 
     private org.netbeans.api.project.Project kotlinProject = null;

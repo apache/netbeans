@@ -23,7 +23,6 @@ import org.netbeans.modules.refactoring.spi.BackupFacility
 import org.netbeans.modules.refactoring.spi.Transaction
 import org.openide.filesystems.FileObject
 import org.openide.text.PositionBounds
-import org.openide.util.Exceptions
 
 /*
   @author Alexander.Baratynski

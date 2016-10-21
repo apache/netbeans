@@ -41,7 +41,6 @@ import org.jetbrains.kotlin.psi.KtScript;
 import org.jetbrains.kotlin.resolve.BindingContext;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 
 public class KotlinLightClassGeneration {
 

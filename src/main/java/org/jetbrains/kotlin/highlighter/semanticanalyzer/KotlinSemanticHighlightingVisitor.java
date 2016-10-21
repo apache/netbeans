@@ -35,7 +35,6 @@ import org.jetbrains.kotlin.descriptors.VariableDescriptor;
 import org.jetbrains.kotlin.descriptors.impl.LocalVariableDescriptor;
 import org.jetbrains.kotlin.psi.KtAnnotationEntry;
 import org.jetbrains.kotlin.psi.KtClassOrObject;
-import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtNamedDeclaration;
 import org.jetbrains.kotlin.psi.KtNamedFunction;
@@ -52,12 +51,8 @@ import org.jetbrains.kotlin.resolve.BindingContext;
 import org.jetbrains.kotlin.types.KotlinType;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.OffsetRange;
-//import static org.jetbrains.kotlin.psi.psiUtil.KtPsiUtilKt.getCalleeHighlightingRange;
 import org.jetbrains.kotlin.resolve.DescriptorUtils;
-/**
- *
- * @author Александр
- */
+
 public class KotlinSemanticHighlightingVisitor extends KtVisitorVoid {
     
     private final KtFile ktFile;

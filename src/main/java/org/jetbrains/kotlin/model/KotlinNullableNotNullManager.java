@@ -21,14 +21,9 @@ import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiModifierListOwner;
 import java.util.List;
-
 import org.jetbrains.annotations.NotNull;
 import org.netbeans.api.project.Project;
 
-/**
- *
- * @author Александр
- */
 public class KotlinNullableNotNullManager extends NullableNotNullManager {
     
     Project javaProject;

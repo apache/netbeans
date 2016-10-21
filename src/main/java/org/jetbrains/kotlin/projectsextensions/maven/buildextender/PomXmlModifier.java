@@ -32,10 +32,6 @@ import org.jetbrains.kotlin.log.KotlinLogger;
 import org.netbeans.api.project.Project;
 import org.openide.util.Exceptions;
 
-/**
- *
- * @author Александр
- */
 public class PomXmlModifier {
 
     private final Project project;

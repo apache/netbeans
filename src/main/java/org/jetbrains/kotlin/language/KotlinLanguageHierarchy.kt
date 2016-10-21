@@ -23,7 +23,6 @@ import org.jetbrains.kotlin.highlighter.TokenType
 import org.jetbrains.kotlin.highlighter.netbeans.KotlinLexerProxy
 import org.jetbrains.kotlin.highlighter.netbeans.KotlinTokenId
 
-
 class KotlinLanguageHierarchy() : LanguageHierarchy<KotlinTokenId>() {
 
     companion object {

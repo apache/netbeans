@@ -32,7 +32,7 @@ class KotlinSemanticAnalyzer : SemanticAnalyzer<KotlinParserResult>() {
 
     override fun getHighlights() = highlighting
 
-    override fun run(result: KotlinParserResult?, event: SchedulerEvent) {
+    override fun run(result: KotlinParserResult?, event: SchedulerEvent?) {
         highlighting.clear()
         cancel = false
         if (result == null) return

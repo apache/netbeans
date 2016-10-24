@@ -1,0 +1,46 @@
+/*******************************************************************************
+ * Copyright 2000-2016 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ *******************************************************************************/
+package org.jetbrains.kotlin.highlighter.semanticanalyzer
+
+import org.netbeans.modules.csl.api.ColoringAttributes
+
+class KotlinHighlightingAttributes private constructor() {
+    lateinit var styleKey: ColoringAttributes
+    
+    companion object {
+        fun withAttributes(changeAttributes: KotlinHighlightingAttributes.() -> Unit): KotlinHighlightingAttributes {
+            val attributes = KotlinHighlightingAttributes()
+            attributes.changeAttributes()
+            return attributes
+        }
+        
+        val LOCAL_FINAL_VARIABLE = withAttributes { styleKey = ColoringAttributes.LOCAL_VARIABLE }
+        val LOCAL_VARIABLE = withAttributes { styleKey = ColoringAttributes.LOCAL_VARIABLE }
+        val PARAMETER_VARIABLE = withAttributes { styleKey = ColoringAttributes.PARAMETER }
+        val FIELD = withAttributes { styleKey = ColoringAttributes.FIELD }
+        val FINAL_FIELD = withAttributes { styleKey = ColoringAttributes.FIELD }
+        val STATIC_FIELD = withAttributes { styleKey = ColoringAttributes.STATIC }
+        val STATIC_FINAL_FIELD = withAttributes { styleKey = ColoringAttributes.STATIC }
+        val TYPE_PARAMETER = withAttributes { styleKey = ColoringAttributes.TYPE_PARAMETER_USE }
+        val ANNOTATION = withAttributes { styleKey = ColoringAttributes.ANNOTATION_TYPE }
+        val ENUM_CLASS = withAttributes { styleKey = ColoringAttributes.ENUM }
+        val INTERFACE = withAttributes { styleKey = ColoringAttributes.INTERFACE }
+        val CLASS = withAttributes { styleKey = ColoringAttributes.CLASS }
+        val FUNCTION_DECLARATION = withAttributes { styleKey = ColoringAttributes.DECLARATION }
+    }
+    
+}

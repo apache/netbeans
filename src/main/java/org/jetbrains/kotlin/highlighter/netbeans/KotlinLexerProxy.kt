@@ -29,7 +29,7 @@ class KotlinLexerProxy(private val info: LexerRestartInfo<KotlinTokenId>) : Lexe
     private val input: LexerInput = info.input()
     
     override fun nextToken(): Token<KotlinTokenId>? {
-        val token = kotlinTokenScanner.nextToken
+        val token = kotlinTokenScanner.getNextToken()
         
         if (input.readLength() < 1) return null
         

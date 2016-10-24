@@ -39,7 +39,7 @@ public class GoToKotlinTypeProvider implements SearchProvider {
     @Override
     public void evaluate(SearchRequest request, SearchResponse response) {
         for (Project project : OpenProjects.getDefault().getOpenProjects()) {
-            List<Pair<KtFile, List<KtDeclaration>>> found = KotlinTypeSearcher.searchDeclaration(project, request.getText());
+            List<Pair<KtFile, List<KtDeclaration>>> found = KotlinTypeSearcher.INSTANCE.searchDeclaration(project, request.getText());
             if (found.isEmpty()) {
                 continue;
             }

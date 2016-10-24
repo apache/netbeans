@@ -46,37 +46,35 @@ import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.TypeMirrorHandl
 import javax.lang.model.type.DeclaredType
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.JavaDocSearcher
 
-class JavaEnvironment {
-    companion object {
-        val JAVA_SOURCE = hashMapOf<Project, JavaSource>()
-        val CLASSPATH_INFO = hashMapOf<Project, ClasspathInfo>()
+object JavaEnvironment {
+    val JAVA_SOURCE = hashMapOf<Project, JavaSource>()
+    val CLASSPATH_INFO = hashMapOf<Project, ClasspathInfo>()
 
-        fun getClasspathInfo(project: Project): ClasspathInfo {
-            val extendedProvider = KotlinProjectHelper.INSTANCE.getExtendedClassPath(project)
-            val boot = extendedProvider.getProjectSourcesClassPath(ClassPath.BOOT)
-            val src = extendedProvider.getProjectSourcesClassPath(ClassPath.SOURCE)
-            val compile = extendedProvider.getProjectSourcesClassPath(ClassPath.COMPILE)
+    fun getClasspathInfo(project: Project): ClasspathInfo {
+        val extendedProvider = KotlinProjectHelper.INSTANCE.getExtendedClassPath(project)
+        val boot = extendedProvider.getProjectSourcesClassPath(ClassPath.BOOT)
+        val src = extendedProvider.getProjectSourcesClassPath(ClassPath.SOURCE)
+        val compile = extendedProvider.getProjectSourcesClassPath(ClassPath.COMPILE)
 
-            val bootProxy = ClassPathSupport.createProxyClassPath(boot, compile)
+        val bootProxy = ClassPathSupport.createProxyClassPath(boot, compile)
 
-            return ClasspathInfo.create(bootProxy, src, compile)
-        }
+        return ClasspathInfo.create(bootProxy, src, compile)
+    }
 
-        fun updateClasspathInfo(project: Project) {
+    fun updateClasspathInfo(project: Project) {
+        CLASSPATH_INFO.put(project, getClasspathInfo(project))
+        JAVA_SOURCE.put(project, JavaSource.create(CLASSPATH_INFO.get(project)))
+    }
+
+    fun checkJavaSource(project: Project) {
+        if (!CLASSPATH_INFO.containsKey(project)) {
             CLASSPATH_INFO.put(project, getClasspathInfo(project))
+        }
+        if (!JAVA_SOURCE.containsKey(project)) {
             JAVA_SOURCE.put(project, JavaSource.create(CLASSPATH_INFO.get(project)))
         }
-
-        fun checkJavaSource(project: Project) {
-            if (!CLASSPATH_INFO.containsKey(project)) {
-                CLASSPATH_INFO.put(project, getClasspathInfo(project))
-            }
-            if (!JAVA_SOURCE.containsKey(project)) {
-                JAVA_SOURCE.put(project, JavaSource.create(CLASSPATH_INFO.get(project)))
-            }
-        }
-
     }
+
 }
 
 fun String.getPackages(project: Project): Set<String> {
@@ -90,14 +88,14 @@ fun String.getPackages(project: Project): Set<String> {
 fun <T : Task<CompilationController>> T.execute(project: Project): T {
     JavaEnvironment.checkJavaSource(project)
     JavaEnvironment.JAVA_SOURCE[project]!!.runUserActionTask(this, true)
-    
+
     return this
 }
 
-fun Project.findType(name: String) = 
+fun Project.findType(name: String) =
         TypeElementSearcher(name, this).execute(this).element
 
-fun Project.findTypeMirrorHandle(name: String) = 
+fun Project.findTypeMirrorHandle(name: String) =
         TypeMirrorHandleSearcher(name).execute(this).handle
 
 fun Project.findPackage(name: String) =
@@ -106,26 +104,26 @@ fun Project.findPackage(name: String) =
 fun ElemHandle<TypeElement>.computeClassId(project: Project) =
         ClassIdComputer(this).execute(project).classId
 
-fun ElemHandle<*>.getSimpleName(project: Project) = 
+fun ElemHandle<*>.getSimpleName(project: Project) =
         ElementSimpleNameSearcher(this).execute(project).simpleName
 
 fun TypeMirrorHandle<*>.getHashCode(project: Project) =
         TypeMirrorHandleHashCodeSearcher(this).execute(project).hashCode
 
-fun TypeMirrorHandle<*>.isEqual(handle: TypeMirrorHandle<*>, project: Project) = 
+fun TypeMirrorHandle<*>.isEqual(handle: TypeMirrorHandle<*>, project: Project) =
         TypeMirrorHandleEquals(this, handle).execute(project).equals()
 
 fun Project.findFQName(name: String): List<String> {
     JavaEnvironment.checkJavaSource(this)
-    
+
     return JavaEnvironment.CLASSPATH_INFO[this]!!.classIndex.
-            getDeclaredTypes(name, ClassIndex.NameKind.SIMPLE_NAME, 
-                    setOf(ClassIndex.SearchScope.SOURCE, 
+            getDeclaredTypes(name, ClassIndex.NameKind.SIMPLE_NAME,
+                    setOf(ClassIndex.SearchScope.SOURCE,
                             ClassIndex.SearchScope.DEPENDENCIES))
-            .map{ it.qualifiedName }
+            .map { it.qualifiedName }
 }
 
-fun ElementHandle<*>.openInEditor(project: Project) = 
+fun ElementHandle<*>.openInEditor(project: Project) =
         ElementOpen.open(JavaEnvironment.CLASSPATH_INFO[project], this)
 
 fun TypeMirrorHandle<*>.getJavaClass(project: Project) =
@@ -139,19 +137,19 @@ fun ElemHandle<*>.isDeprecated(project: Project) =
 
 fun Project.findClassUsages(className: String): Set<FileObject> {
     val handle = this.findType(className)
-    
+
     return JavaEnvironment.CLASSPATH_INFO[this]!!.classIndex.getResources(handle.elementHandle,
             ClassIndex.SearchKind.values().toSet(), hashSetOf(ClassIndex.SearchScope.SOURCE))
 }
 
 fun Project.getFileObjectForFqName(fqName: String): FileObject? {
     val handle = this.findType(fqName)
-    
+
     val fObjects = JavaEnvironment.CLASSPATH_INFO[this]!!.classIndex.getResources(handle.elementHandle,
             setOf(ClassIndex.SearchKind.IMPLEMENTORS), setOf(ClassIndex.SearchScope.DEPENDENCIES),
             setOf(ClassIndex.ResourceType.BINARY))
-    
-    return fObjects.elementAt(0)?: null
+
+    return fObjects.elementAt(0) ?: null
 }
 
 fun ElemHandle<*>.getJavaDoc(project: Project) =

@@ -172,7 +172,7 @@ public class KotlinProjectHelper {
             extendedClassPaths.put(p, new MavenExtendedClassPath(p));
         }
         updateFullClassPath(project);
-        JavaEnvironment.Companion.updateClasspathInfo(p);
+        JavaEnvironment.INSTANCE.updateClasspathInfo(p);
         KotlinEnvironment.updateKotlinEnvironment(project);
     }
     

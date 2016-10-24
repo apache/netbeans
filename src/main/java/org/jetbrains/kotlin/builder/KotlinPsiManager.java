@@ -49,8 +49,7 @@ public class KotlinPsiManager {
     
     public static final KotlinPsiManager INSTANCE = new KotlinPsiManager();
     
-    private final Map<FileObject, KtFile> cachedKtFiles = 
-            new HashMap<FileObject, KtFile>();
+    private final Map<FileObject, KtFile> cachedKtFiles = new HashMap<>();
     
     private KotlinPsiManager(){}
     

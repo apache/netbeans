@@ -85,8 +85,11 @@ public class TypeSearchers {
             if (type == null) {
                 return;
             }
-            SourceUtils.getBound((WildcardType) type);
-            TypeMirror boundMirror = SourceUtils.getBound((WildcardType) type);
+            
+            TypeMirror boundMirror = ((WildcardType) type).getExtendsBound();
+            if (boundMirror == null) {
+                boundMirror = ((WildcardType) type).getSuperBound();
+            }
             
             bound = boundMirror != null ? NetBeansJavaType.create(
                     TypeMirrorHandle.create(boundMirror), project) : null;

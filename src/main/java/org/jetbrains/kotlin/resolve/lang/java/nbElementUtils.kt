@@ -45,6 +45,7 @@ import org.openide.filesystems.FileObject
 import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.TypeMirrorHandleEquals
 import javax.lang.model.type.DeclaredType
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.JavaDocSearcher
+import org.netbeans.api.java.source.ScanUtils
 
 object JavaEnvironment {
     val JAVA_SOURCE = hashMapOf<Project, JavaSource>()
@@ -102,8 +103,8 @@ fun Project.findType(fqName: String): ElemHandle<TypeElement>? {
 
 fun <T : Task<CompilationController>> T.execute(project: Project): T {
     JavaEnvironment.checkJavaSource(project)
-    JavaEnvironment.JAVA_SOURCE[project]!!.runUserActionTask(this, true)
-
+    ScanUtils.waitUserActionTask(JavaEnvironment.JAVA_SOURCE[project], this)
+    
     return this
 }
 

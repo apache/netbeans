@@ -59,7 +59,7 @@ public class BundledCompiler {
     
     public static void getKotlinc() {
         try {
-            InputStream inputStream = BundledCompiler.class.getClassLoader().getResourceAsStream("/org/jetbrains/kotlin/kotlinc/kotlinc.zip");
+            InputStream inputStream = BundledCompiler.class.getClassLoader().getResourceAsStream("org/jetbrains/kotlin/kotlinc/kotlinc.zip");
 
             File userDirectory = Places.getUserDirectory();
             if (userDirectory == null) {

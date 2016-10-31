@@ -96,6 +96,10 @@ public class ElemHandle<T extends Element> {
         return new ElemHandle(element, project);
     }
     
+    public static <T extends Element> ElemHandle<T> create(final ElementHandle<T> element, Project project) {
+        return new ElemHandle(element, project);
+    }
+    
     public static ElemHandle<PackageElement> createPackageElementHandle (
         final String packageName, Project project) {
         ElementHandle elemHandle = ElementHandle.createPackageElementHandle(packageName);

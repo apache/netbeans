@@ -85,15 +85,27 @@ fun String.getPackages(project: Project): Set<String> {
             getPackageNames(this, false, hashSetOf(ClassIndex.SearchScope.SOURCE, ClassIndex.SearchScope.DEPENDENCIES))
 }
 
+fun Project.findType(fqName: String): ElemHandle<TypeElement>? {
+    JavaEnvironment.checkJavaSource(this)
+    val classIndex = JavaEnvironment.JAVA_SOURCE[this]!!.getClasspathInfo().getClassIndex()
+    
+    val name = fqName.substringAfterLast(".", fqName)
+    
+    val declaredTypes = classIndex.getDeclaredTypes(name, ClassIndex.NameKind.SIMPLE_NAME,
+            setOf(ClassIndex.SearchScope.DEPENDENCIES, ClassIndex.SearchScope.SOURCE))
+    
+    val elementHandle = declaredTypes.filter { it.qualifiedName == fqName }
+            .firstOrNull() ?: return null
+    
+    return ElemHandle.create(elementHandle, this)
+}
+
 fun <T : Task<CompilationController>> T.execute(project: Project): T {
     JavaEnvironment.checkJavaSource(project)
     JavaEnvironment.JAVA_SOURCE[project]!!.runUserActionTask(this, true)
 
     return this
 }
-
-fun Project.findType(name: String) =
-        TypeElementSearcher(name, this).execute(this).element
 
 fun Project.findTypeMirrorHandle(name: String) =
         TypeMirrorHandleSearcher(name).execute(this).handle
@@ -136,14 +148,14 @@ fun ElemHandle<*>.isDeprecated(project: Project) =
         IsDeprecatedSearcher(this).execute(project).isDeprecated
 
 fun Project.findClassUsages(className: String): Set<FileObject> {
-    val handle = this.findType(className)
+    val handle = this.findType(className) ?: return emptySet()
 
     return JavaEnvironment.CLASSPATH_INFO[this]!!.classIndex.getResources(handle.elementHandle,
             ClassIndex.SearchKind.values().toSet(), hashSetOf(ClassIndex.SearchScope.SOURCE))
 }
 
 fun Project.getFileObjectForFqName(fqName: String): FileObject? {
-    val handle = this.findType(fqName)
+    val handle = this.findType(fqName) ?: return null
 
     val fObjects = JavaEnvironment.CLASSPATH_INFO[this]!!.classIndex.getResources(handle.elementHandle,
             setOf(ClassIndex.SearchKind.IMPLEMENTORS), setOf(ClassIndex.SearchScope.DEPENDENCIES),

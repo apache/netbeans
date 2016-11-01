@@ -103,7 +103,7 @@ fun Project.findType(fqName: String): ElemHandle<TypeElement>? {
 
 fun <T : Task<CompilationController>> T.execute(project: Project): T {
     JavaEnvironment.checkJavaSource(project)
-    ScanUtils.waitUserActionTask(JavaEnvironment.JAVA_SOURCE[project], this)
+    JavaEnvironment.JAVA_SOURCE[project]!!.runUserActionTask(this, true)
     
     return this
 }
@@ -134,6 +134,15 @@ fun Project.findFQName(name: String): List<String> {
                     setOf(ClassIndex.SearchScope.SOURCE,
                             ClassIndex.SearchScope.DEPENDENCIES))
             .map { it.qualifiedName }
+}
+
+fun Project.findTypes(prefix: String): List<ElementHandle<TypeElement>> {
+    JavaEnvironment.checkJavaSource(this)
+    
+    return JavaEnvironment.CLASSPATH_INFO[this]!!.classIndex.
+            getDeclaredTypes(prefix, ClassIndex.NameKind.CASE_INSENSITIVE_PREFIX,
+                    setOf(ClassIndex.SearchScope.SOURCE,
+                            ClassIndex.SearchScope.DEPENDENCIES)).toList()
 }
 
 fun ElementHandle<*>.openInEditor(project: Project) =

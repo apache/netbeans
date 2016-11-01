@@ -33,6 +33,10 @@ public class KotlinImageProvider {
     
     private KotlinImageProvider(){}
     
+    public ImageIcon getTypeImage() {
+        return new ImageIcon(ImageUtilities.loadImage(imagesLocation + "class.png"));
+    }
+    
     public ImageIcon getImage(DeclarationDescriptor descriptor){
         if (descriptor instanceof ClassDescriptor){
             ClassDescriptor classDescriptor = (ClassDescriptor) descriptor;

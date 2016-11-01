@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.lang.model.element.TypeElement;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
@@ -65,6 +66,7 @@ import org.jetbrains.kotlin.resolve.scopes.utils.ScopeUtilsKt;
 import org.jetbrains.kotlin.idea.codeInsight.ReferenceVariantsHelper;
 import org.jetbrains.kotlin.load.java.descriptors.JavaConstructorDescriptor;
 import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter;
+import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.CompletionProposal;
 
@@ -328,7 +330,14 @@ public class KotlinCompletionUtils {
         PsiElement psiElement = ktFile.findElementAt(identOffset);
         if (psiElement != null) {
             proposals.addAll(KotlinKeywordCompletionKt.generateKeywordProposals(identifierPart, psiElement, identOffset, prefix));
+            KtSimpleNameExpression simpleNameExpression = 
+                    PsiTreeUtil.getParentOfType(psiElement, KtSimpleNameExpression.class);
+            if (simpleNameExpression != null) {
+                proposals.addAll(NonImportedCompletionKt
+                        .generateNonImportedCompletionProposals(prefix, ktFile, simpleNameExpression, project, identOffset));
+            }
         }
+        
         
         return proposals; 
     }

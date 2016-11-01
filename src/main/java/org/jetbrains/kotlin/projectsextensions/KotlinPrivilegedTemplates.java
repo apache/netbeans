@@ -28,6 +28,8 @@ public class KotlinPrivilegedTemplates implements PrivilegedTemplates {
             "Templates/Kotlin/class.kt",
             "Templates/Kotlin/interface.kt",
             "Templates/Kotlin/content.kt",
+            "Templates/Kotlin/enum.kt",
+            "Templates/Kotlin/object.kt",
             "Templates/Classes/Class.java",
             "Templates/Classes/Package", 
             "Templates/Classes/Interface.java", 

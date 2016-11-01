@@ -86,5 +86,5 @@ class NonImportedCompletionProposal(val identifierPart: String,
 
     override fun getRhsHtml(hf: HtmlFormatter?) = ""
 
-    override fun getLhsHtml(hf: HtmlFormatter?) = type.qualifiedName
+    override fun getLhsHtml(hf: HtmlFormatter?) = "<i>${type.qualifiedName}</i>"
 }

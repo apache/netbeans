@@ -38,15 +38,16 @@ import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
+import org.openide.util.HelpCtx;
 
 public abstract class KtDefaultWizardIterator implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
 
     private final String type;
-    
+
     public KtDefaultWizardIterator(String type) {
         this.type = type;
     }
-    
+
     private int index;
 
     private WizardDescriptor wizard;
@@ -57,8 +58,8 @@ public abstract class KtDefaultWizardIterator implements WizardDescriptor.Instan
         Project project = Templates.getProject(wizard);
         Sources sources = (Sources) project.getLookup().lookup(Sources.class);
         SourceGroup[] groups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-        packageChooserPanel = PackageChooser.createPackageChooser(project, groups, new KtWizardPanel1(), type + " name");
-        
+        packageChooserPanel = PackageChooser.createPackageChooser(project, groups, new KtWizardPanel(), type + " name");
+
         if (panels == null) {
             panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
             panels.add(packageChooserPanel);
@@ -87,22 +88,22 @@ public abstract class KtDefaultWizardIterator implements WizardDescriptor.Instan
     @Override
     public Set<?> instantiate() throws IOException {
         Map<String, String> args = new HashMap<String, String>();
-        
+
         String packageName = PackageChooser.pack;
         args.put("package", packageName);
-        
+
         FileObject template = Templates.getTemplate(wizard);
         DataObject dTemplate = DataObject.find(template);
-        
+
         FileObject dir = Templates.getTargetFolder(wizard);
         DataFolder df = DataFolder.findFolder(dir);
-        
+
         String targetName = Templates.getTargetName(wizard);
-        
+
         DataObject dobj = dTemplate.createFromTemplate(df, targetName, args);
-        
+
         FileObject createdFile = dobj.getPrimaryFile();
-        
+
         return Collections.singleton(createdFile);
     }
 
@@ -181,6 +182,41 @@ public abstract class KtDefaultWizardIterator implements WizardDescriptor.Instan
             }
         }
         return res;
+    }
+
+    private static class KtWizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
+
+        private KtVisualPanel1 component;
+
+        @Override
+        public KtVisualPanel1 getComponent() {
+            if (component == null) {
+                component = new KtVisualPanel1();
+            }
+            return component;
+        }
+
+        @Override
+        public HelpCtx getHelp() {
+            return HelpCtx.DEFAULT_HELP;
+        }
+
+        @Override
+        public boolean isValid() {
+            return true;
+        }
+
+        @Override
+        public void addChangeListener(ChangeListener l) {}
+
+        @Override
+        public void removeChangeListener(ChangeListener l) {}
+
+        @Override
+        public void readSettings(WizardDescriptor wiz) {}
+
+        @Override
+        public void storeSettings(WizardDescriptor wiz) {}
     }
 
 }

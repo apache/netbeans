@@ -37,6 +37,7 @@ import org.jetbrains.kotlin.resolve.lang.java.resolver.NetBeansJavaSourceElement
 import org.netbeans.api.project.Project
 import org.jetbrains.kotlin.resolve.lang.java.getJavaDoc
 import javax.swing.text.Document
+import org.netbeans.modules.csl.api.ElementKind
 
 class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int, 
                                val descriptor: DeclarationDescriptor, val doc: StyledDocument,
@@ -67,6 +68,7 @@ class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
         
         return null
     }
+    
     override fun getLhsHtml(formatter: HtmlFormatter) = proposalName
     override fun getRhsHtml(formatter: HtmlFormatter) = type
     override fun getName() = proposalName
@@ -75,15 +77,20 @@ class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
     override fun getAnchorOffset() = idenStartOffset
     override fun getIcon() = FIELD_ICON
     
-    override fun getSortPrioOverride(): Int {
-        return when(descriptor) {
-            is VariableDescriptor -> 20
-            is FunctionDescriptor -> 30
-            is ClassDescriptor -> 40
-            is PackageFragmentDescriptor -> 10
-            is PackageViewDescriptor -> 10
-            else -> 150
-        }
+    override fun getKind() = when(descriptor) {
+        is VariableDescriptor -> ElementKind.FIELD
+        is FunctionDescriptor -> ElementKind.METHOD
+        is ClassDescriptor -> ElementKind.CLASS
+        is PackageFragmentDescriptor, is PackageViewDescriptor -> ElementKind.PACKAGE
+        else -> ElementKind.OTHER
+    }
+    
+    override fun getSortPrioOverride() = when(descriptor) {
+        is VariableDescriptor -> 20
+        is FunctionDescriptor -> 30
+        is ClassDescriptor -> 40
+        is PackageFragmentDescriptor, is PackageViewDescriptor -> 10
+        else -> 150
     }
     
     private fun functionAction(doc: StyledDocument) {

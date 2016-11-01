@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.file.wizard.packagechooser;
+package org.jetbrains.kotlin.file.templates.packagechooser;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -342,7 +342,7 @@ private static final String DEFAULT_NEW_PACKAGE_NAME =
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 0);
         jPanel1.add(documentNameTextField, gridBagConstraints);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/jetbrains/kotlin/file/wizard/packagechooser/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/jetbrains/kotlin/file/templates/packagechooser/Bundle"); // NOI18N
         documentNameTextField.getAccessibleContext().setAccessibleDescription(bundle.getString("AD_documentNameTextField")); // NOI18N
 
         gridBagConstraints = new java.awt.GridBagConstraints();

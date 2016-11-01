@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  ****************************************************************************** */
-package org.jetbrains.kotlin.file.wizard;
+package org.jetbrains.kotlin.file.templates.defaultwizard;
 
 import java.awt.Component;
 import java.io.IOException;
@@ -27,8 +27,8 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
-import org.jetbrains.kotlin.file.wizard.packagechooser.PackageChooser;
-import org.jetbrains.kotlin.file.wizard.packagechooser.TargetChooserPanel;
+import org.jetbrains.kotlin.file.templates.packagechooser.PackageChooser;
+import org.jetbrains.kotlin.file.templates.packagechooser.TargetChooserPanel;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.SourceGroup;

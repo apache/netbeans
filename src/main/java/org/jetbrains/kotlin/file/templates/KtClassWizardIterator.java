@@ -1,4 +1,4 @@
-/** *****************************************************************************
+/*******************************************************************************
  * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- ****************************************************************************** */
-package org.jetbrains.kotlin.file.wizard.interfacewizard;
+ *******************************************************************************/
+package org.jetbrains.kotlin.file.templates;
 
-import org.jetbrains.kotlin.file.wizard.KtDefaultWizardIterator;
+import org.jetbrains.kotlin.file.templates.defaultwizard.KtDefaultWizardIterator;
 import org.netbeans.api.templates.TemplateRegistration;
-import org.openide.util.NbBundle;
 
 @TemplateRegistration(folder = "Kotlin", 
-        displayName = "Kotlin interface", 
-        content = "interface.kt",
+        displayName = "Kotlin class", 
+        content = "class.kt",
         iconBase = "org/jetbrains/kotlin/kt.png", 
-        description = "ktInterface.html",
+        description = "ktClass.html",
         scriptEngine="freemarker")
-@NbBundle.Messages("KtClassWizardIterator_displayName=Kotlin class")
-public class KtInterfaceWizardIterator extends KtDefaultWizardIterator {
-    public KtInterfaceWizardIterator() {
-        super("Interface");
+public final class KtClassWizardIterator extends KtDefaultWizardIterator {
+    public KtClassWizardIterator() {
+        super("Class");
     }
 }

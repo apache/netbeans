@@ -14,20 +14,26 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.file.wizard;
+package org.jetbrains.kotlin.file.templates.packagechooser;
 
-import org.netbeans.api.templates.TemplateRegistration;
-import org.openide.util.NbBundle.Messages;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.SourceGroup;
+import org.openide.WizardDescriptor;
 
-@TemplateRegistration(folder = "Kotlin", 
-        displayName = "Kotlin file",
-        content = "content.kt", 
-        iconBase = "org/jetbrains/kotlin/kt.png", 
-        description = "kt.html",
-        scriptEngine="freemarker")
-@Messages("KtWizardIterator_displayName=Simple Kotlin File")
-public final class KtWizardIterator extends KtDefaultWizardIterator {
-    public KtWizardIterator() {
-        super("File");
+/**
+ *
+ * @author Alexander.Baratynski
+ */
+public class PackageChooser {
+    
+    public static String pack = null;
+    
+    public static TargetChooserPanel createPackageChooser(Project project, SourceGroup[] folders, 
+        WizardDescriptor.Panel<WizardDescriptor> bottomPanel, String type) {
+        if (folders.length == 0) {
+            throw new IllegalArgumentException("No folders selected");
+        }
+        return new TargetChooserPanel(project, folders, bottomPanel, Type.FILE, false, type);
     }
+    
 }

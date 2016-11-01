@@ -14,10 +14,21 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.file.wizard.packagechooser;
+package org.jetbrains.kotlin.file.templates;
 
-/**
- *
- * @author Alexander.Baratynski
- */
-public enum Type {FILE, PACKAGE, PKG_INFO}
+import org.jetbrains.kotlin.file.templates.defaultwizard.KtDefaultWizardIterator;
+import org.netbeans.api.templates.TemplateRegistration;
+import org.openide.util.NbBundle.Messages;
+
+@TemplateRegistration(folder = "Kotlin", 
+        displayName = "Kotlin file",
+        content = "content.kt", 
+        iconBase = "org/jetbrains/kotlin/kt.png", 
+        description = "kt.html",
+        scriptEngine="freemarker")
+@Messages("KtWizardIterator_displayName=Simple Kotlin File")
+public final class KtWizardIterator extends KtDefaultWizardIterator {
+    public KtWizardIterator() {
+        super("File");
+    }
+}

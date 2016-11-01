@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.file.wizard;
+package org.jetbrains.kotlin.file.templates.defaultwizard;
 
 import javax.swing.JPanel;
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.file.wizard.packagechooser;
+package org.jetbrains.kotlin.file.templates.packagechooser;
 
 import java.awt.Component;
 import java.io.File;

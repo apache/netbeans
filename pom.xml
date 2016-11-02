@@ -108,6 +108,21 @@
               <packaging>jar</packaging>  
               <generatePom>true</generatePom> 
             </configuration> 
+          </execution>  
+          <execution> 
+            <id>inst6</id>  
+            <phase>validate</phase>  
+            <goals> 
+              <goal>install-file</goal> 
+            </goals>  
+            <configuration> 
+              <file>${project.basedir}/lib/kotlin-converter.jar</file>  
+              <groupId>org.jetbrains.kotlin</groupId>  
+              <artifactId>kotlin-converter</artifactId>  
+              <version>1.0</version>  
+              <packaging>jar</packaging>  
+              <generatePom>true</generatePom> 
+            </configuration> 
           </execution> 
         </executions> 
       </plugin>  
@@ -220,6 +235,12 @@
     <dependency> 
       <groupId>org.jetbrains.kotlin</groupId>  
       <artifactId>intellij-core</artifactId>  
+      <version>1.0</version>  
+      <type>jar</type> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.jetbrains.kotlin</groupId>  
+      <artifactId>kotlin-converter</artifactId>  
       <version>1.0</version>  
       <type>jar</type> 
     </dependency>  

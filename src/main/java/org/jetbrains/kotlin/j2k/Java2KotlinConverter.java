@@ -16,24 +16,104 @@
  ****************************************************************************** */
 package org.jetbrains.kotlin.j2k;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
+import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.project.Project;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.cookies.OpenCookie;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
+import org.openide.util.Exceptions;
 
 public class Java2KotlinConverter {
 
-    public static void convert(Document doc, Project proj) throws BadLocationException {
-        String contents = doc.getText(0, doc.getLength());
-        String translatedCode = JavaToKotlinTranslator.INSTANCE.prettify(
-            JavaToKotlinTranslatorKt.translateToKotlin(contents, 
-                    KotlinEnvironment.getEnvironment(proj).getProject()));
-        NotifyDescriptor nd = new NotifyDescriptor.Message(translatedCode, 
-                NotifyDescriptor.INFORMATION_MESSAGE);
-        DialogDisplayer.getDefault().notifyLater(
-                nd);
+    public static void convert(Document doc, Project proj, FileObject fo) {
+        String translatedCode = getTranslatedCode(doc, proj);
+        if (translatedCode == null) {
+            showError("Error while converting to Kotlin");
+            return;
+        }
+        
+        String newKotlinFilePath = fo.getParent().getPath() + 
+                ProjectUtils.FILE_SEPARATOR + fo.getName() + ".kt";
+        
+        File kotlinFile = new File(newKotlinFilePath);
+        if (kotlinFile.exists()) {
+            showError(newKotlinFilePath + " already exists");
+            return;
+        }
+        
+        try {
+            kotlinFile.createNewFile();
+        } catch (IOException ex) {
+            showError("Error");
+            return;
+        }
+        
+        if (!addContent(kotlinFile, translatedCode)) {
+            showError("Couldn't add content to Kotlin file");
+            return;
+        }
+        
+        try {
+            fo.delete();
+        } catch (IOException ex) {
+            showError("Couldn't delete Java file");
+            return;
+        }
+        
+        FileObject kotlinFO = FileUtil.toFileObject(kotlinFile);
+        try {
+            DataObject.find(kotlinFO).getLookup().lookup(OpenCookie.class).open();
+        } catch (DataObjectNotFoundException ex) {
+            KotlinLogger.INSTANCE.logException("Cannot open Kotlin file", ex);
+        }
+    }
+    
+    private static boolean addContent(File file, String code) {
+        BufferedWriter writer = null;
+        try {
+            writer = Files.newBufferedWriter(file.toPath());
+            writer.write(code);
+            writer.flush();
+            return true;
+        } catch (IOException ex) {
+            return false;
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+    }
+    
+    private static void showError(String message) {
+        NotifyDescriptor nd = new NotifyDescriptor.Message(message, NotifyDescriptor.ERROR_MESSAGE);
+        DialogDisplayer.getDefault().notifyLater(nd);
+    }
+    
+    private static String getTranslatedCode(Document doc, Project proj) {
+        try {
+            String contents = doc.getText(0, doc.getLength());
+            return JavaToKotlinTranslator.INSTANCE.prettify(
+                    JavaToKotlinTranslatorKt.translateToKotlin(contents,
+                            KotlinEnvironment.getEnvironment(proj).getProject()));
+        } catch (BadLocationException ex) {
+            return null;
+        }
     }
     
 }

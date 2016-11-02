@@ -19,10 +19,11 @@ package org.jetbrains.kotlin.j2k;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.project.Project;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.loaders.DataObject;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -49,14 +50,31 @@ public final class ConvertToKotlinAction implements ActionListener {
         this.context = context;
     }
 
+    private void showDialog(FileObject fo, Document doc, Project project) {
+        NotifyDescriptor nd = new NotifyDescriptor.Confirmation(
+            "Convert to Kotlin. Do you want to continue?", 
+                NotifyDescriptor.YES_NO_OPTION);
+        Object result = DialogDisplayer.getDefault().notify(nd);
+        if (result == NotifyDescriptor.YES_OPTION) {
+            Java2KotlinConverter.convert(doc, project, fo);
+        }
+    }
+    
     @Override
     public void actionPerformed(ActionEvent ev) {
         FileObject fo = context.getPrimaryFile();
         try {
             Document doc = ProjectUtils.getDocumentFromFileObject(fo);
+            if (doc == null) {
+                return;
+            }
             Project project = ProjectUtils.getKotlinProjectForFileObject(fo);
-            Java2KotlinConverter.convert(doc, project);
-        } catch (IOException | BadLocationException ex) {
+            if (project == null) {
+                return;
+            }
+            
+            showDialog(fo, doc, project);
+        } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         } 
     }

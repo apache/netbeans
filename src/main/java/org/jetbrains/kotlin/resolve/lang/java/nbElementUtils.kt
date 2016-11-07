@@ -46,6 +46,9 @@ import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.TypeMirrorHandl
 import javax.lang.model.type.DeclaredType
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.JavaDocSearcher
 import org.netbeans.api.java.source.ScanUtils
+import org.netbeans.api.java.source.CancellableTask
+import org.netbeans.api.java.source.WorkingCopy
+import org.netbeans.api.java.source.ModificationResult
 
 object JavaEnvironment {
     val JAVA_SOURCE = hashMapOf<Project, JavaSource>()
@@ -106,6 +109,11 @@ fun <T : Task<CompilationController>> T.execute(project: Project): T {
     JavaEnvironment.JAVA_SOURCE[project]!!.runUserActionTask(this, true)
     
     return this
+}
+
+fun <T : CancellableTask<WorkingCopy>> T.modify(file: FileObject): ModificationResult {
+    val javaSource = JavaSource.forFileObject(file)
+    return javaSource.runModificationTask(this)
 }
 
 fun Project.findTypeMirrorHandle(name: String) =

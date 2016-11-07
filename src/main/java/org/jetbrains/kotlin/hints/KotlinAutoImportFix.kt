@@ -38,9 +38,14 @@ class KotlinAutoImportFix(val fqName: String, val parserResult: KotlinParserResu
         val packageDirective = ktFile.packageDirective
         
         if (importDirectives.isNotEmpty()) {
-            val importDirective = importDirectives.last()
-            doc.insertString(importDirective.textOffset + importDirective.textLength, 
-                    "\nimport ${fqName}", null)
+            val offset = getOffsetToInsert(importDirectives, fqName)
+            if (offset != null) {
+                doc.insertString(offset, 
+                        "import ${fqName}\n", null)
+            } else {
+                doc.insertString(importDirectives.last().textRange.endOffset,
+                        "\nimport $fqName", null)
+            }
         } else if (packageDirective != null) {
             doc.insertString(packageDirective.textOffset + packageDirective.textLength, 
                     "\n\nimport ${fqName}", null)
@@ -48,4 +53,15 @@ class KotlinAutoImportFix(val fqName: String, val parserResult: KotlinParserResu
             doc.insertString(0, "import ${fqName}", null)
         }
     }
+    
+    private fun getOffsetToInsert(importDirectives: List<KtImportDirective>, fqName: String): Int? {
+        importDirectives.filter { it.importedFqName != null }
+                .forEachIndexed { index, it ->
+                    if (it.importedFqName!!.asString().compareTo(fqName) > 0) {
+                        return it.textRange.startOffset
+                    }
+                }
+        return return null
+    }
+    
 }

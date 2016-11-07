@@ -71,7 +71,7 @@ public class KotlinRenameRefactoring extends ProgressProviderAdapter implements 
         
         Map<FileObject, List<OffsetRange>> renameMap = RenamePerformer.getRenameRefactoringMap(fo, psi, newName);
         
-        bag.registerTransaction(new KotlinTransaction(renameMap, newName, psi.getText()));
+        bag.registerTransaction(RenamePerformer.getTransaction(renameMap, newName, psi.getText()));
         
         bag.getSession().doRefactoring(true);
         

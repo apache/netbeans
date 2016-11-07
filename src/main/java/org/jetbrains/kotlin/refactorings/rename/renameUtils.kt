@@ -36,6 +36,10 @@ import org.openide.filesystems.FileUtil
 import org.openide.text.CloneableEditorSupport
 import org.openide.text.PositionBounds
 import org.openide.text.PositionRef
+import org.netbeans.modules.csl.spi.support.ModificationResult
+import org.netbeans.modules.csl.spi.support.ModificationResult.Difference
+import org.netbeans.modules.refactoring.spi.Transaction
+import org.netbeans.modules.refactoring.spi.RefactoringCommit
 
 /*
   @author Alexander.Baratynski
@@ -59,23 +63,30 @@ fun getRenameRefactoringMap(fo: FileObject, psi: PsiElement, newName: String): M
         val occurrencesRanges = OccurrencesUtils.search(searchingElements, it)
         val f = File(it.virtualFile.path)
         val file = FileUtil.toFileObject(f)
-        if (file != null) ranges.put(file, occurrencesRanges)
+        if (file != null && occurrencesRanges.isNotEmpty()) ranges.put(file, occurrencesRanges)
     }
     
     return ranges
 }
 
 fun createPositionBoundsForFO(fo: FileObject, ranges: List<OffsetRange>): List<PositionBounds> {
-    val bounds = arrayListOf<PositionBounds>()
+    val ces = GsfUtilities.findCloneableEditorSupport(fo) ?: return emptyList()
     
-    val ces = GsfUtilities.findCloneableEditorSupport(fo)
-    if (ces == null) return emptyList()
-    
-    ranges.forEach{ 
-        val startRef = ces.createPositionRef(it.start, Position.Bias.Forward)
-        val endRef = ces.createPositionRef(it.end, Position.Bias.Forward)
-        bounds.add(PositionBounds(startRef, endRef))
+    return ranges.map {
+        PositionBounds(
+                ces.createPositionRef(it.start, Position.Bias.Forward),
+                ces.createPositionRef(it.end, Position.Bias.Forward)
+        )
+    }
+}
+
+fun getTransaction(renameMap: Map<FileObject, List<OffsetRange>>, 
+                   newName: String, oldName: String): Transaction {
+    val result = ModificationResult()
+    for ((file, range) in renameMap) {
+        val posBounds = createPositionBoundsForFO(file, range)
+        result.addDifferences(file, posBounds.map{ Difference(Difference.Kind.CHANGE, it.begin, it.end, oldName, newName) })
     }
     
-    return bounds
+    return RefactoringCommit(listOf(result))
 }

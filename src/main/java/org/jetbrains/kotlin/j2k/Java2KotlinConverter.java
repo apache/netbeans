@@ -22,8 +22,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.jetbrains.kotlin.formatting.KotlinFormatterUtils;
 import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
+import org.jetbrains.kotlin.psi.KtFile;
+import org.jetbrains.kotlin.psi.KtPsiFactory;
+import org.jetbrains.kotlin.psi.KtPsiFactoryKt;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.project.Project;
 import org.openide.DialogDisplayer;
@@ -60,7 +64,9 @@ public class Java2KotlinConverter {
             return;
         }
         
-        if (!addContent(kotlinFile, translatedCode)) {
+        String formattedCode = getFormattedCode(translatedCode, kotlinFile.getName(), proj);
+        
+        if (!addContent(kotlinFile, formattedCode)) {
             showError("Couldn't add content to Kotlin file");
             return;
         }
@@ -100,6 +106,15 @@ public class Java2KotlinConverter {
         }
     }
     
+    private static String getFormattedCode(String code, String fileName, Project project) {
+        KtFile ktFile = new KtPsiFactory(
+                KotlinEnvironment.getEnvironment(project).getProject()).createFile(code);
+        String formattedCode = KotlinFormatterUtils.formatCode(code, fileName, 
+                KtPsiFactoryKt.KtPsiFactory(ktFile), "\n");
+        
+        return formattedCode;
+    }
+    
     private static void showError(String message) {
         NotifyDescriptor nd = new NotifyDescriptor.Message(message, NotifyDescriptor.ERROR_MESSAGE);
         DialogDisplayer.getDefault().notifyLater(nd);
@@ -108,9 +123,8 @@ public class Java2KotlinConverter {
     private static String getTranslatedCode(Document doc, Project proj) {
         try {
             String contents = doc.getText(0, doc.getLength());
-            return JavaToKotlinTranslator.INSTANCE.prettify(
-                    JavaToKotlinTranslatorKt.translateToKotlin(contents,
-                            KotlinEnvironment.getEnvironment(proj).getProject()));
+            return JavaToKotlinTranslatorKt.translateToKotlin(contents,
+                            KotlinEnvironment.getEnvironment(proj).getProject());
         } catch (BadLocationException ex) {
             return null;
         }

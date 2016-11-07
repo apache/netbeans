@@ -113,40 +113,7 @@ public class ReferenceUtils {
     }
     
     public static List<KotlinReference> createReferences(KtReferenceExpression element){
-        List<KotlinReference> refs = Lists.newArrayList();
-        if (element instanceof KtSimpleNameExpression){
-            refs.add(new KotlinSimpleNameReference((KtSimpleNameExpression) element));
-        } else if (element instanceof KtCallExpression){
-            refs.add(new KotlinInvokeFunctionReference(((KtCallExpression)element)));
-        } else if (element instanceof KtConstructorDelegationReferenceExpression){
-            refs.add(new KotlinConstructorDelegationReference((
-                    (KtConstructorDelegationReferenceExpression) element)));
-        } else if (element instanceof KtNameReferenceExpression){
-            if (((KtNameReferenceExpression) element).getReferencedNameElementType() != KtTokens.IDENTIFIER){
-                return Collections.emptyList();
-            }
-            
-            ReferenceAccess access = getReadWriteAccess(element);
-            switch(access){
-                case READ:
-                    refs.add(new KotlinSyntheticPropertyAccessorReference.
-                            Getter((KtNameReferenceExpression) element));
-                    break;
-                case WRITE:
-                    refs.add(new KotlinSyntheticPropertyAccessorReference.
-                            Setter((KtNameReferenceExpression) element));
-                    break;
-                case READ_WRITE:
-                    refs.add(new KotlinSyntheticPropertyAccessorReference.
-                            Getter((KtNameReferenceExpression) element));
-                    refs.add(new KotlinSyntheticPropertyAccessorReference.
-                            Setter((KtNameReferenceExpression) element));
-                    break;
-            }
-            
-        } 
-        
-        return refs;
+        return ReferenceUtilsKt.createReferences(element);
     }
     
     public static Collection<? extends DeclarationDescriptor> getReferenceTargets(KtReferenceExpression expression, 

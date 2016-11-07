@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import kotlin.Pair;
 import org.jetbrains.kotlin.descriptors.SourceElement;
-import org.jetbrains.kotlin.navigation.references.ReferenceUtils;
+import org.jetbrains.kotlin.navigation.references.ReferenceUtilsKt;
 import org.jetbrains.kotlin.psi.KtElement;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtNamedDeclaration;
@@ -113,7 +113,7 @@ public class OccurrencesUtils {
                 continue;
             }
 
-            List<? extends SourceElement> sourceElements = ReferenceUtils.resolveToSourceDeclaration(element);
+            List<? extends SourceElement> sourceElements = ReferenceUtilsKt.resolveToSourceDeclaration(element);
             if (sourceElements.isEmpty()) {
                 continue;
             }
@@ -148,7 +148,7 @@ public class OccurrencesUtils {
     }
 
     public static List<? extends SourceElement> getSearchingElements(List<? extends SourceElement> sourceElements) {
-        List<SourceElement> classOrObjects = ReferenceUtils.getContainingClassOrObjectForConstructor(sourceElements);
+        List<? extends SourceElement> classOrObjects = ReferenceUtilsKt.getContainingClassOrObjectForConstructor(sourceElements);
         return classOrObjects.isEmpty() ? sourceElements : classOrObjects;
     }
 

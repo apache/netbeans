@@ -37,7 +37,7 @@ public class KotlinSimpleNameReference implements KotlinReference {
 
     @Override
     public Collection<? extends DeclarationDescriptor> getTargetDescriptors(BindingContext context) {
-        return ReferenceUtils.getReferenceTargets(expression, context);
+        return ReferenceUtilsKt.getReferenceTargets(expression, context);
     }
     
 }

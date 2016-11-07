@@ -23,7 +23,7 @@ import java.io.File
 import javax.swing.text.Position
 import org.jetbrains.kotlin.descriptors.SourceElement
 import org.jetbrains.kotlin.highlighter.occurrences.OccurrencesUtils
-import org.jetbrains.kotlin.navigation.references.ReferenceUtils
+import org.jetbrains.kotlin.navigation.references.resolveToSourceDeclaration
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement
@@ -48,7 +48,7 @@ fun getRenameRefactoringMap(fo: FileObject, psi: PsiElement, newName: String): M
     val ktElement: KtElement? = PsiTreeUtil.getNonStrictParentOfType(psi, KtElement::class.java)
     if (ktElement == null) return ranges
     
-    val sourceElements = ReferenceUtils.resolveToSourceDeclaration(ktElement)
+    val sourceElements = ktElement.resolveToSourceDeclaration()
     if (sourceElements.isEmpty()) return ranges
      
     val searchingElements = OccurrencesUtils.getSearchingElements(sourceElements)

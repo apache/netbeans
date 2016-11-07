@@ -32,6 +32,20 @@ import org.jetbrains.kotlin.psi.KtAnnotatedExpression
 import org.jetbrains.kotlin.psi.KtLabeledExpression
 import org.jetbrains.kotlin.psi.KtUnaryExpression
 import org.jetbrains.kotlin.utils.addToStdlib.constant
+import org.jetbrains.kotlin.descriptors.SourceElement
+import org.jetbrains.kotlin.resolve.source.KotlinSourceElement
+import org.jetbrains.kotlin.psi.KtConstructor
+import org.jetbrains.kotlin.resolve.BindingContext
+import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
+import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
+import org.jetbrains.kotlin.psi.KtDeclaration
+import org.netbeans.api.project.Project
+import org.jetbrains.kotlin.resolve.NetBeansDescriptorUtils
+import org.openide.filesystems.FileUtil
+import java.io.File
+import org.jetbrains.kotlin.utils.ProjectUtils
+import org.jetbrains.kotlin.resolve.KotlinAnalyzer
 
 inline private fun <reified T> ArrayList<KotlinReference>.register(e: KtElement, action: (T) -> KotlinReference) {
     if (e is T) this.add(action(e))
@@ -86,3 +100,50 @@ fun createReferences(element: KtReferenceExpression): List<KotlinReference> {
         }
     }
 }
+
+fun List<SourceElement>.getContainingClassOrObjectForConstructor() 
+        = this.filterIsInstance(KotlinSourceElement::class.java)
+              .map { it.psi }
+              .filterIsInstance(KtConstructor::class.java)
+              .map { KotlinSourceElement(it.getContainingClassOrObject()) }
+
+fun KtReferenceExpression.getReferenceTargets(context: BindingContext): Collection<DeclarationDescriptor> {
+    val targetDescriptor = context[BindingContext.REFERENCE_TARGET, this]
+    return if (targetDescriptor != null) {
+            listOf(targetDescriptor) 
+        } else {
+            context[BindingContext.AMBIGUOUS_REFERENCE_TARGET, this].orEmpty()
+        }
+}
+
+fun PsiElement.getReferenceExpression(): KtReferenceExpression? = PsiTreeUtil.getNonStrictParentOfType(this, KtReferenceExpression::class.java)
+
+fun KtElement.resolveToSourceDeclaration(): List<SourceElement> {
+    return when (this) {
+        is KtDeclaration -> listOf(KotlinSourceElement(this))
+        
+        else -> {
+            val referenceExpression = this.getReferenceExpression()
+            if (referenceExpression == null) return emptyList()
+            
+            val reference = createReferences(referenceExpression)
+            reference.resolveToSourceElements()
+        } 
+    }
+}
+
+fun List<KotlinReference>.resolveToSourceElements(): List<SourceElement> {
+    if (isEmpty()) return emptyList()
+    
+    val ktFile = first().referenceExpression.getContainingKtFile()
+    val path = ktFile.virtualFile.canonicalPath
+    
+    val file = FileUtil.toFileObject(File(path)) ?: return emptyList()
+    val project = ProjectUtils.getKotlinProjectForFileObject(file) ?: return emptyList()
+    
+    return this.resolveToSourceElements(
+            KotlinAnalyzer.analyzeFile(project, ktFile).analysisResult.bindingContext, project)
+}
+
+fun List<KotlinReference>.resolveToSourceElements(context: BindingContext, project: Project) = flatMap { it.getTargetDescriptors(context) }
+            .flatMap { NetBeansDescriptorUtils.descriptorToDeclarations(it, project) }

@@ -31,7 +31,7 @@ import javax.swing.text.StyledDocument;
 import kotlin.Pair;
 import org.jetbrains.kotlin.builder.KotlinPsiManager;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
-import org.jetbrains.kotlin.navigation.references.ReferenceUtils;
+import org.jetbrains.kotlin.navigation.references.ReferenceUtilsKt;
 import org.jetbrains.kotlin.resolve.NetBeansDescriptorUtils;
 import org.jetbrains.kotlin.resolve.lang.java.resolver.NetBeansJavaSourceElement;
 import org.jetbrains.kotlin.utils.LineEndUtil;
@@ -88,7 +88,7 @@ public class NavigationUtil {
             return null;
         }
         
-        return ReferenceUtils.getReferenceExpression(psiExpression);
+        return ReferenceUtilsKt.getReferenceExpression(psiExpression);
     }
     
     @Nullable

@@ -31,7 +31,7 @@ import kotlin.Pair;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.navigation.NavigationUtil;
 import org.jetbrains.kotlin.navigation.references.KotlinReference;
-import org.jetbrains.kotlin.navigation.references.ReferenceUtils;
+import org.jetbrains.kotlin.navigation.references.ReferenceUtilsKt;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
@@ -237,7 +237,7 @@ public class KotlinHyperlinkProvider implements HyperlinkProviderExt {
             return;
         }
         BindingContext context = analysisResult.getAnalysisResult().getBindingContext();
-        List<KotlinReference> refs = ReferenceUtils.createReferences(referenceExpression);
+        List<KotlinReference> refs = ReferenceUtilsKt.createReferences(referenceExpression);
         for (KotlinReference ref : refs) {
             Collection<? extends DeclarationDescriptor> descriptors = ref.getTargetDescriptors(context);
             for (DeclarationDescriptor desc : descriptors) {
@@ -274,7 +274,7 @@ public class KotlinHyperlinkProvider implements HyperlinkProviderExt {
             return null;
         }
         BindingContext context = analysisResult.getAnalysisResult().getBindingContext();
-        List<KotlinReference> refs = ReferenceUtils.createReferences(referenceExpression);
+        List<KotlinReference> refs = ReferenceUtilsKt.createReferences(referenceExpression);
 
         for (KotlinReference ref : refs) {
             Collection<? extends DeclarationDescriptor> descriptors = ref.getTargetDescriptors(context);

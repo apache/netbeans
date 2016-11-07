@@ -19,7 +19,7 @@ package org.jetbrains.kotlin.highlighter.occurrences
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
-import org.jetbrains.kotlin.navigation.references.ReferenceUtils
+import org.jetbrains.kotlin.navigation.references.resolveToSourceDeclaration
 import org.jetbrains.kotlin.descriptors.SourceElement
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtFile
@@ -62,7 +62,7 @@ class KotlinOccurrencesFinder : OccurrencesFinder<KotlinParserResult>() {
     }
     
     private fun findOccurrences(ktElement : KtElement, ktFile: KtFile) {
-        val sourceElements = ReferenceUtils.resolveToSourceDeclaration(ktElement)
+        val sourceElements = ktElement.resolveToSourceDeclaration()
         if (sourceElements.isEmpty()) return
         
         val searchingElements = OccurrencesUtils.getSearchingElements(sourceElements)

@@ -187,13 +187,7 @@ public class ProjectUtils {
         return files;
     }
 
-    public static Project getKotlinProjectForFileObject(FileObject file){
-        for (Project project : OpenProjects.getDefault().getOpenProjects()){
-            if (file.toURI().toString().contains(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).toURI().toString())){
-                return project;
-            }
-        }
-        
+    public static Project getKotlinProjectForFileObject(FileObject file) {
         return FileOwnerQuery.getOwner(file);
     }
     

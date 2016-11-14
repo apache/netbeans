@@ -29,7 +29,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.util.Exceptions;
-import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -63,7 +62,7 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                             }
                         };
                         if (!progressHandleRun) {
-                            RequestProcessor.getDefault().post(run);
+                            KotlinProjectHelper.INSTANCE.postTask(run);
                         }
                         
                         NbMavenProject projectWatcher = getProjectWatcher();

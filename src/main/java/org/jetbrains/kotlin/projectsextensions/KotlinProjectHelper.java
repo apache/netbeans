@@ -32,6 +32,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
 import org.openide.util.Exceptions;
+import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -47,6 +48,12 @@ public class KotlinProjectHelper {
     private final Map<Project, FileObject> lightClassesDirs = new HashMap<>();
     private final Map<Project, ClassPathExtender> extendedClassPaths = new HashMap<>();
     private final Map<Project, ClassPath> fullClasspaths = new HashMap<>();
+    private final RequestProcessor environmentLoader = 
+            new RequestProcessor("Kotlin Environment loader");
+    
+    public void postTask(Runnable run) {
+        environmentLoader.post(run);
+    }
     
     public boolean checkProject(Project project){
         String className = project.getClass().getName();

@@ -21,7 +21,6 @@ package org.jetbrains.kotlin.projectsextensions.j2se.lookup;
 import org.jetbrains.kotlin.projectsextensions.KotlinPrivilegedTemplates;
 import org.jetbrains.kotlin.projectsextensions.j2se.J2SEProjectOpenedHook;
 import org.jetbrains.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider;
-import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.LookupProvider;
 import org.openide.util.Lookup;
@@ -36,8 +35,6 @@ public class J2SEProjectLookupProviderExtension implements LookupProvider {
     @Override
     public Lookup createAdditionalLookup(Lookup lkp) {
         final Project j2seProject = lkp.lookup(Project.class);
-
-        ProjectUtils.checkKtHome();
         
         return Lookups.fixed(
                 new KotlinPrivilegedTemplates(),

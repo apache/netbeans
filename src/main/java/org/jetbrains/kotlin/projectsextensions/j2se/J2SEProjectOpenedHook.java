@@ -27,7 +27,6 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
-import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -57,7 +56,7 @@ public class J2SEProjectOpenedHook extends ProjectOpenedHook {
                         progressbar.finish();
                     }
                 };
-                RequestProcessor.getDefault().post(run);
+                KotlinProjectHelper.INSTANCE.postTask(run);
                 KotlinBuildExtender extender = new KotlinBuildExtender(project);
                 extender.addKotlinTasksToScript(project);
 

@@ -49,6 +49,7 @@ import org.netbeans.api.java.source.ScanUtils
 import org.netbeans.api.java.source.CancellableTask
 import org.netbeans.api.java.source.WorkingCopy
 import org.netbeans.api.java.source.ModificationResult
+import org.netbeans.api.java.platform.JavaPlatform
 
 object JavaEnvironment {
     val JAVA_SOURCE = hashMapOf<Project, JavaSource>()
@@ -59,10 +60,8 @@ object JavaEnvironment {
         val boot = extendedProvider.getProjectSourcesClassPath(ClassPath.BOOT)
         val src = extendedProvider.getProjectSourcesClassPath(ClassPath.SOURCE)
         val compile = extendedProvider.getProjectSourcesClassPath(ClassPath.COMPILE)
-
-        val bootProxy = ClassPathSupport.createProxyClassPath(boot, compile)
-
-        return ClasspathInfo.create(bootProxy, src, compile)
+        
+        return ClasspathInfo.create(boot, compile, src)
     }
 
     fun updateClasspathInfo(project: Project) {

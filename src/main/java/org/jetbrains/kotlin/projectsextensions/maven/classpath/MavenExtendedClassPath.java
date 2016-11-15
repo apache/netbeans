@@ -57,7 +57,7 @@ public class MavenExtendedClassPath implements ClassPathExtender {
     private ClassPath getClasspath(List<String> paths) throws DependencyResolutionRequiredException, MalformedURLException {
         Set<URL> classpaths = new HashSet<>();
         if (paths == null) {
-            return ClassPathSupport.createClassPath(classpaths.toArray(new URL[0]));
+            return ClassPath.EMPTY;
         }
         Set<String> classpath = new HashSet<>();
         classpath.addAll(paths);
@@ -158,12 +158,13 @@ public class MavenExtendedClassPath implements ClassPathExtender {
             source = getClasspath(getCompileSourceRoots(project));
             
             ClassPathProviderImpl impl = new ClassPathProviderImpl(project);
-            ClassPath javaPlatform = impl.getJavaPlatform().getBootstrapLibraries();
+            boot = impl.getJavaPlatform().getBootstrapLibraries();
             
             List<String> javaClasspathElements = new ArrayList<String>();
-            javaClasspathElements.addAll(getSystemClasspathElements(project));
+//            javaClasspathElements.addAll(getSystemClasspathElements(project));
             javaClasspathElements.addAll(getTestClasspathElements(project));
-            boot = ClassPathSupport.createProxyClassPath(getClasspath(javaClasspathElements), javaPlatform);
+            compile = ClassPathSupport.createProxyClassPath(getClasspath(getCompileClasspathElements(project)), 
+                    getClasspath(javaClasspathElements));
             
         } catch (DependencyResolutionRequiredException | MalformedURLException ex) {
             Exceptions.printStackTrace(ex);

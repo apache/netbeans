@@ -30,7 +30,6 @@ import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaType;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource.Phase;
-import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TypeMirrorHandle;
 import org.netbeans.api.project.Project;
@@ -52,7 +51,7 @@ public class TypeSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.ELEMENTS_RESOLVED);
+            NbElementUtilsKt.toResolvedPhase(info);
             TypeMirror type = handle.resolve(info);
             if (type == null) {
                 return;
@@ -80,7 +79,7 @@ public class TypeSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.ELEMENTS_RESOLVED);
+            NbElementUtilsKt.toResolvedPhase(info);
             TypeMirror type = handle.resolve(info);
             if (type == null) {
                 return;
@@ -112,7 +111,7 @@ public class TypeSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.ELEMENTS_RESOLVED);
+            NbElementUtilsKt.toResolvedPhase(info);
             TypeMirror type = handle.resolve(info);
             if (type == null) {
                 return;
@@ -141,7 +140,7 @@ public class TypeSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.ELEMENTS_RESOLVED);
+            NbElementUtilsKt.toResolvedPhase(info);
             TypeMirror type = handle.resolve(info);
             if (type == null) {
                 throw new UnsupportedOperationException("Component type not found");
@@ -169,7 +168,7 @@ public class TypeSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.ELEMENTS_RESOLVED);
+            NbElementUtilsKt.toResolvedPhase(info);
             ElementHandle<TypeElement> elementHandle = ElementHandle.from(handle);
             TypeElement element = elementHandle.resolve(info);
             if (element != null && element.getTypeParameters().isEmpty()) {
@@ -202,7 +201,7 @@ public class TypeSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.ELEMENTS_RESOLVED);
+            NbElementUtilsKt.toResolvedPhase(info);
             TypeMirror type = handle.resolve(info);
             if (type == null) {
                 return;

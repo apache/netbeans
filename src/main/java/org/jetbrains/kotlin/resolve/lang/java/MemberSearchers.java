@@ -54,7 +54,7 @@ public class MemberSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.ELEMENTS_RESOLVED);
+            NbElementUtilsKt.toResolvedPhase(info);
             Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
@@ -80,7 +80,7 @@ public class MemberSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.ELEMENTS_RESOLVED);
+            NbElementUtilsKt.toResolvedPhase(info);
             Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
@@ -106,7 +106,7 @@ public class MemberSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.ELEMENTS_RESOLVED);
+            NbElementUtilsKt.toResolvedPhase(info);
             Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
@@ -132,7 +132,7 @@ public class MemberSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.ELEMENTS_RESOLVED);
+            NbElementUtilsKt.toResolvedPhase(info);
             Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
@@ -158,7 +158,7 @@ public class MemberSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.ELEMENTS_RESOLVED);
+            NbElementUtilsKt.toResolvedPhase(info);
             Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
@@ -184,7 +184,7 @@ public class MemberSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.ELEMENTS_RESOLVED);
+            NbElementUtilsKt.toResolvedPhase(info);
             Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
@@ -220,7 +220,7 @@ public class MemberSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.ELEMENTS_RESOLVED);
+            NbElementUtilsKt.toResolvedPhase(info);
             Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
@@ -249,7 +249,7 @@ public class MemberSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.ELEMENTS_RESOLVED);
+            NbElementUtilsKt.toResolvedPhase(info);
             Element elem = handle.resolve(info);
             if (elem == null) {
                 return;
@@ -275,7 +275,7 @@ public class MemberSearchers {
         
         @Override
         public void run(CompilationController info) throws Exception {
-            info.toPhase(Phase.ELEMENTS_RESOLVED);
+            NbElementUtilsKt.toResolvedPhase(info);
             Element elem = handle.resolve(info);
             if (elem == null) {
                 return;

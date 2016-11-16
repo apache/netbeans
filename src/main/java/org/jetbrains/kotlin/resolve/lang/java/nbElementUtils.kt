@@ -115,6 +115,8 @@ fun <T : CancellableTask<WorkingCopy>> T.modify(file: FileObject): ModificationR
     return javaSource.runModificationTask(this)
 }
 
+fun CompilationController.toResolvedPhase() = this.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED)
+
 fun Project.findTypeMirrorHandle(name: String) =
         TypeMirrorHandleSearcher(name).execute(this).handle
 

@@ -77,7 +77,7 @@ class AnnotationsSearcher(val handle: ElemHandle<*>, val project: Project) : Tas
     val annotations = arrayListOf<JavaAnnotation>()
     
     override fun run(info: CompilationController) {
-        info.toPhase(Phase.ELEMENTS_RESOLVED)
+        info.toResolvedPhase()
         val element = handle.resolve(info) ?: return
         
         for (mirror in element.annotationMirrors) {
@@ -93,7 +93,7 @@ class AnnotationsForTypeMirrorHandleSearcher(val handle: TypeMirrorHandle<*>,
     val annotations = arrayListOf<JavaAnnotation>()
     
     override fun run(info: CompilationController) {
-        info.toPhase(Phase.ELEMENTS_RESOLVED)
+        info.toResolvedPhase()
         val element = handle.resolve(info) ?: return
         
         for (mirror in element.annotationMirrors) {
@@ -109,7 +109,7 @@ class AnnotationSearcher(val handle: ElemHandle<*>, val project: Project,
     var annotation: JavaAnnotation? = null
     
     override fun run(info: CompilationController) {
-        info.toPhase(Phase.ELEMENTS_RESOLVED)
+        info.toResolvedPhase()
         val element = handle.resolve(info) ?: return
         
         for (mirror in element.annotationMirrors) {
@@ -128,7 +128,7 @@ class AnnotationForTypeMirrorHandleSearcher(val handle: TypeMirrorHandle<*>, val
     var annotation: JavaAnnotation? = null
     
     override fun run(info: CompilationController) {
-        info.toPhase(Phase.ELEMENTS_RESOLVED)
+        info.toResolvedPhase()
         val element = handle.resolve(info) ?: return
         
         for (mirror in element.annotationMirrors) {

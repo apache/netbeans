@@ -50,7 +50,7 @@ class NameSearcher(val handle: ElemHandle<TypeElement>) : Task<CompilationContro
     var name: Name = SpecialNames.safeIdentifier(handle.qualifiedName) 
     
     override fun run(info: CompilationController) {
-        info.toPhase(Phase.ELEMENTS_RESOLVED)
+        info.toResolvedPhase()
         val element = handle.resolve(info) ?: return
         
         name = SpecialNames.safeIdentifier(element.simpleName.toString())
@@ -81,7 +81,7 @@ class SuperTypesSearcher(val handle: ElemHandle<TypeElement>, val project: Proje
     }
     
     override fun run(info: CompilationController) {
-        info.toPhase(Phase.ELEMENTS_RESOLVED)
+        info.toResolvedPhase()
         val element = handle.resolve(info) ?: return
         
         getSuperTypesWithObject(element as TypeElement, info)
@@ -95,7 +95,7 @@ class InnerClassesSearcher(val handle: ElemHandle<TypeElement>,
     val innerClasses = arrayListOf<JavaClass>()
     
     override fun run(info: CompilationController) {
-        info.toPhase(Phase.ELEMENTS_RESOLVED)
+        info.toResolvedPhase()
         val element = handle.resolve(info) ?: return
         
         val filteredMembers = element.enclosedElements
@@ -111,7 +111,7 @@ class OuterClassSearcher(val handle: ElemHandle<TypeElement>,
     var outerClass: JavaClass? = null
     
     override fun run(info: CompilationController) {
-        info.toPhase(Phase.ELEMENTS_RESOLVED)
+        info.toResolvedPhase()
         val element = handle.resolve(info) ?: return
         
         val outer = element.enclosingElement ?: return
@@ -126,7 +126,7 @@ class MethodsSearcher(val handle: ElemHandle<TypeElement>,
     val methods = arrayListOf<JavaMethod>()
     
     override fun run(info: CompilationController) {
-        info.toPhase(Phase.ELEMENTS_RESOLVED)
+        info.toResolvedPhase()
         val element = handle.resolve(info) ?: return
         
         val filteredMembers = element.enclosedElements
@@ -142,7 +142,7 @@ class ConstructorsSearcher(val handle: ElemHandle<TypeElement>,
     val constructors = arrayListOf<JavaConstructor>()
     
     override fun run(info: CompilationController) {
-        info.toPhase(Phase.ELEMENTS_RESOLVED)
+        info.toResolvedPhase()
         val element = handle.resolve(info) ?: return
         
         val filteredMembers = element.enclosedElements
@@ -158,7 +158,7 @@ class FieldsSearcher(val handle: ElemHandle<TypeElement>,
     val fields = arrayListOf<JavaField>()
     
     override fun run(info: CompilationController) {
-        info.toPhase(Phase.ELEMENTS_RESOLVED)
+        info.toResolvedPhase()
         val element = handle.resolve(info) ?: return
         
         val filteredMembers = element.enclosedElements
@@ -175,7 +175,7 @@ class TypeParametersSearcher(val handle: ElemHandle<TypeElement>,
     val typeParameters = arrayListOf<JavaTypeParameter>()
     
     override fun run(info: CompilationController) {
-        info.toPhase(Phase.ELEMENTS_RESOLVED)
+        info.toResolvedPhase()
         val element = handle.resolve(info) ?: return
         
         (element as TypeElement).typeParameters

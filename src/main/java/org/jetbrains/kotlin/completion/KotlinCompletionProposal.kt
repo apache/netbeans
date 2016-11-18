@@ -62,7 +62,7 @@ class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
         val source = NavigationUtil.getElementWithSource(descriptor, project);
         if (source is NetBeansJavaSourceElement) {
             val handle = source.getElementBinding()
-            val doc = handle.getJavaDoc(project)
+            val doc = handle.getJavaDoc(project) ?: return null
             return ElementHandle.UrlHandle(doc.rawCommentText)
         }
         

@@ -44,13 +44,13 @@ import org.jetbrains.kotlin.psi.KtSecondaryConstructor;
 import org.jetbrains.kotlin.psi.KtVisitorVoid;
 import org.jetbrains.kotlin.resolve.lang.java.ElementHandleFieldContainingClassSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.ElementHandleNameSearcher;
-import org.jetbrains.kotlin.resolve.lang.java.Searchers;
+import org.jetbrains.kotlin.resolve.lang.java.ElementHandleSimpleNameSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ElementSearcher;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.Project;
 import org.openide.util.Exceptions;
-import org.jetbrains.kotlin.resolve.lang.java.Searchers.ElementSearcher;
 
 /**
  *
@@ -220,8 +220,8 @@ public class FromJavaToKotlinNavigationUtils {
     public static boolean equalsNames(KtElement ktElement, ElementHandle element, Document doc) {
         String first = ktElement.getName();
         JavaSource javaSource = JavaSource.forDocument(doc);
-        Searchers.ElementHandleSimpleNameSearcher searcher = 
-                new Searchers.ElementHandleSimpleNameSearcher(element);
+        ElementHandleSimpleNameSearcher searcher = 
+                new ElementHandleSimpleNameSearcher(element);
         try {
             javaSource.runUserActionTask(searcher, true);
         } catch (IOException ex) {

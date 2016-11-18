@@ -42,7 +42,8 @@ import org.jetbrains.kotlin.psi.KtProperty;
 import org.jetbrains.kotlin.psi.KtPropertyAccessor;
 import org.jetbrains.kotlin.psi.KtSecondaryConstructor;
 import org.jetbrains.kotlin.psi.KtVisitorVoid;
-import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers;
+import org.jetbrains.kotlin.resolve.lang.java.ElementHandleFieldContainingClassSearcher;
+import org.jetbrains.kotlin.resolve.lang.java.ElementHandleNameSearcher;
 import org.jetbrains.kotlin.resolve.lang.java.Searchers;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtils;
@@ -139,7 +140,7 @@ public class FromJavaToKotlinNavigationUtils {
 
                     private void visitExplicitDeclaration(KtDeclaration declaration) {
                         JavaSource javaSource = JavaSource.forDocument(doc);
-                        MemberSearchers.ElementHandleNameSearcher searcher = new MemberSearchers.ElementHandleNameSearcher(element);
+                        ElementHandleNameSearcher searcher = new ElementHandleNameSearcher(element);
                         try {
                             javaSource.runUserActionTask(searcher, true);
                         } catch (IOException ex) {
@@ -185,8 +186,8 @@ public class FromJavaToKotlinNavigationUtils {
                     @Override
                     public void visitClass(KtClass ktClass) {
                         JavaSource javaSource = JavaSource.forDocument(doc);
-                        MemberSearchers.ElementHandleFieldContainingClassSearcher searcher = 
-                                new MemberSearchers.ElementHandleFieldContainingClassSearcher(element);
+                        ElementHandleFieldContainingClassSearcher searcher = 
+                                new ElementHandleFieldContainingClassSearcher(element);
                         try {
                             javaSource.runUserActionTask(searcher, true);
                         } catch (IOException ex) {
@@ -252,8 +253,8 @@ public class FromJavaToKotlinNavigationUtils {
     public static boolean equalsDeclaringTypes(KtElement ktElement, ElementHandle element, Document doc) {
         FqName typeNameInfo = getDeclaringTypeFqName(ktElement);
         JavaSource javaSource = JavaSource.forDocument(doc);
-        MemberSearchers.ElementHandleFieldContainingClassSearcher searcher = 
-                new MemberSearchers.ElementHandleFieldContainingClassSearcher(element);
+        ElementHandleFieldContainingClassSearcher searcher = 
+                new ElementHandleFieldContainingClassSearcher(element);
         try {
             javaSource.runUserActionTask(searcher, true);
         } catch (IOException ex) {

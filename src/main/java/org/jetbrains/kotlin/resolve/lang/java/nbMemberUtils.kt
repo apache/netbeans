@@ -20,13 +20,6 @@ import javax.lang.model.element.TypeElement
 import org.jetbrains.kotlin.descriptors.Visibility
 import org.jetbrains.kotlin.load.java.structure.JavaType
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.FieldContainingClassSearcher
-import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.FieldTypeSearcher
-import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.IsAbstractSearcher
-import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.IsFinalSearcher
-import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.IsStaticSearcher
-import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.NameSearcher
-import org.jetbrains.kotlin.resolve.lang.java.MemberSearchers.VisibilitySearcher
 import org.netbeans.api.project.Project
 import javax.lang.model.element.VariableElement
 
@@ -40,7 +33,7 @@ fun ElemHandle<*>.isFinal(project: Project) =
         IsFinalSearcher(this).execute(project).isFinal
 
 fun ElemHandle<*>.getName(project: Project) =
-        NameSearcher(this).execute(project).name
+        MemberNameSearcher(this).execute(project).name
 
 fun ElemHandle<*>.getVisibility(project: Project) = 
         VisibilitySearcher(this).execute(project).visibility

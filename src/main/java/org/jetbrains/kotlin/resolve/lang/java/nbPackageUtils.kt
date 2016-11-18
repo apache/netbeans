@@ -21,9 +21,6 @@ import org.jetbrains.kotlin.load.java.structure.JavaClass
 import org.jetbrains.kotlin.load.java.structure.JavaPackage
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.resolve.lang.java.PackageSearchers.ClassesSearcher
-import org.jetbrains.kotlin.resolve.lang.java.PackageSearchers.FqNameSearcher
-import org.jetbrains.kotlin.resolve.lang.java.PackageSearchers.SubPackagesSearcher
 import org.netbeans.api.project.Project
 
 fun JavaPackage.getSubPackages(project: Project) = 

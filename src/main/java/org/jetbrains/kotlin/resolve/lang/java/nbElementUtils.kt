@@ -28,7 +28,6 @@ import org.jetbrains.kotlin.resolve.lang.java.Searchers.IsDeprecatedSearcher
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.PackageElementSearcher
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.TypeElementSearcher
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.TypeMirrorHandleSearcher
-import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.TypeMirrorHandleHashCodeSearcher
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass
 import org.netbeans.api.java.classpath.ClassPath
 import org.netbeans.api.java.source.ClassIndex
@@ -42,7 +41,6 @@ import org.netbeans.api.java.source.ui.ElementOpen
 import org.netbeans.api.project.Project
 import org.netbeans.spi.java.classpath.support.ClassPathSupport
 import org.openide.filesystems.FileObject
-import org.jetbrains.kotlin.resolve.lang.java.ParameterSearchers.TypeMirrorHandleEquals
 import javax.lang.model.type.DeclaredType
 import org.jetbrains.kotlin.resolve.lang.java.Searchers.JavaDocSearcher
 import org.netbeans.api.java.source.ScanUtils
@@ -133,7 +131,7 @@ fun TypeMirrorHandle<*>.getHashCode(project: Project) =
         TypeMirrorHandleHashCodeSearcher(this).execute(project).hashCode
 
 fun TypeMirrorHandle<*>.isEqual(handle: TypeMirrorHandle<*>, project: Project) =
-        TypeMirrorHandleEquals(this, handle).execute(project).equals()
+        TypeMirrorHandleEquals(this, handle).execute(project).equals
 
 fun Project.findFQName(name: String): List<String> {
     JavaEnvironment.checkJavaSource(this)

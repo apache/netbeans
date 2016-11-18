@@ -17,12 +17,6 @@
 package org.jetbrains.kotlin.resolve.lang.java
 
 import org.jetbrains.kotlin.load.java.structure.JavaType
-import org.jetbrains.kotlin.resolve.lang.java.TypeSearchers.BoundSearcher
-import org.jetbrains.kotlin.resolve.lang.java.TypeSearchers.ComponentTypeSearcher
-import org.jetbrains.kotlin.resolve.lang.java.TypeSearchers.IsExtendsSearcher
-import org.jetbrains.kotlin.resolve.lang.java.TypeSearchers.IsRawSearcher
-import org.jetbrains.kotlin.resolve.lang.java.TypeSearchers.TypeArgumentsSearcher
-import org.jetbrains.kotlin.resolve.lang.java.TypeSearchers.TypeNameSearcher
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
 

@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.lang.java.*
 import org.netbeans.api.project.Project
 import javax.lang.model.element.Element
+import javax.lang.model.element.VariableElement
 
 /*
 
@@ -31,8 +32,8 @@ import javax.lang.model.element.Element
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaValueParameter(elementHandle : ElemHandle<Element>, project : Project, name : String, isVararg : Boolean) : 
-        NetBeansJavaElement<Element>(elementHandle, project), JavaValueParameter {
+class NetBeansJavaValueParameter(elementHandle : ElemHandle<VariableElement>, project : Project, name : String, isVararg : Boolean) : 
+        NetBeansJavaElement<VariableElement>(elementHandle, project), JavaValueParameter {
 
     override val name : Name = Name.identifier(name)
     override val isVararg : Boolean = isVararg

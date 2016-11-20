@@ -124,10 +124,6 @@ public class NetBeansVirtualFileFinder extends VirtualFileKotlinClassFinder impl
         return new NetBeansVirtualFileFinder(project);
     }
 
-    private boolean isBinaryKotlinClass(TypeElement type) {
-        return !NetBeansJavaClassFinder.isInKotlinBinFolder(type);
-    }
-
     private String classFileName(JavaClass jClass) {
         JavaClass outerClass = jClass.getOuterClass();
         if (outerClass == null) {

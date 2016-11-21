@@ -104,14 +104,16 @@ public class KotlinHyperlinkProvider implements HyperlinkProviderExt {
             return;
         }
 
-        NavigationData navigationData = getNavigationData(referenceExpression, project);
-        if (navigationData == null) {
-            gotoKotlinStdlib(referenceExpression, project);
-            return;
-        }
-
-        navigationCache = NavigationUtil.gotoElement(navigationData.getSourceElement(), navigationData.getDeclarationDescriptor(),
-                referenceExpression, project, file);
+        navigationCache = OpenDeclarationKt.navigate(referenceExpression, project, file);
+        
+//        NavigationData navigationData = getNavigationData(referenceExpression, project);
+//        if (navigationData == null) {
+//            gotoKotlinStdlib(referenceExpression, project);
+//            return;
+//        }
+//
+//        navigationCache = NavigationUtil.gotoElement(navigationData.getSourceElement(), navigationData.getDeclarationDescriptor(),
+//                referenceExpression, project, file);
     }
 
     @Override

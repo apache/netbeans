@@ -41,6 +41,11 @@ import org.netbeans.api.java.source.CancellableTask
 import org.netbeans.api.java.source.WorkingCopy
 import org.netbeans.api.java.source.ModificationResult
 import org.netbeans.api.java.platform.JavaPlatform
+import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
+import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor
+import javax.lang.model.element.ElementKind
+import javax.lang.model.element.ExecutableElement
+import org.jetbrains.kotlin.log.KotlinLogger
 
 object JavaEnvironment {
     val JAVA_SOURCE = hashMapOf<Project, JavaSource>()
@@ -176,3 +181,30 @@ fun Project.getFileObjectForFqName(fqName: String): FileObject? {
 
 fun ElemHandle<*>.getJavaDoc(project: Project) =
         JavaDocSearcher(this).execute(project).javaDoc
+                                               
+fun ElementHandle<TypeElement>.findMember(descriptor: DeclarationDescriptor, 
+                                          project: Project): ElementHandle<*>? {
+    var member: ElementHandle<*>? = null
+    val finder = Task<CompilationController>() { info ->
+        info.toResolvedPhase()
+        
+        val typeElement = this.resolve(info)
+        if (typeElement != null) {
+            val filteredMembers = if (descriptor is CallableMemberDescriptor) {
+                //TODO check signatures
+                typeElement.enclosedElements
+                        .filterIsInstance(ExecutableElement::class.java)
+                        .filter { it.kind == ElementKind.METHOD }
+                        .filter { it.simpleName.toString() == descriptor.name.asString() }
+            } else typeElement.enclosedElements
+                    .filter { it.kind == ElementKind.FIELD }
+                    .filter { it.simpleName.toString() == descriptor.name.asString() }
+            val memberElement = filteredMembers.firstOrNull()
+            if (memberElement != null) member = ElementHandle.create(memberElement)
+        }
+        
+    }
+    
+    finder.execute(project)
+    return member
+} 

@@ -28,6 +28,7 @@ import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaMember
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass
 import org.jetbrains.kotlin.resolve.lang.java.findType
 import org.jetbrains.kotlin.resolve.lang.java.openInEditor
+import org.jetbrains.kotlin.resolve.lang.java.findMember
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.navigation.references.createReferences
 import org.jetbrains.kotlin.navigation.NavigationUtil
@@ -56,6 +57,8 @@ import org.jetbrains.kotlin.serialization.deserialization.descriptors.Deserializ
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.serialization.jvm.JvmProtoBuf
 import org.jetbrains.kotlin.log.KotlinLogger
+import org.jetbrains.kotlin.resolve.DescriptorUtils
+import org.jetbrains.kotlin.descriptors.MemberDescriptor
 
 fun navigate(referenceExpression: KtReferenceExpression, project: Project, file: FileObject): Pair<Document, Int>? {
     val data = getNavigationData(referenceExpression, project) ?: return null
@@ -106,9 +109,10 @@ private fun gotoElementInBinaryClass(binaryClass: KotlinJvmBinaryClass,
         getImplClassName(descriptor)?.asString() ?: return
     } else binaryClass.classId.asSingleFqName().asString()
     
-    val elementHandle = project.findType(className)
-    elementHandle?.elementHandle?.openInEditor(project)
-    
+    var elementHandle = project.findType(className)?.elementHandle ?: return
+    if (descriptor is MemberDescriptor) {
+        elementHandle.findMember(descriptor, project)?.openInEditor(project) ?: elementHandle.openInEditor(project)
+    } else elementHandle.openInEditor(project)
 }
 
 private fun getImplClassName(memberDescriptor: DeserializedCallableMemberDescriptor): Name? {

@@ -31,7 +31,6 @@ import org.jetbrains.kotlin.resolve.lang.java.openInEditor
 import org.jetbrains.kotlin.resolve.lang.java.findMember
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.navigation.references.createReferences
-import org.jetbrains.kotlin.navigation.NavigationUtil
 import org.jetbrains.kotlin.psi.KtElement
 import org.openide.filesystems.FileObject
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement
@@ -59,6 +58,7 @@ import org.jetbrains.kotlin.serialization.jvm.JvmProtoBuf
 import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.resolve.DescriptorUtils
 import org.jetbrains.kotlin.descriptors.MemberDescriptor
+import org.jetbrains.kotlin.resolve.NetBeansDescriptorUtils
 
 fun navigate(referenceExpression: KtReferenceExpression, project: Project, file: FileObject): Pair<Document, Int>? {
     val data = getNavigationData(referenceExpression, project) ?: return null
@@ -167,13 +167,19 @@ private fun findFileObjectForReferencedElement(psi: PsiElement, fromElement: KtE
     return file
 }
 
-private fun openFileAtOffset(doc: StyledDocument, offset: Int) {
+fun openFileAtOffset(doc: StyledDocument, offset: Int) {
     val line = NbEditorUtilities.getLine(doc, offset, false)
     val colNumber = NbDocument.findLineColumn(doc, offset)
     line.show(Line.ShowOpenType.OPEN, Line.ShowVisibilityType.FRONT, colNumber)
 }
 
-private fun getNavigationData(referenceExpression: KtReferenceExpression,
+fun getElementWithSource(descriptor: DeclarationDescriptor, project: Project): SourceElement? {
+    val sourceElements = NetBeansDescriptorUtils.descriptorToDeclarations(descriptor, project)
+    
+    return sourceElements.firstOrNull { it != SourceElement.NO_SOURCE }
+}
+
+fun getNavigationData(referenceExpression: KtReferenceExpression,
                               project: Project): NavigationData? {
     val ktFile = referenceExpression.getContainingKtFile()
     val analysisResult = KotlinParser.getAnalysisResult(ktFile) ?: return null
@@ -183,13 +189,13 @@ private fun getNavigationData(referenceExpression: KtReferenceExpression,
             .asSequence()
             .flatMap { it.getTargetDescriptors(context).asSequence() }
             .mapNotNull { 
-                val elementWithSource = NavigationUtil.getElementWithSource(it, project)
+                val elementWithSource = getElementWithSource(it, project)
                 if (elementWithSource != null) NavigationData(elementWithSource, it) else null
             }
             .firstOrNull()
 }
 
-private data class NavigationData(val sourceElement: SourceElement, val descriptor: DeclarationDescriptor)
+data class NavigationData(val sourceElement: SourceElement, val descriptor: DeclarationDescriptor)
 
 
 

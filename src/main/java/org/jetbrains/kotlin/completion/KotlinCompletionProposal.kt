@@ -32,7 +32,7 @@ import org.jetbrains.kotlin.utils.KotlinImageProvider
 import org.netbeans.modules.csl.api.ElementHandle
 import org.netbeans.modules.csl.api.HtmlFormatter
 import org.netbeans.modules.csl.spi.DefaultCompletionProposal
-import org.jetbrains.kotlin.navigation.NavigationUtil
+import org.jetbrains.kotlin.navigation.netbeans.getElementWithSource
 import org.jetbrains.kotlin.resolve.lang.java.resolver.NetBeansJavaSourceElement
 import org.netbeans.api.project.Project
 import org.jetbrains.kotlin.resolve.lang.java.getJavaDoc
@@ -59,7 +59,7 @@ class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
     }
     
     override fun getElement(): ElementHandle? {
-        val source = NavigationUtil.getElementWithSource(descriptor, project);
+        val source = getElementWithSource(descriptor, project);
         if (source is NetBeansJavaSourceElement) {
             val handle = source.getElementBinding()
             val doc = handle.getJavaDoc(project) ?: return null

@@ -25,7 +25,6 @@ import java.util.Set;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import kotlin.Pair;
-import org.jetbrains.kotlin.navigation.NavigationUtil;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
@@ -140,7 +139,7 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
                     FileObject fileToOpen = FileUtil.toFileObject(new File(filePath));
                     try {
                         StyledDocument docToOpen = ProjectUtils.getDocumentFromFileObject(fileToOpen);
-                        NavigationUtil.openFileAtOffset(docToOpen, offsetToOpen);
+                        OpenDeclarationKt.openFileAtOffset(docToOpen, offsetToOpen);
                     } catch (IOException ex) {
                         Exceptions.printStackTrace(ex);
                     }

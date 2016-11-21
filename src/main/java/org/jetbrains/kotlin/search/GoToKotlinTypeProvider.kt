@@ -18,7 +18,7 @@ package org.jetbrains.kotlin.search
 
 import java.io.File
 import javax.swing.text.StyledDocument
-import org.jetbrains.kotlin.navigation.NavigationUtil
+import org.jetbrains.kotlin.navigation.netbeans.openFileAtOffset
 import org.jetbrains.kotlin.psi.KtDeclaration
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.utils.ProjectUtils
@@ -44,7 +44,7 @@ class GoToKotlinTypeProvider : SearchProvider {
                             val fo = FileUtil.toFileObject(f) ?: return@action
 
                             val doc = ProjectUtils.getDocumentFromFileObject(fo) ?: return@action
-                            NavigationUtil.openFileAtOffset(doc, it.textRange.startOffset)
+                            openFileAtOffset(doc, it.textRange.startOffset)
                         }, html)
                     }
                 }

@@ -51,6 +51,11 @@ import javax.swing.text.Document
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryClass
 import org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass
 import org.netbeans.api.java.source.ElementHandle
+import org.jetbrains.kotlin.load.kotlin.header.KotlinClassHeader
+import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedCallableMemberDescriptor
+import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.serialization.jvm.JvmProtoBuf
+import org.jetbrains.kotlin.log.KotlinLogger
 
 fun navigate(referenceExpression: KtReferenceExpression, project: Project, file: FileObject): Pair<Document, Int>? {
     val data = getNavigationData(referenceExpression, project) ?: return null
@@ -74,22 +79,67 @@ private fun gotoElement(element: SourceElement, descriptor: DeclarationDescripto
         
         is KotlinJvmBinarySourceElement -> gotoElementInBinaryClass(element.binaryClass, descriptor, project)
         
-        is KotlinJvmBinaryPackageSourceElement -> {}
+        is KotlinJvmBinaryPackageSourceElement -> gotoClassByPackageSourceElement(element, fromElement, descriptor, project)
         
         else -> return null
     }
     return null
 }
 
+private fun gotoClassByPackageSourceElement(sourceElement: KotlinJvmBinaryPackageSourceElement,
+                                            fromElement: KtElement, 
+                                            descriptor: DeclarationDescriptor,
+                                            project: Project) {
+    if (descriptor !is DeserializedCallableMemberDescriptor) return
+    
+    val binaryClass = sourceElement.getContainingBinaryClass(descriptor) ?: return
+    gotoElementInBinaryClass(binaryClass, descriptor, project)
+}
+
 private fun gotoElementInBinaryClass(binaryClass: KotlinJvmBinaryClass,
                                      descriptor: DeclarationDescriptor, 
                                      project: Project) {
     if (binaryClass !is VirtualFileKotlinClass) return
-    val className = binaryClass.classId.asSingleFqName().asString()
+    
+    val className = if (KotlinClassHeader.Kind.MULTIFILE_CLASS == binaryClass.classHeader.kind) {
+        if (descriptor !is DeserializedCallableMemberDescriptor) return
+        getImplClassName(descriptor)?.asString() ?: return
+    } else binaryClass.classId.asSingleFqName().asString()
+    
     val elementHandle = project.findType(className)
     elementHandle?.elementHandle?.openInEditor(project)
+    
 }
 
+private fun getImplClassName(memberDescriptor: DeserializedCallableMemberDescriptor): Name? {
+    val nameIndex: Int
+    
+    try
+    {
+        val getProtoMethod = DeserializedCallableMemberDescriptor::class.java.getMethod("getProto")
+        val proto = getProtoMethod!!.invoke(memberDescriptor)
+        val implClassNameField = Class.forName("org.jetbrains.kotlin.serialization.jvm.JvmProtoBuf").getField("implClassName")
+        val implClassName = implClassNameField!!.get(null)
+        val protobufCallable = Class.forName("org.jetbrains.kotlin.serialization.ProtoBuf\$Callable")
+        val getExtensionMethod = protobufCallable!!.getMethod("getExtension", implClassName!!.javaClass)
+        val indexObj = getExtensionMethod!!.invoke(proto, implClassName)
+    
+        if (indexObj !is Int) return null
+    
+        nameIndex = indexObj.toInt()
+    } catch (e: ReflectiveOperationException) {
+        KotlinLogger.INSTANCE.logException("", e)
+        return null
+    } catch (e: IllegalArgumentException) {
+        KotlinLogger.INSTANCE.logException("", e)
+        return null
+    } catch (e: SecurityException) {
+        KotlinLogger.INSTANCE.logException("", e)
+        return null
+    }
+    
+    return memberDescriptor.nameResolver.getName(nameIndex)
+}
 
 private fun gotoKotlinDeclaration(psi: PsiElement, fromElement: KtElement,
                                   project: Project, currentFile: FileObject): Pair<Document, Int>? {

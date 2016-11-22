@@ -81,6 +81,21 @@ import org.jetbrains.kotlin.resolve.jvm.extensions.PackageFragmentProviderExtens
 import org.netbeans.api.project.Project as NBProject
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCliJavaFileManagerImpl
 import org.jetbrains.kotlin.model.KotlinNullableNotNullManager
+import com.intellij.openapi.util.SystemInfo
+
+//copied from kotlin eclipse plugin to avoid RuntimeException: Could not find installation home path. 
+//Please make sure bin/idea.properties is present in the installation directory
+private fun setIdeaIoUseFallback() {
+    if (SystemInfo.isWindows) {
+        val properties = System.getProperties()
+
+        properties.setProperty("idea.io.use.nio2", java.lang.Boolean.TRUE.toString());
+
+        if (!(SystemInfo.isJavaVersionAtLeast("1.7") && !"1.7.0-ea".equals(SystemInfo.JAVA_VERSION))) {
+            properties.setProperty("idea.io.use.fallback", java.lang.Boolean.TRUE.toString());
+        }
+    }
+}
 
 class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable: Disposable) {
 
@@ -114,7 +129,9 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
     
     init {
         val startTime = System.nanoTime()
-        
+
+        setIdeaIoUseFallback()
+                
         applicationEnvironment = createJavaCoreApplicationEnvironment(disposable)
         projectEnvironment = object : JavaCoreProjectEnvironment(disposable, applicationEnvironment) {
             override fun preregisterServices() { 

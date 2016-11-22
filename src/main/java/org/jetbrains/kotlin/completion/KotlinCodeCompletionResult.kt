@@ -32,7 +32,7 @@ class KotlinCodeCompletionResult(private val doc: Document, offset: Int,
     val proposals: List<CompletionProposal>
     
     init {
-        proposals = KotlinCompletionUtils.INSTANCE.createProposals(doc, offset, analysisResult, prefix)
+        proposals = createProposals(doc, offset, analysisResult, prefix)
     }
     
     override fun getItems() = proposals

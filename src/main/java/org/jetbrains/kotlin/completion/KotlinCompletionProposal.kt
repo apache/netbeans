@@ -123,7 +123,7 @@ class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
         if (classifierDescriptor == null) return desc.name.asString()
         
         val typeName = classifierDescriptor.name.asString()
-        return KotlinCompletionUtils.INSTANCE.getValueForType(typeName) ?: desc.name.asString()
+        return getValueForType(typeName) ?: desc.name.asString()
     }
     
     override fun doInsert(document: Document) {

@@ -9,7 +9,7 @@ import java.util.List;
 import javaproject.JavaProject;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import org.jetbrains.kotlin.completion.KotlinCompletionUtils;
+import org.jetbrains.kotlin.completion.CompletionUtilsKt;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
@@ -57,11 +57,9 @@ public class CompletionTest extends NbTestCase {
                     = KotlinAnalyzer.analyzeFile(project, ktFile);
             KotlinParser.setAnalysisResult(ktFile, resultWithProvider);
             
-            completionItems = KotlinCompletionUtils.INSTANCE.createProposals(doc,
+            completionItems = CompletionUtilsKt.createProposals(doc,
                     caret, resultWithProvider, "");
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
         }
 

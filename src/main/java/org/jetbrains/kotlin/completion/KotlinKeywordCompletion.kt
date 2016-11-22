@@ -462,7 +462,7 @@ fun generateKeywordProposals(identifierPart: String,
         
         return arrayListOf<String>().apply {
             KeywordCompletion.complete(expression, identifierPart, true) { keywordProposal ->
-                if (!KotlinCompletionUtils.INSTANCE.applicableNameFor(identifierPart, keywordProposal)) return@complete
+                if (!applicableNameFor(identifierPart, keywordProposal)) return@complete
                 
                 when (keywordProposal) {
                     "break", "continue" -> {

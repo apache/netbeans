@@ -48,7 +48,7 @@ class KotlinParser : Parser() {
         }
     }
     
-    lateinit var snapshot: Snapshot
+    private lateinit var snapshot: Snapshot
     private var project: Project? = null
 
     override fun parse(snapshot: Snapshot, task: Task, event: SourceModificationEvent) {
@@ -61,7 +61,7 @@ class KotlinParser : Parser() {
         
         file = ProjectUtils.getKtFile(snapshot.text.toString(), snapshot.source.fileObject)
         if (event.affectedEndOffset <= 0) {
-            CACHE.put(file!!.virtualFile.path, KotlinAnalysisProjectCache.INSTANCE.getAnalysisResult(project))
+            CACHE.put(file!!.virtualFile.path, KotlinAnalysisProjectCache.getAnalysisResult(project!!))
             return
         }
         

@@ -25,7 +25,6 @@ import org.jetbrains.kotlin.resolve.KotlinAnalyzer;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
 import org.netbeans.modules.parsing.spi.Parser;
@@ -42,7 +41,6 @@ public class KotlinParser extends Parser {
     @Override
     public void parse(Snapshot snapshot, Task task, SourceModificationEvent event) {
         this.snapshot = snapshot;
-        
         project = ProjectUtils.getKotlinProjectForFileObject(snapshot.getSource().getFileObject());
 
         if (project == null){
@@ -51,9 +49,8 @@ public class KotlinParser extends Parser {
         }
         
         fileToAnalyze = ProjectUtils.getKtFile(snapshot.getText().toString(),snapshot.getSource().getFileObject());
-        int caretOffset = GsfUtilities.getLastKnownCaretOffset(snapshot, event);
         
-        if (caretOffset <= 0) {
+        if (event.getAffectedStartOffset() <= 0) {
             CACHE.put(fileToAnalyze.getVirtualFile().getPath(), KotlinAnalysisProjectCache.INSTANCE.getAnalysisResult(project));
             return;
         }

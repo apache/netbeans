@@ -38,13 +38,16 @@ public class KotlinAnalysisProjectCache {
     
     public AnalysisResultWithProvider getAnalysisResult(final Project project) {
         synchronized(project) {
-            if (cache.get(project) == null) {
+            if (!cache.containsKey(project)) {
+                long startTime = System.nanoTime();
                 final AnalysisResultWithProvider result = 
                         NetBeansAnalyzerFacadeForJVM.INSTANCE.analyzeFilesWithJavaIntegration(project, 
                         KotlinEnvironment.Companion.getEnvironment(project).getProject(), ProjectUtils.getSourceFilesWithDependencies(project));
                 cache.put(project, result);
                 KotlinLogger.INSTANCE.logInfo("Project " + 
                         project.getProjectDirectory().getPath() + " analysis result cached");
+                long endTime = System.nanoTime();
+                KotlinLogger.INSTANCE.logInfo("Kotlin analysis took " + (endTime - startTime));
             }
             
             return cache.get(project);

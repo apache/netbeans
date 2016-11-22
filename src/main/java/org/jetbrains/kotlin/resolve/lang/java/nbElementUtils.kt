@@ -84,20 +84,7 @@ fun String.getPackages(project: Project): Set<String> {
             getPackageNames(this, false, hashSetOf(ClassIndex.SearchScope.SOURCE, ClassIndex.SearchScope.DEPENDENCIES))
 }
 
-fun Project.findType(fqName: String): ElemHandle<TypeElement>? {
-    JavaEnvironment.checkJavaSource(this)
-    val classIndex = JavaEnvironment.JAVA_SOURCE[this]!!.getClasspathInfo().getClassIndex()
-    
-    val name = fqName.substringAfterLast(".", fqName)
-    
-    val declaredTypes = classIndex.getDeclaredTypes(name, ClassIndex.NameKind.SIMPLE_NAME,
-            setOf(ClassIndex.SearchScope.DEPENDENCIES, ClassIndex.SearchScope.SOURCE))
-    
-    val elementHandle = declaredTypes.filter { it.qualifiedName == fqName }
-            .firstOrNull() ?: return null
-    
-    return ElemHandle.create(elementHandle, this)
-}
+fun Project.findType(fqName: String) = TypeElementSearcher(fqName, this).execute(this).element
 
 fun <T : Task<CompilationController>> T.execute(project: Project): T {
     JavaEnvironment.checkJavaSource(project)

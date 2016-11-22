@@ -41,7 +41,7 @@ public class KotlinAnalysisProjectCache {
             if (cache.get(project) == null) {
                 final AnalysisResultWithProvider result = 
                         NetBeansAnalyzerFacadeForJVM.INSTANCE.analyzeFilesWithJavaIntegration(project, 
-                        KotlinEnvironment.getEnvironment(project).getProject(), ProjectUtils.getSourceFilesWithDependencies(project));
+                        KotlinEnvironment.Companion.getEnvironment(project).getProject(), ProjectUtils.getSourceFilesWithDependencies(project));
                 cache.put(project, result);
                 KotlinLogger.INSTANCE.logInfo("Project " + 
                         project.getProjectDirectory().getPath() + " analysis result cached");

@@ -56,7 +56,7 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                                 final ProgressHandle progressbar = 
                                     ProgressHandleFactory.createHandle("Loading Kotlin environment");
                                 progressbar.start();
-                                KotlinEnvironment.getEnvironment(project);
+                                KotlinEnvironment.Companion.getEnvironment(project);
                                 progressbar.finish();
                                 progressHandleRun = false;
                             }

@@ -86,7 +86,7 @@ public class BuiltInsReferenceResolver {
     
     @NotNull
     public static BuiltInsReferenceResolver getInstance(@NotNull org.netbeans.api.project.Project kotlinProject) {
-        Project ideaProject = KotlinEnvironment.getEnvironment(kotlinProject).getProject();
+        Project ideaProject = KotlinEnvironment.Companion.getEnvironment(kotlinProject).getProject();
         return ServiceManager.getService(ideaProject, BuiltInsReferenceResolver.class);
     }
 

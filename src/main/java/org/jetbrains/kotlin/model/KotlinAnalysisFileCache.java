@@ -56,7 +56,7 @@ public class KotlinAnalysisFileCache {
         if (lastAnalysedFileCache != null && lastAnalysedFileCache.getFile() == file){
             return lastAnalysedFileCache.getAnalysisResult();
         } else {
-            KotlinEnvironment kotlinEnvironment = KotlinEnvironment.getEnvironment(project);
+            KotlinEnvironment kotlinEnvironment = KotlinEnvironment.Companion.getEnvironment(project);
             AnalysisResultWithProvider analysisResult = 
                     NetBeansAnalyzerFacadeForJVM.INSTANCE.analyzeFilesWithJavaIntegration(
                             project, kotlinEnvironment.getProject(), Lists.newArrayList(file));

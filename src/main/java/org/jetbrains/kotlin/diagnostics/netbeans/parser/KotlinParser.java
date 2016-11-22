@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.diagnostics.netbeans.parser;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.event.ChangeListener;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer;
 import org.jetbrains.kotlin.utils.ProjectUtils;
@@ -95,5 +96,8 @@ public class KotlinParser extends Parser {
     public void removeChangeListener(ChangeListener changeListener) {
     }
 
-    
+    @Override
+    public void cancel(CancelReason reason, SourceModificationEvent event) {
+        KotlinLogger.INSTANCE.logInfo("Parser cancel: " + reason.name());
+    }
 }

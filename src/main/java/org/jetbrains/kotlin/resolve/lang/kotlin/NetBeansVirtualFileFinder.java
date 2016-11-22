@@ -100,7 +100,7 @@ public class NetBeansVirtualFileFinder extends VirtualFileKotlinClassFinder impl
                     if (splittedPath.length < 2) {
                         return null;
                     }
-                    return KotlinEnvironment.getEnvironment(project).
+                    return KotlinEnvironment.Companion.getEnvironment(project).
                             getVirtualFileInJar(pathToJar, splittedPath[1]);
                 } catch (FileStateInvalidException ex) {
                     KotlinLogger.INSTANCE.logException("Can't get file in jar", ex);
@@ -113,7 +113,7 @@ public class NetBeansVirtualFileFinder extends VirtualFileKotlinClassFinder impl
         }
         
         if (isClassFileName(path)) {
-            return KotlinEnvironment.getEnvironment(project).getVirtualFile(path);
+            return KotlinEnvironment.Companion.getEnvironment(project).getVirtualFile(path);
         } else {
             throw new IllegalArgumentException("Virtual file not found for " + path);
         }

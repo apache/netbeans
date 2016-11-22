@@ -58,7 +58,7 @@ public class KotlinLightClassManager {
     
     @NotNull
     public static KotlinLightClassManager getInstance(@NotNull org.netbeans.api.project.Project project){
-        Project ideaProject = KotlinEnvironment.getEnvironment(project).getProject();
+        Project ideaProject = KotlinEnvironment.Companion.getEnvironment(project).getProject();
         return ServiceManager.getService(ideaProject, KotlinLightClassManager.class);
     }
     

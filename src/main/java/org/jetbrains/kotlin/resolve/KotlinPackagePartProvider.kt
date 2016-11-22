@@ -7,8 +7,7 @@ import org.jetbrains.kotlin.load.kotlin.ModuleMapping
 import org.jetbrains.kotlin.cli.jvm.compiler.JavaRoot
 
 class KotlinPackagePartProvider(val project: Project) : PackagePartProvider {
-    val roots = KotlinEnvironment.getEnvironment(project)
-            .getRoots()
+    val roots = KotlinEnvironment.getEnvironment(project).roots
             .map { it.file }
             .filter { it.findChild("META-INF") != null }
 

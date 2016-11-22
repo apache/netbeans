@@ -42,7 +42,7 @@ public class KotlinAnalyzer {
             return analyzeFile(kotlinProject, filesToAnalyze.iterator().next());
         }
         
-        KotlinEnvironment kotlinEnvironment = KotlinEnvironment.getEnvironment(kotlinProject);
+        KotlinEnvironment kotlinEnvironment = KotlinEnvironment.Companion.getEnvironment(kotlinProject);
         return analyzeFiles(kotlinProject, kotlinEnvironment, filesToAnalyze);
     }
     

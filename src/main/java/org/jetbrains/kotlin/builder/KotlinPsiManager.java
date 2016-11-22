@@ -99,7 +99,7 @@ public class KotlinPsiManager {
             }
         }
         
-        com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(
+        com.intellij.openapi.project.Project project = KotlinEnvironment.Companion.getEnvironment(
                 kotlinProject).getProject();
 
         LightVirtualFile virtualFile = new KotlinLightVirtualFile(file, text);
@@ -179,7 +179,7 @@ public class KotlinPsiManager {
             kotlinProject =  KotlinMockProject.INSTANCE.getMockProject();
         }
         
-        com.intellij.openapi.project.Project project = KotlinEnvironment.getEnvironment(kotlinProject).getProject();
+        com.intellij.openapi.project.Project project = KotlinEnvironment.Companion.getEnvironment(kotlinProject).getProject();
 
         PsiFileFactoryImpl psiFileFactory = (PsiFileFactoryImpl) PsiFileFactory.getInstance(project);
         

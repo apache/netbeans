@@ -180,7 +180,7 @@ public class KotlinProjectHelper {
         }
         updateFullClassPath(project);
         JavaEnvironment.INSTANCE.updateClasspathInfo(p);
-        KotlinEnvironment.updateKotlinEnvironment(project);
+        KotlinEnvironment.Companion.updateKotlinEnvironment(project);
     }
     
 }

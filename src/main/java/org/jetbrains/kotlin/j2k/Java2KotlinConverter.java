@@ -108,7 +108,7 @@ public class Java2KotlinConverter {
     
     private static String getFormattedCode(String code, String fileName, Project project) {
         KtFile ktFile = new KtPsiFactory(
-                KotlinEnvironment.getEnvironment(project).getProject()).createFile(code);
+                KotlinEnvironment.Companion.getEnvironment(project).getProject()).createFile(code);
         String formattedCode = KotlinFormatterUtils.formatCode(code, fileName, 
                 KtPsiFactoryKt.KtPsiFactory(ktFile), "\n");
         
@@ -124,7 +124,7 @@ public class Java2KotlinConverter {
         try {
             String contents = doc.getText(0, doc.getLength());
             return JavaToKotlinTranslatorKt.translateToKotlin(contents,
-                            KotlinEnvironment.getEnvironment(proj).getProject());
+                            KotlinEnvironment.Companion.getEnvironment(proj).getProject());
         } catch (BadLocationException ex) {
             return null;
         }

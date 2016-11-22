@@ -85,7 +85,7 @@ public class KotlinLightClassGeneration {
         };
 
         GenerationState state = new GenerationState(
-                KotlinEnvironment.getEnvironment(project).getProject(),
+                KotlinEnvironment.Companion.getEnvironment(project).getProject(),
                 new LightClassBuilderFactory(),
                 analysisResult.getModuleDescriptor(),
                 analysisResult.getBindingContext(),

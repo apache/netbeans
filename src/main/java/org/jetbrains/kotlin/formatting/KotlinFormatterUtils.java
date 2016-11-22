@@ -51,7 +51,7 @@ public class KotlinFormatterUtils {
     }
     
     public static KtPsiFactory createPsiFactory(Project project) {
-        KotlinEnvironment environment = KotlinEnvironment.getEnvironment(project);
+        KotlinEnvironment environment = KotlinEnvironment.Companion.getEnvironment(project);
         return new KtPsiFactory(environment.getProject());
     }
     

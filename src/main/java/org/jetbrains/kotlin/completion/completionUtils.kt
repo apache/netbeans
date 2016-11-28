@@ -87,7 +87,7 @@ fun getResolutionScope(psiElement: PsiElement, bindingContext: BindingContext): 
     
     return null
 }
-
+ 
 private fun TypeParameterDescriptor.isVisible(descriptor: DeclarationDescriptor): Boolean {
     val owner = this.containingDeclaration
     var parent: DeclarationDescriptor? = descriptor

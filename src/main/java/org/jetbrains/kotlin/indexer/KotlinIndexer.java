@@ -39,28 +39,28 @@ public class KotlinIndexer extends EmbeddingIndexer {
     
     @Override
     protected void index(Indexable indexable, Parser.Result parserResult, Context context) {
-        final KotlinParserResult result = (KotlinParserResult) parserResult;
-        AnalysisResultWithProvider analysisResult = result.getAnalysisResult();
-        
-        if (analysisResult == null) {
-            return;
-        }
-        
-        final FileObject fo = result.getSnapshot().getSource().getFileObject();
-        final AnalysisResult res = analysisResult.getAnalysisResult();
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                generateLightClass(fo, result.getProject(), res);
-            }
-        });
-        thread.start();
+//        final KotlinParserResult result = (KotlinParserResult) parserResult;
+//        AnalysisResultWithProvider analysisResult = result.getAnalysisResult();
+//        
+//        if (analysisResult == null) {
+//            return;
+//        }
+//        
+//        final FileObject fo = result.getSnapshot().getSource().getFileObject();
+//        final AnalysisResult res = analysisResult.getAnalysisResult();
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                generateLightClass(fo, result.getProject(), res);
+//            }
+//        });
+//        thread.start();
     }
     
-    private void generateLightClass(FileObject fo, Project project, AnalysisResult analysisResult) {
-        synchronized (LOCK) {
-            KotlinLightClassGeneration.INSTANCE.generate(fo, project, analysisResult);
-        }
-    }
+//    private void generateLightClass(FileObject fo, Project project, AnalysisResult analysisResult) {
+//        synchronized (LOCK) {
+//            KotlinLightClassGeneration.INSTANCE.generate(fo, project, analysisResult);
+//        }
+//    }
     
 }

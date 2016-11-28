@@ -16,25 +16,21 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.filesystem.lightclasses;
 
-import java.io.BufferedOutputStream;
+import com.google.common.collect.Lists;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import org.jetbrains.kotlin.filesystem.KotlinLightClassManager;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
-import org.jetbrains.kotlin.resolve.KotlinAnalyzer;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.analyzer.AnalysisResult;
+import org.jetbrains.kotlin.backend.common.output.OutputFile;
 import org.jetbrains.kotlin.codegen.CompilationErrorHandler;
 import org.jetbrains.kotlin.codegen.KotlinCodegenFacade;
 import org.jetbrains.kotlin.codegen.state.GenerationState;
 import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor;
-import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.psi.KtClassOrObject;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.psi.KtScript;
@@ -138,110 +134,31 @@ public class KotlinLightClassGeneration {
         return parts[parts.length - 1];
     }
 
-    public void generate(FileObject file, Project project) {
-        if (project == null) {
-            return;
-        }
+    public List<byte[]> getByteCode(FileObject file, Project project, AnalysisResult analysisResult) {
+        List<byte[]> code = Lists.newArrayList();
+        if (project == null) return Collections.emptyList();
         
         KotlinLightClassManager manager = KotlinLightClassManager.getInstance(project);
         manager.computeLightClassesSources();
         List<String> lightClassesPaths = manager.getLightClassesPaths(file);
-
-        for (String path : lightClassesPaths) {
-            File lightClass = new File(ProjectUtils.getKotlinProjectLightClassesPath(project) + "/" + path);
-            if (!lightClass.exists()){
-                lightClass.mkdirs();
-            }    
-            
-            List<KtFile> ktFiles = manager.getSourceFiles(lightClass);
-            String[] pathParts = path.split("/");
-            String className = pathParts[pathParts.length-1];
-            if (!ktFiles.isEmpty()) {
-                AnalysisResult analysisResult
-                        = KotlinAnalyzer.analyzeFiles(project, ktFiles).getAnalysisResult();
-                GenerationState state = KotlinLightClassGeneration.INSTANCE.
-                        buildLightClasses(analysisResult, project, ktFiles, className);
-                if (state == null) {
-                    return;
-                }
-                for (int i = 0; i < state.getFactory().asList().size(); i++) {
-                    
-                    byte[] lightClassText = state.getFactory().asList().get(i).asByteArray();
-                    
-                    if (lightClass.getAbsolutePath().replace('\\', '/').contains(
-                            state.getFactory().asList().get(i).getRelativePath())) {
-                        OutputStream stream = null;
-                        try {
-                            stream = new BufferedOutputStream(new FileOutputStream(lightClass));
-                            stream.write(lightClassText);
-                            stream.flush();
-                        } catch (IOException ex) {
-                            KotlinLogger.INSTANCE.logException("", ex);
-                        } finally {
-                            if (stream != null) {
-                                try {
-                                    stream.close();
-                                } catch (IOException ex) {
-                                    KotlinLogger.INSTANCE.logException("", ex);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public void generate(FileObject file, Project project, AnalysisResult analysisResult) {
-        if (project == null) {
-            return;
-        }
-        
-        KotlinLightClassManager manager = KotlinLightClassManager.getInstance(project);
-        manager.computeLightClassesSources();
-        List<String> lightClassesPaths = manager.getLightClassesPaths(file);
-
         for (String path : lightClassesPaths) {
             File lightClass = new File(ProjectUtils.getKotlinProjectLightClassesPath(project) + ProjectUtils.FILE_SEPARATOR + path);
-            if (!lightClass.exists()){
-                lightClass.mkdirs();
-            }    
-            
             List<KtFile> ktFiles = manager.getSourceFiles(lightClass);
             String[] pathParts = path.split(Pattern.quote(ProjectUtils.FILE_SEPARATOR));
-            String className = pathParts[pathParts.length-1];
+            String className = pathParts[pathParts.length - 1];
             if (!ktFiles.isEmpty()) {
                 GenerationState state = KotlinLightClassGeneration.INSTANCE.
                         buildLightClasses(analysisResult, project, ktFiles, className);
                 if (state == null) {
-                    return;
+                    return Collections.emptyList();
                 }
-                for (int i = 0; i < state.getFactory().asList().size(); i++) {
-                    
-                    byte[] lightClassText = state.getFactory().asList().get(i).asByteArray();
-                    
-                    if (lightClass.getAbsolutePath().replace('\\', '/').contains(
-                            state.getFactory().asList().get(i).getRelativePath())) {
-                        OutputStream stream = null;
-                        try {
-                            stream = new BufferedOutputStream(new FileOutputStream(lightClass));
-                            stream.write(lightClassText);
-                            stream.flush();
-                        } catch (IOException ex) {
-                            KotlinLogger.INSTANCE.logException("", ex);
-                        } finally {
-                            if (stream != null) {
-                                try {
-                                    stream.close();
-                                } catch (IOException ex) {
-                                    KotlinLogger.INSTANCE.logException("", ex);
-                                }
-                            }
-                        }
-                    }
+                for (OutputFile outFile : state.getFactory().asList()) {
+                    code.add(outFile.asByteArray());
                 }
             }
         }
+        
+        return code;
     }
     
 }

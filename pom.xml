@@ -123,7 +123,22 @@
               <packaging>jar</packaging>  
               <generatePom>true</generatePom> 
             </configuration> 
-          </execution> 
+          </execution>  
+          <execution> 
+            <id>inst7</id>  
+            <phase>validate</phase>  
+            <goals> 
+              <goal>install-file</goal> 
+            </goals>  
+            <configuration> 
+              <file>${project.basedir}/lib/asm-all.jar</file>  
+              <groupId>org.jetbrains.kotlin</groupId>  
+              <artifactId>asm</artifactId>  
+              <version>1.0</version>  
+              <packaging>jar</packaging>  
+              <generatePom>true</generatePom> 
+            </configuration> 
+          </execution>  
         </executions> 
       </plugin>  
       <plugin> 
@@ -243,7 +258,16 @@
       <artifactId>kotlin-converter</artifactId>  
       <version>1.0</version>  
       <type>jar</type> 
-    </dependency>  
+    </dependency>
+    
+    
+    <dependency> 
+      <groupId>org.jetbrains.kotlin</groupId>  
+      <artifactId>asm</artifactId>  
+      <version>1.0</version>  
+      <type>jar</type> 
+    </dependency>
+          
     <dependency> 
       <groupId>org.netbeans.modules</groupId>  
       <artifactId>org-netbeans-modules-maven</artifactId>  

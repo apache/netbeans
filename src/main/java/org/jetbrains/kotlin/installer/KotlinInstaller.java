@@ -32,7 +32,8 @@ public class KotlinInstaller extends Yenta {
                 "org.netbeans.modules.jumpto",
                 "org.netbeans.modules.debugger.jpda", 
                 "org.netbeans.modules.debugger.jpda.projects",
-                "org.netbeans.modules.java.api.common");
+                "org.netbeans.modules.java.api.common",
+                "org.netbeans.modules.java.preprocessorbridge");
     }
     
 }

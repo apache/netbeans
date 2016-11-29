@@ -29,8 +29,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import org.jetbrains.kotlin.builder.KotlinPsiManager;
 import org.jetbrains.kotlin.filesystem.lightclasses.LightClassFile;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
@@ -54,7 +52,7 @@ public class KotlinLightClassManager {
     
     private final org.netbeans.api.project.Project project;
     
-    private final ConcurrentMap<File, Set<FileObject>> sourceFiles = new ConcurrentHashMap<>();
+    private final Map<File, Set<FileObject>> sourceFiles = new HashMap<>();
     
     @NotNull
     public static KotlinLightClassManager getInstance(@NotNull org.netbeans.api.project.Project project){

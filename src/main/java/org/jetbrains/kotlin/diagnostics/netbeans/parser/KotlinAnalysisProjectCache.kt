@@ -27,7 +27,15 @@ object KotlinAnalysisProjectCache {
 
     private val cache = hashMapOf<Project, AnalysisResultWithProvider>()
     
-    @Synchronized fun getAnalysisResult(project: Project): AnalysisResultWithProvider {
+    fun getAnalysisResult(project: Project): AnalysisResultWithProvider {
+        if (!cache.containsKey(project)) {
+            return getResult(project)
+        }
+        
+        return cache[project]!!
+    }
+    
+    @Synchronized private fun getResult(project: Project): AnalysisResultWithProvider {
         if (!cache.containsKey(project)) {
             val startTime = System.nanoTime()
             val result = NetBeansAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration(

@@ -74,7 +74,7 @@ object KotlinUpdater {
         val message = "A new version ($latestVersion) of the Kotlin plugin is available"
         val notifyDescriptor = NotifyDescriptor.Message(message, 
                 NotifyDescriptor.INFORMATION_MESSAGE)
-        DialogDisplayer.getDefault().notify(notifyDescriptor)
+        DialogDisplayer.getDefault().notifyLater(notifyDescriptor)
     }
     
     private fun getLatestVersion(inputStream: InputStream): String {

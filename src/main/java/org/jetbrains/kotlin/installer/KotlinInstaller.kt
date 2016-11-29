@@ -23,6 +23,9 @@ import org.openide.loaders.DataObject
 import org.openide.windows.TopComponent
 import org.openide.windows.WindowManager
 import java.util.HashSet
+import org.jetbrains.kotlin.utils.ProjectUtils
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper
+import org.jetbrains.kotlin.projectsextensions.maven.MavenHelper
 
 class KotlinInstaller : Yenta() {
 
@@ -48,6 +51,8 @@ class KotlinInstaller : Yenta() {
                         val currentFile = dataObject.primaryFile
                         if (currentFile != null && currentFile.mimeType.equals("text/x-kt")) {
                             KotlinUpdater.checkUpdates()
+                            val project = ProjectUtils.getKotlinProjectForFileObject(currentFile)
+                            if (KotlinProjectHelper.INSTANCE.checkProject(project)) MavenHelper.configure(project)
                         }
                     }
                 }

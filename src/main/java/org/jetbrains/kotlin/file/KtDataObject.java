@@ -114,30 +114,6 @@ public class KtDataObject extends MultiDataObject {
     public KtDataObject(final FileObject file, MultiFileLoader loader) throws IOException {
         super(file, loader);
         registerEditor("text/x-kt", true);
-        file.addFileChangeListener(new FileChangeListener(){
-            @Override
-            public void fileFolderCreated(FileEvent fe) {}
-
-            @Override
-            public void fileDataCreated(FileEvent fe) {}
-
-            @Override
-            public void fileChanged(FileEvent fe) {
-                Project project = ProjectUtils.getKotlinProjectForFileObject(fe.getFile());
-                if (KotlinProjectHelper.INSTANCE.isMavenProject(project)) {
-                    MavenHelper.configure(project);
-                }
-            }
-
-            @Override
-            public void fileDeleted(FileEvent fe) {}
-
-            @Override
-            public void fileRenamed(FileRenameEvent fre) {}
-
-            @Override
-            public void fileAttributeChanged(FileAttributeEvent fae) {}
-        });
     }
 
     @Override

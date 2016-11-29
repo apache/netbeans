@@ -62,16 +62,24 @@ public class ProjectUtils {
         }
     }
 
-    public static void checkKtHome(){
+    public static void checkKtHome() throws IOException {
         if (KT_HOME == null){
-            FileObject dir = FileUtil.toFileObject(Places.getUserDirectory());
-            if (dir.getFileObject("kotlinc") == null){
-                BundledCompiler.getKotlinc();
-            }
             File userDirectory = Places.getUserDirectory();
             if (userDirectory == null) {
                 KotlinLogger.INSTANCE.logWarning("KT_HOME is null!");
                 return;
+            }
+            
+            FileObject dir = FileUtil.toFileObject(userDirectory);
+            if (dir == null || dir.getFileObject("kotlinc") == null){
+                BundledCompiler.getKotlinc();
+            } else {
+                FileObject kotlincDir = dir.getFileObject("kotlinc");
+                FileObject build = kotlincDir.getFileObject("build.txt");
+                if (build == null || !build.asText().equals(BundledCompiler.KOTLIN_VERSION)) {
+                    BundledCompiler.getKotlinc();
+                    KotlinLogger.INSTANCE.logInfo("New version of bundled compiler");
+                }
             }
             KT_HOME = userDirectory.getAbsolutePath() + FILE_SEPARATOR + "kotlinc"
                     + FILE_SEPARATOR;

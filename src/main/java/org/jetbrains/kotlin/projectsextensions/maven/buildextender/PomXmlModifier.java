@@ -28,6 +28,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.dom4j.tree.DefaultElement;
+import org.jetbrains.kotlin.bundledcompiler.BundledCompiler;
 import org.jetbrains.kotlin.log.KotlinLogger;
 import org.netbeans.api.project.Project;
 import org.openide.util.Exceptions;
@@ -35,7 +36,6 @@ import org.openide.util.Exceptions;
 public class PomXmlModifier {
 
     private final Project project;
-    private final String kotlinVersion = "1.0.4";
     private final String groupIdName = "org.jetbrains.kotlin";
     
     public PomXmlModifier(Project project) {
@@ -92,7 +92,7 @@ public class PomXmlModifier {
         
         QName versionQname = new QName("version", dependencies.getQName().getNamespace());
         DefaultElement version = new DefaultElement(versionQname);
-        version.addText(kotlinVersion);
+        version.addText(BundledCompiler.KOTLIN_VERSION);
         
         dependency.add(groupId);
         dependency.add(artifactId);
@@ -150,7 +150,7 @@ public class PomXmlModifier {
         
         QName versionQname = new QName("version", plugins.getQName().getNamespace());
         DefaultElement version = new DefaultElement(versionQname);
-        version.addText(kotlinVersion);
+        version.addText(BundledCompiler.KOTLIN_VERSION);
         
         plugin.add(groupId);
         plugin.add(artifactId);

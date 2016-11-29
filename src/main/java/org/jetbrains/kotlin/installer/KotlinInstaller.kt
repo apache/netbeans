@@ -39,6 +39,7 @@ class KotlinInstaller : Yenta() {
     
     override fun restored() {        
         WindowManager.getDefault().invokeWhenUIReady { 
+            ProjectUtils.checkKtHome()
             WindowManager.getDefault().registry.addPropertyChangeListener listener@{
                 if (it.propertyName.equals("opened")) {
                     if (KotlinUpdater.updated) return@listener

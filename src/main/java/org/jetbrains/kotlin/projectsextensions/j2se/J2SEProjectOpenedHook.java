@@ -45,7 +45,6 @@ public class J2SEProjectOpenedHook extends ProjectOpenedHook {
         Thread thread = new Thread() {
             @Override
             public void run() {
-                ProjectUtils.checkKtHome();
                 Runnable run = new Runnable() {
                     @Override
                     public void run() {

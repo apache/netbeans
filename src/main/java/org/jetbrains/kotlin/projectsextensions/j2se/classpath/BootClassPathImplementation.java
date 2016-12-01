@@ -88,8 +88,6 @@ final class BootClassPathImplementation implements ClassPathImplementation, Prop
         for (URL url : kotlinBoot){
             result.add(ClassPathSupport.createResource(url));
         }
-        result.add(ClassPathSupport.createResource(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).toURL()));
-        //
 
         
         synchronized (this) {

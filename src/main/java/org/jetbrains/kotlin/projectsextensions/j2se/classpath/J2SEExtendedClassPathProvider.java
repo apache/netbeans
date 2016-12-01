@@ -241,8 +241,6 @@ public class J2SEExtendedClassPathProvider implements ClassPathProvider, Propert
             for (URL url : kotlinBoot){
                 resources.add(ClassPathSupport.createResource(url));
             }
-            //lightclasses directory
-            resources.add(ClassPathSupport.createResource(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).toURL()));
             
             if (type == 0) {
                 cp = ClassPathFactory.createClassPath(

@@ -160,8 +160,7 @@ public class MavenExtendedClassPath implements ClassPathExtender {
             ClassPathProviderImpl impl = new ClassPathProviderImpl(project);
             boot = impl.getJavaPlatform().getBootstrapLibraries();
             
-            List<String> javaClasspathElements = new ArrayList<String>();
-//            javaClasspathElements.addAll(getSystemClasspathElements(project));
+            List<String> javaClasspathElements = new ArrayList<>();
             javaClasspathElements.addAll(getTestClasspathElements(project));
             compile = ClassPathSupport.createProxyClassPath(getClasspath(getCompileClasspathElements(project)), 
                     getClasspath(javaClasspathElements));

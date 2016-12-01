@@ -16,15 +16,10 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.projectsextensions.maven.classpath;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.projectsextensions.maven.classpath.classpath.ClassPathProviderImpl;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
-import org.netbeans.spi.java.classpath.PathResourceImplementation;
-import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
 
@@ -41,18 +36,7 @@ public final class MavenClassPathProviderImpl implements ClassPathProvider{
     
     @Override
     public ClassPath findClassPath(FileObject fo, String type) {
-        ClassPath cp = impl.findClassPath(fo, type);
-        if (cp == null) {
-            return null;
-        }
-        
-        List<PathResourceImplementation> resources = new ArrayList<>();
-        if (type.equals(ClassPath.COMPILE)){
-            resources.add(ClassPathSupport.createResource(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).toURL()));
-        }
-        ClassPath lightClasses = ClassPathSupport.createClassPath(resources);
-        
-        return ClassPathSupport.createProxyClassPath(cp, lightClasses);
+        return impl.findClassPath(fo, type);
     }
     
     public ClassPath[] getProjectClassPaths(String type) {

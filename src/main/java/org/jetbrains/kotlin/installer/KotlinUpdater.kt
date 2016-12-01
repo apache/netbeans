@@ -62,9 +62,8 @@ object KotlinUpdater {
                     }
                 }
             } catch (e: IOException) {
-                KotlinLogger.INSTANCE.logException("Couldn't connect to https://dl.bintray.com/jetbrains/kotlin/netbeans-plugin", e)
+                KotlinLogger.INSTANCE.logInfo("Couldn't connect to https://dl.bintray.com/jetbrains/kotlin/netbeans-plugin")
             } finally {
-                connection.inputStream.close()
                 connection.disconnect()
             }
         }

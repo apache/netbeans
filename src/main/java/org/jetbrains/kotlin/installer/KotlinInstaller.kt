@@ -42,23 +42,40 @@ class KotlinInstaller : Yenta() {
             ProjectUtils.checkKtHome()
             WindowManager.getDefault().registry.addPropertyChangeListener listener@{
                 if (it.propertyName.equals("opened")) {
-                    if (KotlinUpdater.updated) return@listener
-                    
-                    val newHashSet = it.newValue as HashSet<TopComponent>
-                    val oldHashSet = it.oldValue as HashSet<TopComponent>
-                    newHashSet.filter {!oldHashSet.contains(it)}
-                            .forEach {
-                        val dataObject = it.lookup.lookup(DataObject::class.java) ?: return@forEach
-                        val currentFile = dataObject.primaryFile
-                        if (currentFile != null && currentFile.mimeType.equals("text/x-kt")) {
-                            KotlinUpdater.checkUpdates()
-                            val project = ProjectUtils.getKotlinProjectForFileObject(currentFile)
-                            if (KotlinProjectHelper.INSTANCE.checkProject(project)) MavenHelper.configure(project)
-                        }
-                    }
+                    checkProjectConfiguration(it)
+                    checkUpdates(it)
                 }
             }
         }
+    }
+    
+    private fun checkProjectConfiguration(changeEvent: PropertyChangeEvent) {
+        val newHashSet = changeEvent.newValue as HashSet<TopComponent>
+        val oldHashSet = changeEvent.oldValue as HashSet<TopComponent>
+        newHashSet.filter {!oldHashSet.contains(it)}
+                .forEach {
+                    val dataObject = it.lookup.lookup(DataObject::class.java) ?: return@forEach
+                    val currentFile = dataObject.primaryFile
+                    if (currentFile != null && currentFile.mimeType.equals("text/x-kt")) {
+                        val project = ProjectUtils.getKotlinProjectForFileObject(currentFile)
+                        if (KotlinProjectHelper.INSTANCE.checkProject(project)) MavenHelper.configure(project)
+                    }
+        }
+    }
+    
+    private fun checkUpdates(changeEvent: PropertyChangeEvent) {
+        if (KotlinUpdater.updated) return
+        
+        val newHashSet = changeEvent.newValue as HashSet<TopComponent>
+        val oldHashSet = changeEvent.oldValue as HashSet<TopComponent>
+        newHashSet.filter {!oldHashSet.contains(it)}
+                .forEach {
+                    val dataObject = it.lookup.lookup(DataObject::class.java) ?: return@forEach
+                    val currentFile = dataObject.primaryFile
+                    if (currentFile != null && currentFile.mimeType.equals("text/x-kt")) {
+                        KotlinUpdater.checkUpdates()
+                    }
+                }
     }
     
 }

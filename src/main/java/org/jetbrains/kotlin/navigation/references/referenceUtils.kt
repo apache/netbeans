@@ -138,7 +138,9 @@ fun List<KotlinReference>.resolveToSourceElements(): List<SourceElement> {
     val ktFile = first().referenceExpression.getContainingKtFile()
     val path = ktFile.virtualFile.canonicalPath
     
-    val file = FileUtil.toFileObject(File(path)) ?: return emptyList()
+    val normalizedPath = FileUtil.normalizePath(path)
+    
+    val file = FileUtil.toFileObject(File(normalizedPath)) ?: return emptyList()
     val project = ProjectUtils.getKotlinProjectForFileObject(file) ?: return emptyList()
     
     return this.resolveToSourceElements(

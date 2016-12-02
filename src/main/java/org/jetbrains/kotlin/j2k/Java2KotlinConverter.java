@@ -22,12 +22,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import org.jetbrains.kotlin.formatting.KotlinFormatterUtils;
 import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
-import org.jetbrains.kotlin.psi.KtFile;
-import org.jetbrains.kotlin.psi.KtPsiFactory;
-import org.jetbrains.kotlin.psi.KtPsiFactoryKt;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.api.project.Project;
 import org.openide.DialogDisplayer;
@@ -35,8 +31,8 @@ import org.openide.NotifyDescriptor;
 import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.jetbrains.kotlin.reformatting.FormatUtilsKt;
 import org.openide.loaders.DataObject;
-import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
 
 public class Java2KotlinConverter {
@@ -64,9 +60,7 @@ public class Java2KotlinConverter {
             return;
         }
         
-        String formattedCode = getFormattedCode(translatedCode, kotlinFile.getName(), proj);
-        
-        if (!addContent(kotlinFile, formattedCode)) {
+        if (!addContent(kotlinFile, translatedCode)) {
             showError("Couldn't add content to Kotlin file");
             return;
         }
@@ -79,9 +73,13 @@ public class Java2KotlinConverter {
         }
         
         FileObject kotlinFO = FileUtil.toFileObject(kotlinFile);
+        
         try {
+            Document document = ProjectUtils.getDocumentFromFileObject(kotlinFO);
+            FormatUtilsKt.format(document, 0);
+            
             DataObject.find(kotlinFO).getLookup().lookup(OpenCookie.class).open();
-        } catch (DataObjectNotFoundException ex) {
+        } catch (Exception ex) {
             KotlinLogger.INSTANCE.logException("Cannot open Kotlin file", ex);
         }
     }
@@ -104,15 +102,6 @@ public class Java2KotlinConverter {
                 }
             }
         }
-    }
-    
-    private static String getFormattedCode(String code, String fileName, Project project) {
-        KtFile ktFile = new KtPsiFactory(
-                KotlinEnvironment.Companion.getEnvironment(project).getProject()).createFile(code);
-        String formattedCode = KotlinFormatterUtils.formatCode(code, fileName, 
-                KtPsiFactoryKt.KtPsiFactory(ktFile), "\n");
-        
-        return formattedCode;
     }
     
     private static void showError(String message) {

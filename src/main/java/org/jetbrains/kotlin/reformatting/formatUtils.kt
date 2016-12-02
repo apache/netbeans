@@ -27,14 +27,14 @@ import javax.swing.text.StyledDocument
 import javax.swing.SwingUtilities
 
 
-fun format(doc: Document, offset: Int) {
+fun format(doc: Document, offset: Int, proj: Project? = null) {
     val file = ProjectUtils.getFileObjectForDocument(doc)
     if (file == null) return
 
     val parsedFile = ProjectUtils.getKtFile(doc.getText(0, doc.length), file)
     if (parsedFile == null) return
 
-    val project = ProjectUtils.getKotlinProjectForFileObject(file)
+    val project = proj ?: ProjectUtils.getKotlinProjectForFileObject(file)
     val code = parsedFile.text
     KotlinFormatterUtils.formatCode(code, parsedFile.name, project, "\n")
     val formattedCode = NetBeansDocumentFormattingModel.getNewText()

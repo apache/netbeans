@@ -23,6 +23,7 @@ import java.util.Set;
 import kotlin.Pair;
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.jetbrains.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.jetbrains.kotlin.utils.ProjectUtils;
@@ -59,6 +60,11 @@ public class KotlinVirtualSourceProvider implements VirtualSourceProvider {
             List<Pair<ClassNode, String>> list = JavaStubGenerator.INSTANCE.gen(codeList);
             for (Pair<ClassNode, String> nameAndStub : list) {
                 String code = nameAndStub.getSecond();
+                
+                KotlinLogger.INSTANCE.logInfo("\n\n\n");
+                KotlinLogger.INSTANCE.logInfo(code);
+                KotlinLogger.INSTANCE.logInfo("\n\n\n");
+                
                 int lastIndexOfSlash = nameAndStub.getFirst().name.lastIndexOf("/");
                 String packageName;
                 if (lastIndexOfSlash != -1) {

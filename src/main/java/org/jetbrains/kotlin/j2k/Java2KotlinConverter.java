@@ -76,7 +76,7 @@ public class Java2KotlinConverter {
         
         try {
             Document document = ProjectUtils.getDocumentFromFileObject(kotlinFO);
-            FormatUtilsKt.format(document, 0);
+            FormatUtilsKt.format(document, 0, proj);
             
             DataObject.find(kotlinFO).getLookup().lookup(OpenCookie.class).open();
         } catch (Exception ex) {

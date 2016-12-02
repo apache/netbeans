@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.psi.KtSimpleNameExpression
 import org.jetbrains.kotlin.idea.util.CallTypeAndReceiver
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.resolve.lang.java.findTypes
+import org.jetbrains.kotlin.hints.autoImport
 import org.netbeans.api.project.Project
 import org.netbeans.api.java.source.ElementHandle as JavaElementHandle
 import javax.lang.model.element.TypeElement
@@ -63,7 +64,8 @@ class NonImportedCompletionProposal(val identifierPart: String,
     
     override fun doInsert(document: Document) {
         document.remove(idenOffset, identifierPart.length)
-        document.insertString(idenOffset, sortText, null)
+        document.insertString(idenOffset, sortText.substringAfterLast("."), null)
+        autoImport(sortText, document)
     }
 
     override fun getElement() = null

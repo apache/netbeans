@@ -77,4 +77,14 @@ public class J2KTest extends NbTestCase {
         doTest("mixed");
     }
     
+    @Test
+    public void testWithInnerClass() {
+        doTest("withInnerClass");
+    }
+    
+    @Test
+    public void testInterface() {
+        doTest("interface");
+    }
+    
 }

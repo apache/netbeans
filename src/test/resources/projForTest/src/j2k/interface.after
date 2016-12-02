@@ -1,0 +1,5 @@
+package j2k
+
+interface SomeInterface {
+    fun hello()
+}

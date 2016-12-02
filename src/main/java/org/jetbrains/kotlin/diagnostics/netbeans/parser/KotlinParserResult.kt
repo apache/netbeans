@@ -33,19 +33,23 @@ class KotlinParserResult(snapshot: Snapshot,
                          val ktFile: KtFile, val project: Project) : ParserResult(snapshot) {
 
     private val file = snapshot.source.fileObject
-
-    override fun invalidate() {
-    }
-
-    override fun getDiagnostics() = arrayListOf<Error>().apply {
-        addAll(
+    private val diags = arrayListOf<Error>()
+    
+    init {
+        diags.addAll(
                 analysisResult.analysisResult.bindingContext.diagnostics.all()
                         .filter { it.psiFile.virtualFile.path == file.path }
                         .map { KotlinError(it, file) }
         )
-        addAll(
+        diags.addAll(
                 AnalyzingUtils.getSyntaxErrorRanges(ktFile)
                         .map { KotlinSyntaxError(it, file) }
         )
     }
+    
+    override fun invalidate() {
+    }
+
+    override fun getDiagnostics() = diags
+    
 }

@@ -83,7 +83,7 @@ class KotlinHintsProvider : HintsProvider {
     }
 
     private fun getHints(ruleContext: RuleContext) =
-            (ruleContext.parserResult as KotlinParserResult).diagnostics
+            ruleContext.parserResult.diagnostics
                     .filterIsInstance(KotlinError::class.java)
                     .map { it.createHint(ruleContext.parserResult as KotlinParserResult) }
                     .filterNotNull()
@@ -112,15 +112,7 @@ class KotlinHintsProvider : HintsProvider {
 
     override fun computeErrors(hintsManager: HintsManager, ruleContext: RuleContext,
                                list: List<Hint>, errors: MutableList<Error>) {
-        val parserResult = ruleContext.parserResult as KotlinParserResult
-        val file = parserResult.snapshot.source.fileObject
-
-        val analysisResult = parserResult.analysisResult ?: return
-        errors.addAll(analysisResult.analysisResult.bindingContext.diagnostics.all()
-                .filter { it.psiFile.virtualFile.path == file.path }
-                .map { KotlinError(it, file) })
-        errors.addAll(AnalyzingUtils.getSyntaxErrorRanges(parserResult.ktFile)
-                .map { KotlinSyntaxError(it, file) })
+        errors.addAll(ruleContext.parserResult.diagnostics)
     }
 
 }

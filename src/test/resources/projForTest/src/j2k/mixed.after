@@ -1,0 +1,12 @@
+package j2k
+
+class MixedClass {
+    fun hello() {
+        System.out.println("hello")
+    }
+
+    companion object {
+        fun staticMethod() {
+        }
+    }
+}

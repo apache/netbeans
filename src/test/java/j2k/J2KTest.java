@@ -16,8 +16,8 @@
  ****************************************************************************** */
 package j2k;
 
-import java.io.IOException;
 import javaproject.JavaProject;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.jetbrains.kotlin.j2k.Java2KotlinConverter;
 import org.junit.Test;
@@ -57,7 +57,7 @@ public class J2KTest extends NbTestCase {
             String afterText = afterDoc.getText(0, afterDoc.getLength());
             
             assertEquals(afterText, kotlinText);
-        } catch (Exception ex) {
+        } catch (BadLocationException ex) {
             assertTrue(false);
         }
     }
@@ -65,6 +65,16 @@ public class J2KTest extends NbTestCase {
     @Test
     public void testSimpleCase() {
         doTest("simple");
+    }
+    
+    @Test
+    public void testWithStaticMethods() {
+        doTest("withStaticMethod");
+    }
+    
+    @Test
+    public void testMixed() {
+        doTest("mixed");
     }
     
 }

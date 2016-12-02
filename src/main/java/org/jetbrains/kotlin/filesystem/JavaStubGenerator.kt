@@ -43,8 +43,6 @@ object JavaStubGenerator {
             innerClasses.put(classNode, innerClassesList)
         }
         
-        
-        
         return classes.map { generate(it, innerClasses) }  
     }
     
@@ -96,7 +94,27 @@ object JavaStubGenerator {
             signatureReader.accept(traceSigVisitor)
             
             traceSigVisitor.declaration.replace("$", ".")
-        } else ""
+        } else {
+            val superTypes = StringBuilder()
+            if (classType == "class") {
+                superTypes.append("extends ").append(superName.replace("/", ".").replace("$", "."))
+                superTypes.append(" ")
+            }
+            
+            if (interfaces != null && interfaces.isNotEmpty()) {
+                when(classType) {
+                    "interface" -> superTypes.append(" extends ")
+                    "class" -> superTypes.append(" implements ")
+                }
+            }
+        
+            interfaces.forEachIndexed { i, it ->
+                superTypes.append(it.replace("/", ".").replace("$", "."))
+                if (i != interfaces.size - 1) superTypes.append(",")
+            }
+            
+            superTypes.toString()
+        }
         
         declaration.append(classType).append(" ")
         declaration.append(className).append(" ")

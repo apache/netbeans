@@ -23,8 +23,10 @@ import org.jetbrains.kotlin.resolve.KotlinAnalyzer
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.psi.KtFile
 import org.netbeans.api.project.Project
+import org.netbeans.modules.parsing.api.ParserManager
 import org.netbeans.modules.parsing.api.Snapshot
 import org.netbeans.modules.parsing.api.Task
+import org.netbeans.modules.parsing.api.UserTask
 import org.netbeans.modules.parsing.spi.Parser
 import org.netbeans.modules.parsing.spi.Parser.Result
 import org.netbeans.modules.parsing.spi.SourceModificationEvent
@@ -61,6 +63,10 @@ class KotlinParser : Parser() {
     private var project: Project? = null
 
     override fun parse(snapshot: Snapshot, task: Task, event: SourceModificationEvent) {
+        if (task is UserTask) {
+            ParserManager.parseWhenScanFinished(listOf(snapshot.source), task)
+            return
+        }
         this.snapshot = snapshot
         project = ProjectUtils.getKotlinProjectForFileObject(snapshot.source.fileObject)
         if (project == null) {

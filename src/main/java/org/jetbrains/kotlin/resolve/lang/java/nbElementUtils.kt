@@ -49,7 +49,6 @@ import org.jetbrains.kotlin.log.KotlinLogger
 
 object JavaEnvironment {
     val JAVA_SOURCE = hashMapOf<Project, JavaSource>()
-    val CLASSPATH_INFO = hashMapOf<Project, ClasspathInfo>()
 
     fun getClasspathInfo(project: Project): ClasspathInfo {
         val extendedProvider = KotlinProjectHelper.INSTANCE.getExtendedClassPath(project)
@@ -61,26 +60,20 @@ object JavaEnvironment {
     }
 
     fun updateClasspathInfo(project: Project) {
-        CLASSPATH_INFO.put(project, getClasspathInfo(project))
-        JAVA_SOURCE.put(project, JavaSource.create(CLASSPATH_INFO.get(project)))
+        JAVA_SOURCE.put(project, JavaSource.create(getClasspathInfo(project)))
     }
 
     fun checkJavaSource(project: Project) {
-        if (!CLASSPATH_INFO.containsKey(project)) {
-            CLASSPATH_INFO.put(project, getClasspathInfo(project))
-        }
         if (!JAVA_SOURCE.containsKey(project)) {
-            JAVA_SOURCE.put(project, JavaSource.create(CLASSPATH_INFO.get(project)))
+            JAVA_SOURCE.put(project, JavaSource.create(getClasspathInfo(project)))
         }
     }
 
 }
 
 fun String.getPackages(project: Project): Set<String> {
-    if (!JavaEnvironment.CLASSPATH_INFO.containsKey(project)) {
-        JavaEnvironment.CLASSPATH_INFO.put(project, JavaEnvironment.getClasspathInfo(project))
-    }
-    return JavaEnvironment.CLASSPATH_INFO.get(project)!!.classIndex.
+    JavaEnvironment.checkJavaSource(project)
+    return JavaEnvironment.JAVA_SOURCE[project]!!.classpathInfo.classIndex.
             getPackageNames(this, false, hashSetOf(ClassIndex.SearchScope.SOURCE, ClassIndex.SearchScope.DEPENDENCIES))
 }
 
@@ -121,7 +114,7 @@ fun TypeMirrorHandle<*>.isEqual(handle: TypeMirrorHandle<*>, project: Project) =
 fun Project.findFQName(name: String): List<String> {
     JavaEnvironment.checkJavaSource(this)
 
-    return JavaEnvironment.CLASSPATH_INFO[this]!!.classIndex.
+    return JavaEnvironment.JAVA_SOURCE[this]!!.classpathInfo.classIndex.
             getDeclaredTypes(name, ClassIndex.NameKind.SIMPLE_NAME,
                     setOf(ClassIndex.SearchScope.SOURCE,
                             ClassIndex.SearchScope.DEPENDENCIES))
@@ -131,14 +124,14 @@ fun Project.findFQName(name: String): List<String> {
 fun Project.findTypes(prefix: String): List<ElementHandle<TypeElement>> {
     JavaEnvironment.checkJavaSource(this)
     
-    return JavaEnvironment.CLASSPATH_INFO[this]!!.classIndex.
+    return JavaEnvironment.JAVA_SOURCE[this]!!.classpathInfo.classIndex.
             getDeclaredTypes(prefix, ClassIndex.NameKind.CASE_INSENSITIVE_PREFIX,
                     setOf(ClassIndex.SearchScope.SOURCE,
                             ClassIndex.SearchScope.DEPENDENCIES)).toList()
 }
 
 fun ElementHandle<*>.openInEditor(project: Project) =
-        ElementOpen.open(JavaEnvironment.CLASSPATH_INFO[project], this)
+        ElementOpen.open(JavaEnvironment.JAVA_SOURCE[project]?.classpathInfo, this)
 
 fun TypeMirrorHandle<*>.getJavaClass(project: Project) =
         NetBeansJavaClass(ElemHandle.from(this, project), project)
@@ -152,14 +145,14 @@ fun ElemHandle<*>.isDeprecated(project: Project) =
 fun Project.findClassUsages(className: String): Set<FileObject> {
     val handle = this.findType(className) ?: return emptySet()
 
-    return JavaEnvironment.CLASSPATH_INFO[this]!!.classIndex.getResources(handle.elementHandle,
+    return JavaEnvironment.JAVA_SOURCE[this]!!.classpathInfo.classIndex.getResources(handle.elementHandle,
             ClassIndex.SearchKind.values().toSet(), hashSetOf(ClassIndex.SearchScope.SOURCE))
 }
 
 fun Project.getFileObjectForFqName(fqName: String): FileObject? {
     val handle = this.findType(fqName) ?: return null
 
-    val fObjects = JavaEnvironment.CLASSPATH_INFO[this]!!.classIndex.getResources(handle.elementHandle,
+    val fObjects = JavaEnvironment.JAVA_SOURCE[this]!!.classpathInfo.classIndex.getResources(handle.elementHandle,
             setOf(ClassIndex.SearchKind.IMPLEMENTORS), setOf(ClassIndex.SearchScope.DEPENDENCIES),
             setOf(ClassIndex.ResourceType.BINARY))
 

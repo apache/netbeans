@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.psi.KtFile
+import org.netbeans.api.java.source.SourceUtils
 import org.netbeans.api.project.Project
 import org.netbeans.modules.parsing.api.ParserManager
 import org.netbeans.modules.parsing.api.Snapshot
@@ -78,9 +79,8 @@ class KotlinParser : Parser() {
         }
         
         file = ProjectUtils.getKtFile(snapshot.text.toString(), snapshot.source.fileObject)
-        val caretOffset = GsfUtilities.getLastKnownCaretOffset(snapshot, event)
         
-        if (caretOffset <= 0) {
+        if (SourceUtils.isScanInProgress()) {
             CACHE.put(file!!.virtualFile.path, KotlinAnalysisProjectCache.getAnalysisResult(project!!))
             return
         }

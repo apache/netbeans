@@ -41,7 +41,6 @@ import org.netbeans.modules.csl.api.HintsProvider.HintsManager
 import org.jetbrains.kotlin.diagnostics.Errors
 import org.netbeans.modules.csl.api.HintSeverity
 
-
 class KotlinHintsProvider : HintsProvider {
 
     override fun computeSuggestions(hintsManager: HintsManager, ruleContext: RuleContext,

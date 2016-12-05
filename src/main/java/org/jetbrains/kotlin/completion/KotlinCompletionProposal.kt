@@ -52,7 +52,7 @@ class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
     init {
         text = descriptor.name.identifier
         proposal = DescriptorRenderer.ONLY_NAMES_WITH_SHORT_TYPES.render(descriptor)
-        FIELD_ICON = KotlinImageProvider.INSTANCE.getImage(descriptor)
+        FIELD_ICON = KotlinImageProvider.getImage(descriptor)
         val splitted = proposal.split(":")
         proposalName = splitted[0]
         type = if (splitted.size > 1) splitted[1] else ""

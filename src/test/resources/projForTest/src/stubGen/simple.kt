@@ -1,0 +1,4 @@
+package stubGen
+
+class Simple {
+}

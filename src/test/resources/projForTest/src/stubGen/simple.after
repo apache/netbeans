@@ -1,0 +1,4 @@
+package stubGen;
+public final class Simple extends java.lang.Object {
+public Simple(){}
+}

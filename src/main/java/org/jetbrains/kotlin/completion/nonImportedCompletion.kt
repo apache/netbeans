@@ -70,7 +70,7 @@ class NonImportedCompletionProposal(val identifierPart: String,
 
     override fun getElement() = null
 
-    override fun getIcon() = KotlinImageProvider.INSTANCE.typeImage
+    override fun getIcon() = KotlinImageProvider.typeImage
 
     override fun getAnchorOffset() = idenOffset
 

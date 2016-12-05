@@ -18,6 +18,7 @@ package org.jetbrains.kotlin.diagnostics.netbeans.parser
 
 import com.intellij.psi.PsiErrorElement
 import org.jetbrains.kotlin.diagnostics.Diagnostic
+import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.resolve.AnalyzingUtils
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.psi.KtFile
@@ -29,27 +30,23 @@ import org.openide.filesystems.FileObject
 import org.netbeans.modules.parsing.api.Snapshot
 
 class KotlinParserResult(snapshot: Snapshot,
-                         val analysisResult: AnalysisResultWithProvider,
+                         val analysisResult: AnalysisResultWithProvider?,
                          val ktFile: KtFile, val project: Project) : ParserResult(snapshot) {
 
     private val file = snapshot.source.fileObject
-    private val diags = arrayListOf<Error>()
     
-    init {
-        diags.addAll(
+    override fun invalidate() {}
+
+    override fun getDiagnostics() = if (analysisResult == null) emptyList<Error>() else arrayListOf<Error>().apply {
+        addAll(
                 analysisResult.analysisResult.bindingContext.diagnostics.all()
                         .filter { it.psiFile.virtualFile.path == file.path }
                         .map { KotlinError(it, file) }
         )
-        diags.addAll(
+        addAll(
                 AnalyzingUtils.getSyntaxErrorRanges(ktFile)
                         .map { KotlinSyntaxError(it, file) }
         )
     }
-    
-    override fun invalidate() {
-    }
-
-    override fun getDiagnostics() = diags
     
 }

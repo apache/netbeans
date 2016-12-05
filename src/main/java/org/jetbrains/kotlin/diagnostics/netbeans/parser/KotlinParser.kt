@@ -79,8 +79,13 @@ class KotlinParser : Parser() {
         }
         
         file = ProjectUtils.getKtFile(snapshot.text.toString(), snapshot.source.fileObject)
-        
         if (SourceUtils.isScanInProgress()) {
+            return
+        }
+        
+        val caretOffset = GsfUtilities.getLastKnownCaretOffset(snapshot, event)
+         
+        if (caretOffset <= 0) {
             CACHE.put(file!!.virtualFile.path, KotlinAnalysisProjectCache.getAnalysisResult(project!!))
             return
         }
@@ -89,7 +94,7 @@ class KotlinParser : Parser() {
     }
     
     override fun getResult(task: Task): Result? {
-        if (project != null && file != null) return KotlinParserResult(snapshot, CACHE[file!!.virtualFile.path]!!, file!!, project!!)
+        if (project != null && file != null) return KotlinParserResult(snapshot, CACHE[file!!.virtualFile.path], file!!, project!!)
         
         return null
     }

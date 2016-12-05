@@ -18,10 +18,14 @@ package org.jetbrains.kotlin.diagnostics.netbeans.parser
 
 import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.model.KotlinEnvironment
+import org.jetbrains.kotlin.project.KotlinSources
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.resolve.NetBeansAnalyzerFacadeForJVM
 import org.jetbrains.kotlin.utils.ProjectUtils
+import org.netbeans.api.java.source.ScanUtils
 import org.netbeans.api.project.Project
+import org.netbeans.modules.parsing.api.indexing.IndexingManager
+import org.jetbrains.kotlin.resolve.lang.java.*
 
 object KotlinAnalysisProjectCache {
 
@@ -49,6 +53,8 @@ object KotlinAnalysisProjectCache {
         return cache[project]!!
     }
     
-    @Synchronized fun removeProjectCache(project: Project) = cache.remove(project)
+    @Synchronized fun removeProjectCache(project: Project) {
+        cache.remove(project)
+    }
     
 }

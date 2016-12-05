@@ -53,7 +53,7 @@ class KotlinChangeReturnTypeProposal(val parserResult: KotlinParserResult,
             Errors.TYPE_INFERENCE_EXPECTED_TYPE_MISMATCH)
 
     override fun isApplicable(caretOffset: Int): Boolean {
-        val bindingContext = parserResult.analysisResult.analysisResult.bindingContext
+        val bindingContext = parserResult.analysisResult?.analysisResult?.bindingContext ?: return false
         
         val activeDiagnostic = getActiveDiagnostic(psi.textOffset, bindingContext.diagnostics)
         if (activeDiagnostic == null) return false

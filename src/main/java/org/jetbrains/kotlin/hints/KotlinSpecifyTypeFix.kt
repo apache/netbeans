@@ -62,7 +62,7 @@ class KotlinSpecifyTypeFix(val parserResult: KotlinParserResult,
     }
 
     private fun getTypeForDeclaration(declaration: KtCallableDeclaration, parserResult: KotlinParserResult): KotlinType {
-        val bindingContext = parserResult.analysisResult.analysisResult.bindingContext
+        val bindingContext = parserResult.analysisResult?.analysisResult?.bindingContext ?: return ErrorUtils.createErrorType("null type")
 
         val descriptor = bindingContext[BindingContext.DECLARATION_TO_DESCRIPTOR, declaration]
         val type = (descriptor as? CallableDescriptor)?.getReturnType()

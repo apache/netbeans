@@ -37,7 +37,9 @@ class KotlinSemanticAnalyzer : SemanticAnalyzer<KotlinParserResult>() {
         cancel = false
         if (result == null) return
         
-        val highlightingVisitor = KotlinSemanticHighlightingVisitor(result.ktFile, result.analysisResult.analysisResult)
+        val analysisResult = result.analysisResult?.analysisResult ?: return
+        
+        val highlightingVisitor = KotlinSemanticHighlightingVisitor(result.ktFile, analysisResult)
         highlighting.putAll(highlightingVisitor.computeHighlightingRanges())
     }
 

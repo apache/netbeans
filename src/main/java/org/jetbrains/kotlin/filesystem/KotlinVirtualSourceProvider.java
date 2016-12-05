@@ -18,6 +18,7 @@ package org.jetbrains.kotlin.filesystem;
 
 import com.google.common.collect.Sets;
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import kotlin.Pair;
@@ -26,9 +27,11 @@ import org.jetbrains.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
+import org.jetbrains.kotlin.resolve.KotlinAnalyzer;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider;
 import org.jetbrains.org.objectweb.asm.tree.ClassNode;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -79,7 +82,11 @@ public class KotlinVirtualSourceProvider implements VirtualSourceProvider {
         FileObject fo = FileUtil.toFileObject(file);
         Project project = ProjectUtils.getKotlinProjectForFileObject(fo);
         KtFile ktFile = ProjectUtils.getKtFile(fo);
-        AnalysisResultWithProvider result = KotlinParser.getAnalysisResult(ktFile, project);
+        
+        AnalysisResultWithProvider result = KotlinParser.getAnalysisResult(ktFile);
+        if (result == null) {
+            return Collections.emptyList();
+        }
         
         return KotlinLightClassGeneration.INSTANCE.getByteCode(fo, project, result.getAnalysisResult());
     }

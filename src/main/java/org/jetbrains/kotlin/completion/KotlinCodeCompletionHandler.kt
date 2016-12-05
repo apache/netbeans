@@ -64,13 +64,13 @@ class KotlinCodeCompletionHandler : CodeCompletionHandler2 {
         return QueryType.NONE
     }
     
-    override fun complete(context: CodeCompletionContext): CodeCompletionResult {
+    override fun complete(context: CodeCompletionContext): CodeCompletionResult? {
         val parserResult = context.parserResult as KotlinParserResult
         val file = parserResult.snapshot.source.fileObject
         
         val doc = ProjectUtils.getDocumentFromFileObject(file)
         val caretOffset = context.caretOffset
-        val analysisResultWithProvider = parserResult.analysisResult
+        val analysisResultWithProvider = parserResult.analysisResult ?: return null
         val prefix = context.prefix ?: ""
         
         return KotlinCodeCompletionResult(doc, caretOffset, analysisResultWithProvider, prefix)

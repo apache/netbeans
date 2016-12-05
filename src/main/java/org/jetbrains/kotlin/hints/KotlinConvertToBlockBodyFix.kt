@@ -47,7 +47,7 @@ class KotlinConvertToBlockBodyFix(val parserResult: KotlinParserResult,
 
         when (declaration) {
             is KtNamedFunction -> {
-                val bindingContext = parserResult.analysisResult.analysisResult.bindingContext
+                val bindingContext = parserResult.analysisResult?.analysisResult?.bindingContext ?: return false
                 val returnType: KotlinType = declaration.returnType(bindingContext) ?: return false
 
                 // do not convert when type is implicit and unknown
@@ -68,7 +68,7 @@ class KotlinConvertToBlockBodyFix(val parserResult: KotlinParserResult,
 
     override fun implement() {
         val declaration = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java)!!
-        val context = parserResult.analysisResult.analysisResult.bindingContext
+        val context = parserResult.analysisResult?.analysisResult?.bindingContext ?: return
 
         val shouldSpecifyType = declaration is KtNamedFunction
                 && !declaration.hasDeclaredReturnType()

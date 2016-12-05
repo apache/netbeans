@@ -59,7 +59,12 @@ public class KotlinProjectHelper {
     private final Map<Project, ClassPath> fullClasspaths = new HashMap<>();
     private final RequestProcessor environmentLoader
             = new RequestProcessor("Kotlin Environment loader");
-
+    private boolean isScanning = false;
+    
+    public boolean isScanning() {
+        return isScanning;
+    }
+    
     public void postTask(Runnable run) {
         environmentLoader.post(run);
     }
@@ -75,7 +80,8 @@ public class KotlinProjectHelper {
                         final ProgressHandle progressBar
                                 = ProgressHandleFactory.createHandle("Kotlin files analysis...");
                         progressBar.start();
-
+                        isScanning = true;
+                        
                         for (KtFile ktFile : ProjectUtils.getSourceFiles(project)) {
                             KotlinParser.getAnalysisResult(ktFile, project);
                         }
@@ -83,6 +89,7 @@ public class KotlinProjectHelper {
                             IndexingManager.getDefault().refreshAllIndices(ktFile);
                         }
 
+                        isScanning = false;
                         progressBar.finish();
                     }
                 };

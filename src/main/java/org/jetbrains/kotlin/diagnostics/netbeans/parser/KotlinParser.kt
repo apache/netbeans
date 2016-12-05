@@ -18,6 +18,7 @@ package org.jetbrains.kotlin.diagnostics.netbeans.parser
 
 import javax.swing.event.ChangeListener
 import org.jetbrains.kotlin.log.KotlinLogger
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer
 import org.jetbrains.kotlin.utils.ProjectUtils
@@ -65,12 +66,6 @@ class KotlinParser : Parser() {
     private var project: Project? = null
 
     override fun parse(snapshot: Snapshot, task: Task, event: SourceModificationEvent) {
-        if (!task.toString().startsWith("org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater")
-            && IndexingManager.getDefault().isIndexing) {
-            KotlinLogger.INSTANCE.logInfo("Parse cancelled")
-            return
-        }
-        
         this.snapshot = snapshot
         project = ProjectUtils.getKotlinProjectForFileObject(snapshot.source.fileObject)
         if (project == null) {
@@ -79,12 +74,12 @@ class KotlinParser : Parser() {
         }
         
         file = ProjectUtils.getKtFile(snapshot.text.toString(), snapshot.source.fileObject)
-        if (SourceUtils.isScanInProgress()) {
+        
+        if (SourceUtils.isScanInProgress() || KotlinProjectHelper.INSTANCE.isScanning) {
             return
         }
         
         val caretOffset = GsfUtilities.getLastKnownCaretOffset(snapshot, event)
-         
         if (caretOffset <= 0) {
             CACHE.put(file!!.virtualFile.path, KotlinAnalysisProjectCache.getAnalysisResult(project!!))
             return
@@ -94,9 +89,10 @@ class KotlinParser : Parser() {
     }
     
     override fun getResult(task: Task): Result? {
-        if (project != null && file != null) return KotlinParserResult(snapshot, CACHE[file!!.virtualFile.path], file!!, project!!)
+        val project = project ?: return null
+        val file = file ?: return null
         
-        return null
+        return KotlinParserResult(snapshot, CACHE[file.virtualFile.path], file, project)
     }
     
     override fun addChangeListener(changeListener: ChangeListener) {}

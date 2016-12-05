@@ -75,7 +75,7 @@ class KotlinParser : Parser() {
         
         file = ProjectUtils.getKtFile(snapshot.text.toString(), snapshot.source.fileObject)
         
-        if (SourceUtils.isScanInProgress() || KotlinProjectHelper.INSTANCE.isScanning) {
+        if (SourceUtils.isScanInProgress() || KotlinProjectHelper.INSTANCE.isScanning(project)) {
             return
         }
         

@@ -82,7 +82,7 @@ public class J2SEProjectPropertiesModifier {
             editableProperties.load(input);
             editableProperties.setProperty("run.classpath", getModifiedClasspathProperty(editableProperties, "run.classpath"));
             editableProperties.setProperty("javac.test.classpath", getModifiedClasspathProperty(editableProperties, "javac.test.classpath"));
-            editableProperties.setProperty("file.reference.kotlin-runtime.jar", KotlinClasspath.getKotlinBootClasspath());
+            editableProperties.setProperty("file.reference.kotlin-runtime.jar", KotlinClasspath.INSTANCE.getKotlinBootClasspath());
             editableProperties.setProperty("kotlinc.classpath", "${file.reference.kotlin-runtime.jar}");
             input.close();
             OutputStream out = new BufferedOutputStream(new FileOutputStream(projectProps.getPath()));

@@ -116,7 +116,7 @@ final class BootClassPathImplementation implements ClassPathImplementation, Prop
     public List<URL> getKotlinBootClassPath(){
         List<String> paths = new ArrayList<>();
         List<URL> urls = new ArrayList<>();
-        paths.add(KotlinClasspath.getKotlinBootClasspath());
+        paths.add(KotlinClasspath.INSTANCE.getKotlinBootClasspath());
         for (String path : paths) {
             File file = new File(path);
             if (!file.canRead()) {

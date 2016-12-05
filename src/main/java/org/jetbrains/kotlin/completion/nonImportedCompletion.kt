@@ -64,8 +64,8 @@ class NonImportedCompletionProposal(val identifierPart: String,
     
     override fun doInsert(document: Document) {
         document.remove(idenOffset, identifierPart.length)
-        document.insertString(idenOffset, sortText.substringAfterLast("."), null)
-        autoImport(sortText, document)
+        document.insertString(idenOffset, type.qualifiedName.substringAfterLast("."), null)
+        autoImport(type.qualifiedName, document)
     }
 
     override fun getElement() = null
@@ -88,5 +88,5 @@ class NonImportedCompletionProposal(val identifierPart: String,
 
     override fun getRhsHtml(hf: HtmlFormatter?) = ""
 
-    override fun getLhsHtml(hf: HtmlFormatter?) = "<i>${type.qualifiedName}</i>"
+    override fun getLhsHtml(hf: HtmlFormatter?) = "<i>${type.qualifiedName.substringAfterLast(".")}</i> (${type.qualifiedName.substringBeforeLast(".")})"
 }

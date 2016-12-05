@@ -24,7 +24,6 @@ import java.util.Set;
 import kotlin.Pair;
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.jetbrains.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
-import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.jetbrains.kotlin.utils.ProjectUtils;

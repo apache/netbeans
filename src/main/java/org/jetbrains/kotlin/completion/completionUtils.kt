@@ -210,7 +210,7 @@ fun createProposals(doc: Document, caretOffset: Int,
         proposals.addAll(generateNonImportedCompletionProposals(prefix, ktFile, simpleNameExpression, project, identOffset))
     }
     
-    return proposals
+    return proposals.distinctBy { it.sortText }
 }
 
 fun getValueForType(type: String) = when(type) {

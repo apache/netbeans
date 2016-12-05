@@ -37,12 +37,14 @@ class KotlinParserResult(snapshot: Snapshot,
     
     override fun invalidate() {}
 
-    override fun getDiagnostics() = if (analysisResult == null) emptyList<Error>() else arrayListOf<Error>().apply {
-        addAll(
-                analysisResult.analysisResult.bindingContext.diagnostics.all()
-                        .filter { it.psiFile.virtualFile.path == file.path }
-                        .map { KotlinError(it, file) }
-        )
+    override fun getDiagnostics() = arrayListOf<Error>().apply {
+        if (analysisResult != null) {
+            addAll(
+                    analysisResult.analysisResult.bindingContext.diagnostics.all()
+                            .filter { it.psiFile.virtualFile.path == file.path }
+                            .map { KotlinError(it, file) }
+            )
+        }
         addAll(
                 AnalyzingUtils.getSyntaxErrorRanges(ktFile)
                         .map { KotlinSyntaxError(it, file) }

@@ -145,16 +145,16 @@ fun ElemHandle<*>.isDeprecated(project: Project) =
 fun Project.findClassUsages(className: String): Set<FileObject> {
     val handle = this.findType(className) ?: return emptySet()
 
-    return JavaEnvironment.JAVA_SOURCE[this]!!.classpathInfo.classIndex.getResources(handle.elementHandle,
-            ClassIndex.SearchKind.values().toSet(), hashSetOf(ClassIndex.SearchScope.SOURCE))
+    return JavaEnvironment.JAVA_SOURCE[this]?.classpathInfo?.classIndex?.getResources(handle.elementHandle,
+            ClassIndex.SearchKind.values().toSet(), hashSetOf(ClassIndex.SearchScope.SOURCE)) ?: emptySet()
 }
 
 fun Project.getFileObjectForFqName(fqName: String): FileObject? {
     val handle = this.findType(fqName) ?: return null
 
-    val fObjects = JavaEnvironment.JAVA_SOURCE[this]!!.classpathInfo.classIndex.getResources(handle.elementHandle,
+    val fObjects = JavaEnvironment.JAVA_SOURCE[this]?.classpathInfo?.classIndex?.getResources(handle.elementHandle,
             setOf(ClassIndex.SearchKind.IMPLEMENTORS), setOf(ClassIndex.SearchScope.DEPENDENCIES),
-            setOf(ClassIndex.ResourceType.BINARY))
+            setOf(ClassIndex.ResourceType.BINARY)) ?: return null
 
     return fObjects.elementAt(0) ?: null
 }

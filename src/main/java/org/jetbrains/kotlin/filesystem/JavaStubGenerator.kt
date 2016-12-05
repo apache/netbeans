@@ -108,10 +108,11 @@ object JavaStubGenerator {
                 }
             }
         
-            interfaces.forEachIndexed { i, it ->
-                superTypes.append(it.replace("/", ".").replace("$", "."))
-                if (i != interfaces.size - 1) superTypes.append(",")
-            }
+            superTypes.append(
+                    interfaces.joinToString(", ", "", "", -1, "...", 
+                            { it.replace("/", ".").replace("$", ".") }
+                    )
+            )
             
             superTypes.toString()
         }
@@ -129,10 +130,9 @@ object JavaStubGenerator {
         val fieldsStub = StringBuilder()
         
         if (getClassType(access) == "enum") {
-            fields.forEachIndexed {i, it ->
-               fieldsStub.append(it.name)
-                if (i != fields.size - 1) fieldsStub.append(", ") else fieldsStub.append(";")
-            }
+            fieldsStub.append(
+                    fields.joinToString(", ", "", "", -1, "...", { it.name })
+            ).append(";")
         } else fields.forEach {
             fieldsStub.append(it.getString())
         }

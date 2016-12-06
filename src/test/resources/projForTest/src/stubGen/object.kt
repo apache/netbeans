@@ -1,0 +1,4 @@
+package stubGen
+
+object SimpleObject {
+}

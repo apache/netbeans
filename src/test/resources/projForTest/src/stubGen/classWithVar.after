@@ -1,0 +1,7 @@
+package stubGen;
+public final class ClassWithVar extends java.lang.Object {
+  private java.lang.String prop;
+  public final java.lang.String getProp(){}
+  public final void setProp(java.lang.String){}
+  public ClassWithVar(){}
+}

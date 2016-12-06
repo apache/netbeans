@@ -121,10 +121,10 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
     public void performClickAction(Document doc, int offset, HyperlinkType type) {
         switch (type) {
             case GO_TO_DECLARATION:
-                ElementHandle element = FromJavaToKotlinNavigationUtils.getElement(doc, offset);
+                ElementHandle element = FromJavaToKotlinNavigationUtilsKt.getElement(doc, offset);
                 FileObject file = ProjectUtils.getFileObjectForDocument(doc);
                 Project project = ProjectUtils.getKotlinProjectForFileObject(file);
-                Pair<KtFile, Integer> pair = FromJavaToKotlinNavigationUtils.findKotlinFileToNavigate(element, project, doc);
+                Pair<KtFile, Integer> pair = FromJavaToKotlinNavigationUtilsKt.findKotlinFileToNavigate(element, project, doc);
                 
                 if (pair == null) {
                     clickAction(doc, offset, type);

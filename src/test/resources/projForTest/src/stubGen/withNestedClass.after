@@ -1,0 +1,9 @@
+package stubGen;
+public final class ClassWithNestedClass extends java.lang.Object {
+  public ClassWithNestedClass(){}
+
+  public final static class Nested extends java.lang.Object {
+     public Nested(){}
+  }
+
+}

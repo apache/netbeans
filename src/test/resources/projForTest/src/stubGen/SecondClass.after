@@ -1,0 +1,4 @@
+package stubGen;
+public final class SecondClass extends java.lang.Object {
+public SecondClass(){}
+}

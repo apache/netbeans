@@ -133,4 +133,14 @@ public class JavaStubGeneratorTest extends NbTestCase {
         doTest("classWithVar");
     }
     
+    @Test
+    public void testSeveralClassesInOneFile() {
+        doTest("severalClassesInOneFile", "FirstClass", "SecondClass");
+    }
+    
+    @Test
+    public void testWithNestedClass() {
+        doTest("withNestedClass");
+    }
+    
 }

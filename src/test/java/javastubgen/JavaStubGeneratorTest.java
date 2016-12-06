@@ -28,7 +28,6 @@ import org.jetbrains.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer;
-import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.org.objectweb.asm.tree.ClassNode;
 import org.junit.Test;
 import org.netbeans.api.project.Project;
@@ -82,6 +81,11 @@ public class JavaStubGeneratorTest extends NbTestCase {
     @Test
     public void testSimple() {
         doTest("simple", "simple");
+    }
+    
+    @Test
+    public void testInterface() {
+        doTest("interface", "interface");
     }
     
 }

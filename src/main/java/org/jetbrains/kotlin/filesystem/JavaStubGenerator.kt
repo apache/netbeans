@@ -81,12 +81,14 @@ object JavaStubGenerator {
     
     private fun ClassNode.classDeclaration(): String {
         val declaration = StringBuilder()
+        
+        val classType = getClassType(access)
+        
         declaration.append(getAccess(access)).append(" ")
         declaration.append(getFinal(access)).append(" ")
         declaration.append(getStatic(access)).append(" ")
-        declaration.append(getAbstract(access)).append(" ")
+        if (classType != "interface") declaration.append(getAbstract(access)).append(" ")
         
-        val classType = getClassType(access)
         
         val superTypes = if (signature != null) {
             val signatureReader = SignatureReader(signature)

@@ -69,13 +69,13 @@ public class JavaStubGeneratorTest extends NbTestCase {
             
             if (after.length == 0) {
                 String expected = stubGenDir.getFileObject(fileName + ".after").asText();
-                assertEquals(StringUtil.convertLineSeparators(expected).replaceAll("\\s+"," "), 
-                        StringUtil.convertLineSeparators(list.get(0).getSecond()).replaceAll("\\s+"," "));
+                assertEquals(StringUtil.convertLineSeparators(expected).replaceAll("\\s+",""), 
+                        StringUtil.convertLineSeparators(list.get(0).getSecond()).replaceAll("\\s+",""));
             } else {
                 for (int i = 0; i < after.length; i++) {
                     String expected = stubGenDir.getFileObject(after[i] + ".after").asText();
-                    assertEquals(StringUtil.convertLineSeparators(expected).replaceAll("\\s+"," "), 
-                            StringUtil.convertLineSeparators(list.get(i).getSecond()).replaceAll("\\s+"," "));
+                    assertEquals(StringUtil.convertLineSeparators(expected).replaceAll("\\s+",""), 
+                            StringUtil.convertLineSeparators(list.get(i).getSecond()).replaceAll("\\s+",""));
                 }
             }
         } catch (IOException ex) {
@@ -101,6 +101,21 @@ public class JavaStubGeneratorTest extends NbTestCase {
     @Test
     public void testOpenClass() {
         doTest("openClass");
+    }
+ 
+    @Test
+    public void testEnum() {
+        doTest("enum");
+    }
+    
+    @Test
+    public void testClassWithTypeParameter() {
+        doTest("classWithTypeParameter");
+    }
+    
+    @Test
+    public void testWithoutClass() {
+        doTest("withoutClass");
     }
     
 }

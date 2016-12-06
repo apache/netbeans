@@ -1,0 +1,4 @@
+package stubGen;
+public final class ClassWithTypeParameter <T extends java.lang.CharSequence> {
+public ClassWithTypeParameter(){}
+}

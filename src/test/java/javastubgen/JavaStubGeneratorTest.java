@@ -67,12 +67,17 @@ public class JavaStubGeneratorTest extends NbTestCase {
         try {
             List<Pair<ClassNode, String>> list = JavaStubGenerator.INSTANCE.gen(getByteCode(kotlinFile));
             
-            for (int i = 0; i < after.length; i++) {
-                String expected = stubGenDir.getFileObject(after[i] + ".after").asText();
+            if (after.length == 0) {
+                String expected = stubGenDir.getFileObject(fileName + ".after").asText();
                 assertEquals(StringUtil.convertLineSeparators(expected).replaceAll("\\s+"," "), 
-                        StringUtil.convertLineSeparators(list.get(i).getSecond()).replaceAll("\\s+"," "));
+                        StringUtil.convertLineSeparators(list.get(0).getSecond()).replaceAll("\\s+"," "));
+            } else {
+                for (int i = 0; i < after.length; i++) {
+                    String expected = stubGenDir.getFileObject(after[i] + ".after").asText();
+                    assertEquals(StringUtil.convertLineSeparators(expected).replaceAll("\\s+"," "), 
+                            StringUtil.convertLineSeparators(list.get(i).getSecond()).replaceAll("\\s+"," "));
+                }
             }
-            
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -80,12 +85,22 @@ public class JavaStubGeneratorTest extends NbTestCase {
     
     @Test
     public void testSimple() {
-        doTest("simple", "simple");
+        doTest("simple");
     }
     
     @Test
     public void testInterface() {
-        doTest("interface", "interface");
+        doTest("interface");
+    }
+    
+    @Test
+    public void testAbstractClass() {
+        doTest("abstractClass");
+    }
+    
+    @Test
+    public void testOpenClass() {
+        doTest("openClass");
     }
     
 }

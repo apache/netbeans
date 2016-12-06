@@ -1,0 +1,4 @@
+package stubGen;
+public abstract class SimpleAbstractClass extends java.lang.Object { 
+public SimpleAbstractClass(){}
+}

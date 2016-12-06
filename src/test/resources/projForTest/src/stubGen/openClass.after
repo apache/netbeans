@@ -1,0 +1,4 @@
+package stubGen;
+public class SimpleOpenClass extends java.lang.Object { 
+public SimpleOpenClass(){}
+}

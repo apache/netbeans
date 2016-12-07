@@ -14,8 +14,8 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.project;
+package org.jetbrains.kotlin.project
 
-public enum KotlinProjectConstants {
+enum class KotlinProjectConstants {
     KOTLIN_SOURCE, JAVA_SOURCE, JAR
 }

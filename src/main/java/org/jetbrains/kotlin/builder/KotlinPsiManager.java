@@ -57,8 +57,8 @@ public class KotlinPsiManager {
     public Set<FileObject> getFilesByProject(Project project){
         Set<FileObject> ktFiles = Sets.newLinkedHashSet();
         
-        for (SourceGroup srcGroup : KotlinProjectHelper.INSTANCE.getKotlinSources(project).//project.getKotlinSources().
-                getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE.toString())){
+        for (SourceGroup srcGroup : KotlinProjectHelper.INSTANCE.getKotlinSources(project)
+                .getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE)){
             for (FileObject file : srcGroup.getRootFolder().getChildren()){
                 if (isKotlinFile(file)){
                     ktFiles.add(file);

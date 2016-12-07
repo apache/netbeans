@@ -14,25 +14,15 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.model;
+package org.jetbrains.kotlin.model
 
-import com.intellij.testFramework.LightVirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.kotlin.idea.KotlinLanguage;
-import org.openide.filesystems.FileObject;
+import com.intellij.testFramework.LightVirtualFile
+import org.jetbrains.kotlin.idea.KotlinLanguage
+import org.openide.filesystems.FileObject
 
-public class KotlinLightVirtualFile extends LightVirtualFile {
-   
-    private final String path;
+class KotlinLightVirtualFile(val fo: FileObject, text: String) : 
+        LightVirtualFile(fo.name, KotlinLanguage.INSTANCE, text) {
     
-    public KotlinLightVirtualFile(FileObject file, String text){
-        super(file.getName(),KotlinLanguage.INSTANCE, text);
-        path = file.getPath();
-    }
+    override fun getPath() = fo.path
     
-    @Override
-    @NotNull
-    public String getPath(){
-        return path;
-    }
 }

@@ -101,7 +101,7 @@ class KotlinSemanticHighlightingVisitor(val ktFile: KtFile,
     }
 
     override fun visitClassOrObject(classOrObject: KtClassOrObject) {
-        val identifier = classOrObject.getNameIdentifier()
+        val identifier = classOrObject.nameIdentifier ?: return
         val classDescriptor = bindingContext.get(BindingContext.CLASS, classOrObject)
         if (identifier != null && classDescriptor != null) {
             highlightClassDescriptor(identifier, classDescriptor)
@@ -111,21 +111,20 @@ class KotlinSemanticHighlightingVisitor(val ktFile: KtFile,
     }
 
     override fun visitProperty(property: KtProperty) {
-        val nameIdentifier = property.getNameIdentifier()
-        if (nameIdentifier == null) return
-        val propertyDescriptor = bindingContext[BindingContext.VARIABLE, property]
-        if (propertyDescriptor is PropertyDescriptor) {
-            highlightProperty(nameIdentifier, propertyDescriptor)
-        } else {
-            visitVariableDeclaration(property)
+        val nameIdentifier = property.nameIdentifier ?: return
+        try {
+            val propertyDescriptor = bindingContext[BindingContext.VARIABLE, property]
+            if (propertyDescriptor is PropertyDescriptor) {
+                highlightProperty(nameIdentifier, propertyDescriptor)
+            } else visitVariableDeclaration(property)
+        } catch (ex: IllegalArgumentException) {
+            return
         }
-
         super.visitProperty(property)
     }
 
     override fun visitParameter(parameter: KtParameter) {
-        val nameIdentifier = parameter.getNameIdentifier()
-        if (nameIdentifier == null) return
+        val nameIdentifier = parameter.nameIdentifier ?: return
         val propertyDescriptor = bindingContext[BindingContext.PRIMARY_CONSTRUCTOR_PARAMETER, parameter]
         if (propertyDescriptor is PropertyDescriptor) {
             highlightProperty(nameIdentifier, propertyDescriptor)
@@ -137,7 +136,7 @@ class KotlinSemanticHighlightingVisitor(val ktFile: KtFile,
     }
 
     override fun visitNamedFunction(function: KtNamedFunction) {
-        val nameIdentifier = function.getNameIdentifier()
+        val nameIdentifier = function.nameIdentifier
         if (nameIdentifier != null) {
             highlight(KotlinHighlightingAttributes.FUNCTION_DECLARATION, nameIdentifier.getTextRange())
         }
@@ -147,7 +146,7 @@ class KotlinSemanticHighlightingVisitor(val ktFile: KtFile,
 
     private fun visitVariableDeclaration(declaration: KtNamedDeclaration) {
         val declarationDescriptor = bindingContext[BindingContext.DECLARATION_TO_DESCRIPTOR, declaration]
-        val nameIdentifier = declaration.getNameIdentifier()
+        val nameIdentifier = declaration.nameIdentifier
         if (nameIdentifier != null && declarationDescriptor != null) {
             highlightVariable(nameIdentifier, declarationDescriptor)
         }

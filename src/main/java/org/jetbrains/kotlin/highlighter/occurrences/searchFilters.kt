@@ -21,12 +21,6 @@ interface SearchFilterAfterResolve {
     }
 }
 
-fun getKotlinElements(sourceElements: List<SourceElement>): List<KtElement> {
-    return sourceElements
-            .filterIsInstance(KotlinSourceElement::class.java)
-            .map { it.psi }
-}
-
 fun getBeforeResolveFilters(): List<SearchFilter> {
     val filters = arrayListOf<SearchFilter>()
     filters.add(NonImportFilter())

@@ -65,8 +65,8 @@ class KotlinOccurrencesFinder : OccurrencesFinder<KotlinParserResult>() {
         val sourceElements = ktElement.resolveToSourceDeclaration()
         if (sourceElements.isEmpty()) return
         
-        val searchingElements = OccurrencesUtils.getSearchingElements(sourceElements)
-        val ranges = OccurrencesUtils.search(searchingElements, ktFile)
+        val searchingElements = getSearchingElements(sourceElements)
+        val ranges = search(searchingElements, ktFile)
         ranges.forEach { highlighting.put(it, ColoringAttributes.MARK_OCCURRENCES) }
     }
 }

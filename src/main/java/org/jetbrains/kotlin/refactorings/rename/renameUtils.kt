@@ -22,7 +22,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import java.io.File
 import javax.swing.text.Position
 import org.jetbrains.kotlin.descriptors.SourceElement
-import org.jetbrains.kotlin.highlighter.occurrences.OccurrencesUtils
+import org.jetbrains.kotlin.highlighter.occurrences.*
 import org.jetbrains.kotlin.navigation.references.resolveToSourceDeclaration
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtFile
@@ -55,12 +55,12 @@ fun getRenameRefactoringMap(fo: FileObject, psi: PsiElement, newName: String): M
     val sourceElements = ktElement.resolveToSourceDeclaration()
     if (sourceElements.isEmpty()) return ranges
      
-    val searchingElements = OccurrencesUtils.getSearchingElements(sourceElements)
+    val searchingElements = getSearchingElements(sourceElements)
     val project = ProjectUtils.getKotlinProjectForFileObject(fo)
     if (project == null) return ranges
     
     ProjectUtils.getSourceFiles(project).forEach { 
-        val occurrencesRanges = OccurrencesUtils.search(searchingElements, it)
+        val occurrencesRanges = search(searchingElements, it)
         val f = File(it.virtualFile.path)
         val file = FileUtil.toFileObject(f)
         if (file != null && occurrencesRanges.isNotEmpty()) ranges.put(file, occurrencesRanges)

@@ -40,7 +40,7 @@ import javax.lang.model.element.ElementKind
 import com.intellij.psi.PsiElement
 import org.openide.filesystems.FileUtil
 import java.io.File
-import org.jetbrains.kotlin.navigation.JarNavigationUtil
+import org.jetbrains.kotlin.navigation.*
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.utils.LineEndUtil
 import javax.swing.text.StyledDocument
@@ -163,7 +163,7 @@ private fun findFileObjectForReferencedElement(psi: PsiElement, fromElement: KtE
     var file = FileUtil.toFileObject(File(virtualFile.path))
     if (file != null) return file
     
-    file = JarNavigationUtil.getFileObjectFromJar(virtualFile.path) ?: return null
+    file = getFileObjectFromJar(virtualFile.path) ?: return null
     return file
 }
 

@@ -19,12 +19,12 @@
 package org.jetbrains.kotlin.navigation.netbeans;
 
 import com.google.common.collect.Sets;
+import com.intellij.psi.PsiElement;
 import com.sun.javadoc.Doc;
 import java.util.Set;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import kotlin.Pair;
-import org.jetbrains.kotlin.navigation.NavigationUtil;
+import org.jetbrains.kotlin.navigation.NavigationUtilKt;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.descriptors.SourceElement;
 import org.jetbrains.kotlin.load.java.structure.JavaElement;
@@ -34,34 +34,35 @@ import org.jetbrains.kotlin.resolve.lang.java.NbElementUtilsKt;
 import org.jetbrains.kotlin.resolve.lang.java.resolver.NetBeansJavaSourceElement;
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass;
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaMember;
-import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.jetbrains.kotlin.resolve.source.KotlinSourceElement;
+import org.jetbrains.kotlin.navigation.references.ReferenceUtilsKt;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.project.Project;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 
 @MimeRegistration(mimeType = "text/x-kt", service = HyperlinkProviderExt.class)
 public class KotlinHyperlinkProvider implements HyperlinkProviderExt {
 
-    private KtReferenceExpression referenceExpression;
+    private PsiElement psi = null;
+    private KtReferenceExpression referenceExpression = null;
     private Pair<Document, Integer> navigationCache = null;
 
     @Override
     public boolean isHyperlinkPoint(Document doc, int offset, HyperlinkType type) {
-        try {
-            referenceExpression = NavigationUtil.getReferenceExpression(doc, offset);
-            return referenceExpression != null;
-        } catch (BadLocationException ex) {
-            Exceptions.printStackTrace(ex);
-            return false;
-        }
+        psi = NavigationUtilKt.getReferenceExpression(doc, offset);
+        if (psi == null) return false;
+        
+        referenceExpression = ReferenceUtilsKt.getReferenceExpression(psi);
+        return referenceExpression != null;
+        
     }
 
     @Override
     public int[] getHyperlinkSpan(Document doc, int offset, HyperlinkType type) {
         if (isHyperlinkPoint(doc, offset, type)) {
-            Pair<Integer, Integer> span = NavigationUtil.getSpan();
+            Pair<Integer, Integer> span = NavigationUtilKt.getSpan(psi);
             if (span == null) {
                 return null;
             }

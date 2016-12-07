@@ -54,7 +54,7 @@ public class CompletionTest extends NbTestCase {
             ktFile = KotlinPsiManager.INSTANCE.getParsedFile(file);
 
             AnalysisResultWithProvider resultWithProvider
-                    = KotlinAnalyzer.analyzeFile(project, ktFile);
+                    = KotlinAnalyzer.INSTANCE.analyzeFile(project, ktFile);
             KotlinParser.setAnalysisResult(ktFile, resultWithProvider);
             
             completionItems = CompletionUtilsKt.createProposals(doc,

@@ -43,7 +43,7 @@ public class DiagnosticsTest extends NbTestCase {
         assertNotNull(fileToAnalyze);
         
         KtFile ktFile = ProjectUtils.getKtFile(fileToAnalyze);
-        return KotlinAnalyzer.analyzeFile(project, ktFile);
+        return KotlinAnalyzer.INSTANCE.analyzeFile(project, ktFile);
     }
     
     private void doTest(String fileName, List<Pair<Integer,Integer>> diagnosticsRanges, 

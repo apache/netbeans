@@ -56,7 +56,7 @@ public class JavaStubGeneratorTest extends NbTestCase {
     private List<byte[]> getByteCode(FileObject file) throws IOException {
         KtFile ktFile = KotlinPsiManager.INSTANCE.getParsedFile(file);
         AnalysisResultWithProvider result
-                    = KotlinAnalyzer.analyzeFile(project, ktFile);
+                    = KotlinAnalyzer.INSTANCE.analyzeFile(project, ktFile);
         KotlinParser.setAnalysisResult(ktFile, result);
         
         return KotlinLightClassGeneration.INSTANCE.getByteCode(file, project, result.getAnalysisResult());

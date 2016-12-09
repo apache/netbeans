@@ -24,6 +24,7 @@ import javax.swing.ImageIcon
 import javax.swing.event.ChangeListener
 import org.apache.maven.project.MavenProject
 import org.jetbrains.kotlin.builder.KotlinPsiManager
+import org.jetbrains.kotlin.builder.isKotlinFile
 import org.jetbrains.kotlin.projectsextensions.maven.MavenHelper
 import org.netbeans.api.project.Project
 import org.netbeans.api.project.SourceGroup
@@ -40,7 +41,7 @@ class KotlinSources(private val kotlinProject: Project) {
 
             fo.children.forEach { findSrc(it, files, type) }
         } else when (type) {
-            KotlinProjectConstants.KOTLIN_SOURCE -> if (KotlinPsiManager.INSTANCE.isKotlinFile(fo)) files.add(fo.parent)
+            KotlinProjectConstants.KOTLIN_SOURCE -> if (fo.isKotlinFile()) files.add(fo.parent)
 
             KotlinProjectConstants.JAVA_SOURCE -> if (fo.hasExt("java")) files.add(fo.parent)
 

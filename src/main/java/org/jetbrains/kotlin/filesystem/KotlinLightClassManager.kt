@@ -66,7 +66,7 @@ class KotlinLightClassManager(private val project: NBProject) {
 
     fun computeLightClassesSources() {
         val newSourceFilesMap = hashMapOf<File, MutableSet<FileObject>>()
-        for (sourceFile in KotlinPsiManager.INSTANCE.getFilesByProject(project)) {
+        for (sourceFile in KotlinPsiManager.getFilesByProject(project)) {
             val lightClassesPaths = getLightClassesPaths(sourceFile)
             for (path in lightClassesPaths) {
                 val lightClassFile = LightClassFile(project, path)

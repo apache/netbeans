@@ -31,9 +31,9 @@ class KotlinTokenScanner(val input: LexerInput?, text: String? = null) {
     
     init {
         if (text == null) {
-            ktFile = KotlinPsiManager.INSTANCE.getParsedKtFileForSyntaxHighlighting(getTextToParse())
+            ktFile = KotlinPsiManager.getParsedKtFileForSyntaxHighlighting(getTextToParse())
         } else {
-            ktFile = KotlinPsiManager.INSTANCE.getParsedKtFileForSyntaxHighlighting(text)
+            ktFile = KotlinPsiManager.getParsedKtFileForSyntaxHighlighting(text)
         }
         createListOfKotlinTokens()
     }

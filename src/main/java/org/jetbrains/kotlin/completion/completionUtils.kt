@@ -157,7 +157,7 @@ fun getSimpleNameExpression(identOffset: Int): KtSimpleNameExpression? {
 
 fun getSimpleNameExpression(file: FileObject, identOffset: Int, editorText: String): KtSimpleNameExpression? {
     val sourceCodeWithMarker = StringBuilder(editorText).insert(identOffset, "KotlinNetBeans").toString()
-    val ktFile = KotlinPsiManager.INSTANCE.parseText(StringUtilRt.convertLineSeparators(sourceCodeWithMarker),
+    val ktFile = KotlinPsiManager.parseText(StringUtilRt.convertLineSeparators(sourceCodeWithMarker),
                 file) ?: return null
     val offsetWithoutCR = LineEndUtil.convertCrToDocumentOffset(sourceCodeWithMarker, identOffset)
     val psiElement = ktFile.findElementAt(offsetWithoutCR)

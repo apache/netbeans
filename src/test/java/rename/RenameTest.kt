@@ -68,8 +68,10 @@ class RenameTest : NbTestCase("Rename Test") {
         val caretOffset = getCaret(getDocumentForFileObject(beforeWithCaret))
         assertNotNull(caretOffset)
         
-        val ktFile = KotlinPsiManager.INSTANCE.getParsedFile(before)
-        val psi = ktFile.findElementAt(caretOffset)
+        val ktFile = KotlinPsiManager.getParsedFile(before)
+        assertNotNull(ktFile)
+        
+        val psi = ktFile!!.findElementAt(caretOffset)
         assertNotNull(psi)
         
         doRefactoring(newName, before, psi!!)

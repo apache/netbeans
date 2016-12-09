@@ -31,7 +31,7 @@ fun getReferenceExpression(doc: Document, offset: Int): PsiElement? {
     var ktFile = KotlinParser.file
     val fo = ProjectUtils.getFileObjectForDocument(doc) ?: return null
     if (ktFile == null || !ktFile.name.equals(fo.name)) {
-        ktFile = KotlinPsiManager.INSTANCE.parseText(doc.getText(0, doc.length), fo) ?: return null
+        ktFile = KotlinPsiManager.parseText(doc.getText(0, doc.length), fo) ?: return null
     }
     
     val documentOffset = LineEndUtil.convertCrToDocumentOffset(ktFile.text, offset)

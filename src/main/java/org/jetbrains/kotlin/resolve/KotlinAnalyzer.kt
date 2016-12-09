@@ -22,7 +22,7 @@ import org.jetbrains.kotlin.psi.KtFile
 import org.netbeans.api.project.Project
 
 object KotlinAnalyzer {
-    fun analyzeFile(kotlinProject: Project, ktFile: KtFile) = KotlinAnalysisFileCache.INSTANCE.getAnalysisResult(ktFile, kotlinProject)
+    fun analyzeFile(kotlinProject: Project, ktFile: KtFile) = KotlinAnalysisFileCache.getAnalysisResult(ktFile, kotlinProject)
     
     private fun analyzeFiles(kotlinProject: Project,
                              kotlinEnvironment: KotlinEnvironment, 

@@ -35,7 +35,7 @@ class KotlinSimpleResolutionFacade(
     
     override fun analyze(element: KtElement, bodyResolveMode: BodyResolveMode): BindingContext {
         val ktFile = element.getContainingKtFile()
-        return KotlinAnalysisFileCache.INSTANCE.getAnalysisResult(ktFile, nbProject).analysisResult.bindingContext
+        return KotlinAnalysisFileCache.getAnalysisResult(ktFile, nbProject).analysisResult.bindingContext
     }
     
     override fun analyzeFullyAndGetResult(elements: Collection<KtElement>): AnalysisResult {

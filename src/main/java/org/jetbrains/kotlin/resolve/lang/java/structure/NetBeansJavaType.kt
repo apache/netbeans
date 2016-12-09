@@ -33,7 +33,7 @@ import javax.lang.model.type.TypeMirror
 */
 
 abstract class NetBeansJavaType(val handle : TypeMirrorHandle<*>, 
-                                               val project : Project) : JavaType, JavaAnnotationOwner {
+                                val project : Project) : JavaType, JavaAnnotationOwner {
 
     companion object {
         @JvmStatic        

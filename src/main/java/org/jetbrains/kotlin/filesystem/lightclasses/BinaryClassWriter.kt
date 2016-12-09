@@ -14,22 +14,18 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.filesystem.lightclasses;
+package org.jetbrains.kotlin.filesystem.lightclasses
 
-import org.jetbrains.org.objectweb.asm.ClassWriter;
+import org.jetbrains.org.objectweb.asm.ClassWriter
 
-public class BinaryClassWriter extends ClassWriter {
-    public BinaryClassWriter() {
-        super(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
-    }
-
-    @Override
-    protected String getCommonSuperClass(String type1, String type2) {
+class BinaryClassWriter : ClassWriter(ClassWriter.COMPUTE_FRAMES or ClassWriter.COMPUTE_MAXS) {
+    
+    override protected fun getCommonSuperClass(type1: String, type2: String): String {
         try {
-            return super.getCommonSuperClass(type1, type2);
-        }
-        catch (Throwable t) {
-            return "java/lang/Object";
+            return super.getCommonSuperClass(type1, type2)
+        } catch (t: Throwable) {
+            return "java/lang/Object"
         }
     }
+    
 }

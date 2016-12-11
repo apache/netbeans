@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.ImageIcon;
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
 import org.dom4j.DocumentException;
@@ -57,15 +58,10 @@ public class MavenHelper {
             return;
         }
         
-        final PomXmlModifier pomModifier = new PomXmlModifier(project);
-        boolean hasKotlinDep = true;
-        try {
-            hasKotlinDep = pomModifier.hasKotlinPluginInPom();
-        } catch (DocumentException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        
-        if (!hasKotlinDep) {
+        MavenProject mavenProject = getOriginalMavenProject(project);
+        if (mavenProject == null) return;
+        if (!kotlinPluginConfigured(mavenProject)) {
+            final PomXmlModifier pomModifier = new PomXmlModifier(project);
             ActionListener listener = new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -75,8 +71,24 @@ public class MavenHelper {
             NotificationDisplayer.getDefault().notify("Kotlin is not configured", 
                     new ImageIcon(ImageUtilities.loadImage("org/jetbrains/kotlin/kotlin.png")), 
                     "Configure Kotlin", listener);
-        } 
+        }
+        
         askedToConfigure.add(project);
+    }
+    
+    private static boolean kotlinPluginConfigured(MavenProject mavenProject) {
+        Set<Artifact> pluginArtifacts = mavenProject.getPluginArtifacts();
+        if (pluginArtifacts == null) return false;
+        
+        for (Artifact plugin : pluginArtifacts) {
+            String groupId = plugin.getGroupId();
+            String artifactId = plugin.getArtifactId();
+            
+            if (groupId.equals("org.jetbrains.kotlin") 
+                    && artifactId.equals("kotlin-maven-plugin")) return true;
+        }
+        
+        return false;
     }
     
     public static boolean hasParent(Project project) {

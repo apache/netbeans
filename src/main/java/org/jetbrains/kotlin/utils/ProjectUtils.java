@@ -152,13 +152,7 @@ public class ProjectUtils {
     }
     
     public static KtFile getKtFile(FileObject file){
-        try {
-            return KotlinPsiManager.INSTANCE.getParsedFile(file);
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        
-        return null;
+        return KotlinPsiManager.INSTANCE.getParsedFile(file);
     }
     
     public static KtFile getKtFile(String code, FileObject file){

@@ -49,22 +49,10 @@ object KotlinPsiManager {
                 .filter { it.isKotlinFile() }
                 .toSet()
         
-
-    /**
-     * This method parses the input file.
-     * @param file syntaxFile that was created with createSyntaxFile method
-     * @return the result of {@link #parseText(java.lang.String, java.io.File) parseText} method
-     * @throws IOException
-     */
-    @Throws(IOException::class)
-    private fun parseFile(file: FileObject) = parseText(StringUtilRt.convertLineSeparators(file.asText()), file)
-
-    /**
-     * This method parses text from the input file.
-     * @param text Text of temporary file.
-     * @param file syntaxFile that was created with createSyntaxFile method
-     * @return {@link KtFile}
-     */
+    private fun parseFile(file: FileObject): KtFile? {
+        return parseText(StringUtilRt.convertLineSeparators(file.asText()), file)
+    }
+    
     fun parseText(text: String, file: FileObject): KtFile? {
         StringUtil.assertValidSeparators(text)
         val kotlinProject = ProjectUtils.getKotlinProjectForFileObject(file) ?: ProjectUtils.getValidProject()
@@ -97,7 +85,6 @@ object KotlinPsiManager {
         return cachedKtFiles[file]
     }
 
-    @Throws(IOException::class)
     fun getParsedFile(file: FileObject): KtFile? {
         if (!cachedKtFiles.containsKey(file)) {
             val ktFile = parseFile(file) ?: return null
@@ -108,24 +95,31 @@ object KotlinPsiManager {
         return cachedKtFiles[file]
     }
 
-    @Throws(IOException::class)
     private fun updatePsiFile(file: FileObject) {
-        val code = file.asText()
-        val sourceCodeWithoutCR = StringUtilRt.convertLineSeparators(code)
-        val currentParsedFile = cachedKtFiles[file] ?: return
-        if (currentParsedFile.text != sourceCodeWithoutCR) {
-            val ktFile = parseText(sourceCodeWithoutCR, file) ?: return
-            cachedKtFiles.put(file, ktFile)
+        try {
+            val code = file.asText()
+            val sourceCodeWithoutCR = StringUtilRt.convertLineSeparators(code)
+            val currentParsedFile = cachedKtFiles[file] ?: return
+            if (currentParsedFile.text != sourceCodeWithoutCR) {
+                val ktFile = parseText(sourceCodeWithoutCR, file) ?: return
+                cachedKtFiles.put(file, ktFile)
+            }
+        } catch (ex: Exception) {
+            KotlinLogger.INSTANCE.logWarning("Couldn't update psi file")
         }
     }
 
     private fun updatePsiFile(sourceCode: String, file: FileObject) {
-        val sourceCodeWithoutCR = StringUtilRt.convertLineSeparators(sourceCode)
-        val currentParsedFile = cachedKtFiles[file] ?: return
-        if (currentParsedFile.text != sourceCodeWithoutCR) {
-            val ktFile = parseText(sourceCodeWithoutCR, file) ?: return
-            cachedKtFiles.put(file, ktFile)
-        }
+        try {
+            val sourceCodeWithoutCR = StringUtilRt.convertLineSeparators(sourceCode)
+            val currentParsedFile = cachedKtFiles[file] ?: return
+            if (currentParsedFile.text != sourceCodeWithoutCR) {
+                val ktFile = parseText(sourceCodeWithoutCR, file) ?: return
+                cachedKtFiles.put(file, ktFile)
+            }
+        } catch (ex: Exception) {
+            KotlinLogger.INSTANCE.logWarning("Couldn't update psi file")
+        }    
     }
 
     fun getParsedKtFileForSyntaxHighlighting(text: String): KtFile? {

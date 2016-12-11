@@ -68,14 +68,11 @@ public class KotlinActionsImplementationProvider extends ActionsImplementationPr
         int caretPosition = pane.getCaretPosition();
         StyledDocument doc = ec.getDocument();
         FileObject fo = ProjectUtils.getFileObjectForDocument(doc);
-        try {
-            final KtFile ktFile = KotlinPsiManager.INSTANCE.getParsedFile(fo);
-            final PsiElement psi = ktFile.findElementAt(caretPosition);
-            UI.openRefactoringUI(new KotlinRenameRefactoringUI(psi, new RenameRefactoring(Lookups.fixed(psi, doc))),
-                    TopComponent.getRegistry().getActivated());  
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        final KtFile ktFile = KotlinPsiManager.INSTANCE.getParsedFile(fo);
+        final PsiElement psi = ktFile.findElementAt(caretPosition);
+        UI.openRefactoringUI(new KotlinRenameRefactoringUI(psi, new RenameRefactoring(Lookups.fixed(psi, doc))),
+                TopComponent.getRegistry().getActivated());  
+        
     }
     
 }

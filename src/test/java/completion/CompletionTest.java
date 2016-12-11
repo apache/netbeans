@@ -2,18 +2,15 @@ package completion;
 
 import utils.TestUtilsKt;
 import com.google.common.collect.Lists;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javaproject.JavaProject;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.jetbrains.kotlin.completion.CompletionUtilsKt;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import static junit.framework.TestCase.assertNotNull;
 import org.jetbrains.kotlin.builder.KotlinPsiManager;
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
@@ -49,19 +46,12 @@ public class CompletionTest extends NbTestCase {
         assertNotNull(caret);
 
         FileObject file = ProjectUtils.getFileObjectForDocument(doc);
-        KtFile ktFile = null;
-        try {
-            ktFile = KotlinPsiManager.INSTANCE.getParsedFile(file);
-
-            AnalysisResultWithProvider resultWithProvider
-                    = KotlinAnalyzer.INSTANCE.analyzeFile(project, ktFile);
-            KotlinParser.setAnalysisResult(ktFile, resultWithProvider);
-            
-            completionItems = CompletionUtilsKt.createProposals(doc,
-                    caret, resultWithProvider, "");
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+        KtFile ktFile = KotlinPsiManager.INSTANCE.getParsedFile(file);
+        AnalysisResultWithProvider resultWithProvider
+                = KotlinAnalyzer.INSTANCE.analyzeFile(project, ktFile);
+        KotlinParser.setAnalysisResult(ktFile, resultWithProvider);
+        
+        completionItems = CompletionUtilsKt.createProposals(doc, caret, resultWithProvider, "");
 
         assertNotNull(completionItems);
 

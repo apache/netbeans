@@ -61,6 +61,10 @@ object KotlinLightClassGeneration {
                 true,
                 generateDeclaredClassFilter)
         
+        ktFiles.forEach {
+            state.bindingContext[BindingContext.FILE_TO_PACKAGE_FRAGMENT, it] ?: return null
+        }
+        
         KotlinCodegenFacade.compileCorrectFiles(state, {ex, url -> Unit})
         
         return state

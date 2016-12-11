@@ -16,6 +16,7 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.projectsextensions.maven.classpath;
 
+import com.google.common.collect.Lists;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,6 +25,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.project.MavenProject;
 import org.jetbrains.kotlin.log.KotlinLogger;
@@ -87,11 +89,23 @@ public class MavenExtendedClassPath implements ClassPathExtender {
         if (mavenProj == null) {
             return Collections.emptyList();
         }
-        List<String> compileClasspath = mavenProj.getCompileClasspathElements();
-        if (compileClasspath == null || compileClasspath.isEmpty()) {
-            KotlinLogger.INSTANCE.logInfo(proj.getProjectDirectory().getPath() + 
-                    " compile classpath is empty");
+        
+        List<String> compileClasspath = Lists.newArrayList();
+        List<String> dependencyProjectsNames = Lists.newArrayList();
+        for (Project depProj : MavenHelper.getDependencyProjects(proj)) {
+            dependencyProjectsNames.add(depProj.getProjectDirectory().getName());
         }
+        
+        Set<Artifact> artifacts = mavenProj.getArtifacts();
+        for (Artifact artifact : artifacts) {
+            if (dependencyProjectsNames.contains(artifact.getArtifactId())) continue;
+            
+            File artifactFile = artifact.getFile();
+            if (artifactFile == null) continue;
+            
+            compileClasspath.add(artifactFile.getAbsolutePath());
+        }
+
         return compileClasspath;
     }
     

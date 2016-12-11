@@ -215,17 +215,12 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
     
     private fun configureClasspath(kotlinProject: NBProject) {
         val classpath = ProjectUtils.getClasspath(kotlinProject)
-        val lightClassesDir = KotlinProjectHelper.INSTANCE.getLightClassesDirectory(kotlinProject)?.toURI()?.toString()
         KotlinLogger.INSTANCE.logInfo("Project ${kotlinProject.projectDirectory.path} classpath is $classpath")
         classpath.forEach {
             if (it.endsWith("!/")) {
                 addToClasspath(it.split("!/")[0].substringAfter("file:"), null)
             } else {
-                if (lightClassesDir == null) {
-                    addToClasspath(it, null)
-                } else {
-                    if (!lightClassesDir.contains(it)) addToClasspath(it, null)
-                }
+                addToClasspath(it, null)
             }
         }
     }

@@ -113,10 +113,10 @@ public class JavaStubGeneratorTest extends NbTestCase {
         doTest("classWithTypeParameter");
     }
     
-    @Test
-    public void testWithoutClass() {
-        doTest("withoutClass");
-    }
+//    @Test
+//    public void testWithoutClass() {
+//        doTest("withoutClass");
+//    }
     
     @Test
     public void testObject() {

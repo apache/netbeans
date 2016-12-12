@@ -18,6 +18,7 @@ package org.jetbrains.kotlin.projectsextensions.maven.classpath;
 
 import com.google.common.collect.Lists;
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -31,9 +32,10 @@ import org.apache.maven.project.MavenProject;
 import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.projectsextensions.ClassPathExtender;
 import org.jetbrains.kotlin.projectsextensions.maven.MavenHelper;
-import org.jetbrains.kotlin.projectsextensions.maven.classpath.classpath.ClassPathProviderImpl;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.project.Project;
+import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -151,6 +153,19 @@ public class MavenExtendedClassPath implements ClassPathExtender {
         return systemClasspath;
     }
     
+    private JavaPlatform getJavaPlatform(Project project) {
+        ClassPathProvider provider = project.getLookup().lookup(ClassPathProvider.class);
+        if (provider == null) return null;
+        
+        try {
+            Method method = provider.getClass().getMethod("getJavaPlatform");
+            return (JavaPlatform) method.invoke(provider);
+        } catch (ReflectiveOperationException ex) {
+            Exceptions.printStackTrace(ex);
+            return null;
+        }
+    }
+    
     private List<String> getTestClasspathElements(Project proj) throws DependencyResolutionRequiredException {
         MavenProject mavenProj = MavenHelper.getOriginalMavenProject(proj);
         if (mavenProj == null) {
@@ -171,8 +186,12 @@ public class MavenExtendedClassPath implements ClassPathExtender {
             execute = getClasspath(getRuntimeClasspathElements(project));
             source = getClasspath(getCompileSourceRoots(project));
             
-            ClassPathProviderImpl impl = new ClassPathProviderImpl(project);
-            boot = impl.getJavaPlatform().getBootstrapLibraries();
+            JavaPlatform javaPlatform = getJavaPlatform(project);
+            if (javaPlatform != null) {
+                boot = javaPlatform.getBootstrapLibraries();
+            } else {
+                boot = ClassPath.EMPTY;
+            }
             
             List<String> javaClasspathElements = new ArrayList<>();
             javaClasspathElements.addAll(getTestClasspathElements(project));

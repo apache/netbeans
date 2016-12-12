@@ -18,7 +18,6 @@ package org.jetbrains.kotlin.projectsextensions.maven.lookup;
 
 import org.jetbrains.kotlin.projectsextensions.KotlinPrivilegedTemplates;
 import org.jetbrains.kotlin.projectsextensions.maven.MavenProjectOpenedHook;
-import org.jetbrains.kotlin.projectsextensions.maven.classpath.MavenClassPathProviderImpl;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.LookupProvider;
 import org.openide.util.Lookup;
@@ -35,8 +34,7 @@ public class MavenProjectLookupProviderExtension implements LookupProvider {
         Project project = lkp.lookup(Project.class);
         
         return Lookups.fixed(new KotlinPrivilegedTemplates(),
-                new MavenProjectOpenedHook(project),
-                new MavenClassPathProviderImpl(project)
+                new MavenProjectOpenedHook(project)
         );
     }
 

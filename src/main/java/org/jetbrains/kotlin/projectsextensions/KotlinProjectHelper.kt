@@ -23,7 +23,6 @@ import org.jetbrains.kotlin.model.KotlinEnvironment
 import org.jetbrains.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider
 import org.jetbrains.kotlin.project.KotlinSources
 import org.jetbrains.kotlin.projectsextensions.maven.classpath.MavenExtendedClassPath
-import org.jetbrains.kotlin.projectsextensions.maven.classpath.MavenClassPathProviderImpl
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.resolve.lang.java.JavaEnvironment
 import org.jetbrains.kotlin.utils.ProjectUtils
@@ -142,10 +141,6 @@ object KotlinProjectHelper {
         if (this.javaClass.name == "org.netbeans.modules.java.j2seproject.J2SEProject") {
             extendedClassPaths.put(this, J2SEExtendedClassPathProvider(this))
         } else if (this.javaClass.name == "org.netbeans.modules.maven.NbMavenProjectImpl") {
-            val impl = this.lookup.lookup(MavenClassPathProviderImpl::class.java)
-            if (impl != null) {
-                impl.updateClassPath()
-            }
             extendedClassPaths.put(this, MavenExtendedClassPath(this))
         }
         this.updateFullClassPath()

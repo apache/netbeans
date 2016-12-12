@@ -44,7 +44,7 @@ public class KotlinVirtualSourceProvider implements VirtualSourceProvider {
 
     @Override
     public boolean index() {
-        return false;
+        return true;
     }
 
     @Override

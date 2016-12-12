@@ -102,9 +102,14 @@ object KotlinLightClassGeneration {
             val ktFiles = manager.getSourceFiles(lightClass)
             val className = it.substringAfterLast(Pattern.quote(ProjectUtils.FILE_SEPARATOR))
             if (ktFiles.isNotEmpty()) {
-                val state = buildLightClasses(analysisResult, project, ktFiles, className) ?: return emptyList()
-                
-                state.factory.asList().forEach { outFile -> code.add(outFile.asByteArray()) }
+                try {
+                    val state = buildLightClasses(analysisResult, project, ktFiles, className) ?: return emptyList()
+
+                    state.factory.asList().forEach { outFile -> code.add(outFile.asByteArray()) }
+                } catch (ex: Exception) {
+                    KotlinLogger.INSTANCE.logWarning("Couldn't create light class for ${file.path}")
+                    return emptyList()
+                }
             }
         }
         

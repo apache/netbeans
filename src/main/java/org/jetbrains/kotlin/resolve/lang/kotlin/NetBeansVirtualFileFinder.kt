@@ -22,7 +22,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.search.GlobalSearchScope
 import javax.lang.model.element.TypeElement
 import org.jetbrains.kotlin.model.KotlinEnvironment
-import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.getFullClassPath
 import org.jetbrains.kotlin.resolve.lang.java.NetBeansJavaClassFinder
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinder
 import org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClassFinder
@@ -64,7 +64,7 @@ class NetBeansVirtualFileFinder(private val project: Project) : VirtualFileKotli
     private fun getJarPath(file: FileObject) = file.fileSystem?.displayName
 
     override fun findVirtualFileWithHeader(classId: ClassId): VirtualFile? {
-        val proxy = KotlinProjectHelper.INSTANCE.getFullClassPath(project)
+        val proxy = project.getFullClassPath()
         
         val classFqName = if (classId.isNestedClass) {
             val className = classId.shortClassName.asString()
@@ -74,7 +74,7 @@ class NetBeansVirtualFileFinder(private val project: Project) : VirtualFileKotli
                     .append("$").append(className).append(".class").toString()
         } else classId.asSingleFqName().asString().replace(".", "/") + ".class"
         
-        val resource = proxy.findResource(classFqName) ?: return if (isClassFileName(classFqName)) {
+        val resource = proxy?.findResource(classFqName) ?: return if (isClassFileName(classFqName)) {
             KotlinEnvironment.getEnvironment(project).getVirtualFile(classFqName)
         } else throw IllegalArgumentException("Virtual file not found for " + classFqName)
         

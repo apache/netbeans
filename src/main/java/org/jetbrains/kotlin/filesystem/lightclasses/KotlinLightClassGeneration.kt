@@ -97,7 +97,7 @@ object KotlinLightClassGeneration {
         manager.computeLightClassesSources()
         
         manager.getLightClassesPaths(file).forEach {
-            val lightClass = File(ProjectUtils.getKotlinProjectLightClassesPath(project) 
+            val lightClass = File(project.projectDirectory.path 
                     + ProjectUtils.FILE_SEPARATOR + it)
             val ktFiles = manager.getSourceFiles(lightClass)
             val className = it.substringAfterLast(Pattern.quote(ProjectUtils.FILE_SEPARATOR))

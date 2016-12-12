@@ -24,7 +24,7 @@ import org.openide.windows.TopComponent
 import org.openide.windows.WindowManager
 import java.util.HashSet
 import org.jetbrains.kotlin.utils.ProjectUtils
-import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.isMavenProject
 import org.jetbrains.kotlin.projectsextensions.maven.MavenHelper
 
 class KotlinInstaller : Yenta() {
@@ -60,7 +60,7 @@ class KotlinInstaller : Yenta() {
     
     private fun checkProjectConfiguration(file: FileObject) {
         val project = ProjectUtils.getKotlinProjectForFileObject(file)
-        if (KotlinProjectHelper.INSTANCE.isMavenProject(project)) MavenHelper.configure(project)
+        if (project.isMavenProject()) MavenHelper.configure(project)
     }
     
     private fun checkUpdates() {

@@ -24,7 +24,8 @@ import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.impl.PsiFileFactoryImpl
 import com.intellij.testFramework.LightVirtualFile
 import java.io.IOException
-import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.checkProject
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.getKotlinSources
 import org.jetbrains.kotlin.model.KotlinEnvironment
 import org.jetbrains.kotlin.model.KotlinLightVirtualFile
 import org.jetbrains.kotlin.project.KotlinProjectConstants
@@ -43,11 +44,11 @@ object KotlinPsiManager {
     
     private val cachedKtFiles = hashMapOf<FileObject, KtFile>()
     
-    fun getFilesByProject(project: Project) = KotlinProjectHelper.INSTANCE.getKotlinSources(project)
-                .getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE)
-                .flatMap { it.rootFolder.children.toList() }
-                .filter { it.isKotlinFile() }
-                .toSet()
+    fun getFilesByProject(project: Project) = project.getKotlinSources()
+                ?.getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE)
+                ?.flatMap { it.rootFolder.children.toList() }
+                ?.filter { it.isKotlinFile() }
+                ?.toSet() ?: emptySet()
         
     private fun parseFile(file: FileObject): KtFile? {
         return parseText(StringUtilRt.convertLineSeparators(file.asText()), file)
@@ -104,7 +105,7 @@ object KotlinPsiManager {
                 val ktFile = parseText(sourceCodeWithoutCR, file) ?: return
                 cachedKtFiles.put(file, ktFile)
             }
-        } catch (ex: Exception) {
+        } catch (ex: IOException) {
             KotlinLogger.INSTANCE.logWarning("Couldn't update psi file")
         }
     }
@@ -117,7 +118,7 @@ object KotlinPsiManager {
                 val ktFile = parseText(sourceCodeWithoutCR, file) ?: return
                 cachedKtFiles.put(file, ktFile)
             }
-        } catch (ex: Exception) {
+        } catch (ex: IOException) {
             KotlinLogger.INSTANCE.logWarning("Couldn't update psi file")
         }    
     }
@@ -125,7 +126,7 @@ object KotlinPsiManager {
     fun getParsedKtFileForSyntaxHighlighting(text: String): KtFile? {
         val sourceCode = StringUtilRt.convertLineSeparators(text)
         var kotlinProject = OpenProjects.getDefault().openProjects
-                .filter { KotlinProjectHelper.INSTANCE.checkProject(it) }
+                .filter { it.checkProject() }
                 .firstOrNull()
            
         if (kotlinProject == null) kotlinProject = KotlinMockProject.getMockProject() ?: return null

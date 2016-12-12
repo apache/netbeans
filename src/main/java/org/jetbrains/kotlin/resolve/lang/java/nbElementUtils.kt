@@ -21,7 +21,7 @@ import javax.lang.model.element.TypeElement
 import org.jetbrains.kotlin.load.java.structure.JavaClass
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.projectsextensions.ClassPathExtender
-import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.getExtendedClassPath
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass
 import org.netbeans.api.java.classpath.ClassPath
 import org.netbeans.api.java.source.ClassIndex
@@ -51,7 +51,9 @@ object JavaEnvironment {
     val JAVA_SOURCE = hashMapOf<Project, JavaSource>()
 
     fun getClasspathInfo(project: Project): ClasspathInfo {
-        val extendedProvider = KotlinProjectHelper.INSTANCE.getExtendedClassPath(project)
+        val extendedProvider = project.getExtendedClassPath() ?: 
+                return ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY)
+        
         val boot = extendedProvider.getProjectSourcesClassPath(ClassPath.BOOT)
         val src = extendedProvider.getProjectSourcesClassPath(ClassPath.SOURCE)
         val compile = extendedProvider.getProjectSourcesClassPath(ClassPath.COMPILE)

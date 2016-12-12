@@ -18,7 +18,7 @@ package org.jetbrains.kotlin.diagnostics.netbeans.parser
 
 import javax.swing.event.ChangeListener
 import org.jetbrains.kotlin.log.KotlinLogger
-import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.isScanning
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer
 import org.jetbrains.kotlin.utils.ProjectUtils
@@ -67,15 +67,16 @@ class KotlinParser : Parser() {
 
     override fun parse(snapshot: Snapshot, task: Task, event: SourceModificationEvent) {
         this.snapshot = snapshot
-        project = ProjectUtils.getKotlinProjectForFileObject(snapshot.source.fileObject)
-        if (project == null) {
+        val currentProject = ProjectUtils.getKotlinProjectForFileObject(snapshot.source.fileObject)
+        project = currentProject
+        if (currentProject == null) {
             file = null
             return
         }
         
         file = ProjectUtils.getKtFile(snapshot.text.toString(), snapshot.source.fileObject)
         
-        if (SourceUtils.isScanInProgress() || KotlinProjectHelper.INSTANCE.isScanning(project)) {
+        if (SourceUtils.isScanInProgress() || currentProject.isScanning()) {
             return
         }
         

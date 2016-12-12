@@ -29,7 +29,7 @@ public final class LightClassFile {
     private final File file;
     
     public LightClassFile(Project project, String path){
-        file = new File(KotlinProjectHelper.INSTANCE.getLightClassesDirectory(project).getPath() + ProjectUtils.FILE_SEPARATOR + path);
+        file = new File(project.getProjectDirectory().getPath() + ProjectUtils.FILE_SEPARATOR + path);
         fileObject = FileUtil.toFileObject(file);
     }
     

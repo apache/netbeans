@@ -16,6 +16,8 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.language;
 
+import java.util.Collections;
+import java.util.Set;
 import org.jetbrains.kotlin.completion.KotlinCodeCompletionHandler;
 import org.jetbrains.kotlin.structurescanner.KotlinStructureScanner;
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
@@ -26,6 +28,7 @@ import org.jetbrains.kotlin.highlighter.semanticanalyzer.KotlinSemanticAnalyzer;
 import org.jetbrains.kotlin.hints.KotlinHintsProvider;
 import org.jetbrains.kotlin.indexer.KotlinIndexerFactory;
 import org.jetbrains.kotlin.refactorings.rename.KotlinInstantRenamer;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.HintsProvider;

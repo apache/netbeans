@@ -26,6 +26,7 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.jetbrains.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
+import org.jetbrains.kotlin.resolve.lang.java.JavaEnvironment;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider;
 import org.jetbrains.org.objectweb.asm.tree.ClassNode;

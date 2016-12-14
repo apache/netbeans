@@ -20,6 +20,7 @@ import java.io.IOException
 import java.util.HashMap
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.model.KotlinEnvironment
+import org.jetbrains.kotlin.project.KotlinProjectConstants
 import org.jetbrains.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider
 import org.jetbrains.kotlin.project.KotlinSources
 import org.jetbrains.kotlin.projectsextensions.maven.classpath.MavenExtendedClassPath
@@ -49,12 +50,18 @@ object KotlinProjectHelper {
     private val fullClasspaths = hashMapOf<Project, ClassPath>()
     private val environmentLoader = RequestProcessor("Kotlin Environment loader")
     private val isScanning = hashMapOf<Project, Boolean>()
+    private val hasJavaFiles = hashMapOf<Project, Boolean>()
     
     fun Project.isScanning() = if (isScanning.containsKey(this)) isScanning[this]!! else false
 
     fun postTask(run: Runnable) = environmentLoader.post(run)
     
+    fun hasJavaFiles(project: Project) = hasJavaFiles[project] ?: false
+    
+    fun setHasJavaFiles(project: Project) = hasJavaFiles.put(project, true)
+    
     fun Project.doInitialScan() {
+        hasJavaFiles.put(this, getJavaFilesByProject(this).isNotEmpty())
         JavaEnvironment.checkJavaSource(this)
         try {
             JavaEnvironment.JAVA_SOURCE[this]!!.runWhenScanFinished({
@@ -147,4 +154,11 @@ object KotlinProjectHelper {
         JavaEnvironment.updateClasspathInfo(this)
         KotlinEnvironment.updateKotlinEnvironment(this)
     }
+    
+    fun getJavaFilesByProject(project: Project) = project.getKotlinSources()
+                ?.getSourceGroups(KotlinProjectConstants.JAVA_SOURCE)
+                ?.flatMap { it.rootFolder.children.toList() }
+                ?.filter { it.ext == "java" }
+                ?.toSet() ?: emptySet()
+    
 }

@@ -24,9 +24,10 @@ import java.util.Set;
 import kotlin.Pair;
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.jetbrains.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
+import org.jetbrains.kotlin.log.KotlinLogger;
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
-import org.jetbrains.kotlin.resolve.lang.java.JavaEnvironment;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider;
 import org.jetbrains.org.objectweb.asm.tree.ClassNode;
@@ -48,15 +49,34 @@ public class KotlinVirtualSourceProvider implements VirtualSourceProvider {
         return true;
     }
 
+    private boolean skipTranslating(File file) {
+        File normalizedFile = FileUtil.normalizeFile(file);
+        FileObject fo = FileUtil.toFileObject(normalizedFile);
+        if (fo != null) {
+            Project project = ProjectUtils.getKotlinProjectForFileObject(fo);
+            return project != null && !KotlinProjectHelper.INSTANCE.hasJavaFiles(project);
+        }
+        
+        return false;
+    }
+    
     @Override
     public void translate(Iterable<File> files, File sourceRoot, Result result) {
+        if (files.iterator().hasNext()) {
+            File file = files.iterator().next();
+            if (skipTranslating(file)) {
+                KotlinLogger.INSTANCE.logInfo("No java files. Skipping VirtualSourceProvider");
+                return;
+            }
+        }
+        
         for (File file : files) {
-            List<byte[]> codeList = getByteCode(file);
-            if (codeList.isEmpty()) continue;
-            
             File normalizedFile = FileUtil.normalizeFile(file);
             FileObject fo = FileUtil.toFileObject(normalizedFile);
             if (fo == null) continue;
+            
+            List<byte[]> codeList = getByteCode(file);
+            if (codeList.isEmpty()) continue;
             
             List<Pair<ClassNode, String>> list = JavaStubGenerator.INSTANCE.gen(codeList);
             for (Pair<ClassNode, String> nameAndStub : list) {

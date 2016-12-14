@@ -18,6 +18,9 @@ package org.jetbrains.kotlin.installer
 
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
+import org.jetbrains.kotlin.project.KotlinSources
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper
+import org.netbeans.modules.parsing.api.indexing.IndexingManager
 import org.openide.filesystems.FileObject
 import org.openide.loaders.DataObject
 import org.openide.windows.TopComponent
@@ -48,12 +51,27 @@ class KotlinInstaller : Yenta() {
                             .forEach {
                                 val dataObject = it.lookup.lookup(DataObject::class.java) ?: return@forEach
                                 val currentFile = dataObject.primaryFile
-                                if (currentFile != null && currentFile.mimeType.equals("text/x-kt")) {
-                                    checkUpdates()
-                                    checkProjectConfiguration(currentFile)
+                                if (currentFile != null) {
+                                    if (currentFile.mimeType.equals("text/x-kt")) {
+                                        checkUpdates()
+                                        checkProjectConfiguration(currentFile)
+                                    }
+                                    if (currentFile.mimeType.equals("text/x-java")) {
+                                        checkVirtualSourceProvider(currentFile)
+                                    }
                                 }
                     }
                 }
+            }
+        }
+    }
+    
+    private fun checkVirtualSourceProvider(file: FileObject) {
+        val project = ProjectUtils.getKotlinProjectForFileObject(file) ?: return
+        if (!KotlinProjectHelper.hasJavaFiles(project)) {
+            KotlinProjectHelper.setHasJavaFiles(project)
+            KotlinSources(project).getAllKtFiles().forEach {
+                IndexingManager.getDefault().refreshAllIndices(it)
             }
         }
     }

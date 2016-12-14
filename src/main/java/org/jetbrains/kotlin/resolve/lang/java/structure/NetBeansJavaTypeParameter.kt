@@ -31,18 +31,37 @@ import javax.lang.model.element.TypeParameterElement
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaTypeParameter(elementHandle : ElemHandle<TypeParameterElement>, project : Project) : 
+class NetBeansJavaTypeParameter(elementHandle: ElemHandle<TypeParameterElement>, project: Project) :
         NetBeansJavaClassifier<TypeParameterElement>(elementHandle, project), JavaTypeParameter {
 
-    override val name : Name
+    override val name: Name
         get() = elementHandle.getName(project)
-    
-    override val upperBounds : Collection<JavaClassifierType>
+
+    override val upperBounds: Collection<JavaClassifierType>
         get() = elementHandle.getUpperBounds(project)
-    
-    override val annotations : Collection<JavaAnnotation>
+
+    override val annotations: Collection<JavaAnnotation>
         get() = emptyList()
-    
-    override fun findAnnotation(fqName : FqName) : JavaAnnotation? = null
-    override fun toString() : String = name.asString()
+
+    override fun findAnnotation(fqName: FqName): JavaAnnotation? = null
+    override fun toString(): String = name.asString()
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is NetBeansJavaTypeParameter) return false
+
+        val bound = upperBounds.firstOrNull()?.canonicalText ?: ""
+        val otherBound = other.upperBounds.firstOrNull()?.canonicalText ?: ""
+
+        val fullName = "$name $bound"
+        val otherFullName = "${other.name} $otherBound"
+
+        return fullName == otherFullName
+    }
+
+    override fun hashCode(): Int {
+        val bound = upperBounds.firstOrNull()?.canonicalText ?: ""
+        
+        return "$name $bound".hashCode()
+    }
+
 }

@@ -77,7 +77,7 @@ class KotlinInstaller : Yenta() {
     }
     
     private fun checkProjectConfiguration(file: FileObject) {
-        val project = ProjectUtils.getKotlinProjectForFileObject(file)
+        val project = ProjectUtils.getKotlinProjectForFileObject(file) ?: return
         if (project.isMavenProject()) MavenHelper.configure(project)
     }
     

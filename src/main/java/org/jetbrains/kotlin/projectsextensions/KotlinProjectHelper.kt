@@ -52,7 +52,7 @@ object KotlinProjectHelper {
     private val isScanning = hashMapOf<Project, Boolean>()
     private val hasJavaFiles = hashMapOf<Project, Boolean>()
     
-    fun Project.isScanning() = if (isScanning.containsKey(this)) isScanning[this]!! else false
+    fun Project.isScanning() = isScanning[this] ?: false
 
     fun postTask(run: Runnable) = environmentLoader.post(run)
     
@@ -64,7 +64,7 @@ object KotlinProjectHelper {
         hasJavaFiles.put(this, getJavaFilesByProject(this).isNotEmpty())
         JavaEnvironment.checkJavaSource(this)
         try {
-            JavaEnvironment.JAVA_SOURCE[this]!!.runWhenScanFinished({
+            JavaEnvironment.JAVA_SOURCE[this]?.runWhenScanFinished({
                 postTask(Runnable {
                     val progressBar = ProgressHandleFactory.createHandle("Kotlin files analysis...")
                     progressBar.start()
@@ -83,13 +83,13 @@ object KotlinProjectHelper {
     }
 
     fun Project.checkProject(): Boolean {
-        val className = this.javaClass.name
+        val className = javaClass.name
         return className == "org.netbeans.modules.java.j2seproject.J2SEProject" 
                 || className == "org.netbeans.modules.maven.NbMavenProjectImpl"
     }
 
     fun Project.isMavenProject(): Boolean {
-        return this.javaClass.name == "org.netbeans.modules.maven.NbMavenProjectImpl"
+        return javaClass.name == "org.netbeans.modules.maven.NbMavenProjectImpl"
     }
 
     fun Project.removeProjectCache() {
@@ -99,7 +99,7 @@ object KotlinProjectHelper {
     }
 
     fun Project.getKotlinSources(): KotlinSources? {
-        if (!this.checkProject()) return null
+        if (!checkProject()) return null
         
         if (!kotlinSources.containsKey(this)) {
             kotlinSources.put(this, KotlinSources(this))
@@ -108,13 +108,12 @@ object KotlinProjectHelper {
     }
 
     fun Project.getExtendedClassPath(): ClassPathExtender? {
-        if (!this.checkProject()) return null
+        if (!checkProject()) return null
         
         if (!extendedClassPaths.containsKey(this)) {
-            if (this.javaClass.name == "org.netbeans.modules.java.j2seproject.J2SEProject") {
-                extendedClassPaths.put(this, J2SEExtendedClassPathProvider(this))
-            } else if (this.javaClass.name == "org.netbeans.modules.maven.NbMavenProjectImpl") {
-                extendedClassPaths.put(this, MavenExtendedClassPath(this))
+            when (javaClass.name) {
+                "org.netbeans.modules.java.j2seproject.J2SEProject" -> extendedClassPaths.put(this, J2SEExtendedClassPathProvider(this))
+                "org.netbeans.modules.maven.NbMavenProjectImpl" -> extendedClassPaths.put(this, MavenExtendedClassPath(this))
             }
         }
         return extendedClassPaths[this]
@@ -122,7 +121,7 @@ object KotlinProjectHelper {
 
     fun Project.getFullClassPath(): ClassPath? {
         if (!fullClasspaths.containsKey(this)) {
-            val classpath = this.getExtendedClassPath() ?: return null
+            val classpath = getExtendedClassPath() ?: return null
             
             val boot = classpath.getProjectSourcesClassPath(ClassPath.BOOT)
             val compile = classpath.getProjectSourcesClassPath(ClassPath.COMPILE)
@@ -135,7 +134,7 @@ object KotlinProjectHelper {
     }
 
     private fun Project.updateFullClassPath() {
-        val classpath = this.getExtendedClassPath() ?: return
+        val classpath = getExtendedClassPath() ?: return
         
         val boot = classpath.getProjectSourcesClassPath(ClassPath.BOOT)
         val compile = classpath.getProjectSourcesClassPath(ClassPath.COMPILE)
@@ -145,12 +144,12 @@ object KotlinProjectHelper {
     }
 
     fun Project.updateExtendedClassPath() {
-        if (this.javaClass.name == "org.netbeans.modules.java.j2seproject.J2SEProject") {
-            extendedClassPaths.put(this, J2SEExtendedClassPathProvider(this))
-        } else if (this.javaClass.name == "org.netbeans.modules.maven.NbMavenProjectImpl") {
-            extendedClassPaths.put(this, MavenExtendedClassPath(this))
+        when (javaClass.name) {
+            "org.netbeans.modules.java.j2seproject.J2SEProject" -> extendedClassPaths.put(this, J2SEExtendedClassPathProvider(this))
+            "org.netbeans.modules.maven.NbMavenProjectImpl" -> extendedClassPaths.put(this, MavenExtendedClassPath(this))
         }
-        this.updateFullClassPath()
+        
+        updateFullClassPath()
         JavaEnvironment.updateClasspathInfo(this)
         KotlinEnvironment.updateKotlinEnvironment(this)
     }

@@ -17,20 +17,12 @@
 package org.jetbrains.kotlin.file;
 
 import java.io.IOException;
-import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
-import org.jetbrains.kotlin.projectsextensions.maven.MavenHelper;
-import org.jetbrains.kotlin.utils.ProjectUtils;
-import org.netbeans.api.project.Project;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
-import org.openide.filesystems.FileAttributeEvent;
-import org.openide.filesystems.FileChangeListener;
-import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.MultiDataObject;

@@ -17,6 +17,7 @@
 package org.jetbrains.kotlin.highlighter.semanticanalyzer
 
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.isScanning
 import org.netbeans.modules.csl.api.ColoringAttributes
 import org.netbeans.modules.csl.api.OffsetRange
 import org.netbeans.modules.csl.api.SemanticAnalyzer
@@ -37,6 +38,8 @@ class KotlinSemanticAnalyzer : SemanticAnalyzer<KotlinParserResult>() {
         cancel = false
         if (result == null) return
         
+        if (result.project.isScanning()) return
+          
         val analysisResult = result.analysisResult?.analysisResult ?: return
         
         val highlightingVisitor = KotlinSemanticHighlightingVisitor(result.ktFile, analysisResult)

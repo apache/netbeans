@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.projectsextensions
 import java.io.IOException
 import java.util.HashMap
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
+import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.model.KotlinEnvironment
 import org.jetbrains.kotlin.project.KotlinProjectConstants
 import org.jetbrains.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider

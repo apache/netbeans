@@ -21,6 +21,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.navigation.references.resolveToSourceDeclaration
 import org.jetbrains.kotlin.descriptors.SourceElement
+import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.isScanning
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtFile
 import org.netbeans.modules.csl.api.ColoringAttributes
@@ -39,6 +40,8 @@ class KotlinOccurrencesFinder : OccurrencesFinder<KotlinParserResult>() {
         cancel = false
         highlighting.clear()
         if (result == null) return
+        
+        if (result.project.isScanning()) return
         
         val ktFile = result.ktFile ?: return
         

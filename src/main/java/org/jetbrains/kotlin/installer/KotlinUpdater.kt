@@ -31,6 +31,7 @@ import org.openide.DialogDisplayer
 import java.net.URLEncoder
 import com.intellij.openapi.util.SystemInfo
 import java.util.Random
+import org.openide.modules.Modules
 import org.openide.util.NbPreferences
 
 object KotlinUpdater {
@@ -86,7 +87,7 @@ object KotlinUpdater {
     private fun getRequestParams(): String {
         val os = URLEncoder.encode(SystemInfo.OS_NAME + " " + SystemInfo.OS_VERSION, "UTF-8")
         val userId = getUserID()
-        val netbeansVersion = "8.2"//temp
+        val netbeansVersion = getNetBeansVersion()
         
         return "build=$netbeansVersion&pluginVersion=$KOTLIN_PLUGIN_VERSION&os=$os&uuid=$userId"
     }
@@ -102,5 +103,10 @@ object KotlinUpdater {
         return userId
     }
     
+    private fun getNetBeansVersion(): String {
+        val info = Modules.getDefault().ownerOf(Modules::class.java)
+        
+        return info?.buildVersion ?: "-1"
+    }
     
 }

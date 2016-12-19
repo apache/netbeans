@@ -90,5 +90,11 @@ class JavaStubGeneratorTest : NbTestCase("Stub generator test") {
     fun testSeveralClassesInOneFile() = doTest("severalClassesInOneFile", "FirstClass", "SecondClass")
 
     fun testWithNestedClass() = doTest("withNestedClass")
+
+    fun testWithCompanion() = doTest("withCompanion")
+        
+    fun testClassWithSeveralMethods() = doTest("withSeveralMethods")
+    
+    fun testClassImplementsInterface() = doTest("implementsInterface", "implementsInterface1", "implementsInterface2")
     
 }

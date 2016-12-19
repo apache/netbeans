@@ -1,0 +1,3 @@
+package stubGen;
+public interface Interface {
+}

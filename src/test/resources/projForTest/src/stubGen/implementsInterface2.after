@@ -1,0 +1,4 @@
+package stubGen;
+public final class SimpleImplements extends java.lang.Object implements stubGen.Interface {
+public SimpleImplements(){}
+}

@@ -1,6 +1,5 @@
 package javaproject.mockservices;
 
-import javaproject.mockservices.MockParser;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -10,8 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import javax.swing.text.Document;
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
-import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.modules.java.source.parsing.JavacParserFactory;
 import org.netbeans.modules.masterfs.providers.ProvidedExtensions;
 import org.netbeans.modules.parsing.api.Snapshot;
@@ -71,11 +68,11 @@ public class TestEnvironmentFactory implements EnvironmentFactory {
             return p;
         }
         
-        ParserFactory f = new JavacParserFactory();//JavacParserFactory.getDefault();//MimeLookup.getLookup(mimeType).lookup(ParserFactory.class);
+        ParserFactory f = new JavacParserFactory();
         if (f != null) {
             p = f.createParser(Collections.<Snapshot>emptyList());
         } else {
-            p = new MockParser();///MimeLookup.getDefault().lookup(ParserFactory.class).createParser(Collections.<Snapshot>emptyList());
+            p = new MockParser();
         }
         cachedParsers.put(mimeType, new WeakReference(p));
         return p;

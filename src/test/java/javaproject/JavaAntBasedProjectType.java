@@ -2,7 +2,6 @@ package javaproject;
 
 import java.io.IOException;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.support.ant.AntBasedProjectType;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
 

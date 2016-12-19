@@ -38,7 +38,7 @@ class RenameTest : NbTestCase("Rename Test") {
     private val renameDir: FileObject
     
     init {
-        project = JavaProject.INSTANCE.javaProject
+        project = JavaProject.javaProject
         renameDir = project.projectDirectory.getFileObject("src").getFileObject("rename")
     }
     

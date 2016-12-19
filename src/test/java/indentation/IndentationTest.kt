@@ -31,7 +31,7 @@ class IndentationTest : NbTestCase("Indentation test") {
     val indentationDir: FileObject
     
     init {
-        project = JavaProject.INSTANCE.javaProject
+        project = JavaProject.javaProject
         indentationDir = project.projectDirectory.getFileObject("src").getFileObject("indentation")
     }
     

@@ -33,7 +33,7 @@ class HighlightingTest : NbTestCase("Highlighting test") {
     val highlightingDir: FileObject
     
     init {
-        project = JavaProject.INSTANCE.javaProject
+        project = JavaProject.javaProject
         highlightingDir = project.projectDirectory.getFileObject("src").getFileObject("highlighting")
     }
     

@@ -38,15 +38,44 @@ object KotlinUpdater {
 
     val KOTLIN_PLUGIN_VERSION = "0.1.0-beta-4"
     val USER_ID = "kotlin.userId"
-    
+    val pluginSite = "https://plugins-test.labs.intellij.net/netbeans-plugins/kotlin/update?"
+        
     var updated = false
         private set
 
     @Synchronized fun checkUpdates() {
         if (updated) return
         
-        val url = URL("https://dl.bintray.com/jetbrains/kotlin/netbeans-plugin/last/version.xml")
+        val params = getRequestParams()
+        val url = URL(pluginSite + params)
+        
         val connection = url.openConnection()
+        if (connection is HttpURLConnection) {
+            try {
+                connection.setInstanceFollowRedirects(false)
+                connection.connect()
+                val responseCode = connection.responseCode
+                
+                if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP) {
+                    val redirect = connection.getHeaderField("Location")
+                    handleRedirect(redirect)
+                } else {
+                    KotlinLogger.INSTANCE.logInfo("Response code: $responseCode")
+                }
+                
+            } catch (e: IOException) {
+                KotlinLogger.INSTANCE.logInfo("Couldn't connect to $pluginSite")
+            } finally {
+                connection.disconnect()
+            }
+        }
+    }
+    
+    private fun handleRedirect(redirect: String) {
+        KotlinLogger.INSTANCE.logInfo("Redirect: $redirect")
+        val url = URL("${redirect}version.xml")
+        val connection = url.openConnection()
+        
         if (connection is HttpURLConnection) {
             try {
                 connection.connect()
@@ -63,7 +92,7 @@ object KotlinUpdater {
                     }
                 }
             } catch (e: IOException) {
-                KotlinLogger.INSTANCE.logInfo("Couldn't connect to https://dl.bintray.com/jetbrains/kotlin/netbeans-plugin")
+                KotlinLogger.INSTANCE.logInfo("Couldn't connect to $redirect")
             } finally {
                 connection.disconnect()
             }
@@ -95,7 +124,7 @@ object KotlinUpdater {
     private fun getUserID(): Long {
         val userId = NbPreferences.root().getLong(USER_ID, 0L)
         if (userId == 0L) {
-            val generated = Random().nextLong()
+            val generated = Math.abs(Random().nextLong())
             NbPreferences.root().putLong(USER_ID, generated)
             return generated
         }

@@ -101,7 +101,7 @@ class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
         
         if (params.size == 1) {
             if (name.contains("->")) {
-                doc.insertString(idenStartOffset, text + "{  }", null)
+                doc.insertString(idenStartOffset, text + " {  }", null)
                 return
             }
         }

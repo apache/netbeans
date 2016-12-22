@@ -36,10 +36,10 @@ import org.openide.util.NbPreferences
 
 object KotlinUpdater {
 
-    val KOTLIN_PLUGIN_VERSION = "0.1.0-beta-4"
+    val KOTLIN_PLUGIN_VERSION = "0.1.1-beta"
     val USER_ID = "kotlin.userId"
-    val pluginSite = "https://plugins-test.labs.intellij.net/netbeans-plugins/kotlin/update?"
-        
+    val pluginSite = "https://plugins.jetbrains.com/netbeans-plugins/kotlin/update?"
+    
     var updated = false
         private set
 
@@ -73,7 +73,7 @@ object KotlinUpdater {
     
     private fun handleRedirect(redirect: String) {
         KotlinLogger.INSTANCE.logInfo("Redirect: $redirect")
-        val url = URL("${redirect}version.xml")
+        val url = URL("${redirect}/version.xml")
         val connection = url.openConnection()
         
         if (connection is HttpURLConnection) {

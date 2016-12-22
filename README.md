@@ -4,7 +4,7 @@
 # Kotlin plugin for NetBeans IDE
 
 ## Installing Kotlin plugin
-1. Download the latest release: [0.1.0-beta](https://github.com/JetBrains/kotlin-netbeans/releases/tag/v0.1.0-beta-4)
+1. Download the latest release: [0.1.1-beta](https://github.com/JetBrains/kotlin-netbeans/releases/tag/v0.1.1-beta)
 2. Launch NetBeans IDE
 3. Choose **Tools** and then **Plugins** from the main menu
 4. Switch to **Downloaded** tab
@@ -12,8 +12,6 @@
 6. In the file chooser, navigate to the folder with downloaded plugin. Select the NBM file and click OK. The plugin will show up in the list of plugins to be installed.
 7. Click **Install** button in the Plugins dialog
 8. Complete the installation wizard by clicking **Next**, agreeing to the license terms and clicking **Install** button.
-
-* Note that this plugin requires NetBeans 8.1
 
 
 ## Plugin feature set
@@ -30,12 +28,3 @@
 10. Ant and Maven support
 11. Navigation by Kotlin class name
 12. Debugging support
-
-## For contributors
-
-### Importing the project
-
-1. File -> Create Project
-2. Maven -> Project with the existing POM
-
-To build this project you need to add *kotlin-ide-common.jar* from *lib* folder to local maven repository.

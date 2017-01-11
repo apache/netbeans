@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
-    <!-- J2SEProject extension -->
+    <!-- Projects extensions -->
     <folder name="Projects">
         <folder name="org-netbeans-modules-java-j2seproject">
             <folder name="Lookup">
@@ -11,6 +11,11 @@
         <folder name="org-netbeans-modules-maven">
             <folder name="Lookup">
                 <file name="org.jetbrains.kotlin.projectsextensions.maven.lookup.MavenProjectLookupProviderExtension.instance"/>
+            </folder>
+        </folder>
+        <folder name="org.netbeans.gradle.project">
+            <folder name="Lookup">
+                <file name="org.jetbrains.kotlin.projectsextensions.gradle.lookup.GradleProjectLookupProviderExtension.instance"/>
             </folder>
         </folder>
     </folder>

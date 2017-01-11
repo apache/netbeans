@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.model.KotlinEnvironment
 import org.jetbrains.kotlin.project.KotlinProjectConstants
+import org.jetbrains.kotlin.projectsextensions.gradle.classpath.GradleExtendedClassPath
 import org.jetbrains.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider
 import org.jetbrains.kotlin.project.KotlinSources
 import org.jetbrains.kotlin.projectsextensions.maven.classpath.MavenExtendedClassPath
@@ -85,8 +86,10 @@ object KotlinProjectHelper {
 
     fun Project.checkProject(): Boolean {
         val className = javaClass.name
+        
         return className == "org.netbeans.modules.java.j2seproject.J2SEProject" 
                 || className == "org.netbeans.modules.maven.NbMavenProjectImpl"
+                || className == "org.netbeans.gradle.project.NbGradleProject"
     }
 
     fun Project.isMavenProject(): Boolean {
@@ -115,6 +118,7 @@ object KotlinProjectHelper {
             when (javaClass.name) {
                 "org.netbeans.modules.java.j2seproject.J2SEProject" -> extendedClassPaths.put(this, J2SEExtendedClassPathProvider(this))
                 "org.netbeans.modules.maven.NbMavenProjectImpl" -> extendedClassPaths.put(this, MavenExtendedClassPath(this))
+                "org.netbeans.gradle.project.NbGradleProject" -> extendedClassPaths.put(this, GradleExtendedClassPath(this))
             }
         }
         return extendedClassPaths[this]
@@ -148,6 +152,7 @@ object KotlinProjectHelper {
         when (javaClass.name) {
             "org.netbeans.modules.java.j2seproject.J2SEProject" -> extendedClassPaths.put(this, J2SEExtendedClassPathProvider(this))
             "org.netbeans.modules.maven.NbMavenProjectImpl" -> extendedClassPaths.put(this, MavenExtendedClassPath(this))
+            "org.netbeans.gradle.project.NbGradleProject" -> extendedClassPaths.put(this, GradleExtendedClassPath(this))
         }
         
         updateFullClassPath()

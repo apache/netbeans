@@ -215,7 +215,7 @@ public class MavenExtendedClassPath implements ClassPathExtender {
             case ClassPath.BOOT:
                 return boot;
             default:
-                return null;
+                return ClassPath.EMPTY;
         }
     }
     

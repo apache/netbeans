@@ -16,9 +16,12 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.projectsextensions.gradle.classpath;
 
+import java.lang.reflect.Method;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.projectsextensions.ClassPathExtender;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
+import org.netbeans.spi.java.classpath.ClassPathProvider;
 
 /**
  *
@@ -27,14 +30,28 @@ import org.netbeans.api.project.Project;
 public class GradleExtendedClassPath implements ClassPathExtender {
 
     private final Project project;
-    
+    private final ClassPathProvider classPathProvider;
+        
     public GradleExtendedClassPath(Project project) {
         this.project = project;
+        classPathProvider = project.getLookup().lookup(ClassPathProvider.class);
     }
     
     @Override
     public ClassPath getProjectSourcesClassPath(String type) {
-        return ClassPath.EMPTY;
+        if (classPathProvider == null) return ClassPath.EMPTY;
+        
+        return getClassPath(type);
+    }
+    
+    private ClassPath getClassPath(String type) {
+        try {
+            Method method = classPathProvider.getClass().getMethod("getClassPaths", String.class);
+            return (ClassPath) method.invoke(classPathProvider, type);
+        } catch (ReflectiveOperationException ex) {
+            KotlinLogger.INSTANCE.logWarning(ex.getMessage());
+            return ClassPath.EMPTY;
+        } 
     }
     
 }

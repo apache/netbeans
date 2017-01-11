@@ -14,14 +14,16 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.projectsextensions;
+package org.jetbrains.kotlin.projectsextensions
 
-import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.ClassPath
 
-/**
- *
- * @author Alexander.Baratynski
- */
-public interface ClassPathExtender {
-    public ClassPath getProjectSourcesClassPath(String type);
+/*
+
+  @author baratynskiy
+  Created on Jan 11, 2017
+*/
+
+interface ClassPathExtender {
+    fun getProjectSourcesClassPath(type: String): ClassPath
 }

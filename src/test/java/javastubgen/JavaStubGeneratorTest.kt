@@ -97,4 +97,6 @@ class JavaStubGeneratorTest : NbTestCase("Stub generator test") {
     
     fun testClassImplementsInterface() = doTest("implementsInterface", "implementsInterface1", "implementsInterface2")
     
+    fun testFunWithSeveralArguments() = doTest("severalArguments")
+    
 }

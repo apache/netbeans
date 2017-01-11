@@ -189,9 +189,16 @@ object JavaStubGenerator {
         val returnType = if (name == "<init>") "" else traceSigVisitor.returnType
         
         method.append(returnType.replace("$", ".")).append(" ").append(methodName)
-                .append(traceSigVisitor.declaration.replace("$", ".")).append("{}\n")
+                .append(getMethodArguments(traceSigVisitor.declaration.replace("$", "."))).append("{}\n")
         
         return method.toString()
+    }
+    
+    private fun getMethodArguments(declaration: String): String {
+        val argumentsTypes = declaration.replace("(", "").replace(")", "").split(",")
+        
+        return argumentsTypes.withIndex()
+                .joinToString(",", "(", ")", -1, "...", { if (it.value != "") "${it.value} a${it.index}" else "" })
     }
     
     private fun getClassType(access: Int) = when {

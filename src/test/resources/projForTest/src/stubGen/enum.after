@@ -1,5 +1,5 @@
 package stubGen;
 public enum SimpleEnum extends java.lang.Enum<stubGen.SimpleEnum>{ ONE, TWO, THREE;protected SimpleEnum(){} 
   public static stubGen.SimpleEnum[] values(){} 
-  public static stubGen.SimpleEnum valueOf(java.lang.String){}
+  public static stubGen.SimpleEnum valueOf(java.lang.String a0){}
 }

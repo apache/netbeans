@@ -46,7 +46,7 @@ public class KotlinVirtualSourceProvider implements VirtualSourceProvider {
 
     @Override
     public boolean index() {
-        return true;
+        return false;
     }
 
     private boolean skipTranslating(File file) {
@@ -62,6 +62,8 @@ public class KotlinVirtualSourceProvider implements VirtualSourceProvider {
     
     @Override
     public void translate(Iterable<File> files, File sourceRoot, Result result) {
+        KotlinLogger.INSTANCE.logInfo("KotlinVirtualSourceProvider translate " + files.toString());
+        
         if (files.iterator().hasNext()) {
             File file = files.iterator().next();
             if (skipTranslating(file)) {

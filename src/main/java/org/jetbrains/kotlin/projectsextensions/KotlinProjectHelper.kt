@@ -65,23 +65,30 @@ object KotlinProjectHelper {
     fun Project.doInitialScan() {
         hasJavaFiles.put(this, getJavaFilesByProject(this).isNotEmpty())
         JavaEnvironment.checkJavaSource(this)
+        val progressBar = ProgressHandleFactory.createHandle("Kotlin files analysis...")
         try {
             JavaEnvironment.JAVA_SOURCE[this]?.runWhenScanFinished({
                 postTask(Runnable {
-                    val progressBar = ProgressHandleFactory.createHandle("Kotlin files analysis...")
+                    KotlinLogger.INSTANCE.logInfo("Initial scan began")
                     progressBar.start()
                     isScanning.put(this, true)
                     ProjectUtils.getSourceFiles(this).forEach {
+                        KotlinLogger.INSTANCE.logInfo("Analyzing ${it.containingFile.name}")
                         KotlinParser.getAnalysisResult(it, this)
                     }
                     KotlinSources(this).getAllKtFiles().forEach {
+                        KotlinLogger.INSTANCE.logInfo("Indexing ${it.path}")
                         IndexingManager.getDefault().refreshAllIndices(it)
                     }
                     isScanning.put(this, false)
                     progressBar.finish()
+                    KotlinLogger.INSTANCE.logInfo("Initial scan ended successfully")
                 })
             }, true)
-        } catch (ex: IOException) {}
+        } catch (ex: IOException) {
+            KotlinLogger.INSTANCE.logWarning("Exception during initial scan")
+            progressBar.finish()
+        }
     }
 
     fun Project.checkProject(): Boolean {

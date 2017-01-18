@@ -81,6 +81,8 @@ fun String.getPackages(project: Project): Set<String> {
 
 fun Project.findType(fqName: String) = TypeElementSearcher(fqName, this).execute(this).element
 
+fun Project.findTypeElementHandle(fqName: String) = TypeElementHandleSearcher(fqName, this).execute(this).element
+
 fun <T : Task<CompilationController>> T.execute(project: Project): T {
     JavaEnvironment.checkJavaSource(project)
     JavaEnvironment.JAVA_SOURCE[project]!!.runUserActionTask(this, true)

@@ -49,6 +49,18 @@ class TypeElementSearcher(val fqName: String, val project: Project) : Task<Compi
     }
 }
 
+class TypeElementHandleSearcher(val fqName: String, val project: Project) : Task<CompilationController> {
+
+    var element: ElementHandle<TypeElement>? = null
+
+    override fun run(info: CompilationController) {
+        info.toResolvedPhase()
+
+        val elem = info.elements.getTypeElement(fqName) ?: return
+        element = ElementHandle.create(elem)
+    }
+}
+
 class TypeMirrorHandleSearcher(val fqName: String) : Task<CompilationController> {
 
     lateinit var handle: TypeMirrorHandle<*>

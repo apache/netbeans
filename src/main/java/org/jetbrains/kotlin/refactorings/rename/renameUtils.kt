@@ -108,10 +108,8 @@ private fun getJavaRefactoringMap(searchingElement: KtElement,
             searchingElement.isEnum() -> ElementKind.ENUM
             else -> ElementKind.CLASS
         }
-        KotlinLogger.INSTANCE.logInfo("Type: $kind")
         
-        val elemHandle = project.findType(fqName.asString())?.toString() ?: "NOT FOUND"
-        KotlinLogger.INSTANCE.logInfo(elemHandle)
+        val elemHandle = project.findType(fqName.asString())?.toString() ?: return emptyMap()
         
         
     } else if (searchingElement is KtObjectDeclaration) {
@@ -120,6 +118,9 @@ private fun getJavaRefactoringMap(searchingElement: KtElement,
     } else if (searchingElement is KtNamedFunction) {
         val classOrObject = searchingElement.containingClassOrObject?.fqName ?: 
                 NoResolveFileClassesProvider.getFileClassFqName(searchingElement.getContainingKtFile())
+        
+        val elemHandle = project.findTypeElementHandle(classOrObject.asString()) ?: return emptyMap()
+        
         
     }
     

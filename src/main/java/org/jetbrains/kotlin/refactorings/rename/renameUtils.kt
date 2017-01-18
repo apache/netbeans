@@ -21,16 +21,24 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.search.LocalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import java.io.File
+import javax.lang.model.element.ElementKind
 import javax.swing.text.Position
 import org.jetbrains.kotlin.descriptors.SourceElement
+import org.jetbrains.kotlin.fileClasses.*
 import org.jetbrains.kotlin.highlighter.occurrences.*
 import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.navigation.references.resolveToSourceDeclaration
+import org.jetbrains.kotlin.psi.KtClass
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtFile
+import org.jetbrains.kotlin.psi.KtNamedFunction
+import org.jetbrains.kotlin.psi.KtObjectDeclaration
 import org.jetbrains.kotlin.psi.KtPsiUtil
+import org.jetbrains.kotlin.psi.psiUtil.*
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement
 import org.jetbrains.kotlin.utils.ProjectUtils
+import org.jetbrains.kotlin.resolve.lang.java.*
+import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.project.Project
 import org.netbeans.modules.csl.api.OffsetRange
 import org.netbeans.modules.csl.spi.GsfUtilities
@@ -76,7 +84,7 @@ fun getRenameRefactoringMap(fo: FileObject, psi: PsiElement, newName: String): M
         return ranges
     }
     
-    ranges.putAll(getJavaRefactoringMap(searchingElement))
+    ranges.putAll(getJavaRefactoringMap(searchingElement, project))
     
     ProjectUtils.getSourceFiles(project).forEach { 
         val occurrencesRanges = search(searchingElement, it)
@@ -90,11 +98,30 @@ fun getRenameRefactoringMap(fo: FileObject, psi: PsiElement, newName: String): M
     return ranges
 }
 
-private fun getJavaRefactoringMap(searchingElement: KtElement): Map<FileObject, List<OffsetRange>> {
-    
-    KotlinLogger.INSTANCE.logInfo("Element text: ${searchingElement.name}")
-    KotlinLogger.INSTANCE.logInfo("Use scope name: ${searchingElement.useScope}")
-    KotlinLogger.INSTANCE.logInfo("To string: ${searchingElement.toString()}")
+private fun getJavaRefactoringMap(searchingElement: KtElement,
+                                  project: Project): Map<FileObject, List<OffsetRange>> {
+    if (searchingElement is KtClass) {
+        val fqName = searchingElement.fqName ?: return emptyMap()
+        
+        val kind = when {
+            searchingElement.isInterface() -> ElementKind.INTERFACE
+            searchingElement.isEnum() -> ElementKind.ENUM
+            else -> ElementKind.CLASS
+        }
+        KotlinLogger.INSTANCE.logInfo("Type: $kind")
+        
+        val elemHandle = project.findType(fqName.asString())?.toString() ?: "NOT FOUND"
+        KotlinLogger.INSTANCE.logInfo(elemHandle)
+        
+        
+    } else if (searchingElement is KtObjectDeclaration) {
+        val fqName = searchingElement.fqName ?: return emptyMap()
+        
+    } else if (searchingElement is KtNamedFunction) {
+        val classOrObject = searchingElement.containingClassOrObject?.fqName ?: 
+                NoResolveFileClassesProvider.getFileClassFqName(searchingElement.getContainingKtFile())
+        
+    }
     
     return emptyMap()
 }

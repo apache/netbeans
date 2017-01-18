@@ -788,6 +788,11 @@
       <groupId>com.google.guava</groupId>  
       <artifactId>guava</artifactId>  
       <version>14.0</version> 
-    </dependency> 
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-netbeans-modules-refactoring-java</artifactId>
+      <version>RELEASE82</version>
+    </dependency>
   </dependencies> 
 </project>

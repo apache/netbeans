@@ -41,6 +41,11 @@ private fun getLengthOfIdentifier(ktElement: KtElement?) = when {
     else -> null
 }
 
+fun search(searchElement: KtElement, ktFile: KtFile) = searchTextOccurrences(ktFile, searchElement)
+        .map { getLengthOfIdentifier(it) }
+        .filterNotNull()
+        .map { OffsetRange(it.first, it.second) }
+
 fun search(searchingElements: List<SourceElement>, ktFile: KtFile): List<OffsetRange> {
     val searchElements = getKotlinElements(searchingElements)
     if (searchElements.isEmpty()) return emptyList()

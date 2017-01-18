@@ -18,14 +18,17 @@
 package org.jetbrains.kotlin.refactorings.rename
 
 import com.intellij.psi.PsiElement
+import com.intellij.psi.search.LocalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import java.io.File
 import javax.swing.text.Position
 import org.jetbrains.kotlin.descriptors.SourceElement
 import org.jetbrains.kotlin.highlighter.occurrences.*
+import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.navigation.references.resolveToSourceDeclaration
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtFile
+import org.jetbrains.kotlin.psi.KtPsiUtil
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.api.project.Project
@@ -59,14 +62,41 @@ fun getRenameRefactoringMap(fo: FileObject, psi: PsiElement, newName: String): M
     val project = ProjectUtils.getKotlinProjectForFileObject(fo)
     if (project == null) return ranges
     
+    val searchKtElements = getKotlinElements(searchingElements)
+    
+    if (searchKtElements.isEmpty()) return ranges
+    val searchingElement = searchKtElements.first()
+    
+    if (searchingElement.useScope is LocalSearchScope) {
+        val occurrencesRanges = search(searchingElements, psi.containingFile as KtFile)
+        if (occurrencesRanges.isNotEmpty()) {
+            ranges.put(fo, occurrencesRanges)
+        }
+        
+        return ranges
+    }
+    
+    ranges.putAll(getJavaRefactoringMap(searchingElement))
+    
     ProjectUtils.getSourceFiles(project).forEach { 
-        val occurrencesRanges = search(searchingElements, it)
+        val occurrencesRanges = search(searchingElement, it)
         val f = File(it.virtualFile.path)
         val file = FileUtil.toFileObject(f)
-        if (file != null && occurrencesRanges.isNotEmpty()) ranges.put(file, occurrencesRanges)
+        if (file != null && occurrencesRanges.isNotEmpty()) {
+            ranges.put(file, occurrencesRanges)
+        }
     }
     
     return ranges
+}
+
+private fun getJavaRefactoringMap(searchingElement: KtElement): Map<FileObject, List<OffsetRange>> {
+    
+    KotlinLogger.INSTANCE.logInfo("Element text: ${searchingElement.name}")
+    KotlinLogger.INSTANCE.logInfo("Use scope name: ${searchingElement.useScope}")
+    KotlinLogger.INSTANCE.logInfo("To string: ${searchingElement.toString()}")
+    
+    return emptyMap()
 }
 
 fun createPositionBoundsForFO(fo: FileObject, ranges: List<OffsetRange>): List<PositionBounds> {

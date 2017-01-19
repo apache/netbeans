@@ -40,6 +40,7 @@ import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaField
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaMethod
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaTypeParameter
 import org.netbeans.api.java.source.CompilationController
+import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.java.source.JavaSource.Phase
 import org.netbeans.api.java.source.Task
 import org.netbeans.api.java.source.TypeMirrorHandle
@@ -133,6 +134,21 @@ class MethodsSearcher(val handle: ElemHandle<TypeElement>,
                 .filter{ it.kind == ElementKind.METHOD }
                 .map{ NetBeansJavaMethod(ElemHandle.create(
                         it as ExecutableElement, project), containingClass, project) }
+        methods.addAll(filteredMembers)
+    }
+}
+
+class MethodHandlesSearcher(val handle: ElementHandle<TypeElement>) : Task<CompilationController> {
+    val methods = arrayListOf<ElementHandle<*>>()
+    
+    override fun run(info: CompilationController) {
+        info.toResolvedPhase()
+        val element = handle.resolve(info) ?: return
+        
+        val filteredMembers = element.enclosedElements
+                .filter{ it.kind == ElementKind.METHOD }
+                .map { ElementHandle.create(it) }
+        
         methods.addAll(filteredMembers)
     }
 }

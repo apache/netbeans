@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.search.LocalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import java.io.File
+import java.util.ArrayList
 import javax.lang.model.element.ElementKind
 import javax.swing.text.Position
 import org.jetbrains.kotlin.descriptors.SourceElement
@@ -29,6 +30,7 @@ import org.jetbrains.kotlin.highlighter.occurrences.*
 import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.navigation.references.resolveToSourceDeclaration
 import org.jetbrains.kotlin.psi.KtClass
+import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtNamedFunction
@@ -38,10 +40,16 @@ import org.jetbrains.kotlin.psi.psiUtil.*
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.resolve.lang.java.*
+import org.netbeans.api.java.source.ClassIndex
+import org.netbeans.api.java.source.ClasspathInfo
 import org.netbeans.api.java.source.ElementHandle
+import org.netbeans.api.java.source.JavaSource
+import org.netbeans.api.java.source.SourceUtils
+import org.netbeans.api.java.source.TreePathHandle
 import org.netbeans.api.project.Project
 import org.netbeans.modules.csl.api.OffsetRange
 import org.netbeans.modules.csl.spi.GsfUtilities
+import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils
 import org.openide.filesystems.FileObject
 import org.openide.filesystems.FileUtil
 import org.openide.text.CloneableEditorSupport
@@ -100,31 +108,52 @@ fun getRenameRefactoringMap(fo: FileObject, psi: PsiElement, newName: String): M
 
 private fun getJavaRefactoringMap(searchingElement: KtElement,
                                   project: Project): Map<FileObject, List<OffsetRange>> {
-    if (searchingElement is KtClass) {
-        val fqName = searchingElement.fqName ?: return emptyMap()
-        
-        val kind = when {
-            searchingElement.isInterface() -> ElementKind.INTERFACE
-            searchingElement.isEnum() -> ElementKind.ENUM
-            else -> ElementKind.CLASS
-        }
-        
-        val elemHandle = project.findType(fqName.asString())?.toString() ?: return emptyMap()
-        
-        
-    } else if (searchingElement is KtObjectDeclaration) {
-        val fqName = searchingElement.fqName ?: return emptyMap()
-        
-    } else if (searchingElement is KtNamedFunction) {
-        val classOrObject = searchingElement.containingClassOrObject?.fqName ?: 
-                NoResolveFileClassesProvider.getFileClassFqName(searchingElement.getContainingKtFile())
-        
-        val elemHandle = project.findTypeElementHandle(classOrObject.asString()) ?: return emptyMap()
-        
-        
+    val refactoringMap = hashMapOf<FileObject, ArrayList<OffsetRange>>()
+    
+    fun addToRefactoringMap(file: FileObject, range: OffsetRange) {
+        if (refactoringMap.containsKey(file)) {
+            val list = arrayListOf(range)
+            list.addAll(refactoringMap[file]!!)
+            refactoringMap.put(file, list)
+        } else refactoringMap.put(file, arrayListOf(range))
     }
     
-    return emptyMap()
+    if (searchingElement is KtClassOrObject) {
+        val fqName = searchingElement.fqName ?: return emptyMap()
+        val elementHandle = project.findTypeElementHandle(fqName.asString()) ?: return emptyMap()
+        
+        val files = JavaEnvironment.JAVA_SOURCE[project]!!.classpathInfo.
+                classIndex.getResources(elementHandle,
+                                        ClassIndex.SearchKind.values().toSet(),
+                                        ClassIndex.SearchScope.values().toSet())
+        KotlinLogger.INSTANCE.logInfo("$files")
+    } else if (searchingElement is KtNamedFunction) {
+        val classOrObject = searchingElement.containingClassOrObject?.fqName ?: 
+                NoResolveFileClassesProvider.getFileClassFqName(searchingElement.getContainingKtFile())        
+        val elementHandle = project.findTypeElementHandle(classOrObject.asString()) ?: return emptyMap()   
+        val methods = elementHandle.getMethodsHandles(project) 
+        val methodToFind = methods.firstOrNull() ?: return emptyMap()
+        
+        JavaEnvironment.checkJavaSource(project)
+        JavaEnvironment.JAVA_SOURCE[project]!!.runUserActionTask({ 
+            it.toPhase(JavaSource.Phase.RESOLVED)
+            
+            JavaRefactoringUtils.getInvocationsOf(methodToFind, it)
+                    .forEach { handle ->
+                val file = handle.fileObject
+                JavaSource.forFileObject(file).runUserActionTask({ fileCC ->
+                    val treePath = handle.resolve(fileCC)
+                    val start = fileCC.trees.sourcePositions.
+                            getStartPosition(fileCC.compilationUnit, treePath.leaf)
+                    val end = fileCC.trees.sourcePositions.
+                            getEndPosition(fileCC.compilationUnit, treePath.leaf)
+                    addToRefactoringMap(file, OffsetRange(start.toInt(), end.toInt()))
+                }, true)
+            }
+        }, true)
+    }
+    
+    return refactoringMap
 }
 
 fun createPositionBoundsForFO(fo: FileObject, ranges: List<OffsetRange>): List<PositionBounds> {

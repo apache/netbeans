@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaMethod
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
+import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.project.Project
 import javax.lang.model.element.TypeElement
 
@@ -52,3 +53,6 @@ fun ElemHandle<TypeElement>.getTypeParameters(project: Project) =
         TypeParametersSearcher(this, project).execute(project).typeParameters
 
 fun ElemHandle<TypeElement>.getFqName() = FqName(this.qualifiedName)
+ 
+fun ElementHandle<TypeElement>.getMethodsHandles(project: Project) =
+        MethodHandlesSearcher(this).execute(project).methods

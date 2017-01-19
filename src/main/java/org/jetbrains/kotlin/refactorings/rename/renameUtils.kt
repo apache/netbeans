@@ -128,43 +128,48 @@ private fun getJavaRefactoringMap(searchingElement: KtElement,
                                         ClassIndex.SearchScope.values().toSet())
         KotlinLogger.INSTANCE.logInfo("$files")
     } else if (searchingElement is KtNamedFunction) {
-        val classOrObject = searchingElement.containingClassOrObject?.fqName ?: 
-                NoResolveFileClassesProvider.getFileClassFqName(searchingElement.getContainingKtFile())        
-        val elementHandle = project.findTypeElementHandle(classOrObject.asString()) ?: return emptyMap()   
-        val methods = elementHandle.getMethodsHandles(project) 
-        
-        
-        val methodName = searchingElement.name ?: return emptyMap()
-        val numberOfValueParameters = searchingElement.valueParameters.size
-        
-        val methodToFind = methods.filter { it.getName(project).toString() == methodName }
-                .filter { it.getElementHandleValueParameters(project).size == numberOfValueParameters }
-                .firstOrNull() ?: return emptyMap()
-        
-        JavaEnvironment.checkJavaSource(project)
-        JavaEnvironment.JAVA_SOURCE[project]!!.runUserActionTask({ 
-            it.toPhase(JavaSource.Phase.RESOLVED)
-            
-            JavaRefactoringUtils.getInvocationsOf(methodToFind, it)
-                    .forEach { handle ->
-                val file = handle.fileObject
-                JavaSource.forFileObject(file).runUserActionTask({ fileCC ->
-                    val treePath = handle.resolve(fileCC)
-                    val start = fileCC.trees.sourcePositions.
-                            getStartPosition(fileCC.compilationUnit, treePath.leaf)
-                    val end = fileCC.trees.sourcePositions.
-                            getEndPosition(fileCC.compilationUnit, treePath.leaf)
-                    
-                    val range = getOffsetOfMethodInvocation(file, methodName, start.toInt(), end.toInt())
-                    if (range != null) {
-                        addToRefactoringMap(file, range)
-                    }
-                }, true)
-            }
-        }, true)
+        getJavaRefactoringMapForNamedFunction(searchingElement, project, ::addToRefactoringMap)
     }
     
     return refactoringMap
+}
+
+private fun getJavaRefactoringMapForNamedFunction(searchingElement: KtNamedFunction,
+                                                  project: Project,
+                                                  addToRefactoringMap: (FileObject, OffsetRange) -> Unit) {
+    val classOrObject = searchingElement.containingClassOrObject?.fqName ?: 
+                NoResolveFileClassesProvider.getFileClassFqName(searchingElement.getContainingKtFile())        
+    val elementHandle = project.findTypeElementHandle(classOrObject.asString()) ?: return  
+    val methods = elementHandle.getMethodsHandles(project) 
+        
+    val methodName = searchingElement.name ?: return
+    val numberOfValueParameters = searchingElement.valueParameters.size
+        
+    val methodToFind = methods.filter { it.getName(project).toString() == methodName }
+            .filter { it.getElementHandleValueParameters(project).size == numberOfValueParameters }
+            .firstOrNull() ?: return
+        
+    JavaEnvironment.checkJavaSource(project)
+    JavaEnvironment.JAVA_SOURCE[project]!!.runUserActionTask({ 
+        it.toPhase(JavaSource.Phase.RESOLVED)
+            
+        JavaRefactoringUtils.getInvocationsOf(methodToFind, it)
+                .forEach { handle ->
+            val file = handle.fileObject
+            JavaSource.forFileObject(file).runUserActionTask({ fileCC ->
+                val treePath = handle.resolve(fileCC)
+                val start = fileCC.trees.sourcePositions.
+                        getStartPosition(fileCC.compilationUnit, treePath.leaf)
+                val end = fileCC.trees.sourcePositions.
+                        getEndPosition(fileCC.compilationUnit, treePath.leaf)
+                    
+                val range = getOffsetOfMethodInvocation(file, methodName, start.toInt(), end.toInt())
+                if (range != null) {
+                    addToRefactoringMap(file, range)
+                }
+            }, true)
+        }
+    }, true)
 }
 
 private fun getOffsetOfMethodInvocation(fo: FileObject,

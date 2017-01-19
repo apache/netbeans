@@ -23,7 +23,10 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.text.StyledDocument;
 import org.jetbrains.kotlin.utils.ProjectUtils;
+import org.jetbrains.kotlin.project.KotlinSources;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RenameRefactoring;
 import org.netbeans.modules.refactoring.spi.ProgressProviderAdapter;
@@ -75,7 +78,15 @@ public class KotlinRenameRefactoring extends ProgressProviderAdapter implements 
         
         bag.getSession().doRefactoring(true);
         
+        updateVirtualSources(ProjectUtils.getKotlinProjectForFileObject(fo));
+        
         return null;
+    }
+    
+    private void updateVirtualSources(Project project) {
+        for (FileObject it : new KotlinSources(project).getAllKtFiles()) {
+            IndexingManager.getDefault().refreshAllIndices(it);
+        }
     }
     
 }

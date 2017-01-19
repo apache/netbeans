@@ -132,7 +132,14 @@ private fun getJavaRefactoringMap(searchingElement: KtElement,
                 NoResolveFileClassesProvider.getFileClassFqName(searchingElement.getContainingKtFile())        
         val elementHandle = project.findTypeElementHandle(classOrObject.asString()) ?: return emptyMap()   
         val methods = elementHandle.getMethodsHandles(project) 
-        val methodToFind = methods.firstOrNull() ?: return emptyMap()
+        
+        
+        val methodName = searchingElement.name ?: return emptyMap()
+        val numberOfValueParameters = searchingElement.valueParameters.size
+        
+        val methodToFind = methods.filter { it.getName(project).toString() == methodName }
+                .filter { it.getElementHandleValueParameters(project).size == numberOfValueParameters }
+                .firstOrNull() ?: return emptyMap()
         
         JavaEnvironment.checkJavaSource(project)
         JavaEnvironment.JAVA_SOURCE[project]!!.runUserActionTask({ 
@@ -147,13 +154,29 @@ private fun getJavaRefactoringMap(searchingElement: KtElement,
                             getStartPosition(fileCC.compilationUnit, treePath.leaf)
                     val end = fileCC.trees.sourcePositions.
                             getEndPosition(fileCC.compilationUnit, treePath.leaf)
-                    addToRefactoringMap(file, OffsetRange(start.toInt(), end.toInt()))
+                    
+                    val range = getOffsetOfMethodInvocation(file, methodName, start.toInt(), end.toInt())
+                    if (range != null) {
+                        addToRefactoringMap(file, range)
+                    }
                 }, true)
             }
         }, true)
     }
     
     return refactoringMap
+}
+
+private fun getOffsetOfMethodInvocation(fo: FileObject,
+                                        name: String,
+                                        start: Int,
+                                        end: Int): OffsetRange? {
+    val doc = ProjectUtils.getDocumentFromFileObject(fo) ?: return null
+    val text = doc.getText(start, end - start)
+    
+    val startIndex = text.lastIndexOf(".") + 1
+    
+    return OffsetRange(start + startIndex, end)
 }
 
 fun createPositionBoundsForFO(fo: FileObject, ranges: List<OffsetRange>): List<PositionBounds> {

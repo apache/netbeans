@@ -20,6 +20,7 @@ import javax.lang.model.element.ExecutableElement
 import org.jetbrains.kotlin.load.java.structure.JavaType
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter
 import org.jetbrains.kotlin.load.java.structure.JavaValueParameter
+import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.project.Project
 
 fun ElemHandle<ExecutableElement>.getReturnType(project: Project) =
@@ -33,3 +34,6 @@ fun ElemHandle<ExecutableElement>.getTypeParameters(project: Project) =
 
 fun ElemHandle<ExecutableElement>.getValueParameters(project: Project) =
         ValueParametersSearcher(this, project).execute(project).valueParameters
+
+fun ElementHandle<ExecutableElement>.getElementHandleValueParameters(project: Project) =
+        ElementHandleValueParametersSearcher(this, project).execute(project).valueParameters

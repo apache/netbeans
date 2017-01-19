@@ -27,6 +27,7 @@ import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaType
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaTypeParameter
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaValueParameter
 import org.netbeans.api.java.source.CompilationController
+import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.java.source.Task
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
@@ -73,6 +74,29 @@ class ExecutableTypeParametersSearcher(val handle: ElemHandle<ExecutableElement>
 }
 
 class ValueParametersSearcher(val handle: ElemHandle<ExecutableElement>,
+                              val project: Project) : Task<CompilationController> {
+    
+    val valueParameters = arrayListOf<JavaValueParameter>()
+    
+    override fun run(info: CompilationController) {
+        info.toResolvedPhase()
+        
+        val elem = handle.resolve(info) ?: return
+        val valueParams = (elem as ExecutableElement).parameters
+        val parameterTypesCount = valueParams.size
+        
+        valueParams.forEachIndexed { index, it -> 
+            val isLastParameter = index == parameterTypesCount - 1
+            val parameterName = it.simpleName.toString()
+            val elemHandle = ElemHandle.create(it, project)
+            val valueParameter = NetBeansJavaValueParameter(elemHandle, project, parameterName,
+                    if (isLastParameter) elem.isVarArgs else false)
+            valueParameters.add(valueParameter)
+        }
+    }
+}
+  
+class ElementHandleValueParametersSearcher(val handle: ElementHandle<ExecutableElement>,
                               val project: Project) : Task<CompilationController> {
     
     val valueParameters = arrayListOf<JavaValueParameter>()

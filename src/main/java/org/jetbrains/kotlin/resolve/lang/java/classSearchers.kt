@@ -139,7 +139,7 @@ class MethodsSearcher(val handle: ElemHandle<TypeElement>,
 }
 
 class MethodHandlesSearcher(val handle: ElementHandle<TypeElement>) : Task<CompilationController> {
-    val methods = arrayListOf<ElementHandle<*>>()
+    val methods = arrayListOf<ElementHandle<ExecutableElement>>()
     
     override fun run(info: CompilationController) {
         info.toResolvedPhase()
@@ -147,6 +147,7 @@ class MethodHandlesSearcher(val handle: ElementHandle<TypeElement>) : Task<Compi
         
         val filteredMembers = element.enclosedElements
                 .filter{ it.kind == ElementKind.METHOD }
+                .filterIsInstance(ExecutableElement::class.java)
                 .map { ElementHandle.create(it) }
         
         methods.addAll(filteredMembers)

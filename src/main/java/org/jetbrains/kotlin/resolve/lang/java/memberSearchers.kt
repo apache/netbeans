@@ -81,6 +81,18 @@ class MemberNameSearcher(val handle: ElemHandle<*>) : Task<CompilationController
     }
 }
 
+class MemberElementHandleNameSearcher(val handle: ElementHandle<*>) : Task<CompilationController> {
+
+    lateinit var name: Name
+
+    override fun run(info: CompilationController) {
+        info.toResolvedPhase()
+
+        val elem = handle.resolve(info)
+        name = Name.identifier(elem.simpleName.toString())
+    }
+}
+
 class ElementHandleNameSearcher(val handle: ElementHandle<*>) : Task<CompilationController> {
 
     lateinit var name: Name

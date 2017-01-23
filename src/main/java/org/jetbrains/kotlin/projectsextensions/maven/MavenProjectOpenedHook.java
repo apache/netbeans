@@ -27,6 +27,11 @@ import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
+import org.openide.filesystems.FileAttributeEvent;
+import org.openide.filesystems.FileChangeListener;
+import org.openide.filesystems.FileEvent;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileRenameEvent;
 import org.openide.util.Exceptions;
 
 /**
@@ -63,34 +68,40 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                             KotlinProjectHelper.INSTANCE.postTask(run);
                         }
                         
-//                        NbMavenProject projectWatcher = getProjectWatcher();
-//                        if (projectWatcher == null) {
-//                            return;
-//                        }
-//                        
-//                        projectWatcher.addPropertyChangeListener(new PropertyChangeListener(){
-//                            @Override
-//                            public void propertyChange(PropertyChangeEvent evt) {
-//                                KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
-//                            }
-//                        });
+                        FileObject pomXml = project.getProjectDirectory().getFileObject("pom.xml");
+                        if (pomXml != null) {
+                            pomXml.addFileChangeListener(new FileChangeListener() {
+                                @Override
+                                public void fileFolderCreated(FileEvent fe) {
+                                }
+
+                                @Override
+                                public void fileDataCreated(FileEvent fe) {
+                                }
+
+                                @Override
+                                public void fileChanged(FileEvent fe) {
+                                    KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
+                                }
+
+                                @Override
+                                public void fileDeleted(FileEvent fe) {
+                                }
+
+                                @Override
+                                public void fileRenamed(FileRenameEvent fre) {
+                                }
+
+                                @Override
+                                public void fileAttributeChanged(FileAttributeEvent fae) {
+                                }
+                            });
+                        }
                         
                         KotlinProjectHelper.INSTANCE.doInitialScan(project);
                 }
             };
         thread.start();
-    }
-
-    private NbMavenProject getProjectWatcher() {
-        Class clazz = project.getClass();
-        try {
-            Method getProjectWatcher = clazz.getMethod("getProjectWatcher");
-            return (NbMavenProject) getProjectWatcher.invoke(project);
-        } catch (ReflectiveOperationException ex) {
-            Exceptions.printStackTrace(ex);
-        } 
-        
-        return null;
     }
     
     @Override

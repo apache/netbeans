@@ -63,17 +63,17 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                             KotlinProjectHelper.INSTANCE.postTask(run);
                         }
                         
-                        NbMavenProject projectWatcher = getProjectWatcher();
-                        if (projectWatcher == null) {
-                            return;
-                        }
-                        
-                        projectWatcher.addPropertyChangeListener(new PropertyChangeListener(){
-                            @Override
-                            public void propertyChange(PropertyChangeEvent evt) {
-                                KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
-                            }
-                        });
+//                        NbMavenProject projectWatcher = getProjectWatcher();
+//                        if (projectWatcher == null) {
+//                            return;
+//                        }
+//                        
+//                        projectWatcher.addPropertyChangeListener(new PropertyChangeListener(){
+//                            @Override
+//                            public void propertyChange(PropertyChangeEvent evt) {
+//                                KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
+//                            }
+//                        });
                         
                         KotlinProjectHelper.INSTANCE.doInitialScan(project);
                 }

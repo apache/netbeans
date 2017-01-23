@@ -16,23 +16,18 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.projectsextensions.maven;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.lang.reflect.Method;
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinAnalysisProjectCache;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
-import org.openide.util.Exceptions;
 
 /**
  *

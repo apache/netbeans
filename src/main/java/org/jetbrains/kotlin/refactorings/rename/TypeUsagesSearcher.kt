@@ -21,14 +21,20 @@ import com.sun.source.tree.ImportTree
 import com.sun.source.tree.InstanceOfTree
 import com.sun.source.tree.MethodTree
 import com.sun.source.tree.NewClassTree
+import com.sun.source.tree.ParameterizedTypeTree
 import com.sun.source.tree.Tree
 import com.sun.source.tree.TypeCastTree
+import com.sun.source.tree.TypeParameterTree
 import com.sun.source.tree.VariableTree
 import com.sun.source.util.TreePath
 import com.sun.source.util.TreePathScanner
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
+import javax.lang.model.element.TypeParameterElement
+import javax.lang.model.type.DeclaredType
+import javax.lang.model.type.TypeVariable
+import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.api.java.source.CancellableTask
 import org.netbeans.api.java.source.CompilationController
@@ -115,6 +121,23 @@ class TypeUsagesSearcher(val toFind: ElementHandle<TypeElement>) : TreePathScann
         return super.visitClass(node, handle)
     }
 
+    override fun visitTypeParameter(node: TypeParameterTree?, handle: ElementHandle<*>): Tree? {
+        val e = handle.resolve(info) ?: return super.visitTypeParameter(node, handle)
+        val el = info.trees.getElement(currentPath) as? TypeParameterElement ?: return super.visitTypeParameter(node, handle)
+        
+        addUsageIfApplicable(e, { el.bounds.contains(e.asType()) })
+        
+        return super.visitTypeParameter(node, handle)
+    }
+    
+    override fun visitParameterizedType(node: ParameterizedTypeTree?, handle: ElementHandle<*>): Tree? {
+        val e = handle.resolve(info) ?: return super.visitParameterizedType(node, handle)
+        
+        addUsageIfApplicable(e, { currentPath.leaf.toString().contains(e.simpleName) })
+        
+        return super.visitParameterizedType(node, handle)
+    }
+    
     private fun addUsageIfApplicable(e: Element,
                                      condition: (String) -> Boolean,
                                      index: String.(String) -> Int = { lastIndexOf(it) }) {

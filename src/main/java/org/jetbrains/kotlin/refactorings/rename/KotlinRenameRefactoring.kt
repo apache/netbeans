@@ -17,10 +17,16 @@
 package org.jetbrains.kotlin.refactorings.rename
 
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
 import javax.swing.text.StyledDocument
+import org.jetbrains.kotlin.log.KotlinLogger
+import org.jetbrains.kotlin.psi.KtClassOrObject
+import org.jetbrains.kotlin.psi.KtElement
+import org.jetbrains.kotlin.psi.KtNamedFunction
+import org.jetbrains.kotlin.psi.KtParameter
+import org.jetbrains.kotlin.psi.KtProperty
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.project.KotlinSources
-import org.netbeans.modules.parsing.api.indexing.IndexingManager
 import org.netbeans.modules.refactoring.api.Problem
 import org.netbeans.modules.refactoring.api.RenameRefactoring
 import org.netbeans.modules.refactoring.spi.ProgressProviderAdapter
@@ -38,17 +44,28 @@ class KotlinRenameRefactoring(val refactoring: RenameRefactoring) : ProgressProv
         bag.registerTransaction(getTransaction(renameMap, newName, psi.text))
         bag.session.doRefactoring(true)
         
-        val project = ProjectUtils.getKotlinProjectForFileObject(fo) ?: return null
-        KotlinSources(project).getAllKtFiles().forEach {
-            IndexingManager.getDefault().refreshAllIndices(it)
-        }
-        
         return null
     }
 
     override fun checkParameters() = null
 
-    override fun preCheck() = null
+    override fun preCheck(): Problem? {
+        val psi = refactoring.refactoringSource.lookup(PsiElement::class.java)
+        val ktElement: KtElement = PsiTreeUtil.getNonStrictParentOfType(psi, KtElement::class.java) ?: return null
+        
+        KotlinLogger.INSTANCE.logInfo("${ktElement.javaClass}")
+        
+        if (ktElement !is KtClassOrObject 
+                && ktElement !is KtNamedFunction 
+                && ktElement !is KtProperty
+                && ktElement !is KtParameter) return Problem(true, "")
+                
+        if (psi.text.contains(" ") || psi.text == "interface"
+                || psi.text == "class" || psi.text == "fun" 
+                || psi.text == "package") return Problem(true, "")
+        
+        return null
+    }
 
     override fun fastCheckParameters() = null
 

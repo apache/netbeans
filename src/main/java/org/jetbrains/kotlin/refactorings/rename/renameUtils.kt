@@ -258,19 +258,66 @@ private class TypeUsagesSearcher(val toFind: ElementHandle<TypeElement>) : TreeP
     }
     
     override fun visitImport(node: ImportTree?, handle: ElementHandle<*>): Tree? {
-        val e = handle.resolve(info)
+        val e = handle.resolve(info) as? TypeElement ?: return super.visitImport(node, handle)
+        
+        val start = info.trees.sourcePositions.
+                    getStartPosition(info.compilationUnit, currentPath.leaf).toInt()
+        val end = info.trees.sourcePositions.
+                    getEndPosition(info.compilationUnit, currentPath.leaf).toInt()
+        
+        val doc = ProjectUtils.getDocumentFromFileObject(info.fileObject) ?: return super.visitImport(node, handle)
+        val text = doc.getText(start, end - start)
+        
+        if (text.endsWith("${e.qualifiedName};")) {
+            val startIndex = start + text.lastIndexOf(e.simpleName.toString())
+            val endIndex = end - 1;
+            
+            usages.add(OffsetRange(startIndex, endIndex))
+        }
         
         return super.visitImport(node, handle)
     }
     
     override fun visitClass(node: ClassTree?, handle: ElementHandle<*>): Tree? {
-        val e = handle.resolve(info)
+        val e = handle.resolve(info) ?: return super.visitClass(node, handle)
+        val el = info.trees.getElement(currentPath) as? TypeElement ?: return super.visitClass(node, handle)
+        
+        if (el.interfaces.contains(e.asType()) || el.superclass == e.asType()) {
+            val start = info.trees.sourcePositions.
+                        getStartPosition(info.compilationUnit, currentPath.leaf).toInt()
+            val end = info.trees.sourcePositions.
+                        getEndPosition(info.compilationUnit, currentPath.leaf).toInt()
+            
+            val doc = ProjectUtils.getDocumentFromFileObject(info.fileObject) ?: return super.visitClass(node, handle)
+            val text = doc.getText(start, end - start)
+            
+            val startIndex = start + text.indexOf(e.simpleName.toString())
+            val endIndex = startIndex + e.simpleName.toString().length
+            
+            usages.add(OffsetRange(startIndex, endIndex))
+        }
         
         return super.visitClass(node, handle)
     }
     
     override fun visitMethod(node: MethodTree?, handle: ElementHandle<*>): Tree? {
-        val e = handle.resolve(info)
+        val e = handle.resolve(info) ?: return super.visitMethod(node, handle)
+        val el = info.trees.getElement(currentPath) as? ExecutableElement ?: return super.visitMethod(node, handle)
+        
+        if (el.returnType == e.asType()) {
+            val start = info.trees.sourcePositions.
+                        getStartPosition(info.compilationUnit, currentPath.leaf).toInt()
+            val end = info.trees.sourcePositions.
+                        getEndPosition(info.compilationUnit, currentPath.leaf).toInt()
+            
+            val doc = ProjectUtils.getDocumentFromFileObject(info.fileObject) ?: return super.visitMethod(node, handle)
+            val text = doc.getText(start, end - start)
+            
+            val endIndex = start + text.indexOf(el.simpleName.toString()) - 1
+            val startIndex = endIndex - e.simpleName.toString().length
+            
+            usages.add(OffsetRange(startIndex, endIndex))
+        }
         
         return super.visitMethod(node, handle)
     }
@@ -288,9 +335,10 @@ private class TypeUsagesSearcher(val toFind: ElementHandle<TypeElement>) : TreeP
             val doc = ProjectUtils.getDocumentFromFileObject(info.fileObject) ?: return super.visitVariable(node, handle)
             val text = doc.getText(start, end - start)
                 
-            val endIndex = start + text.indexOf(" ")
+            val startIndex = start + text.indexOf(e.simpleName.toString())
+            val endIndex = startIndex + e.simpleName.toString().length
                 
-            usages.add(OffsetRange(start, endIndex))
+            usages.add(OffsetRange(startIndex, endIndex))
         }
         
         return super.visitVariable(node, handle)
@@ -311,8 +359,8 @@ private class TypeUsagesSearcher(val toFind: ElementHandle<TypeElement>) : TreeP
             val doc = ProjectUtils.getDocumentFromFileObject(info.fileObject) ?: return super.visitNewClass(node, handle)
             val text = doc.getText(start, end - start)
             
-            val startIndex = start + text.lastIndexOf(" ") + 1
-            val endIndex = start + text.indexOf("(")
+            val startIndex = start + text.lastIndexOf(e.simpleName.toString())
+            val endIndex = startIndex + e.simpleName.toString().length
             
             usages.add(OffsetRange(startIndex, endIndex))
         }
@@ -334,7 +382,7 @@ private class TypeUsagesSearcher(val toFind: ElementHandle<TypeElement>) : TreeP
         
         if (textBetwenBrackets.endsWith("${e.simpleName}")) {
             val startIndex = start + text.lastIndexOf("${e.simpleName}")
-            val endIndex = start + text.indexOf(")")
+            val endIndex = startIndex + e.simpleName.toString().length
             
             usages.add(OffsetRange(startIndex, endIndex))
         }

@@ -173,6 +173,12 @@ fun openFileAtOffset(doc: StyledDocument, offset: Int) {
     line.show(Line.ShowOpenType.OPEN, Line.ShowVisibilityType.FRONT, colNumber)
 }
 
+fun moveCaretToOffset(doc: StyledDocument, offset: Int) {
+    val line = NbEditorUtilities.getLine(doc, offset, false)
+    val colNumber = NbDocument.findLineColumn(doc, offset)
+    line.show(Line.ShowOpenType.NONE, Line.ShowVisibilityType.NONE, colNumber)
+}
+
 fun getElementWithSource(descriptor: DeclarationDescriptor, project: Project): SourceElement? {
     val sourceElements = NetBeansDescriptorUtils.descriptorToDeclarations(descriptor, project)
     

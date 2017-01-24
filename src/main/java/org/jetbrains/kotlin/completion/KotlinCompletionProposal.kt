@@ -16,6 +16,7 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.completion
 
+import com.intellij.psi.util.PsiTreeUtil
 import javax.swing.ImageIcon
 import javax.swing.SwingUtilities
 import javax.swing.text.StyledDocument
@@ -27,6 +28,7 @@ import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor
 import org.jetbrains.kotlin.descriptors.PackageViewDescriptor
 import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
 import org.jetbrains.kotlin.descriptors.VariableDescriptor
+import org.jetbrains.kotlin.psi.KtImportDirective
 import org.jetbrains.kotlin.renderer.DescriptorRenderer
 import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.utils.KotlinImageProvider
@@ -36,8 +38,9 @@ import org.netbeans.modules.csl.spi.DefaultCompletionProposal
 import org.jetbrains.kotlin.navigation.netbeans.getElementWithSource
 import org.jetbrains.kotlin.resolve.lang.java.resolver.NetBeansJavaSourceElement
 import org.netbeans.api.project.Project
-import org.jetbrains.kotlin.navigation.netbeans.openFileAtOffset
+import org.jetbrains.kotlin.navigation.netbeans.moveCaretToOffset
 import org.jetbrains.kotlin.resolve.lang.java.getJavaDoc
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import javax.swing.text.Document
 import org.netbeans.modules.csl.api.ElementKind
 
@@ -95,29 +98,32 @@ class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
         else -> 150
     }
     
-    private fun functionAction(doc: StyledDocument) {
+    private fun functionAction() {
         val functionDescriptor = descriptor as FunctionDescriptor
         val params = functionDescriptor.valueParameters
         
+        val importDirective: KtImportDirective? = PsiTreeUtil.getNonStrictParentOfType(KotlinParser.file?.findElementAt(idenStartOffset - 1), 
+                KtImportDirective::class.java)
+        val isImport = importDirective != null
+        
         doc.remove(idenStartOffset, prefix.length)
         
-        if (params.size == 1) {
-            if (name.contains("->")) {
-                doc.insertString(idenStartOffset, "$text {  }", null)
-                SwingUtilities.invokeLater(Runnable { openFileAtOffset(doc, idenStartOffset + "$text { ".length) })
-                
-                return
-            }
+        if (isImport) {
+            doc.insertString(idenStartOffset, text, null)
+            SwingUtilities.invokeLater(Runnable { moveCaretToOffset(doc, idenStartOffset + text.length) })
+            
+            return
         }
         
-        val functionParams = StringBuilder().append("(")
-        params.forEach { functionParams.append(getValueParameter(it)).append(",") }
-        
-        if (params.size > 0) {
-            functionParams.deleteCharAt(functionParams.length - 1)
+        if (params.size == 1 && name.contains("->")) {
+            doc.insertString(idenStartOffset, "$text {  }", null)
+            SwingUtilities.invokeLater(Runnable { moveCaretToOffset(doc, idenStartOffset + "$text { ".length) })
+
+            return
         }
-        functionParams.append(")")
-        doc.insertString(idenStartOffset, text + functionParams.toString(), null)
+            
+        doc.insertString(idenStartOffset, text + params.joinToString(", ", "(", ")", -1, "...", { getValueParameter(it) }), null)
+        SwingUtilities.invokeLater(Runnable { moveCaretToOffset(doc, idenStartOffset + text.length + 1) })  
     }
     
     private fun getValueParameter(desc: ValueParameterDescriptor): String {
@@ -132,7 +138,7 @@ class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
     
     override fun doInsert(document: Document) {
         if (descriptor is FunctionDescriptor) {
-            functionAction(doc)
+            functionAction()
         } else {
             document.remove(idenStartOffset, prefix.length)
             document.insertString(idenStartOffset, text, null)

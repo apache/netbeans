@@ -40,7 +40,7 @@ object KotlinUpdater {
     val USER_ID = "kotlin.userId"
     val pluginSite = "https://plugins.jetbrains.com/netbeans-plugins/kotlin/update?"
     
-    var updated = false
+    var updated = true
         private set
 
     @Synchronized fun checkUpdates() {

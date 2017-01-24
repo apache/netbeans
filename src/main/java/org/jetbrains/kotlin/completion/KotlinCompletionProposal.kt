@@ -17,6 +17,7 @@
 package org.jetbrains.kotlin.completion
 
 import javax.swing.ImageIcon
+import javax.swing.SwingUtilities
 import javax.swing.text.StyledDocument
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.ClassifierDescriptor
@@ -35,6 +36,7 @@ import org.netbeans.modules.csl.spi.DefaultCompletionProposal
 import org.jetbrains.kotlin.navigation.netbeans.getElementWithSource
 import org.jetbrains.kotlin.resolve.lang.java.resolver.NetBeansJavaSourceElement
 import org.netbeans.api.project.Project
+import org.jetbrains.kotlin.navigation.netbeans.openFileAtOffset
 import org.jetbrains.kotlin.resolve.lang.java.getJavaDoc
 import javax.swing.text.Document
 import org.netbeans.modules.csl.api.ElementKind
@@ -101,7 +103,9 @@ class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
         
         if (params.size == 1) {
             if (name.contains("->")) {
-                doc.insertString(idenStartOffset, text + " {  }", null)
+                doc.insertString(idenStartOffset, "$text {  }", null)
+                SwingUtilities.invokeLater(Runnable { openFileAtOffset(doc, idenStartOffset + "$text { ".length) })
+                
                 return
             }
         }

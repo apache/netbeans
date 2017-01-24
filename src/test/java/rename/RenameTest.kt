@@ -21,7 +21,7 @@ import javaproject.JavaProject
 import javax.swing.text.Document
 import org.jetbrains.kotlin.builder.KotlinPsiManager
 import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.refactorings.rename.getTransaction
+import org.jetbrains.kotlin.refactorings.rename.transaction
 import org.jetbrains.kotlin.refactorings.rename.getRenameRefactoringMap
 import org.netbeans.api.project.Project
 import org.netbeans.junit.NbTestCase
@@ -44,7 +44,7 @@ class RenameTest : NbTestCase("Rename Test") {
     
     private fun doRefactoring(newName: String, fo: FileObject, psi: PsiElement) {
         val renameMap = getRenameRefactoringMap(fo, psi, newName)
-        getTransaction(renameMap, newName, psi.text).commit()
+        transaction(renameMap).commit()
     }
     
     private fun checkTextsEquality(actual: FileObject, supposed: FileObject) {

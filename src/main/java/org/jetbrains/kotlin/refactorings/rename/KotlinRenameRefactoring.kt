@@ -41,7 +41,7 @@ class KotlinRenameRefactoring(val refactoring: RenameRefactoring) : ProgressProv
         val psi = refactoring.refactoringSource.lookup(PsiElement::class.java)
         
         val renameMap = getRenameRefactoringMap(fo, psi, newName)
-        bag.registerTransaction(getTransaction(renameMap, newName, psi.text))
+        bag.registerTransaction(transaction(renameMap))
         bag.session.doRefactoring(true)
         
         return null
@@ -52,8 +52,6 @@ class KotlinRenameRefactoring(val refactoring: RenameRefactoring) : ProgressProv
     override fun preCheck(): Problem? {
         val psi = refactoring.refactoringSource.lookup(PsiElement::class.java)
         val ktElement: KtElement = PsiTreeUtil.getNonStrictParentOfType(psi, KtElement::class.java) ?: return null
-        
-        KotlinLogger.INSTANCE.logInfo("${ktElement.javaClass}")
         
         if (ktElement !is KtClassOrObject 
                 && ktElement !is KtNamedFunction 

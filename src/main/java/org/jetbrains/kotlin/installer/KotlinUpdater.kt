@@ -36,11 +36,11 @@ import org.openide.util.NbPreferences
 
 object KotlinUpdater {
 
-    val KOTLIN_PLUGIN_VERSION = "0.1.1-beta"
+    val KOTLIN_PLUGIN_VERSION = "0.1.2-beta"
     val USER_ID = "kotlin.userId"
     val pluginSite = "https://plugins.jetbrains.com/netbeans-plugins/kotlin/update?"
     
-    var updated = true
+    var updated = false
         private set
 
     @Synchronized fun checkUpdates() {

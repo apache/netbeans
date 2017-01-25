@@ -21,6 +21,7 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
 import java.util.Date;
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinAnalysisProjectCache;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.netbeans.api.progress.ProgressHandle;
@@ -28,7 +29,11 @@ import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
+import org.openide.filesystems.FileAttributeEvent;
+import org.openide.filesystems.FileChangeListener;
+import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileRenameEvent;
 
 /**
  *
@@ -64,20 +69,13 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
                             KotlinProjectHelper.INSTANCE.postTask(run);
                         }
                         
+                        PomXmlChangeListener pomListener = new PomXmlChangeListener(project);
                         final FileObject pomXml = project.getProjectDirectory().getFileObject("pom.xml");
                         
-                        getProjectWatcher().addPropertyChangeListener(new PropertyChangeListener() {
-                            @Override
-                            public void propertyChange(PropertyChangeEvent evt) {
-                                int second = 1000;// ms
-                                boolean pomModified = (new Date().getTime() - 
-                                        pomXml.lastModified().getTime()) < 3 * second; // hack
-                                
-                                if (pomModified) {
-                                    KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
-                                }
-                            }
-                        });
+                        if (pomXml != null) {
+                            pomXml.addFileChangeListener(pomListener);
+                            getProjectWatcher().addPropertyChangeListener(pomListener);
+                        }
                         
                         KotlinProjectHelper.INSTANCE.doInitialScan(project);
                 }
@@ -97,6 +95,46 @@ public class MavenProjectOpenedHook extends ProjectOpenedHook{
     protected void projectClosed() {
         KotlinAnalysisProjectCache.INSTANCE.removeProjectCache(project);
         KotlinProjectHelper.INSTANCE.removeProjectCache(project);
+    }
+    
+    private static class PomXmlChangeListener implements PropertyChangeListener, FileChangeListener {
+
+        private final Project project;
+        private boolean changed = false;
+        
+        public PomXmlChangeListener(Project project) {
+            this.project = project;
+        }
+        
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (changed) {
+                KotlinLogger.INSTANCE.logInfo("CHANGED");
+                KotlinProjectHelper.INSTANCE.updateExtendedClassPath(project);
+                changed = false;
+            }
+        }
+
+        @Override
+        public void fileFolderCreated(FileEvent fe) {}
+
+        @Override
+        public void fileDataCreated(FileEvent fe) {}
+
+        @Override
+        public void fileChanged(FileEvent fe) {
+            changed = true;
+        }
+
+        @Override
+        public void fileDeleted(FileEvent fe) {}
+
+        @Override
+        public void fileRenamed(FileRenameEvent fre) {}
+
+        @Override
+        public void fileAttributeChanged(FileAttributeEvent fae) {}
+        
     }
     
 }

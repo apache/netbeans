@@ -70,9 +70,8 @@ public class KotlinIndentStrategy {
         }
         String text = doc.getText(0, doc.getLength());
         String commandText = String.valueOf((text).charAt(offset));
-        String openingChar = String.valueOf((text).charAt(offset - 2));
-        if (CLOSING_BRACE_STRING.equals(commandText)
-                && OPENING_BRACE_STRING.equals(openingChar)) {
+        
+        if (isBeforeCloseBrace(text, offset, text.length()) && isAfterOpenBrace(text, offset, 0)) {
             return autoEditAfterOpenBraceAndBeforeCloseBrace(text);
         } else if(CLOSING_BRACE_STRING.equals(commandText)) {
             return autoEditBeforeCloseBrace(text);
@@ -99,9 +98,11 @@ public class KotlinIndentStrategy {
     }
 
     private int autoEditAfterOpenBraceAndBeforeCloseBrace(String text) throws BadLocationException {
+        int diff = findEndOfWhiteSpaceAfter(text, offset, text.length()) - offset;
         String indent = getIndent(text, caretOffset);
         StringBuilder builder = new StringBuilder();
         builder.append(indent).append("    ").append('\n').append(indent);
+        doc.remove(caretOffset, diff);
         doc.insertString(caretOffset, builder.toString(), null);
         setDocumentOffset(indent.length() + 4);
         
@@ -201,8 +202,20 @@ public class KotlinIndentStrategy {
         return false;
     }
     
+    private static int findEndOfWhiteSpaceBefore(String text, int offset) {
+        int curOffset = offset - 2;
+        while (curOffset >= 0) {
+            if (!IndenterUtil.isWhiteSpaceChar(text.charAt(curOffset))) return curOffset;
+            
+            curOffset--;
+        }
+        
+        return offset;
+    }
+    
     private static boolean isAfterOpenBrace(String document, int offset, int startLineOffset) throws BadLocationException {
-        int nonEmptyOffset = findEndOfWhiteSpaceBefore(document, offset, startLineOffset);
+        int nonEmptyOffset = findEndOfWhiteSpaceBefore(document, offset);
+        
         return document.charAt(nonEmptyOffset) == OPENING_BRACE_CHAR;
     }
 
@@ -211,6 +224,7 @@ public class KotlinIndentStrategy {
         if (nonEmptyOffset == document.length()) {
             nonEmptyOffset--;
         }
+        
         return document.charAt(nonEmptyOffset) == CLOSING_BRACE_CHAR;
     }
 

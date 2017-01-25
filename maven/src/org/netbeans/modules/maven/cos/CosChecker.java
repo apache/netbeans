@@ -41,6 +41,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.api.common.project.BaseActionProvider;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.PluginPropertyUtils;
@@ -76,7 +77,6 @@ import org.openide.util.Utilities;
 @ProjectServiceProvider(service={PrerequisitesChecker.class, LateBoundPrerequisitesChecker.class}, projectType="org-netbeans-modules-maven")
 public class CosChecker implements PrerequisitesChecker, LateBoundPrerequisitesChecker {
 
-    static final String NB_COS = ".netbeans_automatic_build"; //NOI18N
     static final String RUN_MAIN = ActionProvider.COMMAND_RUN_SINGLE + ".main"; //NOI18N
     static final String DEBUG_MAIN = ActionProvider.COMMAND_DEBUG_SINGLE + ".main"; //NOI18N
     static final String PROFILE_MAIN = ActionProvider.COMMAND_PROFILE_SINGLE + ".main"; // NOI18N
@@ -357,7 +357,7 @@ public class CosChecker implements PrerequisitesChecker, LateBoundPrerequisitesC
         }
         File fl = new File(path);
         fl = FileUtil.normalizeFile(fl);
-        return  new File(fl, NB_COS);
+        return  new File(fl, BaseActionProvider.AUTOMATIC_BUILD_TAG);
     }
 
     /**

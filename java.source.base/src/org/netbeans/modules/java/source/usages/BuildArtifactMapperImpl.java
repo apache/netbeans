@@ -30,7 +30,9 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -228,14 +230,21 @@ public class BuildArtifactMapperImpl {
         }
     }
     
-    private static void copyFile(File updatedFile, File target) throws IOException {
+    private static boolean copyFile(File updatedFile, File target, URL sourceFile) throws IOException {
         final File parent = target.getParentFile();
         if (parent != null && !parent.exists()) {
             if (!parent.mkdirs()) {
                 throw new IOException("Cannot create folder: " + parent.getAbsolutePath());
             }
         }
-            
+
+        if (targetNewerThanSourceFile(target, sourceFile)) {
+            LOG.log(Level.FINE, "#227791: declining to overwrite {0} with {1}", new Object[] {target, updatedFile});
+            return false;
+        } else {
+            LOG.log(Level.FINE, "#227791: proceeding to overwrite {0} with {1}", new Object[] {target, updatedFile});
+        }
+
         InputStream ins = null;
         OutputStream out = null;
 
@@ -245,8 +254,10 @@ public class BuildArtifactMapperImpl {
 
             FileUtil.copy(ins, out);
             //target.setLastModified(MINIMAL_TIMESTAMP); see 156153
+            return true;
         } catch (FileNotFoundException fnf) {
             LOG.log(Level.INFO, "Cannot open file.", fnf);   //NOI18N
+            return false;
         } finally {
             if (ins != null) {
                 try {
@@ -302,30 +313,31 @@ public class BuildArtifactMapperImpl {
         }
     }
 
-    private static void copyRecursively(File source, File target) throws IOException {
-        if (source.isDirectory()) {
-            if (target.exists() && !target.isDirectory()) {
-                throw new IOException("Cannot create folder: " + target.getAbsolutePath() + ", already exists as a file.");
-            }
+    private static void copyRecursively(File source, File target, URL sourceURL) throws IOException {
+        if (target.exists() && !target.isDirectory()) {
+            throw new IOException("Cannot create folder: " + target.getAbsolutePath() + ", already exists as a file.");
+        }
 
-            File[] listed = source.listFiles();
-            
-            if (listed == null) {
-                return ;
-            }
-            
-            for (File f : listed) {
-                String name = f.getName();
-                if (name.endsWith(SIG))
-                    name = name.substring(0, name.length() - FileObjects.SIG.length()) + FileObjects.CLASS;
-                copyRecursively(f, new File(target, name));
-            }
-        } else {
-            if (target.isDirectory()) {
-                throw new IOException("Cannot create file: " + target.getAbsolutePath() + ", already exists as a folder.");
-            }
+        File[] listed = source.listFiles();
 
-            copyFile(source, target);
+        if (listed == null) {
+            return ;
+        }
+
+        for (File f : listed) {
+            String name = f.getName();
+            if (name.endsWith(SIG))
+                name = name.substring(0, name.length() - FileObjects.SIG.length()) + FileObjects.CLASS;
+            File newTarget = new File(target, name);
+            if (f.isDirectory()) {
+                copyRecursively(f, newTarget, new URL(sourceURL, name + '/'));
+            } else {
+                if (newTarget.isDirectory()) {
+                    throw new IOException("Cannot create file: " + newTarget.getAbsolutePath() + ", already exists as a folder.");
+                }
+
+                copyFile(f, newTarget, new URL(sourceURL, name));
+            }
         }
     }
 
@@ -777,7 +789,8 @@ public class BuildArtifactMapperImpl {
                         return null;
                     }
 
-                    copyRecursively(index, targetFolder);
+                    LOG.log(Level.FINE, "#227791: copying {0} to {1} given sources in {2}", new Object[] {index, targetFolder, srURL});
+                    copyRecursively(index, targetFolder, srURL);
                 }
 
                 if (copyResources) {
@@ -831,8 +844,13 @@ public class BuildArtifactMapperImpl {
                 }
                 File toDelete = resolveFile(targetFolder, relPath);
 
-                toDelete.delete();
-                updatedFiles.add(toDelete);
+                if (targetNewerThanSourceFile(toDelete, new URL(ctx.getSourceRoot(), relPath))) {
+                    LOG.log(Level.FINE, "#227791: declining to delete {0}", toDelete);
+                } else {
+                    LOG.log(Level.FINE, "#227791: proceeding to delete {0}", toDelete);
+                    toDelete.delete();
+                    updatedFiles.add(toDelete);
+                }
             }
 
             for (File updatedFile : updated) {
@@ -847,8 +865,9 @@ public class BuildArtifactMapperImpl {
                 File target = resolveFile(targetFolder, relPath);                        
 
                 try {
-                    copyFile(updatedFile, target);
-                    updatedFiles.add(target);
+                    if (copyFile(updatedFile, target, new URL(ctx.getSourceRoot(), relPath))) {
+                        updatedFiles.add(target);
+                    }
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -869,6 +888,38 @@ public class BuildArtifactMapperImpl {
                 return false;
             }
             return new File(targetFolder, TAG_UPDATE_RESOURCES).exists();
+        }
+    }
+
+    private static boolean targetNewerThanSourceFile(File target, URL approximateSource) {
+        if (!"file".equals(approximateSource.getProtocol())) {
+            LOG.log(Level.FINE, "#227791: ignoring non-file-based source {0}", approximateSource);
+            return false;
+        }
+        if (!target.isFile()) {
+            LOG.log(Level.FINE, "#227791: {0} does not even exist", target);
+            return false;
+        }
+        long targetLastMod = target.lastModified();
+        File mockSrc;
+        try {
+            mockSrc = BaseUtilities.toFile(approximateSource.toURI());
+        } catch (URISyntaxException x) {
+            LOG.log(Level.FINE, "#227791: cannot convert " + approximateSource, x);
+            return false;
+        }
+        File src = new File(mockSrc.getParentFile(), mockSrc.getName().replaceFirst("([$].+)*[.]sig$", ".java"));
+        if (!src.isFile()) {
+            LOG.log(Level.FINE, "#227791: could not locate estimated source file {0}", src);
+            return false;
+        }
+        long sourceLastMod = src.lastModified();
+        if (targetLastMod > sourceLastMod) {
+            LOG.log(Level.INFO, "#227791: skipping delete/overwrite since {0} @{1,time,yyyy-MM-dd'T'HH:mm:ssZ} is newer than {2} @{3,time,yyyy-MM-dd'T'HH:mm:ssZ}", new Object[] {target, targetLastMod, src, sourceLastMod});
+            return true;
+        } else {
+            LOG.log(Level.FINE, "#227791: {0} @{1,time,yyyy-MM-dd'T'HH:mm:ssZ} is older than {2} @{3,time,yyyy-MM-dd'T'HH:mm:ssZ}", new Object[] {target, targetLastMod, src, sourceLastMod});
+            return false;
         }
     }
     

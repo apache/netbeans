@@ -91,4 +91,8 @@ class IndentationTest : NbTestCase("Indentation test") {
     
     fun testNewLineWhenCaretAtPosition0() = doTest("newLineWhenCaretAtPosition0.kt")
     
+    fun testBetweenBracesOnOneLine() = doTest("betweenBracesOnOneLine.kt")
+    
+    fun testBetweenBracesOnOneLine2() = doTest("betweenBracesOnOneLine2.kt")
+    
 }

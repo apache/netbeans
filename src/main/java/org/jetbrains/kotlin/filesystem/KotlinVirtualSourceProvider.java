@@ -18,22 +18,8 @@ package org.jetbrains.kotlin.filesystem;
 
 import com.google.common.collect.Sets;
 import java.io.File;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
-import kotlin.Pair;
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
-import org.jetbrains.kotlin.filesystem.lightclasses.KotlinLightClassGeneration;
-import org.jetbrains.kotlin.log.KotlinLogger;
-import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
-import org.jetbrains.kotlin.psi.KtFile;
-import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider;
-import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider;
-import org.jetbrains.org.objectweb.asm.tree.ClassNode;
-import org.netbeans.api.project.Project;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = VirtualSourceProvider.class)
@@ -49,61 +35,9 @@ public class KotlinVirtualSourceProvider implements VirtualSourceProvider {
         return false;
     }
 
-    private boolean skipTranslating(File file) {
-        File normalizedFile = FileUtil.normalizeFile(file);
-        FileObject fo = FileUtil.toFileObject(normalizedFile);
-        if (fo != null) {
-            Project project = ProjectUtils.getKotlinProjectForFileObject(fo);
-            return project != null && !KotlinProjectHelper.INSTANCE.hasJavaFiles(project);
-        }
-        
-        return false;
-    }
-    
     @Override
     public void translate(Iterable<File> files, File sourceRoot, Result result) {
-        KotlinLogger.INSTANCE.logInfo("KotlinVirtualSourceProvider translate " + files.toString());
-        
-        if (files.iterator().hasNext()) {
-            File file = files.iterator().next();
-            if (skipTranslating(file)) {
-                KotlinLogger.INSTANCE.logInfo("No java files. Skipping VirtualSourceProvider");
-                return;
-            }
-        }
-        
-        for (File file : files) {
-            File normalizedFile = FileUtil.normalizeFile(file);
-            FileObject fo = FileUtil.toFileObject(normalizedFile);
-            if (fo == null) continue;
-            
-            List<byte[]> codeList = getByteCode(file);
-            if (codeList.isEmpty()) continue;
-            
-            List<Pair<ClassNode, String>> list = JavaStubGenerator.INSTANCE.gen(codeList);
-            for (Pair<ClassNode, String> nameAndStub : list) {
-                String code = nameAndStub.getSecond();
-                int lastIndexOfSlash = nameAndStub.getFirst().name.lastIndexOf("/");
-                String packageName;
-                if (lastIndexOfSlash != -1) {
-                    packageName = nameAndStub.getFirst().name.substring(0, lastIndexOfSlash);
-                } else packageName = nameAndStub.getFirst().name;
-                result.add(normalizedFile, packageName, fo.getName(), code);
-            }
-        }
-    }
-    
-    private List<byte[]> getByteCode(File file) {
-        FileObject fo = FileUtil.toFileObject(file);
-        Project project = ProjectUtils.getKotlinProjectForFileObject(fo);
-        KtFile ktFile = ProjectUtils.getKtFile(fo);
-        
-        AnalysisResultWithProvider result = KotlinParser.getAnalysisResult(ktFile);
-        if (result == null) {
-            return Collections.emptyList();
-        }
-        
-        return KotlinLightClassGeneration.INSTANCE.getByteCode(fo, project, result.getAnalysisResult());
+        VirtualSourceUtilsKt.translate(files, result);
     }
     
 }

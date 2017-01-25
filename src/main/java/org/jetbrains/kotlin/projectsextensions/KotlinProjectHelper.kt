@@ -90,7 +90,7 @@ object KotlinProjectHelper {
             progressBar.finish()
         }
     }
-
+    
     fun Project.checkProject(): Boolean {
         val className = javaClass.name
         

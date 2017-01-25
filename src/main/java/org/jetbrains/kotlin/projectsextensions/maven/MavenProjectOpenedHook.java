@@ -17,6 +17,7 @@
 package org.jetbrains.kotlin.projectsextensions.maven;
 
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinAnalysisProjectCache;
+import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.model.KotlinEnvironment;
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.netbeans.api.progress.ProgressHandle;

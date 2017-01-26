@@ -87,4 +87,6 @@ class CompletionTest : NbTestCase("Completion test") {
 
     fun testInParameterType() = doTest("checkInParameterType.kt", listOf("Int"))
 
+    fun testUpperAndLowerCase() = doTest("checkUpperAndLowerCases.kt", listOf("method()"))
+    
 }

@@ -146,8 +146,7 @@ public class KotlinIndentStrategy {
                 KotlinSpacingRulesKt.createSpacingBuilder(
                         settings, KotlinFormatter.KotlinSpacingBuilderUtilImpl.INSTANCE));
         
-        KotlinFormatterUtils.adjustIndent(ktFile, rootBlock, settings, offset, text);
-        String newText = NetBeansDocumentFormattingModel.getNewText();
+        String newText = KotlinFormatterUtils.adjustIndent(ktFile, rootBlock, settings, offset, text);
         if (newText == null) {
             return "";
         }

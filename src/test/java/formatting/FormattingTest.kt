@@ -48,8 +48,7 @@ class FormattingTest : NbTestCase("Formatting test") {
         val parsedFile = ProjectUtils.getKtFile(doc.getText(0, doc.length), file)
         val code = parsedFile.text
             
-        KotlinFormatterUtils.formatCode(code, parsedFile.name, project, "\n")
-        val formattedCode = NetBeansDocumentFormattingModel.getNewText()
+        val formattedCode = KotlinFormatterUtils.formatCode(code, parsedFile.name, project, "\n")
         val doc2 = getDocumentForFileObject(formattingDir, fileName.replace(".kt", ".after"))
         val after = doc2.getText(0, doc2.length)
         assertEquals(after, formattedCode)

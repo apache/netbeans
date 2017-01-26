@@ -31,13 +31,11 @@ fun format(doc: Document, offset: Int, proj: Project? = null) {
     val file = ProjectUtils.getFileObjectForDocument(doc)
     if (file == null) return
 
-    val parsedFile = ProjectUtils.getKtFile(doc.getText(0, doc.length), file)
-    if (parsedFile == null) return
+    val parsedFile = ProjectUtils.getKtFile(doc.getText(0, doc.length), file) ?: return
 
     val project = proj ?: ProjectUtils.getKotlinProjectForFileObject(file)
     val code = parsedFile.text
-    KotlinFormatterUtils.formatCode(code, parsedFile.name, project, "\n")
-    val formattedCode = NetBeansDocumentFormattingModel.getNewText()
+    val formattedCode = KotlinFormatterUtils.formatCode(code, parsedFile.name, project, "\n")
     doc.remove(0, doc.length)
     doc.insertString(0, formattedCode, null)
     SwingUtilities.invokeLater(Runnable { openFileAtOffset(doc as StyledDocument, offset) })

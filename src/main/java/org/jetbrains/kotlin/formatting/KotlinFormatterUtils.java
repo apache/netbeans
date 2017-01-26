@@ -63,17 +63,17 @@ public class KotlinFormatterUtils {
         return new KotlinFormatter(source, fileName, psiFactory, lineSeparator).formatCode();
     }
     
-    public static void reformatAll(KtFile containingFile, Block rootBlock, 
+    public static String reformatAll(KtFile containingFile, Block rootBlock, 
             CodeStyleSettings settings, String source ) {
-        formatRange(containingFile, rootBlock, settings, source, containingFile.getTextRange());
+        return formatRange(containingFile, rootBlock, settings, source, containingFile.getTextRange());
     }
     
-    public static void formatRange(String source, NetBeansDocumentRange range, 
+    public static String formatRange(String source, NetBeansDocumentRange range, 
             KtPsiFactory psiFactory, String fileName) {
-        formatRange(source, range.toPsiRange(source), psiFactory, fileName);
+        return formatRange(source, range.toPsiRange(source), psiFactory, fileName);
     }
     
-    public static void formatRange(String source, TextRange range, KtPsiFactory psiFactory, String fileName) {
+    public static String formatRange(String source, TextRange range, KtPsiFactory psiFactory, String fileName) {
         KtFile ktFile = createKtFile(source, psiFactory, fileName);
         Block rootBlock = new KotlinBlock(ktFile.getNode(),
                 NodeAlignmentStrategy.getNullStrategy(),
@@ -81,15 +81,17 @@ public class KotlinFormatterUtils {
                 null,   
                 settings,
                 KotlinSpacingRulesKt.createSpacingBuilder(settings, KotlinSpacingBuilderUtilImpl.INSTANCE));
-        formatRange(ktFile, rootBlock, settings, source, range);
+        return formatRange(ktFile, rootBlock, settings, source, range);
     }
     
-    private static void formatRange(KtFile containingFile, Block rootBlock,
+    private static String formatRange(KtFile containingFile, Block rootBlock,
             CodeStyleSettings settings, String source, TextRange range) {
         NetBeansDocumentFormattingModel formattingModel = 
                 buildModel(containingFile, rootBlock, settings, source, false);
         FormatTextRanges ranges = new FormatTextRanges(range, true);
         new FormatterImpl().format(formattingModel, settings, settings.getIndentOptions(), ranges, false);
+        
+        return formattingModel.getNewText();
     }
     
     private static void initializeSettings(IndentOptions options) {
@@ -130,12 +132,14 @@ public class KotlinFormatterUtils {
         return elementAtOffset.getTextRange();
     }
     
-    public static void adjustIndent(KtFile containingFile, Block rootBlock,
+    public static String adjustIndent(KtFile containingFile, Block rootBlock,
             CodeStyleSettings settings, int offset, String document) {
         NetBeansDocumentFormattingModel model = 
                 buildModel(containingFile, rootBlock, settings, document, true);
         new FormatterImpl().adjustLineIndent(model, settings, settings.getIndentOptions(), 
                 offset, getSignificantRange(containingFile, offset));
+        
+        return model.getNewText();
     }
     
     public static class NetBeansDocumentRange {

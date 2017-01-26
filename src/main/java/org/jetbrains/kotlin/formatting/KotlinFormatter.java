@@ -60,10 +60,8 @@ public class KotlinFormatter {
                 KotlinFormatterUtils.getSettings(),
                 KotlinSpacingRulesKt.createSpacingBuilder(
                     KotlinFormatterUtils.getSettings(), KotlinSpacingBuilderUtilImpl.INSTANCE));
-        KotlinFormatterUtils.reformatAll(ktFile, rootBlock, 
+        return KotlinFormatterUtils.reformatAll(ktFile, rootBlock, 
                 KotlinFormatterUtils.getSettings(), source);
-        
-        return source;
     }
     
     static class KotlinSpacingBuilderUtilImpl implements KotlinSpacingBuilderUtil {

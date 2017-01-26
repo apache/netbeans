@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class NetBeansDocumentFormattingModel implements FormattingModelEx {
 
-    private static String newText;
+    private String newText;
     private final Project myProject;
     private final ASTNode myASTNode;
     private final NetBeansFormattingModel myDocumentModel;
@@ -218,7 +218,7 @@ public class NetBeansDocumentFormattingModel implements FormattingModelEx {
         newText = newTextBuilder.toString();
     }
 
-    public static String getNewText() {
+    public String getNewText() {
         return newText;
     }
 

@@ -63,7 +63,7 @@ fun applicableNameFor(prefix: String, name: Name): Boolean {
     if (!name.isSpecial()) {
         val identifier = name.identifier
         
-        return identifier.startsWith(prefix) || identifier.toLowerCase().startsWith(prefix)
+        return identifier.toLowerCase().startsWith(prefix.toLowerCase())
     }
     return false
 }

@@ -53,7 +53,7 @@ import org.jetbrains.kotlin.resolve.scopes.receivers.ExpressionReceiver
 import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.resolve.scopes.utils.getImplicitReceiversHierarchy
 import org.jetbrains.kotlin.idea.codeInsight.ReferenceVariantsHelper
-import org.jetbrains.kotlin.load.java.descriptors.JavaConstructorDescriptor
+import org.jetbrains.kotlin.load.java.descriptors.JavaClassConstructorDescriptor
 import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter
 import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.project.Project
@@ -198,7 +198,7 @@ fun createProposals(doc: Document, caretOffset: Int,
     val project = ProjectUtils.getKotlinProjectForFileObject(file) ?: return emptyList()
     val descriptors = generateBasicCompletionProposals(file, identifierPart, identOffset, editorText, result)
     
-    val proposals: MutableList<CompletionProposal> = descriptors.filter { it !is JavaConstructorDescriptor }
+    val proposals: MutableList<CompletionProposal> = descriptors.filter { it !is JavaClassConstructorDescriptor }
             .map { KotlinCompletionProposal(identOffset, caretOffset, it, styledDoc, prefix, project) }
             .toMutableList()
     val ktFile = KotlinParser.file ?: return proposals

@@ -24,7 +24,7 @@ import org.jetbrains.kotlin.psi.KtFunctionLiteral
 import org.jetbrains.kotlin.psi.KtNamedFunction
 import org.jetbrains.kotlin.psi.KtParameter
 import org.jetbrains.kotlin.psi.KtProperty
-import org.jetbrains.kotlin.psi.KtWithExpressionInitializer
+import org.jetbrains.kotlin.psi.KtDeclarationWithInitializer
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.types.ErrorUtils
 import org.jetbrains.kotlin.types.KotlinType
@@ -49,7 +49,7 @@ class KotlinSpecifyTypeFix(val parserResult: KotlinParserResult,
         if (element is KtConstructor<*>) return false
         if (element.getTypeReference() != null) return false
 
-        val initializer = (element as? KtWithExpressionInitializer)?.getInitializer()
+        val initializer = (element as? KtDeclarationWithInitializer)?.getInitializer()
         if (initializer != null && initializer.getTextRange().containsOffset(caretOffset)) return false
 
         if (element is KtNamedFunction && element.hasBlockBody()) return false

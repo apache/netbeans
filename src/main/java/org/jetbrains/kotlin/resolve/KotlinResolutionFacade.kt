@@ -37,25 +37,27 @@ import org.netbeans.api.project.Project as NBProject
   Created on Sep 9, 2016
 */
 
-class KotlinResolutionFacade(val kotlinProject : NBProject, 
-                             val componentProvider : ComponentProvider,
-                             override val moduleDescriptor : ModuleDescriptor ) : ResolutionFacade {
+class KotlinResolutionFacade(val kotlinProject: NBProject,
+                             val componentProvider: ComponentProvider,
+                             override val moduleDescriptor: ModuleDescriptor) : ResolutionFacade {
+    override fun analyze(elements: Collection<KtElement>, bodyResolveMode: BodyResolveMode) = throw UnsupportedOperationException()
+    
 
-    override val project : Project
+    override fun resolveToDescriptor(declaration: KtDeclaration, bodyResolveMode: BodyResolveMode) = throw UnsupportedOperationException()
+    
+    override val project: Project
         get() = KotlinEnvironment.getEnvironment(kotlinProject).project
-    
-    override fun analyze(element : KtElement, bodyResolveMode : BodyResolveMode) : BindingContext = throw UnsupportedOperationException()
-    
-    override fun analyzeFullyAndGetResult(elements : Collection<KtElement>) : AnalysisResult = throw UnsupportedOperationException()
-    
-    override fun resolveToDescriptor(declaration : KtDeclaration) : DeclarationDescriptor = throw UnsupportedOperationException()
-    
+
+    override fun analyze(element: KtElement, bodyResolveMode: BodyResolveMode): BindingContext = throw UnsupportedOperationException()
+
+    override fun analyzeFullyAndGetResult(elements: Collection<KtElement>): AnalysisResult = throw UnsupportedOperationException()
+
     override fun <T : Any> getFrontendService(element: PsiElement, serviceClass: Class<T>): T = throw UnsupportedOperationException()
-    
+
     override fun <T : Any> getFrontendService(serviceClass: Class<T>): T = componentProvider.getService(serviceClass)
-    
+
     override fun <T : Any> getFrontendService(moduleDescriptor: ModuleDescriptor, serviceClass: Class<T>): T = throw UnsupportedOperationException()
-    
+
     override fun <T : Any> getIdeService(serviceClass: Class<T>): T = throw UnsupportedOperationException()
 
 }

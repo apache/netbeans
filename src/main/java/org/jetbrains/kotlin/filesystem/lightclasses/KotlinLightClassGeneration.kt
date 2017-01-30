@@ -28,6 +28,7 @@ import org.jetbrains.kotlin.backend.common.output.OutputFile
 import org.jetbrains.kotlin.codegen.CompilationErrorHandler
 import org.jetbrains.kotlin.codegen.KotlinCodegenFacade
 import org.jetbrains.kotlin.codegen.state.GenerationState
+import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtFile
@@ -57,8 +58,7 @@ object KotlinLightClassGeneration {
                 analysisResult.moduleDescriptor,
                 analysisResult.bindingContext,
                 ktFiles,
-                true,
-                true,
+                CompilerConfiguration.EMPTY,
                 generateDeclaredClassFilter)
         
         ktFiles.forEach {

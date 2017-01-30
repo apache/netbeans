@@ -22,7 +22,7 @@ import org.jetbrains.kotlin.psi.KtNamedFunction
 import org.jetbrains.kotlin.psi.KtParameter
 import org.jetbrains.kotlin.psi.KtProperty
 import org.jetbrains.kotlin.psi.KtTypeReference
-import org.jetbrains.kotlin.psi.KtWithExpressionInitializer
+import org.jetbrains.kotlin.psi.KtDeclarationWithInitializer
 import org.netbeans.modules.csl.api.HintFix
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import com.intellij.psi.PsiElement
@@ -38,7 +38,7 @@ class KotlinRemoveExplicitTypeFix(val parserResult: KotlinParserResult,
         if (element.getContainingFile() is KtCodeFragment) return false
         if (element.getTypeReference() == null) return false
 
-        val initializer = (element as? KtWithExpressionInitializer)?.getInitializer()
+        val initializer = (element as? KtDeclarationWithInitializer)?.getInitializer()
         if (initializer != null && initializer.getTextRange().containsOffset(caretOffset)) return false
 
         return when (element) {

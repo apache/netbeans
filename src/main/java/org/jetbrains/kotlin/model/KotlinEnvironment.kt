@@ -18,7 +18,7 @@ package org.jetbrains.kotlin.model
 
 import com.intellij.codeInsight.ExternalAnnotationsManager
 import com.intellij.codeInsight.InferredAnnotationsManager
-import org.jetbrains.kotlin.resolve.lang.kotlin.NetBeansVirtualFileFinder
+import org.jetbrains.kotlin.resolve.lang.kotlin.NetBeansVirtualFileFinderFactory
 import java.io.File
 import org.jetbrains.kotlin.asJava.classes.KtLightClassForFacade
 import org.jetbrains.kotlin.asJava.LightClassGenerationSupport
@@ -170,7 +170,7 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
             registerService(BuiltInsReferenceResolver::class.java, BuiltInsReferenceResolver(project))
             registerService(KotlinSourceIndex::class.java, KotlinSourceIndex())
             registerService(KotlinCacheService::class.java, KotlinCacheServiceImpl(project, kotlinProject))
-            registerService(JvmVirtualFileFinderFactory::class.java, NetBeansVirtualFileFinder(kotlinProject))
+            registerService(JvmVirtualFileFinderFactory::class.java, NetBeansVirtualFileFinderFactory(kotlinProject))
             registerService(ImportInsertHelper::class.java, KotlinImportInserterHelper())
             
             registerService(ExternalAnnotationsManager::class.java, MockExternalAnnotationsManager())
@@ -204,8 +204,6 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
                 ExtensionPointName<DefaultErrorMessages.Extension>("org.jetbrains.kotlin.defaultErrorMessages"), DefaultErrorMessages.Extension::class.java)
         CoreApplicationEnvironment.registerApplicationExtensionPoint(
                 ExtensionPointName<SuppressStringProvider>("org.jetbrains.kotlin.suppressStringProvider"), SuppressStringProvider::class.java)
-        CoreApplicationEnvironment.registerApplicationExtensionPoint(
-                ExtensionPointName<ExternalDeclarationsProvider>("org.jetbrains.kotlin.externalDeclarationsProvider"), ExternalDeclarationsProvider::class.java)
         CoreApplicationEnvironment.registerApplicationExtensionPoint(
                 ExtensionPointName<ExpressionCodegenExtension>(("org.jetbrains.kotlin.expressionCodegenExtension")), ExpressionCodegenExtension::class.java)
         CoreApplicationEnvironment.registerApplicationExtensionPoint(

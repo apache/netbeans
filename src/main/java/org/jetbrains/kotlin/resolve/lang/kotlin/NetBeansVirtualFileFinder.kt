@@ -48,7 +48,7 @@ import org.openide.filesystems.FileStateInvalidException
 import org.openide.filesystems.FileSystem
 
 class NetBeansVirtualFileFinder(private val project: Project,
-                                private val scope: GlobalSearchScope) : VirtualFileKotlinClassFinder(), JvmVirtualFileFinderFactory {
+                                private val scope: GlobalSearchScope) : VirtualFileKotlinClassFinder() {
    
     val index: JvmDependenciesIndex
         get() = KotlinEnvironment.getEnvironment(project).index
@@ -105,10 +105,6 @@ class NetBeansVirtualFileFinder(private val project: Project,
         if (isClassFileName(path)) {
             return KotlinEnvironment.Companion.getEnvironment(project).getVirtualFile(path)
         } else throw IllegalArgumentException("Virtual file not found for " + path)
-    }
-
-    override fun create(scope: GlobalSearchScope): JvmVirtualFileFinder {
-        return NetBeansVirtualFileFinder(project, scope)
     }
 
     private fun classFileName(jClass: JavaClass): String {
@@ -170,4 +166,8 @@ class NetBeansVirtualFileFinder(private val project: Project,
     
     fun <T: Any> T.check(predicate: (T) -> Boolean): T? = if (predicate(this)) this else null
     
+}
+
+class NetBeansVirtualFileFinderFactory(private val project: Project) : JvmVirtualFileFinderFactory {
+    override fun create(scope: GlobalSearchScope): JvmVirtualFileFinder = NetBeansVirtualFileFinder(project, scope)
 }

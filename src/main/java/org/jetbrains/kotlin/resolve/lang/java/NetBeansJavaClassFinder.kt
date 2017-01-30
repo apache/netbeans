@@ -16,6 +16,7 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.resolve.lang.java
 
+import javax.annotation.PostConstruct
 import javax.inject.Inject
 import javax.lang.model.element.Element
 import javax.lang.model.element.PackageElement
@@ -25,9 +26,12 @@ import org.jetbrains.kotlin.load.java.structure.JavaClass
 import org.jetbrains.kotlin.load.java.structure.JavaPackage
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.resolve.jvm.JavaClassFinderPostConstruct
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaPackage
+import org.jetbrains.kotlin.resolve.lazy.KotlinCodeAnalyzer
+import org.jetbrains.kotlin.resolve.BindingTrace
+import org.jetbrains.kotlin.resolve.CodeAnalyzerInitializer
+import org.jetbrains.kotlin.model.KotlinEnvironment
 import org.netbeans.api.project.Project
 
 class NetBeansJavaClassFinder : JavaClassFinder {
@@ -38,7 +42,11 @@ class NetBeansJavaClassFinder : JavaClassFinder {
         this.project = project
     }
     
-    @Inject fun setComponentPostConstruct(finderPostConstruct: JavaClassFinderPostConstruct) {}
+    @PostConstruct fun initialize(trace: BindingTrace, codeAnalyzer: KotlinCodeAnalyzer) {
+        val ideaProject = KotlinEnvironment.getEnvironment(project).project
+        CodeAnalyzerInitializer.Companion.getInstance(ideaProject).initialize(trace, codeAnalyzer.moduleDescriptor, codeAnalyzer)
+    }
+    
     
     override fun findClass(classId: ClassId): JavaClass? {
         val element = project.findType(classId.asSingleFqName().asString()) ?: return null

@@ -30,7 +30,7 @@ import org.openide.modules.Places;
 
 public class BundledCompiler {
 
-    public static final String KOTLIN_VERSION = "1.0.4";
+    public static final String KOTLIN_VERSION = "1.1.0-beta-17";
     
     private static void unZipFile(InputStream fis, FileObject destDir) throws IOException {
         try {

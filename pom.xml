@@ -9,7 +9,7 @@
   <properties> 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
     <netbeans.version>RELEASE82</netbeans.version>  
-    <kotlin.version>1.0.4</kotlin.version> 
+    <kotlin.version>1.1.0-beta-17</kotlin.version> 
   </properties>  
   <name>Kotlin</name>  
   <description url="http://kotlinlang.org/">Kotlin language support</description>  
@@ -221,6 +221,14 @@
       <id>local-maven-repo</id>  
       <url>file:///${project.parent.basedir}/local-maven-repo</url> 
     </repository> 
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>bintray-kotlin-kotlin-eap-1.1</id>
+      <name>bintray</name>
+      <url>http://dl.bintray.com/kotlin/kotlin-eap-1.1</url>
+    </repository>
   </repositories>  
   <dependencies> 
     <dependency> 

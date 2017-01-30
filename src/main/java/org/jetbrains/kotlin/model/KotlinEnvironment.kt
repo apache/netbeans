@@ -16,13 +16,14 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.model
 
+import com.intellij.codeInsight.ExternalAnnotationsManager
+import com.intellij.codeInsight.InferredAnnotationsManager
 import org.jetbrains.kotlin.resolve.lang.kotlin.NetBeansVirtualFileFinder
 import java.io.File
 import org.jetbrains.kotlin.asJava.classes.KtLightClassForFacade
 import org.jetbrains.kotlin.asJava.LightClassGenerationSupport
 import org.jetbrains.kotlin.cli.jvm.compiler.CliLightClassGenerationSupport
 import org.jetbrains.kotlin.codegen.extensions.ExpressionCodegenExtension
-import org.jetbrains.kotlin.extensions.ExternalDeclarationsProvider
 import org.jetbrains.kotlin.load.kotlin.KotlinBinaryClassCache
 import org.jetbrains.kotlin.parsing.KotlinParserDefinition
 import org.jetbrains.kotlin.resolve.CodeAnalyzerInitializer
@@ -60,6 +61,7 @@ import org.jetbrains.kotlin.resolve.BuiltInsReferenceResolver
 import org.jetbrains.kotlin.resolve.KotlinCacheServiceImpl
 import org.jetbrains.kotlin.resolve.KotlinSourceIndex
 import org.jetbrains.kotlin.utils.ProjectUtils
+import org.jetbrains.kotlin.utils.KotlinImportInserterHelper
 import org.jetbrains.kotlin.caches.resolve.KotlinCacheService
 import org.jetbrains.kotlin.cli.common.CliModuleVisibilityManagerImpl
 import org.jetbrains.kotlin.codegen.extensions.ClassBuilderInterceptorExtension
@@ -68,8 +70,14 @@ import com.intellij.formatting.KotlinLanguageCodeStyleSettingsProvider
 import com.intellij.formatting.KotlinSettingsProvider
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
-import org.jetbrains.kotlin.cli.jvm.compiler.JavaRoot
+import org.jetbrains.kotlin.cli.jvm.index.JavaRoot
+import org.jetbrains.kotlin.cli.jvm.index.JvmDependenciesIndexImpl
+import org.jetbrains.kotlin.cli.jvm.compiler.MockExternalAnnotationsManager
+import org.jetbrains.kotlin.cli.jvm.compiler.MockInferredAnnotationsManager
 import org.jetbrains.kotlin.idea.KotlinFileType
+import org.jetbrains.kotlin.config.CommonConfigurationKeys
+import org.jetbrains.kotlin.config.CompilerConfiguration
+import org.jetbrains.kotlin.idea.util.ImportInsertHelper
 import org.jetbrains.kotlin.js.resolve.diagnostics.DefaultErrorMessagesJs
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory
 import org.jetbrains.kotlin.load.kotlin.ModuleVisibilityManager
@@ -127,6 +135,10 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
     val project: MockProject
     val roots = hashSetOf<JavaRoot>()
     
+    val index by lazy { JvmDependenciesIndexImpl(roots.toList()) }
+    
+    val configuration = CompilerConfiguration()
+    
     init {
         val startTime = System.nanoTime()
 
@@ -147,21 +159,28 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
             registerService(NullableNotNullManager::class.java, KotlinNullableNotNullManager(kotlinProject))
             registerService(CoreJavaFileManager::class.java,
                 ServiceManager.getService(project, JavaFileManager::class.java) as CoreJavaFileManager)
+            
             val cliLightClassGenerationSupport = CliLightClassGenerationSupport(project)
             registerService(LightClassGenerationSupport::class.java, cliLightClassGenerationSupport)
             registerService(CliLightClassGenerationSupport::class.java, cliLightClassGenerationSupport)
-            registerService(KtLightClassForFacade.FacadeStubCache::class.java, KtLightClassForFacade.FacadeStubCache(project))
             registerService(CodeAnalyzerInitializer::class.java, cliLightClassGenerationSupport)
+            
+            registerService(KtLightClassForFacade.FacadeStubCache::class.java, KtLightClassForFacade.FacadeStubCache(project))
             registerService(KotlinLightClassManager::class.java, KotlinLightClassManager(kotlinProject))
             registerService(BuiltInsReferenceResolver::class.java, BuiltInsReferenceResolver(project))
             registerService(KotlinSourceIndex::class.java, KotlinSourceIndex())
             registerService(KotlinCacheService::class.java, KotlinCacheServiceImpl(project, kotlinProject))
             registerService(JvmVirtualFileFinderFactory::class.java, NetBeansVirtualFileFinder(kotlinProject))
+            registerService(ImportInsertHelper::class.java, KotlinImportInserterHelper())
+            
+            registerService(ExternalAnnotationsManager::class.java, MockExternalAnnotationsManager())
+            registerService(InferredAnnotationsManager::class.java, MockInferredAnnotationsManager())
         }
+        
+        configuration.put(CommonConfigurationKeys.MODULE_NAME, project.getName())
         
         configureClasspath(kotlinProject)
         
-        ExternalDeclarationsProvider.Companion.registerExtensionPoint(project)
         ExpressionCodegenExtension.Companion.registerExtensionPoint(project)
         
         getExtensionsFromCommonXml()

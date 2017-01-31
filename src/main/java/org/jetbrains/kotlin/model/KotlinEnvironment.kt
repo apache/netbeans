@@ -86,6 +86,8 @@ import org.jetbrains.kotlin.resolve.diagnostics.DiagnosticSuppressor
 import org.jetbrains.kotlin.resolve.diagnostics.SuppressStringProvider
 import org.jetbrains.kotlin.resolve.jvm.diagnostics.DefaultErrorMessagesJvm
 import org.jetbrains.kotlin.resolve.jvm.extensions.PackageFragmentProviderExtension
+import org.jetbrains.kotlin.script.KotlinScriptDefinitionProvider
+import org.jetbrains.kotlin.script.KotlinScriptExternalImportsProvider
 import org.netbeans.api.project.Project as NBProject
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCliJavaFileManagerImpl
 import org.jetbrains.kotlin.model.KotlinNullableNotNullManager
@@ -155,6 +157,12 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
         project = projectEnvironment.project
         
         with (project) {
+            val scriptDefinitionProvider = KotlinScriptDefinitionProvider()
+            registerService(KotlinScriptDefinitionProvider::class.java, scriptDefinitionProvider)
+            registerService(
+                    KotlinScriptExternalImportsProvider::class.java,
+                    KotlinScriptExternalImportsProvider(project, scriptDefinitionProvider))
+            
             registerService(ModuleVisibilityManager::class.java, CliModuleVisibilityManagerImpl())
             registerService(NullableNotNullManager::class.java, KotlinNullableNotNullManager(kotlinProject))
             registerService(CoreJavaFileManager::class.java,

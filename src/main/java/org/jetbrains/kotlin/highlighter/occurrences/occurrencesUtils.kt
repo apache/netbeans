@@ -22,6 +22,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import kotlin.Pair
 import org.jetbrains.kotlin.descriptors.SourceElement
+import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.navigation.references.*
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtFile
@@ -42,8 +43,7 @@ private fun getLengthOfIdentifier(ktElement: KtElement?) = when {
 }
 
 fun search(searchElement: KtElement, ktFile: KtFile) = searchTextOccurrences(ktFile, searchElement)
-        .map { getLengthOfIdentifier(it) }
-        .filterNotNull()
+        .mapNotNull { getLengthOfIdentifier(it) }
         .map { OffsetRange(it.first, it.second) }
 
 fun search(searchingElements: List<SourceElement>, ktFile: KtFile): List<OffsetRange> {
@@ -71,27 +71,27 @@ fun searchTextOccurrences(ktFile: KtFile, sourceElement: KtElement): List<KtElem
     
     val beforeResolveFilters = getBeforeResolveFilters()
     val afterResolveFilters = getAfterResolveFilters()
-    
-    for (element in elements) {
-        var beforeResolveCheck = true
-        for (filter in beforeResolveFilters) {
-            if (!filter.isApplicable(element)) {
-                beforeResolveCheck = false
-                break
-            }
-        }
-        if (!beforeResolveCheck) continue
-        
-        val sourceElements = element.resolveToSourceDeclaration()
-        if (sourceElements.isEmpty()) continue
-        
-        for (filter in afterResolveFilters) {
-            if (filter.isApplicable(sourceElements, sourceElement)) {
-                elementsToReturn.add(element)
-            }
-        }
-    }
-    return elementsToReturn
+//    
+//    for (element in elements) {
+//        var beforeResolveCheck = true
+//        for (filter in beforeResolveFilters) {
+//            if (!filter.isApplicable(element)) {
+//                beforeResolveCheck = false
+//                break
+//            }
+//        }
+//        if (!beforeResolveCheck) continue
+//        
+//        val sourceElements = element.resolveToSourceDeclaration()
+//        if (sourceElements.isEmpty()) continue
+//        
+//        for (filter in afterResolveFilters) {
+//            if (filter.isApplicable(sourceElements, sourceElement)) {
+//                elementsToReturn.add(element)
+//            }
+//        }
+//    }
+    return elements//ToReturn
 }
 
 private fun getAllOccurrencesInFile(ktFile: KtFile, text: String): List<PsiElement> {

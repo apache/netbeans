@@ -21,15 +21,9 @@ interface SearchFilterAfterResolve {
     }
 }
 
-fun getBeforeResolveFilters(): List<SearchFilter> {
-    val filters = arrayListOf<SearchFilter>()
-    filters.add(NonImportFilter())
-    filters.add(ReferenceFilter())
-    
-    return filters
-}
+fun getBeforeResolveFilters() = listOf(NonImportFilter(), ReferenceFilter())
 
-fun getAfterResolveFilters(): List<SearchFilterAfterResolve> = listOf(ResolvedReferenceFilter())
+fun getAfterResolveFilters() = listOf(ResolvedReferenceFilter())
 
 class ReferenceFilter : SearchFilter {
     override fun isApplicable(jetElement: KtElement): Boolean = jetElement is KtReferenceExpression || jetElement is KtNamedDeclaration

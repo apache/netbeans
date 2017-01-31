@@ -196,8 +196,16 @@
         <version>2.15</version> 
       </plugin> 
     </plugins> 
-  </build>  
+  </build>
+  <pluginRepositories>
+      <pluginRepository>
+          <id>kotlin-eap</id>
+          <name>kotlin-repo</name>
+          <url>http://dl.bintray.com/kotlin/kotlin-eap-1.1</url>
+      </pluginRepository>
+  </pluginRepositories>  
   <repositories> 
+     
     <repository> 
       <id>netbeans-modules</id>  
       <name>Repository hosting NetBeans modules</name>  
@@ -217,18 +225,19 @@
         <enabled>false</enabled> 
       </snapshots> 
     </repository>  
-    <repository> 
-      <id>local-maven-repo</id>  
-      <url>file:///${project.parent.basedir}/local-maven-repo</url> 
-    </repository> 
     <repository>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
-      <id>bintray-kotlin-kotlin-eap-1.1</id>
+      <id>bintray-kotlin-kotlin-eap</id>
       <name>bintray</name>
       <url>http://dl.bintray.com/kotlin/kotlin-eap-1.1</url>
     </repository>
+    <repository> 
+      <id>local-maven-repo</id>  
+      <url>file:///${project.parent.basedir}/local-maven-repo</url> 
+    </repository> 
+    
   </repositories>  
   <dependencies> 
     <dependency> 
@@ -687,7 +696,17 @@
       <groupId>org.netbeans.api</groupId>  
       <artifactId>org-netbeans-modules-csl-types</artifactId>  
       <version>${netbeans.version}</version> 
-    </dependency>  
+    </dependency>   
+    <dependency> 
+      <groupId>com.google.guava</groupId>  
+      <artifactId>guava</artifactId>  
+      <version>14.0</version> 
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-netbeans-modules-refactoring-java</artifactId>
+      <version>${netbeans.version}</version>
+    </dependency>
     <!-- TEST DEPENDENCIES -->  
     <dependency> 
       <groupId>junit</groupId>  
@@ -791,16 +810,6 @@
       <artifactId>org-netbeans-modules-nbjunit</artifactId>  
       <version>${netbeans.version}</version>  
       <scope>test</scope> 
-    </dependency>  
-    <dependency> 
-      <groupId>com.google.guava</groupId>  
-      <artifactId>guava</artifactId>  
-      <version>14.0</version> 
-    </dependency>
-    <dependency>
-      <groupId>org.netbeans.api</groupId>
-      <artifactId>org-netbeans-modules-refactoring-java</artifactId>
-      <version>RELEASE82</version>
-    </dependency>
+    </dependency> 
   </dependencies> 
 </project>

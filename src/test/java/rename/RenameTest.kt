@@ -85,26 +85,24 @@ class RenameTest : NbTestCase("Rename Test") {
         }
     }
     
-    fun testNothing() = assertTrue(true)
+    fun testSimpleCase() = doTest("simple", "file", "NewName")
     
-//    fun testSimpleCase() = doTest("simple", "file", "NewName")
-//    
-//    fun testSecondSimpleCase() = doTest("properties", "file", "someValue")
-//    
-//    fun testThirdSimpleCase() = doTest("simplesec", "file", "someValue")
-//    
-//    fun testFunctionParameterRenaming() = doTest("functionparameter", "file", "someValue")
-//    
-//    fun testFunctionRenaming() = doTest("function", "file", "fooFunc")
-//    
-//    fun testClassRenaming() = doTest("classrename", "file", "NewName")
-//    
-//    fun testMethodRenaming() = doTest("methodrename", "file", "notSoCoolFun")
-//    
-//    fun testForLoop() = doTest("forloop", "file", "arg1")
-//    
-//    fun testForLoop2() = doTest("forloop2", "file", "arg1")
-//    
-//    fun testRenameKotlinClassByConstructorRef() = doTest("classbyconstructor", "file", "KotlinRules")
+    fun testSecondSimpleCase() = doTest("properties", "file", "someValue")
+    
+    fun testThirdSimpleCase() = doTest("simplesec", "file", "someValue")
+    
+    fun testFunctionParameterRenaming() = doTest("functionparameter", "file", "someValue")
+    
+    fun testFunctionRenaming() = doTest("function", "file", "fooFunc")
+    
+    fun testClassRenaming() = doTest("classrename", "file", "NewName")
+    
+    fun testMethodRenaming() = doTest("methodrename", "file", "notSoCoolFun")
+    
+    fun testForLoop() = doTest("forloop", "file", "arg1")
+    
+    fun testForLoop2() = doTest("forloop2", "file", "arg1")
+    
+    fun testRenameKotlinClassByConstructorRef() = doTest("classbyconstructor", "file", "KotlinRules")
     
 }

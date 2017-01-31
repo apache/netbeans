@@ -21,9 +21,13 @@ interface SearchFilterAfterResolve {
     }
 }
 
-fun getBeforeResolveFilters() = listOf(NonImportFilter(), ReferenceFilter())
+fun KtElement.filterBeforeResolve() = beforeResolveFilters().none { !it.isApplicable(this) }
 
-fun getAfterResolveFilters() = listOf(ResolvedReferenceFilter())
+fun List<SourceElement>.filterAfterResolve(origin: KtElement) = afterResolveFilters().none { !it.isApplicable(this, origin) }
+
+private fun beforeResolveFilters() = listOf(NonImportFilter(), ReferenceFilter())
+
+private fun afterResolveFilters() = listOf(ResolvedReferenceFilter())
 
 class ReferenceFilter : SearchFilter {
     override fun isApplicable(jetElement: KtElement): Boolean = jetElement is KtReferenceExpression || jetElement is KtNamedDeclaration
@@ -36,7 +40,5 @@ class NonImportFilter : SearchFilter {
 }
 
 class ResolvedReferenceFilter : SearchFilterAfterResolve {
-    override fun isApplicable(sourceElement: KtElement, originElement: KtElement): Boolean {
-        return sourceElement == originElement
-    }
+    override fun isApplicable(sourceElement: KtElement, originElement: KtElement) = sourceElement == originElement
 }

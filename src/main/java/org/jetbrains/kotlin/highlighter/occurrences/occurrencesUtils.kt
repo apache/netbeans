@@ -63,35 +63,12 @@ fun getKotlinElements(sourceElements: List<SourceElement>) = sourceElements
         .map { it.psi }
 
 fun searchTextOccurrences(ktFile: KtFile, sourceElement: KtElement): List<KtElement> {
-    val elementsToReturn = arrayListOf<KtElement>()
     val elementName = sourceElement.name ?: return emptyList()
-    
-    val elements = getAllOccurrencesInFile(ktFile, elementName)
+    val elements: Collection<KtElement> = getAllOccurrencesInFile(ktFile, elementName)
             .mapNotNull { PsiTreeUtil.getNonStrictParentOfType(it, KtElement::class.java) }
     
-    val beforeResolveFilters = getBeforeResolveFilters()
-    val afterResolveFilters = getAfterResolveFilters()
-//    
-//    for (element in elements) {
-//        var beforeResolveCheck = true
-//        for (filter in beforeResolveFilters) {
-//            if (!filter.isApplicable(element)) {
-//                beforeResolveCheck = false
-//                break
-//            }
-//        }
-//        if (!beforeResolveCheck) continue
-//        
-//        val sourceElements = element.resolveToSourceDeclaration()
-//        if (sourceElements.isEmpty()) continue
-//        
-//        for (filter in afterResolveFilters) {
-//            if (filter.isApplicable(sourceElements, sourceElement)) {
-//                elementsToReturn.add(element)
-//            }
-//        }
-//    }
-    return elements//ToReturn
+    return elements.filter { it.filterBeforeResolve() }
+            .filter { it.resolveToSourceDeclaration().filterAfterResolve(sourceElement) }
 }
 
 private fun getAllOccurrencesInFile(ktFile: KtFile, text: String): List<PsiElement> {

@@ -123,8 +123,7 @@ fun KtElement.resolveToSourceDeclaration(): List<SourceElement> {
         is KtDeclaration -> listOf(KotlinSourceElement(this))
         
         else -> {
-            val referenceExpression = this.getReferenceExpression()
-            if (referenceExpression == null) return emptyList()
+            val referenceExpression = getReferenceExpression() ?: return emptyList()
             
             val reference = createReferences(referenceExpression)
             reference.resolveToSourceElements()
@@ -147,5 +146,6 @@ fun List<KotlinReference>.resolveToSourceElements(): List<SourceElement> {
             KotlinAnalyzer.analyzeFile(project, ktFile).analysisResult.bindingContext, project)
 }
 
-fun List<KotlinReference>.resolveToSourceElements(context: BindingContext, project: Project) = flatMap { it.getTargetDescriptors(context) }
-            .flatMap { NetBeansDescriptorUtils.descriptorToDeclarations(it, project) }
+fun List<KotlinReference>.resolveToSourceElements(context: BindingContext, 
+                                                  project: Project) = flatMap { it.getTargetDescriptors(context) }
+        .flatMap { NetBeansDescriptorUtils.descriptorToDeclarations(it, project) }

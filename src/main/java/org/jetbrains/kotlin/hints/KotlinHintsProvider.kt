@@ -64,7 +64,8 @@ class KotlinHintsProvider : HintsProvider {
             KotlinRemoveExplicitTypeFix(parserResult, psi),
             KotlinSpecifyTypeFix(parserResult, psi),
             KotlinConvertToBlockBodyFix(parserResult, psi),
-            KotlinChangeReturnTypeProposal(parserResult, psi))
+            KotlinChangeReturnTypeProposal(parserResult, psi),
+            ConvertTryFinallyToUseCallIntention(parserResult, psi))
             .filter { it.isApplicable(offset) }
 
     override fun computeSelectionHints(hintsManager: HintsManager, ruleContext: RuleContext,

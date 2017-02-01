@@ -74,7 +74,8 @@ class KotlinHintsProvider : HintsProvider {
             ConvertForEachToForLoopIntention(parserResult, psi),
             ConvertEnumToSealedClassIntention(parserResult, psi),
             AddValToConstructorParameterIntention(parserResult, psi),
-            ConvertPropertyInitializerToGetterIntention(parserResult, psi))
+            ConvertPropertyInitializerToGetterIntention(parserResult, psi),
+            ConvertToConcatenatedStringIntention(parserResult, psi))
             .filter { it.isApplicable(offset) }
 
     override fun computeSelectionHints(hintsManager: HintsManager, ruleContext: RuleContext,

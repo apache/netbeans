@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.hints
+package org.jetbrains.kotlin.hints.fixes
 
 import javax.swing.text.Document
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult

@@ -20,7 +20,7 @@ import org.jetbrains.kotlin.psi.KtSimpleNameExpression
 import org.jetbrains.kotlin.idea.util.CallTypeAndReceiver
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.resolve.lang.java.findTypes
-import org.jetbrains.kotlin.hints.autoImport
+import org.jetbrains.kotlin.hints.fixes.autoImport
 import org.netbeans.api.project.Project
 import org.netbeans.api.java.source.ElementHandle as JavaElementHandle
 import javax.lang.model.element.TypeElement

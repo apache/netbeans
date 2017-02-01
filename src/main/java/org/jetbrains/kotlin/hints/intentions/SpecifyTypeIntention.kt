@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.hints
+package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.psi.KtCallableDeclaration
@@ -35,8 +35,8 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.descriptors.CallableDescriptor
 import org.jetbrains.kotlin.idea.util.IdeDescriptorRenderers
 
-class KotlinSpecifyTypeFix(val parserResult: KotlinParserResult, 
-                           val psi: PsiElement) : ApplicableFix {
+class SpecifyTypeIntention(val parserResult: KotlinParserResult, 
+                           val psi: PsiElement) : ApplicableIntention {
 
     private lateinit var displayString: String
 

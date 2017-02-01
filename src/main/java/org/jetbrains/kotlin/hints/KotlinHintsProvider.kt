@@ -20,6 +20,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import javax.swing.text.Document
 import javax.swing.text.StyledDocument
+import org.jetbrains.kotlin.hints.fixes.*
+import org.jetbrains.kotlin.hints.intentions.*
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinSyntaxError
@@ -63,11 +65,11 @@ class KotlinHintsProvider : HintsProvider {
     }
 
     private fun getSuggestions(parserResult: KotlinParserResult,
-                               psi: PsiElement, offset: Int) = listOf<ApplicableFix>(
-            KotlinRemoveExplicitTypeFix(parserResult, psi),
-            KotlinSpecifyTypeFix(parserResult, psi),
-            KotlinConvertToBlockBodyFix(parserResult, psi),
-            KotlinChangeReturnTypeProposal(parserResult, psi),
+                               psi: PsiElement, offset: Int) = listOf<ApplicableIntention>(
+            RemoveExplicitTypeIntention(parserResult, psi),
+            SpecifyTypeIntention(parserResult, psi),
+            ConvertToBlockBodyIntention(parserResult, psi),
+            ChangeReturnTypeIntention(parserResult, psi),
             ConvertTryFinallyToUseCallIntention(parserResult, psi),
             ConvertForEachToForLoopIntention(parserResult, psi),
             ConvertEnumToSealedClassIntention(parserResult, psi),
@@ -119,10 +121,6 @@ class KotlinHintsProvider : HintsProvider {
         errors.addAll(ruleContext.parserResult.diagnostics)
     }
 
-}
-
-interface ApplicableFix : HintFix {
-    fun isApplicable(caretOffset: Int): Boolean
 }
 
 fun Document.atomicChange(change: Document.() -> Unit) = NbDocument.runAtomicAsUser(this as StyledDocument, { change() })

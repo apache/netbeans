@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.hints
+package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
@@ -35,9 +35,10 @@ import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
+import org.jetbrains.kotlin.hints.atomicChange
 
-class KotlinConvertToBlockBodyFix(val parserResult: KotlinParserResult,
-                                 val psi: PsiElement) : ApplicableFix {
+class ConvertToBlockBodyIntention(val parserResult: KotlinParserResult,
+                                 val psi: PsiElement) : ApplicableIntention {
 
     override fun isApplicable(caretOffset: Int): Boolean {
         val declaration: KtDeclarationWithBody = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java) ?: return false

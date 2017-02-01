@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.hints
+package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
@@ -40,9 +40,10 @@ import org.jetbrains.kotlin.psi.KtClassBody
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.resolve.scopes.LexicalScope
 import org.jetbrains.kotlin.psi.psiUtil.parentsWithSelf
+import org.jetbrains.kotlin.hints.atomicChange
 
-class KotlinChangeReturnTypeProposal(val parserResult: KotlinParserResult,
-                                     val psi: PsiElement) : ApplicableFix {
+class ChangeReturnTypeIntention(val parserResult: KotlinParserResult,
+                                     val psi: PsiElement) : ApplicableIntention {
 
     private lateinit var function: KtFunction
     private lateinit var type: KotlinType

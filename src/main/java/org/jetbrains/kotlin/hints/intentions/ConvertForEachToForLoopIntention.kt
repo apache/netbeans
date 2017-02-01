@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.hints
+package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
 import javax.swing.text.StyledDocument
@@ -25,9 +25,10 @@ import org.jetbrains.kotlin.resolve.calls.callUtil.getResolvedCall
 import org.jetbrains.kotlin.resolve.scopes.receivers.ExpressionReceiver
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
+import org.jetbrains.kotlin.hints.atomicChange
 
 class ConvertForEachToForLoopIntention(val parserResult: KotlinParserResult,
-                                       val psi: PsiElement) : ApplicableFix {
+                                       val psi: PsiElement) : ApplicableIntention {
     
     private val FOR_EACH_NAME = "forEach"
     private val FOR_EACH_FQ_NAMES = listOf("collections", "sequences", "text", "ranges").map { "kotlin.$it.$FOR_EACH_NAME" }.toSet()

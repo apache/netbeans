@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.hints
+package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
@@ -28,9 +28,10 @@ import org.jetbrains.kotlin.psi.psiUtil.siblings
 import org.jetbrains.kotlin.psi.psiUtil.startOffset
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
+import org.jetbrains.kotlin.hints.atomicChange
 
 class ConvertEnumToSealedClassIntention(val parserResult: KotlinParserResult,
-                                        val psi: PsiElement) : ApplicableFix {
+                                        val psi: PsiElement) : ApplicableIntention {
 
     private var expression: KtClass? = null
 

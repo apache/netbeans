@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.hints
+package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.descriptors.VariableDescriptor
@@ -31,9 +31,10 @@ import org.jetbrains.kotlin.resolve.scopes.receivers.ImplicitReceiver
 import org.jetbrains.kotlin.types.typeUtil.supertypes
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
+import org.jetbrains.kotlin.hints.atomicChange
 
 class ConvertTryFinallyToUseCallIntention(val parserResult: KotlinParserResult,
-                                          val psi: PsiElement) : ApplicableFix {
+                                          val psi: PsiElement) : ApplicableIntention {
     
     private var tryExpression: KtTryExpression? = null
     

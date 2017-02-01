@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.hints
+package org.jetbrains.kotlin.hints.intentions
 
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.KtCallableDeclaration
@@ -28,8 +28,8 @@ import org.netbeans.modules.csl.api.HintFix
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import com.intellij.psi.PsiElement
 
-class KotlinRemoveExplicitTypeFix(val parserResult: KotlinParserResult, 
-                                  val psi: PsiElement) : ApplicableFix {
+class RemoveExplicitTypeIntention(val parserResult: KotlinParserResult, 
+                                  val psi: PsiElement) : ApplicableIntention {
 
     override fun isApplicable(caretOffset: Int): Boolean {
         val element = psi.getNonStrictParentOfType(KtCallableDeclaration::class.java) ?: return false

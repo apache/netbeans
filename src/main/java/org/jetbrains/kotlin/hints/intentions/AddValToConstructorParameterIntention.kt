@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.hints
+package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.psi.*
@@ -24,7 +24,7 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 
 class AddValToConstructorParameterIntention(val parserResult: KotlinParserResult,
-                                               val psi: PsiElement) : ApplicableFix {
+                                               val psi: PsiElement) : ApplicableIntention {
     
     private var parameter: KtParameter? = null
     

@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  *******************************************************************************/
-package org.jetbrains.kotlin.hints
+package org.jetbrains.kotlin.hints.fixes
 
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.PsiElement
@@ -49,6 +49,7 @@ import org.jetbrains.kotlin.psi.psiUtil.getElementTextWithContext
 import org.netbeans.api.project.Project
 import javax.swing.text.Document
 import org.jetbrains.kotlin.reformatting.format
+import org.jetbrains.kotlin.hints.atomicChange
 
 class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: PsiElement) : HintFix {
 

@@ -76,7 +76,8 @@ class KotlinHintsProvider : HintsProvider {
             AddValToConstructorParameterIntention(parserResult, psi),
             ConvertPropertyInitializerToGetterIntention(parserResult, psi),
             ConvertToConcatenatedStringIntention(parserResult, psi),
-            ConvertToStringTemplateIntention(parserResult, psi))
+            ConvertToStringTemplateIntention(parserResult, psi),
+            ConvertTwoComparisonsToRangeCheckIntention(parserResult, psi))
             .filter { it.isApplicable(offset) }
 
     override fun computeSelectionHints(hintsManager: HintsManager, ruleContext: RuleContext,

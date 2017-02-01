@@ -17,9 +17,9 @@
 package org.jetbrains.kotlin.hints
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
 import javax.swing.text.StyledDocument
 import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.resolve.DescriptorUtils
 import org.jetbrains.kotlin.resolve.calls.callUtil.getResolvedCall
 import org.jetbrains.kotlin.resolve.scopes.receivers.ExpressionReceiver
@@ -35,7 +35,7 @@ class ConvertForEachToForLoopIntention(val parserResult: KotlinParserResult,
     private var element: KtSimpleNameExpression? = null
     
     override fun isApplicable(caretOffset: Int): Boolean {
-        element = PsiTreeUtil.getNonStrictParentOfType(psi, KtSimpleNameExpression::class.java) ?: return false
+        element = psi.getNonStrictParentOfType(KtSimpleNameExpression::class.java) ?: return false
         val expression = element ?: return false
         
         val data = extractData(expression) ?: return false

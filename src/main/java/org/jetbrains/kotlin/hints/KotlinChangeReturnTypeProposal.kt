@@ -16,15 +16,16 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.hints
 
+import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.diagnostics.Diagnostic
 import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.idea.core.quickfix.QuickFixUtil
 import org.jetbrains.kotlin.idea.util.IdeDescriptorRenderers
 import org.jetbrains.kotlin.idea.util.approximateWithResolvableType
+import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.KtCallExpression
 import org.jetbrains.kotlin.psi.KtExpression
 import org.jetbrains.kotlin.psi.KtFunction
@@ -55,7 +56,7 @@ class KotlinChangeReturnTypeProposal(val parserResult: KotlinParserResult,
     override fun isApplicable(caretOffset: Int): Boolean {
         val bindingContext = parserResult.analysisResult?.analysisResult?.bindingContext ?: return false
         val activeDiagnostic = getActiveDiagnostic(psi.textOffset, bindingContext.diagnostics) ?: return false
-        val expression: KtExpression = PsiTreeUtil.getNonStrictParentOfType(activeDiagnostic.psiElement, KtExpression::class.java) ?: return false
+        val expression = activeDiagnostic.psiElement.getNonStrictParentOfType(KtExpression::class.java) ?: return false
         
         val expressionType = when (activeDiagnostic.factory) {
             Errors.TYPE_MISMATCH -> {

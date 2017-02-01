@@ -17,9 +17,9 @@
 package org.jetbrains.kotlin.hints
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.descriptors.VariableDescriptor
 import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.psiUtil.contentRange
 import org.jetbrains.kotlin.psi.psiUtil.endOffset
 import org.jetbrains.kotlin.psi.psiUtil.startOffset
@@ -38,7 +38,7 @@ class ConvertTryFinallyToUseCallIntention(val parserResult: KotlinParserResult,
     private var tryExpression: KtTryExpression? = null
     
     override fun isApplicable(caretOffset: Int): Boolean {
-        tryExpression = PsiTreeUtil.getNonStrictParentOfType(psi, KtTryExpression::class.java) ?: return false
+        tryExpression = psi.getNonStrictParentOfType(KtTryExpression::class.java) ?: return false
         val element = tryExpression ?: return false
         
         val finallySection = element.finallyBlock ?: return false

@@ -19,7 +19,7 @@ package org.jetbrains.kotlin.hints
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
-import com.intellij.psi.util.PsiTreeUtil
+import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.psiUtil.allChildren
@@ -35,7 +35,7 @@ class ConvertEnumToSealedClassIntention(val parserResult: KotlinParserResult,
     private var expression: KtClass? = null
 
     override fun isApplicable(caretOffset: Int): Boolean {
-        expression = PsiTreeUtil.getNonStrictParentOfType(psi, KtClass::class.java) ?: return false
+        expression = psi.getNonStrictParentOfType(KtClass::class.java) ?: return false
         val element = expression ?: return false
         element.nameIdentifier ?: return false
         element.modifierList?.getModifier(KtTokens.ENUM_KEYWORD) ?: return false

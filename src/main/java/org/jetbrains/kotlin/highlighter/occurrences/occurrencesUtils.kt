@@ -19,11 +19,11 @@
 package org.jetbrains.kotlin.highlighter.occurrences
 
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
 import kotlin.Pair
 import org.jetbrains.kotlin.descriptors.SourceElement
 import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.navigation.references.*
+import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtNamedDeclaration
@@ -65,7 +65,7 @@ fun getKotlinElements(sourceElements: List<SourceElement>) = sourceElements
 fun searchTextOccurrences(ktFile: KtFile, sourceElement: KtElement): List<KtElement> {
     val elementName = sourceElement.name ?: return emptyList()
     val elements: Collection<KtElement> = getAllOccurrencesInFile(ktFile, elementName)
-            .mapNotNull { PsiTreeUtil.getNonStrictParentOfType(it, KtElement::class.java) }
+            .mapNotNull { it.getNonStrictParentOfType(KtElement::class.java) }
     
     return elements.filter { it.filterBeforeResolve() }
             .filter { it.resolveToSourceDeclaration().filterAfterResolve(sourceElement) }

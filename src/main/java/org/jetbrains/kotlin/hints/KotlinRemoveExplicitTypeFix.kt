@@ -16,6 +16,7 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.hints
 
+import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.KtCallableDeclaration
 import org.jetbrains.kotlin.psi.KtCodeFragment
 import org.jetbrains.kotlin.psi.KtNamedFunction
@@ -26,13 +27,12 @@ import org.jetbrains.kotlin.psi.KtDeclarationWithInitializer
 import org.netbeans.modules.csl.api.HintFix
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
 
 class KotlinRemoveExplicitTypeFix(val parserResult: KotlinParserResult, 
                                   val psi: PsiElement) : ApplicableFix {
 
     override fun isApplicable(caretOffset: Int): Boolean {
-        val element: KtCallableDeclaration = PsiTreeUtil.getNonStrictParentOfType(psi, KtCallableDeclaration::class.java) ?: return false
+        val element = psi.getNonStrictParentOfType(KtCallableDeclaration::class.java) ?: return false
         
         if (element.containingFile is KtCodeFragment) return false
         if (element.typeReference == null) return false
@@ -53,7 +53,7 @@ class KotlinRemoveExplicitTypeFix(val parserResult: KotlinParserResult,
     override fun isInteractive() = false
 
     override fun implement() {
-        val element: KtCallableDeclaration = PsiTreeUtil.getNonStrictParentOfType(psi, KtCallableDeclaration::class.java) ?: return
+        val element = psi.getNonStrictParentOfType(KtCallableDeclaration::class.java) ?: return
         val anchor = getAnchor(element) ?: return
 
         val doc = parserResult.snapshot.source.getDocument(false)

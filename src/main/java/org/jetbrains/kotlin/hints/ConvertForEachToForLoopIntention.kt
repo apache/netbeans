@@ -25,7 +25,6 @@ import org.jetbrains.kotlin.resolve.calls.callUtil.getResolvedCall
 import org.jetbrains.kotlin.resolve.scopes.receivers.ExpressionReceiver
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
-import org.openide.text.NbDocument
 
 class ConvertForEachToForLoopIntention(val parserResult: KotlinParserResult,
                                        val psi: PsiElement) : ApplicableFix {

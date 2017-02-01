@@ -18,6 +18,8 @@ package org.jetbrains.kotlin.hints
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
+import javax.swing.text.Document
+import javax.swing.text.StyledDocument
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinSyntaxError
@@ -40,6 +42,7 @@ import org.openide.filesystems.FileObject
 import org.netbeans.modules.csl.api.HintsProvider.HintsManager
 import org.jetbrains.kotlin.diagnostics.Errors
 import org.netbeans.modules.csl.api.HintSeverity
+import org.openide.text.NbDocument
 
 class KotlinHintsProvider : HintsProvider {
 
@@ -70,11 +73,9 @@ class KotlinHintsProvider : HintsProvider {
             .filter { it.isApplicable(offset) }
 
     override fun computeSelectionHints(hintsManager: HintsManager, ruleContext: RuleContext,
-                                       list: List<Hint>, i: Int, i2: Int) {
-    }
+                                       list: List<Hint>, i: Int, i2: Int) {}
 
-    override fun cancel() {
-    }
+    override fun cancel() {}
 
     override fun getBuiltinRules() = emptyList<Rule>()
     override fun createRuleContext() = KotlinRuleContext()
@@ -98,17 +99,17 @@ class KotlinHintsProvider : HintsProvider {
             }
 
     private fun KotlinError.createHintForUnresolvedReference(parserResult: KotlinParserResult): Hint {
-        val suggestions = parserResult.project.findFQName(this.psi.text)
+        val suggestions = parserResult.project.findFQName(psi.text)
         val fixes = suggestions.map { KotlinAutoImportFix(it, parserResult) }
 
         return Hint(KotlinRule(HintSeverity.ERROR), "Class not found", parserResult.snapshot.source.fileObject,
-                OffsetRange(this.startPosition, this.endPosition), fixes, 10)
+                OffsetRange(startPosition, endPosition), fixes, 10)
     }
 
     private fun KotlinError.createImplementMembersHint(parserResult: KotlinParserResult): Hint {
-        val fix = KotlinImplementMembersFix(parserResult, this.psi)
+        val fix = KotlinImplementMembersFix(parserResult, psi)
         return Hint(KotlinRule(HintSeverity.ERROR), "Implement members", parserResult.snapshot.source.fileObject,
-                OffsetRange(this.startPosition, this.endPosition), listOf(fix), 10)
+                OffsetRange(startPosition, endPosition), listOf(fix), 10)
     }
 
     override fun computeErrors(hintsManager: HintsManager, ruleContext: RuleContext,
@@ -121,3 +122,5 @@ class KotlinHintsProvider : HintsProvider {
 interface ApplicableFix : HintFix {
     fun isApplicable(caretOffset: Int): Boolean
 }
+
+fun Document.atomicChange(change: Document.() -> Unit) = NbDocument.runAtomicAsUser(this as StyledDocument, { change() })

@@ -41,16 +41,15 @@ class KotlinSpecifyTypeFix(val parserResult: KotlinParserResult,
     private lateinit var displayString: String
 
     override fun isApplicable(caretOffset: Int): Boolean {
-        val element = PsiTreeUtil.getNonStrictParentOfType(psi, KtCallableDeclaration::class.java)
-        if (element == null) return false
-
-        if (element.getContainingFile() is KtCodeFragment) return false
+        val element: KtCallableDeclaration = PsiTreeUtil.getNonStrictParentOfType(psi, KtCallableDeclaration::class.java) ?: return false
+        
+        if (element.containingFile is KtCodeFragment) return false
         if (element is KtFunctionLiteral) return false
         if (element is KtConstructor<*>) return false
-        if (element.getTypeReference() != null) return false
+        if (element.typeReference != null) return false
 
-        val initializer = (element as? KtDeclarationWithInitializer)?.getInitializer()
-        if (initializer != null && initializer.getTextRange().containsOffset(caretOffset)) return false
+        val initializer = (element as? KtDeclarationWithInitializer)?.initializer
+        if (initializer != null && initializer.textRange.containsOffset(caretOffset)) return false
 
         if (element is KtNamedFunction && element.hasBlockBody()) return false
 
@@ -65,7 +64,7 @@ class KotlinSpecifyTypeFix(val parserResult: KotlinParserResult,
         val bindingContext = parserResult.analysisResult?.analysisResult?.bindingContext ?: return ErrorUtils.createErrorType("null type")
 
         val descriptor = bindingContext[BindingContext.DECLARATION_TO_DESCRIPTOR, declaration]
-        val type = (descriptor as? CallableDescriptor)?.getReturnType()
+        val type = (descriptor as? CallableDescriptor)?.returnType
         return type ?: ErrorUtils.createErrorType("null type")
     }
 
@@ -74,7 +73,7 @@ class KotlinSpecifyTypeFix(val parserResult: KotlinParserResult,
     override fun isInteractive() = false
 
     override fun implement() {
-        val element = PsiTreeUtil.getNonStrictParentOfType(psi, KtCallableDeclaration::class.java)!!
+        val element: KtCallableDeclaration = PsiTreeUtil.getNonStrictParentOfType(psi, KtCallableDeclaration::class.java) ?: return
         val type = getTypeForDeclaration(element, parserResult)
         val anchor = getAnchor(element) ?: return
 

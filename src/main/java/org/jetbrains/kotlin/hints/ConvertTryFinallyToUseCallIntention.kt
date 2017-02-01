@@ -114,9 +114,10 @@ class ConvertTryFinallyToUseCallIntention(val parserResult: KotlinParserResult,
         val startOffset = element.textRange.startOffset
         val lengthToDelete = element.textLength
         
-        doc.remove(startOffset, lengthToDelete)
-        doc.insertString(startOffset, useExpression.toString(), null)
-        
-        format(doc, psi.textRange.startOffset)
+        doc.atomicChange { 
+            remove(startOffset, lengthToDelete)
+            insertString(startOffset, useExpression.toString(), null)
+            format(this, psi.textRange.startOffset)
+        }
     }
 }

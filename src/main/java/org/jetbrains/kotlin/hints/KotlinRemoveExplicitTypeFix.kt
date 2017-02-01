@@ -32,19 +32,18 @@ class KotlinRemoveExplicitTypeFix(val parserResult: KotlinParserResult,
                                   val psi: PsiElement) : ApplicableFix {
 
     override fun isApplicable(caretOffset: Int): Boolean {
-        val element = PsiTreeUtil.getNonStrictParentOfType(psi, KtCallableDeclaration::class.java)
-        if (element == null) return false
+        val element: KtCallableDeclaration = PsiTreeUtil.getNonStrictParentOfType(psi, KtCallableDeclaration::class.java) ?: return false
+        
+        if (element.containingFile is KtCodeFragment) return false
+        if (element.typeReference == null) return false
 
-        if (element.getContainingFile() is KtCodeFragment) return false
-        if (element.getTypeReference() == null) return false
-
-        val initializer = (element as? KtDeclarationWithInitializer)?.getInitializer()
-        if (initializer != null && initializer.getTextRange().containsOffset(caretOffset)) return false
+        val initializer = (element as? KtDeclarationWithInitializer)?.initializer
+        if (initializer != null && initializer.textRange.containsOffset(caretOffset)) return false
 
         return when (element) {
             is KtProperty -> initializer != null
             is KtNamedFunction -> !element.hasBlockBody() && initializer != null
-            is KtParameter -> element.isLoopParameter()
+            is KtParameter -> element.isLoopParameter
             else -> false
         }
     }
@@ -54,12 +53,12 @@ class KotlinRemoveExplicitTypeFix(val parserResult: KotlinParserResult,
     override fun isInteractive() = false
 
     override fun implement() {
-        val element = PsiTreeUtil.getNonStrictParentOfType(psi, KtCallableDeclaration::class.java)!!
+        val element: KtCallableDeclaration = PsiTreeUtil.getNonStrictParentOfType(psi, KtCallableDeclaration::class.java) ?: return
         val anchor = getAnchor(element) ?: return
 
         val doc = parserResult.snapshot.source.getDocument(false)
         val endOffset = anchor.textRange.endOffset
-        val endOfType = element.getTypeReference()!!.textRange.endOffset
+        val endOfType = element.typeReference!!.textRange.endOffset
 
         doc.remove(endOffset, endOfType - endOffset)
     }
@@ -68,9 +67,8 @@ class KotlinRemoveExplicitTypeFix(val parserResult: KotlinParserResult,
 
 fun getAnchor(element: KtCallableDeclaration): PsiElement? {
     return when (element) {
-        is KtProperty -> element.getNameIdentifier()
-        is KtNamedFunction -> element.getValueParameterList()
-        is KtParameter -> element.getNameIdentifier()
+        is KtProperty, is KtParameter -> element.nameIdentifier
+        is KtNamedFunction -> element.valueParameterList
         else -> null
     }
 }

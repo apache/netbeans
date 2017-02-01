@@ -54,12 +54,8 @@ class KotlinChangeReturnTypeProposal(val parserResult: KotlinParserResult,
 
     override fun isApplicable(caretOffset: Int): Boolean {
         val bindingContext = parserResult.analysisResult?.analysisResult?.bindingContext ?: return false
-        
-        val activeDiagnostic = getActiveDiagnostic(psi.textOffset, bindingContext.diagnostics)
-        if (activeDiagnostic == null) return false
-        
-        val expression = PsiTreeUtil.getNonStrictParentOfType(activeDiagnostic.psiElement, KtExpression::class.java)
-        if (expression == null) return false
+        val activeDiagnostic = getActiveDiagnostic(psi.textOffset, bindingContext.diagnostics) ?: return false
+        val expression: KtExpression = PsiTreeUtil.getNonStrictParentOfType(activeDiagnostic.psiElement, KtExpression::class.java) ?: return false
         
         val expressionType = when (activeDiagnostic.factory) {
             Errors.TYPE_MISMATCH -> {
@@ -81,11 +77,9 @@ class KotlinChangeReturnTypeProposal(val parserResult: KotlinParserResult,
             }
             
             else -> null
-        }
+        } ?: return false
         
-        if (expressionType == null) return false
-        
-        val expressionParent = expression.getParent()
+        val expressionParent = expression.parent
         val ktFunction = if (expressionParent is KtReturnExpression) {
             expressionParent.getTargetFunction(bindingContext)
         } else {
@@ -122,7 +116,7 @@ class KotlinChangeReturnTypeProposal(val parserResult: KotlinParserResult,
     }
 
     override fun getDescription(): String {
-        val functionName = function.getName()
+        val functionName = function.name
         val renderedType = IdeDescriptorRenderers.SOURCE_CODE_SHORT_NAMES_IN_TYPES.renderType(type)
         return if (functionName != null) {
             "Change '$functionName' function return type to '$renderedType'"
@@ -135,16 +129,18 @@ class KotlinChangeReturnTypeProposal(val parserResult: KotlinParserResult,
     override fun isInteractive() = false
     
     override fun implement() {
-        val oldTypeRef = function.getTypeReference()
+        val oldTypeRef = function.typeReference
         val renderedType = IdeDescriptorRenderers.SOURCE_CODE_SHORT_NAMES_IN_TYPES.renderType(type)
         val doc = parserResult.snapshot.source.getDocument(false)
         if (oldTypeRef != null) {
             val startOffset = oldTypeRef.textRange.startOffset
             val endOffset = oldTypeRef.textRange.endOffset
-            doc.remove(startOffset, endOffset - startOffset)
-            doc.insertString(startOffset, renderedType, null)
+            doc.atomicChange {
+                remove(startOffset, endOffset - startOffset)
+                insertString(startOffset, renderedType, null)
+            }
         } else {
-            val anchor = function.getValueParameterList()
+            val anchor = function.valueParameterList
             if (anchor != null) {
                 doc.insertString(anchor.textRange.endOffset, ": $renderedType", null)
             }

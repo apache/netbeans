@@ -40,10 +40,8 @@ class KotlinConvertToBlockBodyFix(val parserResult: KotlinParserResult,
                                  val psi: PsiElement) : ApplicableFix {
 
     override fun isApplicable(caretOffset: Int): Boolean {
-        val declaration = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java) ?: return false
-        if (declaration is KtFunctionLiteral ||
-                declaration.hasBlockBody() ||
-                !declaration.hasBody()) return false
+        val declaration: KtDeclarationWithBody = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java) ?: return false
+        if (declaration is KtFunctionLiteral || declaration.hasBlockBody() || !declaration.hasBody()) return false
 
         when (declaration) {
             is KtNamedFunction -> {
@@ -67,7 +65,7 @@ class KotlinConvertToBlockBodyFix(val parserResult: KotlinParserResult,
     override fun isInteractive() = false
 
     override fun implement() {
-        val declaration = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java)!!
+        val declaration: KtDeclarationWithBody = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java) ?: return
         val context = parserResult.analysisResult?.analysisResult?.bindingContext ?: return
 
         val shouldSpecifyType = declaration is KtNamedFunction
@@ -76,31 +74,29 @@ class KotlinConvertToBlockBodyFix(val parserResult: KotlinParserResult,
 
         val factory = KtPsiFactory(declaration)
         
-        replaceBody(declaration, factory, context)
-        
-        if (shouldSpecifyType) specifyType(declaration, factory, context)
+        replaceBody(declaration, factory, context, shouldSpecifyType)
     }
 
     private fun convert(declaration: KtDeclarationWithBody, bindingContext: BindingContext, factory: KtPsiFactory): KtExpression {
-        val body = declaration.getBodyExpression()!!
+        val body = declaration.bodyExpression!!
 
         fun generateBody(returnsValue: Boolean): KtExpression {
             val bodyType = bindingContext.getType(body)
             val needReturn = returnsValue &&
                     (bodyType == null || (!KotlinBuiltIns.isUnit(bodyType) && !KotlinBuiltIns.isNothing(bodyType)))
 
-            val expression = factory.createExpression(body.getText())
+            val expression = factory.createExpression(body.text)
             val block: KtBlockExpression = if (needReturn) {
                 factory.createBlock("return xyz")
             } else {
-                return factory.createBlock(expression.getText())
+                return factory.createBlock(expression.text)
             }
-            val returnExpression = PsiTreeUtil.getChildOfType(block, KtReturnExpression::class.java)
-            val returned = returnExpression?.getReturnedExpression() ?: return factory.createBlock("return ${expression.getText()}")
-            if (KtPsiUtil.areParenthesesNecessary(expression, returned, returnExpression!!)) {
-                return factory.createBlock("return (${expression.getText()})")
+            val returnExpression: KtReturnExpression? = PsiTreeUtil.getChildOfType(block, KtReturnExpression::class.java)
+            val returned = returnExpression?.returnedExpression ?: return factory.createBlock("return ${expression.text}")
+            if (KtPsiUtil.areParenthesesNecessary(expression, returned, returnExpression)) {
+                return factory.createBlock("return (${expression.text})")
             }
-            return factory.createBlock("return ${expression.getText()}")
+            return factory.createBlock("return ${expression.text}")
         }
 
         val newBody = when (declaration) {
@@ -116,36 +112,41 @@ class KotlinConvertToBlockBodyFix(val parserResult: KotlinParserResult,
         return newBody
     }
 
-    private fun replaceBody(declaration: KtDeclarationWithBody, factory: KtPsiFactory, context: BindingContext) {
+    private fun replaceBody(declaration: KtDeclarationWithBody, factory: KtPsiFactory, 
+                            context: BindingContext, shouldSpecifyType: Boolean) {
         val newBody = convert(declaration, context, factory)
-        var newBodyText = newBody.getNode().text
+        var newBodyText = newBody.node.text
 
-        val anchorToken = declaration.getEqualsToken()
-        if (anchorToken!!.getNextSibling() !is PsiWhiteSpace) {
-            newBodyText = factory.createWhiteSpace().getText() + newBodyText
+        val anchorToken = declaration.equalsToken
+        if (anchorToken!!.nextSibling !is PsiWhiteSpace) {
+            newBodyText = factory.createWhiteSpace().text + newBodyText
         }
 
         val startOffset = anchorToken.textRange.startOffset
-        val endOffset = declaration.getBodyExpression()!!.textRange.endOffset
+        val endOffset = declaration.bodyExpression!!.textRange.endOffset
         val doc = parserResult.snapshot.source.getDocument(false)
         
-        doc.remove(startOffset, endOffset - startOffset)
-        doc.insertString(startOffset, newBodyText, null)
-        
-        format(parserResult.snapshot.source.getDocument(false), declaration.textRange.endOffset)
+        doc.atomicChange {
+            remove(startOffset, endOffset - startOffset)
+            insertString(startOffset, newBodyText, null)
+            format(this, declaration.textRange.endOffset)
+            if (shouldSpecifyType) { 
+                specifyType(declaration, factory, context)
+            }
+        }
     }
 
     private fun specifyType(declaration: KtDeclarationWithBody, factory: KtPsiFactory, context: BindingContext) {
         val returnType = (declaration as KtNamedFunction).returnType(context).toString()
         val stringToInsert = listOf(factory.createColon(), factory.createWhiteSpace())
-                .joinToString(separator = "") { it.getText() } + returnType
+                .joinToString(separator = "") { it.text } + returnType
         val doc = parserResult.snapshot.source.getDocument(false)
-        doc.insertString(declaration.getValueParameterList()!!.textRange.endOffset, stringToInsert, null)
+        doc.insertString(declaration.valueParameterList!!.textRange.endOffset, stringToInsert, null)
     }
     
 }
 
 private fun KtNamedFunction.returnType(context: BindingContext): KotlinType? {
     val descriptor = context[BindingContext.DECLARATION_TO_DESCRIPTOR, this] ?: return null
-    return (descriptor as FunctionDescriptor).getReturnType()
+    return (descriptor as FunctionDescriptor).returnType
 }

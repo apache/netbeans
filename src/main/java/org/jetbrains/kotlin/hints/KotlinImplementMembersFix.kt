@@ -59,14 +59,15 @@ class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: P
     override fun implement() {
         val doc = parserResult.snapshot.source.getDocument(false)
         
-        val classOrObject = PsiTreeUtil.getParentOfType(psi, KtClassOrObject::class.java, false)
-        if (classOrObject == null) return
+        val classOrObject: KtClassOrObject = PsiTreeUtil.getParentOfType(psi, KtClassOrObject::class.java, false) ?: return
         
         val missingImplementations = collectMethodsToGenerate(classOrObject)
         if (missingImplementations.isEmpty()) return
         
-        generateMethods(doc, classOrObject, missingImplementations)
-        format(doc, psi.textRange.startOffset)
+        doc.atomicChange {
+            generateMethods(this, classOrObject, missingImplementations)
+            format(this, psi.textRange.startOffset)
+        }
     }
 
     private val OVERRIDE_RENDERER = DescriptorRenderer.withOptions {
@@ -81,9 +82,9 @@ class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: P
 
     fun generateMethods(document: Document, classOrObject: KtClassOrObject, selectedElements: Set<CallableMemberDescriptor>) {
         var body = classOrObject.getBody()
-        val psiFactory = KtPsiFactory(classOrObject.getProject())
+        val psiFactory = KtPsiFactory(classOrObject.project)
         if (body == null) {
-            val bodyText = "${psiFactory.createWhiteSpace().getText()}${psiFactory.createEmptyClassBody().getText()}"
+            val bodyText = "${psiFactory.createWhiteSpace().text}${psiFactory.createEmptyClassBody().text}"
             insertAfter(classOrObject, bodyText, document)
         } else {
             removeWhitespaceAfterLBrace(body, document)
@@ -105,13 +106,11 @@ class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: P
     }
     
     private fun removeWhitespaceAfterLBrace(body: KtClassBody, document: Document) {
-        val lBrace = body.lBrace
-        if (lBrace != null) {
-            val sibling = lBrace.getNextSibling()
-            val needNewLine = sibling.getNextSibling() is KtDeclaration
-            if (sibling is PsiWhiteSpace && !needNewLine) {
-                document.remove(sibling.textRange.startOffset, sibling.getTextLength())
-            }
+        val lBrace = body.lBrace ?: return
+        val sibling = lBrace.nextSibling
+        val needNewLine = sibling.nextSibling is KtDeclaration
+        if (sibling is PsiWhiteSpace && !needNewLine) {
+            document.remove(sibling.textRange.startOffset, sibling.textLength)
         }
     }
 
@@ -135,39 +134,39 @@ class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: P
     }
 
     fun KtElement.resolveToDescriptor(): DeclarationDescriptor {
-        val ktFile = this.getContainingKtFile()
+        val ktFile = getContainingKtFile()
         val analysisResult = KotlinAnalyzer.analyzeFile(parserResult.project, ktFile).analysisResult
         return BindingContextUtils.getNotNull(
                 analysisResult.bindingContext,
                 BindingContext.DECLARATION_TO_DESCRIPTOR,
                 this,
-                "Descriptor wasn't found for declaration " + this.toString() + "\n" + this.getElementTextWithContext())
+                "Descriptor wasn't found for declaration " + toString() + "\n" + getElementTextWithContext())
     }
 
     private fun removeAfterOffset(offset: Int, whiteSpace: PsiWhiteSpace): PsiElement {
-        val spaceNode = whiteSpace.getNode()
+        val spaceNode = whiteSpace.node
         if (spaceNode.getTextRange().contains(offset)) {
-            var beforeWhiteSpaceText = spaceNode.getText().substring(0, offset - spaceNode.getStartOffset())
+            var beforeWhiteSpaceText = spaceNode.text.substring(0, offset - spaceNode.startOffset)
             if (!StringUtil.containsLineBreak(beforeWhiteSpaceText)) {
                 beforeWhiteSpaceText += "\n"
             }
 
-            val factory = KtPsiFactory(whiteSpace.getProject())
+            val factory = KtPsiFactory(whiteSpace.project)
 
-            val insertAfter = whiteSpace.getPrevSibling()
+            val insertAfter = whiteSpace.prevSibling
             whiteSpace.delete()
 
             val beforeSpace = factory.createWhiteSpace(beforeWhiteSpaceText)
-            insertAfter.getParent().addAfter(beforeSpace, insertAfter)
+            insertAfter.parent.addAfter(beforeSpace, insertAfter)
 
-            return insertAfter.getNextSibling()
+            return insertAfter.nextSibling
         }
 
         return whiteSpace
     }
     
     private fun generateUnsupportedOrSuperCall(descriptor: CallableMemberDescriptor): String {
-        val isAbstract = descriptor.getModality() == Modality.ABSTRACT
+        val isAbstract = descriptor.modality == Modality.ABSTRACT
         if (isAbstract) {
             return "throw UnsupportedOperationException()"
         } else {
@@ -175,7 +174,7 @@ class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: P
             builder.append("super.${descriptor.escapedName()}")
 
             if (descriptor is FunctionDescriptor) {
-                val paramTexts = descriptor.getValueParameters().map {
+                val paramTexts = descriptor.valueParameters.map {
                     val renderedName = it.escapedName()
                     if (it.varargElementType != null) "*$renderedName" else renderedName
                 }
@@ -189,8 +188,8 @@ class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: P
     private fun overrideProperty(classOrObject: KtClassOrObject,
                                  descriptor: PropertyDescriptor,
                                  lineDelimiter: String): KtElement {
-        val newDescriptor = descriptor.copy(descriptor.getContainingDeclaration(), Modality.OPEN, descriptor.getVisibility(),
-                descriptor.getKind(), /* copyOverrides = */ true) as PropertyDescriptor
+        val newDescriptor = descriptor.copy(descriptor.containingDeclaration, Modality.OPEN, descriptor.visibility,
+                descriptor.kind, /* copyOverrides = */ true) as PropertyDescriptor
         newDescriptor.setOverriddenDescriptors(listOf(descriptor))
 
         val body = StringBuilder()
@@ -200,25 +199,25 @@ class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: P
         if (descriptor.isVar()) {
             body.append("${lineDelimiter}set(value) {\n}")
         }
-        return KtPsiFactory(classOrObject.getProject()).createProperty(OVERRIDE_RENDERER.render(newDescriptor) + body)
+        return KtPsiFactory(classOrObject.project).createProperty(OVERRIDE_RENDERER.render(newDescriptor) + body)
     }
     
     private fun overrideFunction(classOrObject: KtClassOrObject,
                                  descriptor: FunctionDescriptor,
                                  lineDelimiter: String): KtNamedFunction {
-        val newDescriptor: FunctionDescriptor = descriptor.copy(descriptor.getContainingDeclaration(), Modality.OPEN, descriptor.getVisibility(),
-                descriptor.getKind(), /* copyOverrides = */ true)
+        val newDescriptor: FunctionDescriptor = descriptor.copy(descriptor.containingDeclaration, Modality.OPEN, descriptor.visibility,
+                descriptor.kind, /* copyOverrides = */ true)
         newDescriptor.setOverriddenDescriptors(listOf(descriptor))
 
-        val returnType = descriptor.getReturnType()
+        val returnType = descriptor.returnType
         val returnsNotUnit = returnType != null && !KotlinBuiltIns.isUnit(returnType)
-        val isAbstract = descriptor.getModality() == Modality.ABSTRACT
+        val isAbstract = descriptor.modality == Modality.ABSTRACT
 
         val delegation = generateUnsupportedOrSuperCall(descriptor)
 
         val body = "{$lineDelimiter" + (if (returnsNotUnit && !isAbstract) "return " else "") + delegation + "$lineDelimiter}"
 
-        return KtPsiFactory(classOrObject.getProject()).createFunction(OVERRIDE_RENDERER.render(newDescriptor) + body)
+        return KtPsiFactory(classOrObject.project).createFunction(OVERRIDE_RENDERER.render(newDescriptor) + body)
     }
     
     private fun generateOverridingMembers(selectedElements: Set<CallableMemberDescriptor>,

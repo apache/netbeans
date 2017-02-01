@@ -18,12 +18,14 @@ package org.jetbrains.kotlin.hints
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
+import javax.swing.text.StyledDocument
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.resolve.DescriptorUtils
 import org.jetbrains.kotlin.resolve.calls.callUtil.getResolvedCall
 import org.jetbrains.kotlin.resolve.scopes.receivers.ExpressionReceiver
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
+import org.openide.text.NbDocument
 
 class ConvertForEachToForLoopIntention(val parserResult: KotlinParserResult,
                                        val psi: PsiElement) : ApplicableFix {
@@ -48,7 +50,7 @@ class ConvertForEachToForLoopIntention(val parserResult: KotlinParserResult,
 
     override fun isInteractive() = false
 
-    override fun getDescription() = "Convert forEach to for loop"
+    override fun getDescription() = "Convert 'forEach' to for loop"
 
     override fun implement() {
         val expression = element ?: return
@@ -61,10 +63,11 @@ class ConvertForEachToForLoopIntention(val parserResult: KotlinParserResult,
         val startOffset = expressionToReplace.textRange.startOffset
         val lengthToDelete = expressionToReplace.textLength
         
-        doc.remove(startOffset, lengthToDelete)
-        doc.insertString(startOffset, loop, null)
-        
-        format(doc, psi.textRange.startOffset)
+        doc.atomicChange {
+            remove(startOffset, lengthToDelete)
+            insertString(startOffset, loop, null)
+            format(this, psi.textRange.startOffset)
+        }
     }
     
     private data class Data(

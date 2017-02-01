@@ -60,14 +60,6 @@ class SpecifyTypeIntention(val parserResult: KotlinParserResult,
         return true
     }
 
-    private fun getTypeForDeclaration(declaration: KtCallableDeclaration, parserResult: KotlinParserResult): KotlinType {
-        val bindingContext = parserResult.analysisResult?.analysisResult?.bindingContext ?: return ErrorUtils.createErrorType("null type")
-
-        val descriptor = bindingContext[BindingContext.DECLARATION_TO_DESCRIPTOR, declaration]
-        val type = (descriptor as? CallableDescriptor)?.returnType
-        return type ?: ErrorUtils.createErrorType("null type")
-    }
-
     override fun getDescription() = displayString
     override fun isSafe() = true
     override fun isInteractive() = false
@@ -86,4 +78,12 @@ class SpecifyTypeIntention(val parserResult: KotlinParserResult,
 
         doc.insertString(element.textRange.endOffset, text, null)
     }
+}
+
+fun getTypeForDeclaration(declaration: KtCallableDeclaration, parserResult: KotlinParserResult): KotlinType {
+    val bindingContext = parserResult.analysisResult?.analysisResult?.bindingContext ?: return ErrorUtils.createErrorType("null type")
+
+    val descriptor = bindingContext[BindingContext.DECLARATION_TO_DESCRIPTOR, declaration]
+    val type = (descriptor as? CallableDescriptor)?.returnType
+    return type ?: ErrorUtils.createErrorType("null type")
 }

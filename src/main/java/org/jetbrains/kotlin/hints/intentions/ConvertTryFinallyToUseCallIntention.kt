@@ -35,59 +35,30 @@ import org.jetbrains.kotlin.hints.atomicChange
 
 class ConvertTryFinallyToUseCallIntention(val parserResult: KotlinParserResult,
                                           val psi: PsiElement) : ApplicableIntention {
-    
+
     private var tryExpression: KtTryExpression? = null
-    
+
     override fun isApplicable(caretOffset: Int): Boolean {
         tryExpression = psi.getNonStrictParentOfType(KtTryExpression::class.java) ?: return false
         val element = tryExpression ?: return false
-        
-        val finallySection = element.finallyBlock ?: return false
-        val finallyExpression = finallySection.finalExpression.statements.singleOrNull() ?: return false
-        if (element.catchClauses.isNotEmpty()) return false
 
-        val context = parserResult.analysisResult?.analysisResult?.bindingContext ?: return false
-        val resolvedCall = finallyExpression.getResolvedCall(context) ?: return false
-        if (resolvedCall.candidateDescriptor.name.asString() != "close") return false
-        if (resolvedCall.extensionReceiver != null) return false
-        val receiver = resolvedCall.dispatchReceiver ?: return false
-        if (receiver.type.supertypes().all {
-            it.constructor.declarationDescriptor?.fqNameSafe?.asString().let {
-                it != "java.io.Closeable" && it != "java.lang.AutoCloseable"
-            }
-        }) return false
-
-        when (receiver) {
-            is ExpressionReceiver -> {
-                val expression = receiver.expression
-                if (expression !is KtThisExpression) {
-                    val resourceReference = expression as? KtReferenceExpression ?: return false
-                    val resourceDescriptor =
-                            context[BindingContext.REFERENCE_TARGET, resourceReference] as? VariableDescriptor ?: return false
-                    if (resourceDescriptor.isVar) return false
-                }
-            }
-            is ImplicitReceiver -> {}
-            else -> return false
-}
-        
-        return true
+        return element.isApplicable(parserResult)
     }
 
     override fun getDescription() = "Convert try-finally to .use()"
 
     override fun implement() {
         val element = tryExpression ?: return
-        
+
         val finallySection = element.finallyBlock!!
         val finallyExpression = finallySection.finalExpression.statements.single()
         val finallyExpressionReceiver = (finallyExpression as? KtQualifiedExpression)?.receiverExpression
         val resourceReference = finallyExpressionReceiver as? KtNameReferenceExpression
         val resourceName = resourceReference?.getReferencedNameAsName()
-        
+
         val useExpression = StringBuilder()
-        
-        with (useExpression) {
+
+        with(useExpression) {
             if (resourceName != null) {
                 append(resourceName).append(".")
             } else if (finallyExpressionReceiver is KtThisExpression) {
@@ -100,21 +71,67 @@ class ConvertTryFinallyToUseCallIntention(val parserResult: KotlinParserResult,
                 append(resourceName).append("->")
             }
             append("\n")
-            
+
             element.tryBlock.contentRange().forEach { append(it.text).append("\n") }
-            
+
             append("}")
         }
-        
+
         val doc = parserResult.snapshot.source.getDocument(false)
-        
+
         val startOffset = element.textRange.startOffset
         val lengthToDelete = element.textLength
-        
-        doc.atomicChange { 
+
+        doc.atomicChange {
             remove(startOffset, lengthToDelete)
             insertString(startOffset, useExpression.toString(), null)
             format(this, psi.textRange.startOffset)
         }
     }
+}
+
+class ConvertTryFinallyToUseCallInspection(val parserResult: KotlinParserResult,
+                                           override val element: KtElement) : Inspection(element) {
+    
+    override val description = "Usage of try-finally instead of .use()"
+
+    override fun isApplicable(): Boolean {
+        if (element !is KtTryExpression) return false
+        
+        return element.isApplicable(parserResult)
+    }
+}
+
+private fun KtTryExpression.isApplicable(parserResult: KotlinParserResult): Boolean {
+    val finallySection = finallyBlock ?: return false
+    val finallyExpression = finallySection.finalExpression.statements.singleOrNull() ?: return false
+    if (catchClauses.isNotEmpty()) return false
+
+    val context = parserResult.analysisResult?.analysisResult?.bindingContext ?: return false
+    val resolvedCall = finallyExpression.getResolvedCall(context) ?: return false
+    if (resolvedCall.candidateDescriptor.name.asString() != "close") return false
+    if (resolvedCall.extensionReceiver != null) return false
+    val receiver = resolvedCall.dispatchReceiver ?: return false
+    if (receiver.type.supertypes().all {
+        it.constructor.declarationDescriptor?.fqNameSafe?.asString().let {
+            it != "java.io.Closeable" && it != "java.lang.AutoCloseable"
+        }
+    }) return false
+
+    when (receiver) {
+        is ExpressionReceiver -> {
+            val expression = receiver.expression
+            if (expression !is KtThisExpression) {
+                val resourceReference = expression as? KtReferenceExpression ?: return false
+                val resourceDescriptor =
+                        context[BindingContext.REFERENCE_TARGET, resourceReference] as? VariableDescriptor ?: return false
+                if (resourceDescriptor.isVar) return false
+            }
+        }
+        is ImplicitReceiver -> {
+        }
+        else -> return false
+    }
+
+    return true
 }

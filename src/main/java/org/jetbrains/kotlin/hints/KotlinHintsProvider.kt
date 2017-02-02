@@ -52,22 +52,23 @@ class KotlinHintsProvider : HintsProvider {
         
         private fun listOfSuggestions(parserResult: KotlinParserResult,
                                       psi: PsiElement, offset: Int) = listOf(
-            RemoveExplicitTypeIntention(parserResult, psi),
-            SpecifyTypeIntention(parserResult, psi),
-            ConvertToBlockBodyIntention(parserResult, psi),
-            ChangeReturnTypeIntention(parserResult, psi),
-            ConvertTryFinallyToUseCallIntention(parserResult, psi),
-            ConvertForEachToForLoopIntention(parserResult, psi),
-            ConvertEnumToSealedClassIntention(parserResult, psi),
-            AddValToConstructorParameterIntention(parserResult, psi),
-            ConvertPropertyInitializerToGetterIntention(parserResult, psi),
-            ConvertToConcatenatedStringIntention(parserResult, psi),
-            ConvertToStringTemplateIntention(parserResult, psi),
-            ConvertTwoComparisonsToRangeCheckIntention(parserResult, psi),
-            MergeIfsIntention(parserResult, psi),
-            RemoveBracesIntention(parserResult, psi),
-            SplitIfIntention(parserResult, psi),
-            ToInfixIntention(parserResult, psi)
+                RemoveExplicitTypeIntention(parserResult, psi),
+                SpecifyTypeIntention(parserResult, psi),
+                ConvertToBlockBodyIntention(parserResult, psi),
+                ChangeReturnTypeIntention(parserResult, psi),
+                ConvertTryFinallyToUseCallIntention(parserResult, psi),
+                ConvertForEachToForLoopIntention(parserResult, psi),
+                ConvertEnumToSealedClassIntention(parserResult, psi),
+                AddValToConstructorParameterIntention(parserResult, psi),
+                ConvertPropertyInitializerToGetterIntention(parserResult, psi),
+                ConvertToConcatenatedStringIntention(parserResult, psi),
+                ConvertToStringTemplateIntention(parserResult, psi),
+                ConvertTwoComparisonsToRangeCheckIntention(parserResult, psi),
+                MergeIfsIntention(parserResult, psi),
+                RemoveBracesIntention(parserResult, psi),
+                SplitIfIntention(parserResult, psi),
+                ToInfixIntention(parserResult, psi),
+                RemoveEmptyClassBodyIntention(parserResult, psi)
         ).filter { it.isApplicable(offset) }
         
         private fun getHints(ruleContext: RuleContext) =

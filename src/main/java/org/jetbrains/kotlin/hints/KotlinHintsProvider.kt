@@ -48,24 +48,10 @@ import org.openide.text.NbDocument
 
 class KotlinHintsProvider : HintsProvider {
 
-    override fun computeSuggestions(hintsManager: HintsManager, ruleContext: RuleContext,
-                                    hints: MutableList<Hint>, offset: Int) {
-        val parserResult = ruleContext.parserResult as KotlinParserResult
-        val psi = parserResult.ktFile.findElementAt(offset) ?: return
-
-        hints.addAll(getSuggestions(parserResult, psi, offset)
-                .map {
-                    Hint(KotlinRule(HintSeverity.CURRENT_LINE_WARNING),
-                            it.description,
-                            parserResult.snapshot.source.fileObject,
-                            OffsetRange(offset, offset),
-                            listOf(it), 20)
-                }
-        )
-    }
-
-    private fun getSuggestions(parserResult: KotlinParserResult,
-                               psi: PsiElement, offset: Int) = listOf<ApplicableIntention>(
+    companion object {
+        
+        private fun listOfSuggestions(parserResult: KotlinParserResult,
+                                      psi: PsiElement, offset: Int) = listOf(
             RemoveExplicitTypeIntention(parserResult, psi),
             SpecifyTypeIntention(parserResult, psi),
             ConvertToBlockBodyIntention(parserResult, psi),
@@ -81,8 +67,40 @@ class KotlinHintsProvider : HintsProvider {
             MergeIfsIntention(parserResult, psi),
             RemoveBracesIntention(parserResult, psi),
             SplitIfIntention(parserResult, psi),
-            ToInfixIntention(parserResult, psi))
-            .filter { it.isApplicable(offset) }
+            ToInfixIntention(parserResult, psi)
+        ).filter { it.isApplicable(offset) }
+        
+        private fun getHints(ruleContext: RuleContext) =
+            ruleContext.parserResult.diagnostics
+                    .filterIsInstance(KotlinError::class.java)
+                    .map { it.createHint(ruleContext.parserResult as KotlinParserResult) }
+                    .filterNotNull()
+        
+        private fun KotlinError.createHint(parserResult: KotlinParserResult) =
+            when (diagnostic.factory) {
+                Errors.UNRESOLVED_REFERENCE -> createHintForUnresolvedReference(parserResult)
+                Errors.ABSTRACT_MEMBER_NOT_IMPLEMENTED, 
+                Errors.ABSTRACT_CLASS_MEMBER_NOT_IMPLEMENTED -> createImplementMembersHint(parserResult)
+                else -> null
+            }
+   
+    }
+    
+    override fun computeSuggestions(hintsManager: HintsManager, ruleContext: RuleContext,
+                                    hints: MutableList<Hint>, offset: Int) {
+        val parserResult = ruleContext.parserResult as KotlinParserResult
+        val psi = parserResult.ktFile.findElementAt(offset) ?: return
+
+        hints.addAll(listOfSuggestions(parserResult, psi, offset)
+                .map {
+                    Hint(KotlinRule(HintSeverity.CURRENT_LINE_WARNING),
+                            it.description,
+                            parserResult.snapshot.source.fileObject,
+                            OffsetRange(offset, offset),
+                            listOf(it), 20)
+                }
+        )
+    }
 
     override fun computeSelectionHints(hintsManager: HintsManager, ruleContext: RuleContext,
                                        list: List<Hint>, i: Int, i2: Int) {}
@@ -94,34 +112,6 @@ class KotlinHintsProvider : HintsProvider {
 
     override fun computeHints(hintsManager: HintsManager, ruleContext: RuleContext, hints: MutableList<Hint>) {
         hints.addAll(getHints(ruleContext))
-    }
-
-    private fun getHints(ruleContext: RuleContext) =
-            ruleContext.parserResult.diagnostics
-                    .filterIsInstance(KotlinError::class.java)
-                    .map { it.createHint(ruleContext.parserResult as KotlinParserResult) }
-                    .filterNotNull()
-
-    private fun KotlinError.createHint(parserResult: KotlinParserResult) =
-            when (diagnostic.factory) {
-                Errors.UNRESOLVED_REFERENCE -> createHintForUnresolvedReference(parserResult)
-                Errors.ABSTRACT_MEMBER_NOT_IMPLEMENTED, 
-                Errors.ABSTRACT_CLASS_MEMBER_NOT_IMPLEMENTED -> createImplementMembersHint(parserResult)
-                else -> null
-            }
-
-    private fun KotlinError.createHintForUnresolvedReference(parserResult: KotlinParserResult): Hint {
-        val suggestions = parserResult.project.findFQName(psi.text)
-        val fixes = suggestions.map { KotlinAutoImportFix(it, parserResult) }
-
-        return Hint(KotlinRule(HintSeverity.ERROR), "Class not found", parserResult.snapshot.source.fileObject,
-                OffsetRange(startPosition, endPosition), fixes, 10)
-    }
-
-    private fun KotlinError.createImplementMembersHint(parserResult: KotlinParserResult): Hint {
-        val fix = KotlinImplementMembersFix(parserResult, psi)
-        return Hint(KotlinRule(HintSeverity.ERROR), "Implement members", parserResult.snapshot.source.fileObject,
-                OffsetRange(startPosition, endPosition), listOf(fix), 10)
     }
 
     override fun computeErrors(hintsManager: HintsManager, ruleContext: RuleContext,

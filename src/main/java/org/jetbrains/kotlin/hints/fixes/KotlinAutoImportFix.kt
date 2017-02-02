@@ -21,8 +21,14 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtImportDirective
 import org.jetbrains.kotlin.psi.KtPackageDirective
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
 import org.jetbrains.kotlin.utils.ProjectUtils
+import org.jetbrains.kotlin.resolve.lang.java.findFQName
+import org.jetbrains.kotlin.hints.KotlinRule
 import org.netbeans.modules.csl.api.HintFix
+import org.netbeans.modules.csl.api.Hint
+import org.netbeans.modules.csl.api.OffsetRange
+import org.netbeans.modules.csl.api.HintSeverity
 
 
 fun autoImport(fqName: String, doc: Document) {
@@ -55,13 +61,21 @@ private fun insert(fqName: String, doc: Document, ktFile: KtFile) {
 
 private fun getOffsetToInsert(importDirectives: List<KtImportDirective>, fqName: String): Int? {
     importDirectives.filter { it.importedFqName != null }
-            .forEachIndexed { index, it ->
+            .forEach {
                 if (it.importedFqName!!.asString().compareTo(fqName) > 0) {
                     return it.textRange.startOffset
                 }
             }
     return null
 }
+
+fun KotlinError.createHintForUnresolvedReference(parserResult: KotlinParserResult): Hint {
+        val suggestions = parserResult.project.findFQName(psi.text)
+        val fixes = suggestions.map { KotlinAutoImportFix(it, parserResult) }
+
+        return Hint(KotlinRule(HintSeverity.ERROR), "Class not found", parserResult.snapshot.source.fileObject,
+                OffsetRange(startPosition, endPosition), fixes, 10)
+    }
 
 class KotlinAutoImportFix(val fqName: String, val parserResult: KotlinParserResult) : HintFix {
 

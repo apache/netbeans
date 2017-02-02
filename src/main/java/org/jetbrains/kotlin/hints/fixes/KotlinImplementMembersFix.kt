@@ -41,11 +41,16 @@ import org.jetbrains.kotlin.renderer.DescriptorRendererModifier
 import org.jetbrains.kotlin.renderer.OverrideRenderingPolicy
 import org.jetbrains.kotlin.resolve.OverrideResolver
 import org.netbeans.modules.csl.api.HintFix
+import org.netbeans.modules.csl.api.Hint
+import org.netbeans.modules.csl.api.OffsetRange
+import org.netbeans.modules.csl.api.HintSeverity
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer
 import org.jetbrains.kotlin.resolve.BindingContextUtils
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.psi.psiUtil.getElementTextWithContext
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
+import org.jetbrains.kotlin.hints.KotlinRule
 import org.netbeans.api.project.Project
 import javax.swing.text.Document
 import org.jetbrains.kotlin.reformatting.format
@@ -234,5 +239,10 @@ class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: P
         }
         return overridingMembers
     }
-    
+}
+
+fun KotlinError.createImplementMembersHint(parserResult: KotlinParserResult): Hint {
+        val fix = KotlinImplementMembersFix(parserResult, psi)
+        return Hint(KotlinRule(HintSeverity.ERROR), "Implement members", parserResult.snapshot.source.fileObject,
+                OffsetRange(startPosition, endPosition), listOf(fix), 10)
 }

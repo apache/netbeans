@@ -24,34 +24,50 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 
 class RemoveEmptyClassBodyIntention(val parserResult: KotlinParserResult,
                                     val psi: PsiElement) : ApplicableIntention {
-    
+
     private var expression: KtClassBody? = null
-    
+
     override fun isApplicable(caretOffset: Int): Boolean {
         expression = psi.getNonStrictParentOfType(KtClassBody::class.java) ?: return false
         val element = expression ?: return false
-        
-        element.getNonStrictParentOfType(KtObjectDeclaration::class.java)?.let {
-            if (it.isObjectLiteral()) return false
-        }
 
-        element.getNonStrictParentOfType(KtClass::class.java)?.let {
-            if (!it.isTopLevel() && it.getNextSiblingIgnoringWhitespaceAndComments() is KtSecondaryConstructor) return false
-        }
-
-        return element.text.replace("{", "").replace("}", "").isBlank()
+        return element.isApplicable()
     }
 
     override fun getDescription() = "Remove empty class body"
 
     override fun implement() {
         val element = expression ?: return
-        
+
         val doc = parserResult.snapshot.source.getDocument(false)
 
         val startOffset = element.textRange.startOffset
         val lengthToDelete = element.textLength
-        
+
         doc.remove(startOffset, lengthToDelete)
     }
+}
+
+class RemoveEmptyClassBodyInspection(val parserResult: KotlinParserResult,
+                                     override val element: KtElement) : Inspection(element) {
+
+    override val description = "Empty class body"
+
+    override fun isApplicable(): Boolean {
+        if (element !is KtClassBody) return false
+
+        return element.isApplicable()
+    }
+}
+
+private fun KtClassBody.isApplicable(): Boolean {
+    getNonStrictParentOfType(KtObjectDeclaration::class.java)?.let {
+        if (it.isObjectLiteral()) return false
+    }
+
+    getNonStrictParentOfType(KtClass::class.java)?.let {
+        if (!it.isTopLevel() && it.getNextSiblingIgnoringWhitespaceAndComments() is KtSecondaryConstructor) return false
+    }
+
+    return text.replace("{", "").replace("}", "").isBlank()
 }

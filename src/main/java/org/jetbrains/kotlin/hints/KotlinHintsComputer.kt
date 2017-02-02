@@ -39,13 +39,16 @@ class KotlinHintsComputer(val parserResult: KotlinParserResult) : KtVisitor<Unit
     }
     
     override fun visitKtElement(element: KtElement, data: Unit?) {
-        RemoveEmptyPrimaryConstructorInspection(parserResult, element).apply {
-            if (isApplicable()) {
-                hints.add(hint(parserResult.snapshot.source.fileObject))
-            } 
-        }
+        hints.addAll(element.inspections())
         
         element.children.forEach { it.accept(this) }
     }
+    
+    private fun KtElement.inspections() = listOf(
+            RemoveEmptyPrimaryConstructorInspection(parserResult, this),
+            RemoveEmptyClassBodyInspection(parserResult, this)
+    )
+            .filter(Inspection::isApplicable)
+            .map { it.hint(parserResult.snapshot.source.fileObject) }
         
 }

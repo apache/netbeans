@@ -31,13 +31,7 @@ class RemoveEmptyPrimaryConstructorIntention(val parserResult: KotlinParserResul
         expression = psi.getNonStrictParentOfType(KtPrimaryConstructor::class.java) ?: return false
         val element = expression ?: return false
         
-        return when {
-            element.valueParameters.isNotEmpty() -> false
-            element.annotations.isNotEmpty() -> false
-            element.modifierList?.text?.isBlank() == false -> false
-            element.containingClass()?.getSecondaryConstructors()?.isNotEmpty() == true -> false
-            else -> true
-        }
+        return element.isApplicable()
     }
 
     override fun getDescription() = "Remove empty primary constructor"
@@ -52,4 +46,25 @@ class RemoveEmptyPrimaryConstructorIntention(val parserResult: KotlinParserResul
         
         doc.remove(startOffset, lengthToDelete)
     }
+}
+
+class RemoveEmptyPrimaryConstructorInspection(val parserResult: KotlinParserResult,
+                                              override val element: KtElement) : Inspection(element) {
+    
+    override val description = "Empty primary constructor"
+    
+    override fun isApplicable(): Boolean {
+        if (element !is KtPrimaryConstructor) return false
+        
+        return element.isApplicable()
+    }
+    
+}
+
+private fun KtPrimaryConstructor.isApplicable() = when {
+    valueParameters.isNotEmpty() -> false
+    annotations.isNotEmpty() -> false
+    modifierList?.text?.isBlank() == false -> false
+    containingClass()?.getSecondaryConstructors()?.isNotEmpty() == true -> false
+    else -> true
 }

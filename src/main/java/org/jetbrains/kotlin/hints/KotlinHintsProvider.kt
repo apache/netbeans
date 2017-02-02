@@ -20,6 +20,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import javax.swing.text.Document
 import javax.swing.text.StyledDocument
+import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.hints.fixes.*
 import org.jetbrains.kotlin.hints.intentions.*
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
@@ -50,7 +51,7 @@ class KotlinHintsProvider : HintsProvider {
 
     companion object {
         
-        private fun listOfSuggestions(parserResult: KotlinParserResult,
+        private fun listOfIntentions(parserResult: KotlinParserResult,
                                       psi: PsiElement, offset: Int) = listOf(
                 RemoveExplicitTypeIntention(parserResult, psi),
                 SpecifyTypeIntention(parserResult, psi),
@@ -94,28 +95,37 @@ class KotlinHintsProvider : HintsProvider {
         val parserResult = ruleContext.parserResult as KotlinParserResult
         val psi = parserResult.ktFile.findElementAt(offset) ?: return
 
-        hints.addAll(listOfSuggestions(parserResult, psi, offset)
+        hints.addAll(listOfIntentions(parserResult, psi, offset)
                 .map {
                     Hint(KotlinRule(HintSeverity.CURRENT_LINE_WARNING),
                             it.description,
                             parserResult.snapshot.source.fileObject,
                             OffsetRange(offset, offset),
-                            listOf(it), 20)
+                            listOf(it), 
+                            20
+                    )
                 }
         )
     }
 
+    override fun computeHints(hintsManager: HintsManager, ruleContext: RuleContext, hints: MutableList<Hint>) {
+        val ktFile = (ruleContext.parserResult as KotlinParserResult).ktFile
+        val hintsComputer = KotlinHintsComputer(ruleContext.parserResult as KotlinParserResult)
+        
+        ktFile.accept(hintsComputer)
+        
+        hints.addAll(getHints(ruleContext))
+        hints.addAll(hintsComputer.hints)
+    }
+    
     override fun computeSelectionHints(hintsManager: HintsManager, ruleContext: RuleContext,
                                        list: List<Hint>, i: Int, i2: Int) {}
 
     override fun cancel() {}
 
     override fun getBuiltinRules() = emptyList<Rule>()
-    override fun createRuleContext() = KotlinRuleContext()
 
-    override fun computeHints(hintsManager: HintsManager, ruleContext: RuleContext, hints: MutableList<Hint>) {
-        hints.addAll(getHints(ruleContext))
-    }
+    override fun createRuleContext() = KotlinRuleContext()
 
     override fun computeErrors(hintsManager: HintsManager, ruleContext: RuleContext,
                                list: List<Hint>, errors: MutableList<Error>) {

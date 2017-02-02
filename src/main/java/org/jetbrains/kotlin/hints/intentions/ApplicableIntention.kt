@@ -16,7 +16,10 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.hints.intentions
 
-import org.netbeans.modules.csl.api.HintFix
+import org.jetbrains.kotlin.psi.KtElement
+import org.jetbrains.kotlin.hints.KotlinRule
+import org.netbeans.modules.csl.api.*
+import org.openide.filesystems.FileObject
 
 interface ApplicableIntention : HintFix {
     
@@ -25,5 +28,22 @@ interface ApplicableIntention : HintFix {
     override fun isSafe() = true
     
     override fun isInteractive() = false
+    
+}
+
+abstract class Inspection(open val element: KtElement) {
+    
+    abstract val description: String
+    
+    abstract fun isApplicable(): Boolean
+    
+    fun hint(fileObject: FileObject) = Hint(
+            KotlinRule(HintSeverity.WARNING),
+            description,
+            fileObject,
+            OffsetRange(element.textRange.startOffset, element.textRange.endOffset),
+            emptyList(),
+            10
+    )
     
 }

@@ -71,7 +71,8 @@ class KotlinHintsProvider : HintsProvider {
                 ToInfixIntention(parserResult, psi),
                 RemoveEmptyClassBodyIntention(parserResult, psi),
                 RemoveEmptyParenthesesFromLambdaCallIntention(parserResult, psi),
-                RemoveEmptyPrimaryConstructorIntention(parserResult, psi)
+                RemoveEmptyPrimaryConstructorIntention(parserResult, psi),
+                RemoveEmptySecondaryConstructorIntention(parserResult, psi)
         ).filter { it.isApplicable(offset) }
         
         private fun getHints(ruleContext: RuleContext) =

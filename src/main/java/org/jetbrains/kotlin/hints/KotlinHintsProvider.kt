@@ -16,10 +16,12 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.hints
 
+import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import javax.swing.text.Document
 import javax.swing.text.StyledDocument
+import org.jetbrains.kotlin.psi.psiUtil.elementsInRange
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.hints.fixes.*
 import org.jetbrains.kotlin.hints.intentions.*
@@ -42,17 +44,17 @@ import org.netbeans.modules.csl.api.OffsetRange
 import org.netbeans.modules.csl.api.Rule
 import org.netbeans.modules.csl.api.RuleContext
 import org.openide.filesystems.FileObject
+import org.openide.text.NbDocument
 import org.netbeans.modules.csl.api.HintsProvider.HintsManager
 import org.jetbrains.kotlin.diagnostics.Errors
 import org.netbeans.modules.csl.api.HintSeverity
-import org.openide.text.NbDocument
 
 class KotlinHintsProvider : HintsProvider {
 
     companion object {
-        
+
         private fun listOfIntentions(parserResult: KotlinParserResult,
-                                      psi: PsiElement, offset: Int) = listOf(
+                                     psi: PsiElement) = listOf(
                 RemoveExplicitTypeIntention(parserResult, psi),
                 SpecifyTypeIntention(parserResult, psi),
                 ConvertToBlockBodyIntention(parserResult, psi),
@@ -73,54 +75,77 @@ class KotlinHintsProvider : HintsProvider {
                 RemoveEmptyParenthesesFromLambdaCallIntention(parserResult, psi),
                 RemoveEmptyPrimaryConstructorIntention(parserResult, psi),
                 RemoveEmptySecondaryConstructorIntention(parserResult, psi)
-        ).filter { it.isApplicable(offset) }
-        
+        ).filter { it.isApplicable(psi.textRange.startOffset) }
+
         private fun getHints(ruleContext: RuleContext) =
-            ruleContext.parserResult.diagnostics
-                    .filterIsInstance(KotlinError::class.java)
-                    .map { it.createHint(ruleContext.parserResult as KotlinParserResult) }
-                    .filterNotNull()
-        
+                ruleContext.parserResult.diagnostics
+                        .filterIsInstance(KotlinError::class.java)
+                        .map { it.createHint(ruleContext.parserResult as KotlinParserResult) }
+                        .filterNotNull()
+
         private fun KotlinError.createHint(parserResult: KotlinParserResult) =
-            when (diagnostic.factory) {
-                Errors.UNRESOLVED_REFERENCE -> createHintForUnresolvedReference(parserResult)
-                Errors.ABSTRACT_MEMBER_NOT_IMPLEMENTED, 
-                Errors.ABSTRACT_CLASS_MEMBER_NOT_IMPLEMENTED -> createImplementMembersHint(parserResult)
-                else -> null
-            }
-   
+                when (diagnostic.factory) {
+                    Errors.UNRESOLVED_REFERENCE -> createHintForUnresolvedReference(parserResult)
+                    Errors.ABSTRACT_MEMBER_NOT_IMPLEMENTED,
+                    Errors.ABSTRACT_CLASS_MEMBER_NOT_IMPLEMENTED -> createImplementMembersHint(parserResult)
+                    else -> null
+                }
+
     }
     
     override fun computeSuggestions(hintsManager: HintsManager, ruleContext: RuleContext,
                                     hints: MutableList<Hint>, offset: Int) {
         val parserResult = ruleContext.parserResult as KotlinParserResult
-        val psi = parserResult.ktFile.findElementAt(offset) ?: return
+        val doc = ruleContext.doc as StyledDocument
 
-        hints.addAll(listOfIntentions(parserResult, psi, offset)
-                .map {
-                    Hint(KotlinRule(HintSeverity.CURRENT_LINE_WARNING),
-                            it.description,
-                            parserResult.snapshot.source.fileObject,
-                            OffsetRange(offset, offset),
-                            listOf(it), 
-                            20
-                    )
+        val lineNumber = NbDocument.findLineNumber(doc, offset)
+        val lastLine = NbDocument.findLineNumber(doc, doc.length)
+
+        if (lineNumber == lastLine) return
+
+        val lineStartOffset = NbDocument.findLineOffset(doc, lineNumber)
+        val lineEndOffset = NbDocument.findLineOffset(doc, lineNumber + 1)
+
+        val intentions = parserResult.ktFile.elementsInRange(TextRange(lineStartOffset, lineEndOffset))
+                .toMutableList()
+                .apply { 
+                    val elem = parserResult.ktFile.findElementAt(offset)
+                    if (elem != null) {
+                        add(elem)
+                    }
                 }
+                .map { psi ->
+                    listOfIntentions(parserResult, psi)
+                            .map {
+                                Hint(KotlinRule(HintSeverity.CURRENT_LINE_WARNING),
+                                        it.description,
+                                        parserResult.snapshot.source.fileObject,
+                                        OffsetRange(offset, offset),
+                                        listOf(it),
+                                        20
+                                )
+                            }
+                }
+
+        hints.addAll(
+                intentions.flatMap { it }
+                        .distinctBy { it.description }
         )
     }
 
     override fun computeHints(hintsManager: HintsManager, ruleContext: RuleContext, hints: MutableList<Hint>) {
         val ktFile = (ruleContext.parserResult as KotlinParserResult).ktFile
         val hintsComputer = KotlinHintsComputer(ruleContext.parserResult as KotlinParserResult)
-        
+
         ktFile.accept(hintsComputer)
-        
+
         hints.addAll(getHints(ruleContext))
         hints.addAll(hintsComputer.hints)
     }
-    
+
     override fun computeSelectionHints(hintsManager: HintsManager, ruleContext: RuleContext,
-                                       list: List<Hint>, i: Int, i2: Int) {}
+                                       list: List<Hint>, i: Int, i2: Int) {
+    }
 
     override fun cancel() {}
 

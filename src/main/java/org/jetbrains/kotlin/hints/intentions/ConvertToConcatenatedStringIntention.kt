@@ -38,10 +38,6 @@ class ConvertToConcatenatedStringIntention(val parserResult: KotlinParserResult,
         return element.entries.any { it is KtStringTemplateEntryWithExpression }
     }
 
-    override fun isSafe() = true
-
-    override fun isInteractive() = false
-
     override fun getDescription() = "Convert template to concatenated string"
 
     override fun implement() {

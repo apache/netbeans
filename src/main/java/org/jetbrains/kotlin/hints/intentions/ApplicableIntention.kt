@@ -19,5 +19,11 @@ package org.jetbrains.kotlin.hints.intentions
 import org.netbeans.modules.csl.api.HintFix
 
 interface ApplicableIntention : HintFix {
+    
     fun isApplicable(caretOffset: Int): Boolean
+    
+    override fun isSafe() = true
+    
+    override fun isInteractive() = false
+    
 }

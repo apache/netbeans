@@ -46,10 +46,6 @@ class ConvertToStringTemplateIntention(val parserResult: KotlinParserResult,
         return true    
     }
 
-    override fun isSafe() = true
-
-    override fun isInteractive() = false
-
     override fun getDescription() = "Convert concatenation to template"
 
     override fun implement() {

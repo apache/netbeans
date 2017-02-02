@@ -41,10 +41,6 @@ class MergeIfsIntention(val parserResult: KotlinParserResult,
         return true
     }
 
-    override fun isSafe() = true
-
-    override fun isInteractive() = false
-
     override fun getDescription() = "Merge 'if's"
 
     override fun implement() {
@@ -55,7 +51,7 @@ class MergeIfsIntention(val parserResult: KotlinParserResult,
         val secondCondition = nestedIf.condition ?: return
         val nestedBody = nestedIf.then ?: return
         
-        val text = "if (${condition.text} && ${secondCondition.text}) {\n ${nestedBody.text} \n}"
+        val text = "if (${condition.text} && ${secondCondition.text})  ${nestedBody.text} "
         
         val doc = parserResult.snapshot.source.getDocument(false)
         

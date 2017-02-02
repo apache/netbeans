@@ -74,10 +74,6 @@ class ConvertTryFinallyToUseCallIntention(val parserResult: KotlinParserResult,
         return true
     }
 
-    override fun isSafe() = true
-
-    override fun isInteractive() = false
-
     override fun getDescription() = "Convert try-finally to .use()"
 
     override fun implement() {

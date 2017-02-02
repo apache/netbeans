@@ -49,8 +49,6 @@ class RemoveExplicitTypeIntention(val parserResult: KotlinParserResult,
     }
 
     override fun getDescription() = "Remove explicit type specification"
-    override fun isSafe() = true
-    override fun isInteractive() = false
 
     override fun implement() {
         val element = psi.getNonStrictParentOfType(KtCallableDeclaration::class.java) ?: return

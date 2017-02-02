@@ -62,8 +62,6 @@ class ConvertToBlockBodyIntention(val parserResult: KotlinParserResult,
     }
 
     override fun getDescription() = "Convert to block body"
-    override fun isSafe() = true
-    override fun isInteractive() = false
 
     override fun implement() {
         val declaration: KtDeclarationWithBody = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java) ?: return

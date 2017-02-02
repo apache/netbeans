@@ -127,9 +127,6 @@ class ChangeReturnTypeIntention(val parserResult: KotlinParserResult,
         }
     }
     
-    override fun isSafe() = true
-    override fun isInteractive() = false
-    
     override fun implement() {
         val oldTypeRef = function.typeReference
         val renderedType = IdeDescriptorRenderers.SOURCE_CODE_SHORT_NAMES_IN_TYPES.renderType(type)

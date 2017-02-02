@@ -55,10 +55,6 @@ class RemoveBracesIntention(val parserResult: KotlinParserResult,
         }
     }
 
-    override fun isSafe() = true
-
-    override fun isInteractive() = false
-
     override fun getDescription() = desc
 
     override fun implement() {

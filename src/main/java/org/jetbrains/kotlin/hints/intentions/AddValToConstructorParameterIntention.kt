@@ -38,10 +38,6 @@ class AddValToConstructorParameterIntention(val parserResult: KotlinParserResult
         return element.nameIdentifier?.textRange != null
     }
 
-    override fun isSafe() = true
-
-    override fun isInteractive() = false
-
     override fun getDescription() = "Add val to parameter '${parameter?.name ?: ""}'"
 
     override fun implement() {

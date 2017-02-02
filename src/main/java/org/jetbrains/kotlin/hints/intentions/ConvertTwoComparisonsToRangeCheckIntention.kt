@@ -42,10 +42,6 @@ class ConvertTwoComparisonsToRangeCheckIntention(val parserResult: KotlinParserR
         return generateRangeExpressionData(element) != null
     }
 
-    override fun isSafe() = true
-
-    override fun isInteractive() = false
-
     override fun getDescription() = "Convert to range check"
 
     override fun implement() {

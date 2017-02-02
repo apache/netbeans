@@ -43,10 +43,6 @@ class ConvertPropertyInitializerToGetterIntention(val parserResult: KotlinParser
         else return false
     }
 
-    override fun isSafe() = true
-
-    override fun isInteractive() = false
-
     override fun getDescription() = "Convert property initializer to getter"
 
     override fun implement() {

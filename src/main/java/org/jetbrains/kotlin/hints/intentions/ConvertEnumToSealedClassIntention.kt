@@ -44,10 +44,6 @@ class ConvertEnumToSealedClassIntention(val parserResult: KotlinParserResult,
         return true
     }
 
-    override fun isSafe() = true
-
-    override fun isInteractive() = false
-
     override fun getDescription() = "Convert to sealed class"
 
     private fun KtClass.generateSealedClass(): String {

@@ -80,7 +80,8 @@ class KotlinHintsProvider : HintsProvider {
             ConvertTwoComparisonsToRangeCheckIntention(parserResult, psi),
             MergeIfsIntention(parserResult, psi),
             RemoveBracesIntention(parserResult, psi),
-            SplitIfIntention(parserResult, psi))
+            SplitIfIntention(parserResult, psi),
+            ToInfixIntention(parserResult, psi))
             .filter { it.isApplicable(offset) }
 
     override fun computeSelectionHints(hintsManager: HintsManager, ruleContext: RuleContext,

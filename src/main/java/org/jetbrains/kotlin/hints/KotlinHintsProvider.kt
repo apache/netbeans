@@ -77,22 +77,17 @@ class KotlinHintsProvider : HintsProvider {
                 RemoveEmptySecondaryConstructorIntention(parserResult, psi)
         ).filter { it.isApplicable(psi.textRange.startOffset) }
 
-        private fun getHints(ruleContext: RuleContext) =
-                ruleContext.parserResult.diagnostics
+        private fun KotlinError.listOfQuickFixes(parserResult: KotlinParserResult) = listOf(
+                RemoveUselessElvisFix(this, parserResult),
+                ImplementMembersFix(this, parserResult),
+                AutoImportFix(this, parserResult)
+        ).filter(KotlinQuickFix::isApplicable)
+        
+        private val RuleContext.quickFixes
+                get() = parserResult.diagnostics
                         .filterIsInstance(KotlinError::class.java)
-                        .map { it.createHint(ruleContext.parserResult as KotlinParserResult) }
-                        .filterNotNull()
-
-        private fun KotlinError.createHint(parserResult: KotlinParserResult) =
-                when (diagnostic.factory) {
-                    Errors.UNRESOLVED_REFERENCE -> createHintForUnresolvedReference(parserResult)
-                    Errors.ABSTRACT_MEMBER_NOT_IMPLEMENTED,
-                    Errors.ABSTRACT_CLASS_MEMBER_NOT_IMPLEMENTED -> createImplementMembersHint(parserResult)
-                    Errors.USELESS_ELVIS,
-                    Errors.USELESS_ELVIS_ON_LAMBDA_EXPRESSION,
-                    Errors.USELESS_ELVIS_RIGHT_IS_NULL -> createRemoveUselessElvisFix(parserResult)
-                    else -> null
-                }
+                        .flatMap { it.listOfQuickFixes(parserResult as KotlinParserResult) }
+                        .map(KotlinQuickFix::createHint)
 
     }
     
@@ -142,8 +137,10 @@ class KotlinHintsProvider : HintsProvider {
 
         ktFile.accept(hintsComputer)
 
-        hints.addAll(getHints(ruleContext))
-        hints.addAll(hintsComputer.hints)
+        with(hints) {
+            addAll(ruleContext.quickFixes)
+            addAll(hintsComputer.hints)
+        }
     }
 
     override fun computeSelectionHints(hintsManager: HintsManager, ruleContext: RuleContext,

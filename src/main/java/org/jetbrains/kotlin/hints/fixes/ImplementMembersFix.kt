@@ -50,29 +50,39 @@ import org.jetbrains.kotlin.resolve.BindingContextUtils
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.psi.psiUtil.getElementTextWithContext
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
+import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.hints.KotlinRule
 import org.netbeans.api.project.Project
 import javax.swing.text.Document
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
-class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: PsiElement) : HintFix {
+class ImplementMembersFix(kotlinError: KotlinError,
+                          parserResult: KotlinParserResult) : KotlinQuickFix(kotlinError, parserResult) {
+    
+    override val hintSeverity = HintSeverity.ERROR
 
-    override fun getDescription() = "Implement members"
-    override fun isSafe() = true
-    override fun isInteractive() = false
+    override fun isApplicable() = when (kotlinError.diagnostic.factory) {
+        Errors.ABSTRACT_MEMBER_NOT_IMPLEMENTED,
+        Errors.ABSTRACT_CLASS_MEMBER_NOT_IMPLEMENTED -> true
+        else -> false
+    }
+
+    override fun createFixes() = listOf(this)
+
+    override fun getDescription() = "Implements members"
 
     override fun implement() {
         val doc = parserResult.snapshot.source.getDocument(false)
-        
-        val classOrObject: KtClassOrObject = PsiTreeUtil.getParentOfType(psi, KtClassOrObject::class.java, false) ?: return
-        
+
+        val classOrObject: KtClassOrObject = PsiTreeUtil.getParentOfType(kotlinError.psi, KtClassOrObject::class.java, false) ?: return
+
         val missingImplementations = collectMethodsToGenerate(classOrObject)
         if (missingImplementations.isEmpty()) return
-        
+
         doc.atomicChange {
             generateMethods(this, classOrObject, missingImplementations)
-            format(this, psi.textRange.startOffset)
+            format(this, kotlinError.psi.textRange.startOffset)
         }
     }
 
@@ -95,22 +105,22 @@ class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: P
         } else {
             removeWhitespaceAfterLBrace(body, document)
         }
-        
+
         val insertOffset = findLBraceEndOffset(document, classOrObject.textRange.startOffset)
         if (insertOffset == null) return
-        
+
         val generatedText = generateOverridingMembers(selectedElements, classOrObject, "\n")
                 .map { it.node.text }
                 .joinToString("\n", postfix = "\n")
-        
+
         document.insertString(insertOffset, generatedText, null)
-    }    
-    
+    }
+
     fun insertAfter(psi: PsiElement, text: String, doc: Document) {
         val end = psi.textRange.endOffset
         doc.insertString(end, text, null)
     }
-    
+
     private fun removeWhitespaceAfterLBrace(body: KtClassBody, document: Document) {
         val lBrace = body.lBrace ?: return
         val sibling = lBrace.nextSibling
@@ -128,7 +138,7 @@ class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: P
 
         return null
     }
-    
+
     fun DeclarationDescriptor.escapedName() = DescriptorRenderer.COMPACT.renderName(getName())
 
     public fun collectMethodsToGenerate(classOrObject: KtClassOrObject): Set<CallableMemberDescriptor> {
@@ -170,7 +180,7 @@ class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: P
 
         return whiteSpace
     }
-    
+
     private fun generateUnsupportedOrSuperCall(descriptor: CallableMemberDescriptor): String {
         val isAbstract = descriptor.modality == Modality.ABSTRACT
         if (isAbstract) {
@@ -207,7 +217,7 @@ class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: P
         }
         return KtPsiFactory(classOrObject.project).createProperty(OVERRIDE_RENDERER.render(newDescriptor) + body)
     }
-    
+
     private fun overrideFunction(classOrObject: KtClassOrObject,
                                  descriptor: FunctionDescriptor,
                                  lineDelimiter: String): KtNamedFunction {
@@ -225,7 +235,7 @@ class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: P
 
         return KtPsiFactory(classOrObject.project).createFunction(OVERRIDE_RENDERER.render(newDescriptor) + body)
     }
-    
+
     private fun generateOverridingMembers(selectedElements: Set<CallableMemberDescriptor>,
                                           classOrObject: KtClassOrObject,
                                           lineDelimiter: String): List<KtElement> {
@@ -239,10 +249,4 @@ class KotlinImplementMembersFix(val parserResult: KotlinParserResult, val psi: P
         }
         return overridingMembers
     }
-}
-
-fun KotlinError.createImplementMembersHint(parserResult: KotlinParserResult): Hint {
-        val fix = KotlinImplementMembersFix(parserResult, psi)
-        return Hint(KotlinRule(HintSeverity.ERROR), "Implement members", parserResult.snapshot.source.fileObject,
-                OffsetRange(startPosition, endPosition), listOf(fix), 10)
 }

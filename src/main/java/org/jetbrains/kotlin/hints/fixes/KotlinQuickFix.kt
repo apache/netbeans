@@ -16,37 +16,36 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.hints.fixes
 
-import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
-import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
-import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.hints.KotlinRule
 import org.netbeans.modules.csl.api.Hint
 import org.netbeans.modules.csl.api.HintFix
 import org.netbeans.modules.csl.api.HintSeverity
 import org.netbeans.modules.csl.api.OffsetRange
 
-class RemoveUselessElvisFix(kotlinError: KotlinError,
-                            parserResult: KotlinParserResult) : KotlinQuickFix(kotlinError, parserResult) {
+abstract class KotlinQuickFix(val kotlinError: KotlinError,
+                              val parserResult: KotlinParserResult) : HintFix {
+
+    private val PRIORITY = 10
     
-    override val hintSeverity = HintSeverity.WARNING
-
-    override fun isApplicable() = when (kotlinError.diagnostic.factory) {
-        Errors.USELESS_ELVIS,
-        Errors.USELESS_ELVIS_ON_LAMBDA_EXPRESSION,
-        Errors.USELESS_ELVIS_RIGHT_IS_NULL -> true
-        else -> false
-    }
-
-    override fun createFixes(): List<KotlinQuickFix> = listOf(this)
-
-    override fun getDescription() = "Remove useless elvis operator"
-
-    override fun implement() {
-        val doc = parserResult.snapshot.source.getDocument(false)
-
-        doc.remove(kotlinError.startPosition, kotlinError.endPosition - kotlinError.startPosition)
-    }
+    abstract val hintSeverity: HintSeverity
+    
+    override fun isSafe() = true
+    
+    override fun isInteractive() = false
+    
+    abstract fun isApplicable(): Boolean
+    
+    abstract fun createFixes(): List<KotlinQuickFix>
+    
+    fun createHint() = Hint(
+            KotlinRule(hintSeverity),
+            description,
+            parserResult.snapshot.source.fileObject,
+            OffsetRange(kotlinError.startPosition, kotlinError.endPosition),
+            createFixes(), 
+            PRIORITY
+    )
+    
 }

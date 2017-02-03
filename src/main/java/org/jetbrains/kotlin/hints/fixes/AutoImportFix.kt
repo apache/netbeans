@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtImportDirective
 import org.jetbrains.kotlin.psi.KtPackageDirective
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
+import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.resolve.lang.java.findFQName
 import org.jetbrains.kotlin.hints.KotlinRule
@@ -34,7 +35,7 @@ import org.netbeans.modules.csl.api.HintSeverity
 fun autoImport(fqName: String, doc: Document) {
     val file = ProjectUtils.getFileObjectForDocument(doc) ?: return
     val ktFile = ProjectUtils.getKtFile(doc.getText(0, doc.length), file) ?: return
-    
+
     insert(fqName, doc, ktFile)
 }
 
@@ -69,25 +70,35 @@ private fun getOffsetToInsert(importDirectives: List<KtImportDirective>, fqName:
     return null
 }
 
-fun KotlinError.createHintForUnresolvedReference(parserResult: KotlinParserResult): Hint {
-        val suggestions = parserResult.project.findFQName(psi.text)
-        val fixes = suggestions.map { KotlinAutoImportFix(it, parserResult) }
+class AutoImportFix(kotlinError: KotlinError,
+                    parserResult: KotlinParserResult) : KotlinQuickFix(kotlinError, parserResult) {
+    
+    private var fqName: String? = null
+    
+    constructor(kotlinError: KotlinError, 
+                parserResult: KotlinParserResult,
+                fqName: String) : this(kotlinError, parserResult) {
+        this.fqName = fqName
+    }
+    
+    override val hintSeverity = HintSeverity.ERROR
 
-        return Hint(KotlinRule(HintSeverity.ERROR), "Class not found", parserResult.snapshot.source.fileObject,
-                OffsetRange(startPosition, endPosition), fixes, 10)
+    override fun isApplicable() = when (kotlinError.diagnostic.factory) {
+        Errors.UNRESOLVED_REFERENCE -> true
+        else -> false
     }
 
-class KotlinAutoImportFix(val fqName: String, val parserResult: KotlinParserResult) : HintFix {
+    override fun createFixes(): List<KotlinQuickFix> {
+        val suggestions = parserResult.project.findFQName(kotlinError.psi.text)
+        return suggestions.map { AutoImportFix(kotlinError, parserResult, it) }
+    }
 
-    override fun getDescription() = "Add import for ${fqName}"
-    override fun isSafe() = true
-    override fun isInteractive() = false
+    override fun getDescription() = "Add import for $fqName"
 
     override fun implement() {
         val doc = parserResult.snapshot.source.getDocument(false)
         val ktFile = parserResult.ktFile
 
-        insert(fqName, doc, ktFile)
+        insert(fqName!!, doc, ktFile)
     }
-
 }

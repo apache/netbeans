@@ -88,6 +88,9 @@ class KotlinHintsProvider : HintsProvider {
                     Errors.UNRESOLVED_REFERENCE -> createHintForUnresolvedReference(parserResult)
                     Errors.ABSTRACT_MEMBER_NOT_IMPLEMENTED,
                     Errors.ABSTRACT_CLASS_MEMBER_NOT_IMPLEMENTED -> createImplementMembersHint(parserResult)
+                    Errors.USELESS_ELVIS,
+                    Errors.USELESS_ELVIS_ON_LAMBDA_EXPRESSION,
+                    Errors.USELESS_ELVIS_RIGHT_IS_NULL -> createRemoveUselessElvisFix(parserResult)
                     else -> null
                 }
 

@@ -80,7 +80,8 @@ class KotlinHintsProvider : HintsProvider {
         private fun KotlinError.listOfQuickFixes(parserResult: KotlinParserResult) = listOf(
                 RemoveUselessElvisFix(this, parserResult),
                 ImplementMembersFix(this, parserResult),
-                AutoImportFix(this, parserResult)
+                AutoImportFix(this, parserResult),
+                RemoveUselessCastFix(this, parserResult)
         ).filter(KotlinQuickFix::isApplicable)
         
         private val RuleContext.quickFixes

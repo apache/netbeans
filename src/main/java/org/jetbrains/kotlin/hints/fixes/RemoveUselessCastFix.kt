@@ -16,9 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.hints.fixes
 
-import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
-import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
 import org.jetbrains.kotlin.diagnostics.Errors
@@ -28,21 +25,19 @@ import org.netbeans.modules.csl.api.HintFix
 import org.netbeans.modules.csl.api.HintSeverity
 import org.netbeans.modules.csl.api.OffsetRange
 
-class RemoveUselessElvisFix(kotlinError: KotlinError,
-                            parserResult: KotlinParserResult) : KotlinQuickFix(kotlinError, parserResult) {
+class RemoveUselessCastFix(kotlinError: KotlinError,
+                           parserResult: KotlinParserResult) : KotlinQuickFix(kotlinError, parserResult) {
     
     override val hintSeverity = HintSeverity.WARNING
 
     override fun isApplicable() = when (kotlinError.diagnostic.factory) {
-        Errors.USELESS_ELVIS,
-        Errors.USELESS_ELVIS_ON_LAMBDA_EXPRESSION,
-        Errors.USELESS_ELVIS_RIGHT_IS_NULL -> true
+        Errors.USELESS_CAST -> true
         else -> false
     }
 
     override fun createFixes() = listOf(this)
 
-    override fun getDescription() = "Remove useless elvis operator"
+    override fun getDescription() = "Remove useless cast"
 
     override fun implement() {
         val doc = parserResult.snapshot.source.getDocument(false)

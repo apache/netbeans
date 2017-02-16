@@ -16,9 +16,11 @@
  ****************************************************************************** */
 package org.jetbrains.kotlin.file.templates.defaultwizard;
 
+import com.google.common.collect.Lists;
 import java.awt.Component;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +36,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
@@ -56,12 +59,30 @@ public abstract class KtDefaultWizardIterator implements WizardDescriptor.Instan
     private List<WizardDescriptor.Panel<WizardDescriptor>> panels;
 
     private List<WizardDescriptor.Panel<WizardDescriptor>> getPanels() {
-        Project project = Templates.getProject(wizard);
-        Sources sources = ProjectUtils.getSources(project);
-        SourceGroup[] groups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-        packageChooserPanel = PackageChooser.createPackageChooser(project, groups, new KtWizardPanel(), type + " name");
-
         if (panels == null) {
+            Project project = Templates.getProject(wizard);
+            SourceGroup[] groups;
+            
+            if (project == null) {
+                List<SourceGroup> sourceGroups = Lists.newArrayList();
+                                        
+                for (Project proj : OpenProjects.getDefault().getOpenProjects()) {
+                    Sources sources = ProjectUtils.getSources(proj);
+                    if (sources != null) {
+                        sourceGroups.addAll(Arrays.asList(
+                                sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)));
+                        project = proj;
+                        break;
+                    }
+                                    
+                }
+                groups = sourceGroups.toArray(new SourceGroup[sourceGroups.size()]);
+            } else {
+                Sources sources = ProjectUtils.getSources(project);
+                groups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+            }
+            packageChooserPanel = PackageChooser.createPackageChooser(project, groups, new KtWizardPanel(), type + " name");
+            
             panels = new ArrayList<>();
             panels.add(packageChooserPanel);
             String[] steps = createSteps();
@@ -83,6 +104,7 @@ public abstract class KtDefaultWizardIterator implements WizardDescriptor.Instan
                 }
             }
         }
+
         return panels;
     }
 
@@ -208,16 +230,20 @@ public abstract class KtDefaultWizardIterator implements WizardDescriptor.Instan
         }
 
         @Override
-        public void addChangeListener(ChangeListener l) {}
+        public void addChangeListener(ChangeListener l) {
+        }
 
         @Override
-        public void removeChangeListener(ChangeListener l) {}
+        public void removeChangeListener(ChangeListener l) {
+        }
 
         @Override
-        public void readSettings(WizardDescriptor wiz) {}
+        public void readSettings(WizardDescriptor wiz) {
+        }
 
         @Override
-        public void storeSettings(WizardDescriptor wiz) {}
+        public void storeSettings(WizardDescriptor wiz) {
+        }
     }
 
 }

@@ -41,6 +41,8 @@ class KotlinHighlightingAttributes private constructor() {
         val INTERFACE = withAttributes { styleKey = ColoringAttributes.INTERFACE }
         val CLASS = withAttributes { styleKey = ColoringAttributes.CLASS }
         val FUNCTION_DECLARATION = withAttributes { styleKey = ColoringAttributes.DECLARATION }
+        val SMART_CAST = withAttributes { styleKey = ColoringAttributes.CUSTOM1 }
+        
     }
     
 }

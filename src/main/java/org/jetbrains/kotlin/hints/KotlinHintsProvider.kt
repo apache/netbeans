@@ -74,7 +74,8 @@ class KotlinHintsProvider : HintsProvider {
                 RemoveEmptyClassBodyIntention(parserResult, psi),
                 RemoveEmptyParenthesesFromLambdaCallIntention(parserResult, psi),
                 RemoveEmptyPrimaryConstructorIntention(parserResult, psi),
-                RemoveEmptySecondaryConstructorIntention(parserResult, psi)
+                RemoveEmptySecondaryConstructorIntention(parserResult, psi),
+                ReplaceSizeCheckWithIsNotEmptyIntention(parserResult, psi)
         ).filter { it.isApplicable(psi.textRange.startOffset) }
 
         private fun KotlinError.listOfQuickFixes(parserResult: KotlinParserResult) = listOf(

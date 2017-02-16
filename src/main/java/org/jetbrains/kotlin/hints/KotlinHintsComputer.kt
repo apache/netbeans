@@ -49,7 +49,8 @@ class KotlinHintsComputer(val parserResult: KotlinParserResult) : KtVisitor<Unit
             RemoveEmptyClassBodyInspection(parserResult, this),
             ConvertToStringTemplateInspection(parserResult, this),
             ConvertTryFinallyToUseCallInspection(parserResult, this),
-            RemoveEmptySecondaryConstructorInspection(parserResult, this)
+            RemoveEmptySecondaryConstructorInspection(parserResult, this),
+            ReplaceSizeCheckWithIsNotEmptyInspection(parserResult, this)
     )
             .filter(Inspection::isApplicable)
             .map { it.hint(parserResult.snapshot.source.fileObject) }

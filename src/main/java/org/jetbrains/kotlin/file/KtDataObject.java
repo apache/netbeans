@@ -69,6 +69,11 @@ import org.openide.windows.TopComponent;
     ),
     @ActionReference(
             path = "Loaders/text/x-kt/Actions",
+            id = @ActionID(category = "Project", id = "org.netbeans.modules.project.ui.RunSingle"),
+            position = 550
+    ),
+    @ActionReference(
+            path = "Loaders/text/x-kt/Actions",
             id = @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
             position = 600
     ),

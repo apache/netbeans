@@ -24,6 +24,14 @@
         <folder name="text">
             <folder name="x-kt">
                 <folder name="Actions">
+<!--                    <file name="RunFile.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunSingle.instance"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                    <file name="org-netbeans-modules-debugger-ui-actions-DebugFileAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugFileAction.instance"/>
+                        <attr name="position" intvalue="1100"/>
+                    </file>-->
                     <file name="TestFile.shadow">
                         <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-TestSingle.instance"/>
                         <attr name="position" intvalue="1267"/>

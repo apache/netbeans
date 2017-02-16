@@ -31,6 +31,7 @@ import org.jetbrains.kotlin.file.templates.packagechooser.PackageChooser;
 import org.jetbrains.kotlin.file.templates.packagechooser.TargetChooserPanel;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.spi.project.ui.templates.support.Templates;
@@ -56,12 +57,12 @@ public abstract class KtDefaultWizardIterator implements WizardDescriptor.Instan
 
     private List<WizardDescriptor.Panel<WizardDescriptor>> getPanels() {
         Project project = Templates.getProject(wizard);
-        Sources sources = (Sources) project.getLookup().lookup(Sources.class);
+        Sources sources = ProjectUtils.getSources(project);
         SourceGroup[] groups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
         packageChooserPanel = PackageChooser.createPackageChooser(project, groups, new KtWizardPanel(), type + " name");
 
         if (panels == null) {
-            panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
+            panels = new ArrayList<>();
             panels.add(packageChooserPanel);
             String[] steps = createSteps();
             for (int i = 0; i < panels.size(); i++) {
@@ -87,7 +88,7 @@ public abstract class KtDefaultWizardIterator implements WizardDescriptor.Instan
 
     @Override
     public Set<?> instantiate() throws IOException {
-        Map<String, String> args = new HashMap<String, String>();
+        Map<String, String> args = new HashMap<>();
 
         String packageName = PackageChooser.pack;
         args.put("package", packageName);

@@ -9,7 +9,7 @@
   <properties> 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
     <netbeans.version>RELEASE82</netbeans.version>  
-    <kotlin.version>1.1.0-beta-17</kotlin.version> 
+    <kotlin.version>1.1.0-rc-84</kotlin.version> 
   </properties>  
   <name>Kotlin</name>  
   <description url="http://kotlinlang.org/">Kotlin language support</description>  
@@ -203,6 +203,14 @@
           <name>kotlin-repo</name>
           <url>http://dl.bintray.com/kotlin/kotlin-eap-1.1</url>
       </pluginRepository>
+      <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-kotlin-kotlin-dev</id>
+            <name>bintray-plugins</name>
+            <url>http://dl.bintray.com/kotlin/kotlin-dev</url>
+    </pluginRepository>
   </pluginRepositories>  
   <repositories> 
      
@@ -232,6 +240,14 @@
       <id>bintray-kotlin-kotlin-eap</id>
       <name>bintray</name>
       <url>http://dl.bintray.com/kotlin/kotlin-eap-1.1</url>
+    </repository>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>bintray-kotlin-kotlin-dev</id>
+      <name>bintray</name>
+      <url>http://dl.bintray.com/kotlin/kotlin-dev</url>
     </repository>
     <repository> 
       <id>local-maven-repo</id>  
@@ -276,15 +292,20 @@
       <version>1.0</version>  
       <type>jar</type> 
     </dependency>
-    
-    
     <dependency> 
       <groupId>org.jetbrains.kotlin</groupId>  
       <artifactId>asm</artifactId>  
       <version>1.0</version>  
       <type>jar</type> 
     </dependency>
-          
+    
+    <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-compiler</artifactId>
+        <version>${kotlin.version}</version>
+        <type>jar</type>
+    </dependency>
+                
     <dependency> 
       <groupId>org.netbeans.modules</groupId>  
       <artifactId>org-netbeans-modules-maven</artifactId>  
@@ -296,19 +317,7 @@
       <artifactId>org-netbeans-modules-maven-embedder</artifactId>  
       <version>${netbeans.version}</version>  
       <type>jar</type> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.jetbrains.kotlin</groupId>  
-      <artifactId>kotlin-maven-plugin</artifactId>  
-      <version>${kotlin.version}</version>  
-      <type>jar</type> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.jetbrains.kotlin</groupId>  
-      <artifactId>kotlin-test-junit</artifactId>  
-      <version>${kotlin.version}</version>  
-      <scope>test</scope> 
-    </dependency>  
+    </dependency>   
     <dependency> 
       <groupId>org.netbeans.api</groupId>  
       <artifactId>org-netbeans-modules-parsing-api</artifactId>  
@@ -584,12 +593,7 @@
       <groupId>dom4j</groupId>  
       <artifactId>dom4j</artifactId>  
       <version>1.6.1</version> 
-    </dependency>  
-    <dependency> 
-      <groupId>org.jetbrains.kotlin</groupId>  
-      <artifactId>kotlin-stdlib</artifactId>  
-      <version>${kotlin.version}</version> 
-    </dependency>  
+    </dependency>    
     <dependency> 
       <groupId>org.netbeans.api</groupId>  
       <artifactId>org-netbeans-modules-refactoring-api</artifactId>  

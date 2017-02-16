@@ -39,30 +39,30 @@ object KotlinUpdater {
     val KOTLIN_PLUGIN_VERSION = "0.1.2-beta"
     val USER_ID = "kotlin.userId"
     val pluginSite = "https://plugins.jetbrains.com/netbeans-plugins/kotlin/update?"
-    
+
     var updated = true
         private set
 
     @Synchronized fun checkUpdates() {
         if (updated) return
-        
+
         val params = getRequestParams()
         val url = URL(pluginSite + params)
-        
+
         val connection = url.openConnection()
         if (connection is HttpURLConnection) {
             try {
                 connection.setInstanceFollowRedirects(false)
                 connection.connect()
                 val responseCode = connection.responseCode
-                
+
                 if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP) {
                     val redirect = connection.getHeaderField("Location")
                     handleRedirect(redirect)
                 } else {
                     KotlinLogger.INSTANCE.logInfo("Response code: $responseCode")
                 }
-                
+
             } catch (e: IOException) {
                 KotlinLogger.INSTANCE.logInfo("Couldn't connect to $pluginSite")
             } finally {
@@ -70,23 +70,23 @@ object KotlinUpdater {
             }
         }
     }
-    
+
     private fun handleRedirect(redirect: String) {
         KotlinLogger.INSTANCE.logInfo("Redirect: $redirect")
         val url = URL("${redirect}/version.xml")
         val connection = url.openConnection()
-        
+
         if (connection is HttpURLConnection) {
             try {
                 connection.connect()
                 val responseCode = connection.responseCode
-                
+
                 if (responseCode == 200) {
                     updated = true
-                    
+
                     val latestVersion = getLatestVersion(connection.inputStream)
                     KotlinLogger.INSTANCE.logInfo("Latest version: $latestVersion. Installed version: $KOTLIN_PLUGIN_VERSION")
-                    
+
                     if (latestVersion != KOTLIN_PLUGIN_VERSION) {
                         showNotification(latestVersion)
                     }
@@ -98,29 +98,29 @@ object KotlinUpdater {
             }
         }
     }
-    
+
     private fun showNotification(latestVersion: String) {
         val message = "A new version ($latestVersion) of the Kotlin plugin is available"
-        val notifyDescriptor = NotifyDescriptor.Message(message, 
+        val notifyDescriptor = NotifyDescriptor.Message(message,
                 NotifyDescriptor.INFORMATION_MESSAGE)
         DialogDisplayer.getDefault().notifyLater(notifyDescriptor)
     }
-    
+
     private fun getLatestVersion(inputStream: InputStream): String {
         val text = BufferedInputStream(inputStream).bufferedReader(Charset.defaultCharset()).readText()
         val document = SAXReader().read(StringReader(text))
-        
+
         return document.rootElement.text
     }
-    
+
     private fun getRequestParams(): String {
-        val os = URLEncoder.encode(SystemInfo.OS_NAME + " " + SystemInfo.OS_VERSION, "UTF-8")
+        val os = URLEncoder.encode("${SystemInfo.OS_NAME} ${SystemInfo.OS_VERSION}", "UTF-8")
         val userId = getUserID()
         val netbeansVersion = getNetBeansVersion()
-        
+
         return "build=$netbeansVersion&pluginVersion=$KOTLIN_PLUGIN_VERSION&os=$os&uuid=$userId"
     }
-    
+
     private fun getUserID(): Long {
         val userId = NbPreferences.root().getLong(USER_ID, 0L)
         if (userId == 0L) {
@@ -128,14 +128,14 @@ object KotlinUpdater {
             NbPreferences.root().putLong(USER_ID, generated)
             return generated
         }
-        
+
         return userId
     }
-    
+
     private fun getNetBeansVersion(): String {
         val info = Modules.getDefault().ownerOf(Modules::class.java)
-        
+
         return info?.buildVersion ?: "-1"
     }
-    
+
 }

@@ -31,19 +31,19 @@ import org.openide.util.ImageUtilities
 
 class KotlinClassStructureItem(private val psiElement: KtClass,
                                private val isLeaf: Boolean) : StructureItem {
-    
+
     override fun getName(): String {
         val className = psiElement.name
         val superType = StringBuilder()
-        
+
         psiElement.getSuperTypeListEntries().forEach {
-            superType.append(it.text).append(",")           
+            superType.append(it.text).append(",")
         }
-        if (superType.length > 0) superType.deleteCharAt(superType.length - 1)
-        
+        if (superType.isNotEmpty()) superType.deleteCharAt(superType.length - 1)
+
         return "${className}::${superType.toString()}"
     }
-    
+
     override fun getSortText() = psiElement.name
     override fun getHtml(formatter: HtmlFormatter) = name
     override fun getElementHandle() = null
@@ -53,7 +53,7 @@ class KotlinClassStructureItem(private val psiElement: KtClass,
     override fun getPosition() = psiElement.textRange.startOffset.toLong()
     override fun getEndPosition() = psiElement.textRange.endOffset.toLong()
     override fun getCustomIcon() = ImageIcon(ImageUtilities.loadImage("org/jetbrains/kotlin/completionIcons/class.png"))
-    
+
     override fun getNestedItems() = psiElement.declarations.map {
         when (it) {
             is KtClass -> KotlinClassStructureItem(it, true)
@@ -62,5 +62,5 @@ class KotlinClassStructureItem(private val psiElement: KtClass,
             else -> null
         }
     }.filterNotNull()
-    
+
 }

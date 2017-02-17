@@ -64,30 +64,8 @@ class KotlinStructureScanner : StructureScanner {
         if (ProjectUtils.getKotlinProjectForFileObject(file) == null) return emptyMap()
         
         val ktFile = ProjectUtils.getKtFile(file) ?: return emptyMap()
-        val elements: Collection<PsiElement> = PsiTreeUtil.findChildrenOfAnyType(ktFile, 
-                KtImportList::class.java, PsiCoreCommentImpl::class.java, 
-                KtNamedFunction::class.java)
         
-        val comments = arrayListOf<OffsetRange>()
-        val imports = arrayListOf<OffsetRange>()
-        val functions = arrayListOf<OffsetRange>()
-        
-        for (it in elements) {
-            val start = getStartOffset(it)
-            val end  = it.textRange.endOffset
-            if (start >= end) continue
-            
-            val range = OffsetRange(start, end)
-            when (it) {
-                is PsiCoreCommentImpl -> comments.add(range)
-                is KtNamedFunction -> functions.add(range)
-                is KtImportList -> imports.add(range)
-            }
-        }
-        
-        return mapOf("comments" to comments, 
-                "codeblocks" to functions,
-                "imports" to imports)
+        return KotlinFoldingVisitor(ktFile).computeFolds()
     }
     
 }

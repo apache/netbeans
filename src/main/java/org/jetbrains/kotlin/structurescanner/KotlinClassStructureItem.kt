@@ -17,11 +17,7 @@
 package org.jetbrains.kotlin.structurescanner
 
 import javax.swing.ImageIcon
-import org.jetbrains.kotlin.psi.KtClass
-import org.jetbrains.kotlin.psi.KtDeclaration
-import org.jetbrains.kotlin.psi.KtNamedFunction
-import org.jetbrains.kotlin.psi.KtProperty
-import org.jetbrains.kotlin.psi.KtSuperTypeListEntry
+import org.jetbrains.kotlin.psi.*
 import org.netbeans.modules.csl.api.ElementHandle
 import org.netbeans.modules.csl.api.ElementKind
 import org.netbeans.modules.csl.api.HtmlFormatter
@@ -29,19 +25,16 @@ import org.netbeans.modules.csl.api.Modifier
 import org.netbeans.modules.csl.api.StructureItem
 import org.openide.util.ImageUtilities
 
-class KotlinClassStructureItem(private val psiElement: KtClass,
+class KotlinClassStructureItem(private val psiElement: KtClassOrObject,
                                private val isLeaf: Boolean) : StructureItem {
 
     override fun getName(): String {
         val className = psiElement.name
-        val superType = StringBuilder()
-
-        psiElement.getSuperTypeListEntries().forEach {
-            superType.append(it.text).append(",")
+        val superTypes = psiElement.superTypeListEntries.let {
+            if (it.isNotEmpty()) it.joinToString(prefix = "::") { it.text } else ""
         }
-        if (superType.isNotEmpty()) superType.deleteCharAt(superType.length - 1)
 
-        return "${className}::${superType.toString()}"
+        return "$className$superTypes"
     }
 
     override fun getSortText() = psiElement.name

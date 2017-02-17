@@ -16,8 +16,10 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.structurescanner
 
+import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
+import com.intellij.psi.util.PsiTreeUtil
 import javax.swing.ImageIcon
 import org.jetbrains.kotlin.psi.KtNamedFunction
 import org.jetbrains.kotlin.psi.KtParameter
@@ -32,31 +34,30 @@ class KotlinFunctionStructureItem(private val function: KtNamedFunction,
                                   private val isLeaf: Boolean) : StructureItem {
 
     override fun getName(): String {
-        val builder = StringBuilder()
-        builder.append(function.name).append("(")
-        val valueParameters = function.valueParameters
+        val name = function.name
+        val valueParameters = function.valueParameters.joinToString(prefix = "(", postfix = ")") { it.text }
         
-        valueParameters.forEach { builder.append(it.text).append(",") }
-        if (valueParameters.isNotEmpty()) builder.deleteCharAt(builder.length - 1)
-        builder.append(")")
+        val receiver = function.receiverTypeReference?.text?.let { "$it." } ?: ""
         
-        val colon = function.colon ?: return builder.toString()
-        var returnType = colon.nextSibling
-        if (returnType is PsiWhiteSpace) returnType = returnType.nextSibling
-        builder.append(" : ").append(returnType.text)
+        val returnType = function.colon?.let {
+            val sibling = PsiTreeUtil.skipSiblingsForward(it, PsiWhiteSpace::class.java, PsiComment::class.java)
+            if (sibling != null) {
+                ": ${sibling.text}"
+            } else ""
+        } ?: ""
         
-        return builder.toString()
+        return "$receiver$name$valueParameters$returnType"
     }
-    
+
     override fun getSortText() = function.name
     override fun getHtml(formatter: HtmlFormatter) = name
     override fun getElementHandle() = null
     override fun getKind() = ElementKind.METHOD
     override fun getModifiers() = emptySet<Modifier>()
-    override fun isLeaf() = isLeaf 
+    override fun isLeaf() = isLeaf
     override fun getNestedItems() = listOf<StructureItem>()
     override fun getPosition() = function.textRange.startOffset.toLong()
     override fun getEndPosition() = function.textRange.endOffset.toLong()
     override fun getCustomIcon() = ImageIcon(ImageUtilities.loadImage("org/jetbrains/kotlin/completionIcons/method.png"))
-    
+
 }

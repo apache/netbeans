@@ -25,22 +25,11 @@ import org.netbeans.modules.csl.api.StructureScanner
 import org.netbeans.modules.csl.spi.ParserResult
 import org.openide.filesystems.FileObject
 import org.jetbrains.kotlin.utils.ProjectUtils
-import org.jetbrains.kotlin.psi.KtClass
-import org.jetbrains.kotlin.psi.KtDeclaration
-import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.psi.KtImportList
-import org.jetbrains.kotlin.psi.KtNamedFunction
-import org.jetbrains.kotlin.psi.KtProperty
+import org.jetbrains.kotlin.psi.*
 import org.netbeans.modules.csl.api.StructureScanner.Configuration
 
 class KotlinStructureScanner : StructureScanner {
 
-    private fun getStartOffset(elem: PsiElement) = when (elem) {
-        is KtNamedFunction -> elem.textRange.startOffset + elem.text.split("\\{")[0].length
-        is KtImportList -> elem.textRange.startOffset + "import ".length
-        else -> elem.textRange.startOffset
-    }
-    
     override fun getConfiguration() = Configuration(true, true)
     
     override fun scan(info: ParserResult): List<StructureItem> {
@@ -49,14 +38,14 @@ class KotlinStructureScanner : StructureScanner {
         
         val ktFile = ProjectUtils.getKtFile(file) ?: return emptyList()
         
-        return ktFile.declarations.map {
+        return ktFile.declarations.mapNotNull {
             when(it) {
-                is KtClass -> KotlinClassStructureItem(it, false)
+                is KtClassOrObject -> KotlinClassStructureItem(it, false)
                 is KtNamedFunction -> KotlinFunctionStructureItem(it, false)
                 is KtProperty -> KotlinPropertyStructureItem(it, false)
                 else -> null
             }
-        }.filterNotNull()
+        }
     }
     
     override fun folds(info: ParserResult): Map<String, List<OffsetRange>> {

@@ -29,12 +29,10 @@ class KotlinPropertyStructureItem(private val property: KtProperty,
                                   private val isLeaf: Boolean) : StructureItem {
 
     override fun getName(): String {
-        val builder = StringBuilder()
-        builder.append(property.name)
-        val typeReference = property.typeReference?.text ?: return builder.toString()
-        builder.append(" : ").append(typeReference)
+        val name = property.name
+        val type = property.typeReference?.text?.let { ": $it" } ?: ""
         
-        return builder.toString()
+        return "$name$type"
     } 
     
     override fun getSortText() = property.name

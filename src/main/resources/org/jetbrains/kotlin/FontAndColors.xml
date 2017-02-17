@@ -38,5 +38,6 @@
     <fontcolor name="mod-deprecated" strikeThrough="404040" />
     <fontcolor name="mark-occurrences" bgColor="ECEBA3"/>
     <fontcolor name="mod-custom1" bgColor="CCFFCC"/>
+    <fontcolor name="mod-custom2" underline="black"/>
     
 </fontscolors>

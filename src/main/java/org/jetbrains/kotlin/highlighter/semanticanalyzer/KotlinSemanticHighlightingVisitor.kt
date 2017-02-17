@@ -65,17 +65,12 @@ class KotlinSemanticHighlightingVisitor(val ktFile: KtFile,
 
     private fun highlight(styleAttributes: KotlinHighlightingAttributes, range: TextRange) {
         val offsetRange = OffsetRange(range.startOffset, range.endOffset)
-        positions.put(offsetRange, hashSetOf(styleAttributes.styleKey))
+        positions.put(offsetRange, styleAttributes.styleKey)
     }
 
     private fun highlight(styleAttributes: Set<ColoringAttributes>, range: TextRange) {
         val offsetRange = OffsetRange(range.startOffset, range.endOffset)
         positions.put(offsetRange, styleAttributes)
-    }
-    
-    private fun highlightSmartCast(range: TextRange, typeName: String) {
-        val offsetRange = OffsetRange(range.startOffset, range.endOffset)
-        positions.put(offsetRange, hashSetOf(KotlinHighlightingAttributes.SMART_CAST.styleKey))
     }
 
     override fun visitElement(element: PsiElement) = element.acceptChildren(this)
@@ -108,7 +103,11 @@ class KotlinSemanticHighlightingVisitor(val ktFile: KtFile,
     }
 
     override fun visitClassOrObject(classOrObject: KtClassOrObject) {
-        val identifier = classOrObject.nameIdentifier ?: return
+        val identifier = classOrObject.nameIdentifier
+        if (identifier == null) {
+            classOrObject.acceptChildren(this)
+            return
+        }
         val classDescriptor = bindingContext.get(BindingContext.CLASS, classOrObject)
         if (classDescriptor != null) {
             highlightClassDescriptor(identifier, classDescriptor)
@@ -191,8 +190,8 @@ class KotlinSemanticHighlightingVisitor(val ktFile: KtFile,
             if (mutable) KotlinHighlightingAttributes.FIELD else KotlinHighlightingAttributes.FINAL_FIELD
         
         }
-        val styleAttributes = hashSetOf(attributes.styleKey)
-        if (typeName != null) styleAttributes.add(KotlinHighlightingAttributes.SMART_CAST.styleKey)
+        val styleAttributes = attributes.styleKey.toMutableSet()
+        if (typeName != null) styleAttributes.addAll(KotlinHighlightingAttributes.SMART_CAST.styleKey)
                
         highlight(styleAttributes, range)
     }
@@ -213,8 +212,8 @@ class KotlinSemanticHighlightingVisitor(val ktFile: KtFile,
 
             else -> KotlinHighlightingAttributes.LOCAL_VARIABLE
         }
-        val styleAttributes = hashSetOf(attributes.styleKey)
-        if (typeName != null) styleAttributes.add(KotlinHighlightingAttributes.SMART_CAST.styleKey)
+        val styleAttributes = attributes.styleKey.toMutableSet()
+        if (typeName != null) styleAttributes.addAll(KotlinHighlightingAttributes.SMART_CAST.styleKey)
                
         highlight(styleAttributes, element.textRange)
     }

@@ -24,6 +24,8 @@ import com.sun.javadoc.Doc;
 import java.util.Set;
 import javax.swing.text.Document;
 import kotlin.Pair;
+import org.jetbrains.kotlin.psi.*;
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
 import org.jetbrains.kotlin.navigation.NavigationUtilKt;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.kotlin.descriptors.SourceElement;
@@ -97,10 +99,13 @@ public class KotlinHyperlinkProvider implements HyperlinkProviderExt {
 
     @Override
     public String getTooltipText(Document doc, int offset, HyperlinkType type) {
+        String smartCast = HoverUtilsKt.getSmartCastHover(offset);
+        if (smartCast != null) return smartCast;
+        
         if (referenceExpression == null) {
             return "";
         }
-
+        
         FileObject file = ProjectUtils.getFileObjectForDocument(doc);
         if (file == null) {
             return "";
@@ -110,7 +115,7 @@ public class KotlinHyperlinkProvider implements HyperlinkProviderExt {
         if (project == null) {
             return "";
         }
-
+        
         NavigationData navigationData = OpenDeclarationKt.getNavigationData(referenceExpression, project);
         if (navigationData == null) {
             return "";

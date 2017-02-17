@@ -33,15 +33,17 @@ class KotlinHintsComputer(val parserResult: KotlinParserResult) : KtVisitor<Unit
     val hints = arrayListOf<Hint>()
     
     override fun visitKtFile(ktFile: KtFile, data: Unit?) {
-        ktFile.children.forEach {
-            it.accept(this)
-        }
+        ktFile.acceptChildren(this)
     }
     
     override fun visitKtElement(element: KtElement, data: Unit?) {
         hints.addAll(element.inspections())
         
-        element.children.forEach { it.accept(this) }
+        element.acceptChildren(this)
+    }
+    
+    override fun visitSimpleNameExpression(expression: KtSimpleNameExpression, data: Unit?) {
+        getSmartCastHover(expression, parserResult)?.let { hints.add(it) }
     }
     
     private fun KtElement.inspections() = listOf(

@@ -133,6 +133,7 @@ class KotlinHintsProvider : HintsProvider {
                 intentions.flatMap { it }
                         .distinctBy { it.description }
         )
+        
     }
 
     override fun computeHints(hintsManager: HintsManager, ruleContext: RuleContext, hints: MutableList<Hint>) {

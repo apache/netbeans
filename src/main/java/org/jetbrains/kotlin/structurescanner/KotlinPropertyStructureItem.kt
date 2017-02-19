@@ -18,6 +18,8 @@ package org.jetbrains.kotlin.structurescanner
 
 import javax.swing.ImageIcon
 import org.jetbrains.kotlin.psi.KtProperty
+import org.jetbrains.kotlin.resolve.BindingContext
+import org.jetbrains.kotlin.descriptors.VariableDescriptor
 import org.netbeans.modules.csl.api.ElementHandle
 import org.netbeans.modules.csl.api.ElementKind
 import org.netbeans.modules.csl.api.HtmlFormatter
@@ -26,11 +28,17 @@ import org.netbeans.modules.csl.api.StructureItem
 import org.openide.util.ImageUtilities
 
 class KotlinPropertyStructureItem(private val property: KtProperty,
-                                  private val isLeaf: Boolean) : StructureItem {
+                                  private val isLeaf: Boolean,
+                                  private val context: BindingContext) : StructureItem {
 
     override fun getName(): String {
         val name = property.name
-        val type = property.typeReference?.text?.let { ": $it" } ?: ""
+        val type = property.typeReference?.text?.let { ": $it" } ?: 
+                (context[BindingContext.DECLARATION_TO_DESCRIPTOR, property] as? VariableDescriptor)
+                        ?.let { 
+                            it.type.takeIf { it.toString() != "Unit" }
+                                    ?.let { ": $it" } 
+                        } ?: ""
         
         return "$name$type"
     } 

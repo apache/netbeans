@@ -18,6 +18,7 @@ package org.jetbrains.kotlin.structurescanner
 
 import javax.swing.ImageIcon
 import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.resolve.BindingContext
 import org.netbeans.modules.csl.api.ElementHandle
 import org.netbeans.modules.csl.api.ElementKind
 import org.netbeans.modules.csl.api.HtmlFormatter
@@ -26,7 +27,8 @@ import org.netbeans.modules.csl.api.StructureItem
 import org.openide.util.ImageUtilities
 
 class KotlinClassStructureItem(private val psiElement: KtClassOrObject,
-                               private val isLeaf: Boolean) : StructureItem {
+                               private val isLeaf: Boolean,
+                               private val context: BindingContext) : StructureItem {
 
     override fun getName(): String {
         val className = psiElement.name
@@ -49,9 +51,9 @@ class KotlinClassStructureItem(private val psiElement: KtClassOrObject,
 
     override fun getNestedItems() = psiElement.declarations.map {
         when (it) {
-            is KtClass -> KotlinClassStructureItem(it, true)
-            is KtNamedFunction -> KotlinFunctionStructureItem(it, true)
-            is KtProperty -> KotlinPropertyStructureItem(it, true)
+            is KtClass -> KotlinClassStructureItem(it, true, context)
+            is KtNamedFunction -> KotlinFunctionStructureItem(it, true, context)
+            is KtProperty -> KotlinPropertyStructureItem(it, true, context)
             else -> null
         }
     }.filterNotNull()

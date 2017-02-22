@@ -67,6 +67,13 @@ fun findKotlinFileToNavigate(element: ElementHandle<*>?, project: Project?, doc:
     val ktFiles = ProjectUtils.getSourceFiles(project)
 
     ktFiles.forEach {
+        if (element.kind == ElementKind.CLASS) {
+            val fqName = NoResolveFileClassesProvider.getFileClassInfo(it).fileClassFqName
+            if (fqName.asString() == element.qualifiedName) {
+                return Pair(it, 0)
+            }
+        }
+        
         val ktElement = findKotlinDeclaration(element, it, doc)
         if (ktElement != null) {
             val offset = ktElement.textOffset
@@ -92,7 +99,7 @@ private fun makeVisitor(element: ElementHandle<*>, result: MutableList<KtElement
         ElementKind.CLASS,
         ElementKind.INTERFACE,
         ElementKind.ENUM -> return object : KtAllVisitor() {
-
+            
             override fun visitClassOrObject(ktClassOrObject: KtClassOrObject) {
                 val fqName = ktClassOrObject.fqName?.asString() ?: ""
                 if (fqName.equals(element.getQualifiedName())) {

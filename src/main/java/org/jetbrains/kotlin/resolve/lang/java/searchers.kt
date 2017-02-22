@@ -119,7 +119,7 @@ class ElementSearcher(val offset: Int) : Task<CompilationController> {
         val treePath = info.treeUtilities.pathFor(offset)
         val elem = info.trees.getElement(treePath) ?: return
 
-        element = ElementHandle.create(elem)
+        if (elem.kind != ElementKind.LOCAL_VARIABLE) element = ElementHandle.create(elem)
     }
 }
 

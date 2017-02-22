@@ -67,7 +67,6 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
         }
         
         try {
-            
             Method method = clazz.getMethod("getHyperlinkSpan", Document.class, int.class, HyperlinkType.class);
             return (int[]) method.invoke(object, doc, offset, type);
         } catch (ReflectiveOperationException ex) {
@@ -83,7 +82,6 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
         }
         
         try {
-            
             Method method = clazz.getMethod("getTooltipText", Document.class, int.class, HyperlinkType.class);
             return (String) method.invoke(object, doc, offset, type);
         } catch (ReflectiveOperationException ex) {
@@ -99,7 +97,6 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
         }
         
         try {
-            
             Method method = clazz.getMethod("performClickAction", Document.class, int.class, HyperlinkType.class);
             method.invoke(object, doc, offset, type);
         } catch (ReflectiveOperationException ex) {

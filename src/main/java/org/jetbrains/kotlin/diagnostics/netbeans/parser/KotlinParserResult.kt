@@ -18,6 +18,7 @@ package org.jetbrains.kotlin.diagnostics.netbeans.parser
 
 import com.intellij.psi.PsiErrorElement
 import org.jetbrains.kotlin.diagnostics.Diagnostic
+import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.resolve.AnalyzingUtils
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
@@ -42,6 +43,7 @@ class KotlinParserResult(snapshot: Snapshot,
             addAll(
                     analysisResult.analysisResult.bindingContext.diagnostics.all()
                             .filter { it.psiFile.virtualFile.path == file.path }
+                            .filter { it.factory != Errors.DEPRECATION }
                             .map { KotlinError(it, file) }
             )
         }

@@ -51,7 +51,7 @@ class KotlinHighlightingAttributes private constructor() {
         val CLASS = withAttributes { styleKey = setOf(ColoringAttributes.CLASS) }
         val FUNCTION_DECLARATION = withAttributes { styleKey = setOf(ColoringAttributes.DECLARATION) }
         val SMART_CAST = withAttributes { styleKey = setOf(ColoringAttributes.CUSTOM1) }
-        
+        val DEPRECATED = withAttributes { styleKey = setOf(ColoringAttributes.DEPRECATED) }
     }
     
 }

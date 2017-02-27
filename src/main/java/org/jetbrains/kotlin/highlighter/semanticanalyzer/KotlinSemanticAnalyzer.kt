@@ -17,6 +17,7 @@
 package org.jetbrains.kotlin.highlighter.semanticanalyzer
 
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
+import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.isScanning
 import org.netbeans.modules.csl.api.ColoringAttributes
 import org.netbeans.modules.csl.api.OffsetRange
@@ -28,6 +29,13 @@ class KotlinSemanticAnalyzer : SemanticAnalyzer<KotlinParserResult>() {
     
     private var cancel = false
     private val highlighting = hashMapOf<OffsetRange, Set<ColoringAttributes>>()
+    
+    private fun highlightDeprecatedElements(result: KotlinParserResult) = 
+            result.analysisResult?.analysisResult?.bindingContext?.diagnostics
+                    ?.filter { it.factory == Errors.DEPRECATION }
+                    ?.map { OffsetRange(it.textRanges.first().startOffset,
+                            it.textRanges.first().endOffset) }
+                    ?.forEach { highlighting.put(it, KotlinHighlightingAttributes.DEPRECATED.styleKey) }
     
     override fun getPriority() = 999
 
@@ -44,6 +52,8 @@ class KotlinSemanticAnalyzer : SemanticAnalyzer<KotlinParserResult>() {
         
         val highlightingVisitor = KotlinSemanticHighlightingVisitor(result.ktFile, analysisResult)
         highlighting.putAll(highlightingVisitor.computeHighlightingRanges())
+        
+        highlightDeprecatedElements(result)
     }
 
     override fun cancel() {

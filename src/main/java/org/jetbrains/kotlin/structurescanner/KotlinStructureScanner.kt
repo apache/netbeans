@@ -39,7 +39,7 @@ class KotlinStructureScanner : StructureScanner {
         
         val ktFile = ProjectUtils.getKtFile(file) ?: return emptyList()
         
-        val context = (info as KotlinParserResult).analysisResult!!.analysisResult.bindingContext
+        val context = (info as KotlinParserResult).analysisResult?.analysisResult?.bindingContext ?: return emptyList()
         
         return ktFile.declarations.mapNotNull {
             when(it) {

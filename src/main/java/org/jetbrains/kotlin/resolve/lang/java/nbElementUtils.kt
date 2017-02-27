@@ -29,6 +29,7 @@ import org.netbeans.api.java.source.ClasspathInfo
 import org.netbeans.api.java.source.CompilationController
 import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.java.source.JavaSource
+import org.netbeans.api.java.source.SourceUtils
 import org.netbeans.api.java.source.Task
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.java.source.ui.ElementOpen
@@ -72,6 +73,8 @@ object JavaEnvironment {
     }
 
 }
+
+fun ElementHandle<*>.getFileObject(project: Project) = SourceUtils.getFile(this, JavaEnvironment.JAVA_SOURCE[project]!!.classpathInfo)
 
 fun String.getPackages(project: Project): Set<String> {
     JavaEnvironment.checkJavaSource(project)

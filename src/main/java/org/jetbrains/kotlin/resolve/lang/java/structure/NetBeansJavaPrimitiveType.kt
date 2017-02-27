@@ -30,13 +30,13 @@ import javax.lang.model.type.TypeMirror
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaPrimitiveType(handle : TypeMirrorHandle<*>, project : Project) : 
+class NetBeansJavaPrimitiveType(handle: TypeMirrorHandle<*>, project: Project) :
         NetBeansJavaType(handle, project), JavaPrimitiveType {
 
-    override val type : PrimitiveType? 
+    override val type: PrimitiveType?
         get() {
             val text = handle.getName(project)
-            return if ("void".equals(text)) null else JvmPrimitiveType.get(text).primitiveType
+            return if ("void" == text) null else JvmPrimitiveType.get(text).primitiveType
         }
-    
+
 }

@@ -28,10 +28,10 @@ import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
   Created on Aug 26, 2016
 */
 
-class NetBeansJavaSourceElement(override val javaElement : JavaElement) : JavaSourceElement {
+class NetBeansJavaSourceElement(override val javaElement: JavaElement) : JavaSourceElement {
 
-    override fun getContainingFile() : SourceFile = SourceFile.NO_SOURCE_FILE
+    override fun getContainingFile() = SourceFile.NO_SOURCE_FILE
     
-    fun getElementBinding() : ElemHandle<*> = (javaElement as NetBeansJavaElement<*>).elementHandle
+    fun getElementBinding() = (javaElement as NetBeansJavaElement<*>).elementHandle
     
 }

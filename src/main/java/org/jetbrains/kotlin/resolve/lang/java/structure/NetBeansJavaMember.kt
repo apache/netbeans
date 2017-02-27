@@ -32,23 +32,23 @@ import javax.lang.model.element.Element
   Created on Aug 29, 2016
 */
 
-abstract class NetBeansJavaMember<T: Element>(elementHandle : ElemHandle<T>, override val containingClass : JavaClass, project : Project) : 
+abstract class NetBeansJavaMember<T : Element>(elementHandle: ElemHandle<T>, override val containingClass: JavaClass, project: Project) :
         NetBeansJavaElement<T>(elementHandle, project), JavaMember {
-    
-    override val annotations : Collection<JavaAnnotation>
+
+    override val annotations: Collection<JavaAnnotation>
         get() = elementHandle.getAnnotations(project)
 
-    override val visibility : Visibility 
+    override val visibility: Visibility
         get() = elementHandle.getVisibility(project)
-    
-    override val name : Name
+
+    override val name: Name
         get() = elementHandle.getName(project)
-    
-    override val isDeprecatedInJavaDoc : Boolean = elementHandle.isDeprecated(project)
-    override val isAbstract : Boolean = elementHandle.isAbstract(project)
-    override val isStatic : Boolean = elementHandle.isStatic(project)
-    override val isFinal : Boolean = elementHandle.isFinal(project)
-    
-    override fun findAnnotation(fqName : FqName) : JavaAnnotation? = elementHandle.getAnnotation(project, fqName)
-    
+
+    override val isDeprecatedInJavaDoc: Boolean = elementHandle.isDeprecated(project)
+    override val isAbstract: Boolean = elementHandle.isAbstract(project)
+    override val isStatic: Boolean = elementHandle.isStatic(project)
+    override val isFinal: Boolean = elementHandle.isFinal(project)
+
+    override fun findAnnotation(fqName: FqName): JavaAnnotation? = elementHandle.getAnnotation(project, fqName)
+
 }

@@ -29,7 +29,6 @@ import org.jetbrains.kotlin.name.FqName
 
 class NetBeansExternalAnnotationResolver : ExternalAnnotationResolver {
 
-    override fun findExternalAnnotation(owner : JavaAnnotationOwner, 
-                                        fqName : FqName) : JavaAnnotation? = null
+    override fun findExternalAnnotation(owner: JavaAnnotationOwner, fqName: FqName) = null
     
 }

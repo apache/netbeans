@@ -44,7 +44,7 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import javax.swing.text.Document
 import org.netbeans.modules.csl.api.ElementKind
 
-class KotlinCompletionProposal(val idenStartOffset: Int, caretOffset: Int,
+class KotlinCompletionProposal(val idenStartOffset: Int,
                                val descriptor: DeclarationDescriptor, val doc: StyledDocument,
                                val prefix: String, val project: Project) : DefaultCompletionProposal(), InsertableProposal {
 

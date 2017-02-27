@@ -163,7 +163,7 @@ class KotlinSemanticHighlightingVisitor(val ktFile: KtFile,
 
     private fun highlightAnnotation(expression: PsiElement) {
         var range = expression.textRange
-        val annotationEntry = PsiTreeUtil.getParentOfType(expression, KtAnnotationEntry::class.java,
+        val annotationEntry = PsiTreeUtil.getParentOfType<KtAnnotationEntry>(expression, KtAnnotationEntry::class.java,
                 false, KtValueArgumentList::class.java)
 
         if (annotationEntry != null) {

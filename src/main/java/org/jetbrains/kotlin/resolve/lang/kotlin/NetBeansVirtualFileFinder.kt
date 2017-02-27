@@ -49,10 +49,10 @@ import org.openide.filesystems.FileSystem
 
 class NetBeansVirtualFileFinder(private val project: Project,
                                 private val scope: GlobalSearchScope) : VirtualFileKotlinClassFinder() {
-   
+
     val index: JvmDependenciesIndex
         get() = KotlinEnvironment.getEnvironment(project).index
-    
+
     private fun isClassFileName(name: String?): Boolean {
         if (name == null) return false
 
@@ -82,11 +82,11 @@ class NetBeansVirtualFileFinder(private val project: Project,
             StringBuilder(fqName.substring(0,
                     fqName.length - className.length - 1).replace(".", "/"))
                     .append("$").append(className).append(".class").toString()
-        } else classId.asSingleFqName().asString().replace(".", "/") + ".class"
+        } else "${classId.asSingleFqName().asString().replace(".", "/")}.class"
 
         val resource = proxy?.findResource(classFqName) ?: return if (isClassFileName(classFqName)) {
             KotlinEnvironment.getEnvironment(project).getVirtualFile(classFqName)
-        } else throw IllegalArgumentException("Virtual file not found for " + classFqName)
+        } else throw IllegalArgumentException("Virtual file not found for $classFqName")
 
         val path = resource.toURL().path
         if (path.contains("!/")) {
@@ -104,22 +104,22 @@ class NetBeansVirtualFileFinder(private val project: Project,
 
         if (isClassFileName(path)) {
             return KotlinEnvironment.Companion.getEnvironment(project).getVirtualFile(path)
-        } else throw IllegalArgumentException("Virtual file not found for " + path)
+        } else throw IllegalArgumentException("Virtual file not found for $path")
     }
 
     private fun classFileName(jClass: JavaClass): String {
         val outerClass = jClass.outerClass ?: return jClass.name.asString()
 
-        return classFileName(outerClass) + "$" + jClass.name.asString()
+        return "${classFileName(outerClass)}$${jClass.name.asString()}"
     }
 
     override fun findKotlinClass(javaClass: JavaClass): KotlinJvmBinaryClass? {
-        val fqName = javaClass.fqName ?: return null
+        javaClass.fqName ?: return null
         val classId = (javaClass as NetBeansJavaClassifier<TypeElement>).elementHandle.computeClassId(project) ?: return null
         var file: VirtualFile? = findVirtualFileWithHeader(classId) ?: return null
 
         if (javaClass.outerClass != null) {
-            val classFileName = classFileName(javaClass) + ".class"
+            val classFileName = "${classFileName(javaClass)}.class"
             file = file!!.parent.findChild(classFileName)
             if (file != null) {
                 throw IllegalStateException("Virtual file not found")
@@ -127,13 +127,13 @@ class NetBeansVirtualFileFinder(private val project: Project,
         }
         return KotlinBinaryClassCache.Companion.getKotlinBinaryClass(file!!, null)
     }
-    
+
     override fun findBuiltInsData(packageFqName: FqName): InputStream? {
         val fileName = BuiltInSerializerProtocol.getBuiltInsFileName(packageFqName)
-        
+
         val classId = ClassId(packageFqName, Name.special("<builtins-metadata>"))
-        
-        return index.findClass(classId, acceptedRootTypes = JavaRoot.OnlyBinary) { dir, rootType ->
+
+        return index.findClass(classId, acceptedRootTypes = JavaRoot.OnlyBinary) { dir, _ ->
             dir.findChild(fileName)?.check(VirtualFile::isValid)
         }?.check { it in scope }?.inputStream
     }
@@ -143,29 +143,29 @@ class NetBeansVirtualFileFinder(private val project: Project,
 
         return findBinaryClass(
                 classId,
-                classId.shortClassName.asString() + MetadataPackageFragment.DOT_METADATA_FILE_EXTENSION)?.inputStream
+                "${classId.shortClassName.asString()}${MetadataPackageFragment.DOT_METADATA_FILE_EXTENSION}")?.inputStream
     }
 
     override fun hasMetadataPackage(fqName: FqName): Boolean {
         var found = false
-        
+
         val index = KotlinEnvironment.getEnvironment(project).index
-        
-        index.traverseDirectoriesInPackage(fqName, continueSearch = { dir, rootType ->
+
+        index.traverseDirectoriesInPackage(fqName, continueSearch = { dir, _ ->
             found = found or dir.children.any { it.extension == MetadataPackageFragment.METADATA_FILE_EXTENSION }
             !found
         })
-        
+
         return found
     }
-    
+
     private fun findBinaryClass(classId: ClassId, fileName: String): VirtualFile? =
-            index.findClass(classId, acceptedRootTypes = JavaRoot.OnlyBinary) { dir, rootType ->
+            index.findClass(classId, acceptedRootTypes = JavaRoot.OnlyBinary) { dir, _ ->
                 dir.findChild(fileName)?.check(VirtualFile::isValid)
             }?.check { it in scope }
-    
-    fun <T: Any> T.check(predicate: (T) -> Boolean): T? = if (predicate(this)) this else null
-    
+
+    fun <T : Any> T.check(predicate: (T) -> Boolean): T? = if (predicate(this)) this else null
+
 }
 
 class NetBeansVirtualFileFinderFactory(private val project: Project) : JvmVirtualFileFinderFactory {

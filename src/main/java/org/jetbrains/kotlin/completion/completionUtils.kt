@@ -199,7 +199,7 @@ fun createProposals(doc: Document, caretOffset: Int,
     val descriptors = generateBasicCompletionProposals(file, identifierPart, identOffset, editorText, result)
     
     val proposals: MutableList<CompletionProposal> = descriptors.filter { it !is JavaClassConstructorDescriptor }
-            .map { KotlinCompletionProposal(identOffset, caretOffset, it, styledDoc, prefix, project) }
+            .map { KotlinCompletionProposal(identOffset, it, styledDoc, prefix, project) }
             .toMutableList()
     val ktFile = KotlinParser.file ?: return proposals
     val psiElement = ktFile.findElementAt(identOffset) ?: return proposals

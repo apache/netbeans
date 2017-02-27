@@ -33,20 +33,20 @@ import javax.lang.model.type.DeclaredType
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaAnnotation(val project : Project, val handle : TypeMirrorHandle<DeclaredType>, 
-                             arguments : Collection<JavaAnnotationArgument>) : 
-        JavaAnnotation, JavaElement{
-    override val arguments : Collection<JavaAnnotationArgument> = arguments
-    
-    override val classId : ClassId? 
+class NetBeansJavaAnnotation(val project: Project, val handle: TypeMirrorHandle<DeclaredType>,
+                             arguments: Collection<JavaAnnotationArgument>) :
+        JavaAnnotation, JavaElement {
+    override val arguments: Collection<JavaAnnotationArgument> = arguments
+
+    override val classId: ClassId?
         get() = handle.computeClassId(project)
-    
-    override fun resolve() : JavaClass? = handle.getJavaClass(project)
-    override fun hashCode() : Int = handle.getHashCode(project)
-    
-    override fun equals(other : Any?) : Boolean {
+
+    override fun resolve(): JavaClass? = handle.getJavaClass(project)
+    override fun hashCode(): Int = handle.getHashCode(project)
+
+    override fun equals(other: Any?): Boolean {
         if (other !is NetBeansJavaAnnotation) return false
-        
+
         return handle.isEqual(other.handle, project)
     }
 }

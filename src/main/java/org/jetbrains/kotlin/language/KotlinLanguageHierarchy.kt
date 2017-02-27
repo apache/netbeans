@@ -23,7 +23,7 @@ import org.jetbrains.kotlin.highlighter.TokenType
 import org.jetbrains.kotlin.highlighter.netbeans.KotlinLexerProxy
 import org.jetbrains.kotlin.highlighter.netbeans.KotlinTokenId
 
-class KotlinLanguageHierarchy() : LanguageHierarchy<KotlinTokenId>() {
+class KotlinLanguageHierarchy : LanguageHierarchy<KotlinTokenId>() {
 
     companion object {
         private val tokens = listOf(
@@ -39,7 +39,7 @@ class KotlinLanguageHierarchy() : LanguageHierarchy<KotlinTokenId>() {
                 KotlinTokenId(TokenType.KDOC_LINK.name,TokenType.KDOC_LINK.name,9)
         )
         
-        fun getToken(id: Int) = tokens.filter{ it.ordinal() == id }.first()
+        fun getToken(id: Int) = tokens.filter { it.ordinal() == id }.first()
     }
     
     override fun createTokenIds() = tokens

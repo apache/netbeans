@@ -42,16 +42,16 @@ object KotlinLightClassGeneration {
     fun buildLightClasses(analysisResult: AnalysisResult, project: Project,
                           ktFiles: List<KtFile>, requestedClassName: String): GenerationState? {
         val generateDeclaredClassFilter = object : GenerationState.GenerateClassFilter() {
-            override fun shouldAnnotateClass(classOrObject: KtClassOrObject) = true
+            override fun shouldAnnotateClass(processingClassOrObject: KtClassOrObject) = true
 
-            override fun shouldGenerateClass(classOrObject: KtClassOrObject) = true
+            override fun shouldGenerateClass(processingClassOrObject: KtClassOrObject) = true
 
-            override fun shouldGeneratePackagePart(ktFile: KtFile) = true
+            override fun shouldGeneratePackagePart(jetFile: KtFile) = true
 
             override fun shouldGenerateScript(script: KtScript) = false
-            
+
         }
-        
+
         val state = GenerationState(
                 KotlinEnvironment.getEnvironment(project).project,
                 LightClassBuilderFactory(),
@@ -60,45 +60,44 @@ object KotlinLightClassGeneration {
                 ktFiles,
                 CompilerConfiguration.EMPTY,
                 generateDeclaredClassFilter)
-        
+
         ktFiles.forEach {
             state.bindingContext[BindingContext.FILE_TO_PACKAGE_FRAGMENT, it] ?: return null
         }
-        
-        KotlinCodegenFacade.compileCorrectFiles(state, {ex, url -> Unit})
-        
+
+        KotlinCodegenFacade.compileCorrectFiles(state, { _, _ -> Unit })
+
         return state
     }
 
     private fun checkByInternalName(internalName: String?, requestedClassFileName: String): Boolean {
         if (internalName == null) return false
-        
+
         val classFileName = getLastSegment(internalName)
         val requestedInternalName = requestedClassFileName.dropLast(".class".length)
-        
+
         if (requestedInternalName.startsWith(classFileName)) {
             if (requestedInternalName.length == classFileName.length) return true
-            
+
             if (requestedInternalName[classFileName.length] == '$') return true
         }
-        
+
         return false
     }
 
     private fun getLastSegment(path: String) = path.substringAfterLast("/")
 
-    fun getByteCode(file: FileObject, project: Project?, 
+    fun getByteCode(file: FileObject, project: Project?,
                     analysisResult: AnalysisResult): List<ByteArray> {
         if (project == null) return emptyList()
-        
+
         val code = arrayListOf<ByteArray>()
-        
+
         val manager = KotlinLightClassManager.getInstance(project)
         manager.computeLightClassesSources()
-        
+
         manager.getLightClassesPaths(file).forEach {
-            val lightClass = File(project.projectDirectory.path 
-                    + ProjectUtils.FILE_SEPARATOR + it)
+            val lightClass = File("${project.projectDirectory.path}${ProjectUtils.FILE_SEPARATOR}$it")
             val ktFiles = manager.getSourceFiles(lightClass)
             val className = it.substringAfterLast(Pattern.quote(ProjectUtils.FILE_SEPARATOR))
             if (ktFiles.isNotEmpty()) {
@@ -112,7 +111,7 @@ object KotlinLightClassGeneration {
                 }
             }
         }
-        
+
         return code
     }
 }

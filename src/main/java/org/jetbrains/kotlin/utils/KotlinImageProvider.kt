@@ -27,13 +27,13 @@ import org.jetbrains.kotlin.descriptors.PackageViewDescriptor
 import org.openide.util.ImageUtilities
 
 object KotlinImageProvider {
-    
+
     private val imagesLocation = "org/jetbrains/kotlin/completionIcons/"
-    
+
     val typeImage = ImageIcon(ImageUtilities.loadImage("${imagesLocation}class.png"))
 
-    private fun getImageIcon(name: String) = ImageIcon(ImageUtilities.loadImage(imagesLocation + name))
-    
+    private fun getImageIcon(name: String) = ImageIcon(ImageUtilities.loadImage("$imagesLocation$name"))
+
     fun getImage(descriptor: DeclarationDescriptor?) = when {
         descriptor is ClassDescriptor -> {
             when (descriptor.kind) {

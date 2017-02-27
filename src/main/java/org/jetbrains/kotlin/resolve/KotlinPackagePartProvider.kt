@@ -27,7 +27,7 @@ class KotlinPackagePartProvider(val project: Project) : PackagePartProvider {
         
         val result = linkedSetOf<String>()
         val visitedMultifileFacades = linkedSetOf<String>()
-        for ((virtualFile, packageParts) in rootToPackageParts) {
+        for ((_, packageParts) in rootToPackageParts) {
             for (name in packageParts.parts) {
                 val facadeName = packageParts.getMultifileFacadeName(name)
                 if (facadeName == null || facadeName !in visitedMultifileFacades) {
@@ -77,8 +77,7 @@ class KotlinPackagePartProvider(val project: Project) : PackagePartProvider {
                     ModuleMapping.create(moduleFile.contentsToByteArray(), moduleFile.toString())
                 }
                 catch (e: EOFException) {
-                    throw RuntimeException("Error on reading package parts for '$packageFqName' package in '$moduleFile', " +
-                                           "roots: $notLoadedRoots", e)
+                    throw RuntimeException("Error on reading package parts for '$packageFqName' package in '$moduleFile', roots: $notLoadedRoots", e)
                 }
                 loadedModules.add(ModuleMappingInfo(root, mapping))
             }

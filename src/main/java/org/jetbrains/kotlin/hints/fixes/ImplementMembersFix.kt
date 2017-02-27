@@ -59,7 +59,7 @@ import org.jetbrains.kotlin.hints.atomicChange
 
 class ImplementMembersFix(kotlinError: KotlinError,
                           parserResult: KotlinParserResult) : KotlinQuickFix(kotlinError, parserResult) {
-    
+
     override val hintSeverity = HintSeverity.ERROR
 
     override fun isApplicable() = when (kotlinError.diagnostic.factory) {
@@ -152,11 +152,11 @@ class ImplementMembersFix(kotlinError: KotlinError,
     fun KtElement.resolveToDescriptor(): DeclarationDescriptor {
         val ktFile = getContainingKtFile()
         val analysisResult = KotlinAnalyzer.analyzeFile(parserResult.project, ktFile).analysisResult
-        return BindingContextUtils.getNotNull(
+        return BindingContextUtils.getNotNull<PsiElement, DeclarationDescriptor>(
                 analysisResult.bindingContext,
                 BindingContext.DECLARATION_TO_DESCRIPTOR,
                 this,
-                "Descriptor wasn't found for declaration " + toString() + "\n" + getElementTextWithContext())
+                "Descriptor wasn't found for declaration ${toString()}\n${getElementTextWithContext()}")
     }
 
     private fun removeAfterOffset(offset: Int, whiteSpace: PsiWhiteSpace): PsiElement {
@@ -215,7 +215,7 @@ class ImplementMembersFix(kotlinError: KotlinError,
         if (descriptor.isVar()) {
             body.append("${lineDelimiter}set(value) {\n}")
         }
-        return KtPsiFactory(classOrObject.project).createProperty(OVERRIDE_RENDERER.render(newDescriptor) + body)
+        return KtPsiFactory(classOrObject.project).createProperty("${OVERRIDE_RENDERER.render(newDescriptor)}$body")
     }
 
     private fun overrideFunction(classOrObject: KtClassOrObject,
@@ -231,9 +231,9 @@ class ImplementMembersFix(kotlinError: KotlinError,
 
         val delegation = generateUnsupportedOrSuperCall(descriptor)
 
-        val body = "{$lineDelimiter" + (if (returnsNotUnit && !isAbstract) "return " else "") + delegation + "$lineDelimiter}"
+        val body = "{$lineDelimiter${if (returnsNotUnit && !isAbstract) "return " else ""}$delegation$lineDelimiter}"
 
-        return KtPsiFactory(classOrObject.project).createFunction(OVERRIDE_RENDERER.render(newDescriptor) + body)
+        return KtPsiFactory(classOrObject.project).createFunction("${OVERRIDE_RENDERER.render(newDescriptor)}$body")
     }
 
     private fun generateOverridingMembers(selectedElements: Set<CallableMemberDescriptor>,

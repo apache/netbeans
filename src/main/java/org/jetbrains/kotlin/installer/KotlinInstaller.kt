@@ -45,11 +45,11 @@ class KotlinInstaller : Yenta() {
             ProjectUtils.checkKtHome()
             WindowManager.getDefault().registry.addPropertyChangeListener listener@{
                 if (it.propertyName.equals("opened")) {
-                    val newHashSet = it.newValue as HashSet<TopComponent>
-                    val oldHashSet = it.oldValue as HashSet<TopComponent>
+                    val newHashSet = it.newValue as HashSet<*>
+                    val oldHashSet = it.oldValue as HashSet<*>
                     newHashSet.filter {!oldHashSet.contains(it)}
                             .forEach {
-                                val dataObject = it.lookup.lookup(DataObject::class.java) ?: return@forEach
+                                val dataObject = (it as? TopComponent)?.lookup?.lookup(DataObject::class.java) ?: return@forEach
                                 val currentFile = dataObject.primaryFile
                                 if (currentFile != null) {
                                     if (currentFile.mimeType.equals("text/x-kt")) {

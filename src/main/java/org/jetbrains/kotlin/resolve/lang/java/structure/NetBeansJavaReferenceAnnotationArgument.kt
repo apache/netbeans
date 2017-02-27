@@ -32,9 +32,9 @@ import javax.lang.model.element.VariableElement
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaReferenceAnnotationArgument(val handle : ElemHandle<VariableElement>, val project : Project) : 
+class NetBeansJavaReferenceAnnotationArgument(val handle: ElemHandle<VariableElement>, val project: Project) :
         NetBeansJavaAnnotationArgument(FqName(handle.getSimpleName(project))), JavaEnumValueAnnotationArgument {
-    override fun resolve() : JavaField {
+    override fun resolve(): JavaField {
         val containingClass = handle.getContainingClass(project)
         return NetBeansJavaField(handle, NetBeansJavaClass(containingClass, project), project)
     }

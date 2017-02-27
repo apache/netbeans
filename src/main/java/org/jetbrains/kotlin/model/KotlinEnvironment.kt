@@ -230,7 +230,7 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
     }
     
     private fun getExtensionsFromKotlin2JvmXml() {
-        CoreApplicationEnvironment.registerComponentInstance(Extensions.getRootArea().getPicoContainer(), 
+        CoreApplicationEnvironment.registerComponentInstance<DefaultErrorMessages.Extension>(Extensions.getRootArea().getPicoContainer(), 
                 DefaultErrorMessages.Extension::class.java, DefaultErrorMessagesJvm())
     }
     
@@ -259,22 +259,22 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
             registerFileType(PlainTextFileType.INSTANCE, "xml")
             registerFileType(KotlinFileType.INSTANCE, "kt")
             registerParserDefinition(KotlinParserDefinition())
-            application.registerService(KotlinBinaryClassCache::class.java, KotlinBinaryClassCache())
+            application.registerService<KotlinBinaryClassCache>(KotlinBinaryClassCache::class.java, KotlinBinaryClassCache())
         }
         
         return javaApplicationEnvironment
     }
     
     private fun registerAppExtensionPoints() {
-        CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), ContainerProvider.EP_NAME,
+        CoreApplicationEnvironment.registerExtensionPoint<ContainerProvider>(Extensions.getRootArea(), ContainerProvider.EP_NAME,
                 ContainerProvider::class.java)
-        CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), ClsCustomNavigationPolicy.EP_NAME,
+        CoreApplicationEnvironment.registerExtensionPoint<ClsCustomNavigationPolicy>(Extensions.getRootArea(), ClsCustomNavigationPolicy.EP_NAME,
                 ClsCustomNavigationPolicy::class.java)
-        CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), ClassFileDecompilers.EP_NAME,
+        CoreApplicationEnvironment.registerExtensionPoint<ClassFileDecompilers.Decompiler>(Extensions.getRootArea(), ClassFileDecompilers.EP_NAME,
                 ClassFileDecompilers.Decompiler::class.java)
         
-        CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), PsiAugmentProvider.EP_NAME, PsiAugmentProvider::class.java)
-        CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), JavaMainMethodProvider.EP_NAME, JavaMainMethodProvider::class.java)
+        CoreApplicationEnvironment.registerExtensionPoint<PsiAugmentProvider>(Extensions.getRootArea(), PsiAugmentProvider.EP_NAME, PsiAugmentProvider::class.java)
+        CoreApplicationEnvironment.registerExtensionPoint<JavaMainMethodProvider>(Extensions.getRootArea(), JavaMainMethodProvider.EP_NAME, JavaMainMethodProvider::class.java)
     }
     
     private fun addToClasspath(path: String, rootType: JavaRoot.RootType?) {

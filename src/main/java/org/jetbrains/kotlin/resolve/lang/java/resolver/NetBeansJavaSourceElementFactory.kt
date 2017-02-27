@@ -28,6 +28,6 @@ import org.jetbrains.kotlin.load.java.structure.JavaElement
 
 class NetBeansJavaSourceElementFactory : JavaSourceElementFactory {
 
-    override fun source(javaElement : JavaElement) : JavaSourceElement = NetBeansJavaSourceElement(javaElement)
+    override fun source(javaElement: JavaElement) = NetBeansJavaSourceElement(javaElement)
     
 }

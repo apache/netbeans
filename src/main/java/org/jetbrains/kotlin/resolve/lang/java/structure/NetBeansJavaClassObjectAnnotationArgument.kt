@@ -29,11 +29,11 @@ import org.netbeans.api.project.Project
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaClassObjectAnnotationArgument(val javaClass : Class<*>, name : Name, 
-                                                val project : Project) : JavaClassObjectAnnotationArgument {
-    override val name : Name = name
-    
-    override fun getReferencedType() : JavaType {
+class NetBeansJavaClassObjectAnnotationArgument(val javaClass: Class<*>, name: Name,
+                                                val project: Project) : JavaClassObjectAnnotationArgument {
+    override val name: Name = name
+
+    override fun getReferencedType(): JavaType {
         val handle = project.findTypeMirrorHandle(javaClass.canonicalName)
         return NetBeansJavaType.create(handle, project)
     }

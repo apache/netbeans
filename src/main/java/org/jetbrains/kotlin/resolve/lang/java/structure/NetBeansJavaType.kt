@@ -32,35 +32,35 @@ import javax.lang.model.type.TypeMirror
   Created on Sep 7, 2016
 */
 
-abstract class NetBeansJavaType(val handle : TypeMirrorHandle<*>, 
-                                val project : Project) : JavaType, JavaAnnotationOwner {
+abstract class NetBeansJavaType(val handle: TypeMirrorHandle<*>,
+                                val project: Project) : JavaType, JavaAnnotationOwner {
 
     companion object {
-        @JvmStatic        
-        fun create(typeHandle : TypeMirrorHandle<*>, project : Project) : NetBeansJavaType {
+        @JvmStatic
+        fun create(typeHandle: TypeMirrorHandle<*>, project: Project): NetBeansJavaType {
             return when {
-                typeHandle.kind.isPrimitive || 
-                        typeHandle.getName(project).equals("void") -> 
+                typeHandle.kind.isPrimitive ||
+                        typeHandle.getName(project).equals("void") ->
                     NetBeansJavaPrimitiveType(typeHandle, project)
-                
+
                 typeHandle.kind == TypeKind.ARRAY -> NetBeansJavaArrayType(typeHandle, project)
-                
+
                 typeHandle.kind == TypeKind.DECLARED || typeHandle.kind == TypeKind.TYPEVAR -> NetBeansJavaClassifierType(typeHandle, project)
-                
+
                 typeHandle.kind == TypeKind.WILDCARD -> NetBeansJavaWildcardType(typeHandle, project)
-                
-                else  -> throw UnsupportedOperationException("Unsupported NetBeans type ${typeHandle.getName(project)}")
+
+                else -> throw UnsupportedOperationException("Unsupported NetBeans type ${typeHandle.getName(project)}")
             }
         }
     }
-    
+
     override val isDeprecatedInJavaDoc = false
-    
-    override val annotations : Collection<JavaAnnotation>
+
+    override val annotations: Collection<JavaAnnotation>
         get() = handle.getAnnotations(project)
-    
-    override fun findAnnotation(fqName : FqName) : JavaAnnotation? = handle.getAnnotation(project, fqName)
-    override fun hashCode() : Int = handle.getHashCode(project)
-    override fun equals(other : Any?) : Boolean = other is NetBeansJavaType && handle.isEqual(other.handle, project)
-    
+
+    override fun findAnnotation(fqName: FqName): JavaAnnotation? = handle.getAnnotation(project, fqName)
+    override fun hashCode(): Int = handle.getHashCode(project)
+    override fun equals(other: Any?): Boolean = other is NetBeansJavaType && handle.isEqual(other.handle, project)
+
 }

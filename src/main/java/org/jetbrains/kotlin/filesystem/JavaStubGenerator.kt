@@ -34,22 +34,22 @@ object JavaStubGenerator {
         val classNodes = byteCodeList.mapNotNull { it.getClassNode() }.distinctBy { it.name }
         val innerClasses = hashMapOf<ClassNode, List<ClassNode>>()
         val classes = classNodes.filter { !it.name.contains("$") }
-        
+
         classNodes.forEach { classNode ->
             val innerClassesList = classNode.innerClasses
-                    .mapNotNull { inner -> 
-                        classNodes.find { it.name == inner.name && inner.name.length > classNode.name.length} 
-            }
+                    .mapNotNull { inner ->
+                        classNodes.find { it.name == inner.name && inner.name.length > classNode.name.length }
+                    }
             innerClasses.put(classNode, innerClassesList)
         }
-        
-        return classes.map { generate(it, innerClasses) }  
+
+        return classes.map { generate(it, innerClasses) }
     }
-    
-    private fun generate(classNode: ClassNode, 
-                 innerClassesMap: Map<ClassNode, List<ClassNode>>): Pair<ClassNode, String> {
+
+    private fun generate(classNode: ClassNode,
+                         innerClassesMap: Map<ClassNode, List<ClassNode>>): Pair<ClassNode, String> {
         val javaStub = StringBuilder()
-        
+
         if (!classNode.name.contains("$")) javaStub.append(classNode.packageString)
         javaStub.append(classNode.classDeclaration())
         javaStub.append(classNode.fields())
@@ -57,11 +57,11 @@ object JavaStubGenerator {
         for (node in innerClassesMap[classNode]!!) {
             javaStub.append(generate(node, innerClassesMap).second).append("\n")
         }
-        
+
         javaStub.append("}")
         return Pair(classNode, javaStub.toString())
     }
-    
+
     private fun ByteArray.getClassNode(): ClassNode? {
         val classNode = ClassNode()
         try {
@@ -69,32 +69,32 @@ object JavaStubGenerator {
         } catch (ex: Exception) {
             return null
         }
-        
+
         return classNode
     }
-    
+
     val ClassNode.packageString: String
         get() = "package ${name.substringBeforeLast("/").replace("/", ".")};\n"
-    
+
     val ClassNode.className: String
         get() = if (!name.contains("$")) name.substringAfterLast("/") else name.substringAfterLast("$")
-    
+
     private fun ClassNode.classDeclaration(): String {
         val declaration = StringBuilder()
-        
+
         val classType = getClassType(access)
-        
+
         declaration.append(getAccess(access)).append(" ")
         declaration.append(getFinal(access)).append(" ")
         declaration.append(getStatic(access)).append(" ")
         if (classType != "interface") declaration.append(getAbstract(access)).append(" ")
-        
-        
+
+
         val superTypes = if (signature != null) {
             val signatureReader = SignatureReader(signature)
             val traceSigVisitor = TraceSignatureVisitor(access)
             signatureReader.accept(traceSigVisitor)
-            
+
             traceSigVisitor.declaration.replace("$", ".")
         } else {
             val superTypes = StringBuilder()
@@ -102,35 +102,35 @@ object JavaStubGenerator {
                 superTypes.append("extends ").append(superName.replace("/", ".").replace("$", "."))
                 superTypes.append(" ")
             }
-            
+
             if (interfaces != null && interfaces.isNotEmpty()) {
-                when(classType) {
+                when (classType) {
                     "interface" -> superTypes.append(" extends ")
                     "class" -> superTypes.append(" implements ")
                 }
             }
-        
+
             superTypes.append(
-                    interfaces.joinToString(", ", "", "", -1, "...", 
+                    interfaces.joinToString(", ", "", "", -1, "...",
                             { it.replace("/", ".").replace("$", ".") }
                     )
             )
-            
+
             superTypes.toString()
         }
-        
+
         declaration.append(classType).append(" ")
         declaration.append(className).append(" ")
         declaration.append(superTypes)
-        
+
         declaration.append("{\n")
-        
+
         return declaration.toString();
     }
-    
+
     private fun ClassNode.fields(): String {
         val fieldsStub = StringBuilder()
-        
+
         if (getClassType(access) == "enum") {
             fieldsStub.append(
                     fields.joinToString(", ", "", "", -1, "...", { it.name })
@@ -140,88 +140,88 @@ object JavaStubGenerator {
         }
         return fieldsStub.toString()
     }
-    
+
     private fun FieldNode.getString(): String {
         val field = StringBuilder()
-        
+
         val sig = if (signature != null) signature else desc
 
         val signatureReader = SignatureReader(sig)
         val traceSigVisitor = TraceSignatureVisitor(access)
         signatureReader.accept(traceSigVisitor)
-        
+
         val type = traceSigVisitor.declaration.substringAfterLast(" ")
-        
+
         field.append(getAccess(access)).append(" ")
         field.append(getFinal(access)).append(" ")
         field.append(getStatic(access)).append(" ")
         field.append(type.replace("$", ".")).append(" ")
         field.append(name).append(";\n")
-        
+
         return field.toString()
     }
-    
+
     private fun ClassNode.methods(): String {
         val methodsStub = StringBuilder()
-        
+
         for (it in methods) {
             methodsStub.append(it.getString(className))
         }
-        
+
         return methodsStub.toString()
     }
-    
+
     private fun MethodNode.getString(className: String): String {
         val method = StringBuilder()
-        
+
         val sig = if (signature != null) signature else desc
-        
+
         method.append(getAccess(access)).append(" ")
         method.append(getFinal(access)).append(" ")
         method.append(getStatic(access)).append(" ")
         method.append(getAbstract(access)).append(" ")
-        
+
         val methodName = if (name == "<init>") className else name
-        
+
         val traceSigVisitor = TraceSignatureVisitor(access)
         SignatureReader(sig).accept(traceSigVisitor)
 
         val returnType = if (name == "<init>") "" else traceSigVisitor.returnType
-        
+
         method.append(returnType.replace("$", ".")).append(" ").append(methodName)
                 .append(getMethodArguments(traceSigVisitor.declaration.replace("$", "."))).append("{}\n")
-        
+
         return method.toString()
     }
-    
+
     private fun getMethodArguments(declaration: String): String {
         val argumentsTypes = declaration.replace("(", "").replace(")", "").split(",")
-        
+
         return argumentsTypes.withIndex()
                 .joinToString(",", "(", ")", -1, "...", { if (it.value != "") "${it.value} a${it.index}" else "" })
     }
-    
+
     private fun getClassType(access: Int) = when {
         access.contains(Opcodes.ACC_INTERFACE) -> "interface"
         access.contains(Opcodes.ACC_ENUM) -> "enum"
         else -> "class"
     }
-    
+
     private fun getAccess(access: Int) = when {
         access.contains(Opcodes.ACC_PUBLIC) -> "public"
         access.contains(Opcodes.ACC_PRIVATE) -> "private"
         access.contains(Opcodes.ACC_PROTECTED) -> "protected"
         else -> ""
     }
-   
+
     private fun getFinal(access: Int) = if (access.contains(Opcodes.ACC_FINAL)) "final" else ""
-    
+
     private fun getStatic(access: Int) = if (access.contains(Opcodes.ACC_STATIC)) "static" else ""
-    
+
     private fun getAbstract(access: Int) = if (access.contains(Opcodes.ACC_ABSTRACT)) "abstract" else ""
-    
+
     private fun Int.contains(opcode: Int) = (this and opcode) != 0
-    
+
     private fun String.toType() = when {
         startsWith("Z") -> "boolean"
         startsWith("V") -> "void"
@@ -235,9 +235,9 @@ object JavaStubGenerator {
         startsWith("L") -> substring(1)
         startsWith("[") -> {
             val type = substring(1)
-            if (type.startsWith("L")) type.substring(1) + "[]" else type + "[]"
+            if (type.startsWith("L")) "${type.substring(1)}[]" else "$type[]"
         }
         else -> "void"
     }
-    
+
 }

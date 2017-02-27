@@ -28,7 +28,7 @@ import org.netbeans.api.project.Project
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaArrayType(handle : TypeMirrorHandle<*>, project : Project) : 
+class NetBeansJavaArrayType(handle: TypeMirrorHandle<*>, project: Project) :
         NetBeansJavaType(handle, project), JavaArrayType {
-    override val componentType : JavaType = handle.getComponentType(project)
+    override val componentType: JavaType = handle.getComponentType(project)
 }

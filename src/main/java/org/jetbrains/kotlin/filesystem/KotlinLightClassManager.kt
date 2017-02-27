@@ -40,7 +40,7 @@ import org.openide.filesystems.FileUtil
 import org.netbeans.api.project.Project as NBProject
 
 class KotlinLightClassManager(private val project: NBProject) {
-    
+
     companion object {
         fun getInstance(project: NBProject): KotlinLightClassManager {
             val ideaProject = KotlinEnvironment.getEnvironment(project).project
@@ -52,16 +52,16 @@ class KotlinLightClassManager(private val project: NBProject) {
             val topmostClassOrObject: KtClassOrObject = PsiTreeUtil.
                     getTopmostParentOfType(classOrObject, KtClassOrObject::class.java) ?: return makeInternalByToplevel(fullFqName)
             val topLevelFqName = topmostClassOrObject.fqName ?: return null
-            
+
             val nestedPart = fullFqName.asString().substring(topLevelFqName.asString().length).replace(".", "$")
-            return makeInternalByToplevel(topLevelFqName) + nestedPart
+            return "${makeInternalByToplevel(topLevelFqName)}$nestedPart"
         }
 
         private fun makeInternalByToplevel(fqName: FqName): String {
             return fqName.asString().replace(".", "/")
         }
     }
-    
+
     private val sourceFiles = hashMapOf<File, Set<FileObject>>()
 
     fun computeLightClassesSources() {
@@ -75,7 +75,7 @@ class KotlinLightClassManager(private val project: NBProject) {
                     newSourceFiles = hashSetOf<FileObject>()
                     newSourceFilesMap.put(lightClassFile.asFile(), newSourceFiles)
                 }
-                
+
                 newSourceFiles.add(sourceFile)
             }
         }
@@ -86,23 +86,23 @@ class KotlinLightClassManager(private val project: NBProject) {
     fun getLightClassesPaths(sourceFile: FileObject?): List<String> {
         val lightClasses = arrayListOf<String>()
         val ktFile = ProjectUtils.getKtFile(sourceFile)
-        
+
         findLightClasses(ktFile).forEach {
             val internalName = getInternalName(it)
             if (internalName != null) lightClasses.add(computePathByInternalName(internalName))
         }
-        
+
         if (PackagePartClassUtils.fileHasTopLevelCallables(ktFile)) {
             val newFacadeInternalName = NoResolveFileClassesProvider.getFileClassInternalName(ktFile)
             lightClasses.add(computePathByInternalName(newFacadeInternalName))
         }
-        
+
         return lightClasses
     }
 
     private fun findLightClasses(ktFile: KtFile): List<KtClassOrObject> {
         val lightClasses = arrayListOf<KtClassOrObject>()
-        
+
         ktFile.acceptChildren(object : KtVisitorVoid() {
             override fun visitClassOrObject(classOrObject: KtClassOrObject) {
                 lightClasses.add(classOrObject)
@@ -119,7 +119,7 @@ class KotlinLightClassManager(private val project: NBProject) {
                 if (element != null) element.acceptChildren(this)
             }
         })
-        
+
         return lightClasses
     }
 
@@ -127,13 +127,13 @@ class KotlinLightClassManager(private val project: NBProject) {
 
     fun getSourceFiles(file: File): List<KtFile> {
         if (sourceFiles.isEmpty()) computeLightClassesSources()
-        
+
         return getSourceKtFiles(file)
     }
 
     private fun getSourceKtFiles(file: File): List<KtFile> {
         val sourceIOFiles = sourceFiles[file] ?: return emptyList()
-        
+
         return sourceIOFiles.mapNotNull { ProjectUtils.getKtFile(it) }
     }
 }

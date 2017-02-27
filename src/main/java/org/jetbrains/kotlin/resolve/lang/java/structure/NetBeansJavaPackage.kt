@@ -33,18 +33,18 @@ import org.jetbrains.kotlin.resolve.lang.java.*
   Created on Aug 29, 2016
 */
 
-class NetBeansJavaPackage(val packages : List<ElemHandle<PackageElement>>, val project : Project) : 
+class NetBeansJavaPackage(val packages: List<ElemHandle<PackageElement>>, val project: Project) :
         JavaPackage, JavaElement {
-    
-    constructor(pack : ElemHandle<PackageElement>, project : Project) : this(Collections.singletonList(pack), project)
-    
-    override val fqName : FqName 
-        get() = packages[0].getFqName(project)
-    
-    override val subPackages : Collection<JavaPackage>
-        get() = this.getSubPackages(project)
-    
-    override fun getClasses(nameFilter : (Name) -> Boolean) = 
+
+    constructor(pack: ElemHandle<PackageElement>, project: Project) : this(Collections.singletonList(pack), project)
+
+    override val fqName: FqName
+        get() = packages.first().getFqName(project)
+
+    override val subPackages: Collection<JavaPackage>
+        get() = getSubPackages(project)
+
+    override fun getClasses(nameFilter: (Name) -> Boolean) =
             packages.getClasses(project, nameFilter)
-    
+
 }

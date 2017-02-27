@@ -27,14 +27,14 @@ import javax.lang.model.element.Element
   Created on Aug 29, 2016
 */
 
-abstract class NetBeansJavaElement<T: Element>(val elementHandle : ElemHandle<T>,
-                                   val project : Project) : JavaElement {
-    
-    override fun hashCode() : Int = elementHandle.hashCode()
-    
-    override fun equals(other : Any?) : Boolean {
+abstract class NetBeansJavaElement<T : Element>(val elementHandle: ElemHandle<T>,
+                                                val project: Project) : JavaElement {
+
+    override fun hashCode() = elementHandle.hashCode()
+
+    override fun equals(other: Any?): Boolean {
         if (other !is NetBeansJavaElement<*>) return false
         return elementHandle.equals(other.elementHandle)
     }
-    
+
 }

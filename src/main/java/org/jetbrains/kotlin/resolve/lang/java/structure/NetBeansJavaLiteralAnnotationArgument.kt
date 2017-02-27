@@ -25,7 +25,5 @@ import org.jetbrains.kotlin.name.Name
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaLiteralAnnotationArgument(value : Any, name : Name) : JavaLiteralAnnotationArgument {
-    override val value : Any = value
-    override val name : Name = name 
-}
+class NetBeansJavaLiteralAnnotationArgument(override val value: Any, 
+                                            override val name: Name) : JavaLiteralAnnotationArgument 

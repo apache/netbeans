@@ -35,8 +35,7 @@ class SubPackagesSearcher(val project: Project,
 
     val subPackages = arrayListOf<JavaPackage>()
 
-    fun findPackageFragments(name: String, partialMatch: Boolean,
-                             patternMatch: Boolean, info: CompilationController): Array<PackageElement>? {
+    fun findPackageFragments(name: String, info: CompilationController): Array<PackageElement>? {
         val packages = name.getPackages(project)
         val subpackageElements = packages.map { info.elements.getPackageElement(it) }.filterNotNull()
         if (subpackageElements.isEmpty()) return null
@@ -48,12 +47,12 @@ class SubPackagesSearcher(val project: Project,
         info.toResolvedPhase()
 
         val thisPackageName = pack.fqName.asString()
-        val pattern = if (thisPackageName.isEmpty()) "*" else thisPackageName + "."
+        val pattern = if (thisPackageName.isEmpty()) "*" else "$thisPackageName."
 
-        val packageFragments = findPackageFragments(pattern, true, true, info)
+        val packageFragments = findPackageFragments(pattern, info)
         val thisNestedLevel = thisPackageName.split("\\.").size
 
-        if (packageFragments != null && packageFragments.size > 0) {
+        if (packageFragments != null && packageFragments.isNotEmpty()) {
             packageFragments.forEach {
                 val subNestedLevel = it.qualifiedName.toString().split("\\.").size
                 val applicableForRootPackage = thisNestedLevel == 1 && thisNestedLevel == subNestedLevel
@@ -95,12 +94,12 @@ class ClassesSearcher(val packages: List<ElemHandle<PackageElement>>,
 }
 
 class FqNameSearcher(val handle: ElemHandle<PackageElement>) : Task<CompilationController> {
-    
+
     lateinit var fqName: FqName
-    
+
     override fun run(info: CompilationController) {
         info.toResolvedPhase()
-        
+
         val pack = handle.resolve(info) ?: throw UnsupportedOperationException("Couldn''t resolve $handle")
         fqName = FqName((pack as PackageElement).qualifiedName.toString())
     }

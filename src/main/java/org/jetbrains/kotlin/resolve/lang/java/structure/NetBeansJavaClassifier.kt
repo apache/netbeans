@@ -30,14 +30,14 @@ import javax.lang.model.element.Element
   Created on Aug 29, 2016
 */
 
-abstract class NetBeansJavaClassifier<T: Element>(elementHandle : ElemHandle<T>, project : Project) : 
+abstract class NetBeansJavaClassifier<T : Element>(elementHandle: ElemHandle<T>, project: Project) :
         NetBeansJavaElement<T>(elementHandle, project), JavaClassifier, JavaAnnotationOwner {
 
-    override val annotations : Collection<JavaAnnotation>
+    override val annotations: Collection<JavaAnnotation>
         get() = elementHandle.getAnnotations(project)
-    
-    override val isDeprecatedInJavaDoc : Boolean = elementHandle.isDeprecated(project)
-    
-    override fun findAnnotation(fqName : FqName) = elementHandle.getAnnotation(project, fqName)
-   
+
+    override val isDeprecatedInJavaDoc: Boolean = elementHandle.isDeprecated(project)
+
+    override fun findAnnotation(fqName: FqName) = elementHandle.getAnnotation(project, fqName)
+
 }

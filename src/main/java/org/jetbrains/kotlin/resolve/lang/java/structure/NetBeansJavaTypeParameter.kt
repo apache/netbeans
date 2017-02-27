@@ -60,7 +60,7 @@ class NetBeansJavaTypeParameter(elementHandle: ElemHandle<TypeParameterElement>,
 
     override fun hashCode(): Int {
         val bound = upperBounds.firstOrNull()?.canonicalText ?: ""
-        
+
         return "$name $bound".hashCode()
     }
 

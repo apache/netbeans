@@ -30,13 +30,13 @@ import javax.lang.model.element.ExecutableElement
   Created on Aug 29, 2016
 */
 
-class NetBeansJavaConstructor(elementHandle : ElemHandle<ExecutableElement>, containingClass : JavaClass, project : Project) : 
+class NetBeansJavaConstructor(elementHandle: ElemHandle<ExecutableElement>, containingClass: JavaClass, project: Project) :
         NetBeansJavaMember<ExecutableElement>(elementHandle, containingClass, project), JavaConstructor {
 
-    override val valueParameters : List<JavaValueParameter>
+    override val valueParameters: List<JavaValueParameter>
         get() = elementHandle.getValueParameters(project)
-    
-    override val typeParameters : List<JavaTypeParameter>
+
+    override val typeParameters: List<JavaTypeParameter>
         get() = elementHandle.getTypeParameters(project)
-    
+
 }

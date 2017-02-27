@@ -28,11 +28,11 @@ import org.netbeans.api.project.Project
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaWildcardType(handle : TypeMirrorHandle<*>, project : Project) : NetBeansJavaType(handle, project), JavaWildcardType {
-    
-    override val bound : JavaType?
+class NetBeansJavaWildcardType(handle: TypeMirrorHandle<*>, project: Project) : NetBeansJavaType(handle, project), JavaWildcardType {
+
+    override val bound: JavaType?
         get() = handle.getBound(project)
-    
-    override val isExtends : Boolean = handle.isExtends(project)
-    
+
+    override val isExtends = handle.isExtends(project)
+
 }

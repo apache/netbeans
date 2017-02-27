@@ -31,18 +31,18 @@ import javax.lang.model.element.ExecutableElement
   Created on Aug 29, 2016
 */
 
-class NetBeansJavaMethod(elementHandle : ElemHandle<ExecutableElement>, containingClass : JavaClass, project : Project) : 
+class NetBeansJavaMethod(elementHandle: ElemHandle<ExecutableElement>, containingClass: JavaClass, project: Project) :
         NetBeansJavaMember<ExecutableElement>(elementHandle, containingClass, project), JavaMethod {
 
-    override val valueParameters : List<JavaValueParameter>
+    override val valueParameters: List<JavaValueParameter>
         get() = elementHandle.getValueParameters(project)
-    
-    override val returnType : JavaType
+
+    override val returnType: JavaType
         get() = elementHandle.getReturnType(project)
-    
-    override val hasAnnotationParameterDefaultValue : Boolean
+
+    override val hasAnnotationParameterDefaultValue: Boolean
         get() = elementHandle.hasAnnotationParameterDefaultValue(project)
-    
-    override val typeParameters : List<JavaTypeParameter>
+
+    override val typeParameters: List<JavaTypeParameter>
         get() = elementHandle.getTypeParameters(project)
 }

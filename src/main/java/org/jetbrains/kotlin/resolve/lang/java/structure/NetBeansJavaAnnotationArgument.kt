@@ -27,6 +27,6 @@ import org.jetbrains.kotlin.name.Name
   Created on Sep 7, 2016
 */
 
-open class NetBeansJavaAnnotationArgument(fqName : FqName) : JavaAnnotationArgument, JavaElement {
-    override val name : Name = Name.identifier(fqName.shortName().asString())
+open class NetBeansJavaAnnotationArgument(fqName: FqName) : JavaAnnotationArgument, JavaElement {
+    override val name: Name = Name.identifier(fqName.shortName().asString())
 }

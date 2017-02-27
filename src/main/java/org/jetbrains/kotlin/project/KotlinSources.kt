@@ -52,7 +52,7 @@ class KotlinSources(private val kotlinProject: Project) {
     }
 
     fun isMavenModuledProject(): Boolean {
-        if (kotlinProject.javaClass.name != "org.netbeans.modules.maven.NbMavenProjectImpl") return false
+        if (kotlinProject::class.java.name != "org.netbeans.modules.maven.NbMavenProjectImpl") return false
 
         val originalProject = MavenHelper.getOriginalMavenProject(kotlinProject) ?: return false
         val modules = originalProject.modules ?: return false
@@ -78,12 +78,6 @@ class KotlinSources(private val kotlinProject: Project) {
             .toTypedArray()
 
     fun getSourceGroupForFileObject(fo: FileObject) = KotlinSourceGroup(fo)
-
-    fun addChangeListener(cl: ChangeListener?) {
-    }
-
-    fun removeChangeListener(cl: ChangeListener?) {
-    }
 
 }
 

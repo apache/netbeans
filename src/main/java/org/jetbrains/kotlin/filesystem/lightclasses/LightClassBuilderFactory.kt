@@ -54,8 +54,8 @@ class LightClassBuilderFactory : ClassBuilderFactory {
                     userData = hashSetOf<Pair<String,String>>()
                     element.putUserData(JVM_SIGNATURE, userData)
                 }
-                    userData.toMutableSet().add(Pair(desc, name))
                 
+                userData.toMutableSet().add(Pair(desc, name))
             }
         }
     }

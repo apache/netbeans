@@ -214,7 +214,7 @@ fun equalsDeclaringTypes(ktElement: KtElement?, element: ElementHandle<*>?, doc:
         Exceptions.printStackTrace(ex)
     }
     
-    val fqName = searcher.containingClass?.qualifiedName ?: return false
+    val fqName = searcher.containingClass.qualifiedName ?: return false
     return fqName == typeNameInfo.asString() || typeNameInfo.asString() == "${fqName}Kt"
 }
 

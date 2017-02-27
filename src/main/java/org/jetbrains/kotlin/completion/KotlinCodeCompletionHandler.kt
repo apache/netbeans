@@ -37,43 +37,43 @@ import java.net.URL
 
 class KotlinCodeCompletionHandler : CodeCompletionHandler2 {
 
-    override fun documentElement(info: ParserResult, element: ElementHandle, 
+    override fun documentElement(info: ParserResult, element: ElementHandle,
                                  cancel: Callable<Boolean>): Documentation {
-        return if (element is ElementHandle.UrlHandle) 
+        return if (element is ElementHandle.UrlHandle)
             return Documentation.create(element.url)
         else Documentation.create("")
     }
-    
+
     override fun document(info: ParserResult, element: ElementHandle) = ""
-    
+
     override fun resolveLink(link: String, handle: ElementHandle) = null
-    
+
     override fun getPrefix(info: ParserResult, caretOffset: Int, upToOffset: Boolean) = null
-    
+
     override fun resolveTemplateVariable(variable: String, info: ParserResult, caretOffset: Int,
-                                         name: String, parameters: Map<*,*>) = null
-    
+                                         name: String, parameters: Map<*, *>) = null
+
     override fun getApplicableTemplates(doc: Document, selectionBegin: Int, selectionEnd: Int) = emptySet<String>()
-    
+
     override fun parameters(info: ParserResult, caretOffset: Int, proposal: CompletionProposal) = ParameterInfo.NONE
-    
+
     override fun getAutoQuery(component: JTextComponent, typedText: String): QueryType {
-        if (typedText.length > 0) {
+        if (typedText.isNotEmpty()) {
             if (typedText.endsWith(".")) return QueryType.COMPLETION
         }
         return QueryType.NONE
     }
-    
+
     override fun complete(context: CodeCompletionContext): CodeCompletionResult? {
         val parserResult = context.parserResult as KotlinParserResult
         val file = parserResult.snapshot.source.fileObject
-        
+
         val doc = ProjectUtils.getDocumentFromFileObject(file)
         val caretOffset = context.caretOffset
         val analysisResultWithProvider = parserResult.analysisResult ?: return null
         val prefix = context.prefix ?: ""
-        
+
         return KotlinCodeCompletionResult(doc, caretOffset, analysisResultWithProvider, prefix)
     }
-    
+
 }

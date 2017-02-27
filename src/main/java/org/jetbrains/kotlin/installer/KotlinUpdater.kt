@@ -47,7 +47,7 @@ object KotlinUpdater {
         if (updated) return
 
         val params = getRequestParams()
-        val url = URL(pluginSite + params)
+        val url = URL("$pluginSite$params")
 
         val connection = url.openConnection()
         if (connection is HttpURLConnection) {

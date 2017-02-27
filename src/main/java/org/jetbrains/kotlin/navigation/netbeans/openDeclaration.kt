@@ -78,11 +78,11 @@ private fun gotoElement(element: SourceElement, descriptor: DeclarationDescripto
             elementHandle.openInEditor(project)
         }
         
-        is KotlinSourceElement -> return gotoKotlinDeclaration(element.psi, fromElement, project, currentFile)
+        is KotlinSourceElement -> return gotoKotlinDeclaration(element.psi, fromElement, currentFile)
         
         is KotlinJvmBinarySourceElement -> gotoElementInBinaryClass(element.binaryClass, descriptor, project)
         
-        is KotlinJvmBinaryPackageSourceElement -> gotoClassByPackageSourceElement(element, fromElement, descriptor, project)
+        is KotlinJvmBinaryPackageSourceElement -> gotoClassByPackageSourceElement(element, descriptor, project)
         
         else -> return null
     }
@@ -90,7 +90,6 @@ private fun gotoElement(element: SourceElement, descriptor: DeclarationDescripto
 }
 
 private fun gotoClassByPackageSourceElement(sourceElement: KotlinJvmBinaryPackageSourceElement,
-                                            fromElement: KtElement, 
                                             descriptor: DeclarationDescriptor,
                                             project: Project) {
     if (descriptor !is DeserializedCallableMemberDescriptor) return
@@ -125,7 +124,7 @@ private fun getImplClassName(memberDescriptor: DeserializedCallableMemberDescrip
         val implClassNameField = Class.forName("org.jetbrains.kotlin.serialization.jvm.JvmProtoBuf").getField("implClassName")
         val implClassName = implClassNameField!!.get(null)
         val protobufCallable = Class.forName("org.jetbrains.kotlin.serialization.ProtoBuf\$Callable")
-        val getExtensionMethod = protobufCallable!!.getMethod("getExtension", implClassName!!.javaClass)
+        val getExtensionMethod = protobufCallable!!.getMethod("getExtension", implClassName!!::class.java)
         val indexObj = getExtensionMethod!!.invoke(proto, implClassName)
     
         if (indexObj !is Int) return null
@@ -146,8 +145,8 @@ private fun getImplClassName(memberDescriptor: DeserializedCallableMemberDescrip
 }
 
 private fun gotoKotlinDeclaration(psi: PsiElement, fromElement: KtElement,
-                                  project: Project, currentFile: FileObject): Pair<Document, Int>? {
-    val declarationFile = findFileObjectForReferencedElement(psi, fromElement, project, currentFile) ?: return null
+                                  currentFile: FileObject): Pair<Document, Int>? {
+    val declarationFile = findFileObjectForReferencedElement(psi, fromElement, currentFile) ?: return null
     val document = ProjectUtils.getDocumentFromFileObject(declarationFile) ?: return null
     
     val startOffset = LineEndUtil.convertCrToDocumentOffset(psi.containingFile.text, psi.textOffset)
@@ -156,7 +155,7 @@ private fun gotoKotlinDeclaration(psi: PsiElement, fromElement: KtElement,
 }
 
 private fun findFileObjectForReferencedElement(psi: PsiElement, fromElement: KtElement,
-                                               project: Project, currentFile: FileObject): FileObject? {
+                                               currentFile: FileObject): FileObject? {
     if (fromElement.containingFile == psi.containingFile) return currentFile
     
     val virtualFile = psi.containingFile.virtualFile ?: return null

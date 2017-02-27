@@ -30,11 +30,11 @@ import javax.lang.model.type.DeclaredType
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaAnnotationAsAnnotationArgument(val project : Project, name : Name, 
-                                                 val typeHandle : TypeMirrorHandle<DeclaredType>, 
-                                                 val args : List<JavaAnnotationArgument>) : 
+class NetBeansJavaAnnotationAsAnnotationArgument(val project: Project, name: Name,
+                                                 val typeHandle: TypeMirrorHandle<DeclaredType>,
+                                                 val args: List<JavaAnnotationArgument>) :
         JavaAnnotationAsAnnotationArgument {
-    override val name : Name = name
-    override fun getAnnotation() : JavaAnnotation = NetBeansJavaAnnotation(project, typeHandle, args)
-    
+    override val name: Name = name
+    override fun getAnnotation(): JavaAnnotation = NetBeansJavaAnnotation(project, typeHandle, args)
+
 }

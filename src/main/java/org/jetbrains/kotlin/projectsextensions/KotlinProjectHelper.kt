@@ -92,7 +92,7 @@ object KotlinProjectHelper {
     }
     
     fun Project.checkProject(): Boolean {
-        val className = javaClass.name
+        val className = this::class.java.name
         
         return className == "org.netbeans.modules.java.j2seproject.J2SEProject" 
                 || className == "org.netbeans.modules.maven.NbMavenProjectImpl"
@@ -100,7 +100,7 @@ object KotlinProjectHelper {
     }
 
     fun Project.isMavenProject(): Boolean {
-        return javaClass.name == "org.netbeans.modules.maven.NbMavenProjectImpl"
+        return this::class.java.name == "org.netbeans.modules.maven.NbMavenProjectImpl"
     }
 
     fun Project.removeProjectCache() {
@@ -122,7 +122,7 @@ object KotlinProjectHelper {
         if (!checkProject()) return null
         
         if (!extendedClassPaths.containsKey(this)) {
-            when (javaClass.name) {
+            when (this::class.java.name) {
                 "org.netbeans.modules.java.j2seproject.J2SEProject" -> extendedClassPaths.put(this, J2SEExtendedClassPathProvider(this))
                 "org.netbeans.modules.maven.NbMavenProjectImpl" -> extendedClassPaths.put(this, MavenExtendedClassPath(this))
                 "org.netbeans.gradle.project.NbGradleProject" -> extendedClassPaths.put(this, GradleExtendedClassPath(this))
@@ -156,7 +156,7 @@ object KotlinProjectHelper {
     }
 
     fun Project.updateExtendedClassPath() {
-        when (javaClass.name) {
+        when (this::class.java.name) {
             "org.netbeans.modules.java.j2seproject.J2SEProject" -> extendedClassPaths.put(this, J2SEExtendedClassPathProvider(this))
             "org.netbeans.modules.maven.NbMavenProjectImpl" -> extendedClassPaths.put(this, MavenExtendedClassPath(this))
             "org.netbeans.gradle.project.NbGradleProject" -> extendedClassPaths.put(this, GradleExtendedClassPath(this))

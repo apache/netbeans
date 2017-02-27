@@ -32,19 +32,19 @@ import javax.lang.model.element.VariableElement
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaValueParameter(elementHandle : ElemHandle<VariableElement>, project : Project, name : String, isVararg : Boolean) : 
+class NetBeansJavaValueParameter(elementHandle: ElemHandle<VariableElement>, project: Project, name: String, isVararg: Boolean) :
         NetBeansJavaElement<VariableElement>(elementHandle, project), JavaValueParameter {
 
-    override val name : Name = Name.identifier(name)
-    override val isVararg : Boolean = isVararg
+    override val name = Name.identifier(name)
+    override val isVararg = isVararg
     override val isDeprecatedInJavaDoc = false
-    
-    override val type : JavaType
+
+    override val type: JavaType
         get() = NetBeansJavaType.create(elementHandle.typeMirrorHandle, project)
-    
-    override val annotations : Collection<JavaAnnotation>
+
+    override val annotations: Collection<JavaAnnotation>
         get() = emptyList()
-    
-    override fun findAnnotation(fqName : FqName) : JavaAnnotation? = null
-    
+
+    override fun findAnnotation(fqName: FqName) = null
+
 }

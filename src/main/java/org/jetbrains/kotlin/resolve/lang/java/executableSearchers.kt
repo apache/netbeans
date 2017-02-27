@@ -105,7 +105,7 @@ class ElementHandleValueParametersSearcher(val handle: ElementHandle<ExecutableE
         info.toResolvedPhase()
         
         val elem = handle.resolve(info) ?: return
-        val valueParams = (elem as ExecutableElement).parameters
+        val valueParams = elem.parameters
         val parameterTypesCount = valueParams.size
         
         valueParams.forEachIndexed { index, it -> 

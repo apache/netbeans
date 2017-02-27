@@ -35,8 +35,8 @@ fun getSmartCastHover(expression: KtSimpleNameExpression, parserResult: KotlinPa
     
     if (parentExpression is KtThisExpression || parentExpression is KtSuperExpression) return null
 
-    val target = bindingContext[BindingContext.REFERENCE_TARGET, expression]?.let {
-        if (it is ConstructorDescriptor) it.getContainingDeclaration() else it
+    bindingContext[BindingContext.REFERENCE_TARGET, expression]?.let {
+        if (it is ConstructorDescriptor) it.containingDeclaration else it
     } ?: return null
 
     val smartCast = bindingContext.get(BindingContext.SMARTCAST, expression)

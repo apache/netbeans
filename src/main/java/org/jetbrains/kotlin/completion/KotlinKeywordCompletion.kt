@@ -113,18 +113,18 @@ object KeywordCompletion {
     )
 
     private val NO_SPACE_AFTER = listOf(THIS_KEYWORD,
-                                        SUPER_KEYWORD,
-                                        NULL_KEYWORD,
-                                        TRUE_KEYWORD,
-                                        FALSE_KEYWORD,
-                                        BREAK_KEYWORD,
-                                        CONTINUE_KEYWORD,
-                                        ELSE_KEYWORD,
-                                        WHEN_KEYWORD,
-                                        FILE_KEYWORD,
-                                        DYNAMIC_KEYWORD,
-                                        GET_KEYWORD,
-                                        SET_KEYWORD).map { it.value} + "companion object"
+            SUPER_KEYWORD,
+            NULL_KEYWORD,
+            TRUE_KEYWORD,
+            FALSE_KEYWORD,
+            BREAK_KEYWORD,
+            CONTINUE_KEYWORD,
+            ELSE_KEYWORD,
+            WHEN_KEYWORD,
+            FILE_KEYWORD,
+            DYNAMIC_KEYWORD,
+            GET_KEYWORD,
+            SET_KEYWORD).map { it.value } + "companion object"
 
     fun complete(position: PsiElement, prefix: String, isJvmModule: Boolean, consumer: (String) -> Unit) {
         if (!GENERAL_FILTER.isAcceptable(position, position)) return
@@ -142,7 +142,7 @@ object KeywordCompletion {
                     next = next.substring(1)
                 }
                 if (next != nextKeyword.value) {
-                    keyword += " " + nextKeyword.value
+                    keyword += " ${nextKeyword.value}"
                 }
             }
 
@@ -157,8 +157,7 @@ object KeywordCompletion {
             if (constructText != null) {
                 val element = keyword
                 consumer(element)
-            }
-            else {
+            } else {
                 var element = keyword
 
                 consumer(element)
@@ -174,20 +173,20 @@ object KeywordCompletion {
             LeftNeighbour(TextFilter("?."))
     ))
 
-    private class CommentFilter() : ElementFilter {
-        override fun isAcceptable(element : Any?, context : PsiElement?)
+    private class CommentFilter : ElementFilter {
+        override fun isAcceptable(element: Any?, context: PsiElement?)
                 = (element is PsiElement) && KtPsiUtil.isInComment(element)
 
         override fun isClassAcceptable(hintClass: Class<out Any?>)
                 = true
     }
 
-    private class ParentFilter(filter : ElementFilter) : PositionElementFilter() {
+    private class ParentFilter(filter: ElementFilter) : PositionElementFilter() {
         init {
             setFilter(filter)
         }
 
-        override fun isAcceptable(element : Any?, context : PsiElement?) : Boolean {
+        override fun isAcceptable(element: Any?, context: PsiElement?): Boolean {
             val parent = (element as? PsiElement)?.parent
             return parent != null && (filter?.isAcceptable(parent, context) ?: true)
         }
@@ -212,8 +211,7 @@ object KeywordCompletion {
                         }
 
                         return buildFilterWithContext(prefixText, prevParent, position)
-                    }
-                    else {
+                    } else {
                         val lastExpression = prevParent
                                 .siblings(forward = false, withItself = false)
                                 .firstIsInstanceOrNull<KtExpression>()
@@ -222,7 +220,7 @@ object KeywordCompletion {
                                     .siblings(forward = true, withItself = false)
                                     .takeWhile { it != prevParent }
                                     .joinToString { it.text }
-                            return buildFilterWithContext(prefixText + "x" + contextAfterExpression, prevParent, position)
+                            return buildFilterWithContext("${prefixText}x$contextAfterExpression", prevParent, position)
                         }
                     }
                 }
@@ -248,8 +246,7 @@ object KeywordCompletion {
                     is KtClassOrObject -> {
                         if (parent is KtPrimaryConstructor) {
                             return buildFilterWithReducedContext("class X ", parent, position)
-                        }
-                        else {
+                        } else {
                             return buildFilterWithReducedContext("class X { ", parent, position)
                         }
                     }
@@ -270,7 +267,7 @@ object KeywordCompletion {
                                        position: PsiElement): (KtKeywordToken) -> Boolean {
         val offset = position.getStartOffsetInAncestor(contextElement)
         val truncatedContext = contextElement.text!!.substring(0, offset)
-        return buildFilterByText(prefixText + truncatedContext, contextElement.project)
+        return buildFilterByText("$prefixText$truncatedContext", contextElement.project)
     }
 
     private fun buildFilterWithReducedContext(prefixText: String,
@@ -278,15 +275,15 @@ object KeywordCompletion {
                                               position: PsiElement): (KtKeywordToken) -> Boolean {
         val builder = StringBuilder()
         buildReducedContextBefore(builder, position, contextElement)
-        return buildFilterByText(prefixText + builder.toString(), position.project)
+        return buildFilterByText("$prefixText$builder", position.project)
     }
 
 
     private fun buildFilterByText(prefixText: String, project: Project): (KtKeywordToken) -> Boolean {
         val psiFactory = KtPsiFactory(project)
-        return fun (keywordTokenType): Boolean {
+        return fun(keywordTokenType): Boolean {
             val postfix = if (prefixText.endsWith("@")) ":X" else " X"
-            val file = psiFactory.createFile(prefixText + keywordTokenType.value + postfix)
+            val file = psiFactory.createFile("$prefixText${keywordTokenType.value}$postfix")
             val elementAt = file.findElementAt(prefixText.length)!!
 
             when {
@@ -356,14 +353,14 @@ object KeywordCompletion {
     private fun isErrorElementBefore(token: PsiElement): Boolean {
         for (leaf in token.prevLeafs) {
             if (leaf is PsiWhiteSpace || leaf is PsiComment) continue
-            if (leaf.parentsWithSelf.any { it is PsiErrorElement } ) return true
+            if (leaf.parentsWithSelf.any { it is PsiErrorElement }) return true
             if (leaf.textLength != 0) break
         }
         return false
     }
 
     private fun IElementType.matchesKeyword(keywordType: KtKeywordToken): Boolean {
-        return when(this) {
+        return when (this) {
             keywordType -> true
             NOT_IN -> keywordType == IN_KEYWORD
             NOT_IS -> keywordType == IS_KEYWORD
@@ -386,8 +383,7 @@ object KeywordCompletion {
                 if (child == prevDeclaration) {
                     builder.appendReducedText(child)
                 }
-            }
-            else {
+            } else {
                 builder.append(child!!.text)
             }
 
@@ -399,8 +395,7 @@ object KeywordCompletion {
         var child = element.firstChild
         if (child == null) {
             append(element.text!!)
-        }
-        else {
+        } else {
             while (child != null) {
                 when (child) {
                     is KtBlockExpression, is KtClassBody -> append("{}")
@@ -431,7 +426,7 @@ fun breakOrContinueExpressionItems(position: KtElement, breakOrContinue: String)
 
                 val label = (parent.getParent() as? KtLabeledExpression)?.getLabelNameAsName()
                 if (label != null) {
-                    result.add(breakOrContinue + label.labelNameToTail())
+                    result.add("$breakOrContinue${label.labelNameToTail()}")
                 }
             }
 
@@ -441,7 +436,7 @@ fun breakOrContinueExpressionItems(position: KtElement, breakOrContinue: String)
     return result
 }
 
-private fun Name?.labelNameToTail(): String = if (this != null) "@" + render() else ""
+private fun Name?.labelNameToTail(): String = if (this != null) "@${render()}" else ""
 
 inline fun <reified T : Any> Sequence<*>.firstIsInstanceOrNull(): T? {
     for (element in this) if (element is T) return element
@@ -456,35 +451,35 @@ inline fun <reified T : PsiElement> PsiElement.getParentOfType(strict: Boolean):
     return PsiTreeUtil.getParentOfType(this, T::class.java, strict)
 }
 
-fun generateKeywordProposals(identifierPart: String, 
+fun generateKeywordProposals(identifierPart: String,
                              expression: PsiElement, offset: Int, prefix: String): List<CompletionProposal> {
-        val callTypeAndReceiver = if (expression is KtSimpleNameExpression) CallTypeAndReceiver.detect(expression) else null
-        
-        return arrayListOf<String>().apply {
-            KeywordCompletion.complete(expression, identifierPart, true) { keywordProposal ->
-                if (!applicableNameFor(identifierPart, keywordProposal)) return@complete
-                
-                when (keywordProposal) {
-                    "break", "continue" -> {
-                        if (expression is KtSimpleNameExpression) {
-                            addAll(breakOrContinueExpressionItems(expression, keywordProposal))
-                        }
+    val callTypeAndReceiver = if (expression is KtSimpleNameExpression) CallTypeAndReceiver.detect(expression) else null
+
+    return arrayListOf<String>().apply {
+        KeywordCompletion.complete(expression, identifierPart, true) { keywordProposal ->
+            if (!applicableNameFor(identifierPart, keywordProposal)) return@complete
+
+            when (keywordProposal) {
+                "break", "continue" -> {
+                    if (expression is KtSimpleNameExpression) {
+                        addAll(breakOrContinueExpressionItems(expression, keywordProposal))
                     }
-                    
-                    "class" -> {
-                        if (callTypeAndReceiver !is CallTypeAndReceiver.CALLABLE_REFERENCE) {
-                            add(keywordProposal)
-                        }
-                    }
-                    
-                    "this", "return" -> {
-                        if (expression is KtExpression) {
-                            add(keywordProposal)
-                        }
-                    }
-                    
-                    else -> add(keywordProposal)
                 }
+
+                "class" -> {
+                    if (callTypeAndReceiver !is CallTypeAndReceiver.CALLABLE_REFERENCE) {
+                        add(keywordProposal)
+                    }
+                }
+
+                "this", "return" -> {
+                    if (expression is KtExpression) {
+                        add(keywordProposal)
+                    }
+                }
+
+                else -> add(keywordProposal)
             }
-        }.map { KeywordCompletionProposal(it, offset, prefix) }
+        }
+    }.map { KeywordCompletionProposal(it, offset, prefix) }
 }

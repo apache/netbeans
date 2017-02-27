@@ -20,6 +20,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import java.io.IOException
 import javax.lang.model.element.ElementKind
+import javax.lang.model.element.ExecutableElement
 import javax.swing.text.Document
 import kotlin.Pair
 import org.jetbrains.kotlin.utils.ProjectUtils
@@ -43,6 +44,7 @@ import org.jetbrains.kotlin.resolve.lang.java.ElementHandleFieldContainingClassS
 import org.jetbrains.kotlin.resolve.lang.java.ElementHandleNameSearcher
 import org.jetbrains.kotlin.resolve.lang.java.ElementHandleSimpleNameSearcher
 import org.jetbrains.kotlin.resolve.lang.java.ElementSearcher
+import org.jetbrains.kotlin.resolve.lang.java.getElementHandleValueParameters
 import org.netbeans.api.java.source.JavaSource
 import org.netbeans.api.java.source.SourceUtils
 import org.netbeans.api.java.source.ElementHandle
@@ -101,8 +103,7 @@ private fun makeVisitor(element: ElementHandle<*>, result: MutableList<KtElement
         ElementKind.ENUM -> return object : KtAllVisitor() {
             
             override fun visitClassOrObject(ktClassOrObject: KtClassOrObject) {
-                val fqName = ktClassOrObject.fqName?.asString() ?: ""
-                if (fqName.equals(element.getQualifiedName())) {
+                if (ktClassOrObject.fqName?.asString() == element.qualifiedName) {
                     result.add(ktClassOrObject)
                     return
                 }
@@ -125,7 +126,7 @@ private fun makeVisitor(element: ElementHandle<*>, result: MutableList<KtElement
             }
 
             private fun visitExplicitDeclaration(declaration: KtDeclaration?) {
-                if (declaration == null) return
+                declaration ?: return
                 val javaSource = JavaSource.forDocument(doc) ?: return
                 val searcher = ElementHandleNameSearcher(element)
                 try {
@@ -133,7 +134,7 @@ private fun makeVisitor(element: ElementHandle<*>, result: MutableList<KtElement
                 } catch (ex: IOException) {
                     Exceptions.printStackTrace(ex)
                 }
-                if (equalsNames(declaration, element, doc) && declaration.name.equals(searcher.name.asString())) {
+                if (equalsNames(declaration, element, doc) && declaration.name == searcher.name.asString()) {
                     result.add(declaration)
                 }
             }
@@ -162,19 +163,6 @@ private fun makeVisitor(element: ElementHandle<*>, result: MutableList<KtElement
             }
 
             override fun visitClass(ktClass: KtClass) {
-                val javaSource = JavaSource.forDocument(doc) ?: return
-                val searcher = ElementHandleFieldContainingClassSearcher(element)
-                try {
-                    javaSource.runUserActionTask(searcher, true)
-                } catch (ex: IOException) {
-                    Exceptions.printStackTrace(ex)
-                }
-                val containingClass = searcher.containingClass
-                val fqName = containingClass?.qualifiedName ?: ""
-                if (equalsNames(ktClass, element, doc) && (fqName.equals(ktClass.fqName?.asString()))) {
-                    result.add(ktClass)
-                    return
-                }
                 ktClass.acceptChildren(this)
             }
 
@@ -192,7 +180,7 @@ private fun makeVisitor(element: ElementHandle<*>, result: MutableList<KtElement
 
 fun equalsNames(ktElement: KtElement?, element: ElementHandle<*>?, doc: Document): Boolean {
     if (ktElement == null || element == null) return false
-    val first = ktElement.getName() ?: return false
+    val first = ktElement.name ?: return false
     val javaSource = JavaSource.forDocument(doc) ?: return false
     val searcher = ElementHandleSimpleNameSearcher(element)
     try {
@@ -205,7 +193,8 @@ fun equalsNames(ktElement: KtElement?, element: ElementHandle<*>?, doc: Document
     if (first != second) return false
 
     val ktSignatures: Set<Pair<String, String>> =
-            ktElement.getUserData(LightClassBuilderFactory.JVM_SIGNATURE) ?: return false
+            ktElement.getUserData(LightClassBuilderFactory.JVM_SIGNATURE) ?: return true
+    if (ktSignatures.isEmpty())  return true
 
     val signatures = SourceUtils.getJVMSignature(element).toList()
 
@@ -224,15 +213,14 @@ fun equalsDeclaringTypes(ktElement: KtElement?, element: ElementHandle<*>?, doc:
     } catch (ex: IOException) {
         Exceptions.printStackTrace(ex)
     }
-    val containingClass = searcher.containingClass ?: return false
-    val fqName = containingClass.qualifiedName ?: return false
+    
+    val fqName = searcher.containingClass?.qualifiedName ?: return false
     return fqName == typeNameInfo.asString() || typeNameInfo.asString() == "${fqName}Kt"
 }
 
 private fun getDeclaringTypeFqName(ktElement: KtElement?): FqName? {
-    val parent = PsiTreeUtil.getParentOfType(ktElement,
-            KtClassOrObject::class.java, KtFile::class.java) ?: return null
-    return getTypeFqName(parent)
+    return PsiTreeUtil.getParentOfType(ktElement,
+            KtClassOrObject::class.java, KtFile::class.java)?.let { getTypeFqName(it) }
 }
 
 private fun getTypeFqName(element: PsiElement?) = when (element) {

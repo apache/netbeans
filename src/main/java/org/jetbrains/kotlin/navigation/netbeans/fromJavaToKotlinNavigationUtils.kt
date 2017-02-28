@@ -22,7 +22,6 @@ import java.io.IOException
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
 import javax.swing.text.Document
-import kotlin.Pair
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider
 import org.jetbrains.kotlin.filesystem.lightclasses.LightClassBuilderFactory

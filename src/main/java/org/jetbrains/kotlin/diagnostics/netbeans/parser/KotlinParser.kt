@@ -91,9 +91,9 @@ class KotlinParser : Parser() {
     
     override fun getResult(task: Task): Result? {
         val project = project ?: return null
-        val file = file ?: return null
+        val ktFile = ProjectUtils.getKtFile(snapshot.text.toString(), snapshot.source.fileObject)
         
-        return KotlinParserResult(snapshot, CACHE[file.virtualFile.path], file, project)
+        return KotlinParserResult(snapshot, CACHE[snapshot.source.fileObject.path], ktFile, project)
     }
     
     override fun addChangeListener(changeListener: ChangeListener) {}

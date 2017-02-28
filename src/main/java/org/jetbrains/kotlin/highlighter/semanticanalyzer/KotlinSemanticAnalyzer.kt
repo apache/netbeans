@@ -45,8 +45,8 @@ class KotlinSemanticAnalyzer : SemanticAnalyzer<KotlinParserResult>() {
     override fun run(result: KotlinParserResult?, event: SchedulerEvent?) {
         highlighting.clear()
         cancel = false
-        if (result == null) return
         
+        if (result == null) return
         if (result.project.isScanning()) return
           
         val analysisResult = result.analysisResult?.analysisResult ?: return

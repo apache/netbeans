@@ -18,14 +18,13 @@ package org.jetbrains.kotlin.hints.fixes
 
 import javax.swing.text.Document
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
-import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.psi.KtImportDirective
-import org.jetbrains.kotlin.psi.KtPackageDirective
+import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
 import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.resolve.lang.java.findFQName
 import org.jetbrains.kotlin.hints.KotlinRule
+import org.netbeans.api.project.Project
 import org.netbeans.modules.csl.api.HintFix
 import org.netbeans.modules.csl.api.Hint
 import org.netbeans.modules.csl.api.OffsetRange
@@ -70,17 +69,25 @@ private fun getOffsetToInsert(importDirectives: List<KtImportDirective>, fqName:
     return null
 }
 
+private fun Project.getPublicFunctions(name: String) = ProjectUtils.getSourceFiles(this)
+        .flatMap { ktFile ->
+            PublicFunctionsVisitor(name).let {
+                ktFile.acceptChildren(it)
+                it.publicFunctions
+            }
+        }
+
 class AutoImportFix(kotlinError: KotlinError,
                     parserResult: KotlinParserResult) : KotlinQuickFix(kotlinError, parserResult) {
-    
+
     private var fqName: String? = null
-    
-    constructor(kotlinError: KotlinError, 
+
+    constructor(kotlinError: KotlinError,
                 parserResult: KotlinParserResult,
                 fqName: String) : this(kotlinError, parserResult) {
         this.fqName = fqName
     }
-    
+
     override val hintSeverity = HintSeverity.ERROR
 
     override fun isApplicable() = when (kotlinError.diagnostic.factory) {
@@ -89,7 +96,8 @@ class AutoImportFix(kotlinError: KotlinError,
     }
 
     override fun createFixes(): List<KotlinQuickFix> {
-        val suggestions = parserResult.project.findFQName(kotlinError.psi.text)
+        val types = parserResult.project.findFQName(kotlinError.psi.text)
+        val suggestions = if (types.isNotEmpty()) types else parserResult.project.getPublicFunctions(kotlinError.psi.text)
         return suggestions.map { AutoImportFix(kotlinError, parserResult, it) }
     }
 
@@ -101,4 +109,19 @@ class AutoImportFix(kotlinError: KotlinError,
 
         insert(fqName!!, doc, ktFile)
     }
+}
+
+private class PublicFunctionsVisitor(private val name: String) : KtVisitorVoid() {
+
+    val publicFunctions = hashSetOf<String>()
+
+    override fun visitNamedFunction(function: KtNamedFunction) {
+        val functionName = function.name ?: return
+        val fqName = function.fqName?.asString() ?: return
+        
+        if (functionName == name && function.modifierList == null) {
+            publicFunctions.add("$fqName")
+        }
+    }
+
 }

@@ -27,19 +27,7 @@ import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider
 import org.jetbrains.kotlin.filesystem.lightclasses.LightClassBuilderFactory
 import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.psi.KtClass
-import org.jetbrains.kotlin.psi.KtClassOrObject
-import org.jetbrains.kotlin.psi.KtDeclaration
-import org.jetbrains.kotlin.psi.KtElement
-import org.jetbrains.kotlin.psi.KtEnumEntry
-import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.psi.KtNamedFunction
-import org.jetbrains.kotlin.psi.KtObjectDeclaration
-import org.jetbrains.kotlin.psi.KtPrimaryConstructor
-import org.jetbrains.kotlin.psi.KtProperty
-import org.jetbrains.kotlin.psi.KtPropertyAccessor
-import org.jetbrains.kotlin.psi.KtSecondaryConstructor
-import org.jetbrains.kotlin.psi.KtVisitorVoid
+import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.resolve.lang.java.ElementHandleFieldContainingClassSearcher
 import org.jetbrains.kotlin.resolve.lang.java.ElementHandleNameSearcher
 import org.jetbrains.kotlin.resolve.lang.java.ElementHandleSimpleNameSearcher
@@ -160,6 +148,12 @@ private fun makeVisitor(element: ElementHandle<*>, result: MutableList<KtElement
 
             override fun visitPrimaryConstructor(constructor: KtPrimaryConstructor) {
                 visitExplicitDeclaration(constructor)
+                
+                constructor.valueParameters.forEach {
+                    if (it.valOrVarKeyword != null) {
+                        visitExplicitDeclaration(it)
+                    }
+                }
             }
 
             override fun visitClass(ktClass: KtClass) {
@@ -181,6 +175,7 @@ private fun makeVisitor(element: ElementHandle<*>, result: MutableList<KtElement
 fun equalsNames(ktElement: KtElement?, element: ElementHandle<*>?, doc: Document): Boolean {
     if (ktElement == null || element == null) return false
     val first = ktElement.name ?: return false
+    
     val javaSource = JavaSource.forDocument(doc) ?: return false
     val searcher = ElementHandleSimpleNameSearcher(element)
     try {
@@ -190,6 +185,10 @@ fun equalsNames(ktElement: KtElement?, element: ElementHandle<*>?, doc: Document
     }
     val second = searcher.simpleName ?: return false
 
+    if (ktElement is KtValVarKeywordOwner && element.kind == ElementKind.METHOD) {
+        return equalsForProperty(ktElement, second)
+    }
+    
     if (first != second) return false
 
     val ktSignatures: Set<Pair<String, String>> =
@@ -200,6 +199,24 @@ fun equalsNames(ktElement: KtElement?, element: ElementHandle<*>?, doc: Document
 
     ktSignatures.firstOrNull { signatures.contains(it.first) } ?: return false
     return true
+}
+
+private fun equalsForProperty(ktProperty: KtValVarKeywordOwner, simpleName: String): Boolean {
+    val name = when (ktProperty) {
+        is KtProperty -> ktProperty.name
+        is KtParameter -> ktProperty.name
+        else -> null
+    } ?: return false
+    
+    val propertyFromMethodName = simpleName.let {
+        if (simpleName.startsWith("is")) it else {
+            if (simpleName.length <= 3) return false
+            val withoutGetOrSet = it.substring(3)
+            withoutGetOrSet.replaceRange(0, 1, withoutGetOrSet.first().toLowerCase().toString())
+        }
+    }
+    
+    return name == propertyFromMethodName
 }
 
 fun equalsDeclaringTypes(ktElement: KtElement?, element: ElementHandle<*>?, doc: Document): Boolean {

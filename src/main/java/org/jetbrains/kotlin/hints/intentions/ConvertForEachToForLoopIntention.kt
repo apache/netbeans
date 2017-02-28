@@ -62,7 +62,7 @@ class ConvertForEachToForLoopIntention(val parserResult: KotlinParserResult,
         doc.atomicChange {
             remove(startOffset, lengthToDelete)
             insertString(startOffset, loop, null)
-            format(this, psi.textRange.startOffset)
+            format(this, expression.textRange.startOffset)
         }
     }
     

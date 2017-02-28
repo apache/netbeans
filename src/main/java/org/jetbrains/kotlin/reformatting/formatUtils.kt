@@ -38,5 +38,7 @@ fun format(doc: Document, offset: Int, proj: Project? = null) {
     val formattedCode = KotlinFormatterUtils.formatCode(code, parsedFile.name, project, "\n")
     doc.remove(0, doc.length)
     doc.insertString(0, formattedCode, null)
-    SwingUtilities.invokeLater(Runnable { moveCaretToOffset(doc as StyledDocument, offset) })
+    doc.moveCursorTo(offset)
 }
+
+fun Document.moveCursorTo(position: Int) = SwingUtilities.invokeLater(Runnable { moveCaretToOffset(this as StyledDocument, position) })

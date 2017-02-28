@@ -61,7 +61,7 @@ class MergeIfsIntention(val parserResult: KotlinParserResult,
         doc.atomicChange {
             remove(startOffset, lengthToDelete)
             insertString(startOffset, text, null)
-            format(this, psi.textRange.startOffset)
+            format(this, element.textRange.startOffset)
         }
     }
     

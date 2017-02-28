@@ -17,6 +17,9 @@
 package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
+import javax.swing.SwingUtilities
+import javax.swing.text.StyledDocument
+import org.jetbrains.kotlin.navigation.netbeans.moveCaretToOffset
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.util.PsiUtilCore
@@ -24,6 +27,7 @@ import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.idea.caches.resolve.analyze
 import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.reformatting.moveCursorTo
 import org.jetbrains.kotlin.resolve.constants.evaluate.ConstantExpressionEvaluator
 import org.jetbrains.kotlin.resolve.lazy.BodyResolveMode
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
@@ -56,7 +60,7 @@ class ConvertToStringTemplateIntention(val parserResult: KotlinParserResult,
         doc.atomicChange {
             remove(startOffset, lengthToDelete)
             insertString(startOffset, text, null)
-            format(this, element.textRange.startOffset)
+            moveCursorTo(element.textRange.startOffset) 
         }
     }
 
@@ -64,12 +68,12 @@ class ConvertToStringTemplateIntention(val parserResult: KotlinParserResult,
 
 class ConvertToStringTemplateInspection(val parserResult: KotlinParserResult,
                                         override val element: KtElement) : Inspection(element) {
-    
+
     override val description = "Concatenation can be replaced by template"
 
     override fun isApplicable(): Boolean {
         if (element !is KtBinaryExpression) return false
-        
+
         return element.isApplicable()
     }
 }
@@ -103,7 +107,7 @@ private fun fold(left: KtExpression?, right: String, factory: KtPsiFactory): KtS
 
     if (left is KtBinaryExpression && isApplicableToNoParentCheck(left)) {
         val leftRight = buildText(left.right, forceBraces)
-        return fold(left.left, leftRight + right, factory)
+        return fold(left.left, "$leftRight$right", factory)
     } else {
         val leftText = buildText(left, forceBraces)
         return factory.createExpression("\"$leftText$right\"") as KtStringTemplateExpression
@@ -145,11 +149,11 @@ private fun buildText(expr: KtExpression?, forceBraces: Boolean): String {
 
             if (forceBraces) {
                 if (base.endsWith('$')) {
-                    return base.dropLast(1) + "\\$"
+                    return "${base.dropLast(1)}\\$"
                 } else {
                     val lastPart = expression.children.lastOrNull()
                     if (lastPart is KtSimpleNameStringTemplateEntry) {
-                        return base.dropLast(lastPart.textLength) + "\${" + lastPart.text.drop(1) + "}"
+                        return "${base.dropLast(lastPart.textLength)}\${${lastPart.text.drop(1)}}"
                     }
                 }
             }
@@ -157,7 +161,7 @@ private fun buildText(expr: KtExpression?, forceBraces: Boolean): String {
         }
 
         is KtNameReferenceExpression ->
-            return "$" + (if (forceBraces) "{$expressionText}" else expressionText)
+            return "$${if (forceBraces) "{$expressionText}" else expressionText}"
     }
 
     return "\${$expressionText}"

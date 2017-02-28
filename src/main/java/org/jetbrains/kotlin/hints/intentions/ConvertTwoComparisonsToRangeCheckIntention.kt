@@ -57,7 +57,6 @@ class ConvertTwoComparisonsToRangeCheckIntention(val parserResult: KotlinParserR
         doc.atomicChange {
             remove(startOffset, lengthToDelete)
             insertString(startOffset, text, null)
-            format(this, psi.textRange.startOffset)
         }
     }
     

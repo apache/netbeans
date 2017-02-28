@@ -68,7 +68,6 @@ class ReplaceSizeCheckWithIsNotEmptyIntention(val parserResult: KotlinParserResu
         doc.atomicChange {
             remove(startOffset, lengthToDelete)
             insertString(startOffset, newText, null)
-            format(this, psi.textRange.startOffset)
         }
 
     }

@@ -82,7 +82,7 @@ class ImplementMembersFix(kotlinError: KotlinError,
 
         doc.atomicChange {
             generateMethods(this, classOrObject, missingImplementations)
-            format(this, kotlinError.psi.textRange.startOffset)
+            format(this, classOrObject.textRange.startOffset)
         }
     }
 

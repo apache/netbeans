@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
+import org.jetbrains.kotlin.reformatting.moveCursorTo
 
 class ConvertToConcatenatedStringIntention(val parserResult: KotlinParserResult,
                                            val psi: PsiElement) : ApplicableIntention {
@@ -63,7 +64,7 @@ class ConvertToConcatenatedStringIntention(val parserResult: KotlinParserResult,
         doc.atomicChange {
             remove(startOffset, lengthToDelete)
             insertString(startOffset, text, null)
-            format(this, psi.textRange.startOffset)
+            moveCursorTo(element.textRange.startOffset)
         }
     }
 

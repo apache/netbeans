@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.resolve.lang.java.findFQName
 import org.jetbrains.kotlin.hints.KotlinRule
+import org.jetbrains.kotlin.search.PublicFunctionsVisitor
 import org.netbeans.api.project.Project
 import org.netbeans.modules.csl.api.HintFix
 import org.netbeans.modules.csl.api.Hint
@@ -71,7 +72,7 @@ private fun getOffsetToInsert(importDirectives: List<KtImportDirective>, fqName:
 
 private fun Project.getPublicFunctions(name: String) = ProjectUtils.getSourceFiles(this)
         .flatMap { ktFile ->
-            PublicFunctionsVisitor(name).let {
+            PublicFunctionsVisitor({ it == name }).let {
                 ktFile.acceptChildren(it)
                 it.publicFunctions
             }
@@ -107,19 +108,4 @@ class AutoImportFix(kotlinError: KotlinError,
 
         insert(fqName!!, doc, ktFile)
     }
-}
-
-private class PublicFunctionsVisitor(private val name: String) : KtVisitorVoid() {
-
-    val publicFunctions = hashSetOf<String>()
-
-    override fun visitNamedFunction(function: KtNamedFunction) {
-        val functionName = function.name ?: return
-        val fqName = function.fqName?.asString() ?: return
-        
-        if (functionName == name && function.modifierList == null) {
-            publicFunctions.add("$fqName")
-        }
-    }
-
 }

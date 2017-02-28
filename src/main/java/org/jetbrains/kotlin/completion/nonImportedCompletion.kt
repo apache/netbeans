@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.idea.util.CallTypeAndReceiver
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.resolve.lang.java.findTypes
 import org.jetbrains.kotlin.hints.fixes.autoImport
+import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.api.project.Project
 import org.netbeans.api.java.source.ElementHandle as JavaElementHandle
 import javax.lang.model.element.TypeElement
@@ -31,17 +32,20 @@ import org.netbeans.modules.csl.api.ElementKind
 import org.netbeans.modules.csl.api.HtmlFormatter
 import org.netbeans.modules.csl.spi.DefaultCompletionProposal
 import org.jetbrains.kotlin.utils.KotlinImageProvider
+import org.jetbrains.kotlin.search.PublicFunctionsVisitor
 import javax.swing.text.Document
 
 fun generateNonImportedCompletionProposals(identifierPart: String,
                                            ktFile: KtFile, expression: KtSimpleNameExpression,
                                            project: Project, idenOffset: Int) =
-        lookupNonImportedTypes(expression, identifierPart, ktFile, project)
-                .map { NonImportedCompletionProposal(identifierPart, expression, it, idenOffset) }
+        lookupNonImportedTypes(expression, identifierPart, ktFile, project, idenOffset)
+                .toMutableList()
+                .apply { addAll(lookupNonImportedFunctions(identifierPart, project, idenOffset)) }
 
 private fun lookupNonImportedTypes(simpleNameExpression: KtSimpleNameExpression,
                                    identifierPart: String, ktFile: KtFile,
-                                   project: Project): List<JavaElementHandle<TypeElement>> {
+                                   project: Project, 
+                                   idenOffset: Int): List<NonImportedCompletionProposal> {
     val callTypeAndReceiver = CallTypeAndReceiver.detect(simpleNameExpression)
 
     if ((callTypeAndReceiver !is CallTypeAndReceiver.TYPE &&
@@ -54,39 +58,58 @@ private fun lookupNonImportedTypes(simpleNameExpression: KtSimpleNameExpression,
             .mapNotNull { it.getImportedFqName()?.asString() }
             .toSet()
 
-    return project.findTypes(identifierPart).filter { it.qualifiedName !in importsSet }
+    return project.findTypes(identifierPart)
+            .filter { it.qualifiedName !in importsSet }
+            .map { NonImportedCompletionProposal(identifierPart, it.qualifiedName, ElementKind.CLASS, idenOffset) }
 }
 
+private fun lookupNonImportedFunctions(identifierPart: String, 
+                                       project: Project, 
+                                       idenOffset: Int) = ProjectUtils.getSourceFiles(project)
+        .flatMap { ktFile ->
+            PublicFunctionsVisitor({ it.startsWith(identifierPart) }).let {
+                ktFile.acceptChildren(it)
+                it.publicFunctions
+            }
+        }
+        .map { NonImportedCompletionProposal(identifierPart, it, ElementKind.METHOD, idenOffset) }
+
+
 class NonImportedCompletionProposal(val identifierPart: String,
-                                    val expression: KtSimpleNameExpression,
-                                    val type: JavaElementHandle<TypeElement>, 
+                                    val text: String,
+                                    val elemKind: ElementKind,
                                     val idenOffset: Int) : DefaultCompletionProposal(), InsertableProposal {
     
     override fun doInsert(document: Document) {
         document.remove(idenOffset, identifierPart.length)
-        document.insertString(idenOffset, type.qualifiedName.substringAfterLast("."), null)
-        autoImport(type.qualifiedName, document)
+        document.insertString(idenOffset, text.substringAfterLast("."), null)
+        autoImport(text, document)
     }
-
+    
     override fun getElement() = null
 
-    override fun getIcon() = KotlinImageProvider.typeImage
+    override fun getIcon() = when (elemKind) {
+        ElementKind.CLASS -> KotlinImageProvider.typeImage
+        ElementKind.METHOD -> KotlinImageProvider.functionImage
+        else -> null
+    }
 
     override fun getAnchorOffset() = idenOffset
 
-    override fun getKind() = ElementKind.CLASS
+    override fun getKind() = elemKind
 
-    override fun getName() = type.qualifiedName
+    override fun getName() = text
 
-    override fun getSortText() = type.qualifiedName
+    override fun getSortText() = text
 
     override fun getSortPrioOverride() = 50
 
     override fun isSmart() = false
 
-    override fun getInsertPrefix() = type.qualifiedName
+    override fun getInsertPrefix() = text
 
     override fun getRhsHtml(hf: HtmlFormatter?) = ""
 
-    override fun getLhsHtml(hf: HtmlFormatter?) = "<i>${type.qualifiedName.substringAfterLast(".")}</i> (${type.qualifiedName.substringBeforeLast(".")})"
+    override fun getLhsHtml(hf: HtmlFormatter?) = "<i>${text.substringAfterLast(".")}</i> (${text.substringBeforeLast(".")})"
+    
 }

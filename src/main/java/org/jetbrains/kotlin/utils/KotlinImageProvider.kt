@@ -31,7 +31,8 @@ object KotlinImageProvider {
     private val imagesLocation = "org/jetbrains/kotlin/completionIcons/"
 
     val typeImage = ImageIcon(ImageUtilities.loadImage("${imagesLocation}class.png"))
-
+    val functionImage = ImageIcon(ImageUtilities.loadImage("${imagesLocation}method.png"))
+    
     private fun getImageIcon(name: String) = ImageIcon(ImageUtilities.loadImage("$imagesLocation$name"))
 
     fun getImage(descriptor: DeclarationDescriptor?) = when {

@@ -91,7 +91,11 @@ class KotlinParser : Parser() {
     
     override fun getResult(task: Task): Result? {
         val project = project ?: return null
-        val ktFile = ProjectUtils.getKtFile(snapshot.text.toString(), snapshot.source.fileObject)
+        val ktFile = if (file?.virtualFile?.path == snapshot.source.fileObject.path) {
+            file 
+        } else {
+            ProjectUtils.getKtFile(snapshot.text.toString(), snapshot.source.fileObject)
+        } ?: return null
         
         return KotlinParserResult(snapshot, CACHE[snapshot.source.fileObject.path], ktFile, project)
     }

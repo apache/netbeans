@@ -18,21 +18,15 @@ package org.jetbrains.kotlin.navigation
 
 import com.intellij.psi.PsiElement
 import javax.swing.text.Document
-import kotlin.Pair
-import org.jetbrains.kotlin.builder.KotlinPsiManager
 import org.jetbrains.kotlin.utils.LineEndUtil
 import org.jetbrains.kotlin.utils.ProjectUtils
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtReferenceExpression
 import org.openide.filesystems.FileObject
 
 fun getReferenceExpression(doc: Document, offset: Int): PsiElement? {
-    var ktFile = KotlinParser.file
     val fo = ProjectUtils.getFileObjectForDocument(doc) ?: return null
-    if (ktFile == null || !ktFile.name.equals(fo.name)) {
-        ktFile = KotlinPsiManager.parseText(doc.getText(0, doc.length), fo) ?: return null
-    }
+    val ktFile = ProjectUtils.getKtFile(doc.getText(0, doc.length), fo)
     
     val documentOffset = LineEndUtil.convertCrToDocumentOffset(ktFile.text, offset)
     return ktFile.findElementAt(documentOffset)

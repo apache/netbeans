@@ -81,7 +81,9 @@ class AutoImportFix(kotlinError: KotlinError,
                     parserResult: KotlinParserResult) : KotlinQuickFix(kotlinError, parserResult) {
 
     private var fqName: String? = null
-
+    private val types by lazy { parserResult.project.findFQName(kotlinError.psi.text) }
+    private val suggestions by lazy { if (types.isNotEmpty()) types else parserResult.project.getPublicFunctions(kotlinError.psi.text) }
+    
     constructor(kotlinError: KotlinError,
                 parserResult: KotlinParserResult,
                 fqName: String) : this(kotlinError, parserResult) {
@@ -91,15 +93,11 @@ class AutoImportFix(kotlinError: KotlinError,
     override val hintSeverity = HintSeverity.ERROR
 
     override fun isApplicable() = when (kotlinError.diagnostic.factory) {
-        Errors.UNRESOLVED_REFERENCE -> true
+        Errors.UNRESOLVED_REFERENCE -> suggestions.isNotEmpty()
         else -> false
     }
 
-    override fun createFixes(): List<KotlinQuickFix> {
-        val types = parserResult.project.findFQName(kotlinError.psi.text)
-        val suggestions = if (types.isNotEmpty()) types else parserResult.project.getPublicFunctions(kotlinError.psi.text)
-        return suggestions.map { AutoImportFix(kotlinError, parserResult, it) }
-    }
+    override fun createFixes() =  suggestions.map { AutoImportFix(kotlinError, parserResult, it) }
 
     override fun getDescription() = "Add import for $fqName"
 

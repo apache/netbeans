@@ -18,7 +18,7 @@ package org.jetbrains.kotlin.structurescanner
 
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
-import com.intellij.psi.impl.source.tree.PsiCoreCommentImpl
+import com.intellij.psi.PsiComment
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.psi.*
 import org.netbeans.modules.csl.api.OffsetRange
@@ -32,7 +32,7 @@ class KotlinFoldingVisitor(val ktFile: KtFile) : KtVisitorVoid() {
     fun computeFolds(): Map<String, List<OffsetRange>> {
         ktFile.acceptChildren(this)
         
-        val found: Collection<PsiElement> = PsiTreeUtil.findChildrenOfType(ktFile, PsiCoreCommentImpl::class.java)
+        val found: Collection<PsiElement> = PsiTreeUtil.findChildrenOfType(ktFile, PsiComment::class.java)
         found.mapTo(comments) { it.textRange.toOffsetRange() }
         
         return mapOf("comments" to comments, 

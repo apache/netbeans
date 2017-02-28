@@ -312,11 +312,4 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
         
         return applicationEnvironment.jarFileSystem.findFileByPath("$decodedPathToJar!/$decodedRelativePath")
     }
-    
 }
-
-
-
-
-
-

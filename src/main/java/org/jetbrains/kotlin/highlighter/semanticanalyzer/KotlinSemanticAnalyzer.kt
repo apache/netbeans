@@ -33,6 +33,7 @@ class KotlinSemanticAnalyzer : SemanticAnalyzer<KotlinParserResult>() {
     private fun highlightDeprecatedElements(result: KotlinParserResult) = 
             result.analysisResult?.analysisResult?.bindingContext?.diagnostics
                     ?.filter { it.factory == Errors.DEPRECATION }
+                    ?.filter { it.psiFile == result.ktFile }
                     ?.map { OffsetRange(it.textRanges.first().startOffset,
                             it.textRanges.first().endOffset) }
                     ?.forEach { highlighting.put(it, KotlinHighlightingAttributes.DEPRECATED.styleKey) }

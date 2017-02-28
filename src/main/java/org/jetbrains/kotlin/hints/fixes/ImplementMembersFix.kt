@@ -70,7 +70,7 @@ class ImplementMembersFix(kotlinError: KotlinError,
 
     override fun createFixes() = listOf(this)
 
-    override fun getDescription() = "Implements members"
+    override fun getDescription() = "Implement members"
 
     override fun implement() {
         val doc = parserResult.snapshot.source.getDocument(false)

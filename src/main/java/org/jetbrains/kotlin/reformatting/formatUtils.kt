@@ -20,9 +20,9 @@ import com.intellij.psi.PsiFile
 import javax.swing.text.Document
 import org.jetbrains.kotlin.formatting.KotlinFormatterUtils
 import org.jetbrains.kotlin.formatting.NetBeansDocumentFormattingModel
+import org.jetbrains.kotlin.navigation.netbeans.moveCaretToOffset
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.api.project.Project
-import org.jetbrains.kotlin.navigation.netbeans.openFileAtOffset
 import javax.swing.text.StyledDocument
 import javax.swing.SwingUtilities
 
@@ -38,5 +38,5 @@ fun format(doc: Document, offset: Int, proj: Project? = null) {
     val formattedCode = KotlinFormatterUtils.formatCode(code, parsedFile.name, project, "\n")
     doc.remove(0, doc.length)
     doc.insertString(0, formattedCode, null)
-    SwingUtilities.invokeLater(Runnable { openFileAtOffset(doc as StyledDocument, offset) })
+    SwingUtilities.invokeLater(Runnable { moveCaretToOffset(doc as StyledDocument, offset) })
 }

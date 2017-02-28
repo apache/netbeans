@@ -38,7 +38,7 @@ import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
 class ConvertToBlockBodyIntention(val parserResult: KotlinParserResult,
-                                 val psi: PsiElement) : ApplicableIntention {
+                                  val psi: PsiElement) : ApplicableIntention {
 
     override fun isApplicable(caretOffset: Int): Boolean {
         val declaration: KtDeclarationWithBody = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java) ?: return false
@@ -72,7 +72,7 @@ class ConvertToBlockBodyIntention(val parserResult: KotlinParserResult,
                 && !KotlinBuiltIns.isUnit(declaration.returnType(context)!!)
 
         val factory = KtPsiFactory(declaration)
-        
+
         replaceBody(declaration, factory, context, shouldSpecifyType)
     }
 
@@ -111,27 +111,27 @@ class ConvertToBlockBodyIntention(val parserResult: KotlinParserResult,
         return newBody
     }
 
-    private fun replaceBody(declaration: KtDeclarationWithBody, factory: KtPsiFactory, 
+    private fun replaceBody(declaration: KtDeclarationWithBody, factory: KtPsiFactory,
                             context: BindingContext, shouldSpecifyType: Boolean) {
         val newBody = convert(declaration, context, factory)
         var newBodyText = newBody.node.text
 
         val anchorToken = declaration.equalsToken
         if (anchorToken!!.nextSibling !is PsiWhiteSpace) {
-            newBodyText = factory.createWhiteSpace().text + newBodyText
+            newBodyText = "${factory.createWhiteSpace().text}$newBodyText"
         }
 
         val startOffset = anchorToken.textRange.startOffset
         val endOffset = declaration.bodyExpression!!.textRange.endOffset
         val doc = parserResult.snapshot.source.getDocument(false)
-        
+
         doc.atomicChange {
             remove(startOffset, endOffset - startOffset)
             insertString(startOffset, newBodyText, null)
-            format(this, declaration.textRange.endOffset)
-            if (shouldSpecifyType) { 
+            if (shouldSpecifyType) {
                 specifyType(declaration, factory, context)
             }
+            format(this, declaration.textRange.endOffset)
         }
     }
 
@@ -142,7 +142,7 @@ class ConvertToBlockBodyIntention(val parserResult: KotlinParserResult,
         val doc = parserResult.snapshot.source.getDocument(false)
         doc.insertString(declaration.valueParameterList!!.textRange.endOffset, stringToInsert, null)
     }
-    
+
 }
 
 private fun KtNamedFunction.returnType(context: BindingContext): KotlinType? {

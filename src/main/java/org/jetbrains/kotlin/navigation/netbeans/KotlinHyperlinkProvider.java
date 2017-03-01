@@ -97,52 +97,7 @@ public class KotlinHyperlinkProvider implements HyperlinkProviderExt {
 
     @Override
     public String getTooltipText(Document doc, int offset, HyperlinkType type) {
-        String smartCast = HoverUtilsKt.getSmartCastHover(offset);
-        if (smartCast != null) return smartCast;
-        
-        if (referenceExpression == null) {
-            return "";
-        }
-        
-        FileObject file = ProjectUtils.getFileObjectForDocument(doc);
-        if (file == null) {
-            return "";
-        }
-
-        Project project = getProjectForNavigation(file);
-        if (project == null) {
-            return "";
-        }
-        
-        NavigationData navigationData = OpenDeclarationKt.getNavigationData(referenceExpression, project);
-        if (navigationData == null) {
-            return "";
-        }
-        
-        SourceElement sourceElement = navigationData.getSourceElement();
-        if (sourceElement instanceof KotlinSourceElement) {
-            return "";
-        } 
-        if (sourceElement instanceof NetBeansJavaSourceElement) {
-            ElemHandle handle = ((NetBeansJavaSourceElement) sourceElement).getElementBinding();
-            Doc javaDoc = NbElementUtilsKt.getJavaDoc(handle, project);
-            if (javaDoc == null) return "";
-            StringBuilder builder = new StringBuilder();
-            
-            JavaElement javaElement = ((NetBeansJavaSourceElement) sourceElement).getJavaElement();
-            if (javaElement instanceof NetBeansJavaClass) {
-                builder.append(((NetBeansJavaClass) javaElement).getFqName().asString()).append('\n');
-            }
-            if (javaElement instanceof NetBeansJavaMember) {
-                builder.append(((NetBeansJavaMember) javaElement).getName().asString()).append('\n');
-            }
-            builder.append(javaDoc.commentText());
-            
-            return builder.toString();
-        }
-        
-        
-        return "";
+        return HoverUtilsKt.getToolTip(referenceExpression, doc, offset);
     }
     
     private Project getProjectForNavigation(FileObject fo) {

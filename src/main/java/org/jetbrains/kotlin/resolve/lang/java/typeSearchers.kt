@@ -93,7 +93,7 @@ class IsRawSearcher(val handle: TypeMirrorHandle<*>) : Task<CompilationControlle
         val type = handle.resolve(info) as? DeclaredType ?: return
         val element = type.asElement() as TypeElement
         if (element.typeParameters.isEmpty()) return
-
+        
         isRaw = type.typeArguments.isEmpty()
     }
 }

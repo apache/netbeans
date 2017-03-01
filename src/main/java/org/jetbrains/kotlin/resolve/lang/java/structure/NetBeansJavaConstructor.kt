@@ -39,4 +39,6 @@ class NetBeansJavaConstructor(elementHandle: ElemHandle<ExecutableElement>, cont
     override val typeParameters: List<JavaTypeParameter>
         get() = elementHandle.getTypeParameters(project)
 
+    override fun presentation() = "$name${valueParameters.joinToString(prefix = "(", postfix = ")") { "${it.type} ${it.name}" }}"
+    
 }

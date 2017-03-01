@@ -51,4 +51,6 @@ abstract class NetBeansJavaMember<T : Element>(elementHandle: ElemHandle<T>, ove
 
     override fun findAnnotation(fqName: FqName): JavaAnnotation? = elementHandle.getAnnotation(project, fqName)
 
+    abstract fun presentation(): String
+    
 }

@@ -37,4 +37,6 @@ class NetBeansJavaField(elementHandle: ElemHandle<VariableElement>, containingCl
     override val type: JavaType
         get() = elementHandle.getFieldType(project)
 
+    override fun presentation() = "$type $name"
+    
 }

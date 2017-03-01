@@ -45,4 +45,6 @@ class NetBeansJavaMethod(elementHandle: ElemHandle<ExecutableElement>, containin
 
     override val typeParameters: List<JavaTypeParameter>
         get() = elementHandle.getTypeParameters(project)
+    
+    override fun presentation() = "$returnType $name${valueParameters.joinToString(prefix = "(", postfix = ")") { "${it.type} ${it.name}" }}"
 }

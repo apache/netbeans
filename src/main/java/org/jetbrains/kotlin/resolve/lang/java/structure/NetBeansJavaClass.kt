@@ -79,4 +79,12 @@ class NetBeansJavaClass(elementHandle: ElemHandle<TypeElement>, project: Project
 
     override fun toString(): String = elementHandle.qualifiedName
 
+    fun presentation(): String {
+        val visibility = visibility.displayName
+        val final = if (isFinal) " final" else ""
+        val cl = if (isInterface) " inteface" else if (isEnum) " enum" else " class"
+        
+        return "$visibility$final$cl ${elementHandle.qualifiedName}"
+    }
+    
 }

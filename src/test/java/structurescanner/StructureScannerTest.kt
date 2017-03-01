@@ -19,9 +19,10 @@ package structurescanner
 import javaproject.JavaProject
 import org.jetbrains.kotlin.builder.KotlinPsiManager
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer
-import org.jetbrains.kotlin.structurescanner.KotlinStructureScanner
+import org.jetbrains.kotlin.structurescanner.*
 import org.netbeans.api.project.Project
 import org.netbeans.junit.NbTestCase
+import org.netbeans.modules.csl.api.StructureItem
 import org.openide.filesystems.FileObject
 
 class StructureScannerTest : NbTestCase("StructureScanner test") {
@@ -34,7 +35,10 @@ class StructureScannerTest : NbTestCase("StructureScanner test") {
         structureScannerDir = project.projectDirectory.getFileObject("src").getFileObject("structureScanner")
     }
     
-    private fun doTest(fileName: String, expectedNumOfItems: Int) {
+    private val StructureItem.allItems: List<StructureItem> 
+        get() = arrayListOf(this).apply { addAll(nestedItems.flatMap { it.allItems }) }
+    
+    private fun doTest(fileName: String, functions: Int = 0, properties: Int = 0, classes: Int = 0) {
         val file = structureScannerDir.getFileObject("$fileName.kt")
         assertNotNull(file)
         
@@ -42,16 +46,28 @@ class StructureScannerTest : NbTestCase("StructureScanner test") {
         val resultWithProvider = KotlinAnalyzer.analyzeFile(project, ktFile)
         
         val items = KotlinStructureScanner().structureItems(file, resultWithProvider.analysisResult.bindingContext)
-        assertEquals(items.size, expectedNumOfItems)
-    }
+                .flatMap { it.allItems }
+        
+        assertEquals(functions, items.filterIsInstance<KotlinFunctionStructureItem>().size)
+        assertEquals(properties, items.filterIsInstance<KotlinPropertyStructureItem>().size)
+        assertEquals(classes, items.filterIsInstance<KotlinClassStructureItem>().size)
+    }    
     
     fun testProjectCreation() {
         assertNotNull(project)
         assertNotNull(structureScannerDir)
     }
     
-    fun testSimple() = doTest("simple", 1)
+    fun testEmpty() = doTest("empty")
     
-    fun testSeveralFunctions() = doTest("severalFunctions", 2)
+    fun testSimple() = doTest("simple", functions = 1)
+    
+    fun testSeveralFunctions() = doTest("severalFunctions", functions = 2)
+    
+    fun testObject() = doTest("object", classes = 1, functions = 1)
+    
+    fun testClassWithSeveralMembers() = doTest("classWithSeveralMembers", classes = 2, functions = 1, properties = 1)
+    
+    fun testSeveralClasses() = doTest("severalClasses", classes = 4, functions = 3, properties = 3)
     
 }

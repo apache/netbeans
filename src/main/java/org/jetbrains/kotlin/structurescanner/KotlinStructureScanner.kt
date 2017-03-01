@@ -41,6 +41,12 @@ class KotlinStructureScanner : StructureScanner {
         return structureItems(file, context)
     }
     
+    override fun folds(info: ParserResult): Map<String, List<OffsetRange>> {
+        val file = info.snapshot.source.fileObject ?: return emptyMap()
+        
+        return foldMap(file)
+    }
+    
     fun structureItems(file: FileObject, context: BindingContext): List<StructureItem> {
         if (ProjectUtils.getKotlinProjectForFileObject(file) == null) return emptyList()
         
@@ -56,10 +62,8 @@ class KotlinStructureScanner : StructureScanner {
         }
     }
     
-    override fun folds(info: ParserResult): Map<String, List<OffsetRange>> {
-        val file = info.snapshot.source.fileObject ?: return emptyMap()
+    fun foldMap(file: FileObject): Map<String, List<OffsetRange>> {
         if (ProjectUtils.getKotlinProjectForFileObject(file) == null) return emptyMap()
-        
         val ktFile = ProjectUtils.getKtFile(file) ?: return emptyMap()
         
         return KotlinFoldingVisitor(ktFile).computeFolds()

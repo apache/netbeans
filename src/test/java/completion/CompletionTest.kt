@@ -7,7 +7,6 @@ import org.jetbrains.kotlin.completion.*
 import org.netbeans.api.project.Project
 import org.netbeans.junit.NbTestCase
 import org.openide.filesystems.FileObject
-import junit.framework.TestCase.assertNotNull
 import org.jetbrains.kotlin.builder.KotlinPsiManager
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.psi.KtFile

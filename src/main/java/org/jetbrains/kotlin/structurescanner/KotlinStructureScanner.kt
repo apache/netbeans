@@ -24,6 +24,7 @@ import org.netbeans.modules.csl.api.StructureItem
 import org.netbeans.modules.csl.api.StructureScanner
 import org.netbeans.modules.csl.spi.ParserResult
 import org.openide.filesystems.FileObject
+import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
@@ -35,11 +36,15 @@ class KotlinStructureScanner : StructureScanner {
     
     override fun scan(info: ParserResult): List<StructureItem> {
         val file = info.snapshot.source.fileObject ?: return emptyList()
+        val context = (info as KotlinParserResult).analysisResult?.analysisResult?.bindingContext ?: return emptyList()
+        
+        return structureItems(file, context)
+    }
+    
+    fun structureItems(file: FileObject, context: BindingContext): List<StructureItem> {
         if (ProjectUtils.getKotlinProjectForFileObject(file) == null) return emptyList()
         
         val ktFile = ProjectUtils.getKtFile(file) ?: return emptyList()
-        
-        val context = (info as KotlinParserResult).analysisResult?.analysisResult?.bindingContext ?: return emptyList()
         
         return ktFile.declarations.mapNotNull {
             when(it) {

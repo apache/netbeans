@@ -42,16 +42,7 @@ class KotlinKeystrokeHandler : KeystrokeHandler {
     }
     
     override fun beforeCharInserted(doc: Document, caretOffset: Int, 
-                                    target: JTextComponent, ch: Char): Boolean {
-        return when(ch) {
-            '"' -> checkNextChar(doc, caretOffset, "\"", target)
-            '\'' -> checkNextChar(doc, caretOffset, "'", target)
-            ')' -> checkNextChar(doc, caretOffset, ")", target)
-            '}' -> checkNextChar(doc, caretOffset, "}", target)
-            ']' -> checkNextChar(doc, caretOffset, "]", target)
-            else -> false
-        }
-    }
+                                    target: JTextComponent, ch: Char) = checkNextChar(doc, caretOffset, ch.toString(), target)
     
     override fun afterCharInserted(doc: Document, caretOffset: Int, 
                                     target: JTextComponent, ch: Char): Boolean {

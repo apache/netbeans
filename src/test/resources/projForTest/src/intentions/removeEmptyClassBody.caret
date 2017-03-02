@@ -1,0 +1,5 @@
+package intentions
+
+class RemoveBraces {
+<caret>
+}

@@ -17,6 +17,8 @@
 package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
+import javax.swing.text.Document
+import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.KtDeclaration
 import org.jetbrains.kotlin.psi.KtProperty
@@ -27,8 +29,9 @@ import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
 
-class ConvertPropertyInitializerToGetterIntention(val parserResult: KotlinParserResult,
-                                                  val psi: PsiElement) : ApplicableIntention {
+class ConvertPropertyInitializerToGetterIntention(doc: Document,
+                                                  analysisResult: AnalysisResult?,
+                                                  psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
 
     private var property: KtProperty? = null
 
@@ -49,8 +52,6 @@ class ConvertPropertyInitializerToGetterIntention(val parserResult: KotlinParser
         val element = property ?: return
         val textWithGetter = getTextWithGetter(element)
         
-        val doc = parserResult.snapshot.source.getDocument(false)
-        
         val startOffset = element.textRange.startOffset
         val lengthToDelete = element.textLength
         
@@ -70,7 +71,7 @@ class ConvertPropertyInitializerToGetterIntention(val parserResult: KotlinParser
 
         append(element.name)
 
-        val type = getTypeForDeclaration(element, parserResult)
+        val type = getTypeForDeclaration(element, analysisResult)
 
         append(": ").append(type)
 

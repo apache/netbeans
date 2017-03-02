@@ -17,6 +17,8 @@
 package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
+import org.jetbrains.kotlin.analyzer.AnalysisResult
+import javax.swing.text.Document
 import org.jetbrains.kotlin.descriptors.VariableDescriptor
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
@@ -33,8 +35,9 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
-class ConvertTryFinallyToUseCallIntention(val parserResult: KotlinParserResult,
-                                          val psi: PsiElement) : ApplicableIntention {
+class ConvertTryFinallyToUseCallIntention(doc: Document,
+                                          analysisResult: AnalysisResult?,
+                                          psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
 
     private var tryExpression: KtTryExpression? = null
 
@@ -42,7 +45,7 @@ class ConvertTryFinallyToUseCallIntention(val parserResult: KotlinParserResult,
         tryExpression = psi.getNonStrictParentOfType(KtTryExpression::class.java) ?: return false
         val element = tryExpression ?: return false
 
-        return element.isApplicable(parserResult)
+        return element.isApplicable(analysisResult)
     }
 
     override fun getDescription() = "Convert try-finally to .use()"
@@ -77,8 +80,6 @@ class ConvertTryFinallyToUseCallIntention(val parserResult: KotlinParserResult,
             append("}")
         }
 
-        val doc = parserResult.snapshot.source.getDocument(false)
-
         val startOffset = element.textRange.startOffset
         val lengthToDelete = element.textLength
 
@@ -98,16 +99,16 @@ class ConvertTryFinallyToUseCallInspection(val parserResult: KotlinParserResult,
     override fun isApplicable(): Boolean {
         if (element !is KtTryExpression) return false
         
-        return element.isApplicable(parserResult)
+        return element.isApplicable(parserResult.analysisResult?.analysisResult)
     }
 }
 
-private fun KtTryExpression.isApplicable(parserResult: KotlinParserResult): Boolean {
+private fun KtTryExpression.isApplicable(analysisResult: AnalysisResult?): Boolean {
     val finallySection = finallyBlock ?: return false
     val finallyExpression = finallySection.finalExpression.statements.singleOrNull() ?: return false
     if (catchClauses.isNotEmpty()) return false
 
-    val context = parserResult.analysisResult?.analysisResult?.bindingContext ?: return false
+    val context = analysisResult?.bindingContext ?: return false
     val resolvedCall = finallyExpression.getResolvedCall(context) ?: return false
     if (resolvedCall.candidateDescriptor.name.asString() != "close") return false
     if (resolvedCall.extensionReceiver != null) return false

@@ -16,6 +16,8 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.hints.intentions
 
+import javax.swing.text.Document
+import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.KtCallableDeclaration
 import org.jetbrains.kotlin.psi.KtCodeFragment
@@ -28,8 +30,9 @@ import org.netbeans.modules.csl.api.HintFix
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import com.intellij.psi.PsiElement
 
-class RemoveExplicitTypeIntention(val parserResult: KotlinParserResult, 
-                                  val psi: PsiElement) : ApplicableIntention {
+class RemoveExplicitTypeIntention(doc: Document,
+                                  analysisResult: AnalysisResult?,
+                                  psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
 
     override fun isApplicable(caretOffset: Int): Boolean {
         val element = psi.getNonStrictParentOfType(KtCallableDeclaration::class.java) ?: return false
@@ -54,7 +57,6 @@ class RemoveExplicitTypeIntention(val parserResult: KotlinParserResult,
         val element = psi.getNonStrictParentOfType(KtCallableDeclaration::class.java) ?: return
         val anchor = getAnchor(element) ?: return
 
-        val doc = parserResult.snapshot.source.getDocument(false)
         val endOffset = anchor.textRange.endOffset
         val endOfType = element.typeReference!!.textRange.endOffset
 

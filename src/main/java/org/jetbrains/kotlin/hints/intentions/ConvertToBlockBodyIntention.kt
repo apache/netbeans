@@ -20,6 +20,8 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
+import javax.swing.text.Document
+import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.descriptors.FunctionDescriptor
 import org.jetbrains.kotlin.psi.KtBlockExpression
@@ -37,8 +39,9 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
-class ConvertToBlockBodyIntention(val parserResult: KotlinParserResult,
-                                  val psi: PsiElement) : ApplicableIntention {
+class ConvertToBlockBodyIntention(doc: Document,
+                                  analysisResult: AnalysisResult?,
+                                  psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
 
     override fun isApplicable(caretOffset: Int): Boolean {
         val declaration: KtDeclarationWithBody = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java) ?: return false
@@ -46,7 +49,7 @@ class ConvertToBlockBodyIntention(val parserResult: KotlinParserResult,
 
         when (declaration) {
             is KtNamedFunction -> {
-                val bindingContext = parserResult.analysisResult?.analysisResult?.bindingContext ?: return false
+                val bindingContext = analysisResult?.bindingContext ?: return false
                 val returnType: KotlinType = declaration.returnType(bindingContext) ?: return false
 
                 // do not convert when type is implicit and unknown
@@ -65,7 +68,7 @@ class ConvertToBlockBodyIntention(val parserResult: KotlinParserResult,
 
     override fun implement() {
         val declaration: KtDeclarationWithBody = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java) ?: return
-        val context = parserResult.analysisResult?.analysisResult?.bindingContext ?: return
+        val context = analysisResult?.bindingContext ?: return
 
         val shouldSpecifyType = declaration is KtNamedFunction
                 && !declaration.hasDeclaredReturnType()
@@ -123,8 +126,7 @@ class ConvertToBlockBodyIntention(val parserResult: KotlinParserResult,
 
         val startOffset = anchorToken.textRange.startOffset
         val endOffset = declaration.bodyExpression!!.textRange.endOffset
-        val doc = parserResult.snapshot.source.getDocument(false)
-
+        
         doc.atomicChange {
             remove(startOffset, endOffset - startOffset)
             insertString(startOffset, newBodyText, null)
@@ -139,7 +141,7 @@ class ConvertToBlockBodyIntention(val parserResult: KotlinParserResult,
         val returnType = (declaration as KtNamedFunction).returnType(context).toString()
         val stringToInsert = listOf(factory.createColon(), factory.createWhiteSpace())
                 .joinToString(separator = "") { it.text } + returnType
-        val doc = parserResult.snapshot.source.getDocument(false)
+        
         doc.insertString(declaration.valueParameterList!!.textRange.endOffset, stringToInsert, null)
     }
 

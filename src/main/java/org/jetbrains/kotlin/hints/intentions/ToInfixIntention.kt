@@ -17,6 +17,8 @@
 package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
+import org.jetbrains.kotlin.analyzer.AnalysisResult
+import javax.swing.text.Document
 import org.jetbrains.kotlin.descriptors.FunctionDescriptor
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
@@ -27,8 +29,9 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
-class ToInfixIntention(val parserResult: KotlinParserResult,
-                       val psi: PsiElement) : ApplicableIntention {
+class ToInfixIntention(doc: Document,
+                       analysisResult: AnalysisResult?,
+                       psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
     
     private var expression: KtCallExpression? = null
     
@@ -47,7 +50,7 @@ class ToInfixIntention(val parserResult: KotlinParserResult,
         if (argument.isNamed()) return false
         if (argument.getArgumentExpression() == null) return false
 
-        val bindingContext = parserResult.analysisResult?.analysisResult?.bindingContext ?: return false
+        val bindingContext = analysisResult?.bindingContext ?: return false
         val resolvedCall = element.getResolvedCall(bindingContext) ?: return false
         val function = resolvedCall.resultingDescriptor as? FunctionDescriptor ?: return false
         if (!function.isInfix) return false
@@ -70,8 +73,6 @@ class ToInfixIntention(val parserResult: KotlinParserResult,
         
         val newText = "${receiver.text} $name ${argument.text}"
         
-        val doc = parserResult.snapshot.source.getDocument(false)
-
         val startOffset = receiver.textRange.startOffset
         val lengthToDelete = element.textLength + receiver.textLength + 1
 

@@ -16,14 +16,19 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.hints.intentions
 
+import com.intellij.psi.PsiElement
+import javax.swing.text.Document
+import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.hints.KotlinRule
 import org.netbeans.modules.csl.api.*
 import org.openide.filesystems.FileObject
 
-interface ApplicableIntention : HintFix {
+abstract class ApplicableIntention(val doc: Document,
+                                   val analysisResult: AnalysisResult?,
+                                   val psi: PsiElement): HintFix {
     
-    fun isApplicable(caretOffset: Int): Boolean
+    abstract fun isApplicable(caretOffset: Int): Boolean
     
     override fun isSafe() = true
     

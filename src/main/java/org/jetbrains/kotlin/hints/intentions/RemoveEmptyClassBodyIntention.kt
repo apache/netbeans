@@ -17,13 +17,16 @@
 package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
+import org.jetbrains.kotlin.analyzer.AnalysisResult
+import javax.swing.text.Document
 import org.jetbrains.kotlin.psi.psiUtil.getNextSiblingIgnoringWhitespaceAndComments
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 
-class RemoveEmptyClassBodyIntention(val parserResult: KotlinParserResult,
-                                    val psi: PsiElement) : ApplicableIntention {
+class RemoveEmptyClassBodyIntention(doc: Document,
+                                    analysisResult: AnalysisResult?,
+                                    psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
 
     private var expression: KtClassBody? = null
 
@@ -38,8 +41,6 @@ class RemoveEmptyClassBodyIntention(val parserResult: KotlinParserResult,
 
     override fun implement() {
         val element = expression ?: return
-
-        val doc = parserResult.snapshot.source.getDocument(false)
 
         val startOffset = element.textRange.startOffset
         val lengthToDelete = element.textLength

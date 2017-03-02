@@ -17,6 +17,8 @@
 package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.util.PsiTreeUtil
+import org.jetbrains.kotlin.analyzer.AnalysisResult
+import javax.swing.text.Document
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import com.intellij.psi.PsiElement
@@ -42,8 +44,9 @@ import org.jetbrains.kotlin.resolve.scopes.LexicalScope
 import org.jetbrains.kotlin.psi.psiUtil.parentsWithSelf
 import org.jetbrains.kotlin.hints.atomicChange
 
-class ChangeReturnTypeIntention(val parserResult: KotlinParserResult,
-                                     val psi: PsiElement) : ApplicableIntention {
+class ChangeReturnTypeIntention(doc: Document,
+                                analysisResult: AnalysisResult?,
+                                psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
 
     private lateinit var function: KtFunction
     private lateinit var type: KotlinType
@@ -55,7 +58,7 @@ class ChangeReturnTypeIntention(val parserResult: KotlinParserResult,
             Errors.TYPE_INFERENCE_EXPECTED_TYPE_MISMATCH)
 
     override fun isApplicable(caretOffset: Int): Boolean {
-        val bindingContext = parserResult.analysisResult?.analysisResult?.bindingContext ?: return false
+        val bindingContext = analysisResult?.bindingContext ?: return false
         val activeDiagnostic = getActiveDiagnostic(psi.textOffset, bindingContext.diagnostics) ?: return false
         val expression = activeDiagnostic.psiElement.getNonStrictParentOfType(KtExpression::class.java) ?: return false
         
@@ -130,7 +133,7 @@ class ChangeReturnTypeIntention(val parserResult: KotlinParserResult,
     override fun implement() {
         val oldTypeRef = function.typeReference
         val renderedType = IdeDescriptorRenderers.SOURCE_CODE_SHORT_NAMES_IN_TYPES.renderType(type)
-        val doc = parserResult.snapshot.source.getDocument(false)
+        
         if (oldTypeRef != null) {
             val startOffset = oldTypeRef.textRange.startOffset
             val endOffset = oldTypeRef.textRange.endOffset

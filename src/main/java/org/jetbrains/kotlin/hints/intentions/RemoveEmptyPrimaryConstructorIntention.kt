@@ -17,13 +17,16 @@
 package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
+import org.jetbrains.kotlin.analyzer.AnalysisResult
+import javax.swing.text.Document
 import org.jetbrains.kotlin.psi.psiUtil.containingClass
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 
-class RemoveEmptyPrimaryConstructorIntention(val parserResult: KotlinParserResult,
-                                             val psi: PsiElement) : ApplicableIntention {
+class RemoveEmptyPrimaryConstructorIntention(doc: Document,
+                                             analysisResult: AnalysisResult?,
+                                             psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
     
     private var expression: KtPrimaryConstructor? = null
     
@@ -39,8 +42,6 @@ class RemoveEmptyPrimaryConstructorIntention(val parserResult: KotlinParserResul
     override fun implement() {
         val element = expression ?: return
         
-        val doc = parserResult.snapshot.source.getDocument(false)
-
         val startOffset = element.textRange.startOffset
         val lengthToDelete = element.textLength
         

@@ -17,6 +17,8 @@
 package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
+import org.jetbrains.kotlin.analyzer.AnalysisResult
+import javax.swing.text.Document
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.lexer.KtTokens
@@ -26,8 +28,9 @@ import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 import org.jetbrains.kotlin.reformatting.moveCursorTo
 
-class ConvertToConcatenatedStringIntention(val parserResult: KotlinParserResult,
-                                           val psi: PsiElement) : ApplicableIntention {
+class ConvertToConcatenatedStringIntention(doc: Document,
+                                           analysisResult: AnalysisResult?,
+                                           psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
 
     private var expression: KtStringTemplateExpression? = null
 
@@ -56,8 +59,6 @@ class ConvertToConcatenatedStringIntention(val parserResult: KotlinParserResult,
                 .joinToString(separator = "+")
                 .replace("""$quote+$quote""", "")
         
-        val doc = parserResult.snapshot.source.getDocument(false)
-        
         val startOffset = element.textRange.startOffset
         val lengthToDelete = element.textLength
         
@@ -80,12 +81,12 @@ class ConvertToConcatenatedStringIntention(val parserResult: KotlinParserResult,
         val expression = expression!! // checked before
 
         val text = if (needsParenthesis(expression, isFinalEntry))
-            "(" + expression.text + ")"
+            "(${expression.text})"
         else
             expression.text
 
         return if (convertExplicitly && !expression.isStringExpression())
-            text + ".toString()"
+            "$text.toString()"
         else
             text
     }
@@ -98,10 +99,10 @@ class ConvertToConcatenatedStringIntention(val parserResult: KotlinParserResult,
         }
     }
 
-    private fun String.quote(quote: String) = quote + this + quote
+    private fun String.quote(quote: String) = "$quote${this}$quote"
 
     private fun KtExpression.isStringExpression(): Boolean {
-        val context = parserResult.analysisResult?.analysisResult?.bindingContext ?: return false
+        val context = analysisResult?.bindingContext ?: return false
         return KotlinBuiltIns.isString(context.getType(this))
     }
 }

@@ -17,7 +17,9 @@
 package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
+import javax.swing.text.Document
 import javax.swing.text.StyledDocument
+import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.resolve.DescriptorUtils
@@ -27,8 +29,9 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
-class ConvertForEachToForLoopIntention(val parserResult: KotlinParserResult,
-                                       val psi: PsiElement) : ApplicableIntention {
+class ConvertForEachToForLoopIntention(doc: Document,
+                                       analysisResult: AnalysisResult?,
+                                       psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
     
     private val FOR_EACH_NAME = "forEach"
     private val FOR_EACH_FQ_NAMES = listOf("collections", "sequences", "text", "ranges").map { "kotlin.$it.$FOR_EACH_NAME" }.toSet()
@@ -54,8 +57,6 @@ class ConvertForEachToForLoopIntention(val parserResult: KotlinParserResult,
         val (expressionToReplace, receiver, functionLiteral) = extractData(expression)!!
         val loop = generateLoop(functionLiteral, receiver)
         
-        val doc = parserResult.snapshot.source.getDocument(false)
-        
         val startOffset = expressionToReplace.textRange.startOffset
         val lengthToDelete = expressionToReplace.textLength
         
@@ -80,7 +81,7 @@ class ConvertForEachToForLoopIntention(val parserResult: KotlinParserResult,
             else -> null
         } ?: return null) as KtExpression
 
-        val context = parserResult.analysisResult?.analysisResult?.bindingContext ?: return null
+        val context = analysisResult?.bindingContext ?: return null
         
         val resolvedCall = expression.getResolvedCall(context) ?: return null
         if (DescriptorUtils.getFqName(resolvedCall.resultingDescriptor).toString() !in FOR_EACH_FQ_NAMES) return null

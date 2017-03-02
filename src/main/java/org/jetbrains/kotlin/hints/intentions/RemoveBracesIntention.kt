@@ -19,6 +19,8 @@ package org.jetbrains.kotlin.hints.intentions
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
+import javax.swing.text.Document
+import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.KtNodeTypes
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.*
@@ -26,8 +28,9 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
-class RemoveBracesIntention(val parserResult: KotlinParserResult,
-                            val psi: PsiElement) : ApplicableIntention {
+class RemoveBracesIntention(doc: Document,
+                            analysisResult: AnalysisResult?,
+                            psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
     
     private var desc: String = "Remove braces"
     private var expression: KtElement? = null
@@ -63,8 +66,6 @@ class RemoveBracesIntention(val parserResult: KotlinParserResult,
         val block = element.findChildBlock() ?: return
         val statement = block.statements.single()
 
-        val doc = parserResult.snapshot.source.getDocument(false)
-        
         val startOffset = block.textRange.startOffset
         val lengthToDelete = block.textLength
         

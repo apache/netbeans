@@ -19,6 +19,8 @@ package org.jetbrains.kotlin.hints.intentions
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
+import org.jetbrains.kotlin.analyzer.AnalysisResult
+import javax.swing.text.Document
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.psi.*
@@ -30,8 +32,9 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
-class ConvertEnumToSealedClassIntention(val parserResult: KotlinParserResult,
-                                        val psi: PsiElement) : ApplicableIntention {
+class ConvertEnumToSealedClassIntention(doc: Document,
+                                        analysisResult: AnalysisResult?,
+                                        psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
 
     private var expression: KtClass? = null
 
@@ -85,8 +88,6 @@ class ConvertEnumToSealedClassIntention(val parserResult: KotlinParserResult,
         val element = expression ?: return
 
         val newText = element.generateSealedClass()
-        
-        val doc = parserResult.snapshot.source.getDocument(false)
         
         val startOffset = element.textRange.startOffset
         val lengthToDelete = element.textLength

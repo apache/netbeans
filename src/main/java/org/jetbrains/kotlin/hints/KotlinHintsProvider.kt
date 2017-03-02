@@ -54,29 +54,34 @@ class KotlinHintsProvider : HintsProvider {
     companion object {
 
         private fun listOfIntentions(parserResult: KotlinParserResult,
-                                     psi: PsiElement) = listOf(
-                RemoveExplicitTypeIntention(parserResult, psi),
-                SpecifyTypeIntention(parserResult, psi),
-                ConvertToBlockBodyIntention(parserResult, psi),
-                ChangeReturnTypeIntention(parserResult, psi),
-                ConvertTryFinallyToUseCallIntention(parserResult, psi),
-                ConvertForEachToForLoopIntention(parserResult, psi),
-                ConvertEnumToSealedClassIntention(parserResult, psi),
-                AddValToConstructorParameterIntention(parserResult, psi),
-                ConvertPropertyInitializerToGetterIntention(parserResult, psi),
-                ConvertToConcatenatedStringIntention(parserResult, psi),
-                ConvertToStringTemplateIntention(parserResult, psi),
-                ConvertTwoComparisonsToRangeCheckIntention(parserResult, psi),
-                MergeIfsIntention(parserResult, psi),
-                RemoveBracesIntention(parserResult, psi),
-                SplitIfIntention(parserResult, psi),
-                ToInfixIntention(parserResult, psi),
-                RemoveEmptyClassBodyIntention(parserResult, psi),
-                RemoveEmptyParenthesesFromLambdaCallIntention(parserResult, psi),
-                RemoveEmptyPrimaryConstructorIntention(parserResult, psi),
-                RemoveEmptySecondaryConstructorIntention(parserResult, psi),
-                ReplaceSizeCheckWithIsNotEmptyIntention(parserResult, psi)
-        ).filter { it.isApplicable(psi.textRange.startOffset) }
+                                     psi: PsiElement) = parserResult.let {
+            Pair(parserResult.snapshot.source.getDocument(false),
+                    parserResult.analysisResult?.analysisResult)
+        }.let {
+            listOf(
+                    RemoveExplicitTypeIntention(it.first, it.second, psi),
+                    SpecifyTypeIntention(it.first, it.second, psi),
+                    ConvertToBlockBodyIntention(it.first, it.second, psi),
+                    ChangeReturnTypeIntention(it.first, it.second, psi),
+                    ConvertTryFinallyToUseCallIntention(it.first, it.second, psi),
+                    ConvertForEachToForLoopIntention(it.first, it.second, psi),
+                    ConvertEnumToSealedClassIntention(it.first, it.second, psi),
+                    AddValToConstructorParameterIntention(it.first, it.second, psi),
+                    ConvertPropertyInitializerToGetterIntention(it.first, it.second, psi),
+                    ConvertToConcatenatedStringIntention(it.first, it.second, psi),
+                    ConvertToStringTemplateIntention(it.first, it.second, psi),
+                    ConvertTwoComparisonsToRangeCheckIntention(it.first, it.second, psi),
+                    MergeIfsIntention(it.first, it.second, psi),
+                    RemoveBracesIntention(it.first, it.second, psi),
+                    SplitIfIntention(it.first, it.second, psi),
+                    ToInfixIntention(it.first, it.second, psi),
+                    RemoveEmptyClassBodyIntention(it.first, it.second, psi),
+                    RemoveEmptyParenthesesFromLambdaCallIntention(it.first, it.second, psi),
+                    RemoveEmptyPrimaryConstructorIntention(it.first, it.second, psi),
+                    RemoveEmptySecondaryConstructorIntention(it.first, it.second, psi),
+                    ReplaceSizeCheckWithIsNotEmptyIntention(it.first, it.second, psi)
+            ).filter { it.isApplicable(psi.textRange.startOffset) }
+        }
 
         private fun KotlinError.listOfQuickFixes(parserResult: KotlinParserResult) = listOf(
                 RemoveUselessElvisFix(this, parserResult),
@@ -86,15 +91,15 @@ class KotlinHintsProvider : HintsProvider {
                 RenameModToRemFix(this, parserResult),
                 RemoveUnnecessarySafeCallFix(this, parserResult)
         ).filter(KotlinQuickFix::isApplicable)
-        
+
         private val RuleContext.quickFixes
-                get() = parserResult.diagnostics
-                        .filterIsInstance(KotlinError::class.java)
-                        .flatMap { it.listOfQuickFixes(parserResult as KotlinParserResult) }
-                        .map(KotlinQuickFix::createHint)
+            get() = parserResult.diagnostics
+                    .filterIsInstance(KotlinError::class.java)
+                    .flatMap { it.listOfQuickFixes(parserResult as KotlinParserResult) }
+                    .map(KotlinQuickFix::createHint)
 
     }
-    
+
     override fun computeSuggestions(hintsManager: HintsManager, ruleContext: RuleContext,
                                     hints: MutableList<Hint>, offset: Int) {
         val parserResult = ruleContext.parserResult as KotlinParserResult
@@ -110,7 +115,7 @@ class KotlinHintsProvider : HintsProvider {
 
         val intentions = parserResult.ktFile.elementsInRange(TextRange(lineStartOffset, lineEndOffset))
                 .toMutableList()
-                .apply { 
+                .apply {
                     val elem = parserResult.ktFile.findElementAt(offset)
                     if (elem != null) {
                         add(elem)
@@ -133,7 +138,7 @@ class KotlinHintsProvider : HintsProvider {
                 intentions.flatMap { it }
                         .distinctBy { it.description }
         )
-        
+
     }
 
     override fun computeHints(hintsManager: HintsManager, ruleContext: RuleContext, hints: MutableList<Hint>) {

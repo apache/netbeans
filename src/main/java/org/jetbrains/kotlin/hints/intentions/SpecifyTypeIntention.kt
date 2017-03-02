@@ -17,6 +17,8 @@
 package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
+import javax.swing.text.Document
+import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.psi.KtCallableDeclaration
 import org.jetbrains.kotlin.psi.KtCodeFragment
 import org.jetbrains.kotlin.psi.KtConstructor
@@ -35,8 +37,9 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.descriptors.CallableDescriptor
 import org.jetbrains.kotlin.idea.util.IdeDescriptorRenderers
 
-class SpecifyTypeIntention(val parserResult: KotlinParserResult, 
-                           val psi: PsiElement) : ApplicableIntention {
+class SpecifyTypeIntention(doc: Document,
+                           analysisResult: AnalysisResult?,
+                           psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
 
     private lateinit var displayString: String
 
@@ -53,7 +56,7 @@ class SpecifyTypeIntention(val parserResult: KotlinParserResult,
 
         if (element is KtNamedFunction && element.hasBlockBody()) return false
 
-        if (getTypeForDeclaration(element, parserResult).isError) return false
+        if (getTypeForDeclaration(element, analysisResult).isError) return false
 
         displayString = if (element is KtFunction) "Specify return type explicitly" else "Specify type explicitly"
 
@@ -64,7 +67,7 @@ class SpecifyTypeIntention(val parserResult: KotlinParserResult,
 
     override fun implement() {
         val element = psi.getNonStrictParentOfType(KtCallableDeclaration::class.java) ?: return
-        val type = getTypeForDeclaration(element, parserResult)
+        val type = getTypeForDeclaration(element, analysisResult)
         val anchor = getAnchor(element) ?: return
 
         addTypeAnnotation(anchor, type)
@@ -72,14 +75,13 @@ class SpecifyTypeIntention(val parserResult: KotlinParserResult,
 
     private fun addTypeAnnotation(element: PsiElement, type: KotlinType) {
         val text = ": ${IdeDescriptorRenderers.SOURCE_CODE_SHORT_NAMES_IN_TYPES.renderType(type)}"
-        val doc = parserResult.snapshot.source.getDocument(false)
-
+        
         doc.insertString(element.textRange.endOffset, text, null)
     }
 }
 
-fun getTypeForDeclaration(declaration: KtCallableDeclaration, parserResult: KotlinParserResult): KotlinType {
-    val bindingContext = parserResult.analysisResult?.analysisResult?.bindingContext ?: return ErrorUtils.createErrorType("null type")
+fun getTypeForDeclaration(declaration: KtCallableDeclaration, analysisResult: AnalysisResult?): KotlinType {
+    val bindingContext = analysisResult?.bindingContext ?: return ErrorUtils.createErrorType("null type")
 
     val descriptor = bindingContext[BindingContext.DECLARATION_TO_DESCRIPTOR, declaration]
     val type = (descriptor as? CallableDescriptor)?.returnType

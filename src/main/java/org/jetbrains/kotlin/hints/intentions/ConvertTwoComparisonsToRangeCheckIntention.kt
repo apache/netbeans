@@ -17,6 +17,8 @@
 package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
+import javax.swing.text.Document
+import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import com.intellij.psi.tree.IElementType
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
@@ -30,8 +32,9 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
-class ConvertTwoComparisonsToRangeCheckIntention(val parserResult: KotlinParserResult,
-                                                val psi: PsiElement) : ApplicableIntention {
+class ConvertTwoComparisonsToRangeCheckIntention(doc: Document,
+                                                 analysisResult: AnalysisResult?,
+                                                 psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
     
     private var expression: KtBinaryExpression? = null
     
@@ -49,7 +52,6 @@ class ConvertTwoComparisonsToRangeCheckIntention(val parserResult: KotlinParserR
         val rangeData = generateRangeExpressionData(element) ?: return
         
         val text = "${rangeData.value.text} in ${rangeData.min}..${rangeData.max}"
-        val doc = parserResult.snapshot.source.getDocument(false)
         
         val startOffset = element.textRange.startOffset
         val lengthToDelete = element.textLength

@@ -18,7 +18,9 @@ package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
 import javax.swing.SwingUtilities
+import javax.swing.text.Document
 import javax.swing.text.StyledDocument
+import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.navigation.netbeans.moveCaretToOffset
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import com.intellij.openapi.util.text.StringUtil
@@ -34,8 +36,9 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
-class ConvertToStringTemplateIntention(val parserResult: KotlinParserResult,
-                                       val psi: PsiElement) : ApplicableIntention {
+class ConvertToStringTemplateIntention(doc: Document,
+                                       analysisResult: AnalysisResult?,
+                                       psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
     private var expression: KtBinaryExpression? = null
 
     override fun isApplicable(caretOffset: Int): Boolean {
@@ -51,8 +54,6 @@ class ConvertToStringTemplateIntention(val parserResult: KotlinParserResult,
         val element = expression ?: return
 
         val text = buildReplacement(element).text
-
-        val doc = parserResult.snapshot.source.getDocument(false)
 
         val startOffset = element.textRange.startOffset
         val lengthToDelete = element.textLength

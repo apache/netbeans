@@ -18,6 +18,8 @@ package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
+import org.jetbrains.kotlin.analyzer.AnalysisResult
+import javax.swing.text.Document
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.psiUtil.startOffset
 import org.jetbrains.kotlin.lexer.KtTokens
@@ -26,8 +28,9 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
-class SplitIfIntention(val parserResult: KotlinParserResult,
-                       val psi: PsiElement) : ApplicableIntention {
+class SplitIfIntention(doc: Document,
+                       analysisResult: AnalysisResult?,
+                       psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
 
     private var expression: KtExpression? = null
 
@@ -84,8 +87,6 @@ class SplitIfIntention(val parserResult: KotlinParserResult,
                 else -> throw IllegalArgumentException()
             }
         }
-
-        val doc = parserResult.snapshot.source.getDocument(false)
 
         val startOffset = ifExpression.textRange.startOffset
         val lengthToDelete = ifExpression.textLength

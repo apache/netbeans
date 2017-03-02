@@ -17,6 +17,8 @@
 package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
+import org.jetbrains.kotlin.analyzer.AnalysisResult
+import javax.swing.text.Document
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.psi.psiUtil.*
 import org.jetbrains.kotlin.psi.*
@@ -35,12 +37,13 @@ class ReplaceSizeCheckWithIsNotEmptyInspection(val parserResult: KotlinParserRes
     override fun isApplicable(): Boolean {
         if (element !is KtBinaryExpression) return false
         
-        return element.isApplicable(parserResult)
+        return element.isApplicable(parserResult.analysisResult?.analysisResult)
     }
 }
 
-class ReplaceSizeCheckWithIsNotEmptyIntention(val parserResult: KotlinParserResult,
-                                              val psi: PsiElement) : ApplicableIntention {
+class ReplaceSizeCheckWithIsNotEmptyIntention(doc: Document,
+                                              analysisResult: AnalysisResult?,
+                                              psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
 
     private var expression: KtBinaryExpression? = null
 
@@ -48,7 +51,7 @@ class ReplaceSizeCheckWithIsNotEmptyIntention(val parserResult: KotlinParserResu
         expression = psi.getNonStrictParentOfType(KtBinaryExpression::class.java) ?: return false
         val element = expression ?: return false
 
-        return element.isApplicable(parserResult)
+        return element.isApplicable(analysisResult)
     }
 
     override fun getDescription() = "Replace size check with 'isNotEmpty'"
@@ -60,8 +63,7 @@ class ReplaceSizeCheckWithIsNotEmptyIntention(val parserResult: KotlinParserResu
         if (target !is KtDotQualifiedExpression) return
 
         val newText = "${target.receiverExpression.text}.isNotEmpty()"
-        val doc = parserResult.snapshot.source.getDocument(false)
-
+        
         val startOffset = element.textRange.startOffset
         val lengthToDelete = element.textLength
 
@@ -114,9 +116,9 @@ private fun getTargetExpression(element: KtBinaryExpression): KtExpression? {
         }
     }
 
-private fun KtBinaryExpression.isApplicable(parserResult: KotlinParserResult): Boolean {
+private fun KtBinaryExpression.isApplicable(analysisResult: AnalysisResult?): Boolean {
     val targetExpression = getTargetExpression(this) ?: return false
-    val context = parserResult.analysisResult?.analysisResult?.bindingContext ?: return false
+    val context = analysisResult?.bindingContext ?: return false
 
     return targetExpression.isSizeOrLength(context)
 }

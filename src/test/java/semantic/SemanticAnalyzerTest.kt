@@ -58,18 +58,20 @@ class SemanticAnalyzerTest : NbTestCase("SemanticAnalyzer test") {
         return ranges
     }
     
-    private fun attrs(fileName: String, attrs: List<Attr>): Map<OffsetRange, Set<ColoringAttributes>> {
+    private fun attrs(fileName: String, attrs: List<Attr>, withSmartCast: Boolean = false): Map<OffsetRange, Set<ColoringAttributes>> {
         val doc = getDocumentForFileObject(semanticDir, "$fileName.caret")
         val ranges = doc.carets().toOffsetRanges()
         
         return hashMapOf<OffsetRange, Set<ColoringAttributes>>().apply {
             attrs.forEachIndexed { i, it ->
-                put(ranges[i], it.styleKey)
+                put(ranges[i], it.styleKey.let { 
+                    if (withSmartCast) it.toMutableSet().apply { addAll(Attr.SMART_CAST.styleKey) } else it
+                })
             }
         }
     }
     
-    private fun doTest(fileName: String, vararg attrs: Attr) {
+    private fun doTest(fileName: String, vararg attrs: Attr, withSmartCast: Boolean = false) {
         val file = semanticDir.getFileObject("$fileName.kt")
         val ktFile = KotlinPsiManager.getParsedFile(file)!!
         
@@ -81,8 +83,8 @@ class SemanticAnalyzerTest : NbTestCase("SemanticAnalyzer test") {
             it.highlights
         }
         
-        assertTrue(highlights.entries.containsAll(attrs(fileName, attrs.toList()).entries))
-    }
+        assertTrue(highlights.entries.containsAll(attrs(fileName, attrs.toList(), withSmartCast).entries))
+    }    
     
     fun testProjectCreation() {
         assertNotNull(project)
@@ -101,5 +103,7 @@ class SemanticAnalyzerTest : NbTestCase("SemanticAnalyzer test") {
     fun testAnnotation() = doTest("annotation", Attr.ANNOTATION)
     
     fun testDeprecated() = doTest("deprecated", Attr.DEPRECATED)
+    
+    fun testSmartCast() = doTest("smartCast", Attr.LOCAL_FINAL_VARIABLE, withSmartCast = true)
     
 }

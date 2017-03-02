@@ -19,7 +19,6 @@ package semantic
 import javaproject.JavaProject
 import javax.swing.text.Document
 import org.netbeans.api.project.Project
-import org.netbeans.junit.NbTestCase
 import org.netbeans.modules.csl.api.ColoringAttributes
 import org.netbeans.modules.csl.api.OffsetRange
 import org.openide.filesystems.FileObject
@@ -30,20 +29,11 @@ import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer
 import org.jetbrains.kotlin.utils.ProjectUtils
-import utils.carets
-import utils.getDocumentForFileObject
+import utils.*
 
 typealias Attr = KotlinHighlightingAttributes
 
-class SemanticAnalyzerTest : NbTestCase("SemanticAnalyzer test") {
-    private val project: Project
-    private val semanticDir: FileObject
-
-    init {
-        project = JavaProject.javaProject
-        semanticDir = project.projectDirectory.getFileObject("src").getFileObject("semantic")
-    }
-    
+class SemanticAnalyzerTest : KotlinTestCase("SemanticAnalyzer test", "semantic") {
     private infix fun Int.to(end: Int) = OffsetRange(this, end)
     
     private fun List<Int>.toOffsetRanges(): List<OffsetRange> {
@@ -59,7 +49,7 @@ class SemanticAnalyzerTest : NbTestCase("SemanticAnalyzer test") {
     }
     
     private fun attrs(fileName: String, attrs: List<Attr>, withSmartCast: Boolean = false): Map<OffsetRange, Set<ColoringAttributes>> {
-        val doc = getDocumentForFileObject(semanticDir, "$fileName.caret")
+        val doc = getDocumentForFileObject(dir, "$fileName.caret")
         val ranges = doc.carets().toOffsetRanges()
         
         return hashMapOf<OffsetRange, Set<ColoringAttributes>>().apply {
@@ -72,7 +62,7 @@ class SemanticAnalyzerTest : NbTestCase("SemanticAnalyzer test") {
     }
     
     private fun doTest(fileName: String, vararg attrs: Attr, withSmartCast: Boolean = false) {
-        val file = semanticDir.getFileObject("$fileName.kt")
+        val file = dir.getFileObject("$fileName.kt")
         val ktFile = KotlinPsiManager.getParsedFile(file)!!
         
         val resultWithProvider = KotlinAnalyzer.analyzeFile(project, ktFile)
@@ -85,11 +75,6 @@ class SemanticAnalyzerTest : NbTestCase("SemanticAnalyzer test") {
         
         assertTrue(highlights.entries.containsAll(attrs(fileName, attrs.toList(), withSmartCast).entries))
     }    
-    
-    fun testProjectCreation() {
-        assertNotNull(project)
-        assertNotNull(semanticDir)
-    }
     
     fun testEmpty() = doTest("empty")
     

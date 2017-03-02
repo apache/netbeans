@@ -22,21 +22,12 @@ import org.jetbrains.kotlin.formatting.KotlinIndentStrategy
 import org.netbeans.api.project.Project
 import org.netbeans.junit.NbTestCase
 import org.openide.filesystems.FileObject
-import utils.getCaret
-import utils.getDocumentForFileObject
+import utils.*
 
-class IndentationTest : NbTestCase("Indentation test") {
+class IndentationTest : KotlinTestCase("Indentation test", "indentation") {
 
-    val project: Project
-    val indentationDir: FileObject
-    
-    init {
-        project = JavaProject.javaProject
-        indentationDir = project.projectDirectory.getFileObject("src").getFileObject("indentation")
-    }
-    
     fun doTest(fileName: String) {
-        val doc = getDocumentForFileObject(indentationDir, fileName) as StyledDocument
+        val doc = getDocumentForFileObject(dir, fileName) as StyledDocument
         val offset = getCaret(doc) + 1
         doc.remove(offset - 1, "<caret>".length)
         doc.insertString(offset - 1, "\n", null)
@@ -44,15 +35,10 @@ class IndentationTest : NbTestCase("Indentation test") {
         val strategy = KotlinIndentStrategy(doc, offset)
         val newOffset = strategy.addIndent()
         
-        val doc2 = getDocumentForFileObject(indentationDir, fileName.replace(".kt", ".after"))
+        val doc2 = getDocumentForFileObject(dir, fileName.replace(".kt", ".after"))
         val expectedOffset = getCaret(doc2)
         
         assertEquals(expectedOffset, newOffset)
-    }
-    
-    fun testProjectCreation() {
-        assertNotNull(project)
-        assertNotNull(indentationDir)
     }
     
     fun testAfterOneOpenBrace() = doTest("afterOneOpenBrace.kt")

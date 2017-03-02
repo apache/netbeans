@@ -21,33 +21,20 @@ import org.jetbrains.kotlin.builder.KotlinPsiManager
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer
 import org.jetbrains.kotlin.structurescanner.*
 import org.netbeans.api.project.Project
-import org.netbeans.junit.NbTestCase
 import org.netbeans.modules.csl.api.StructureItem
 import org.openide.filesystems.FileObject
+import utils.KotlinTestCase
 
-class FoldingTest : NbTestCase("Folding test") {
-    
-    private val project: Project
-    private val foldingDir: FileObject
-
-    init {
-        project = JavaProject.javaProject
-        foldingDir = project.projectDirectory.getFileObject("src").getFileObject("folding")
-    }
+class FoldingTest : KotlinTestCase("Folding test", "folding") {
     
     private fun doTest(fileName: String, codeBlocks: Int = 0, comments: Int = 0) {
-        val file = foldingDir.getFileObject("$fileName.kt")
+        val file = dir.getFileObject("$fileName.kt")
         assertNotNull(file)
         
         val folds = KotlinStructureScanner().foldMap(file)
         
         assertEquals(codeBlocks, folds["codeblocks"]?.size)
         assertEquals(comments, folds["comments"]?.size)
-    }
-    
-    fun testProjectCreation() {
-        assertNotNull(project)
-        assertNotNull(foldingDir)
     }
     
     fun testLicenseHeader() = doTest("licenseHeader", comments = 1)

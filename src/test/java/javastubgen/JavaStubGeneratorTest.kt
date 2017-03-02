@@ -27,22 +27,10 @@ import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer
 import org.jetbrains.org.objectweb.asm.tree.ClassNode
 import org.netbeans.api.project.Project
-import org.netbeans.junit.NbTestCase
 import org.openide.filesystems.FileObject
+import utils.KotlinTestCase
 
-class JavaStubGeneratorTest : NbTestCase("Stub generator test") {
-    private val project: Project
-    private val stubGenDir: FileObject
-
-    init {
-        project = JavaProject.javaProject
-        stubGenDir = project.projectDirectory.getFileObject("src").getFileObject("stubGen")
-    }
-
-    fun testProjectCreation() {
-        assertNotNull(project)
-        assertNotNull(stubGenDir)
-    }
+class JavaStubGeneratorTest : KotlinTestCase("Stub generator test", "stubGen") {
 
     private fun getByteCode(file: FileObject): List<ByteArray> {
         val ktFile = KotlinPsiManager.getParsedFile(file)!!
@@ -53,15 +41,15 @@ class JavaStubGeneratorTest : NbTestCase("Stub generator test") {
     }
 
     private fun doTest(fileName: String, vararg after: String) {
-        val kotlinFile = stubGenDir.getFileObject("$fileName.kt")
+        val kotlinFile = dir.getFileObject("$fileName.kt")
             val list = JavaStubGenerator.gen(getByteCode(kotlinFile))
             val spacesRegex = Regex("\\s+")
             if (after.isEmpty()) {
-                val expected = stubGenDir.getFileObject("$fileName.after").asText()
+                val expected = dir.getFileObject("$fileName.after").asText()
                 assertEquals(spacesRegex.replace(StringUtil.convertLineSeparators(expected), ""),
                         spacesRegex.replace(StringUtil.convertLineSeparators(list.first().second), ""))
-            } else after.forEachIndexed { i, it ->
-                val expected = stubGenDir.getFileObject("${after[i]}.after").asText()
+            } else after.forEachIndexed { i, _ ->
+                val expected = dir.getFileObject("${after[i]}.after").asText()
                 assertEquals(spacesRegex.replace(StringUtil.convertLineSeparators(expected), ""),
                         spacesRegex.replace(StringUtil.convertLineSeparators(list[i].second), ""))
         }    

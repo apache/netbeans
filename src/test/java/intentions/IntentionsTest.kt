@@ -20,7 +20,6 @@ import utils.*
 import javaproject.JavaProject
 import javax.swing.text.Document
 import org.netbeans.api.project.Project
-import org.netbeans.junit.NbTestCase
 import org.openide.filesystems.FileObject
 import org.jetbrains.kotlin.builder.KotlinPsiManager
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
@@ -30,22 +29,14 @@ import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer
 import org.jetbrains.kotlin.utils.ProjectUtils
 
-class IntentionsTest : NbTestCase("Intentions test") {
-    
-    private val project: Project
-    private val intentionsDir: FileObject
-
-    init {
-        project = JavaProject.javaProject
-        intentionsDir = project.projectDirectory.getFileObject("src").getFileObject("intentions")
-    }
+class IntentionsTest : KotlinTestCase("Intentions test", "intentions") {
     
     private fun doTest(fileName: String, intention: Class<out ApplicableIntention>, applicable: Boolean = true) {
-        val caret = getCaret(getDocumentForFileObject(intentionsDir, "$fileName.caret"))
+        val caret = getCaret(getDocumentForFileObject(dir, "$fileName.caret"))
         assertNotNull(caret)
         
-        val doc = getDocumentForFileObject(intentionsDir, "$fileName.kt")
-        val file = intentionsDir.getFileObject("$fileName.kt")
+        val doc = getDocumentForFileObject(dir, "$fileName.kt")
+        val file = dir.getFileObject("$fileName.kt")
         val ktFile = KotlinPsiManager.getParsedFile(file)!!
         
         val resultWithProvider = KotlinAnalyzer.analyzeFile(project, ktFile)

@@ -23,22 +23,13 @@ import org.jetbrains.kotlin.highlighter.TokenType
 import org.jetbrains.kotlin.highlighter.netbeans.KotlinToken
 import org.jetbrains.kotlin.highlighter.netbeans.KotlinTokenId
 import org.netbeans.api.project.Project
-import org.netbeans.junit.NbTestCase
 import org.openide.filesystems.FileObject
-import utils.getDocumentForFileObject
+import utils.*
 
-class HighlightingTest : NbTestCase("Highlighting test") {
+class HighlightingTest : KotlinTestCase("Highlighting test", "highlighting") {
 
-    val project: Project
-    val highlightingDir: FileObject
-    
-    init {
-        project = JavaProject.javaProject
-        highlightingDir = project.projectDirectory.getFileObject("src").getFileObject("highlighting")
-    }
-    
     fun doTest(fileName: String, vararg types: TokenType) {
-        val doc = getDocumentForFileObject(highlightingDir, fileName)
+        val doc = getDocumentForFileObject(dir, fileName)
         val tokens = KotlinTokenScanner(doc.getText(0, doc.length)).tokens
         assertNotNull(tokens)
         
@@ -48,11 +39,6 @@ class HighlightingTest : NbTestCase("Highlighting test") {
         
         
         assertEquals(parsedTypes, types.asList())
-    }
-    
-    fun testProjectCreation() {
-        assertNotNull(project)
-        assertNotNull(highlightingDir)
     }
     
     fun testBlockComment() = doTest("blockComment.kt", TokenType.MULTI_LINE_COMMENT)

@@ -24,24 +24,13 @@ import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.refactorings.rename.transaction
 import org.jetbrains.kotlin.refactorings.rename.getRenameRefactoringMap
 import org.netbeans.api.project.Project
-import org.netbeans.junit.NbTestCase
 import org.netbeans.modules.csl.api.OffsetRange
 import org.netbeans.modules.refactoring.spi.Transaction
 import org.openide.filesystems.FileObject
-import utils.getAllKtFilesInFolder
-import utils.getCaret
-import utils.getDocumentForFileObject
+import utils.*
 
-class RenameTest : NbTestCase("Rename Test") {
+class RenameTest : KotlinTestCase("Rename Test", "rename") {
 
-    private val project: Project
-    private val renameDir: FileObject
-    
-    init {
-        project = JavaProject.javaProject
-        renameDir = project.projectDirectory.getFileObject("src").getFileObject("rename")
-    }
-    
     private fun doRefactoring(newName: String, fo: FileObject, psi: PsiElement) {
         val renameMap = getRenameRefactoringMap(fo, psi, newName)
         transaction(renameMap).commit()
@@ -61,9 +50,9 @@ class RenameTest : NbTestCase("Rename Test") {
     }
     
     private fun doTest(pack: String, name: String, newName: String) {
-        val packFile = renameDir.getFileObject(pack)
-        val before = packFile.getFileObject(name + ".kt")
-        val beforeWithCaret = packFile.getFileObject(name + ".caret")
+        val packFile = dir.getFileObject(pack)
+        val before = packFile.getFileObject("$name.kt")
+        val beforeWithCaret = packFile.getFileObject("$name.caret")
         
         val caretOffset = getCaret(getDocumentForFileObject(beforeWithCaret))
         assertNotNull(caretOffset)
@@ -78,7 +67,7 @@ class RenameTest : NbTestCase("Rename Test") {
         
         for (file in getAllKtFilesInFolder(packFile)) {
             val fileName = file.name
-            val afterFile = packFile.getFileObject(fileName + ".after")
+            val afterFile = packFile.getFileObject("$fileName.after")
             assertNotNull(afterFile)
             
             checkTextsEquality(file, afterFile)

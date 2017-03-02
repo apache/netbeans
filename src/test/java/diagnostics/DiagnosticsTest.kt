@@ -1,8 +1,8 @@
 package diagnostics
 
+import utils.*
 import com.intellij.psi.PsiErrorElement
 import org.netbeans.api.project.Project
-import org.netbeans.junit.NbTestCase
 import javaproject.JavaProject
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer
@@ -12,23 +12,15 @@ import org.jetbrains.kotlin.diagnostics.Severity
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.resolve.AnalyzingUtils
 import org.openide.filesystems.FileObject
-import kotlin.Pair
 
 /**
  *
  * @author Alexander.Baratynski
  */
-class DiagnosticsTest : NbTestCase("Diagnostics test") {
-    private val project: Project
-    private val diagnosticsDir: FileObject
-
-    init {
-        project = JavaProject.javaProject
-        diagnosticsDir = project.projectDirectory.getFileObject("src").getFileObject("diagnostics")
-    }
-
+class DiagnosticsTest : KotlinTestCase("Diagnostics test", "diagnostics") {
+    
     private fun getAnalysisResult(fileName: String): AnalysisResultWithProvider {
-        val fileToAnalyze = diagnosticsDir.getFileObject(fileName)
+        val fileToAnalyze = dir.getFileObject(fileName)
         assertNotNull(fileToAnalyze)
         
         val ktFile = ProjectUtils.getKtFile(fileToAnalyze)
@@ -43,7 +35,7 @@ class DiagnosticsTest : NbTestCase("Diagnostics test") {
         val numberOfSyntaxErrors = syntaxErrorsRanges.size
         
         val result = getAnalysisResult(fileName)
-        val fileToAnalyze = diagnosticsDir.getFileObject(fileName)
+        val fileToAnalyze = dir.getFileObject(fileName)
         val ktFile = ProjectUtils.getKtFile(fileToAnalyze)
         
         val diagnostics = result.analysisResult.bindingContext.diagnostics.all()
@@ -78,11 +70,6 @@ class DiagnosticsTest : NbTestCase("Diagnostics test") {
     
     private fun doTest(fileName: String,
                        syntaxErrorsRanges: List<Pair<Int, Int>> = emptyList()) = doTest(fileName, emptyList(), emptyList(), syntaxErrorsRanges)
-        
-    fun testProjectCreation() {
-        assertNotNull(project)
-        assertNotNull(diagnosticsDir)
-    }
 
     fun testKtHome() = assertNotNull(ProjectUtils.KT_HOME)
 

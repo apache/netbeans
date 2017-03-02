@@ -21,25 +21,17 @@ import org.jetbrains.kotlin.builder.KotlinPsiManager
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer
 import org.jetbrains.kotlin.structurescanner.*
 import org.netbeans.api.project.Project
-import org.netbeans.junit.NbTestCase
 import org.netbeans.modules.csl.api.StructureItem
 import org.openide.filesystems.FileObject
+import utils.KotlinTestCase
 
-class StructureScannerTest : NbTestCase("StructureScanner test") {
-    
-    private val project: Project
-    private val structureScannerDir: FileObject
-
-    init {
-        project = JavaProject.javaProject
-        structureScannerDir = project.projectDirectory.getFileObject("src").getFileObject("structureScanner")
-    }
+class StructureScannerTest : KotlinTestCase("StructureScanner test", "structureScanner") {
     
     private val StructureItem.allItems: List<StructureItem> 
         get() = arrayListOf(this).apply { addAll(nestedItems.flatMap { it.allItems }) }
     
     private fun doTest(fileName: String, functions: Int = 0, properties: Int = 0, classes: Int = 0) {
-        val file = structureScannerDir.getFileObject("$fileName.kt")
+        val file = dir.getFileObject("$fileName.kt")
         assertNotNull(file)
         
         val ktFile = KotlinPsiManager.getParsedFile(file)!!
@@ -51,11 +43,6 @@ class StructureScannerTest : NbTestCase("StructureScanner test") {
         assertEquals(functions, items.filterIsInstance<KotlinFunctionStructureItem>().size)
         assertEquals(properties, items.filterIsInstance<KotlinPropertyStructureItem>().size)
         assertEquals(classes, items.filterIsInstance<KotlinClassStructureItem>().size)
-    }    
-    
-    fun testProjectCreation() {
-        assertNotNull(project)
-        assertNotNull(structureScannerDir)
     }
     
     fun testEmpty() = doTest("empty")

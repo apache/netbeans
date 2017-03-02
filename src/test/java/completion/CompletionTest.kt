@@ -5,7 +5,6 @@ import javaproject.JavaProject
 import javax.swing.text.Document
 import org.jetbrains.kotlin.completion.*
 import org.netbeans.api.project.Project
-import org.netbeans.junit.NbTestCase
 import org.openide.filesystems.FileObject
 import org.jetbrains.kotlin.builder.KotlinPsiManager
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
@@ -19,17 +18,10 @@ import org.netbeans.modules.csl.api.CompletionProposal
  *
  * @author Alexander.Baratynski
  */
-class CompletionTest : NbTestCase("Completion test") {
-    private val project: Project
-    private val completionDir: FileObject
-
-    init {
-        project = JavaProject.javaProject
-        completionDir = project.projectDirectory.getFileObject("src").getFileObject("completion")
-    }
-
+class CompletionTest : KotlinTestCase("Completion test", "completion") {
+    
     private fun doTest(fileName: String, items: Collection<String> = emptyList()) {
-        val doc = getDocumentForFileObject(completionDir, fileName)
+        val doc = getDocumentForFileObject(dir, fileName)
         val caret = getCaret(doc)
         assertNotNull(caret)
         
@@ -44,11 +36,6 @@ class CompletionTest : NbTestCase("Completion test") {
         
         val completions = completionItems.map { it.sortText }
         assertEquals(true, completions.containsAll(items))
-    }
-
-    fun testProjectCreation() {
-        assertNotNull(project)
-        assertNotNull(completionDir)
     }
 
     fun testStringCompletion() = doTest("checkStringCompletion.kt", listOf("toString()"))

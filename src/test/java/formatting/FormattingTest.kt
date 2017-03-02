@@ -25,7 +25,6 @@ import org.jetbrains.kotlin.formatting.KotlinFormatterUtils
 import org.jetbrains.kotlin.formatting.NetBeansDocumentFormattingModel
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.api.project.Project
-import org.netbeans.junit.NbTestCase
 import org.openide.filesystems.FileObject
 import utils.*
 
@@ -33,30 +32,18 @@ import utils.*
  *
  * @author Alexander.Baratynski
  */
-class FormattingTest : NbTestCase("Formatting test") {
-    private val project: Project
-    private val formattingDir: FileObject
-
-    init {
-        project = JavaProject.javaProject
-        formattingDir = project.projectDirectory.getFileObject("src").getFileObject("formatting")
-    }
-
+class FormattingTest : KotlinTestCase("Formatting test", "formatting") {
+    
     private fun doTest(fileName: String) {
-        val doc = getDocumentForFileObject(formattingDir, fileName)
+        val doc = getDocumentForFileObject(dir, fileName)
         val file = ProjectUtils.getFileObjectForDocument(doc)
         val parsedFile = ProjectUtils.getKtFile(doc.getText(0, doc.length), file)
         val code = parsedFile.text
             
         val formattedCode = KotlinFormatterUtils.formatCode(code, parsedFile.name, project, "\n")
-        val doc2 = getDocumentForFileObject(formattingDir, fileName.replace(".kt", ".after"))
+        val doc2 = getDocumentForFileObject(dir, fileName.replace(".kt", ".after"))
         val after = doc2.getText(0, doc2.length)
         assertEquals(after, formattedCode)
-    }
-
-    fun testProjectCreation() {
-        assertNotNull(project)
-        assertNotNull(formattingDir)
     }
 
     fun testBlockCommentBeforeDeclaration() = doTest("blockCommentBeforeDeclaration.kt")

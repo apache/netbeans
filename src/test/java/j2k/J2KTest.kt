@@ -20,31 +20,18 @@ import javaproject.JavaProject
 import javax.swing.text.Document
 import org.jetbrains.kotlin.j2k.Java2KotlinConverter
 import org.netbeans.api.project.Project
-import org.netbeans.junit.NbTestCase
 import org.openide.filesystems.FileObject
 import utils.*
 
-class J2KTest : NbTestCase("Converter test") {
-    private val project: Project
-    private val j2kDir: FileObject
-
-    init {
-        project = JavaProject.javaProject
-        j2kDir = project.projectDirectory.getFileObject("src").getFileObject("j2k")
-    }
-
-    fun testProjectCreation() {
-        assertNotNull(project)
-        assertNotNull(j2kDir)
-    }
+class J2KTest : KotlinTestCase("Converter test", "j2k") {
 
     private fun doTest(fileName: String) {
-        val javaFile = j2kDir.getFileObject("$fileName.java")
-        val doc = getDocumentForFileObject(j2kDir, "$fileName.java")
+        val javaFile = dir.getFileObject("$fileName.java")
+        val doc = getDocumentForFileObject(dir, "$fileName.java")
         Java2KotlinConverter.convert(doc, project, javaFile)
         
-        val kotlinDoc = getDocumentForFileObject(j2kDir, "$fileName.kt")
-        val afterDoc = getDocumentForFileObject(j2kDir, "$fileName.after")
+        val kotlinDoc = getDocumentForFileObject(dir, "$fileName.kt")
+        val afterDoc = getDocumentForFileObject(dir, "$fileName.after")
         val kotlinText = kotlinDoc.getText(0, kotlinDoc.length)
         val afterText = afterDoc.getText(0, afterDoc.length)
         assertEquals(afterText, kotlinText)

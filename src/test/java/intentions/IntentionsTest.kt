@@ -51,4 +51,10 @@ class IntentionsTest : KotlinTestCase("Intentions test", "intentions") {
  
     fun testRemoveBraces() = doTest("removeEmptyClassBody", RemoveEmptyClassBodyIntention::class.java)
    
+    fun testToInfix() = doTest("toInfix", ToInfixIntention::class.java)
+    
+    fun testSpecifyType() = doTest("specifyType", SpecifyTypeIntention::class.java)
+    
+    fun testAddValToConstructorParameter() = doTest("addValToConstructorParameter", AddValToConstructorParameterIntention::class.java)
+    
 }

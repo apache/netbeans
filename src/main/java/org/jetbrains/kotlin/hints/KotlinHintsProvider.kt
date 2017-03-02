@@ -55,8 +55,7 @@ class KotlinHintsProvider : HintsProvider {
 
         private fun listOfIntentions(parserResult: KotlinParserResult,
                                      psi: PsiElement) = parserResult.let {
-            Pair(parserResult.snapshot.source.getDocument(false),
-                    parserResult.analysisResult?.analysisResult)
+            Pair(it.snapshot.source.getDocument(false), it.analysisResult?.analysisResult)
         }.let {
             listOf(
                     RemoveExplicitTypeIntention(it.first, it.second, psi),

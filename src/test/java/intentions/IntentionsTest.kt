@@ -57,4 +57,14 @@ class IntentionsTest : KotlinTestCase("Intentions test", "intentions") {
     
     fun testAddValToConstructorParameter() = doTest("addValToConstructorParameter", AddValToConstructorParameterIntention::class.java)
     
+    fun testChangeReturnType() = doTest("changeReturnType", ChangeReturnTypeIntention::class.java)
+    
+    fun testConvertToSealedClass() = doTest("convertToSealedClass", ConvertEnumToSealedClassIntention::class.java)
+    
+    fun testConvertPropertyInitializerToGetter() = doTest("convertPropertyInitializerToGetter", ConvertPropertyInitializerToGetterIntention::class.java)
+
+    fun testConvertToBlockBody() = doTest("convertToBlockBody", ConvertToBlockBodyIntention::class.java)
+    
+    fun testConvertToStringTemplate() = doTest("convertToStringTemplate", ConvertToStringTemplateIntention::class.java)
+
 }

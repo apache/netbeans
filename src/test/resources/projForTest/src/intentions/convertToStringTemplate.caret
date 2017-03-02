@@ -1,0 +1,3 @@
+package intentions
+
+fun convertTotringTemplate() = "12" + "<caret>14"

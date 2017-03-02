@@ -1,0 +1,7 @@
+package intentions
+
+class ConvertPropertyInitToGetter {
+
+    val property = <caret>42
+
+}

@@ -1,0 +1,7 @@
+package semantic
+
+class <caret>SomeClass<caret> {
+
+	val <caret>value<caret> = 42
+
+}

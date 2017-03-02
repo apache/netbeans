@@ -1,0 +1,6 @@
+package semantic
+
+class <caret>SemClass<caret> {
+
+}
+

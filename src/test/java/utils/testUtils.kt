@@ -23,6 +23,26 @@ import org.openide.filesystems.FileObject
 
 fun getCaret(doc: Document): Int = doc.getText(0,doc.length).indexOf("<caret>")
 
+fun Document.carets(): List<Int> {
+    val result = arrayListOf<Int>()
+    val caret = "<caret>"
+    val text = getText(0, length)
+    
+    var index = 0
+    
+    while(true) {
+        val newIndex = text.substring(index).indexOf(caret)
+        if (newIndex == -1) break
+        
+        index += newIndex
+        result.add(index)
+        
+        index += caret.length
+    }
+    
+    return result.mapIndexed { i, it -> it - caret.length * i}
+}
+
 fun getDocumentForFileObject(fo: FileObject) = ProjectUtils.getDocumentFromFileObject(fo)
 
 fun getDocumentForFileObject(dir: FileObject, fileName: String): Document {

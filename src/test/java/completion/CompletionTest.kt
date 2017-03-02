@@ -43,7 +43,6 @@ class CompletionTest : NbTestCase("Completion test") {
         assertNotNull(completionItems)
         
         val completions = completionItems.map { it.sortText }
-        println(completions)
         assertEquals(true, completions.containsAll(items))
     }
 

@@ -16,9 +16,12 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.highlighter.semanticanalyzer
 
+import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.isScanning
+import org.jetbrains.kotlin.psi.KtFile
+import org.jetbrains.kotlin.resolve.BindingContext
 import org.netbeans.modules.csl.api.ColoringAttributes
 import org.netbeans.modules.csl.api.OffsetRange
 import org.netbeans.modules.csl.api.SemanticAnalyzer
@@ -30,13 +33,13 @@ class KotlinSemanticAnalyzer : SemanticAnalyzer<KotlinParserResult>() {
     private var cancel = false
     private val highlighting = hashMapOf<OffsetRange, Set<ColoringAttributes>>()
     
-    private fun highlightDeprecatedElements(result: KotlinParserResult) = 
-            result.analysisResult?.analysisResult?.bindingContext?.diagnostics
-                    ?.filter { it.factory == Errors.DEPRECATION }
-                    ?.filter { it.psiFile == result.ktFile }
-                    ?.map { OffsetRange(it.textRanges.first().startOffset,
+    private fun highlightDeprecatedElements(bindingContext: BindingContext, ktFile: KtFile) = 
+            bindingContext.diagnostics
+                    .filter { it.factory == Errors.DEPRECATION }
+                    .filter { it.psiFile == ktFile }
+                    .map { OffsetRange(it.textRanges.first().startOffset,
                             it.textRanges.first().endOffset) }
-                    ?.forEach { highlighting.put(it, KotlinHighlightingAttributes.DEPRECATED.styleKey) }
+                    .forEach { highlighting.put(it, KotlinHighlightingAttributes.DEPRECATED.styleKey) }
     
     override fun getPriority() = 999
 
@@ -46,17 +49,20 @@ class KotlinSemanticAnalyzer : SemanticAnalyzer<KotlinParserResult>() {
         highlighting.clear()
         cancel = false
         
-        if (result == null) return
-        if (result.project.isScanning()) return
+        if (result == null || result.project.isScanning()) return
           
         val analysisResult = result.analysisResult?.analysisResult ?: return
         
-        val highlightingVisitor = KotlinSemanticHighlightingVisitor(result.ktFile, analysisResult)
-        highlighting.putAll(highlightingVisitor.computeHighlightingRanges())
-        
-        highlightDeprecatedElements(result)
+        highlight(analysisResult, result.ktFile)
     }
 
+    fun highlight(analysisResult: AnalysisResult, ktFile: KtFile) {
+        val highlightingVisitor = KotlinSemanticHighlightingVisitor(ktFile, analysisResult)
+        highlighting.putAll(highlightingVisitor.computeHighlightingRanges())
+        
+        highlightDeprecatedElements(analysisResult.bindingContext, ktFile)
+    }
+    
     override fun cancel() {
         cancel = true
     }

@@ -28,7 +28,7 @@ class CompletionTest : NbTestCase("Completion test") {
         completionDir = project.projectDirectory.getFileObject("src").getFileObject("completion")
     }
 
-    private fun doTest(fileName: String, items: Collection<String>) {
+    private fun doTest(fileName: String, items: Collection<String> = emptyList()) {
         val doc = getDocumentForFileObject(completionDir, fileName)
         val caret = getCaret(doc)
         assertNotNull(caret)
@@ -43,7 +43,7 @@ class CompletionTest : NbTestCase("Completion test") {
         assertNotNull(completionItems)
         
         val completions = completionItems.map { it.sortText }
-       
+        println(completions)
         assertEquals(true, completions.containsAll(items))
     }
 
@@ -88,4 +88,8 @@ class CompletionTest : NbTestCase("Completion test") {
 
     fun testUpperAndLowerCase() = doTest("checkUpperAndLowerCases.kt", listOf("method()"))
     
+    fun testNonImported() = doTest("checkUnimported.kt", listOf("completion.pack.function1", "completion.pack.function2"))
+
+    fun testNonImportedPrivate() = doTest("checkNonImportedPrivate.kt")
+        
 }

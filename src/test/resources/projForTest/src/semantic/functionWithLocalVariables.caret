@@ -1,0 +1,6 @@
+package semantic
+
+fun <caret>functionWithLocalVariables<caret>() {
+    val <caret>value<caret> = 0
+    var <caret>variable<caret> = 0
+}

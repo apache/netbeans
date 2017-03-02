@@ -95,4 +95,11 @@ class SemanticAnalyzerTest : NbTestCase("SemanticAnalyzer test") {
     
     fun testClass() = doTest("class", Attr.CLASS, Attr.FINAL_FIELD)
     
+    fun testFunctionWithLocalVariables() = doTest("functionWithLocalVariables", Attr.FUNCTION_DECLARATION,
+            Attr.LOCAL_FINAL_VARIABLE, Attr.LOCAL_VARIABLE)
+    
+    fun testAnnotation() = doTest("annotation", Attr.ANNOTATION)
+    
+    fun testDeprecated() = doTest("deprecated", Attr.DEPRECATED)
+    
 }

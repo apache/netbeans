@@ -1,0 +1,4 @@
+package semantic
+
+<caret>@Deprecated<caret>("deprecated")
+fun deprecatedFun() = 42

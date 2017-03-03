@@ -88,7 +88,6 @@ class KotlinHintsProvider : HintsProvider {
                 ImplementMembersFix(this, parserResult),
                 AutoImportFix(this, parserResult),
                 RemoveUselessCastFix(this, parserResult),
-                RenameModToRemFix(this, parserResult),
                 RemoveUnnecessarySafeCallFix(this, parserResult)
         ).filter(KotlinQuickFix::isApplicable)
 

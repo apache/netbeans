@@ -71,15 +71,13 @@ import org.netbeans.modules.refactoring.spi.RefactoringCommit
 fun getRenameRefactoringMap(fo: FileObject, psi: PsiElement, newName: String): Map<FileObject, Map<OffsetRange, String>> {
     val ranges = hashMapOf<FileObject, Map<OffsetRange, String>>()
     
-    val ktElement: KtElement? = PsiTreeUtil.getNonStrictParentOfType(psi, KtElement::class.java)
-    if (ktElement == null) return ranges
+    val ktElement: KtElement = PsiTreeUtil.getNonStrictParentOfType(psi, KtElement::class.java) ?: return ranges
 
     val sourceElements = ktElement.resolveToSourceDeclaration()
     if (sourceElements.isEmpty()) return ranges
 
     val searchingElements = getSearchingElements(sourceElements)
-    val project = ProjectUtils.getKotlinProjectForFileObject(fo)
-    if (project == null) return ranges
+    val project = ProjectUtils.getKotlinProjectForFileObject(fo) ?: return ranges
 
     val searchKtElements = getKotlinElements(searchingElements)
     

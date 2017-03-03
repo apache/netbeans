@@ -19,7 +19,6 @@
 package org.jetbrains.kotlin.refactorings.rename;
 
 import com.intellij.psi.PsiElement;
-import java.io.IOException;
 import javax.swing.JEditorPane;
 import javax.swing.text.StyledDocument;
 import org.jetbrains.kotlin.builder.KotlinPsiManager;
@@ -30,7 +29,6 @@ import org.netbeans.modules.refactoring.spi.ui.ActionsImplementationProvider;
 import org.netbeans.modules.refactoring.spi.ui.UI;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;

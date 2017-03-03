@@ -33,12 +33,13 @@ import org.jetbrains.kotlin.projectsextensions.maven.MavenHelper
 class KotlinInstaller : Yenta() {
 
     override fun friends() = setOf("org.netbeans.modules.maven",
-                "org.netbeans.modules.maven.embedder",
-                "org.netbeans.modules.jumpto",
-                "org.netbeans.modules.debugger.jpda",
-                "org.netbeans.modules.debugger.jpda.projects",
-                "org.netbeans.modules.java.api.common",
-                "org.netbeans.modules.java.preprocessorbridge")
+            "org.netbeans.modules.maven.embedder",
+            "org.netbeans.modules.jumpto",
+            "org.netbeans.modules.debugger.jpda",
+            "org.netbeans.modules.debugger.jpda.projects",
+            "org.netbeans.modules.java.api.common",
+            "org.netbeans.modules.java.preprocessorbridge"
+    )
     
     override fun restored() {        
         WindowManager.getDefault().invokeWhenUIReady { 

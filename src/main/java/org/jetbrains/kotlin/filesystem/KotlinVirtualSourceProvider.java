@@ -18,13 +18,26 @@ package org.jetbrains.kotlin.filesystem;
 
 import com.google.common.collect.Sets;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = VirtualSourceProvider.class)
 public class KotlinVirtualSourceProvider implements VirtualSourceProvider {
 
+    private static List<Project> translatedFully = new ArrayList<>();
+    
+    public static boolean isFullyTranslated(Project project) {
+        return translatedFully.contains(project);
+    }
+    
+    public static void translated(Project project) {
+        translatedFully.add(project);
+    }
+    
     @Override
     public Set<String> getSupportedExtensions() {
         return Sets.newHashSet("kt");

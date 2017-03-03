@@ -42,8 +42,10 @@ fun translate(files: Iterable<File>, result: VirtualSourceProvider.Result) {
     } else files.mapNotNull { FileUtil.toFileObject(FileUtil.normalizeFile(it)) }
 
     val project = filesToTranslate.firstOrNull()?.let { ProjectUtils.getKotlinProjectForFileObject(it) } ?: return
-
+    if (KotlinVirtualSourceProvider.isFullyTranslated(project)) return
+    
     if (filesToTranslate.size == KotlinPsiManager.getFilesByProject(project, false).size) {
+        KotlinVirtualSourceProvider.translated(project)
         val startTime = System.nanoTime()
         val analysisResult = NetBeansAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration(
                 project, KotlinEnvironment.getEnvironment(project).project,

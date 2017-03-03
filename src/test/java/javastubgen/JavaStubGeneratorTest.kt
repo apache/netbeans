@@ -19,7 +19,6 @@ package javastubgen
 import com.intellij.openapi.util.text.StringUtil
 import javaproject.JavaProject
 import org.jetbrains.kotlin.builder.KotlinPsiManager
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.filesystem.JavaStubGenerator
 import org.jetbrains.kotlin.filesystem.lightclasses.KotlinLightClassGeneration
 import org.jetbrains.kotlin.psi.KtFile
@@ -35,7 +34,6 @@ class JavaStubGeneratorTest : KotlinTestCase("Stub generator test", "stubGen") {
     private fun getByteCode(file: FileObject): List<ByteArray> {
         val ktFile = KotlinPsiManager.getParsedFile(file)!!
         val result = KotlinAnalyzer.analyzeFile(project, ktFile)
-        KotlinParser.setAnalysisResult(ktFile, result)
         
         return KotlinLightClassGeneration.getByteCode(file, project, result.analysisResult)
     }

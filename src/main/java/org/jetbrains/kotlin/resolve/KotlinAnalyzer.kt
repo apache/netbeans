@@ -16,13 +16,21 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.resolve
 
-import org.jetbrains.kotlin.model.KotlinAnalysisFileCache
+import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.model.KotlinEnvironment
 import org.jetbrains.kotlin.psi.KtFile
 import org.netbeans.api.project.Project
 
 object KotlinAnalyzer {
-    fun analyzeFile(kotlinProject: Project, ktFile: KtFile) = KotlinAnalysisFileCache.getAnalysisResult(ktFile, kotlinProject)
+    
+    fun analyzeFile(project: Project, file: KtFile): AnalysisResultWithProvider {
+        KotlinLogger.INSTANCE.logInfo("Analyzing ${file.virtualFile.path}")
+        val kotlinEnvironment = KotlinEnvironment.getEnvironment(project)
+        val analysisResult = NetBeansAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration(
+                project, kotlinEnvironment.project, listOf(file))
+        
+        return analysisResult
+    }
     
     private fun analyzeFiles(kotlinProject: Project,
                              kotlinEnvironment: KotlinEnvironment, 

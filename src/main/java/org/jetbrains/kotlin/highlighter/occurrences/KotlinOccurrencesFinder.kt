@@ -43,7 +43,7 @@ class KotlinOccurrencesFinder : OccurrencesFinder<KotlinParserResult>() {
         
         if (result.project.isScanning()) return
         
-        val ktFile = result.ktFile ?: return
+        val ktFile = result.ktFile
         
         val psiElement = ktFile.findElementAt(caretPosition)
         val ktElement = PsiTreeUtil.getNonStrictParentOfType(psiElement, KtElement::class.java) ?: return

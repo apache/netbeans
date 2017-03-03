@@ -22,7 +22,6 @@ import javax.swing.text.Document
 import org.netbeans.api.project.Project
 import org.openide.filesystems.FileObject
 import org.jetbrains.kotlin.builder.KotlinPsiManager
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.hints.intentions.*
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
@@ -40,7 +39,6 @@ class IntentionsTest : KotlinTestCase("Intentions test", "intentions") {
         val ktFile = KotlinPsiManager.getParsedFile(file)!!
         
         val resultWithProvider = KotlinAnalyzer.analyzeFile(project, ktFile)
-        KotlinParser.setAnalysisResult(ktFile, resultWithProvider)
         
         val psi = ktFile.findElementAt(caret) ?: assert(false)
         

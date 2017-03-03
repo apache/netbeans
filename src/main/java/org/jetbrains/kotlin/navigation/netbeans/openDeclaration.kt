@@ -187,7 +187,7 @@ fun getElementWithSource(descriptor: DeclarationDescriptor, project: Project): S
 fun getNavigationData(referenceExpression: KtReferenceExpression,
                               project: Project): NavigationData? {
     val ktFile = referenceExpression.getContainingKtFile()
-    val analysisResult = KotlinParser.getAnalysisResult(ktFile) ?: return null
+    val analysisResult = KotlinParser.getAnalysisResult(ktFile, project) ?: return null
     val context = analysisResult.analysisResult.bindingContext
     
     return createReferences(referenceExpression)

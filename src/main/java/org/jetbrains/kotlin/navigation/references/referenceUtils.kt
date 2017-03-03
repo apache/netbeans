@@ -17,24 +17,14 @@
 package org.jetbrains.kotlin.navigation.references
 
 import java.util.ArrayList
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.psi.psiUtil.getQualifiedExpressionForSelectorOrThis
 import org.jetbrains.kotlin.psi.psiUtil.getAssignmentByLHS
-import org.jetbrains.kotlin.psi.KtElement
-import org.jetbrains.kotlin.psi.KtReferenceExpression
-import org.jetbrains.kotlin.psi.KtSimpleNameExpression
-import org.jetbrains.kotlin.psi.KtCallExpression
-import org.jetbrains.kotlin.psi.KtConstructorDelegationReferenceExpression
-import org.jetbrains.kotlin.psi.KtNameReferenceExpression
+import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.lexer.KtTokens
-import org.jetbrains.kotlin.psi.KtExpression
-import org.jetbrains.kotlin.psi.KtParenthesizedExpression
-import org.jetbrains.kotlin.psi.KtAnnotatedExpression
-import org.jetbrains.kotlin.psi.KtLabeledExpression
-import org.jetbrains.kotlin.psi.KtUnaryExpression
 import org.jetbrains.kotlin.utils.addToStdlib.constant
 import org.jetbrains.kotlin.descriptors.SourceElement
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement
-import org.jetbrains.kotlin.psi.KtConstructor
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import com.intellij.psi.PsiElement
@@ -142,8 +132,10 @@ fun List<KotlinReference>.resolveToSourceElements(): List<SourceElement> {
     val file = FileUtil.toFileObject(File(normalizedPath)) ?: return emptyList()
     val project = ProjectUtils.getKotlinProjectForFileObject(file) ?: return emptyList()
     
+    val analysisResult = KotlinParser.getAnalysisResult(ktFile, project) ?: return emptyList()
+    
     return this.resolveToSourceElements(
-            KotlinAnalyzer.analyzeFile(project, ktFile).analysisResult.bindingContext, project)
+            analysisResult.analysisResult.bindingContext, project)
 }
 
 fun List<KotlinReference>.resolveToSourceElements(context: BindingContext, 

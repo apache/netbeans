@@ -31,7 +31,7 @@ import org.jetbrains.kotlin.utils.ProjectUtils
 
 fun getSmartCastHover(offset: Int): String? {
     val ktFile = KotlinParser.file ?: return null
-    val analysisResult = KotlinParser.getAnalysisResult() ?: return null
+    val analysisResult = KotlinParser.analysisResult ?: return null
     val bindingContext = analysisResult.analysisResult.bindingContext
     
     val element = ktFile.findElementAt(offset)

@@ -23,7 +23,6 @@ import org.netbeans.modules.csl.api.ColoringAttributes
 import org.netbeans.modules.csl.api.OffsetRange
 import org.openide.filesystems.FileObject
 import org.jetbrains.kotlin.builder.KotlinPsiManager
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.highlighter.semanticanalyzer.*
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
@@ -66,7 +65,6 @@ class SemanticAnalyzerTest : KotlinTestCase("SemanticAnalyzer test", "semantic")
         val ktFile = KotlinPsiManager.getParsedFile(file)!!
         
         val resultWithProvider = KotlinAnalyzer.analyzeFile(project, ktFile)
-        KotlinParser.setAnalysisResult(ktFile, resultWithProvider)
         
         val highlights = KotlinSemanticAnalyzer().let {
             it.highlight(resultWithProvider.analysisResult, ktFile)

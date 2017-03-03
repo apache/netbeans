@@ -16,6 +16,7 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.diagnostics.netbeans.parser
 
+import java.io.File
 import javax.swing.event.ChangeListener
 import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.isScanning
@@ -25,84 +26,63 @@ import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.psi.KtFile
 import org.netbeans.api.java.source.SourceUtils
 import org.netbeans.api.project.Project
-import org.netbeans.modules.parsing.api.ParserManager
-import org.netbeans.modules.parsing.api.Snapshot
-import org.netbeans.modules.parsing.api.Task
-import org.netbeans.modules.parsing.api.UserTask
-import org.netbeans.modules.parsing.api.indexing.IndexingManager
-import org.netbeans.modules.parsing.spi.Parser
-import org.netbeans.modules.parsing.spi.Parser.Result
-import org.netbeans.modules.parsing.spi.SourceModificationEvent
-import org.netbeans.modules.csl.spi.GsfUtilities
+import org.netbeans.modules.parsing.api.*
+import org.netbeans.modules.parsing.spi.*
+import org.openide.filesystems.FileUtil
 
 class KotlinParser : Parser() {
-    
+
     companion object {
-        @JvmStatic var file: KtFile? = null
+        var file: KtFile? = null
+            private set
+
+        var project: Project? = null
             private set
         
-        @JvmStatic private val CACHE = hashMapOf<String, AnalysisResultWithProvider>()
+        var analysisResult: AnalysisResultWithProvider? = null
         
-        @JvmStatic fun getAnalysisResult() = if (file != null) CACHE[file!!.virtualFile.path] else null
+        @JvmStatic fun getAnalysisResult(ktFile: KtFile,
+                                         proj: Project) = if (ktFile upToDate file) analysisResult else analyze(ktFile, proj)
         
-        @JvmStatic fun getAnalysisResult(ktFile: KtFile) = CACHE[ktFile.virtualFile.path]
+        private fun analyze(ktFile: KtFile, 
+                            proj: Project): AnalysisResultWithProvider? = KotlinAnalyzer.analyzeFile(proj, ktFile)
+                .also { 
+                    project = proj 
+                    file = ktFile
+                    analysisResult = it
+                }
         
-        // for tests only
-        @JvmStatic fun setAnalysisResult(ktFile: KtFile, analysisResult: AnalysisResultWithProvider) {
-            file = ktFile
-            CACHE.put(ktFile.virtualFile.path, analysisResult)
-        }
-        
-        @JvmStatic fun getAnalysisResult(file: KtFile, proj: Project): AnalysisResultWithProvider {
-            if (!CACHE.contains(file.virtualFile.path)) {
-                CACHE.put(file.virtualFile.path, KotlinAnalysisProjectCache.getAnalysisResult(proj))
-            }
-            return CACHE[file.virtualFile.path]!!
-        }
+        private infix fun KtFile.upToDate(ktFile: KtFile?) = 
+                virtualFile.path == ktFile?.virtualFile?.path && text == ktFile.text
         
     }
-    
-    private lateinit var snapshot: Snapshot
-    private var project: Project? = null
 
+    private lateinit var snapshot: Snapshot
+    
     override fun parse(snapshot: Snapshot, task: Task, event: SourceModificationEvent) {
         this.snapshot = snapshot
-        val currentProject = ProjectUtils.getKotlinProjectForFileObject(snapshot.source.fileObject)
-        project = currentProject
-        if (currentProject == null) {
-            file = null
-            return
-        }
         
-        file = ProjectUtils.getKtFile(snapshot.text.toString(), snapshot.source.fileObject)
+        if (SourceUtils.isScanInProgress()) return
         
-        if (SourceUtils.isScanInProgress() || currentProject.isScanning()) {
-            return
-        }
+        val project = ProjectUtils.getKotlinProjectForFileObject(snapshot.source.fileObject)
+        if (project.isScanning()) return
         
-        val caretOffset = GsfUtilities.getLastKnownCaretOffset(snapshot, event)
-        if (caretOffset <= 0) {
-            CACHE.put(file!!.virtualFile.path, KotlinAnalysisProjectCache.getAnalysisResult(project!!))
-            return
-        }
-        
-        CACHE.put(file!!.virtualFile.path, KotlinAnalyzer.analyzeFile(project!!, file!!))
+        val ktFile = ProjectUtils.getKtFile(snapshot.text.toString(), snapshot.source.fileObject)
+
+        getAnalysisResult(ktFile, project)
     }
-    
+
     override fun getResult(task: Task): Result? {
         val project = project ?: return null
-        val ktFile = if (file?.virtualFile?.path == snapshot.source.fileObject.path) {
-            file 
-        } else {
-            ProjectUtils.getKtFile(snapshot.text.toString(), snapshot.source.fileObject)
-        } ?: return null
-        
-        return KotlinParserResult(snapshot, CACHE[snapshot.source.fileObject.path], ktFile, project)
+        val ktFile = file ?: return null
+        val result = analysisResult ?: return null
+
+        return KotlinParserResult(snapshot, result, ktFile, project)
     }
-    
+
     override fun addChangeListener(changeListener: ChangeListener) {}
     override fun removeChangeListener(changeListener: ChangeListener) {}
-    
+
     override fun cancel(reason: CancelReason, event: SourceModificationEvent?) {
         KotlinLogger.INSTANCE.logInfo("Parser cancel ${reason.name}")
     }

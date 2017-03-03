@@ -2,6 +2,7 @@ package org.jetbrains.kotlin.resolve
 
 import com.intellij.psi.PsiFile
 import org.jetbrains.kotlin.caches.resolve.KotlinCacheService
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.idea.resolve.ResolutionFacade
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
@@ -12,7 +13,6 @@ import org.jetbrains.kotlin.analyzer.AnalysisResult
 import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.psi.KtDeclaration
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
-import org.jetbrains.kotlin.model.KotlinAnalysisFileCache
 import org.jetbrains.kotlin.resolve.diagnostics.KotlinSuppressCache
 import org.jetbrains.kotlin.container.ComponentProvider
 import org.netbeans.api.project.Project as NBProject
@@ -42,7 +42,7 @@ class KotlinSimpleResolutionFacade(
             return BindingContext.EMPTY
         }
         val ktFile = elements.first().getContainingKtFile()
-        return KotlinAnalysisFileCache.getAnalysisResult(ktFile, nbProject).analysisResult.bindingContext
+        return KotlinParser.getAnalysisResult(ktFile, nbProject)?.analysisResult?.bindingContext ?: BindingContext.EMPTY
     }
 
     override fun resolveToDescriptor(declaration: KtDeclaration, bodyResolveMode: BodyResolveMode): DeclarationDescriptor {
@@ -54,7 +54,7 @@ class KotlinSimpleResolutionFacade(
 
     override fun analyze(element: KtElement, bodyResolveMode: BodyResolveMode): BindingContext {
         val ktFile = element.getContainingKtFile()
-        return KotlinAnalysisFileCache.getAnalysisResult(ktFile, nbProject).analysisResult.bindingContext
+        return KotlinParser.getAnalysisResult(ktFile, nbProject)?.analysisResult?.bindingContext ?: BindingContext.EMPTY
     }
 
     override fun analyzeFullyAndGetResult(elements: Collection<KtElement>): AnalysisResult {

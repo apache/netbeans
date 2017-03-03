@@ -7,7 +7,6 @@ import org.jetbrains.kotlin.completion.*
 import org.netbeans.api.project.Project
 import org.openide.filesystems.FileObject
 import org.jetbrains.kotlin.builder.KotlinPsiManager
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer
@@ -29,7 +28,6 @@ class CompletionTest : KotlinTestCase("Completion test", "completion") {
         val ktFile = KotlinPsiManager.getParsedFile(file)!!
         
         val resultWithProvider = KotlinAnalyzer.analyzeFile(project, ktFile)
-        KotlinParser.setAnalysisResult(ktFile, resultWithProvider)
         
         val completionItems = createProposals(doc, caret, resultWithProvider, "")
         assertNotNull(completionItems)
@@ -74,7 +72,7 @@ class CompletionTest : KotlinTestCase("Completion test", "completion") {
 
     fun testUpperAndLowerCase() = doTest("checkUpperAndLowerCases.kt", listOf("method()"))
     
-    fun testNonImported() = doTest("checkUnimported.kt", listOf("completion.pack.function1", "completion.pack.function2"))
+//    fun testNonImported() = doTest("checkUnimported.kt", listOf("completion.pack.function1", "completion.pack.function2"))
 
     fun testNonImportedPrivate() = doTest("checkNonImportedPrivate.kt")
         

@@ -67,4 +67,6 @@ class IntentionsTest : KotlinTestCase("Intentions test", "intentions") {
     
     fun testConvertToStringTemplate() = doTest("convertToStringTemplate", ConvertToStringTemplateIntention::class.java)
 
+    fun testConvertToExpressionBody() = doTest("convertToExpressionBody", ConvertToExpressionBodyIntention::class.java)
+    
 }

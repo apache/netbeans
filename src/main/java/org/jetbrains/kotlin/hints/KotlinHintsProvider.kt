@@ -61,6 +61,7 @@ class KotlinHintsProvider : HintsProvider {
                     RemoveExplicitTypeIntention(it.first, it.second, psi),
                     SpecifyTypeIntention(it.first, it.second, psi),
                     ConvertToBlockBodyIntention(it.first, it.second, psi),
+                    ConvertToExpressionBodyIntention(it.first, it.second, psi),
                     ChangeReturnTypeIntention(it.first, it.second, psi),
                     ConvertTryFinallyToUseCallIntention(it.first, it.second, psi),
                     ConvertForEachToForLoopIntention(it.first, it.second, psi),

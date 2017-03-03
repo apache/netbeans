@@ -133,7 +133,7 @@ class ConvertToBlockBodyIntention(doc: Document,
             if (shouldSpecifyType) {
                 specifyType(declaration, factory, context)
             }
-            format(this, declaration.textRange.endOffset)
+            format(this, declaration.textRange.startOffset)
         }
     }
 

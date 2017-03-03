@@ -163,7 +163,7 @@ public class ProjectUtils {
     public static List<KtFile> getSourceFiles(@NotNull Project project){
         List<KtFile> ktFiles = new ArrayList<>();
         
-        for (FileObject file : KotlinPsiManager.INSTANCE.getFilesByProject(project)){
+        for (FileObject file : KotlinPsiManager.INSTANCE.getFilesByProject(project, true)){
             ktFiles.add(getKtFile(file));
             
         }
@@ -178,7 +178,7 @@ public class ProjectUtils {
                     equals("org.netbeans.modules.maven.NbMavenProjectImpl")) {
             List<? extends Project> depProjects = MavenHelper.getDependencyProjects(project);
             for (Project depProject : depProjects) {
-                for (FileObject file : KotlinPsiManager.INSTANCE.getFilesByProject(depProject)){
+                for (FileObject file : KotlinPsiManager.INSTANCE.getFilesByProject(depProject, false)){
                     depFiles.add(getKtFile(file));
                 }
             }

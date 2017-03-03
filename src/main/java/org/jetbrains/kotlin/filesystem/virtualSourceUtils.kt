@@ -17,6 +17,7 @@
 package org.jetbrains.kotlin.filesystem
 
 import java.io.File
+import org.jetbrains.kotlin.builder.KotlinPsiManager
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.model.KotlinEnvironment
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
@@ -42,7 +43,7 @@ fun translate(files: Iterable<File>, result: VirtualSourceProvider.Result) {
 
     val project = filesToTranslate.firstOrNull()?.let { ProjectUtils.getKotlinProjectForFileObject(it) } ?: return
 
-    if (filesToTranslate.size == ProjectUtils.getSourceFiles(project).size) {
+    if (filesToTranslate.size == KotlinPsiManager.getFilesByProject(project, false).size) {
         val startTime = System.nanoTime()
         val analysisResult = NetBeansAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration(
                 project, KotlinEnvironment.getEnvironment(project).project,

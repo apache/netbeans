@@ -58,15 +58,18 @@ class KotlinParser : Parser() {
     }
 
     private lateinit var snapshot: Snapshot
-    
+    private var cancel = false
+
     override fun parse(snapshot: Snapshot, task: Task, event: SourceModificationEvent) {
         this.snapshot = snapshot
+        cancel = false
         
         if (SourceUtils.isScanInProgress()) return
         
         val project = ProjectUtils.getKotlinProjectForFileObject(snapshot.source.fileObject)
         if (project.isScanning()) return
-        
+        if (cancel) return
+
         val ktFile = ProjectUtils.getKtFile(snapshot.text.toString(), snapshot.source.fileObject)
 
         getAnalysisResult(ktFile, project)
@@ -74,8 +77,10 @@ class KotlinParser : Parser() {
 
     override fun getResult(task: Task): Result? {
         val project = project ?: return null
-        val ktFile = file ?: return null
-        val result = analysisResult ?: return null
+        val ktFile = if (snapshot.source.fileObject.path == file?.virtualFile?.path) file else {
+                ProjectUtils.getKtFile(snapshot.text.toString(), snapshot.source.fileObject)
+            } ?: return null
+        val result = getAnalysisResult(ktFile, project) ?: return null
 
         return KotlinParserResult(snapshot, result, ktFile, project)
     }
@@ -84,6 +89,7 @@ class KotlinParser : Parser() {
     override fun removeChangeListener(changeListener: ChangeListener) {}
 
     override fun cancel(reason: CancelReason, event: SourceModificationEvent?) {
+        cancel = true
         KotlinLogger.INSTANCE.logInfo("Parser cancel ${reason.name}")
     }
 }

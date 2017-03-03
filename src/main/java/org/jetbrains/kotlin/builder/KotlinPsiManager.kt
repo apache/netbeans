@@ -44,12 +44,13 @@ object KotlinPsiManager {
     
     private val cachedKtFiles = hashMapOf<FileObject, KtFile>()
     
-    fun getFilesByProject(project: Project) = project.getKotlinSources()
-                ?.getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE)
-                ?.flatMap { it.rootFolder.children.toList() }
-                ?.filter { it.isKotlinFile() }
-                ?.toSet() ?: emptySet()
-        
+    fun getFilesByProject(project: Project, 
+                          test: Boolean = true) = project.getKotlinSources()
+            ?.getSourceGroups(KotlinProjectConstants.KOTLIN_SOURCE, test)
+            ?.flatMap { it.rootFolder.children.toList() }
+            ?.filter { it.isKotlinFile() }
+            ?.toSet() ?: emptySet()
+    
     private fun parseFile(file: FileObject): KtFile? {
         return parseText(StringUtilRt.convertLineSeparators(file.asText()), file)
     }

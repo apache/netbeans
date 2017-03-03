@@ -34,12 +34,15 @@ class KotlinSources(private val kotlinProject: Project) {
 
     private fun findSrc(fo: FileObject,
                         files: MutableCollection<FileObject>,
-                        type: KotlinProjectConstants?) {
+                        type: KotlinProjectConstants?,
+                        test: Boolean) {
         if (fo.isFolder()) {
+            if (!test && fo.name == "test" && fo.parent.name == "src") return
             if (fo.name == "resources" &&
                     (fo.parent.name == "test" || fo.parent.name == "main")) return
 
-            fo.children.forEach { findSrc(it, files, type) }
+            
+            fo.children.forEach { findSrc(it, files, type, test) }
         } else when (type) {
             KotlinProjectConstants.KOTLIN_SOURCE -> if (fo.isKotlinFile()) files.add(fo.parent)
 
@@ -60,11 +63,12 @@ class KotlinSources(private val kotlinProject: Project) {
         return modules.isNotEmpty()
     }
 
-    fun getSrcDirectories(type: KotlinProjectConstants): List<FileObject> {
+    fun getSrcDirectories(type: KotlinProjectConstants,
+                          test: Boolean = true): List<FileObject> {
         val orderedFiles = hashSetOf<FileObject>()
         val srcDir = kotlinProject.projectDirectory.getFileObject("src") ?: return emptyList()
 
-        findSrc(srcDir, orderedFiles, type)
+        findSrc(srcDir, orderedFiles, type, test)
         return orderedFiles.toList()
     }
 
@@ -73,7 +77,8 @@ class KotlinSources(private val kotlinProject: Project) {
             .filter { it.hasExt("kt") }
 
 
-    fun getSourceGroups(type: KotlinProjectConstants) = getSrcDirectories(type)
+    fun getSourceGroups(type: KotlinProjectConstants,
+                        test: Boolean = true) = getSrcDirectories(type, test)
             .map { KotlinSourceGroup(it) }
             .toTypedArray()
 

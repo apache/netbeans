@@ -65,7 +65,7 @@ class UnusedImportsComputer(private val parserResult: KotlinParserResult) : KtVi
     
     override fun visitReferenceExpression(expression: KtReferenceExpression, data: Any?) {
         val reference = context[BindingContext.REFERENCE_TARGET, expression]?.let { 
-            if (it is ClassDescriptor) it else it.containingDeclaration
+            if (it is ClassDescriptor && !it.isCompanionObject) it else it.containingDeclaration
         }
         
         if (reference is ClassDescriptor) usedClasses.add(reference)

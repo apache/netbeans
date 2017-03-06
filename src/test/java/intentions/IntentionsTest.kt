@@ -17,16 +17,11 @@
 package intentions
 
 import utils.*
-import javaproject.JavaProject
-import javax.swing.text.Document
-import org.netbeans.api.project.Project
 import org.openide.filesystems.FileObject
 import org.jetbrains.kotlin.builder.KotlinPsiManager
 import org.jetbrains.kotlin.hints.intentions.*
 import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
-import org.jetbrains.kotlin.resolve.KotlinAnalyzer
-import org.jetbrains.kotlin.utils.ProjectUtils
+import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 
 class IntentionsTest : KotlinTestCase("Intentions test", "intentions") {
     
@@ -38,7 +33,7 @@ class IntentionsTest : KotlinTestCase("Intentions test", "intentions") {
         val file = dir.getFileObject("$fileName.kt")
         val ktFile = KotlinPsiManager.getParsedFile(file)!!
         
-        val resultWithProvider = KotlinAnalyzer.analyzeFile(project, ktFile)
+        val resultWithProvider = KotlinParser.getAnalysisResult(ktFile, project)!!
         
         val psi = ktFile.findElementAt(caret) ?: assert(false)
         
@@ -66,5 +61,9 @@ class IntentionsTest : KotlinTestCase("Intentions test", "intentions") {
     fun testConvertToStringTemplate() = doTest("convertToStringTemplate", ConvertToStringTemplateIntention::class.java)
 
     fun testConvertToExpressionBody() = doTest("convertToExpressionBody", ConvertToExpressionBodyIntention::class.java)
+ 
+    //fun testConvertToForLoop() = doTest("convertToForLoop", ConvertForEachToForLoopIntention::class.java)
+   
+    //fun testConvertToConcatenatedString() = doTest("convertToConcatenatedString", ConvertToConcatenatedStringIntention::class.java)
     
 }

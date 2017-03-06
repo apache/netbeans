@@ -201,11 +201,11 @@ fun createProposals(doc: Document, caretOffset: Int,
     val proposals: MutableList<CompletionProposal> = descriptors.filter { it !is JavaClassConstructorDescriptor }
             .map { KotlinCompletionProposal(identOffset, it, styledDoc, prefix, project) }
             .toMutableList()
-    val ktFile = KotlinParser.file ?: return proposals
+    val ktFile = KotlinParser.file ?: ProjectUtils.getKtFile(editorText, file) ?:  return proposals
     val psiElement = ktFile.findElementAt(identOffset) ?: return proposals
     
     proposals.addAll(generateKeywordProposals(identifierPart, psiElement, identOffset, prefix))
-    val simpleNameExpression: KtSimpleNameExpression? = PsiTreeUtil.getParentOfType(psiElement, KtSimpleNameExpression::class.java)
+    val simpleNameExpression = PsiTreeUtil.getParentOfType(psiElement, KtSimpleNameExpression::class.java)
     if (simpleNameExpression != null) {
         proposals.addAll(generateNonImportedCompletionProposals(prefix, ktFile, simpleNameExpression, project, identOffset))
     }

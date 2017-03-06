@@ -72,7 +72,7 @@ class CompletionTest : KotlinTestCase("Completion test", "completion") {
 
     fun testUpperAndLowerCase() = doTest("checkUpperAndLowerCases.kt", listOf("method()"))
     
-//    fun testNonImported() = doTest("checkUnimported.kt", listOf("completion.pack.function1", "completion.pack.function2"))
+    fun testNonImported() = doTest("checkUnimported.kt", listOf("completion.pack.function1", "completion.pack.function2"))
 
     fun testNonImportedPrivate() = doTest("checkNonImportedPrivate.kt")
         

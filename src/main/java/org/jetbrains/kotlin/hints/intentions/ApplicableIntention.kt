@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.hints.intentions
 import com.intellij.psi.PsiElement
 import javax.swing.text.Document
 import org.jetbrains.kotlin.analyzer.AnalysisResult
+import org.jetbrains.kotlin.language.Priorities
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.hints.KotlinRule
 import org.netbeans.modules.csl.api.*
@@ -48,7 +49,7 @@ abstract class Inspection(open val element: KtElement) {
             fileObject,
             OffsetRange(element.textRange.startOffset, element.textRange.endOffset),
             emptyList(),
-            10
+            Priorities.HINT_PRIORITY
     )
     
 }

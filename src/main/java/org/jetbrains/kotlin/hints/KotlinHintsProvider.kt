@@ -141,14 +141,17 @@ class KotlinHintsProvider : HintsProvider {
     }
 
     override fun computeHints(hintsManager: HintsManager, ruleContext: RuleContext, hints: MutableList<Hint>) {
-        val ktFile = (ruleContext.parserResult as KotlinParserResult).ktFile
-        val hintsComputer = KotlinHintsComputer(ruleContext.parserResult as KotlinParserResult)
-
+        val parserResult = ruleContext.parserResult as KotlinParserResult
+        val ktFile = parserResult.ktFile
+        val hintsComputer = KotlinHintsComputer(parserResult)
+        val unusedComputer = UnusedImportsComputer(parserResult)
+        
         ktFile.accept(hintsComputer)
 
         with(hints) {
             addAll(ruleContext.quickFixes)
             addAll(hintsComputer.hints)
+            addAll(unusedComputer.getUnusedImports())
         }
     }
 

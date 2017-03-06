@@ -17,6 +17,7 @@
 package org.jetbrains.kotlin.language
 
 object Priorities {
+    val HINT_PRIORITY = 10
     val SEMANTIC_ANALYZER_PRIORITY = 999
     val OCCURRENCES_FINDER_PRIORITY = 1000
 }

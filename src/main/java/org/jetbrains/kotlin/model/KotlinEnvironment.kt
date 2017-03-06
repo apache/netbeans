@@ -207,17 +207,17 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
     
     private fun getExtensionsFromCommonXml() {
         CoreApplicationEnvironment.registerApplicationExtensionPoint(
-                ExtensionPointName<DiagnosticSuppressor>("org.jetbrains.kotlin.diagnosticSuppressor"), DiagnosticSuppressor::class.java)
+                ExtensionPointName("org.jetbrains.kotlin.diagnosticSuppressor"), DiagnosticSuppressor::class.java)
         CoreApplicationEnvironment.registerApplicationExtensionPoint(
-                ExtensionPointName<DefaultErrorMessages.Extension>("org.jetbrains.kotlin.defaultErrorMessages"), DefaultErrorMessages.Extension::class.java)
+                ExtensionPointName("org.jetbrains.kotlin.defaultErrorMessages"), DefaultErrorMessages.Extension::class.java)
         CoreApplicationEnvironment.registerApplicationExtensionPoint(
-                ExtensionPointName<SuppressStringProvider>("org.jetbrains.kotlin.suppressStringProvider"), SuppressStringProvider::class.java)
+                ExtensionPointName("org.jetbrains.kotlin.suppressStringProvider"), SuppressStringProvider::class.java)
         CoreApplicationEnvironment.registerApplicationExtensionPoint(
-                ExtensionPointName<ExpressionCodegenExtension>(("org.jetbrains.kotlin.expressionCodegenExtension")), ExpressionCodegenExtension::class.java)
+                ExtensionPointName(("org.jetbrains.kotlin.expressionCodegenExtension")), ExpressionCodegenExtension::class.java)
         CoreApplicationEnvironment.registerApplicationExtensionPoint(
-                ExtensionPointName<ClassBuilderInterceptorExtension>(("org.jetbrains.kotlin.classBuilderFactoryInterceptorExtension")), ClassBuilderInterceptorExtension::class.java)
+                ExtensionPointName(("org.jetbrains.kotlin.classBuilderFactoryInterceptorExtension")), ClassBuilderInterceptorExtension::class.java)
         CoreApplicationEnvironment.registerApplicationExtensionPoint(
-                ExtensionPointName<PackageFragmentProviderExtension>(("org.jetbrains.kotlin.packageFragmentProviderExtension")), PackageFragmentProviderExtension::class.java)
+                ExtensionPointName(("org.jetbrains.kotlin.packageFragmentProviderExtension")), PackageFragmentProviderExtension::class.java)
         CoreApplicationEnvironment.registerApplicationExtensionPoint(CodeStyleSettingsProvider.EXTENSION_POINT_NAME, KotlinSettingsProvider::class.java)
         CoreApplicationEnvironment.registerApplicationExtensionPoint(LanguageCodeStyleSettingsProvider.EP_NAME, KotlinLanguageCodeStyleSettingsProvider::class.java)
         
@@ -259,22 +259,22 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
             registerFileType(PlainTextFileType.INSTANCE, "xml")
             registerFileType(KotlinFileType.INSTANCE, "kt")
             registerParserDefinition(KotlinParserDefinition())
-            application.registerService<KotlinBinaryClassCache>(KotlinBinaryClassCache::class.java, KotlinBinaryClassCache())
+            application.registerService(KotlinBinaryClassCache::class.java, KotlinBinaryClassCache())
         }
         
         return javaApplicationEnvironment
     }
     
     private fun registerAppExtensionPoints() {
-        CoreApplicationEnvironment.registerExtensionPoint<ContainerProvider>(Extensions.getRootArea(), ContainerProvider.EP_NAME,
+        CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), ContainerProvider.EP_NAME,
                 ContainerProvider::class.java)
-        CoreApplicationEnvironment.registerExtensionPoint<ClsCustomNavigationPolicy>(Extensions.getRootArea(), ClsCustomNavigationPolicy.EP_NAME,
+        CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), ClsCustomNavigationPolicy.EP_NAME,
                 ClsCustomNavigationPolicy::class.java)
-        CoreApplicationEnvironment.registerExtensionPoint<ClassFileDecompilers.Decompiler>(Extensions.getRootArea(), ClassFileDecompilers.EP_NAME,
+        CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), ClassFileDecompilers.EP_NAME,
                 ClassFileDecompilers.Decompiler::class.java)
         
-        CoreApplicationEnvironment.registerExtensionPoint<PsiAugmentProvider>(Extensions.getRootArea(), PsiAugmentProvider.EP_NAME, PsiAugmentProvider::class.java)
-        CoreApplicationEnvironment.registerExtensionPoint<JavaMainMethodProvider>(Extensions.getRootArea(), JavaMainMethodProvider.EP_NAME, JavaMainMethodProvider::class.java)
+        CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), PsiAugmentProvider.EP_NAME, PsiAugmentProvider::class.java)
+        CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), JavaMainMethodProvider.EP_NAME, JavaMainMethodProvider::class.java)
     }
     
     private fun addToClasspath(path: String, rootType: JavaRoot.RootType?) {

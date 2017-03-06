@@ -44,7 +44,7 @@ class ConvertToBlockBodyIntention(doc: Document,
                                   psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
 
     override fun isApplicable(caretOffset: Int): Boolean {
-        val declaration: KtDeclarationWithBody = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java) ?: return false
+        val declaration = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java) ?: return false
         if (declaration is KtFunctionLiteral || declaration.hasBlockBody() || !declaration.hasBody()) return false
 
         when (declaration) {
@@ -67,7 +67,7 @@ class ConvertToBlockBodyIntention(doc: Document,
     override fun getDescription() = "Convert to block body"
 
     override fun implement() {
-        val declaration: KtDeclarationWithBody = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java) ?: return
+        val declaration = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java) ?: return
         val context = analysisResult?.bindingContext ?: return
 
         val shouldSpecifyType = declaration is KtNamedFunction
@@ -93,7 +93,7 @@ class ConvertToBlockBodyIntention(doc: Document,
             } else {
                 return factory.createBlock(expression.text)
             }
-            val returnExpression: KtReturnExpression? = PsiTreeUtil.getChildOfType(block, KtReturnExpression::class.java)
+            val returnExpression = PsiTreeUtil.getChildOfType(block, KtReturnExpression::class.java)
             val returned = returnExpression?.returnedExpression ?: return factory.createBlock("return ${expression.text}")
             if (KtPsiUtil.areParenthesesNecessary(expression, returned, returnExpression)) {
                 return factory.createBlock("return (${expression.text})")

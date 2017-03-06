@@ -149,11 +149,16 @@ fun TypeMirrorHandle<DeclaredType>.computeClassId(project: Project) =
 fun ElemHandle<*>.isDeprecated(project: Project) =
         IsDeprecatedSearcher(this).execute(project).isDeprecated
 
+fun searchKinds() = setOf(ClassIndex.SearchKind.FIELD_REFERENCES,
+        ClassIndex.SearchKind.IMPLEMENTORS, 
+        ClassIndex.SearchKind.METHOD_REFERENCES, 
+        ClassIndex.SearchKind.TYPE_REFERENCES)
+
 fun Project.findClassUsages(className: String): Set<FileObject> {
     val handle = this.findType(className) ?: return emptySet()
 
     return JavaEnvironment.JAVA_SOURCE[this]?.classpathInfo?.classIndex?.getResources(handle.elementHandle,
-            ClassIndex.SearchKind.values().toSet(), hashSetOf(ClassIndex.SearchScope.SOURCE)) ?: emptySet()
+            searchKinds(), hashSetOf(ClassIndex.SearchScope.SOURCE)) ?: emptySet()
 }
 
 fun Project.getFileObjectForFqName(fqName: String): FileObject? {

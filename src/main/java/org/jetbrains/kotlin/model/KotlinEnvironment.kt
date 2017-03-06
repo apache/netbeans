@@ -185,7 +185,7 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
             registerService(InferredAnnotationsManager::class.java, MockInferredAnnotationsManager())
         }
         
-        configuration.put(CommonConfigurationKeys.MODULE_NAME, project.getName())
+        configuration.put<String>(CommonConfigurationKeys.MODULE_NAME, project.name)
         
         configureClasspath(kotlinProject)
         

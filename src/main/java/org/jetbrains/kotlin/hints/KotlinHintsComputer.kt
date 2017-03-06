@@ -28,21 +28,21 @@ import org.netbeans.modules.csl.api.OffsetRange
 import org.netbeans.modules.csl.api.HintSeverity
 import org.openide.filesystems.FileObject
 
-class KotlinHintsComputer(val parserResult: KotlinParserResult) : KtVisitor<Unit, Unit>() {
+class KotlinHintsComputer(val parserResult: KotlinParserResult) : KtVisitor<Unit, Any?>() {
 
     val hints = arrayListOf<Hint>()
     
-    override fun visitKtFile(ktFile: KtFile, data: Unit?) {
+    override fun visitKtFile(ktFile: KtFile, data: Any?) {
         ktFile.acceptChildren(this)
     }
     
-    override fun visitKtElement(element: KtElement, data: Unit?) {
+    override fun visitKtElement(element: KtElement, data: Any?) {
         hints.addAll(element.inspections())
         
         element.acceptChildren(this)
     }
     
-    override fun visitSimpleNameExpression(expression: KtSimpleNameExpression, data: Unit?) {
+    override fun visitSimpleNameExpression(expression: KtSimpleNameExpression, data: Any?) {
         getSmartCastHover(expression, parserResult)?.let { hints.add(it) }
     }
     

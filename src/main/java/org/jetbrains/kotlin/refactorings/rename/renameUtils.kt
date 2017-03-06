@@ -29,26 +29,12 @@ import org.jetbrains.kotlin.fileClasses.*
 import org.jetbrains.kotlin.highlighter.occurrences.*
 import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.navigation.references.resolveToSourceDeclaration
-import org.jetbrains.kotlin.psi.KtClass
-import org.jetbrains.kotlin.psi.KtClassOrObject
-import org.jetbrains.kotlin.psi.KtDeclaration
-import org.jetbrains.kotlin.psi.KtElement
-import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.psi.KtNamedFunction
-import org.jetbrains.kotlin.psi.KtObjectDeclaration
-import org.jetbrains.kotlin.psi.KtProperty
-import org.jetbrains.kotlin.psi.KtPsiUtil
+import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.psiUtil.*
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.resolve.lang.java.*
-import org.netbeans.api.java.source.ClassIndex
-import org.netbeans.api.java.source.ClasspathInfo
-import org.netbeans.api.java.source.CompilationController
-import org.netbeans.api.java.source.ElementHandle
-import org.netbeans.api.java.source.JavaSource
-import org.netbeans.api.java.source.SourceUtils
-import org.netbeans.api.java.source.TreePathHandle
+import org.netbeans.api.java.source.*
 import org.netbeans.api.project.Project
 import org.netbeans.modules.csl.api.OffsetRange
 import org.netbeans.modules.csl.spi.GsfUtilities
@@ -161,7 +147,7 @@ private fun getJavaRefactoringMapForClassOrObject(searchingElement: KtClassOrObj
 
     val references = JavaEnvironment.JAVA_SOURCE[project]!!.classpathInfo.
             classIndex.getResources(elementHandle,
-            ClassIndex.SearchKind.values().toSet(),
+            searchKinds(),
             setOf(ClassIndex.SearchScope.SOURCE))
 
     val usagesSearcher = TypeUsagesSearcher(elementHandle)

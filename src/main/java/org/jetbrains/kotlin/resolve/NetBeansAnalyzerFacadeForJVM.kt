@@ -84,7 +84,7 @@ object NetBeansAnalyzerFacadeForJVM {
         
         val dependencyModule = run { 
             val dependenciesContext = ContextForNewModule(
-                    moduleContext,  Name.special("<dependencies of ${environment.configuration.getNotNull(CommonConfigurationKeys.MODULE_NAME)}>"),
+                    moduleContext,  Name.special("<dependencies of ${environment.configuration.getNotNull<String>(CommonConfigurationKeys.MODULE_NAME)}>"),
                     module.builtIns, null
             )
             
@@ -160,7 +160,7 @@ object NetBeansAnalyzerFacadeForJVM {
         val builtIns = JvmBuiltIns(projectContext.storageManager, !createBuiltInsFromModule)
         
         return ContextForNewModule(
-                projectContext, Name.special("<${configuration.getNotNull(CommonConfigurationKeys.MODULE_NAME)}>"), builtIns, null
+                projectContext, Name.special("<${configuration.getNotNull<String>(CommonConfigurationKeys.MODULE_NAME)}>"), builtIns, null
         ).apply { 
             if (createBuiltInsFromModule) {
                 builtIns.builtInsModule = module

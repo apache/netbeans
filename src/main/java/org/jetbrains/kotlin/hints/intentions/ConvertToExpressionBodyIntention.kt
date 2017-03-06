@@ -41,7 +41,7 @@ class ConvertToExpressionBodyIntention(doc: Document,
                                        psi: PsiElement) : ApplicableIntention(doc, analysisResult, psi) {
 
     override fun isApplicable(caretOffset: Int): Boolean {
-        val element: KtDeclarationWithBody = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java) ?: return false
+        val element = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java) ?: return false
         if (element is KtConstructor<*>) return false
         val value = calcValue(element) ?: return false
         
@@ -53,7 +53,7 @@ class ConvertToExpressionBodyIntention(doc: Document,
     override fun getDescription() = "Convert to expression body"
 
     override fun implement() {
-        val element: KtDeclarationWithBody = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java) ?: return
+        val element = PsiTreeUtil.getParentOfType(psi, KtDeclarationWithBody::class.java) ?: return
         val expression = calcValue(element) ?: return
         val context = analysisResult?.bindingContext ?: return
         val block = element.blockExpression() ?: return

@@ -31,7 +31,6 @@ import javax.swing.ImageIcon;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
-import org.dom4j.DocumentException;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.log.KotlinLogger;
 import org.jetbrains.kotlin.projectsextensions.maven.buildextender.PomXmlModifier;

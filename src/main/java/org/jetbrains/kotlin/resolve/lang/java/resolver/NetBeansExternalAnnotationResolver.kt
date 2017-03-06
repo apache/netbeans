@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.resolve.lang.java.resolver
 
 import org.jetbrains.kotlin.load.java.components.ExternalAnnotationResolver
-import org.jetbrains.kotlin.load.java.structure.JavaAnnotation
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationOwner
 import org.jetbrains.kotlin.name.FqName
 

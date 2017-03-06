@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.model
 
 import com.intellij.codeInsight.NullableNotNullManager
-import com.intellij.psi.PsiAnnotation
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiModifierListOwner
 import org.netbeans.api.project.Project

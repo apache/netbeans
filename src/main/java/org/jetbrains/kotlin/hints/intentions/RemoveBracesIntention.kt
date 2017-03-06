@@ -16,15 +16,12 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.hints.intentions
 
-import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiWhiteSpace
 import javax.swing.text.Document
 import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.KtNodeTypes
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.*
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 

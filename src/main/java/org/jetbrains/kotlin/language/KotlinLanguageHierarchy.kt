@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.language
 
 import org.netbeans.spi.lexer.LanguageHierarchy
-import org.netbeans.spi.lexer.Lexer
 import org.netbeans.spi.lexer.LexerRestartInfo
 import org.jetbrains.kotlin.highlighter.TokenType
 import org.jetbrains.kotlin.highlighter.netbeans.KotlinLexerProxy

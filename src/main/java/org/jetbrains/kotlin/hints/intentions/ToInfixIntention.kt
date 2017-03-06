@@ -24,8 +24,6 @@ import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.psiUtil.getQualifiedExpressionForSelector
 import org.jetbrains.kotlin.resolve.calls.callUtil.getResolvedCall
-import org.jetbrains.kotlin.resolve.lazy.BodyResolveMode
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 

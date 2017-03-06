@@ -26,7 +26,6 @@ import org.jetbrains.kotlin.builtins.BuiltInSerializerProtocol
 import org.jetbrains.kotlin.cli.jvm.index.JavaRoot
 import org.jetbrains.kotlin.model.KotlinEnvironment
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.getFullClassPath
-import org.jetbrains.kotlin.resolve.lang.java.NetBeansJavaClassFinder
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinder
 import org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClassFinder
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory
@@ -45,7 +44,6 @@ import org.jetbrains.kotlin.cli.jvm.index.JvmDependenciesIndex
 import org.netbeans.api.java.classpath.ClassPath
 import org.openide.filesystems.FileObject
 import org.openide.filesystems.FileStateInvalidException
-import org.openide.filesystems.FileSystem
 
 class NetBeansVirtualFileFinder(private val project: Project,
                                 private val scope: GlobalSearchScope) : VirtualFileKotlinClassFinder() {

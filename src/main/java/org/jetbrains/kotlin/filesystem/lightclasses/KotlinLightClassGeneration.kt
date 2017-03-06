@@ -24,12 +24,10 @@ import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.model.KotlinEnvironment
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.analyzer.AnalysisResult
-import org.jetbrains.kotlin.backend.common.output.OutputFile
 import org.jetbrains.kotlin.codegen.CompilationErrorHandler
 import org.jetbrains.kotlin.codegen.KotlinCodegenFacade
 import org.jetbrains.kotlin.codegen.state.GenerationState
 import org.jetbrains.kotlin.config.CompilerConfiguration
-import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtScript

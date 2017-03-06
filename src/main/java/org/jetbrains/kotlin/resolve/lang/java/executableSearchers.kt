@@ -16,10 +16,7 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.resolve.lang.java
 
-import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
-import javax.lang.model.element.TypeParameterElement
-import javax.lang.model.element.VariableElement
 import org.jetbrains.kotlin.load.java.structure.JavaType
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter
 import org.jetbrains.kotlin.load.java.structure.JavaValueParameter

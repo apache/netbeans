@@ -25,7 +25,6 @@ import org.jetbrains.kotlin.load.java.structure.JavaField
 import org.jetbrains.kotlin.load.java.structure.JavaMethod
 import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter
 import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.name.Name
 import org.netbeans.api.project.Project
 import org.jetbrains.kotlin.resolve.lang.java.*
 import javax.lang.model.element.TypeElement

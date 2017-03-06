@@ -16,7 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.resolve.lang.java
 
-import javax.lang.model.element.Element
 import javax.lang.model.element.PackageElement
 import javax.lang.model.element.TypeElement
 import org.jetbrains.kotlin.load.java.structure.JavaClass
@@ -26,7 +25,6 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaPackage
 import org.netbeans.api.java.source.CompilationController
-import org.netbeans.api.java.source.JavaSource.Phase
 import org.netbeans.api.java.source.Task
 import org.netbeans.api.project.Project
 

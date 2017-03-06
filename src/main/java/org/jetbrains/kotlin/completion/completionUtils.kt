@@ -19,7 +19,6 @@ package org.jetbrains.kotlin.completion
 import com.intellij.openapi.util.text.StringUtilRt
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import javax.lang.model.element.TypeElement
 import javax.swing.text.Document
 import javax.swing.text.StyledDocument
 import org.jetbrains.kotlin.builder.KotlinPsiManager
@@ -29,12 +28,10 @@ import org.jetbrains.kotlin.resolve.KotlinResolutionFacade
 import org.jetbrains.kotlin.utils.LineEndUtil
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.analyzer.AnalysisResult
-import org.jetbrains.kotlin.container.ComponentProvider
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.ClassDescriptorWithResolutionScopes
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptorWithVisibility
-import org.jetbrains.kotlin.descriptors.ReceiverParameterDescriptor
 import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor
 import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
@@ -50,13 +47,10 @@ import org.openide.filesystems.FileObject
 import org.jetbrains.kotlin.psi.psiUtil.getReceiverExpression
 import org.jetbrains.kotlin.psi.psiUtil.parentsWithSelf
 import org.jetbrains.kotlin.resolve.scopes.receivers.ExpressionReceiver
-import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.resolve.scopes.utils.getImplicitReceiversHierarchy
 import org.jetbrains.kotlin.idea.codeInsight.ReferenceVariantsHelper
 import org.jetbrains.kotlin.load.java.descriptors.JavaClassConstructorDescriptor
 import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter
-import org.netbeans.api.java.source.ElementHandle
-import org.netbeans.api.project.Project
 import org.netbeans.modules.csl.api.CompletionProposal
 
 fun applicableNameFor(prefix: String, name: Name): Boolean {

@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.highlighter.netbeans
 
 import org.jetbrains.kotlin.language.KotlinLanguageHierarchy
-import org.netbeans.api.lexer.Language
 import org.netbeans.api.lexer.TokenId
 
 class KotlinTokenId(val tokenName: String, val category: String, val id: Int) : TokenId {

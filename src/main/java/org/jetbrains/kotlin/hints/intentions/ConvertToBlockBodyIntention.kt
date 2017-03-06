@@ -16,7 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.hints.intentions
 
-import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
@@ -24,18 +23,9 @@ import javax.swing.text.Document
 import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.descriptors.FunctionDescriptor
-import org.jetbrains.kotlin.psi.KtBlockExpression
-import org.jetbrains.kotlin.psi.KtDeclarationWithBody
-import org.jetbrains.kotlin.psi.KtExpression
-import org.jetbrains.kotlin.psi.KtFunctionLiteral
-import org.jetbrains.kotlin.psi.KtNamedFunction
-import org.jetbrains.kotlin.psi.KtPropertyAccessor
-import org.jetbrains.kotlin.psi.KtPsiFactory
-import org.jetbrains.kotlin.psi.KtPsiUtil
-import org.jetbrains.kotlin.psi.KtReturnExpression
+import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.types.KotlinType
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 

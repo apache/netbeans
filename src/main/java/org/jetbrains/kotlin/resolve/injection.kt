@@ -32,7 +32,6 @@ import org.jetbrains.kotlin.incremental.components.LookupTracker
 import org.jetbrains.kotlin.load.java.InternalFlexibleTypeTransformer
 import org.jetbrains.kotlin.load.java.components.SignaturePropagatorImpl
 import org.jetbrains.kotlin.load.java.components.TraceBasedErrorReporter
-import org.jetbrains.kotlin.load.java.lazy.SingleModuleClassResolver
 import org.jetbrains.kotlin.load.java.lazy.ModuleClassResolver
 import org.jetbrains.kotlin.load.java.sam.SamConversionResolverImpl
 import org.jetbrains.kotlin.load.kotlin.DeserializationComponentsForJava

@@ -17,16 +17,12 @@
 package org.jetbrains.kotlin.structurescanner
 
 import com.intellij.psi.PsiComment
-import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
 import javax.swing.ImageIcon
 import org.jetbrains.kotlin.psi.KtNamedFunction
-import org.jetbrains.kotlin.psi.KtParameter
 import org.jetbrains.kotlin.resolve.BindingContext
-import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.descriptors.SimpleFunctionDescriptor
-import org.netbeans.modules.csl.api.ElementHandle
 import org.netbeans.modules.csl.api.ElementKind
 import org.netbeans.modules.csl.api.HtmlFormatter
 import org.netbeans.modules.csl.api.Modifier

@@ -20,8 +20,6 @@ import com.intellij.psi.search.GlobalSearchScope
 import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.builtins.JvmBuiltInsPackageFragmentProvider
 import org.jetbrains.kotlin.cli.jvm.compiler.CliLightClassGenerationSupport
-import org.jetbrains.kotlin.config.LanguageVersion
-import org.jetbrains.kotlin.container.ComponentProvider
 import org.jetbrains.kotlin.config.CommonConfigurationKeys
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.LanguageVersionSettingsImpl

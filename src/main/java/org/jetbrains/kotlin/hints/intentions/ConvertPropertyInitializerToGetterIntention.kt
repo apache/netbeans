@@ -20,11 +20,9 @@ import com.intellij.psi.PsiElement
 import javax.swing.text.Document
 import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
-import org.jetbrains.kotlin.psi.KtDeclaration
 import org.jetbrains.kotlin.psi.KtProperty
 import org.jetbrains.kotlin.psi.KtPsiFactory
 import org.jetbrains.kotlin.psi.psiUtil.isExtensionDeclaration
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 

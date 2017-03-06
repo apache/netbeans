@@ -28,7 +28,6 @@ import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.resolve.calls.callUtil.getType
 import org.jetbrains.kotlin.resolve.constants.evaluate.ConstantExpressionEvaluator
 import org.jetbrains.kotlin.types.KotlinType
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 

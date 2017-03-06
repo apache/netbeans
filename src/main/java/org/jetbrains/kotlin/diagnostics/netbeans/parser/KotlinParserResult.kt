@@ -16,18 +16,13 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.diagnostics.netbeans.parser
 
-import com.intellij.psi.PsiErrorElement
-import org.jetbrains.kotlin.diagnostics.Diagnostic
 import org.jetbrains.kotlin.diagnostics.Errors
-import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.resolve.AnalyzingUtils
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.psi.KtFile
 import org.netbeans.api.project.Project
 import org.netbeans.modules.csl.api.Error
 import org.netbeans.modules.csl.spi.ParserResult
-import org.netbeans.modules.parsing.spi.ParseException
-import org.openide.filesystems.FileObject
 import org.netbeans.modules.parsing.api.Snapshot
 
 class KotlinParserResult(snapshot: Snapshot,

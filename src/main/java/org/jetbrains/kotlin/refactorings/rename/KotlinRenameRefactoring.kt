@@ -19,14 +19,12 @@ package org.jetbrains.kotlin.refactorings.rename
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import javax.swing.text.StyledDocument
-import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtNamedFunction
 import org.jetbrains.kotlin.psi.KtParameter
 import org.jetbrains.kotlin.psi.KtProperty
 import org.jetbrains.kotlin.utils.ProjectUtils
-import org.jetbrains.kotlin.project.KotlinSources
 import org.netbeans.modules.refactoring.api.Problem
 import org.netbeans.modules.refactoring.api.RenameRefactoring
 import org.netbeans.modules.refactoring.spi.ProgressProviderAdapter

@@ -23,11 +23,6 @@ import org.jetbrains.kotlin.resolve.lang.java.findTypes
 import org.jetbrains.kotlin.hints.fixes.autoImport
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.api.project.Project
-import org.netbeans.api.java.source.ElementHandle as JavaElementHandle
-import javax.lang.model.element.TypeElement
-import org.netbeans.modules.csl.api.ElementHandle
-import org.netbeans.modules.csl.api.Modifier
-import javax.swing.ImageIcon
 import org.netbeans.modules.csl.api.ElementKind
 import org.netbeans.modules.csl.api.HtmlFormatter
 import org.netbeans.modules.csl.spi.DefaultCompletionProposal

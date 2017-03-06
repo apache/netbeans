@@ -21,7 +21,6 @@ import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.model.KotlinEnvironment
 import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.container.ComponentProvider
-import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.idea.resolve.ResolutionFacade
 import org.jetbrains.kotlin.psi.KtDeclaration

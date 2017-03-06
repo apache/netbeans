@@ -16,25 +16,13 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.refactorings.rename
 
-import com.sun.source.tree.ClassTree
-import com.sun.source.tree.ImportTree
-import com.sun.source.tree.InstanceOfTree
-import com.sun.source.tree.MethodTree
-import com.sun.source.tree.NewClassTree
-import com.sun.source.tree.ParameterizedTypeTree
-import com.sun.source.tree.Tree
-import com.sun.source.tree.TypeCastTree
-import com.sun.source.tree.TypeParameterTree
-import com.sun.source.tree.VariableTree
+import com.sun.source.tree.*
 import com.sun.source.util.TreePath
 import com.sun.source.util.TreePathScanner
 import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
 import javax.lang.model.element.TypeParameterElement
-import javax.lang.model.type.DeclaredType
-import javax.lang.model.type.TypeVariable
-import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.api.java.source.CancellableTask
 import org.netbeans.api.java.source.CompilationController

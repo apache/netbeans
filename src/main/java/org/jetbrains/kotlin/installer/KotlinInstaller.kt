@@ -16,7 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.installer
 
-import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import org.jetbrains.kotlin.project.KotlinSources
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper

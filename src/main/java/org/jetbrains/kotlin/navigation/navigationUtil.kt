@@ -20,9 +20,6 @@ import com.intellij.psi.PsiElement
 import javax.swing.text.Document
 import org.jetbrains.kotlin.utils.LineEndUtil
 import org.jetbrains.kotlin.utils.ProjectUtils
-import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.psi.KtReferenceExpression
-import org.openide.filesystems.FileObject
 
 fun getReferenceExpression(doc: Document, offset: Int): PsiElement? {
     val fo = ProjectUtils.getFileObjectForDocument(doc) ?: return null

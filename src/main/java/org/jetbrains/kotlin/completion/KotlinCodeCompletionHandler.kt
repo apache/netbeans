@@ -19,9 +19,7 @@ package org.jetbrains.kotlin.completion
 import java.util.concurrent.Callable
 import javax.swing.text.Document
 import javax.swing.text.JTextComponent
-import javax.swing.text.StyledDocument
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
-import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.modules.csl.api.CodeCompletionContext
 import org.netbeans.modules.csl.api.CodeCompletionHandler2
@@ -31,9 +29,7 @@ import org.netbeans.modules.csl.api.Documentation
 import org.netbeans.modules.csl.api.ElementHandle
 import org.netbeans.modules.csl.api.ParameterInfo
 import org.netbeans.modules.csl.spi.ParserResult
-import org.openide.filesystems.FileObject
 import org.netbeans.modules.csl.api.CodeCompletionHandler.QueryType
-import java.net.URL
 
 class KotlinCodeCompletionHandler : CodeCompletionHandler2 {
 

@@ -16,16 +16,13 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.resolve.lang.java
 
-import javax.lang.model.element.Element
 import javax.lang.model.element.TypeParameterElement
-import javax.lang.model.type.TypeMirror
 import javax.lang.model.type.TypeVariable
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.SpecialNames
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClassifierType
 import org.netbeans.api.java.source.CompilationController
-import org.netbeans.api.java.source.JavaSource.Phase
 import org.netbeans.api.java.source.Task
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project

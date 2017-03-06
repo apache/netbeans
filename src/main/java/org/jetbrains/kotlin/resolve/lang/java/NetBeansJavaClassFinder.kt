@@ -18,9 +18,6 @@ package org.jetbrains.kotlin.resolve.lang.java
 
 import javax.annotation.PostConstruct
 import javax.inject.Inject
-import javax.lang.model.element.Element
-import javax.lang.model.element.PackageElement
-import javax.lang.model.element.TypeElement
 import org.jetbrains.kotlin.load.java.JavaClassFinder
 import org.jetbrains.kotlin.load.java.structure.JavaClass
 import org.jetbrains.kotlin.load.java.structure.JavaPackage

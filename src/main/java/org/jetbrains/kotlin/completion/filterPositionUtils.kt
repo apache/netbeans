@@ -16,7 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.completion
 
-import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.TokenType

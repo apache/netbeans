@@ -20,7 +20,6 @@ import javax.lang.model.type.TypeKind
 import org.jetbrains.kotlin.load.java.structure.JavaClassifier
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType
 import org.jetbrains.kotlin.load.java.structure.JavaType
-import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
 import org.jetbrains.kotlin.resolve.lang.java.*

@@ -16,7 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.search
 
-import org.jetbrains.kotlin.psi.KtDeclaration
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.api.project.Project

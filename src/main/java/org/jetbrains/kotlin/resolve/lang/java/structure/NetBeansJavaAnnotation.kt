@@ -22,7 +22,6 @@ import org.jetbrains.kotlin.load.java.structure.JavaClass
 import org.jetbrains.kotlin.load.java.structure.JavaElement
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.resolve.lang.java.*
-import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
 import javax.lang.model.type.DeclaredType

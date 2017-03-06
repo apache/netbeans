@@ -23,12 +23,8 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
 import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.resolve.lang.java.findFQName
-import org.jetbrains.kotlin.hints.KotlinRule
 import org.jetbrains.kotlin.search.PublicFunctionsVisitor
 import org.netbeans.api.project.Project
-import org.netbeans.modules.csl.api.HintFix
-import org.netbeans.modules.csl.api.Hint
-import org.netbeans.modules.csl.api.OffsetRange
 import org.netbeans.modules.csl.api.HintSeverity
 
 

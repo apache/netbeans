@@ -27,11 +27,9 @@ import javax.swing.text.Position
 import org.jetbrains.kotlin.descriptors.SourceElement
 import org.jetbrains.kotlin.fileClasses.*
 import org.jetbrains.kotlin.highlighter.occurrences.*
-import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.navigation.references.resolveToSourceDeclaration
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.psiUtil.*
-import org.jetbrains.kotlin.resolve.source.KotlinSourceElement
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.resolve.lang.java.*
 import org.netbeans.api.java.source.*
@@ -41,9 +39,7 @@ import org.netbeans.modules.csl.spi.GsfUtilities
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils
 import org.openide.filesystems.FileObject
 import org.openide.filesystems.FileUtil
-import org.openide.text.CloneableEditorSupport
 import org.openide.text.PositionBounds
-import org.openide.text.PositionRef
 import org.netbeans.modules.csl.spi.support.ModificationResult
 import org.netbeans.modules.csl.spi.support.ModificationResult.Difference
 import org.netbeans.modules.refactoring.spi.Transaction

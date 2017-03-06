@@ -16,10 +16,8 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.resolve.lang.java.structure
 
-import com.google.common.collect.Lists
 import java.util.Collections
 import javax.lang.model.element.PackageElement
-import org.jetbrains.kotlin.load.java.structure.JavaClass
 import org.jetbrains.kotlin.load.java.structure.JavaElement
 import org.jetbrains.kotlin.load.java.structure.JavaPackage
 import org.jetbrains.kotlin.name.FqName

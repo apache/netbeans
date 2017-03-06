@@ -20,7 +20,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import java.io.IOException
 import javax.lang.model.element.ElementKind
-import javax.lang.model.element.ExecutableElement
 import javax.swing.text.Document
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider

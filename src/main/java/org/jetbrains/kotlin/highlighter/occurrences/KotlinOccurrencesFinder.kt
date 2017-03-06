@@ -16,7 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.highlighter.occurrences
 
-import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.navigation.references.resolveToSourceDeclaration

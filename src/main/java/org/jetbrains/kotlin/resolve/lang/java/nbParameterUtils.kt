@@ -17,8 +17,6 @@
 package org.jetbrains.kotlin.resolve.lang.java
 
 import javax.lang.model.element.TypeParameterElement
-import org.jetbrains.kotlin.load.java.structure.JavaClassifierType
-import org.jetbrains.kotlin.name.Name
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
 import javax.lang.model.type.TypeVariable

@@ -17,17 +17,12 @@
 package org.jetbrains.kotlin.search
 
 import java.io.File
-import javax.swing.text.StyledDocument
 import org.jetbrains.kotlin.navigation.netbeans.openFileAtOffset
-import org.jetbrains.kotlin.psi.KtDeclaration
-import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.utils.ProjectUtils
-import org.netbeans.api.project.Project
 import org.netbeans.api.project.ui.OpenProjects
 import org.netbeans.spi.quicksearch.SearchProvider
 import org.netbeans.spi.quicksearch.SearchRequest
 import org.netbeans.spi.quicksearch.SearchResponse
-import org.openide.filesystems.FileObject
 import org.openide.filesystems.FileUtil
 
 class GoToKotlinTypeProvider : SearchProvider {

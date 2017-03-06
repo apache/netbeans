@@ -16,10 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.resolve.lang.java
 
-import javax.lang.model.element.TypeElement
-import org.jetbrains.kotlin.descriptors.Visibility
-import org.jetbrains.kotlin.load.java.structure.JavaType
-import org.jetbrains.kotlin.name.Name
 import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.project.Project
 import javax.lang.model.element.VariableElement

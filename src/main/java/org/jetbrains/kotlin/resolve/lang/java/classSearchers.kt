@@ -16,11 +16,9 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.resolve.lang.java
 
-import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
-import javax.lang.model.element.TypeParameterElement
 import javax.lang.model.element.VariableElement
 import javax.lang.model.type.NoType
 import javax.lang.model.type.TypeKind
@@ -41,7 +39,6 @@ import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaMethod
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaTypeParameter
 import org.netbeans.api.java.source.CompilationController
 import org.netbeans.api.java.source.ElementHandle
-import org.netbeans.api.java.source.JavaSource.Phase
 import org.netbeans.api.java.source.Task
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project

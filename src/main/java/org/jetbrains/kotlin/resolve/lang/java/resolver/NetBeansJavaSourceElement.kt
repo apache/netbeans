@@ -20,7 +20,6 @@ import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaElement
 import org.jetbrains.kotlin.descriptors.SourceFile
 import org.jetbrains.kotlin.load.java.sources.JavaSourceElement
 import org.jetbrains.kotlin.load.java.structure.JavaElement
-import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
 
 /*
 

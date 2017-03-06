@@ -16,29 +16,18 @@
  ****************************************************************************** */
 package org.jetbrains.kotlin.projectsextensions
 
-import java.io.IOException
 import java.util.HashMap
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
-import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.model.KotlinEnvironment
 import org.jetbrains.kotlin.project.KotlinProjectConstants
 import org.jetbrains.kotlin.projectsextensions.gradle.classpath.GradleExtendedClassPath
 import org.jetbrains.kotlin.projectsextensions.j2se.classpath.J2SEExtendedClassPathProvider
 import org.jetbrains.kotlin.project.KotlinSources
 import org.jetbrains.kotlin.projectsextensions.maven.classpath.MavenExtendedClassPath
-import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.resolve.lang.java.JavaEnvironment
-import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.api.java.classpath.ClassPath
-import org.netbeans.api.java.source.CompilationController
 import org.netbeans.api.java.source.Task
-import org.netbeans.api.progress.ProgressHandle
-import org.netbeans.api.progress.ProgressHandleFactory
 import org.netbeans.api.project.Project
-import org.netbeans.modules.parsing.api.indexing.IndexingManager
 import org.netbeans.spi.java.classpath.support.ClassPathSupport
-import org.openide.filesystems.FileObject
-import org.openide.filesystems.FileUtil
 import org.openide.util.RequestProcessor
 
 /**

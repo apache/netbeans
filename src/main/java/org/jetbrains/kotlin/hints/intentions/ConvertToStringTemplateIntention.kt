@@ -17,9 +17,7 @@
 package org.jetbrains.kotlin.hints.intentions
 
 import com.intellij.psi.PsiElement
-import javax.swing.SwingUtilities
 import javax.swing.text.Document
-import javax.swing.text.StyledDocument
 import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.navigation.netbeans.moveCaretToOffset
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType

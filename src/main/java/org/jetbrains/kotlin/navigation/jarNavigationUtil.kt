@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.navigation
 
 import java.io.File
-import kotlin.Pair
 import org.openide.filesystems.FileObject
 import org.openide.filesystems.FileUtil
 

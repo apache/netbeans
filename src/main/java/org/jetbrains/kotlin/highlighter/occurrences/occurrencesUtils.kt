@@ -21,7 +21,6 @@ package org.jetbrains.kotlin.highlighter.occurrences
 import com.intellij.psi.PsiElement
 import kotlin.Pair
 import org.jetbrains.kotlin.descriptors.SourceElement
-import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.navigation.references.*
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.KtElement

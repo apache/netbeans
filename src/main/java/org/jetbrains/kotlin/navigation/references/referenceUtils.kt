@@ -35,7 +35,6 @@ import org.jetbrains.kotlin.resolve.NetBeansDescriptorUtils
 import org.openide.filesystems.FileUtil
 import java.io.File
 import org.jetbrains.kotlin.utils.ProjectUtils
-import org.jetbrains.kotlin.resolve.KotlinAnalyzer
 
 inline private fun <reified T> ArrayList<KotlinReference>.register(e: KtElement, action: (T) -> KotlinReference) {
     if (e is T) this.add(action(e))

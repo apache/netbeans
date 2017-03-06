@@ -18,35 +18,19 @@ package org.jetbrains.kotlin.hints
 
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiErrorElement
 import javax.swing.text.Document
 import javax.swing.text.StyledDocument
 import org.jetbrains.kotlin.psi.psiUtil.elementsInRange
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.hints.fixes.*
 import org.jetbrains.kotlin.hints.intentions.*
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinSyntaxError
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
-import org.jetbrains.kotlin.utils.ProjectUtils
-import org.jetbrains.kotlin.diagnostics.Diagnostic
-import org.jetbrains.kotlin.resolve.diagnostics.Diagnostics
-import org.jetbrains.kotlin.diagnostics.DiagnosticFactory
-import org.jetbrains.kotlin.resolve.AnalyzingUtils
 import org.jetbrains.kotlin.resolve.lang.java.*
-import org.netbeans.modules.csl.api.Error
-import org.netbeans.modules.csl.api.Hint
-import org.netbeans.modules.csl.api.HintFix
-import org.netbeans.modules.csl.api.HintsProvider
-import org.netbeans.modules.csl.api.OffsetRange
-import org.netbeans.modules.csl.api.Rule
-import org.netbeans.modules.csl.api.RuleContext
-import org.openide.filesystems.FileObject
+import org.netbeans.modules.csl.api.*
 import org.openide.text.NbDocument
 import org.netbeans.modules.csl.api.HintsProvider.HintsManager
-import org.jetbrains.kotlin.diagnostics.Errors
 import org.netbeans.modules.csl.api.HintSeverity
 
 class KotlinHintsProvider : HintsProvider {

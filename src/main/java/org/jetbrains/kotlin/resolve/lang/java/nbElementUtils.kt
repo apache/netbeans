@@ -16,10 +16,7 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.resolve.lang.java
 
-import javax.lang.model.element.PackageElement
 import javax.lang.model.element.TypeElement
-import org.jetbrains.kotlin.load.java.structure.JavaClass
-import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.projectsextensions.ClassPathExtender
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.getExtendedClassPath
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass
@@ -34,19 +31,15 @@ import org.netbeans.api.java.source.Task
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.java.source.ui.ElementOpen
 import org.netbeans.api.project.Project
-import org.netbeans.spi.java.classpath.support.ClassPathSupport
 import org.openide.filesystems.FileObject
 import javax.lang.model.type.DeclaredType
-import org.netbeans.api.java.source.ScanUtils
 import org.netbeans.api.java.source.CancellableTask
 import org.netbeans.api.java.source.WorkingCopy
 import org.netbeans.api.java.source.ModificationResult
-import org.netbeans.api.java.platform.JavaPlatform
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
-import org.jetbrains.kotlin.log.KotlinLogger
 
 object JavaEnvironment {
     val JAVA_SOURCE = hashMapOf<Project, JavaSource>()

@@ -16,9 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.structurescanner
 
-import com.intellij.psi.PsiElement
-import com.intellij.psi.impl.source.tree.PsiCoreCommentImpl
-import com.intellij.psi.util.PsiTreeUtil
 import org.netbeans.modules.csl.api.OffsetRange
 import org.netbeans.modules.csl.api.StructureItem
 import org.netbeans.modules.csl.api.StructureScanner

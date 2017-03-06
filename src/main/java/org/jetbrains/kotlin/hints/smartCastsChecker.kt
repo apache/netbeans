@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.hints
 
 import org.jetbrains.kotlin.descriptors.ConstructorDescriptor
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.renderer.DescriptorRenderer
 import org.jetbrains.kotlin.resolve.BindingContext

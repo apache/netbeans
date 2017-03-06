@@ -19,7 +19,6 @@ package org.jetbrains.kotlin.highlighter
 import org.jetbrains.kotlin.lexer.KtTokens
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.PsiElement
-import com.intellij.psi.tree.IElementType
 import org.jetbrains.kotlin.kdoc.lexer.KDocTokens
 
 class KotlinTokensFactory {

@@ -21,7 +21,6 @@ import javax.swing.ImageIcon
 import javax.swing.SwingUtilities
 import javax.swing.text.StyledDocument
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
-import org.jetbrains.kotlin.descriptors.ClassifierDescriptor
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.FunctionDescriptor
 import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor
@@ -30,7 +29,6 @@ import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
 import org.jetbrains.kotlin.descriptors.VariableDescriptor
 import org.jetbrains.kotlin.psi.KtImportDirective
 import org.jetbrains.kotlin.renderer.DescriptorRenderer
-import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.utils.KotlinImageProvider
 import org.netbeans.modules.csl.api.ElementHandle
 import org.netbeans.modules.csl.api.HtmlFormatter

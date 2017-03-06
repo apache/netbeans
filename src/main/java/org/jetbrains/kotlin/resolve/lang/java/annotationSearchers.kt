@@ -18,8 +18,6 @@ package org.jetbrains.kotlin.resolve.lang.java
 
 import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.AnnotationValue
-import javax.lang.model.element.Element
-import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.VariableElement
 import javax.lang.model.type.TypeMirror
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotation
@@ -34,7 +32,6 @@ import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClassObjectA
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaLiteralAnnotationArgument
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaReferenceAnnotationArgument
 import org.netbeans.api.java.source.CompilationController
-import org.netbeans.api.java.source.JavaSource.Phase
 import org.netbeans.api.java.source.Task
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project

@@ -24,10 +24,7 @@ import org.jetbrains.kotlin.psi.KtCodeFragment
 import org.jetbrains.kotlin.psi.KtNamedFunction
 import org.jetbrains.kotlin.psi.KtParameter
 import org.jetbrains.kotlin.psi.KtProperty
-import org.jetbrains.kotlin.psi.KtTypeReference
 import org.jetbrains.kotlin.psi.KtDeclarationWithInitializer
-import org.netbeans.modules.csl.api.HintFix
-import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import com.intellij.psi.PsiElement
 
 class RemoveExplicitTypeIntention(doc: Document,

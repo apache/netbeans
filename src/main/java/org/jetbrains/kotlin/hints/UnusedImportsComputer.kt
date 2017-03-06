@@ -19,7 +19,6 @@ package org.jetbrains.kotlin.hints
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.language.Priorities
-import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.descriptors.*

@@ -41,7 +41,6 @@ import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.extensions.Extensions
 import com.intellij.openapi.extensions.ExtensionsArea
 import com.intellij.openapi.fileTypes.PlainTextFileType
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.impl.ZipHandler
@@ -54,9 +53,7 @@ import com.intellij.psi.compiled.ClassFileDecompilers
 import com.intellij.psi.impl.PsiTreeChangePreprocessor
 import com.intellij.psi.impl.compiled.ClsCustomNavigationPolicy
 import com.intellij.psi.impl.file.impl.JavaFileManager
-import java.util.Collections
 import org.jetbrains.kotlin.filesystem.KotlinLightClassManager
-import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper
 import org.jetbrains.kotlin.resolve.BuiltInsReferenceResolver
 import org.jetbrains.kotlin.resolve.KotlinCacheServiceImpl
 import org.jetbrains.kotlin.resolve.KotlinSourceIndex
@@ -68,7 +65,6 @@ import org.jetbrains.kotlin.codegen.extensions.ClassBuilderInterceptorExtension
 import org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages
 import com.intellij.formatting.KotlinLanguageCodeStyleSettingsProvider
 import com.intellij.formatting.KotlinSettingsProvider
-import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import org.jetbrains.kotlin.cli.jvm.index.JavaRoot
 import org.jetbrains.kotlin.cli.jvm.index.JvmDependenciesIndexImpl

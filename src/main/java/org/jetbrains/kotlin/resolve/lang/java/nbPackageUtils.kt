@@ -17,9 +17,7 @@
 package org.jetbrains.kotlin.resolve.lang.java
 
 import javax.lang.model.element.PackageElement
-import org.jetbrains.kotlin.load.java.structure.JavaClass
 import org.jetbrains.kotlin.load.java.structure.JavaPackage
-import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.netbeans.api.project.Project
 

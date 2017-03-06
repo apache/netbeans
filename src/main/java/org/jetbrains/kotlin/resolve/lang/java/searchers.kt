@@ -17,20 +17,15 @@
 package org.jetbrains.kotlin.resolve.lang.java
 
 import com.sun.javadoc.Doc
-import com.sun.source.util.TreePath
-import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.PackageElement
 import javax.lang.model.element.TypeElement
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
-import org.netbeans.api.java.source.CancellableTask
 import org.netbeans.api.java.source.ClasspathInfo
 import org.netbeans.api.java.source.CompilationController
 import org.netbeans.api.java.source.ElementHandle
-import org.netbeans.api.java.source.JavaSource
-import org.netbeans.api.java.source.JavaSource.Phase
 import org.netbeans.api.java.source.SourceUtils
 import org.netbeans.api.java.source.Task
 import org.netbeans.api.java.source.TypeMirrorHandle

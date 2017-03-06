@@ -50,13 +50,10 @@ import org.openide.text.Line
 import javax.swing.text.Document
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinaryClass
 import org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass
-import org.netbeans.api.java.source.ElementHandle
 import org.jetbrains.kotlin.load.kotlin.header.KotlinClassHeader
 import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedCallableMemberDescriptor
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.serialization.jvm.JvmProtoBuf
 import org.jetbrains.kotlin.log.KotlinLogger
-import org.jetbrains.kotlin.resolve.DescriptorUtils
 import org.jetbrains.kotlin.descriptors.MemberDescriptor
 import org.jetbrains.kotlin.resolve.NetBeansDescriptorUtils
 

@@ -19,10 +19,8 @@ package org.jetbrains.kotlin.builder
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.util.text.StringUtilRt
 import com.intellij.openapi.vfs.CharsetToolkit
-import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.impl.PsiFileFactoryImpl
-import com.intellij.testFramework.LightVirtualFile
 import java.io.IOException
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.checkProject
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.getKotlinSources
@@ -36,7 +34,6 @@ import org.jetbrains.kotlin.idea.KotlinLanguage
 import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.psi.KtFile
 import org.netbeans.api.project.Project
-import org.netbeans.api.project.SourceGroup
 import org.netbeans.api.project.ui.OpenProjects
 import org.openide.filesystems.FileObject
 

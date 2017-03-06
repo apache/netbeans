@@ -18,7 +18,6 @@ package org.jetbrains.kotlin.indexer
 
 import org.netbeans.modules.parsing.api.Snapshot
 import org.netbeans.modules.parsing.spi.indexing.Context
-import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory
 import org.netbeans.modules.parsing.spi.indexing.Indexable
 

@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.filesystem
 
 import com.intellij.openapi.components.ServiceManager
-import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import java.io.File
@@ -36,7 +35,6 @@ import org.jetbrains.kotlin.psi.KtProperty
 import org.jetbrains.kotlin.psi.KtSecondaryConstructor
 import org.jetbrains.kotlin.psi.KtVisitorVoid
 import org.openide.filesystems.FileObject
-import org.openide.filesystems.FileUtil
 import org.netbeans.api.project.Project as NBProject
 
 class KotlinLightClassManager(private val project: NBProject) {

@@ -16,7 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.diagnostics.netbeans.textinterceptor
 
-import javax.swing.text.BadLocationException
 import javax.swing.text.Document
 import javax.swing.text.JTextComponent
 import org.netbeans.modules.csl.api.KeystrokeHandler

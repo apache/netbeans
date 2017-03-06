@@ -16,17 +16,11 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.hints.fixes
 
-import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
 import org.jetbrains.kotlin.diagnostics.Errors
-import org.jetbrains.kotlin.hints.KotlinRule
-import org.netbeans.modules.csl.api.Hint
-import org.netbeans.modules.csl.api.HintFix
 import org.netbeans.modules.csl.api.HintSeverity
-import org.netbeans.modules.csl.api.OffsetRange
 
 class RemoveUselessElvisFix(kotlinError: KotlinError,
                             parserResult: KotlinParserResult) : KotlinQuickFix(kotlinError, parserResult) {

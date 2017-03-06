@@ -23,7 +23,6 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.lang.java.*
 import org.netbeans.api.project.Project
-import javax.lang.model.element.Element
 import javax.lang.model.element.VariableElement
 
 /*

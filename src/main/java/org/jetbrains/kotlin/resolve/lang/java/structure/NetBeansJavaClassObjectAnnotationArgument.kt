@@ -20,7 +20,6 @@ import org.jetbrains.kotlin.load.java.structure.JavaClassObjectAnnotationArgumen
 import org.jetbrains.kotlin.load.java.structure.JavaType
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.lang.java.*
-import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
 
 /*

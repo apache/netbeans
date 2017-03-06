@@ -20,10 +20,8 @@ import org.jetbrains.kotlin.load.java.structure.JavaEnumValueAnnotationArgument
 import org.jetbrains.kotlin.load.java.structure.JavaField
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.resolve.lang.java.*
-import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.project.Project
 import org.jetbrains.kotlin.resolve.lang.java.ElemHandle
-import javax.lang.model.element.TypeElement
 import javax.lang.model.element.VariableElement
 
 /*

@@ -16,10 +16,8 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.reformatting
 
-import com.intellij.psi.PsiFile
 import javax.swing.text.Document
 import org.jetbrains.kotlin.formatting.KotlinFormatterUtils
-import org.jetbrains.kotlin.formatting.NetBeansDocumentFormattingModel
 import org.jetbrains.kotlin.navigation.netbeans.moveCaretToOffset
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.api.project.Project

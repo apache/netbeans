@@ -17,10 +17,8 @@
 package org.jetbrains.kotlin.completion
 
 import org.netbeans.modules.csl.spi.DefaultCompletionProposal
-import org.netbeans.modules.csl.api.ElementHandle
 import org.netbeans.modules.csl.api.ElementKind
 import org.netbeans.modules.csl.api.HtmlFormatter
-import com.intellij.psi.PsiElement
 import javax.swing.text.Document
 
 class KeywordCompletionProposal(val keyword: String, 

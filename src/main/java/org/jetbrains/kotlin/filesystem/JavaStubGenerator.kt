@@ -17,14 +17,11 @@
 package org.jetbrains.kotlin.filesystem
 
 import kotlin.Pair
-import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.org.objectweb.asm.ClassReader
 import org.jetbrains.org.objectweb.asm.Opcodes
 import org.jetbrains.org.objectweb.asm.tree.ClassNode
 import org.jetbrains.org.objectweb.asm.tree.MethodNode
 import org.jetbrains.org.objectweb.asm.tree.FieldNode
-import org.jetbrains.org.objectweb.asm.ClassVisitor
-import org.jetbrains.org.objectweb.asm.FieldVisitor
 import org.jetbrains.org.objectweb.asm.signature.SignatureReader
 import org.jetbrains.org.objectweb.asm.util.TraceSignatureVisitor
 

@@ -19,11 +19,8 @@
 package org.jetbrains.kotlin.project
 
 import java.beans.PropertyChangeListener
-import javax.swing.Icon
 import javax.swing.ImageIcon
 import javax.swing.event.ChangeListener
-import org.apache.maven.project.MavenProject
-import org.jetbrains.kotlin.builder.KotlinPsiManager
 import org.jetbrains.kotlin.builder.isKotlinFile
 import org.jetbrains.kotlin.projectsextensions.maven.MavenHelper
 import org.netbeans.api.project.Project

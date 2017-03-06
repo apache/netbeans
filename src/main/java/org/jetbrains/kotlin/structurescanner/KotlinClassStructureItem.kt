@@ -19,7 +19,6 @@ package org.jetbrains.kotlin.structurescanner
 import javax.swing.ImageIcon
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.resolve.BindingContext
-import org.netbeans.modules.csl.api.ElementHandle
 import org.netbeans.modules.csl.api.ElementKind
 import org.netbeans.modules.csl.api.HtmlFormatter
 import org.netbeans.modules.csl.api.Modifier

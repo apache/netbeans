@@ -16,7 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.diagnostics.netbeans.parser
 
-import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.diagnostics.Diagnostic
 import org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages
 import org.netbeans.modules.csl.api.Error.Badging

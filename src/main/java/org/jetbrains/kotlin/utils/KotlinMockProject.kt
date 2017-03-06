@@ -21,7 +21,6 @@ import org.netbeans.api.project.Project
 import org.netbeans.api.project.ProjectManager
 import org.netbeans.spi.project.support.ant.AntProjectHelper
 import org.netbeans.spi.project.support.ant.ProjectGenerator
-import org.openide.filesystems.FileObject
 import org.openide.filesystems.FileUtil
 import org.openide.modules.Places
 

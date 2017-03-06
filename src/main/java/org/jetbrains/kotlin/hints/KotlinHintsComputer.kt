@@ -19,14 +19,8 @@ package org.jetbrains.kotlin.hints
 import org.jetbrains.kotlin.psi.psiUtil.siblings
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.hints.intentions.*
-import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.psi.*
-import org.jetbrains.kotlin.hints.KotlinRule
-import org.netbeans.modules.csl.api.HintFix
 import org.netbeans.modules.csl.api.Hint
-import org.netbeans.modules.csl.api.OffsetRange
-import org.netbeans.modules.csl.api.HintSeverity
-import org.openide.filesystems.FileObject
 
 class KotlinHintsComputer(val parserResult: KotlinParserResult) : KtVisitor<Unit, Any?>() {
 

@@ -16,7 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.diagnostics.netbeans.parser
 
-import java.io.File
 import javax.swing.event.ChangeListener
 import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.isScanning
@@ -28,7 +27,6 @@ import org.netbeans.api.java.source.SourceUtils
 import org.netbeans.api.project.Project
 import org.netbeans.modules.parsing.api.*
 import org.netbeans.modules.parsing.spi.*
-import org.openide.filesystems.FileUtil
 
 class KotlinParser : Parser() {
 

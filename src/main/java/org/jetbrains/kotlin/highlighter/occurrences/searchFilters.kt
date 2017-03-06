@@ -1,7 +1,6 @@
 package org.jetbrains.kotlin.highlighter.occurrences
 
 import org.jetbrains.kotlin.psi.KtElement
-import org.jetbrains.kotlin.resolve.source.KotlinSourceElement
 import org.jetbrains.kotlin.psi.KtReferenceExpression
 import org.jetbrains.kotlin.psi.KtSimpleNameExpression
 import org.jetbrains.kotlin.psi.psiUtil.isImportDirectiveExpression

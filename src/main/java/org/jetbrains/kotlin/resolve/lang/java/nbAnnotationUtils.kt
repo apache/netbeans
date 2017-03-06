@@ -16,7 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.resolve.lang.java
 
-import org.jetbrains.kotlin.load.java.structure.JavaAnnotation
 import org.jetbrains.kotlin.name.FqName
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project

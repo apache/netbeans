@@ -17,13 +17,7 @@
 package org.jetbrains.kotlin.resolve.lang.java
 
 import org.jetbrains.kotlin.load.java.structure.JavaClass
-import org.jetbrains.kotlin.load.java.structure.JavaClassifierType
-import org.jetbrains.kotlin.load.java.structure.JavaConstructor
-import org.jetbrains.kotlin.load.java.structure.JavaField
-import org.jetbrains.kotlin.load.java.structure.JavaMethod
-import org.jetbrains.kotlin.load.java.structure.JavaTypeParameter
 import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.name.Name
 import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.project.Project
 import javax.lang.model.element.TypeElement

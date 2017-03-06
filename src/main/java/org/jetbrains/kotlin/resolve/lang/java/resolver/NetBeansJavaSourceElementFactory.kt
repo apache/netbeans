@@ -16,7 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.resolve.lang.java.resolver
 
-import org.jetbrains.kotlin.load.java.sources.JavaSourceElement
 import org.jetbrains.kotlin.load.java.sources.JavaSourceElementFactory
 import org.jetbrains.kotlin.load.java.structure.JavaElement
 

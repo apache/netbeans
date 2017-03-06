@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.reformatting
 
 import org.netbeans.modules.editor.indent.spi.Context
-import org.netbeans.modules.editor.indent.spi.ExtraLock
 import org.netbeans.modules.editor.indent.spi.ReformatTask
 
 

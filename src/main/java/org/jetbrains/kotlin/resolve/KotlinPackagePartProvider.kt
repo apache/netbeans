@@ -74,6 +74,7 @@ class KotlinPackagePartProvider(val project: Project) : PackagePartProvider {
             val moduleFiles = metaInf.children.filter { it.name.endsWith(ModuleMapping.MAPPING_FILE_EXT) }
             for (moduleFile in moduleFiles) {
                 val mapping = try {
+                    if (!moduleFile.exists()) continue
                     ModuleMapping.create(moduleFile.contentsToByteArray(), moduleFile.toString())
                 }
                 catch (e: EOFException) {

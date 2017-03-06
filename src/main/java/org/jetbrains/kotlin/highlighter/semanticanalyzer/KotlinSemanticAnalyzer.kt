@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.isScanning
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.resolve.BindingContext
+import org.jetbrains.kotlin.language.Priorities
 import org.netbeans.modules.csl.api.ColoringAttributes
 import org.netbeans.modules.csl.api.OffsetRange
 import org.netbeans.modules.csl.api.SemanticAnalyzer
@@ -41,7 +42,7 @@ class KotlinSemanticAnalyzer : SemanticAnalyzer<KotlinParserResult>() {
                             it.textRanges.first().endOffset) }
                     .forEach { highlighting.put(it, KotlinHighlightingAttributes.DEPRECATED.styleKey) }
     
-    override fun getPriority() = 999
+    override fun getPriority() = Priorities.SEMANTIC_ANALYZER_PRIORITY
 
     override fun getHighlights() = highlighting
 

@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.descriptors.SourceElement
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.isScanning
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtFile
+import org.jetbrains.kotlin.language.Priorities
 import org.netbeans.modules.csl.api.ColoringAttributes
 import org.netbeans.modules.csl.api.OccurrencesFinder
 import org.netbeans.modules.csl.api.OffsetRange
@@ -52,7 +53,7 @@ class KotlinOccurrencesFinder : OccurrencesFinder<KotlinParserResult>() {
 
     override fun getSchedulerClass() = Scheduler.EDITOR_SENSITIVE_TASK_SCHEDULER
 
-    override fun getPriority() = 1000
+    override fun getPriority() = Priorities.OCCURRENCES_FINDER_PRIORITY
 
     override fun getOccurrences() = highlighting
     

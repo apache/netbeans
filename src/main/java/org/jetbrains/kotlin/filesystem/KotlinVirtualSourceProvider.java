@@ -28,14 +28,14 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = VirtualSourceProvider.class)
 public class KotlinVirtualSourceProvider implements VirtualSourceProvider {
 
-    private static List<Project> translatedFully = new ArrayList<>();
+    private static final List<Project> TRANSLATED_FULLY = new ArrayList<>();
     
     public static boolean isFullyTranslated(Project project) {
-        return translatedFully.contains(project);
+        return TRANSLATED_FULLY.contains(project);
     }
     
     public static void translated(Project project) {
-        translatedFully.add(project);
+        TRANSLATED_FULLY.add(project);
     }
     
     @Override

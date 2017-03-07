@@ -114,7 +114,7 @@ public class ProjectUtils {
         for (ClassPath.Entry entry : compile.entries()){
             String path = entry.getURL().getPath();
             
-            FileObject fo = FileUtil.toFileObject(new File(path));
+            FileObject fo = FileUtil.toFileObject(FileUtil.normalizeFile(new File(path)));
             if (fo != null && fo.isFolder()) continue;
             
             if (path != null){

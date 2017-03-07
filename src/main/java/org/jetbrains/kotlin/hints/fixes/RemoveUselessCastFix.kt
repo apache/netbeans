@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.hints.fixes
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
 import org.jetbrains.kotlin.diagnostics.Errors
+import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.modules.csl.api.HintSeverity
 
 class RemoveUselessCastFix(kotlinError: KotlinError,
@@ -36,7 +37,7 @@ class RemoveUselessCastFix(kotlinError: KotlinError,
     override fun getDescription() = "Remove useless cast"
 
     override fun implement() {
-        val doc = parserResult.snapshot.source.getDocument(false)
+        val doc = parserResult.snapshot?.source?.getDocument(false) ?: ProjectUtils.getDocumentFromFileObject(parserResult.file)
 
         doc.remove(kotlinError.startPosition, kotlinError.endPosition - kotlinError.startPosition)
     }

@@ -1,0 +1,12 @@
+package quickfixes
+
+class InterfaceImpl : Interface {
+    override fun someFunc(): Int {
+        throw UnsupportedOperationException()
+    }
+
+} 
+
+interface Interface {
+    fun someFunc(): Int
+}

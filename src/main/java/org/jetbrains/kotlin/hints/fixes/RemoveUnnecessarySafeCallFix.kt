@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
 import org.jetbrains.kotlin.diagnostics.Errors
+import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.modules.csl.api.HintSeverity
 
 class RemoveUnnecessarySafeCallFix(kotlinError: KotlinError,
@@ -37,7 +38,7 @@ class RemoveUnnecessarySafeCallFix(kotlinError: KotlinError,
     override fun getDescription() = "Remove '?'"
 
     override fun implement() {
-        val doc = parserResult.snapshot.source.getDocument(false)
+        val doc = parserResult.snapshot?.source?.getDocument(false) ?: ProjectUtils.getDocumentFromFileObject(parserResult.file)
 
         doc.remove(kotlinError.startPosition, 1)
     }

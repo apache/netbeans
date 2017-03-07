@@ -26,6 +26,7 @@ import org.jetbrains.kotlin.idea.util.IdeDescriptorRenderers
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.renderer.*
 import org.jetbrains.kotlin.resolve.OverrideResolver
+import org.jetbrains.kotlin.utils.ProjectUtils
 import org.netbeans.modules.csl.api.HintSeverity
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer
@@ -54,7 +55,7 @@ class ImplementMembersFix(kotlinError: KotlinError,
     override fun getDescription() = "Implement members"
 
     override fun implement() {
-        val doc = parserResult.snapshot.source.getDocument(false)
+        val doc = parserResult.snapshot?.source?.getDocument(false) ?: ProjectUtils.getDocumentFromFileObject(parserResult.file)
 
         val classOrObject: KtClassOrObject = PsiTreeUtil.getParentOfType(kotlinError.psi, KtClassOrObject::class.java, false) ?: return
 

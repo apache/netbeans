@@ -79,7 +79,7 @@ class KotlinParser : Parser() {
         ktFile ?: return null
         val result = getAnalysisResult(ktFile, project) ?: return null
 
-        return KotlinParserResult(snapshot, result, ktFile, project)
+        return KotlinParserResult(snapshot, result, ktFile, snapshot.source.fileObject, project)
     }
 
     override fun addChangeListener(changeListener: ChangeListener) {}

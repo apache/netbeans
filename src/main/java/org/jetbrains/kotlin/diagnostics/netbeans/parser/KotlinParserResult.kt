@@ -24,20 +24,20 @@ import org.netbeans.api.project.Project
 import org.netbeans.modules.csl.api.Error
 import org.netbeans.modules.csl.spi.ParserResult
 import org.netbeans.modules.parsing.api.Snapshot
+import org.openide.filesystems.FileObject
 
-class KotlinParserResult(snapshot: Snapshot,
+class KotlinParserResult(snapshot: Snapshot?,
                          val analysisResult: AnalysisResultWithProvider?,
-                         val ktFile: KtFile, val project: Project) : ParserResult(snapshot) {
+                         val ktFile: KtFile,
+                         val file: FileObject, 
+                         val project: Project) : ParserResult(snapshot) {
 
-    private val file = snapshot.source.fileObject
-    
     override fun invalidate() {}
 
     override fun getDiagnostics() = arrayListOf<Error>().apply {
         if (analysisResult != null) {
             addAll(
                     analysisResult.analysisResult.bindingContext.diagnostics.all()
-                            .filter { it.psiFile.virtualFile.path == file.path }
                             .filter { it.factory != Errors.DEPRECATION }
                             .map { KotlinError(it, file) }
             )

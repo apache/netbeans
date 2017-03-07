@@ -99,7 +99,7 @@ class AutoImportFix(kotlinError: KotlinError,
     override fun getDescription() = "Add import for $fqName"
 
     override fun implement() {
-        val doc = parserResult.snapshot.source.getDocument(false)
+        val doc = parserResult.snapshot?.source?.getDocument(false) ?: ProjectUtils.getDocumentFromFileObject(parserResult.file)
         val ktFile = parserResult.ktFile
 
         insert(fqName!!, doc, ktFile)

@@ -116,14 +116,7 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
             return CACHED_ENVIRONMENT.get(kotlinProject)!!
         }
         
-        @Synchronized fun updateKotlinEnvironment(kotlinProject: NBProject) {
-            if (CACHED_ENVIRONMENT.containsKey(kotlinProject)) {
-                val environment = CACHED_ENVIRONMENT.get(kotlinProject)!!
-                Disposer.dispose(environment.applicationEnvironment.parentDisposable)
-                ZipHandler.clearFileAccessorCache()
-            }
-            CACHED_ENVIRONMENT.put(kotlinProject, KotlinEnvironment(kotlinProject, Disposer.newDisposable()))
-        }
+        @Synchronized fun updateKotlinEnvironment(kotlinProject: NBProject) = getEnvironment(kotlinProject).configureClasspath(kotlinProject)
     }
     
     val KOTLIN_COMPILER_PATH = ProjectUtils.buildLibPath("kotlin-compiler")
@@ -234,7 +227,7 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
         CoreApplicationEnvironment.registerExtensionPointAndExtensions(File(KOTLIN_COMPILER_PATH), configFilePath, Extensions.getRootArea())
     }
     
-    private fun configureClasspath(kotlinProject: NBProject) {
+    fun configureClasspath(kotlinProject: NBProject) {
         val classpath = ProjectUtils.getClasspath(kotlinProject)
         KotlinLogger.INSTANCE.logInfo("Project ${kotlinProject.projectDirectory.path} classpath is $classpath")
         classpath.forEach {

@@ -24,40 +24,43 @@ import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 
 class IntentionsTest : KotlinTestCase("Intentions test", "intentions") {
-    
+
     private fun doTest(fileName: String, intention: Class<out ApplicableIntention>, applicable: Boolean = true) {
         val caret = getCaret(getDocumentForFileObject(dir, "$fileName.caret"))
         assertNotNull(caret)
-        
+
         val doc = getDocumentForFileObject(dir, "$fileName.kt")
         val file = dir.getFileObject("$fileName.kt")
         val ktFile = KotlinPsiManager.getParsedFile(file)!!
-        
+
         val resultWithProvider = KotlinParser.getAnalysisResult(ktFile, project)!!
-        
+
         val psi = ktFile.findElementAt(caret) ?: assert(false)
-        
+
         val applicableIntention = intention.constructors.first().newInstance(doc, resultWithProvider.analysisResult, psi) as ApplicableIntention
-        
+
         assertEquals(applicable, applicableIntention.isApplicable(caret))
+
+        applicableIntention.implement()
+        assertTrue(doc.getText(0, doc.length) equalsWithoutSpaces dir.getFileObject("$fileName.after").asText())
     }
 
     fun testRemoveEmptyClassBody() = doTest("removeEmptyClassBody", RemoveEmptyClassBodyIntention::class.java)
-   
+
     fun testToInfix() = doTest("toInfix", ToInfixIntention::class.java)
-    
+
     fun testSpecifyType() = doTest("specifyType", SpecifyTypeIntention::class.java)
-    
+
     fun testAddValToConstructorParameter() = doTest("addValToConstructorParameter", AddValToConstructorParameterIntention::class.java)
-    
+
     fun testChangeReturnType() = doTest("changeReturnType", ChangeReturnTypeIntention::class.java)
-    
+
     fun testConvertToSealedClass() = doTest("convertToSealedClass", ConvertEnumToSealedClassIntention::class.java)
-    
+
     fun testConvertPropertyInitializerToGetter() = doTest("convertPropertyInitializerToGetter", ConvertPropertyInitializerToGetterIntention::class.java)
 
     fun testConvertToBlockBody() = doTest("convertToBlockBody", ConvertToBlockBodyIntention::class.java)
-    
+
     fun testConvertToStringTemplate() = doTest("convertToStringTemplate", ConvertToStringTemplateIntention::class.java)
 
     fun testConvertToExpressionBody() = doTest("convertToExpressionBody", ConvertToExpressionBodyIntention::class.java)
@@ -81,7 +84,5 @@ class IntentionsTest : KotlinTestCase("Intentions test", "intentions") {
     fun testSplitIf() = doTest("splitIf", SplitIfIntention::class.java)
     
     fun testConvertToConcatenatedString() = doTest("convertToConcatenatedString", ConvertToConcatenatedStringIntention::class.java)
-    
-    fun testConvertForEachToForLoop() = doTest("convertForEachToForLoop", ConvertForEachToForLoopIntention::class.java)
-    
+
 }

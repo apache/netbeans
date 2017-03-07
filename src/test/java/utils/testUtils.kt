@@ -16,6 +16,7 @@
  *******************************************************************************/
 package utils
 
+import com.intellij.openapi.util.text.StringUtil
 import javax.swing.text.Document
 import junit.framework.TestCase.assertNotNull
 import org.jetbrains.kotlin.utils.ProjectUtils
@@ -54,3 +55,10 @@ fun getDocumentForFileObject(dir: FileObject, fileName: String): Document {
 }
 
 fun getAllKtFilesInFolder(folder: FileObject) = folder.children.filter{ it.hasExt("kt") }
+
+infix fun String.equalsWithoutSpaces(expected: String): Boolean {
+    val spacesRegex = Regex("\\s+")
+    
+    return spacesRegex.replace(StringUtil.convertLineSeparators(expected), "") == 
+        spacesRegex.replace(StringUtil.convertLineSeparators(this), "")
+}

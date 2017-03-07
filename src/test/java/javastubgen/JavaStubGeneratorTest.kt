@@ -16,41 +16,33 @@
  *******************************************************************************/
 package javastubgen
 
-import com.intellij.openapi.util.text.StringUtil
-import javaproject.JavaProject
 import org.jetbrains.kotlin.builder.KotlinPsiManager
 import org.jetbrains.kotlin.filesystem.JavaStubGenerator
 import org.jetbrains.kotlin.filesystem.lightclasses.KotlinLightClassGeneration
-import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer
-import org.jetbrains.org.objectweb.asm.tree.ClassNode
-import org.netbeans.api.project.Project
 import org.openide.filesystems.FileObject
-import utils.KotlinTestCase
+import utils.*
 
 class JavaStubGeneratorTest : KotlinTestCase("Stub generator test", "stubGen") {
 
     private fun getByteCode(file: FileObject): List<ByteArray> {
         val ktFile = KotlinPsiManager.getParsedFile(file)!!
         val result = KotlinAnalyzer.analyzeFile(project, ktFile)
-        
+
         return KotlinLightClassGeneration.getByteCode(file, project, result.analysisResult)
     }
 
     private fun doTest(fileName: String, vararg after: String) {
         val kotlinFile = dir.getFileObject("$fileName.kt")
-            val list = JavaStubGenerator.gen(getByteCode(kotlinFile))
-            val spacesRegex = Regex("\\s+")
-            if (after.isEmpty()) {
-                val expected = dir.getFileObject("$fileName.after").asText()
-                assertEquals(spacesRegex.replace(StringUtil.convertLineSeparators(expected), ""),
-                        spacesRegex.replace(StringUtil.convertLineSeparators(list.first().second), ""))
-            } else after.forEachIndexed { i, _ ->
-                val expected = dir.getFileObject("${after[i]}.after").asText()
-                assertEquals(spacesRegex.replace(StringUtil.convertLineSeparators(expected), ""),
-                        spacesRegex.replace(StringUtil.convertLineSeparators(list[i].second), ""))
-        }    
+        val list = JavaStubGenerator.gen(getByteCode(kotlinFile))
+        if (after.isEmpty()) {
+            val expected = dir.getFileObject("$fileName.after").asText()
+            assertTrue(list.first().second equalsWithoutSpaces expected)
+        } else after.forEachIndexed { i, _ ->
+            val expected = dir.getFileObject("${after[i]}.after").asText()
+            assertTrue(list[i].second equalsWithoutSpaces expected)
+        }
     }
 
     fun testSimple() = doTest("simple")
@@ -78,11 +70,11 @@ class JavaStubGeneratorTest : KotlinTestCase("Stub generator test", "stubGen") {
     fun testWithNestedClass() = doTest("withNestedClass")
 
     fun testWithCompanion() = doTest("withCompanion")
-        
+
     fun testClassWithSeveralMethods() = doTest("withSeveralMethods")
-    
+
     fun testClassImplementsInterface() = doTest("implementsInterface", "implementsInterface2", "implementsInterface1")
-    
+
     fun testFunWithSeveralArguments() = doTest("severalArguments")
-    
+
 }

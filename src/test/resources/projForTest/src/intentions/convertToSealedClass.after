@@ -1,0 +1,13 @@
+package intentions
+
+sealed class ProtocolState {
+    object WAITING : ProtocolState() {
+        override fun signal() = TALKING
+    }
+
+    object TALKING : ProtocolState() {
+        override fun signal() = WAITING
+    }
+
+    abstract fun signal(): ProtocolState
+}

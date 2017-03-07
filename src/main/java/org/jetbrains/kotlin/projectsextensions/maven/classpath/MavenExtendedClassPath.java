@@ -195,7 +195,7 @@ public class MavenExtendedClassPath implements ClassPathExtender {
             
             List<String> javaClasspathElements = new ArrayList<>();
             javaClasspathElements.addAll(getTestClasspathElements(project));
-            compile = ClassPathSupport.createProxyClassPath(getClasspath(getCompileClasspathElements(project)), 
+            compile = ClassPathSupport.createProxyClassPath(compile, 
                     getClasspath(javaClasspathElements));
             
         } catch (DependencyResolutionRequiredException | MalformedURLException ex) {

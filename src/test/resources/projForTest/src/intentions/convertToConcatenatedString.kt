@@ -1,5 +1,5 @@
 package intentions
 
-fun convertToConcatenatedString() {
-    val smth = "23" + "34"
+fun convertToConcatenatedString(s: String) {
+    val str = "Hello, $s"
 }

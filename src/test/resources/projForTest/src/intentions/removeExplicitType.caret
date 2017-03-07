@@ -1,0 +1,4 @@
+package intentions
+
+fun explicit(): <caret>Int = 42
+

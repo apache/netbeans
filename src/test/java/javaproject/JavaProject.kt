@@ -1,6 +1,5 @@
 package javaproject
 
-import java.io.IOException
 import javaproject.mockservices.MockActiveDocumentProvider
 import javaproject.mockservices.MockEditorMimeTypesImpl
 import javaproject.mockservices.MockKotlinParserFactory
@@ -14,7 +13,6 @@ import org.netbeans.junit.MockServices
 import org.netbeans.junit.NbTestCase
 import org.netbeans.modules.java.source.parsing.JavacParserFactory
 import org.netbeans.modules.project.ant.AntBasedProjectFactorySingleton
-import org.openide.util.Exceptions
 
 /**
  *
@@ -34,15 +32,15 @@ object JavaProject : NbTestCase("Java project") {
     }
 
     private fun createMockLookup() {
-        MockServices.setServices(JavaAntBasedProjectType::class.java)
-        MockServices.setServices(AntBasedProjectFactorySingleton::class.java)
-        MockServices.setServices(org.netbeans.modules.project.ant.StandardAntArtifactQueryImpl::class.java)
-        MockServices.setServices(TestEnvironmentFactory::class.java)
-        MockServices.setServices(MockKotlinParserFactory::class.java)
-        MockServices.setServices(MockActiveDocumentProvider::class.java)
-        MockServices.setServices(MockOpenProjectsTrampoline::class.java)
-        MockServices.setServices(JavaPlatformManager::class.java)
-        MockServices.setServices(JavacParserFactory::class.java)
-        MockServices.setServices(MockEditorMimeTypesImpl::class.java)
+        MockServices.setServices(JavaAntBasedProjectType::class.java,
+                AntBasedProjectFactorySingleton::class.java,
+                org.netbeans.modules.project.ant.StandardAntArtifactQueryImpl::class.java,
+                TestEnvironmentFactory::class.java,
+                MockKotlinParserFactory::class.java,
+                MockActiveDocumentProvider::class.java,
+                MockOpenProjectsTrampoline::class.java,
+                JavaPlatformManager::class.java,
+                JavacParserFactory::class.java,
+                MockEditorMimeTypesImpl::class.java)
     }
 }

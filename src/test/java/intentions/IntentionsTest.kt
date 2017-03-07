@@ -41,8 +41,8 @@ class IntentionsTest : KotlinTestCase("Intentions test", "intentions") {
         
         assertEquals(applicable, applicableIntention.isApplicable(caret))
     }
- 
-    fun testRemoveBraces() = doTest("removeEmptyClassBody", RemoveEmptyClassBodyIntention::class.java)
+
+    fun testRemoveEmptyClassBody() = doTest("removeEmptyClassBody", RemoveEmptyClassBodyIntention::class.java)
    
     fun testToInfix() = doTest("toInfix", ToInfixIntention::class.java)
     
@@ -62,8 +62,26 @@ class IntentionsTest : KotlinTestCase("Intentions test", "intentions") {
 
     fun testConvertToExpressionBody() = doTest("convertToExpressionBody", ConvertToExpressionBodyIntention::class.java)
  
-    //fun testConvertToForLoop() = doTest("convertToForLoop", ConvertForEachToForLoopIntention::class.java)
+    fun testConvertTwoComparisonsToRangeCheck() = doTest("convertTwoComparisons", ConvertTwoComparisonsToRangeCheckIntention::class.java)
+    
+    fun testMergeIfsIntention() = doTest("mergeIfs", MergeIfsIntention::class.java)
+    
+    fun testRemoveBraces() = doTest("removeBraces", RemoveBracesIntention::class.java)
+    
+    fun testRemoveParenthesesFromLambdaCall() = doTest("removeParenthesesFromLambdaCall", RemoveEmptyParenthesesFromLambdaCallIntention::class.java)
+    
+    fun testRemoveEmptyPrimaryConstructor() = doTest("removeEmptyPrimaryConstructor", RemoveEmptyPrimaryConstructorIntention::class.java)
+    
+    fun testRemoveEmptySecondaryConstructor() = doTest("removeEmptySecondaryConstructor", RemoveEmptySecondaryConstructorIntention::class.java)
    
-    //fun testConvertToConcatenatedString() = doTest("convertToConcatenatedString", ConvertToConcatenatedStringIntention::class.java)
+    fun testRemoveExplicitType() = doTest("removeExplicitType", RemoveExplicitTypeIntention::class.java)
+ 
+    fun testReplaceSizeCheckWithIsNotEmpty() = doTest("replaceSizeCheckWithIsNotEmpty", ReplaceSizeCheckWithIsNotEmptyIntention::class.java)
+ 
+    fun testSplitIf() = doTest("splitIf", SplitIfIntention::class.java)
+    
+    fun testConvertToConcatenatedString() = doTest("convertToConcatenatedString", ConvertToConcatenatedStringIntention::class.java)
+    
+    fun testConvertForEachToForLoop() = doTest("convertForEachToForLoop", ConvertForEachToForLoopIntention::class.java)
     
 }

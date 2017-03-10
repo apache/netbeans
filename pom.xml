@@ -676,6 +676,11 @@
       <artifactId>org-netbeans-modules-refactoring-java</artifactId>
       <version>${netbeans.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.netbeans.api</groupId>
+      <artifactId>org-openide-io</artifactId>
+      <version>${netbeans.version}</version>
+    </dependency>
     <!-- TEST DEPENDENCIES -->  
     <dependency> 
       <groupId>junit</groupId>  
@@ -779,6 +784,6 @@
       <artifactId>org-netbeans-modules-nbjunit</artifactId>  
       <version>${netbeans.version}</version>  
       <scope>test</scope> 
-    </dependency> 
+    </dependency>
   </dependencies> 
 </project>

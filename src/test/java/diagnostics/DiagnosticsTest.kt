@@ -1,15 +1,10 @@
 package diagnostics
 
 import utils.*
-import com.intellij.psi.PsiErrorElement
-import org.netbeans.api.project.Project
-import javaproject.JavaProject
 import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer
 import org.jetbrains.kotlin.utils.ProjectUtils
-import org.jetbrains.kotlin.diagnostics.Diagnostic
 import org.jetbrains.kotlin.diagnostics.Severity
-import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.resolve.AnalyzingUtils
 import org.openide.filesystems.FileObject
 

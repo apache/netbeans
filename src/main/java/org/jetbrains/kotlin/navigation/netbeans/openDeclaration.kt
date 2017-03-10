@@ -32,6 +32,7 @@ import org.jetbrains.kotlin.resolve.lang.java.findMember
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.navigation.references.createReferences
 import org.jetbrains.kotlin.psi.KtElement
+import org.openide.cookies.EditorCookie
 import org.openide.filesystems.FileObject
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement
 import org.jetbrains.kotlin.load.kotlin.KotlinJvmBinarySourceElement
@@ -45,6 +46,7 @@ import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.utils.LineEndUtil
 import javax.swing.text.StyledDocument
 import org.netbeans.modules.editor.NbEditorUtilities
+import org.openide.loaders.DataObject
 import org.openide.text.NbDocument
 import org.openide.text.Line
 import javax.swing.text.Document
@@ -161,6 +163,19 @@ private fun findFileObjectForReferencedElement(psi: PsiElement, fromElement: KtE
     
     file = getFileObjectFromJar(virtualFile.path) ?: return null
     return file
+}
+
+fun FileObject.openFileAtPosition(lineNumber: Int, columnNumber: Int) {
+    val dataObject = DataObject.find(this) ?: return
+    val editorCookie = dataObject.lookup.lookup(EditorCookie::class.java) ?: return
+    
+    if (lineNumber == -1 || lineNumber == 0) editorCookie.open()
+    
+    editorCookie.openDocument()
+    val line = editorCookie.lineSet.getOriginal(lineNumber - 1)
+    if (!line.isDeleted) {
+        line.show(Line.ShowOpenType.REUSE, Line.ShowVisibilityType.FOCUS, columnNumber)
+    }
 }
 
 fun openFileAtOffset(doc: StyledDocument, offset: Int) {

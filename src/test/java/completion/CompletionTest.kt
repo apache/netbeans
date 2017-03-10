@@ -1,17 +1,10 @@
 package completion
 
 import utils.*
-import javaproject.JavaProject
-import javax.swing.text.Document
 import org.jetbrains.kotlin.completion.*
-import org.netbeans.api.project.Project
-import org.openide.filesystems.FileObject
 import org.jetbrains.kotlin.builder.KotlinPsiManager
-import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
 import org.jetbrains.kotlin.resolve.KotlinAnalyzer
 import org.jetbrains.kotlin.utils.ProjectUtils
-import org.netbeans.modules.csl.api.CompletionProposal
 
 /**
  *

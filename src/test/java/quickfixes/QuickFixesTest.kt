@@ -16,12 +16,12 @@
  *******************************************************************************/
 package quickfixes
 
-import org.jetbrains.kotlin.utils.ProjectUtils
-import utils.*
 import org.openide.filesystems.FileObject
 import org.jetbrains.kotlin.builder.KotlinPsiManager
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.*
 import org.jetbrains.kotlin.hints.fixes.*
+import org.jetbrains.kotlin.utils.ProjectUtils
+import utils.*
 
 class QuickFixesTest : KotlinTestCase("Quick Fixes test", "quickfixes") {
     

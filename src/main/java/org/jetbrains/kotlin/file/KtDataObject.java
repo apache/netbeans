@@ -31,10 +31,6 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 
-/**
- *
- * @author Александр KtDataObject class represents .kt file in NetBeans IDE
- */
 @Messages({
     "LBL_Kt_LOADER=Files of Kt"
 })
@@ -66,11 +62,6 @@ import org.openide.windows.TopComponent;
             id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
             position = 400,
             separatorAfter = 500
-    ),
-    @ActionReference(
-            path = "Loaders/text/x-kt/Actions",
-            id = @ActionID(category = "Project", id = "org.netbeans.modules.project.ui.RunSingle"),
-            position = 550
     ),
     @ActionReference(
             path = "Loaders/text/x-kt/Actions",

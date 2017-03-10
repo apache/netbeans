@@ -24,14 +24,14 @@
         <folder name="text">
             <folder name="x-kt">
                 <folder name="Actions">
-<!--                    <file name="RunFile.shadow">
+                    <file name="RunFile.shadow">
                         <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunSingle.instance"/>
-                        <attr name="position" intvalue="1000"/>
+                        <attr name="position" intvalue="1265"/>
                     </file>
                     <file name="org-netbeans-modules-debugger-ui-actions-DebugFileAction.shadow">
                         <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugFileAction.instance"/>
-                        <attr name="position" intvalue="1100"/>
-                    </file>-->
+                        <attr name="position" intvalue="1266"/>
+                    </file>
                     <file name="TestFile.shadow">
                         <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-TestSingle.instance"/>
                         <attr name="position" intvalue="1267"/>
@@ -68,16 +68,25 @@
                         </file>
                     </folder>
                     <folder name="Popup">
+                        <file name="RunFile.shadow">
+                            <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RunSingle.instance"/>
+                            <attr name="position" intvalue="1790"/>
+                        </file>
+                        <file name="org-netbeans-modules-debugger-ui-actions-DebugFileAction.shadow">
+                            <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugFileAction.instance"/>
+                            <attr name="position" intvalue="1791"/>
+                        </file>
                         <file name="TestFile.shadow">
                             <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-TestSingle.instance"/>
-                            <attr name="position" intvalue="1780"/>
+                            <attr name="position" intvalue="1792"/>
                         </file>
                         <file name="org-netbeans-modules-debugger-ui-actions-DebugTestFileAction.shadow">
                             <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugTestFileAction.instance"/>
-                            <attr name="position" intvalue="1790"/>
+                            <attr name="position" intvalue="1793"/>
                         </file>
                         <file name="RefactoringAll.instance">
                             <attr name="instanceCreate" methodvalue="org.netbeans.modules.refactoring.api.ui.RefactoringActionsFactory.editorSubmenuAction"/>
+                            <attr name="position" intvalue="1794"/>
                         </file>
                     </folder>
                     <file name="JavaIndexer.shadow">
@@ -112,8 +121,7 @@
             <attr name="debugger_actions" stringvalue="[toggleBreakpoint]"/>
             <attr name="debugger_activateForMIMETypes" stringvalue="[text/x-kt]"/>
             <attr name="instanceOf" stringvalue="org.netbeans.spi.debugger.ActionsProvider"/>
-            <attr
-                methodvalue="org.netbeans.spi.debugger.ActionsProvider$ContextAware.createService" name="instanceCreate"/>
+            <attr methodvalue="org.netbeans.spi.debugger.ActionsProvider$ContextAware.createService" name="instanceCreate"/>
         </file>
         
         <folder name="netbeans-JPDASession">
@@ -121,8 +129,7 @@
                 <attr name="serviceName" stringvalue="org.jetbrains.kotlin.debugger.KotlinSourcePathProvider"/>
                 <attr name="serviceClass" stringvalue="org.netbeans.spi.debugger.jpda.SourcePathProvider"/>
                 <attr name="instanceOf" stringvalue="org.netbeans.spi.debugger.jpda.SourcePathProvider"/>
-                <attr
-                    methodvalue="org.netbeans.spi.debugger.jpda.SourcePathProvider$ContextAware.createService" name="instanceCreate"/>
+                <attr methodvalue="org.netbeans.spi.debugger.jpda.SourcePathProvider$ContextAware.createService" name="instanceCreate"/>
             </file>
         </folder>
         

@@ -17,9 +17,15 @@
 package org.jetbrains.kotlin.utils
 
 import java.io.File
-import org.jetbrains.kotlin.psi.KtDeclaration
-import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.psi.KtNamedFunction
+import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider
+
+fun KtFile.mainClassName(simple: Boolean = false) = declarations.findMainFunction()
+        ?.let {
+            NoResolveFileClassesProvider.getFileClassInfo(this).facadeClassFqName.let {
+                if (simple) it.shortName().asString() else it.asString()
+            }
+        }
 
 fun KtFile.hasMain() = declarations.findMainFunction() != null
 

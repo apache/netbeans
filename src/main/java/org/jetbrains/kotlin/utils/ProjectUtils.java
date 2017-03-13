@@ -72,6 +72,7 @@ public class ProjectUtils {
             
             FileObject dir = FileUtil.toFileObject(userDirectory);
             if (dir == null || dir.getFileObject("kotlinc") == null){
+                KotlinLogger.INSTANCE.logInfo("No kotlinc folder. Adding bundled compiler.");
                 BundledCompiler.getKotlinc();
             } else {
                 FileObject kotlincDir = dir.getFileObject("kotlinc");

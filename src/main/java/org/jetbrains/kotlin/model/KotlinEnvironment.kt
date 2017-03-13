@@ -43,7 +43,6 @@ import com.intellij.openapi.extensions.ExtensionsArea
 import com.intellij.openapi.fileTypes.PlainTextFileType
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.impl.ZipHandler
 import com.intellij.psi.PsiElementFinder
 import com.intellij.psi.PsiManager
 import com.intellij.psi.augment.PsiAugmentProvider

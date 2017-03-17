@@ -67,6 +67,23 @@ object JavaEnvironment {
 
 }
 
+fun knownClassNamesInPackage(packageFqName: String, project: Project): Set<String> {
+    val classes = hashSetOf<String>()
+    JavaEnvironment.checkJavaSource(project)
+    JavaEnvironment.JAVA_SOURCE[project]?.let {
+        it.runUserActionTask({
+            it.toResolvedPhase()
+            it.elements.getPackageElement(packageFqName)
+                    ?.enclosedElements
+                    ?.filterIsInstance(TypeElement::class.java)
+                    ?.map { it.simpleName.toString() }
+                    ?.let { classes.addAll(it) }
+        }, true)
+    } 
+    
+    return classes
+} 
+
 fun ElementHandle<*>.getFileObject(project: Project) = SourceUtils.getFile(this, JavaEnvironment.JAVA_SOURCE[project]!!.classpathInfo)
 
 fun String.getPackages(project: Project): Set<String> {

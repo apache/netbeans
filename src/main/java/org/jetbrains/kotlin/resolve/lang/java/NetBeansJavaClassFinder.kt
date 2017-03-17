@@ -57,5 +57,5 @@ class NetBeansJavaClassFinder : JavaClassFinder {
         return NetBeansJavaPackage(pack, project)
     }
 
-    override fun knownClassNamesInPackage(packageFqName: FqName) = null
+    override fun knownClassNamesInPackage(packageFqName: FqName) = knownClassNamesInPackage(packageFqName.asString(), project)
 }

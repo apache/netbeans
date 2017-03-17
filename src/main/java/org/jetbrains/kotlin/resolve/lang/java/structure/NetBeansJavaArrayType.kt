@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.resolve.lang.java.structure
 
 import org.jetbrains.kotlin.load.java.structure.JavaArrayType
-import org.jetbrains.kotlin.load.java.structure.JavaType
 import org.jetbrains.kotlin.resolve.lang.java.*
 import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
@@ -30,5 +29,6 @@ import org.netbeans.api.project.Project
 
 class NetBeansJavaArrayType(handle: TypeMirrorHandle<*>, project: Project) :
         NetBeansJavaType(handle, project), JavaArrayType {
-    override val componentType: JavaType = handle.getComponentType(project)
+    override val componentType 
+        get() = handle.getComponentType(project)
 }

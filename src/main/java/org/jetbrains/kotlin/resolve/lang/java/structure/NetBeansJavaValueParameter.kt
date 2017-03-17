@@ -31,11 +31,14 @@ import javax.lang.model.element.VariableElement
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaValueParameter(elementHandle: ElemHandle<VariableElement>, project: Project, name: String, isVararg: Boolean) :
+class NetBeansJavaValueParameter(elementHandle: ElemHandle<VariableElement>, project: Project, 
+                                 private val parameterName: String, 
+                                 override val isVararg: Boolean) :
         NetBeansJavaElement<VariableElement>(elementHandle, project), JavaValueParameter {
 
-    override val name = Name.identifier(name)
-    override val isVararg = isVararg
+    override val name 
+        get() = Name.identifier(parameterName)
+    
     override val isDeprecatedInJavaDoc = false
 
     override val type: JavaType

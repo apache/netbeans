@@ -33,8 +33,10 @@ import org.jetbrains.kotlin.resolve.lang.java.*
 class NetBeansJavaClassifierType(handle: TypeMirrorHandle<*>, project: Project) :
         NetBeansJavaType(handle, project), JavaClassifierType {
 
-    override val presentableText: String = handle.getName(project)
-    override val canonicalText: String = handle.getName(project)
+    override val presentableText 
+        get() = handle.getName(project)
+    override val canonicalText 
+        get() = handle.getName(project)
 
     override val isRaw: Boolean
         get() = if (handle.kind == TypeKind.DECLARED) handle.isRaw(project) else false
@@ -42,10 +44,11 @@ class NetBeansJavaClassifierType(handle: TypeMirrorHandle<*>, project: Project) 
     override val typeArguments: List<JavaType>
         get() = if (handle.kind == TypeKind.DECLARED) handle.getTypeArguments(project) else emptyList()
 
-    override val classifier: JavaClassifier? = when (handle.kind) {
-        TypeKind.DECLARED -> handle.getJavaClass(project)
-        TypeKind.TYPEVAR -> NetBeansJavaTypeParameter(handle.toElemHandle(project), project)
-        else -> null
-    }
+    override val classifier 
+        get() = when (handle.kind) {
+            TypeKind.DECLARED -> handle.getJavaClass(project)
+            TypeKind.TYPEVAR -> NetBeansJavaTypeParameter(handle.toElemHandle(project), project)
+            else -> null
+        }
 
 }

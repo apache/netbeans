@@ -44,10 +44,14 @@ abstract class NetBeansJavaMember<T : Element>(elementHandle: ElemHandle<T>, ove
     override val name: Name
         get() = elementHandle.getName(project)
 
-    override val isDeprecatedInJavaDoc: Boolean = elementHandle.isDeprecated(project)
-    override val isAbstract: Boolean = elementHandle.isAbstract(project)
-    override val isStatic: Boolean = elementHandle.isStatic(project)
-    override val isFinal: Boolean = elementHandle.isFinal(project)
+    override val isDeprecatedInJavaDoc 
+        get() = elementHandle.isDeprecated(project)
+    override val isAbstract 
+        get() = elementHandle.isAbstract(project)
+    override val isStatic 
+        get() = elementHandle.isStatic(project)
+    override val isFinal 
+        get() = elementHandle.isFinal(project)
 
     override fun findAnnotation(fqName: FqName): JavaAnnotation? = elementHandle.getAnnotation(project, fqName)
 

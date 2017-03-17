@@ -26,7 +26,6 @@ import org.jetbrains.kotlin.name.Name
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaArrayAnnotationArgument(val args: List<JavaAnnotationArgument>, name: Name) : JavaArrayAnnotationArgument {
-    override val name: Name = name
+class NetBeansJavaArrayAnnotationArgument(val args: List<JavaAnnotationArgument>, override val name: Name) : JavaArrayAnnotationArgument {
     override fun getElements() = args
 }

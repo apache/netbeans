@@ -9,7 +9,7 @@
   <properties> 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
     <netbeans.version>RELEASE82</netbeans.version>  
-    <kotlin.version>1.1.1-eap-25</kotlin.version> 
+    <kotlin.version>1.1.1</kotlin.version> 
   </properties>  
   <name>Kotlin</name>  
   <description url="http://kotlinlang.org/">Kotlin language support</description>  
@@ -144,7 +144,7 @@
       <plugin> 
         <groupId>org.jetbrains.kotlin</groupId>  
         <artifactId>kotlin-maven-plugin</artifactId>  
-        <version>1.1.1-eap-25</version>  
+        <version>${kotlin.version}</version>  
         <executions> 
           <execution> 
             <id>compile</id>  
@@ -197,22 +197,8 @@
       </plugin> 
     </plugins> 
   </build>
-  <pluginRepositories>
-      <pluginRepository>
-          <id>kotlin-dev</id>
-          <name>kotlin-repo</name>
-          <url>http://dl.bintray.com/kotlin/kotlin-dev</url>
-      </pluginRepository>
-  </pluginRepositories> 
+  
   <repositories> 
-     <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>bintray-kotlin-kotlin-dev</id>
-      <name>bintray</name>
-      <url>http://dl.bintray.com/kotlin/kotlin-dev</url>
-      </repository>
     <repository> 
       <id>netbeans-modules</id>  
       <name>Repository hosting NetBeans modules</name>  

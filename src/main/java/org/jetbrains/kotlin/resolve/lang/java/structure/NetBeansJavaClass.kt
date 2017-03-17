@@ -38,7 +38,8 @@ import javax.lang.model.element.TypeElement
 class NetBeansJavaClass(elementHandle: ElemHandle<TypeElement>, project: Project) :
         NetBeansJavaClassifier<TypeElement>(elementHandle, project), JavaClass {
 
-    override val name = elementHandle.getName(project)
+    override val name 
+        get() = elementHandle.getName(project)
 
     override val fqName: FqName?
         get() = elementHandle.getFqName()
@@ -67,12 +68,18 @@ class NetBeansJavaClass(elementHandle: ElemHandle<TypeElement>, project: Project
     override val typeParameters: List<JavaTypeParameter>
         get() = elementHandle.getTypeParameters(project)
 
-    override val isInterface: Boolean = elementHandle.kind == ElementKind.INTERFACE
-    override val isAnnotationType: Boolean = elementHandle.kind == ElementKind.ANNOTATION_TYPE
-    override val isEnum: Boolean = elementHandle.kind == ElementKind.ENUM
-    override val isAbstract: Boolean = elementHandle.isAbstract(project)
-    override val isStatic: Boolean = elementHandle.isStatic(project)
-    override val isFinal: Boolean = elementHandle.isFinal(project)
+    override val isInterface 
+        get() = elementHandle.kind == ElementKind.INTERFACE
+    override val isAnnotationType 
+        get() = elementHandle.kind == ElementKind.ANNOTATION_TYPE
+    override val isEnum 
+        get() = elementHandle.kind == ElementKind.ENUM
+    override val isAbstract 
+        get() = elementHandle.isAbstract(project)
+    override val isStatic 
+        get() = elementHandle.isStatic(project)
+    override val isFinal 
+        get() = elementHandle.isFinal(project)
 
     override val lightClassOriginKind = null
 

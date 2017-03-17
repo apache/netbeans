@@ -16,7 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.resolve.lang.java.structure
 
-import org.jetbrains.kotlin.load.java.structure.JavaAnnotation
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationArgument
 import org.jetbrains.kotlin.load.java.structure.JavaAnnotationAsAnnotationArgument
 import org.jetbrains.kotlin.name.Name
@@ -30,11 +29,12 @@ import javax.lang.model.type.DeclaredType
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaAnnotationAsAnnotationArgument(val project: Project, name: Name,
+class NetBeansJavaAnnotationAsAnnotationArgument(val project: Project, 
+                                                 override val name: Name,
                                                  val typeHandle: TypeMirrorHandle<DeclaredType>,
                                                  val args: List<JavaAnnotationArgument>) :
         JavaAnnotationAsAnnotationArgument {
-    override val name: Name = name
-    override fun getAnnotation(): JavaAnnotation = NetBeansJavaAnnotation(project, typeHandle, args)
+    
+    override fun getAnnotation() = NetBeansJavaAnnotation(project, typeHandle, args)
 
 }

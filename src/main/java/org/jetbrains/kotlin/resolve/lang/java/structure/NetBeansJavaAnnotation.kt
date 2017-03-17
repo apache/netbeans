@@ -33,10 +33,9 @@ import javax.lang.model.type.DeclaredType
 */
 
 class NetBeansJavaAnnotation(val project: Project, val handle: TypeMirrorHandle<DeclaredType>,
-                             arguments: Collection<JavaAnnotationArgument>) :
+                             override val arguments: Collection<JavaAnnotationArgument>) :
         JavaAnnotation, JavaElement {
-    override val arguments: Collection<JavaAnnotationArgument> = arguments
-
+    
     override val classId: ClassId?
         get() = handle.computeClassId(project)
 

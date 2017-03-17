@@ -50,12 +50,10 @@ private fun create(value: Any, name: Name, info: CompilationController, project:
                     getMirrorArguments(value, info, project))
             }
             is VariableElement -> NetBeansJavaReferenceAnnotationArgument(ElemHandle.create(value, project), project)
-            is String -> NetBeansJavaLiteralAnnotationArgument(value, name)
-            is Class<*> -> NetBeansJavaClassObjectAnnotationArgument(value, name, project)
+            is TypeMirror -> NetBeansJavaClassObjectAnnotationArgument(value, name, project)
             is Collection<*> -> getArrayAnnotationArgument(value, name, info, project)
             is AnnotationValue -> create(value.value, name, info, project)
-            is TypeMirror -> NetBeansJavaLiteralAnnotationArgument(value.toString(), name)
-            else -> NetBeansJavaLiteralAnnotationArgument(value::class.java.toString(), name)
+            else -> NetBeansJavaLiteralAnnotationArgument(value, name)
         }
 
 private fun getArrayAnnotationArgument(values: Collection<*>, name: Name,

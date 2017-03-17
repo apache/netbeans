@@ -16,10 +16,12 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.resolve.lang.java.structure
 
+import javax.lang.model.type.TypeMirror
 import org.jetbrains.kotlin.load.java.structure.JavaClassObjectAnnotationArgument
 import org.jetbrains.kotlin.load.java.structure.JavaType
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.lang.java.*
+import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
 
 /*
@@ -28,10 +30,10 @@ import org.netbeans.api.project.Project
   Created on Sep 7, 2016
 */
 
-class NetBeansJavaClassObjectAnnotationArgument(val javaClass: Class<*>, override val name: Name,
+class NetBeansJavaClassObjectAnnotationArgument(val typeMirror: TypeMirror, override val name: Name,
                                                 val project: Project) : JavaClassObjectAnnotationArgument {
     override fun getReferencedType(): JavaType {
-        val handle = project.findTypeMirrorHandle(javaClass.canonicalName)
+        val handle = TypeMirrorHandle.create(typeMirror)
         return NetBeansJavaType.create(handle, project)
     }
 }

@@ -122,7 +122,7 @@ Portions Copyrighted 2016 Sun Microsystems, Inc.
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>0-1</release-version>
-                        <specification-version>1.120</specification-version>
+                        <specification-version>1.121</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

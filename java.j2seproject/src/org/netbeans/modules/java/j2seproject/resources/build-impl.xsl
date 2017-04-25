@@ -572,7 +572,11 @@ is divided into following sections:
                         <mkdir dir="${{empty.dir}}"/>
                         <mkdir dir="@{{apgeneratedsrcdir}}"/>
                         <condition property="processormodulepath.set">
-                            <length string="@{{toString:processormodulepath}}" when="greater" length="0"/>
+                            <resourcecount when="greater" count="0">
+                                <path>
+                                    <pathelement path="@{{processormodulepath}}"/>
+                                </path>
+                            </resourcecount>
                         </condition>
                         <javac>
                             <xsl:attribute name="srcdir">@{srcdir}</xsl:attribute>

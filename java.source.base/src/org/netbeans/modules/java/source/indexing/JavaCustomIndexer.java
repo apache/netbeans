@@ -579,35 +579,35 @@ public class JavaCustomIndexer extends CustomIndexer {
             if (cont) {
                 file = new File(classFolder, withoutExt + '.' + FileObjects.SIG);
                 if (file.exists()) {
-                    if (!javaContext.getFQNs().check(FileObjects.getBinaryName(file, classFolder), relURLPair.second())) {
-                        String fileName = file.getName();
-                        fileName = fileName.substring(0, fileName.lastIndexOf('.'));
-                        final String[][] patterns = new String[][]{
-                            new String[]{fileName + '.', "", FileObjects.SIG, FileObjects.RS, FileObjects.RAPT, FileObjects.RX},    //NOI18N
-                            new String[]{fileName + '$', null, FileObjects.SIG}                                                       //NOI18N
-                        };
-                        File parent = file.getParentFile();
-                        FilenameFilter filter = new FilenameFilter() {
+                    String fileName = file.getName();
+                    fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+                    final String[][] patterns = new String[][]{
+                        new String[]{fileName + '.', "", FileObjects.SIG, FileObjects.RS, FileObjects.RAPT, FileObjects.RX},    //NOI18N
+                        new String[]{fileName + '$', null, FileObjects.SIG}                                                       //NOI18N
+                    };
+                    File parent = file.getParentFile();
+                    FilenameFilter filter = new FilenameFilter() {
 
-                            @Override
-                            public boolean accept(File dir, String name) {
-                                for (final String[] pattern : patterns) {
-                                    if (name.startsWith(pattern[0])) {
-                                        final String ext = FileObjects.getExtension(name);
-                                        for (int i = 2; i< pattern.length; i++) {
-                                            if (pattern[i].equals(ext) && (pattern[1] == null || name.length() == pattern[0].length() + pattern[i].length())) {
-                                                return true;
-                                            }
+                        @Override
+                        public boolean accept(File dir, String name) {
+                            for (final String[] pattern : patterns) {
+                                if (name.startsWith(pattern[0])) {
+                                    final String ext = FileObjects.getExtension(name);
+                                    for (int i = 2; i< pattern.length; i++) {
+                                        if (pattern[i].equals(ext) && (pattern[1] == null || name.length() == pattern[0].length() + pattern[i].length())) {
+                                            return true;
                                         }
                                     }
                                 }
-                                return false;
                             }
-                        };
-                        final File[] children = parent.listFiles(filter);
-                        if (children != null) {
-                            for (File f : children) {
-                                String className = FileObjects.getBinaryName(f, classFolder);
+                            return false;
+                        }
+                    };
+                    final File[] children = parent.listFiles(filter);
+                    if (children != null) {
+                        for (File f : children) {
+                            String className = FileObjects.getBinaryName(f, classFolder);
+                            if (!javaContext.getFQNs().check(className, relURLPair.second())) {
                                 javaContext.getFQNs().remove(className, relURLPair.second());
                                 toDelete.add(
                                         FileObjects.MODULE_INFO.equals(className) ?

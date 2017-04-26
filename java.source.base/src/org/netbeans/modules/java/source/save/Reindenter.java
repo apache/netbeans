@@ -84,6 +84,8 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.text.BadLocationException;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -234,7 +236,10 @@ public class Reindenter implements IndentTask {
             ClassLoader origCL = Thread.currentThread().getContextClassLoader();
             try {
                 Thread.currentThread().setContextClassLoader(Reindenter.class.getClassLoader());
-                JavacTaskImpl javacTask = (JavacTaskImpl)JavacTool.create().getTask(null, null, diagnostic -> {
+                JavacTaskImpl javacTask = (JavacTaskImpl)JavacTool.create().getTask(null, null, new DiagnosticListener<JavaFileObject>() {
+                    @Override
+                    public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
+                    }
                 }, Collections.singletonList("-proc:none"), null, Collections.<JavaFileObject>emptySet()); //NOI18N
                 com.sun.tools.javac.util.Context ctx = javacTask.getContext();
                 JavaCompiler.instance(ctx).genEndPos = true;

@@ -52,19 +52,26 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import javax.swing.event.ChangeListener;
+import org.apache.tools.ant.module.api.AntProjectCookie;
 import org.apache.tools.ant.module.api.support.ActionUtils;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
@@ -86,19 +93,28 @@ import org.netbeans.spi.project.LookupProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.netbeans.spi.project.support.ant.PropertyEvaluator;
+import org.netbeans.spi.project.support.ant.PropertyUtils;
 import org.openide.execution.ExecutorTask;
+import org.openide.filesystems.FileAttributeEvent;
+import org.openide.filesystems.FileChangeListener;
+import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.modules.Places;
 import org.openide.util.BaseUtilities;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.Pair;
 import org.openide.util.Parameters;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.xml.XMLUtil;
 
 /** Action provider of the J2SE project. This is the place where to do
  * strange things to J2SE actions. E.g. compile-single.
@@ -367,7 +383,7 @@ public class J2SEActionProvider extends BaseActionProvider {
     }
 
     private static final class CosAction implements BuildArtifactMapper.ArtifactsUpdated,
-            CompileOnSaveAction, PropertyChangeListener {
+            CompileOnSaveAction, PropertyChangeListener, FileChangeListener {
         private static Map<Project,Reference<CosAction>> instances = new WeakHashMap<>();
         private static final String COS_UPDATED = "$cos.update";    //NOI18N
         private static final String COS_CUSTOM = "$cos.update.resources";    //NOI18N
@@ -388,6 +404,7 @@ public class J2SEActionProvider extends BaseActionProvider {
         private final BuildArtifactMapper mapper;
         private final Map</*@GuardedBy("this")*/URL,BuildArtifactMapper.ArtifactsUpdated> currentListeners;
         private final ChangeSupport cs;
+        private final AtomicReference<Pair<URI,Collection<File>>> importantFilesCache;
         private volatile Object targetCache;
         private volatile Object updatedFSProp;
 
@@ -403,6 +420,7 @@ public class J2SEActionProvider extends BaseActionProvider {
             this.mapper = new BuildArtifactMapper();
             this.currentListeners = new HashMap<>();
             this.cs = new ChangeSupport(this);
+            this.importantFilesCache = new AtomicReference<>(Pair.of(null,null));
             this.eval.addPropertyChangeListener(WeakListeners.propertyChange(this, this.eval));
             this.src.addPropertyChangeListener(WeakListeners.propertyChange(this, this.src));
             this.tests.addPropertyChangeListener(WeakListeners.propertyChange(this, this.tests));
@@ -446,20 +464,22 @@ public class J2SEActionProvider extends BaseActionProvider {
                 if (target != null) {
                     final FileObject buildXml = owner.findBuildXml();
                     if (buildXml != null) {
-                        try {
-                                ActionUtils.runTarget(
-                                    buildXml,
-                                    new String[] {target},
-                                    null,
-                                        null);
-                        } catch (IOException ioe) {
-                            LOG.log(
-                                    Level.WARNING,
-                                    "Cannot execute pos compile on save target: {0} in: {1}",   //NOI18N
-                                    new Object[]{
-                                        target,
-                                        FileUtil.getFileDisplayName(buildXml)
-                                    });
+                        if (checkImportantFiles(buildXml)) {
+                            try {
+                                    ActionUtils.runTarget(
+                                        buildXml,
+                                        new String[] {target},
+                                        null,
+                                            null);
+                            } catch (IOException ioe) {
+                                LOG.log(
+                                        Level.WARNING,
+                                        "Cannot execute pos compile on save target: {0} in: {1}",   //NOI18N
+                                        new Object[]{
+                                            target,
+                                            FileUtil.getFileDisplayName(buildXml)
+                                        });
+                            }
                         }
                     }
                 }
@@ -492,7 +512,37 @@ public class J2SEActionProvider extends BaseActionProvider {
         @Override
         public void removeChangeListener(@NonNull final ChangeListener listener) {
             cs.removeChangeListener(listener);
-        }               
+        }
+
+        @Override
+        public void fileDeleted(FileEvent fe) {
+            resetImportantFilesCache();
+        }
+
+        @Override
+        public void fileChanged(FileEvent fe) {
+            resetImportantFilesCache();
+        }
+
+        @Override
+        public void fileFolderCreated(FileEvent fe) {
+            resetImportantFilesCache();
+        }
+
+        @Override
+        public void fileDataCreated(FileEvent fe) {
+            resetImportantFilesCache();
+        }
+
+        @Override
+        public void fileRenamed(FileRenameEvent fe) {
+            resetImportantFilesCache();
+        }
+
+        @Override
+        public void fileAttributeChanged(FileAttributeEvent fe) {
+            //Not important
+        }
 
         private void updateRootsListeners() {
             final Set<URL> newRoots = new HashSet<>();
@@ -557,52 +607,54 @@ public class J2SEActionProvider extends BaseActionProvider {
             if (target != null) {
                 final FileObject buildXml = owner.findBuildXml();
                 if (buildXml != null) {
-                    try {
-                        final FileObject cosScript = getCosScript();
-                        final Iterable<? extends File> updated = ctx.getUpdated();
-                        final Iterable<? extends File> deleted = ctx.getDeleted();
-                        final File root = ctx.isCopyResources() ?
-                                BaseUtilities.toFile(ctx.getSourceRoot().toURI()) :
-                                ctx.getCacheRoot();
-                        final String includes = createIncludes(root, updated);
-                        if (includes != null) {
-                            final Properties props = new Properties();
-                            props.setProperty(PROP_TARGET, target);
-                            props.setProperty(PROP_SCRIPT, FileUtil.toFile(buildXml).getAbsolutePath());
-                            props.setProperty(PROP_SRCDIR, root.getAbsolutePath());
-                            props.setProperty(PROP_INCLUDES, includes);
-                            props.setProperty(COS_CUSTOM, getUpdatedFileSetProperty());
-                            RUNNER.execute(()-> {
-                                try {
-                                    final ExecutorTask task = ActionUtils.runTarget(
-                                            cosScript,
-                                            new String[] {TARGET},
-                                            props,
-                                            null);
-                                    task.result();
-                                } catch (IOException | IllegalArgumentException ex) {
-                                    LOG.log(
-                                        Level.WARNING,
-                                        "Cannot execute update targer: {0} in: {1} due to: {2}",   //NOI18N
-                                        new Object[]{
-                                            target,
-                                            FileUtil.getFileDisplayName(buildXml),
-                                            ex.getMessage()
-                                        });
-                                }
-                            });
-                        } else {
-                            LOG.warning("BuildArtifactMapper artifacts do not provide attributes.");    //NOI18N
-                        }
-                    } catch (IOException | URISyntaxException e) {
-                        LOG.log(
-                                Level.WARNING,
-                                "Cannot execute update targer: {0} in: {1} due to: {2}",   //NOI18N
-                                new Object[]{
-                                    target,
-                                    FileUtil.getFileDisplayName(buildXml),
-                                    e.getMessage()
+                    if (checkImportantFiles(buildXml)) {
+                        try {
+                            final FileObject cosScript = getCosScript();
+                            final Iterable<? extends File> updated = ctx.getUpdated();
+                            final Iterable<? extends File> deleted = ctx.getDeleted();
+                            final File root = ctx.isCopyResources() ?
+                                    BaseUtilities.toFile(ctx.getSourceRoot().toURI()) :
+                                    ctx.getCacheRoot();
+                            final String includes = createIncludes(root, updated);
+                            if (includes != null) {
+                                final Properties props = new Properties();
+                                props.setProperty(PROP_TARGET, target);
+                                props.setProperty(PROP_SCRIPT, FileUtil.toFile(buildXml).getAbsolutePath());
+                                props.setProperty(PROP_SRCDIR, root.getAbsolutePath());
+                                props.setProperty(PROP_INCLUDES, includes);
+                                props.setProperty(COS_CUSTOM, getUpdatedFileSetProperty());
+                                RUNNER.execute(()-> {
+                                    try {
+                                        final ExecutorTask task = ActionUtils.runTarget(
+                                                cosScript,
+                                                new String[] {TARGET},
+                                                props,
+                                                null);
+                                        task.result();
+                                    } catch (IOException | IllegalArgumentException ex) {
+                                        LOG.log(
+                                            Level.WARNING,
+                                            "Cannot execute update targer: {0} in: {1} due to: {2}",   //NOI18N
+                                            new Object[]{
+                                                target,
+                                                FileUtil.getFileDisplayName(buildXml),
+                                                ex.getMessage()
+                                            });
+                                    }
                                 });
+                            } else {
+                                LOG.warning("BuildArtifactMapper artifacts do not provide attributes.");    //NOI18N
+                            }
+                        } catch (IOException | URISyntaxException e) {
+                            LOG.log(
+                                    Level.WARNING,
+                                    "Cannot execute update targer: {0} in: {1} due to: {2}",   //NOI18N
+                                    new Object[]{
+                                        target,
+                                        FileUtil.getFileDisplayName(buildXml),
+                                        e.getMessage()
+                                    });
+                        }
                     }
                 }
             }
@@ -637,8 +689,81 @@ public class J2SEActionProvider extends BaseActionProvider {
                 }
             }
             return cosScript;
-        }        
-        
+        }
+
+        private boolean checkImportantFiles(@NonNull final FileObject buildScript) {
+            final URI currentURI = buildScript.toURI();
+            final Pair<URI,Collection<File>> cacheLine = importantFilesCache.get();
+            final URI lastURI = cacheLine.first();
+            Collection<File> importantFiles = cacheLine.second();
+            if (!currentURI.equals(lastURI) || importantFiles == null) {
+                Optional.ofNullable(lastURI)
+                        .map(BaseUtilities::toFile)
+                        .filter((f) -> !currentURI.equals(lastURI))
+                        .ifPresent(this::safeRemoveFileChangeListener);
+                Optional.ofNullable(FileUtil.toFile(buildScript))
+                        .filter((f) -> !currentURI.equals(lastURI))
+                        .ifPresent(this::safeAddFileChangeListener);
+                importantFiles = new ArrayList<>();
+                try {
+                    final File base = FileUtil.toFile(buildScript.getParent());
+                    if (base != null) {
+                        Optional.ofNullable(DataObject.find(buildScript).getLookup().lookup(AntProjectCookie.class))
+                                .map(AntProjectCookie::getProjectElement)
+                                .map(XMLUtil::findSubElements)
+                                .map(Collection::stream)
+                                .orElse(Stream.empty())
+                                .filter((e) -> "import".equals(e.getNodeName()))    //NOI18N
+                                .map((e) -> e.getAttribute("file"))                 //NOI18N
+                                .filter((p) -> !p.isEmpty())
+                                .map((p) -> PropertyUtils.resolveFile(base, p))
+                                .forEach(importantFiles::add);
+                    }
+                } catch (DataObjectNotFoundException e) {
+                    LOG.log(
+                            Level.WARNING,
+                            "No DataObject for: {0}, reason: {1}",  //NOI18N
+                            new Object[]{
+                                FileUtil.getFileDisplayName(buildScript),
+                                e.getMessage()
+                            });
+                }
+                importantFilesCache.set(Pair.of(currentURI, importantFiles));
+            }
+            for (File importantFile : importantFiles) {
+                if (!importantFile.isFile()) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private void resetImportantFilesCache() {
+            while (true) {
+                final Pair<URI, Collection<File>> expected = importantFilesCache.get();
+                final Pair<URI, Collection<File>> update = Pair.of(expected.first(), null);
+                if (importantFilesCache.compareAndSet(expected, update)) {
+                    break;
+                }
+            }
+        }
+
+        private void safeAddFileChangeListener(@NonNull final File f) {
+            try {
+                FileUtil.addFileChangeListener(this, f);
+            } catch (IllegalArgumentException e) {
+                //not important
+            }
+        }
+
+        private void safeRemoveFileChangeListener(@NonNull final File f) {
+            try {
+                FileUtil.removeFileChangeListener(this, f);
+            } catch (IllegalArgumentException e) {
+                //not important
+            }
+        }
+
         @CheckForNull
         private static String createIncludes(
                 @NonNull final File root,

@@ -67,14 +67,18 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javax.swing.event.ChangeListener;
 import org.apache.tools.ant.module.api.AntProjectCookie;
+import org.apache.tools.ant.module.api.AntTargetExecutor;
 import org.apache.tools.ant.module.api.support.ActionUtils;
+import org.apache.tools.ant.module.api.support.AntScriptUtils;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.BuildArtifactMapper;
@@ -109,6 +113,7 @@ import org.openide.util.BaseUtilities;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 import org.openide.util.Parameters;
 import org.openide.util.RequestProcessor;
@@ -466,11 +471,12 @@ public class J2SEActionProvider extends BaseActionProvider {
                     if (buildXml != null) {
                         if (checkImportantFiles(buildXml)) {
                             try {
-                                    ActionUtils.runTarget(
+                                    runTargetInDedicatedTab(
+                                        NbBundle.getMessage(J2SEActionProvider.class, "LBL_CompileOnSaveUpdate"),
                                         buildXml,
                                         new String[] {target},
                                         null,
-                                            null);
+                                        null);
                             } catch (IOException ioe) {
                                 LOG.log(
                                         Level.WARNING,
@@ -625,7 +631,8 @@ public class J2SEActionProvider extends BaseActionProvider {
                                 props.setProperty(COS_CUSTOM, getUpdatedFileSetProperty());
                                 RUNNER.execute(()-> {
                                     try {
-                                        final ExecutorTask task = ActionUtils.runTarget(
+                                        final ExecutorTask task = runTargetInDedicatedTab(
+                                                NbBundle.getMessage(J2SEActionProvider.class, "LBL_CompileOnSaveUpdate"),
                                                 cosScript,
                                                 new String[] {TARGET},
                                                 props,
@@ -762,6 +769,37 @@ public class J2SEActionProvider extends BaseActionProvider {
             } catch (IllegalArgumentException e) {
                 //not important
             }
+        }
+
+        @NonNull
+        private static ExecutorTask runTargetInDedicatedTab(
+                @NullAllowed final String tabName,
+                @NonNull final FileObject buildXml,
+                @NullAllowed final String[] targetNames,
+                @NullAllowed final Properties properties,
+                @NullAllowed final Set<String> concealedProperties) throws IOException, IllegalArgumentException {
+            Parameters.notNull("buildXml", buildXml);   //NOI18N
+            if (targetNames != null && targetNames.length == 0) {
+                throw new IllegalArgumentException("No targets supplied"); // NOI18N
+            }
+            final AntProjectCookie apc = AntScriptUtils.antProjectCookieFor(buildXml);
+            final AntTargetExecutor.Env execenv = new AntTargetExecutor.Env();
+            if (properties != null) {
+                Properties p = execenv.getProperties();
+                p.putAll(properties);
+                execenv.setProperties(p);
+            }
+            if (concealedProperties != null) {
+                execenv.setConcealedProperties(concealedProperties);
+            }
+            execenv.setSaveAllDocuments(false);
+            execenv.setPreferredName(tabName);
+            final Predicate<String> p = (s) -> tabName == null ?
+                    true :
+                    tabName.equals(s);
+            execenv.setTabReplaceStrategy(p, p);
+            return AntTargetExecutor.createTargetExecutor(execenv)
+                    .execute(apc, targetNames);
         }
 
         @CheckForNull

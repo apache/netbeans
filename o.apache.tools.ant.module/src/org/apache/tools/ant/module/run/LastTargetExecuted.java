@@ -48,6 +48,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 import org.apache.tools.ant.module.AntModule;
 import org.apache.tools.ant.module.api.AntProjectCookie;
@@ -74,6 +75,7 @@ public class LastTargetExecuted implements BuildExecutionSupport.ActionItem {
     //private static int verbosity;
     private String[] targets;
     private Map<String,String> properties;
+    private Set<String> concealedProperties;
     private String displayName;
     private Thread thread;
     private Boolean shouldSaveAllDocs;
@@ -85,6 +87,7 @@ public class LastTargetExecuted implements BuildExecutionSupport.ActionItem {
             File buildScript,
             String[] targets,
             Map<String,String> properties,
+            @NonNull final Set<String> concealedProperties,
             String displayName,
             @NullAllowed final Boolean shouldSaveAllDocs,
             @NonNull final Predicate<String> canReplace,
@@ -95,6 +98,7 @@ public class LastTargetExecuted implements BuildExecutionSupport.ActionItem {
         //LastTargetExecuted.verbosity = verbosity;
         rec.targets = targets;
         rec.properties = properties;
+        rec.concealedProperties = concealedProperties;
         rec.displayName = displayName;
         rec.thread = thread;
         rec.shouldSaveAllDocs = shouldSaveAllDocs;
@@ -136,6 +140,7 @@ public class LastTargetExecuted implements BuildExecutionSupport.ActionItem {
         TargetExecutor t = new TargetExecutor(apc, exec.targets);
         //t.setVerbosity(verbosity);
         t.setProperties(exec.properties);
+        t.setConcealedProperties(exec.concealedProperties);
         t.setDisplayName(exec.displayName); // #140999: do not recalculate
         if (exec.shouldSaveAllDocs != null) {
             t.setSaveAllDocuments(exec.shouldSaveAllDocs);

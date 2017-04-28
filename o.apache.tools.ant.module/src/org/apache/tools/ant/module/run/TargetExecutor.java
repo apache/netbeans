@@ -522,6 +522,7 @@ public final class TargetExecutor implements Runnable {
                 buildFile, /*verbosity,*/
                 targetNames != null ? targetNames.toArray(new String[targetNames.size()]) : null,
                 properties,
+                concealedProperties,
                 suggestedDisplayName != null ? suggestedDisplayName : getProcessDisplayName(pcookie, targetNames),
                 shouldSaveAllDocs,
                 canReplace,

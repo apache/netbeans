@@ -132,8 +132,8 @@ public final class TargetExecutor implements Runnable {
     private String displayName;
     private String suggestedDisplayName;
     private Boolean shouldSaveAllDocs;
-    private Predicate<String> canBeReplaced = (s) -> true;
     private Predicate<String> canReplace = (s) -> true;
+    private Predicate<String> canBeReplaced = (s) -> true;
     private volatile Set<String> concealedProperties;
 
     /** targets may be null to indicate default target */
@@ -250,6 +250,9 @@ public final class TargetExecutor implements Runnable {
         private Map<String,String> properties;
         private Set<String> concealedProperties;
         private String displayName;
+        private Boolean shouldSaveAllDocs;
+        private Predicate<String> canReplace;
+        private Predicate<String> canBeReplaced;
 
         public RerunAction(TargetExecutor prototype, boolean withModifications) {
             this.withModifications = withModifications;
@@ -268,6 +271,9 @@ public final class TargetExecutor implements Runnable {
             properties = prototype.properties;
             concealedProperties = prototype.concealedProperties;
             displayName = prototype.suggestedDisplayName;
+            shouldSaveAllDocs = prototype.shouldSaveAllDocs;
+            canReplace = prototype.canReplace;
+            canBeReplaced = prototype.canBeReplaced;
         }
 
         @Override
@@ -310,6 +316,10 @@ public final class TargetExecutor implements Runnable {
                     if (displayName != null) {
                         exec.setDisplayName(displayName);
                     }
+                    if (shouldSaveAllDocs != null) {
+                        exec.setSaveAllDocuments(shouldSaveAllDocs);
+                    }
+                    exec.setTabReplaceStrategy(canReplace, canBeReplaced);
                     exec.execute();
                 }
             } catch (IOException x) {
@@ -508,10 +518,15 @@ public final class TargetExecutor implements Runnable {
         }
 
         // #139185: do not record verbosity level; always pick it up from Ant Settings.
-        thisExec[0] = LastTargetExecuted.record(buildFile, /*verbosity,*/
+        thisExec[0] = LastTargetExecuted.record(
+                buildFile, /*verbosity,*/
                 targetNames != null ? targetNames.toArray(new String[targetNames.size()]) : null,
                 properties,
-                suggestedDisplayName != null ? suggestedDisplayName : getProcessDisplayName(pcookie, targetNames), Thread.currentThread());
+                suggestedDisplayName != null ? suggestedDisplayName : getProcessDisplayName(pcookie, targetNames),
+                shouldSaveAllDocs,
+                canReplace,
+                canBeReplaced,
+                Thread.currentThread());
         sa.t = thisExec[0];
         
         // Don't hog the CPU, the build might take a while:

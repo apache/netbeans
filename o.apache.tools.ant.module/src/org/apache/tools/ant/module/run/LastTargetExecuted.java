@@ -48,10 +48,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Predicate;
 import org.apache.tools.ant.module.AntModule;
 import org.apache.tools.ant.module.api.AntProjectCookie;
 import org.apache.tools.ant.module.api.support.AntScriptUtils;
 import org.apache.tools.ant.module.bridge.AntBridge;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileObject;
@@ -73,9 +76,20 @@ public class LastTargetExecuted implements BuildExecutionSupport.ActionItem {
     private Map<String,String> properties;
     private String displayName;
     private Thread thread;
-    
+    private Boolean shouldSaveAllDocs;
+    private Predicate<String> canReplace;
+    private Predicate<String> canBeReplaced;
+
     /** Called from {@link TargetExecutor}. */
-    static LastTargetExecuted record(File buildScript, String[] targets, Map<String,String> properties, String displayName, Thread thread) {
+    static LastTargetExecuted record(
+            File buildScript,
+            String[] targets,
+            Map<String,String> properties,
+            String displayName,
+            @NullAllowed final Boolean shouldSaveAllDocs,
+            @NonNull final Predicate<String> canReplace,
+            @NonNull final Predicate<String> canBeReplaced,
+            Thread thread) {
         LastTargetExecuted rec = new LastTargetExecuted();
         rec.buildScript = buildScript;
         //LastTargetExecuted.verbosity = verbosity;
@@ -83,6 +97,9 @@ public class LastTargetExecuted implements BuildExecutionSupport.ActionItem {
         rec.properties = properties;
         rec.displayName = displayName;
         rec.thread = thread;
+        rec.shouldSaveAllDocs = shouldSaveAllDocs;
+        rec.canReplace = canReplace;
+        rec.canBeReplaced = canBeReplaced;
         BuildExecutionSupport.registerRunningItem(rec);
         return rec;
     }
@@ -120,6 +137,10 @@ public class LastTargetExecuted implements BuildExecutionSupport.ActionItem {
         //t.setVerbosity(verbosity);
         t.setProperties(exec.properties);
         t.setDisplayName(exec.displayName); // #140999: do not recalculate
+        if (exec.shouldSaveAllDocs != null) {
+            t.setSaveAllDocuments(exec.shouldSaveAllDocs);
+        }
+        t.setTabReplaceStrategy(exec.canReplace, exec.canBeReplaced);
         return t.execute();
     }
     

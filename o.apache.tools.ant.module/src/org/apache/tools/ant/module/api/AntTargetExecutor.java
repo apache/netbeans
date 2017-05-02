@@ -118,6 +118,7 @@ final public class AntTargetExecutor {
             assert env.canBeReplaced != null;
             te.setTabReplaceStrategy(env.canReplace,env.canBeReplaced);
         }
+        te.setUserAction(env.userAction);
         if (env.getLogger() == null) {
             return te.execute();
         } else {
@@ -139,6 +140,7 @@ final public class AntTargetExecutor {
         private String preferredName;
         private Predicate<String> canReplace;
         private Predicate<String> canBeReplaced;
+        private boolean userAction;
 
         /** Create instance of Env class describing environment for Ant target execution.
          */
@@ -147,6 +149,7 @@ final public class AntTargetExecutor {
             properties = new Properties();
             properties.putAll(AntSettings.getProperties());
             concealedProperties = Collections.emptySet();
+            userAction = true;
         }
 
         /**
@@ -258,6 +261,19 @@ final public class AntTargetExecutor {
             Parameters.notNull("canBeReplaced", canBeReplaced); //NOI18N
             this.canReplace = canReplace;
             this.canBeReplaced = canBeReplaced;
+        }
+
+        /**
+         * Marks the execution as an user action.
+         * The executions marked as user actions are registered in the
+         * UI support {@link org.netbeans.spi.project.ui.support.BuildExecutionSupport}.
+         * By default the execution is an user action.
+         * @param userAction if true the execution is registered into
+         * the {@link org.netbeans.spi.project.ui.support.BuildExecutionSupport}
+         * @since 3.85
+         */
+        public void setUserAction(final boolean userAction) {
+            this.userAction = userAction;
         }
     }
 }

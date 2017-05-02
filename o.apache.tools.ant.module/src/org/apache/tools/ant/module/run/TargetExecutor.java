@@ -134,6 +134,7 @@ public final class TargetExecutor implements Runnable {
     private Boolean shouldSaveAllDocs;
     private Predicate<String> canReplace = (s) -> true;
     private Predicate<String> canBeReplaced = (s) -> true;
+    private boolean userAction = true;
     private volatile Set<String> concealedProperties;
 
     /** targets may be null to indicate default target */
@@ -171,6 +172,10 @@ public final class TargetExecutor implements Runnable {
         Parameters.notNull("canBeReplaced", canBeReplaced); //NOI18N
         this.canReplace = canReplace;
         this.canBeReplaced = canBeReplaced;
+    }
+    
+    public void setUserAction(final boolean userAction) {
+        this.userAction = userAction;
     }
     
     private static String getProcessDisplayName(AntProjectCookie pcookie, List<String> targetNames) {
@@ -527,7 +532,8 @@ public final class TargetExecutor implements Runnable {
                 shouldSaveAllDocs,
                 canReplace,
                 canBeReplaced,
-                Thread.currentThread());
+                Thread.currentThread(),
+                userAction);
         sa.t = thisExec[0];
         
         // Don't hog the CPU, the build might take a while:

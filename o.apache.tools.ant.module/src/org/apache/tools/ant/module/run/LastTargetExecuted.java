@@ -69,7 +69,8 @@ import org.openide.util.RequestProcessor;
  */
 public class LastTargetExecuted implements BuildExecutionSupport.ActionItem {
     
-    private LastTargetExecuted() {}
+    private LastTargetExecuted() {
+    }
     
     private File buildScript;
     //private static int verbosity;
@@ -81,6 +82,7 @@ public class LastTargetExecuted implements BuildExecutionSupport.ActionItem {
     private Boolean shouldSaveAllDocs;
     private Predicate<String> canReplace;
     private Predicate<String> canBeReplaced;
+    private boolean wasRegistered;
 
     /** Called from {@link TargetExecutor}. */
     static LastTargetExecuted record(
@@ -92,7 +94,8 @@ public class LastTargetExecuted implements BuildExecutionSupport.ActionItem {
             @NullAllowed final Boolean shouldSaveAllDocs,
             @NonNull final Predicate<String> canReplace,
             @NonNull final Predicate<String> canBeReplaced,
-            Thread thread) {
+            Thread thread,
+            final boolean shouldRegister) {
         LastTargetExecuted rec = new LastTargetExecuted();
         rec.buildScript = buildScript;
         //LastTargetExecuted.verbosity = verbosity;
@@ -104,14 +107,19 @@ public class LastTargetExecuted implements BuildExecutionSupport.ActionItem {
         rec.shouldSaveAllDocs = shouldSaveAllDocs;
         rec.canReplace = canReplace;
         rec.canBeReplaced = canBeReplaced;
-        BuildExecutionSupport.registerRunningItem(rec);
+        if (shouldRegister) {
+            BuildExecutionSupport.registerRunningItem(rec);
+        }
+        rec.wasRegistered = shouldRegister;
         return rec;
     }
 
     static void finish(LastTargetExecuted exc) {
-        BuildExecutionSupport.registerFinishedItem(exc);
+        if (exc.wasRegistered) {
+            BuildExecutionSupport.registerFinishedItem(exc);
+        }
     }
-    
+
     /**
      * Get the last build script to be run.
      * @return the last-run build script, or null if nothing has been run yet (or the build script disappeared etc.)

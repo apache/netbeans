@@ -798,6 +798,7 @@ public class J2SEActionProvider extends BaseActionProvider {
                     true :
                     tabName.equals(s);
             execenv.setTabReplaceStrategy(p, p);
+            execenv.setUserAction(false);
             return AntTargetExecutor.createTargetExecutor(execenv)
                     .execute(apc, targetNames);
         }

@@ -55,7 +55,7 @@ made subject to such option by the copyright holder.
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>3</release-version>
-                        <specification-version>3.84</specification-version>
+                        <specification-version>3.85</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

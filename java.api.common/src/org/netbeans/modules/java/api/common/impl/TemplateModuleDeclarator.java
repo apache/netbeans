@@ -211,9 +211,10 @@ public final class TemplateModuleDeclarator implements CreateFromTemplateDecorat
             }
         }
         if (classResource != null) {
-            FileObject r = searchPath.findOwnerRoot(classResource);
+            final FileObject r = searchPath.findOwnerRoot(classResource);
             for (ClassPath.Entry e : searchPath.entries()) {
-                if (e.getRoot().equals(r)) {
+                final FileObject er = e.getRoot();
+                if (er != null && er.equals(r)) {
                     String name = SourceUtils.getModuleName(e.getURL(), true);
                     moduleNames.add(name);
                 }

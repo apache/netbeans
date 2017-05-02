@@ -745,9 +745,6 @@ public class JavacParser extends Parser {
                             .filter((modName) -> modName != null)
                             .forEach(additionalModules::add);
                 }
-                if (additionalModules.isEmpty()) {
-                    additionalModules.add("ALL-MODULE-PATH");
-                }
             }
             final FileObject artefact = root != null ?
                     root :

@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.maven.classpath;
 
+import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,8 +75,9 @@ public class TestRuntimeClassPathImpl extends AbstractProjectClassPathImpl {
         }
         List<Artifact> arts = prj.getTestArtifacts();
         for (Artifact art : arts) {
-            if (art.getFile() != null) {
-                lst.add(Utilities.toURI(art.getFile()));
+            File f = getFile(art);
+            if (f != null) {
+                lst.add(Utilities.toURI(f));
             } else {
                 //NOPMD   //null means dependencies were not resolved..
             }

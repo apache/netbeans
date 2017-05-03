@@ -785,6 +785,7 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
                 return null;
             }
             URI uri = org.openide.util.Utilities.toURI(art.getFile());
+            // TODO should be patched, along with other uses of Artifact.getFile among nodes
             return FileOwnerQuery.getOwner(uri);
         }
 

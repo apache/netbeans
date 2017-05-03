@@ -46,6 +46,7 @@ package org.netbeans.modules.editor.java;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 
@@ -93,7 +94,21 @@ public class MethodParamsTipPaintComponent extends JToolTip {
         Rectangle r = g.getClipBounds();
         g.fillRect(r.x, r.y, r.width, r.height);
         g.setColor(getForeground());
-        draw(g);
+
+        Object value = (Map)(Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")); //NOI18N
+        Map renderingHints = (value instanceof Map) ? (java.util.Map)value : null;
+        if (renderingHints != null && g instanceof Graphics2D) {
+            Graphics2D g2d = (Graphics2D) g;
+            RenderingHints oldHints = g2d.getRenderingHints();
+            g2d.addRenderingHints(renderingHints);
+            try {
+                draw(g2d);
+            } finally {
+                g2d.setRenderingHints(oldHints);
+            }
+        } else {
+            draw(g);
+        }
     }
 
     protected void draw(Graphics g) {

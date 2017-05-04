@@ -2148,10 +2148,15 @@ is divided into following sections:
             </target>
 
             <target name ="-check-module-main-class" depends="init,compile">
+                <pathconvert property="main.class.file">
+                    <string value="${{main.class}}"/>
+                    <unpackagemapper from="*" to="*.class"/>
+                </pathconvert>
                 <condition property="do.module.main.class">
                     <and>
                         <isset property="main.class.available"/>
                         <available file="${{build.classes.dir}}/module-info.class"/>
+                        <available file="${{build.classes.dir}}/${{main.class.file}}"/>
                         <isset property="libs.CopyLibs.classpath"/>
                         <available classpath="${{libs.CopyLibs.classpath}}" classname="org.netbeans.modules.java.j2seproject.moduletask.ModuleMainClass"/>
                     </and>

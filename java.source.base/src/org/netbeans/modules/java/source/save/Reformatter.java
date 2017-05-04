@@ -4241,6 +4241,12 @@ public class Reformatter implements ReformatTask {
             for (Iterator<? extends Tree> it = trees.iterator(); it.hasNext();) {
                 Tree impl = it.next();
                 if (wrapAnnotation && impl.getKind() == Tree.Kind.ANNOTATION) {
+                    if (!first) {
+                        boolean containedNewLine = spaces(spaceBeforeSeparator ? 1 : 0, false);
+                        if (separator.equals(accept(separator)) && containedNewLine) {
+                            newline();
+                        }
+                    }
                     wrapTree(CodeStyle.WrapStyle.WRAP_ALWAYS, alignIndent, spaceAfterSeparator ? 1 : 0, impl);
                 } else if (impl.getKind() == Tree.Kind.ERRONEOUS) {
                     scan(impl, null);

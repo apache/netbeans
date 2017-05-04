@@ -253,7 +253,7 @@ parser code {:
 /* terminals */
 
 terminal  String T_EXIT;
-terminal  T_IF;
+terminal  String T_IF;
 terminal  String T_LNUMBER;
 terminal  String T_DNUMBER;
 terminal  String T_STRING;
@@ -263,56 +263,56 @@ terminal  String T_NUM_STRING;
 terminal  T_INLINE_HTML;
 terminal  String T_ENCAPSED_AND_WHITESPACE;
 terminal  String T_CONSTANT_ENCAPSED_STRING;
-terminal  T_ECHO;
-terminal  T_DO;
-terminal  T_WHILE;
-terminal  T_ENDWHILE;
-terminal  T_FOR;
-terminal  T_ENDFOR;
-terminal  T_FOREACH;
-terminal  T_ENDFOREACH;
-terminal  T_DECLARE;
-terminal  T_ENDDECLARE;
-terminal  T_INSTANCEOF;
-terminal  T_CLONE;
-terminal  T_AS;
-terminal  T_SWITCH;
-terminal  T_ENDSWITCH;
-terminal  T_CASE;
-terminal  T_DEFAULT;
-terminal  T_BREAK;
-terminal  T_CONTINUE;
-terminal  T_GOTO;
-terminal  T_FUNCTION;
-terminal  T_CONST;
-terminal  T_RETURN;
-terminal  T_YIELD;
+terminal  String T_ECHO;
+terminal  String T_DO;
+terminal  String T_WHILE;
+terminal  String T_ENDWHILE;
+terminal  String T_FOR;
+terminal  String T_ENDFOR;
+terminal  String T_FOREACH;
+terminal  String T_ENDFOREACH;
+terminal  String T_DECLARE;
+terminal  String T_ENDDECLARE;
+terminal  String T_INSTANCEOF;
+terminal  String T_CLONE;
+terminal  String T_AS;
+terminal  String T_SWITCH;
+terminal  String T_ENDSWITCH;
+terminal  String T_CASE;
+terminal  String T_DEFAULT;
+terminal  String T_BREAK;
+terminal  String T_CONTINUE;
+terminal  String T_GOTO;
+terminal  String T_FUNCTION;
+terminal  String T_CONST;
+terminal  String T_RETURN;
+terminal  String T_YIELD;
 terminal  T_YIELD_FROM;
-terminal  T_TRY;
-terminal  T_CATCH;
-terminal  T_THROW;
-terminal  T_FINALLY;
-terminal  T_USE;
-terminal  T_GLOBAL;
-terminal  T_VAR;
+terminal  String T_TRY;
+terminal  String T_CATCH;
+terminal  String T_THROW;
+terminal  String T_FINALLY;
+terminal  String T_USE;
+terminal  String T_GLOBAL;
+terminal  String T_VAR;
 terminal  String T_UNSET;
 terminal  String T_ISSET;
 terminal  String T_EMPTY;
 terminal  T_HALT_COMPILER;
-terminal  T_CLASS;
-terminal  T_INTERFACE;
-terminal  T_EXTENDS;
-terminal  T_IMPLEMENTS;
+terminal  String T_CLASS;
+terminal  String T_INTERFACE;
+terminal  String T_EXTENDS;
+terminal  String T_IMPLEMENTS;
 terminal  T_OBJECT_OPERATOR;
 terminal  T_DOUBLE_ARROW;
-terminal  T_LIST;
-terminal  T_ARRAY;
-terminal  T_CALLABLE;
-terminal  T_CLASS_C;
-terminal  T_TRAIT_C;
-terminal  T_METHOD_C;
-terminal  T_FUNC_C;
-terminal  T_LINE;
+terminal  String T_LIST;
+terminal  String T_ARRAY;
+terminal  String T_CALLABLE;
+terminal  String T_CLASS_C;
+terminal  String T_TRAIT_C;
+terminal  String T_METHOD_C;
+terminal  String T_FUNC_C;
+terminal  String T_LINE;
 terminal  String T_FILE;
 terminal  T_START_HEREDOC;
 terminal  T_END_HEREDOC;
@@ -321,9 +321,9 @@ terminal  T_CURLY_OPEN_WITH_DOLAR;
 terminal  T_CURLY_OPEN;
 terminal  T_CURLY_CLOSE;
 terminal  T_PAAMAYIM_NEKUDOTAYIM;
-terminal  T_NAMESPACE;
-terminal  T_NS_C;
-terminal  T_DIR;
+terminal  String T_NAMESPACE;
+terminal  String T_NS_C;
+terminal  String T_DIR;
 terminal  T_NS_SEPARATOR;
 terminal String T_VAR_COMMENT;
 terminal String T_DEFINE;
@@ -356,18 +356,18 @@ terminal T_NEKUDA;
 terminal T_INC,T_DEC,T_INT_CAST,T_DOUBLE_CAST,T_STRING_CAST,T_ARRAY_CAST,T_OBJECT_CAST,T_BOOL_CAST,T_UNSET_CAST;
 terminal T_AT;
 terminal T_OPEN_RECT,T_CLOSE_RECT;
-terminal T_NEW;
-terminal T_ENDIF;
-terminal T_ELSEIF;
-terminal T_ELSE;
-terminal T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC;
+terminal String T_NEW;
+terminal String T_ENDIF;
+terminal String T_ELSEIF;
+terminal String T_ELSE;
+terminal String T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC;
 terminal T_OPEN_PARENTHESE,T_CLOSE_PARENTHESE;
 terminal T_NEKUDOTAIM;
 terminal T_DOLLAR;
 terminal T_QUATE,T_BACKQUATE;
 terminal T_START_NOWDOC, T_END_NOWDOC;
-terminal T_TRAIT;
-terminal T_INSTEADOF;
+terminal String T_TRAIT;
+terminal String T_INSTEADOF;
 terminal T_POW;
 terminal T_POW_EQUAL;
 terminal T_ELLIPSIS;
@@ -487,6 +487,11 @@ non terminal VariableBase w_variable;
 non terminal Expression class_name;
 non terminal NamespaceName fully_qualified_class_name;
 non terminal List class_variable_declaration;
+non terminal Identifier reserved_non_modifiers_without_class;
+non terminal Identifier semi_reserved_without_class;
+non terminal Identifier identifier_without_class;
+non terminal Identifier identifier;
+non terminal List class_constant_declaration;
 non terminal List constant_declaration;
 non terminal Integer constant_modifiers;
 non terminal Integer method_modifiers;
@@ -537,6 +542,7 @@ non terminal StaticConstantAccess static_class_constant;
 non terminal Expression static_reference_constant;
 non terminal Expression static_array_creation_with_access;
 non terminal Expression static_constant_array_access;
+non terminal Expression static_class_constant_array_access;
 non terminal Expression static_array_creation;
 non terminal VariableBase base_variable_with_function_calls;
 
@@ -627,6 +633,411 @@ namespace_name:list
 | T_NS_SEPARATOR:s namespace_name:list
 {:
 	RESULT = new NamespaceName(sleft, listright, list, true, false);
+:}
+;
+
+reserved_non_modifiers_without_class ::=
+T_INCLUDE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_INCLUDE_ONCE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_EVAL:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_REQUIRE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_REQUIRE_ONCE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_LOGICAL_OR:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_LOGICAL_XOR:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_LOGICAL_AND:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_INSTANCEOF:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_NEW:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_CLONE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_EXIT:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_IF:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_ELSEIF:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_ELSE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_ENDIF:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_ECHO:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_DO:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_WHILE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_ENDWHILE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_FOR:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_ENDFOR:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_FOREACH:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_ENDFOREACH:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_DECLARE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_ENDDECLARE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_AS:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_TRY:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_CATCH:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_FINALLY:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_THROW:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_USE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_INSTEADOF:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_GLOBAL:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_VAR:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_UNSET:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_ISSET:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_EMPTY:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_CONTINUE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_GOTO:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_FUNCTION:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_CONST:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_RETURN:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_PRINT:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_YIELD:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_LIST:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_SWITCH:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_ENDSWITCH:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_CASE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_DEFAULT:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_BREAK:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_ARRAY:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_CALLABLE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_EXTENDS:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_IMPLEMENTS:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_NAMESPACE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_TRAIT:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_INTERFACE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+/*
+| T_CLASS:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+*/
+
+| T_CLASS_C:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_TRAIT_C:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_FUNC_C:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_METHOD_C:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_LINE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_FILE:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_DIR:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+
+| T_NS_C:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+;
+
+semi_reserved_without_class ::=
+reserved_non_modifiers_without_class:reserved
+{:
+	RESULT = reserved;
+:}
+
+| T_STATIC:modifier
+{:
+	RESULT = new Identifier(modifierleft, modifierright, modifier, true);
+:}
+
+| T_ABSTRACT:modifier
+{:
+	RESULT = new Identifier(modifierleft, modifierright, modifier, true);
+:}
+
+| T_FINAL:modifier
+{:
+	RESULT = new Identifier(modifierleft, modifierright, modifier, true);
+:}
+
+| T_PRIVATE:modifier
+{:
+	RESULT = new Identifier(modifierleft, modifierright, modifier, true);
+:}
+
+| T_PROTECTED:modifier
+{:
+	RESULT = new Identifier(modifierleft, modifierright, modifier, true);
+:}
+
+| T_PUBLIC:modifier
+{:
+	RESULT = new Identifier(modifierleft, modifierright, modifier, true);
+:}
+;
+
+identifier ::=
+identifier_without_class:ident
+{:
+	RESULT = ident;
+:}
+
+| T_CLASS:reserved
+{:
+	RESULT = new Identifier(reservedleft, reservedright, reserved, true);
+:}
+;
+
+identifier_without_class ::=
+T_STRING:string
+{:
+	RESULT = new Identifier(stringleft, stringright, string);
+:}
+
+| T_DEFINE:define
+{:
+	RESULT = new Identifier(defineleft, defineright, define);
+:}
+
+| semi_reserved_without_class:reserved
+{:
+	RESULT = reserved;
 :}
 ;
 
@@ -1339,7 +1750,7 @@ interface_statement_list:list interface_statement:interfaceStatement
 ;
 
 interface_statement ::=
-constant_modifiers:modifier constant_declaration:list T_SEMICOLON:end
+constant_modifiers:modifier class_constant_declaration:list T_SEMICOLON:end
 {:
 	int constantStart = modifier == null ? listleft : modifierleft;
 	modifier = modifier == null ? ASTPHP5Parser.IMPLICIT_PUBLIC : modifier;
@@ -1347,14 +1758,13 @@ constant_modifiers:modifier constant_declaration:list T_SEMICOLON:end
 	RESULT = classConstantDeclaration;
 :}
 
-| method_modifiers:modifier T_FUNCTION:start is_reference:isReference string_st:functionName
+| method_modifiers:modifier T_FUNCTION:start is_reference:isReference identifier:functionId
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
 optional_return_type:returnType
 T_SEMICOLON:end
 {:
 	int methodStart = modifier == null ? startleft : modifierleft;
 	modifier = modifier == null ? ASTPHP5Parser.PUBLIC : modifier;
-	Identifier functionId = new Identifier(functionNameleft, functionNameright, functionName);
         Block block = new Block(endleft, endright, Collections.EMPTY_LIST, false);
 	FunctionDeclaration functionDeclaration = new FunctionDeclaration(startleft, endright, functionId, paramList, returnType, block, isReference.booleanValue());
 	MethodDeclaration methodDeclaration = new MethodDeclaration(methodStart, endright, modifier.intValue(), functionDeclaration, true);
@@ -1388,14 +1798,13 @@ variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON:end
 	RESULT = fieldsDeclaration;
 :}
 
-| method_modifiers:modifier T_FUNCTION:start is_reference:isReference string_st:functionName
+| method_modifiers:modifier T_FUNCTION:start is_reference:isReference identifier:functionId
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
 optional_return_type:returnType
 method_body:body
 {:
 	int methodStart = modifier == null ? startleft : modifierleft;
 	modifier = modifier == null ? ASTPHP5Parser.PUBLIC : modifier;
-	Identifier functionId = new Identifier(functionNameleft, functionNameright, functionName);
 	FunctionDeclaration functionDeclaration = new FunctionDeclaration(startleft, bodyright, functionId, paramList, returnType, body, isReference.booleanValue());
 	MethodDeclaration methodDeclaration = new MethodDeclaration(methodStart, bodyright, modifier.intValue(), functionDeclaration, true);
 	RESULT = methodDeclaration;
@@ -2026,7 +2435,7 @@ variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON:end
 	RESULT = fieldsDeclaration;
 :}
 
-| constant_modifiers:modifier constant_declaration:list T_SEMICOLON:end
+| constant_modifiers:modifier class_constant_declaration:list T_SEMICOLON:end
 {:
 	int constantStart = modifier == null ? listleft : modifierleft;
 	modifier = modifier == null ? ASTPHP5Parser.IMPLICIT_PUBLIC : modifier;
@@ -2034,14 +2443,13 @@ variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON:end
 	RESULT = classConstantDeclaration;
 :}
 
-| method_modifiers:modifier T_FUNCTION:start is_reference:isReference string_st:functionName
+| method_modifiers:modifier T_FUNCTION:start is_reference:isReference identifier:functionId
 T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
 optional_return_type:returnType
 method_body:body
 {:
 	int methodStart = modifier == null ? startleft : modifierleft;
 	modifier = modifier == null ? ASTPHP5Parser.PUBLIC : modifier;
-	Identifier functionId = new Identifier(functionNameleft, functionNameright, functionName);
 	FunctionDeclaration functionDeclaration = new FunctionDeclaration(startleft, bodyright, functionId, paramList, returnType, body, isReference.booleanValue());
 	MethodDeclaration methodDeclaration = new MethodDeclaration(methodStart, bodyright, modifier.intValue(), functionDeclaration, true);
 	RESULT = methodDeclaration;
@@ -2453,17 +2861,32 @@ class_variable_declaration:list T_COMMA T_VARIABLE:var
 ;
 
 constant_declaration ::=
-constant_declaration:list T_COMMA T_STRING:constName T_EQUAL static_scalar_value:expr
+constant_declaration:list T_COMMA string_st:constName T_EQUAL static_scalar_value:expr
 {:
 	Identifier constId = new Identifier(constNameleft, constNameright, constName);
 	list.add(new ASTNode[] {constId, expr});
 	RESULT = list;
 :}
 
-| T_CONST T_STRING:constName T_EQUAL static_scalar_value:expr
+| T_CONST string_st:constName T_EQUAL static_scalar_value:expr
 {:
 	List list = new LinkedList();
 	Identifier constId = new Identifier(constNameleft, constNameright, constName);
+	list.add(new ASTNode[] {constId, expr});
+	RESULT = list;
+:}
+;
+
+class_constant_declaration ::=
+class_constant_declaration:list T_COMMA identifier_without_class:constName T_EQUAL static_scalar_value:expr
+{:
+	list.add(new ASTNode[] {constName, expr});
+	RESULT = list;
+:}
+
+| T_CONST identifier_without_class:constId T_EQUAL static_scalar_value:expr
+{:
+	List list = new LinkedList();
 	list.add(new ASTNode[] {constId, expr});
 	RESULT = list;
 :}
@@ -2997,12 +3420,11 @@ namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_
 			new NamespaceName(sleft, listright, list, true, false)), parameters);
 :}
 
-| class_name:className T_PAAMAYIM_NEKUDOTAYIM string_st:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
 	RESULT = new StaticMethodInvocation(classNameleft, eright, className,
 		new FunctionInvocation(fnleft, eright,
-			new FunctionName(fnleft, fnright,
-				new Identifier(fnleft, fnright, fn)), parameters));
+			new FunctionName(fnleft, fnright, fn), parameters));
 :}
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
@@ -3020,12 +3442,11 @@ namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_
 			new FunctionName(oleft, cright, reflectionVariable), parameters));
 :}
 
-| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM string_st:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {:
 	RESULT = new StaticMethodInvocation(classNameleft, eright, className,
 		new FunctionInvocation(fnleft, eright,
-			new FunctionName(fnleft, fnright,
-				new Identifier(fnleft, fnright, fn)), parameters));
+			new FunctionName(fnleft, fnright, fn), parameters));
 :}
 
 | variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
@@ -3573,14 +3994,26 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM static_reference_constant:constant
 ;
 
 static_reference_constant ::=
-static_constant_array_access:arrayAccess
+static_class_constant_array_access:arrayAccess
 {:
 	RESULT = arrayAccess;
 :}
 
-| T_STRING:constantName
+| identifier:constantName
 {:
-	RESULT = new Identifier(constantNameleft, constantNameright, constantName);
+	RESULT = constantName;
+:}
+;
+
+static_class_constant_array_access ::=
+static_class_constant_array_access:arrayAccess T_OPEN_RECT:o static_scalar_value:index T_CLOSE_RECT:end
+{:
+	RESULT = new ExpressionArrayAccess(arrayAccessleft, endright, arrayAccess, new ArrayDimension(oleft, endright, index));
+:}
+
+| identifier:constantName T_OPEN_RECT:o static_scalar_value:index T_CLOSE_RECT:end
+{:
+	RESULT = new ExpressionArrayAccess(constantNameleft, endright, constantName, new ArrayDimension(oleft, endright, index));
 :}
 ;
 
@@ -4445,9 +4878,9 @@ reference_constant:constant T_OPEN_RECT:o dim_offset:index T_CLOSE_RECT:end
 	RESULT = new ExpressionArrayAccess(constantleft, endright, constant, new ArrayDimension(oleft, endright, index));
 :}
 
-| T_STRING:constantName
+| identifier:constantName
 {:
-	RESULT = new Identifier(constantNameleft, constantNameright, constantName);
+	RESULT = constantName;
 :}
 ;
 

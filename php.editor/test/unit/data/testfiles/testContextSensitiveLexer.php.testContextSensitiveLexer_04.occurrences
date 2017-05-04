@@ -1,0 +1,3 @@
+    public function |>MARK_OCCURRENCES:imple^ments<|();
+    public function |>MARK_OCCURRENCES:implements<|() {
+        $this->|>MARK_OCCURRENCES:implements<|();

@@ -822,8 +822,34 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/issue269707");
     }
 
+    // #262141 PHP7.0
+    public void testContextSensitiveLexer_01() throws Exception {
+        performTest("parser/contextSensitiveLexer_01");
+    }
+
+    public void testContextSensitiveLexer_02() throws Exception {
+        performTest("parser/contextSensitiveLexer_02");
+    }
+
+    public void testContextSensitiveLexer_03() throws Exception {
+        performTest("parser/contextSensitiveLexer_03");
+    }
+
+    public void testContextSensitiveLexer_04() throws Exception {
+        performTest("parser/contextSensitiveLexer_04");
+    }
+
+    public void testContextSensitiveLexer_05() throws Exception {
+        performTest("parser/contextSensitiveLexer_05");
+    }
+
+    public void testContextSensitiveLexerWithConstVisibility_01() throws Exception {
+        performTest("parser/contextSensitiveLexerWithConstVisibility_01");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
+        // the same <Comment /> is shown twice becase the scanner is used twice
         File testFile = new File(getDataDir(), "testfiles/" + filename + ".php");
         StringBuilder result = new StringBuilder();
         String content = PHPLexerUtils.getFileContent(testFile);

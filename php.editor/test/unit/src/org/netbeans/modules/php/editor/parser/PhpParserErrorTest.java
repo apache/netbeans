@@ -381,6 +381,19 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/classConstant.php");
     }
 
+    public void testClassConstantWithWhitespace() throws Exception {
+        checkErrors("testfiles/parser/classConstantWithWhitespace.php");
+    }
+
+    public void testConstDefine_01() throws Exception {
+        // const DEFINE = ""; is not a syntax error
+        checkErrors("testfiles/parser/constDefine_01.php");
+    }
+
+    public void testConstDefine_02() throws Exception {
+        checkErrors("testfiles/parser/constDefine_02.php");
+    }
+
     // #250579
     public void testConstantArrayAccess_01() throws Exception {
         checkErrors("testfiles/parser/constantArrayAccess_01.php");
@@ -716,6 +729,31 @@ public class PhpParserErrorTest extends PHPTestBase {
 
     public void testSymmetricArrayDestructuring_01() throws Exception {
         checkErrors("testfiles/parser/symmetricArrayDestructuring_01.php");
+    }
+
+    // #262141 PHP7.0
+    public void testContextSensitiveLexer_01() throws Exception {
+        checkErrors("testfiles/parser/contextSensitiveLexer_01.php");
+    }
+
+    public void testContextSensitiveLexer_02() throws Exception {
+        checkErrors("testfiles/parser/contextSensitiveLexer_02.php");
+    }
+
+    public void testContextSensitiveLexer_03() throws Exception {
+        checkErrors("testfiles/parser/contextSensitiveLexer_03.php");
+    }
+
+    public void testContextSensitiveLexer_04() throws Exception {
+        checkErrors("testfiles/parser/contextSensitiveLexer_04.php");
+    }
+
+    public void testContextSensitiveLexer_05() throws Exception {
+        checkErrors("testfiles/parser/contextSensitiveLexer_05.php");
+    }
+
+    public void testContextSensitiveLexerWithConstVisibility_01() throws Exception {
+        checkErrors("testfiles/parser/contextSensitiveLexerWithConstVisibility_01.php");
     }
 
 }

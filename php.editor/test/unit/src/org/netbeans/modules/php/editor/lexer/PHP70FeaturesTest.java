@@ -116,4 +116,45 @@ public class PHP70FeaturesTest extends PHPLexerTestBase {
         performTest("lexer/scalar_types_01");
     }
 
+    // #262141
+    public void testContextSensitiveLexer_01() throws Exception {
+        performTest("lexer/context_sensitive_lexer_01"); // class method
+    }
+
+    public void testContextSensitiveLexer_02() throws Exception {
+        performTest("lexer/context_sensitive_lexer_02"); // trait method
+    }
+
+    public void testContextSensitiveLexer_03() throws Exception {
+        performTest("lexer/context_sensitive_lexer_03"); // interface method
+    }
+
+    public void testContextSensitiveLexer_04() throws Exception {
+        performTest("lexer/context_sensitive_lexer_04"); // class const
+    }
+
+    public void testContextSensitiveLexer_05() throws Exception {
+        performTest("lexer/context_sensitive_lexer_05"); // interface const
+    }
+
+    // check the "function"(PHP_FUNCTION) token after the const keyword
+    // it's not PHP_STRING but PHP_FUNCTION
+    public void testContextSensitiveLexer_06() throws Exception {
+        performTest("lexer/context_sensitive_lexer_06"); // in mixed group uses
+    }
+
+    public void testContextSensitiveLexer_07() throws Exception {
+        performTest("lexer/context_sensitive_lexer_07"); // in mixed group uses
+    }
+
+    public void testContextSensitiveLexer_08() throws Exception {
+        // const CONST = [1,3], GOTO = 2;
+        performTest("lexer/context_sensitive_lexer_08");
+    }
+
+    public void testContextSensitiveLexer_09() throws Exception {
+        // const CONST = array("test", array("foo" => 1)), GOTO = 2;
+        performTest("lexer/context_sensitive_lexer_09");
+    }
+
 }

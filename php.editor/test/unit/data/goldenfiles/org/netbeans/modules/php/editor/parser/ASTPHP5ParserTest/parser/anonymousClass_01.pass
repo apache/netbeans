@@ -876,12 +876,12 @@
     </scanner>
     <Program start='0' end='1774'>
         <Comments>
-            Comment start='581' end='655' commentType='singleLine'/>
-            Comment start='958' end='1032' commentType='singleLine'/>
-            Comment start='1580' end='1654' commentType='singleLine'/>
-            Comment start='581' end='655' commentType='singleLine'/>
-            Comment start='958' end='1032' commentType='singleLine'/>
-            Comment start='1580' end='1654' commentType='singleLine'/>
+            <Comment start='581' end='655' commentType='singleLine'/>
+            <Comment start='958' end='1032' commentType='singleLine'/>
+            <Comment start='1580' end='1654' commentType='singleLine'/>
+            <Comment start='581' end='655' commentType='singleLine'/>
+            <Comment start='958' end='1032' commentType='singleLine'/>
+            <Comment start='1580' end='1654' commentType='singleLine'/>
         </Comments>
         <Statements>
             <InterfaceDeclaration start='7' end='65'>

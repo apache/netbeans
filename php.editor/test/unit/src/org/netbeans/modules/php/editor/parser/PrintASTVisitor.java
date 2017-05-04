@@ -335,7 +335,7 @@ public class PrintASTVisitor implements Visitor {
 
     @Override
     public void visit(Comment comment) {
-        addNodeDescription("Comment", comment, false);
+        addNodeDescription("<Comment", comment, false);
 	buffer.append(" commentType='").append(comment.getCommentType()).append("'/>").append(NEW_LINE);
     }
 

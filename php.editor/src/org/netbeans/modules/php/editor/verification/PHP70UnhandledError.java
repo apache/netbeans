@@ -58,6 +58,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression;
+import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.ExpressionArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
@@ -181,6 +182,7 @@ public class PHP70UnhandledError extends UnhandledErrorRule {
             }
             checkScalarTypes(node.getFunction().getFormalParameters());
             checkReturnType(node.getFunction().getReturnType());
+            checkMethodName(node.getFunction().getFunctionName());
             super.visit(node);
         }
 
@@ -269,6 +271,15 @@ public class PHP70UnhandledError extends UnhandledErrorRule {
             super.visit(node);
         }
 
+        @Override
+        public void visit(ConstantDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkConstName(node);
+            super.visit(node);
+        }
+
         private void checkScalarTypes(List<FormalParameter> formalParameters) {
             for (FormalParameter formalParameter : formalParameters) {
                 // nullable types are checked in PHP71UnhandledError, so just ignore "?"
@@ -332,6 +343,19 @@ public class PHP70UnhandledError extends UnhandledErrorRule {
                 if (expression instanceof YieldExpression) {
                     createError(expression);
                 }
+            }
+        }
+
+        private void checkConstName(ConstantDeclaration node) {
+            List<Identifier> names = node.getNames();
+            names.stream().filter(name -> name.isKeyword()).forEach(name -> {
+                createError(name);
+            });
+        }
+
+        private void checkMethodName(Identifier node) {
+            if (node != null && node.isKeyword()) {
+                createError(node);
             }
         }
 

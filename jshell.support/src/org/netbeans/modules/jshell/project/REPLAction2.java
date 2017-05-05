@@ -96,6 +96,11 @@ public class REPLAction2 implements ProjectActionPerformer {
     @Override
     public void perform(Project project) {
         ActionProvider p = project.getLookup().lookup(ActionProvider.class);
+        // check whether the is CoS enabled fo the project
+        if (ShellProjectUtils.isCompileOnSave(project)) {
+            doRunShell(project);
+            return;
+        }
         if (p == null || !p.isActionEnabled(ActionProvider.COMMAND_BUILD, Lookups.singleton(project))) {
             StatusDisplayer.getDefault().setStatusText(Bundle.ERR_CannotBuildProject());
             return;

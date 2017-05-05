@@ -58,6 +58,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.ModuleElement.DirectiveKind;
@@ -83,15 +84,18 @@ import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.modules.java.api.common.project.ProjectProperties;
 import org.netbeans.modules.java.j2seproject.api.J2SEPropertyEvaluator;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.jshell.launch.PropertyNames;
+import org.netbeans.modules.maven.api.execute.RunUtils;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.project.AuxiliaryProperties;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
@@ -422,6 +426,10 @@ public final class ShellProjectUtils {
                     URL u = URLMapper.findURL(sg.getRootFolder(), URLMapper.INTERNAL);
                     BinaryForSourceQuery.Result r = BinaryForSourceQuery.findBinaryRoots(u);
                     for (URL ru : r.getRoots()) {
+                        // ignore JARs, prefer output folder:
+                        if (FileUtil.isArchiveArtifact(ru)) {
+                            continue;
+                        }
                         if (knownURLs.add(ru)) {
                             urls.add(ru);
                         }
@@ -442,5 +450,32 @@ public final class ShellProjectUtils {
         }
         JavaPlatform platform = findPlatform(ClassPath.getClassPath(ref, ClassPath.BOOT));
         return platform != null ? platform : JavaPlatform.getDefault();
+    }
+    
+    /**
+     * Attempts to detect Compile on Save enabled.
+     */
+    public static boolean isCompileOnSave(Project p) {
+        J2SEPropertyEvaluator  prjEval = p.getLookup().lookup(J2SEPropertyEvaluator.class);
+        if (prjEval == null) {
+            // try maven approach
+            return RunUtils.isCompileOnSaveEnabled(p);
+        }
+        String compileOnSaveProperty = prjEval.evaluator().getProperty(ProjectProperties.COMPILE_ON_SAVE);
+        if (compileOnSaveProperty == null || !Boolean.valueOf(compileOnSaveProperty)) {
+            return false;
+        }
+        Map<String, String> props = prjEval.evaluator().getProperties();
+        if (props == null) {
+            return false;
+        }
+        for (Map.Entry<String, String> e : props.entrySet()) {
+            if (e.getKey().startsWith(ProjectProperties.COMPILE_ON_SAVE_UNSUPPORTED_PREFIX)) {
+                if (e.getValue() != null && Boolean.valueOf(e.getValue())) {
+                    return false;
+                }
+            }
+        }                    
+        return true;
     }
 }

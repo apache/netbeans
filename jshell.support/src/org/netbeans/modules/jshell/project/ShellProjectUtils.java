@@ -207,6 +207,10 @@ public final class ShellProjectUtils {
         
         for (SourceGroup sg : org.netbeans.api.project.ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
             if (isNormalRoot(sg)) {
+                FileObject fo = sg.getRootFolder().getFileObject("module-info.java");
+                if (fo == null) {
+                    continue;
+                }
                 URL u = URLMapper.findURL(sg.getRootFolder(), URLMapper.INTERNAL);
                 BinaryForSourceQuery.Result r = BinaryForSourceQuery.findBinaryRoots(u);
                 for (URL u2 : r.getRoots()) {

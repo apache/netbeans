@@ -68,6 +68,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
@@ -93,6 +94,7 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery;
+import org.netbeans.api.java.queries.BinaryForSourceQuery;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
@@ -101,6 +103,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.JavaSourceTaskFactoryManager;
+import org.netbeans.modules.java.source.ModuleNames;
 import org.netbeans.modules.java.source.base.Module;
 import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
 import org.netbeans.modules.java.source.parsing.FileObjects;
@@ -245,6 +248,7 @@ public class JavaCustomIndexer extends CustomIndexer {
                     javaContext.getClassIndexImpl().setDirty(null);
                     final SourceFileManager.ModifiedFilesTransaction mftx = txCtx.get(SourceFileManager.ModifiedFilesTransaction.class);
                     final boolean[] isModuleInfo = new boolean[1];
+                    URL[] binaries = null;
                     for (Indexable i : javaSources) {
                         final CompileTuple tuple = createTuple(context, javaContext, i);
                         if (tuple != null) {
@@ -264,6 +268,10 @@ public class JavaCustomIndexer extends CustomIndexer {
                                     null :
                                     ElementHandleAccessor.getInstance().create(ElementKind.MODULE, moduleName);
                             JavaIndex.setAttribute(context.getRootURI(), JavaIndex.ATTR_MODULE_NAME, null);
+                            binaries = findBinaries(context.getRootURI());
+                            for (URL binary : binaries) {
+                                ModuleNames.getInstance().reset(binary);
+                            }
                         }
                     }
                     for (CompileTuple tuple : virtualSourceTuples) {
@@ -308,6 +316,12 @@ public class JavaCustomIndexer extends CustomIndexer {
                     }
                     if (moduleName != null) {
                         JavaIndex.setAttribute(context.getRootURI(), JavaIndex.ATTR_MODULE_NAME, moduleName);
+                        if (binaries == null) {
+                            binaries = findBinaries(context.getRootURI());
+                        }
+                        for (URL binary : binaries) {
+                            ModuleNames.getInstance().reset(binary);
+                        }
                     }
                     finished = compileResult.success;
 
@@ -398,6 +412,15 @@ public class JavaCustomIndexer extends CustomIndexer {
         } catch (IOException ioe) {
             Exceptions.printStackTrace(ioe);
         }
+    }
+
+    @NonNull
+    private static URL[] findBinaries(@NonNull final URL sourceRoot) throws IOException {
+        final URL[] artefacts = BinaryForSourceQuery.findBinaryRoots(sourceRoot).getRoots();
+        final List<URL> bin = new ArrayList<>(artefacts.length+1);
+        Collections.addAll(bin, artefacts);
+        bin.add(BaseUtilities.toURI(JavaIndex.getClassFolder(sourceRoot, false, false)).toURL());
+        return bin.toArray(new URL[bin.size()]);
     }
 
     private static List<? extends Indexable> splitSources(final Iterable<? extends Indexable> indexables, final List<? super Indexable> javaSources) {

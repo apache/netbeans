@@ -202,8 +202,8 @@ public class JsTypedBreakInterceptor implements TypedBreakInterceptor {
         if (id.isError()) {
             // See if it's a block comment opener
             String text = token.text().toString();
-            if (comments.test(doc) && text.startsWith("/*") && ts.offset() == Utilities.getRowFirstNonWhite(doc, offset)) {
-                int indent = GsfUtilities.getLineIndent(doc, offset);
+            if (comments.test(doc) && text.startsWith("/*") ) {
+                int indent = GsfUtilities.getLineIndent(doc, ts.offset());
                 StringBuilder sb = new StringBuilder();
                 sb.append("\n"); // NOI18N
                 sb.append(IndentUtils.createIndentString(doc, indent));

@@ -546,5 +546,23 @@ public class JsTypedBreakInterceptorTest extends JsTestBase {
                 + "\\n\\^\n'\n"
                 + "};"
         );
+    } 
+   
+    public void testIssue215318() throws Exception {
+        insertBreak(
+                "    /**\n"
+                + "     *^",
+                "    /**\n"
+                + "     *\n"
+                + "     * ^\n"
+                + "     */");
     }
+
+    public void testIssue215318_1() throws Exception {
+        insertBreak(
+                "    /** *^",
+                "    /** *\n"
+                + "     * ^\n"
+                + "     */");
+    } 
 }

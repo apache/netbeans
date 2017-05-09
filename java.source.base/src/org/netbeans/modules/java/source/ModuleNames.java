@@ -55,6 +55,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -91,6 +92,8 @@ import org.openide.util.WeakListeners;
 public final class ModuleNames {
     private static final Logger LOG = Logger.getLogger(ModuleNames.class.getName());
     private static final java.util.regex.Pattern AUTO_NAME_PATTERN = java.util.regex.Pattern.compile("-(\\d+(\\.|$))"); //NOI18N
+    private static final String RES_MANIFEST = "META-INF/MANIFEST.MF";              //NOI18N
+    private static final String ATTR_AUTOMATIC_MOD_NAME = "Automatic-Module-Name";   //NOI18N
     private static final ModuleNames INSTANCE = new ModuleNames();
 
     private final Map<URL,CacheLine> cache;
@@ -143,7 +146,7 @@ public final class ModuleNames {
             final FileObject root = URLMapper.findFileObject(rootUrl);
             if (root != null) {
                 final FileObject file = FileUtil.getArchiveFile(root);
-                /*final*/ FileObject moduleInfo = root.getFileObject(FileObjects.MODULE_INFO, FileObjects.CLASS);
+                final FileObject moduleInfo = root.getFileObject(FileObjects.MODULE_INFO, FileObjects.CLASS);
                 if (moduleInfo != null) {
                     try {
                         final String modName = readModuleName(moduleInfo);
@@ -155,6 +158,32 @@ public final class ModuleNames {
                                 path != null ?
                                     new FileCacheLine(rootUrl, modName, path):
                                     new FileObjectCacheLine(rootUrl, modName, moduleInfo));
+                    } catch (IOException ioe) {
+                        //Behave as javac: Pass to automatic module
+                    }
+                }
+                final FileObject manifest = root.getFileObject(RES_MANIFEST);
+                if (manifest != null) {
+                    try {
+                        try (final InputStream in = new BufferedInputStream(manifest.getInputStream())) {
+                            final Manifest mf = new Manifest(in);
+                            final String autoModName = mf.getMainAttributes().getValue(ATTR_AUTOMATIC_MOD_NAME);
+                            if (autoModName != null) {
+                                final File path = Optional.ofNullable(file)
+                                        .map(FileUtil::toFile)
+                                        .orElse(null);
+                                return register(
+                                    rootUrl,
+                                    path != null ?
+                                        new FileCacheLine(rootUrl, autoModName, path):
+                                        new FileObjectCacheLine(
+                                                rootUrl,
+                                                autoModName,
+                                                file != null ?
+                                                        file :
+                                                        manifest));
+                            }
+                        }
                     } catch (IOException ioe) {
                         //Behave as javac: Pass to automatic module
                     }

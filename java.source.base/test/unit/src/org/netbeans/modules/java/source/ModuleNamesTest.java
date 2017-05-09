@@ -69,6 +69,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.jar.Attributes;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -76,7 +79,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.swing.event.ChangeListener;
@@ -119,6 +121,7 @@ import org.openide.util.Pair;
  * @author Tomas Zezula
  */
 public class ModuleNamesTest extends NbTestCase {
+    private static final String RES_MANIFEST = "META-INF/MANIFEST.MF";  //NOI18N
     private FileObject wd;
     private ModuleNames names;
 
@@ -175,11 +178,109 @@ public class ModuleNamesTest extends NbTestCase {
             FileUtil.getArchiveFile(mod1).delete();
             FileObject jar = jar(wd,
                     "app-core-1.0.jar", //NOI18N
-                    moduleInfoClz(moduleInfoJava("org.me.app.core", Collections.emptyList()))).get();   //NOI18N
+                    () -> Collections.singleton(Pair.of(
+                            "module-info.class",    //NOI18N
+                            moduleInfoClz(moduleInfoJava("org.me.app.core", Collections.emptyList())).get()))   //NOI18N
+                    ).get();
             mod1 = FileUtil.getArchiveRoot(jar);
             moduleName = names.getModuleName(mod1.toURL(), false);
             assertTrue(th.isCalculated());
             assertEquals("org.me.app.core", moduleName);    //NOI18N
+            th.reset();
+        } finally {
+            th.unregister();
+        }
+    }
+
+    public void testAutomaticModuleWithManifestAttribute() throws Exception {
+        final TraceHandler th = TraceHandler.register();
+        try {
+            FileObject mod = FileUtil.getArchiveRoot(jar(
+                    wd,
+                    "app-core-1.0.jar", //NOI18N
+                    () -> {
+                        try {
+                            final ByteArrayOutputStream out = new ByteArrayOutputStream();
+                            final Manifest mf = new Manifest();
+                            mf.getMainAttributes().putValue(Attributes.Name.MANIFEST_VERSION.toString(), "1.0");    //NOI18N
+                            mf.getMainAttributes().putValue("Automatic-Module-Name", "org.me.app.core");    //NOI18N
+                            mf.write(out);
+                            return Collections.singleton(Pair.of(
+                                    RES_MANIFEST,
+                                    out.toByteArray()
+                            ));
+                        } catch (IOException ioe) {
+                            throw new RuntimeException(ioe);
+                        }
+                    }
+            ).get());
+            String moduleName = names.getModuleName(mod.toURL(), false);
+            assertEquals("org.me.app.core", moduleName);    //NOI18N
+            assertTrue(th.isCalculated());
+            th.reset();
+            moduleName = names.getModuleName(mod.toURL(), false);
+            assertEquals("org.me.app.core", moduleName);    //NOI18N
+            assertFalse(th.isCalculated());
+            th.reset();
+            mod.getFileSystem().removeNotify();    //Close JAR before changing it, otherwise JarFS may be created with wrong content.
+            mod = FileUtil.getArchiveRoot(jar(
+                    wd,
+                    "app-core-1.0.jar", //NOI18N
+                    null).get());
+            moduleName = names.getModuleName(mod.toURL(), false);
+            assertEquals("app.core", moduleName);    //NOI18N
+            assertTrue(th.isCalculated());
+            th.reset();
+            moduleName = names.getModuleName(mod.toURL(), false);
+            assertEquals("app.core", moduleName);    //NOI18N
+            assertFalse(th.isCalculated());
+            th.reset();
+            mod.getFileSystem().removeNotify();    //Close JAR before changing it, otherwise JarFS may be created with wrong content.
+            mod = FileUtil.getArchiveRoot(jar(
+                    wd,
+                    "app-core-1.0.jar", //NOI18N
+                    () -> {
+                        try {
+                            final ByteArrayOutputStream out = new ByteArrayOutputStream();
+                            final Manifest mf = new Manifest();
+                            mf.getMainAttributes().putValue(Attributes.Name.MANIFEST_VERSION.toString(), "1.0");    //NOI18N
+                            mf.getMainAttributes().putValue("Automatic-Module-Name", "org.me.app.core");    //NOI18N
+                            mf.write(out);
+                            return Collections.singleton(Pair.of(
+                                    RES_MANIFEST,
+                                    out.toByteArray()
+                            ));
+                        } catch (IOException ioe) {
+                            throw new RuntimeException(ioe);
+                        }
+                    }
+            ).get());    //NOI18N
+            mod = FileUtil.getArchiveRoot(jar(
+                    wd,
+                    "app-core-1.0.jar", //NOI18N
+                    () -> {
+                        try {
+                            final ByteArrayOutputStream out = new ByteArrayOutputStream();
+                            final Manifest mf = new Manifest();
+                            mf.getMainAttributes().putValue(Attributes.Name.MANIFEST_VERSION.toString(), "1.0");    //NOI18N
+                            mf.getMainAttributes().putValue("Automatic-Module-Name", "com.me.app.core");    //NOI18N
+                            mf.write(out);
+                            return Collections.singleton(Pair.of(
+                                    RES_MANIFEST,
+                                    out.toByteArray()
+                            ));
+                        } catch (IOException ioe) {
+                            throw new RuntimeException(ioe);
+                        }
+                    }
+            ).get());    //NOI18N
+            moduleName = names.getModuleName(mod.toURL(), false);
+            assertEquals("com.me.app.core", moduleName);    //NOI18N
+            assertTrue(th.isCalculated());
+            th.reset();
+            moduleName = names.getModuleName(mod.toURL(), false);
+            assertEquals("com.me.app.core", moduleName);    //NOI18N
+            assertFalse(th.isCalculated());
             th.reset();
         } finally {
             th.unregister();
@@ -192,7 +293,10 @@ public class ModuleNamesTest extends NbTestCase {
             FileObject mod = FileUtil.getArchiveRoot(jar(
                     wd,
                     "dist.jar", //NOI18N
-                    moduleInfoClz(moduleInfoJava("org.me.app", Collections.emptyList()))).get());    //NOI18N
+                    () -> Collections.singleton(Pair.of(
+                            "module-info.class",    //NOI18N
+                            moduleInfoClz(moduleInfoJava("org.me.app", Collections.emptyList())).get()))        //NOI18N
+                    ).get());
             String moduleName = names.getModuleName(mod.toURL(), false);
             assertEquals("org.me.app", moduleName);    //NOI18N
             assertTrue(th.isCalculated());
@@ -205,7 +309,10 @@ public class ModuleNamesTest extends NbTestCase {
             FileUtil.getArchiveFile(mod).delete();
             FileObject jar = jar(wd,
                     "dist.jar", //NOI18N
-                    moduleInfoClz(moduleInfoJava("com.me.app", Collections.emptyList()))).get();   //NOI18N
+                    () -> Collections.singleton(Pair.of(
+                            "module-info.class",    //NOI18N
+                            moduleInfoClz(moduleInfoJava("com.me.app", Collections.emptyList())).get()))    //NOI18N
+                    ).get();
             mod = FileUtil.getArchiveRoot(jar);
             moduleName = names.getModuleName(mod.toURL(), false);
             assertTrue(th.isCalculated());
@@ -363,15 +470,27 @@ public class ModuleNamesTest extends NbTestCase {
     private final Supplier<FileObject> jar(
             @NonNull final FileObject folder,
             @NonNull final String name,
-            @NullAllowed final Supplier<byte[]> moduleInfo) {
+            @NullAllowed final Supplier<Collection<Pair<String,byte[]>>> content) {
         return () -> {
             try {
                 final FileObject zf = FileUtil.createData(folder, name);
-                try (final ZipOutputStream out = new ZipOutputStream(zf.getOutputStream())) {
+                final Map<String,byte[]> files = new HashMap<>();
+                Manifest mf = new Manifest();
+                if (content != null) {
+                    for (Pair<String,byte[]> c : content.get()) {
+                        if (RES_MANIFEST.equals(c.first())) {
+                            mf = new Manifest(new ByteArrayInputStream(c.second()));
+                        } else {
+                            files.put(c.first(), c.second());
+                        }
+                    }
+                }
+                try (final JarOutputStream out = new JarOutputStream(zf.getOutputStream(), mf)) {
                     out.setComment("Test zip file");
-                    if (moduleInfo != null) {
-                        out.putNextEntry(new ZipEntry("module-info.class"));
-                        final byte[] data = moduleInfo.get();
+                    for (Map.Entry<String,byte[]> file : files.entrySet()) {
+                        final String path = file.getKey();
+                        final byte[] data = file.getValue();
+                        out.putNextEntry(new ZipEntry(path));
                         out.write(data, 0, data.length);
                         out.closeEntry();
                     }

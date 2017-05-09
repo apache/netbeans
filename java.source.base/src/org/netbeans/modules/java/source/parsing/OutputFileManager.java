@@ -86,7 +86,7 @@ public class OutputFileManager extends CachingFileManager {
     /**
      * Exception used to signal that the sourcepath is broken (project is deleted)
      */
-    public class InvalidSourcePath extends IllegalStateException {
+    public static class InvalidSourcePath extends IllegalStateException {
     }
 
     private final ClassPath scp;

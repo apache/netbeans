@@ -184,6 +184,9 @@ public final class ClasspathInfo {
                 this.cachedSrcClassPath.addPropertyChangeListener(WeakListeners.propertyChange(this.cpListener,this.cachedSrcClassPath));
             }
         }
+        if (backgroundCompilation && this.cachedSrcClassPath.entries().isEmpty()) {
+            throw new OutputFileManager.InvalidSourcePath();
+        }
         if (moduleSrcCp == null) {
             this.moduleSrcPath = ClassPath.EMPTY;
         } else {

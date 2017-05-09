@@ -68,7 +68,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
@@ -100,7 +99,6 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.JavaSourceTaskFactoryManager;
 import org.netbeans.modules.java.source.ModuleNames;
@@ -228,7 +226,16 @@ public class JavaCustomIndexer extends CustomIndexer {
                 final JavaParsingContext javaContext;
                 try {
                     //todo: Ugly hack, the ClassIndexManager.createUsagesQuery has to be called before the root is set to dirty mode.
-                    javaContext = new JavaParsingContext(context, bootPath, moduleBootPath != null ? moduleBootPath : ClassPath.EMPTY, compilePath, moduleCompilePath != null ? moduleCompilePath : ClassPath.EMPTY, moduleClassPath != null ? moduleClassPath : ClassPath.EMPTY, sourcePath, moduleSourcePath, virtualSourceTuples);
+                    javaContext = new JavaParsingContext(
+                            context,
+                            bootPath,
+                            moduleBootPath != null ? moduleBootPath : ClassPath.EMPTY,
+                            compilePath,
+                            moduleCompilePath != null ? moduleCompilePath : ClassPath.EMPTY,
+                            moduleClassPath != null ? moduleClassPath : ClassPath.EMPTY,
+                            sourcePath,
+                            moduleSourcePath,
+                            virtualSourceTuples);
                 } finally {
                     JavaIndex.setAttribute(context.getRootURI(), ClassIndexManager.PROP_DIRTY_ROOT, Boolean.TRUE.toString());
                 }

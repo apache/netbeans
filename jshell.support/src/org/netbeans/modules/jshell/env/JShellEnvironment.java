@@ -505,7 +505,9 @@ public class JShellEnvironment {
         
         res.second().addTaskListener(e -> {
             starting = false;
-            fireShellStarted(event);
+            if (nss.isValid() && nss.isActive()) {
+                fireShellStarted(event);
+            }
             fireShellStatus(event);
         });
         

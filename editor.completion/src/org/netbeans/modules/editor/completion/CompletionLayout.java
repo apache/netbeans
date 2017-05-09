@@ -425,9 +425,11 @@ public final class CompletionLayout {
                                             r.setParameters(new Object[] { null, completionScrollPane.getSelectedIndex(), selectedItem.getClass().getSimpleName()});
                                             CompletionImpl.uilog(r);
                                             CompletionImpl.sendUndoableEdit(doc, CloneableEditorSupport.BEGIN_COMMIT_GROUP);
+                                            MulticaretHandler mch = MulticaretHandler.create(c);
                                             try {
                                                 selectedItem.defaultAction(c);
                                             } finally {
+                                                mch.release();
                                                 CompletionImpl.sendUndoableEdit(doc, CloneableEditorSupport.END_COMMIT_GROUP);
                                             }
                                         }

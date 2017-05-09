@@ -57,7 +57,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -784,6 +783,7 @@ CaretListener, KeyListener, FocusListener, ListSelectionListener, PropertyChange
             CompletionItem item = layout.getSelectedCompletionItem();
             if (item != null) {
                 sendUndoableEdit(doc, CloneableEditorSupport.BEGIN_COMMIT_GROUP);
+                MulticaretHandler mch = MulticaretHandler.create(comp);
                 try {
                     if (compEditable && !guardedPos) {
                         LogRecord r = new LogRecord(Level.FINE, "COMPL_KEY_SELECT"); // NOI18N
@@ -813,6 +813,7 @@ CaretListener, KeyListener, FocusListener, ListSelectionListener, PropertyChange
                         return;
                     }
                 } finally {
+                    mch.release();
                     sendUndoableEdit(doc, CloneableEditorSupport.END_COMMIT_GROUP);
                 }
             } else if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN
@@ -1172,10 +1173,12 @@ outer:      for (Iterator it = localCompletionResult.getResultSets().iterator();
                         if (block == null || block[1] == caretOffset) { // NOI18N
                             CompletionItem item = sortedResultItems.get(0);
                             sendUndoableEdit(doc, CloneableEditorSupport.BEGIN_COMMIT_GROUP);
+                            MulticaretHandler mch = MulticaretHandler.create(c);
                             try {
                                 if (item.instantSubstitution(c))
                                     return;
                             } finally {
+                                mch.release();
                                 sendUndoableEdit(doc, CloneableEditorSupport.END_COMMIT_GROUP);
                             }
                         }

@@ -80,9 +80,6 @@ public class FXMLEditAction extends AbstractAction implements ContextAwareAction
     }
     
     void init() {
-        assert SwingUtilities.isEventDispatchThread() 
-               : "this shall be called just from AWT thread"; // NOI18N
- 
         if (lkpInfo != null) {
             return;
         }

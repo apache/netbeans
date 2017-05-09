@@ -555,7 +555,9 @@ public final class XMLSyntaxSupport {
                 case PI_TARGET: {
                     Token<XMLTokenId> first = token;
                     while(token.id() != XMLTokenId.PI_START) {
-                        ts.movePrevious();
+                        if (!ts.movePrevious()) {
+                            break;
+                        }
                         token = ts.token();
                     }
                     return createElement(ts, token);
@@ -645,7 +647,9 @@ public final class XMLSyntaxSupport {
                         target = t.text().toString();
                     if(t.id() == XMLTokenId.PI_CONTENT)
                         content = t.text().toString();
-                    ts.moveNext();
+                    if (!ts.moveNext()) {
+                        break;
+                    }
                     t = ts.token();
                 }
                 end = ts.offset() + t.length();
@@ -698,7 +702,9 @@ public final class XMLSyntaxSupport {
             case TAG: {
                 Token<XMLTokenId> t = token;
                 do {
-                    ts.moveNext();
+                    if (!ts.moveNext()) {
+                        break;
+                    }
                     t = ts.token();
                 } while(t.id() != XMLTokenId.TAG);
                 end = ts.offset() + t.length();

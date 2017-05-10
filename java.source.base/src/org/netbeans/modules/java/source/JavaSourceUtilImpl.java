@@ -234,6 +234,7 @@ public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preproce
                     true,
                     false,
                     false,
+                    false,
                     jfmProvider);
             final APTUtils aptUtils = APTUtils.get(srcRoot);
             final JavacTaskImpl  jt = JavacParser.createJavacTask(

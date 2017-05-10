@@ -153,6 +153,7 @@ public final class ClasspathInfo {
                           final boolean ignoreExcludes,
                           final boolean hasMemoryFileManager,
                           final boolean useModifiedFiles,
+                          final boolean requiresSourceRoots,
                           @NullAllowed final Function<JavaFileManager.Location, JavaFileManager> jfmProvider) {
         assert bootCp != null;
         assert compileCp != null;
@@ -184,7 +185,7 @@ public final class ClasspathInfo {
                 this.cachedSrcClassPath.addPropertyChangeListener(WeakListeners.propertyChange(this.cpListener,this.cachedSrcClassPath));
             }
         }
-        if (backgroundCompilation && this.cachedSrcClassPath.entries().isEmpty()) {
+        if (requiresSourceRoots && this.cachedSrcClassPath.entries().isEmpty()) {
             throw new OutputFileManager.InvalidSourcePath();
         }
         if (moduleSrcCp == null) {
@@ -415,6 +416,7 @@ public final class ClasspathInfo {
                     false,
                     false,
                     true,
+                    false,
                     null);
         }
     }
@@ -450,7 +452,7 @@ public final class ClasspathInfo {
         }
         ClassPath srcPath = ClassPath.getClassPath(fo, ClassPath.SOURCE);
         ClassPath moduleSrcPath = ClassPath.getClassPath(fo, JavaClassPathConstants.MODULE_SOURCE_PATH);
-        return create (bootPath, moduleBootPath, compilePath, moduleCompilePath, moduleClassPath, srcPath, moduleSrcPath, filter, backgroundCompilation, ignoreExcludes, hasMemoryFileManager, useModifiedFiles, null);
+        return create (bootPath, moduleBootPath, compilePath, moduleCompilePath, moduleClassPath, srcPath, moduleSrcPath, filter, backgroundCompilation, ignoreExcludes, hasMemoryFileManager, useModifiedFiles, false, null);
     }
 
     @NonNull
@@ -467,9 +469,23 @@ public final class ClasspathInfo {
             final boolean ignoreExcludes,
             final boolean hasMemoryFileManager,
             final boolean useModifiedFiles,
+            final boolean requiresSourceRoots,
             @NullAllowed final Function<JavaFileManager.Location, JavaFileManager> jfmProvider) {
-        return new ClasspathInfo(bootPath, moduleBootPath, classPath, moduleCompilePath, moduleClassPath, sourcePath, moduleSourcePath,
-                filter, backgroundCompilation, ignoreExcludes, hasMemoryFileManager, useModifiedFiles, jfmProvider);
+        return new ClasspathInfo(
+                bootPath,
+                moduleBootPath,
+                classPath,
+                moduleCompilePath,
+                moduleClassPath,
+                sourcePath,
+                moduleSourcePath,
+                filter,
+                backgroundCompilation,
+                ignoreExcludes,
+                hasMemoryFileManager,
+                useModifiedFiles,
+                requiresSourceRoots,
+                jfmProvider);
     }
 
     // Public methods ----------------------------------------------------------
@@ -710,8 +726,23 @@ public final class ClasspathInfo {
                 final boolean ignoreExcludes,
                 final boolean hasMemoryFileManager,
                 final boolean useModifiedFiles,
+                final boolean requiresSourceRoots,
                 @NullAllowed final Function<JavaFileManager.Location, JavaFileManager> jfmProvider) {
-            return ClasspathInfo.create(bootPath, moduleBootPath, classPath, moduleCompilePath, moduleClassPath, sourcePath, moduleSourcePath, filter, backgroundCompilation, ignoreExcludes, hasMemoryFileManager, useModifiedFiles, jfmProvider);
+            return ClasspathInfo.create(
+                    bootPath,
+                    moduleBootPath,
+                    classPath,
+                    moduleCompilePath,
+                    moduleClassPath,
+                    sourcePath,
+                    moduleSourcePath,
+                    filter,
+                    backgroundCompilation,
+                    ignoreExcludes,
+                    hasMemoryFileManager,
+                    useModifiedFiles,
+                    requiresSourceRoots,
+                    jfmProvider);
         }
 
         @Override

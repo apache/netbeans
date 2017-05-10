@@ -152,6 +152,7 @@ final class JavaParsingContext {
                 context.isSourceForBinaryRootIndexing(),
                 false,
                 context.checkForEditorModifications(),
+                false,
                 null);
         } else {
             cpInfo = null;
@@ -163,9 +164,21 @@ final class JavaParsingContext {
         ctx = context;
         rootNotNeeded = false;
         uq = ClassIndexManager.getDefault().createUsagesQuery(context.getRootURI(), true);
-        cpInfo = ClasspathInfoAccessor.getINSTANCE().create(bootPath, moduleBootPath, compilePath, moduleCompilePath, moduleClassPath, sourcePath, moduleSourcePath,
-                filter, true, context.isSourceForBinaryRootIndexing(),
-                !virtualSources.isEmpty(), context.checkForEditorModifications(), null);
+        cpInfo = ClasspathInfoAccessor.getINSTANCE().create(
+                bootPath,
+                moduleBootPath,
+                compilePath,
+                moduleCompilePath,
+                moduleClassPath,
+                sourcePath,
+                moduleSourcePath,
+                filter,
+                true,
+                context.isSourceForBinaryRootIndexing(),
+                !virtualSources.isEmpty(),
+                context.checkForEditorModifications(),
+                true,
+                null);
         registerVirtualSources(cpInfo, virtualSources);
     }
     

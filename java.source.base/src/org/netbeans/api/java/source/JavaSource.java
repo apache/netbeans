@@ -311,7 +311,7 @@ public final class JavaSource {
                     srcPath,
                     moduleSrcPath,
                     null,
-                    false, false, false, true, null);
+                    false, false, false, true, false, null);
                 FileObject root = ClassPathSupport.createProxyClassPath(
                     ClassPathSupport.createClassPath(CachingArchiveProvider.getDefault().ctSymRootsFor(bootPath)),
                     bootPath,

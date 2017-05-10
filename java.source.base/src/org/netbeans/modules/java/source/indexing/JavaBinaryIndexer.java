@@ -213,6 +213,7 @@ public class JavaBinaryIndexer extends BinaryIndexer {
             true,
             false,
             false,
+            false,
             null);
         final JavacTaskImpl jt = JavacParser.createJavacTask(cpInfo, new DevNullDiagnosticListener(), null, null, null, null, null, null, null);
         TreeLoader.preRegister(jt.getContext(), cpInfo, true);

@@ -354,6 +354,24 @@ public final class QuerySupport {
     }
 
     /**
+     * Creates an Automatic-Module-Name query.
+     * @param helper the {@link AntProjectHelper}
+     * @param eval the {@link PropertyEvaluator}
+     * @param srcRoots the source roots
+     * @param manifestProperty  the property holding the path to the manifest file
+     * @return a {@link CompilerOptionsQueryImplementation} to find out the Automatic-Module-Name
+     * @since 1.122
+     */
+    @NonNull
+    public static CompilerOptionsQueryImplementation createAutomaticModuleNameQuery(
+            @NonNull final AntProjectHelper helper,
+            @NonNull final PropertyEvaluator eval,
+            @NonNull final SourceRoots srcRoots,
+            @NonNull final String manifestProperty) {
+        return new AutomaticModuleNameCompilerOptionsQueryImpl(helper, eval, srcRoots, manifestProperty);
+    }
+
+    /**
      * Create a new query to set up explicit compiler options needed for unit test compilation in a multi module project.
      * @param project the project to create a query for
      * @param sourceModules the module roots

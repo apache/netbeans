@@ -63,6 +63,13 @@ public final class SimpleValueNames {
     public static final String TAB_SIZE = "tab-size"; // NOI18N
 
     /**
+     * Whether indentation is enabled.
+     * Values: java.lang.Boolean instances
+     * @since 1.58
+     */
+    public static final String ENABLE_INDENTATION = "enable-indent"; // NOI18N
+
+    /**
      * Whether expand typed tabs to spaces. The number of spaces to substitute
      * per one typed tab is determined by SPACES_PER_TAB setting.
      * Values: java.lang.Boolean instances

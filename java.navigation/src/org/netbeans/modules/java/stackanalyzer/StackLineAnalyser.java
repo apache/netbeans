@@ -43,6 +43,8 @@
 package org.netbeans.modules.java.stackanalyzer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.text.StyledDocument;
@@ -98,14 +100,14 @@ class StackLineAnalyser {
                 return null;
             }
             if (matcher.group(1)==null ) {
-                return new Link(matcher.group(4).split("\\$")[0],
+                return new Link(matcher.group(4),
                             lineNumber,
                             matcher.start(4),
                             matcher.end(6)+1
                             );
                 
             }
-            return new Link(matcher.group(1) + matcher.group(4).split("\\$")[0],
+            return new Link(matcher.group(1) + matcher.group(4),
                             lineNumber,
                             matcher.start(1),
                             matcher.end(6)+1
@@ -141,10 +143,18 @@ class StackLineAnalyser {
             return endOffset;
         }
 
-        void show () {         
-            final String resource = className.replace ('.', '/') + ".java";     //NOI18N
+        void show () {
+            String name = className.replace('.', '/');
+            final List<String> resources = new ArrayList<>();
+            resources.add(name + ".java"); //NOI18N
+            int idx = name.lastIndexOf('$');
+            while (idx >= 0) {
+                name = name.substring(0, idx);
+                resources.add(name + ".java"); //NOI18N
+                idx = name.lastIndexOf('$');
+            }
             final ProgressHandle handle = ProgressHandleFactory.createHandle(
-                NbBundle.getMessage(StackLineAnalyser.class, "TXT_OpeningSource", resource));
+                NbBundle.getMessage(StackLineAnalyser.class, "TXT_OpeningSource", resources.get(0)));
             handle.start();
             RP.execute(
                 new Runnable() {
@@ -154,7 +164,11 @@ class StackLineAnalyser {
                         try {
                             final ClassPath classPath = ClassPathSupport.createClassPath(
                             GlobalPathRegistry.getDefault().getSourceRoots().toArray(new FileObject[0]));
-                            dobj = findDataObject(classPath.findResource(resource));
+                            for (String resource : resources) {
+                                dobj = findDataObject(classPath.findResource(resource));
+                                if (dobj != null)
+                                    break;
+                            }
                         } finally {
                             final DataObject dataObject = dobj;
                             Mutex.EVENT.readAccess(new Runnable() {
@@ -165,7 +179,7 @@ class StackLineAnalyser {
                                             StatusDisplayer.getDefault().setStatusText(
                                             NbBundle.getMessage(StackLineAnalyser.class,
                                             "AnalyzeStackTopComponent.sourceNotFound",
-                                            new Object[]{resource}));
+                                            new Object[]{resources.get(0)}));
                                             return;
                                         }
                                         try {

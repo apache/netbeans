@@ -82,7 +82,7 @@ import org.openide.util.WeakListeners;
 final class AutomaticModuleNameCompilerOptionsQueryImpl implements CompilerOptionsQueryImplementation {
 
     private static final Logger LOG = Logger.getLogger(AutomaticModuleNameCompilerOptionsQueryImpl.class.getName());
-    private static final String OPT_AUTOMATIC_MODULE_NAME = "--automatic-module-name";  //NOI18N
+    private static final String OPT_AUTOMATIC_MODULE_NAME = "-XDautomatic-module-name";  //NOI18N
     private static final String ATTR_AUTOMATIC_MOD_NAME = "Automatic-Module-Name";   //NOI18N
     private static final String MODULE_INFO_JAVA = "module-info.java";                  //NOI18N
 

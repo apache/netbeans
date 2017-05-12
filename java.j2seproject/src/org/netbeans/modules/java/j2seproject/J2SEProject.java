@@ -395,6 +395,7 @@ public final class J2SEProject implements Project {
             new J2SEProjectPlatformImpl(this),
             QuerySupport.createCompilerOptionsQuery(eval, ProjectProperties.JAVAC_COMPILERARGS),
             QuerySupport.createUnitTestsCompilerOptionsQuery(eval, sourceRoots, testRoots),
+            QuerySupport.createAutomaticModuleNameQuery(helper, eval, sourceRoots, ProjectProperties.MANIFEST_FILE),
             QuerySupport.createModuleInfoAccessibilityQuery(sourceRoots, testRoots),
             LookupMergerSupport.createCompilerOptionsQueryMerger(),
             J2SEFileWizardIterator.create()

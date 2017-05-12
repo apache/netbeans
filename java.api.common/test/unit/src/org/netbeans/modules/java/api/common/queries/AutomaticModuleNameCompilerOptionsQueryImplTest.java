@@ -138,7 +138,7 @@ public class AutomaticModuleNameCompilerOptionsQueryImplTest extends NbTestCase 
         r = q.getOptions(srcRoots.getRoots()[0]);
         assertNotNull(r);
         assertEquals(
-                Collections.singletonList("--automatic-module-name:org.me.foo"),    //NOI18N
+                Collections.singletonList("-XDautomatic-module-name:org.me.foo"),    //NOI18N
                 r.getArguments());
         final FileObject modInfo = srcRoots.getRoots()[0].createData("module-info", "java");               //NOI18N
         q = new AutomaticModuleNameCompilerOptionsQueryImpl(
@@ -158,7 +158,7 @@ public class AutomaticModuleNameCompilerOptionsQueryImplTest extends NbTestCase 
         r = q.getOptions(srcRoots.getRoots()[0]);
         assertNotNull(r);
         assertEquals(
-                Collections.singletonList("--automatic-module-name:org.me.foo"),    //NOI18N
+                Collections.singletonList("-XDautomatic-module-name:org.me.foo"),    //NOI18N
                 r.getArguments());
         updateManifest(Collections.emptyMap());
         q = new AutomaticModuleNameCompilerOptionsQueryImpl(
@@ -182,7 +182,7 @@ public class AutomaticModuleNameCompilerOptionsQueryImplTest extends NbTestCase 
         final CompilerOptionsQueryImplementation.Result r = q.getOptions(srcRoots.getRoots()[0]);
         assertNotNull(r);
         assertEquals(
-                Collections.singletonList("--automatic-module-name:org.me.foo"),    //NOI18N
+                Collections.singletonList("-XDautomatic-module-name:org.me.foo"),    //NOI18N
                 r.getArguments());
         ProjectManager.mutex(true, project).writeAccess(() -> {
             final EditableProperties ep = project.getUpdateHelper().getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
@@ -196,7 +196,7 @@ public class AutomaticModuleNameCompilerOptionsQueryImplTest extends NbTestCase 
             project.getUpdateHelper().putProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH, ep);
         });
         assertEquals(
-                Collections.singletonList("--automatic-module-name:org.me.foo"),    //NOI18N
+                Collections.singletonList("-XDautomatic-module-name:org.me.foo"),    //NOI18N
                 r.getArguments());
     }
 
@@ -211,7 +211,7 @@ public class AutomaticModuleNameCompilerOptionsQueryImplTest extends NbTestCase 
         final CompilerOptionsQueryImplementation.Result r = q.getOptions(srcRoots.getRoots()[0]);
         assertNotNull(r);
         assertEquals(
-                Collections.singletonList("--automatic-module-name:org.me.foo"),    //NOI18N
+                Collections.singletonList("-XDautomatic-module-name:org.me.foo"),    //NOI18N
                 r.getArguments());
         FileObject modInfo = srcRoots.getRoots()[0].createData("module-info", "java");       //NOI18N
         assertTrue(r.getArguments().isEmpty());
@@ -219,7 +219,7 @@ public class AutomaticModuleNameCompilerOptionsQueryImplTest extends NbTestCase 
             modInfo.rename(lck, "module-info", "bak"); //NOI18N
         }
         assertEquals(
-                Collections.singletonList("--automatic-module-name:org.me.foo"),    //NOI18N
+                Collections.singletonList("-XDautomatic-module-name:org.me.foo"),    //NOI18N
                 r.getArguments());
         try (FileLock lck = modInfo.lock()) {
             modInfo.rename(lck, "module-info", "java"); //NOI18N
@@ -227,7 +227,7 @@ public class AutomaticModuleNameCompilerOptionsQueryImplTest extends NbTestCase 
         assertTrue(r.getArguments().isEmpty());
         modInfo.delete();
         assertEquals(
-                Collections.singletonList("--automatic-module-name:org.me.foo"),    //NOI18N
+                Collections.singletonList("-XDautomatic-module-name:org.me.foo"),    //NOI18N
                 r.getArguments());
     }
 
@@ -244,11 +244,11 @@ public class AutomaticModuleNameCompilerOptionsQueryImplTest extends NbTestCase 
         assertNotNull(getManifest());
         assertNotNull(r);
         assertEquals(
-                Collections.singletonList("--automatic-module-name:org.me.foo"),    //NOI18N
+                Collections.singletonList("-XDautomatic-module-name:org.me.foo"),    //NOI18N
                 r.getArguments());
         updateManifest(Collections.singletonMap("Automatic-Module-Name", "org.me.boo"));    //NOI18N
         assertEquals(
-                Collections.singletonList("--automatic-module-name:org.me.boo"),    //NOI18N
+                Collections.singletonList("-XDautomatic-module-name:org.me.boo"),    //NOI18N
                 r.getArguments());
         final FileObject mf = getManifest();
         try (FileLock lck = mf.lock()) {
@@ -259,7 +259,7 @@ public class AutomaticModuleNameCompilerOptionsQueryImplTest extends NbTestCase 
             mf.rename(lck, "manifest", "mf"); //NOI18N
         }
         assertEquals(
-                Collections.singletonList("--automatic-module-name:org.me.boo"),    //NOI18N
+                Collections.singletonList("-XDautomatic-module-name:org.me.boo"),    //NOI18N
                 r.getArguments());
         mf.delete();
         assertTrue(r.getArguments().isEmpty());

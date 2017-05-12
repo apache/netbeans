@@ -107,6 +107,7 @@ import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.java.source.usages.ClassIndexManager;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation;
+import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation2;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
@@ -134,7 +135,7 @@ public class ModuleNamesTest extends NbTestCase {
         super.setUp();
         clearWorkDir();
         ProxyURLStreamHandlerFactory.register();
-        MockServices.setServices(BinAndSrc.class, NBJRTStreamHandlerFactory.class);
+        MockServices.setServices(BinAndSrc.class, NBJRTStreamHandlerFactory.class, AutomaticModuleName.class);
         wd = FileUtil.toFileObject(getWorkDir());
         assertNotNull(wd);
         final FileObject cache = FileUtil.createFolder(wd, "cache");    //NOI18N
@@ -390,6 +391,61 @@ public class ModuleNamesTest extends NbTestCase {
             th.reset();
             moduleName = names.getModuleName(distJarURL, false);
             assertEquals("prj", moduleName);     //NOI18N
+            assertFalse(th.isCalculated());
+            th.reset();
+        } finally {
+            th.unregister();
+        }
+    }
+
+    public void testAutomaticProject() throws IOException {
+        final FileObject src = FileUtil.createFolder(wd, "src");    //NOI18N
+        final FileObject dist = FileUtil.createFolder(wd, "dist");      //NOI18N
+        final File distJar = new File(FileUtil.toFile(dist), "prj.jar");    //NOI18N
+        final URL distJarURL = FileUtil.urlForArchiveOrDir(distJar);
+        BinAndSrc.getInstance().register(src.toURL(), distJarURL);
+        final SourceForBinaryQuery.Result2 sres = SourceForBinaryQuery.findSourceRoots2(distJarURL);
+        assertTrue(sres.preferSources());
+        assertEquals(Arrays.asList(src), Arrays.asList(sres.getRoots()));
+        final BinaryForSourceQuery.Result bres = BinaryForSourceQuery.findBinaryRoots(src.toURL());
+        assertEquals(Arrays.asList(distJarURL), Arrays.asList(bres.getRoots()));
+        final TraceHandler th = TraceHandler.register();
+        AutomaticModuleName.getInstance().register(src, null);  //Register Result for root to listen on it.
+        try {
+            fakeIndex(src, distJarURL, null);
+            String moduleName = names.getModuleName(distJarURL, false);
+            assertEquals("prj", moduleName);    //NOI18N
+            assertTrue(th.isCalculated());
+            th.reset();
+            moduleName = names.getModuleName(distJarURL, false);
+            assertEquals("prj", moduleName);    //NOI18N
+            assertFalse(th.isCalculated());
+            th.reset();
+            AutomaticModuleName.getInstance().register(src, "org.me.foo");  //NOI18N
+            moduleName = names.getModuleName(distJarURL, false);
+            assertEquals("org.me.foo", moduleName);    //NOI18N
+            assertTrue(th.isCalculated());
+            th.reset();
+            moduleName = names.getModuleName(distJarURL, false);
+            assertEquals("org.me.foo", moduleName);    //NOI18N
+            assertFalse(th.isCalculated());
+            th.reset();
+            AutomaticModuleName.getInstance().register(src, "org.me.boo");  //NOI18N
+            moduleName = names.getModuleName(distJarURL, false);
+            assertEquals("org.me.boo", moduleName);    //NOI18N
+            assertTrue(th.isCalculated());
+            th.reset();
+            moduleName = names.getModuleName(distJarURL, false);
+            assertEquals("org.me.boo", moduleName);    //NOI18N
+            assertFalse(th.isCalculated());
+            th.reset();
+            AutomaticModuleName.getInstance().register(src, null);
+            moduleName = names.getModuleName(distJarURL, false);
+            assertEquals("prj", moduleName);    //NOI18N
+            assertTrue(th.isCalculated());
+            th.reset();
+            moduleName = names.getModuleName(distJarURL, false);
+            assertEquals("prj", moduleName);    //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
         } finally {
@@ -1076,6 +1132,73 @@ public class ModuleNamesTest extends NbTestCase {
             protected URLConnection openConnection(URL u) throws IOException {
                 //Not needed
                 return null;
+            }
+        }
+    }
+
+    public static final class AutomaticModuleName implements CompilerOptionsQueryImplementation {
+
+        private Map<FileObject, R> roots = new HashMap<>();
+
+        @Override
+        public Result getOptions(FileObject file) {
+            for (Map.Entry<FileObject,R> e : roots.entrySet()) {
+                if (e.getKey().equals(file) || FileUtil.isParentOf(e.getKey(), file)) {
+                    return e.getValue();
+                }
+            }
+            return null;
+        }
+
+        void register(
+                @NonNull final FileObject root,
+                @NullAllowed final String moduleName) {
+            R r = roots.get(root);
+            if (r == null) {
+                r = new R();
+                roots.put(root, r);
+            }
+            r.setModuleName(moduleName);
+        }
+
+        @CheckForNull
+        public static AutomaticModuleName getInstance() {
+            return Lookup.getDefault().lookup(AutomaticModuleName.class);
+        }
+
+        private static class R extends CompilerOptionsQueryImplementation.Result {
+            private final ChangeSupport listeners;
+            private String moduleName;
+
+            private R() {
+                this.listeners = new ChangeSupport(this);
+            }
+
+            void setModuleName(@NullAllowed final String moduleName) {
+                this.moduleName = moduleName;
+                this.listeners.fireChange();
+            }
+
+            @Override
+            public List<? extends String> getArguments() {
+                if (moduleName != null) {
+                    return Collections.singletonList(String.format(
+                            "-XDautomatic-module-name:%s",  //NOI18N
+                            moduleName
+                    ));
+                } else {
+                    return Collections.emptyList();
+                }
+            }
+
+            @Override
+            public void addChangeListener(ChangeListener listener) {
+                this.listeners.addChangeListener(listener);
+            }
+
+            @Override
+            public void removeChangeListener(ChangeListener listener) {
+                this.listeners.removeChangeListener(listener);
             }
         }
     }

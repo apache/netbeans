@@ -58,6 +58,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -66,6 +68,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.BinaryForSourceQuery;
+import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.queries.FileEncodingQuery;
@@ -94,6 +97,7 @@ public final class ModuleNames {
     private static final java.util.regex.Pattern AUTO_NAME_PATTERN = java.util.regex.Pattern.compile("-(\\d+(\\.|$))"); //NOI18N
     private static final String RES_MANIFEST = "META-INF/MANIFEST.MF";              //NOI18N
     private static final String ATTR_AUTOMATIC_MOD_NAME = "Automatic-Module-Name";   //NOI18N
+    private static final Pattern AUTOMATIC_MODULE_NAME_MATCHER = Pattern.compile("-XDautomatic-module-name:(.*)");  //NOI18N
     private static final ModuleNames INSTANCE = new ModuleNames();
 
     private final Map<URL,CacheLine> cache;
@@ -322,11 +326,30 @@ public final class ModuleNames {
     private static CacheLine autoName(
             @NonNull final URL artefact,
             @NonNull final List<? extends URL> srcRootURLs) {
+        CompilerOptionsQuery.Result cops = null;
+        String amn = null;
+        for (URL srcRootURL : srcRootURLs) {
+            final FileObject fo = URLMapper.findFileObject(srcRootURL);
+            if (fo != null) {
+                cops  = CompilerOptionsQuery.getOptions(fo);
+                for (String opt : cops.getArguments()) {
+                    final Matcher m = AUTOMATIC_MODULE_NAME_MATCHER.matcher(opt);
+                    if (m.matches()) {
+                        amn = m.group(1);
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        if (amn != null) {
+            return new BinCacheLine(artefact, amn, cops, null);
+        }
         final BinaryForSourceQuery.Result res = BinaryForSourceQuery.findBinaryRoots(srcRootURLs.get(0));
         for (URL binRoot : res.getRoots()) {
             if (FileObjects.JAR.equals(binRoot.getProtocol())) {
                 final String modName = autoName(FileObjects.stripExtension(FileUtil.archiveOrDirForURL(binRoot).getName()));
-                return new BinCacheLine(artefact, modName, res);
+                return new BinCacheLine(artefact, modName, cops, res);
             }
         }
         return new CacheLine(artefact, null);
@@ -513,17 +536,31 @@ public final class ModuleNames {
     }
 
     private static final class BinCacheLine extends CacheLine implements ChangeListener {
+        private final CompilerOptionsQuery.Result cops;
         private final BinaryForSourceQuery.Result res;
-        private final ChangeListener cl;
+        private final ChangeListener copsCl;
+        private final ChangeListener resCl;
 
         BinCacheLine(
                 @NonNull final URL artefact,
                 @NonNull final String modName,
-                @NonNull final BinaryForSourceQuery.Result res) {
+                @NullAllowed final CompilerOptionsQuery.Result cops,
+                @NullAllowed final BinaryForSourceQuery.Result res) {
             super(artefact, modName);
+            this.cops = cops;
             this.res =  res;
-            this.cl = WeakListeners.change(this, this.res);
-            this.res.addChangeListener(cl);
+            if (this.cops != null) {
+                this.copsCl = WeakListeners.change(this, this.cops);
+                this.cops.addChangeListener(copsCl);
+            } else {
+                this.copsCl = null;
+            }
+            if (this.res != null) {
+                this.resCl = WeakListeners.change(this, this.res);
+                this.res.addChangeListener(resCl);
+            } else {
+                this.resCl = null;
+            }
         }
 
         @Override
@@ -534,7 +571,12 @@ public final class ModuleNames {
         @Override
         void invalidate() {
             super.invalidate();
-            this.res.removeChangeListener(this.cl);
+            if (this.copsCl != null) {
+                this.cops.removeChangeListener(this.copsCl);;
+            }
+            if (this.resCl != null) {
+                this.res.removeChangeListener(this.resCl);
+            }
         }
     }
 }

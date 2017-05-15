@@ -66,15 +66,19 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
+import javax.swing.JButton;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.event.ChangeListener;
 import org.apache.tools.ant.module.api.AntProjectCookie;
 import org.apache.tools.ant.module.api.AntTargetExecutor;
-import org.apache.tools.ant.module.api.support.ActionUtils;
 import org.apache.tools.ant.module.api.support.AntScriptUtils;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
@@ -82,6 +86,8 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.source.BuildArtifactMapper;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.api.common.SourceRoots;
@@ -98,6 +104,10 @@ import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.netbeans.spi.project.support.ant.PropertyEvaluator;
 import org.netbeans.spi.project.support.ant.PropertyUtils;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
+import org.openide.LifecycleManager;
+import org.openide.NotifyDescriptor;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
@@ -300,6 +310,67 @@ public class J2SEActionProvider extends BaseActionProvider {
         return names;
     }
 
+    @Override
+    public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
+        final Runnable superCall = () -> super.invokeAction(command, context);
+        if (isCompileOnSaveUpdate() && cosAction.getTarget() != null && getScanSensitiveActions().contains(command)) {
+            LifecycleManager.getDefault ().saveAll ();  //Need to do saveAll eagerly
+            final JButton stopButton = new JButton(NbBundle.getMessage(J2SEActionProvider.class, "TXT_StopBuild"));
+            stopButton.setMnemonic(NbBundle.getMessage(J2SEActionProvider.class, "MNE_StopBuild").charAt(0));
+            stopButton.getAccessibleContext().setAccessibleName(NbBundle.getMessage(J2SEActionProvider.class, "AN_StopBuild"));
+            stopButton.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(J2SEActionProvider.class, "AD_StopBuild"));
+
+            final AtomicBoolean showState = new AtomicBoolean(true);
+            final AtomicBoolean stopState = new AtomicBoolean();
+
+            try {
+                final JavaSource js = createSource();
+                js.runWhenScanFinished((cc) -> {
+                    cosAction.newSyncTask(() -> SwingUtilities.invokeLater(() -> {
+                        showState.set(false);
+                        final boolean cancelled = stopState.get();
+                        stopButton.doClick();
+                        if (!cancelled) {
+                            superCall.run();
+                        }
+                    }));
+                }, false);
+                final Timer timer = new Timer(1_000, (e) -> {
+                    if (showState.get()) {
+                        final NotifyDescriptor nd = new NotifyDescriptor(
+                            NbBundle.getMessage(J2SEActionProvider.class, "TXT_CosUpdateActive"),
+                            command,
+                            NotifyDescriptor.YES_NO_OPTION,
+                            NotifyDescriptor.INFORMATION_MESSAGE,
+                            new Object[] {stopButton},
+                            null);
+                        final Object res = DialogDisplayer.getDefault().notify(nd);
+                        if (res == DialogDescriptor.CLOSED_OPTION || res == stopButton) {
+                            stopState.set(true);
+                        }
+                    }
+                });
+                timer.setRepeats(false);
+                timer.start();
+            } catch (IOException ioe) {
+                Exceptions.printStackTrace(ioe);
+                superCall.run();    //Last resort - try to run it
+            }
+        } else {
+            superCall.run();
+        }
+    }
+
+    @NonNull
+    private static JavaSource createSource() {
+        final ClasspathInfo cpInfo = ClasspathInfo.create(
+                ClassPath.EMPTY,
+                ClassPath.EMPTY,
+                ClassPath.EMPTY);
+        final JavaSource js = JavaSource.create(cpInfo);
+        return js;
+    }
+
     @ProjectServiceProvider(
             service=ActionProvider.class,
             projectTypes={@LookupProvider.Registration.ProjectType(id="org-netbeans-modules-java-j2seproject",position=100)})
@@ -470,22 +541,26 @@ public class J2SEActionProvider extends BaseActionProvider {
                     final FileObject buildXml = owner.findBuildXml();
                     if (buildXml != null) {
                         if (checkImportantFiles(buildXml)) {
-                            try {
-                                    runTargetInDedicatedTab(
-                                        NbBundle.getMessage(J2SEActionProvider.class, "LBL_CompileOnSaveUpdate"),
-                                        buildXml,
-                                        new String[] {target},
-                                        null,
-                                        null);
-                            } catch (IOException ioe) {
-                                LOG.log(
-                                        Level.WARNING,
-                                        "Cannot execute pos compile on save target: {0} in: {1}",   //NOI18N
-                                        new Object[]{
-                                            target,
-                                            FileUtil.getFileDisplayName(buildXml)
-                                        });
-                            }
+                            RUNNER.execute(() -> {
+                                try {
+                                    final ExecutorTask task = runTargetInDedicatedTab(
+                                            NbBundle.getMessage(J2SEActionProvider.class, "LBL_CompileOnSaveUpdate"),
+                                            buildXml,
+                                            new String[] {target},
+                                            null,
+                                            null);
+                                    task.result();
+                                } catch (IOException | IllegalArgumentException ex) {
+                                    LOG.log(
+                                            Level.WARNING,
+                                            "Cannot execute pos compile on save target: {0} in: {1} due to: {2}",   //NOI18N
+                                            new Object[]{
+                                                target,
+                                                FileUtil.getFileDisplayName(buildXml),
+                                                ex.getMessage()
+                                            });
+                                }
+                            });
                         }
                     }
                 }
@@ -548,6 +623,11 @@ public class J2SEActionProvider extends BaseActionProvider {
         @Override
         public void fileAttributeChanged(FileAttributeEvent fe) {
             //Not important
+        }
+
+        @NonNull
+        Future<?> newSyncTask(@NonNull final Runnable callback) {
+            return RUNNER.submit(callback, null);
         }
 
         private void updateRootsListeners() {

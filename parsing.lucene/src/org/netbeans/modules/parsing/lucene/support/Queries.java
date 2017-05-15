@@ -552,7 +552,7 @@ public final class Queries {
                         i++;
                         continue;
                     }
-                } else if (!quoted && (c == '^') || c == '$') { //NOI18N
+                } else if (!quoted && (c == '^' || c == '$')) { //NOI18N
                     continue;
                 }
                 if (!quoted && SPECIAL_CHARS.get(c)) {

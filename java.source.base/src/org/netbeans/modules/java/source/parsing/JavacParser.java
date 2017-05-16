@@ -726,7 +726,7 @@ public class JavacParser extends Parser {
         }
         if (Optional.ofNullable(mayBeParser.map(p->(p.file))
                 .orElse(file))
-                .filter((f)->FileObjects.MODULE_INFO.equals(f.getName())).isPresent()) {
+                .filter((f)->FileObjects.MODULE_INFO.equals(f.getName())&&FileObjects.CLASS.equals(f.getExt())).isPresent()) {
             flags.add(ConfigFlags.MODULE_INFO);
         }
         try(final ModuleOraculum mo = ModuleOraculum.getInstance()) {

@@ -50,6 +50,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.jumpto.EntityComparator;
+import org.netbeans.modules.jumpto.settings.GoToSettings;
 import org.netbeans.modules.jumpto.type.TypeComparator;
 import org.netbeans.modules.jumpto.type.TypeProviderAccessor;
 import org.netbeans.spi.jumpto.type.SearchType;
@@ -97,7 +98,7 @@ public class GoToTypeWorker implements Runnable {
         isCanceled = true;
     }
 
-    private List<? extends TypeDescriptor> getTypeNames(String text) {
+    private List<? extends TypeDescriptor> getTypeNames(final String text) {
         // Multiple providers: merge results
         List<TypeDescriptor> items = new ArrayList<TypeDescriptor>(128);
         List<TypeDescriptor> ccItems = new ArrayList<TypeDescriptor>(128);
@@ -129,7 +130,7 @@ public class GoToTypeWorker implements Runnable {
         ts.addAll(items);
         items.clear();
         items.addAll(ts); //eliminate duplicates
-        Collections.sort(items, new TypeComparator());
+        Collections.sort(items, TypeComparator.create(GoToSettings.SortingType.LEXICOGRAPHIC, text, false, true));
         return items;
     }
 

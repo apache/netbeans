@@ -44,6 +44,7 @@ package org.netbeans.spi.jumpto.file;
 
 import javax.swing.Icon;
 import org.netbeans.api.project.SourceGroup;
+import org.netbeans.spi.jumpto.support.Descriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -53,7 +54,7 @@ import org.openide.filesystems.FileUtil;
  * @author Tomas Zezula
  *
  */
-public abstract class FileDescriptor {
+public abstract class FileDescriptor extends Descriptor {
 
     private boolean preferred;
     private int lineNr = -1;

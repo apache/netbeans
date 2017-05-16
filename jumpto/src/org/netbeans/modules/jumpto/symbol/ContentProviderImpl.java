@@ -68,6 +68,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.modules.jumpto.EntityComparator;
 import org.netbeans.modules.jumpto.common.AbstractModelFilter;
 import org.netbeans.modules.jumpto.common.CurrentSearch;
 import org.netbeans.modules.jumpto.common.Factory;
@@ -75,6 +76,7 @@ import org.netbeans.modules.jumpto.common.ItemRenderer;
 import org.netbeans.modules.jumpto.common.Models;
 import org.netbeans.modules.jumpto.common.Models.MutableListModel;
 import org.netbeans.modules.jumpto.common.Utils;
+import org.netbeans.modules.jumpto.settings.GoToSettings;
 import org.netbeans.spi.jumpto.support.AsyncDescriptor;
 import org.netbeans.spi.jumpto.symbol.SymbolDescriptor;
 import org.netbeans.spi.jumpto.symbol.SymbolProvider;
@@ -148,6 +150,7 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
     private Worker running;
     //threading: accessed only in EDT
     private Dialog dialog;
+    private volatile SymbolComparator itemsComparator;
 
 
     public ContentProviderImpl(final JButton okButton) {
@@ -227,11 +230,12 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
             final SymbolDescriptorAttrCopier acp = currentSearch.getAttribute(SymbolDescriptorAttrCopier.class);
             final boolean correctCase = acp == null || acp.hasCorrectCase();
             if (currentSearch.isNarrowing(searchType, name, scope, correctCase)) {
+                itemsComparator.setText(name);
                 currentSearch.filter(searchType, name, null);
                 enableOK(panel.revalidateModel(true));
                 return false;
             } else {
-                running = new Worker(text, searchType, panel);
+                running = new Worker(text, name, searchType, panel);
                 task = rp.post( running, 500);
                 if ( panel.getStartTime() != -1 ) {
                     LOG.log(
@@ -267,7 +271,7 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
             @NonNull final String text,
             @NonNull final SearchType searchType,
             @NonNull final GoToPanel panel) {
-        return new Worker(text, searchType, panel);
+        return new Worker(text, text, searchType, panel);
     }
 
     private void enableOK(final boolean enabled) {
@@ -342,6 +346,7 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
     private class Worker implements Runnable {
 
         private final String text;
+        private final String name;
         private final SearchType searchType;
         private final long createTime;
         private final GoToPanel panel;
@@ -351,9 +356,11 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
 
         Worker(
                 @NonNull final String text,
+                @NonNull final String name,
                 @NonNull final SearchType searchType,
                 @NonNull final GoToPanel panel ) {
             this.text = text;
+            this.name = name;
             this.searchType = searchType;
             this.panel = panel;
             this.createTime = System.currentTimeMillis();
@@ -374,8 +381,14 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
             int lastSize = -1, lastProvCount = providers.size();
             final int[] newSize = new int[1];
             final SymbolDescriptorAttrCopier attrCopier = new SymbolDescriptorAttrCopier();
+            final SymbolComparator ic = SymbolComparator.create(
+                    GoToSettings.getDefault().getSortingType(),
+                    name,
+                    Utils.isCaseSensitive(searchType),
+                    GoToSettings.getDefault().isSortingPreferOpenProjects());
+            itemsComparator = ic;
             final MutableListModel<SymbolDescriptor> model = Models.mutable(
-                    new SymbolComparator(),
+                    ic,
                     currentSearch.resetFilter(),
                     attrCopier);
             try {

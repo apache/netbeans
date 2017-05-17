@@ -55,7 +55,7 @@ import org.openide.util.NbBundle;
 @ActionRegistration(displayName = "#LBL_EncapsulateFieldsAction", lazy = false)
 @ActionReferences({
     @ActionReference(path = "Editors/text/x-java/RefactoringActions", name = "EncapsulateFieldAction", position = 1800),
-    @ActionReference(path = "Shortcuts", name = "OCS-E")
+    @ActionReference(path = "Shortcuts", name = "CS-Y E")
 })
 public final class EncapsulateFieldAction extends JavaRefactoringGlobalAction {
 

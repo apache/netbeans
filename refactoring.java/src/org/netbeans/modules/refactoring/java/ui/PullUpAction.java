@@ -59,7 +59,7 @@ import org.openide.util.NbBundle;
 @ActionRegistration(displayName = "#LBL_PullUp_Action", lazy = false)
 @ActionReferences({
     @ActionReference(path = "Editors/text/x-java/RefactoringActions", name = "PullUpAction", position = 500),
-    @ActionReference(path = "Shortcuts", name = "OCS-U")
+    @ActionReference(path = "Shortcuts", name = "CS-Y U")
 })
 public class PullUpAction extends JavaRefactoringGlobalAction {
 

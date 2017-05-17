@@ -60,7 +60,7 @@ import org.openide.util.NbBundle;
 @ActionRegistration(displayName = "#LBL_PushDown_Action", lazy = false)
 @ActionReferences({
     @ActionReference(path = "Editors/text/x-java/RefactoringActions", name = "PushDownAction", position = 600),
-    @ActionReference(path = "Shortcuts", name = "OCS-D")
+    @ActionReference(path = "Shortcuts", name = "CS-Y D")
 })
 public class PushDownAction extends JavaRefactoringGlobalAction {
     

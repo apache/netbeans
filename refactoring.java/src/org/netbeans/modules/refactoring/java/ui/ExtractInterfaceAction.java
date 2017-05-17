@@ -58,7 +58,7 @@ import org.openide.util.NbBundle;
 @ActionRegistration(displayName = "#LBL_ExtractInterface_Action", lazy = false)
 @ActionReferences({
     @ActionReference(path = "Editors/text/x-java/RefactoringActions", name = "ExtractInterfaceAction", position = 700),
-    @ActionReference(path = "Shortcuts", name = "OCS-T")
+    @ActionReference(path = "Shortcuts", name = "CS-Y T")
 })
 public final class ExtractInterfaceAction extends JavaRefactoringGlobalAction {
 

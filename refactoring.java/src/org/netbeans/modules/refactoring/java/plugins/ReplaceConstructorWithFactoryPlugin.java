@@ -86,6 +86,7 @@ public class ReplaceConstructorWithFactoryPlugin extends JavaRefactoringPlugin {
 
     @Override
     protected Problem preCheck(CompilationController javac) throws IOException {
+        javac.toPhase(JavaSource.Phase.RESOLVED);
         Element constr = treePathHandle.resolveElement(javac);
         if(constr.getKind() != ElementKind.CONSTRUCTOR) {
             return new Problem(true, ERR_ReplaceWrongType());

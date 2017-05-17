@@ -49,7 +49,7 @@ Contributor(s):
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>8.17</specification-version>
+                        <specification-version>8.22</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>

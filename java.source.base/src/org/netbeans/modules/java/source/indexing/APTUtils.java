@@ -256,6 +256,15 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
         return false;
     }
 
+    /**
+     * Returns the root the APTUtils was created for.
+     * @return the {@link FileObject}
+     */
+    @NonNull
+    public FileObject getRoot() {
+        return root;
+    }
+
     public boolean aptEnabledOnScan() {
         return aptOptions.annotationProcessingEnabled().contains(AnnotationProcessingQuery.Trigger.ON_SCAN);
     }

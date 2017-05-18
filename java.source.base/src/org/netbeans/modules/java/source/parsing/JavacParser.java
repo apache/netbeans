@@ -79,6 +79,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -117,7 +118,6 @@ import org.netbeans.api.java.source.ClasspathInfo.PathKind;
 import org.netbeans.api.java.source.JavaParserResultTask;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
-import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.lib.editor.util.swing.PositionRegion;
@@ -861,7 +861,7 @@ public class JavacParser extends Parser {
         boolean aptEnabled = aptUtils != null &&
                 aptUtils.aptEnabledOnScan() &&
                 (backgroundCompilation || (aptUtils.aptEnabledInEditor() && !multiSource)) &&
-                !ClasspathInfoAccessor.getINSTANCE().getCachedClassPath(cpInfo, PathKind.SOURCE).entries().isEmpty();
+                hasSourceCache(cpInfo, aptUtils);
         Collection<? extends Processor> processors = null;
         if (aptEnabled) {
             processors = aptUtils.resolveProcessors(backgroundCompilation);
@@ -1089,6 +1089,22 @@ public class JavacParser extends Parser {
             }
         }
         return true;
+    }
+
+    private static boolean hasSourceCache(
+            @NonNull final ClasspathInfo cpInfo,
+            @NonNull final APTUtils aptUtils) {
+        final List<? extends ClassPath.Entry> entries = ClasspathInfoAccessor.getINSTANCE().getCachedClassPath(cpInfo, PathKind.SOURCE).entries();
+        if (entries.isEmpty()) {
+            return false;
+        }
+        final URL sourceRoot = aptUtils.getRoot().toURL();
+        for (ClassPath.Entry entry : entries) {
+            if (sourceRoot.equals(entry.getURL())) {
+                return true;
+            }
+        }
+        return false;
     }
 
      private static boolean hasResource(

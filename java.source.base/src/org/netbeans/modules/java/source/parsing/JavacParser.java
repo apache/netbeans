@@ -389,10 +389,13 @@ public class JavacParser extends Parser {
         }
         if (newSource.equals(oldSource)) {
             return false;
-        } else {
-            currentSource = new WeakReference<>(newSource);
-            return true;
         }
+        if (newSource.getClasspathInfo() == oldSource.getClasspathInfo()) {
+            currentSource = new WeakReference<>(newSource);
+            return false;
+        }
+        currentSource = new WeakReference<>(newSource);
+        return true;
     }
 
     private void parseImpl(

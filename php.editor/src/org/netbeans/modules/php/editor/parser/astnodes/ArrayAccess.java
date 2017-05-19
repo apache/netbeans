@@ -43,39 +43,29 @@ package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
  * Holds a variable and an index that point to array or hashtable
- * <pre>e.g.<pre> $a[],
+ * <pre>e.g. $a[],
  * $a[1],
  * $a[$b],
  * $a{'name'}
+ * </pre>
  */
 public class ArrayAccess extends Variable {
-
-    public enum Type {
-        VARIABLE_ARRAY,
-        VARIABLE_HASHTABLE
-    }
 
     /**
      * In case of array / hashtable variable, the index expression is added
      */
-    private ArrayDimension dimension;
-    private ArrayAccess.Type arrayType;
+    private final ArrayDimension dimension;
 
-    public ArrayAccess(int start, int end, VariableBase variableName, ArrayDimension dimension, ArrayAccess.Type arrayType) {
+    public ArrayAccess(int start, int end, VariableBase variableName, ArrayDimension dimension) {
         super(start, end, variableName);
 
         //if (variableName != null) variableName.setParent(this);
         //if (index != null) index.setParent(index);
         this.dimension = dimension;
-        this.arrayType = arrayType;
     }
 
     public ArrayDimension getDimension() {
         return dimension;
-    }
-
-    public ArrayAccess.Type getArrayType() {
-        return arrayType;
     }
 
     /**
@@ -95,7 +85,7 @@ public class ArrayAccess extends Variable {
 
     @Override
     public String toString() {
-        return getArrayType() + " " + getName() + getDimension(); //NOI18N
+        return getDimension().getType() + " " + getName() + getDimension(); //NOI18N
     }
 
 }

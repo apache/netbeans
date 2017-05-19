@@ -86,9 +86,9 @@ parser code {:
         return anonymousClassCounter;
     }
 
-	public VariableBase createDispatch(VariableBase dispatcher, Pair<VariableBase, Boolean> pair, List dimensions) {
-		VariableBase dispatch = null;
-		VariableBase property = pair.first();
+    public VariableBase createDispatch(VariableBase dispatcher, Pair<Expression, Boolean> pair, List dimensions) {
+        VariableBase dispatch = null;
+        Expression property = pair.first();
         boolean isStatic = pair.second();
         if (property instanceof DereferencedArrayAccess) {
             DereferencedArrayAccess arrayAccess = (DereferencedArrayAccess) property;
@@ -103,7 +103,7 @@ parser code {:
         if (property instanceof Variable) {
             if (isStatic) {
                 Variable variable = (Variable) property;
-                if (variable.isDollared()) {
+                if (variable.isDollared() || variable instanceof ArrayAccess) {
                     dispatch = new StaticFieldAccess(dispatcher.getStartOffset(), property.getEndOffset(), dispatcher, (Variable) property);
                 } else {
                     Expression varName = variable.getName();
@@ -115,23 +115,26 @@ parser code {:
             } else {
                 dispatch = new FieldAccess(dispatcher.getStartOffset(), property.getEndOffset(), dispatcher, (Variable)property);
             }
-		} else if (property instanceof FunctionInvocation) {
+        } else if (property instanceof FunctionInvocation) {
             if (isStatic) {
                 dispatch = new StaticMethodInvocation(dispatcher.getStartOffset(), property.getEndOffset(), dispatcher, (FunctionInvocation)property);
             } else {
                 dispatch = new MethodInvocation(dispatcher.getStartOffset(), property.getEndOffset(), dispatcher, (FunctionInvocation)property);
             }
-		} else {
-			throw new IllegalArgumentException("Unexpected class: " + property.getClass().getName());
-		}
+        } else if (property instanceof ExpressionArrayAccess || property instanceof Identifier) {
+            dispatch = new StaticConstantAccess(dispatcher.getStartOffset(), property.getEndOffset(), dispatcher, property);
+        } else {
+            throw new IllegalArgumentException("Unexpected class: " + property.getClass().getName());
+        }
+
         if (dimensions != null) {
             for (Object i : dimensions) {
                 ArrayDimension index = (ArrayDimension) i;
                 dispatch = new DereferencedArrayAccess(dispatch.getStartOffset(), index.getEndOffset(), dispatch, index);
             }
         }
-		return dispatch;
-	}
+        return dispatch;
+    }
 
 	public VariableBase createDispatch(VariableBase dispatcher, VariableBase property, List dimensions) {
 		return createDispatch(dispatcher, Pair.of(property, false), null);
@@ -141,9 +144,9 @@ parser code {:
 		return createDispatch(dispatcher, property, null);
 	}
 
-    public VariableBase createDispatch(boolean isStatic, VariableBase var, VariableBase memberProperty, int memberPropertyleft, int memberPropertyright,
+    public VariableBase createDispatch(boolean isStatic, VariableBase var, Expression memberProperty, int memberPropertyleft, int memberPropertyright,
             List<Expression> paramsList, int paramsListright, List propertyList, List aa) {
-        VariableBase firstVarProperty = null;
+        Expression firstVarProperty = null;
         if (paramsList == null) {
             firstVarProperty = memberProperty;
         } else {
@@ -161,7 +164,7 @@ parser code {:
         List arrayDimensiones = aa;
         Iterator listIt = list.iterator();
         while (listIt.hasNext()) {
-            Pair<VariableBase, Boolean> property = (Pair<VariableBase, Boolean>) listIt.next();
+            Pair<Expression, Boolean> property = (Pair<Expression, Boolean>) listIt.next();
             dispatch = createDispatch(dispatcher, property, arrayDimensiones);
             dispatcher = dispatch;
             arrayDimensiones = new LinkedList();
@@ -169,18 +172,20 @@ parser code {:
         return dispatch;
     }
 
-    public Pair<VariableBase, Boolean> createDispatchProperty(boolean isStatic, VariableBase memberProperty, int memberPropertyleft, int memberPropertyright,
+    public Pair<Expression, Boolean> createDispatchProperty(boolean isStatic, Expression memberProperty, int memberPropertyleft, int memberPropertyright,
             List<Expression> paramsList, int paramsListright, List aa) {
-        VariableBase result = null;
+        Expression result = null;
         if (paramsList == null) {
             result = memberProperty;
         } else {
             FunctionName functionName = new FunctionName(memberPropertyleft, memberPropertyright, memberProperty);
             result = new FunctionInvocation(memberPropertyleft, paramsListright, functionName, paramsList);
         }
-        for (Object i : aa) {
-            ArrayDimension index = (ArrayDimension) i;
-            result = new DereferencedArrayAccess(result.getStartOffset(), index.getEndOffset(), result, index);
+        if (result instanceof VariableBase) {
+            for (Object i : aa) {
+                ArrayDimension index = (ArrayDimension) i;
+                result = new DereferencedArrayAccess(result.getStartOffset(), index.getEndOffset(), (VariableBase) result, index);
+            }
         }
         return Pair.of(result, isStatic);
     }
@@ -447,7 +452,10 @@ non terminal Variable reference_variable;
 non terminal Variable variable_class_name;
 non terminal Variable compound_variable;
 non terminal Expression dim_offset;
+non terminal ArrayDimension array_dimension;
+non terminal ArrayDimension array_dimension_with_static_scalar_value;
 non terminal List array_access_or_not;
+non terminal Expression static_property;
 non terminal VariableBase object_property;
 non terminal VariableBase object_dim_list;
 non terminal VariableBase variable_name;
@@ -480,7 +488,7 @@ non terminal VariableBase field_or_method_access;
 non terminal Expression expression_array_access;
 non terminal Expression constant_array_access;
 non terminal Expression array_creation;
-non terminal Expression array_creation_with_access;
+non terminal VariableBase array_creation_with_access;
 non terminal ClassInstanceCreation anonymous_class;
 
 non terminal VariableBase w_variable;
@@ -522,7 +530,7 @@ non terminal VariableBase r_variable;
 non terminal Integer variable_modifiers;
 non terminal VariableBase rw_variable;
 non terminal Variable variable_without_objects;
-non terminal Pair<VariableBase, Boolean> variable_property;
+non terminal Pair<Expression, Boolean> variable_property;
 non terminal VariableBase static_member;
 non terminal List isset_variables;
 non terminal Expression isset_variable;
@@ -535,7 +543,9 @@ non terminal ClassName class_name_reference;
 non terminal StaticConstantAccess class_constant;
 non terminal Expression reference_constant;
 non terminal ClassName dynamic_class_name_reference;
+non terminal VariableBase dereferencable_variable;
 non terminal VariableBase base_variable;
+non terminal VariableBase base_variable_without_reference_variable;
 non terminal List dynamic_class_name_variable_properties;
 non terminal VariableBase dynamic_class_name_variable_property;
 non terminal StaticConstantAccess static_class_constant;
@@ -577,7 +587,7 @@ precedence right T_NOT;
 precedence nonassoc T_INSTANCEOF;
 precedence right T_TILDA,T_INC,T_DEC,T_INT_CAST,T_DOUBLE_CAST,T_STRING_CAST,T_ARRAY_CAST,T_OBJECT_CAST,T_BOOL_CAST,T_UNSET_CAST,T_AT;
 precedence right T_CLOSE_PARENTHESE;
-precedence right T_OPEN_RECT;
+precedence right T_OPEN_RECT, T_CURLY_OPEN, T_OPEN_PARENTHESE;
 precedence nonassoc T_NEW, T_CLONE;
 precedence left T_ELSEIF;
 precedence left T_ELSE;
@@ -2949,6 +2959,12 @@ expr_without_variable_and_class_instance:ex
 	ClassInstanceCreation classInstanceCreation = new ClassInstanceCreation(startleft, ctorright, className, ctor);
 	RESULT = classInstanceCreation;
 :}
+
+| T_CLONE:start expr:expr
+{:
+	CloneExpression clone = new CloneExpression(startleft, exprright, expr);
+	RESULT = clone;
+:}
 ;
 
 expr_without_variable_and_class_instance ::=
@@ -2982,12 +2998,6 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:varList T_CLOSE_PARENTHESE:close 
 	Reference reference = new Reference(reftokenleft, ctorright, classInstanceCreation);
 	Assignment assignment = new Assignment(varleft, ctorright, var, Assignment.Type.EQUAL, reference);
 	RESULT = assignment;
-:}
-
-| T_CLONE:start expr:expr
-{:
-	CloneExpression clone = new CloneExpression(startleft, exprright, expr);
-	RESULT = clone;
 :}
 
 | variable:var T_POW_EQUAL expr:expr
@@ -3476,9 +3486,9 @@ namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_
 		new FunctionName(startleft, startright, start), parameters);
 :}
 
-| function_call:var T_OPEN_RECT:o dim_offset:index T_CLOSE_RECT:end
+| function_call:var array_dimension:ad
 {:
-    RESULT = new DereferencedArrayAccess(varleft, endright, var, new ArrayDimension(oleft, endright, index));
+    RESULT = new DereferencedArrayAccess(varleft, adright, var, ad);
 :}
 
 | function_call:call T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
@@ -3492,6 +3502,16 @@ callable_expr ::=
 parenthesis_expr:expr
 {:
 	RESULT = expr;
+:}
+
+| dereferencable_variable:dereferencableVariable
+{:
+	RESULT = dereferencableVariable;
+:}
+
+| field_or_method_access:fma
+{:
+	RESULT = fma;
 :}
 
 | T_OPEN_PARENTHESE:start anonymous_class:cls T_CLOSE_PARENTHESE:end
@@ -3796,14 +3816,14 @@ static_array_creation:arrayCreation
     RESULT = arrayAccess;
 :}
 
-| T_ENCAPSED_AND_WHITESPACE:str T_OPEN_RECT:o static_scalar_value:index T_CLOSE_RECT:end
+| T_ENCAPSED_AND_WHITESPACE:str array_dimension_with_static_scalar_value:ad
 {:
-    RESULT = new ExpressionArrayAccess(strleft, endright, new Identifier(strleft, strright, str), new ArrayDimension(oleft, endright, index));
+    RESULT = new ExpressionArrayAccess(strleft, adright, new Identifier(strleft, strright, str), ad);
 :}
 
-| T_CONSTANT_ENCAPSED_STRING:str T_OPEN_RECT:o static_scalar_value:index T_CLOSE_RECT:end
+| T_CONSTANT_ENCAPSED_STRING:str array_dimension_with_static_scalar_value:ad
 {:
-    RESULT = new ExpressionArrayAccess(strleft, endright, new Identifier(strleft, strright, str), new ArrayDimension(oleft, endright, index));
+    RESULT = new ExpressionArrayAccess(strleft, adright, new Identifier(strleft, strright, str), ad);
 :}
 
 | static_scalar_value:expr1 T_PLUS static_scalar_value:expr2
@@ -4008,41 +4028,41 @@ static_class_constant_array_access:arrayAccess
 static_class_constant_array_access ::=
 static_class_constant_array_access:arrayAccess T_OPEN_RECT:o static_scalar_value:index T_CLOSE_RECT:end
 {:
-	RESULT = new ExpressionArrayAccess(arrayAccessleft, endright, arrayAccess, new ArrayDimension(oleft, endright, index));
+	RESULT = new ExpressionArrayAccess(arrayAccessleft, endright, arrayAccess, new ArrayDimension(oleft, endright, index, ArrayDimension.Type.VARIABLE_ARRAY));
 :}
 
 | identifier:constantName T_OPEN_RECT:o static_scalar_value:index T_CLOSE_RECT:end
 {:
-	RESULT = new ExpressionArrayAccess(constantNameleft, endright, constantName, new ArrayDimension(oleft, endright, index));
+	RESULT = new ExpressionArrayAccess(constantNameleft, endright, constantName, new ArrayDimension(oleft, endright, index, ArrayDimension.Type.VARIABLE_ARRAY));
 :}
 ;
 
 static_constant_array_access ::=
 static_constant_array_access:arrayAccess T_OPEN_RECT:o static_scalar_value:index T_CLOSE_RECT:end
 {:
-	RESULT = new ExpressionArrayAccess(arrayAccessleft, endright, arrayAccess, new ArrayDimension(oleft, endright, index));
+	RESULT = new ExpressionArrayAccess(arrayAccessleft, endright, arrayAccess, new ArrayDimension(oleft, endright, index, ArrayDimension.Type.VARIABLE_ARRAY));
 :}
 
 | T_STRING:constantName T_OPEN_RECT:o static_scalar_value:index T_CLOSE_RECT:end
 {:
-	RESULT = new ExpressionArrayAccess(constantNameleft, endright, new Identifier(constantNameleft, constantNameright, constantName), new ArrayDimension(oleft, endright, index));
+	RESULT = new ExpressionArrayAccess(constantNameleft, endright, new Identifier(constantNameleft, constantNameright, constantName), new ArrayDimension(oleft, endright, index, ArrayDimension.Type.VARIABLE_ARRAY));
 :}
 
 | namespace_name_access:namespace T_OPEN_RECT:o static_scalar_value:index T_CLOSE_RECT:end
 {:
-	RESULT = new ExpressionArrayAccess(namespaceleft, endright, namespace, new ArrayDimension(oleft, endright, index));
+	RESULT = new ExpressionArrayAccess(namespaceleft, endright, namespace, new ArrayDimension(oleft, endright, index, ArrayDimension.Type.VARIABLE_ARRAY));
 :}
 ;
 
 static_array_creation_with_access ::=
-static_array_creation:arr T_OPEN_RECT:o static_scalar_value:index T_CLOSE_RECT:end
+static_array_creation:arr array_dimension_with_static_scalar_value:ad
 {:
-    RESULT = new ExpressionArrayAccess(arrleft, endright, arr, new ArrayDimension(oleft, endright, index));
+    RESULT = new ExpressionArrayAccess(arrleft, adright, arr, ad);
 :}
 
-| static_array_creation_with_access:acc T_OPEN_RECT:o static_scalar_value:index T_CLOSE_RECT:end
+| static_array_creation_with_access:acc array_dimension_with_static_scalar_value:ad
 {:
-    RESULT = new ExpressionArrayAccess(accleft, endright, acc, new ArrayDimension(oleft, endright, index));
+    RESULT = new ExpressionArrayAccess(accleft, adright, acc, ad);
 :}
 ;
 
@@ -4281,7 +4301,12 @@ base_variable_with_function_calls:var T_OBJECT_OPERATOR object_property:memberPr
 :}
 
 //| base_variable_with_function_calls:var T_PAAMAYIM_NEKUDOTAYIM object_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
-| function_call:var T_PAAMAYIM_NEKUDOTAYIM object_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
+| function_call:var T_PAAMAYIM_NEKUDOTAYIM static_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
+{:
+	RESULT = parser.createDispatch(true, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
+:}
+
+| base_variable_without_reference_variable:var T_PAAMAYIM_NEKUDOTAYIM static_property:memberProperty method_or_not:paramsList array_access_or_not:aa variable_properties:propertyList
 {:
 	RESULT = parser.createDispatch(true, var, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, propertyList, aa);
 :}
@@ -4318,7 +4343,7 @@ T_OBJECT_OPERATOR object_property:memberProperty method_or_not:paramsList array_
     RESULT = parser.createDispatchProperty(false, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, aa);
 :}
 
-| T_PAAMAYIM_NEKUDOTAYIM object_property:memberProperty method_or_not:paramsList array_access_or_not:aa
+| T_PAAMAYIM_NEKUDOTAYIM static_property:memberProperty method_or_not:paramsList array_access_or_not:aa
 {:
     RESULT = parser.createDispatchProperty(true, memberProperty, memberPropertyleft, memberPropertyright, paramsList, paramsListright, aa);
 :}
@@ -4336,17 +4361,41 @@ T_OPEN_PARENTHESE function_call_parameter_list:paramsList T_CLOSE_PARENTHESE
 :}
 ;
 
-array_access_or_not ::=
+array_dimension ::=
 T_OPEN_RECT:o dim_offset:index T_CLOSE_RECT:end
 {:
+    RESULT = new ArrayDimension(oleft, endright, index, ArrayDimension.Type.VARIABLE_ARRAY);
+:}
+
+| T_CURLY_OPEN:o dim_offset:index T_CURLY_CLOSE:end
+{:
+    RESULT = new ArrayDimension(oleft, endright, index, ArrayDimension.Type.VARIABLE_HASHTABLE);
+:}
+;
+
+array_dimension_with_static_scalar_value ::=
+T_OPEN_RECT:o static_scalar_value:index T_CLOSE_RECT:end
+{:
+    RESULT = new ArrayDimension(oleft, endright, index, ArrayDimension.Type.VARIABLE_ARRAY);
+:}
+
+| T_CURLY_OPEN:o static_scalar_value:index T_CURLY_CLOSE:end
+{:
+    RESULT = new ArrayDimension(oleft, endright, index, ArrayDimension.Type.VARIABLE_HASHTABLE);
+:}
+;
+
+array_access_or_not ::=
+array_dimension:ad
+{:
     List list = new LinkedList();
-    list.add(new ArrayDimension(oleft, endright, index));
+    list.add(ad);
     RESULT = list;
 :}
 
-| array_access_or_not:list T_OPEN_RECT:o dim_offset:index T_CLOSE_RECT:end
+| array_access_or_not:list array_dimension:ad
 {:
-    list.add(new ArrayDimension(oleft, endright, index));
+    list.add(ad);
     RESULT = list;
 :}
 
@@ -4414,48 +4463,43 @@ constant_array_access:arrayAccess
     RESULT = arrayAccess;
 :}
 
-| T_ENCAPSED_AND_WHITESPACE:str T_OPEN_RECT:o dim_offset:index T_CLOSE_RECT:end
+| T_ENCAPSED_AND_WHITESPACE:str array_dimension:ad
 {:
-    RESULT = new ExpressionArrayAccess(strleft, endright, new Identifier(strleft, strright, str), new ArrayDimension(oleft, endright, index));
+    RESULT = new ExpressionArrayAccess(strleft, adright, new Identifier(strleft, strright, str), ad);
 :}
 
-| T_CONSTANT_ENCAPSED_STRING:str T_OPEN_RECT:o dim_offset:index T_CLOSE_RECT:end
+| T_CONSTANT_ENCAPSED_STRING:str array_dimension:ad
 {:
-    RESULT = new ExpressionArrayAccess(strleft, endright, new Identifier(strleft, strright, str), new ArrayDimension(oleft, endright, index));
-:}
-
-| array_creation_with_access:arr
-{:
-    RESULT = arr;
+    RESULT = new ExpressionArrayAccess(strleft, adright, new Identifier(strleft, strright, str), ad);
 :}
 ;
 
 constant_array_access ::=
-constant_array_access:arrayAccess T_OPEN_RECT:o dim_offset:index T_CLOSE_RECT:end
+constant_array_access:arrayAccess array_dimension:ad
 {:
-    RESULT = new ExpressionArrayAccess(arrayAccessleft, endright, arrayAccess, new ArrayDimension(oleft, endright, index));
+    RESULT = new ExpressionArrayAccess(arrayAccessleft, adright, arrayAccess, ad);
 :}
 
-| T_STRING:constantName T_OPEN_RECT:o dim_offset:index T_CLOSE_RECT:end
+| T_STRING:constantName array_dimension:ad
 {:
-    RESULT = new ExpressionArrayAccess(constantNameleft, endright, new Identifier(constantNameleft, constantNameright, constantName), new ArrayDimension(oleft, endright, index));
+    RESULT = new ExpressionArrayAccess(constantNameleft, adright, new Identifier(constantNameleft, constantNameright, constantName), ad);
 :}
 
-| namespace_name_access:namespace T_OPEN_RECT:o dim_offset:index T_CLOSE_RECT:end
+| namespace_name_access:namespace array_dimension:ad
 {:
-	RESULT = new ExpressionArrayAccess(namespaceleft, endright, namespace, new ArrayDimension(oleft, endright, index));
+	RESULT = new ExpressionArrayAccess(namespaceleft, adright, namespace, ad);
 :}
 ;
 
 array_creation_with_access ::=
-array_creation:arr T_OPEN_RECT:o dim_offset:index T_CLOSE_RECT:end
+array_creation:arr array_dimension:ad
 {:
-    RESULT = new ExpressionArrayAccess(arrleft, endright, arr, new ArrayDimension(oleft, endright, index));
+    RESULT = new ExpressionArrayAccess(arrleft, adright, arr, ad);
 :}
 
-| array_creation_with_access:acc T_OPEN_RECT:o dim_offset:index T_CLOSE_RECT:end
+| array_creation_with_access:acc array_dimension:ad
 {:
-    RESULT = new ExpressionArrayAccess(accleft, endright, acc, new ArrayDimension(oleft, endright, index));
+    RESULT = new ExpressionArrayAccess(accleft, adright, acc, ad);
 :}
 ;
 
@@ -4479,7 +4523,14 @@ reference_variable:var
 	RESULT = var;
 :}
 
-| T_OPEN_PARENTHESE:start anonymous_class:cls T_CLOSE_PARENTHESE:end
+| base_variable_without_reference_variable:variable
+{:
+	RESULT = variable;
+:}
+;
+
+base_variable_without_reference_variable ::=
+T_OPEN_PARENTHESE:start anonymous_class:cls T_CLOSE_PARENTHESE:end
 {:
     RESULT = new AnonymousObjectVariable(startleft, endright, cls);
 :}
@@ -4488,6 +4539,12 @@ reference_variable:var
 {:
     ClassInstanceCreation classInstanceCreation = new ClassInstanceCreation(nleft, ctorright, className, ctor);
     RESULT = new AnonymousObjectVariable(startleft, endright, classInstanceCreation);
+:}
+
+| T_OPEN_PARENTHESE:start T_CLONE:c expr:expr T_CLOSE_PARENTHESE:end
+{:
+    CloneExpression clone = new CloneExpression(cleft, exprright, expr);
+    RESULT = new AnonymousObjectVariable(startleft, endright, clone);
 :}
 
 | simple_indirect_reference:ref_count reference_variable:var
@@ -4505,18 +4562,34 @@ reference_variable:var
 {:
 	RESULT = staticFieldAccess;
 :}
+
+| array_creation_with_access:arrayCreationWithAccess
+{:
+	RESULT = arrayCreationWithAccess;
+:}
+
+| dereferencable_variable:dereferencableVariable
+{:
+	RESULT = dereferencableVariable;
+:}
+;
+
+dereferencable_variable ::=
+T_OPEN_PARENTHESE:start variable:var T_CLOSE_PARENTHESE:end
+{:
+    RESULT = new DereferencableVariable(startleft, endright, var);
+:}
+
+| dereferencable_variable:var array_dimension:ad
+{:
+    RESULT = new DereferencedArrayAccess(varleft, adright, var, ad);
+:}
 ;
 
 reference_variable ::=
-reference_variable:varName T_OPEN_RECT:o dim_offset:index T_CLOSE_RECT:end
+reference_variable:varName array_dimension:ad
 {:
-	Variable var = new ArrayAccess(varNameleft, endright, varName, new ArrayDimension(oleft, endright, index), ArrayAccess.Type.VARIABLE_ARRAY);
-	RESULT = var;
-:}
-
-| reference_variable:varName T_CURLY_OPEN:o expr:index T_CURLY_CLOSE:end
-{:
-	Variable var = new ArrayAccess(varNameleft, endright, varName, new ArrayDimension(oleft, endright, index), ArrayAccess.Type.VARIABLE_HASHTABLE);
+	Variable var = new ArrayAccess(varNameleft, adright, varName, ad);
 	RESULT = var;
 :}
 
@@ -4547,6 +4620,18 @@ dim_offset ::=
 :}
 ;
 
+static_property ::=
+variable_without_objects:var
+{:
+	RESULT = var;
+:}
+
+| static_reference_constant:var
+{:
+	RESULT = var;
+:}
+;
+
 object_property ::=
 object_dim_list:var
 {:
@@ -4560,15 +4645,9 @@ object_dim_list:var
 ;
 
 object_dim_list ::=
-object_dim_list:var T_OPEN_RECT:o dim_offset:index T_CLOSE_RECT:end
+object_dim_list:var array_dimension:ad
 {:
-	Variable varArray = new ArrayAccess(varleft, endright, var, new ArrayDimension(oleft, endright, index), ArrayAccess.Type.VARIABLE_ARRAY);
-	RESULT = varArray;
-:}
-
-| object_dim_list:var T_CURLY_OPEN:o expr:index T_CURLY_CLOSE:end
-{:
-	Variable varArray = new ArrayAccess(varleft, endright, var, new ArrayDimension(oleft, endright, index), ArrayAccess.Type.VARIABLE_HASHTABLE);
+	Variable varArray = new ArrayAccess(varleft, adright, var, ad);
 	RESULT = varArray;
 :}
 
@@ -4709,7 +4788,7 @@ tracked_variable:var
 
 | tracked_variable:varName T_OPEN_RECT:o encaps_var_offset:index T_CLOSE_RECT:end
 {:
-	Variable var = new ArrayAccess(varNameleft, endright, varName, new ArrayDimension(oleft, endright, index), ArrayAccess.Type.VARIABLE_ARRAY);
+	Variable var = new ArrayAccess(varNameleft, endright, varName, new ArrayDimension(oleft, endright, index, ArrayDimension.Type.VARIABLE_ARRAY));
 	RESULT = var;
 :}
 
@@ -4729,7 +4808,7 @@ tracked_variable:var
 | T_DOLLAR_OPEN_CURLY_BRACES:start T_STRING_VARNAME:varName T_OPEN_RECT:o expr:index T_CLOSE_RECT:c T_CURLY_CLOSE:end
 {:
 	Variable var = new Variable(varNameleft, varNameright, varName);
-	Variable indexedVar = new ArrayAccess(startleft, endright, var, new ArrayDimension(oleft, cright, index), ArrayAccess.Type.VARIABLE_ARRAY);
+	Variable indexedVar = new ArrayAccess(startleft, endright, var, new ArrayDimension(oleft, cright, index, ArrayDimension.Type.VARIABLE_ARRAY));
 	RESULT = indexedVar;
 :}
 
@@ -4873,9 +4952,9 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM reference_constant:constant
 ;
 
 reference_constant ::=
-reference_constant:constant T_OPEN_RECT:o dim_offset:index T_CLOSE_RECT:end
+reference_constant:constant array_dimension:ad
 {:
-	RESULT = new ExpressionArrayAccess(constantleft, endright, constant, new ArrayDimension(oleft, endright, index));
+	RESULT = new ExpressionArrayAccess(constantleft, adright, constant, ad);
 :}
 
 | identifier:constantName

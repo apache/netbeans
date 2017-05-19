@@ -55,10 +55,15 @@ import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.AnonymousObjectVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.ArrayDimension;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.CloneExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.DereferencableVariable;
+import org.netbeans.modules.php.editor.parser.astnodes.DereferencedArrayAccess;
+import org.netbeans.modules.php.editor.parser.astnodes.Dispatch;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.ExpressionArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
@@ -70,14 +75,15 @@ import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
 import org.netbeans.modules.php.editor.parser.astnodes.InfixExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
-import org.netbeans.modules.php.editor.parser.astnodes.ParenthesisExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticDispatch;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
+import org.netbeans.modules.php.editor.parser.astnodes.VariableBase;
 import org.netbeans.modules.php.editor.parser.astnodes.YieldExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.YieldFromExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
@@ -253,6 +259,15 @@ public class PHP70UnhandledError extends UnhandledErrorRule {
         }
 
         @Override
+        public void visit(MethodInvocation node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            checkDispatcher(node);
+            super.visit(node);
+        }
+
+        @Override
         public void visit(StaticMethodInvocation node) {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
@@ -280,6 +295,36 @@ public class PHP70UnhandledError extends UnhandledErrorRule {
             super.visit(node);
         }
 
+        @Override
+        public void visit(AnonymousObjectVariable node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            // (clone $this->getSomething())
+            checkCloneExpression(node.getName());
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(ExpressionArrayAccess node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            // e.g. [1, 2, 3]{0}
+            checkArrayDimension(node.getDimension());
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(DereferencedArrayAccess node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            // e.g. test(){0};
+            checkArrayDimension(node.getDimension());
+            super.visit(node);
+        }
+
         private void checkScalarTypes(List<FormalParameter> formalParameters) {
             for (FormalParameter formalParameter : formalParameters) {
                 // nullable types are checked in PHP71UnhandledError, so just ignore "?"
@@ -294,6 +339,17 @@ public class PHP70UnhandledError extends UnhandledErrorRule {
         private void checkReturnType(Expression returnType) {
             if (returnType != null) {
                 createError(returnType);
+            }
+        }
+
+        private void checkDispatcher(Dispatch node) {
+            // check dereferencable variable
+            // e.g. ($foo->test())->test2();
+            // [$object1, $object2][0]->test();
+            VariableBase dispatcher = node.getDispatcher();
+            if (dispatcher instanceof DereferencableVariable
+                    || dispatcher instanceof ExpressionArrayAccess) {
+                createError(dispatcher);
             }
         }
 
@@ -330,7 +386,7 @@ public class PHP70UnhandledError extends UnhandledErrorRule {
             Expression name = functionName.getName();
             if (name instanceof Scalar // "strlen"("something");
                     || name instanceof ArrayCreation // ["Foo", "bar"]();
-                    || name instanceof ParenthesisExpression // ($foo)();
+                    || name instanceof DereferencableVariable // ($foo)();
                     || name instanceof AnonymousObjectVariable) { // (new Object)();
                 createError(name);
             }
@@ -355,6 +411,18 @@ public class PHP70UnhandledError extends UnhandledErrorRule {
 
         private void checkMethodName(Identifier node) {
             if (node != null && node.isKeyword()) {
+                createError(node);
+            }
+        }
+
+        private void checkCloneExpression(Expression node) {
+            if (node instanceof CloneExpression) {
+                createError(node);
+            }
+        }
+
+        private void checkArrayDimension(ArrayDimension node) {
+            if (node.getType() == ArrayDimension.Type.VARIABLE_HASHTABLE) {
                 createError(node);
             }
         }

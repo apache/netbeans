@@ -1202,15 +1202,16 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                         }
                     }
                     if (staticContext) {
-                        boolean isVariableAccess = isVariableAccess(varName);
+                        boolean isDynamicAccess = isDynamicAccess(varName);
                         Set<TypeConstantElement> magicConstants = constantsFilter.filter(request.index.getAccessibleMagicConstants(typeScope));
                         for (TypeConstantElement magicConstant : magicConstants) {
                             if (CancelSupport.getDefault().isCancelled()) {
                                 return;
                             }
                             if (magicConstant != null) {
-                                // $instance::class is invalid
-                                if ("class".equals(magicConstant.getName()) && isVariableAccess) { // NOI18N
+                                // dynamic class names are not allowed in complie-time
+                                // e.g. $instance::class, create()::class
+                                if ("class".equals(magicConstant.getName()) && isDynamicAccess) { // NOI18N
                                     continue;
                                 }
                                 completionResult.add(PHPCompletionItem.TypeConstantItem.getItem(magicConstant, request));
@@ -1222,10 +1223,14 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         }
     }
 
-    private static boolean isVariableAccess(CharSequence varName) {
-        // "]" : array
-        return varName != null
-                && (varName.charAt(0) == '$' || varName.charAt(0) == ']'); // NOI18N
+    private static boolean isDynamicAccess(CharSequence varName) {
+        if (varName != null) {
+            return varName.charAt(0) == '$'
+                    || varName.charAt(0) == ']' // array
+                    || varName.charAt(0) == '}'
+                    || varName.charAt(0) == ')';
+        }
+        return false;
     }
 
     private void autoCompleteClassFields(final PHPCompletionResult completionResult, final PHPCompletionItem.CompletionRequest request) {

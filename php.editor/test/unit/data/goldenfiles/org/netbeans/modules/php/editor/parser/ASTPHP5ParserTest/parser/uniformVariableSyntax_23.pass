@@ -84,9 +84,7 @@
                             <Member>
                                 <FunctionInvocation start='26' end='37'>
                                     <FucntionName start='26' end='35'>
-                                        <Variable start='26' end='35' isDollared='false'>
-                                            <Identifier start='26' end='35' name='myStatic2'/>
-                                        </Variable>
+                                        <Identifier start='26' end='35' name='myStatic2'/>
                                     </FucntionName>
                                     <Parameters>
                                     </Parameters>
@@ -94,9 +92,7 @@
                             </Member>
                             <FunctionInvocation start='26' end='37'>
                                 <FucntionName start='26' end='35'>
-                                    <Variable start='26' end='35' isDollared='false'>
-                                        <Identifier start='26' end='35' name='myStatic2'/>
-                                    </Variable>
+                                    <Identifier start='26' end='35' name='myStatic2'/>
                                 </FucntionName>
                                 <Parameters>
                                 </Parameters>
@@ -105,9 +101,7 @@
                         <Member>
                             <FunctionInvocation start='39' end='50'>
                                 <FucntionName start='39' end='48'>
-                                    <Variable start='39' end='48' isDollared='false'>
-                                        <Identifier start='39' end='48' name='myStatic1'/>
-                                    </Variable>
+                                    <Identifier start='39' end='48' name='myStatic1'/>
                                 </FucntionName>
                                 <Parameters>
                                 </Parameters>
@@ -115,9 +109,7 @@
                         </Member>
                         <FunctionInvocation start='39' end='50'>
                             <FucntionName start='39' end='48'>
-                                <Variable start='39' end='48' isDollared='false'>
-                                    <Identifier start='39' end='48' name='myStatic1'/>
-                                </Variable>
+                                <Identifier start='39' end='48' name='myStatic1'/>
                             </FucntionName>
                             <Parameters>
                             </Parameters>

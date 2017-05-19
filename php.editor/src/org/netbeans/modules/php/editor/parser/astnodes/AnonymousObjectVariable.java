@@ -43,9 +43,11 @@ package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
  * Holds an anonymous object variable (object creation encapsulated by braces).
- * <pre>e.g.<pre>
- * (new Object())
- * (new Object)
+ * <pre>e.g.
+ * (new Object()),
+ * (new Object),
+ * (clone (new Object()))
+ * </pre>
  *
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
@@ -53,6 +55,10 @@ public class AnonymousObjectVariable extends Variable {
 
     public AnonymousObjectVariable(int start, int end, ClassInstanceCreation classInstanceCreation) {
         super(start, end, classInstanceCreation);
+    }
+
+    public AnonymousObjectVariable(int start, int end, CloneExpression cloneExpression) {
+        super(start, end, cloneExpression);
     }
 
     @Override

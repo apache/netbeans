@@ -57,6 +57,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.ZipOutputStream;
+import javax.swing.event.ChangeListener;
 import static junit.framework.TestCase.assertTrue;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -77,6 +78,7 @@ import org.netbeans.modules.java.api.common.queries.QuerySupport;
 import org.netbeans.modules.java.platform.implspi.JavaPlatformProvider;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.queries.BinaryForSourceQueryImplementation;
+import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.netbeans.spi.project.support.ant.EditableProperties;
 import org.openide.filesystems.FileObject;
@@ -148,6 +150,30 @@ public class MultiModuleClassPathProviderTest extends NbTestCase {
                     sources,
                     testModules,
                     testSources);
+        });
+        factories.put(SourceLevelQueryImplementation2.class, (prj) -> {
+            return new SourceLevelQueryImplementation2 () {
+                private final SourceLevelQueryImplementation2.Result RES = new SourceLevelQueryImplementation2.Result() {
+                    @Override
+                    public String getSourceLevel() {
+                        return "9"; //NOI18N
+                    }
+                    @Override
+                    public void addChangeListener(ChangeListener listener) {
+                    }
+                    @Override
+                    public void removeChangeListener(ChangeListener listener) {
+                    }
+                };
+                @Override
+                public SourceLevelQueryImplementation2.Result getSourceLevel(FileObject javaFile) {
+                    if (javaFile == prj.getProjectDirectory() || FileUtil.isParentOf(prj.getProjectDirectory(), javaFile)) {
+                        return RES;
+                    } else {
+                        return null;
+                    }
+                }
+            };
         });
         MockLookup.setInstances(TestProject.createProjectType(factories), new MockJPProvider());
         final FileObject wd = FileUtil.toFileObject(FileUtil.normalizeFile(getWorkDir()));

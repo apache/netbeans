@@ -363,7 +363,7 @@ public class MultiModuleClassPathProviderTest extends NbTestCase {
         assertSame(bcp, bcp2);
     }
 
-    public void testGetProjectClassPaths() {
+    public void testGetProjectClassPaths() throws IOException {
         if (systemModules == null) {
             System.out.println("No Java 9, skipping testBootPath"); //NOI18N
             return;
@@ -430,9 +430,9 @@ public class MultiModuleClassPathProviderTest extends NbTestCase {
                 add(filter(urls(systemModules),"java.base","java.compiler"));   //NOI18N
                 add(filter(urls(systemModules),"java.base","java.xml"));    //NOI18N
                 //Tests - todo not currect now as there is no CompilerOpsQuery
-                add(Collections.emptyList());    //NOI18N
-                add(Collections.emptyList());    //NOI18N
-                add(Collections.emptyList());    //NOI18N
+                add(new ArrayList<>(ModuleClassPathsTest.unnamedReads(systemModules)));
+                add(new ArrayList<>(ModuleClassPathsTest.unnamedReads(systemModules)));
+                add(new ArrayList<>(ModuleClassPathsTest.unnamedReads(systemModules)));
                 add(filter(urls(systemModules),"java.base"));   //NOI18N
             }
         };

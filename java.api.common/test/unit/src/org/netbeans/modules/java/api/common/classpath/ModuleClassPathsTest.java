@@ -670,8 +670,12 @@ public class ModuleClassPathsTest extends NbTestCase {
         Collections.sort(res, LEX_COMPARATOR);
         return res;
     }
-    
-    private Collection<URL> reads(
+
+    static Collection<URL> unnamedReads(@NonNull final ClassPath base) throws IOException {
+        return reads(base, NamePredicate.create("java.se").or(NON_JAVA_PUB));  //NOI18N
+    }
+
+    private static Collection<URL> reads(
             @NonNull final ClassPath base,
             @NonNull final Predicate<ModuleElement> predicate,
             @NonNull final FileObject... additionalRoots) throws IOException {

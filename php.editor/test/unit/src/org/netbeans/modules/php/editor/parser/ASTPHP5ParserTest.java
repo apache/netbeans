@@ -694,15 +694,15 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/uniformVariableSyntax_20");
     }
 
-    // XXX
-//    public void testUniformVariableSyntax_21() throws Exception {
-//        performTest("parser/uniformVariableSyntax_21");
-//    }
+    // #262141
+    public void testUniformVariableSyntax_21() throws Exception {
+        performTest("parser/uniformVariableSyntax_21");
+    }
 
-    // XXX
-//    public void testUniformVariableSyntax_22() throws Exception {
-//        performTest("parser/uniformVariableSyntax_22");
-//    }
+    // #262141
+    public void testUniformVariableSyntax_22() throws Exception {
+        performTest("parser/uniformVariableSyntax_22");
+    }
 
     public void testUniformVariableSyntax_23() throws Exception {
         performTest("parser/uniformVariableSyntax_23");
@@ -746,6 +746,31 @@ public class ASTPHP5ParserTest extends ParserTestBase {
 
     public void testUniformVariableSyntax_33() throws Exception {
         performTest("parser/uniformVariableSyntax_33");
+    }
+
+    // #262141
+    public void testUniformVariableSyntax_34() throws Exception {
+        // ... -> ... (->|::)
+        performTest("parser/uniformVariableSyntax_34");
+    }
+
+    public void testUniformVariableSyntax_35() throws Exception {
+        // ... :: ... (->|::)
+        performTest("parser/uniformVariableSyntax_35");
+    }
+
+    public void testUniformVariableSyntax_36() throws Exception {
+        // dereferencable
+        performTest("parser/uniformVariableSyntax_36");
+    }
+
+    public void testUniformVariableSyntax_37() throws Exception {
+        // [$object1, $object2][0]->property;
+        performTest("parser/uniformVariableSyntax_37");
+    }
+
+    public void testCloneExpression_01() throws Exception {
+        performTest("parser/cloneExpression_01");
     }
 
     public void testGroupUse_01() throws Exception {

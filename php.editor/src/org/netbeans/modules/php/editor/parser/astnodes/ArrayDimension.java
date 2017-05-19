@@ -46,15 +46,27 @@ package org.netbeans.modules.php.editor.parser.astnodes;
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
 public class ArrayDimension extends Expression {
-    private final Expression index;
 
-    public ArrayDimension(int start, int end, Expression index) {
+    public enum Type {
+        VARIABLE_ARRAY,
+        VARIABLE_HASHTABLE
+    }
+
+    private final Expression index;
+    private final ArrayDimension.Type type;
+
+    public ArrayDimension(int start, int end, Expression index, ArrayDimension.Type type) {
         super(start, end);
         this.index = index;
+        this.type = type;
     }
 
     public Expression getIndex() {
         return index;
+    }
+
+    public Type getType() {
+        return type;
     }
 
     @Override
@@ -64,6 +76,9 @@ public class ArrayDimension extends Expression {
 
     @Override
     public String toString() {
+        if (type == Type.VARIABLE_HASHTABLE) {
+            return "{" + getIndex() + "}"; //NOI18N
+        }
         return "[" + getIndex() + "]"; //NOI18N
     }
 

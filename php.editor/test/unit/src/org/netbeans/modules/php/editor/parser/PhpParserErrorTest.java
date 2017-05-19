@@ -597,15 +597,15 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/uniformVariableSyntax_20.php");
     }
 
-    // XXX
-//    public void testUniformVariableSyntax_21() throws Exception {
-//        checkErrors("testfiles/parser/uniformVariableSyntax_21.php");
-//    }
+    // #262141
+    public void testUniformVariableSyntax_21() throws Exception {
+        checkErrors("testfiles/parser/uniformVariableSyntax_21.php");
+    }
 
-    // XXX
-//    public void testUniformVariableSyntax_22() throws Exception {
-//        checkErrors("testfiles/parser/uniformVariableSyntax_22.php");
-//    }
+    // #262141
+    public void testUniformVariableSyntax_22() throws Exception {
+        checkErrors("testfiles/parser/uniformVariableSyntax_22.php");
+    }
 
     public void testUniformVariableSyntax_23() throws Exception {
         checkErrors("testfiles/parser/uniformVariableSyntax_23.php");
@@ -649,6 +649,31 @@ public class PhpParserErrorTest extends PHPTestBase {
 
     public void testUniformVariableSyntax_33() throws Exception {
         checkErrors("testfiles/parser/uniformVariableSyntax_33.php");
+    }
+
+    // #262141
+    public void testUniformVariableSyntax_34() throws Exception {
+        // ... -> ... (->|::)
+        checkErrors("testfiles/parser/uniformVariableSyntax_34.php");
+    }
+
+    public void testUniformVariableSyntax_35() throws Exception {
+        // ... :: ... (->|::)
+        checkErrors("testfiles/parser/uniformVariableSyntax_35.php");
+    }
+
+    public void testUniformVariableSyntax_36() throws Exception {
+        // dereferencable
+        checkErrors("testfiles/parser/uniformVariableSyntax_36.php");
+    }
+
+    public void testUniformVariableSyntax_37() throws Exception {
+        // [$object1, $object2][0]->property;
+        checkErrors("testfiles/parser/uniformVariableSyntax_37.php");
+    }
+
+    public void testCloneExpression_01() throws Exception {
+        checkErrors("testfiles/parser/cloneExpression_01.php");
     }
 
     public void testGroupUse_01() throws Exception {

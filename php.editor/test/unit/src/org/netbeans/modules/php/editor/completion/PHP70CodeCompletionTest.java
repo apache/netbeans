@@ -500,10 +500,9 @@ public class PHP70CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion("testfiles/completion/lib/php70/base/uniformVariableSyntax03.php", "UVS3::myStatic3()::myStatic2()::$IN^STANCE::myStatic1();", false);
     }
 
-    // XXX
-//    public void testUniformVariableSyntax03f() throws Exception {
-//        checkCompletion("testfiles/completion/lib/php70/base/uniformVariableSyntax03.php", "UVS3::myStatic3()::myStatic2()::$INSTANCE::mySta^tic1();", false);
-//    }
+    public void testUniformVariableSyntax03f() throws Exception {
+        checkCompletion("testfiles/completion/lib/php70/base/uniformVariableSyntax03.php", "UVS3::myStatic3()::myStatic2()::$INSTANCE::mySta^tic1();", false);
+    }
 
     public void testIssue259074a() throws Exception {
         checkCompletion("testfiles/completion/lib/php70/base/issue259074.php", "    C^2", false);

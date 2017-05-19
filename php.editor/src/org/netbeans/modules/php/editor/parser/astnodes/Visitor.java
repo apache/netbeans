@@ -103,6 +103,8 @@ public interface Visitor {
     //public void endVisit(ContinueStatement continueStatement);
     public void visit(DeclareStatement declareStatement);
 
+    public void visit(DereferencableVariable dereferencableVariable);
+
     //public void endVisit(DeclareStatement declareStatement);
     public void visit(DoStatement doStatement);
 

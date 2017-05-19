@@ -205,7 +205,7 @@ public class PrintASTVisitor implements Visitor {
     @Override
     public void visit(ArrayAccess node) {
         XMLPrintNode printNode = new XMLPrintNode(node, "ArrayAccess",
-                new String[]{ "type", node.getArrayType().name(),
+                new String[]{ "type", node.getDimension().getType().name(),
                     "isDollared", (node.isDollared()?"true":"false")});
         printNode.addChild(node.getDimension());
         printNode.addChildrenGroup("Name", new ASTNode[]{node.getName()});
@@ -361,6 +361,13 @@ public class PrintASTVisitor implements Visitor {
         printNode.addChildrenGroup("DirectiveNames", node.getDirectiveNames());
         printNode.addChildrenGroup("DirectiveValues", node.getDirectiveValues());
         printNode.addChild(node.getBody());
+        printNode.print(this);
+    }
+
+    @Override
+    public void visit(DereferencableVariable node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "DereferencableVariable");
+        printNode.addChild(node.getExpression());
         printNode.print(this);
     }
 

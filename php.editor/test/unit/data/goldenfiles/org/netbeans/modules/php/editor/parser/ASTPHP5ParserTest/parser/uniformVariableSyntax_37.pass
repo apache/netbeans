@@ -1,0 +1,154 @@
+<testresult testFile='uniformVariableSyntax_37.php'>
+    <scanner>
+        <token id='T_OPEN_RECT' start='7' end='8'>
+            <text>[</text>
+        </token>
+        <token id='T_VARIABLE' start='8' end='16'>
+            <text>$object1</text>
+        </token>
+        <token id='T_COMMA' start='16' end='17'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='18' end='26'>
+            <text>$object2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='26' end='27'>
+            <text>]</text>
+        </token>
+        <token id='T_OPEN_RECT' start='27' end='28'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='28' end='29'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='29' end='30'>
+            <text>]</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='30' end='32'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='32' end='40'>
+            <text>property</text>
+        </token>
+        <token id='T_SEMICOLON' start='40' end='41'>
+            <text>;</text>
+        </token>
+        <token id='T_ARRAY' start='42' end='47'>
+            <text>array</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='47' end='48'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='48' end='56'>
+            <text>$object1</text>
+        </token>
+        <token id='T_COMMA' start='56' end='57'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='58' end='66'>
+            <text>$object2</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='66' end='67'>
+            <text>)</text>
+        </token>
+        <token id='T_OPEN_RECT' start='67' end='68'>
+            <text>[</text>
+        </token>
+        <token id='T_LNUMBER' start='68' end='69'>
+            <text>0</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='69' end='70'>
+            <text>]</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='70' end='72'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='72' end='80'>
+            <text>property</text>
+        </token>
+        <token id='T_SEMICOLON' start='80' end='81'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='82' end='82'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='82'>
+        <Comments>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='7' end='41'>
+                <FieldAccess start='7' end='40'>
+                    <ExpressionArrayAccess start='7' end='30'>
+                        <ArrayCreation start='7' end='27' type='NEW'>
+                            <ArrayElement start='8' end='16'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Variable start='8' end='16' isDollared='true'>
+                                        <Identifier start='9' end='16' name='object1'/>
+                                    </Variable>
+                                </Value>
+                            </ArrayElement>
+                            <ArrayElement start='18' end='26'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Variable start='18' end='26' isDollared='true'>
+                                        <Identifier start='19' end='26' name='object2'/>
+                                    </Variable>
+                                </Value>
+                            </ArrayElement>
+                        </ArrayCreation>
+                        <ArrayDimension start='27' end='30'>
+                            <Index>
+                                <Scalar start='28' end='29' type='INT' value='0'/>
+                            </Index>
+                        </ArrayDimension>
+                    </ExpressionArrayAccess>
+                    <Field>
+                        <Variable start='32' end='40' isDollared='false'>
+                            <Identifier start='32' end='40' name='property'/>
+                        </Variable>
+                    </Field>
+                </FieldAccess>
+            </ExpressionStatement>
+            <ExpressionStatement start='42' end='81'>
+                <FieldAccess start='42' end='80'>
+                    <ExpressionArrayAccess start='42' end='70'>
+                        <ArrayCreation start='42' end='67' type='OLD'>
+                            <ArrayElement start='48' end='56'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Variable start='48' end='56' isDollared='true'>
+                                        <Identifier start='49' end='56' name='object1'/>
+                                    </Variable>
+                                </Value>
+                            </ArrayElement>
+                            <ArrayElement start='58' end='66'>
+                                <Key>
+                                </Key>
+                                <Value>
+                                    <Variable start='58' end='66' isDollared='true'>
+                                        <Identifier start='59' end='66' name='object2'/>
+                                    </Variable>
+                                </Value>
+                            </ArrayElement>
+                        </ArrayCreation>
+                        <ArrayDimension start='67' end='70'>
+                            <Index>
+                                <Scalar start='68' end='69' type='INT' value='0'/>
+                            </Index>
+                        </ArrayDimension>
+                    </ExpressionArrayAccess>
+                    <Field>
+                        <Variable start='72' end='80' isDollared='false'>
+                            <Identifier start='72' end='80' name='property'/>
+                        </Variable>
+                    </Field>
+                </FieldAccess>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

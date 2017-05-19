@@ -154,4 +154,61 @@ public class OccurrencesFinderImplPHP70Test extends OccurrencesFinderImplTestBas
         checkOccurrences(getTestPath(), "ChildClass::^IF;", true);
     }
 
+    // nested static field access
+    public void testUniformVariableSyntax03_01() throws Exception {
+        checkOccurrences(getTestPath(), "class U^VS1", true);
+    }
+
+    public void testUniformVariableSyntax03_02() throws Exception {
+        checkOccurrences(getTestPath(), "     * @var UV^S1", true);
+    }
+
+    public void testUniformVariableSyntax03_03() throws Exception {
+        checkOccurrences(getTestPath(), "UV^S1::$INSTANCE2::$INSTANCE3::MAX;", true);
+    }
+
+    public void testUniformVariableSyntax03_04() throws Exception {
+        checkOccurrences(getTestPath(), "    static $INSTA^NCE2;", true);
+    }
+
+    public void testUniformVariableSyntax03_05() throws Exception {
+        checkOccurrences(getTestPath(), "UVS1::$INSTAN^CE2::$INSTANCE3::MAX;", true);
+    }
+
+    public void testUniformVariableSyntax03_06() throws Exception {
+        checkOccurrences(getTestPath(), "test()::$INSTANCE1::$INSTANC^E2::MAX;", true);
+    }
+
+    public void testUniformVariableSyntax03_07() throws Exception {
+        checkOccurrences(getTestPath(), "    static $INSTAN^CE3;", true);
+    }
+
+    public void testUniformVariableSyntax03_08() throws Exception {
+        checkOccurrences(getTestPath(), "UVS1::$INSTANCE2::$INSTANC^E3::MAX;", true);
+    }
+
+    public void testUniformVariableSyntax03_09() throws Exception {
+        checkOccurrences(getTestPath(), "    const ^MAX = 101; // UVS3", true);
+    }
+
+    public void testUniformVariableSyntax03_10() throws Exception {
+        checkOccurrences(getTestPath(), "UVS1::$INSTANCE2::$INSTANCE3::M^AX;", true);
+    }
+
+    public void testUniformVariableSyntax03_11() throws Exception {
+        checkOccurrences(getTestPath(), "    static $INSTAN^CE1;", true);
+    }
+
+    public void testUniformVariableSyntax03_12() throws Exception {
+        checkOccurrences(getTestPath(), "test()::$INSTA^NCE1::$INSTANCE2::MAX;", true);
+    }
+
+    public void testUniformVariableSyntax03_13() throws Exception {
+        checkOccurrences(getTestPath(), "    const MA^X = 100; // UVS2", true);
+    }
+
+    public void testUniformVariableSyntax03_14() throws Exception {
+        checkOccurrences(getTestPath(), "test()::$INSTANCE1::$INSTANCE2::MA^X;", true);
+    }
+
 }

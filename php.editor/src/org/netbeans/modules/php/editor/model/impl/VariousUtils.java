@@ -933,10 +933,19 @@ public final class VariousUtils {
         if (varBase instanceof AnonymousObjectVariable) {
             AnonymousObjectVariable aov = (AnonymousObjectVariable) varBase;
             Expression clsName = aov.getName();
-            assert clsName instanceof ClassInstanceCreation : clsName.getClass().getName();
-            ClassInstanceCreation cis = (ClassInstanceCreation) clsName;
-            String className = CodeUtils.extractClassName(cis.getClassName());
-            return PRE_OPERATION_TYPE_DELIMITER + CONSTRUCTOR_TYPE_PREFIX + className;
+            assert clsName instanceof ClassInstanceCreation || clsName instanceof CloneExpression : clsName.getClass().getName();
+            if (clsName instanceof CloneExpression) {
+                CloneExpression ce = (CloneExpression) clsName;
+                clsName = ce.getExpression();
+                if (clsName instanceof AnonymousObjectVariable) {
+                    clsName = ((AnonymousObjectVariable) clsName).getName();
+                }
+            }
+            if (clsName instanceof ClassInstanceCreation) {
+                ClassInstanceCreation cis = (ClassInstanceCreation) clsName;
+                String className = CodeUtils.extractClassName(cis.getClassName());
+                return PRE_OPERATION_TYPE_DELIMITER + CONSTRUCTOR_TYPE_PREFIX + className;
+            }
         } else if (varBase instanceof Variable) {
             String varName = CodeUtils.extractVariableName((Variable) varBase);
             AssignmentImpl assignmentImpl = allAssignments.get(varName);
@@ -1115,11 +1124,9 @@ public final class VariousUtils {
                     case STATIC_REFERENCE:
                         state = State.INVALID;
                         if (isString(token)) {
-                            metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.FIELD_TYPE_PREFIX);
                             metaAll.insert(0, token.text().toString());
                             state = State.CLASSNAME;
                         } else if (isSelf(token) || isParent(token) || isStatic(token)) {
-                            metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.FIELD_TYPE_PREFIX);
                             metaAll.insert(0, translateSpecialClassName(varScope, token.text().toString()));
                             state = State.CLASSNAME;
                         } else if (isRightBracket(token)) {
@@ -1173,6 +1180,7 @@ public final class VariousUtils {
                         break;
                     case VARBASE:
                         if (isStaticReference(token)) {
+                            metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.FIELD_TYPE_PREFIX);
                             state = State.STATIC_REFERENCE;
                             break;
                         } else {

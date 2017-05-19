@@ -106,4 +106,35 @@ public class GotoDeclarationPHP70Test extends GotoDeclarationTestBase {
         checkDeclaration(getTestPath(), "        ChildClass::I^F;", "    const GOTO = [1, 2], ^IF = 2;");
     }
 
+    public void testUniformVariableSyntaxNestedStaticFieldAccess_01() throws Exception {
+        checkDeclaration(getTestPath(), "UV^S1::$INSTANCE2::$INSTANCE3::MAX;", "class ^UVS1");
+    }
+
+    public void testUniformVariableSyntaxNestedStaticFieldAccess_02() throws Exception {
+        checkDeclaration(getTestPath(), "UVS1::$I^NSTANCE2::$INSTANCE3::MAX;", "    static $^INSTANCE2;");
+    }
+
+    public void testUniformVariableSyntaxNestedStaticFieldAccess_03() throws Exception {
+        checkDeclaration(getTestPath(), "UVS1::$INSTANCE2::$INS^TANCE3::MAX;", "    static $^INSTANCE3;");
+    }
+
+    public void testUniformVariableSyntaxNestedStaticFieldAccess_04() throws Exception {
+        checkDeclaration(getTestPath(), "UVS1::$INSTANCE2::$INSTANCE3::M^AX;", "    const ^MAX = 101; // UVS3");
+    }
+
+    public void testUniformVariableSyntaxNestedStaticFieldAccess_05() throws Exception {
+        checkDeclaration(getTestPath(), "tes^t()::$INSTANCE1::$INSTANCE2::MAX;", "function ^test() { // func");
+    }
+
+    public void testUniformVariableSyntaxNestedStaticFieldAccess_06() throws Exception {
+        checkDeclaration(getTestPath(), "test()::$IN^STANCE1::$INSTANCE2::MAX;", "    static $^INSTANCE1;");
+    }
+
+    public void testUniformVariableSyntaxNestedStaticFieldAccess_07() throws Exception {
+        checkDeclaration(getTestPath(), "test()::$INSTANCE1::$INSTAN^CE2::MAX;", "    static $^INSTANCE2;");
+    }
+
+    public void testUniformVariableSyntaxNestedStaticFieldAccess_08() throws Exception {
+        checkDeclaration(getTestPath(), "test()::$INSTANCE1::$INSTANCE2::M^AX;", "    const ^MAX = 100; // UVS2");
+    }
 }

@@ -99,7 +99,9 @@ public enum PHPTokenId implements TokenId {
     PHP_WHILE("while", "keyword"), //NOI18N
     PHP_ENDFOREACH(null, "keyword"), //NOI18N
     PHP_EVAL(null, "keyword"), //NOI18N
-    PHP_INSTANCEOF("instanceof", "operator"), //NOI18N
+    // instanceof is a type operator http://php.net/manual/en/language.operators.type.php
+    // however, it is marked as "keyword" for coloring
+    PHP_INSTANCEOF("instanceof", "keyword"), //NOI18N
     PHP_INSTEADOF("insteadof", "keyword"), //NOI18N
     PHP_ENDWHILE(null, "keyword"), //NOI18N
     PHP_BREAK("break", "keyword"), //NOI18N

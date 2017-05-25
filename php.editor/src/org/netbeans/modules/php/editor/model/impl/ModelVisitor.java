@@ -1208,12 +1208,12 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     public void visit(PHPDocVarTypeTag node) {
         Scope currentScope = modelBuilder.getCurrentScope();
         StringBuilder sb = new StringBuilder();
+        StringBuilder fqNames = new StringBuilder();
         List<? extends PhpDocTypeTagInfo> tagInfos = PhpDocTypeTagInfo.create(node, currentScope);
         for (Iterator<? extends PhpDocTypeTagInfo> it = tagInfos.iterator(); it.hasNext();) {
             PhpDocTypeTagInfo phpDocTypeTagInfo = it.next();
             if (phpDocTypeTagInfo.getKind().equals(Kind.FIELD) && !phpDocTypeTagInfo.getName().isEmpty()) {
                 String typeName = phpDocTypeTagInfo.getTypeName();
-                StringBuilder fqNames = new StringBuilder();
                 if (typeName != null) {
                     if (sb.length() > 0) {
                         sb.append("|"); //NOI18N

@@ -117,7 +117,7 @@ public class ModuleOraculumTest extends NbTestCase {
         assertNotNull(impl);
         final Options opts = Options.instance(impl.getContext());
         assertNotNull(opts);
-        assertEquals("Test", opts.get("-Xmodule:"));    //NOI18N
+        assertEquals("Test", opts.get("-XD-Xmodule:"));    //NOI18N
     }
 
     public void testOraculumLibrarySourceWithoutRootWithSourcePath() {
@@ -138,7 +138,7 @@ public class ModuleOraculumTest extends NbTestCase {
         assertNotNull(impl);
         final Options opts = Options.instance(impl.getContext());
         assertNotNull(opts);
-        assertEquals("Test", opts.get("-Xmodule:"));    //NOI18N
+        assertEquals("Test", opts.get("-XD-Xmodule:"));    //NOI18N
     }
 
     public void testOraculumLibrarySourceWithoutRootWithoutSourcePath() {
@@ -155,7 +155,7 @@ public class ModuleOraculumTest extends NbTestCase {
         assertNotNull(impl);
         final Options opts = Options.instance(impl.getContext());
         assertNotNull(opts);
-        assertEquals("Test", opts.get("-Xmodule:"));    //NOI18N
+        assertEquals("Test", opts.get("-XD-Xmodule:"));    //NOI18N
     }
 
     public void testOraculumLibrarySourceNoModuleInfo() throws IOException {
@@ -173,7 +173,7 @@ public class ModuleOraculumTest extends NbTestCase {
         assertNotNull(impl);
         final Options opts = Options.instance(impl.getContext());
         assertNotNull(opts);
-        assertNull(opts.get("-Xmodule:"));    //NOI18N
+        assertNull(opts.get("-XD-Xmodule:"));    //NOI18N
     }
 
     public void testOraculumProjectSource() throws IOException {
@@ -191,13 +191,13 @@ public class ModuleOraculumTest extends NbTestCase {
         assertNotNull(impl);
         final Options opts = Options.instance(impl.getContext());
         assertNotNull(opts);
-        assertNull(opts.get("-Xmodule:"));    //NOI18N
+        assertNull(opts.get("-XD-Xmodule:"));    //NOI18N
     }
 
     public void testOraculumLibrarySourceWithRootExpliciteXModule() throws IOException {
         Lookup.getDefault().lookup(COQ.class)
                 .forRoot(root1)
-                .apply("-Xmodule:SomeModule");  //NOI18N
+                .apply("-XD-Xmodule:SomeModule");  //NOI18N
         final ClasspathInfo cpInfo = new ClasspathInfo.Builder(ClassPath.EMPTY).build();
         final JavacParser parser = new JavacParser(Collections.emptyList(), true);
         final JavacTaskImpl impl = JavacParser.createJavacTask(
@@ -211,7 +211,7 @@ public class ModuleOraculumTest extends NbTestCase {
         assertNotNull(impl);
         final Options opts = Options.instance(impl.getContext());
         assertNotNull(opts);
-        assertEquals("SomeModule", opts.get("-Xmodule:"));    //NOI18N
+        assertEquals("SomeModule", opts.get("-XD-Xmodule:"));    //NOI18N
     }
 
 
@@ -241,7 +241,7 @@ public class ModuleOraculumTest extends NbTestCase {
                     null,
                     null,
                     false);
-            assertEquals("Test", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
+            assertEquals("Test", Options.instance(impl.getContext()).get("-XD-Xmodule:"));    //NOI18N
             List<? extends FileObject> roots = h.getRoots();
             assertEquals(1, roots.size());
             assertEquals(root1, roots.get(0));
@@ -254,7 +254,7 @@ public class ModuleOraculumTest extends NbTestCase {
                     null,
                     null,
                     false);
-            assertEquals("Test", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
+            assertEquals("Test", Options.instance(impl.getContext()).get("-XD-Xmodule:"));    //NOI18N
             roots = h.getRoots();
             assertEquals(0, roots.size());
             impl = JavacParser.createJavacTask(
@@ -265,7 +265,7 @@ public class ModuleOraculumTest extends NbTestCase {
                     null,
                     null,
                     false);
-            assertEquals("Next", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
+            assertEquals("Next", Options.instance(impl.getContext()).get("-XD-Xmodule:"));    //NOI18N
             roots = h.getRoots();
             assertEquals(1, roots.size());
             assertEquals(root2, roots.get(0));
@@ -292,7 +292,7 @@ public class ModuleOraculumTest extends NbTestCase {
                     null,
                     null,
                     false);
-            assertEquals("Test", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
+            assertEquals("Test", Options.instance(impl.getContext()).get("-XD-Xmodule:"));    //NOI18N
             List<? extends String> names = h.getModuleNames();
             assertEquals(1, names.size());
             assertEquals("Test", names.get(0)); //NOI18N
@@ -305,7 +305,7 @@ public class ModuleOraculumTest extends NbTestCase {
                     null,
                     null,
                     false);
-            assertEquals("Test", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
+            assertEquals("Test", Options.instance(impl.getContext()).get("-XD-Xmodule:"));    //NOI18N
             names = h.getModuleNames();
             assertEquals(0, names.size());
             impl = JavacParser.createJavacTask(
@@ -316,7 +316,7 @@ public class ModuleOraculumTest extends NbTestCase {
                     null,
                     null,
                     false);
-            assertEquals("Next", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
+            assertEquals("Next", Options.instance(impl.getContext()).get("-XD-Xmodule:"));    //NOI18N
             names = h.getModuleNames();
             assertEquals(1, names.size());
             assertEquals("Next", names.get(0)); //NOI18N
@@ -343,7 +343,7 @@ public class ModuleOraculumTest extends NbTestCase {
                     null,
                     null,
                     false);
-            assertEquals("Test", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
+            assertEquals("Test", Options.instance(impl.getContext()).get("-XD-Xmodule:"));    //NOI18N
             List<? extends String> names = h.getModuleNames();
             assertEquals(1, names.size());
             assertEquals("Test", names.get(0)); //NOI18N
@@ -357,7 +357,7 @@ public class ModuleOraculumTest extends NbTestCase {
                     null,
                     null,
                     false);
-            assertEquals("TestUpdated", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
+            assertEquals("TestUpdated", Options.instance(impl.getContext()).get("-XD-Xmodule:"));    //NOI18N
             names = h.getModuleNames();
             assertEquals(1, names.size());
             assertEquals("TestUpdated", names.get(0)); //NOI18N
@@ -370,7 +370,7 @@ public class ModuleOraculumTest extends NbTestCase {
                     null,
                     null,
                     false);
-            assertEquals("TestUpdated", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
+            assertEquals("TestUpdated", Options.instance(impl.getContext()).get("-XD-Xmodule:"));    //NOI18N
             names = h.getModuleNames();
             assertEquals(0, names.size());
         } finally {
@@ -396,7 +396,7 @@ public class ModuleOraculumTest extends NbTestCase {
                     null,
                     null,
                     false);
-            assertEquals("Test", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
+            assertEquals("Test", Options.instance(impl.getContext()).get("-XD-Xmodule:"));    //NOI18N
             List<? extends String> names = h.getModuleNames();
             assertEquals(1, names.size());
             assertEquals("Test", names.get(0)); //NOI18N
@@ -410,7 +410,7 @@ public class ModuleOraculumTest extends NbTestCase {
                     null,
                     null,
                     false);
-            assertNull(Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
+            assertNull(Options.instance(impl.getContext()).get("-XD-Xmodule:"));    //NOI18N
             names = h.getModuleNames();
             assertEquals(1, names.size());
             assertEquals(null, names.get(0));
@@ -423,7 +423,7 @@ public class ModuleOraculumTest extends NbTestCase {
                     null,
                     null,
                     false);
-            assertNull(Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
+            assertNull(Options.instance(impl.getContext()).get("-XD-Xmodule:"));    //NOI18N
             names = h.getModuleNames();
             assertEquals(0, names.size());
         } finally {
@@ -450,7 +450,7 @@ public class ModuleOraculumTest extends NbTestCase {
                     null,
                     null,
                     false);
-            assertNull(Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
+            assertNull(Options.instance(impl.getContext()).get("-XD-Xmodule:"));    //NOI18N
             List<? extends String> names = h.getModuleNames();
             assertEquals(1, names.size());
             assertNull(names.get(0));
@@ -464,7 +464,7 @@ public class ModuleOraculumTest extends NbTestCase {
                     null,
                     null,
                     false);
-            assertEquals("TestNew", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
+            assertEquals("TestNew", Options.instance(impl.getContext()).get("-XD-Xmodule:"));    //NOI18N
             names = h.getModuleNames();
             assertEquals(1, names.size());
             assertEquals("TestNew", names.get(0));  //NOI18N
@@ -477,7 +477,7 @@ public class ModuleOraculumTest extends NbTestCase {
                     null,
                     null,
                     false);
-            assertEquals("TestNew", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
+            assertEquals("TestNew", Options.instance(impl.getContext()).get("-XD-Xmodule:"));    //NOI18N
             names = h.getModuleNames();
             assertEquals(0, names.size());
         } finally {

@@ -1054,8 +1054,11 @@ public class JavacParser extends Parser {
         for (int i = 0; i < options.size(); i++) {
             String option = options.get(i);
             if (option.startsWith("-Xmodule:") && !xmoduleSeen) {   //NOI18N
+                LOGGER.log(
+                        Level.WARNING,
+                        "Removed javac option -Xmodule: {0}",   //NOI18N
+                        option);
                 //Compatibility handle -Xmodule
-                //Todo warning?
                 res.add("-XD"+option);  //NOI18N
                 xmoduleSeen = true;
             } else if (option.startsWith("-XD-Xmodule:") && !xmoduleSeen) { //NOI18N

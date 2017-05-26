@@ -74,7 +74,7 @@ public final class CommonModuleUtils {
 
     private static final String ARG_ADDMODS = "--add-modules";       //NOI18N
     private static final String ARG_PATCH_MOD = "--patch-module";   //NOI18N
-    private static final String ARG_XMODULE = "-Xmodule";      //NOI18N
+    private static final String ARG_XMODULE = "-XD-Xmodule";      //NOI18N
     private static final Pattern MATCHER_XMODULE =
             Pattern.compile(String.format("%s:(\\S+)", ARG_XMODULE));  //NOI18N
     private static final Pattern MATCHER_PATCH =

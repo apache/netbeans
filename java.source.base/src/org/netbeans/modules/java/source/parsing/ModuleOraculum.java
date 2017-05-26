@@ -274,7 +274,7 @@ public final class ModuleOraculum implements CompilerOptionsQueryImplementation,
         R(@NonNull final String moduleName) {
             Parameters.notNull("moduleName", moduleName);   //NOI18N
             this.ops = Collections.singletonList(String.format(
-                    "-Xmodule:%s",  //NOI18N
+                    "-XD-Xmodule:%s",  //NOI18N
                     moduleName));
         }
 

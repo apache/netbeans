@@ -1303,7 +1303,7 @@ public class ElementJavadoc {
         if (element != null) {
             createLink(sb, element, label == null || label.isEmpty() ? sig : inlineTags(label, docPath, doc, trees, null)); //NOI18N
         } else {
-            sb.append(sig);
+            sb.append(label == null || label.isEmpty() ? sig : inlineTags(label, docPath, doc, trees, null));
         }
     }
 

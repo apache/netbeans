@@ -1239,6 +1239,14 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         
         if (mode == null) {
             mode = getDefaultEditorModeForOpen();
+            Collection<? extends ModeSelector> selectors = Lookup.getDefault().lookupAll(ModeSelector.class);
+            for (ModeSelector s : selectors) {
+                Mode hintMode = s.selectModeForOpen(tc, mode);
+                if (hintMode instanceof ModeImpl) {
+                    mode = (ModeImpl)hintMode;
+                    break;
+                }
+            }
             assert getModes().contains(mode) : "Mode " + mode.getName() + " is not in model."; //NOI18N
             if (tc.getClientProperty (Constants.TOPCOMPONENT_ALLOW_DOCK_ANYWHERE) == null) {
                 tc.putClientProperty (Constants.TOPCOMPONENT_ALLOW_DOCK_ANYWHERE, Boolean.TRUE);

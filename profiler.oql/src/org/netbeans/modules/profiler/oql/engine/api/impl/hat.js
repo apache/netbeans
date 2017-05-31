@@ -228,7 +228,7 @@ function JavaClassProto() {
     }
 
     this.instances = function() {
-        return jclass(this).instances.iterator;
+        return wrapIterator(jclass(this).instances.iterator(), true)
     }
 
     this.toString = function() { 

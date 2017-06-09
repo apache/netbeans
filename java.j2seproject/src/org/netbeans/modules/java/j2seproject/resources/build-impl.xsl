@@ -558,6 +558,16 @@ is divided into following sections:
                     <attribute>
                         <xsl:attribute name="name">sourcepath</xsl:attribute>
                         <xsl:attribute name="default">${empty.dir}</xsl:attribute>
+                        <xsl:attribute name="unless:set">named.module.internal</xsl:attribute>
+                    </attribute>
+                    <attribute>
+                        <xsl:attribute name="name">sourcepath</xsl:attribute>
+                        <xsl:attribute name="default">
+                            <xsl:call-template name="createPath">
+                                <xsl:with-param name="roots" select="/p:project/p:configuration/j2seproject3:data/j2seproject3:source-roots"/>
+                            </xsl:call-template>
+                        </xsl:attribute>
+                        <xsl:attribute name="if:set">named.module.internal</xsl:attribute>
                     </attribute>
                     <attribute>
                         <xsl:attribute name="name">gensrcdir</xsl:attribute>
@@ -568,6 +578,13 @@ is divided into following sections:
                         <xsl:attribute name="optional">true</xsl:attribute>
                     </element>
                     <sequential>
+                        <condition property="warn.excludes.internal">
+                            <and>
+                                <isset property="named.module.internal"/>
+                                <length string="@{{excludes}}" when="greater" length="0" trim="true"/>
+                            </and>
+                        </condition>
+                        <echo level="warning" message="The javac excludes are not supported in the JDK 9 Named Module." if:set="warn.excludes.internal"/>
                         <property name="empty.dir" location="${{build.dir}}/empty"/><!-- #157692 -->
                         <mkdir dir="${{empty.dir}}"/>
                         <mkdir dir="@{{apgeneratedsrcdir}}"/>

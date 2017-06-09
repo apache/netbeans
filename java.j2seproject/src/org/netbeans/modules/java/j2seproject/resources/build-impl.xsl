@@ -2756,6 +2756,19 @@ is divided into following sections:
                     </xsl:attribute>
                 </j2seproject3:modulename>
                 <condition>
+                    <xsl:attribute name="property">javac.test.sourcepath</xsl:attribute>
+                    <xsl:attribute name="value">
+                        <xsl:call-template name="createPath">
+                                <xsl:with-param name="roots" select="/p:project/p:configuration/j2seproject3:data/j2seproject3:test-roots"/>
+                        </xsl:call-template>
+                    </xsl:attribute>
+                    <xsl:attribute name="else">${empty.dir}</xsl:attribute>
+                    <and>
+                        <isset property="test.module.name"/>
+                        <length length="0" string="${{test.module.name}}" when="greater"/>
+                    </and>
+                </condition>
+                <condition>
                     <xsl:attribute name="property">javac.test.compilerargs</xsl:attribute>
                     <xsl:attribute name="value">--add-reads ${test.module.name}=ALL-UNNAMED</xsl:attribute>
                     <xsl:attribute name="else">--patch-module ${module.name}=<xsl:call-template name="createPath">
@@ -2795,6 +2808,7 @@ is divided into following sections:
                 </condition>
             </target>
             <target name="-init-test-module-properties-without-module" depends="-init-source-module-properties" unless="named.module.internal">
+                <property name="javac.test.sourcepath" value="${{empty.dir}}"/>
                 <property name="javac.test.compilerargs" value=""/>
                 <property name="run.test.jvmargs" value=""/>
             </target>
@@ -2826,6 +2840,7 @@ is divided into following sections:
                     <xsl:attribute name="processorpath">${javac.test.processorpath}</xsl:attribute>
                     <xsl:attribute name="modulepath">${javac.test.modulepath}</xsl:attribute>
                     <xsl:attribute name="apgeneratedsrcdir">${build.test.classes.dir}</xsl:attribute>
+                    <xsl:attribute name="sourcepath">${javac.test.sourcepath}</xsl:attribute>
                     <customize>
                         <compilerarg line="${{javac.test.compilerargs}}"/>
                     </customize>

@@ -2755,7 +2755,12 @@ is divided into following sections:
                             </xsl:call-template>
                     </xsl:attribute>
                 </j2seproject3:modulename>
-                <condition property="javac.test.compilerargs" value="--add-reads ${{test.module.name}}=ALL-UNNAMED" else="-Xmodule:${{module.name}} --add-reads ${{module.name}}=ALL-UNNAMED">
+                <condition>
+                    <xsl:attribute name="property">javac.test.compilerargs</xsl:attribute>
+                    <xsl:attribute name="value">--add-reads ${test.module.name}=ALL-UNNAMED</xsl:attribute>
+                    <xsl:attribute name="else">--patch-module ${module.name}=<xsl:call-template name="createPath">
+                                <xsl:with-param name="roots" select="/p:project/p:configuration/j2seproject3:data/j2seproject3:test-roots"/>
+                        </xsl:call-template> --add-reads ${module.name}=ALL-UNNAMED</xsl:attribute>
                     <and>
                         <isset property="test.module.name"/>
                         <length length="0" string="${{test.module.name}}" when="greater"/>

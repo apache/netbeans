@@ -91,9 +91,12 @@ final class CompletionContextFinder {
             new Object[]{PHPTokenId.PHP_NEW, PHPTokenId.WHITESPACE},
             new Object[]{PHPTokenId.PHP_NEW, PHPTokenId.WHITESPACE, NAMESPACE_FALSE_TOKEN},
             new Object[]{PHPTokenId.PHP_NEW, PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING});
-    private static final List<Object[]> THROW_NEW_TOKEN_CHAINS = Arrays.asList(
+    private static final List<Object[]> THROW_TOKEN_CHAINS = Arrays.asList(
             new Object[]{PHPTokenId.PHP_THROW},
             new Object[]{PHPTokenId.PHP_THROW, PHPTokenId.WHITESPACE},
+            new Object[]{PHPTokenId.PHP_THROW, PHPTokenId.WHITESPACE, NAMESPACE_FALSE_TOKEN},
+            new Object[]{PHPTokenId.PHP_THROW, PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING});
+    private static final List<Object[]> THROW_NEW_TOKEN_CHAINS = Arrays.asList(
             new Object[]{PHPTokenId.PHP_THROW, PHPTokenId.WHITESPACE, PHPTokenId.PHP_NEW},
             new Object[]{PHPTokenId.PHP_THROW, PHPTokenId.WHITESPACE, PHPTokenId.PHP_NEW, PHPTokenId.WHITESPACE},
             new Object[]{PHPTokenId.PHP_THROW, PHPTokenId.WHITESPACE, PHPTokenId.PHP_NEW, PHPTokenId.WHITESPACE, NAMESPACE_FALSE_TOKEN},
@@ -216,7 +219,7 @@ final class CompletionContextFinder {
         CLASS_MEMBER, STATIC_CLASS_MEMBER, PHPDOC, INHERITANCE, EXTENDS, IMPLEMENTS, METHOD_NAME,
         CLASS_CONTEXT_KEYWORDS, SERVER_ENTRY_CONSTANTS, NONE, NEW_CLASS, GLOBAL, NAMESPACE_KEYWORD,
         GROUP_USE_KEYWORD, GROUP_USE_CONST_KEYWORD, GROUP_USE_FUNCTION_KEYWORD,
-        USE_KEYWORD, USE_CONST_KEYWORD, USE_FUNCTION_KEYWORD, DEFAULT_PARAMETER_VALUE, OPEN_TAG, THROW, CATCH, CLASS_MEMBER_IN_STRING,
+        USE_KEYWORD, USE_CONST_KEYWORD, USE_FUNCTION_KEYWORD, DEFAULT_PARAMETER_VALUE, OPEN_TAG, THROW, THROW_NEW, CATCH, CLASS_MEMBER_IN_STRING,
         INTERFACE_CONTEXT_KEYWORDS, USE_TRAITS
     };
 
@@ -264,8 +267,10 @@ final class CompletionContextFinder {
         if (clsIfaceDeclContext != null) {
             return clsIfaceDeclContext;
         }
-        if (acceptTokenChains(tokenSequence, THROW_NEW_TOKEN_CHAINS, moveNextSucces)) {
+        if (acceptTokenChains(tokenSequence, THROW_TOKEN_CHAINS, moveNextSucces)) {
             return CompletionContext.THROW;
+        } else if (acceptTokenChains(tokenSequence, THROW_NEW_TOKEN_CHAINS, moveNextSucces)) {
+            return CompletionContext.THROW_NEW;
         } else if (acceptTokenChains(tokenSequence, CLASS_NAME_TOKENCHAINS, moveNextSucces)) {
             // has to be checked AFTER: THROW_NEW_TOKEN_CHAINS
             return CompletionContext.NEW_CLASS;

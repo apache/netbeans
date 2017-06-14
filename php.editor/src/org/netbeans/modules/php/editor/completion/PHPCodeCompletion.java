@@ -499,9 +499,16 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             case INHERITANCE:
                 autoCompleteKeywords(completionResult, request, INHERITANCE_KEYWORDS);
                 break;
-            case THROW:
+            case THROW_NEW:
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteExceptions(completionResult, request, true);
+                break;
+            case THROW:
+                autoCompleteKeywords(completionResult, request, Collections.singletonList("new")); // NOI18N
+                autoCompleteNamespaces(completionResult, request);
+                // XXX allow all class names for static factory methods? e.g. ExceptionFactory::create("Something");
+                // currently, restrict to classes extending the Exception class
+                autoCompleteExceptions(completionResult, request, false);
                 break;
             case CATCH:
                 autoCompleteNamespaces(completionResult, request);
@@ -707,7 +714,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     if (isExceptionClass(inheritedClass)) {
                         completionResult.add(new PHPCompletionItem.ClassItem(classElement, request, false, null));
                         if (withConstructors) {
-                            constructorClassNames.add(inheritedClass.getFullyQualifiedName());
+                            constructorClassNames.add(classElement.getFullyQualifiedName());
                         }
                         break;
                     }

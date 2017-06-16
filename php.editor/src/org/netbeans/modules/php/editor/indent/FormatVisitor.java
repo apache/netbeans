@@ -1295,6 +1295,8 @@ public class FormatVisitor extends DefaultVisitor {
         scan(node.getCondition());
         Statement trueStatement = node.getTrueStatement();
         formatTokens.add(new FormatToken.IndentToken(ts.offset(), -1 * options.continualIndentSize));
+        // #268541
+        boolean isTrueStatementCurly = false;
         if (trueStatement != null && trueStatement instanceof Block && !((Block) trueStatement).isCurly()) {
             isCurly = false;
             addAllUntilOffset(trueStatement.getStartOffset());
@@ -1309,6 +1311,7 @@ public class FormatVisitor extends DefaultVisitor {
             isCurly = false;
             addNoCurlyBody(trueStatement, FormatToken.Kind.WHITESPACE_BEFORE_IF_ELSE_STATEMENT);
         } else {
+            isTrueStatementCurly = true;
             scan(trueStatement);
         }
         Statement falseStatement = node.getFalseStatement();
@@ -1345,6 +1348,7 @@ public class FormatVisitor extends DefaultVisitor {
             addEndOfUnbreakableSequence(falseStatement.getEndOffset());
             formatTokens.add(new FormatToken.IndentToken(falseStatement.getEndOffset(), -1 * options.indentSize));
         } else {
+            isCurly = isTrueStatementCurly;
             scan(falseStatement);
         }
 

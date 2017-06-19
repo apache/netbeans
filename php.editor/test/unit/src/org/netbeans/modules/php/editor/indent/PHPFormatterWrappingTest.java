@@ -133,6 +133,37 @@ public class PHPFormatterWrappingTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/wrapping/methodParams07.php", options);
     }
 
+    // #270903
+    public void testWrapMethodParams08() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        reformatFileContents("testfiles/formatting/wrapping/methodParams08.php", options);
+    }
+
+    public void testWrapMethodParams09() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        reformatFileContents("testfiles/formatting/wrapping/methodParams09.php", options);
+    }
+
+    public void testWrapMethodParams10() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        reformatFileContents("testfiles/formatting/wrapping/methodParams10.php", options);
+    }
+
+    public void testWrapMethodParams11() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        reformatFileContents("testfiles/formatting/wrapping/methodParams11.php", options);
+    }
+
+    public void testWrapMethodParams12() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_PARAMS, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        reformatFileContents("testfiles/formatting/wrapping/methodParams12.php", options);
+    }
+
     public void testWrapInterfaces01() throws Exception {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
         options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_KEYWORD, CodeStyle.WrapStyle.WRAP_ALWAYS);

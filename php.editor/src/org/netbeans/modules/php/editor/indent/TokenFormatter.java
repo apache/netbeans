@@ -889,12 +889,12 @@ public class TokenFormatter {
                                         switch (docOptions.wrapMethodParams) {
                                             case WRAP_ALWAYS:
                                                 newLines = 1;
-                                                countSpaces = docOptions.alignMultilineMethodParams ? lastAnchor.getAnchorColumn() : indent + docOptions.continualIndentSize;
+                                                countSpaces = docOptions.alignMultilineMethodParams ? lastAnchor.getAnchorColumn() : indent;
                                                 break;
                                             case WRAP_NEVER:
                                                 if (isAfterLineComment(formatTokens, index)) {
                                                     newLines = 1;
-                                                    countSpaces = docOptions.alignMultilineMethodParams ? lastAnchor.getAnchorColumn() : indent + docOptions.continualIndentSize;
+                                                    countSpaces = docOptions.alignMultilineMethodParams ? lastAnchor.getAnchorColumn() : indent;
                                                 } else {
                                                     newLines = 0;
                                                     countSpaces = docOptions.spaceAfterComma ? 1 : 0;
@@ -903,7 +903,7 @@ public class TokenFormatter {
                                             case WRAP_IF_LONG:
                                                 if (column + 1 + countLengthOfNextSequence(formatTokens, index + 1) > docOptions.margin) {
                                                     newLines = 1;
-                                                    countSpaces = docOptions.alignMultilineMethodParams ? lastAnchor.getAnchorColumn() : indent + docOptions.continualIndentSize;
+                                                    countSpaces = docOptions.alignMultilineMethodParams ? lastAnchor.getAnchorColumn() : indent;
                                                 } else {
                                                     newLines = 0;
                                                     countSpaces = 1;

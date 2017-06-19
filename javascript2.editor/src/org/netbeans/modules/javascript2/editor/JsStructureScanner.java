@@ -335,8 +335,17 @@ public class JsStructureScanner implements StructureScanner {
                         stack.add(new FoldingItem(kind, ts.offset()));
                     } else if (tokenId == JsTokenId.BRACKET_RIGHT_CURLY && !stack.isEmpty()) {
                         FoldingItem fromStack = stack.remove(stack.size() - 1);
-                        appendFold(folds, fromStack.kind, info.getSnapshot().getOriginalOffset(fromStack.start),
-                                info.getSnapshot().getOriginalOffset(ts.offset() + 1));
+
+                        TokenId previousTokenId = null;
+                        if (ts.movePrevious()) {
+                            previousTokenId = ts.token().id();
+                            ts.moveNext();
+                        }
+                        
+                        if (previousTokenId != null && previousTokenId != JsTokenId.BRACKET_LEFT_CURLY) {
+                            appendFold(folds, fromStack.kind, info.getSnapshot().getOriginalOffset(fromStack.start),
+                                    info.getSnapshot().getOriginalOffset(ts.offset() + 1));
+                        }
                     }
                 }
             }

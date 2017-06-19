@@ -1133,6 +1133,10 @@ public class FormatVisitor extends DefaultVisitor {
             ts.movePrevious();
         }
         scan(node.getFunctionName());
+
+        // #270903 add indent
+        formatTokens.add(new FormatToken.IndentToken(node.getFunctionName().getEndOffset(), options.continualIndentSize));
+
         List<FormalParameter> parameters = node.getFormalParameters();
         if (parameters != null && parameters.size() > 0) {
             while (ts.moveNext() && ts.offset() < parameters.get(0).getStartOffset()
@@ -1142,6 +1146,20 @@ public class FormatVisitor extends DefaultVisitor {
             ts.movePrevious();
             addListOfNodes(parameters, FormatToken.Kind.WHITESPACE_IN_PARAMETER_LIST);
         }
+
+        // #270903 add indent
+        int indentEndOffset;
+        Expression returnType = node.getReturnType();
+        Block body = node.getBody();
+        if (returnType != null) {
+            indentEndOffset = returnType.getStartOffset();
+        } else if (body != null){
+            indentEndOffset = body.getStartOffset();
+        } else {
+            indentEndOffset = node.getEndOffset();
+        }
+        formatTokens.add(new FormatToken.IndentToken(indentEndOffset, -1 * options.continualIndentSize));
+
         addReturnType(node.getReturnType());
         scan(node.getBody());
     }

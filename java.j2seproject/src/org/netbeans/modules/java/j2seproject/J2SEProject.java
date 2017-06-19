@@ -91,6 +91,7 @@ import org.netbeans.modules.java.api.common.SourceRoots;
 import org.netbeans.modules.java.api.common.ant.UpdateHelper;
 import org.netbeans.modules.java.api.common.classpath.ClassPathModifier;
 import org.netbeans.modules.java.api.common.classpath.ClassPathProviderImpl;
+import org.netbeans.modules.java.api.common.problems.ProjectProblemsProviders;
 import org.netbeans.modules.java.api.common.project.ProjectConfigurations;
 import org.netbeans.modules.java.api.common.project.ProjectHooks;
 import org.netbeans.modules.java.api.common.project.ProjectOperations;
@@ -398,7 +399,8 @@ public final class J2SEProject implements Project {
             QuerySupport.createAutomaticModuleNameQuery(helper, eval, sourceRoots, ProjectProperties.MANIFEST_FILE),
             QuerySupport.createModuleInfoAccessibilityQuery(sourceRoots, testRoots),
             LookupMergerSupport.createCompilerOptionsQueryMerger(),
-            J2SEFileWizardIterator.create()
+            J2SEFileWizardIterator.create(),
+            ProjectProblemsProviders.createMissingModuleProjectProblemsProvider(this)
         );
         lookup = base; // in case LookupProvider's call Project.getLookup
         return LookupProviderSupport.createCompositeLookup(base, "Projects/org-netbeans-modules-java-j2seproject/Lookup"); //NOI18N

@@ -171,7 +171,7 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
                 return false;
             }
 
-            if (size > MAX_MINIMIZE_FILE_SIZE_TO_PARSE && !snapshot.getMimeType().equals(JsTokenId.JSON_MIME_TYPE)) {
+            if (size > MAX_MINIMIZE_FILE_SIZE_TO_PARSE && !(snapshot.getMimeType().equals(JsTokenId.JSON_MIME_TYPE) || snapshot.getMimeType().equals(JsTokenId.PACKAGE_JSON_MIME_TYPE)||snapshot.getMimeType().equals(JsTokenId.BOWER_JSON_MIME_TYPE))) {
                 // try to find only for the file that has size bigger then 1/3 of the max size
                 boolean isMinified = false;
                 TokenSequence<? extends JsTokenId> ts = LexUtilities.getTokenSequence(snapshot, 0, language);

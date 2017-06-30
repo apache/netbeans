@@ -283,6 +283,10 @@ public final class ShellProjectUtils {
     }
     
     public static boolean isModularProject(Project project) {
+        return isModularProject(project, false);
+    }
+    
+    public static boolean isModularProject(Project project, boolean checkModuleInfo) {
         if (project == null) { 
             return false;
         }
@@ -293,6 +297,9 @@ public final class ShellProjectUtils {
         String s = SourceLevelQuery.getSourceLevel(project.getProjectDirectory());
         if (!(s != null && new SpecificationVersion("9").compareTo(new SpecificationVersion(s)) <= 0)) {
             return false;
+        }
+        if (!checkModuleInfo) {
+            return true;
         }
         // find module-info.java
         for (SourceGroup sg : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
@@ -362,8 +369,7 @@ public final class ShellProjectUtils {
                 ShellProjectUtils.findProjectImportedModules(project, 
                     ShellProjectUtils.findProjectModules(project, null))
         );
-        ShellProjectUtils.findProjectModules(project, null);
-        boolean modular = isModularJDK(findPlatform(project));
+        boolean modular = isModularProject(project, false);
         if (exportMods.isEmpty() || !modular) {
             return null;
         }
@@ -389,16 +395,17 @@ public final class ShellProjectUtils {
                 ShellProjectUtils.findProjectImportedModules(project, 
                     ShellProjectUtils.findProjectModules(project, null))
         );
-        ShellProjectUtils.findProjectModules(project, null);
-        boolean modular = isModularJDK(findPlatform(project));
+        boolean modular = isModularProject(project, false);
         if (exportMods.isEmpty() || !modular) {
             return null;
         }
         List<String> addReads = new ArrayList<>();
-        exportMods.add("jdk.jshell");
+        exportMods.add("jdk.jshell"); // NOI18N
         Collections.sort(exportMods);
-        addReads.add("--add-modules " + String.join(",", exportMods));
-        addReads.add("--add-reads jdk.jshell=ALL-UNNAMED"); // NOI18N
+        addReads.add("--add-modules"); // NOI18N
+        addReads.add(String.join(",", exportMods));
+        addReads.add("--add-reads"); // NOI18N
+        addReads.add("jdk.jshell=ALL-UNNAMED"); // NOI18N
         
         // now export everything from the project:
         Map<String, Collection<String>> packages = ShellProjectUtils.findProjectModulesAndPackages(project);
@@ -407,7 +414,8 @@ public final class ShellProjectUtils {
             Collection<String> vals = en.getValue();
 
             for (String v : vals) {
-                addReads.add(String.format("--add-exports %s/%s=ALL-UNNAMED", 
+                addReads.add("--add-exports"); // NOI18N
+                addReads.add(String.format("%s/%s=ALL-UNNAMED",  // NOI18N
                         p, v));
             }
         }
@@ -477,5 +485,20 @@ public final class ShellProjectUtils {
             }
         }                    
         return true;
+    }
+    
+    public static String quoteCmdArg(String s) {
+        if (s.indexOf(' ') == -1) {
+            return s;
+        }
+        return '"' + s + '"'; // NOI18N
+    }
+    
+    public static List<String> quoteCmdArgs(List<String> args) {
+        List<String> ret = new ArrayList<>();
+        for (String a : args) {
+            ret.add(quoteCmdArg(a));
+        }
+        return ret;
     }
 }

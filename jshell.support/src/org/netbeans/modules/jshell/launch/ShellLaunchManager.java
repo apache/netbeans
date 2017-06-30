@@ -556,7 +556,7 @@ public final class ShellLaunchManager {
                 ShellProjectUtils.isModularJDK(platform) ?
                     "modules/ext/nb-mod-jshell-probe.jar": 
                     "modules/ext/nb-custom-jshell-probe.jar",
-                "org.netbeans.modules.jshell.support", false);
+                "org.netbeans.lib.jshell.agent", false);
         String policy = propertyEvaluator.apply(PropertyNames.JSHELL_CLASS_LOADING);
         if (policy == null) {
             policy = RunOptionsModel.LoaderPolicy.SYSTEM.toString().toLowerCase();

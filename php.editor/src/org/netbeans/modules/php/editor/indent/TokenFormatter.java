@@ -216,6 +216,8 @@ public class TokenFormatter {
         public boolean groupMulitilineAssignment;
         public boolean groupMulitilineArrayInit;
 
+        boolean wrapNeverKeepLines = Boolean.getBoolean("nb.php.editor.formatting.never.keep.lines"); // NOI18N
+
         public DocumentOptions(BaseDocument doc) {
             CodeStyle codeStyle = CodeStyle.get(doc);
             continualIndentSize = codeStyle.getContinuationIndentSize();
@@ -892,7 +894,10 @@ public class TokenFormatter {
                                                 countSpaces = docOptions.alignMultilineMethodParams ? lastAnchor.getAnchorColumn() : indent;
                                                 break;
                                             case WRAP_NEVER:
-                                                if (isAfterLineComment(formatTokens, index)) {
+                                                // for keeping the same line
+                                                int countOfNewLines = countOfNewLines(oldText);
+                                                if (isAfterLineComment(formatTokens, index)
+                                                        || (!docOptions.wrapNeverKeepLines && countOfNewLines > 0)) {
                                                     newLines = 1;
                                                     countSpaces = docOptions.alignMultilineMethodParams ? lastAnchor.getAnchorColumn() : indent;
                                                 } else {
@@ -921,7 +926,10 @@ public class TokenFormatter {
                                                 countSpaces = docOptions.alignMultilineCallArgs ? lastAnchor.getAnchorColumn() : indent;
                                                 break;
                                             case WRAP_NEVER:
-                                                if (isAfterLineComment(formatTokens, index)) {
+                                                // for keeping the same line
+                                                int countOfNewLines = countOfNewLines(oldText);
+                                                if (isAfterLineComment(formatTokens, index)
+                                                        || (!docOptions.wrapNeverKeepLines && countOfNewLines > 0)) {
                                                     newLines = 1;
                                                     countSpaces = docOptions.alignMultilineCallArgs ? lastAnchor.getAnchorColumn() : indent;
                                                 } else {

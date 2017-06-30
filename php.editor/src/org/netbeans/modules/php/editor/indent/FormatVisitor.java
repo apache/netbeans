@@ -292,7 +292,7 @@ public class FormatVisitor extends DefaultVisitor {
                 delta = options.indentArrayItems;
             }
             delta = modifyDeltaForEnclosingFunctionInvocations(delta);
-            if (path.get(1) instanceof FunctionInvocation && ((FunctionInvocation) path.get(1)).getParameters().size() == 1) {
+            if (path.get(1) instanceof FunctionInvocation) {
                 int hindex = formatTokens.size() - 1;
                 while (hindex > 0 && formatTokens.get(hindex).getId() != FormatToken.Kind.TEXT
                         && formatTokens.get(hindex).getId() != FormatToken.Kind.WHITESPACE_INDENT
@@ -708,7 +708,10 @@ public class FormatVisitor extends DefaultVisitor {
             super.visit(node);
         } else {
             if (node.ctorParams() != null && node.ctorParams().size() > 0) {
-                boolean addIndentation = (path.size() > 2 && (path.get(1) instanceof ArrayElement) && (path.get(2) instanceof ArrayCreation));
+                boolean addIndentation = !(path.get(1) instanceof ReturnStatement
+                        || path.get(1) instanceof Assignment
+                        || path.get(1) instanceof ExpressionStatement)
+                        || (path.size() > 2 && (path.get(1) instanceof ArrayElement) && (path.get(2) instanceof ArrayCreation));
                 if (addIndentation) {
                     formatTokens.add(new FormatToken.IndentToken(node.getClassName().getEndOffset(), options.continualIndentSize));
                 }
@@ -1233,20 +1236,15 @@ public class FormatVisitor extends DefaultVisitor {
             boolean addIndentation = !(path.get(1) instanceof ReturnStatement
                     || path.get(1) instanceof Assignment
                     || (path.size() > 2 && path.get(1) instanceof MethodInvocation && path.get(2) instanceof Assignment));
-            // anonymous classes
-            if (options.wrapMethodCallArgs != CodeStyle.WrapStyle.WRAP_ALWAYS) {
-                for (Expression parameter : parameters) {
-                    if (isAnonymousClass(parameter)) {
-                        addIndentation = false;
-                        break;
-                    }
-                }
-            }
-
+            FormatToken.IndentToken indentToken = new FormatToken.IndentToken(node.getFunctionName().getEndOffset(), options.continualIndentSize);
             if (addIndentation) {
-                formatTokens.add(new FormatToken.IndentToken(node.getFunctionName().getEndOffset(), options.continualIndentSize));
+                formatTokens.add(indentToken);
             }
             processArguments(parameters);
+
+            // remove an indent token when the last param is an anonymous class
+            addIndentation = removeIndentTokenForAnonymousClass(parameters, indentToken, addIndentation);
+
             if (addIndentation) {
                 List<FormatToken> removed = new ArrayList<>();
                 FormatToken ftoken = formatTokens.get(formatTokens.size() - 1);
@@ -1256,7 +1254,7 @@ public class FormatVisitor extends DefaultVisitor {
                         || ftoken.getId() == FormatToken.Kind.COMMENT_START
                         || ftoken.getId() == FormatToken.Kind.COMMENT_END
                         || ftoken.getId() == FormatToken.Kind.INDENT
-                        || (ftoken.getId() == FormatToken.Kind.TEXT && (")".equals(ftoken.getOldText().toString()) || "]".equals(ftoken.getOldText().toString())))) {
+                        || (ftoken.getId() == FormatToken.Kind.TEXT && (")".equals(ftoken.getOldText()) || "]".equals(ftoken.getOldText())))) { // NOI18N
                     formatTokens.remove(formatTokens.size() - 1);
                     removed.add(ftoken);
                     ftoken = formatTokens.get(formatTokens.size() - 1);
@@ -1277,6 +1275,42 @@ public class FormatVisitor extends DefaultVisitor {
             }
         }
         addAllUntilOffset(node.getEndOffset());
+    }
+
+    private boolean removeIndentTokenForAnonymousClass(List<Expression> parameters, FormatToken.IndentToken indentToken, boolean addIndentation) {
+        boolean addIndent = addIndentation;
+        if (options.wrapMethodCallArgs == CodeStyle.WrapStyle.WRAP_ALWAYS
+                || parameters.isEmpty()) {
+            return addIndent;
+        }
+        Expression firstParameter = parameters.get(0);
+        if (!isAnonymousClass(parameters.get(parameters.size() - 1))) {
+            return addIndent;
+        }
+
+        for (Expression parameter : parameters) {
+            if (isAnonymousClass(parameter)) {
+                int index = formatTokens.size() - 1;
+                FormatToken lastFormatToken = formatTokens.get(index);
+                while (lastFormatToken.getOffset() >= firstParameter.getStartOffset()) {
+                    index--;
+                    lastFormatToken = formatTokens.get(index);
+                    if (parameter.getStartOffset() == lastFormatToken.getOffset()) {
+                        if (index - 1 >= 0
+                                && formatTokens.get(index - 1).getId() == FormatToken.Kind.WHITESPACE_INDENT) {
+                            lastFormatToken = formatTokens.get(index - 1);
+                            break;
+                        }
+                    }
+                }
+                if (lastFormatToken.getId() != FormatToken.Kind.WHITESPACE_INDENT) {
+                    formatTokens.remove(indentToken);
+                    addIndent = false;
+                }
+                break;
+            }
+        }
+        return addIndent;
     }
 
     @Override

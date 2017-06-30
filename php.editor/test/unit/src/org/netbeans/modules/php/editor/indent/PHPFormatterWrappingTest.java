@@ -978,4 +978,10 @@ public class PHPFormatterWrappingTest extends PHPFormatterTestBase {
         options.put(FmtOptions.WRAP_GROUP_USE_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
         reformatFileContents("testfiles/formatting/wrapping/selectedGroupUseListAlways07.php", options);
     }
+
+    public void testIssue243203() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.WRAP_METHOD_CALL_ARGS, CodeStyle.WrapStyle.WRAP_NEVER);
+        reformatFileContents("testfiles/formatting/wrapping/issue243203.php", options);
+    }
 }

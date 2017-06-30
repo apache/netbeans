@@ -8,12 +8,20 @@ test(new class {
 });
 
 test(
-new class {
+        new class {
 
-    public function foo() {
-        
-    }
-});
+            public function foo() {
+                
+            }
+        });
+
+test($arg1,
+        new class {
+
+            public function foo() {
+                
+            }
+        });
 
 test($arg1, new class {
 
@@ -22,13 +30,21 @@ test($arg1, new class {
     }
 });
 
-test(
-$arg1, new class {
+test($arg1, new class {
 
-    public function foo() {
-        
-    }
-});
+            public function foo() {
+                
+            }
+        }, $arg2, $arg3);
+
+test(
+        $arg1,
+        new class {
+
+            public function foo() {
+                
+            }
+        });
 
 // method
 $test->test(new class {
@@ -39,12 +55,20 @@ $test->test(new class {
 });
 
 $test->test(
-new class {
+        new class {
 
-    public function foo() {
-        
-    }
-});
+            public function foo() {
+                
+            }
+        });
+
+$test->test($arg1,
+        new class {
+
+            public function foo() {
+                
+            }
+        });
 
 $test->test($arg1, new class {
 
@@ -53,10 +77,18 @@ $test->test($arg1, new class {
     }
 });
 
-$test->test(
-$arg1, new class {
+$test->test($arg1, new class {
 
-    public function foo() {
-        
-    }
-});
+            public function foo() {
+                
+            }
+        }, $arg2, $arg3);
+
+$test->test(
+        $arg1,
+        new class {
+
+            public function foo() {
+                
+            }
+        });

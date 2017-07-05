@@ -53,6 +53,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
+import org.netbeans.modules.php.analysis.CodingStandardsFixerParams;
 import org.netbeans.modules.php.analysis.options.AnalysisOptions;
 import org.netbeans.modules.php.analysis.parsers.CodingStandardsFixerReportParser;
 import org.netbeans.modules.php.analysis.results.Result;
@@ -105,6 +106,11 @@ public final class CodingStandardsFixer {
             ANSI_PARAM,
             NO_INTERACTION_PARAM);
 
+    @org.netbeans.api.annotations.common.SuppressWarnings(value = "MS_MUTABLE_COLLECTION", justification = "It is immutable") // NOI18N
+    public static final List<String> VERSIONS = Arrays.asList(
+            "1", // NOI18N
+            "2" // NOI18N
+    );
     @org.netbeans.api.annotations.common.SuppressWarnings(value = "MS_MUTABLE_COLLECTION", justification = "It is immutable") // NOI18N
     public static final List<String> ALL_LEVEL = Arrays.asList(
             "", // NOI18N
@@ -183,11 +189,11 @@ public final class CodingStandardsFixer {
         "CodingStandardsFixer.analyze=Coding Standards Fixer (analyze #{0})",
     })
     @CheckForNull
-    public List<Result> analyze(String level, String conifg, String options, FileObject file) {
+    public List<Result> analyze(CodingStandardsFixerParams params, FileObject file) {
         assert file.isValid() : "Invalid file given: " + file;
         try {
             Integer result = getExecutable(Bundle.CodingStandardsFixer_analyze(analyzeGroupCounter++))
-                    .additionalParameters(getParameters(level, conifg, options, file))
+                    .additionalParameters(getParameters(params, file))
                     .runAndWait(getDescriptor(), "Running coding standards fixer..."); // NOI18N
             if (result == null) {
                 return null;
@@ -240,17 +246,23 @@ public final class CodingStandardsFixer {
                 });
     }
 
-    private List<String> getParameters(String level, String config, String options, FileObject file) {
+    private List<String> getParameters(CodingStandardsFixerParams parameters, FileObject file) {
         // fix /path/to/{dir|file}
         List<String> params = new ArrayList<>();
         params.add(FIX_COMMAND);
         params.addAll(ANALYZE_DEFAULT_PARAMS);
-        if (!StringUtils.isEmpty(level)) {
-            params.add(String.format(LEVEL_PARAM, level));
+        String version = parameters.getVersion();
+        if ("1".equals(version)) { // NOI18N
+            String level = parameters.getLevel();
+            if (!StringUtils.isEmpty(level)) {
+                params.add(String.format(LEVEL_PARAM, level));
+            }
+            String config = parameters.getConfig();
+            if (!StringUtils.isEmpty(config)) {
+                params.add(String.format(CONFIG_PARAM, config));
+            }
         }
-        if (!StringUtils.isEmpty(config)) {
-            params.add(String.format(CONFIG_PARAM, config));
-        }
+        String options = parameters.getOptions();
         if (!StringUtils.isEmpty(options)) {
             params.addAll(StringUtils.explode(options, " ")); // NOI18N
         }

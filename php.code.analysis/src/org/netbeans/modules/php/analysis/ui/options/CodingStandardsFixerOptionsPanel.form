@@ -16,18 +16,22 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="codingStandardsFixerLearnMoreLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="codingStandardsFixerLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="codingStandardsFixerLevelLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="codingStandardsFixerConfigLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="codingStandardsFixerOptionsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="noteLabel" min="-2" max="-2" attributes="0"/>
+                  <Component id="codingStandardsFixerVersionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="codingStandardsFixerConfigComboBox" min="-2" max="-2" attributes="0"/>
-                  <Component id="codingStandardsFixerLevelComboBox" min="-2" max="-2" attributes="0"/>
-                  <Component id="codingStandardsFixerHintLabel" min="-2" max="-2" attributes="0"/>
                   <Component id="codingStandardsFixerOptionsTextField" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="codingStandardsFixerTextField" max="32767" attributes="0"/>
@@ -36,16 +40,16 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="codingStandardsFixerSearchButton" linkSize="1" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="codingStandardsFixerVersionComboBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="codingStandardsFixerConfigComboBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="codingStandardsFixerLevelComboBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="codingStandardsFixerHintLabel" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
               </Group>
-          </Group>
-          <Group type="102" attributes="0">
-              <Component id="noteLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="codingStandardsFixerLearnMoreLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -60,6 +64,11 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="codingStandardsFixerHintLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="codingStandardsFixerVersionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="codingStandardsFixerVersionComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="codingStandardsFixerLevelLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -126,6 +135,26 @@
         <Property name="text" type="java.lang.String" value="HINT" noResource="true"/>
       </Properties>
     </Component>
+    <Component class="javax.swing.JLabel" name="codingStandardsFixerVersionLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/analysis/ui/options/Bundle.properties" key="CodingStandardsFixerOptionsPanel.codingStandardsFixerVersionLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="codingStandardsFixerVersionComboBox">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="0"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="codingStandardsFixerVersionComboBoxActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+    </Component>
     <Component class="javax.swing.JLabel" name="codingStandardsFixerLevelLabel">
       <Properties>
         <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
@@ -142,6 +171,9 @@
           <StringArray count="0"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="codingStandardsFixerConfigLabel">
       <Properties>
@@ -159,6 +191,9 @@
           <StringArray count="0"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="codingStandardsFixerOptionsLabel">
       <Properties>

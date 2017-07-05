@@ -78,11 +78,13 @@ public class CodingStandardsFixerOptionsPanel extends AnalysisCategoryPanel {
         initComponents();
         init();
     }
+
     private void init() {
         DocumentListener defaultDocumentListener = new DefaultDocumentListener();
         initCodingStandardsFixer(defaultDocumentListener);
-        codingStandardsFixerLevelComboBox.setModel(new DefaultComboBoxModel(CodingStandardsFixer.ALL_LEVEL.toArray()));
-        codingStandardsFixerConfigComboBox.setModel(new DefaultComboBoxModel(CodingStandardsFixer.ALL_CONFIG.toArray()));
+        codingStandardsFixerVersionComboBox.setModel(new DefaultComboBoxModel<>(CodingStandardsFixer.VERSIONS.toArray(new String[0])));
+        codingStandardsFixerLevelComboBox.setModel(new DefaultComboBoxModel<>(CodingStandardsFixer.ALL_LEVEL.toArray(new String[0])));
+        codingStandardsFixerConfigComboBox.setModel(new DefaultComboBoxModel<>(CodingStandardsFixer.ALL_CONFIG.toArray(new String[0])));
     }
 
     @NbBundle.Messages({
@@ -92,7 +94,7 @@ public class CodingStandardsFixerOptionsPanel extends AnalysisCategoryPanel {
     })
     private void initCodingStandardsFixer(DocumentListener defaultDocumentListener) {
         codingStandardsFixerHintLabel.setText(Bundle.CodingStandardsFixerOptionsPanel_hint(CodingStandardsFixer.NAME, CodingStandardsFixer.LONG_NAME));
-        codingStandardsFixerLevelComboBox.setModel(new DefaultComboBoxModel());
+        codingStandardsFixerLevelComboBox.setModel(new DefaultComboBoxModel<>());
 
         // listeners
         codingStandardsFixerTextField.getDocument().addDocumentListener(defaultDocumentListener);
@@ -113,6 +115,14 @@ public class CodingStandardsFixerOptionsPanel extends AnalysisCategoryPanel {
 
     public void setCodingStandardsFixerPath(String path) {
         codingStandardsFixerTextField.setText(path);
+    }
+
+    public String getCodingStandardsFixerVersion() {
+        return (String) codingStandardsFixerVersionComboBox.getSelectedItem();
+    }
+
+    public void setCodingStandardsFixerVersion(String version) {
+        codingStandardsFixerVersionComboBox.setSelectedItem(version);
     }
 
     @CheckForNull
@@ -159,6 +169,7 @@ public class CodingStandardsFixerOptionsPanel extends AnalysisCategoryPanel {
     @Override
     public void update() {
         AnalysisOptions analysisOptions = AnalysisOptions.getInstance();
+        setCodingStandardsFixerVersion(analysisOptions.getCodingStandardsFixerVersion());
         setCodingStandardsFixerPath(analysisOptions.getCodingStandardsFixerPath());
         setCodingStandardsFixerLevel(analysisOptions.getCodingStandardsFixerLevel());
         setCodingStandardsFixerConfig(analysisOptions.getCodingStandardsFixerConfig());
@@ -168,6 +179,7 @@ public class CodingStandardsFixerOptionsPanel extends AnalysisCategoryPanel {
     @Override
     public void applyChanges() {
         AnalysisOptions analysisOptions = AnalysisOptions.getInstance();
+        analysisOptions.setCodingStandardsFixerVersion(getCodingStandardsFixerVersion());
         analysisOptions.setCodingStandardsFixerPath(getCodingStandardsFixerPath());
         analysisOptions.setCodingStandardsFixerLevel(getCodingStandardsFixerLevel());
         analysisOptions.setCodingStandardsFixerConfig(getCodingStandardsFixerConfig());
@@ -179,6 +191,11 @@ public class CodingStandardsFixerOptionsPanel extends AnalysisCategoryPanel {
         String saved = AnalysisOptions.getInstance().getCodingStandardsFixerPath();
         String current = getCodingStandardsFixerPath().trim();
         if (saved == null ? !current.isEmpty() : !saved.equals(current)) {
+            return true;
+        }
+        saved = AnalysisOptions.getInstance().getCodingStandardsFixerVersion();
+        current = getCodingStandardsFixerVersion();
+        if (saved == null ? StringUtils.hasText(current) : !saved.equals(current)) {
             return true;
         }
         saved = AnalysisOptions.getInstance().getCodingStandardsFixerLevel();
@@ -208,6 +225,13 @@ public class CodingStandardsFixerOptionsPanel extends AnalysisCategoryPanel {
         changeSupport.fireChange();
     }
 
+    private void setVersion1ComponentsVisible(boolean visible) {
+        codingStandardsFixerLevelLabel.setVisible(visible);
+        codingStandardsFixerLevelComboBox.setVisible(visible);
+        codingStandardsFixerConfigLabel.setVisible(visible);
+        codingStandardsFixerConfigComboBox.setVisible(visible);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -222,10 +246,12 @@ public class CodingStandardsFixerOptionsPanel extends AnalysisCategoryPanel {
         codingStandardsFixerBrowseButton = new javax.swing.JButton();
         codingStandardsFixerSearchButton = new javax.swing.JButton();
         codingStandardsFixerHintLabel = new javax.swing.JLabel();
+        codingStandardsFixerVersionLabel = new javax.swing.JLabel();
+        codingStandardsFixerVersionComboBox = new javax.swing.JComboBox<>();
         codingStandardsFixerLevelLabel = new javax.swing.JLabel();
-        codingStandardsFixerLevelComboBox = new javax.swing.JComboBox();
+        codingStandardsFixerLevelComboBox = new javax.swing.JComboBox<>();
         codingStandardsFixerConfigLabel = new javax.swing.JLabel();
-        codingStandardsFixerConfigComboBox = new javax.swing.JComboBox();
+        codingStandardsFixerConfigComboBox = new javax.swing.JComboBox<>();
         codingStandardsFixerOptionsLabel = new javax.swing.JLabel();
         codingStandardsFixerOptionsTextField = new javax.swing.JTextField();
         noteLabel = new javax.swing.JLabel();
@@ -251,6 +277,14 @@ public class CodingStandardsFixerOptionsPanel extends AnalysisCategoryPanel {
         });
 
         org.openide.awt.Mnemonics.setLocalizedText(codingStandardsFixerHintLabel, "HINT"); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(codingStandardsFixerVersionLabel, org.openide.util.NbBundle.getMessage(CodingStandardsFixerOptionsPanel.class, "CodingStandardsFixerOptionsPanel.codingStandardsFixerVersionLabel.text")); // NOI18N
+
+        codingStandardsFixerVersionComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                codingStandardsFixerVersionComboBoxActionPerformed(evt);
+            }
+        });
 
         codingStandardsFixerLevelLabel.setLabelFor(codingStandardsFixerLevelComboBox);
         org.openide.awt.Mnemonics.setLocalizedText(codingStandardsFixerLevelLabel, org.openide.util.NbBundle.getMessage(CodingStandardsFixerOptionsPanel.class, "CodingStandardsFixerOptionsPanel.codingStandardsFixerLevelLabel.text")); // NOI18N
@@ -280,30 +314,33 @@ public class CodingStandardsFixerOptionsPanel extends AnalysisCategoryPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(codingStandardsFixerLearnMoreLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(codingStandardsFixerLabel)
                     .addComponent(codingStandardsFixerLevelLabel)
                     .addComponent(codingStandardsFixerConfigLabel)
-                    .addComponent(codingStandardsFixerOptionsLabel))
+                    .addComponent(codingStandardsFixerOptionsLabel)
+                    .addComponent(noteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(codingStandardsFixerVersionLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(codingStandardsFixerConfigComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(codingStandardsFixerLevelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(codingStandardsFixerHintLabel)
                     .addComponent(codingStandardsFixerOptionsTextField)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(codingStandardsFixerTextField)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(codingStandardsFixerBrowseButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(codingStandardsFixerSearchButton))))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(noteLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(codingStandardsFixerLearnMoreLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(codingStandardsFixerSearchButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(codingStandardsFixerVersionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(codingStandardsFixerConfigComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(codingStandardsFixerLevelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(codingStandardsFixerHintLabel))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {codingStandardsFixerBrowseButton, codingStandardsFixerSearchButton});
@@ -318,6 +355,10 @@ public class CodingStandardsFixerOptionsPanel extends AnalysisCategoryPanel {
                     .addComponent(codingStandardsFixerBrowseButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(codingStandardsFixerHintLabel)
+                .addGap(5, 5, 5)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(codingStandardsFixerVersionLabel)
+                    .addComponent(codingStandardsFixerVersionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(codingStandardsFixerLevelLabel)
@@ -393,27 +434,42 @@ public class CodingStandardsFixerOptionsPanel extends AnalysisCategoryPanel {
 
     private void codingStandardsFixerLearnMoreLabelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_codingStandardsFixerLearnMoreLabelMousePressed
         try {
-            URL url = new URL("https://github.com/fabpot/PHP-CS-Fixer"); // NOI18N
+            URL url = new URL("https://github.com/FriendsOfPHP/PHP-CS-Fixer"); // NOI18N
             HtmlBrowser.URLDisplayer.getDefault().showURL(url);
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);
         }
     }//GEN-LAST:event_codingStandardsFixerLearnMoreLabelMousePressed
 
+    private void codingStandardsFixerVersionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codingStandardsFixerVersionComboBoxActionPerformed
+        switch (getCodingStandardsFixerVersion()) {
+            case "1": // NOI18N
+                setVersion1ComponentsVisible(true);
+                break;
+            case "2": // NOI18N
+                setVersion1ComponentsVisible(false);
+                break;
+            default:
+                throw new AssertionError();
+        }
+    }//GEN-LAST:event_codingStandardsFixerVersionComboBoxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton codingStandardsFixerBrowseButton;
-    private javax.swing.JComboBox codingStandardsFixerConfigComboBox;
+    private javax.swing.JComboBox<String> codingStandardsFixerConfigComboBox;
     private javax.swing.JLabel codingStandardsFixerConfigLabel;
     private javax.swing.JLabel codingStandardsFixerHintLabel;
     private javax.swing.JLabel codingStandardsFixerLabel;
     private javax.swing.JLabel codingStandardsFixerLearnMoreLabel;
-    private javax.swing.JComboBox codingStandardsFixerLevelComboBox;
+    private javax.swing.JComboBox<String> codingStandardsFixerLevelComboBox;
     private javax.swing.JLabel codingStandardsFixerLevelLabel;
     private javax.swing.JLabel codingStandardsFixerOptionsLabel;
     private javax.swing.JTextField codingStandardsFixerOptionsTextField;
     private javax.swing.JButton codingStandardsFixerSearchButton;
     private javax.swing.JTextField codingStandardsFixerTextField;
+    private javax.swing.JComboBox<String> codingStandardsFixerVersionComboBox;
+    private javax.swing.JLabel codingStandardsFixerVersionLabel;
     private javax.swing.JLabel noteLabel;
     // End of variables declaration//GEN-END:variables
 

@@ -687,6 +687,10 @@ public class FormatVisitor extends DefaultVisitor {
                 switch (ts.token().id()) {
                     case PHP_CLASS:
                         addFormatToken(formatTokens);
+                        List<Expression> ctorParams = node.ctorParams();
+                        if (!ctorParams.isEmpty()) {
+                            processArguments(ctorParams);
+                        }
                         break;
                     case PHP_IMPLEMENTS:
                         if (node.getInterfaces().size() > 0) {
@@ -698,6 +702,7 @@ public class FormatVisitor extends DefaultVisitor {
                     case PHP_EXTENDS:
                         formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_EXTENDS_IMPLEMENTS, ts.offset()));
                         addFormatToken(formatTokens);
+                        scan(node.getSuperClass());
                         break;
                     default:
                         addFormatToken(formatTokens);
@@ -705,7 +710,7 @@ public class FormatVisitor extends DefaultVisitor {
             }
 
             ts.movePrevious();
-            super.visit(node);
+            scan(node.getBody());
         } else {
             if (node.ctorParams() != null && node.ctorParams().size() > 0) {
                 boolean addIndentation = !(path.get(1) instanceof ReturnStatement

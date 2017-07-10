@@ -197,6 +197,8 @@ class CustomPopupFactory extends PopupFactory {
         
         @Override
         void dispose() {
+            window.setVisible(false);
+            window.dispose();
             window = null;
             super.dispose();
         }

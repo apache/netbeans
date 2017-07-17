@@ -56,6 +56,22 @@ public class GoToDeclarationTest extends JsTestBase {
     public void testIssue209941_01() throws Exception {
         checkDeclaration("testfiles/coloring/issue209941.js", "this.globalNot^ify();", "    this.^globalNotify = function() {");
     }
+            
+    public void testIssue233298_0() throws Exception {        
+        checkDeclaration("testfiles/coloring/issue233298.js", "address.door^No", "^doorNo: \"10\"");        
+    }
+        
+    public void testIssue233298_1() throws Exception {        
+        checkDeclaration("testfiles/coloring/issue233298_1.js", "add.door^No", "^doorNo: \"10\"");        
+    }
+    
+    public void testIssue233298_2() throws Exception {        
+        checkDeclaration("testfiles/coloring/issue233298_1.js", "addr3.door^No", "^doorNo: \"10\"");        
+    }
+    
+    public void testIssue233298_3() throws Exception {
+        checkDeclaration("testfiles/coloring/issue233298_2.js", "add.zi^p", "^zip: \"15000\"");        
+    }
     
     public void testBasicNavigation_01() throws Exception {
         checkDeclaration("testfiles/model/variables01.js", "var address = new A^ddress(\"Prague\", \"Czech Republic\", 15000)", "function ^Address (town, state, number) {");

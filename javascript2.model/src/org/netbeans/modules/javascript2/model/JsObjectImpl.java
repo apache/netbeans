@@ -475,12 +475,13 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
                 if (!type.getType().contains(ModelUtils.THIS)) {
                     for (TypeUsage typeHere : resolvedHere) {
                         if (typeHere.getOffset() > 0) {
-                            String rType = typeHere.getType();
-                            if (rType.startsWith(SemiTypeResolverVisitor.ST_EXP)) {
-                                rType = rType.substring(5);
-                                rType = rType.replace(SemiTypeResolverVisitor.ST_PRO, ".");
+                            TypeUsage newType = typeHere;
+                            if (!typeHere.isResolved() && (typeHere.getType().startsWith(SemiTypeResolverVisitor.ST_PRO))) {
+                                newType = ModelUtils.createResolvedType(global, typeHere);
                             }
+                            String rType = ModelUtils.getFQNFromType(newType);
                             JsObject jsObject = ModelUtils.findJsObjectByName(global, rType);
+                            
                             if (jsObject == null && rType.indexOf('.') == -1 && global instanceof DeclarationScope) {
                                 DeclarationScope declarationScope = ModelUtils.getDeclarationScope((DeclarationScope) global, typeHere.getOffset());
                                 jsObject = ModelUtils.getJsObjectByName(declarationScope, rType);

@@ -1186,6 +1186,144 @@ public class ModelUtils {
             return Collections.singletonList(type.getType());
         }
     }
+
+    /**
+     * Resolve assignments to return a resolved typeUsage
+     *
+     * @param parent Parent Object
+     * @param typeHere TypeUsage for the assignment
+     * @return
+     */
+    public static TypeUsage createResolvedType(JsObject parent, TypeUsage typeHere) {
+        String fqn = getFQNFromType(typeHere);
+        return resolveTypes(parent, fqn, typeHere.getOffset());
+    }
+
+    /* @return TypeUsage with generated typename string 
+     */
+    private static TypeUsage resolveTypes(JsObject parent, String fqn, int offset) {
+
+        String name = fqn;
+        StringBuilder props = new StringBuilder();
+        int indx = fqn.indexOf(".");
+        if (indx != -1) {
+            name = fqn.substring(0, indx);
+            props.append(fqn.substring(indx + 1));
+        }
+        List<TypeUsage> localResolved = new ArrayList<TypeUsage>();
+
+        resolveAssignments(parent, name, offset, localResolved, props);
+
+        boolean typeResolved = false;
+        for (TypeUsage type : localResolved) {
+            if (type.isResolved()) {
+                String newObjectName = type.getType();
+                JsObject object = ModelUtils.searchJsObjectByName(parent, newObjectName);
+                if (object != null) {
+                    String partfqn = props.toString();
+                    if (!partfqn.trim().equals("")) {
+                        String[] tokens = partfqn.split("\\.");
+                        for (int i = 0; i < tokens.length; i++) {
+                            object = ModelUtils.searchJsObjectByName(parent, newObjectName);
+                            for (JsObject prop : object.getProperties().values()) {
+                                if ((prop.getName().equals(tokens[i])) && (prop.isDeclared())) {
+                                    if (prop.getAssignmentCount() > 0) {
+                                        for (TypeUsage type1 : prop.getAssignments()) {
+                                            return resolveTypes(object, String.join(".", Arrays.copyOfRange(tokens, i, tokens.length)), offset);
+                                        }
+                                    } else {
+                                        object = prop;
+                                        newObjectName = newObjectName + "." + prop.getName();
+                                        if (i == tokens.length - 1) {
+                                            typeResolved = true;
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (typeResolved) {
+                            return new TypeUsage(newObjectName, type.getOffset(), true);
+                        }
+
+                    }
+                }
+            }
+        }
+        return new TypeUsage(fqn, offset, false);
+    }
+
+    private static void resolveAssignments(JsObject jsObject, String fqn, int offset, List<TypeUsage> resolved, StringBuilder nestedProperties) {
+
+        Set<String> alreadyProcessed = new HashSet<String>();
+        for (TypeUsage type : resolved) {
+            alreadyProcessed.add(type.getType());
+        }
+        resolveAssignments(jsObject, fqn, offset, resolved, alreadyProcessed, nestedProperties);
+    }
+
+    /**
+     * Resolves assignments for the top level object in a given fqn
+     *
+     * @param parent parent JsObject
+     * @param fqn assignment Type name string
+     * @param offset assignment Type offset
+     * @param resolved list of resolved TypeUsages
+     * @param alreadyProcessed List of FQNs already resolved
+     * @param nestedProperties "." separated nested property names string part
+     * of FQN
+     */
+    private static void resolveAssignments(JsObject parent, String fqn, int offset, List<TypeUsage> resolved, Set<String> alreadyProcessed, StringBuilder nestedProperties) {
+        if (!alreadyProcessed.contains(fqn)) {
+            alreadyProcessed.add(fqn);
+            String fqnCorrected = ModelUtils.getFQNFromType(new TypeUsage(fqn, offset, false));
+            //resolve the parent object in fqn
+            int index = fqnCorrected.indexOf(".");//NOI18N
+            if (index != -1) {
+                //save the remaining fqn part to locate in object properties later
+                nestedProperties.insert(0, fqnCorrected.substring(index + 1) + ".");
+                fqnCorrected = fqnCorrected.substring(0, index);
+            }
+            if (!fqnCorrected.startsWith("@")) {
+                List<TypeUsage> toProcess = new ArrayList<TypeUsage>();
+                JsObject object = ModelUtils.searchJsObjectByName(parent, fqnCorrected);
+
+                if ((object != null) && (((JsObjectImpl) object).getAssignmentCount() > 0)) {
+                    for (TypeUsage type : ((JsObjectImpl) object).getAssignments()) {
+                        if (!type.isResolved()) {
+                            for (TypeUsage resolvedType : resolveTypeFromSemiType(object, type)) {
+                                toProcess.add(resolvedType);
+                            }
+                        } else {
+                            toProcess.add(type);
+                        }
+                    }
+                    for (TypeUsage type : toProcess) {
+                        if (!alreadyProcessed.contains(type.getType())) {
+                            resolveAssignments(parent, type.getType(), type.getOffset(), resolved, alreadyProcessed, nestedProperties);
+                        }
+                    }
+                } else {
+                    ModelUtils.addUniqueType(resolved, new TypeUsage(fqnCorrected, offset, true));
+                }
+            } else {
+                ModelUtils.addUniqueType(resolved, new TypeUsage(fqnCorrected, offset, false));
+            }
+        }
+    }
+
+    private static JsObject searchJsObjectByName(JsObject parent, String fqn) {
+        JsObject object = ModelUtils.findJsObjectByName(parent, fqn);
+        if (object == null) {
+            if (!isGlobal(parent)) {
+                if (parent.getParent() != null) {
+                    parent = parent.getParent();
+                    return searchJsObjectByName(parent, fqn);
+                }
+            }
+        }
+        return object;
+    }
     
     public static Collection<TypeUsage> resolveTypes(Collection<? extends TypeUsage> unresolved, Model model, Index jsIndex, boolean includeAllPossible) {
         //assert !SwingUtilities.isEventDispatchThread() : "Type resolution may block AWT due to index search";

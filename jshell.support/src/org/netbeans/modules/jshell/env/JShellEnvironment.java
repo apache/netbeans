@@ -140,6 +140,8 @@ public class JShellEnvironment {
     
     private final ShellL            shellL = new ShellL();
     
+    private Document document;
+    
     protected JShellEnvironment(Project project, String displayName) {
         this.project = project;
         this.displayName = displayName;
@@ -420,6 +422,7 @@ public class JShellEnvironment {
         }
         this.classpathInfo = cpi;
         forceOpenDocument();
+        // createSession will get opened document, shutdown runs under lock
         doStartAndFire(ShellSession.createSession(this));
     }
 
@@ -477,8 +480,10 @@ public class JShellEnvironment {
     }
     
     private void doStartAndFire(ShellSession nss) {
-        this.shellSession = nss;
-        starting = true;
+        synchronized (this) {
+            this.shellSession = nss;
+            starting = true;
+        }
         Pair<ShellSession, Task> res = nss.start();
         nss.getModel().addConsoleListener(new ConsoleListener() {
             @Override
@@ -504,7 +509,12 @@ public class JShellEnvironment {
         fireShellStatus(event);
         
         res.second().addTaskListener(e -> {
-            starting = false;
+            synchronized (this) {
+                starting = false;
+                if (shellSession != nss) {
+                    return;
+                }
+            }
             if (nss.isValid() && nss.isActive()) {
                 fireShellStarted(event);
             }
@@ -551,12 +561,18 @@ public class JShellEnvironment {
     
     private Document forceOpenDocument() throws IOException {
         EditorCookie cake = consoleFile.getLookup().lookup(EditorCookie.class);
-        return cake == null ? null : cake.openDocument();
+        if (cake == null) {
+            return null;
+        }
+        Document d =  cake.openDocument();
+        synchronized (this) {
+            this.document = d;
+        }
+        return d;
     }
 
-    public Document getConsoleDocument() {
-        EditorCookie cake = consoleFile.getLookup().lookup(EditorCookie.class);
-        return cake == null ? null : cake.getDocument();
+    public synchronized Document getConsoleDocument() {
+        return document;
     }
     
     public ClassPath getSnippetClassPath() {
@@ -601,8 +617,6 @@ public class JShellEnvironment {
         ShellRegistry.get().closed(this);
     }
     
-    private Document document;
-    
     public void open() throws IOException {
         assert workRoot != null;
         DataObject d = DataObject.find(getConsoleFile());
@@ -611,7 +625,6 @@ public class JShellEnvironment {
         if (shellSession == null) {
             start();
             cake.open();
-            document = cake.openDocument();
         } else {
             cake.open();
             document = cake.openDocument();

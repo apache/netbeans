@@ -384,7 +384,7 @@ public class Reindenter implements IndentTask {
                         if (prevTokenId != null) {
                             switch (prevTokenId) {
                                 case LBRACE:
-                                    if (path.get(1).getKind() == Kind.NEW_CLASS && isLeftBraceOnNewLine(lastPos, startOffset)) {
+                                    if (path.size() > 1 && path.get(1).getKind() == Kind.NEW_CLASS && isLeftBraceOnNewLine(lastPos, startOffset)) {
                                         switch (cs.getClassDeclBracePlacement()) {
                                             case SAME_LINE:
                                             case NEW_LINE:
@@ -622,7 +622,7 @@ public class Reindenter implements IndentTask {
                     } else if (isStatic) {
                         currentIndent += cs.getIndentSize();
                     } else if (isLeftBraceOnNewLine(lastPos, startOffset)) {
-                        switch (path.get(1).getKind() == Kind.METHOD ? cs.getMethodDeclBracePlacement() : cs.getOtherBracePlacement()) {
+                        switch (path.size() > 1 && path.get(1).getKind() == Kind.METHOD ? cs.getMethodDeclBracePlacement() : cs.getOtherBracePlacement()) {
                             case SAME_LINE:
                             case NEW_LINE:
                                 currentIndent += cs.getIndentSize();
@@ -658,10 +658,8 @@ public class Reindenter implements IndentTask {
                             break;
                     }
                 } else if (!isLeftBraceOnNewLine(lastPos, startOffset)) {
-                    int i = getCurrentIndent(path.get(1), path);
-                    if (i >= 0) {
-                        currentIndent = i;
-                    }
+                    int i = path.size() > 1 ? getCurrentIndent(path.get(1), path) : -1;
+                    currentIndent = i < 0 ? currentIndent + cs.getIndentSize() : i;
                 }
                 break;
             case SWITCH:

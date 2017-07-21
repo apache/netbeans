@@ -382,7 +382,7 @@ public final class JavaPluginUtils {
         
         return false;
     }
-
+    
     //<editor-fold defaultstate="collapsed" desc="TODO: Copied from java.source.base TreeUtilities">
     static boolean isSynthetic(CompilationInfo info, CompilationUnitTree cut, Tree leaf) throws NullPointerException {
         JCTree tree = (JCTree) leaf;

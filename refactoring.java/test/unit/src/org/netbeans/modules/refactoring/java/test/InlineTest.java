@@ -70,7 +70,7 @@ public class InlineTest extends RefactoringTestBase {
     static {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
     }
-    
+
     public void test258579b() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("t/A.java", "package t;\n"
@@ -792,7 +792,7 @@ public class InlineTest extends RefactoringTestBase {
                 + "}"));
         final InlineRefactoring[] r = new InlineRefactoring[1];
         createInlineMethodRefactoring(src.getFileObject("t/A.java"), 3, r);
-        performRefactoring(r, new Problem(false, "WRN_InlineNotAccessible"));
+        performRefactoring(r);
         verifyContent(src,
                 new File("t/A.java", "package t;\n"
                 + "public class A {\n"
@@ -2220,6 +2220,78 @@ public class InlineTest extends RefactoringTestBase {
                 + "                System.out.println(5);\n"
                 + "    }\n"
                 + "}"));
+    }
+    
+    /**
+     * Checks that the instance used to invoke the method will be used in dereferenced instance's members
+     */
+    public void test271065InlineMethod() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("t/TestInline.java", "package t;\n"
+                        + "public class TestInline {\n"
+                        + "    protected Object[] entities;\n"
+                        + "\n"
+                        + "    public Object[] getEntities() {\n"
+                        + "        return entities;\n"
+                        + "    }\n"
+                        + "\n"
+                        + "    public void copy(TestInline source)\n"
+                        + "    {\n"
+                        + "        this.entities = source.getEntities();\n"
+                        + "    }\n"
+                        + "}")
+        );
+        final InlineRefactoring[] r = new InlineRefactoring[1];
+        createInlineMethodRefactoring(src.getFileObject("t/TestInline.java"), 2, r);
+        performRefactoring(r);
+        verifyContent(src,
+                new File("t/TestInline.java", "package t;\n"
+                        + "public class TestInline {\n"
+                        + "    protected Object[] entities;\n"
+                        + "\n"
+                        + "    public void copy(TestInline source)\n"
+                        + "    {\n"
+                        + "        this.entities = source.entities;\n"
+                        + "    }\n"
+                        + "}")
+        );
+    }
+    
+    /**
+     * "this" qualifier should be suppressed.
+     */
+    public void test271065InlineMethodReduceThis() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("t/TestInline4.java", "package t;\n"
+                        + "public class TestInline4 {\n"
+                        + "    protected Object[] entities;\n"
+                        + "    protected Object[] entities2;\n"
+                        + "    \n"
+                        + "    public Object[] getEntities() {\n"
+                        + "        return entities;\n"
+                        + "    }\n"
+                        + "\n"
+                        + "    public void copy()\n"
+                        + "    {\n"
+                        + "        this.entities2 = this.getEntities();\n"
+                        + "    }\n"
+                        + "}")
+        );
+        final InlineRefactoring[] r = new InlineRefactoring[1];
+        createInlineMethodRefactoring(src.getFileObject("t/TestInline4.java"), 3, r);
+        performRefactoring(r);
+        verifyContent(src,
+                new File("t/TestInline4.java", "package t;\n"
+                        + "public class TestInline4 {\n"
+                        + "    protected Object[] entities;\n"
+                        + "    protected Object[] entities2;\n"
+                        + "    \n"
+                        + "    public void copy()\n"
+                        + "    {\n"
+                        + "        this.entities2 = entities;\n"
+                        + "    }\n"
+                        + "}")
+        );
     }
 
     private void createInlineConstantRefactoring(FileObject source, final int position, final InlineRefactoring[] r) throws IOException, IllegalArgumentException {

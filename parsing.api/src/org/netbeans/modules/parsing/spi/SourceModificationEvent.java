@@ -114,4 +114,12 @@ public class SourceModificationEvent extends EventObject {
     public String toString () {
         return "SourceModificationEvent " + hashCode () + "(source: " + source + ")";
     }
+
+    /**
+     * @since 9.8.0
+     */
+    public static interface Composite {
+        public SourceModificationEvent getWriteEvent();
+        public SourceModificationEvent getReadEvent();
+    }
 }

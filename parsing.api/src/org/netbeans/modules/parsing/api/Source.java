@@ -597,8 +597,11 @@ public final class Source implements Lookup.Provider {
         ASourceModificationEvent newSourceModificationEvent;
         do {
             oldSourceModificationEvent = sourceModificationEvent.get();
-            boolean mergedChange = sourceChanged | (oldSourceModificationEvent == null ? false : oldSourceModificationEvent.sourceChanged());
-            newSourceModificationEvent = new ASourceModificationEvent (this, mergedChange, startOffset, endOffset);                
+            if (oldSourceModificationEvent == null) {
+                newSourceModificationEvent = new ASourceModificationEvent (this, sourceChanged, startOffset, endOffset);
+            } else {
+                newSourceModificationEvent = oldSourceModificationEvent.add(sourceChanged, startOffset, endOffset);
+            }
         } while (!sourceModificationEvent.compareAndSet(oldSourceModificationEvent, newSourceModificationEvent));
     }
 
@@ -891,8 +894,8 @@ public final class Source implements Lookup.Provider {
         
     private static class ASourceModificationEvent extends SourceModificationEvent {
 
-        private int         startOffset;
-        private int         endOffset;
+        private final int         startOffset;
+        private final int         endOffset;
 
         ASourceModificationEvent (
             Object          source,
@@ -903,14 +906,6 @@ public final class Source implements Lookup.Provider {
             super (source, sourceChanged);
             startOffset = _startOffset;
             endOffset = _endOffset;
-        }
-        
-        void add (
-            int             _startOffset,
-            int             _endOffset
-        ) {
-            startOffset = Math.min (startOffset, _startOffset);
-            endOffset = Math.max (endOffset, _endOffset);
         }
 
         @Override
@@ -927,6 +922,57 @@ public final class Source implements Lookup.Provider {
         public String toString () {
             //XXX: Never change the toString value, some tests depends on it!
             return "SourceModificationEvent " + startOffset + ":" + endOffset;
+        }
+
+        @NonNull
+        ASourceModificationEvent add(final boolean changed, int start, int end) {
+            final boolean oldChanged = sourceChanged();
+            if (oldChanged == changed) {
+                start = Math.min(start, startOffset);
+                end = Math.min(end, endOffset);
+                return new ASourceModificationEvent (getSource(), oldChanged, start, end);
+            } else {
+                final ASourceModificationEvent other = new ASourceModificationEvent(getSource(), changed, start, end);
+                return oldChanged ?
+                        new AComposite(other, this) :
+                        new AComposite(this, other);
+            }
+        }
+    }
+
+    private static class AComposite extends ASourceModificationEvent implements SourceModificationEvent.Composite {
+        private final ASourceModificationEvent read;
+        private final ASourceModificationEvent write;
+
+        AComposite(
+                @NonNull final ASourceModificationEvent read,
+                @NonNull final ASourceModificationEvent write) {
+            super(
+                    read.getSource(),
+                    true,
+                    Math.min(read.getAffectedStartOffset(), write.getAffectedStartOffset()),
+                    Math.max(read.getAffectedEndOffset(), write.getAffectedEndOffset()));
+            this.read = read;
+            this.write = write;
+        }
+
+        @Override
+        public SourceModificationEvent getReadEvent() {
+            return read;
+        }
+
+        @Override
+        public SourceModificationEvent getWriteEvent() {
+            return write;
+        }
+
+        @Override
+        ASourceModificationEvent add(boolean changed, int start, int end) {
+            if (changed) {
+                return new AComposite(read, write.add(changed, start, end));
+            } else {
+                return new AComposite(read.add(changed, start, end), write);
+            }
         }
     }
 

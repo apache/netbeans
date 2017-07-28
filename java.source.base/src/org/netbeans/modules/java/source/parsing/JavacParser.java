@@ -1395,7 +1395,10 @@ public class JavacParser extends Parser {
         }
     }
 
-    private void checkSourceModification(final SourceModificationEvent evt) {
+    private void checkSourceModification(SourceModificationEvent evt) {
+        if (evt instanceof SourceModificationEvent.Composite) {
+            evt = ((SourceModificationEvent.Composite)evt).getWriteEvent();
+        }
         if (evt != null && evt.sourceChanged()) {
             Pair<DocPositionRegion,MethodTree> changedMethod = null;
             if (supportsReparse) {

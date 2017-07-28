@@ -62,6 +62,7 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
@@ -239,7 +240,7 @@ final class CompletionFilter extends DocTrees {
         if (te == null || scope == null) {
             return false;
         }
-        if (te.getQualifiedName().toString().startsWith("REPL.")) {
+        if (te.getQualifiedName().toString().startsWith("REPL.") && te.getNestingKind() == NestingKind.TOP_LEVEL) {
             return false;
         }
         return delegate.isAccessible(scope, te);

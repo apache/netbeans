@@ -43,7 +43,9 @@
 package org.netbeans.modules.parsing.spi;
 
 import java.util.EventObject;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.parsing.api.Source;
+import org.openide.util.Parameters;
 
 /**
  *
@@ -118,8 +120,26 @@ public class SourceModificationEvent extends EventObject {
     /**
      * @since 9.8.0
      */
-    public static interface Composite {
-        public SourceModificationEvent getWriteEvent();
-        public SourceModificationEvent getReadEvent();
+    public static class Composite extends SourceModificationEvent {
+        private final SourceModificationEvent read;
+        private final SourceModificationEvent write;
+
+        public Composite(
+                @NonNull final SourceModificationEvent read,
+                @NonNull SourceModificationEvent write) {
+            super(read.getSource(), true);
+            Parameters.notNull("read", read);   //NOI18N
+            Parameters.notNull("write", write);   //NOI18N
+            this.read = read;
+            this.write = write;
+        }
+
+        public SourceModificationEvent getWriteEvent() {
+            return write;
+        }
+
+        public SourceModificationEvent getReadEvent() {
+            return read;
+        }
     }
 }

@@ -173,6 +173,7 @@ public class IntroduceFieldPanel extends javax.swing.JPanel implements ChangeLis
         }
         
         changeSupport = new FieldNameSupport();
+        changeSupport.setChangeListener(this);
         resetAccess();
         resetInit();
         adjustInitializeIn();

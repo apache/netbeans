@@ -872,6 +872,11 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/contextSensitiveLexerWithConstVisibility_01");
     }
 
+    public void testIssue271109() throws Exception {
+        // PHP7
+        performTest("parser/issue271109");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

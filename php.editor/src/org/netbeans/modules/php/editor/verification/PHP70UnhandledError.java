@@ -322,6 +322,8 @@ public class PHP70UnhandledError extends UnhandledErrorRule {
             }
             // e.g. test(){0};
             checkArrayDimension(node.getDimension());
+            // ($test)[0];
+            checkDereferencedAccess(node);
             super.visit(node);
         }
 
@@ -387,7 +389,10 @@ public class PHP70UnhandledError extends UnhandledErrorRule {
             if (name instanceof Scalar // "strlen"("something");
                     || name instanceof ArrayCreation // ["Foo", "bar"]();
                     || name instanceof DereferencableVariable // ($foo)();
-                    || name instanceof AnonymousObjectVariable) { // (new Object)();
+                    || name instanceof AnonymousObjectVariable // (new Object)();
+                    || name instanceof FunctionInvocation // foo()()
+                    || name instanceof MethodInvocation // foo->bar()()
+                    || name instanceof StaticMethodInvocation) { // Foo::bar()()
                 createError(name);
             }
         }
@@ -423,6 +428,12 @@ public class PHP70UnhandledError extends UnhandledErrorRule {
 
         private void checkArrayDimension(ArrayDimension node) {
             if (node.getType() == ArrayDimension.Type.VARIABLE_HASHTABLE) {
+                createError(node);
+            }
+        }
+
+        private void checkDereferencedAccess(DereferencedArrayAccess node) {
+            if (node.getMember() instanceof DereferencableVariable) {
                 createError(node);
             }
         }

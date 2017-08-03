@@ -447,7 +447,7 @@ non terminal Expression expr_with_yields;
 non terminal Expression expr_without_class_instance;
 non terminal Expression yield_expr;
 non terminal Expression yield_from_expr;
-non terminal Expression parenthesis_expr;
+non terminal ParenthesisExpression parenthesis_expr;
 non terminal Variable reference_variable;
 non terminal Variable variable_class_name;
 non terminal Variable compound_variable;
@@ -4578,6 +4578,13 @@ dereferencable_variable ::=
 T_OPEN_PARENTHESE:start variable:var T_CLOSE_PARENTHESE:end
 {:
     RESULT = new DereferencableVariable(startleft, endright, var);
+:}
+
+| parenthesis_expr:pe array_dimension:ad
+{:
+    // e.g. ((string) $variable->something)[0];
+    DereferencableVariable dereferencableVariable = new DereferencableVariable(peleft, peright, pe.getExpression());;
+    RESULT = new DereferencedArrayAccess(peleft, adright, dereferencableVariable, ad);
 :}
 
 | dereferencable_variable:var array_dimension:ad

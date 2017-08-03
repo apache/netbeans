@@ -781,4 +781,9 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/contextSensitiveLexerWithConstVisibility_01.php");
     }
 
+    public void testIssue271109() throws Exception {
+        // PHP7
+        checkErrors("testfiles/parser/issue271109.php");
+    }
+
 }

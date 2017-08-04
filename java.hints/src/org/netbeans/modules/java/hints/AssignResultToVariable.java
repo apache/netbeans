@@ -185,7 +185,7 @@ public class AssignResultToVariable extends AbstractHint {
             TypeMirror type = Utilities.resolveTypeForDeclaration(
                     info, base
             );
-            if (!error && !Utilities.isValidType(base)) {
+            if (!error && !Utilities.isValidType(base) && type.getKind() != TypeKind.EXECUTABLE) {
                 if (treePath.getLeaf().getKind() == Tree.Kind.METHOD_INVOCATION) {
                     TypeMirror retType = ((ExecutableElement)elem).getReturnType();
                     if (!info.getTypes().isAssignable(info.getTypes().erasure(retType), info.getTypes().erasure(type))) {

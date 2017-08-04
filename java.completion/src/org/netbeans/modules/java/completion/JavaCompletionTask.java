@@ -3074,7 +3074,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     if (e.getEnclosingElement() != enclClass && conflictsWithLocal(e.getSimpleName(), enclClass, locals)) {
                         results.add(itemFactory.createStaticMemberItem(env.getController(), (DeclaredType)e.getEnclosingElement().asType(), e, et, false, anchorOffset, elements.isDeprecated(e), env.addSemicolon()));
                     } else {
-                        results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, null, env.getScope().getEnclosingClass() != e.getEnclosingElement(), elements.isDeprecated(e), false, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, enclClass.asType()), smartTypes), env.assignToVarPos(), false));
+                        results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, null, env.getScope().getEnclosingClass() != e.getEnclosingElement(), elements.isDeprecated(e), false, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, enclClass != null ? enclClass.asType() : null), smartTypes), env.assignToVarPos(), false));
                     }
                     break;
             }
@@ -4773,7 +4773,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
     private TypeMirror getCorrectedReturnType(Env env, ExecutableType et, ExecutableElement el, TypeMirror site) {
         TypeMirror type = et.getReturnType();
-        if (site.getKind() == TypeKind.DECLARED) {
+        if (site != null && site.getKind() == TypeKind.DECLARED) {
             if ("getClass".contentEquals(el.getSimpleName()) && et.getParameterTypes().isEmpty() //NOI18N
                     && type.getKind() == TypeKind.DECLARED
                     && JAVA_LANG_CLASS.contentEquals(((TypeElement) ((DeclaredType) type).asElement()).getQualifiedName())

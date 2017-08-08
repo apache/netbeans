@@ -51,6 +51,7 @@ import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.lib.editor.util.CharSequenceUtilities;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Task;
@@ -206,11 +207,19 @@ public class TwigParser extends Parser {
 
                                 boolean standalone = false;
                                 boolean moved;
+                                boolean first = true;
                                 do {
 
                                     moved = sequence.moveNext();
                                     token = (Token<TwigBlockTokenId>) sequence.token();
 
+                                    // #271040 check whitespace control
+                                    if (first || sequence.offset() == block.endTokenOffset - 1) {
+                                        first = false;
+                                        if (isWhitespaceControlOperator(token)) {
+                                            continue;
+                                        }
+                                    }
                                     if (token.id() == TwigBlockTokenId.T_TWIG_OPERATOR) {
                                         standalone = true;
                                         break;
@@ -308,6 +317,10 @@ public class TwigParser extends Parser {
 
     @Override
     public void removeChangeListener(ChangeListener cl) {
+    }
+
+    private static boolean isWhitespaceControlOperator(Token<TwigBlockTokenId> token) {
+        return token.id() == TwigBlockTokenId.T_TWIG_OPERATOR && TokenUtilities.equals("-", token.text()); // NOI18N
     }
 
     private static class Block {

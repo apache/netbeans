@@ -299,7 +299,8 @@ public class CompilationInfo {
      * @since 0.124
      */
     public @NonNull DocTrees getDocTrees() {
-        return (DocTrees) getTrees();
+        final Trees ts = getTrees();
+        return ts instanceof DocTrees ? (DocTrees) ts : JavacTrees.instance(impl.getJavacTask().getContext());
     }
     
     /**

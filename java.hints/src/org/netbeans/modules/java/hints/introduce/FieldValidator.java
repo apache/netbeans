@@ -66,14 +66,16 @@ import org.netbeans.api.java.source.TypeMirrorHandle;
 final class FieldValidator implements MemberValidator {
     private final JavaSource            theSource;
     private final TypeMirrorHandle      fieldTypeHandle;
+    private final TreePathHandle        srcHandle;
     
     private String             name;
     private ElementHandle<Element>  target;
     private MemberSearchResult lastResult;
 
-    public FieldValidator(JavaSource theSource, TypeMirrorHandle fieldTypeHandle) {
+    public FieldValidator(JavaSource theSource, TypeMirrorHandle fieldTypeHandle, TreePathHandle srcHandle) {
         this.theSource = theSource;
         this.fieldTypeHandle = fieldTypeHandle;
+        this.srcHandle = srcHandle;
     }
     
     MemberSearchResult getLastResult() {
@@ -112,30 +114,48 @@ final class FieldValidator implements MemberValidator {
         public void run(CompilationController parameter) throws Exception {
             parameter.toPhase(JavaSource.Phase.RESOLVED);
             this.cinfo = parameter;
-            if (targetHandle == null) {
+            if (targetHandle == null || srcHandle == null) {
+                return;
+            }
+            TreePath srcPath = srcHandle.resolve(cinfo);
+            if (srcPath == null) {
                 return;
             }
             TreePath targetPath = targetHandle.resolve(cinfo);
-            if (target == null) {
+            if (targetPath == null) {
                 return;
             }
-            initialScope = cinfo.getTrees().getScope(targetPath);
-
+            initialScope = cinfo.getTrees().getScope(srcPath);
+            Scope targetScope = cinfo.getTrees().getScope(targetPath);
             Map<? extends Element, Scope> visibleVariables = 
                     cinfo.getElementUtilities().findElementsAndOrigins(initialScope, this);
-
+            lastResult = null;
+            Element target = cinfo.getTrees().getElement(targetPath);
             for (Element e : visibleVariables.keySet()) {
                 if (e.getKind() == ElementKind.FIELD ||
                     e.getKind() == ElementKind.ENUM_CONSTANT) {
                     Scope def = visibleVariables.get(e);
+                    if (def != targetScope) {
+                        for (Scope s = def; s.getEnclosingClass() != null; s = s.getEnclosingScope()) {
+                            if (s == target) {
+                                lastResult = new MemberSearchResult(ElementHandle.create(e));
+                                return;
+                            }
+                        }
+                    }
                     TypeElement owner = def.getEnclosingClass();
                     if (owner == null) {
                         // static import
                         lastResult = new MemberSearchResult(ElementHandle.create(e),
                             ElementHandle.create((TypeElement)e.getEnclosingElement()));
                     } else if (owner == e.getEnclosingElement()) {
-                        lastResult = new MemberSearchResult(ElementHandle.create(e),
-                            ElementHandle.create(owner));
+                        if (owner == target) {
+                            lastResult = new MemberSearchResult(ElementHandle.create(e));
+                            return;
+                        } else {
+                            lastResult = new MemberSearchResult(ElementHandle.create(e),
+                                ElementHandle.create(owner));
+                        }
                     } else {
                         // special case - hiding superclass field
                         lastResult = new MemberSearchResult(ElementHandle.create(e),
@@ -144,7 +164,8 @@ final class FieldValidator implements MemberValidator {
                 } else {
                     // some locals, report a conflict since the hidden local
                     // cannot be dereferenced 
-                    lastResult = new MemberSearchResult(ElementHandle.create(e));
+                    TreePath p = cinfo.getTrees().getPath(e);
+                    lastResult = new MemberSearchResult(TreePathHandle.create(p, cinfo), e.getKind());
                     return;
                 }
             }

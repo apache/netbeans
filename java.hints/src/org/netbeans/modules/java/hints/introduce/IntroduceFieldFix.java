@@ -164,7 +164,7 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
         JButton btnCancel = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Cancel"));
         btnCancel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(IntroduceHint.class, "AD_IntrHint_Cancel"));
         IntroduceFieldPanel panel = createPanel(btnOk);
-        FieldValidator fv = new FieldValidator(js, null);
+        FieldValidator fv = new FieldValidator(js, null, this.handle);
         if (targetIsInterface) {
             panel.setAllowAccess(false);
         }

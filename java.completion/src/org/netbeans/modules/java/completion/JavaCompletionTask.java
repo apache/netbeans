@@ -3654,7 +3654,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (path != null && path.getLeaf().getKind() == Tree.Kind.SWITCH) {
             SwitchTree st = (SwitchTree)path.getLeaf();
             for (CaseTree ct : st.getCases()) {
-                Element e = trees.getElement(new TreePath(path, ct.getExpression()));
+                Element e = ct.getExpression() != null ? trees.getElement(new TreePath(path, ct.getExpression())) : null;
                 if (e != null && e.getKind() == ENUM_CONSTANT) {
                     alreadyUsed.add(e);
                 }

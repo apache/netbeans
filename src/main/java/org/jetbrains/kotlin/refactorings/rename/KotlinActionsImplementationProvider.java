@@ -52,11 +52,8 @@ public class KotlinActionsImplementationProvider extends ActionsImplementationPr
             return false;
         }
         FileObject fo = ProjectUtils.getFileObjectForDocument(doc);
-        if (fo == null) {
-            return false;
-        }
-        
-        return fo.hasExt("kt");
+        return fo != null && fo.hasExt("kt");
+
     }
     
     @Override

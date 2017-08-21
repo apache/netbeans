@@ -48,13 +48,13 @@ class KotlinClassStructureItem(private val psiElement: KtClassOrObject,
     override fun getEndPosition() = psiElement.textRange.endOffset.toLong()
     override fun getCustomIcon() = ImageIcon(ImageUtilities.loadImage("org/jetbrains/kotlin/completionIcons/class.png"))
 
-    override fun getNestedItems() = psiElement.declarations.map {
+    override fun getNestedItems() = psiElement.declarations.mapNotNull {
         when (it) {
             is KtClass -> KotlinClassStructureItem(it, true, context)
             is KtNamedFunction -> KotlinFunctionStructureItem(it, true, context)
             is KtProperty -> KotlinPropertyStructureItem(it, true, context)
             else -> null
         }
-    }.filterNotNull()
+    }
 
 }

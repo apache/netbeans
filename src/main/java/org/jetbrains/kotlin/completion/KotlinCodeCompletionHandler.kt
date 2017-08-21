@@ -51,7 +51,7 @@ class KotlinCodeCompletionHandler : CodeCompletionHandler2 {
 
     override fun getApplicableTemplates(doc: Document, selectionBegin: Int, selectionEnd: Int) = emptySet<String>()
 
-    override fun parameters(info: ParserResult, caretOffset: Int, proposal: CompletionProposal) = ParameterInfo.NONE
+    override fun parameters(info: ParserResult, caretOffset: Int, proposal: CompletionProposal): ParameterInfo = ParameterInfo.NONE
 
     override fun getAutoQuery(component: JTextComponent, typedText: String): QueryType {
         if (typedText.isNotEmpty()) {

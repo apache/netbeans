@@ -20,7 +20,7 @@ import org.netbeans.modules.csl.api.HintSeverity
 import org.netbeans.modules.csl.api.Rule
 import org.netbeans.modules.csl.api.RuleContext
 
-class KotlinRule(val severity: HintSeverity) : Rule {
+class KotlinRule(private val severity: HintSeverity) : Rule {
     
     override fun appliesTo(context: RuleContext) = context is KotlinRuleContext
     override fun getDisplayName() = ""

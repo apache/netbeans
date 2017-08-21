@@ -19,7 +19,6 @@ package org.jetbrains.kotlin.projectsextensions.maven
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.utils.hasMain
 import org.jetbrains.kotlin.utils.mainClassName
-import org.netbeans.modules.maven.spi.actions.ReplaceTokenProvider
 import org.netbeans.spi.project.ActionProvider
 import org.openide.filesystems.FileObject
 import org.openide.util.Lookup

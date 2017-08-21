@@ -22,9 +22,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.search.LocalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import java.io.File
-import java.util.ArrayList
 import javax.swing.text.Position
-import org.jetbrains.kotlin.descriptors.SourceElement
 import org.jetbrains.kotlin.fileClasses.*
 import org.jetbrains.kotlin.highlighter.occurrences.*
 import org.jetbrains.kotlin.navigation.references.resolveToSourceDeclaration
@@ -119,7 +117,7 @@ private fun getJavaRefactoringMapForProperty(searchingElement: KtProperty,
                                              project: Project,
                                              newName: String,
                                              addToRefactoringMap: (FileObject, OffsetRange, String) -> Unit) {
-    val name = searchingElement.name?.toString() ?: return
+    val name = searchingElement.name ?: return
     
     val getterName = "get${name.capitalize()}"
     val setterName = "set${name.capitalize()}"
@@ -203,15 +201,12 @@ private fun getClassMethod(searchingElement: KtDeclaration,
                            methodName: String,
                            numberOfValueParameters: Int = 0): ElementHandle<*>? {
     val classOrObject = searchingElement.containingClassOrObject?.fqName ?:
-            NoResolveFileClassesProvider.getFileClassFqName(searchingElement.getContainingKtFile())
+            NoResolveFileClassesProvider.getFileClassFqName(searchingElement.containingKtFile)
     val elementHandle = project.findTypeElementHandle(classOrObject.asString()) ?: return null
     val methods = elementHandle.getMethodsHandles(project)
 
-    val methodToFind = methods.filter { it.getName(project).toString() == methodName }
-            .filter { it.getElementHandleValueParameters(project).size == numberOfValueParameters }
-            .firstOrNull() ?: return null
-    
-    return methodToFind
+    return methods.filter { it.getName(project).toString() == methodName }
+            .firstOrNull { it.getElementHandleValueParameters(project).size == numberOfValueParameters } ?: return null
 }
 
 private fun getOffsetOfMethodInvocation(fo: FileObject,

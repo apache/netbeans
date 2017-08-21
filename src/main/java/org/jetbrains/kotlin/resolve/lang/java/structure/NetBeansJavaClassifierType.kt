@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.resolve.lang.java.structure
 
 import javax.lang.model.type.TypeKind
-import org.jetbrains.kotlin.load.java.structure.JavaClassifier
 import org.jetbrains.kotlin.load.java.structure.JavaClassifierType
 import org.jetbrains.kotlin.load.java.structure.JavaType
 import org.netbeans.api.java.source.TypeMirrorHandle

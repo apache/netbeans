@@ -29,6 +29,7 @@ import javax.swing.text.StyledDocument;
 import kotlin.Pair;
 import org.jetbrains.kotlin.builder.KotlinPsiManager;
 import org.jetbrains.kotlin.fileClasses.NoResolveFileClassesProvider;
+import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.psi.KtClass;
 import org.jetbrains.kotlin.psi.KtDeclaration;
 import org.jetbrains.kotlin.psi.KtFile;
@@ -53,7 +54,7 @@ import org.openide.util.Utilities;
  *
  * @author Alexander.Baratynski
  */
-public class KotlinDebugUtils {
+class KotlinDebugUtils {
 
     private static KtDeclaration findDeclarationBeforeEndOffset(KtFile ktFile, StyledDocument doc, int startOffset, int endOffset, int initialStartOffset) {
         PsiElement element = null;
@@ -84,9 +85,8 @@ public class KotlinDebugUtils {
         }
         int startOffset = NbDocument.findLineOffset(doc, line - 1);
         int endOffset = NbDocument.findLineOffset(doc, line);
-        KtDeclaration declaration = findDeclarationBeforeEndOffset(ktFile, doc, startOffset, endOffset, startOffset);
 
-        return declaration;
+        return findDeclarationBeforeEndOffset(ktFile, doc, startOffset, endOffset, startOffset);
     }
 
     private static FileObject getFileObjectFromJar(URL url){
@@ -114,8 +114,7 @@ public class KotlinDebugUtils {
         try {
             URL url = new URL(urlStr);
             if (url.getProtocol().equals("jar")) {
-                FileObject fileObjectFromJar = getFileObjectFromJar(url);
-                return fileObjectFromJar;
+                return getFileObjectFromJar(url);
             }
             File file = Utilities.toFile(url.toURI());
             if (file == null) {
@@ -129,9 +128,9 @@ public class KotlinDebugUtils {
         return null;
     }
     
-    public static Pair<String, String> getFunctionNameAndContainingClass(String urlStr, int lineNumber) {
-        String name = null;
-        String classFqName = null;
+    static Pair<String, String> getFunctionNameAndContainingClass(String urlStr, int lineNumber) {
+        String name;
+        String classFqName;
 
         try {
             FileObject fo = getFileFromUrlString(urlStr);
@@ -147,7 +146,12 @@ public class KotlinDebugUtils {
             name = declaration.getName();
             KtClass containingClass = KtPsiUtilKt.containingClass(declaration);
             if (containingClass != null) {
-                classFqName = containingClass.getFqName().asString();
+                FqName fqName = containingClass.getFqName();
+                if (fqName != null) {
+                    classFqName = fqName.asString();
+                } else {
+                    classFqName = NoResolveFileClassesProvider.INSTANCE.getFileClassInfo(ktFile).getFacadeClassFqName().toString();
+                }
             } else {
                 classFqName = NoResolveFileClassesProvider.INSTANCE.getFileClassInfo(ktFile).getFacadeClassFqName().toString();
             }
@@ -159,28 +163,28 @@ public class KotlinDebugUtils {
         return new Pair<>(classFqName, name);
     }
 
-    public static String getClassFqName(String urlStr, int line) {
+    static String getClassFqName(String urlStr, int line) {
         String classFqName = null;
         try {
             FileObject fo = getFileFromUrlString(urlStr);
-            if (fo == null) {
-                return null;
-            }
+            if (fo == null) return null;
             KtFile ktFile = KotlinPsiManager.INSTANCE.getParsedFile(fo);
             classFqName = NoResolveFileClassesProvider.INSTANCE.getFileClassInfo(ktFile).getFacadeClassFqName().toString();
+            if (ktFile == null) return classFqName;
+
             StyledDocument doc = ProjectUtils.getDocumentFromFileObject(fo);
             int offset = NbDocument.findLineOffset(doc, line - 1);
             PsiElement psi = ktFile.findElementAt(offset);
-            if (psi == null) {
-                return classFqName;
-            }
+            if (psi == null) return classFqName;
             KtDeclaration declaration = PsiTreeUtil.getNonStrictParentOfType(psi, KtDeclaration.class);
-            if (declaration == null) {
-                return classFqName;
-            }
+            if (declaration == null) return classFqName;
+
             KtClass containingClass = KtPsiUtilKt.containingClass(declaration);
             if (containingClass != null) {
-                classFqName = containingClass.getFqName().asString();
+                FqName fqName = containingClass.getFqName();
+                if (fqName != null) {
+                    classFqName = fqName.asString();
+                }
             }
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
@@ -189,7 +193,7 @@ public class KotlinDebugUtils {
         return classFqName;
     }
 
-    public static Object annotate(JPDABreakpoint b, String url, int line) {
+    static Object annotate(JPDABreakpoint b, String url, int line) {
         String annotationType;
         if (b instanceof FieldBreakpoint) {
             annotationType = b.isEnabled()
@@ -206,7 +210,7 @@ public class KotlinDebugUtils {
         return EditorContextBridge.getContext().annotate(url, line, annotationType, null);
     }
 
-    public static MethodBreakpoint findMethodBreakpoint(DebuggerManager manager, String className, String functionName) {
+    static MethodBreakpoint findMethodBreakpoint(DebuggerManager manager, String className, String functionName) {
         Breakpoint[] breakpoints = manager.getBreakpoints();
         for (Breakpoint breakpoint : breakpoints) {
             if (!(breakpoint instanceof MethodBreakpoint)) {
@@ -238,7 +242,7 @@ public class KotlinDebugUtils {
         return name.equals(pattern);
     }
 
-    public static LineBreakpoint findBreakpoint(String url, int lineNumber) {
+    static LineBreakpoint findBreakpoint(String url, int lineNumber) {
         Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager().getBreakpoints();
         for (Breakpoint breakpoint : breakpoints) {
             if (!(breakpoint instanceof LineBreakpoint)) {

@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.navigation.netbeans
 
 import javax.swing.text.Document
-import org.jetbrains.kotlin.descriptors.ConstructorDescriptor
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.renderer.DescriptorRenderer
@@ -40,9 +39,7 @@ fun getSmartCastHover(offset: Int): String? {
     
     if (parentExpression is KtThisExpression || parentExpression is KtSuperExpression) return null
 
-    val target = bindingContext[BindingContext.REFERENCE_TARGET, expression]?.let {
-        if (it is ConstructorDescriptor) it.getContainingDeclaration() else it
-    } ?: return null
+    bindingContext[BindingContext.REFERENCE_TARGET, expression] ?: return null
 
     val smartCast = bindingContext.get(BindingContext.SMARTCAST, expression)
     

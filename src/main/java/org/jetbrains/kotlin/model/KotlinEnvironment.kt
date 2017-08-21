@@ -85,7 +85,6 @@ import org.jetbrains.kotlin.script.KotlinScriptDefinitionProvider
 import org.jetbrains.kotlin.script.KotlinScriptExternalImportsProvider
 import org.netbeans.api.project.Project as NBProject
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCliJavaFileManagerImpl
-import org.jetbrains.kotlin.model.KotlinNullableNotNullManager
 import com.intellij.openapi.util.SystemInfo
 
 //copied from kotlin eclipse plugin to avoid RuntimeException: Could not find installation home path. 
@@ -94,10 +93,10 @@ private fun setIdeaIoUseFallback() {
     if (SystemInfo.isWindows) {
         val properties = System.getProperties()
 
-        properties.setProperty("idea.io.use.nio2", java.lang.Boolean.TRUE.toString());
+        properties.setProperty("idea.io.use.nio2", java.lang.Boolean.TRUE.toString())
 
-        if (!(SystemInfo.isJavaVersionAtLeast("1.7") && !"1.7.0-ea".equals(SystemInfo.JAVA_VERSION))) {
-            properties.setProperty("idea.io.use.fallback", java.lang.Boolean.TRUE.toString());
+        if (!(SystemInfo.isJavaVersionAtLeast("1.7") && "1.7.0-ea" != SystemInfo.JAVA_VERSION)) {
+            properties.setProperty("idea.io.use.fallback", java.lang.Boolean.TRUE.toString())
         }
     }
 }
@@ -112,16 +111,14 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
                 CACHED_ENVIRONMENT.put(kotlinProject, KotlinEnvironment(kotlinProject, Disposer.newDisposable()))
             }
             
-            return CACHED_ENVIRONMENT.get(kotlinProject)!!
+            return CACHED_ENVIRONMENT[kotlinProject]!!
         }
         
         @Synchronized fun updateKotlinEnvironment(kotlinProject: NBProject) = getEnvironment(kotlinProject).configureClasspath(kotlinProject)
     }
-    
-    val KOTLIN_COMPILER_PATH = ProjectUtils.buildLibPath("kotlin-compiler")
-    
+
     val applicationEnvironment: JavaCoreApplicationEnvironment
-    val projectEnvironment: JavaCoreProjectEnvironment
+    private val projectEnvironment: JavaCoreProjectEnvironment
     val project: MockProject
     val roots = hashSetOf<JavaRoot>()
     
@@ -218,12 +215,8 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
     }
     
     private fun getExtensionsFromKotlin2JvmXml() {
-        CoreApplicationEnvironment.registerComponentInstance<DefaultErrorMessages.Extension>(Extensions.getRootArea().getPicoContainer(), 
+        CoreApplicationEnvironment.registerComponentInstance<DefaultErrorMessages.Extension>(Extensions.getRootArea().picoContainer,
                 DefaultErrorMessages.Extension::class.java, DefaultErrorMessagesJvm())
-    }
-    
-    private fun registerApplicationExtensionPointsAndExtensionsFromConfigFile(configFilePath: String) {
-        CoreApplicationEnvironment.registerExtensionPointAndExtensions(File(KOTLIN_COMPILER_PATH), configFilePath, Extensions.getRootArea())
     }
     
     fun configureClasspath(kotlinProject: NBProject) {
@@ -267,7 +260,7 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
     
     private fun addToClasspath(path: String, rootType: JavaRoot.RootType?) {
         val file = File(path)
-        if (file.isFile()) {
+        if (file.isFile) {
             val jarFile = applicationEnvironment.jarFileSystem.findFileByPath("$path!/") ?: return
             projectEnvironment.addJarToClassPath(file)
             val type = rootType ?: JavaRoot.RootType.BINARY
@@ -282,18 +275,8 @@ class KotlinEnvironment private constructor(kotlinProject: NBProject, disposable
         }
     }
     
-    fun isJarFile(pathToJar: String): Boolean {
-        val jarFile = applicationEnvironment.jarFileSystem.findFileByPath("$pathToJar!/") ?: return false
-        return jarFile.isValid
-    }
-    
     fun getVirtualFile(location: String) = applicationEnvironment.localFileSystem.findFileByPath(location)
-    
-    fun getVirtualFileInJar(path: String): VirtualFile? {
-        val decodedPath = URLDecoder.decode(path, "UTF-8") ?: path
-        return applicationEnvironment.jarFileSystem.findFileByPath(decodedPath)
-    }
-    
+
     fun getVirtualFileInJar(pathToJar: String, relativePath: String): VirtualFile? {
         val decodedPathToJar = URLDecoder.decode(pathToJar, "UTF-8") ?: pathToJar
         val decodedRelativePath = URLDecoder.decode(relativePath, "UTF-8") ?: relativePath

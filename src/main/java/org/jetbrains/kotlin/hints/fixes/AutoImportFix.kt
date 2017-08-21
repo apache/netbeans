@@ -43,23 +43,23 @@ private fun insert(fqName: String, doc: Document, ktFile: KtFile) {
         val offset = getOffsetToInsert(importDirectives, fqName)
         if (offset != null) {
             doc.insertString(offset,
-                    "import ${fqName}\n", null)
+                    "import $fqName\n", null)
         } else {
             doc.insertString(importDirectives.last().textRange.endOffset,
                     "\nimport $fqName", null)
         }
     } else if (packageDirective != null) {
         doc.insertString(packageDirective.textOffset + packageDirective.textLength,
-                "\n\nimport ${fqName}", null)
+                "\n\nimport $fqName", null)
     } else {
-        doc.insertString(0, "import ${fqName}", null)
+        doc.insertString(0, "import $fqName", null)
     }
 }
 
 private fun getOffsetToInsert(importDirectives: List<KtImportDirective>, fqName: String): Int? {
     importDirectives.filter { it.importedFqName != null }
             .forEach {
-                if (it.importedFqName!!.asString().compareTo(fqName) > 0) {
+                if (it.importedFqName!!.asString() > fqName) {
                     return it.textRange.startOffset
                 }
             }

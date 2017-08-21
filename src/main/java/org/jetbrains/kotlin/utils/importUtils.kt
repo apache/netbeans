@@ -39,21 +39,16 @@ class KotlinImportInserterHelper : ImportInsertHelper() {
         return importPath.isImported(defaultImports)
     }
     
-    override fun mayImportOnShortenReferences(descriptor: DeclarationDescriptor): Boolean {
-        return false
-    }
+    override fun mayImportOnShortenReferences(descriptor: DeclarationDescriptor) = false
 }
 
-fun FqName.isImported(importPath: ImportPath, skipAliasedImports: Boolean = true): Boolean {
-    return when {
-        skipAliasedImports && importPath.hasAlias() -> false
-        importPath.isAllUnder && !isRoot -> importPath.fqnPart() == this.parent()
-        else -> importPath.fqnPart() == this
-    }
+fun FqName.isImported(importPath: ImportPath, skipAliasedImports: Boolean = true): Boolean = when {
+    skipAliasedImports && importPath.hasAlias() -> false
+    importPath.isAllUnder && !isRoot -> importPath.fqnPart() == this.parent()
+    else -> importPath.fqnPart() == this
 }
 
-fun ImportPath.isImported(alreadyImported: ImportPath): Boolean {
-return if (isAllUnder || hasAlias()) this == alreadyImported else fqnPart().isImported(alreadyImported)
-}
+fun ImportPath.isImported(alreadyImported: ImportPath): Boolean =
+        if (isAllUnder || hasAlias()) this == alreadyImported else fqnPart().isImported(alreadyImported)
 
 fun ImportPath.isImported(imports: Iterable<ImportPath>): Boolean = imports.any { isImported(it) }

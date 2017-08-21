@@ -57,10 +57,10 @@ class KotlinError(val diagnostic: Diagnostic, val fileObject: FileObject) : Badg
     override fun getParameters() = null
 }
 
-class KotlinSyntaxError(val psiError: PsiErrorElement, val fileObject: FileObject) : Badging {
+class KotlinSyntaxError(private val psiError: PsiErrorElement, val fileObject: FileObject) : Badging {
     override fun showExplorerBadge() = true
 
-    override fun getDisplayName() = psiError.errorDescription
+    override fun getDisplayName(): String = psiError.errorDescription ?: ""
 
     override fun getDescription() = ""
 

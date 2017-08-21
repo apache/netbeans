@@ -24,11 +24,8 @@ import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.lexer.KtTokens
-import org.jetbrains.kotlin.psi.psiUtil.endOffset
-import org.jetbrains.kotlin.psi.psiUtil.startOffset
 import org.jetbrains.kotlin.reformatting.moveCursorTo
 import org.jetbrains.kotlin.resolve.BindingContext
-import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
 class ConvertToExpressionBodyIntention(doc: Document,
@@ -67,15 +64,13 @@ class ConvertToExpressionBodyIntention(doc: Document,
         } else if (element.hasDeclaredReturnType()) {
             element.typeReference!!.text
         } else ""
-        
-        
-        val startOffset = colon
-        val endOffset = element.bodyExpression!!.textRange.endOffset    
+
+        val endOffset = element.bodyExpression!!.textRange.endOffset
         
         doc.atomicChange { 
-            remove(startOffset, endOffset - startOffset)
-            insertString(startOffset, ": $type = ${expression.text}", null)
-            moveCursorTo(startOffset)
+            remove(colon, endOffset - colon)
+            insertString(colon, ": $type = ${expression.text}", null)
+            moveCursorTo(colon)
         }
     }
     
@@ -147,9 +142,8 @@ fun KtExpression.resultingWhens(): List<KtWhenExpression> = when (this) {
     else -> listOf()
 }
 
-inline fun <reified T : PsiElement> PsiElement.anyDescendantOfType(crossinline canGoInside: (PsiElement) -> Boolean, noinline predicate: (T) -> Boolean = { true }): Boolean {
-    return findDescendantOfType(canGoInside, predicate) != null
-}
+inline fun <reified T : PsiElement> PsiElement.anyDescendantOfType(crossinline canGoInside: (PsiElement) -> Boolean, noinline predicate: (T) -> Boolean = { true }): Boolean =
+        findDescendantOfType(canGoInside, predicate) != null
 
 inline fun <reified T : PsiElement> PsiElement.findDescendantOfType(crossinline canGoInside: (PsiElement) -> Boolean, noinline predicate: (T) -> Boolean = { true }): T? {
     var result: T? = null

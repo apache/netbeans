@@ -21,13 +21,10 @@ import com.intellij.psi.PsiElement
 import javax.swing.text.Document
 import javax.swing.text.StyledDocument
 import org.jetbrains.kotlin.psi.psiUtil.elementsInRange
-import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.hints.fixes.*
 import org.jetbrains.kotlin.hints.intentions.*
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
-import org.jetbrains.kotlin.resolve.AnalysisResultWithProvider
-import org.jetbrains.kotlin.resolve.lang.java.*
 import org.netbeans.modules.csl.api.*
 import org.openide.text.NbDocument
 import org.netbeans.modules.csl.api.HintsProvider.HintsManager

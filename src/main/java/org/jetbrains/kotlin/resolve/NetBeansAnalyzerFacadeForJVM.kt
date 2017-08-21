@@ -33,8 +33,6 @@ import org.jetbrains.kotlin.descriptors.PackageFragmentProvider
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.platform.JvmBuiltIns
 import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.resolve.KotlinPackagePartProvider
-import org.jetbrains.kotlin.resolve.TopDownAnalysisMode
 import org.jetbrains.kotlin.resolve.jvm.JavaDescriptorResolver
 import org.jetbrains.kotlin.resolve.jvm.TopDownAnalyzerFacadeForJVM
 import org.jetbrains.kotlin.resolve.jvm.TopDownAnalyzerFacadeForJVM.SourceOrBinaryModuleClassResolver
@@ -51,14 +49,14 @@ import com.intellij.openapi.project.Project
 
 object NetBeansAnalyzerFacadeForJVM {
 
-    public fun analyzeFilesWithJavaIntegration(
+    fun analyzeFilesWithJavaIntegration(
             kotlinProject: NBProject,
             project : Project,
             filesToAnalyze: Collection<KtFile>): AnalysisResultWithProvider {
         val filesSet = filesToAnalyze.toSet()
         
         val allFiles = LinkedHashSet<KtFile>(filesSet)
-        val addedFiles = filesSet.map { getPath(it) }.filterNotNull().toSet()
+        val addedFiles = filesSet.mapNotNullTo(hashSetOf()) { getPath(it) }
         ProjectUtils.getSourceFilesWithDependencies(kotlinProject).filterNotTo(allFiles) {
             getPath(it) in addedFiles
         }
@@ -98,7 +96,7 @@ object NetBeansAnalyzerFacadeForJVM {
                     moduleClassResolver,
                     kotlinProject)
             
-            moduleClassResolver.compiledCodeResolver = dependenciesContainer.get<JavaDescriptorResolver>()
+            moduleClassResolver.compiledCodeResolver = dependenciesContainer.get()
             
             dependenciesContext.setDependencies(listOfNotNull(dependenciesContext.module, optionalBuiltInsModule))
             dependenciesContext.initializeModuleContents(CompositePackageFragmentProvider(listOf(
@@ -122,7 +120,7 @@ object NetBeansAnalyzerFacadeForJVM {
             initJvmBuiltInsForTopDownAnalysis(module, languageVersionSettings)
         }
         
-        moduleClassResolver.sourceCodeResolver = container.get<JavaDescriptorResolver>()
+        moduleClassResolver.sourceCodeResolver = container.get()
         
         val additionalProviders = arrayListOf<PackageFragmentProvider>()
         additionalProviders.add(container.get<JavaDescriptorResolver>().packageFragmentProvider)
@@ -149,7 +147,7 @@ object NetBeansAnalyzerFacadeForJVM {
         )
     }
     
-    private fun getPath(jetFile: KtFile): String? = jetFile.getVirtualFile()?.getPath()
+    private fun getPath(jetFile: KtFile): String? = jetFile.virtualFile?.path
     
     private fun createModuleContext(project: Project,
                                     configuration: CompilerConfiguration,

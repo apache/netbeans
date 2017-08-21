@@ -34,7 +34,7 @@ class TypeNameSearcher(val handle: TypeMirrorHandle<*>) : Task<CompilationContro
     override fun run(info: CompilationController) {
         info.toResolvedPhase()
 
-        val type = handle.resolve(info) ?: throw UnsupportedOperationException("${handle.toString()} doesn't exist'")
+        val type = handle.resolve(info) ?: throw UnsupportedOperationException("$handle doesn't exist'")
         name = type.toString()
     }
 }
@@ -48,7 +48,7 @@ class BoundSearcher(val handle: TypeMirrorHandle<*>,
         info.toResolvedPhase()
 
         val type = handle.resolve(info) ?: return
-        var boundMirror = (type as WildcardType).extendsBound ?: type.superBound
+        val boundMirror = (type as WildcardType).extendsBound ?: type.superBound
 
         bound = if (boundMirror != null) NetBeansJavaType.create(TypeMirrorHandle.create(boundMirror), project) else null
     }

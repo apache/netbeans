@@ -21,8 +21,6 @@ import javax.swing.text.Document
 import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
-import org.jetbrains.kotlin.psi.psiUtil.startOffset
-import org.jetbrains.kotlin.reformatting.format
 
 class AddValToConstructorParameterIntention(doc: Document,
                                             analysisResult: AnalysisResult?,
@@ -35,7 +33,7 @@ class AddValToConstructorParameterIntention(doc: Document,
         val element = parameter ?: return false
         
         if (!canInvoke(element)) return false
-        if (element.getNonStrictParentOfType(KtClass::class.java)?.isData() ?: false) return false
+        if (element.getNonStrictParentOfType(KtClass::class.java)?.isData() == true) return false
         
         return element.nameIdentifier?.textRange != null
     }
@@ -50,8 +48,7 @@ class AddValToConstructorParameterIntention(doc: Document,
         doc.insertString(startOffset, "val ", null)
     }
 
-    fun canInvoke(element: KtParameter): Boolean {
-        return element.valOrVarKeyword == null && (element.parent as? KtParameterList)?.parent is KtPrimaryConstructor
-    }
+    private fun canInvoke(element: KtParameter): Boolean =
+            element.valOrVarKeyword == null && (element.parent as? KtParameterList)?.parent is KtPrimaryConstructor
     
 }

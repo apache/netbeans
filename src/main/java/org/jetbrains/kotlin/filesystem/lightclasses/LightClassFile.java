@@ -17,43 +17,19 @@
 package org.jetbrains.kotlin.filesystem.lightclasses;
 
 import java.io.File;
-import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper;
 import org.jetbrains.kotlin.utils.ProjectUtils;
 import org.jetbrains.annotations.NotNull;
 import org.netbeans.api.project.Project;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 
 public final class LightClassFile {
-    private final FileObject fileObject;
     private final File file;
     
     public LightClassFile(Project project, String path){
         file = new File(project.getProjectDirectory().getPath() + ProjectUtils.FILE_SEPARATOR + path);
-        fileObject = FileUtil.toFileObject(file);
     }
-    
-    public LightClassFile(FileObject fo){
-        fileObject = fo;
-        file = FileUtil.toFile(fo);
-    }
-    
-    public boolean exists(){
-        return FileUtil.toFile(fileObject).exists();
-    }
-    
-    public void refreshFile(){
-        fileObject.refresh();
-    }
-    
     @NotNull
     public File asFile(){
         return file;
-    }
-    
-    @NotNull
-    public FileObject getResource(){
-        return fileObject;
     }
     
 }

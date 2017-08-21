@@ -19,7 +19,6 @@ package org.jetbrains.kotlin.hints.intentions
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.analyzer.AnalysisResult
 import javax.swing.text.Document
-import org.jetbrains.kotlin.reformatting.format
 import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.diagnostics.Diagnostic
 import org.jetbrains.kotlin.diagnostics.Errors
@@ -64,12 +63,12 @@ class ChangeReturnTypeIntention(doc: Document,
         val expressionType = when (activeDiagnostic.factory) {
             Errors.TYPE_MISMATCH -> {
                 val diagnosticWithParameters = Errors.TYPE_MISMATCH.cast(activeDiagnostic)
-                diagnosticWithParameters.getB()
+                diagnosticWithParameters.b
             }
             
             Errors.NULL_FOR_NONNULL_TYPE -> {
                 val diagnosticWithParameters = Errors.NULL_FOR_NONNULL_TYPE.cast(activeDiagnostic)
-                val expectedType = diagnosticWithParameters.getA()
+                val expectedType = diagnosticWithParameters.a
                 expectedType.makeNullable()
             }
             
@@ -77,21 +76,19 @@ class ChangeReturnTypeIntention(doc: Document,
             
             Errors.TYPE_INFERENCE_EXPECTED_TYPE_MISMATCH -> {
                 val diagnosticWithParameters = Errors.TYPE_INFERENCE_EXPECTED_TYPE_MISMATCH.cast(activeDiagnostic)
-                diagnosticWithParameters.getB()
+                diagnosticWithParameters.b
             }
             
             else -> null
         } ?: return false
         
         val expressionParent = expression.parent
-        val ktFunction = if (expressionParent is KtReturnExpression) {
+        val ktFunction = (if (expressionParent is KtReturnExpression) {
             expressionParent.getTargetFunction(bindingContext)
         } else {
             PsiTreeUtil.getParentOfType(expression, KtFunction::class.java, true)
-        }
-        
-        if (ktFunction !is KtFunction) return false
-        
+        }) as? KtFunction ?: return false
+
         return when {
             QuickFixUtil.canFunctionOrGetterReturnExpression(ktFunction, expression) -> {
                 val scope = ktFunction.getResolutionScope(bindingContext)
@@ -151,7 +148,7 @@ class ChangeReturnTypeIntention(doc: Document,
 }
 
 // from idea/idea-core/src/org/jetbrains/kotlin/idea/core/Utils.kt but without the second parameter
-public fun PsiElement.getResolutionScope(bindingContext: BindingContext): LexicalScope {
+fun PsiElement.getResolutionScope(bindingContext: BindingContext): LexicalScope {
     for (parent in parentsWithSelf) {
         if (parent is KtElement) {
             val scope = bindingContext[BindingContext.LEXICAL_SCOPE, parent]
@@ -161,7 +158,7 @@ public fun PsiElement.getResolutionScope(bindingContext: BindingContext): Lexica
         if (parent is KtClassBody) {
             val classDescriptor = bindingContext[BindingContext.CLASS, parent.getParent()] as? ClassDescriptorWithResolutionScopes
             if (classDescriptor != null) {
-                return classDescriptor.getScopeForMemberDeclarationResolution()
+                return classDescriptor.scopeForMemberDeclarationResolution
             }
         }
     }

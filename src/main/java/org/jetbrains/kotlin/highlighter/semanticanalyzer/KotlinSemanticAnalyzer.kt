@@ -68,6 +68,6 @@ class KotlinSemanticAnalyzer : SemanticAnalyzer<KotlinParserResult>() {
         cancel = true
     }
 
-    override fun getSchedulerClass() = Scheduler.EDITOR_SENSITIVE_TASK_SCHEDULER
+    override fun getSchedulerClass(): Class<out Scheduler> = Scheduler.EDITOR_SENSITIVE_TASK_SCHEDULER
 
 }

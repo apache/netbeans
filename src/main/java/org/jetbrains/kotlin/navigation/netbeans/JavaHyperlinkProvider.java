@@ -61,14 +61,14 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
         return EnumSet.of(HyperlinkType.GO_TO_DECLARATION, HyperlinkType.ALT_HYPERLINK);
     }
 
-    private int[] getIdentifierSpan(Document doc, int offset, HyperlinkType type) {
+    private int[] getIdentifierSpan(Document doc, int offset) {
         if (clazz == null || object == null) {
             return new int[0];
         }
         
         try {
             Method method = clazz.getMethod("getHyperlinkSpan", Document.class, int.class, HyperlinkType.class);
-            return (int[]) method.invoke(object, doc, offset, type);
+            return (int[]) method.invoke(object, doc, offset, null);
         } catch (ReflectiveOperationException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -76,14 +76,14 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
         return new int[0];
     }
     
-    private String tooltipText(Document doc, int offset, HyperlinkType type) {
+    private String tooltipText(Document doc, int offset) {
         if (clazz == null || object == null) {
             return null;
         }
         
         try {
             Method method = clazz.getMethod("getTooltipText", Document.class, int.class, HyperlinkType.class);
-            return (String) method.invoke(object, doc, offset, type);
+            return (String) method.invoke(object, doc, offset, null);
         } catch (ReflectiveOperationException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -111,7 +111,7 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
 
     @Override
     public int[] getHyperlinkSpan(Document doc, int offset, HyperlinkType type) {
-        return getIdentifierSpan(doc, offset, null);
+        return getIdentifierSpan(doc, offset);
     }
 
     @Override
@@ -136,6 +136,7 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
                     FileObject fileToOpen = FileUtil.toFileObject(new File(filePath));
                     try {
                         StyledDocument docToOpen = ProjectUtils.getDocumentFromFileObject(fileToOpen);
+                        if (docToOpen == null) return;
                         OpenDeclarationKt.openFileAtOffset(docToOpen, offsetToOpen);
                     } catch (IOException ex) {
                         Exceptions.printStackTrace(ex);
@@ -150,7 +151,7 @@ public final class JavaHyperlinkProvider implements HyperlinkProviderExt {
 
     @Override
     public String getTooltipText(Document doc, int offset, HyperlinkType type) {
-        return tooltipText(doc, offset, null);
+        return tooltipText(doc, offset);
     }
 
 }

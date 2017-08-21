@@ -48,9 +48,8 @@ object KotlinPsiManager {
             ?.filter { it.isKotlinFile() }
             ?.toSet() ?: emptySet()
     
-    private fun parseFile(file: FileObject): KtFile? {
-        return parseText(StringUtilRt.convertLineSeparators(file.asText()), file)
-    }
+    private fun parseFile(file: FileObject): KtFile? =
+            parseText(StringUtilRt.convertLineSeparators(file.asText()), file)
     
     fun parseText(text: String, file: FileObject): KtFile? {
         StringUtil.assertValidSeparators(text)
@@ -62,7 +61,7 @@ object KotlinPsiManager {
         
         val project = KotlinEnvironment.getEnvironment(kotlinProject).project
         val virtualFile = KotlinLightVirtualFile(file, text)
-        virtualFile.setCharset(CharsetToolkit.UTF8_CHARSET)
+        virtualFile.charset = CharsetToolkit.UTF8_CHARSET
         val psiFileFactory = PsiFileFactory.getInstance(project) as PsiFileFactoryImpl
         
         return psiFileFactory.trySetupPsiForFile(virtualFile, KotlinLanguage.INSTANCE, true, false) as KtFile
@@ -123,9 +122,7 @@ object KotlinPsiManager {
 
     fun getParsedKtFileForSyntaxHighlighting(text: String): KtFile? {
         val sourceCode = StringUtilRt.convertLineSeparators(text)
-        var kotlinProject = OpenProjects.getDefault().openProjects
-                .filter { it.checkProject() }
-                .firstOrNull()
+        var kotlinProject = OpenProjects.getDefault().openProjects.firstOrNull { it.checkProject() }
            
         if (kotlinProject == null) kotlinProject = KotlinMockProject.getMockProject() ?: return null
         
@@ -137,4 +134,4 @@ object KotlinPsiManager {
 }
 
 
-fun FileObject.isKotlinFile() = KotlinFileType.INSTANCE.getDefaultExtension() == ext
+fun FileObject.isKotlinFile() = KotlinFileType.INSTANCE.defaultExtension == ext

@@ -61,15 +61,15 @@ sealed class KotlinSyntheticPropertyAccessorReference(override val referenceExpr
         if (descriptors.none { it is SyntheticJavaPropertyDescriptor }) return emptyList()
         
         val result = SmartList<FunctionDescriptor>()
-        for (descriptor in descriptors) {
-            if (descriptor is SyntheticJavaPropertyDescriptor) {
-                if (getter) {
-                    result.add(descriptor.getMethod)
-                } else {
-                    result.addIfNotNull(descriptor.setMethod)
+        descriptors
+                .filterIsInstance<SyntheticJavaPropertyDescriptor>()
+                .forEach {
+                    if (getter) {
+                        result.add(it.getMethod)
+                    } else {
+                        result.addIfNotNull(it.setMethod)
+                    }
                 }
-            }
-        }
         return result
     }
     

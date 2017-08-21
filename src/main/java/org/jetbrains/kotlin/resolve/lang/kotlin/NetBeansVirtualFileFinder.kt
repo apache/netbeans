@@ -21,7 +21,6 @@ package org.jetbrains.kotlin.resolve.lang.kotlin
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.search.GlobalSearchScope
 import java.io.InputStream
-import javax.lang.model.element.TypeElement
 import org.jetbrains.kotlin.builtins.BuiltInSerializerProtocol
 import org.jetbrains.kotlin.cli.jvm.index.JavaRoot
 import org.jetbrains.kotlin.model.KotlinEnvironment
@@ -38,10 +37,9 @@ import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.serialization.deserialization.MetadataPackageFragment
-import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClassifier
 import org.jetbrains.kotlin.resolve.lang.java.computeClassId
 import org.jetbrains.kotlin.cli.jvm.index.JvmDependenciesIndex
-import org.netbeans.api.java.classpath.ClassPath
+import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass
 import org.openide.filesystems.FileObject
 import org.openide.filesystems.FileStateInvalidException
 
@@ -60,7 +58,7 @@ class NetBeansVirtualFileFinder(private val project: Project,
         val suffixLength = suffixClass.size
         if (nameLength < suffixLength) return false
 
-        for (i in 0..suffixLength - 1) {
+        for (i in 0 until suffixLength) {
             val c = name[nameLength - i - 1]
             val suffixIndex = suffixLength - i - 1
 
@@ -113,7 +111,7 @@ class NetBeansVirtualFileFinder(private val project: Project,
 
     override fun findKotlinClass(javaClass: JavaClass): KotlinJvmBinaryClass? {
         javaClass.fqName ?: return null
-        val classId = (javaClass as NetBeansJavaClassifier<TypeElement>).elementHandle.computeClassId(project) ?: return null
+        val classId = (javaClass as NetBeansJavaClass).elementHandle.computeClassId(project) ?: return null
         var file: VirtualFile? = findVirtualFileWithHeader(classId) ?: return null
 
         if (javaClass.outerClass != null) {

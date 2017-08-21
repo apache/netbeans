@@ -23,6 +23,6 @@ import org.openide.filesystems.FileObject
 class KotlinLightVirtualFile(val fo: FileObject, text: String) : 
         LightVirtualFile(fo.name, KotlinLanguage.INSTANCE, text) {
     
-    override fun getPath() = fo.path
+    override fun getPath(): String = fo.path
     
 }

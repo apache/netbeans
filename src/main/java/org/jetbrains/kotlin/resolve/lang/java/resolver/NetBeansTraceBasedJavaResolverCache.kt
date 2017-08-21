@@ -31,9 +31,8 @@ class NetBeansTraceBasedJavaResolverCache : JavaResolverCache {
         this.resolveSession = resolveSession
     }
 
-    override fun getClassResolvedFromSource(fqName: FqName): ClassDescriptor? {
-        return trace[BindingContext.FQNAME_TO_CLASS_DESCRIPTOR, fqName.toUnsafe()] ?: findInPackageFragments(fqName)
-    }
+    override fun getClassResolvedFromSource(fqName: FqName): ClassDescriptor? =
+            trace[BindingContext.FQNAME_TO_CLASS_DESCRIPTOR, fqName.toUnsafe()] ?: findInPackageFragments(fqName)
 
     override fun recordMethod(method: JavaMethod, descriptor: SimpleFunctionDescriptor) {
     }
@@ -52,9 +51,8 @@ class NetBeansTraceBasedJavaResolverCache : JavaResolverCache {
         var fqName = if (fullFqName.isRoot) fullFqName else fullFqName.parent()
     
         while (true) {
-            val packageDescriptor = resolveSession.getPackageFragment(fqName)
-            if (packageDescriptor == null) break
-    
+            val packageDescriptor = resolveSession.getPackageFragment(fqName) ?: break
+
             val result = ResolveSessionUtils.findClassByRelativePath(
                     packageDescriptor.getMemberScope(), fullFqName.tail(fqName))
             if (result != null) return result

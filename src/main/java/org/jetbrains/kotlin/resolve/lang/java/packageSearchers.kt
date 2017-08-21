@@ -29,17 +29,15 @@ import org.netbeans.api.java.source.Task
 import org.netbeans.api.project.Project
 
 class SubPackagesSearcher(val project: Project,
-                          val pack: JavaPackage) : Task<CompilationController> {
+                          private val pack: JavaPackage) : Task<CompilationController> {
 
     val subPackages = arrayListOf<JavaPackage>()
 
-    fun findPackageFragments(name: String, info: CompilationController): Array<PackageElement>? {
-        val packages = name.getPackages(project)
-        val subpackageElements = packages.map { info.elements.getPackageElement(it) }.filterNotNull()
-        if (subpackageElements.isEmpty()) return null
-
-        return subpackageElements.toTypedArray()
-    }
+    private fun findPackageFragments(name: String, info: CompilationController): Array<PackageElement>? =
+            name.getPackages(project)
+                    .mapNotNull { info.elements.getPackageElement(it) }
+                    .takeIf { it.isNotEmpty() }
+                    ?.toTypedArray()
 
     override fun run(info: CompilationController) {
         info.toResolvedPhase()
@@ -63,19 +61,18 @@ class SubPackagesSearcher(val project: Project,
     }
 }
 
-class ClassesSearcher(val packages: List<ElemHandle<PackageElement>>,
+class ClassesSearcher(private val packages: List<ElemHandle<PackageElement>>,
                       val project: Project,
-                      val nameFilter: (Name) -> Boolean) : Task<CompilationController> {
+                      private val nameFilter: (Name) -> Boolean) : Task<CompilationController> {
 
     val classes = arrayListOf<JavaClass>()
 
-    fun isOuterClass(classFile: TypeElement) = !classFile.simpleName.toString().contains("$")
+    private fun isOuterClass(classFile: TypeElement) = !classFile.simpleName.toString().contains("$")
 
-    fun getClassesInPackage(javaPackage: PackageElement, nameFilter: (Name) -> Boolean): List<JavaClass> {
+    private fun getClassesInPackage(javaPackage: PackageElement, nameFilter: (Name) -> Boolean): List<JavaClass> {
         return javaPackage.enclosedElements
-                .filter { isOuterClass(it as TypeElement) }
                 .filter {
-                    Name.isValidIdentifier(it.simpleName.toString())
+                    isOuterClass(it as TypeElement) && Name.isValidIdentifier(it.simpleName.toString())
                             && nameFilter.invoke(Name.identifier(it.simpleName.toString()))
                 }
                 .map { NetBeansJavaClass(ElemHandle.create(it as TypeElement, project), project) }
@@ -84,10 +81,8 @@ class ClassesSearcher(val packages: List<ElemHandle<PackageElement>>,
     override fun run(info: CompilationController) {
         info.toResolvedPhase()
 
-        for (it in packages) {
-            val elem = it.resolve(info) ?: continue
-            classes.addAll(getClassesInPackage(elem as PackageElement, nameFilter))
-        }
+        packages.mapNotNull { it -> it.resolve(info) }
+                .forEach { classes.addAll(getClassesInPackage(it as PackageElement, nameFilter)) }
     }
 }
 

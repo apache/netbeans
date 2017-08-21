@@ -28,13 +28,10 @@ import org.netbeans.spi.java.classpath.ClassPathProvider
  */
 class GradleExtendedClassPath(val project: Project) : ClassPathExtender {
     
-    private val classPathProvider: ClassPathProvider?
+    private val classPathProvider: ClassPathProvider? = project.lookup.lookup(ClassPathProvider::class.java)
 
-    init {
-        classPathProvider = project.lookup.lookup(ClassPathProvider::class.java)
-    }
-
-    override fun getProjectSourcesClassPath(type: String) = if (classPathProvider == null) ClassPath.EMPTY else getClassPath(type)
+    override fun getProjectSourcesClassPath(type: String): ClassPath =
+            if (classPathProvider == null) ClassPath.EMPTY else getClassPath(type)
     
     private fun getClassPath(type: String): ClassPath {
         try {

@@ -18,13 +18,11 @@ package org.jetbrains.kotlin.filesystem.lightclasses
 
 import java.io.File
 import java.util.regex.Pattern
-import org.jetbrains.kotlin.fileClasses.*
 import org.jetbrains.kotlin.filesystem.KotlinLightClassManager
 import org.jetbrains.kotlin.log.KotlinLogger
 import org.jetbrains.kotlin.model.KotlinEnvironment
 import org.jetbrains.kotlin.utils.ProjectUtils
 import org.jetbrains.kotlin.analyzer.AnalysisResult
-import org.jetbrains.kotlin.codegen.CompilationErrorHandler
 import org.jetbrains.kotlin.codegen.KotlinCodegenFacade
 import org.jetbrains.kotlin.codegen.state.GenerationState
 import org.jetbrains.kotlin.config.CompilerConfiguration
@@ -37,8 +35,8 @@ import org.openide.filesystems.FileObject
 
 object KotlinLightClassGeneration {
 
-    fun buildLightClasses(analysisResult: AnalysisResult, project: Project,
-                          ktFiles: List<KtFile>, requestedClassName: String): GenerationState? {
+    private fun buildLightClasses(analysisResult: AnalysisResult, project: Project,
+                                  ktFiles: List<KtFile>, requestedClassName: String): GenerationState? {
         val generateDeclaredClassFilter = object : GenerationState.GenerateClassFilter() {
             override fun shouldAnnotateClass(processingClassOrObject: KtClassOrObject) = true
 
@@ -67,23 +65,6 @@ object KotlinLightClassGeneration {
 
         return state
     }
-
-    private fun checkByInternalName(internalName: String?, requestedClassFileName: String): Boolean {
-        if (internalName == null) return false
-
-        val classFileName = getLastSegment(internalName)
-        val requestedInternalName = requestedClassFileName.dropLast(".class".length)
-
-        if (requestedInternalName.startsWith(classFileName)) {
-            if (requestedInternalName.length == classFileName.length) return true
-
-            if (requestedInternalName[classFileName.length] == '$') return true
-        }
-
-        return false
-    }
-
-    private fun getLastSegment(path: String) = path.substringAfterLast("/")
 
     fun getByteCode(file: FileObject, project: Project?,
                     analysisResult: AnalysisResult): List<ByteArray> {

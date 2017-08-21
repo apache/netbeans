@@ -16,7 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.hints
 
-import org.jetbrains.kotlin.psi.psiUtil.siblings
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.hints.intentions.*
 import org.jetbrains.kotlin.psi.*

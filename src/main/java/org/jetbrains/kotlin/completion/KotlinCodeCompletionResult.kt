@@ -29,12 +29,8 @@ class KotlinCodeCompletionResult(private val doc: Document, offset: Int,
                                  analysisResult: AnalysisResultWithProvider,
                                  prefix: String) : CodeCompletionResult() {
     
-    val proposals: List<CompletionProposal>
-    
-    init {
-        proposals = createProposals(doc, offset, analysisResult, prefix)
-    }
-    
+    private val proposals: List<CompletionProposal> = createProposals(doc, offset, analysisResult, prefix)
+
     override fun getItems() = proposals
     override fun isTruncated() = false
     override fun isFilterable() = false

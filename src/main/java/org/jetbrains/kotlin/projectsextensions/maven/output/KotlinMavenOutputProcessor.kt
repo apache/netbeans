@@ -50,7 +50,7 @@ class KotlinMavenOutputProcessor : OutputProcessor {
 
         val position = (if (line[colon + 1] == '[') position('[', ']') else position('(', ')')) ?: return
 
-        visitor.setOutputListener(CompilationErrorAnnotation(fo, position.first, position.second))
+        visitor.outputListener = CompilationErrorAnnotation(fo, position.first, position.second)
     }
 
     override fun getRegisteredOutputSequences() = arrayOf("mojo-execute#kotlin:compile",

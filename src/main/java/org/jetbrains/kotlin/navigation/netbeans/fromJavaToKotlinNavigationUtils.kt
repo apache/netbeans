@@ -30,7 +30,6 @@ import org.jetbrains.kotlin.resolve.lang.java.ElementHandleFieldContainingClassS
 import org.jetbrains.kotlin.resolve.lang.java.ElementHandleNameSearcher
 import org.jetbrains.kotlin.resolve.lang.java.ElementHandleSimpleNameSearcher
 import org.jetbrains.kotlin.resolve.lang.java.ElementSearcher
-import org.jetbrains.kotlin.resolve.lang.java.getElementHandleValueParameters
 import org.netbeans.api.java.source.JavaSource
 import org.netbeans.api.java.source.SourceUtils
 import org.netbeans.api.java.source.ElementHandle

@@ -29,7 +29,7 @@ import org.jetbrains.kotlin.load.java.structure.JavaElement
 
 class NetBeansJavaSourceElement(override val javaElement: JavaElement) : JavaSourceElement {
 
-    override fun getContainingFile() = SourceFile.NO_SOURCE_FILE
+    override fun getContainingFile(): SourceFile = SourceFile.NO_SOURCE_FILE
     
     fun getElementBinding() = (javaElement as NetBeansJavaElement<*>).elementHandle
     

@@ -26,8 +26,7 @@ import javax.swing.SwingUtilities
 
 
 fun format(doc: Document, offset: Int, proj: Project? = null) {
-    val file = ProjectUtils.getFileObjectForDocument(doc)
-    if (file == null) return
+    val file = ProjectUtils.getFileObjectForDocument(doc) ?: return
 
     val parsedFile = ProjectUtils.getKtFile(doc.getText(0, doc.length), file) ?: return
 
@@ -39,4 +38,4 @@ fun format(doc: Document, offset: Int, proj: Project? = null) {
     doc.moveCursorTo(offset)
 }
 
-fun Document.moveCursorTo(position: Int) = SwingUtilities.invokeLater(Runnable { moveCaretToOffset(this as StyledDocument, position) })
+fun Document.moveCursorTo(position: Int) = SwingUtilities.invokeLater { moveCaretToOffset(this as StyledDocument, position) }

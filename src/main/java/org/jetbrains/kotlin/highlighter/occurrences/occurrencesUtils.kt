@@ -30,14 +30,14 @@ import org.jetbrains.kotlin.psi.KtReferenceExpression
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement
 import org.netbeans.modules.csl.api.OffsetRange
 
-private fun getLengthOfIdentifier(ktElement: KtElement?) = when {
-    ktElement is KtNamedDeclaration -> {
+private fun getLengthOfIdentifier(ktElement: KtElement?) = when (ktElement) {
+    is KtNamedDeclaration -> {
         val nameIdentifier = ktElement.nameIdentifier
         if (nameIdentifier == null) null else {
             Pair(nameIdentifier.textRange.startOffset, nameIdentifier.textRange.endOffset)
         }
     }
-    ktElement is KtReferenceExpression -> Pair(ktElement.textRange.startOffset, ktElement.textRange.endOffset)
+    is KtReferenceExpression -> Pair(ktElement.textRange.startOffset, ktElement.textRange.endOffset)
     else -> null
 }
 
@@ -52,9 +52,7 @@ fun search(searchingElements: List<SourceElement>, ktFile: KtFile): List<OffsetR
     val searchElement = searchElements.first()
     val occurrences = searchTextOccurrences(ktFile, searchElement)
     
-    return occurrences.map { getLengthOfIdentifier(it) }
-            .filterNotNull()
-            .map { OffsetRange(it.first, it.second) }
+    return occurrences.mapNotNull { getLengthOfIdentifier(it)?.let { OffsetRange(it.first, it.second) } }
 }
 
 fun getKotlinElements(sourceElements: List<SourceElement>) = sourceElements

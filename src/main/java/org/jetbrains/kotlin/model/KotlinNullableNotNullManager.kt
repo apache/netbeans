@@ -31,9 +31,9 @@ class KotlinNullableNotNullManager(private val javaProject: Project) : NullableN
     override fun hasHardcodedContracts(element: PsiElement) = false
     
     override fun isNotNull(owner: PsiModifierListOwner, checkBases: Boolean): Boolean {
-        val notNullAnnotations = getNotNulls().toSet()
-        return owner.getModifierList()?.getAnnotations()?.any { annotation ->
-            annotation.getQualifiedName() in notNullAnnotations
+        val notNullAnnotations = notNulls.toSet()
+        return owner.modifierList?.annotations?.any { annotation ->
+            annotation.qualifiedName in notNullAnnotations
         } ?: false
     }
 

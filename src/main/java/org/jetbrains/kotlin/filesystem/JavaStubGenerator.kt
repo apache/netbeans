@@ -44,20 +44,20 @@ object JavaStubGenerator {
     }
 
     private fun generate(classNode: ClassNode,
-                         innerClassesMap: Map<ClassNode, List<ClassNode>>): Pair<ClassNode, String> {
-        val javaStub = StringBuilder()
+                         innerClassesMap: Map<ClassNode, List<ClassNode>>): Pair<ClassNode, String> =
+            with (StringBuilder()) {
+                if (!classNode.name.contains("$")) append(classNode.packageString)
+                append(classNode.classDeclaration())
+                append(classNode.fields())
+                append(classNode.methods())
+                for (node in innerClassesMap[classNode]!!) {
+                    append(generate(node, innerClassesMap).second).append("\n")
+                }
 
-        if (!classNode.name.contains("$")) javaStub.append(classNode.packageString)
-        javaStub.append(classNode.classDeclaration())
-        javaStub.append(classNode.fields())
-        javaStub.append(classNode.methods())
-        for (node in innerClassesMap[classNode]!!) {
-            javaStub.append(generate(node, innerClassesMap).second).append("\n")
-        }
+                append("}")
 
-        javaStub.append("}")
-        return Pair(classNode, javaStub.toString())
-    }
+                return classNode to this.toString()
+            }
 
     private fun ByteArray.getClassNode(): ClassNode? {
         val classNode = ClassNode()
@@ -70,10 +70,10 @@ object JavaStubGenerator {
         return classNode
     }
 
-    val ClassNode.packageString: String
+    private val ClassNode.packageString: String
         get() = "package ${name.substringBeforeLast("/").replace("/", ".")};\n"
 
-    val ClassNode.className: String
+    private val ClassNode.className: String
         get() = if (!name.contains("$")) name.substringAfterLast("/") else name.substringAfterLast("$")
 
     private fun ClassNode.classDeclaration(): String {
@@ -122,7 +122,7 @@ object JavaStubGenerator {
 
         declaration.append("{\n")
 
-        return declaration.toString();
+        return declaration.toString()
     }
 
     private fun ClassNode.fields(): String {
@@ -139,8 +139,6 @@ object JavaStubGenerator {
     }
 
     private fun FieldNode.getString(): String {
-        val field = StringBuilder()
-
         val sig = if (signature != null) signature else desc
 
         val signatureReader = SignatureReader(sig)
@@ -149,13 +147,15 @@ object JavaStubGenerator {
 
         val type = traceSigVisitor.declaration.substringAfterLast(" ")
 
-        field.append(getAccess(access)).append(" ")
-        field.append(getFinal(access)).append(" ")
-        field.append(getStatic(access)).append(" ")
-        field.append(type.replace("$", ".")).append(" ")
-        field.append(name).append(";\n")
+        with (StringBuilder()) {
+            append(getAccess(access)).append(" ")
+            append(getFinal(access)).append(" ")
+            append(getStatic(access)).append(" ")
+            append(type.replace("$", ".")).append(" ")
+            append(name).append(";\n")
 
-        return field.toString()
+            return toString()
+        }
     }
 
     private fun ClassNode.methods(): String {
@@ -218,23 +218,5 @@ object JavaStubGenerator {
     private fun getAbstract(access: Int) = if (access.contains(Opcodes.ACC_ABSTRACT)) "abstract" else ""
 
     private fun Int.contains(opcode: Int) = (this and opcode) != 0
-
-    private fun String.toType() = when {
-        startsWith("Z") -> "boolean"
-        startsWith("V") -> "void"
-        startsWith("B") -> "byte"
-        startsWith("C") -> "char"
-        startsWith("S") -> "short"
-        startsWith("I") -> "int"
-        startsWith("J") -> "long"
-        startsWith("F") -> "float"
-        startsWith("D") -> "double"
-        startsWith("L") -> substring(1)
-        startsWith("[") -> {
-            val type = substring(1)
-            if (type.startsWith("L")) "${type.substring(1)}[]" else "$type[]"
-        }
-        else -> "void"
-    }
 
 }

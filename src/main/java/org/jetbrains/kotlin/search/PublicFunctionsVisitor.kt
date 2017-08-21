@@ -27,7 +27,7 @@ class PublicFunctionsVisitor(private val predicate: (String) -> Boolean) : KtVis
         val fqName = function.fqName?.asString() ?: return
         
         if (predicate(functionName) && function.modifierList == null) {
-            publicFunctions.add("$fqName")
+            publicFunctions.add(fqName)
         }
     }
 

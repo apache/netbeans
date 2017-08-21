@@ -25,9 +25,9 @@ import org.netbeans.modules.csl.api.OffsetRange
 
 class KotlinFoldingVisitor(val ktFile: KtFile) : KtVisitorVoid() {
 
-    val comments = arrayListOf<OffsetRange>()
-    val imports = arrayListOf<OffsetRange>()
-    val codeBlocks = arrayListOf<OffsetRange>()
+    private val comments = arrayListOf<OffsetRange>()
+    private val imports = arrayListOf<OffsetRange>()
+    private val codeBlocks = arrayListOf<OffsetRange>()
     
     fun computeFolds(): Map<String, List<OffsetRange>> {
         ktFile.acceptChildren(this)

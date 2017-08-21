@@ -17,12 +17,13 @@
 package org.jetbrains.kotlin.highlighter.netbeans
 
 import org.jetbrains.kotlin.language.KotlinLanguageHierarchy
+import org.netbeans.api.lexer.Language
 import org.netbeans.api.lexer.TokenId
 
-class KotlinTokenId(val tokenName: String, val category: String, val id: Int) : TokenId {
+class KotlinTokenId(private val tokenName: String, private val category: String, val id: Int) : TokenId {
     
     companion object {
-        fun getLanguage() = KotlinLanguageHierarchy().language()
+        fun getLanguage(): Language<KotlinTokenId> = KotlinLanguageHierarchy().language()
     }
     
     override fun name() = tokenName

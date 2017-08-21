@@ -27,7 +27,6 @@ import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.resolve.calls.callUtil.getResolvedCall
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
-import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
 class ReplaceSizeCheckWithIsNotEmptyInspection(val parserResult: KotlinParserResult,
@@ -59,8 +58,7 @@ class ReplaceSizeCheckWithIsNotEmptyIntention(doc: Document,
     override fun implement() {
         val element = expression ?: return
 
-        val target = getTargetExpression(element)
-        if (target !is KtDotQualifiedExpression) return
+        val target = getTargetExpression(element) as? KtDotQualifiedExpression ?: return
 
         val newText = "${target.receiverExpression.text}.isNotEmpty()"
         
@@ -101,20 +99,18 @@ fun KtElement?.isSizeOrLength(context: BindingContext): Boolean {
     }
 }
 
-private fun getTargetExpression(element: KtBinaryExpression): KtExpression? {
-        return when (element.operationToken) {
-            KtTokens.EXCLEQ -> when {
-                element.right.isZero() -> element.left
-                element.left.isZero() -> element.right
-                else -> null
-            }
-            KtTokens.GT -> if (element.right.isZero()) element.left else null
-            KtTokens.LT -> if (element.left.isZero()) element.right else null
-            KtTokens.GTEQ -> if (element.right.isOne()) element.left else null
-            KtTokens.LTEQ -> if (element.left.isOne()) element.right else null
-            else -> null
-        }
+private fun getTargetExpression(element: KtBinaryExpression): KtExpression? = when (element.operationToken) {
+    KtTokens.EXCLEQ -> when {
+        element.right.isZero() -> element.left
+        element.left.isZero() -> element.right
+        else -> null
     }
+    KtTokens.GT -> if (element.right.isZero()) element.left else null
+    KtTokens.LT -> if (element.left.isZero()) element.right else null
+    KtTokens.GTEQ -> if (element.right.isOne()) element.left else null
+    KtTokens.LTEQ -> if (element.left.isOne()) element.right else null
+    else -> null
+}
 
 private fun KtBinaryExpression.isApplicable(analysisResult: AnalysisResult?): Boolean {
     val targetExpression = getTargetExpression(this) ?: return false

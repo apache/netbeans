@@ -19,12 +19,12 @@ package org.jetbrains.kotlin.filesystem.lightclasses
 import org.jetbrains.org.objectweb.asm.ClassWriter
 
 class BinaryClassWriter : ClassWriter(ClassWriter.COMPUTE_FRAMES or ClassWriter.COMPUTE_MAXS) {
-    
-    override protected fun getCommonSuperClass(type1: String, type2: String): String {
-        try {
-            return super.getCommonSuperClass(type1, type2)
+
+    override fun getCommonSuperClass(type1: String, type2: String): String {
+        return try {
+            super.getCommonSuperClass(type1, type2)
         } catch (t: Throwable) {
-            return "java/lang/Object"
+            "java/lang/Object"
         }
     }
     

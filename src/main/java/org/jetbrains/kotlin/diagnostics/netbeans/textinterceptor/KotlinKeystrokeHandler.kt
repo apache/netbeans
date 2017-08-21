@@ -24,8 +24,8 @@ import org.netbeans.modules.csl.spi.ParserResult
 
 class KotlinKeystrokeHandler : KeystrokeHandler {
     
-    fun checkNextChar(doc: Document, caretOffset: Int, ch: String, 
-                      target: JTextComponent): Boolean {
+    private fun checkNextChar(doc: Document, caretOffset: Int, ch: String,
+                              target: JTextComponent): Boolean {
         if (doc.getText(caretOffset, 1) == ch) {
             target.caretPosition = caretOffset + 1
             return true
@@ -33,8 +33,8 @@ class KotlinKeystrokeHandler : KeystrokeHandler {
         return false
     }
     
-    fun insert(doc: Document, caretOffset: Int, ch: String,
-               target: JTextComponent): Boolean {
+    private fun insert(doc: Document, caretOffset: Int, ch: String,
+                       target: JTextComponent): Boolean {
         doc.insertString(caretOffset + 1, ch, null)
         target.caretPosition = caretOffset + 1
         return false
@@ -48,16 +48,14 @@ class KotlinKeystrokeHandler : KeystrokeHandler {
     }
     
     override fun afterCharInserted(doc: Document, caretOffset: Int, 
-                                    target: JTextComponent, ch: Char): Boolean {
-        return when(ch) {
-            '(' -> insert(doc, caretOffset, ")", target)
-            '{' -> insert(doc, caretOffset, "}", target)
-            '[' -> insert(doc, caretOffset, "]", target)
-            '"' -> insert(doc, caretOffset, "\"", target)
-            '\'' -> insert(doc, caretOffset, "'", target)
-            else -> false
-        }
-    }
+                                    target: JTextComponent, ch: Char): Boolean = when(ch) {
+                                        '(' -> insert(doc, caretOffset, ")", target)
+                                        '{' -> insert(doc, caretOffset, "}", target)
+                                        '[' -> insert(doc, caretOffset, "]", target)
+                                        '"' -> insert(doc, caretOffset, "\"", target)
+                                        '\'' -> insert(doc, caretOffset, "'", target)
+                                        else -> false
+                                    }
     
     override fun charBackspaced(doc: Document, caretOffset: Int, target: JTextComponent, ch: Char) = false
     override fun beforeBreak(doc: Document, caretOffset: Int, target: JTextComponent) = -1

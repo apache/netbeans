@@ -19,11 +19,9 @@ package org.jetbrains.kotlin.highlighter.netbeans
 import org.jetbrains.kotlin.highlighter.TokenType
 import org.netbeans.api.lexer.TokenId
 
-class KotlinToken<T : TokenId>(val value: T, val text: String, val type: TokenType) {
+class KotlinToken<out T : TokenId>(val value: T, val text: String, val type: TokenType) {
     
-    val kotlinTokenId = value as KotlinTokenId
-    
-    fun id() = kotlinTokenId
+    fun id() = value as KotlinTokenId
     fun text() = text
     fun length() = text.length
     

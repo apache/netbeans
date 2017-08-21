@@ -74,7 +74,7 @@ public class MavenHelper {
         
         askedToConfigure.add(project);
     }
-    
+
     private static boolean kotlinPluginConfigured(MavenProject mavenProject) {
         Set<Artifact> pluginArtifacts = mavenProject.getPluginArtifacts();
         if (pluginArtifacts == null) return false;

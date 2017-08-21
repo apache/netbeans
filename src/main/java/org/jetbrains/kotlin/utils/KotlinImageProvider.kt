@@ -35,8 +35,8 @@ object KotlinImageProvider {
     
     private fun getImageIcon(name: String) = ImageIcon(ImageUtilities.loadImage("$imagesLocation$name"))
 
-    fun getImage(descriptor: DeclarationDescriptor?) = when {
-        descriptor is ClassDescriptor -> {
+    fun getImage(descriptor: DeclarationDescriptor?) = when (descriptor) {
+        is ClassDescriptor -> {
             when (descriptor.kind) {
                 ClassKind.ANNOTATION_CLASS -> getImageIcon("annotation.png")
                 ClassKind.ENUM_CLASS -> getImageIcon("enum.png")
@@ -44,10 +44,9 @@ object KotlinImageProvider {
                 else -> getImageIcon("class.png")
             }
         }
-        descriptor is FunctionDescriptor -> getImageIcon("method.png")
-        descriptor is VariableDescriptor -> getImageIcon("field.png")
-        descriptor is PackageFragmentDescriptor ||
-                descriptor is PackageViewDescriptor -> getImageIcon("package.png")
+        is FunctionDescriptor -> getImageIcon("method.png")
+        is VariableDescriptor -> getImageIcon("field.png")
+        is PackageFragmentDescriptor, is PackageViewDescriptor -> getImageIcon("package.png")
         else -> null
     }
 }

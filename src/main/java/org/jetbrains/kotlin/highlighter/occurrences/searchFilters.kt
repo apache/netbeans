@@ -33,9 +33,8 @@ class ReferenceFilter : SearchFilter {
 }
 
 class NonImportFilter : SearchFilter {
-    override fun isApplicable(jetElement: KtElement): Boolean {
-        return jetElement !is KtSimpleNameExpression || !jetElement.isImportDirectiveExpression()
-    }
+    override fun isApplicable(jetElement: KtElement): Boolean =
+            jetElement !is KtSimpleNameExpression || !jetElement.isImportDirectiveExpression()
 }
 
 class ResolvedReferenceFilter : SearchFilterAfterResolve {

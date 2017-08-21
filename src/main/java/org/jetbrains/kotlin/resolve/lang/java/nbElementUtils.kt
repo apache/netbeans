@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.resolve.lang.java
 
 import javax.lang.model.element.TypeElement
-import org.jetbrains.kotlin.projectsextensions.ClassPathExtender
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.getExtendedClassPath
 import org.jetbrains.kotlin.resolve.lang.java.structure.NetBeansJavaClass
 import org.netbeans.api.java.classpath.ClassPath
@@ -33,9 +32,6 @@ import org.netbeans.api.java.source.ui.ElementOpen
 import org.netbeans.api.project.Project
 import org.openide.filesystems.FileObject
 import javax.lang.model.type.DeclaredType
-import org.netbeans.api.java.source.CancellableTask
-import org.netbeans.api.java.source.WorkingCopy
-import org.netbeans.api.java.source.ModificationResult
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor
 import javax.lang.model.element.ElementKind
@@ -44,7 +40,7 @@ import javax.lang.model.element.ExecutableElement
 object JavaEnvironment {
     val JAVA_SOURCE = hashMapOf<Project, JavaSource>()
 
-    fun getClasspathInfo(project: Project): ClasspathInfo {
+    private fun getClasspathInfo(project: Project): ClasspathInfo {
         val extendedProvider = project.getExtendedClassPath() ?: 
                 return ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY)
         
@@ -84,7 +80,8 @@ fun knownClassNamesInPackage(packageFqName: String, project: Project): Set<Strin
     return classes
 } 
 
-fun ElementHandle<*>.getFileObject(project: Project) = SourceUtils.getFile(this, JavaEnvironment.JAVA_SOURCE[project]!!.classpathInfo)
+fun ElementHandle<*>.getFileObject(project: Project): FileObject? =
+        SourceUtils.getFile(this, JavaEnvironment.JAVA_SOURCE[project]!!.classpathInfo)
 
 fun String.getPackages(project: Project): Set<String> {
     JavaEnvironment.checkJavaSource(project)
@@ -103,15 +100,7 @@ fun <T : Task<CompilationController>> T.execute(project: Project): T {
     return this
 }
 
-fun <T : CancellableTask<WorkingCopy>> T.modify(file: FileObject): ModificationResult {
-    val javaSource = JavaSource.forFileObject(file)
-    return javaSource.runModificationTask(this)
-}
-
-fun CompilationController.toResolvedPhase() = this.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED)
-
-fun Project.findTypeMirrorHandle(name: String) =
-        TypeMirrorHandleSearcher(name).execute(this).handle
+fun CompilationController.toResolvedPhase(): JavaSource.Phase = this.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED)
 
 fun Project.findPackage(name: String) =
         PackageElementSearcher(name, this).execute(this).`package`
@@ -164,30 +153,13 @@ fun searchKinds() = setOf(ClassIndex.SearchKind.FIELD_REFERENCES,
         ClassIndex.SearchKind.METHOD_REFERENCES, 
         ClassIndex.SearchKind.TYPE_REFERENCES)
 
-fun Project.findClassUsages(className: String): Set<FileObject> {
-    val handle = this.findType(className) ?: return emptySet()
-
-    return JavaEnvironment.JAVA_SOURCE[this]?.classpathInfo?.classIndex?.getResources(handle.elementHandle,
-            searchKinds(), hashSetOf(ClassIndex.SearchScope.SOURCE)) ?: emptySet()
-}
-
-fun Project.getFileObjectForFqName(fqName: String): FileObject? {
-    val handle = this.findType(fqName) ?: return null
-
-    val fObjects = JavaEnvironment.JAVA_SOURCE[this]?.classpathInfo?.classIndex?.getResources(handle.elementHandle,
-            setOf(ClassIndex.SearchKind.IMPLEMENTORS), setOf(ClassIndex.SearchScope.DEPENDENCIES),
-            setOf(ClassIndex.ResourceType.BINARY)) ?: return null
-
-    return fObjects.elementAt(0) ?: null
-}
-
 fun ElemHandle<*>.getJavaDoc(project: Project) =
         JavaDocSearcher(this).execute(project).javaDoc
                                                
 fun ElementHandle<TypeElement>.findMember(descriptor: DeclarationDescriptor, 
                                           project: Project): ElementHandle<*>? {
     var member: ElementHandle<*>? = null
-    val finder = Task<CompilationController>() { info ->
+    val finder = Task<CompilationController> { info ->
         info.toResolvedPhase()
         
         val typeElement = this.resolve(info)
@@ -196,11 +168,9 @@ fun ElementHandle<TypeElement>.findMember(descriptor: DeclarationDescriptor,
                 //TODO check signatures
                 typeElement.enclosedElements
                         .filterIsInstance(ExecutableElement::class.java)
-                        .filter { it.kind == ElementKind.METHOD }
-                        .filter { it.simpleName.toString() == descriptor.name.asString() }
+                        .filter { it.kind == ElementKind.METHOD && it.simpleName.toString() == descriptor.name.asString() }
             } else typeElement.enclosedElements
-                    .filter { it.kind == ElementKind.FIELD }
-                    .filter { it.simpleName.toString() == descriptor.name.asString() }
+                    .filter { it.kind == ElementKind.FIELD && it.simpleName.toString() == descriptor.name.asString() }
             val memberElement = filteredMembers.firstOrNull()
             if (memberElement != null) member = ElementHandle.create(memberElement)
         }

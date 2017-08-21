@@ -29,10 +29,6 @@ fun KtFile.mainClassName(simple: Boolean = false) = declarations.findMainFunctio
 
 fun KtFile.hasMain() = declarations.findMainFunction() != null
 
-fun Collection<KtFile>.getKtFilesWithMainFunction() =
-        this.filter { it.declarations.findMainFunction() != null }
-                .map { File(it.virtualFile.path) }
-
 private fun KtNamedFunction.isMain(): Boolean {
     if (name == "main" && valueParameters.size == 1) {
         val reference = valueParameters.first().typeReference ?: return false
@@ -44,9 +40,7 @@ private fun KtNamedFunction.isMain(): Boolean {
 }
 
 private fun Collection<KtDeclaration>.findMainFunction() =
-        this.filterIsInstance(KtNamedFunction::class.java)
-                .filter { it.isMain() }
-                .firstOrNull()
+        filterIsInstance(KtNamedFunction::class.java).firstOrNull { it.isMain() }
         
     
     

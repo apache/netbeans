@@ -25,7 +25,6 @@ import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.idea.resolve.ResolutionFacade
 import org.jetbrains.kotlin.psi.KtDeclaration
 import org.jetbrains.kotlin.psi.KtElement
-import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.resolve.lazy.BodyResolveMode
 import org.jetbrains.kotlin.container.getService
 import org.netbeans.api.project.Project as NBProject
@@ -36,8 +35,8 @@ import org.netbeans.api.project.Project as NBProject
   Created on Sep 9, 2016
 */
 
-class KotlinResolutionFacade(val kotlinProject: NBProject,
-                             val componentProvider: ComponentProvider,
+class KotlinResolutionFacade(private val kotlinProject: NBProject,
+                             private val componentProvider: ComponentProvider,
                              override val moduleDescriptor: ModuleDescriptor) : ResolutionFacade {
     override fun analyze(elements: Collection<KtElement>, bodyResolveMode: BodyResolveMode) = throw UnsupportedOperationException()
     

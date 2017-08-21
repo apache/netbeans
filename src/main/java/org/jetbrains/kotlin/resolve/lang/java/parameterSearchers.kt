@@ -34,7 +34,7 @@ class TypeParameterNameSearcher(val handle: ElemHandle<*>) : Task<CompilationCon
     override fun run(info: CompilationController) {
         info.toResolvedPhase()
 
-        val elem = handle.resolve(info) ?: throw UnsupportedOperationException("Couldn't resolve '${handle}")
+        val elem = handle.resolve(info) ?: throw UnsupportedOperationException("Couldn't resolve '$handle")
         name = SpecialNames.safeIdentifier(elem.simpleName.toString())
     }
 }
@@ -63,7 +63,7 @@ class TypeMirrorHandleHashCodeSearcher(val handle: TypeMirrorHandle<*>) : Task<C
     }
 }
 
-class ElemHandleSearcher(val typeHandle: TypeMirrorHandle<*>,
+class ElemHandleSearcher(private val typeHandle: TypeMirrorHandle<*>,
                          val project: Project) : Task<CompilationController> {
 
     lateinit var elemHandle: ElemHandle<TypeParameterElement>
@@ -90,7 +90,7 @@ class UpperBoundsSearcher(val handle: ElemHandle<*>, val project: Project) : Tas
 }
 
 class Equals(val handle: TypeMirrorHandle<*>,
-             val handle2: TypeMirrorHandle<*>) : Task<CompilationController> {
+             private val handle2: TypeMirrorHandle<*>) : Task<CompilationController> {
 
     var equals = false
 
@@ -105,7 +105,7 @@ class Equals(val handle: TypeMirrorHandle<*>,
 }
 
 class TypeMirrorHandleEquals(val handle: TypeMirrorHandle<*>,
-                       val handle2: TypeMirrorHandle<*>) : Task<CompilationController> {
+                             private val handle2: TypeMirrorHandle<*>) : Task<CompilationController> {
     
     var equals = false
     

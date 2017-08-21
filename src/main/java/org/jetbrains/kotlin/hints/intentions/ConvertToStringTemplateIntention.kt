@@ -19,7 +19,6 @@ package org.jetbrains.kotlin.hints.intentions
 import com.intellij.psi.PsiElement
 import javax.swing.text.Document
 import org.jetbrains.kotlin.analyzer.AnalysisResult
-import org.jetbrains.kotlin.navigation.netbeans.moveCaretToOffset
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.util.PsiUtilCore
@@ -31,7 +30,6 @@ import org.jetbrains.kotlin.reformatting.moveCursorTo
 import org.jetbrains.kotlin.resolve.constants.evaluate.ConstantExpressionEvaluator
 import org.jetbrains.kotlin.resolve.lazy.BodyResolveMode
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
-import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
 class ConvertToStringTemplateIntention(doc: Document,
@@ -88,14 +86,6 @@ private fun KtBinaryExpression.isApplicable(): Boolean {
     return true
 }
 
-private fun shouldSuggestToConvert(expression: KtBinaryExpression): Boolean {
-    val entries = buildReplacement(expression).entries
-    return entries.none { it is KtBlockStringTemplateEntry }
-            && !entries.all { it is KtLiteralStringTemplateEntry || it is KtEscapeStringTemplateEntry }
-            && entries.count { it is KtLiteralStringTemplateEntry } > 1
-            && !expression.textContains('\n')
-}
-
 private fun buildReplacement(expression: KtBinaryExpression): KtStringTemplateExpression {
     val rightText = buildText(expression.right, false)
     return fold(expression.left, rightText, KtPsiFactory(expression))
@@ -104,12 +94,12 @@ private fun buildReplacement(expression: KtBinaryExpression): KtStringTemplateEx
 private fun fold(left: KtExpression?, right: String, factory: KtPsiFactory): KtStringTemplateExpression {
     val forceBraces = !right.isEmpty() && right.first() != '$' && right.first().isJavaIdentifierPart()
 
-    if (left is KtBinaryExpression && isApplicableToNoParentCheck(left)) {
+    return if (left is KtBinaryExpression && isApplicableToNoParentCheck(left)) {
         val leftRight = buildText(left.right, forceBraces)
-        return fold(left.left, "$leftRight$right", factory)
+        fold(left.left, "$leftRight$right", factory)
     } else {
         val leftText = buildText(left, forceBraces)
-        return factory.createExpression("\"$leftText$right\"") as KtStringTemplateExpression
+        factory.createExpression("\"$leftText$right\"") as KtStringTemplateExpression
     }
 }
 

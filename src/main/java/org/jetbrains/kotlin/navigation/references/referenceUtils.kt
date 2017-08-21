@@ -56,9 +56,9 @@ private fun KtExpression.readWriteAccess(): ReferenceAccess {
     
     val assignment = expression.getAssignmentByLHS()
     if (assignment != null) {
-        when (assignment.operationToken) {
-            KtTokens.EQ -> return ReferenceAccess.WRITE
-            else -> return ReferenceAccess.READ_WRITE
+        return when (assignment.operationToken) {
+            KtTokens.EQ -> ReferenceAccess.WRITE
+            else -> ReferenceAccess.READ_WRITE
         }
     }
     
@@ -72,9 +72,9 @@ fun createReferences(element: KtReferenceExpression): List<KotlinReference> {
     return arrayListOf<KotlinReference>().apply {
         register<KtSimpleNameExpression>(element, ::KotlinSimpleNameReference)
         
-        register<KtCallExpression>(element, ::KotlinInvokeFunctionReference)
+        register(element, ::KotlinInvokeFunctionReference)
         
-        register<KtConstructorDelegationReferenceExpression>(element, ::KotlinConstructorDelegationReference)
+        register(element, ::KotlinConstructorDelegationReference)
         
         registerMulti<KtNameReferenceExpression>(element) {
             if (it.getReferencedNameElementType() != KtTokens.IDENTIFIER) return@registerMulti emptyList()
@@ -123,7 +123,7 @@ fun KtElement.resolveToSourceDeclaration(): List<SourceElement> {
 fun List<KotlinReference>.resolveToSourceElements(): List<SourceElement> {
     if (isEmpty()) return emptyList()
     
-    val ktFile = first().referenceExpression.getContainingKtFile()
+    val ktFile = first().referenceExpression.containingKtFile
     val path = ktFile.virtualFile.canonicalPath
     
     val normalizedPath = FileUtil.normalizePath(path)

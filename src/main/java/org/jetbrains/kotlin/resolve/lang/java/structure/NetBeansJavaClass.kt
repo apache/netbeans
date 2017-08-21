@@ -88,7 +88,7 @@ class NetBeansJavaClass(elementHandle: ElemHandle<TypeElement>, project: Project
     fun presentation(): String {
         val visibility = visibility.displayName
         val final = if (isFinal) " final" else ""
-        val cl = if (isInterface) " inteface" else if (isEnum) " enum" else " class"
+        val cl = if (isInterface) " interface" else if (isEnum) " enum" else " class"
         
         return "$visibility$final$cl ${elementHandle.qualifiedName}"
     }

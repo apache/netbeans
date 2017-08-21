@@ -103,9 +103,7 @@ class SplitIfIntention(doc: Document,
         val endOffset = conditionRange.length
         val rightString = condition.text.substring(startOffset, endOffset)
 
-        val expression = KtPsiFactory(element).createExpression(rightString)
-
-        return expression
+        return KtPsiFactory(element).createExpression(rightString)
     }
 
     private fun getFirstValidOperator(element: KtIfExpression): KtOperationReferenceExpression? {
@@ -128,7 +126,7 @@ class SplitIfIntention(doc: Document,
             if (expression.operationToken != operator) return false
         }
 
-        val ifExpression = expression.parent?.parent as? KtIfExpression ?: return false
+        val ifExpression = expression.parent.parent as? KtIfExpression ?: return false
 
         if (ifExpression.condition == null) return false
         if (!PsiTreeUtil.isAncestor(ifExpression.condition, element, false)) return false

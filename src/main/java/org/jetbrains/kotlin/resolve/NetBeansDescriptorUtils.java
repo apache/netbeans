@@ -30,7 +30,6 @@ import org.jetbrains.kotlin.descriptors.ClassDescriptor;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptorWithSource;
 import org.jetbrains.kotlin.descriptors.SourceElement;
-import org.jetbrains.kotlin.resolve.DescriptorToSourceUtils;
 
 import com.google.common.collect.Lists;
 import org.netbeans.api.project.Project;

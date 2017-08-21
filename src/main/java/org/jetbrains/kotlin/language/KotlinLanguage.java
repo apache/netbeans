@@ -16,6 +16,7 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.language;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.completion.KotlinCodeCompletionHandler;
 import org.jetbrains.kotlin.structurescanner.KotlinStructureScanner;
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser;
@@ -42,11 +43,13 @@ import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory;
 @LanguageRegistration(mimeType = "text/x-kt")
 public class KotlinLanguage extends DefaultLanguageConfig {
 
+    @NotNull
     @Override
     public Language getLexerLanguage() {
         return KotlinTokenId.Companion.getLanguage();
     }
 
+    @NotNull
     @Override
     public String getDisplayName() {
         return "KT";

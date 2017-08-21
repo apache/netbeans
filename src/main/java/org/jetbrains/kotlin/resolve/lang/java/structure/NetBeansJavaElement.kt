@@ -32,9 +32,6 @@ abstract class NetBeansJavaElement<T : Element>(val elementHandle: ElemHandle<T>
 
     override fun hashCode() = elementHandle.hashCode()
 
-    override fun equals(other: Any?): Boolean {
-        if (other !is NetBeansJavaElement<*>) return false
-        return elementHandle.equals(other.elementHandle)
-    }
+    override fun equals(other: Any?) = (other as? NetBeansJavaElement<*>)?.elementHandle == elementHandle
 
 }

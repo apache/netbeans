@@ -46,7 +46,6 @@ class KotlinHighlightingAttributes private constructor() {
                 /*bold*/ColoringAttributes.ENUM) }
         val TYPE_PARAMETER = withAttributes { styleKey = setOf(ColoringAttributes.TYPE_PARAMETER_USE) }
         val ANNOTATION = withAttributes { styleKey = setOf(ColoringAttributes.ANNOTATION_TYPE) }
-        val ENUM_CLASS = withAttributes { styleKey = setOf(ColoringAttributes.ENUM) }
         val INTERFACE = withAttributes { styleKey = setOf(ColoringAttributes.INTERFACE) }
         val CLASS = withAttributes { styleKey = setOf(ColoringAttributes.CLASS) }
         val FUNCTION_DECLARATION = withAttributes { styleKey = setOf(ColoringAttributes.DECLARATION) }

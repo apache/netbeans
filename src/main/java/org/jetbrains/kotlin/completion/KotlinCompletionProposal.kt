@@ -42,34 +42,28 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import javax.swing.text.Document
 import org.netbeans.modules.csl.api.ElementKind
 
-class KotlinCompletionProposal(val idenStartOffset: Int,
+class KotlinCompletionProposal(private val idenStartOffset: Int,
                                val descriptor: DeclarationDescriptor, val doc: StyledDocument,
                                val prefix: String, val project: Project) : DefaultCompletionProposal(), InsertableProposal {
 
-    val text: String
-    val proposal: String
+    val text: String = descriptor.name.identifier
+    private val proposal: String = DescriptorRenderer.ONLY_NAMES_WITH_SHORT_TYPES.render(descriptor)
     val type: String
-    val proposalName: String
-    val FIELD_ICON: ImageIcon?
+    private val proposalName: String
+    private val FIELD_ICON: ImageIcon? = KotlinImageProvider.getImage(descriptor)
 
     init {
-        text = descriptor.name.identifier
-        proposal = DescriptorRenderer.ONLY_NAMES_WITH_SHORT_TYPES.render(descriptor)
-        FIELD_ICON = KotlinImageProvider.getImage(descriptor)
         val splitted = proposal.split(":")
         proposalName = splitted[0]
         type = if (splitted.size > 1) splitted[1] else ""
     }
 
     override fun getElement(): ElementHandle? {
-        val source = getElementWithSource(descriptor, project);
-        if (source is NetBeansJavaSourceElement) {
-            val handle = source.getElementBinding()
-            val doc = handle.getJavaDoc(project) ?: return null
-            return ElementHandle.UrlHandle(doc.rawCommentText)
-        }
+        val source = getElementWithSource(descriptor, project) as? NetBeansJavaSourceElement ?: return null
+        val handle = source.getElementBinding()
+        val doc = handle.getJavaDoc(project) ?: return null
 
-        return null
+        return ElementHandle.UrlHandle(doc.rawCommentText)
     }
 
     override fun getLhsHtml(formatter: HtmlFormatter) = proposalName
@@ -108,29 +102,27 @@ class KotlinCompletionProposal(val idenStartOffset: Int,
 
         if (isImport) {
             doc.insertString(idenStartOffset, text, null)
-            SwingUtilities.invokeLater(Runnable { moveCaretToOffset(doc, idenStartOffset + text.length) })
+            SwingUtilities.invokeLater { moveCaretToOffset(doc, idenStartOffset + text.length) }
 
             return
         }
 
         if (params.size == 1 && name.contains("->")) {
             doc.insertString(idenStartOffset, "$text {  }", null)
-            SwingUtilities.invokeLater(Runnable { moveCaretToOffset(doc, idenStartOffset + "$text { ".length) })
+            SwingUtilities.invokeLater { moveCaretToOffset(doc, idenStartOffset + "$text { ".length) }
 
             return
         }
 
         doc.insertString(idenStartOffset, "$text${params.joinToString(prefix = "(", postfix = ")") { getValueParameter(it) }}", null)
         if (params.isNotEmpty()) {
-            SwingUtilities.invokeLater(Runnable { moveCaretToOffset(doc, idenStartOffset + text.length + 1) })
+            SwingUtilities.invokeLater { moveCaretToOffset(doc, idenStartOffset + text.length + 1) }
         }
     }
 
     private fun getValueParameter(desc: ValueParameterDescriptor): String {
         val kotlinType = desc.type
-        val classifierDescriptor = kotlinType.constructor.declarationDescriptor
-
-        if (classifierDescriptor == null) return desc.name.asString()
+        val classifierDescriptor = kotlinType.constructor.declarationDescriptor ?: return desc.name.asString()
 
         val typeName = classifierDescriptor.name.asString()
         return getValueForType(typeName) ?: desc.name.asString()

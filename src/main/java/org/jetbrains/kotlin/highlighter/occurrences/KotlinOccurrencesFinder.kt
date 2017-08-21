@@ -19,7 +19,6 @@ package org.jetbrains.kotlin.highlighter.occurrences
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.navigation.references.resolveToSourceDeclaration
-import org.jetbrains.kotlin.descriptors.SourceElement
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper.isScanning
 import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtFile
@@ -34,7 +33,7 @@ class KotlinOccurrencesFinder : OccurrencesFinder<KotlinParserResult>() {
     
     private var caretPosition = 0
     private var cancel = false
-    val highlighting = hashMapOf<OffsetRange, ColoringAttributes>()
+    private val highlighting = hashMapOf<OffsetRange, ColoringAttributes>()
 
     override fun run(result: KotlinParserResult?, event: SchedulerEvent?) {
         cancel = false
@@ -50,7 +49,7 @@ class KotlinOccurrencesFinder : OccurrencesFinder<KotlinParserResult>() {
         findOccurrences(ktElement, ktFile)
     }
 
-    override fun getSchedulerClass() = Scheduler.EDITOR_SENSITIVE_TASK_SCHEDULER
+    override fun getSchedulerClass(): Class<out Scheduler> = Scheduler.EDITOR_SENSITIVE_TASK_SCHEDULER
 
     override fun getPriority() = Priorities.OCCURRENCES_FINDER_PRIORITY
 

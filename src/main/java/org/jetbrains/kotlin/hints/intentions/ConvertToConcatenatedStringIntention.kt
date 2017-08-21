@@ -23,7 +23,6 @@ import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.psi.*
-import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 import org.jetbrains.kotlin.reformatting.moveCursorTo
 
@@ -90,12 +89,10 @@ class ConvertToConcatenatedStringIntention(doc: Document,
             text
     }
 
-    private fun needsParenthesis(expression: KtExpression, isFinalEntry: Boolean): Boolean {
-        return when (expression) {
-            is KtBinaryExpression -> true
-            is KtIfExpression -> expression.`else` !is KtBlockExpression && !isFinalEntry
-            else -> false
-        }
+    private fun needsParenthesis(expression: KtExpression, isFinalEntry: Boolean): Boolean = when (expression) {
+        is KtBinaryExpression -> true
+        is KtIfExpression -> expression.`else` !is KtBlockExpression && !isFinalEntry
+        else -> false
     }
 
     private fun String.quote(quote: String) = "$quote${this}$quote"

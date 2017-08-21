@@ -107,7 +107,7 @@ private fun gotoElementInBinaryClass(binaryClass: KotlinJvmBinaryClass,
         getImplClassName(descriptor)?.asString() ?: return
     } else binaryClass.classId.asSingleFqName().asString()
     
-    var elementHandle = project.findType(className)?.elementHandle ?: return
+    val elementHandle = project.findType(className)?.elementHandle ?: return
     if (descriptor is MemberDescriptor) {
         elementHandle.findMember(descriptor, project)?.openInEditor(project) ?: elementHandle.openInEditor(project)
     } else elementHandle.openInEditor(project)
@@ -124,11 +124,9 @@ private fun getImplClassName(memberDescriptor: DeserializedCallableMemberDescrip
         val implClassName = implClassNameField!!.get(null)
         val protobufCallable = Class.forName("org.jetbrains.kotlin.serialization.ProtoBuf\$Callable")
         val getExtensionMethod = protobufCallable!!.getMethod("getExtension", implClassName!!::class.java)
-        val indexObj = getExtensionMethod!!.invoke(proto, implClassName)
-    
-        if (indexObj !is Int) return null
-    
-        nameIndex = indexObj.toInt()
+        val indexObj = getExtensionMethod!!.invoke(proto, implClassName) as? Int ?: return null
+
+        nameIndex = indexObj
     } catch (e: ReflectiveOperationException) {
         KotlinLogger.INSTANCE.logException("", e)
         return null
@@ -198,7 +196,7 @@ fun getElementWithSource(descriptor: DeclarationDescriptor, project: Project): S
 
 fun getNavigationData(referenceExpression: KtReferenceExpression,
                               project: Project): NavigationData? {
-    val ktFile = referenceExpression.getContainingKtFile()
+    val ktFile = referenceExpression.containingKtFile
     val analysisResult = KotlinParser.getAnalysisResult(ktFile, project) ?: return null
     val context = analysisResult.analysisResult.bindingContext
     

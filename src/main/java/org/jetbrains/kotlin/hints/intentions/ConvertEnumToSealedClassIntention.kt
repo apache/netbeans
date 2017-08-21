@@ -22,10 +22,6 @@ import javax.swing.text.Document
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.psi.*
-import org.jetbrains.kotlin.psi.psiUtil.allChildren
-import org.jetbrains.kotlin.psi.psiUtil.endOffset
-import org.jetbrains.kotlin.psi.psiUtil.siblings
-import org.jetbrains.kotlin.psi.psiUtil.startOffset
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
@@ -50,7 +46,7 @@ class ConvertEnumToSealedClassIntention(doc: Document,
         val builder = StringBuilder()
         
         with (builder) {
-            append("sealed class ${name}")
+            append("sealed class $name")
 
             val constructor = primaryConstructor?.text ?: ""
 
@@ -66,7 +62,7 @@ class ConvertEnumToSealedClassIntention(doc: Document,
                     append(initializers.joinToString { "$name${it.text}" })
                 } else append("$name()")
 
-                member.getBody()?.let { body -> append("${body.text}") }
+                member.getBody()?.let { body -> append(body.text) }
                 append("\n")
             }
 

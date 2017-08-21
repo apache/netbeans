@@ -63,9 +63,8 @@ private fun List<FileObject>.translate(result: VirtualSourceProvider.Result,
         .filter { it.second.isNotEmpty() }
         .forEach {
             val stubs = JavaStubGenerator.gen(it.second)
-            stubs.forEach { stub ->
-                val code = stub.second
-                val packageName = stub.first.name.substringBeforeLast("/")
+            stubs.forEach { (first, code) ->
+                val packageName = first.name.substringBeforeLast("/")
 
                 result.add(FileUtil.toFile(it.first), packageName, it.first.name, code)
             }

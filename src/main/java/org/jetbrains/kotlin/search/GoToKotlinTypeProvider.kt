@@ -28,7 +28,7 @@ import org.openide.filesystems.FileUtil
 class GoToKotlinTypeProvider : SearchProvider {
 
     override fun evaluate(request: SearchRequest, response: SearchResponse) {
-        OpenProjects.getDefault().getOpenProjects()
+        OpenProjects.getDefault().openProjects
                 .flatMap { KotlinTypeSearcher.searchDeclaration(it, request.text) }
                 .forEach {
                     val file = it.first

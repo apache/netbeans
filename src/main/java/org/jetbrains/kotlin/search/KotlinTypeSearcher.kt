@@ -24,11 +24,15 @@ object KotlinTypeSearcher {
     
     private fun findDeclarationsInFile(ktFile: KtFile, 
                                        fqName: String) = ktFile.declarations
-            .filter { it.name != null }
-            .filter { it.name!!.contains(fqName) }
+            .filter { it.name?.contains(fqName) == true }
     
     fun searchDeclaration(project: Project, fqName: String) = ProjectUtils.getSourceFilesWithDependencies(project)
-            .map {Pair(it, findDeclarationsInFile(it, fqName))}
-            .filter { it.second.isNotEmpty() }
+            .mapNotNull {
+                val declarationsInFile = findDeclarationsInFile(it, fqName)
+                if (declarationsInFile.isNotEmpty()) {
+                    it to findDeclarationsInFile(it, fqName)
+                }
+                else null
+            }
     
 }

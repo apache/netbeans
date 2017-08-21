@@ -31,7 +31,7 @@ import org.jetbrains.kotlin.resolve.lang.java.*
   Created on Aug 29, 2016
 */
 
-class NetBeansJavaPackage(val packages: List<ElemHandle<PackageElement>>, val project: Project) :
+class NetBeansJavaPackage(private val packages: List<ElemHandle<PackageElement>>, val project: Project) :
         JavaPackage, JavaElement {
 
     constructor(pack: ElemHandle<PackageElement>, project: Project) : this(Collections.singletonList(pack), project)

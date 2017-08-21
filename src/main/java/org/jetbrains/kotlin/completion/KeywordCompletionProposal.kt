@@ -21,8 +21,8 @@ import org.netbeans.modules.csl.api.ElementKind
 import org.netbeans.modules.csl.api.HtmlFormatter
 import javax.swing.text.Document
 
-class KeywordCompletionProposal(val keyword: String, 
-                                val idenStartOffset: Int,
+class KeywordCompletionProposal(private val keyword: String,
+                                private val idenStartOffset: Int,
                                 val prefix: String) : DefaultCompletionProposal(), InsertableProposal {
     override fun getElement() = null
     

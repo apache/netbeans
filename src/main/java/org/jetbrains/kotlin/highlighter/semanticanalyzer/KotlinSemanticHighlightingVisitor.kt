@@ -61,7 +61,7 @@ class KotlinSemanticHighlightingVisitor(val ktFile: KtFile,
         if (parentExpression is KtThisExpression || parentExpression is KtSuperExpression) return
 
         val target = bindingContext[BindingContext.REFERENCE_TARGET, expression]?.let {
-            if (it is ConstructorDescriptor) it.getContainingDeclaration() else it
+            (it as? ConstructorDescriptor)?.containingDeclaration ?: it
         } ?: return
 
         val smartCast = bindingContext.get(BindingContext.SMARTCAST, expression)
@@ -125,7 +125,7 @@ class KotlinSemanticHighlightingVisitor(val ktFile: KtFile,
     override fun visitNamedFunction(function: KtNamedFunction) {
         val nameIdentifier = function.nameIdentifier
         if (nameIdentifier != null) {
-            highlight(KotlinHighlightingAttributes.FUNCTION_DECLARATION, nameIdentifier.getTextRange())
+            highlight(KotlinHighlightingAttributes.FUNCTION_DECLARATION, nameIdentifier.textRange)
         }
 
         super.visitNamedFunction(function)
@@ -182,7 +182,7 @@ class KotlinSemanticHighlightingVisitor(val ktFile: KtFile,
 
         val attributes = when (descriptor) {
             is LocalVariableDescriptor -> {
-                if (descriptor.isVar()) {
+                if (descriptor.isVar) {
                     KotlinHighlightingAttributes.LOCAL_VARIABLE
                 } else {
                     KotlinHighlightingAttributes.LOCAL_FINAL_VARIABLE

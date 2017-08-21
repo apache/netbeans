@@ -49,9 +49,7 @@ private fun lookupNonImportedTypes(simpleNameExpression: KtSimpleNameExpression,
         return emptyList()
     }
 
-    val importsSet = ktFile.getImportDirectives()
-            .mapNotNull { it.getImportedFqName()?.asString() }
-            .toSet()
+    val importsSet = ktFile.importDirectives.mapNotNullTo(hashSetOf()) { it.importedFqName?.asString() }
 
     return project.findTypes(identifierPart)
             .filter { it.qualifiedName !in importsSet }
@@ -70,10 +68,10 @@ private fun lookupNonImportedFunctions(identifierPart: String,
         .map { NonImportedCompletionProposal(identifierPart, it, ElementKind.METHOD, idenOffset) }
 
 
-class NonImportedCompletionProposal(val identifierPart: String,
+class NonImportedCompletionProposal(private val identifierPart: String,
                                     val text: String,
-                                    val elemKind: ElementKind,
-                                    val idenOffset: Int) : DefaultCompletionProposal(), InsertableProposal {
+                                    private val elemKind: ElementKind,
+                                    private val idenOffset: Int) : DefaultCompletionProposal(), InsertableProposal {
     
     override fun doInsert(document: Document) {
         document.remove(idenOffset, identifierPart.length)

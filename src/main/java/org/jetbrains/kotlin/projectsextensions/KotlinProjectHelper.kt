@@ -16,7 +16,6 @@
  ****************************************************************************** */
 package org.jetbrains.kotlin.projectsextensions
 
-import java.util.HashMap
 import org.jetbrains.kotlin.model.KotlinEnvironment
 import org.jetbrains.kotlin.project.KotlinProjectConstants
 import org.jetbrains.kotlin.projectsextensions.gradle.classpath.GradleExtendedClassPath
@@ -25,7 +24,6 @@ import org.jetbrains.kotlin.project.KotlinSources
 import org.jetbrains.kotlin.projectsextensions.maven.classpath.MavenExtendedClassPath
 import org.jetbrains.kotlin.resolve.lang.java.JavaEnvironment
 import org.netbeans.api.java.classpath.ClassPath
-import org.netbeans.api.java.source.Task
 import org.netbeans.api.project.Project
 import org.netbeans.spi.java.classpath.support.ClassPathSupport
 import org.openide.util.RequestProcessor
@@ -45,7 +43,7 @@ object KotlinProjectHelper {
     
     fun Project.isScanning() = isScanning[this] ?: false
 
-    fun postTask(run: Runnable) = environmentLoader.post(run)
+    fun postTask(run: Runnable): RequestProcessor.Task = environmentLoader.post(run)
     
     fun hasJavaFiles(project: Project) = hasJavaFiles[project] ?: false
     
@@ -64,9 +62,7 @@ object KotlinProjectHelper {
                 || className == "org.netbeans.gradle.project.NbGradleProject"
     }
 
-    fun Project.isMavenProject(): Boolean {
-        return this::class.java.name == "org.netbeans.modules.maven.NbMavenProjectImpl"
-    }
+    fun Project.isMavenProject(): Boolean = this::class.java.name == "org.netbeans.modules.maven.NbMavenProjectImpl"
 
     fun Project.removeProjectCache() {
         kotlinSources.remove(this)
@@ -132,10 +128,10 @@ object KotlinProjectHelper {
         KotlinEnvironment.updateKotlinEnvironment(this)
     }
     
-    fun getJavaFilesByProject(project: Project) = project.getKotlinSources()
+    private fun getJavaFilesByProject(project: Project) = project.getKotlinSources()
                 ?.getSourceGroups(KotlinProjectConstants.JAVA_SOURCE)
                 ?.flatMap { it.rootFolder.children.toList() }
-                ?.filter { it.ext == "java" }
+                ?.filterTo(hashSetOf()) { it.ext == "java" }
                 ?.toSet() ?: emptySet()
     
 }

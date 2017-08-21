@@ -21,7 +21,6 @@ import javax.swing.text.Document
 import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.psi.KtProperty
-import org.jetbrains.kotlin.psi.KtPsiFactory
 import org.jetbrains.kotlin.psi.psiUtil.isExtensionDeclaration
 import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
@@ -38,10 +37,9 @@ class ConvertPropertyInitializerToGetterIntention(doc: Document,
         val element = property ?: return false
 
         val initializer = element.initializer
-        if (initializer != null && element.getter == null
+        return initializer != null && element.getter == null
                 && !element.isExtensionDeclaration()
-                && !element.isLocal) return true
-        else return false
+                && !element.isLocal
     }
 
     override fun getDescription() = "Convert property initializer to getter"

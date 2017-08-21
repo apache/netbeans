@@ -91,17 +91,16 @@ class ConvertToBlockBodyIntention(doc: Document,
             return factory.createBlock("return ${expression.text}")
         }
 
-        val newBody = when (declaration) {
+        return when (declaration) {
             is KtNamedFunction -> {
                 val returnType = declaration.returnType(bindingContext)!!
                 generateBody(!KotlinBuiltIns.isUnit(returnType) && !KotlinBuiltIns.isNothing(returnType))
             }
 
-            is KtPropertyAccessor -> generateBody(declaration.isGetter())
+            is KtPropertyAccessor -> generateBody(declaration.isGetter)
 
             else -> throw RuntimeException("Unknown declaration type: $declaration")
         }
-        return newBody
     }
 
     private fun replaceBody(declaration: KtDeclarationWithBody, factory: KtPsiFactory,

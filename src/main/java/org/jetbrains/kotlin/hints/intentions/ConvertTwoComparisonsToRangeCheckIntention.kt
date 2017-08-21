@@ -28,7 +28,6 @@ import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.resolve.calls.callUtil.getType
 import org.jetbrains.kotlin.resolve.constants.evaluate.ConstantExpressionEvaluator
 import org.jetbrains.kotlin.types.KotlinType
-import org.jetbrains.kotlin.reformatting.format
 import org.jetbrains.kotlin.hints.atomicChange
 
 class ConvertTwoComparisonsToRangeCheckIntention(doc: Document,
@@ -65,7 +64,7 @@ class ConvertTwoComparisonsToRangeCheckIntention(doc: Document,
 
     private data class RangeExpressionData(val value: KtExpression, val min: String, val max: String)
 
-    fun KtExpression.unwrapBlockOrParenthesis(): KtExpression {
+    private fun KtExpression.unwrapBlockOrParenthesis(): KtExpression {
         val innerExpression = KtPsiUtil.safeDeparenthesize(this)
         if (innerExpression is KtBlockExpression) {
             val statement = innerExpression.statements.singleOrNull() ?: return this
@@ -74,7 +73,7 @@ class ConvertTwoComparisonsToRangeCheckIntention(doc: Document,
         return innerExpression
     }
 
-    fun KtExpression.evaluatesTo(other: KtExpression) = unwrapBlockOrParenthesis().text == other.text
+    private fun KtExpression.evaluatesTo(other: KtExpression) = unwrapBlockOrParenthesis().text == other.text
 
     private fun generateRangeExpressionData(condition: KtBinaryExpression): RangeExpressionData? {
         if (condition.operationToken != KtTokens.ANDAND) return null

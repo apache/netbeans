@@ -58,7 +58,7 @@ class NameSearcher(val handle: ElemHandle<TypeElement>) : Task<CompilationContro
 class SuperTypesSearcher(val handle: ElemHandle<TypeElement>, val project: Project) : Task<CompilationController> {
     val superTypes = arrayListOf<JavaClassifierType>()
     
-    fun getSuperTypesMirrors(typeBinding: TypeElement): List<TypeMirror> {
+    private fun getSuperTypesMirrors(typeBinding: TypeElement): List<TypeMirror> {
         val superTypesList = typeBinding.interfaces.toMutableList()
         
         val superclass = typeBinding.superclass
@@ -67,7 +67,7 @@ class SuperTypesSearcher(val handle: ElemHandle<TypeElement>, val project: Proje
         return superTypesList
     }
     
-    fun getSuperTypesWithObject(typeBinding: TypeElement, info: CompilationController): Array<TypeMirror> {
+    private fun getSuperTypesWithObject(typeBinding: TypeElement, info: CompilationController): Array<TypeMirror> {
         val allSuperTypes = getSuperTypesMirrors(typeBinding).toMutableList()
         val hasObject = !allSuperTypes.none{ it.toString() == CommonClassNames.JAVA_LANG_OBJECT }
         
@@ -97,7 +97,6 @@ class InnerClassesSearcher(val handle: ElemHandle<TypeElement>,
         val element = handle.resolve(info) ?: return
         
         val filteredMembers = element.enclosedElements
-                .filter{ it.asType().kind == TypeKind.DECLARED }
                 .filterIsInstance(TypeElement::class.java)
                 .map{ NetBeansJavaClass(ElemHandle.create(it, project), project) }
         innerClasses.addAll(filteredMembers)
@@ -128,9 +127,8 @@ class MethodsSearcher(val handle: ElemHandle<TypeElement>,
         val element = handle.resolve(info) ?: return
         
         val filteredMembers = element.enclosedElements
-                .filter{ it.kind == ElementKind.METHOD }
-                .map{ NetBeansJavaMethod(ElemHandle.create(
-                        it as ExecutableElement, project), containingClass, project) }
+                .filter { it.kind == ElementKind.METHOD }
+                .map { NetBeansJavaMethod(ElemHandle.create(it as ExecutableElement, project), containingClass, project) }
         methods.addAll(filteredMembers)
     }
 }
@@ -144,8 +142,7 @@ class MethodHandlesSearcher(val handle: ElementHandle<TypeElement>) : Task<Compi
         
         val filteredMembers = element.enclosedElements
                 .filter{ it.kind == ElementKind.METHOD }
-                .filterIsInstance(ExecutableElement::class.java)
-                .map { ElementHandle.create(it) }
+                .map { ElementHandle.create(it as ExecutableElement) }
         
         methods.addAll(filteredMembers)
     }
@@ -160,9 +157,8 @@ class ConstructorsSearcher(val handle: ElemHandle<TypeElement>,
         val element = handle.resolve(info) ?: return
         
         val filteredMembers = element.enclosedElements
-                .filter{ it.kind == ElementKind.CONSTRUCTOR }
-                .map{ NetBeansJavaConstructor(ElemHandle.create(
-                        it as ExecutableElement, project), containingClass, project) }
+                .filter { it.kind == ElementKind.CONSTRUCTOR }
+                .map { NetBeansJavaConstructor(ElemHandle.create(it as ExecutableElement, project), containingClass, project) }
         constructors.addAll(filteredMembers)
     }
 }
@@ -176,10 +172,8 @@ class FieldsSearcher(val handle: ElemHandle<TypeElement>,
         val element = handle.resolve(info) ?: return
         
         val filteredMembers = element.enclosedElements
-                .filter{ it.kind.isField() }
-                .filter{ Name.isValidIdentifier(it.simpleName.toString()) }
-                .map { NetBeansJavaField(ElemHandle.create(
-                        it as VariableElement, project), containingClass, project) }
+                .filter { it.kind.isField && Name.isValidIdentifier(it.simpleName.toString()) }
+                .map { NetBeansJavaField(ElemHandle.create(it as VariableElement, project), containingClass, project) }
         fields.addAll(filteredMembers)
     }
 }

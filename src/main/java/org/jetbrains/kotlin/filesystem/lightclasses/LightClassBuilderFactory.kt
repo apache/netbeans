@@ -26,11 +26,10 @@ import org.jetbrains.org.objectweb.asm.ClassWriter
 import org.jetbrains.org.objectweb.asm.FieldVisitor
 import org.jetbrains.org.objectweb.asm.MethodVisitor
 import com.intellij.openapi.util.Key
-import com.intellij.psi.PsiElement
 
 class LightClassBuilderFactory : ClassBuilderFactory {
     
-    override fun getClassBuilderMode() = ClassBuilderMode.LIGHT_CLASSES
+    override fun getClassBuilderMode(): ClassBuilderMode = ClassBuilderMode.LIGHT_CLASSES
 
     override fun newClassBuilder(origin: JvmDeclarationOrigin): ClassBuilder {
         return object : AbstractClassBuilder.Concrete(BinaryClassWriter()) {
@@ -51,7 +50,7 @@ class LightClassBuilderFactory : ClassBuilderFactory {
                 
                 var userData = element.getUserData(JVM_SIGNATURE)
                 if (userData == null) {
-                    userData = hashSetOf<Pair<String,String>>()
+                    userData = hashSetOf()
                     element.putUserData(JVM_SIGNATURE, userData)
                 }
                 
@@ -62,7 +61,7 @@ class LightClassBuilderFactory : ClassBuilderFactory {
 
     override fun asText(builder: ClassBuilder) = throw UnsupportedOperationException("BINARIES generator asked for text")
 
-    override fun asBytes(builder: ClassBuilder) = (builder.visitor as ClassWriter).toByteArray()
+    override fun asBytes(builder: ClassBuilder): ByteArray = (builder.visitor as ClassWriter).toByteArray()
 
     override fun close() {}
 

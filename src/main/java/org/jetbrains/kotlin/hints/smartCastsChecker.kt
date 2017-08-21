@@ -20,7 +20,6 @@ import org.jetbrains.kotlin.descriptors.ConstructorDescriptor
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.renderer.DescriptorRenderer
 import org.jetbrains.kotlin.resolve.BindingContext
-import org.jetbrains.kotlin.psi.psiUtil.getNonStrictParentOfType
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.netbeans.modules.csl.api.Hint
 import org.netbeans.modules.csl.api.HintSeverity
@@ -35,7 +34,7 @@ fun getSmartCastHover(expression: KtSimpleNameExpression, parserResult: KotlinPa
     if (parentExpression is KtThisExpression || parentExpression is KtSuperExpression) return null
 
     bindingContext[BindingContext.REFERENCE_TARGET, expression]?.let {
-        if (it is ConstructorDescriptor) it.containingDeclaration else it
+        (it as? ConstructorDescriptor)?.containingDeclaration ?: it
     } ?: return null
 
     val smartCast = bindingContext.get(BindingContext.SMARTCAST, expression)

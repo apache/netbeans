@@ -30,13 +30,11 @@ class TextFilter(val value: String) : ElementFilter {
 
     override fun isClassAcceptable(hintClass: Class<*>): Boolean = true
     
-    private fun getTextByElement(element: Any): String? {
-        return when (element) {
-            is PsiType -> element.presentableText
-            is PsiNamedElement -> element.name
-            is PsiElement -> element.text
-            else -> null
-        }
+    private fun getTextByElement(element: Any): String? = when (element) {
+        is PsiType -> element.presentableText
+        is PsiNamedElement -> element.name
+        is PsiElement -> element.text
+        else -> null
     }
 }
 
@@ -49,6 +47,6 @@ class LeftNeighbour(filter: ElementFilter) : PositionElementFilter() {
         if (element !is PsiElement) return false
         
         val previous = element.searchNonSpaceNonCommentBack()
-        return if (previous != null) getFilter().isAcceptable(previous, context) else false
+        return if (previous != null) filter.isAcceptable(previous, context) else false
     }
 }

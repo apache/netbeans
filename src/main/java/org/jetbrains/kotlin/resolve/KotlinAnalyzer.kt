@@ -26,10 +26,9 @@ object KotlinAnalyzer {
     fun analyzeFile(project: Project, file: KtFile): AnalysisResultWithProvider {
         KotlinLogger.INSTANCE.logInfo("Analyzing ${file.virtualFile.path}")
         val kotlinEnvironment = KotlinEnvironment.getEnvironment(project)
-        val analysisResult = NetBeansAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration(
+
+        return NetBeansAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration(
                 project, kotlinEnvironment.project, listOf(file))
-        
-        return analysisResult
     }
     
     private fun analyzeFiles(kotlinProject: Project,

@@ -69,7 +69,9 @@ public class KotlinSourcePathProvider extends SourcePathProvider {
             }
             Collection<KtClass> classes = PsiTreeUtil.findChildrenOfType(ktFile, KtClass.class);
             for (KtClass ktClass : classes) {
-                if (ktClass.getFqName().asString().equals(fqName)) {
+                FqName ktClassFqName = ktClass.getFqName();
+                if (ktClassFqName == null) continue;
+                if (ktClassFqName.asString().equals(fqName)) {
                     String path = ktFile.getVirtualFile().getPath();
                     File file = new File(path);
                     FileObject fo = FileUtil.toFileObject(file);

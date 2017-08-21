@@ -16,7 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.installer
 
-import java.beans.PropertyChangeListener
 import org.jetbrains.kotlin.project.KotlinSources
 import org.jetbrains.kotlin.projectsextensions.KotlinProjectHelper
 import org.netbeans.modules.parsing.api.indexing.IndexingManager
@@ -44,7 +43,7 @@ class KotlinInstaller : Yenta() {
         WindowManager.getDefault().invokeWhenUIReady { 
             ProjectUtils.checkKtHome()
             WindowManager.getDefault().registry.addPropertyChangeListener listener@{
-                if (it.propertyName.equals("opened")) {
+                if (it.propertyName == "opened") {
                     val newHashSet = it.newValue as HashSet<*>
                     val oldHashSet = it.oldValue as HashSet<*>
                     newHashSet.filter {!oldHashSet.contains(it)}
@@ -52,11 +51,11 @@ class KotlinInstaller : Yenta() {
                                 val dataObject = (it as? TopComponent)?.lookup?.lookup(DataObject::class.java) ?: return@forEach
                                 val currentFile = dataObject.primaryFile
                                 if (currentFile != null) {
-                                    if (currentFile.mimeType.equals("text/x-kt")) {
+                                    if (currentFile.mimeType == "text/x-kt") {
                                         checkUpdates()
                                         checkProjectConfiguration(currentFile)
                                     }
-                                    if (currentFile.mimeType.equals("text/x-java")) {
+                                    if (currentFile.mimeType == "text/x-java") {
                                         checkVirtualSourceProvider(currentFile)
                                     }
                                 }

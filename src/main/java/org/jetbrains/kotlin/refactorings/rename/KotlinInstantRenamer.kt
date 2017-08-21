@@ -33,7 +33,7 @@ class KotlinInstantRenamer : InstantRenamer {
     
     private var occurrencesRanges: Set<OffsetRange>? = null
     
-    override fun getRenameRegions(info: ParserResult, caretOffset: Int) = occurrencesRanges ?: emptySet<OffsetRange>()
+    override fun getRenameRegions(info: ParserResult, caretOffset: Int) = occurrencesRanges ?: emptySet()
 
     override fun isRenameAllowed(info: ParserResult, caretOffset: Int, explanationRetValue: Array<String>?): Boolean {
         val fo = info.snapshot.source.fileObject

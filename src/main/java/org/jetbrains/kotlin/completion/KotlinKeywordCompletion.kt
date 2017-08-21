@@ -59,8 +59,6 @@ import org.jetbrains.kotlin.idea.util.CallTypeAndReceiver
 import org.jetbrains.kotlin.psi.KtSimpleNameExpression
 import org.netbeans.modules.csl.api.CompletionProposal
 
-open class KeywordLookupObject
-
 // This code is mostly copied from Idea plugin
 object KeywordCompletion {
     private val ALL_KEYWORDS = (KEYWORDS.types + SOFT_KEYWORDS.types).map { it as KtKeywordToken }
@@ -72,32 +70,6 @@ object KeywordCompletion {
             ENUM_KEYWORD to CLASS_KEYWORD,
             ANNOTATION_KEYWORD to CLASS_KEYWORD
     )
-
-    private val KEYWORD_CONSTRUCTS = mapOf<KtKeywordToken, String>(
-            IF_KEYWORD to "fun foo() { if (caret)",
-            WHILE_KEYWORD to "fun foo() { while(caret)",
-            FOR_KEYWORD to "fun foo() { for(caret)",
-            TRY_KEYWORD to "fun foo() { try {\ncaret\n}",
-            CATCH_KEYWORD to "fun foo() { try {} catch (caret)",
-            FINALLY_KEYWORD to "fun foo() { try {\n}\nfinally{\ncaret\n}",
-            DO_KEYWORD to "fun foo() { do {\ncaret\n}",
-            INIT_KEYWORD to "class C { init {\ncaret\n}",
-            CONSTRUCTOR_KEYWORD to "class C { constructor(caret)"
-    )
-
-    private val NO_SPACE_AFTER = listOf(THIS_KEYWORD,
-            SUPER_KEYWORD,
-            NULL_KEYWORD,
-            TRUE_KEYWORD,
-            FALSE_KEYWORD,
-            BREAK_KEYWORD,
-            CONTINUE_KEYWORD,
-            ELSE_KEYWORD,
-            WHEN_KEYWORD,
-            FILE_KEYWORD,
-            DYNAMIC_KEYWORD,
-            GET_KEYWORD,
-            SET_KEYWORD).map { it.value } + "companion object"
 
     fun complete(position: PsiElement, prefix: String, isJvmModule: Boolean, consumer: (String) -> Unit) {
         if (!GENERAL_FILTER.isAcceptable(position, position)) return
@@ -126,15 +98,7 @@ object KeywordCompletion {
 
             if (!parserFilter(keywordToken)) continue
 
-            val constructText = KEYWORD_CONSTRUCTS[keywordToken]
-            if (constructText != null) {
-                val element = keyword
-                consumer(element)
-            } else {
-                var element = keyword
-
-                consumer(element)
-            }
+            consumer(keyword)
         }
     }
 
@@ -200,15 +164,15 @@ object KeywordCompletion {
 
                 is KtDeclarationWithInitializer -> {
                     val initializer = parent.initializer
-                    if (prevParent == initializer) {
-                        return buildFilterWithContext("val v = ", initializer!!, position)
+                    if (initializer != null && prevParent == initializer) {
+                        return buildFilterWithContext("val v = ", initializer, position)
                     }
                 }
 
                 is KtParameter -> {
                     val default = parent.defaultValue
-                    if (prevParent == default) {
-                        return buildFilterWithContext("val v = ", default!!, position)
+                    if (default != null && prevParent == default) {
+                        return buildFilterWithContext("val v = ", default, position)
                     }
                 }
             }
@@ -217,10 +181,10 @@ object KeywordCompletion {
                 val scope = parent.parent
                 when (scope) {
                     is KtClassOrObject -> {
-                        if (parent is KtPrimaryConstructor) {
-                            return buildFilterWithReducedContext("class X ", parent, position)
+                        return if (parent is KtPrimaryConstructor) {
+                            buildFilterWithReducedContext("class X ", parent, position)
                         } else {
-                            return buildFilterWithReducedContext("class X { ", parent, position)
+                            buildFilterWithReducedContext("class X { ", parent, position)
                         }
                     }
 
@@ -332,14 +296,14 @@ object KeywordCompletion {
         return false
     }
 
-    private fun IElementType.matchesKeyword(keywordType: KtKeywordToken): Boolean {
-        return when (this) {
+    private fun IElementType.matchesKeyword(keywordType: KtKeywordToken): Boolean =
+        when (this) {
             keywordType -> true
             NOT_IN -> keywordType == IN_KEYWORD
             NOT_IS -> keywordType == IS_KEYWORD
             else -> false
         }
-    }
+
 
     // builds text within scope (or from the start of the file) before position element excluding almost all declarations
     private fun buildReducedContextBefore(builder: StringBuilder, position: PsiElement, scope: PsiElement?) {
@@ -397,7 +361,7 @@ fun breakOrContinueExpressionItems(position: KtElement, breakOrContinue: String)
                     result.add(breakOrContinue)
                 }
 
-                val label = (parent.getParent() as? KtLabeledExpression)?.getLabelNameAsName()
+                val label = (parent.parent as? KtLabeledExpression)?.getLabelNameAsName()
                 if (label != null) {
                     result.add("$breakOrContinue${label.labelNameToTail()}")
                 }
@@ -416,13 +380,11 @@ inline fun <reified T : Any> Sequence<*>.firstIsInstanceOrNull(): T? {
     return null
 }
 
-inline fun <reified T : PsiElement> PsiElement.getNonStrictParentOfType(): T? {
-    return PsiTreeUtil.getParentOfType(this, T::class.java, false)
-}
+inline fun <reified T : PsiElement> PsiElement.getNonStrictParentOfType(): T? =
+        PsiTreeUtil.getParentOfType(this, T::class.java, false)
 
-inline fun <reified T : PsiElement> PsiElement.getParentOfType(strict: Boolean): T? {
-    return PsiTreeUtil.getParentOfType(this, T::class.java, strict)
-}
+inline fun <reified T : PsiElement> PsiElement.getParentOfType(strict: Boolean): T? =
+        PsiTreeUtil.getParentOfType(this, T::class.java, strict)
 
 fun generateKeywordProposals(identifierPart: String,
                              expression: PsiElement, offset: Int, prefix: String): List<CompletionProposal> {

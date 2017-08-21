@@ -28,7 +28,6 @@ import org.netbeans.api.java.source.CompilationController
 import org.netbeans.api.java.source.ElementHandle
 import org.netbeans.api.java.source.SourceUtils
 import org.netbeans.api.java.source.Task
-import org.netbeans.api.java.source.TypeMirrorHandle
 import org.netbeans.api.project.Project
 import org.openide.filesystems.FileObject
 
@@ -56,18 +55,6 @@ class TypeElementHandleSearcher(val fqName: String, val project: Project) : Task
     }
 }
 
-class TypeMirrorHandleSearcher(val fqName: String) : Task<CompilationController> {
-
-    lateinit var handle: TypeMirrorHandle<*>
-
-    override fun run(info: CompilationController) {
-        info.toResolvedPhase()
-
-        val elem = info.elements.getTypeElement(fqName) ?: throw UnsupportedOperationException("Couldn't resolve $fqName'")
-        handle = TypeMirrorHandle.create(elem.asType())
-    }
-}
-
 class PackageElementSearcher(val fqName: String, val project: Project) : Task<CompilationController> {
 
     var `package`: ElemHandle<PackageElement>? = null
@@ -84,10 +71,10 @@ class ClassIdComputer(val handle: ElemHandle<TypeElement>) : Task<CompilationCon
 
     var classId: ClassId? = null
 
-    fun computeClassId(classBinding: TypeElement): ClassId? {
+    private fun computeClassId(classBinding: TypeElement): ClassId? {
         val container = classBinding.enclosingElement
 
-        if (container.getKind() != ElementKind.PACKAGE) {
+        if (container.kind != ElementKind.PACKAGE) {
             val parentClassId = computeClassId(container as TypeElement) ?: return null
             return parentClassId.createNestedClassId(Name.identifier(classBinding.simpleName.toString()))
         }
@@ -139,19 +126,6 @@ class ElementHandleSimpleNameSearcher(val element: ElementHandle<*>) : Task<Comp
 
         val elem = element.resolve(info) ?: return
         simpleName = elem.simpleName.toString()
-    }
-}
-
-class FileObjectForFqNameSearcher(val fqName: String, val cpInfo: ClasspathInfo) : Task<CompilationController> {
-
-    var fileObject: FileObject? = null
-
-    override fun run(info: CompilationController) {
-        info.toResolvedPhase()
-
-        val te = info.elements.getTypeElement(fqName) ?: return
-        val handle = ElementHandle.create(te)
-        fileObject = SourceUtils.getFile(handle, cpInfo)
     }
 }
 

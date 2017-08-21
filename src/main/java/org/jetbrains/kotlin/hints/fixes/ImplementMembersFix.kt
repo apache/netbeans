@@ -16,7 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.hints.fixes
 
-import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
@@ -78,8 +77,8 @@ class ImplementMembersFix(kotlinError: KotlinError,
         typeNormalizer = IdeDescriptorRenderers.APPROXIMATE_FLEXIBLE_TYPES
     }
 
-    fun generateMethods(document: Document, classOrObject: KtClassOrObject, selectedElements: Set<CallableMemberDescriptor>) {
-        var body = classOrObject.getBody()
+    private fun generateMethods(document: Document, classOrObject: KtClassOrObject, selectedElements: Set<CallableMemberDescriptor>) {
+        val body = classOrObject.getBody()
         val psiFactory = KtPsiFactory(classOrObject.project)
         if (body == null) {
             val bodyText = "${psiFactory.createWhiteSpace().text}${psiFactory.createEmptyClassBody().text}"
@@ -88,17 +87,15 @@ class ImplementMembersFix(kotlinError: KotlinError,
             removeWhitespaceAfterLBrace(body, document)
         }
 
-        val insertOffset = findLBraceEndOffset(document, classOrObject.textRange.startOffset)
-        if (insertOffset == null) return
+        val insertOffset = findLBraceEndOffset(document, classOrObject.textRange.startOffset) ?: return
 
         val generatedText = generateOverridingMembers(selectedElements, classOrObject, "\n")
-                .map { it.node.text }
-                .joinToString("\n", postfix = "\n")
+                .joinToString("\n", postfix = "\n") { it.node.text }
 
         document.insertString(insertOffset, generatedText, null)
     }
 
-    fun insertAfter(psi: PsiElement, text: String, doc: Document) {
+    private fun insertAfter(psi: PsiElement, text: String, doc: Document) {
         val end = psi.textRange.endOffset
         doc.insertString(end, text, null)
     }
@@ -114,16 +111,15 @@ class ImplementMembersFix(kotlinError: KotlinError,
 
     private fun findLBraceEndOffset(document: Document, startIndex: Int): Int? {
         val text = document.getText(0, document.length)
-        for (i in startIndex..text.lastIndex) {
-            if (text[i] == '{') return i + 1
-        }
 
-        return null
+        return (startIndex..text.lastIndex)
+                .firstOrNull { text[it] == '{' }
+                ?.let { it + 1 }
     }
 
-    fun DeclarationDescriptor.escapedName() = DescriptorRenderer.COMPACT.renderName(getName())
+    private fun DeclarationDescriptor.escapedName() = DescriptorRenderer.COMPACT.renderName(name)
 
-    public fun collectMethodsToGenerate(classOrObject: KtClassOrObject): Set<CallableMemberDescriptor> {
+    private fun collectMethodsToGenerate(classOrObject: KtClassOrObject): Set<CallableMemberDescriptor> {
         val descriptor = classOrObject.resolveToDescriptor()
         if (descriptor is ClassDescriptor) {
             return OverrideResolver.getMissingImplementations(descriptor)
@@ -131,36 +127,14 @@ class ImplementMembersFix(kotlinError: KotlinError,
         return emptySet()
     }
 
-    fun KtElement.resolveToDescriptor(): DeclarationDescriptor {
-        val ktFile = getContainingKtFile()
+    private fun KtElement.resolveToDescriptor(): DeclarationDescriptor {
+        val ktFile = containingKtFile
         val analysisResult = KotlinAnalyzer.analyzeFile(parserResult.project, ktFile).analysisResult
         return BindingContextUtils.getNotNull<PsiElement, DeclarationDescriptor>(
                 analysisResult.bindingContext,
                 BindingContext.DECLARATION_TO_DESCRIPTOR,
                 this,
                 "Descriptor wasn't found for declaration ${toString()}\n${getElementTextWithContext()}")
-    }
-
-    private fun removeAfterOffset(offset: Int, whiteSpace: PsiWhiteSpace): PsiElement {
-        val spaceNode = whiteSpace.node
-        if (spaceNode.getTextRange().contains(offset)) {
-            var beforeWhiteSpaceText = spaceNode.text.substring(0, offset - spaceNode.startOffset)
-            if (!StringUtil.containsLineBreak(beforeWhiteSpaceText)) {
-                beforeWhiteSpaceText += "\n"
-            }
-
-            val factory = KtPsiFactory(whiteSpace.project)
-
-            val insertAfter = whiteSpace.prevSibling
-            whiteSpace.delete()
-
-            val beforeSpace = factory.createWhiteSpace(beforeWhiteSpaceText)
-            insertAfter.parent.addAfter(beforeSpace, insertAfter)
-
-            return insertAfter.nextSibling
-        }
-
-        return whiteSpace
     }
 
     private fun generateUnsupportedOrSuperCall(descriptor: CallableMemberDescriptor): String {
@@ -188,13 +162,13 @@ class ImplementMembersFix(kotlinError: KotlinError,
                                  lineDelimiter: String): KtElement {
         val newDescriptor = descriptor.copy(descriptor.containingDeclaration, Modality.OPEN, descriptor.visibility,
                 descriptor.kind, /* copyOverrides = */ true) as PropertyDescriptor
-        newDescriptor.setOverriddenDescriptors(listOf(descriptor))
+        newDescriptor.overriddenDescriptors = listOf(descriptor)
 
         val body = StringBuilder()
         body.append("${lineDelimiter}get()")
         body.append(" = ")
         body.append(generateUnsupportedOrSuperCall(descriptor))
-        if (descriptor.isVar()) {
+        if (descriptor.isVar) {
             body.append("${lineDelimiter}set(value) {\n}")
         }
         return KtPsiFactory(classOrObject.project).createProperty("${OVERRIDE_RENDERER.render(newDescriptor)}$body")
@@ -205,7 +179,7 @@ class ImplementMembersFix(kotlinError: KotlinError,
                                  lineDelimiter: String): KtNamedFunction {
         val newDescriptor: FunctionDescriptor = descriptor.copy(descriptor.containingDeclaration, Modality.OPEN, descriptor.visibility,
                 descriptor.kind, /* copyOverrides = */ true)
-        newDescriptor.setOverriddenDescriptors(listOf(descriptor))
+        newDescriptor.overriddenDescriptors = listOf(descriptor)
 
         val returnType = descriptor.returnType
         val returnsNotUnit = returnType != null && !KotlinBuiltIns.isUnit(returnType)

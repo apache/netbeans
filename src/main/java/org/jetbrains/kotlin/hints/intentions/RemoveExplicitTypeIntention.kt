@@ -62,10 +62,8 @@ class RemoveExplicitTypeIntention(doc: Document,
 
 }
 
-fun getAnchor(element: KtCallableDeclaration): PsiElement? {
-    return when (element) {
-        is KtProperty, is KtParameter -> element.nameIdentifier
-        is KtNamedFunction -> element.valueParameterList
-        else -> null
-    }
+fun getAnchor(element: KtCallableDeclaration): PsiElement? = when (element) {
+    is KtProperty, is KtParameter -> element.nameIdentifier
+    is KtNamedFunction -> element.valueParameterList
+    else -> null
 }

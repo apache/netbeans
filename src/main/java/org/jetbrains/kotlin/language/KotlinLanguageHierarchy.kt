@@ -38,7 +38,7 @@ class KotlinLanguageHierarchy : LanguageHierarchy<KotlinTokenId>() {
                 KotlinTokenId(TokenType.KDOC_LINK.name,TokenType.KDOC_LINK.name,9)
         )
         
-        fun getToken(id: Int) = tokens.filter { it.ordinal() == id }.first()
+        fun getToken(id: Int) = tokens.first { it.ordinal() == id }
     }
     
     override fun createTokenIds() = tokens

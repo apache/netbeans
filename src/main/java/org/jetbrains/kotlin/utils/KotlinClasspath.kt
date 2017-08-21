@@ -21,7 +21,5 @@ object KotlinClasspath {
     private val LIB_RUNTIME_NAME = "kotlin-runtime.jar"
     
     val kotlinBootClasspath = "${ProjectUtils.KT_HOME}lib\\$LIB_RUNTIME_NAME"
-    
-    val kotlinClasspath = listOf(kotlinBootClasspath)
 
 }

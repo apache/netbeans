@@ -23,17 +23,17 @@ import org.jetbrains.kotlin.highlighter.netbeans.KotlinTokenId
 import org.jetbrains.kotlin.psi.KtFile
 import org.netbeans.spi.lexer.LexerInput
 
-class KotlinTokenScanner(val input: LexerInput?, text: String? = null) {
+class KotlinTokenScanner(private val input: LexerInput?, text: String? = null) {
 
     private val kotlinTokensFactory = KotlinTokensFactory()
     private val ktFile: KtFile?
     val tokens = arrayListOf<KotlinToken<KotlinTokenId>>()
     
     init {
-        if (text == null) {
-            ktFile = KotlinPsiManager.getParsedKtFileForSyntaxHighlighting(getTextToParse())
+        ktFile = if (text == null) {
+            KotlinPsiManager.getParsedKtFileForSyntaxHighlighting(getTextToParse())
         } else {
-            ktFile = KotlinPsiManager.getParsedKtFileForSyntaxHighlighting(text)
+            KotlinPsiManager.getParsedKtFileForSyntaxHighlighting(text)
         }
         createListOfKotlinTokens()
     }
@@ -80,18 +80,18 @@ class KotlinTokenScanner(val input: LexerInput?, text: String? = null) {
     
     fun getNextToken(): KotlinToken<KotlinTokenId>? {
         if (input == null) return null
-        if (tokens.isNotEmpty()) {
-            var ktToken = tokens.first()
+        return if (tokens.isNotEmpty()) {
+            val ktToken = tokens.first()
             tokens.removeAt(0)
             var tokenLength = ktToken.length()
             while (tokenLength > 0) {
                 input.read()
                 tokenLength--
             }
-            return ktToken
+            ktToken
         } else {
             input.read()
-            return KotlinToken(KotlinTokenId(TokenType.EOF.name, TokenType.EOF.name, TokenType.EOF.getId()),
+            KotlinToken(KotlinTokenId(TokenType.EOF.name, TokenType.EOF.name, TokenType.EOF.getId()),
                     "", TokenType.EOF)
         }
     }

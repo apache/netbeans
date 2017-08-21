@@ -37,13 +37,9 @@ import org.jetbrains.kotlin.load.java.sam.SamConversionResolverImpl
 import org.jetbrains.kotlin.load.kotlin.DeserializationComponentsForJava
 import org.jetbrains.kotlin.load.kotlin.JvmVirtualFileFinderFactory
 import org.jetbrains.kotlin.platform.JvmBuiltIns
-import org.jetbrains.kotlin.resolve.BindingTrace
-import org.jetbrains.kotlin.resolve.CompilerEnvironment
-import org.jetbrains.kotlin.resolve.LazyTopDownAnalyzer
 import org.jetbrains.kotlin.resolve.jvm.JavaDescriptorResolver
 import org.jetbrains.kotlin.resolve.jvm.platform.JvmPlatform
 import org.jetbrains.kotlin.resolve.lazy.FileScopeProviderImpl
-import org.jetbrains.kotlin.resolve.lazy.KotlinCodeAnalyzer
 import org.jetbrains.kotlin.resolve.lazy.ResolveSession
 import org.jetbrains.kotlin.resolve.lazy.declarations.DeclarationProviderFactory
 import org.jetbrains.kotlin.resolve.lang.java.NetBeansJavaClassFinder
@@ -118,10 +114,10 @@ private fun createContainerForLazyResolveWithJava(
         useImpl<LazyResolveToken>()
     }
 }.apply { 
-    get<NetBeansJavaClassFinder>().initialize(bindingTrace, get<KotlinCodeAnalyzer>())
+    get<NetBeansJavaClassFinder>().initialize(bindingTrace, get())
 }
 
-public fun createContainerForTopDownAnalyzerForJvm(
+fun createContainerForTopDownAnalyzerForJvm(
         moduleContext: ModuleContext, 
         bindingTrace: BindingTrace,
         declarationProviderFactory: DeclarationProviderFactory,
@@ -141,6 +137,4 @@ inline fun <reified T : Any> StorageComponentContainer.useImpl() {
     registerSingleton(T::class.java)
 }
 
-inline fun <reified T : Any> ComponentProvider.get(): T {
-    return getService(T::class.java)
-}
+inline fun <reified T : Any> ComponentProvider.get(): T = getService(T::class.java)

@@ -27,7 +27,6 @@ import org.jetbrains.kotlin.resolve.KotlinAnalyzer
 import org.jetbrains.kotlin.resolve.KotlinResolutionFacade
 import org.jetbrains.kotlin.utils.LineEndUtil
 import org.jetbrains.kotlin.utils.ProjectUtils
-import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.ClassDescriptorWithResolutionScopes
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
@@ -38,8 +37,6 @@ import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParser
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.psi.KtClassBody
 import org.jetbrains.kotlin.psi.KtElement
-import org.jetbrains.kotlin.psi.KtExpression
-import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtSimpleNameExpression
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.resolve.scopes.LexicalScope
@@ -54,7 +51,7 @@ import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter
 import org.netbeans.modules.csl.api.CompletionProposal
 
 fun applicableNameFor(prefix: String, name: Name): Boolean {
-    if (!name.isSpecial()) {
+    if (!name.isSpecial) {
         val identifier = name.identifier
         
         return identifier.toLowerCase().startsWith(prefix.toLowerCase())
@@ -63,9 +60,6 @@ fun applicableNameFor(prefix: String, name: Name): Boolean {
 }
 
 fun applicableNameFor(prefix: String, completion: String) = completion.startsWith(prefix) || completion.toLowerCase().startsWith(prefix)
-
-fun filterCompletionProposals(descriptors: Collection<DeclarationDescriptor>, prefix: String) = descriptors
-        .filter { applicableNameFor(prefix, it.name) }
 
 fun getResolutionScope(psiElement: PsiElement, bindingContext: BindingContext): LexicalScope? {
     psiElement.parentsWithSelf.forEach {
@@ -123,7 +117,7 @@ fun getReferenceVariants(simpleNameExpression: KtSimpleNameExpression,
                          file: FileObject,
                          result: AnalysisResultWithProvider? = null): Collection<DeclarationDescriptor> {
     val project = ProjectUtils.getKotlinProjectForFileObject(file) ?: return emptyList()
-    val resultWithProvider = if (result == null) KotlinAnalyzer.analyzeFile(project, simpleNameExpression.getContainingKtFile()) else result
+    val resultWithProvider = result ?: KotlinAnalyzer.analyzeFile(project, simpleNameExpression.containingKtFile)
     val analysisResult = resultWithProvider.analysisResult
     val container = resultWithProvider.componentProvider
     
@@ -162,7 +156,7 @@ fun getSimpleNameExpression(file: FileObject, identOffset: Int, editorText: Stri
 fun getIdentifierStartOffset(text: String, offset: Int): Int {
     var identStartOffset = offset
     while ((identStartOffset != 0) && Character.isUnicodeIdentifierPart(text[identStartOffset - 1])){
-        identStartOffset--;
+        identStartOffset--
     }
         
     return identStartOffset

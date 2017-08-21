@@ -16,7 +16,6 @@
  *******************************************************************************/
 package org.jetbrains.kotlin.hints.fixes
 
-import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinParserResult
 import org.jetbrains.kotlin.diagnostics.netbeans.parser.KotlinError
 import org.jetbrains.kotlin.diagnostics.Errors

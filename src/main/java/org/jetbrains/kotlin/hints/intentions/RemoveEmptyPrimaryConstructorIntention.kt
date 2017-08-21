@@ -66,6 +66,6 @@ private fun KtPrimaryConstructor.isApplicable() = when {
     valueParameters.isNotEmpty() -> false
     annotations.isNotEmpty() -> false
     modifierList?.text?.isBlank() == false -> false
-    containingClass()?.getSecondaryConstructors()?.isNotEmpty() == true -> false
+    containingClass()?.secondaryConstructors?.isNotEmpty() == true -> false
     else -> true
 }

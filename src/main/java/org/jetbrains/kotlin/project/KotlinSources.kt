@@ -20,9 +20,7 @@ package org.jetbrains.kotlin.project
 
 import java.beans.PropertyChangeListener
 import javax.swing.ImageIcon
-import javax.swing.event.ChangeListener
 import org.jetbrains.kotlin.builder.isKotlinFile
-import org.jetbrains.kotlin.projectsextensions.maven.MavenHelper
 import org.netbeans.api.project.Project
 import org.netbeans.api.project.SourceGroup
 import org.openide.filesystems.FileObject
@@ -33,7 +31,7 @@ class KotlinSources(private val kotlinProject: Project) {
                         files: MutableCollection<FileObject>,
                         type: KotlinProjectConstants?,
                         test: Boolean) {
-        if (fo.isFolder()) {
+        if (fo.isFolder) {
             if (!test && fo.name == "test" && fo.parent.name == "src") return
             if (fo.name == "resources" &&
                     (fo.parent.name == "test" || fo.parent.name == "main")) return
@@ -51,17 +49,8 @@ class KotlinSources(private val kotlinProject: Project) {
         }
     }
 
-    fun isMavenModuledProject(): Boolean {
-        if (kotlinProject::class.java.name != "org.netbeans.modules.maven.NbMavenProjectImpl") return false
-
-        val originalProject = MavenHelper.getOriginalMavenProject(kotlinProject) ?: return false
-        val modules = originalProject.modules ?: return false
-
-        return modules.isNotEmpty()
-    }
-
-    fun getSrcDirectories(type: KotlinProjectConstants,
-                          test: Boolean = true): List<FileObject> {
+    private fun getSrcDirectories(type: KotlinProjectConstants,
+                                  test: Boolean = true): List<FileObject> {
         val orderedFiles = hashSetOf<FileObject>()
         val srcDir = kotlinProject.projectDirectory.getFileObject("src") ?: return emptyList()
 
@@ -79,17 +68,15 @@ class KotlinSources(private val kotlinProject: Project) {
             .map { KotlinSourceGroup(it) }
             .toTypedArray()
 
-    fun getSourceGroupForFileObject(fo: FileObject) = KotlinSourceGroup(fo)
-
 }
 
 class KotlinSourceGroup(private val root: FileObject) : SourceGroup {
 
     override fun getRootFolder() = root
 
-    override fun getName() = root.path
+    override fun getName(): String = root.path
 
-    override fun getDisplayName() = rootFolder.name
+    override fun getDisplayName(): String = rootFolder.name
 
     override fun getIcon(bool: Boolean) = ImageIcon("org/jetbrains/kotlin.png")
 

@@ -36,20 +36,12 @@ abstract class NetBeansJavaType(val handle: TypeMirrorHandle<*>,
 
     companion object {
         @JvmStatic
-        fun create(typeHandle: TypeMirrorHandle<*>, project: Project): NetBeansJavaType {
-            return when {
-                typeHandle.kind.isPrimitive ||
-                        typeHandle.getName(project).equals("void") ->
-                    NetBeansJavaPrimitiveType(typeHandle, project)
-
-                typeHandle.kind == TypeKind.ARRAY -> NetBeansJavaArrayType(typeHandle, project)
-
-                typeHandle.kind == TypeKind.DECLARED || typeHandle.kind == TypeKind.TYPEVAR -> NetBeansJavaClassifierType(typeHandle, project)
-
-                typeHandle.kind == TypeKind.WILDCARD -> NetBeansJavaWildcardType(typeHandle, project)
-
-                else -> throw UnsupportedOperationException("Unsupported NetBeans type ${typeHandle.getName(project)}")
-            }
+        fun create(typeHandle: TypeMirrorHandle<*>, project: Project): NetBeansJavaType = when {
+            typeHandle.kind.isPrimitive || typeHandle.kind == TypeKind.VOID -> NetBeansJavaPrimitiveType(typeHandle, project)
+            typeHandle.kind == TypeKind.ARRAY -> NetBeansJavaArrayType(typeHandle, project)
+            typeHandle.kind == TypeKind.DECLARED || typeHandle.kind == TypeKind.TYPEVAR -> NetBeansJavaClassifierType(typeHandle, project)
+            typeHandle.kind == TypeKind.WILDCARD -> NetBeansJavaWildcardType(typeHandle, project)
+            else -> throw UnsupportedOperationException("Unsupported NetBeans type ${typeHandle.getName(project)}")
         }
     }
 

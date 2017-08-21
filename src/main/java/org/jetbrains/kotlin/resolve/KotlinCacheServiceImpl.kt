@@ -8,7 +8,6 @@ import org.jetbrains.kotlin.idea.resolve.ResolutionFacade
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import com.intellij.openapi.project.Project
 import org.jetbrains.kotlin.resolve.lazy.BodyResolveMode
-import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.analyzer.AnalysisResult
 import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.psi.KtDeclaration
@@ -17,7 +16,7 @@ import org.jetbrains.kotlin.resolve.diagnostics.KotlinSuppressCache
 import org.jetbrains.kotlin.container.ComponentProvider
 import org.netbeans.api.project.Project as NBProject
 
-class KotlinCacheServiceImpl(val ideaProject: Project, val project: NBProject) : KotlinCacheService {
+class KotlinCacheServiceImpl(private val ideaProject: Project, val project: NBProject) : KotlinCacheService {
 
     override fun getResolutionFacadeByFile(file: PsiFile, platform: TargetPlatform): ResolutionFacade {
         throw UnsupportedOperationException()
@@ -27,9 +26,8 @@ class KotlinCacheServiceImpl(val ideaProject: Project, val project: NBProject) :
         throw UnsupportedOperationException()
     }
 
-    override fun getResolutionFacade(elements: List<KtElement>): ResolutionFacade {
-        return KotlinSimpleResolutionFacade(ideaProject, elements, project)
-    }
+    override fun getResolutionFacade(elements: List<KtElement>): ResolutionFacade =
+            KotlinSimpleResolutionFacade(ideaProject, elements, project)
 }
 
 class KotlinSimpleResolutionFacade(
@@ -41,7 +39,7 @@ class KotlinSimpleResolutionFacade(
         if (elements.isEmpty()) {
             return BindingContext.EMPTY
         }
-        val ktFile = elements.first().getContainingKtFile()
+        val ktFile = elements.first().containingKtFile
         return KotlinParser.getAnalysisResult(ktFile, nbProject)?.analysisResult?.bindingContext ?: BindingContext.EMPTY
     }
 
@@ -53,7 +51,7 @@ class KotlinSimpleResolutionFacade(
         get() = throw UnsupportedOperationException()
 
     override fun analyze(element: KtElement, bodyResolveMode: BodyResolveMode): BindingContext {
-        val ktFile = element.getContainingKtFile()
+        val ktFile = element.containingKtFile
         return KotlinParser.getAnalysisResult(ktFile, nbProject)?.analysisResult?.bindingContext ?: BindingContext.EMPTY
     }
 
@@ -66,7 +64,7 @@ class KotlinSimpleResolutionFacade(
     }
 
     override fun <T : Any> getFrontendService(serviceClass: Class<T>): T {
-        val files = elements.map { it.getContainingKtFile() }.toSet()
+        val files = elements.map { it.containingKtFile }.toSet()
         if (files.isEmpty()) throw IllegalStateException("Elements should not be empty")
 
         val componentProvider = KotlinAnalyzer.analyzeFiles(nbProject, files).componentProvider
@@ -83,6 +81,5 @@ class KotlinSimpleResolutionFacade(
     }
 }
 
-@Suppress("UNCHECKED_CAST") fun <T : Any> ComponentProvider.getService(request: Class<T>): T {
-    return resolve(request)!!.getValue() as T
-}
+@Suppress("UNCHECKED_CAST") fun <T : Any> ComponentProvider.getService(request: Class<T>): T =
+        resolve(request)!!.getValue() as T

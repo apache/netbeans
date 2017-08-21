@@ -11,7 +11,7 @@ The plugin could be installed via NetBeans Update Center.
 
 ### Manual installation
 
-1. Download the latest release: [0.2.0](https://github.com/JetBrains/kotlin-netbeans/releases/tag/v0.2.0)
+1. Download the latest release: [0.2.0.1](https://github.com/JetBrains/kotlin-netbeans/releases/tag/v0.2.0.1)
 2. Launch NetBeans IDE
 3. Choose **Tools** and then **Plugins** from the main menu
 4. Switch to **Downloaded** tab

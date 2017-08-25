@@ -630,10 +630,11 @@ public class Reformatter implements ReformatTask {
             for (Tree typeDecl : node.getTypeDecls()) {
                 if (semiRead && typeDecl.getKind() == Tree.Kind.EMPTY_STATEMENT)
                     continue;
-                if (TreeUtilities.CLASS_TREE_KINDS.contains(typeDecl.getKind()))
+                if (TreeUtilities.CLASS_TREE_KINDS.contains(typeDecl.getKind())) {
                     blankLines(cs.getBlankLinesBeforeClass());
-                else
-                    blankLines(1);
+                } else {
+                    blankLines(typeDecl.getKind() == Tree.Kind.MODULE ? 0 : 1);
+                }
                 scan(typeDecl, p);
                 int index = tokens.index();
                 int c = col;

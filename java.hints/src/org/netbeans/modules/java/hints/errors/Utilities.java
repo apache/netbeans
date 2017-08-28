@@ -168,6 +168,7 @@ import javax.lang.model.type.UnionType;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
+import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CodeStyleUtils;
 import org.netbeans.api.java.source.TreeMaker;
@@ -3003,5 +3004,16 @@ public class Utilities {
             right = negate(make, right, original);
         }
         return make.Binary(newKind, left, right);
+    }
+    
+    public static FileObject getModuleInfo(CompilationInfo info) {
+        if (info.getSourceVersion().compareTo(SourceVersion.RELEASE_9) > 0) {
+            return null;
+        }
+        return info.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE).findResource("module-info.java");
+    }
+    
+    public static boolean isModular(CompilationInfo info) {
+        return getModuleInfo(info) != null;
     }
 }

@@ -91,6 +91,16 @@ public class MemberSearchResult {
         this.conflictingPath = null;
         this.kind = conflicting.getKind();
     }
+    
+    public MemberSearchResult(ElementKind kind) {
+        this.conflicting = null;
+        this.shadowed = null;
+        this.shadowedGate = null;
+        this.gateSuper = false;
+        this.requiredModifier = null;
+        this.conflictingPath = null;
+        this.kind = kind;
+    }
 
     public MemberSearchResult(TreePathHandle conflicting, ElementKind kind) {
         this.conflicting = null;

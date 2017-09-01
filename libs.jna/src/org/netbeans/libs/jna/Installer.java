@@ -27,6 +27,6 @@ public class Installer extends ModuleInstall {
     public void validate() {
         super.validate();
         //#211655
-        System.setProperty( "jna.boot.library.name", "jnidispatch-422" ); //NOI18N
+        System.setProperty( "jna.boot.library.name", "jnidispatch-440" ); //NOI18N
     }
 }

@@ -609,7 +609,7 @@ public class CompletionUtil {
         
         AXIComponent child = null;
         for(QName qname : path) {
-            child = findChildElement(parent, qname);
+            child = findChildElement(parent, qname,context);
             parent = child;
         }
         
@@ -620,17 +620,39 @@ public class CompletionUtil {
     }
     
     private static AXIComponent findChildElement(AXIComponent parent,
-            QName qname) {
-        if(parent == null)
+            QName qname, CompletionContextImpl context) {
+        if(parent == null) {
             return null;
+        }
         for(AXIComponent element : parent.getChildElements()) {
             if(!(element instanceof Element)) {
                 continue;
             }
             Element e = (Element)element;
-            if(qname.getLocalPart().equals(e.getName()))
+            if(qname.getLocalPart().equals(e.getName())) {
                 return element;
+            }
+             if(e.isReference()){
+                Element ref=e.getReferent();
+                // check substitutions
+                AXIModel model = ref.getModel();
+                String nsUri = ref.getTargetNamespace();
+                String localName = ref.getName();
+                for (CompletionModel completionModel : context.getCompletionModels()) {
+                    SchemaModel schemaModel = completionModel.getSchemaModel();
+                    Set<GlobalElement> substitutions = FindSubstitutions.resolveSubstitutions(schemaModel, nsUri, localName);
+                    for (GlobalElement substitution : substitutions) {
+                        AXIComponent substitutionElement = getAxiComponent(model, substitution);
+                        if(substitutionElement instanceof Element){
+                            if(((Element)substitutionElement).getName().equals(qname.getLocalPart())) {
+                                return substitutionElement;
+                            }
+                        }
+                    }
+                }
+            }
         }
+        
         for (AXIComponent c : parent.getChildren()) {
             if (c instanceof SchemaReference) {
                 SchemaReference ref = (SchemaReference)c;
@@ -639,7 +661,7 @@ public class CompletionUtil {
                 try {
                     model = in.resolveReferencedModel();
                     AXIModel am = AXIModelFactory.getDefault().getModel(model);
-                    AXIComponent check = findChildElement(am.getRoot(), qname);
+                    AXIComponent check = findChildElement(am.getRoot(), qname, context);
                     if (check != null) {
                         return check;
                     }

@@ -1624,6 +1624,10 @@ public class Utilities {
         return e != null && isValidType(e.asType());
     }
     
+    public static boolean isValidValueType(TypeMirror m) {
+        return isValidType(m) && m.getKind() != TypeKind.EXECUTABLE;
+    }
+    
     public static boolean isValidType(TypeMirror m) {
         return m != null && (
                 m.getKind() != TypeKind.PACKAGE &&

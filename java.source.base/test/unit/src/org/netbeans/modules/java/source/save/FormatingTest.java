@@ -4205,8 +4205,19 @@ public class FormatingTest extends NbTestCase {
                 + "            i++;\n"
                 + "    }\n"
                 + "}\n";
+        String golden2 =
+                "package hierbas.del.litoral;\n"
+                + "public class Test{\n"
+                + "    public void test() {\n"
+                + "        int i = 5;\n"
+                + "        if (i > 0)\n"
+                + "            i++;\n"
+                + "        if (i > 0)\n"
+                + "            i++;\n"
+                + "    }\n"
+                + "}\n";
         reformat(doc, content, golden, 92, 128);
-        reformat(doc, content, golden, 92, 127);
+        reformat(doc, content, golden2, 92, 127);
 
         golden =
                 "package hierbas.del.litoral;\n"
@@ -4220,8 +4231,19 @@ public class FormatingTest extends NbTestCase {
                 + "        }\n"
                 + "    }\n"
                 + "}\n";
-        reformat(doc, content, golden, 128, 163);
-        reformat(doc, content, golden, 127, 163);
+        golden2 =
+                "package hierbas.del.litoral;\n"
+                + "public class Test{\n"
+                + "    public void test() {\n"
+                + "        int i = 5;\n"
+                + "        if (i > 0)\n"
+                + "            i++;\n"
+                + "        if (i > 0)\n"
+                + "            i++;\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden, 128, 164);
+        reformat(doc, content, golden2, 127, 163);
     }
 
     public void test177858() throws Exception {

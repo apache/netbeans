@@ -2307,9 +2307,49 @@ public class Reformatter implements ReformatTask {
             }
             return true;
         }
+        
+        /**
+         * Finds the end of the line (for brace insertion) after the statement Tree, provided
+         * the statement is followed nu whitespace only.
+         * @param statement
+         * @return 
+         */
+        private int findNewlineAfterStatement(Tree statement) {
+            int pos = (int)sp.getEndPosition(root, statement);
+            if (pos < 0) {
+                return pos;
+            }
+            int index = tokens.index();
+            try {
+                tokens.move(pos);
+                while (tokens.moveNext()) {
+                    Token<JavaTokenId> tukac = tokens.token();
+                    switch (tukac.id()) {
+                        case WHITESPACE: {
+                            int nl = tukac.text().toString().indexOf('\n');
+                            if (nl != -1) {
+                                return tokens.offset() + nl + 1;
+                            }
+                            break;
+                        }
+                        case LINE_COMMENT:
+                            // up to and including EOL:
+                            return tokens.offset() + tukac.length();
+                        case BLOCK_COMMENT:
+                            break;
+                        default:
+                            return pos;
+                    }
+                }
+            } finally {
+                tokens.moveIndex(index);
+                tokens.moveNext();
+            }
+            return pos;
+        }
 
         @Override
-        public Boolean visitIf(IfTree node, Void p) {
+        public Boolean visitIf(final IfTree node, Void p) {
             accept(IF);
             boolean old = continuationIndent;
             try {
@@ -2321,9 +2361,11 @@ public class Reformatter implements ReformatTask {
             }
             StatementTree elseStat = node.getElseStatement();
             CodeStyle.BracesGenerationStyle redundantIfBraces = cs.redundantIfBraces();
+            int eoln = findNewlineAfterStatement(node);
             if ((elseStat != null && redundantIfBraces == CodeStyle.BracesGenerationStyle.ELIMINATE && danglingElseChecker.hasDanglingElse(node.getThenStatement())) ||
-                    (redundantIfBraces == CodeStyle.BracesGenerationStyle.GENERATE && (startOffset > sp.getStartPosition(root, node) || endOffset < sp.getEndPosition(root, node) || node.getCondition().getKind() == Tree.Kind.ERRONEOUS)))
+                    (redundantIfBraces == CodeStyle.BracesGenerationStyle.GENERATE && (startOffset > sp.getStartPosition(root, node) || endOffset < eoln || node.getCondition().getKind() == Tree.Kind.ERRONEOUS))) {
                 redundantIfBraces = CodeStyle.BracesGenerationStyle.LEAVE_ALONE;
+            }
             lastIndent = indent;
             boolean prevblock = wrapStatement(cs.wrapIfStatement(), redundantIfBraces, cs.spaceBeforeIfLeftBrace() ? 1 : 0, node.getThenStatement());
             if (elseStat != null) {
@@ -2352,8 +2394,9 @@ public class Reformatter implements ReformatTask {
                     lastIndent -= indentSize;
                 } else {
                     redundantIfBraces = cs.redundantIfBraces();
-                    if (redundantIfBraces == CodeStyle.BracesGenerationStyle.GENERATE && (startOffset > sp.getStartPosition(root, node) || endOffset < sp.getEndPosition(root, node)))
+                    if (redundantIfBraces == CodeStyle.BracesGenerationStyle.GENERATE && (startOffset > sp.getStartPosition(root, node) || endOffset < eoln)) {
                         redundantIfBraces = CodeStyle.BracesGenerationStyle.LEAVE_ALONE;
+                    }
                     wrapElse = cs.wrapIfStatement();
                 }
                 wrapStatement(wrapElse, redundantIfBraces, cs.spaceBeforeElseLeftBrace() ? 1 : 0, preserveNewLine, elseStat);
@@ -2367,9 +2410,11 @@ public class Reformatter implements ReformatTask {
             lastIndent = indent;
             boolean old = continuationIndent;
             try {
+                int eoln = findNewlineAfterStatement(node);
                 CodeStyle.BracesGenerationStyle redundantDoWhileBraces = cs.redundantDoWhileBraces();
-                if (redundantDoWhileBraces == CodeStyle.BracesGenerationStyle.GENERATE && (startOffset > sp.getStartPosition(root, node) || endOffset < sp.getEndPosition(root, node) || node.getCondition().getKind() == Tree.Kind.ERRONEOUS))
+                if (redundantDoWhileBraces == CodeStyle.BracesGenerationStyle.GENERATE && (startOffset > sp.getStartPosition(root, node) || endOffset <  eoln || node.getCondition().getKind() == Tree.Kind.ERRONEOUS)) {
                     redundantDoWhileBraces = CodeStyle.BracesGenerationStyle.LEAVE_ALONE;
+                }
                 boolean isBlock = node.getStatement().getKind() == Tree.Kind.BLOCK || redundantDoWhileBraces == CodeStyle.BracesGenerationStyle.GENERATE;
                 if (isBlock && redundantDoWhileBraces == CodeStyle.BracesGenerationStyle.ELIMINATE) {
                     Iterator<? extends StatementTree> stats = ((BlockTree)node.getStatement()).getStatements().iterator();
@@ -2409,9 +2454,11 @@ public class Reformatter implements ReformatTask {
                 continuationIndent = old;
             }
             lastIndent = indent;
+            int eoln = findNewlineAfterStatement(node);
             CodeStyle.BracesGenerationStyle redundantWhileBraces = cs.redundantWhileBraces();
-            if (redundantWhileBraces == CodeStyle.BracesGenerationStyle.GENERATE && (startOffset > sp.getStartPosition(root, node) || endOffset < sp.getEndPosition(root, node) || node.getCondition().getKind() == Tree.Kind.ERRONEOUS))
+            if (redundantWhileBraces == CodeStyle.BracesGenerationStyle.GENERATE && (startOffset > sp.getStartPosition(root, node) || endOffset < eoln || node.getCondition().getKind() == Tree.Kind.ERRONEOUS)) {
                 redundantWhileBraces = CodeStyle.BracesGenerationStyle.LEAVE_ALONE;
+            }
             wrapStatement(cs.wrapWhileStatement(), redundantWhileBraces, cs.spaceBeforeWhileLeftBrace() ? 1 : 0, node.getStatement());
             return true;
         }
@@ -2472,8 +2519,10 @@ public class Reformatter implements ReformatTask {
             }
             lastIndent = indent;
             CodeStyle.BracesGenerationStyle redundantForBraces = cs.redundantForBraces();
-            if (redundantForBraces == CodeStyle.BracesGenerationStyle.GENERATE && (startOffset > sp.getStartPosition(root, node) || endOffset < sp.getEndPosition(root, node)))
+            int eoln = findNewlineAfterStatement(node);
+            if (redundantForBraces == CodeStyle.BracesGenerationStyle.GENERATE && (startOffset > sp.getStartPosition(root, node) || endOffset < eoln || node.getCondition().getKind() == Tree.Kind.ERRONEOUS)) {
                 redundantForBraces = CodeStyle.BracesGenerationStyle.LEAVE_ALONE;
+            }
             wrapStatement(cs.wrapForStatement(), redundantForBraces, cs.spaceBeforeForLeftBrace() ? 1 : 0, node.getStatement());
             return true;            
         }
@@ -2497,8 +2546,10 @@ public class Reformatter implements ReformatTask {
             }
             lastIndent = indent;
             CodeStyle.BracesGenerationStyle redundantForBraces = cs.redundantForBraces();
-            if (redundantForBraces == CodeStyle.BracesGenerationStyle.GENERATE && (startOffset > sp.getStartPosition(root, node) || endOffset < sp.getEndPosition(root, node)))
+            int eoln = findNewlineAfterStatement(node);
+            if (redundantForBraces == CodeStyle.BracesGenerationStyle.GENERATE && (startOffset > sp.getStartPosition(root, node) || endOffset < eoln)) {
                 redundantForBraces = CodeStyle.BracesGenerationStyle.LEAVE_ALONE;
+            }
             wrapStatement(cs.wrapForStatement(), redundantForBraces, cs.spaceBeforeForLeftBrace() ? 1 : 0, node.getStatement());
             return true;
         }

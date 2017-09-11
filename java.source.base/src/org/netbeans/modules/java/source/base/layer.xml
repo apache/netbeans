@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2008 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+
+    <folder name="Editors">
+        <file name="JavaBinaryIndexer.instance">
+            <attr name="instanceClass" stringvalue="org.netbeans.modules.java.source.indexing.JavaBinaryIndexer$Factory"/>
+        </file>
+        <file name="COSSynchronizingIndexer.instance">
+            <attr name="instanceClass" stringvalue="org.netbeans.modules.java.source.indexing.COSSynchronizingIndexer$Factory"/>
+        </file>
+        <folder name="text">
+            <folder name="x-java">
+                <file name="Reformatter.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.java.source.save.Reformatter$Factory"/>
+                </file>
+                <file name="Reindenter.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.java.source.save.Reindenter$Factory"/>
+                </file>
+                <file name="JavaIndexer.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.java.source.indexing.JavaCustomIndexer$Factory"/>
+                    <!--attr name="position" intvalue="1000"/-->
+                </file>
+                <file name="SourcePathCheck.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.java.source.classpath.SourcePathCheck$Factory"/>
+                </file>
+                <file name="AutoIndenter.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.typinghooks.TypedTextInterceptor$Factory"/>
+                    <attr name="instanceCreate"
+                          methodvalue="org.netbeans.modules.editor.indent.spi.support.AutomatedIndenting.createHotCharsIndenter"/>
+                    <attr name="regex1" stringvalue="\s*\{"/>
+                    <attr name="regex2" stringvalue="\s*\}"/>
+                    <attr name="regex3" stringvalue="\s*case\s"/>
+                    <attr name="regex4" stringvalue="\s*default[:\s]"/>
+                    <attr name="regex5" stringvalue="\s*else[\s\{]"/>
+                    <attr name="regex6" stringvalue="\s*\w*\s*:"/>
+                    <attr name="regex7" stringvalue="\s*\)"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+
+    <!-- Options are needed for code formatting -->
+    <folder name="OptionsExport">
+        <folder name="Formatting">
+            <file name="Java">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.java.source.resources.Bundle#Editor.Export.Formatting.Java.displayName"/>
+                <attr name="include" stringvalue="config/Editors/text/x-java/Preferences/org-netbeans-modules-editor-settings-CustomPreferences.xml"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

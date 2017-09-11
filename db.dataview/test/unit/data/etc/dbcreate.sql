@@ -1,0 +1,1 @@
+create table if not exists simpletable (tinyintc INT,smallintc INT,varcharc VARCHAR(20),intc INT,bigintc BIGINT,datec DATE,charc CHAR,datetime TIMESTAMP,floatc FLOAT,doublec DOUBLE,doubleprecisionc DOUBLE,CONSTRAINT pk_tinyintc PRIMARY KEY (tinyintc, smallintc));

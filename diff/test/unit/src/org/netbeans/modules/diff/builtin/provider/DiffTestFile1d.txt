@@ -1,0 +1,125 @@
+10c10
+<  * Code is Sun Microsystems, Inc. Portions Copyright 1997-2005 Sun
+---
+>  * Code is Sun Microsystems, Inc. Portions Copyright 1997-2000 Sun
+25a26
+> import com.sun.jdi.IncompatibleThreadStateException;
+38a40
+> import org.netbeans.api.debugger.DebuggerManager;
+65c67
+<     private static final boolean ssverbose = 
+---
+>     private static boolean ssverbose = 
+70c72,73
+<     private String position;
+---
+>     private ThreadReference tr;
+>     //private String position;
+107,111d109
+<             JPDAThread t = getDebuggerImpl ().getCurrentThread ();
+<             if (t == null || !t.isSuspended()) {
+<                 // Can not step when it's not suspended.
+<                 return ;
+<             }
+113,115d110
+<             position = t.getClassName () + '.' +
+<                        t.getMethodName () + ':' +
+<                        t.getLineNumber (null);
+164,169c159,161
+<             JPDAThreadImpl jtr = (JPDAThreadImpl) getDebuggerImpl ().
+<                 getCurrentThread ();
+<             if (jtr != null) {
+<                 ThreadReference tr = jtr.getThreadReference ();
+<                 removeStepRequests (tr);
+<             }
+---
+>             ThreadReference tr = (JPDAThreadImpl) getDebuggerImpl ().
+>                 getCurrentThread ().getThreadReference ();
+>             removeStepRequests (tr);
+184,186c176
+<         if (stepRequest != null) {
+<             stepRequest.disable ();
+<         }
+---
+>         stepRequest.disable ();
+187a178,179
+>         //String np = le.location ().declaringType ().name () + ":" + 
+>         //            le.location ().lineNumber (null);
+191,200c183,184
+<         
+<         try {
+<             if (tr.frame(0).location().method().isSynthetic()) {
+<                 //S ystem.out.println("In synthetic method -> STEP INTO again");
+<                 setStepRequest (StepRequest.STEP_INTO);
+<                 return true;
+<             }
+<         } catch (Exception e) {e.printStackTrace();}
+<         
+<         boolean stop = getCompoundSmartSteppingListener ().stopHere 
+---
+>         boolean stop = //(!np.equals (position)) &&    ? position is never set ?
+>                        getCompoundSmartSteppingListener ().stopHere 
+203,213d186
+<             String stopPosition = t.getClassName () + '.' +
+<                                   t.getMethodName () + ':' +
+<                                   t.getLineNumber (null);
+<             if (position.equals(stopPosition)) {
+<                 // We are where we started!
+<                 stop = false;
+<                 setStepRequest (StepRequest.STEP_INTO);
+<                 return true;
+<             }
+<         }
+<         if (stop) {
+220c193,197
+<                 setStepRequest (StepRequest.STEP_OUT);
+---
+>                 //TODO following line of code is wrong !
+>                 // step out implementation calls getDebuggerImpl ().resume ();
+>                 // such code should not be called from operator!
+>                 //getStepActionProvider().doAction(ActionsManager.ACTION_STEP_OUT);
+>                 setStepRequest ();
+260,278c237,259
+<     private void setStepRequest (int step) {
+<         ThreadReference tr = ((JPDAThreadImpl) getDebuggerImpl ().
+<             getCurrentThread ()).getThreadReference ();
+<         removeStepRequests (tr);
+<         stepRequest = getDebuggerImpl ().getVirtualMachine ().
+<         eventRequestManager ().createStepRequest (
+<             tr,
+<             StepRequest.STEP_LINE,
+<             step
+<         );
+<         getDebuggerImpl ().getOperator ().register (stepRequest, this);
+<         stepRequest.setSuspendPolicy (getDebuggerImpl ().getSuspend ());
+<         
+<         if (ssverbose)
+<             System.out.println("SS:    set patterns:");
+<         addPatternsToRequest (
+<             getSmartSteppingFilterImpl ().getExclusionPatterns ()
+<         );
+<         stepRequest.enable ();
+---
+>     private void setStepRequest () {
+>         JPDAThreadImpl jt = (JPDAThreadImpl) getDebuggerImpl ().
+>             getCurrentThread ();
+>         synchronized (jt) {
+>             if (!jt.isSuspended()) {}  // TODO Handle the condition or what?
+>             ThreadReference tr = jt.getThreadReference ();
+>             removeStepRequests (tr);
+>             stepRequest = getDebuggerImpl ().getVirtualMachine ().
+>             eventRequestManager ().createStepRequest (
+>                 tr,
+>                 StepRequest.STEP_LINE,
+>                 StepRequest.STEP_INTO
+>             );
+>             getDebuggerImpl ().getOperator ().register (stepRequest, this);
+>             stepRequest.setSuspendPolicy (getDebuggerImpl ().getSuspend ());
+> 
+>             if (ssverbose)
+>                 System.out.println("SS:    set patterns:");
+>             addPatternsToRequest (
+>                 getSmartSteppingFilterImpl ().getExclusionPatterns ()
+>             );
+>             stepRequest.enable ();
+>         }

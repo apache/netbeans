@@ -1,0 +1,5 @@
+Column customer_id in table customer
+Column csummary_id in view csummary
+Table customer
+View csummary
+Schema customers

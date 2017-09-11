@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<project name="test runner" default="test" basedir=".">
+    <target name="init">
+        <property name="extra.test.libs.dir" location="../../../extralibs"/>
+        <property name="test.dist.dir" location="../../.."/>
+        <property name="test.timeout" value="600000"/>
+        <pathconvert property="nbjunit.workdir">
+            <path location="${basedir}"/>
+            <mapper>
+                <chainedmapper>
+                    <flattenmapper/>
+                    <globmapper from="*" to="../../work/*"/>
+                </chainedmapper>
+            </mapper>
+        </pathconvert>
+        <property name="test.results.dir" location="../../results"/>
+        <property name="test.classes.dir" location="../../classes"/>
+        <property name="java.home.parent" location="${java.home}/.."/>
+        <loadproperties srcFile="test.properties"/>
+        <propertyset id="test.properties">
+            <propertyref prefix="test-sys-prop."/>
+            <mapper type="glob" from="test-sys-prop.*" to="*"/>
+        </propertyset>
+        <delete dir="${test.classes.dir}"/>
+        <mkdir dir="${test.results.dir}"/>
+        <unjar src="tests.jar" dest="${test.classes.dir}"/>
+        <available file="data.zip" type="file" property="exists.test.data"/>
+        <available file="${netbeans.dest.dir}/moduleCluster.properties" type="file" property="exists.platform.properties"/>
+        <path id="test.cp">
+            <pathelement location="${test.classes.dir}"/>
+            <path path="${extra.test.libs}"/>
+            <path path="${test.run.cp}"/>
+        </path>
+        <taskdef name="validatepath" classpath="../../../tasks.jar" classname="org.netbeans.nbbuild.testdist.ValidatePath"/>
+        <condition property="testng.found" value ="true">
+            <available classname="org.testng.annotations.Test" classpath="${extra.test.libs}"/>
+        </condition>
+        <validatepath pathref="test.cp" failedproperty="wrong.classpath"/>
+        <pathconvert property="retouche.javac.api">
+            <fileset dir="${netbeans.dest.dir}">
+                <include name="java/modules/ext/*javac*api*.jar"/>
+            </fileset>
+        </pathconvert>
+        <pathconvert property="retouche.javac.impl">
+            <fileset dir="${netbeans.dest.dir}">
+                <include name="java/modules/ext/*javac*impl*.jar"/>
+            </fileset>
+            <fileset dir="${nbjdk.home}/../Classes" erroronmissingdir="false">
+                <include name="*.jar"/>
+            </fileset>
+        </pathconvert>
+        <!-- When requires.nb.javac property is true, prepend javac-api on bootclasspath to allow override the default annotation
+             processing API located in rt.jar. On Mac, prepend also javac-impl, so that tests are built against correct version of javac. -->
+        <condition property="bootclasspath.prepend" value="${retouche.javac.api}:${retouche.javac.impl}">
+            <and>
+                <os family="mac"/>
+                <istrue value="${requires.nb.javac}"/>
+            </and>
+        </condition>
+        <condition property="bootclasspath.prepend" value="${retouche.javac.api}">
+            <istrue value="${requires.nb.javac}"/>
+        </condition>
+        <condition property="test.bootclasspath.prepend.args" value="-Xbootclasspath/p:&quot;${bootclasspath.prepend}&quot;">
+            <isset property="bootclasspath.prepend"/>
+        </condition>
+        <property name="test.bootclasspath.prepend.args" value=""/>
+    </target>
+
+    <target name="init-data" if="exists.test.data">
+        <property name="test.data.folder" location="../../data"/>
+        <unzip src="data.zip" dest="${test.data.folder}"/>
+    </target>
+
+    <target name="init-junit" depends="init" unless="${testng.found}">
+        <macrodef name="test">
+            <sequential>
+                <junit
+                    showoutput="true" fork="true" failureproperty="tests.failed"
+                    errorproperty="tests.failed" filtertrace="${test.filter.trace}"
+                    tempdir="${test.results.dir}" timeout="${test.timeout}" jvm="${custom.jvm.executable}"
+                >
+                    <batchtest todir="${test.results.dir}">
+                        <fileset dir="${test.classes.dir}" includes="${test.includes}" excludes="${test.excludes}"/>
+                    </batchtest>
+                    <classpath refid="test.cp"/>
+                    <syspropertyset refid="test.properties"/>
+                    <sysproperty key="nbjunit.workdir" path="${nbjunit.workdir}"/>
+                    <sysproperty key="nbjunit.hard.timeout" value="${test.timeout}"/>
+                    <jvmarg line="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.run.args.full}"/>
+                    <formatter type="brief" usefile="false"/>
+                    <formatter type="xml"/>
+                </junit>
+            </sequential>
+        </macrodef>
+    </target>
+
+    <target name="init-testng" depends="init" if="${testng.found}">
+        <macrodef name="test">
+            <sequential>
+                <mkdir dir="${test.results.dir}/testng"/>
+                <taskdef name="testng" classname="org.testng.TestNGAntTask" classpath="${extra.test.libs}"/>
+                <testng  mode="mixed"
+                         failureProperty="tests.failed"
+                         outputdir="${test.results.dir}/testng"
+                         workingDir="${test.results.dir}"
+                >
+                    <classfileset dir="${test.classes.dir}" includes="${test.includes}" excludes="${test.excludes}"/>
+                    <propertyset refid="test.properties"/>
+                    <classpath refid="test.cp"/>
+                    <jvmarg line="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.run.args}"/>
+                    <sysproperty key="nbjunit.workdir" path="${nbjunit.workdir}"/>
+                    <sysproperty key="nbjunit.hard.timeout" value="${test.timeout}"/>
+                </testng>
+                <copy todir="${test.results.dir}">
+                    <fileset dir="${test.results.dir}/testng/junitreports"/>
+                </copy>
+            </sequential>
+        </macrodef>
+    </target>
+
+    <target name="test" depends="init,init-data,run-test" if="tests.failed">
+        <mkdir dir="${test.results.dir}/failed-test-var"/>
+    </target>
+
+    <target name="run-test" depends="init,init-platform-properties,init-data,init-junit,init-testng,do-test,fail-test" description="Run tests">
+
+    </target>
+    <target name="do-test" unless="wrong.classpath">
+        <macrodef name="metaproperty">
+            <attribute name="name"/>
+            <attribute name="value"/>
+            <sequential>
+                <property name="@{name}" value="${@{value}}"/>
+            </sequential>
+        </macrodef>
+        <property name="test.config" value="default"/>
+        <condition property="test.run.args" value="-ea -Xmx480m -Xss2m -Dnetbeans.keyring.no.master=true">
+            <!-- JDK8 dropped support for PermSize (and JDK9 does not start with it being specified). Don't specify such option when running on JDK8 and newer. -->
+            <available classname="java.lang.FunctionalInterface"/>
+        </condition>
+        <property name="test.run.args" value="-ea -XX:PermSize=32m -XX:MaxPermSize=200m -Xmx480m -Xss2m -Dnetbeans.keyring.no.master=true"/>
+        <property name="custom.jvm.args" value=""/>
+        <property name="custom.jvm.executable" value="java"/>
+        <property name="test.run.args.full" value="${test.run.args} ${custom.jvm.args}"/>
+        <property name="test.config.default.includes" value="**/*Test.class"/>
+        <property name="test.config.${test.config}.includes" value="NOTHING"/>
+        <metaproperty name="test.includes" value="test.config.${test.config}.includes"/>
+        <property name="test.config.${test.config}.excludes" value=""/>
+        <metaproperty name="test.excludes" value="test.config.${test.config}.excludes"/>
+        <test/>
+    </target>
+
+    <target name="fail-test" unless="test.disable.fails">
+        <fail if="tests.failed">Some tests failed;Look at results:
+            ${test.results.dir} .
+        </fail>
+    </target>
+
+    <target name="init-platform-properties" depends="init" if="exists.platform.properties">
+        <property file="${netbeans.dest.dir}/moduleCluster.properties"/>
+    </target>
+</project>

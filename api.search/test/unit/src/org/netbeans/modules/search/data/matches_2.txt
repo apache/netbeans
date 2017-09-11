@@ -1,0 +1,7 @@
+first
+_padding_NETBeans_padding_
+a
+b
+c
+d
+_text_at_the_end_of_file_NetBEANS

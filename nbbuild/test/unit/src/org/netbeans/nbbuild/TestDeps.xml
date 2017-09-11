@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<project name="Test Test Dependecies" basedir="." default="all" >
+    <taskdef name="parseprojectxml" classname="org.netbeans.nbbuild.ParseProjectXml" classpath="${nbantext.jar}"/>
+
+    <property name="netbeans.dest.dir" location="${netbeans.dest.dir.work}"/>
+    <loadproperties srcfile="${netbeans.dest.dir}/moduleCluster.properties">
+        <filterchain>
+            <replaceregex pattern="platform\d+" replace="platform"/> <!-- avoid needing to change this all the time -->
+        </filterchain>
+    </loadproperties>
+    <property name="nb.cluster.platform.dir" value="platform"/> <!-- avoid needing to change this all the time -->
+    <property file="${nb_all}/nbbuild/cluster.properties"/>
+    <property file="${nb_all}/nbbuild/build.properties"/>
+    <property name="xtest.home" value="any"/>
+    <property name="xtest.testtype" value="testtype"/>
+
+    <target name="test-deps" >
+        <parseprojectxml projectfile="${project.file}" project="${nb_all}/java.project.ui/">
+            <testtype name="unit" folder="unit.dist.folder" compilecp="unit.compile.cp" runtimecp="unit.runtime.cp"/>
+            <testtype name="qa-functional" folder="qa.dist.folder" compilecp="qa.compile.cp" runtimecp="qa.runtime.cp"/>
+        </parseprojectxml>        
+<!--            
+            unittestfolderproperty ="unit.dist.folder"
+            unittestruntimeclasspathproperty ="unit.runtime.cp"
+            unittestcompileclasspathproperty ="unit.compile.cp"
+            qafunctionaltestfolderproperty="qa.dist.folder"
+            qafunctionaltestcompileclasspathproperty="qa.compile.cp"
+            qafunctionaltestruntimeclasspathproperty="qa.runtime.cp"
+            
+            -->
+  <!-- unittests -->
+  
+        <condition property="ok-unit-dist-folder" >
+            <contains string="${unit.dist.folder}" substring="${test.dist.dir}/unit/platform/org-openide-loaders" />
+        </condition>
+        <condition property="ok-unittestruntimeclasspath" >
+            <and>
+                <contains string="${unit.runtime.cp}" substring="${test.dist.dir}/unit/platform/org-openide-filesystems/tests.jar"/>
+                <contains string="${unit.runtime.cp}" substring="platform/core/org-openide-filesystems.jar"/>
+                <contains string="${unit.runtime.cp}" substring="platform/modules/org-openide-nodes.jar"/>
+                <contains string="${unit.runtime.cp}" substring="${test.dist.dir}/unit/platform/org-openide-nodes/tests.jar"/>
+                <contains string="${unit.runtime.cp}" substring="platform/lib/org-openide-util.jar"/>
+                <contains string="${unit.runtime.cp}" substring="platform/modules/org-netbeans-modules-queries.jar"/>
+            </and>
+        </condition> 
+        <condition property="ok-unittestcompileclasspath" >
+            <and>
+                <contains string="${unit.compile.cp}" substring="platform/modules/org-openide-nodes.jar"/>
+                <contains string="${unit.runtime.cp}" substring="${test.dist.dir}/unit/platform/org-openide-nodes/tests.jar"/>
+            </and>    
+        </condition>     
+   
+        <echo message="unittestfolder  : ${unit.dist.folder}" />
+        <echo message="unittestruntimeclasspath : ${unit.runtime.cp}" />
+        <echo message="unit.compile.cp           : ${unit.compile.cp}" />
+        <fail message="${unit.dist.folder}" unless="ok-unit-dist-folder" />
+        <fail message="{ok-unittestcompileclasspath}" unless="ok-unittestcompileclasspath"/> 
+        <fail message="{ok-unittestruntimeclasspath}" unless="ok-unittestruntimeclasspath"/> 
+        
+   <!-- qa-functional tests -->
+        <condition property="ok-qa-dist-folder" >
+            <contains string="${qa.dist.folder}" substring="${test.dist.dir}/qa-functional/platform/org-openide-loaders" />
+        </condition>
+        <condition property="ok-qa-testruntimeclasspath" >
+                <contains string="${qa.runtime.cp}" substring="platform/modules/org-openide-loaders.jar"/>
+        </condition> 
+        <condition property="ok-qa-testcompileclasspath" >
+                <contains string="${qa.compile.cp}" substring="platform/modules/org-openide-loaders.jar"/>
+        </condition>     
+   
+        <echo message="qa test folder  : ${qa.dist.folder}" />
+        <echo message="qa-testruntimeclasspath : ${qa.runtime.cp}" />
+        <echo message="qa.compile.cp           : ${qa.compile.cp}" />
+        <fail message="{qa.dist.folder}" unless="ok-qa-dist-folder" />
+        <fail message="{ok-qa-testcompileclasspath}" unless="ok-qa-testcompileclasspath"/> 
+        <fail message="{ok-qa-testruntimeclasspath}" unless="ok-qa-testruntimeclasspath"/> 
+
+     
+    </target>
+ 
+     <target name="test-deps-no-test-deps" >
+        <parseprojectxml projectfile="${project.file}" project="${nb_all}/java.project.ui/">
+            <testtype name="unit" folder="unit.dist.folder" compilecp="unit.compile.cp2" runtimecp="unit.runtime.cp2"/>
+            <testtype name="qa-functional" folder="qa.dist.folder" compilecp="qa.compile.cp2" runtimecp="qa.runtime.cp2"/>
+        </parseprojectxml>        
+
+  <!-- unittests -->
+  
+        <condition property="ok-unit-dist-folder" >
+            <contains string="${unit.dist.folder}" substring="${test.dist.dir}/unit/platform/org-openide-loaders" />
+        </condition>
+
+        <echo message="unittestfolder  : ${unit.dist.folder}" />
+        <pathconvert dirsep="/" property="unit.runtime.cp3">
+            <path path="${unit.runtime.cp2}"/>
+            <map from="${netbeans.dest.dir}/" to=""/>
+        </pathconvert>
+        <echo message="unit.runtime.cp : ${unit.runtime.cp3}" />
+        <pathconvert dirsep="/" property="unit.compile.cp3">
+            <path path="${unit.compile.cp2}"/>
+            <map from="${netbeans.dest.dir}/" to=""/>
+        </pathconvert>
+        <echo message="unit.compile.cp : ${unit.compile.cp3}" />
+        <fail message="{unit.dist.folder}" unless="ok-unit-dist-folder" />
+        <fail message="Bad unit test compile cp">
+            <condition>
+                <not>
+                    <equals arg1="${unit.compile.cp3}" arg2="platform/modules/org-netbeans-libs-junit4.jar"/>
+                </not>
+            </condition>
+        </fail>
+        <fail message="Bad unit test runtime cp">
+            <condition>
+                <not>
+                    <equals arg1="${unit.runtime.cp3}" arg2="platform/modules/org-netbeans-libs-junit4.jar"/>
+                </not>
+            </condition>
+        </fail>
+        
+   <!-- qa-functional tests -->
+   
+        <fail message="qa.dist.folder=${qa.dist.folder}">
+            <condition>
+                <not>
+                    <contains string="${qa.dist.folder}" substring="${test.dist.dir}/qa-functional/platform/org-openide-loaders" />
+                </not>
+            </condition>
+        </fail>
+        <pathconvert property="qa.compile.cp3" pathsep=":">
+            <path path="${qa.compile.cp2}"/>
+            <flattenmapper/>
+        </pathconvert>
+        <fail message="Bad qa-functional test compile cp: ${qa.compile.cp2}">
+            <condition>
+                <not>
+                    <equals arg1="${qa.compile.cp3}" arg2="org-netbeans-libs-junit4.jar"/>
+                </not>
+            </condition>
+        </fail>
+        <pathconvert property="qa.runtime.cp3" pathsep=":">
+            <path path="${qa.runtime.cp2}"/>
+            <flattenmapper/>
+        </pathconvert>
+        <fail message="Bad qa-functional test runtime cp">
+            <condition>
+                <not>
+                    <equals arg1="${qa.runtime.cp3}" arg2="org-netbeans-libs-junit4.jar"/>
+                </not>
+            </condition>
+        </fail>
+  </target>
+
+     <target name="test-deps-missing-module-entry-test-deps" >
+        <parseprojectxml projectfile="${project.file}" project="${nb_all}/java.project.ui/">
+            <testtype name="unit" folder="unit.dist.folder" compilecp="unit.compile.cp2" runtimecp="unit.runtime.cp2"/>
+            <testtype name="qa-functional" folder="qa.dist.folder" compilecp="qa.compile.cp2" runtimecp="qa.runtime.cp2"/>
+        </parseprojectxml>        
+
+  <!-- unittests -->
+  
+        <condition property="ok-unit-dist-folder" >
+            <contains string="${unit.dist.folder}" substring="${test.dist.dir}/unit/platform/org-openide-loaders" />
+        </condition>
+        <condition property="ok-unittestruntimeclasspath" >
+            <and>
+                <contains string="${unit.runtime.cp2}" substring="-missing-Module-Entries-:"/>
+            </and>
+        </condition> 
+        <condition property="ok-unittestcompileclasspath" >
+            <and>
+                <contains string="${unit.compile.cp2}" substring="-missing-Module-Entries-:"/>
+            </and>    
+        </condition>     
+        
+        <echo message="unittestfolder  : ${unit.dist.folder}" />
+        <echo message="unittestruntimeclasspath : ${unit.runtime.cp2}" />
+        <echo message="unit.compile.cp           : ${unit.compile.cp2}" />
+        <fail message="{unit.dist.folder}" unless="ok-unit-dist-folder" />
+        <fail message="{ok-unittestcompileclasspath}" unless="ok-unittestcompileclasspath"/> 
+        <fail message="{ok-unittestruntimeclasspath}" unless="ok-unittestruntimeclasspath"/> 
+
+   <!-- qa-functional tests -->
+        <condition property="ok-qa-dist-folder" >
+            <contains string="${qa.dist.folder}" substring="${test.dist.dir}/qa-functional/platform/org-openide-loaders" />
+        </condition>
+
+        <condition property="ok-qatestruntimeclasspath" >
+            <and>
+                <contains string="${qa.runtime.cp2}" substring="-missing-Module-Entries-:"/>
+            </and>
+        </condition> 
+        <condition property="ok-qatestcompileclasspath" >
+            <and>
+                <contains string="${qa.compile.cp2}" substring="-missing-Module-Entries-:"/>
+            </and>    
+        </condition>     
+        
+        <echo message="qa test folder  : ${qa.dist.folder}" />
+        <echo message="qa-testruntimeclasspath : ${qa.runtime.cp2}" />
+        <echo message="qa.compile.cp           : ${qa.compile.cp2}" />
+        <fail message="{qa.dist.folder}" unless="ok-qa-dist-folder" />
+        <fail message="{ok-qa-testcompileclasspath}" unless="ok-qatestcompileclasspath"/> 
+        <fail message="{ok-qa-testruntimeclasspath}" unless="ok-qatestruntimeclasspath"/> 
+  </target>
+</project>

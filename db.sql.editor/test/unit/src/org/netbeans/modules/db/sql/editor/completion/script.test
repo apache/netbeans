@@ -1,0 +1,18 @@
+insert into customer values (1);
+
+insert into customer values (2);
+
+select c|
+
+insert into customer values (3);
+
+--
+<unknown>
+  customers*
+    customer
+      customer_id
+    address
+      address_id
+    csummary[view]
+      csummary_id
+  

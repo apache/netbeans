@@ -1,0 +1,5 @@
+[auth]
+store-auth-creds = no
+
+[my_new_section]
+key = value

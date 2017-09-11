@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: relvertest/2
+OpenIDE-Module-Name: Maj. Rev. Vers. 2
+OpenIDE-Module-Specification-Version: 2.0
+OpenIDE-Module-Implementation-Version: test
+

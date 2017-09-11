@@ -1,0 +1,375 @@
+<?xml version="1.0"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.0//EN" "http://www.netbeans.org/dtds/filesystem-1_0.dtd">
+<filesystem>
+
+    <folder name="Actions">
+        <folder name="Edit">
+            <file name="org-netbeans-modules-editor-ExportHtmlAction.instance"/>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="File">
+            <file name="org-netbeans-modules-editor-ExportHtmlAction.shadow">
+                <attr name="position" intvalue="2400"/>
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-editor-ExportHtmlAction.instance"/>
+            </file>
+            </folder>
+
+        <folder name="Edit">
+            <file name="org-netbeans-modules-editor-MainMenuAction$PasteFormattedAction.instance">
+                <attr name="position" intvalue="1300"/>
+            </file>
+            
+            <file name="org-netbeans-modules-editor-MainMenuAction$SelectAllAction.instance">
+                <attr name="position" intvalue="1430"/>
+            </file>
+            
+            <file name="org-netbeans-modules-editor-MainMenuAction$SelectIdentifierAction.instance">
+                <attr name="position" intvalue="1440"/>
+            </file>
+            
+            <file name="SeparatorAfterProjectsSearch.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="3000"/>
+            </file>
+            
+            <file name="org-netbeans-modules-editor-MainMenuAction$StartMacroRecordingAction.instance">
+                <attr name="position" intvalue="3100"/>
+            </file>
+            
+            <file name="org-netbeans-modules-editor-MainMenuAction$StopMacroRecordingAction.instance">
+                <attr name="position" intvalue="3200"/>
+            </file>
+            </folder>
+                
+        <folder name="View">
+            <file name="org-netbeans-modules-editor-NbCodeFoldingAction.instance">
+                <attr name="position" intvalue="200"/>
+            </file>
+            </folder>
+        
+        <folder name="GoTo">
+            <file name="org-netbeans-modules-editor-MainMenuAction$GoToSourceAction.instance">
+                <attr name="position" intvalue="800"/>
+            </file>
+            
+            <file name="org-netbeans-modules-editor-MainMenuAction$GoToSuperAction.instance">
+                <attr name="position" intvalue="1000"/>
+            </file>
+
+            <file name="SeparatorBeforeJumpBack.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="1100"/>
+            </file>
+            
+            <file name="org-netbeans-modules-editor-impl-actions-NavigationHistoryLastEditAction$MainMenu.instance">
+                <attr name="position" intvalue="1150"/>
+            </file>
+            
+            <file name="org-netbeans-modules-editor-MainMenuAction$JumpBackAction.instance">
+                <attr name="position" intvalue="1200"/>
+            </file>
+
+            <file name="org-netbeans-modules-editor-MainMenuAction$JumpForwardAction.instance">
+                <attr name="position" intvalue="1300"/>
+            </file>
+            </folder>
+        
+        <folder name="Source">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.editor.Bundle"/>
+            <attr name="position" intvalue="500"/>
+
+            <file name="org-netbeans-modules-editor-MainMenuAction$FormatAction.instance">
+                <attr name="position" intvalue="300"/>
+            </file>
+
+            <file name="org-netbeans-modules-editor-MainMenuAction$RemoveTrailingSpacesAction.instance">
+                <attr name="position" intvalue="400"/>
+            </file>
+            
+            <file name="org-netbeans-modules-editor-MainMenuAction$ShiftLineLeftAction.instance">
+                <attr name="position" intvalue="500"/>
+            </file>
+        
+            <file name="org-netbeans-modules-editor-MainMenuAction$ShiftLineRightAction.instance">
+                <attr name="position" intvalue="600"/>
+            </file>
+
+            <file name="org-netbeans-modules-editor-impl-actions-LineActionsMainMenu$MoveUp.instance">
+                <attr name="position" intvalue="700"/>
+            </file>
+            
+            <file name="org-netbeans-modules-editor-impl-actions-LineActionsMainMenu$MoveDown.instance">
+                <attr name="position" intvalue="800"/>
+            </file>
+            
+            <file name="org-netbeans-modules-editor-impl-actions-LineActionsMainMenu$DuplicateUp.instance">
+                <attr name="position" intvalue="900"/>
+            </file>
+            
+            <file name="org-netbeans-modules-editor-impl-actions-LineActionsMainMenu$DuplicateDown.instance">
+                <attr name="position" intvalue="1000"/>
+            </file>
+        
+            <file name="org-netbeans-modules-editor-MainMenuAction$ToggleCommentAction.instance">
+                <attr name="position" intvalue="1100"/>
+            </file>
+                    
+            <!--
+            <file name="org-netbeans-modules-editor-MainMenuAction$CommentAction.instance">
+                <attr name="position" intvalue="1150"/>
+            </file>
+                    
+            <file name="org-netbeans-modules-editor-MainMenuAction$UncommentAction.instance">
+                <attr name="position" intvalue="1200"/>
+            </file>
+            -->
+            <file name="SeparatorAfterLineTools.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="2000"/>
+            </file>
+            
+            <file name="org-netbeans-modules-editor-codegen-NbGenerateCodeAction$GlobalAction.instance">
+                <attr name="position" intvalue="2200"/>
+            </file>
+
+            <file name="SeparatorBeforeWordMatchInsert.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="3000"/>
+            </file>
+
+            <file name="org-netbeans-modules-editor-MainMenuAction$WordMatchNextAction.instance">
+                <attr name="position" intvalue="3100"/>
+            </file>
+            
+            <file name="org-netbeans-modules-editor-MainMenuAction$WordMatchPrevAction.instance">
+                <attr name="position" intvalue="3200"/>
+            </file>
+                      
+        </folder>
+                
+    </folder>
+
+    <folder name="Services">
+        <folder name="IndentEngine">
+            <file name="org-netbeans-modules-editor-SimpleIndentEngine.settings" url="SimpleIndentEngine.settings">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.editor.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/editor/resources/indentEngine.gif"/>
+                <attr name="hidden" boolvalue="true"/>
+            </file>
+        </folder>
+
+    </folder>
+
+<!--
+    <folder name="Templates">
+        <folder name="Services">
+            <folder name="IndentEngine">
+                <file name="org-netbeans-modules-editor-SimpleIndentEngine.settings" url="SimpleIndentEngine.settings">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.editor.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/editor/resources/indentEngine.gif"/>
+                    <attr name="template" boolvalue="true"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+-->
+    <folder name="Editors">
+        <file name="org-netbeans-modules-editor-impl-highlighting-HLFactory.instance"/>
+        <file name="org-netbeans-lib-editor-hyperlink-HyperlinkOperation$HighlightFactoryImpl.instance"/>
+        <file name="org-netbeans-modules-editor-url-HighlightURLs$FactoryImpl.instance" />
+
+        <folder name="Popup">
+            <file name="org-openide-actions-CopyAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                <attr name="position" intvalue="3000"/>
+            </file>
+            <file name="org-openide-actions-CutAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                <attr name="position" intvalue="2000"/>
+            </file>
+            <file name="org-netbeans-modules-project-ui-SelectInProjects.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/SelectDocumentNode/org-netbeans-modules-project-ui-SelectInProjects.instance"/>
+                <attr name="position" intvalue="9000"/>
+            </file>
+            <file name="org-openide-actions-PasteAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
+                <attr name="position" intvalue="4000"/>
+            </file>
+        </folder>
+
+        <folder name="SideBar">
+            <file name="org-netbeans-editor-GlyphGutter.instance">
+                <attr name="position" intvalue="1000"/>
+            </file>
+            <file name="org-netbeans-editor-StatusBar$StatusBarFactory.instance">
+                <attr name="location" stringvalue="South"/>
+                <attr name="position" intvalue="6000"/>
+                <attr name="scrollable" boolvalue="false"/>
+            </file>
+        </folder>
+        
+        <folder name="Toolbars">
+            <folder name="Default">
+                <file name="Separator0.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="1000"/>
+                </file>
+                <file name="jump-list-last-edit">
+                    <attr name="position" intvalue="2000"/>
+                </file>
+                <file name="jump-list-prev">
+                    <attr name="position" intvalue="3000"/>
+                </file>
+                <file name="jump-list-next">
+                    <attr name="position" intvalue="4000"/>
+                </file>
+                <file name="Separator-before-find-previous.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="5000"/>
+                </file>
+                <file name="toggle-rectangular-selection">
+                    <attr name="position" intvalue="9500"/>
+                </file>
+                <file name="Separator-after-toggle-highlight-search.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="10000"/>
+                </file>
+                <file name="shift-line-left">
+                    <attr name="position" intvalue="15000"/>
+                </file>
+                <file name="shift-line-right">
+                    <attr name="position" intvalue="16000"/>
+                </file>
+                <file name="Separator-after-shift-line.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="17000"/>
+                </file>
+            </folder>
+        </folder>
+
+        <folder name="FontsColors">
+            <folder name="NetBeans">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.editor.Bundle"/>
+                <folder name="Defaults">
+                    <file name="org-netbeans-modules-editor-token-colorings.xml" url="NetBeans-fontsColorsDefaults.xml">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.editor.Bundle"/>
+                    </file>
+                    <file name="org-netbeans-modules-editor-highlight-colorings.xml" url="NetBeans-editor.xml">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.editor.Bundle"/>
+                        <attr name="nbeditor-settings-ColoringType" stringvalue="highlight"/>
+                    </file>
+                    <file name="org-netbeans-modules-editor-annotations-colorings.xml" url="NetBeans-annotations.xml">
+                        <attr name="nbeditor-settings-ColoringType" stringvalue="annotation"/>
+                    </file>
+                    <file name="org-netbeans-modules-editor-url-coloring.xml" url="urlFontsColors.xml">
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.editor.url.Bundle"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+            
+        <folder name="Keybindings">
+            <folder name="NetBeans">
+                <folder name="Defaults">
+                    <file name="org-netbeans-modules-editor-keybindings.xml" url="NetBeans-keybindings.xml"/>
+                    <file name="org-netbeans-modules-editor-keybindings-mac.xml" url="NetBeans-keybindings-mac.xml">
+                        <attr name="nbeditor-settings-targetOS" stringvalue="OS_MAC"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+
+        <folder name="Preferences">
+            <folder name="Defaults">
+                <file name="org-netbeans-modules-editor-preferences.xml" url="NetBeans-preferences.xml"/>
+                <file name="org-netbeans-modules-editor-preferences-mac.xml" url="NetBeans-preferences-mac.xml">
+                    <attr name="nbeditor-settings-targetOS" stringvalue="OS_MAC"/>
+                </file>
+            </folder>
+        </folder>
+            
+        <folder name="HyperlinkProviders">
+            <file name="org-netbeans-modules-editor-url-HyperlinkImpl.instance">
+                <attr name="position" intvalue="2100"/>
+            </file>
+        </folder>
+        
+        <folder name="AnnotationTypes">
+            <file name="org-netbeans-modules-editor-annotations-is_overridden.xml" url="override/is-overridden-annotation.xml"/>
+            <file name="org-netbeans-modules-editor-annotations-has_implementations.xml" url="override/has-implementations-annotation.xml"/>
+            <file name="org-netbeans-modules-editor-annotations-overrides.xml" url="override/overrides-annotation.xml"/>
+            <file name="org-netbeans-modules-editor-annotations-implements.xml" url="override/implements-annotation.xml"/>
+            <file name="implements-has-implementations-combined.xml" url="override/implements-has-implementations-combined.xml" />
+            <file name="implements-is-overridden-combined.xml" url="override/implements-is-overridden-combined.xml" />
+            <file name="override-is-overridden-combined.xml" url="override/override-is-overridden-combined.xml" />
+        </folder>
+    </folder>
+
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="NetBeans">
+                <file name="DTD_annotation_type_1_0" url="nbres:/org/netbeans/modules/editor/resources/AnnotationTypes/annotation-type-1_0.dtd"/>
+                <file name="DTD_annotation_type_1_1" url="nbres:/org/netbeans/modules/editor/resources/AnnotationTypes/annotation-type-1_1.dtd"/>
+            </folder>    
+        </folder>
+        <folder name="lookups">
+            <folder name="NetBeans">
+               <file name="DTD_annotation_type_1_0.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.editor.options.AnnotationTypeProcessor"/>
+               </file>
+               <file name="DTD_annotation_type_1_1.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.editor.options.AnnotationTypeProcessor"/>
+               </file>
+            </folder>    
+        </folder>
+    </folder>
+    
+    <folder name="WarmUp">
+      <file name="org-netbeans-modules-editor-EditorWarmUpTask.instance"/>
+    </folder>
+</filesystem>

@@ -1,0 +1,577 @@
+/*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ *
+ * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ * Other names may be trademarks of their respective owners.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common
+ * Development and Distribution License("CDDL") (collectively, the
+ * "License"). You may not use this file except in compliance with the
+ * License. You can obtain a copy of the License at
+ * http://www.netbeans.org/cddl-gplv2.html
+ * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ * specific language governing permissions and limitations under the
+ * License.  When distributing the software, include this License Header
+ * Notice in each file and include the License file at
+ * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the GPL Version 2 section of the License file that
+ * accompanied this code. If applicable, add the following below the
+ * License Header, with the fields enclosed by brackets [] replaced by
+ * your own identifying information:
+ * "Portions Copyrighted [year] [name of copyright owner]"
+ *
+ * Contributor(s):
+ *
+ * The Original Software is NetBeans. The Initial Developer of the Original
+ * Software is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun
+ * Microsystems, Inc. All Rights Reserved.
+ *
+ * If you wish your version of this file to be governed by only the CDDL
+ * or only the GPL Version 2, indicate your decision by adding
+ * "[Contributor] elects to include this software in this distribution
+ * under the [CDDL or GPL Version 2] license." If you do not indicate a
+ * single choice of license, a recipient has the option to distribute
+ * your version of this file under either the CDDL, the GPL Version 2 or
+ * to extend the choice of license to its licensees as provided above.
+ * However, if you add GPL Version 2 code and therefore, elected the GPL
+ * Version 2 license, then the option applies only if the new code is
+ * made subject to such option by the copyright holder.
+ */
+
+package org.netbeans.modules.tasklist.ui;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import javax.swing.JToolBar;
+import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
+import org.netbeans.modules.tasklist.filter.FilterRepository;
+import org.netbeans.modules.tasklist.impl.ScannerList;
+import org.netbeans.modules.tasklist.impl.ScanningScopeList;
+import org.netbeans.modules.tasklist.impl.TaskList;
+import org.netbeans.modules.tasklist.impl.TaskManagerImpl;
+import org.netbeans.spi.tasklist.Task;
+import org.netbeans.spi.tasklist.TaskScanningScope;
+import org.openide.util.Cancellable;
+import org.openide.util.HelpCtx;
+import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
+
+/**
+ * Top component which displays something.
+ */
+final class TaskListTopComponent extends TopComponent {
+    
+    private static TaskListTopComponent instance;
+    /** path to the icon used by the component and its open action */
+    static final String ICON_PATH = "org/netbeans/modules/tasklist/ui/resources/taskList.png"; //NOI18N
+    
+    private static final String PREFERRED_ID = "TaskListTopComponent"; //NOI18N
+    
+    private TaskManagerImpl taskManager;
+    private PropertyChangeListener scopeListListener;
+    private PropertyChangeListener scannerListListener;
+    private TaskListModel model;
+    private FilterRepository filters;
+    private TaskListTable table;
+    private PropertyChangeListener changeListener;
+    private TaskList.Listener tasksListener;
+
+    private static final boolean isMacLaf = "Aqua".equals(UIManager.getLookAndFeel().getID());
+    private static final Color macBackground = UIManager.getColor("NbExplorerView.background");
+    
+    private TaskListTopComponent() {
+        taskManager = TaskManagerImpl.getInstance();
+        
+        initComponents();
+//        statusBarPanel.setMinimumSize(new JLabel("dummy").getPreferredSize());
+        setName(NbBundle.getMessage(TaskListTopComponent.class, "CTL_TaskListTopComponent")); //NOI18N
+        setToolTipText(NbBundle.getMessage(TaskListTopComponent.class, "HINT_TaskListTopComponent")); //NOI18N
+        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
+        
+        tableScroll.addMouseListener( new MouseAdapter() {
+            @Override
+            public void mousePressed( MouseEvent e ) {
+                maybePopup( e );
+            }
+            
+            @Override
+            public void mouseReleased( MouseEvent e ) {
+                maybePopup( e );
+            }
+        });
+        if( isMacLaf ) {
+            tableScroll.setBackground(macBackground);
+            tableScroll.getViewport().setBackground(macBackground);
+            toolbar.setBackground(macBackground);
+            statusBarPanel.setBackground(macBackground);
+        }
+
+    }
+    
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        toolbar = new javax.swing.JToolBar();
+        tableHolderPanel = new javax.swing.JPanel();
+        tableScroll = new javax.swing.JScrollPane();
+        toolbarSeparator = new javax.swing.JSeparator();
+        statusSeparator = new javax.swing.JSeparator();
+        statusBarPanel = new javax.swing.JPanel();
+
+        setLayout(new java.awt.GridBagLayout());
+
+        toolbar.setFloatable(false);
+        toolbar.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weighty = 1.0;
+        add(toolbar, gridBagConstraints);
+
+        tableHolderPanel.setOpaque(false);
+
+        tableScroll.setBorder(null);
+
+        javax.swing.GroupLayout tableHolderPanelLayout = new javax.swing.GroupLayout(tableHolderPanel);
+        tableHolderPanel.setLayout(tableHolderPanelLayout);
+        tableHolderPanelLayout.setHorizontalGroup(
+            tableHolderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(tableScroll, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+        );
+        tableHolderPanelLayout.setVerticalGroup(
+            tableHolderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(tableScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+        );
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(tableHolderPanel, gridBagConstraints);
+
+        toolbarSeparator.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weighty = 1.0;
+        add(toolbarSeparator, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        add(statusSeparator, gridBagConstraints);
+
+        statusBarPanel.setLayout(new java.awt.BorderLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHEAST;
+        gridBagConstraints.weightx = 1.0;
+        add(statusBarPanel, gridBagConstraints);
+    }// </editor-fold>//GEN-END:initComponents
+    
+    
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel statusBarPanel;
+    private javax.swing.JSeparator statusSeparator;
+    private javax.swing.JPanel tableHolderPanel;
+    private javax.swing.JScrollPane tableScroll;
+    private javax.swing.JToolBar toolbar;
+    private javax.swing.JSeparator toolbarSeparator;
+    // End of variables declaration//GEN-END:variables
+    
+    /**
+     * Gets default instance. Do not use directly: reserved for *.settings files only,
+     * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
+     * To obtain the singleton instance, use {@link findInstance}.
+     */
+    public static synchronized TaskListTopComponent getDefault() {
+        if (instance == null) {
+            instance = new TaskListTopComponent();
+        }
+        return instance;
+    }
+    
+    /**
+     * Obtain the TaskListTopComponent instance. Never call {@link #getDefault} directly!
+     */
+    public static synchronized TaskListTopComponent findInstance() {
+        TopComponent win = WindowManager.getDefault().findTopComponent(PREFERRED_ID);
+        if (win == null) {
+            getLogger().log( Level.INFO, "Cannot find TaskList component. It will not be located properly in the window system." ); //NOI18N
+            return getDefault();
+        }
+        if (win instanceof TaskListTopComponent) {
+            return (TaskListTopComponent)win;
+        }
+        getLogger().log( Level.INFO,
+                "There seem to be multiple components with the '" + PREFERRED_ID + //NOI18N
+                "' ID. That is a potential source of errors and unexpected behavior."); //NOI18N
+        return getDefault();
+    }
+    
+    @Override
+    public int getPersistenceType() {
+        return TopComponent.PERSISTENCE_ALWAYS;
+    }
+    
+    @Override
+    public void componentOpened() {
+        if( null == model ) {
+            toolbarSeparator.setVisible(false);
+            statusSeparator.setVisible(false);
+            tableScroll.setViewportView( createNoTasksMessage() );
+        }
+
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            @Override
+            public void run() {
+                TaskManagerImpl.RP.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        init();
+                    }
+                });
+            }
+        });
+    }
+    
+    private void init() {
+        TaskScanningScope activeScope = getActiveScope();
+        if( null == filters ) {
+            try {
+                filters = FilterRepository.getDefault();
+                filters.load();
+            } catch( IOException ioE ) {
+                getLogger().log( Level.INFO, ioE.getMessage(), ioE );
+            }
+        }
+
+        if( null == changeListener ) {
+            changeListener = createChangeListener();
+            taskManager.addPropertyChangeListener( TaskManagerImpl.PROP_WORKING_STATUS, changeListener );
+        }
+        
+        if( null == model ) {
+            table = new TaskListTable();
+            if( isMacLaf )
+                table.setBackground(macBackground);
+            //later on the button in the toolbar will switch to the previously used table model
+            model = new TaskListModel( taskManager.getTasks() );
+            table.setModel( model );
+            tasksListener = new TaskList.Listener() {
+                @Override
+                public void tasksAdded( List<? extends Task> tasks ) {
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            tableScroll.setViewportView( table );
+                            Color background = UIManager.getColor("TextArea.background"); //NOI18N
+                            if( null != background )
+                                tableScroll.getViewport().setBackground( background );
+                            tableScroll.setBorder( BorderFactory.createEmptyBorder() );
+                            if( isMacLaf ) {
+                                table.setBackground(macBackground);
+                                tableScroll.getViewport().setBackground(macBackground);
+                            }
+                        }
+                    };
+                    taskManager.getTasks().removeListener(tasksListener);
+                    if( SwingUtilities.isEventDispatchThread() ) {
+                        runnable.run();
+                    } else {
+                        SwingUtilities.invokeLater(runnable);
+                    }
+                    tasksListener = null;
+                }
+
+                @Override
+                public void tasksRemoved(List<? extends Task> tasks) {
+                }
+
+                @Override
+                public void cleared() {
+                }
+            };
+            taskManager.getTasks().addListener(tasksListener);
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    tableScroll.setViewportView( createNoTasksMessage() );
+                    tableScroll.setBorder( BorderFactory.createEmptyBorder() );
+                    
+                    statusBarPanel.add( new CountStatusBar(taskManager.getTasks()), BorderLayout.WEST );
+                    statusBarPanel.add( new ScopeStatusBar(taskManager), BorderLayout.CENTER );
+
+                    toolbarSeparator.setVisible(true);
+                    statusSeparator.setVisible(true);
+                    rebuildToolbar();
+                }
+            });
+        }
+        SwingUtilities.invokeLater( new Runnable() {
+            @Override
+            public void run() {
+                ScanningScopeList.getDefault().addPropertyChangeListener( getScopeListListener() );
+                ScannerList.getFileScannerList().addPropertyChangeListener( getScannerListListener() );
+                ScannerList.getPushScannerList().addPropertyChangeListener( getScannerListListener() );
+            }
+        });
+        
+        final TaskScanningScope scopeToObserve = activeScope;
+        taskManager.observe( scopeToObserve, filters.getActive() );
+    }
+
+    private Component createNoTasksMessage() {
+        JPanel panel = new JPanel( new BorderLayout() );
+        if( isMacLaf ) {
+            panel.setBackground(macBackground);
+        } else {
+            Color background = UIManager.getColor("TextArea.background"); //NOI18N
+            if( null != background )
+                panel.setBackground( background );
+        }
+        JLabel msg = new JLabel( NbBundle.getMessage(TaskListTopComponent.class, "LBL_NoTasks" ) ); //NOI18N
+        msg.setHorizontalAlignment(JLabel.CENTER);
+        msg.setEnabled(false);
+        msg.setOpaque(false);
+        panel.add( msg, BorderLayout.CENTER );
+        return panel;
+    }
+    
+    @Override
+    public void componentClosed() {
+        ScanningScopeList.getDefault().removePropertyChangeListener( getScopeListListener() );
+        ScannerList.getFileScannerList().removePropertyChangeListener( getScannerListListener() );
+        ScannerList.getPushScannerList().removePropertyChangeListener( getScannerListListener() );
+        taskManager.observe( null, null );
+        if( null != changeListener ) {
+            taskManager.removePropertyChangeListener( TaskManagerImpl.PROP_WORKING_STATUS, changeListener );
+            changeListener = null;
+        }
+        synchronized( this ) {
+            if( null != progress )
+                progress.finish();
+            progress = null;
+        }
+        try {
+            FilterRepository.getDefault().save();
+        } catch( IOException ioE ) {
+            getLogger().log( Level.INFO, null, ioE );
+        }
+    }
+    
+    @Override
+    public void requestActive() {
+        super.requestActive();
+        if( null != table )
+            table.requestFocusInWindow();
+    }
+    
+    @Override
+    public Object writeReplace() {
+        return new ResolvableHelper();
+    }
+    
+    @Override
+    protected String preferredID() {
+        return PREFERRED_ID;
+    }
+    
+    private void maybePopup( MouseEvent e ) {
+        if( e.isPopupTrigger() && null != table ) {
+            e.consume();
+            JPopupMenu popup = Util.createPopup( table );
+            popup.show( this, e.getX(), e.getY() );
+        }
+    }
+    
+    private PropertyChangeListener getScopeListListener() {
+        if( null == scopeListListener ) {
+            scopeListListener = new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent arg0) {
+                    ScanningScopeList scopeList = ScanningScopeList.getDefault();
+                    List<TaskScanningScope> newScopes = scopeList.getTaskScanningScopes();
+                    if( newScopes.isEmpty() ) {
+                        getLogger().log( Level.INFO, "No task scanning scope found" ); //NOI18N
+                    }
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            rebuildToolbar();
+                        }
+                    });
+                }
+            };
+        }
+        return scopeListListener;
+    }
+    
+    private PropertyChangeListener getScannerListListener() {
+        if( null == scannerListListener ) {
+            scannerListListener = new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent e) {
+                    final TaskScanningScope scopeToObserve = taskManager.getScope();
+                    taskManager.observe( null, null );
+                    SwingUtilities.invokeLater( new Runnable() {
+                        @Override
+                        public void run() {
+                            taskManager.observe( scopeToObserve, filters.getActive() );
+                        }
+                    });
+                }
+            };
+        }
+        return scannerListListener;
+    }
+    
+    private void rebuildToolbar() {
+        toolbar.removeAll();
+        toolbar.setFocusable( false );
+        //scope buttons
+        List<TaskScanningScope> scopes = ScanningScopeList.getDefault().getTaskScanningScopes();
+        for( TaskScanningScope scope : scopes ) {
+            final ScopeButton scopeButton = new ScopeButton( taskManager, scope );
+            scopeButton.setSelected(scope.equals(Settings.getDefault().getActiveScanningScope()));
+            toolbar.add(scopeButton);
+        }
+        toolbar.add( new JToolBar.Separator() );
+        //filter
+        JToggleButton toggleFilter = new FiltersMenuButton( filters.getActive() );
+        toolbar.add( toggleFilter );
+        //grouping & other butons
+        toolbar.addSeparator();
+        final JToggleButton toggleGroups = new JToggleButton( ImageUtilities.loadImageIcon("org/netbeans/modules/tasklist/ui/resources/groups.png", false)); //NOI18N
+        toggleGroups.addItemListener( new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                switchTableModel( e.getStateChange() == ItemEvent.SELECTED );
+                Settings.getDefault().setGroupTasksByCategory( toggleGroups.isSelected() );
+                toggleGroups.setToolTipText( toggleGroups.isSelected() 
+                        ? NbBundle.getMessage( TaskListTopComponent.class, "HINT_TasksAsList" )  //NOI18N
+                        : NbBundle.getMessage( TaskListTopComponent.class, "HINT_GrouppedTasks" ) ); //NOI18N
+            }
+        });
+        toggleGroups.setSelected( Settings.getDefault().getGroupTasksByCategory() );
+        toggleGroups.setToolTipText( toggleGroups.isSelected() 
+                        ? NbBundle.getMessage( TaskListTopComponent.class, "HINT_TasksAsList" )  //NOI18N
+                        : NbBundle.getMessage( TaskListTopComponent.class, "HINT_GrouppedTasks" ) ); //NOI18N
+        toggleGroups.setFocusable( false );
+        toolbar.add( toggleGroups );
+    }
+    
+    private void switchTableModel( boolean useFoldingModel ) {
+        if( useFoldingModel ) {
+            model = new FoldingTaskListModel( taskManager.getTasks() );
+            table.setModel( model );
+            statusBarPanel.removeAll();
+        } else {
+            model = new TaskListModel( taskManager.getTasks() );
+            table.setModel( model );
+            statusBarPanel.add( new CountStatusBar(taskManager.getTasks()), BorderLayout.WEST );
+            statusBarPanel.add( new ScopeStatusBar(taskManager), BorderLayout.CENTER );
+        }
+        statusBarPanel.setVisible( !useFoldingModel );
+        statusSeparator.setVisible( !useFoldingModel );
+    }
+    
+    static private Logger getLogger() {
+        return Logger.getLogger( TaskListTopComponent.class.getName() );
+    }
+
+    private ProgressHandle progress;
+    private PropertyChangeListener createChangeListener() {
+        return new PropertyChangeListener() {
+            @Override
+            public void propertyChange( PropertyChangeEvent e ) {
+                synchronized( TaskListTopComponent.this ) {
+                    if( ((Boolean)e.getNewValue()).booleanValue() ) {
+                        if( null == progress ) {
+                            progress = ProgressHandleFactory.createHandle(
+                                    NbBundle.getMessage( TaskListTopComponent.class, "LBL_ScanProgress" ), //NOI18N
+                                    new Cancellable() { //NOI18N
+                                        @Override
+                                        public boolean cancel() {
+                                            taskManager.abort();
+                                            return true;
+                                        }
+                                    });
+                            progress.start();
+                            progress.switchToIndeterminate();
+                        }
+                    } else {
+                        if( null != progress )
+                            progress.finish();
+                        progress = null;
+                    }
+                }
+            }
+        };
+    }
+    
+    final static class ResolvableHelper implements Serializable {
+        private static final long serialVersionUID = 1L;
+        public Object readResolve() {
+            return TaskListTopComponent.getDefault();
+        }
+    }
+    
+   /** Defines task list Help ID */
+    @Override
+    public HelpCtx getHelpCtx () {
+        return new HelpCtx(TaskListTopComponent.class);
+    }
+
+    private TaskScanningScope getActiveScope() {
+        TaskScanningScope activeScope = Settings.getDefault().getActiveScanningScope();
+        if( null == activeScope )
+            activeScope = ScanningScopeList.getDefault().getDefaultScope();
+        return activeScope;
+    }
+}

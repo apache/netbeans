@@ -1,0 +1,6 @@
+# form
+read global
+${l10n-module}/src/org/netbeans/modules/form/beaninfo/awt/*.gif
+${l10n-module}/src/org/netbeans/modules/form/beaninfo/swing/*.gif
+${l10n-module}/src/org/netbeans/modules/form/editors2/*.gif
+${l10n-module}/src/org/netbeans/modules/form/fakepeer/*.gif

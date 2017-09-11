@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mode version="2.1">
+    <name unique="mode05" />
+    <kind type="sliding" />
+    <slidingSide side="left" />
+    <state type="joined" />
+<!--    <constraints>
+        <path orientation="vertical" number="1" weight="0.3" />
+        <path orientation="horizontal" number="0" weight="0.5" />
+    </constraints>
+-->
+    <active-tc id="output" />
+    <empty-behavior permanent="false" />
+</mode>

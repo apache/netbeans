@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2004, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+
+<!--
+    Declaratively describes library content definition.
+
+    PUBLIC "-//NetBeans//DTD Library Declaration 1.0//EN"
+    SYSTEM "http://www.netbeans.org/dtds/library-declaration-1_0.dtd"
+
+    Example:
+    <library version="1.0">
+        <type>j2se</type>
+        <name>NetBeans Lookup library</name>
+        <description>Library providing lookup functionality.</description>
+        <volume>
+            <type>classpath</type>
+            <resource>nbinst:/modules/autoload/lookup.jar</resource>
+        </volume>
+        <volume>
+            <type>javadoc</type>
+            <resource>file:/home/me/Projects/lookup/doc/standard-doclet/</resource>
+        </volume>
+    </library>
+-->
+
+<!---
+  Root element of library definition descriptor.
+-->
+<!ELEMENT library (name, type, description?, localizing-bundle?, volume*) >
+
+<!-- The version attribute specifies the version of the library -->
+<!ATTLIST library version CDATA #FIXED "1.0" >
+
+<!--- Library unique identifier - a string.
+ In the case when the localizing-bundle element presents the name value is used 
+ as a key into bundle to locate the display name. Otherwise the name value is 
+ used as a display name-->
+<!ELEMENT name (#PCDATA) >
+
+<!--Short description of given library - a string.
+ In the case when the localizing-bundle element presents the description value
+ is used as a key into bundle to locate the localized description. Otherwise
+ the description value is used.-->
+<!ELEMENT description (#PCDATA) >
+
+<!-- The resource name of base bundle without an extension - a string.
+ The bundle used to lookup the localized strings.
+ The bundle is looked up by NbBundle.getBundle (String) method.
+ Example of localizing bundle: org.netbeans.modules.junit.resources.Bundle -->
+<!ELEMENT localizing-bundle (#PCDATA)>
+
+<!--- Volume is typed list of resources -->
+<!ELEMENT volume (type, resource*) >
+
+<!--- Volume type of a library volume - a string 
+ For example the J2SE library supports the following types of volume:
+ classpath, javadoc and src -->
+<!ELEMENT type (#PCDATA) >
+
+<!--- Volume resource coded as absolute URI.
+ Example:
+ file:/usr/lib/java/xerces.jar is resolved to /usr/lib/java/xerces.jar
+ nbinst:/modules/ext/junit.jar is resolved to /IDE-INSTALLATION/ide/modules/ext/junit.jar
+ -->
+<!ELEMENT resource (#PCDATA) >

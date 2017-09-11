@@ -1,0 +1,16 @@
+# ---------------------------------------------------------
+# Configuration file for VCS Test Compatibility Kit
+# ---------------------------------------------------------
+
+# USAGE:
+# 1) copy this file to create "tck.properties"
+# 2) edit "tck.properties"
+# 3) run IDE with your tested module installed
+# 4) execute VersioningSystemTest JUnit class from the Versioning (versioncontrol) module
+
+# Fully qualified name of the tested versioning system class
+test.vcs  = org.netbeans.modules.versioning.system.cvss.CVS
+
+# Absolute path to a directory managed by the tested versioning system
+# WARNING: files will be created and deleted in this directory as part of testing process
+test.root = /path/to/your/testing/versioned/directory

@@ -1,0 +1,50 @@
+#!/bin/sh
+
+[ -n "$push_username" ] || exit 102
+[ -n "$push_password" ] || exit 103
+[ -n "$push_repo" ] || exit 104
+
+rollback() {
+  EXIT="$?"
+  if [ -n "$BASETIP" ]; then
+    echo "Script failed for these heads"
+    hg heads
+    echo "Script failed with exitcode $EXIT rolling back to $BASETIP"
+    hg update -C
+    hg --config extensions.mq= strip -n "$BASETIP"
+    hg pull -r "$BASETIP"
+  else
+    echo "No rollback, exitcode $EXIT"
+  fi
+}
+
+BASETIP=`hg log -r . --template '{node}'`
+trap rollback EXIT
+
+hg pull -r default -u http://hg.netbeans.org/"$push_repo"
+
+hg heads
+HEADS=`hg heads --template "{branches}\n" | grep "^$" | wc -l`
+if [ $HEADS = 2 ]; then
+    echo "2 heads, Need to merge"
+    hg --config ui.merge=internal:merge --config ui.interactive=1 merge < /dev/null || exit 8
+    hg ci -u "$push_username"@netbeans.org -m "Automated merge with main-silver"
+else
+    if [ $HEADS -gt 2 ]; then
+        echo "$HEADS heads, here is some diagnostic"
+        hg heads
+    fi
+fi
+
+TIP=`hg log -r . --template '{node}'`
+
+if hg push -f -r $TIP https://"$push_username":"$push_password"@hg.netbeans.org/"$push_repo"; then
+    echo Push OK.
+else
+    hg heads
+    hg incoming -r default http://hg.netbeans.org/"$push_repo"
+    echo Too many heads in default branch or there are some incoming changesets
+    exit 9
+fi
+unset BASETIP
+exit 0

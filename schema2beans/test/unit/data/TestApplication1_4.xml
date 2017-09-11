@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<application xmlns='http://java.sun.com/xml/ns/j2ee' version='1.4'>
+	<display-name>test app</display-name>
+	<module>
+		<java>org.foo</java>
+	</module>
+</application>

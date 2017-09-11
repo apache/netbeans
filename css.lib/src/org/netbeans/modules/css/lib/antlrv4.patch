@@ -1,0 +1,864 @@
+diff -r 63baafcd69f5 css.lib/build.xml
+--- a/css.lib/build.xml	Thu Feb 14 17:26:26 2013 +0100
++++ b/css.lib/build.xml	Mon Feb 18 14:26:29 2013 +0100
+@@ -6,10 +6,10 @@
+     <target name="generate-antlr-parser">
+         <fail unless="antlr.jar">You must set antlr.jar property pointing to the antlr-x.x-complete.jar</fail>
+         
+-        <java classname="org.antlr.Tool" fork="true" failonerror="true">
++        <java classname="org.antlr.v4.Tool" fork="true" failonerror="true">
+             <!-- use -debug option so the generated parser allows to register an DebugEventListener and hence allow to build a parse tree -->
+-            <arg value="-debug"/> 
+-            <arg value="-verbose"/>
++<!--            <arg value="-debug"/> 
++            <arg value="-verbose"/>-->
+             <arg value="-o"/>
+             <arg path="src/org/netbeans/modules/css/lib"/>
+             <arg path="src/org/netbeans/modules/css/lib/Css3.g"/>                
+diff -r 63baafcd69f5 css.lib/nbproject/project.properties
+--- a/css.lib/nbproject/project.properties	Thu Feb 14 17:26:26 2013 +0100
++++ b/css.lib/nbproject/project.properties	Mon Feb 18 14:26:29 2013 +0100
+@@ -47,3 +47,6 @@
+ test.config.stableBTD.includes=**/*Test.class
+ test.config.stableBTD.excludes=\
+     **/NbCss3LexerTest.class
++
++file.reference.antlr-4.0-complete.jar=external/antlr-4.0-complete.jar
++release.external/antlr-4.0-complete.jar=modules/ext/antlr-4.0-complete.jar
+\ No newline at end of file
+diff -r 63baafcd69f5 css.lib/nbproject/project.xml
+--- a/css.lib/nbproject/project.xml	Thu Feb 14 17:26:26 2013 +0100
++++ b/css.lib/nbproject/project.xml	Mon Feb 18 14:26:29 2013 +0100
+@@ -5,14 +5,14 @@
+         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+             <code-name-base>org.netbeans.modules.css.lib</code-name-base>
+             <module-dependencies>
+-                <dependency>
++<!--                <dependency>
+                     <code-name-base>org.netbeans.libs.antlr3.runtime</code-name-base>
+                     <build-prerequisite/>
+                     <compile-dependency/>
+                     <run-dependency>
+                         <specification-version>1.7</specification-version>
+                     </run-dependency>
+-                </dependency>
++                </dependency>-->
+                 <dependency>
+                     <code-name-base>org.netbeans.modules.csl.api</code-name-base>
+                     <build-prerequisite/>
+@@ -157,6 +157,10 @@
+                 <package>org.netbeans.modules.css.lib.api.properties</package>
+                 <package>org.netbeans.modules.css.lib.api.properties.model</package>
+             </friend-packages>
++            <class-path-extension>
++                <runtime-relative-path>ext/antlr-4.0-complete.jar</runtime-relative-path>
++                <binary-origin>external/antlr-4.0-complete.jar</binary-origin>
++            </class-path-extension>
+         </data>
+     </configuration>
+ </project>
+diff -r 63baafcd69f5 css.lib/src/org/netbeans/modules/css/lib/Css3.g
+--- a/css.lib/src/org/netbeans/modules/css/lib/Css3.g	Thu Feb 14 17:26:26 2013 +0100
++++ b/css.lib/src/org/netbeans/modules/css/lib/Css3.g	Mon Feb 18 14:26:29 2013 +0100
+@@ -125,178 +125,6 @@
+         return false;
+     }
+     
+-/**
+-     * Use the current stacked followset to work out the valid tokens that
+-     * can follow on from the current point in the parse, then recover by
+-     * eating tokens that are not a member of the follow set we compute.
+-     *
+-     * This method is used whenever we wish to force a sync, even though
+-     * the parser has not yet checked LA(1) for alt selection. This is useful
+-     * in situations where only a subset of tokens can begin a new construct
+-     * (such as the start of a new statement in a block) and we want to
+-     * proactively detect garbage so that the current rule does not exit on
+-     * on an exception.
+-     *
+-     * We could override recover() to make this the default behavior but that
+-     * is too much like using a sledge hammer to crack a nut. We want finer
+-     * grained control of the recovery and error mechanisms.
+-     */
+-    protected void syncToSet()
+-    {
+-        // Compute the followset that is in context wherever we are in the
+-        // rule chain/stack
+-        //
+-         BitSet follow = state.following[state._fsp]; //computeContextSensitiveRuleFOLLOW();
+-
+-         syncToSet(follow);
+-    }
+-
+-    protected void syncToSet(BitSet follow)
+-    {
+-        int mark = -1;
+-
+-        //create error-recovery node
+-        dbg.enterRule(getGrammarFileName(), "recovery");
+-
+-        try {
+-
+-            mark = input.mark();
+-
+-            // Consume all tokens in the stream until we find a member of the follow
+-            // set, which means the next production should be guaranteed to be happy.
+-            //
+-            while (! follow.member(input.LA(1)) ) {
+-
+-                if  (input.LA(1) == Token.EOF) {
+-
+-                    // Looks like we didn't find anything at all that can help us here
+-                    // so we need to rewind to where we were and let normal error handling
+-                    // bail out.
+-                    //
+-                    input.rewind();
+-                    mark = -1;
+-                    return;
+-                }
+-                input.consume();
+-
+-                // Now here, because you are consuming some tokens, yu will probably want
+-                // to raise an error message such as "Spurious elements after the class member were discarded"
+-                // using whatever your override of displayRecognitionError() routine does to record
+-                // error messages. The exact error my depend on context etc.
+-                //
+-            }
+-        } catch (Exception e) {
+-
+-          // Just ignore any errors here, we will just let the recognizer
+-          // try to resync as normal - something must be very screwed.
+-          //
+-        }
+-        finally {
+-            dbg.exitRule(getGrammarFileName(), "recovery");
+-
+-            // Always release the mark we took
+-            //
+-            if  (mark != -1) {
+-                input.release(mark);
+-            }
+-        }
+-    }
+-    
+-    /**
+-         * synces to next RBRACE "}" taking nesting into account
+-         */
+-        protected void syncToRBRACE(int nest)
+-            {
+-                
+-                int mark = -1;
+-                //create error-recovery node
+-                //dbg.enterRule(getGrammarFileName(), "recovery");
+-
+-                try {
+-                    mark = input.mark();
+-                    for(;;) {
+-                        //read char
+-                        int c = input.LA(1);
+-                        
+-                        switch(c) {
+-                            case Token.EOF:
+-                                input.rewind();
+-                                mark = -1;
+-                                return ;
+-                            case Css3Lexer.LBRACE:
+-                                nest++;
+-                                break;
+-                            case Css3Lexer.RBRACE:
+-                                nest--;
+-                                if(nest == 0) {
+-                                    //do not eat the final RBRACE
+-                                    return ;
+-                                }
+-                        }
+-                        
+-                        input.consume();
+-                                            
+-                    }
+-
+-                } catch (Exception e) {
+-
+-                  // Just ignore any errors here, we will just let the recognizer
+-                  // try to resync as normal - something must be very screwed.
+-                  //
+-                }
+-                finally {
+-                    if  (mark != -1) {
+-                        input.release(mark);
+-                    }
+-                    //dbg.exitRule(getGrammarFileName(), "recovery");
+-                }
+-            }
+-    
+-}
+-
+-@lexer::header {
+-/*
+- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+- *
+- * Copyright 2011 Oracle and/or its affiliates. All rights reserved.
+- *
+- * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+- * Other names may be trademarks of their respective owners.
+- *
+- * The contents of this file are subject to the terms of either the GNU
+- * General Public License Version 2 only ("GPL") or the Common
+- * Development and Distribution License("CDDL") (collectively, the
+- * "License"). You may not use this file except in compliance with the
+- * License. You can obtain a copy of the License at
+- * http://www.netbeans.org/cddl-gplv2.html
+- * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+- * specific language governing permissions and limitations under the
+- * License.  When distributing the software, include this License Header
+- * Notice in each file and include the License file at
+- * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+- * particular file as subject to the "Classpath" exception as provided
+- * by Oracle in the GPL Version 2 section of the License file that
+- * accompanied this code. If applicable, add the following below the
+- * License Header, with the fields enclosed by brackets [] replaced by
+- * your own identifying information:
+- * "Portions Copyrighted [year] [name of copyright owner]"
+- *
+- * If you wish your version of this file to be governed by only the CDDL
+- * or only the GPL Version 2, indicate your decision by adding
+- * "[Contributor] elects to include this software in this distribution
+- * under the [CDDL or GPL Version 2] license." If you do not indicate a
+- * single choice of license, a recipient has the option to distribute
+- * your version of this file under either the CDDL, the GPL Version 2 or
+- * to extend the choice of license to its licensees as provided above.
+- * However, if you add GPL Version 2 code and therefore, elected the GPL
+- * Version 2 license, then the option applies only if the new code is
+- * made subject to such option by the copyright holder.
+- *
+- * Contributor(s):
+- *
+- * Portions Copyrighted 2011 Sun Microsystems, Inc.
+- */
+-package org.netbeans.modules.css.lib;
+ }
+ 
+ // -------------
+@@ -352,7 +180,7 @@
+ media
+     : MEDIA_SYM ws? mediaQueryList
+         LBRACE ws?
+-            ( ( rule | page | fontFace | vendorAtRule ) ws?)*
++            ( ( cssRule | page | fontFace | vendorAtRule ) ws?)*
+          RBRACE
+     ;
+ 
+@@ -387,7 +215,7 @@
+  
+ bodyItem
+     : 
+-    	rule
++    	cssRule
+         | media
+         | page
+         | counterStyle
+@@ -413,7 +241,7 @@
+ generic_at_rule
+     : AT_IDENT WS* ( atRuleId WS* )? 
+         LBRACE 
+-        	syncTo_RBRACE
++        	//syncTo_RBRACE
+         RBRACE
+ 	;    
+ moz_document
+@@ -442,7 +270,7 @@
+ 	:
+ 	webkitKeyframeSelectors ws?
+ //	LBRACE  ws? syncToDeclarationsRule
+-	LBRACE  ws? syncToFollow
++	LBRACE  ws? //syncToFollow
+ 		declarations
+ 	RBRACE 
+ 	;	
+@@ -464,20 +292,25 @@
+     
+ counterStyle
+     : COUNTER_STYLE_SYM ws? IDENT ws?
+-        LBRACE ws? syncToDeclarationsRule
++        LBRACE ws? //syncToDeclarationsRule
+ 		declarations
+         RBRACE
+     ;
+     
+ fontFace
+     : FONT_FACE_SYM ws?
+-        LBRACE ws? syncToDeclarationsRule
++        LBRACE ws? //syncToDeclarationsRule
+ 		declarations
+         RBRACE
+     ;
+ 
+ margin	
+-	: margin_sym ws? LBRACE ws? syncToDeclarationsRule declarations RBRACE
++	: margin_sym ws? 
++            LBRACE 
++                ws? 
++                //syncToDeclarationsRule 
++                declarations 
++            RBRACE
+        ;
+        
+ margin_sym 
+@@ -525,52 +358,50 @@
+     : (IDENT | GEN | {isLessSource()}? less_variable) ws?
+     ;
+     
+-rule 
++cssRule 
+     :   ( selectorsGroup | {isLessSource()}? less_mixin_declaration )
+ //        LBRACE ws? syncToDeclarationsRule
+-        LBRACE ws? syncToFollow
++        LBRACE ws? //syncToFollow
+             declarations
+         RBRACE
+     ;
+-    	catch[ RecognitionException rce] {
+-        reportError(rce);
+-        consumeUntil(input, BitSet.of(RBRACE));
+-        input.consume(); //consume the RBRACE as well   
+-        }
++//    	catch[ RecognitionException rce] {
++//        reportError(rce);
++//        consumeUntil(input, BitSet.of(RBRACE));
++//        input.consume(); //consume the RBRACE as well   
++//        }
+     
+ 
+ declarations
+     :
+          ( 
+             (
+-                (rulePredicate)=>rule
++                cssRule
+                 | 
+-                ( (declarationPredicate)=>declaration SEMI )
++                ( declaration SEMI )
+                 |
+                 {isLessSource()}? less_mixin_call
+             )            
+             ws?
+         )*
+         
+-//        ((lastDeclarationPredicate)=>declaration)
++//        ((lastDeclarationPredicate)=>declaration)?
+     ;
+     
+ rulePredicate
+-    options { k = 1; }
+     :
+ //    ( ~ (LBRACE ))+ LBRACE
+     ( ~(LBRACE | SEMI | RBRACE ))+ LBRACE
+     ;
+     
+ declarationPredicate
+-    options { k = 1; }
+     :
+ //    ( ~SEMI )+ SEMI
+     ( ~(LBRACE | SEMI | RBRACE ) )+ SEMI
+     ;
+     
+ lastDeclarationPredicate
+-    options { k = 1; }
++//    options { k = 1; }
+     :
+ //    ( ~RBRACE )+ RBRACE
+     ( ~(LBRACE | SEMI | RBRACE ) )+ RBRACE
+@@ -588,14 +419,14 @@
+ simpleSelectorSequence
+ 	:   
+         //using typeSelector even for the universal selector since the lookahead would have to be 3 (IDENT PIPE (IDENT|STAR) :-(
+-	( typeSelector ((esPred)=>elementSubsequent ws?)* )
++	( typeSelector (elementSubsequent ws?)* )
+ 	| 
+-	( ((esPred)=>elementSubsequent ws?)+ )
++	( (elementSubsequent ws?)+ )
+ 	;
+-	catch[ RecognitionException rce] {
+-            reportError(rce);
+-            consumeUntil(input, BitSet.of(LBRACE)); 
+-        }
++//	catch[ RecognitionException rce] {
++//            reportError(rce);
++//            consumeUntil(input, BitSet.of(LBRACE)); 
++//        }
+         
+ //predicate
+ esPred
+@@ -603,8 +434,8 @@
+     ;        
+        
+ typeSelector 
+-	options { k = 2; }
+- 	:  ((nsPred)=>namespacePrefix)? ( elementName ws? )
++//	options { k = 2; }
++ 	:  (namespacePrefix)? ( elementName ws? )
+ // 	:  ((nsPred)=>namespacePrefix)? ( elementName ) 	
+  	;
+ 
+@@ -633,18 +464,18 @@
+ cssId
+     : HASH | ( '#' NAME )
+     ;
+-    catch[ RecognitionException rce] {
+-        reportError(rce);
+-        consumeUntil(input, BitSet.of(WS, IDENT, LBRACE)); 
+-    }
++//    catch[ RecognitionException rce] {
++//        reportError(rce);
++//        consumeUntil(input, BitSet.of(WS, IDENT, LBRACE)); 
++//    }
+ 
+ cssClass
+     : DOT ( IDENT | GEN  )
+     ;
+-    catch[ RecognitionException rce] {
+-        reportError(rce);
+-        consumeUntil(input, BitSet.of(WS, IDENT, LBRACE)); 
+-    }
++//    catch[ RecognitionException rce] {
++//        reportError(rce);
++//        consumeUntil(input, BitSet.of(WS, IDENT, LBRACE)); 
++//    }
+     
+ //using typeSelector even for the universal selector since the lookahead would have to be 3 (IDENT PIPE (IDENT|STAR) :-(
+ elementName
+@@ -672,10 +503,10 @@
+     
+       RBRACKET
+ ;
+-catch[ RecognitionException rce] {
+-        reportError(rce);
+-        consumeUntil(input, BitSet.of(IDENT, LBRACE)); 
+-    }
++//catch[ RecognitionException rce] {
++//        reportError(rce);
++//        consumeUntil(input, BitSet.of(IDENT, LBRACE)); 
++//    }
+ 
+ //bit similar naming to attrvalue, attrname - but these are different - for functions
+ slAttributeName
+@@ -709,16 +540,16 @@
+     //syncToIdent //recovery: this will sync the parser the identifier (property) if there's a gargabe in front of it
+     STAR? property COLON ws? propertyValue prio?
+     ;
+-    catch[ RecognitionException rce] {
+-        reportError(rce);
+-        //recovery: if an mismatched token occures inside a declaration is found,
+-        //then skip all tokens until an end of the rule is found represented by right curly brace
+-        consumeUntil(input, BitSet.of(SEMI, RBRACE)); 
+-    }
++//    catch[ RecognitionException rce] {
++//        reportError(rce);
++//        //recovery: if an mismatched token occures inside a declaration is found,
++//        //then skip all tokens until an end of the rule is found represented by right curly brace
++//        consumeUntil(input, BitSet.of(SEMI, RBRACE)); 
++//    }
+ 
+ propertyValue
+ 	:
+-        ( (expressionPredicate)=>expression )
++        ( expression )
+         | 
+         
+ //this is a bit mysterious - if the use the semantic predicate for the less_expression
+@@ -733,35 +564,11 @@
+ 
+ //an expression wich doesn't contain less expression operators
+ expressionPredicate
+-    options { k = 1; }
++//    options { k = 1; }
+     :
+     ( ~ (PLUS | MINUS | STAR | SOLIDUS | LBRACE | SEMI | RBRACE) )+ ( SEMI | RBRACE )
+     ;
+     
+-//recovery: syncs the parser to the first identifier in the token input stream or the closing curly bracket
+-//since the rule matches epsilon it will always be entered
+-syncToDeclarationsRule
+-    @init {
+-        //why sync to DOT? - LESS allows class rules nested
+-        syncToSet(BitSet.of(IDENT, RBRACE, STAR, DOT)); 
+-    }
+-    	:	
+-    	;
+-    	
+-syncTo_RBRACE
+-    @init {
+-        syncToRBRACE(1); //initial nest == 1
+-    }
+-    	:	
+-    	;    	
+-
+-//synct to computed follow set in the rule
+-syncToFollow
+-    @init {
+-        syncToSet();
+-    }
+-    	:	
+-    	;
+     
+ prio
+     : IMPORTANT_SYM
+@@ -810,10 +617,10 @@
+ 		)
+ 		RPAREN
+ 	;
+-catch[ RecognitionException rce] {
+-        reportError(rce);
+-        consumeUntil(input, BitSet.of(RPAREN, SEMI, RBRACE)); 
+-}
++//catch[ RecognitionException rce] {
++//        reportError(rce);
++//        consumeUntil(input, BitSet.of(RPAREN, SEMI, RBRACE)); 
++//}
+     
+ functionName
+         //css spec allows? here just IDENT, 
+@@ -875,7 +682,7 @@
+     ;
+ 
+ less_atomExp
+-    :    term ((term)=>term)* //multiple terms separated just by whitespace
++    :    term (term)* //multiple terms separated just by whitespace
+     |    LPAREN ws? less_additionExp RPAREN ws?
+     ;
+ 
+@@ -1062,7 +869,7 @@
+                                 )? 
+                                 ('\r'|'\n'|'\t'|'\f'|' ')*  ;
+                                 
+-fragment    ESCAPE      : UNICODE | '\\' ~('\r'|'\n'|'\f'|HEXCHAR)  ;
++fragment    ESCAPE      : UNICODE | '\\' ~('\r'|'\n'|'\f'|'a'..'f'|'A'..'F'|'0'..'9')  ;
+ 
+ fragment    NMSTART     : '_'
+                         | 'a'..'z'
+@@ -1269,33 +1076,6 @@
+                         )
+                 ;
+ 
+-
+-
+-// ---------------------
+-// HTML comment open.   HTML/XML comments may be placed around style sheets so that they
+-//                      are hidden from higher scope parsing engines such as HTML parsers.
+-//                      They comment open is therfore ignored by the CSS parser and we hide
+-//                      it from the ANLTR parser.
+-//
+-CDO             : '<!--'
+-
+-                    {
+-                        $channel = 3;   // CDO on channel 3 in case we want it later
+-                    }
+-                ;
+-    
+-// ---------------------            
+-// HTML comment close.  HTML/XML comments may be placed around style sheets so that they
+-//                      are hidden from higher scope parsing engines such as HTML parsers.
+-//                      They comment close is therfore ignored by the CSS parser and we hide
+-//                      it from the ANLTR parser.
+-//
+-CDC             : '-->'
+-
+-                    {
+-                        $channel = 4;   // CDC on channel 4 in case we want it later
+-                    }
+-                ;
+                 
+ INCLUDES        : '~='      ;
+ DASHMATCH       : '|='      ;
+@@ -1336,13 +1116,13 @@
+ STRING          : '\'' ( ~('\n'|'\r'|'\f'|'\'') )* 
+                     (
+                           '\''
+-                        | { $type = INVALID; }
++                        
+                     )
+                     
+                 | '"' ( ~('\n'|'\r'|'\f'|'"') )*
+                     (
+                           '"'
+-                        | { $type = INVALID; }
++                        
+                     )
+                 ;
+ 
+@@ -1404,94 +1184,93 @@
+ //          Here we first define the various tokens, then we implement the
+ //          number parsing rule.
+ //
+-fragment    EMS         :;  // 'em'
+-fragment    EXS         :;  // 'ex'
+-fragment    LENGTH      :;  // 'px'. 'cm', 'mm', 'in'. 'pt', 'pc'
+-fragment    REM		:;  // 'rem'
+-fragment    ANGLE       :;  // 'deg', 'rad', 'grad'
+-fragment    TIME        :;  // 'ms', 's'
+-fragment    FREQ        :;  // 'khz', 'hz'
+-fragment    DIMENSION   :;  // nnn'Somethingnotyetinvented'
+-fragment    PERCENTAGE  :;  // '%'
+-fragment    RESOLUTION  :;  //dpi,dpcm	
++//fragment    EMS         :;  // 'em'
++//fragment    EXS         :;  // 'ex'
++//fragment    LENGTH      :;  // 'px'. 'cm', 'mm', 'in'. 'pt', 'pc'
++//fragment    REM		:;  // 'rem'
++//fragment    ANGLE       :;  // 'deg', 'rad', 'grad'
++//fragment    TIME        :;  // 'ms', 's'
++//fragment    FREQ        :;  // 'khz', 'hz'
++//fragment    DIMENSION   :;  // nnn'Somethingnotyetinvented'
++//fragment    PERCENTAGE  :;  // '%'
++//fragment    RESOLUTION  :;  //dpi,dpcm	
++
++fragment NUM    
++    :
++    '0'..'9'+ ('.' '0'..'9'+)?
++    | '.' '0'..'9'+
++    ;
++
++RESOLUTION
++    :
++        NUM ( D P ( I | ( C M )))
++    ;
++
++EXS
++    :
++        NUM E X
++    ;
++
++EMS
++    :
++        NUM E M
++    ;
++
++LENGTH
++    :
++        NUM ( P (X|T|C) | C M | M M | I N )
++    ;
++
++TIME
++    :
++        NUM ( M S | S )
++    ;
++
++ANGLE
++    :
++        NUM ( D E G | R A D )
++    ;
++
++REM
++    :
++        NUM R E M
++    ;
++
++FREQ
++    :
++        NUM K? H Z
++    ;
++
++DIMENSION
++    :
++        NUM IDENT
++    ;
++
++PERCENTAGE
++    :
++        NUM '%'
++    ;
+ 
+ NUMBER
+-    :   (
+-              '0'..'9'+ ('.' '0'..'9'+)?
+-            | '.' '0'..'9'+
+-        )
+-        (
+-              (D P (I|C))=>
+-                D P
+-                (
+-                     I | C M     
+-                )
+-                { $type = RESOLUTION; }
+-        	
+-            | (E (M|X))=>
+-                E
+-                (
+-                      M     { $type = EMS;          }
+-                    | X     { $type = EXS;          }
+-                )
+-            | (P(X|T|C))=>
+-                P
+-                (
+-                      X     
+-                    | T
+-                    | C
+-                )
+-                            { $type = LENGTH;       }   
+-            | (C M)=>
+-                C M         { $type = LENGTH;       }
+-            | (M (M|S))=> 
+-                M
+-                (
+-                      M     { $type = LENGTH;       }
+-            
+-                    | S     { $type = TIME;         }
+-                )
+-            | (I N)=>
+-                I N         { $type = LENGTH;       }
+-            
+-            | (D E G)=>
+-                D E G       { $type = ANGLE;        }
+-//            | (R A D)=>
+-//                R A D       { $type = ANGLE;        }
++    :
++        NUM
++    ;
+ 
+-            | (R (A|E))=>
+-                R    
+-                ( 
+-                   A D       {$type = ANGLE;         }
+-                 | E M       {$type = REM;           }
+-                )
+-            
+-            | (S)=>S        { $type = TIME;         }
+-                
+-            | (K? H Z)=>
+-                K? H    Z   { $type = FREQ;         }
+-            
+-            | IDENT         { $type = DIMENSION;    }
+-            
+-            | '%'           { $type = PERCENTAGE;   }
+-            
+-            | // Just a number
+-        )
+-    ;
++
+ 
+ // ------------
+ // url and uri.
+ //
+ URI :   U R L
+         '('
+-            ((WS)=>WS)? (URL|STRING) WS?
++            WS? (URL|STRING) WS?
+         ')'
+     ;
+     
+ MOZ_URL_PREFIX
+ 	:
+ 	'URL-PREFIX('
+-            ((WS)=>WS)? (URL|STRING) WS?
++            WS? (URL|STRING) WS?
+         ')'
+     
+     	;
+@@ -1499,7 +1278,7 @@
+ MOZ_DOMAIN
+ 	:
+ 	'DOMAIN('
+-            ((WS)=>WS)? (URL|STRING) WS?
++            WS? (URL|STRING) WS?
+         ')'
+     
+     	;
+@@ -1507,37 +1286,23 @@
+ MOZ_REGEXP
+ 	:
+ 	'REGEXP('
+-            ((WS)=>WS)? STRING WS?
++            WS? STRING WS?
+         ')'
+     
+         	;
+ 
++WS      
++    : 
++    (' '|'\t')+
++    ;
+ 
++NL      
++    : 
++    ('\r' '\n'? | '\n')
++    ;
+ 
+-// -------------
+-// Whitespace.  Though the W3 standard shows a Yacc/Lex style parser and lexer
+-//              that process the whitespace within the parser, ANTLR does not
+-//              need to deal with the whitespace directly in the parser.
+-//
+-WS      : (' '|'\t')+;
+ 
+-NL      : ('\r' '\n'? | '\n')   { 
+-	//$channel = HIDDEN;    
+-}   ;
+-
+-// ------------- 
+-// Comments.    Comments may not be nested, may be multilined and are delimited
+-//              like C comments: /* ..... */
+-//              COMMENTS are hidden from the parser which simplifies the parser 
+-//              grammar a lot.
+-//
+-COMMENT         : '/*' ( options { greedy=false; } : .*) '*/'
+-    
+-                    {
+-//                        $channel = 2;   // Comments on channel 2 in case we want to find them
+-                    }
+-                ;
+-
+-// -------------
+-//  Illegal.    Any other character shoudl not be allowed.
+-//
++COMMENT         
++    : 
++    '/*' .*? '*/'
++    ;
+diff -r 63baafcd69f5 css.lib/src/org/netbeans/modules/css/lib/nbparser/CssParser.java
+--- a/css.lib/src/org/netbeans/modules/css/lib/nbparser/CssParser.java	Thu Feb 14 17:26:26 2013 +0100
++++ b/css.lib/src/org/netbeans/modules/css/lib/nbparser/CssParser.java	Mon Feb 18 14:26:29 2013 +0100
+@@ -45,16 +45,15 @@
+ import java.util.List;
+ import java.util.logging.Level;
+ import java.util.logging.Logger;
+-import org.netbeans.modules.css.lib.ExtCss3Lexer;
+ import org.netbeans.modules.css.lib.ExtCss3Parser;
+ import org.netbeans.modules.css.lib.api.CssParserResult;
+ import javax.swing.event.ChangeListener;
+-import org.antlr.runtime.CommonTokenStream;
+-import org.antlr.runtime.RecognitionException;
+-import org.antlr.runtime.TokenStream;
++import org.antlr.v4.runtime.*;
+ import org.netbeans.api.editor.mimelookup.MimePath;
+ import org.netbeans.modules.csl.spi.ParserResult;
+ import org.netbeans.modules.css.lib.AbstractParseTreeNode;
++import org.netbeans.modules.css.lib.Css3Lexer;
++import org.netbeans.modules.css.lib.Css3Parser;
+ import org.netbeans.modules.css.lib.NbParseTreeBuilder;
+ import org.netbeans.modules.css.lib.api.ProblemDescription;
+ import org.netbeans.modules.parsing.api.Snapshot;
+@@ -62,7 +61,6 @@
+ import org.netbeans.modules.parsing.spi.ParseException;
+ import org.netbeans.modules.parsing.spi.Parser;
+ import org.netbeans.modules.parsing.spi.SourceModificationEvent;
+-import org.netbeans.modules.web.common.api.Lines;
+ import org.openide.filesystems.FileObject;
+ import org.openide.util.CharSequences;
+ 
+@@ -87,12 +85,12 @@
+         long start = System.currentTimeMillis();
+         try {
+             CharSequence source = snapshot.getText();
+-            ExtCss3Lexer lexer = new ExtCss3Lexer(source);
+-            TokenStream tokenstream = new CommonTokenStream(lexer);
++            Css3Lexer lexer = new Css3Lexer(new ANTLRInputStream(source.toString()));
++            CommonTokenStream tokenstream = new CommonTokenStream(lexer);
+             NbParseTreeBuilder builder = new NbParseTreeBuilder(source);
+-            ExtCss3Parser parser = new ExtCss3Parser(tokenstream, builder, fo);
+-            parser.styleSheet();
+-
++            Css3Parser parser = new Css3Parser(tokenstream);
++            Css3Parser.StyleSheetContext styleSheet = parser.styleSheet();
++            
+             AbstractParseTreeNode tree = builder.getTree();
+             List<ProblemDescription> problems = new ArrayList<ProblemDescription>();
+             //add lexer issues

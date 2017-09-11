@@ -1,0 +1,8 @@
+[global]
+http-proxy-host = my.proxy
+http-proxy-port = 8080
+http-timeout = 60
+neon-debug-mask = 130
+
+http-compression = no
+ssl-authority-files = /path/to/CAcert.pem;/path/to/CAcert2.pem

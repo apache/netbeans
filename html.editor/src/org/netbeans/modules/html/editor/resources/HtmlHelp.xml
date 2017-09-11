@@ -1,0 +1,3749 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!--
+    Document   : HtmlHelp.xml
+    Created on : November 29, 2004, 3:05 PM
+    Author     : petr
+    Description:
+        Purpose of the document follows.
+-->
+
+<help file="docs/html-4.01.zip" >
+    <!--<tag name="">
+        <location file="">
+            <start-text offset="0" text="" />
+            <end-text offset="0" text="" />
+        </location>
+        <add-text before="" after=""/>
+        <attribute name="" >
+            <location file="">
+                <start-text offset="0" text="" />
+                <end-text offset="0" text="" />
+            </location>
+            <add-text before="" after=""/>
+        </attribute>
+        <attribute name="" identical=""/>
+    </tag>-->
+    <!-- element  A -->
+    <tag name="a">
+        <location file="struct/links.html#edef-A">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-12.2" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-12.2.1" />
+        </location>
+        <attribute name="name" >
+            <location file="struct/links.html#adef-name-A">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-A" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-href" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="href" >
+            <location file="struct/links.html#adef-href">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-href" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-hreflang" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="hreflang" >
+            <location file="struct/links.html#adef-hreflang">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-hreflang" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-A" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="type" >
+            <location file="struct/links.html#adef-type-A">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-A" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-rel" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="rel" >
+            <location file="struct/links.html#adef-rel">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-rel" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-rev" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="rev" >
+            <location file="struct/links.html#adef-rev">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-rev" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-charset" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="charset" >
+            <location file="struct/links.html#adef-charset">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-charset" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list" />
+            </location>
+            <add-text before="&lt;dl>" />
+        </attribute>
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="shape" identical="attr#shape"/>
+        <attribute name="coords" identical="attr#coords"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="target" identical="attr#target"/>
+        <attribute name="tabindex" identical="attr#tabindex"/>
+        <attribute name="accesskey" identical="attr#accesskey"/>
+    </tag>
+    
+    <tag name="abbr">
+        <location file="struct/text.html#h-9.2.1">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-9.2.1" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-9.2.2" />
+        </location>
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+    </tag>
+    
+    <tag name="acronym" identical="abbr" >
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+    </tag>
+    
+    <tag name="em" identical="abbr" >
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+    </tag>
+    
+    <tag name="strong" identical="abbr" >
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+    </tag>
+    
+    
+    <tag name="cite" identical="abbr" >
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+    </tag>
+    
+    <tag name="dfn" identical="abbr" >
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+    </tag>
+    
+    <tag name="code" identical="abbr" >
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+    </tag>
+    
+    <tag name="samp" identical="abbr" >
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+    </tag>
+    
+    <tag name="kbd" identical="abbr" >
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+    </tag>
+    
+    <tag name="var" identical="abbr" >
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+    </tag>
+    
+    <tag name="address">
+        <location file="struct/global.html#h-7.5.6">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.5.6" />
+            <end-text offset="0" text="&lt;div class=&quot;navbar" />
+        </location>
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+    </tag>
+    
+    <tag name="applet">
+        <location file="struct/objects.html#h-13.4">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-13.4&quot;" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-13.5&quot;" />
+        </location>
+        <attribute name="codebase" >
+            <location file="struct/objects.html#adef-codebase-APPLET">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-codebase-APPLET" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-code&quot;" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="code" >
+            <location file="struct/objects.html#adef-code">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-code&quot;" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-APPLET" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="name" >
+            <location file="struct/objects.html#adef-name-APPLET">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-APPLET" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-archive-APPLET" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="archive" >
+            <location file="struct/objects.html#adef-archive-APPLET">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-archive-APPLET" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-object" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="object" >
+            <location file="struct/objects.html#adef-object">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-object" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-width" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="width" >
+            <location file="struct/objects.html#adef-width-APPLET">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-width-APPLET" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-height-APPLET" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="height" >
+            <location file="struct/objects.html#adef-height-APPLET">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-height-APPLET" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list" />
+            </location>
+            <add-text before="&lt;dl>"/>
+        </attribute>
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="alt" identical="attr#alt"/>
+        <attribute name="align" identical="attr#align"/>
+        <attribute name="hspace" identical="attr#hspace"/>
+        <attribute name="vspace" identical="attr#vspace"/>
+    </tag>
+    
+    <tag name="area">
+        <location file="struct/objects.html#h-13.6.1">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-13.6.1&quot;" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-13.6.2&quot;" />
+        </location>
+        <attribute name="coords" >
+            <location file="struct/objects.html#adef-coords">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-coords" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-nohref" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="shape" >
+            <location file="struct/objects.html#adef-shape">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-shape" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-coords" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="nohref" >
+            <location file="struct/objects.html#adef-nohref">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-nohref" />
+                <end-text offset="0" text="&lt;div class=&quot;adef-list" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="name" >
+            <location file="interact/forms.html#adef-name-INPUT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-INPUT" />
+                <end-text offset="0" text="&lt;div class=&quot;adef-value-INPUT" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="shape" identical="attr#shape"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="target" identical="attr#target"/>
+        <attribute name="tabindex" identical="attr#tabindex"/>
+        <attribute name="accesskey" identical="attr#accesskey"/>
+        <attribute name="href" identical="a#href"/>
+        <attribute name="alt" identical="attr#alt"/>
+    </tag>
+    
+    <tag name="map">
+        <location file="struct/objects.html#h-13.6.1">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-13.6.1&quot;" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-13.6.2&quot;" />
+        </location>
+        <attribute name="name" >
+            <location file="struct/objects.html#adef-name-MAP">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-MAP" />
+                <end-text offset="0" text="&lt;div class=&quot;adef-list" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="b">
+        <location file="present/graphics.html#h-15.2.1">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-15.2.1&quot;" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-15.2.2&quot;" />
+        </location>
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="tt" identical="b">
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="i" identical="b">
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="big" identical="b">
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="small" identical="b">
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="strike" identical="b">
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="s" identical="b">
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="u" identical="b">
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="base">
+        <location file="struct/links.html#edef-BASE">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-12.4&quot;" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-12.4.1&quot;" />
+        </location>
+        <attribute name="href" >
+            <location file="struct/links.html#adef-href-BASE">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-href-BASE" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="target" identical="attr#target"/>
+    </tag>
+    
+    <tag name="basefont">
+        <location file="present/graphics.html#edef-BASEFONT">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-15.2.2&quot;" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-15.3&quot;" />
+        </location>
+        <attribute name="size" >
+            <location file="present/graphics.html#adef-size-FONT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-size-FONT" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-color-FONT" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dl>"/>
+        </attribute>
+        <attribute name="color" >
+            <location file="present/graphics.html#adef-color-FONT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-color-FONT" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-face-FONT" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dl>"/>
+        </attribute>
+        <attribute name="face" >
+            <location file="present/graphics.html#adef-face-FONT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-face-FONT" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+    </tag>
+    
+    <tag name="font" identical="basefont">
+        <attribute name="size" identical="basefont#size"/>
+        <attribute name="color" identical="basefont#color"/>
+        <attribute name="face" identical="basefont#face"/>
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+    </tag>
+    
+    <tag name="bdo">
+        <location file="struct/dirlang.html#edef-BDO">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-8.2.4&quot;" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-8.2.5&quot;" />
+        </location>
+        <attribute name="dir" >
+            <location file="struct/dirlang.html#adef-dir-BDO">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-dir-BDO" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="lang" identical="attr#lang"/>
+    </tag>
+    
+    <!-- Non existing tags, but attributes, which are used from more tags -->
+    <tag name="attr#id">
+        <location file="struct/global.html#adef-id">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-id" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.5.3" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#class">
+        <location file="struct/global.html#adef-class">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-class" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.5.3" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#lang">
+        <location file="struct/dirlang.html#h-8.1">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-8.1" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-8.1.1" />
+        </location>
+    </tag>
+    
+    <tag name="attr#dir">
+        <location file="struct/dirlang.html#h-8.2">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-8.2" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-8.2.1" />
+        </location>
+    </tag>
+    
+    <tag name="attr#title">
+        <location file="struct/global.html#h-7.4.3">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.4.3" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.4.4" />
+        </location>
+    </tag>
+    
+    <tag name="attr#style">
+        <location file="present/styles.html#h-14.2.2">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-14.2.2" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-14.2.3" />
+        </location>
+    </tag>
+    
+    <tag name="attr#shape">
+        <location file="struct/objects.html#adef-shape">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-shape" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-coords" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#coords">
+        <location file="struct/objects.html#adef-coords">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-coords" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-nohref" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#onclick">
+        <location file="interact/scripts.html#adef-onclick">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onclick" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-ondblclick" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#ondblclick">
+        <location file="interact/scripts.html#adef-ondblclick">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-ondblclick" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onmousedown" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#onmousedown">
+        <location file="interact/scripts.html#adef-onmousedown">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onmousedown" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onmouseup" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#onmouseup">
+        <location file="interact/scripts.html#adef-onmouseup">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onmouseup" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onmouseover" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#onmouseover">
+        <location file="interact/scripts.html#adef-onmouseover">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onmouseover" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onmousemove" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#onmousemove">
+        <location file="interact/scripts.html#adef-onmousemove">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onmousemove" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onmouseout" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#onmouseout">
+        <location file="interact/scripts.html#adef-onmouseout">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onmouseout" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onfocus" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#onfocus">
+        <location file="interact/scripts.html#adef-onfocus">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onfocus" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onblur" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#onblur">
+        <location file="interact/scripts.html#adef-onblur">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onblur" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onkeypress" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#onkeypress">
+        <location file="interact/scripts.html#adef-onkeypress">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onkeypress" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onkeydown" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#onkeydown">
+        <location file="interact/scripts.html#adef-onkeydown">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onkeydown" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onkeyup" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#onselect">
+        <location file="interact/scripts.html#adef-onselect">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onselect" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onchange" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#onchange">
+        <location file="interact/scripts.html#adef-onchange">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onchange" />
+            <end-text offset="0" text="&lt;/samp>&lt;/a>.&lt;/dd>" />
+        </location>
+        <add-text before="&lt;dl>" after=""/>
+    </tag>
+    
+    <tag name="attr#onkeyup">
+        <location file="interact/scripts.html#adef-onkeyup">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onkeyup" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onsubmit" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#target">
+        <location file="present/frames.html#h-16.3">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-16.3" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-16.3.1" />
+        </location>
+        <add-text before="" after=""/>
+    </tag>
+    
+    <tag name="attr#accesskey">
+        <location file="interact/forms.html#h-17.11.2">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-17.11.2" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.12" />
+        </location>
+        <add-text before="" after=""/>
+    </tag>
+    
+    <tag name="attr#tabindex">
+        <location file="interact/forms.html#h-17.11.1">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-17.11.1" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-17.11.2" />
+        </location>
+        <add-text before="" after=""/>
+    </tag>
+    
+    <tag name="attr#alt">
+        <location file="struct/objects.html#adef-alt">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-13.8" />
+            <end-text offset="0" text="&lt;div class=&quot;navbar" />
+        </location>
+        <add-text before="" after=""/>
+    </tag>
+    
+    <tag name="attr#align-IMG">
+        <location file="struct/objects.html#adef-align-IMG">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-13.7.4" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-13.8" />
+        </location>
+        <add-text before="" after=""/>
+    </tag>
+    
+    <tag name="attr#align">
+        <location file="present/graphics.html#adef-align">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-15.1.2" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-15.1.3" />
+        </location>
+        <add-text before="" after=""/>
+    </tag>
+    
+    <tag name="attr#hspace">
+        <location file="struct/objects.html#adef-hspace">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-hspace" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-vspace" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#vspace">
+        <location file="struct/objects.html#adef-vspace">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-vspace" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-13.7.3" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#width">
+        <location file="struct/objects.html#adef-width-IMG">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-width-IMG" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-height-IMG" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#height" >
+        <location file="struct/objects.html#adef-height-IMG">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-height-IMG" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-13.7.2" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#border">
+        <location file="struct/objects.html#adef-border-IMG">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-border-IMG" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-13.7.4" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+<!-- added by ID -->
+    <tag name="attr#align-TD">
+        <location file="struct/tables.html#adef-align-TD">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-align-TD" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-valign" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#bgcolor">
+        <location file="present/graphics.html#adef-bgcolor">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-15.1.1" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-15.1.2" />
+        </location>
+        <add-text before="" after=""/>
+    </tag>
+    
+    <tag name="attr#clear">
+        <location file="present/graphics.html#adef-clear">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-clear" />
+            <end-text offset="0" text="&lt;div class=&quot;example&quot;>" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#char">
+        <location file="struct/tables.html#adef-char">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-char" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-charoff" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#charoff">
+        <location file="struct/tables.html#adef-charoff">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-charoff" />
+            <end-text offset="0" text="&lt;div class=&quot;example&quot;>" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#href">
+        <location file="struct/links.html#adef-href">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-href" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-hreflang" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#hreflang">
+        <location file="struct/links.html#adef-hreflang">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-hreflang" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-A" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#type">
+        <location file="struct/links.html#adef-type-A">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-A" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-rel" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#rel">
+        <location file="struct/links.html#adef-rel">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-rel" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-rev" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#rev">
+        <location file="struct/links.html#adef-rev">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-rev" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-charset" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#disabled">
+        <location file="interact/forms.html#h-17.12.1">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-17.12.1" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-17.12.2" />
+        </location>
+        <add-text before="" after=""/>
+    </tag> 
+    
+    <tag name="attr#charset">
+        <location file="struct/links.html#adef-charset">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-charset" />
+            <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#media">
+        <location file="present/styles.html#adef-media">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-media" />
+            <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>        
+    
+    <tag name="attr#src">
+        <location file="present/frames.html#adef-src-FRAME">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-src-FRAME" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-noresize" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>                
+        
+    <tag name="attr#frameborder">
+        <location file="present/frames.html#adef-frameborder">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-frameborder" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-marginwidth" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+        
+    <tag name="attr#margin-width">
+        <location file="present/frames.html#adef-marginwidth">
+             <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-marginwidth" />
+             <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-marginheight" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+        
+    <tag name="attr#margin-height">
+        <location file="present/frames.html#adef-marginheight">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-marginheight" />
+            <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+        
+    <tag name="attr#scrolling">
+        <location file="present/frames.html#adef-scrolling">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-scrolling" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-frameborder" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>  
+        
+    <tag name="attr#valign">
+        <location file="struct/tables.html#adef-valign">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-valign" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-char" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#onsubmit">
+        <location file="interact/scripts.html#adef-onsubmit">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onsubmit" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onreset" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#onreset">
+        <location file="interact/scripts.html#adef-onreset">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onreset" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onselect" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#onload">
+        <location file="interact/scripts.html#adef-onload">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onload" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onunload" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#onunload">
+        <location file="interact/scripts.html#adef-onunload">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onunload" />
+            <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-onclick" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+
+    <tag name="attr#usemap">
+        <location file="struct/objects.html#adef-usemap">
+            <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-usemap" />
+            <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+        </location>
+        <add-text before="&lt;dl>" after="&lt;/dt>"/>
+    </tag>
+    
+    <tag name="attr#ismap">
+        <location file="struct/objects.html#adef-ismap">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-13.6.2" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-13.7" />
+        </location>
+        <add-text before="" after=""/>
+    </tag>
+           
+    <tag name="attr#readonly">
+        <location file="interact/forms.html#h-17.12.2">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-17.12.2" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.13" />
+        </location>
+        <add-text before="" after=""/>
+    </tag>
+    
+<!-- added by ID  -->
+     <tag name="body">
+        <location file="struct/global.html#edef-BODY">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.5.1" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.5.2" />
+        </location>
+        
+        <attribute name="background">
+            <location file="struct/global.html#adef-background">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-background" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-text" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="text">
+            <location file="struct/global.html#adef-text">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-text" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-link" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="link">
+            <location file="struct/global.html#adef-link">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-link" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-vlink" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="vlink">
+            <location file="struct/global.html#adef-vlink">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-vlink" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-alink" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="alink">
+            <location file="struct/global.html#adef-alink">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-alink" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="bgcolor" identical="attr#bgcolor"/>
+        <attribute name="onload" identical="attr#onload"/>
+        <attribute name="onunload" identical="attr#onunload"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="br">
+        <location file="struct/text.html#edef-BR">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-9.3.2" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-9.3.3" />
+        </location>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="clear" identical="attr#clear"/>
+    </tag>
+    
+    <tag name="button">
+        <location file="interact/forms.html#edef-BUTTON">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.5" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.6" />
+        </location>
+        
+        <attribute name="name">
+            <location file="interact/forms.html#adef-name-BUTTON">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-BUTTON" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-value-BUTTON" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="value">
+            <location file="interact/forms.html#adef-value-BUTTON">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-value-BUTTON" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-BUTTON" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="type">
+            <location file="interact/forms.html#adef-type-BUTTON">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-BUTTON" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="disabled" identical="attr#disabled"/>
+        <attribute name="accesskey" identical="attr#accesskey"/>        
+        <attribute name="tabindex" identical="attr#tabindex"/>        
+        
+        <attribute name="onblure" identical="attr#onblure"/>
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="caption">
+        <location file="struct/tables.html#h-11.2.2">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-11.2.2" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-11.2.3" />
+        </location>
+        
+        <attribute name="align">
+            <location file="struct/tables.html#align-CAPTION">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-align-CAPTION" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="center">
+        <location file="present/graphics.html#h-15.1.2">
+            <start-text offset="0" text="&lt;a name=&quot;edef-CENTER&quot;>" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-15.1.3" />
+        </location>
+    </tag>
+    
+    <!-- cite, already done -->
+    
+    <!-- code, already done -->
+    
+    <tag name="col">
+        <location file="struct/tables.html#edef-COL">
+            <start-text offset="0" text="&lt;h4>The &lt;a name=&quot;edef-COL&quot;>" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-11.2.5" />
+        </location>
+        
+        <attribute name="span">
+            <location file="struct/tables.html#span-COL">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-span-COL&quot;" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-width-COL&quot;" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+               
+        <attribute name="width">
+            <location file="struct/tables.html#width-COLGROUP">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-width-COL&quot;" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+    
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        
+        <attribute name="align" identical="attr#align-TD"/>
+        <attribute name="char" identical="attr#char" />
+        <attribute name="charoff" identical="attr#charoff" />
+        <attribute name="valign" identical="attr#valign"/>
+    </tag>
+    
+    <tag name="colgroup">
+        <location file="struct/tables.html#edef-COLGROUP">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-11.2.4" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-11.2.5" />
+        </location>
+        
+        <attribute name="span">
+            <location file="struct/tables.html#span-COLGROUP">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-span-COLGROUP" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-width-COLGROUP" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+               
+        <attribute name="width">
+            <location file="struct/tables.html#width-COLGROUP">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-width-COLGROUP" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+    
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        
+        <attribute name="align" identical="attr#align-TD"/>
+        <attribute name="char" identical="attr#char" />
+        <attribute name="charoff" identical="attr#charoff" />
+        <attribute name="valign" identical="attr#valign"/>
+    </tag>
+    
+    <tag name="dd" >
+        <location file="struct/lists.html#edef-DD">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-10.3" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-10.3.1" />
+        </location>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        
+        <attribute name="align" identical="attr#align"/>
+        <attribute name="char" identical="attr#char" />
+        <attribute name="charoff" identical="attr#charoff" />
+        <attribute name="valign" identical="attr#valign"/>
+    </tag>
+ 
+    <tag name="dl" identical="dd" >
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        
+        <attribute name="align" identical="attr#align"/>
+        <attribute name="char" identical="attr#char" />
+        <attribute name="charoff" identical="attr#charoff" />
+        <attribute name="valign" identical="attr#valign"/>
+    </tag>
+    
+    <tag name="dt" identical="dd">
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        
+        <attribute name="align" identical="attr#align"/>
+        <attribute name="char" identical="attr#char" />
+        <attribute name="charoff" identical="attr#charoff" />
+        <attribute name="valign" identical="attr#valign"/>
+    </tag>
+  
+    <tag name="del" >
+        <location file="struct/text.html#edef-del">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-9.4" />
+            <end-text offset="0" text="&lt;div class=&quot;navbar&quot; align=&quot;center&quot;>" />
+        </location>
+        
+        <attribute name="cite">
+            <location file="struct/text.html#cite-INS">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-cite-INS" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-datetime" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+               
+        <attribute name="datetime">
+            <location file="struct/text.html#datetime">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-datetime" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="ins" identical="del" >
+        <attribute name="cite" identical="del#cite"/>
+        <attribute name="datetime" identical="del#datetime"/>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <!-- dfn, already done -->
+
+    <tag name="dir">
+        <location file="struct/lists.html#edef-DIR">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-10.4" />
+            <end-text offset="0" text="&lt;div class=&quot;navbar&quot; align=&quot;center&quot;>" />
+        </location>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="menu" identical="dir" >
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="div">
+        <location file="struct/global.html#edef-DIV">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.5.4" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.5.5" />
+        </location>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="align" identical="attr#align"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="span">
+        <location file="struct/global.html#edef-DIV">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.5.4" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.5.5" />
+        </location>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="align" identical="attr#align"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="fieldset">
+        <location file="interact/forms.html#edef-FIELDSET">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.10" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.11" />
+        </location>
+    
+        <attribute name="align">
+            <location file="interact/forms.html#adef-align-LEGEND">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-align-LEGEND" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="accesskey" identical="attr#accesskey"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="legend" identical="fieldset">
+        <attribute name="align" identical="fieldset#align"/>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="accesskey" identical="attr#accesskey"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <!-- font, already done -->
+    
+    <tag name="form">
+        <location file="interact/forms.html#edef-FORM">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.3" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.4" />
+        </location>
+        
+        <attribute name="action">
+            <location file="interact/forms.html#adef-action">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-action" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-method" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="method">
+            <location file="interact/forms.html#adef-method">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-method" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-enctype" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt"/>
+        </attribute>
+        
+        <attribute name="enctype">
+            <location file="interact/forms.html#enctype">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-enctype" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-accept-charset" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="accept-charset">
+            <location file="interact/forms.html#adef-accept-charset">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-accept-charset" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-accept&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="accept">
+            <location file="interact/forms.html#adef-accept">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-accept&quot;>" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-FORM" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="name">
+            <location file="interact/forms.html#name-FORM">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after=""/>
+        </attribute>
+            
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="target" identical="attr#target"/>
+        
+        <attribute name="onsubmit" identical="attr#onsubmit"/>
+        <attribute name="onreset" identical="attr#onreset"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="frame">        
+        <location file="present/frames.html#edef-FRAME">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-16.2.2" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-16.2.3" />
+        </location>
+        
+        <attribute name="name">
+            <location file="present/frames.html#adef-name-FRAME">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-FRAME" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-longdesc-FRAME" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="longdesc">
+            <location file="present/frames.html#adef-longdesc-FRAME">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-longdesc-FRAME" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-src-FRAME" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="src">
+            <location file="present/frames.html#adef-src-FRAME">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-src-FRAME" />
+                <end-text offset="0" text="&lt;div class=&quot;adef-noresize" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="noresize">
+            <location file="present/frames.html#adef-noresize">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-noresize" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-scrolling" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="scrolling">
+            <location file="present/frames.html#adef-scrolling">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-scrolling" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-frameborder" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="frameborder">
+            <location file="present/frames.html#adef-frameborder">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-frameborder" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-marginwidth" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="margin-width">
+            <location file="present/frames.html#adef-marginwidth">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-marginwidth" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-marginheight" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="margin-height">
+            <location file="present/frames.html#adef-marginheight">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-marginheight" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+    </tag>
+    
+    <tag name="frameset">
+        <location file="present/frames.html#edef-FRAMESET">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-16.2.1" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-16.2.2" />
+        </location>
+        
+        <attribute name="rows">
+            <location file="present/frames.html#adef-rows-FRAMESET">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-rows-FRAMESET" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-cols-FRAMESET" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="cols">
+            <location file="present/frames.html#adef-cols-FRAMESET">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-cols-FRAMESET" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        
+        <attribute name="onload" identical="attr#onload"/>
+        <attribute name="onunload" identical="attr#onunload"/>
+    </tag>
+    
+    <tag name="h1">
+        <location file="struct/global.html#edef-H1">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.5.5" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.5.6" />
+        </location>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="align" identical="attr#align"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="h2" identical="h1">
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="align" identical="attr#align"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="h3" identical="h1">
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="align" identical="attr#align"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="h4" identical="h1">
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="align" identical="attr#align"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="h5" identical="h1">
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="align" identical="attr#align"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="h6" identical="h1">
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="align" identical="attr#align"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="head">        
+        <location file="struct/global.html#edef-HEAD">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.4.1" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.4.2" />
+        </location>
+        
+        <attribute name="profile">
+            <location file="struct/global.html#adef-profile">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-profile" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+    </tag>
+        
+    <tag name="hr">        
+        <location file="present/graphics.html#edef-HR">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-15.3" />
+            <end-text offset="0" text="&lt;div class=&quot;navbar&quot; align=&quot;center&quot;>"/>
+        </location>
+        
+        <attribute name="align">
+            <location file="present/graphics.html#align-HR">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-align-HR" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-noshade" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        
+        <attribute name="noshade">
+            <location file="present/graphics.html#noshade">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-noshade" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-size" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        
+        <attribute name="size">
+            <location file="present/graphics.html#size-HR">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-size-HR" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-width-HR" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+               
+        <attribute name="width">
+            <location file="present/graphics.html#width-HR">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-width-HR" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="html">
+        <location file="struct/global.html#edef-HTML">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-7.3" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-7.4" />
+        </location>
+        
+        <attribute name="version">
+            <location file="struct/global.html#adef-version">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-version" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+    </tag>
+    
+    <!-- i, already done -->
+    
+    <tag name="iframe">
+        <location file="present/frames.html#edef-IFRAME">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-16.5" />
+            <end-text offset="0" text="&lt;div class=&quot;navbar&quot; align=&quot;center&quot;" />
+        </location>
+    
+        <attribute name="longdesc">
+            <location file="present/frames.html#adef-longdesc-IFRAME">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-longdesc-IFRAME" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-IFRAME" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="name">
+            <location file="present/frames.html#adef-name-IFRAME">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-IFRAME" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-width-IFRAME" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="width">
+            <location file="present/frames.html#adef-width-IFRAME">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-width-IFRAME" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-height-IFRAME" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="height">
+            <location file="present/frames.html#adef-height-IFRAME">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-height-IFRAME" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        
+<!--  the HTML spec declares 2 name attributes !!                
+        <attribute name="name" identical="attr#name"/>
+-->        
+        <attribute name="src" identical="attr#src"/>
+        <attribute name="frameborder" identical="attr#frameborder"/>
+        <attribute name="marginwidth" identical="attr#margin-width"/>
+        <attribute name="marginheight" identical="attr#margin-height"/>
+        <attribute name="scrolling" identical="attr#scrolling"/>       
+        <attribute name="align" identical="attr#align"/>      
+    </tag>
+    
+    <tag name="img">
+        <location file="struct/objects.html#edef-IMG">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-13.2" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-13.3" />
+        </location>
+    
+        <attribute name="src">
+            <location file="struct/objects.html#adef-src-IMG">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-src-IMG" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-longdesc-IMG" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="longdesc">
+            <location file="struct/objects.html#adef-longdesc-IMG">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-longdesc-IMG" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-IMG" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="name">
+            <location file="struct/objects.html#adef-name-IMG">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-IMG" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="alt" identical="attr#alt"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        
+        
+        <attribute name="ismap" identical="attr#ismap" />
+        <attribute name="usemap" identical="attr#usemap"/>        
+        <attribute name="align" identical="attr#align-IMG"/>       
+        <attribute name="width" identical="attr#width"/>
+        <attribute name="height" identical="attr#height"/>
+        <attribute name="border" identical="attr#border"/>
+        <attribute name="hspace" identical="attr#hspace"/>
+        <attribute name="vspace" identical="attr#vspace"/>
+    </tag>
+    
+    <tag name="input">
+        <location file="interact/forms.html#edef-INPUT">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.4" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.5" />
+        </location>
+        
+        <attribute name="type">
+            <location file="interact/forms.html#adef-type-INPUT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-INPUT" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-INPUT" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="name">
+            <location file="interact/forms.html#adef-name-INPUT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-INPUT" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-value-INPUT" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="value">
+            <location file="interact/forms.html#adef-value-INPUT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-value-INPUT" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-size-INPUT" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="size">
+            <location file="interact/forms.html#adef-size-INPUT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-size-INPUT" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-maxlength" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="maxlength" >
+            <location file="interact/forms.html#adef-maxlength">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-maxlength" />
+                <end-text offset="0" text="&lt;a name=&quot;adef-checked" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="checked">
+            <location file="interact/forms.html#adef-checked">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-checked" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-src" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="src">
+            <location file="interact/forms.html#adef-src">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-src" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>        
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="alt" identical="attr#alt"/>
+        <attribute name="align" identical="attr#align"/>
+        <attribute name="accept" identical="form#accept"/>
+        <attribute name="disabled" identical="attr#disabled"/>
+        <attribute name="tabindex" identical="attr#tabindex"/>
+        <attribute name="accesskey" identical="attr#accesskey"/>
+        <attribute name="usemap" identical="attr#usemap" />
+        <attribute name="ismap" identical="attr#ismap" />
+        <attribute name="readonly" identical="attr#readonly" />
+        
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onselect" identical="attr#onselect"/>
+        <attribute name="onchange" identical="attr#onchange"/>
+        <attribute name="onclick" identical="attr#onclick"/>        
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <!-- ins, already done -->
+    
+    <tag name="isindex">
+        <location file="interact/forms.html#edef-ISINDEX">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.8" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.9" />
+        </location>
+        
+        <attribute name="prompt">
+            <location file="interact/forms.html#adef-prompt">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-prompt" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+    </tag>
+    
+    <!-- kbd, already done -->
+    
+    <tag name="label">
+        <location file="interact/forms.html#edef-LABEL">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-17.9.1" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.10" />
+        </location>
+    
+        <attribute name="for">
+            <location file="interact/forms.html#adef-for">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-for" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="accesskey" identical="attr#accesskey"/>
+                
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onclick" identical="attr#onclick"/>        
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="legend">
+        <location file="interact/forms.html#edef-LEGEND">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.10" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.11" />
+        </location>
+        
+        <attribute name="for">
+            <location file="interact/forms.html#adef-align-LEGEND">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-align-LEGEND" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="accesskey" identical="attr#accesskey"/>
+                
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onclick" identical="attr#onclick"/>        
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="li">
+        <location file="struct/lists.html#edef-LI">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-10.2" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-10.3" />
+        </location>
+        
+        <attribute name="type">
+            <location file="struct/lists.html#adef-type-LI">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-LI" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-start" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="start">
+            <location file="struct/lists.html#adef-start">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-start" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-value-LI" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="value">
+            <location file="struct/lists.html#adef-value-LI">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-value-LI" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-compact" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="compact">
+            <location file="struct/lists.html#adef-compact">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-compact" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+                
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onclick" identical="attr#onclick"/>        
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="ol" identical="li" >
+        <attribute name="type">
+            <location file="struct/lists.html#adef-type-LI">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-LI" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-start" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="start">
+            <location file="struct/lists.html#adef-start">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-start" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-value-LI" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="value">
+            <location file="struct/lists.html#adef-value-LI">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-value-LI" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-compact" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="compact">
+            <location file="struct/lists.html#adef-compact">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-compact" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+                
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onclick" identical="attr#onclick"/>        
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="ul" identical="li" >
+        <attribute name="type">
+            <location file="struct/lists.html#adef-type-LI">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-LI" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-start" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="start">
+            <location file="struct/lists.html#adef-start">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-start" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-value-LI" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="value">
+            <location file="struct/lists.html#adef-value-LI">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-value-LI" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-compact" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="compact">
+            <location file="struct/lists.html#adef-compact">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-compact" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+                
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onclick" identical="attr#onclick"/>        
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="link">
+        <location file="struct/links.html#edef-LINK">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-12.3" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-12.4" />
+        </location>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+                
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onclick" identical="attr#onclick"/>        
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        
+        <attribute name="href" identical="attr#href"/>
+        <attribute name="hreflang" identical="attr#hreflang"/>
+        <attribute name="rel" identical="attr#rel"/>
+        <attribute name="rev" identical="attr#rev"/>
+        <attribute name="target" identical="attr#target"/>
+        <attribute name="charset" identical="attr#charset"/>
+        <attribute name="media" identical="attr#media"/>
+        <attribute name="type" identical="a#type"/>
+    </tag>
+    
+        <!-- map, already done -->
+    
+    <!-- menu, already done -->
+    
+    <tag name="meta">
+        <location file="struct/global.html#edef-META">
+            <start-text offset="0" text="&lt;h4>The &lt;a name=&quot;edef-META" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-7.5" />
+        </location>
+        
+        <attribute name="name">
+            <location file="struct/global.html#adef-name-META">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-META" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-content" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="content">
+            <location file="struct/global.html#adef-content">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-content" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-scheme" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="scheme">
+            <location file="struct/global.html#adef-scheme">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-scheme" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-http-equiv" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="http-equiv">
+            <location file="struct/global.html#adef-http-equiv">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-http-equiv" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+    </tag>
+    
+    <tag name="noframes">
+        <location file="present/frames.html#edef-NOFRAMES">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-16.4.1" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-16.4.2" />
+        </location>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="noscript">
+        <location file="interact/scripts.html#edef-NOSCRIPT">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-18.3.1" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-18.3.2" />
+        </location>
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="object">
+        <location file="struct/objects.html#edef-OBJECT">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-13.3" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-13.3.2" />
+        </location>
+        
+        <attribute name="classid">
+            <location file="struct/objects.html#adef-classid">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-classid" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-codebase-OBJECT" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="codebase">
+            <location file="struct/objects.html#adef-codebase-OBJECT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-codebase-OBJECT" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-codetype" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="codetype">
+            <location file="struct/objects.html#adef-codetype">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-codetype" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-data" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="data">
+            <location file="struct/objects.html#adef-data">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-data" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-OBJECT" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="type">
+            <location file="struct/objects.html#adef-type-OBJECT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-OBJECT" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-archive-OBJECT" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="archive">
+            <location file="struct/objects.html#adef-archive-OBJECT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-archive-OBJECT" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-declare" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="declare">
+            <location file="struct/objects.html#adef-declare">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-declare" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-standby" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="standby">
+            <location file="struct/objects.html#adef-standby">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-standby" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+
+        <attribute name="tabindex" identical="attr#tabindex"/>
+        <attribute name="usemap" identical="attr#usemap"/>  
+        <attribute name="name">
+            <location file="interact/forms.html#adef-name-INPUT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-INPUT" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-value-INPUT" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>      
+        <attribute name="align" identical="attr#align-IMG"/>       
+        <attribute name="width" identical="attr#width"/>
+        <attribute name="height" identical="attr#height"/>
+        <attribute name="border" identical="attr#border"/>
+        <attribute name="hspace" identical="attr#hspace"/>
+        <attribute name="vspace" identical="attr#vspace"/>
+    </tag>
+    
+    <tag name="optgroup">
+        <location file="interact/forms.html#edef-OPTGROUP">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-17.6.1" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.7" />
+        </location>
+        
+        <attribute name ="name">
+            <location file="interact/forms.html#adef-name-SELECT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-SELECT" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-size-SELECT" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name ="label">
+            <location file="interact/forms.html#adef-label-OPTGROUP">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-label-OPTGROUP" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after=""/>
+        </attribute>
+        <attribute name ="size">
+            <location file="interact/forms.html#adef-size-SELECT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-size-SELECT" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-multiple" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name ="multiple">
+            <location file="interact/forms.html#adef-multiple">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-multiple" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="disabled" identical="attr#disabled"/>
+        <attribute name="tabindex" identical="attr#tabindex"/>        
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="option" identical="optgroup">
+        <attribute name ="selected">
+            <location file="interact/forms.html#adef-selected">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-selected" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-value-OPTION" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name ="value">
+            <location file="interact/forms.html#adef-value-OPTION">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-value-OPTION" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-label-OPTION" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name ="label">
+            <location file="interact/forms.html#adef-label-OPTION">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-label-OPTION" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="disabled" identical="attr#disabled"/>
+        <attribute name="tabindex" identical="attr#tabindex"/>        
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="select" >
+        <location file="interact/forms.html#edef-SELECT">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.6" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.7" />
+        </location>
+        <attribute name ="name">
+            <location file="interact/forms.html#adef-name-SELECT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-SELECT" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-size-SELECT" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name ="size">
+            <location file="interact/forms.html#adef-size-SELECT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-size-SELECT" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-multiple" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name ="multiple">
+            <location file="interact/forms.html#adef-multiple">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-multiple" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="disabled" identical="attr#disabled"/>
+        <attribute name="tabindex" identical="attr#tabindex"/>        
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onchange" identical="attr#onchange"/>
+        <attribute name="onfocus" identical="attr#onfocus"/>
+    </tag>
+    
+    <tag name="p">
+        <location file="struct/text.html#edef-P">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-9.3.1" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-9.3.2" />
+        </location>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="alt" identical="attr#alt"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="align" identical="attr#align"/>
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="param">
+        <location file="struct/objects.html#edef-PARAM">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-13.3.2" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-13.3.3" />
+        </location>
+        
+        <attribute name="name">
+            <location file="struct/objects.html#adef-name-PARAM">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-PARAM" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-value-PARAM" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="value">
+            <location file="struct/objects.html#adef-value-PARAM">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-value-PARAM" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-valuetype" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="valuetype">
+            <location file="struct/objects.html#adef-valuetype">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-valuetype" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-PARAM" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="type">
+            <location file="struct/objects.html#adef-type-PARAM">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-PARAM" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+    </tag>
+    
+    <tag name="pre">
+        <location file="struct/text.html#edef-PRE">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-9.3.4" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-9.3.5" />
+        </location>
+        
+        <attribute name="width">
+            <location file="struct/text.html#adef-width-PRE">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-width-PRE" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>      
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="blockquote">
+        <location file="struct/text.html#edef-Q">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-9.2.2" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-9.2.3" />
+        </location>
+        
+        <attribute name="cite">
+            <location file="struct/text.html#adef-cite-Q">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-cite-Q" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>      
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="q" identical="blockquote"> 
+        <attribute name="cite">
+            <location file="struct/text.html#adef-cite-Q">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-cite-Q" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>      
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <!-- s, already done -->
+    
+    <!-- samp, already done -->
+    
+    <tag name="script">
+        <location file="interact/scripts.html#edef-SCRIPT">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-18.2.1" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-18.2.2" />
+        </location>
+        
+        <attribute name="src">
+            <location file="interact/scripts.html#adef-src-SCRIPT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-src-SCRIPT" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-SCRIPT" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="type">
+            <location file="interact/scripts.html#adef-type-SCRIPT">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-SCRIPT" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-language" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="language">
+            <location file="interact/scripts.html#aadef-language">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-language" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-defer" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>        
+        <attribute name="defer">
+            <location file="interact/scripts.html#adef-defer">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-defer" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+    
+        <attribute name="charset" identical="attr#charset"/>
+    </tag>
+    
+    <!-- select, already done -->
+    
+    <!-- small, already done -->
+    
+    <!-- span, already done -->
+    
+    <!-- strike, already done -->
+    
+    <!-- strong, already done -->
+        
+    <tag name="style">
+        <location file="present/styles.html#edef-STYLE">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-14.2.3" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-14.2.4" />
+        </location>
+        
+        <attribute name="type">
+            <location file="present/styles.html#adef-type-STYLE">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-type-STYLE" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-media" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>        
+        <attribute name="media">
+            <location file="present/styles.html#adef-media">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-media" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+    </tag>
+    
+    <tag name="sub">
+        <location file="struct/text.html#edef-SUB">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-9.2.3" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-9.3" />
+        </location>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>      
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <tag name="sup" identical="sub">
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>      
+        
+        <attribute name="onclick" identical="attr#onclick"/>
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+    </tag>
+    
+    <!-- table tags -->
+    
+    <tag name="textarea">
+        <location file="interact/forms.html#edef-TEXTAREA">
+            <start-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.7" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-17.8" />
+        </location>
+        
+        <attribute name="name">
+            <location file="interact/forms.html#adef-name-TEXTAREA">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-name-TEXTAREA" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-rows-TEXTAREA" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        <attribute name="rows">
+            <location file="interact/forms.html#adef-rows-TEXTAREA">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-rows-TEXTAREA" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-cols-TEXTAREA" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        <attribute name="cols">
+            <location file="interact/forms.html#adef-cols-TEXTAREA">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-cols-TEXTAREA" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="readonly" identical="attr#readonly"/>
+        <attribute name="disabled" identical="attr#disabled"/>
+        <attribute name="tabindex" identical="attr#tabindex"/>        
+        <attribute name="accesskey" identical="attr#accesskey"/>        
+                
+        <attribute name="onfocus" identical="attr#onfocus"/>
+        <attribute name="onblur" identical="attr#onblur"/>
+        <attribute name="onclick" identical="attr#onclick"/>        
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="onchange" identical="attr#onchange"/>
+        <attribute name="onselect" identical="attr#onselect"/>
+    </tag>
+    
+    <tag name="title">
+        <location file="struct/global.html#edef-TITLE">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.4.2" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-7.4.3" />
+        </location>
+        
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+    </tag>
+    
+    <tag name="table">
+        <location file="struct/tables.html#edef-TABLE">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-11.2.1" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-11.2.2" />
+        </location>
+        
+        <attribute name="summary">
+            <location file="struct/tables.html#adef-summary">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-summary" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-align-TABLE" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        <attribute name="align">
+            <location file="struct/tables.html#adef-align-TABLE">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-align-TABLE" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-width-TABLE" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        <attribute name="width">
+            <location file="struct/tables.html#adef-width-TABLE">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-width-TABLE" />
+                <end-text offset="0" text="&lt;div class=&quot;aref-list&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>        
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        
+        <attribute name="bgcolor" identical="attr#bgcolor"/>
+        
+        <attribute name="frame">
+            <location file="struct/tables.html#adef-frame">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-frame" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-rules" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        
+        <attribute name="rules">
+            <location file="struct/tables.html#adef-rules">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-rules" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-border-TABLE" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        
+        <attribute name="border">
+            <location file="struct/tables.html#adef-border-TABLE">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-border-TABLE" />
+                <end-text offset="0" text="&lt;div class=&quot;example&quot;>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        
+        <attribute name="cellspacing">
+            <location file="struct/tables.html#adef-cellspacing">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-cellspacing" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-cellpadding" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        
+        <attribute name="cellpadding">
+            <location file="struct/tables.html#adef-cellpadding">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-cellpadding" />
+                <end-text offset="0" text="&lt;/div>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        
+    </tag>
+    
+    <tag name="tbody">
+        <location file="struct/tables.html#h-11.2.3">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-11.2.3" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-11.2.4" />
+        </location>
+        
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>        
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        
+        <attribute name="align">
+            <location file="struct/tables.html#adef-align-TD">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-align-TD" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-valign" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        <attribute name="valign">
+            <location file="struct/tables.html#adef-valign">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-valign" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-char" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="char">
+            <location file="struct/tables.html#adef-char">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-char" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-charoff" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+        <attribute name="charoff">
+            <location file="struct/tables.html#adef-charoff">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-charoff" />
+                <end-text offset="0" text="&lt;/div>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute>
+    </tag>
+    
+    <tag name="tfoot" identical="tbody">
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>        
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="align" identical="tbody#align"/>
+        <attribute name="valign" identical="tbody#valign"/>
+        <attribute name="char" identical="tbody#char"/>
+        <attribute name="charoff" identical="tbody#charoff"/>
+    </tag>
+    
+    <tag name="thead" identical="tbody">
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>        
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="align" identical="tbody#align"/>
+        <attribute name="valign" identical="tbody#valign"/>
+        <attribute name="char" identical="tbody#char"/>
+        <attribute name="charoff" identical="tbody#charoff"/>
+    </tag>
+    
+    
+    <tag name="td">
+        <location file="struct/tables.html#h-11.2.6">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-11.2.6" />
+            <end-text offset="0" text="&lt;h2>&lt;a name=&quot;h-11.3" />
+        </location>
+        
+        <attribute name="headers">
+            <location file="struct/tables.html#adef-headers">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-headers" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-scope" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        <attribute name="scope">
+            <location file="struct/tables.html#adef-scope">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-scope" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-abbr" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        <attribute name="abbr">
+            <location file="struct/tables.html#adef-abbr">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-abbr" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-axis" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        <attribute name="axis">
+            <location file="struct/tables.html#adef-axis">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-axis" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-rowspan" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        <attribute name="rowspan">
+            <location file="struct/tables.html#adef-rowspan">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-rowspan" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-colspan" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        <attribute name="colspan">
+            <location file="struct/tables.html#adef-colspan">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-colspan" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-nowrap" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        <attribute name="nowrap">
+            <location file="struct/tables.html#adef-nowrap">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-nowrap" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-width-TH" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        <attribute name="width">
+            <location file="struct/tables.html#adef-width-TH">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-width-TH" />
+                <end-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-height-TH" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        <attribute name="height">
+            <location file="struct/tables.html#adef-height-TH">
+                <start-text offset="0" text="&lt;dt>&lt;a name=&quot;adef-height-TH" />
+                <end-text offset="0" text="&lt;/div>" />
+            </location>
+            <add-text before="&lt;dl>" after="&lt;/dt>"/>
+        </attribute> 
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>        
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="align" identical="tbody#align"/>
+        <attribute name="valign" identical="tbody#valign"/>
+        <attribute name="char" identical="tbody#char"/>
+        <attribute name="charoff" identical="tbody#charoff"/>
+        <attribute name="bgcolor" identical="attr#bgcolor"/>
+    </tag>
+    
+    <tag name="th" identical="td">
+        
+        <attribute name="headers" identical="td#headers"/>
+        <attribute name="scope" identical="td#scope"/>
+        <attribute name="abbr" identical="td#abbr"/>
+        <attribute name="axis" identical="td#axis" />
+        <attribute name="rowspan" identical="td#rowspan" />
+        <attribute name="colspan" identical="td#colspan" />
+        <attribute name="nowrap" identical="td#nowrap" />
+        <attribute name="width" identical="td#width" />
+        <attribute name="height" identical="td#height" />
+        <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>        
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="align" identical="tbody#align"/>
+        <attribute name="valign" identical="tbody#valign"/>
+        <attribute name="char" identical="tbody#char"/>
+        <attribute name="charoff" identical="tbody#charoff"/>
+        <attribute name="bgcolor" identical="attr#bgcolor"/>
+    </tag>
+    
+    <tag name="tr">
+        <location file="struct/tables.html#h-11.2.5">
+            <start-text offset="0" text="&lt;h3>&lt;a name=&quot;h-11.2.5" />
+            <end-text offset="0" text="&lt;h3>&lt;a name=&quot;h-11.2.6" />
+        </location>
+                <attribute name="id" identical="attr#id"/>
+        <attribute name="class" identical="attr#class"/>
+        <attribute name="lang" identical="attr#lang"/>
+        <attribute name="dir" identical="attr#dir"/>
+        <attribute name="title" identical="attr#title"/>
+        <attribute name="style" identical="attr#style"/>
+        <attribute name="onclick" identical="attr#onclick"/>        
+        <attribute name="ondblclick" identical="attr#ondblclick"/>
+        <attribute name="onmousedown" identical="attr#onmousedown"/>
+        <attribute name="onmouseup" identical="attr#onmouseup"/>
+        <attribute name="onmouseover" identical="attr#onmouseover"/>
+        <attribute name="onmousemove" identical="attr#onmousemove"/>
+        <attribute name="onmouseout" identical="attr#onmouseout"/>
+        <attribute name="onkeypress" identical="attr#onkeypress"/>
+        <attribute name="onkeydown" identical="attr#onkeydown"/>
+        <attribute name="onkeyup" identical="attr#onkeyup"/>
+        <attribute name="align" identical="tbody#align"/>
+        <attribute name="valign" identical="tbody#valign"/>
+        <attribute name="char" identical="tbody#char"/>
+        <attribute name="charoff" identical="tbody#charoff"/>
+        <attribute name="bgcolor" identical="attr#bgcolor"/>
+     </tag>
+     
+</help>
+

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<palette_item version="1.0">
+  <component classname="javax.swing.JSpinner" type="visual" />
+  <icon16 urlvalue="nbres:/org/netbeans/modules/form/resources/palette/spinner_16.png" />
+  <icon32 urlvalue="nbres:/org/netbeans/modules/form/resources/palette/spinner_32.png" />
+  <description localizing-bundle="org.netbeans.modules.form.resources.Bundle"
+               display-name-key="NAME_javax-swing-JSpinner"
+               tooltip-key="HINT_javax-swing-JSpinner" />
+</palette_item>

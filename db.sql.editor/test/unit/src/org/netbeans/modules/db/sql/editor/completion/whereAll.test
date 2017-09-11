@@ -1,0 +1,20 @@
+# Columns are not sorted (they are in table order), columns from customer are
+# only listed once (although the table is there twice), the "cus" alias is there,
+# the "unused" schema is not there.
+
+select * from customer cus inner join customer inner join accounting.invoice where |
+
+--
+<unknown>
+  customers*
+    customer
+      customer_id
+      address_line
+    asummary[view]
+      asummary_id
+  accounting
+    invoice
+      invoice_id
+    purchase_order
+      order_id
+  unused

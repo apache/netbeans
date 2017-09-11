@@ -1,0 +1,8 @@
+# List of patterns (one pair per line) to skip over in VerifyLibsAndLicenses.testBinaryUniqueness.
+# Both sides of the pair must match for the pair to be skipped.
+# Uses standard Ant pattern syntax, in ${nb_all} among modules included in cluster config.
+# (For ZIP entries, just list the containing ZIP, not the entry path.)
+
+# These are used quite independently (sharing in platform makes little sense).
+# apisupport does not even technically use it - it is only part of a sample app.
+apisupport.feedreader/external/jdom-1.0.jar mobility.deployment.webdav/external/jdom-1.0.jar

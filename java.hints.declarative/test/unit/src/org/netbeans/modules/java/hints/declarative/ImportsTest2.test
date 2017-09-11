@@ -1,0 +1,17 @@
+%%TestCase simple
+package test;
+import java.util.LinkedList;
+public class Test {
+    private void test() {
+        java.util.LinkedList l;
+    }
+}
+%%=>
+package test;
+import java.util.ArrayList;
+import java.util.LinkedList;
+public class Test {
+    private void test() {
+        ArrayList l;
+    }
+}

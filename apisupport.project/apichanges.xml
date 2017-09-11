@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Search for CHANGEME in this document when copying and using it: -->
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<?xml-stylesheet type="text/xml" href="CHANGEME/nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="apisupport_spi">Netbeans Modules APISupport SPI</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change>
+            <api name="apisupport_spi"/>
+            <summary>Capitalizing language variant for internationalization</summary>
+            <version major="1" minor="68"/>
+            <date day="29" month="8" year="2013"/>
+            <author login="mkozeny"/>
+            <compatibility addition="yes"/>
+            <description>
+                Internationalization branding option is now creating localized branding files with capitalized language variant.
+            </description>
+            <class package="org.netbeans.modules.apisupport.project.spi" name="BrandingModel"/>
+            <class package="org.netbeans.modules.apisupport.project.spi" name="BrandingSupport"/>
+        </change>
+        <change>
+            <api name="apisupport_spi"/>
+            <summary>Extending branding model for internationalization</summary>
+            <version major="1" minor="67"/>
+            <date day="13" month="8" year="2013"/>
+            <author login="mkozeny"/>
+            <compatibility addition="yes"/>
+            <description>
+                <code>BrandingModel</code> were extended by method 
+                <code>updateProjectInternationalizationLocales</code> for updating information about used locales.
+            </description>
+            <class package="org.netbeans.modules.apisupport.project.spi" name="BrandingModel"/>
+        </change>
+        <change>
+            <api name="apisupport_spi"/>
+            <summary>New interface for refactoring project's property files</summary>
+            <version major="1" minor="65"/>
+            <date day="13" month="6" year="2013"/>
+            <author login="mkozeny"/>
+            <compatibility addition="yes"/>
+            <description>
+                <code>NbRefactoringProvider</code> interface contains method <code>getProjectXmlFilesRefactoring</code>
+                for getting xml files and its elements to be refactored represented as objects of inner
+                abstract class <code>ProjectFileRefactoring</code>, which also handles refactoring in every refactoring element.
+            </description>
+            <class package="org.netbeans.modules.apisupport.project.spi" name="NbModuleProvider"/>
+        </change>
+        <change>
+            <api name="apisupport_spi"/>
+            <summary>Modified NB module provider for aadding modules to target platform, 
+            New interface for getting information about the project</summary>
+            <version major="1" minor="64"/>
+            <date day="15" month="5" year="2013"/>
+            <author login="mkozeny"/>
+            <compatibility addition="yes"/>
+            <description>
+                <code>NbModuleProvider</code> interface now contains method <code>addModulesToTargetPlatform</code>
+                for adding modules to target platform also with its clusters if necessary. <code>NbProjectProvider</code> 
+                interface contains methods <code>isNbPlatformApplication</code>
+                and  <code>isSuiteComponent</code> in order to get information about particular project.
+            </description>
+            <class package="org.netbeans.modules.apisupport.project.spi" name="NbModuleProvider"/>
+            <class package="org.netbeans.modules.apisupport.project.spi" name="NbProjectProvider"/>
+        </change>
+        <change>
+            <api name="apisupport_spi"/>
+            <summary>Modified branding for internationalization</summary>
+            <version major="1" minor="63"/>
+            <date day="1" month="5" year="2013"/>
+            <author login="mkozeny"/>
+            <compatibility addition="yes"/>
+            <description>
+                <code>BrandingModel</code> and <code>BrandingSupport</code> now contains branding methods
+                internationalization.
+            </description>
+            <class package="org.netbeans.modules.apisupport.project.spi" name="BrandingModel"/>
+            <class package="org.netbeans.modules.apisupport.project.spi" name="BrandingSupport"/>
+        </change>
+        <change>
+            <api name="apisupport_spi"/>
+            <summary>Added explicitLayer method</summary>
+            <version major="1" minor="62"/>
+            <date day="26" month="3" year="2013"/>
+            <author login="mkozeny"/>
+            <compatibility addition="yes"/>
+            <description>
+                <code>LayerHandle</code> now contains <code>SingleLayer</code> inner class,
+                which is used for handling only explicit (not generated) <code>layer.xml</code> file. 
+                According to this was also added method <code>explicitLayer()</code>, which returns only explicit <code>layer.xml</code> file.
+            </description>
+            <class package="org.netbeans.modules.apisupport.project.api" name="LayerHandle"/>
+        </change>
+        <change>
+            <api name="apisupport_spi"/>
+            <summary>Allow adding test dependencies</summary>
+            <version major="1" minor="59"/>
+            <date day="10" month="10" year="2012"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes"/>
+            <description>
+                <code>ModuleDependency</code> has a settable property now denoting if the dependency is meant to be test or not
+            </description>
+            <class package="org.netbeans.modules.apisupport.project.spi" name="NbModuleProvider"/>
+        </change>
+        <change>
+            <api name="apisupport_spi"/>
+            <summary>Execute the project</summary>
+            <version major="1" minor="49"/>
+            <date day="3" month="8" year="2011"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes"/>
+            <description>
+                Layout designer seeks for <code>ExecProject</code> interface
+                in project's lookup when it needs to execute the application
+                with additional parameters.
+            </description>
+            <class package="org.netbeans.modules.apisupport.project.spi" name="ExecProject"/>
+        </change>
+        <change>
+            <api name="apisupport_spi"/>
+            <summary>Added prepareContext method</summary>
+            <version major="1" minor="38"/>
+            <date day="23" month="2" year="2010"/>
+            <author login="saubrecht"/>
+            <compatibility addition="yes"/>
+            <description>
+                NbModuleProvider now includes method <code>boolean prepareContext()</code>.
+                The method may get invoked before asking for some NetBeans module
+                properties. The main purpose of this method is to give Maven platform
+                mdules a chance to ask user which app suite they belong to and provide
+                correct classpath context for e.g. XML layer editing. The method
+                must be always invoked from EDT.
+            </description>
+            <class package="org.netbeans.modules.apisupport.project.spi" name="NbModuleProvider"/>
+        </change>
+
+        <change>
+            <api name="apisupport_spi"/>
+            <summary>Introduced ModuleTypePanel</summary>
+            <version major="1" minor="23"/>
+            <date day="29" month="8" year="2008"/>
+            <author login="akorostelev"/>
+            <compatibility addition="yes"/>
+            <description>
+                Adding <code>ModuleTypePanel</code> class to create 
+                UI Panel for selecting module type (Standalone or added to Suite),
+                NetBeans Platform (for standalone modules),
+                Module Suite (for module added to Suite).
+                And to communicate with created panel through WizardDescriptor.
+            </description>
+        </change>
+        
+        <change>
+            <api name="apisupport_spi"/>
+            <summary>Introduced NodeFactoryUtils</summary>
+            <version major="1" minor="16"/>
+            <date day="15" month="3" year="2007"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes"/>
+            <description>
+                Adding <code>NodeFactoryUtils</code> factory class for creation of layer file node.
+            </description>
+        </change>
+        
+        
+        <change>
+            <api name="apisupport_spi"/>
+            <summary>Initial version of SPI released</summary>
+            <version major="1" minor="15"/>
+            <date day="3" month="3" year="2007"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes"/>
+            <description>
+                First initial release of the NetBeans Modules APISupport SPI.
+                Level of stability is friend.
+                Allows for alternate project types to share the
+                apisupport's file creation wizards.
+                Any such project type shall include <code>NbModuleProvider</code> implementation
+                in it's lookup and include the <code>nbm-specific</code> template category
+                in the list of <code>RecommendedTemplates</code>.
+            </description>
+        </change>
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE CHANGEME/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Database Explorer API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the APISupport SPI.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+
+      <hr/><standard-changelists module-code-name="org.netbeans.modules.apisupport.project"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

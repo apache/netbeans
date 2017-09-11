@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- hello world -->
+<wrap>
+    Not indented
+    <child>
+        Indent OK
+    </child>
+    <child>
+        Too much indented
+    </child>
+    <preserve xml:space="preserve">
+                            MUST NOT be indented
+    </preserve>
+    <preserve xml:space="preserve">
+        <child>
+    Do not indent either
+        </child>
+    </preserve>
+
+    <preserve xml:space="preserve">
+        <child>
+    Do not indent either
+                    <indent xml:space="default">
+        Indent
+    </indent>
+        </child>
+    </preserve>
+</wrap>

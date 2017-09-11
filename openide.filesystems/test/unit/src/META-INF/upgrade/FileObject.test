@@ -1,0 +1,41 @@
+%%TestCase toURI
+package test;
+class C {
+    org.openide.filesystems.FileObject f;
+    java.net.URI u() throws Exception {
+        return f.getURL().toURI();
+    }
+}
+%%=>
+package test;
+class C {
+    org.openide.filesystems.FileObject f;
+    java.net.URI u() throws Exception {
+        return f.toURI();
+    }
+}
+%%=>
+package test;
+class C {
+    org.openide.filesystems.FileObject f;
+    java.net.URI u() throws Exception {
+        return f.toURL().toURI();
+    }
+}
+
+%%TestCase toURL
+package test;
+class C {
+    org.openide.filesystems.FileObject f;
+    java.net.URL u() throws IOException {
+        return f.getURL();
+    }
+}
+%%=>
+package test;
+class C {
+    org.openide.filesystems.FileObject f;
+    java.net.URL u() throws IOException {
+        return f.toURL();
+    }
+}

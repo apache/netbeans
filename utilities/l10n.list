@@ -1,0 +1,10 @@
+# utilities
+read global
+${l10n-module}/src/org/netbeans/modules/openfile/*.gif
+${l10n-module}/src/org/netbeans/modules/openfile/*.png
+${l10n-module}/src/org/netbeans/modules/pdf/*.png
+${l10n-module}/src/org/netbeans/modules/search/doc-files/*.png
+${l10n-module}/src/org/netbeans/modules/search/res/*.gif
+${l10n-module}/src/org/netbeans/modules/search/res/*.png
+${l10n-module}/src/org/netbeans/modules/url/*.gif
+${l10n-module}/src/org/netbeans/modules/url/*.png

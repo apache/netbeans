@@ -1,0 +1,188 @@
+Edit|Clear Document Bookmarks
+Edit|Copy
+Edit|Cut
+Edit|Delete Next Character
+Edit|File Hierarchy
+Edit|File Members
+Edit|Find Next Occurrence
+Edit|Find Previous Occurrence
+Edit|Find Selection
+Edit|Find in Projects...
+Edit|Find...
+Edit|Go to Line...
+Edit|Go to Symbol...
+Edit|Go to Type...
+Edit|Hierarchy
+Edit|Members
+Edit|Next Bookmark
+Edit|Paste
+Edit|Previous Bookmark
+Edit|Quick Search
+Edit|Redo
+Edit|Replace
+Edit|Replace in Projects...
+Edit|Start Macro Recording
+Edit|Stop Macro Recording
+Edit|Toggle Bookmark
+Edit|Undo
+Editor Macros|cast-to-String
+Editor Macros|debug-var
+Editor Macros|quote-word
+Go To|Go to Declaration
+Go To|Go to Javadoc
+Go To|Go to Line...
+Go To|Go to Source
+Go To|Go to Super Implementation
+Other|Back
+Other|Complete Line
+Other|Complete Line and Create New Line
+Other|Copy Selection else Line down
+Other|Copy Selection else Line up
+Other|Cut from Insertion Point to Line Begining
+Other|Cut from Insertion Point to Line End
+Other|Delete Line
+Other|Delete Next Word
+Other|Delete Preceding Characters in Line
+Other|Delete Previous Character
+Other|Delete Previous Word
+Other|Delete Selection
+Other|Delete Tab
+Other|Extend Selection Back
+Other|Extend Selection Backward
+Other|Extend Selection Down
+Other|Extend Selection Forward
+Other|Extend Selection Up
+Other|Extend Selection to Beginning of Document
+Other|Extend Selection to Beginning of Line
+Other|Extend Selection to Beginning of Text on Line
+Other|Extend Selection to Beginning of Word
+Other|Extend Selection to End of Document
+Other|Extend Selection to End of Line
+Other|Extend Selection to End of Word
+Other|Extend Selection to First Non-whitespace Char
+Other|Extend Selection to Last Non-whitespace Char
+Other|Extend Selection to Matching Brace
+Other|Extend Selection to Next Page
+Other|Extend Selection to Next Word
+Other|Extend Selection to Previous Page
+Other|Fast Import
+Other|Forward
+Other|Go to First Non-whitespace Char
+Other|Go to Last Non-whitespace Char
+Other|Incremental Search Backward
+Other|Incremental Search Forward
+Other|Inplace Refactoring
+Other|Insert Code
+Other|Insert Current Date and Time
+Other|Insert Newline
+Other|Insert Tab
+Other|Insertion Point Backward
+Other|Insertion Point Down
+Other|Insertion Point Forward
+Other|Insertion Point Up
+Other|Insertion Point to Beginning of Document
+Other|Insertion Point to Beginning of Line
+Other|Insertion Point to Beginning of Text on Line
+Other|Insertion Point to Beginning of Word
+Other|Insertion Point to End of Document
+Other|Insertion Point to End of Line
+Other|Insertion Point to End of Word
+Other|Insertion Point to Matching Brace
+Other|Insertion Point to Next Word
+Other|Insertion Point to Previous Word
+Other|Last edit
+Other|Move Insertion Point to Bottom
+Other|Move Insertion Point to Center
+Other|Move Insertion Point to Top
+Other|Move Selection else Line down
+Other|Move Selection else Line up
+Other|Navigate to Next Occurrence
+Other|Navigate to Previous Occurrence
+Other|Page Down
+Other|Page Up
+Other|Paste Formatted
+Other|Re-indent Current Line or Selection
+Other|Remove Trailing Spaces
+Other|Replace Variable With its Getter
+Other|Replace Variable With its Setter
+Other|Replace Variable With its is* Method
+Other|Scroll Down
+Other|Scroll Insertion Point to Bottom
+Other|Scroll Insertion Point to Center
+Other|Scroll Insertion Point to Top
+Other|Scroll Up
+Other|Select All
+Other|Select Identifier
+Other|Select Line
+Other|Select Next Element
+Other|Select Previous Element
+Other|Select Word
+Other|Show All Code Completion Popup
+Other|Show Code Completion Popup
+Other|Show Code Completion Tip Popup
+Other|Show Documentation Popup
+Other|Show Popup Menu
+Other|Split Line
+Other|Start New Line
+Other|Switch Capitalization of Identifier
+Other|Switch Case
+Other|To Lowercase
+Other|To Uppercase
+Other|Toggle Comment
+Other|Toggle Highlight Search
+Other|Toggle Line Numbers
+Other|Toggle Toolbar
+Other|Toggle Typing Mode
+Refactor|Change Method Parameters...
+Refactor|Convert Anonymous to Member...
+Refactor|Copy...
+Refactor|Encapsulate Fields...
+Refactor|Extract Interface...
+Refactor|Extract Superclass...
+Refactor|Find Usages
+Refactor|Introduce Constant...
+Refactor|Introduce Field...
+Refactor|Introduce Method...
+Refactor|Introduce Variable...
+Refactor|Move...
+Refactor|Pull Up...
+Refactor|Push Down...
+Refactor|Redo
+Refactor|Rename...
+Refactor|Safely Delete...
+Refactor|Undo
+Refactor|Use Supertype Where Possible...
+Source|Analyze Javadoc
+Source|Comment
+Source|Fix Code...
+Source|Fix Imports
+Source|Format
+Source|Next Error in Editor
+Source|Next Matching Word
+Source|Previous Matching Word
+Source|Shift Line Left
+Source|Shift Line Right
+Source|Uncomment
+Tools|Go to File...
+Tools|Javadoc Index Search
+Tools|Javadoc References
+View|Collapse All
+View|Collapse All Java Code
+View|Collapse All Javadoc
+View|Collapse Fold
+View|Expand All
+View|Expand All Java Code
+View|Expand All Javadoc
+View|Expand Fold
+Window|Analyzer
+Window|Call Hierarchy
+Window|Clone Document
+Window|Close All Documents
+Window|Close Other Documents
+Window|Close Window
+Window|Declaration View
+Window|Editor
+Window|Find Usages Results
+Window|Javadoc View
+Window|Navigator
+Window|Refactoring Preview

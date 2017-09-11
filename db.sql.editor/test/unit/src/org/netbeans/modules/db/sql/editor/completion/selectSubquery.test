@@ -1,0 +1,12 @@
+select * from customer cust where cust.customer_id in (select distinct | from invoice)
+
+--
+<unknown>
+  customers*
+    customer
+      customer_id
+    invoice
+      invoice_id
+      customer_id
+    asummary[view]
+      asummary_id

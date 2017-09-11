@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.java.source.ant
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/source/ant/Bundle.properties
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module-Provides: org.netbeans.spi.java.project.runner.JavaRunnerImplementation
+

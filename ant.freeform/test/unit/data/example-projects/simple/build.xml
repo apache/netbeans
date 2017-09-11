@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="dist" name="simple-freeform-project">
+    <target name="init">
+        <property file="build.properties"/>
+        <path id="cp">
+            <pathelement location="${lib.dir}/lib1.jar"/>
+            <pathelement location="${lib.dir}/lib2.jar"/>
+        </path>
+        <path id="run.cp">
+            <path refid="cp"/>
+            <pathelement location="${main.jar}"/>
+        </path>
+    </target>
+    <target name="compile" depends="init">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" source="1.4">
+            <classpath refid="cp"/>
+        </javac>
+    </target>
+    <target name="compile-some-files" depends="init">
+        <fail unless="files">Must set property 'files'</fail>
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" source="1.4" includes="${files}">
+            <classpath refid="cp"/>
+        </javac>
+    </target>
+    <target name="jar" depends="init,compile">
+        <dirname file="${main.jar}" property="main.jar.dir"/>
+        <mkdir dir="${main.jar.dir}"/>
+        <jar jarfile="${main.jar}">
+            <fileset dir="${classes.dir}"/>
+        </jar>
+    </target>
+    <target name="start" depends="jar">
+        <java classname="org.foo.myapp.MyApp">
+            <classpath refid="run.cp"/>
+        </java>
+    </target>
+    <target name="start-with-specified-class" depends="jar">
+        <fail unless="class">Must set property 'class'</fail>
+        <java classname="${class}">
+            <classpath refid="run.cp"/>
+        </java>
+    </target>
+    <target name="build-javadoc" depends="init">
+        <mkdir dir="${javadoc.dir}"/>
+        <javadoc destdir="${javadoc.dir}" sourcepath="${src.dir}">
+            <fileset dir="${src.dir}"/>
+            <classpath refid="cp"/>
+        </javadoc>
+    </target>
+    <target name="ant-compile" depends="init">
+        <mkdir dir="${ant.classes.dir}"/>
+        <javac srcdir="${ant.src.dir}" destdir="${ant.classes.dir}" source="1.4">
+            <classpath>
+                <pathelement location="${ant.home}/lib/ant.jar"/>
+            </classpath>
+        </javac>
+    </target>
+    <target name="ant-compile-some-files" depends="init">
+        <fail unless="files">Must set property 'files'</fail>
+        <mkdir dir="${ant.classes.dir}"/>
+        <javac srcdir="${ant.src.dir}" destdir="${ant.classes.dir}" source="1.4" includes="${files}">
+            <classpath>
+                <pathelement location="${ant.home}/lib/ant.jar"/>
+            </classpath>
+        </javac>
+    </target>
+    <target name="ant-def" depends="ant-compile,init">
+        <taskdef name="special-task" classname="org.foo.ant.SpecialTask">
+            <classpath>
+                <pathelement location="${ant.classes.dir}"/>
+            </classpath>
+        </taskdef>
+    </target>
+    <target name="generate-xdocs" depends="init,ant-def">
+        <special-task/>
+        <!-- XXX -->
+    </target>
+    <target name="dist" depends="init,jar,build-javadoc,generate-xdocs">
+        <!-- XXX -->
+    </target>
+    <target name="clean" depends="init">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+</project>

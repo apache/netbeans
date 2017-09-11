@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="File">
+            <file name="org-example-b-BAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.apisupport.project.layers.TestBundle"/>
+                <attr name="delegate" newvalue="org.example.b.BAction"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.apisupport.project.layers.TestBundle#CTL_BAction"/>
+                <attr name="iconBase" stringvalue="org/netbeans/core/startup/layers/icon.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" stringvalue="false"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="File">
+            <file name="org-example-b-BAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-example-b-BAction.instance"/>
+                <attr name="position" intvalue="1300"/>
+            </file>
+            <file name="org-example-a-AAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-example-a-AAction.instance"/>
+                <attr name="position" intvalue="1400"/>
+            </file>
+        </folder>
+        <folder name="A Folder">
+            <file name="org-example-a-AAction.shadow_hidden"/>
+        </folder>
+    </folder>
+</filesystem>

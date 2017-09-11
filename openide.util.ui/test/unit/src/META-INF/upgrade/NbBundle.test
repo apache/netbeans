@@ -1,0 +1,34 @@
+%%TestCase getBundle
+package test;
+import org.openide.util.NbBundle;
+class Test {
+     void m() {
+         NbBundle.getBundle(Test.class).getString("key");
+     }
+}
+%%=>
+package test;
+import org.openide.util.NbBundle;
+class Test {
+     void m() {
+         NbBundle.getMessage(Test.class, "key");
+     }
+}
+%%TestCase MessageFormat
+package test;
+import java.text.MessageFormat;
+import org.openide.util.NbBundle;
+class Test {
+     String m(int i, String s) {
+         return MessageFormat.format(NbBundle.getMessage(Test.class, "key"), new Object[] {i, s});
+     }
+}
+%%=>
+package test;
+import java.text.MessageFormat;
+import org.openide.util.NbBundle;
+class Test {
+     String m(int i, String s) {
+         return NbBundle.getMessage(Test.class, "key", i, s);
+     }
+}

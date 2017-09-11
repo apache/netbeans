@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : newXMLDocument.xml
+    Created on : October 10, 2006, 7:03 PM
+    Author     : jindra
+    Description:
+        Purpose of the document follows.
+-->
+
+<collection>
+    <description>
+	<comment >
+	</comment>
+    </description>
+    <recipe >
+	<title jmeno = "title" >titulek</title>
+	<ingredient amount="amm" name="name" unit="first" >
+	    <preparation >
+		<step >step by step</step>
+		<step>first step </step>
+		<step> second step <!!!></step>
+	    </preparation>
+	</ingredient>
+	<preparation>
+	    <step >step by step</step>
+	</preparation>
+	<nutrition alcohol="alkohol" carbohydrates="carbo" fat="100" protein="0"/>
+    </recipe>
+    
+</collection>

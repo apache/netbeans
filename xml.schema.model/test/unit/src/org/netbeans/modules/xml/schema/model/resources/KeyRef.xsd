@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="namespace1"
+    xmlns:r="namespace1"
+    elementFormDefault="qualified">
+
+    <xs:element name="root">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element name="A" type="r:A" maxOccurs="unbounded">
+                <xs:keyref name="dummy" refer="r:pNumKey">
+                    <xs:selector xpath="r:part"/>
+                    <xs:field xpath="@ref-number"/>
+                </xs:keyref>
+            </xs:element>
+            <xs:element name="B" type="r:B"/>
+        </xs:sequence>
+    </xs:complexType>
+
+        <xs:key name="pNumKey">
+            <xs:selector xpath="r:B/r:part"/>
+            <xs:field xpath="@key-number"/>
+        </xs:key>
+    </xs:element>
+
+    <xs:complexType name="A">
+        <xs:sequence>
+            <xs:element name="part" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="ref-number" type="xs:integer"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="B">
+        <xs:sequence>      
+            <xs:element name="part" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="key-number" type="xs:integer"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>  
+    </xs:complexType>
+
+</xs:schema>
+

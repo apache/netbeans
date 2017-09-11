@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.libs.bytelist/1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/bytelist/Bundle.properties
+OpenIDE-Module-Implementation-Version: 1

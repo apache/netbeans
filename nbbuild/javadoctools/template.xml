@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!DOCTYPE someant  [
+  <!ENTITY links SYSTEM "links.xml">
+  <!ENTITY properties SYSTEM "properties.xml">
+  <!ENTITY replaces SYSTEM "replaces.xml">
+  <!ENTITY disallowed-links SYSTEM "disallowed-links.xml">
+]>
+
+<project name="template" default="die" basedir=".">
+
+    <description><![CDATA[
+Templated targets:
+
+------------------------------ javadoc ------------------------
+${javadoc.base}       top dir of module, e.g. "${nb_all}/foo" ("." from your build script)
+${javadoc.name}       name of docs folder, e.g. "org-netbeans-modules-foo"
+${javadoc.title}      display title of docs, e.g. "Foo API"
+${javadoc.packages}   list of packages to build, e.g. "org.netbeans.api.foo,org.netbeans.spi.foo"
+${javadoc.classpath}  classpath for source files (probably same as what you use for <javac>)
+Optional:
+${javadoc.files}      selector describing which files to build
+${javadoc.main.page}  link to main page, e.g. org/netbeans/api/foo/doc-files/api.html
+${javadoc.docfiles}   doc-files directory such as ${javadoc.base}/api/doc; default none
+${javadoc.apichanges} API change list XML file; default no change list
+${javadoc.arch}       architecture summary of the module; default a dummy summary
+${javadoc.overview}   Overview HTML file; default a generic page
+${javadoc.check.external.links}  set to "true" to check external HTTP links
+${javadoc.header}     Special header text.
+${javadoc.web.root}   Base URL for online Javadoc for linking; default http://www.netbeans.org/download/dev/javadoc
+
+To call this script you MUST use the form of <ant> with the 'dir' attribute. This
+script expects that its basedir is the directory containing it. If you use only
+the 'antfile' attribute the basedir will be copied from your script, which will
+cause it to fail.
+]]></description>
+
+    <target name="die">
+        <fail>Use this script only from other scripts, to call templated targets.</fail>
+    </target>
+
+    <!-- javadoc -->
+    
+    <target name="javadoc-init" >
+    
+        <!-- Output dir (will create ${javadoc.name}/ and ${javadoc.name}.zip beneath this): -->
+        <property name="javadoc.out" location="${netbeans.javadoc.dir}"/>
+        <property name="javadoc.out.dir" location="${javadoc.out}/${javadoc.name}"/>
+        <property name="javadoc.out.zip" location="${javadoc.out}/${javadoc.name}.zip"/>
+        <!-- Source files: -->
+        <property name="javadoc.src" location="${javadoc.base}/src"/>
+        <!-- Extra HTML files, normally in **/doc-files/*.html: -->
+        <property name="javadoc.docfiles" location="no-doc-files"/>
+        <condition property="javadoc.overview.generate.generic">
+            <not>
+                <isset property="javadoc.overview" />
+            </not>
+        </condition>
+        <property name="javadoc.overview" location="../build/tmp/overview/${javadoc.name}-overview-generic.html"/>
+        <mkdir dir="${javadoc.overview}/../" />
+        <property name="javadoc.apichanges" location="apichanges-empty.xml"/>
+        <property name="javadoc.arch" location="arch-empty.xml"/>
+        
+        
+        <!-- Docs to link to: -->
+        <property name="javadoc.web.root" value="http://root/"/>
+        <property name="javadoc.docs.jdk" value="http://download.oracle.com/javase/7/docs/api"/>
+        &properties;
+        <!-- add more here as needed... -->
+        <property name="javadoc.css.dir" location="."/>
+        <property name="javadoc.css.main" location="${javadoc.css.dir}/javadoc.css"/>
+        <fileset id="javadoc.css.files" dir="${javadoc.css.dir}">
+            <include name="*.css"/>
+        </fileset>
+        <property name="javadoc.resources.dir" location="resources"/>
+        <fileset id="javadoc.resources.files" dir="${javadoc.resources.dir}">
+            <include name="**/*"/>
+            <exclude name="**/*.xcf"/> <!-- GIMP versions of the images -->
+        </fileset>
+        <property name="javadoc.check.external.links" value="false"/>
+        <property name="javadoc.header" value="&amp;nbsp;"/>
+
+        <!-- Determine API stability -->
+        <mkdir dir="../build/tmp/javadoc-colors"/>
+        <delete file="../build/tmp/javadoc-colors/${javadoc.name}.txt" failonerror="false"/>
+        <arch answers="${javadoc.arch}" xsl="export2color.xsl" output="../build/tmp/javadoc-colors/${javadoc.name}.txt" />
+        <property file="../build/tmp/javadoc-colors/${javadoc.name}.txt"/>
+        <property name="javadoc.stability.label" value="&lt;span style='font-style:normal; font-size:medium; font-weight:normal; background-color:${stability.color};'&gt;&lt;a href='${stability.definition.url}' target='_blank'&gt;${stability.title}&lt;/a&gt;&lt;/span&gt;"/>
+
+        <condition property="nb-docs.css" value="nb-docs-stability.css">
+            <isset property="stability.image"/>
+        </condition>
+        <condition property="nb-docs.css" value="nb-docs.css">
+            <not>
+                <isset property="stability.image"/>
+            </not>
+        </condition>
+        
+        <mkdir dir="${javadoc.out.dir}"/>
+        
+        <condition property="javadoc.files.provided">
+        	<isset property="javadoc.files" />
+        </condition>
+        
+        <!-- default value for javadoc-files -->
+        <selector id="all-java-files" >
+            <filename name="**/*.java" />
+        </selector>
+        <property name="javadoc.files" value="all-java-files" />
+        
+        <property file="../build.properties" />
+
+        <condition property="javadoc.reference.generated" >
+            <isset property="javadoc.docs.${javadoc.name}" />
+        </condition>
+    </target>
+
+    <target name="javadoc-generate-references" depends="javadoc-init" unless="javadoc.reference.generated" >
+        <!-- Add these files to the generated ones -->
+        <concat append="true" destfile="properties.xml" ><![CDATA[<property name="javadoc.docs.${javadoc.name}" value="$${javadoc.web.root}/${javadoc.name}"/>]]>
+</concat>
+        <concat append="true" destfile="links.xml" ><![CDATA[<link href="$${javadoc.docs.${javadoc.name}}" offline="true" packagelistloc="${javadoc.out.dir}"/>]]>
+</concat>
+        <concat append="true" destfile="replaces.xml" ><![CDATA[<replacefilter token="@${javadoc.name}@" value="$${javadoc.docs.${javadoc.name}}"/>]]>
+</concat>
+
+        <replace
+            token="${netbeans.javadoc.dir}" 
+            value="$${netbeans.javadoc.dir}" 
+            file="links.xml"
+        />
+        
+        <!-- set the property for use in this script -->
+        <property name="javadoc.docs.${javadoc.name}" value="${javadoc.web.root}/${javadoc.name}" />
+    </target>
+    
+    <target name="javadoc-generate-overview" depends="javadoc-init,javadoc-check-timestamps" unless="javadoc.overview.should.not.be.generated" >
+        <delete file="${javadoc.overview}" />
+
+        <property file="${export.interfaces}/properties/all.properties" />
+        <arch xsl="exportOverview.xsl" answers="${javadoc.arch}" output="${javadoc.overview}" stylesheet="prose.css"
+            apichanges="${javadoc.apichanges}" project="${javadoc.project}" 
+        >
+            <!--
+            <param name="changes-since-year" expression="${previous.release.year}"/>
+            <param name="changes-since-day" expression="${previous.release.day}"/>
+            <param name="changes-since-month" expression="${previous.release.month}"/>
+            -->
+        </arch>
+    </target>
+
+    <target name="javadoc-check-timestamps" depends="javadoc-init">
+        <uptodate targetfile="${javadoc.out.zip}" property="javadoc.up.to.date">
+            <srcfiles dir="${javadoc.src}">
+                <or>
+                    <and>
+                        <selector refid="${javadoc.files}" />
+                        <filename name="**/*.java"/>
+                    </and>
+                    <!-- Can have inline docs too: -->
+                    <filename name="**/package.html"/>
+                    <filename name="**/doc-files/"/>
+                </or>
+            </srcfiles>
+            <srcfiles dir="${javadoc.docfiles}"/>
+            <srcfiles refid="javadoc.css.files"/>
+            <srcfiles refid="javadoc.resources.files"/>
+            <srcfiles dir=".">
+                <include name="apichanges.xsl"/>
+            </srcfiles>
+            <srcfiles file="${javadoc.apichanges}"/>
+            <srcfiles file="${javadoc.arch}"/>
+            <srcfiles file="${javadoc.overview}"/>
+            <srcfiles file="exportOverview.xsl"/>
+        </uptodate>
+        <condition property="javadoc.should.not.be.generated" >
+            <or>
+                <isset property="javadoc.up.to.date" />
+                <not>
+                    <isset property="javadoc.packages" />
+                </not>
+                <equals arg1="${javadoc.packages}" arg2="" />
+            </or>
+        </condition>
+        <condition property="javadoc.interfaces.should.not.be.generated" >
+            <or>
+                <isset property="javadoc.up.to.date" />
+                <not>
+                    <isset property="export.interfaces" />
+                </not>
+            </or>
+        </condition>
+        <condition property="javadoc.apichanges.should.not.be.generated" >
+            <or>
+                <isset property="javadoc.up.to.date" />
+                <not>
+                    <isset property="export.apichanges" />
+                </not>
+            </or>
+        </condition>
+        <condition property="javadoc.overview.should.not.be.generated" >
+            <or>
+                <isset property="javadoc.up.to.date" />
+                <not>
+                    <isset property="javadoc.overview.generate.generic" />
+                </not>
+            </or>
+        </condition>
+        <echo level="verbose">javadoc.up.to.date=${javadoc.up.to.date} javadoc.should.not.be.generated=${javadoc.should.not.be.generated} javadoc.packages=${javadoc.packages}</echo>
+    </target>
+
+    <target name="javadoc-make-plain-title" unless="javadoc.main.page">
+        <property name="javadoc.hyperlinked.title" value="${javadoc.title}"/>
+    </target>
+
+    <target name="javadoc-make-hyperlinked-title" if="javadoc.main.page">
+        <property name="javadoc.hyperlinked.title" value='&lt;a href="@TOP@${javadoc.main.page}"&gt;${javadoc.title}&lt;/a&gt;'/>
+    </target>
+
+    <target name="javadoc-stage-alternative" depends="javadoc-init,javadoc-check-timestamps" if="javadoc.should.not.be.generated" unless="javadoc.up.to.date" >
+        <!-- if no packages are specified, this is used to generate index.html from the overview page -->
+        <copy file="${javadoc.overview}" tofile="${javadoc.out.dir}/index.html" />
+    </target>
+    
+    <target name="javadoc-stage-main" depends="javadoc-init,javadoc-check-timestamps,javadoc-exec-files,javadoc-exec-packages" unless="javadoc.should.not.be.generated" >
+        <copy todir="${javadoc.out.dir}">
+            <fileset refid="javadoc.css.files"/>
+        </copy>
+        <replace dir="${javadoc.out.dir}" >
+            <include name="javadoc*.css"/>
+            <include name="nb-docs-stability.css"/>
+            <replacefilter token="@nb-docs-css@" value="${nb-docs.css}"/>
+            <replacefilter token="@api-stability-image@" value="${stability.image}"/>
+        </replace>
+        <mkdir dir="${javadoc.out.dir}/resources"/>
+        <copy todir="${javadoc.out.dir}/resources">
+            <fileset refid="javadoc.resources.files"/>
+        </copy>
+    </target>
+    
+    <target name="javadoc-exec-condition" depends="javadoc-check-timestamps" >
+        <condition property="javadoc.exec.packages">
+            <or>
+                <isset property="javadoc.files.provided"/>
+                <isset property="javadoc.should.not.be.generated"/>
+            </or>
+        </condition>
+    </target>
+
+    <target name="-javadoc-set-footer">
+        <tstamp>
+            <format property="YEAR" pattern="yyyy"/>
+        </tstamp>
+        <property name="javadoc.footer" value='&lt;span class="footnote"&gt;Built on ${TODAY}.&amp;nbsp;&amp;nbsp;|&amp;nbsp;&amp;nbsp;Portions
+        Copyright 1997-${YEAR} Oracle. All rights reserved.&lt;/span&gt;'/>
+    </target>
+    
+    <target name="javadoc-exec-packages" depends="javadoc-init,javadoc-generate-references,javadoc-generate-overview,javadoc-exec-condition,javadoc-check-timestamps,javadoc-make-plain-title,javadoc-make-hyperlinked-title,javadoc-exec-condition,-javadoc-set-footer" unless="javadoc.exec.packages">
+        <javadoc source="${javac.source}" author="false" destdir="${javadoc.out.dir}" packagenames="${javadoc.packages}" stylesheetfile="${javadoc.css.main}" windowtitle="${javadoc.title}" overview="${javadoc.overview}" splitindex="true" use="true" version="false" encoding="UTF-8">
+            <sourcepath>
+                <pathelement location="${javadoc.docfiles}"/>
+                <pathelement location="${javadoc.src}"/>
+            </sourcepath>
+            <classpath path="${javadoc.classpath}"/>
+            <!-- XXX note, this does not support more than one group -->
+            <group packages="${javadoc.packages}">
+                <title>${javadoc.hyperlinked.title}</title>
+            </group>
+            <link href="${javadoc.docs.jdk}" offline="true" packagelistloc="."/>
+            &links;
+            <doctitle>${javadoc.title}&lt;br/&gt;${javadoc.stability.label}</doctitle>
+            <header>${javadoc.header}</header>
+            <bottom>${javadoc.footer}</bottom>
+        </javadoc>
+    </target>
+    
+    <target name="javadoc-exec-files" depends="javadoc-init,javadoc-generate-references,javadoc-generate-overview,javadoc-exec-condition,javadoc-check-timestamps,javadoc-make-plain-title,javadoc-make-hyperlinked-title" if="javadoc.files.provided,-javadoc-set-footer" unless="javadoc.up.to.date">
+        <javadoc source="${javac.source}" author="false" destdir="${javadoc.out.dir}" packagenames="${javadoc.packages}" stylesheetfile="${javadoc.css.main}" windowtitle="${javadoc.title}" overview="${javadoc.overview}" splitindex="true" use="true" version="false" useexternalfile="true" encoding="UTF-8">
+            <fileset dir="${javadoc.docfiles}"/>
+            <fileset dir="${javadoc.src}" >
+                <and>
+                    <selector refid="${javadoc.files}" />
+                    <filename name="**/*.java" />
+                </and>
+            </fileset>
+            <classpath path="${javadoc.classpath}"/>
+            <!-- XXX note, this does not support more than one group -->
+            <group packages="${javadoc.packages}">
+                <title>${javadoc.hyperlinked.title}</title>
+            </group>
+            <link href="${javadoc.docs.jdk}" offline="true" packagelistloc="."/>
+            &links;
+            <doctitle>${javadoc.title}&lt;br/&gt;${javadoc.stability.label}</doctitle>
+            <header>${javadoc.header}</header>
+            <bottom>${javadoc.footer}</bottom>
+        </javadoc>
+    </target>
+
+    <target name="javadoc-stage-apichanges" depends="javadoc-init,javadoc-check-timestamps,javadoc-stage-export-apichanges" unless="javadoc.up.to.date">
+        <xslt in="${javadoc.apichanges}" out="${javadoc.out.dir}/apichanges.html" style="apichanges.xsl">
+            <param name="javadoc-url-base" expression="."/>
+        </xslt>
+    </target>
+    <target name="javadoc-stage-export-apichanges" depends="javadoc-init,javadoc-check-timestamps,javadoc-stage-init-apichanges" unless="javadoc.apichanges.should.not.be.generated">
+        <fail message="Need to specify the date of branching of previous.release.year: ${previous.release.year}" unless="previous.release.year" />
+        <fail message="Need to specify the date of branching of previous.release.month: ${previous.release.month}" unless="previous.release.month" />
+        <fail message="Need to specify the date of branching of previous.release.day: ${previous.release.day}" unless="previous.release.day" />
+    
+        <xslt in="${javadoc.apichanges}" out="${export.apichanges}/${javadoc.name}" style="export-apichanges.xsl">
+            <param name="changes-since-url" expression="${javadoc.name}/apichanges.html"/>
+            <param name="changes-since-year" expression="${previous.release.year}"/>
+            <param name="changes-since-day" expression="${previous.release.day}"/>
+            <param name="changes-since-month" expression="${previous.release.month}"/>
+        </xslt>
+    </target>
+    <target name="javadoc-stage-init-apichanges" depends="javadoc-init,javadoc-check-timestamps" unless="javadoc.up.to.date">
+        <xmlvalidate file="${javadoc.apichanges}" failonerror="true"/>
+    </target>
+
+    <target name="javadoc-stage-arch" depends="javadoc-init,javadoc-check-timestamps" unless="javadoc.up.to.date">
+        <taskdef name="arch" classname="org.netbeans.nbbuild.Arch">
+            <classpath>
+                <pathelement location="${nbantext.jar}"/>
+            </classpath>
+        </taskdef>
+        <!-- Warn about incorrect question version, but do not make build fail: -->
+        <property name="arch.warn" value="true"/>
+        <arch answers="${javadoc.arch}" 
+            output="${javadoc.out.dir}/architecture-summary.html" 
+            stylesheet="prose.css" 
+            overviewlink="overview-summary.html" 
+            footer="@FOOTER@" 
+            project="${javadoc.project}" 
+        />
+    </target>
+
+    <target name="javadoc-stage-export-interfaces" depends="javadoc-init,javadoc-check-timestamps" unless="javadoc.interfaces.should.not.be.generated">
+        <taskdef name="arch" classname="org.netbeans.nbbuild.Arch">
+            <classpath>
+                <pathelement location="${nbantext.jar}"/>
+            </classpath>
+        </taskdef>
+        <!-- Warn about incorrect question version, but do not make build fail: -->
+        <property name="arch.warn" value="true"/>
+        <property name="arch.target" value="${javadoc.name}" />
+        <mkdir dir="${export.interfaces}"/>
+        <arch xsl="exportInterfaces.xsl" answers="${javadoc.arch}" output="${export.interfaces}/architecture-summary.html" stylesheet="prose.css"/>
+        <move file="${export.interfaces}/architecture-summary.html" tofile="${export.interfaces}/${javadoc.name}" />
+        <mkdir dir="${export.interfaces}/properties" />
+        <xslt style="exportInterfaceProperties.xsl" in="${export.interfaces}/${javadoc.name}" out="${export.interfaces}/properties/${javadoc.name}" >
+            <param name="code.name.base" expression="${javadoc.name}" />
+        </xslt>
+        <concat destfile="${export.interfaces}/properties/all.properties" >
+            <fileset dir="${export.interfaces}/properties/">
+                <include name="*" />
+                <exclude name="all.properties" />
+            </fileset>
+        </concat>
+    </target>
+    
+    <target name="javadoc-stage-replace-apichanges" depends="javadoc-stage-main,javadoc-generate-references,javadoc-stage-alternative,javadoc-stage-apichanges,javadoc-stage-arch,javadoc-stage-export-interfaces" unless="javadoc.up.to.date" if="export.apichanges" >
+        <replace dir="${export.apichanges}" >        
+            <include name="${javadoc.name}"/>
+            <replacefilter token="@JDK@" value="${javadoc.docs.jdk}"/>
+            <replacefilter token="@FOOTER@" value="${javadoc.footer}"/>
+            <replacefilter token="@TOP@/" value="@TOP@" />
+            <replacefilter token="@TOP@" value="${javadoc.name}/" />
+            &replaces;
+        </replace>
+    </target>
+    <target name="javadoc-stage-replace-interfaces" depends="javadoc-stage-main,javadoc-generate-references,javadoc-stage-alternative,javadoc-stage-apichanges,javadoc-stage-arch,javadoc-stage-export-interfaces" unless="javadoc.up.to.date" if="export.interfaces" >
+        <replace dir="${export.interfaces}" >
+            <include name="${javadoc.name}"/>
+            <replacefilter token="@JDK@" value="${javadoc.docs.jdk}"/>
+            <replacefilter token="@FOOTER@" value="${javadoc.footer}"/>
+            <replacefilter token="@TOP@/" value="@TOP@" />
+            <replacefilter token="@TOP@" value="${javadoc.name}/" />
+            &replaces;
+        </replace>
+    </target>
+    
+    <target name="javadoc-stage-replace" depends="javadoc-stage-main,javadoc-generate-references,javadoc-stage-alternative,javadoc-stage-apichanges,javadoc-stage-arch,javadoc-stage-export-interfaces,javadoc-stage-replace-interfaces,javadoc-stage-replace-apichanges" unless="javadoc.up.to.date">
+        <replace dir="${javadoc.out.dir}">
+            <include name="**/*.html"/>
+            <replacefilter token="@JDK@" value="${javadoc.docs.jdk}"/>
+            &replaces;
+            <replacefilter token="@FOOTER@" value="${javadoc.footer}"/>
+        </replace>
+        
+        <replace dir="${javadoc.out.dir}">
+            <include name="**/*.html"/>
+            <replacefilter token="http://root/" value="@TOP@.." />
+        </replace>
+        <replace dir="${javadoc.out.dir}">
+            <include name="**/*.html"/>
+            <replacefilter token="http://top/" value="@TOP@" />
+        </replace>
+        <replace dir="${javadoc.out.dir}" token="@TOP@/" value="@TOP@">
+            <include name="**/*.html"/>
+        </replace>
+        <replace dir="${javadoc.out.dir}" token="@TOP@" value="">
+            <include name="*.html"/>
+        </replace>
+        <replace dir="${javadoc.out.dir}" token="@TOP@" value="../">
+            <include name="*/*.html"/>
+        </replace>
+        <replace dir="${javadoc.out.dir}" token="@TOP@" value="../../">
+            <include name="*/*/*.html"/>
+        </replace>
+        <replace dir="${javadoc.out.dir}" token="@TOP@" value="../../../">
+            <include name="*/*/*/*.html"/>
+        </replace>
+        <replace dir="${javadoc.out.dir}" token="@TOP@" value="../../../../">
+            <include name="*/*/*/*/*.html"/>
+        </replace>
+        <replace dir="${javadoc.out.dir}" token="@TOP@" value="../../../../../">
+            <include name="*/*/*/*/*/*.html"/>
+        </replace>
+        <replace dir="${javadoc.out.dir}" token="@TOP@" value="../../../../../../">
+            <include name="*/*/*/*/*/*/*.html"/>
+        </replace>
+        <replace dir="${javadoc.out.dir}" token="@TOP@" value="../../../../../../../">
+            <include name="*/*/*/*/*/*/*/*.html"/>
+        </replace>
+        <replace dir="${javadoc.out.dir}" token="@TOP@" value="../../../../../../../../">
+            <include name="*/*/*/*/*/*/*/*/*.html"/>
+        </replace>
+    </target>
+    
+    <target name="javadoc-stage-check" depends="javadoc-stage-replace" unless="javadoc.up.to.date">
+        <taskdef name="checklinks" classname="org.netbeans.nbbuild.CheckLinks">
+            <classpath>
+                <pathelement location="${nbantext.jar}"/>
+            </classpath>
+        </taskdef>
+        <checklinks basedir="${javadoc.out.dir}" checkexternal="${javadoc.check.external.links}"
+                    report="${javadoc.out.dir}/checklinks-errors-${javadoc.name}.xml" checkspaces="false">
+            <include name="overview-summary.html"/>
+            <include name="apichanges.html"/>
+            <include name="architecture-summary.html"/>
+            <include name="**/package-summary.html"/>
+            <include name="**/doc-files/**/*.html"/>
+            <!-- XXX why are not all **/*.html checked? Would then need to allow e.g. http://blogs.sun.com/geertjan/entry/swing_outline_component from OutlineView.html -->
+            <!-- Make hyperlinks point to the source files, not the copied files: -->
+            <!-- XXX but line numbers are wrong in several cases! -->
+            <mapper type="glob" from="${javadoc.out.dir}/overview-summary.html" to="${javadoc.arch}"/>
+            <mapper type="glob" from="${javadoc.out.dir}/*/package-summary.html" to="${javadoc.docfiles}/*/package.html"/>
+            <mapper type="glob" from="${javadoc.out.dir}/*/package-summary.html" to="${javadoc.src}/*/package.html"/>
+            <mapper type="glob" from="${javadoc.out.dir}/apichanges.html" to="${javadoc.apichanges}"/>
+            <mapper type="glob" from="${javadoc.out.dir}/architecture-summary.html" to="${javadoc.arch}"/>
+            <mapper type="glob" from="${javadoc.out.dir}/*.html" to="${javadoc.docfiles}/*.html"/>
+            <mapper type="glob" from="${javadoc.out.dir}/*.html" to="${javadoc.src}/*.html"/>
+
+						&disallowed-links;    
+        </checklinks>
+        <!-- XXX run doctorj (doctorj.sf.net) if it is installed? -->
+    </target>
+
+    <target name="javadoc" depends="javadoc-stage-check" unless="javadoc.up.to.date" description="Build Javadoc and associated documentation for a module.">
+        <zip zipfile="${javadoc.out.zip}" basedir="${javadoc.out.dir}"/>
+    </target>
+</project>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2007, Sun Microsystems, Inc. All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+  * Redistributions of source code must retain the above copyright notice,
+    this list of conditions and the following disclaimer.
+
+  * Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+
+  * Neither the name of Sun Microsystems, Inc. nor the names of its contributors
+    may be used to endorse or promote products derived from this software without
+    specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<definitions  xmlns="http://schemas.xmlsoap.org/wsdl/" 
+              xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+              xmlns:xs="http://www.w3.org/2001/XMLSchema"  
+              xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+              xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" 
+              xmlns:tns="http://www.sun.com/javaone/05/TravelReservationService"
+              xmlns:ares="http://www.sun.com/javaone/05/AirlineReservationService" 
+              xmlns:hres="http://www.sun.com/javaone/05/HotelReservationService" 
+              xmlns:vres="http://www.sun.com/javaone/05/VehicleReservationService" 
+              xmlns:ota="http://www.opentravel.org/OTA/2003/05"  
+              xmlns:tres="http://www.sun.com/javaone/05/TravelReservationService"  
+              targetNamespace="http://www.sun.com/javaone/05/TravelReservationService"
+              xmlns:bpws="http://docs.oasis-open.org/wsbpel/2.0/varprop" >
+    
+    <import namespace="http://www.sun.com/javaone/05/HotelReservationService" location="HotelReservationService.wsdl"/>
+    <import namespace="http://www.sun.com/javaone/05/AirlineReservationService" location="AirlineReservationService.wsdl"/>
+    <import namespace="http://www.sun.com/javaone/05/VehicleReservationService" location="VehicleReservationService.wsdl"/>
+
+    <types>
+        <xs:schema xmlns="http://www.opentravel.org/OTA/2003/05"
+                   targetNamespace="http://www.sun.com/javaone/05/TravelReservationService" xmlns:s="http://www.w3.org/2001/XMLSchema"  >
+            <xs:import namespace="http://www.opentravel.org/OTA/2003/05" schemaLocation="OTA_TravelItinerary.xsd"/>
+            <xs:element name="itineraryFault" type="xs:string"/>
+        </xs:schema>
+    </types>
+
+    <message name="ItineraryIn">
+        <part name="itinerary" element="ota:TravelItinerary"/>
+    </message>
+
+    <message name="ItineraryOut">
+        <part name="itinerary" element="ota:TravelItinerary"/>
+    </message>
+
+    <message name="ItineraryFault">
+        <part name="faultMessage" element="tns:itineraryFault"/>
+    </message>
+
+    <portType name="TravelReservationPortType">
+        <operation name="buildItinerary">
+            <input message="tns:ItineraryIn"/>
+            <output message="tns:ItineraryOut"/>
+            <fault name="itineraryProblem" message="tns:ItineraryFault"/>
+        </operation>
+    </portType>
+
+    <binding name="TravelReservationSoapBinding" type="tns:TravelReservationPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="buildItinerary">
+            <soap:operation/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="itineraryProblem">
+                <soap:fault name="itineraryProblem" use="literal"/>
+            </fault>
+        </operation>
+    </binding>
+
+    <service name="TravelReservationSoapService">
+        <port name="TravelReservationSoapHttpPort" binding="tns:TravelReservationSoapBinding">
+            <soap:address location="http://localhost:18181/TravelReservationService/buildItinerary"/>
+        </port>
+        <port name="AirlineReservationCallbackSoapHttpPort" binding="ares:AirlineReservationCallbackSoapBinding">
+            <soap:address location="http://localhost:18181/TravelReservationService/airlineReserved"/>
+        </port>
+        <port name="HotelReservationCallbackSoapHttpPort" binding="hres:HotelReservationCallbackSoapBinding">
+            <soap:address location="http://localhost:18181/TravelReservationService/hotelReserved"/>
+        </port>
+        <port name="VehicleReservationCallbackSoapHttpPort" binding="vres:VehicleReservationCallbackSoapBinding">
+            <soap:address location="http://localhost:18181/TravelReservationService/vehicleReserved"/>
+        </port>
+    </service>
+
+    <bpws:property name="ItineraryRefId" type="xs:string"/>
+
+    <bpws:propertyAlias 
+        propertyName="tres:ItineraryRefId"
+        messageType="tres:ItineraryIn"
+        part="itinerary">
+        <bpws:query>/ota:TravelItinerary/ota:ItineraryRef/ota:UniqueID</bpws:query>
+    </bpws:propertyAlias>
+
+    <bpws:propertyAlias 
+        propertyName="tres:ItineraryRefId"
+        messageType="ares:AirlineReservedIn"
+        part="itinerary">
+        <bpws:query>/ota:TravelItinerary/ota:ItineraryRef/ota:UniqueID</bpws:query>
+    </bpws:propertyAlias>
+
+    <bpws:propertyAlias 
+        propertyName="tres:ItineraryRefId"
+        messageType="ares:ReserveAirlineIn"
+        part="itinerary">
+        <bpws:query>/ota:TravelItinerary/ota:ItineraryRef/ota:UniqueID</bpws:query>
+    </bpws:propertyAlias>
+
+    <bpws:propertyAlias 
+        propertyName="tres:ItineraryRefId"
+        messageType="vres:VehicleReservedIn"
+        part="itinerary">
+        <bpws:query>/ota:TravelItinerary/ota:ItineraryRef/ota:UniqueID</bpws:query>
+    </bpws:propertyAlias>
+
+    <bpws:propertyAlias 
+        propertyName="tres:ItineraryRefId"
+        messageType="vres:ReserveVehicleIn"
+        part="itinerary">
+        <bpws:query>/ota:TravelItinerary/ota:ItineraryRef/ota:UniqueID</bpws:query>
+    </bpws:propertyAlias>
+
+    <bpws:propertyAlias 
+        propertyName="tres:ItineraryRefId"
+        messageType="hres:HotelReservedIn"
+        part="itinerary">
+        <bpws:query>/ota:TravelItinerary/ota:ItineraryRef/ota:UniqueID</bpws:query>
+    </bpws:propertyAlias>
+
+    <bpws:propertyAlias 
+        propertyName="tres:ItineraryRefId"
+        messageType="hres:ReserveHotelIn"
+        part="itinerary">
+        <bpws:query>/ota:TravelItinerary/ota:ItineraryRef/ota:UniqueID</bpws:query>
+    </bpws:propertyAlias>
+
+    <plnk:partnerLinkType name="TravelReservationPartnerLinkType">
+        <plnk:role name="TravelReservationServiceRole" 
+                   portType="tres:TravelReservationPortType">
+        </plnk:role>
+    </plnk:partnerLinkType>
+</definitions>

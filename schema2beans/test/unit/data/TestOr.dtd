@@ -1,0 +1,14 @@
+<!ELEMENT top cache-mapping>
+<!-- <!ELEMENT cache-mapping (servlet-name | url-pattern), (cache-helper-ref)> -->
+<!ELEMENT cache-mapping (servlet-name | url-pattern), (cache-helper-ref | (timeout?, http-method*, key-field*, (a | b), constraint-field*))>
+<!ELEMENT servlet-name  #PCDATA>
+<!ELEMENT url-pattern  #PCDATA>
+<!ELEMENT cache-helper-ref  #PCDATA>
+<!ELEMENT timeout  #PCDATA>
+<!ELEMENT http-method  #PCDATA>
+<!ELEMENT constraint-field  #PCDATA>
+<!ELEMENT a #PCDATA>
+<!ELEMENT b #PCDATA>
+<!ELEMENT key-field EMPTY>
+<!ATTLIST key-field name  CDATA       #REQUIRED
+                    scope CDATA       'request.parameter'>

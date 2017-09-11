@@ -1,0 +1,20 @@
+<?xml version='1.0'?>
+<web-app>
+  <description>This is my Web App</description>
+  <display-name>MyWebApp</display-name>
+  <thing>
+	<filter-name>thing1</filter-name>
+	<filter-class>A</filter-class>
+  </thing>
+  <filter>
+	<filter-name>Bob</filter-name>
+  </filter>
+  <thing>
+	<filter-name>thing2</filter-name>
+	<filter-class>B</filter-class>
+  </thing>
+  <thing>
+	<filter-name>thing3</filter-name>
+	<filter-class>C</filter-class>
+  </thing>
+</web-app>

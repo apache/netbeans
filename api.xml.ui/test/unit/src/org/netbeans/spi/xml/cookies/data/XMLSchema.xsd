@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : XMLSchema.xsd
+    Created on : July 13, 2002, 12:49 PM
+    Author     : Petr Kuzel
+    Description:
+        Grammar definition for test:XMLSchema namespace.
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="test:XMLSchema"
+            xmlns="test:XMLSchema"
+            elementFormDefault="qualified">
+    <xsd:element name="root" type="root"/>
+    <xsd:complexType name="root">
+        <xsd:sequence>
+            <xsd:element name="child1"/>
+            <xsd:element name="child2"/>           
+        </xsd:sequence>
+        <xsd:attribute name="flag"/>
+    </xsd:complexType>
+</xsd:schema>

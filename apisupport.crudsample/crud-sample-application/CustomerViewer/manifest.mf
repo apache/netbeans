@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.customerviewer
+OpenIDE-Module-Layer: org/netbeans/modules/customerviewer/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/customerviewer/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.2
+

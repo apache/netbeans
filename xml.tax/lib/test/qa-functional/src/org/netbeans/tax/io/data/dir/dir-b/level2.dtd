@@ -1,0 +1,3 @@
+<!ELEMENT element-b (#PCDATA)>
+<!ENTITY % c SYSTEM "level3.dtd">
+%c;

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Test" basedir="." default="all" >
+  <taskdef name="checkl"
+    classname="org.netbeans.nbbuild.CheckLicense"
+    classpath="${nbantext.jar}"
+  />
+<target name="all" >
+  <checkl>
+   <fileset dir='${dir}'>
+    <include name="${include}" />
+   </fileset>
+   <convert token='^( *[^ ]) *DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.' replace='Ahoj\nJardo' prefix='true'/>
+   <convert token=' *DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.'>
+       <line text='Ahoj'/>
+       <line text='Jardo'/>
+   </convert>
+   <convert token=' *Oracle and Java.*are.*registered.*trademarks.*of.*Oracle.*and.*or.*its.* affiliates.'
+   >
+       <line text='New'/>
+       <line text='Warning'/>
+   </convert>
+   <convert token='1997-[0-2][09][09][0-9]' replace='1997-2006'/>
+   <convert token='Original\n[^A-Za-z]*Code' replace='Original\n Software' replaceall="true"/>
+   <convert token='Original Code' replace='Original Software' replaceall="true"/>
+  </checkl>
+</target>
+</project>

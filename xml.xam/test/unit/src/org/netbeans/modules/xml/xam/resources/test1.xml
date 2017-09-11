@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test xmlns="http://www.test.com/TestModel"
+      xmlns:t2="http://www.test2.com/TestModel"
+>
+    <a index='1'>CharDataString</a>
+    <b index='1'> <!-- comment -->
+        <t2:a index='1' value="c"/>
+    </b>
+    <c index='1'></c>
+    <c index='2'></c>
+</test>

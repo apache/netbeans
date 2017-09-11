@@ -1,0 +1,23 @@
+<html style="color: aqua;
+      background:silver;">
+    <head>
+        <style>
+            a {
+                color:
+                    blue,
+                    red;
+            }
+            h1 {
+                background: smth;
+
+            }  </style>
+        <style>
+            h2 {
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>title</h1>
+    </body>
+</html>

@@ -1,0 +1,275 @@
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+#
+# Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+#
+# Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+# Other names may be trademarks of their respective owners.
+#
+# The contents of this file are subject to the terms of either the GNU
+# General Public License Version 2 only ("GPL") or the Common
+# Development and Distribution License("CDDL") (collectively, the
+# "License"). You may not use this file except in compliance with the
+# License. You can obtain a copy of the License at
+# http://www.netbeans.org/cddl-gplv2.html
+# or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+# specific language governing permissions and limitations under the
+# License.  When distributing the software, include this License Header
+# Notice in each file and include the License file at
+# nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+# particular file as subject to the "Classpath" exception as provided
+# by Oracle in the GPL Version 2 section of the License file that
+# accompanied this code. If applicable, add the following below the
+# License Header, with the fields enclosed by brackets [] replaced by
+# your own identifying information:
+# "Portions Copyrighted [year] [name of copyright owner]"
+#
+# Contributor(s):
+#
+# The Original Software is NetBeans. The Initial Developer of the Original
+# Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+# Microsystems, Inc. All Rights Reserved.
+#
+# If you wish your version of this file to be governed by only the CDDL
+# or only the GPL Version 2, indicate your decision by adding
+# "[Contributor] elects to include this software in this distribution
+# under the [CDDL or GPL Version 2] license." If you do not indicate a
+# single choice of license, a recipient has the option to distribute
+# your version of this file under either the CDDL, the GPL Version 2 or
+# to extend the choice of license to its licensees as provided above.
+# However, if you add GPL Version 2 code and therefore, elected the GPL
+# Version 2 license, then the option applies only if the new code is
+# made subject to such option by the copyright holder.
+
+########### Syntax Coloring ##################################################################
+
+TOKEN:keyword:("TOKEN")
+TOKEN:identifier: ( ["a"-"z" "A"-"Z"] ["a"-"z" "A"-"Z" "0"-"9" "_"]* )
+TOKEN:operator: ( 
+    ":" | "*" | "?" | "+" | "-" | "[" | "]" | "<" | ">" |
+    "^" | "|" | "{" | "}" | "(" | ")" | "," | "=" | ";" | 
+    "." | "$"
+)
+TOKEN:string:( 
+    "\"" 
+        (  
+            [^ "\"" "\\" "\r" "\n"] | 
+            ("\\" ["r" "n" "t" "\\" "\'" "\""]) |
+            ("\\" "u" ["0"-"9" "a"-"f" "A"-"F"] ["0"-"9" "a"-"f" "A"-"F"] ["0"-"9" "a"-"f" "A"-"F"] ["0"-"9" "a"-"f" "A"-"F"])
+        )* 
+    "\""
+)
+TOKEN:string:( 
+    "\'" 
+        (  
+            [^ "\'" "\\" "\r" "\n"] | 
+            ("\\" ["r" "n" "t" "\\" "\'" "\""]) |
+            ("\\" "u" ["0"-"9" "a"-"f" "A"-"F"] ["0"-"9" "a"-"f" "A"-"F"] ["0"-"9" "a"-"f" "A"-"F"] ["0"-"9" "a"-"f" "A"-"F"])
+        )* 
+    "\'"
+)
+TOKEN:number:( ['0'-'9']+ )
+TOKEN:comment: ( "#" [^"\n" "\r"]* ["\n" "\r"]+ )
+TOKEN:comment: ( "/#" - "#/")
+TOKEN:whitespace:( ["\n" "\r" " " "\t"]+ )
+
+SKIP:comment
+SKIP:whitespace
+
+S = token S;
+S = tokenState S;
+S = grammarRule S;
+S = command S;
+S = ;
+                    
+token = "TOKEN" ":" tokenName ":" token2;
+tokenName = <identifier>;
+token2 = regularExpression token3;
+token2 = properties;
+token3 = ":" state;
+token3 = ;
+tokenState = state tokenState1;
+state = "<" <identifier> ">";
+tokenState1 = "{" tokenGroup;
+tokenState1 = ":" token;
+tokenGroup = tokensInGroup "}";
+tokensInGroup = token tokensInGroup;
+tokensInGroup = ;
+                  
+regularExpression = "(" regularExpression1 ")";                    
+regularExpression1 = reChoice regularExpression2;
+regularExpression2 = "|" reChoice regularExpression2;
+regularExpression2 = ;
+reChoice = rePart reChoice1;
+reChoice1 = rePart reChoice1;
+reChoice1 = ;
+rePart = <string> [ <identifier, "i"> ] rePartOperatorOrMinus;
+rePart = "." rePartOperator;
+rePart = reClass rePartOperator;
+rePart = "(" regularExpression1 ")" rePartOperator;
+rePartOperator = ;
+rePartOperator = "+";
+rePartOperator = "?";
+rePartOperator = "*";
+rePartOperatorOrMinus = "-" <string>;
+rePartOperatorOrMinus = rePartOperator;
+reClass = "[" reInClassNegation reInClass "]";
+reInClassNegation = "^";
+reInClassNegation = ;
+reInClass = <string> reInClassMinus reInClass1;
+reInClass1 = <string> reInClassMinus reInClass1;
+reInClass1 = ;
+reInClassMinus = "-" <string>;
+reInClassMinus = ;
+                    
+grammarRule = grammarRuleNT "=" grRightSide ";";
+grammarRuleNT = <identifier>;
+grRightSide = grChoice grRightSide1;
+grRightSide1 = "|" grChoice grRightSide1;
+grRightSide1 = ;
+grChoice = lookahead grPart grChoice1;
+grChoice = ;
+grChoice1 = grPart grChoice1;
+grChoice1 = ;
+grPart = ntRef grOperator;
+ntRef = <identifier>;
+grPart = tokenDef grOperator;
+grPart = <string> grOperator;
+grPart = "[" grRightSide "]";
+grPart = "(" grRightSide ")" grOperator;
+grOperator = "+";
+grOperator = "*";
+grOperator = "?";
+grOperator = ;
+tokenDef = "<" tokenDefName tokenDef1 ">";
+tokenDefName = <identifier>;
+tokenDef1 = "," <string>;
+tokenDef1 = ;
+lookahead = "{" grRightSide "}";
+lookahead = "{" <number> "}";
+lookahead = ;
+                    
+command = commandName command0;
+commandName = <identifier>;
+command0 = ":" selector [":" value];
+command0 = value;
+value = class | <string> | properties | regularExpression;
+class = <identifier> class1;
+class1 = "." <identifier> class1;
+class1 = ;
+properties = "{" properties1 "}";
+properties1 = property properties1;
+properties1 = ;
+property = <identifier> ":" propertyValue ";";
+propertyValue = <string>;
+propertyValue = class;
+propertyValue = regularExpression;
+selector = selectorPart ("," selectorPart)*;                    
+selectorPart = selectorIdentifier selectorPart1;
+selectorPart1 = "." selectorIdentifier selectorPart1;
+selectorPart1 = ;
+selectorIdentifier = <identifier>;
+
+
+
+AST {
+    removeSimple:"!selector,tokenName,tokenDefName,grammarRuleNT,ntRef,selectorIdentifier";
+}
+
+COLOR:commandName: {
+    color_name: "keyword";
+    default_coloring: "keyword";
+    foreground_color:"blue";
+}
+COLOR:tokenDef: {
+    color_name: "token";
+    default_coloring: "variable";
+    foreground_color:"0x228B22";
+}
+NAVIGATOR:token: {
+    display_name: "<html><b><font color=000099>TOKEN</font></b>: $tokenName$</html>";
+}
+
+NAVIGATOR:command: {
+    display_name: "<html><b><font color=000099>$keyword$</font></b>: $command0.selector$</html>";
+}
+
+COMPLETION:keyword,identifier,operator,comment,string,whitespace: {
+    text1: org.netbeans.modules.languages.ext.NBS.completion;
+}
+
+COMPLETION:tokenName: {
+    text1: "identifier";
+    text2: "comment";
+    text3: "keyword";
+    text4: "string";
+    text5: "number";
+    text6: "operator";
+    text7: "whitespace";
+}
+
+COMPLETION:regularExpression: {
+    text1: "'";
+    description1:"<b>'</b> character or string";
+    text2: "\"";
+    description2:"<b>\"</b> character or string";
+    text3: "?";
+    description3:"<b>?</b> repeat once or not at all";
+    text4: "+";
+    description4:"<b>+</b> repeat once or more time";
+    text5: "*";
+    description5:"<b>*</b> repeat zero or more time";
+    text6: "|";
+    description6:"<b>|</b> or";
+    text7: "(";
+    description7:"<b>(</b> subexpression";
+    text8: "[";
+    description8:"<b>[</b> set of characters ['a'-z' '_']";
+    text9: "[^";
+    description9:"<b>[^</b> any character expect [^'\\n']";
+}
+
+MARK:ERROR: {
+    type:"Error";
+    message:"LBL_SYNTAX_ERROR";
+}
+
+MARK:error: {
+    type:"Error";
+    message:"LBL_UNEXPECTED_CHARACTER";
+}
+
+SEMANTIC_DECLARATION:grammarRuleNT: {
+    name:"$$";
+    type:"variable";
+}
+
+SEMANTIC_DECLARATION:tokenName: {
+    name:"$$";
+    type:"variable";
+}
+
+SEMANTIC_DECLARATION:command0.selector: {
+    name:"$$";
+    type:"variable";
+    condition: org.netbeans.modules.languages.ext.NBS.tokenComand;
+}
+
+SEMANTIC_USAGE:selectorIdentifier: {
+    name:"$$";
+    type:"variable";
+    condition: org.netbeans.modules.languages.ext.NBS.notTokenComand;
+    declaration_precedes_usage:"false";
+}
+
+SEMANTIC_USAGE:ntRef: {
+    name:"$$";
+    type:"variable";
+    declaration_precedes_usage:"false";
+}
+SEMANTIC_USAGE:tokenDefName: {
+    name:"$$";
+    type:"variable";
+    declaration_precedes_usage:"false";
+}
+
+BUNDLE "org.netbeans.modules.languages.resources.Bundle"

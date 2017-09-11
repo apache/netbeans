@@ -1,0 +1,28 @@
+| File |                   F (mnemonics)
+========
+New Project...             w
+New File...                N
+========================
+Open Project...            e
+Open Recent Project    >   j
+Close Project (SampleProject)       C   - Close Project (project-name)
+Close Other Projects       L
+Close All Projects 
+Open File...               O
+Open Recent File       >   F
+========================
+Project Groups...          u
+Project Properties (SampleProject)  t   - Project Properties (project-name)
+========================
+Import Project         >   I
+Export Project         >   R
+========================
+Save                       S
+Save As...                 v
+Save All                   A
+========================
+Page Setup...              g
+Print...                   P
+Print to HTML...           H
+========================
+Exit                       x

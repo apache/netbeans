@@ -1,0 +1,5 @@
+Waiter.WaitingTime=111111
+QueueTool.WaitQueueEmptyTimeout=10000
+FrameWaiter.AfterFrameTimeout=100
+DialogWaiter.AfterDialogTimeout=100
+

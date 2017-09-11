@@ -1,0 +1,14 @@
+# Ensures colums from the table in the default schema "customers" show up in the completion,
+# not from the one in the "accounting" schema.
+
+select | from columns
+
+--
+information_schema*
+  <no-schema>
+    columns
+      table_catalog
+      table_schema
+      table_name
+      column_name
+    tables

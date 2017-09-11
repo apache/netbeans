@@ -1,0 +1,19 @@
+%%TestCase pos-1
+package test;
+import javax.swing.text.AbstractDocument;
+public class Test {
+    private AbstractDocument doc;
+}
+%%=>
+package test;
+import javax.swing.text.Document;
+public class Test {
+    private AbstractDocument doc;
+}
+%%=>
+package test;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.Document;
+public class Test {
+    private Document doc;
+}

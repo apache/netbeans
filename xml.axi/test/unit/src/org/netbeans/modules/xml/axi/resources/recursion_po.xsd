@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://xml.netbeans.org/examples/targetNS"
+    targetNamespace="http://xml.netbeans.org/examples/targetNS"
+    elementFormDefault="unqualified">
+
+  <xsd:element name="purchaseOrder" type="PurchaseOrderType"/>
+
+  <xsd:complexType name="PurchaseOrderType">
+    <xsd:sequence>
+      <xsd:element name="billTo" type="USAddress"/>
+      <xsd:element ref="purchaseOrder" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
+    <xsd:complexType name="USAddress">
+        <xsd:sequence>
+            <xsd:element name="name"   type="xsd:string"/>
+        </xsd:sequence>       
+    </xsd:complexType>  
+
+</xsd:schema>
+

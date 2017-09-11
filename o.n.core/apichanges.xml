@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2013 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<?xml-stylesheet type="text/xml" href="../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+
+<apichanges>
+
+  <apidefs>
+    <apidef name="friend">Bridge Core with Core Network Friend API</apidef>
+  </apidefs>
+
+  <changes>
+      <change id="proxy-selector-brigde">
+          <api name="friend"/>
+          <summary>Core Network provides ProxySelector</summary>
+          <version major="3" minor="40"/>
+          <date day="2" month="4" year="2013"/>
+          <author login="lfischme"/>
+          <compatibility addition="yes" binary="compatible" semantic="compatible" />
+          <description>
+              <p>
+                  The <code>o.n.core</code> module finds a instance of java.net.ProxySelector
+                  in the default <code>org.openide.util.Lookup</code>. If some found
+                  then will be registred as default <code>ProxySelector.setDedault()</code>.
+              </p>
+          </description>
+          <class package="org.netbeans.core" name="ProxySettings"/>
+          <issue number="201731"/>
+      </change>
+
+      <change id="system-proxy-reload-brigde">
+          <api name="friend"/>
+          <summary>ProxySettings.Reload allows reload the Network Proxy Settings</summary>
+          <version major="3" minor="40"/>
+          <date day="2" month="4" year="2013"/>
+          <author login="lfischme"/>
+          <compatibility addition="yes" binary="compatible" semantic="compatible" />
+          <description>
+              <p>
+                  An implementation of this class brings a facility to reload Network 
+                  Proxy Settings from underlying OS.
+                  The module <code>core.network</code> provides a implementation
+                  which may be accessible via <code>Lookup.getDefault()</code>. It's not guaranteed
+                  any implementation is found on all distribution.
+              </p>
+          </description>
+          <class package="org.netbeans.core" name="ProxySettings"/>
+          <issue number="201731"/>
+      </change>
+
+      <change id="system-proxy-reload">
+          <api name="friend"/>
+          <summary>NbProxySelector and ProxyAutoConfig moved to new Core Network module.</summary>
+          <version major="3" minor="40"/>
+          <date day="2" month="4" year="2013"/>
+          <author login="lfischme"/>
+          <compatibility addition="no" binary="compatible" semantic="compatible" />
+          <description>
+              <p>
+                  Classes <code>NbProxySelector</code> and <code>ProxyAutoConfig</code> have been
+                  moved to Core Network module. Now the <code>NbProxySelector</code> can be accessed
+                  via lookup - in <code>CoreBridgeImpl</code>.
+              </p>
+          </description>
+          <issue number="201731"/>
+      </change>
+  </changes>
+
+  <!-- Now the surrounding HTML text and document structure: -->
+
+  <htmlcontents>
+    <head>
+      <title>Change History for the Friend Core APIs</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>
+This document lists changes made to the API between core/startup and core
+modules. It is a friend API so it does not need to be developed compatibly,
+and indeed it is not. 
+</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+
+      <hr/><standard-changelists module-code-name="org.netbeans.core"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

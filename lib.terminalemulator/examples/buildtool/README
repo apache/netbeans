@@ -1,0 +1,39 @@
+A simple build tool application
+===============================
+
+BuildTool implements a simple Java build tool based on ...
+	org.netbeans.lib.terminalemulator.Term
+	javac
+
+It illustrates ...
+- The capabilities of ActiveTerm and how it can be used to annotate output,
+  say from a build script.
+
+To run it issue from a shell
+	./buildtool
+Then enter Junk.java and press Build.
+
+A fair amount of the code has to do with the gui setup, javac Process
+setup and capture of it's output. Once the output is received it is
+processed line-by-line. A crude pattern is used to detect the first
+line of a javac error message and a new ActiveRegion is begun, while
+the previous one is ended. These active regions have their feedback
+attribute set which means that they will be highlighted as the mouse
+moves over them. Anyone who has had to decipher a wrapped compilation
+line and error line from 'make' would appreciate this.
+
+The sourcefilename and line number are also extracted using simple
+patterns and put in their own ActiveRegions as HTML-style links, which
+if clicked will bring up the right line # in some editor, or rather
+fake it using a popup.
+
+The beginning of each error message is also tagged with a simple glyph
+in the "glyph gutter".
+
+Please keep in mind that this is strictly a Term feature demo. I'm not
+advocating using glyphs to tag error messasges, or that textual pattern
+recognition should be used for detecting distinct error messages and
+their components, nor is capturing of Process output is as trivial as it
+seems here (if the demo had instead used 'make' you'd see some
+reordering of output because some comes from stdout and some comes from
+stderr).

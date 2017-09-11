@@ -1,0 +1,7 @@
+Alias a to asummary
+Alias foo to accounting.customer
+Column invoice_id in table accounting.invoice
+Column customer_id in table accounting.invoice
+Column asummary_id in view asummary
+Column customer_id in table accounting.customer
+Schema accounting

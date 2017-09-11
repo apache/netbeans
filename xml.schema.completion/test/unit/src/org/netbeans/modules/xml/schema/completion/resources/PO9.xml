@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<purchaseOrder  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns="http://xml.netbeans.org/schema/PO"
+   xsi:schemaLocation="http://xml.netbeans.org/schema/PO PO.xsd">
+    <shipTo country="US">
+        <name></name>
+        <street></street>
+        <city></city>
+        <state></state>
+        <zip></zip>
+    </shipTo>
+    <billTo country="US">
+        <name></name>
+        <street></street>
+        <city></city>
+        <state></state>
+        <zip></zip>
+    </billTo>
+    <comment></comment>
+    <items>
+        <item partNum="" brand="">
+            <productName></productName>
+            <quantity></quantity>
+            <USPrice></USPrice>
+            <comment></comment>
+            <shipDate></shipDate>
+        </item>
+    </items>
+</purchaseOrder>

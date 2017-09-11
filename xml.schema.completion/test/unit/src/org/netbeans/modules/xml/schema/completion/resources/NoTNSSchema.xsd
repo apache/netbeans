@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified">
+    <xsd:element name="NNSRoot">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="NNSChild1">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="NNSChild11"/>
+                            <xsd:element name="NNSChild12"/>
+                        </xsd:sequence>
+                        <xsd:attribute name="Attr11" type="xsd:string"/>
+                        <xsd:attribute name="Attr12" type="xsd:string"/>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="NNSChild2">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="NNSChild21"/>
+                            <xsd:element name="NNSChild22"/>
+                        </xsd:sequence>
+                        <xsd:attribute name="Attr21" type="xsd:string"/>
+                        <xsd:attribute name="Attr22" type="xsd:string"/>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+            <xsd:attribute name="NNSAttr1" type="xsd:string"/>
+            <xsd:attribute ref="NNSAttr2"/>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:attribute name="NNSAttr2" type="xsd:string"/>
+</xsd:schema>

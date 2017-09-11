@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:spi="http://www.example.com/SPI"
+        targetNamespace="http://www.example.com/PO1"
+        elementFormDefault="unqualified"
+        attributeFormDefault="unqualified"
+>
+
+    <annotation>
+        <appinfo>
+            <spi:sequence>RoundA,RoundF</spi:sequence>
+        </appinfo>
+    </annotation>
+</schema>

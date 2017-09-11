@@ -1,0 +1,377 @@
+# file:/home.local/jarda/work/openide/src/META-INF/netbeans/translate.names
+
+org.openide.util.actions.SystemAction=org.openide.util.actions.SystemAction
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/lib/openide.jar!/META-INF/netbeans/translate.names
+
+org.openide.util.actions.SystemAction=org.openide.util.actions.SystemAction
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/autoload/core-output.jar!/META-INF/netbeans/translate.names
+
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+#
+# Copyright 2012 Oracle and/or its affiliates. All rights reserved.
+#
+# Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+# Other names may be trademarks of their respective owners.
+#
+# The contents of this file are subject to the terms of either the GNU
+# General Public License Version 2 only ("GPL") or the Common
+# Development and Distribution License("CDDL") (collectively, the
+# "License"). You may not use this file except in compliance with the
+# License. You can obtain a copy of the License at
+# http://www.netbeans.org/cddl-gplv2.html
+# or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+# specific language governing permissions and limitations under the
+# License.  When distributing the software, include this License Header
+# Notice in each file and include the License file at
+# nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+# particular file as subject to the "Classpath" exception as provided
+# by Oracle in the GPL Version 2 section of the License file that
+# accompanied this code. If applicable, add the following below the
+# License Header, with the fields enclosed by brackets [] replaced by
+# your own identifying information:
+# "Portions Copyrighted [year] [name of copyright owner]"
+#
+# If you wish your version of this file to be governed by only the CDDL
+# or only the GPL Version 2, indicate your decision by adding
+# "[Contributor] elects to include this software in this distribution
+# under the [CDDL or GPL Version 2] license." If you do not indicate a
+# single choice of license, a recipient has the option to distribute
+# your version of this file under either the CDDL, the GPL Version 2 or
+# to extend the choice of license to its licensees as provided above.
+# However, if you add GPL Version 2 code and therefore, elected the GPL
+# Version 2 license, then the option applies only if the new code is
+# made subject to such option by the copyright holder.
+#
+# Contributor(s):
+#
+# Portions Copyrighted 2012 Sun Microsystems, Inc.
+
+org.netbeans.core.actions.NextOutJumpAction=org.netbeans.core.output.NextOutJumpAction
+org.netbeans.core.actions.PreviousOutJumpAction=org.netbeans.core.output.PreviousOutJumpAction
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/autoload/core-compiler.jar!/META-INF/netbeans/translate.names
+
+org.netbeans.core.actions.StopCompileAction=org.netbeans.core.compiler.StopCompileAction
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/autoload/core-execution.jar!/META-INF/netbeans/translate.names
+
+
+org.netbeans.core.actions.ExecutionViewAction=org.netbeans.core.execution.ExecutionViewAction
+org.netbeans.core.actions.SetArgumentsAction=org.netbeans.core.execution.SetArgumentsAction
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/autoload/core-deprecated.jar!/META-INF/netbeans/translate.names
+
+
+org.netbeans.core.actions.AddFSAction=org.netbeans.core.deprecated.AddFSAction
+org.netbeans.core.actions.AddJarAction=org.netbeans.core.deprecated.AddJarAction
+org.netbeans.core.actions.ProjectClosection=org.netbeans.core.deprecated.ProjectClosection
+org.netbeans.core.actions.ProjectOpenAction=org.netbeans.core.deprecated.ProjectOpenAction
+org.netbeans.core.actions.ProjectSetActiveAction=org.netbeans.core.deprecated.ProjectSetActiveAction
+org.netbeans.core.actions.SaveSettingsAction=org.netbeans.core.deprecated.SaveSettingsAction
+org.netbeans.core.actions.SettingsAction=org.netbeans.core.deprecated.SettingsAction
+org.netbeans.core.NbProject=org.netbeans.core.deprecated.NbProject
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/autoload/javahelp-api.jar!/META-INF/netbeans/translate.names
+
+
+# Moved to a separate module (and deprecated).
+org.netbeans.core.JavaHelp$HelpComponent=org.netbeans.modules.javahelp.JavaHelp$HelpComponent
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/autoload/vcscore.jar!/META-INF/netbeans/translate.names
+
+
+
+# the following packages changed their names
+org.netbeans.modules.vcs.util                                      org.netbeans.modules.vcscore.util
+org.netbeans.modules.vcs.search                                    org.netbeans.modules.vcscore.search
+org.netbeans.modules.vcs.VcsFileSystem                             org.netbeans.modules.vcscore.VcsFileSystem
+org.netbeans.modules.vcs.VcsConfigVariable                         org.netbeans.modules.vcscore.VcsConfigVariable
+org.netbeans.modules.vcs.cmdline.UserCommand                       org.netbeans.modules.vcscore.cmdline.UserCommand
+
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/vcsgen.jar!/META-INF/netbeans/translate.names
+
+
+
+# the following packages changed their names
+com.netbeans.enterprise.modules.vcs                                org.netbeans.modules.vcs.advanced
+com.netbeans.enterprise.modules.vcs.cmdline                        org.netbeans.modules.vcs.advanced
+
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/apisupport.jar!/META-INF/netbeans/translate.names
+
+
+org.netbeans.modules.apisupport.BeanTester=org.netbeans.modules.apisupport.testers.BeanTester
+org.netbeans.modules.apisupport.CompilerTypeTester=org.netbeans.modules.apisupport.testers.CompilerTypeTester
+org.netbeans.modules.apisupport.ExecutorTester=org.netbeans.modules.apisupport.testers.ExecutorTester
+org.netbeans.modules.apisupport.PresenterTester=org.netbeans.modules.apisupport.testers.PresenterTester
+org.netbeans.modules.apisupport.SystemActionTester=org.netbeans.modules.apisupport.testers.SystemActionTester
+
+org.netbeans.modules.apisupport.APIModule$GlobalJarFileSystem=org.netbeans.modules.apisupport.deprecated.GlobalJarFileSystem
+org.netbeans.modules.apisupport.APISettings=org.netbeans.modules.apisupport.deprecated.APISettings
+org.netbeans.modules.apisupport.JavaHelpDataLoader=org.netbeans.modules.apisupport.deprecated.JavaHelpDataLoader
+
+org.netbeans.modules.apisupport.ManifestDataLoader=org.netbeans.modules.apisupport.manifests.ManifestDataLoader
+org.netbeans.modules.apisupport.ModuleDataLoader=org.netbeans.modules.apisupport.manifests.ModuleDataLoader
+# DataObject's have a write replacer anyway, so no one cares if they are moved
+org.netbeans.modules.apisupport.ManifestEditorSupport$ManifestEnv=org.netbeans.modules.apisupport.manifests.ManifestEditorSupport$ManifestEnv
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/ant.jar!/META-INF/netbeans/translate.names
+
+
+# Old repackaging.
+org.apache.tools.ant.module.IntrospectedInfo=org.apache.tools.ant.module.api.IntrospectedInfo
+org.apache.tools.ant.module.AntProjectDataEditor$AntEnv=org.apache.tools.ant.module.loader.AntProjectDataEditor$AntEnv
+org.apache.tools.ant.module.AntProjectDataLoader=org.apache.tools.ant.module.loader.AntProjectDataLoader
+org.apache.tools.ant.module.AntProjectDataObject=org.apache.tools.ant.module.loader.AntProjectDataObject
+org.apache.tools.ant.module.AntTemplateIterator=org.apache.tools.ant.module.loader.AntTemplateIterator
+org.apache.tools.ant.module.AntCompilerType=org.apache.tools.ant.module.run.AntCompilerType
+org.apache.tools.ant.module.IndirectAntCompilerType=org.apache.tools.ant.module.run.IndirectAntCompilerType
+org.apache.tools.ant.module.AntExecutor=org.apache.tools.ant.module.run.AntExecutor
+org.apache.tools.ant.module.AntProjectSupport=org.apache.tools.ant.module.xml.AntProjectSupport
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/form.jar!/META-INF/netbeans/translate.names
+
+org.netbeans.beaninfo.editors.TableModelEditor=org.netbeans.modules.form.editors2.TableModelEditor
+org.netbeans.beaninfo.editors.TableModelEditor$NbTableModel=org.netbeans.modules.form.editors2.TableModelEditor$NbTableModel
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/eager/i18n-form.jar!/META-INF/netbeans/translate.names
+
+org.netbeans.modules.i18n.ResourceBundleStringFormEditor org.netbeans.modules.i18n.form.FormI18nStringEditor
+org.netbeans.modules.i18n.cross.FormI18nStringEditor     org.netbeans.modules.i18n.form.FormI18nStringEditor
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/autoload/debuggerCore.jar!/META-INF/netbeans/translate.names
+
+#
+# The serialVersionUID is defined neither in NB 3.2.1 nor in NB 3.3.
+# Since a class structure has been changed between these two revisions,
+# serialized versions are not compatible.
+#
+# The serialVersionUID has been first defined in NB 3.4 - it is the same
+# serialVersionUID as the (implicit) serialVersionUID of NB 3.3.
+# It means that serialized versions from NB 3.3 and NB 3.4 are compatible.
+#
+# The following line suppresses check of serialVersionUID's so that NB 3.4
+# can import settings also from NB 3.2.1 (see IssueZilla bug #21347).
+#
+org.netbeans.modules.debugger.AbstractWatch                                org.netbeans.modules.debugger.AbstractWatch
+#
+# Classes "SessionRootNode" and "SessionThreadRootNode" were moved between NB 3.3.x and NB 3.4.
+#
+org.netbeans.modules.debugger.multisession.nodes.SessionRootNode                       org.netbeans.modules.debugger.support.nodes.SessionRootNode
+org.netbeans.modules.debugger.multisession.nodes.SessionRootNode$1                     org.netbeans.modules.debugger.support.nodes.SessionRootNode$1
+org.netbeans.modules.debugger.multisession.nodes.SessionRootNode$SessionsHandle        org.netbeans.modules.debugger.support.nodes.SessionRootNode$SessionsHandle
+org.netbeans.modules.debugger.multisession.nodes.SessionRootNode$SessionRootChildren   org.netbeans.modules.debugger.support.nodes.SessionRootNode$SessionRootChildren
+org.netbeans.modules.debugger.multisession.nodes.SessionThreadRootNode                       org.netbeans.modules.debugger.support.nodes.SessionThreadRootNode
+org.netbeans.modules.debugger.multisession.nodes.SessionThreadRootNode$1                     org.netbeans.modules.debugger.support.nodes.SessionThreadRootNode$1
+org.netbeans.modules.debugger.multisession.nodes.SessionThreadRootNode$SessionsHandle        org.netbeans.modules.debugger.support.nodes.SessionThreadRootNode$SessionsHandle
+org.netbeans.modules.debugger.multisession.nodes.SessionThreadRootNode$SessionRootChildren   org.netbeans.modules.debugger.support.nodes.SessionThreadRootNode$SessionRootChildren
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/jsp.jar!/META-INF/netbeans/translate.names
+
+com.netbeans.enterprise.modules.dbjsp                              org.netbeans.modules.web.wizards.dbjsp
+com.netbeans.enterprise.modules.servlet                            org.netbeans.modules.web.core
+com.sun.forte4j.modules.web.context                                org.netbeans.modules.web.context
+com.sun.forte4j.modules.web.editorIntegration.dreamweaver          org.netbeans.modules.web.templates
+com.sun.forte4j.modules.web.ie                                     org.netbeans.modules.web.ie
+com.sun.forte4j.modules.web.monitor                                org.netbeans.modules.web.monitor
+com.sun.forte4j.modules.web.taglibed                               org.netbeans.modules.web.taglibed
+com.sun.forte4j.modules.web.util                                   org.netbeans.modules.web.util
+com.sun.forte4j.modules.web.wizardfw                               org.netbeans.modules.web.wizards.wizardfw
+com.sun.forte4j.modules.web.wizards.jsppage                        org.netbeans.modules.web.wizards.beanjsp
+com.sun.forte4j.modules.webie                                      org.netbeans.modules.web.ie
+org.netbeans.modules.web.core.jswdk                                org.netbeans.modules.web.core.execution
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/autoload/xml-tax.jar!/META-INF/netbeans/translate.names
+
+org.netbeans.modules.xml.tree.beans.customizer                              org.netbeans.modules.xml.tax.beans.customizer
+org.netbeans.modules.xml.tree.beans.editor                                  org.netbeans.modules.xml.tax.beans.editor
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/autoload/ext/tax.jar!/META-INF/netbeans/translate.names
+
+org.netbeans.modules.xml.tree.CannotMergeException                 org.netbeans.tax.CannotMergeException
+org.netbeans.modules.xml.tree.event.TreeEvent                      org.netbeans.tax.event.TreeEvent
+org.netbeans.modules.xml.tree.InvalidArgumentException             org.netbeans.tax.InvalidArgumentException
+org.netbeans.modules.xml.tree.InvalidStateException                org.netbeans.tax.InvalidStateException
+org.netbeans.modules.xml.tree.NotSupportedException                org.netbeans.tax.NotSupportedException
+org.netbeans.modules.xml.tree.ReadOnlyException                    org.netbeans.tax.ReadOnlyException
+org.netbeans.modules.xml.tree.traversal.TreeNodeFilterCustomEditor                    org.netbeans.modules.xml.tax.beans.editor.TreeNodeFilterCustomEditor
+org.netbeans.modules.xml.tree.TreeException                        org.netbeans.tax.TreeException
+org.netbeans.modules.xml.tree.TreeUnsupportedOperationException    org.netbeans.tax.TreeUnsupportedOperationException
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/autoload/xml-core.jar!/META-INF/netbeans/translate.names
+
+org.netbeans.modules.xml.XMLSettings              org.netbeans.modules.xml.settings.XMLSettings
+org.netbeans.modules.xml.XMLDataLoader            org.netbeans.modules.xml.core.XMLDataLoader
+org.netbeans.modules.xml.XMLDataObject            org.netbeans.modules.xml.core.XMLDataObject
+org.netbeans.modules.xml.lib.StreamFileObject     org.netbeans.modules.xml.core.lib.StreamFileObject
+org.netbeans.modules.xml.lib.StreamFileSystem     org.netbeans.modules.xml.core.lib.StreamFileSystem
+org.netbeans.modules.xml.text.TextEditorComponent org.netbeans.modules.xml.core.text.TextEditorComponent
+org.netbeans.modules.xml.text.TextEditorSupport   org.netbeans.modules.xml.core.text.TextEditorSupport
+org.netbeans.modules.xml.XMLUpdateDocumentAction  org.netbeans.modules.xml.core.actions.XMLUpdateDocumentAction
+org.netbeans.modules.xml.DTDDataLoader            org.netbeans.modules.xml.core.DTDDataLoader
+org.netbeans.modules.xml.DTDDataObject            org.netbeans.modules.xml.core.DTDDataObject
+org.netbeans.modules.xml.AbstractUtil             org.netbeans.modules.xml.core.AbstractUtil
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/xml-text-edit.jar!/META-INF/netbeans/translate.names
+
+org.netbeans.modules.xml.editor.coloring                    org.netbeans.modules.xml.text.syntax
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/utilities.jar!/META-INF/netbeans/translate.names
+
+
+
+org.netbeans.modules.pdf.PDFSettings=org.netbeans.modules.pdf.Settings
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/xml-tree-edit.jar!/META-INF/netbeans/translate.names
+
+org.netbeans.modules.xml.editor.CustomizerView                     org.netbeans.modules.xml.tree.editor.CustomizerView
+org.netbeans.modules.xml.editor.TreeEditorComponent                org.netbeans.modules.xml.tree.editor.TreeEditorComponent
+org.netbeans.modules.xml.editor.TreeEditorSupport                  org.netbeans.modules.xml.tree.editor.TreeEditorSupport
+org.netbeans.modules.xml.node.AbstractObjectNode                   org.netbeans.modules.xml.tree.nodes.AbstractObjectNode
+org.netbeans.modules.xml.node.AbstractParentNode                   org.netbeans.modules.xml.tree.nodes.AbstractParentNode
+org.netbeans.modules.xml.settings.NodeViewType                     org.netbeans.modules.xml.tree.settings.NodeViewType
+org.netbeans.modules.xml.XMLNormalizeElementAction                 org.netbeans.modules.xml.tree.actions.XMLNormalizeElementAction
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/image.jar!/META-INF/netbeans/translate.names
+
+
+
+# the following class has corrupted serialVersionUID
+org.netbeans.modules.image.ImageOpenSupport$Environment=org.netbeans.modules.image.ImageOpenSupport$Environment
+
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/xml-tools.jar!/META-INF/netbeans/translate.names
+
+org.netbeans.modules.xml.action.CheckAction                        org.netbeans.modules.xml.tools.actions.CheckAction
+org.netbeans.modules.xml.action.CheckDTDAction                     org.netbeans.modules.xml.tools.actions.CheckDTDAction
+org.netbeans.modules.xml.action.CSSStyleAction                     org.netbeans.modules.xml.tools.actions.CSSStyleAction
+org.netbeans.modules.xml.action.ValidateAction                     org.netbeans.modules.xml.tools.actions.ValidateAction
+org.netbeans.modules.xml.doclet.DocletAction                       org.netbeans.modules.xml.tools.doclet.DocletAction
+org.netbeans.modules.xml.doclet.DTDDoclet                          org.netbeans.modules.xml.tools.doclet.DTDDoclet
+org.netbeans.modules.xml.generator.ElementBindings                 org.netbeans.modules.xml.tools.generator.ElementBindings
+org.netbeans.modules.xml.generator.ElementDeclarations             org.netbeans.modules.xml.tools.generator.ElementDeclarations
+org.netbeans.modules.xml.generator.ParsletBindings                 org.netbeans.modules.xml.tools.generator.ParsletBindings
+org.netbeans.modules.xml.generator.SAXGeneratorAbstractPanel       org.netbeans.modules.xml.tools.generator.SAXGeneratorAbstractPanel
+org.netbeans.modules.xml.generator.SAXGeneratorCustomizer          org.netbeans.modules.xml.tools.generator.SAXGeneratorCustomizer
+org.netbeans.modules.xml.generator.SAXGeneratorFilePanel           org.netbeans.modules.xml.tools.generator.SAXGeneratorFilePanel
+org.netbeans.modules.xml.generator.SAXGeneratorMethodPanel         org.netbeans.modules.xml.tools.generator.SAXGeneratorMethodPanel
+org.netbeans.modules.xml.generator.SAXGeneratorModel               org.netbeans.modules.xml.tools.generator.SAXGeneratorModel
+org.netbeans.modules.xml.generator.SAXGeneratorParsletPanel        org.netbeans.modules.xml.tools.generator.SAXGeneratorParsletPanel
+org.netbeans.modules.xml.generator.SAXGeneratorVersionPanel        org.netbeans.modules.xml.tools.generator.SAXGeneratorVersionPanel
+org.netbeans.modules.xml.generator.SelectFileDialog                org.netbeans.modules.xml.tools.generator.SelectFileDialog
+org.netbeans.modules.xml.generator.ValidatingTextField             org.netbeans.modules.xml.tools.generator.ValidatingTextField
+org.netbeans.modules.xml.generator.XMLGenerateAction               org.netbeans.modules.xml.tools.generator.XMLGenerateAction
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/css.jar!/META-INF/netbeans/translate.names
+
+org.netbeans.modules.xml.css.CheckStyleAction                      org.netbeans.modules.css.actions.CheckStyleAction
+org.netbeans.modules.xml.css.CopyStyleAction                       org.netbeans.modules.css.actions.CopyStyleAction
+org.netbeans.modules.xml.css.CSSEditorOptions                      org.netbeans.modules.css.text.syntax.CSSEditorOptions
+org.netbeans.modules.xml.css.CSSEditorSupport                      org.netbeans.modules.css.text.CSSEditorSupport
+org.netbeans.modules.xml.css.CSSLoader                             org.netbeans.modules.css.CSSLoader
+org.netbeans.modules.xml.css.CSSObject                             org.netbeans.modules.css.CSSObject
+org.netbeans.modules.xml.css.CSSWizardType                         org.netbeans.modules.css.actions.CSSWizardType
+org.netbeans.modules.xml.css.editor.CSSEditorKit                   org.netbeans.modules.css.text.syntax.CSSEditorKit
+org.netbeans.modules.xml.css.editor.CSSEditorOptions               org.netbeans.modules.css.text.syntax.CSSEditorOptions
+org.netbeans.modules.xml.css.javacc.ParseException                 org.netbeans.modules.css.text.syntax.javacc.ParseException
+org.netbeans.modules.xml.css.javacc.TokenMgrError                  org.netbeans.modules.css.text.syntax.javacc.TokenMgrError
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/text.jar!/META-INF/netbeans/translate.names
+
+
+# the following class has corrupted serialVersionUID
+org.netbeans.modules.text.TXTEditorSupport$Environment=org.netbeans.modules.text.TXTEditorSupport$Environment
+
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/core-ide.jar!/META-INF/netbeans/translate.names
+
+#
+# Old NetBeans Developer stuff
+#
+
+com.netbeans                                                       org.netbeans
+com.netbeans.ddl                                                   org.netbeans.lib.ddl
+com.netbeans.developer                                             org.netbeans
+com.netbeans.developer.awt                                         org.netbeans.lib.awtextra
+com.netbeans.developer.docs                                        org.netbeans.docs
+com.netbeans.developer.editors                                     org.netbeans.beaninfo.editors
+com.netbeans.developer.explorer.propertysheet.editors              org.netbeans.modules.form.editors2
+com.netbeans.developer.impl                                        org.netbeans.core
+com.netbeans.developer.impl.beaninfo                               org.netbeans.beaninfo
+com.netbeans.developer.impl.resources.tips                         org.netbeans.docs.tips.resources
+com.netbeans.developer.modules                                     org.netbeans.modules
+com.netbeans.developer.modules.browser                             org.netbeans.modules.objectbrowser
+com.netbeans.developer.modules.loaders                             org.netbeans.modules
+com.netbeans.developer.modules.loaders.txt                         org.netbeans.modules.text
+com.netbeans.developer.modules.projectx                            org.netbeans.modules.projects
+com.netbeans.developer.modules.text                                org.netbeans.modules.editor
+com.netbeans.developer.updater                                     org.netbeans.updater
+com.netbeans.developer.util                                        org.netbeans.modules.form.util2
+com.netbeans.developerx.loaders.form                               org.netbeans.modules.form
+com.netbeans.developerx.loaders.form.formeditor                    org.netbeans.modules.form.compat2
+com.netbeans.editor                                                org.netbeans.editor
+com.netbeans.enterprise.appsrv                                     org.netbeans.modules
+com.netbeans.enterprise.deployment                                 org.netbeans.lib.deployment
+com.netbeans.enterprise.modules                                    org.netbeans.modules
+com.netbeans.enterprise.modules.debugger                           org.netbeans.modules.debugger.multisession
+com.netbeans.enterprise.modules.vcs.starteam                       org.netbeans.modules.vcs.starteam
+com.netbeans.examples                                              org.netbeans.examples
+com.netbeans.examples.modules.crosscompile                         org.netbeans.modules.crosscompile
+com.netbeans.examples.modules.innertesters                         org.netbeans.modules.innertesters
+com.netbeans.examples.modules.multicompile                         org.netbeans.modules.multicompile
+com.netbeans.examples.modules.svuidwiz                             org.netbeans.modules.serialversion
+com.netbeans.examples.modules.sysprops                             org.netbeans.modules.sysprops
+com.netbeans.ide                                                   org.openide
+com.netbeans.ftp                                                   org.netbeans.lib.ftp
+com.netbeans.javac                                                 org.netbeans.lib.javac
+com.netbeans.regexp                                                org.netbeans.lib.regexp
+com.netbeans.sql                                                   org.netbeans.lib.sql
+com.netbeans.timerbean                                             org.netbeans.examples.lib.timerbean
+
+
+# jar:file:/home.local/jarda/work/nbbuild/netbeans/modules/xml-catalog.jar!/META-INF/netbeans/translate.names
+
+org.netbeans.modules.xml.catalog.CatalogSettings                   org.netbeans.modules.xml.catalog.settings.CatalogSettings
+org.netbeans.modules.xml.lib.StreamEnvironment                     org.netbeans.modules.xml.catalog.lib.StreamEnvironment
+
+
+# nbfs:MountQBjavaQBorg-netbeans-modules-apisupport-javahelp-api.xml/META-INF/netbeans/translate.names
+
+
+# Moved to a separate module (and deprecated).
+org.netbeans.core.JavaHelp$HelpComponent=org.netbeans.modules.javahelp.JavaHelp$HelpComponent
+
+
+# nbfs:MountQBjavaQBorg-netbeans-modules-apisupport-openide-main.xml/META-INF/netbeans/translate.names
+
+org.openide.util.actions.SystemAction=org.openide.util.actions.SystemAction
+
+

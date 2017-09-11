@@ -1,0 +1,9 @@
+.t.e.s.t. html comment - issue #149018
+BLOCK_COMMENT   "<!-- comment --->", st=HLS(hc=72412707,s=0)
+TEXT            "\n", la=1, st=HLS(hc=72412707,s=0)
+BLOCK_COMMENT   "<!-- unfinished -- >", la=1, st=HLS(hc=102229704,s=21)
+----- EOF -----
+
+<Unnamed test>
+----- EOF -----
+

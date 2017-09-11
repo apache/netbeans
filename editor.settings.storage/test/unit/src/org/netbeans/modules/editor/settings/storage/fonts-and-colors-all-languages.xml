@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+
+<fontscolors>
+    <fontcolor name="test-all-languages-super-default" bgColor="ABCDEF" />
+    <fontcolor name="test-all-languages-set-all" bgColor="0A0B0C" foreColor="0D0E0F" underline="010203" strikeThrough="040506" waveUnderlined="070809" />
+</fontscolors>

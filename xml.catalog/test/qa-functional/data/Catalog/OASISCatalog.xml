@@ -1,0 +1,6 @@
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+<public publicId="public ID"
+	uri="xmlcatdtd.dtd"/>
+<system systemId="urn:x-oasis:docbook-xml-v4.1.2" 
+	uri="xmlcatdtd.dtd"/>
+</catalog>

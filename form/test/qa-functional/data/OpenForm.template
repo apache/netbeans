@@ -1,0 +1,156 @@
+<HTML><!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Sun designates this
+particular file as subject to the "Classpath" exception as provided
+by Sun in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+ The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+ Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<STYLE TYPE="text/css">
+			BODY  {
+  				font-family: Verdana, sans-serif, helvetica, arial;
+  				font-size: 13px;
+  				background-color: #FFFFFF;
+			}
+			TD	{
+  				font-family: Verdana, sans-serif, helvetica, arial;
+  				font-size: 13px;
+			}
+
+			TH	{
+				font-family: helvetica, arial, sans-serif;
+				font-size: 12pt;
+			}
+    		.error {
+	    		font-weight:bold; background:#EEEEE0; color:purple;
+	    		}
+	    	.fail {
+			    font-weight:bold; background:#EEEEE0; color:red;
+    		}
+	    	.unexpected-pass {
+			    font-weight:bold; background:#EEEEE0; color:#FFB200;
+    		}
+    		.unknown {
+			    font-weight:bold; background:#EEEEE0; color:red;
+    		}
+	    	.expected-fail {
+			    font-weight:bold; background:#EEEEE0; color:brown;
+    		}
+    		.pass {
+		    	background:#EEEEE0;
+	    	}
+    		.error-matrix {
+	    		font-weight:bold; background:#e0a8e0; color:purple;
+	    		}
+	    	.fail-matrix {
+			    font-weight:bold; background:#ffa0a0; color:red;
+    		}
+	    	.unexpected-pass-matrix {
+			    font-weight:bold; background:#FFF0B3; color:#FFB200;
+    		}
+    		.unknown-matrix {
+			    font-weight:bold; background:#EEEEE0; color:red;
+    		}    		
+	    	.expected-fail-matrix {
+			    font-weight:bold; background:#F0D48A; color:brown;
+    		}
+    		.pass-matrix {
+		    	background:#EEEEE0;
+	    	}
+	    		    	
+	    	.header {
+		    	background:#A6CAF0;
+	    	}
+	    	
+	    	A:link {
+  				color: #001692;
+			}
+
+			A:visited {
+  				color: #001692;
+			}
+
+			A:hover {
+  				color: red;
+			}
+
+			.default  {
+				font-family: Verdana, sans-serif, helvetica, arial;
+				font-size: 13px;
+			}
+
+			H1 {font-size: 18pt; font-weight : bold; color: #CC3333;}
+			H2 {font-size: 14pt; font-weight: bold; color: #CC3333; }
+			H3 {font-size: 10pt; font-weight: bold; color: #CC3333; }
+			H4,H5,H6 {font-size: 10pt; font-weight: normal; color: #CC3333; }
+
+			.h1 {font-size: 18pt; font-weight : bold; color: #CC3333;}
+			.h2 {font-size: 14pt; font-weight: bold; color: #CC3333; }
+			.h3 {font-size: 10pt; font-weight: bold; color: #CC3333; }
+			.h4 {font-size: 10pt; font-weight: normal; color: #CC3333; }
+	    	
+	    	UL	{
+				list-style-type: circle;
+			}
+			
+
+			PRE,SAMP,CODE,TT {
+  				font-family: Courier New, Monospaced;
+  			}			
+	    	
+		</STYLE>
+<TITLE>OpenForm test - screenshots</TITLE>
+</HEAD>
+<BODY>
+    
+<TABLE width="98%" cellspacing="2" cellpadding="5" border="0">
+<TR>
+<TD ALIGN="LEFT"><H1>OpenForm test - screenshots</H1></TD><TD ALIGN="RIGHT"><A HREF="javascript:history.go(-1)">&lt;- Back</A></TD>
+</TR>
+</TABLE>
+
+<PUT CONTENT HERE>
+
+<TABLE width="98%" cellspacing="2" cellpadding="5" border="0">
+<TR>
+<TD ALIGN="RIGHT"><A HREF="javascript:history.go(-1)">&lt;- Back</A></TD>
+</TR>
+</TABLE>
+
+</BODY>
+</HTML>

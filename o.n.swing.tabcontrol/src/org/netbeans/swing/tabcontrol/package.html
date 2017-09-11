@@ -1,0 +1,63 @@
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2009, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<html><body>
+<h2>TabDisplayer and TabbedControl</h2>
+This package contains two gui components:
+<ul>
+<li><b>TabDisplayer</b> - A component which displays tabs, the contents of which are defined in a <code>TabDataModel</code>.  This can be used as a standalone component for tab-driven navigation.  It has several UI styles available to suit different purposes, such as scrollable tabs, fixed width tabs, or toggle buton tabs.</li>
+<li><b>TabbedContainer</b> - A component which also takes a <code>TabDataModel</code>, which offers similar functionality to a JTabbedPane, and (as an implementation detail) embeds a TabDisplayer to display its tabs.</li>
+</ul>
+
+Where these classes differ from JTabbedPane is as follows:
+<ul>
+<li>Fully model driven - the contents of the AWT hierarchy are an artifact, not the primary source of information about the contents of the tabbed container.  Several policies are available for when components to be displayed in tabs are to be physically added to a container</li>
+<li>Multiple UI styles supported up front - Several different UI styles are supported, with UI delegates for the major look and feels.</li>
+<li>Drag and drop visualization support - while the actual functionality of what to drag and what to do with it is left up to the application, there is built in support for creating drag images of tabs and visual feedback for where a tab will be placed if dropped.</li>
+<li>Support for using a single component across multiple tabs is designed in - there are some hacks one can do which (maybe) will allow a JTabbedPane to do this, but they are not recommended.  This is made easy using the <code>ComponentConverter</code> class, which determines how an element in the data model is translated into a GUI component</li>
+<li>Very granular event model - TabDataModel is designed on the assumption that the application may atomically add/remove/modify discontiguous ranges of tabs, their contents, titles or icons, and that such operations should be handled atomically, generating a single event/repaint</li>
+</ul>
+
+Besides this module the <a href="../popupswitcher/package-summary.html">org.netbeans.swing.popupswitcher</a>
+package is used from core/windows too. Classes contained in the package are
+rather general and therefore this package could be moved in the future. It is
+placed here only due to current modules dependencies. Consequently the package
+is not intended for external use.<br/>
+
+</body></html>

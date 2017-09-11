@@ -1,0 +1,5 @@
+# core/javahelp
+read global
+${l10n-module}/src/**/resources/*.xml 
+exclude ${l10n-module}/src/org/netbeans/modules/javahelp/resources/master-help.xml
+exclude ${l10n-module}/src/org/netbeans/modules/javahelp/resources/masterHelpToc.xml

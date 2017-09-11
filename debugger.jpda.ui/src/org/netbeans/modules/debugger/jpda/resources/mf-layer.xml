@@ -1,0 +1,282 @@
+<?xml version="1.0"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-java">
+                <folder name="GlyphGutterActions">
+                    <!--<file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                    </file>-->
+                    <file name="org-netbeans-modules-debugger-jpda-ui-actions-ToggleMethodFieldBreakpointAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-jpda-ui-actions-ToggleMethodFieldBreakpointAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                </folder>
+                <folder name="Popup">
+                    <file name="SeparatorAfterFormat.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1600"/>
+                    </file>
+                    <file name="org-netbeans-modules-debugger-ui-actions-DebugFileAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugFileAction.instance"/>
+                        <attr name="position" intvalue="1760"/>
+                    </file>
+                    <file name="org-netbeans-modules-debugger-ui-actions-DebugTestFileAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugTestFileAction.instance"/>
+                        <attr name="position" intvalue="1790"/>
+                    </file>
+                    <file name="org-netbeans-modules-debugger-ui-actions-RunIntoMethodAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-RunIntoMethodAction.instance"/>
+                        <attr name="position" intvalue="1800"/>
+                    </file>
+                    <file name="org-netbeans-modules-debugger-ui-actions-AddWatchAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-AddWatchAction.instance"/>
+                        <attr name="position" intvalue="1840"/>
+                    </file>
+                    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                        <attr name="position" intvalue="1880"/>
+                    </file>
+                </folder>
+                <file name="org.netbeans.spi.editor.highlighting.HighlightsLayerFactory.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.spi.debugger.ui.MethodChooser.createHighlihgtsLayerFactory"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.highlighting.HighlightsLayerFactory"/>
+                </file>
+            </folder>
+            <folder name="x-java-nbdebug-class">
+                <file name="EditorKit.instance">
+                    <attr name="instanceClass" 
+                          stringvalue="org.netbeans.modules.debugger.jpda.ui.completion.JavaClassNbDebugEditorKit"/>
+                </file>
+            </folder>
+            <folder name="x-java-nbdebug-class-exception">
+                <file name="EditorKit.instance">
+                    <attr name="instanceClass" 
+                          stringvalue="org.netbeans.modules.debugger.jpda.ui.completion.ExceptionClassNbDebugEditorKit"/>
+                </file>
+            </folder>
+            <folder name="x-java-nbdebug-class-field">
+                <file name="EditorKit.instance">
+                    <attr name="instanceClass" 
+                          stringvalue="org.netbeans.modules.debugger.jpda.ui.completion.JavaFieldNbDebugEditorKit"/>
+                </file>
+            </folder>
+            <folder name="x-java-nbdebug-class-method">
+                <file name="EditorKit.instance">
+                    <attr name="instanceClass" 
+                          stringvalue="org.netbeans.modules.debugger.jpda.ui.completion.JavaMethodNbDebugEditorKit"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="AnnotationTypes">  <!-- Editor gutter popup menu -->
+            <file name="DisabledFieldBreakpoint.xml" url="DisabledFieldBreakpoint.xml"/>
+            <file name="DisabledMethodBreakpoint.xml" url="DisabledMethodBreakpoint.xml"/>
+            <file name="DisabledClassBreakpoint.xml" url="DisabledClassBreakpoint.xml"/>
+            <file name="FieldBreakpoint.xml" url="FieldBreakpoint.xml"/>
+            <file name="MethodBreakpoint.xml" url="MethodBreakpoint.xml"/>
+            <file name="ClassBreakpoint.xml" url="ClassBreakpoint.xml"/>
+            <file name="DisabledFieldBreakpoint_stroke.xml" url="DisabledFieldBreakpoint_stroke.xml"/>
+            <file name="DisabledMethodBreakpoint_stroke.xml" url="DisabledMethodBreakpoint_stroke.xml"/>
+            <file name="DisabledClassBreakpoint_stroke.xml" url="DisabledClassBreakpoint_stroke.xml"/>
+            <file name="FieldBreakpoint_stroke.xml" url="FieldBreakpoint_stroke.xml"/>
+            <file name="MethodBreakpoint_stroke.xml" url="MethodBreakpoint_stroke.xml"/>
+            <file name="ClassBreakpoint_stroke.xml" url="ClassBreakpoint_stroke.xml"/>
+            <folder name="OtherThreadActions">
+                <file name="org-netbeans-modules-debugger-jpda-ui-actions-SetAsCurrentThreadGutterAction.instance">
+                    <attr name="position" intvalue="100"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="Loaders">
+        <folder name="text">
+            <folder name="x-java">
+                <folder name="Actions">
+                    <file name="org-netbeans-modules-debugger-ui-actions-DebugFileAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugFileAction.instance"/>
+                        <attr name="position" intvalue="1100"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="Actions">
+        <folder name="Debug">
+            <file name="org-netbeans-modules-debugger-jpda-ui-actions-ToggleMethodFieldBreakpointAction.instance"/>
+            <file name="org-netbeans-modules-debugger-jpda-ui-actions-CheckDeadlocksAction.instance"/>
+        </folder>
+    </folder>
+
+    <folder name="Projects">
+        <folder name="Debugger_Actions_temporary">
+            <file name="org-netbeans-modules-debugger-ui-actions-DebugProjectAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugProjectAction.instance"/>
+            </file>
+        </folder>
+    </folder>
+
+    <!-- Main menu -->
+     <folder name="Menu">
+        <folder name="RunProject">
+            <file name="org-netbeans-modules-debugger-ui-actions-ConnectAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ConnectAction.instance"/>
+                <attr name="position" intvalue="600"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-KillAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-KillAction.instance"/>
+                <attr name="position" intvalue="700"/>
+            </file>
+            <file name="Separator11.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="800"/>
+            </file>
+
+            <file name="org-netbeans-modules-debugger-ui-actions-PauseAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-PauseAction.instance"/>
+                <attr name="position" intvalue="900"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-ContinueAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ContinueAction.instance"/>
+                <attr name="position" intvalue="1000"/>
+            </file>
+            <file name="Separator2.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="1100"/>
+            </file>
+
+            <file name="org-netbeans-modules-debugger-ui-actions-StepOverAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOverAction.instance"/>
+                <attr name="position" intvalue="1200"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-StepOperationAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOperationAction.instance"/>
+                <attr name="position" intvalue="1300"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-StepIntoAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepIntoAction.instance"/>
+                <attr name="position" intvalue="1400"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-StepIntoNextMethodAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepIntoNextMethodAction.instance"/>
+                <attr name="position" intvalue="1450"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-StepOutAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOutAction.instance"/>
+                <attr name="position" intvalue="1500"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-RunToCursorAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-RunToCursorAction.instance"/>
+                <attr name="position" intvalue="1600"/>
+            </file>
+            <file name="Separator3.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="1800"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-FixAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-FixAction.instance"/>
+                <attr name="position" intvalue="1900"/>
+            </file>
+            <file name="Separator4.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="2000"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-SetCurrentThreadFromHistoryAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-SetCurrentThreadFromHistoryAction.instance"/>
+                <attr name="position" intvalue="2050"/>
+            </file>
+            <folder name="Stack">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.debugger.jpda.ui.Bundle"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/debugger/resources/actions/Folder.gif"/>
+
+                <attr name="position" intvalue="2100"/>
+                <file name="org-netbeans-modules-debugger-ui-actions-MakeCalleeCurrentAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-MakeCalleeCurrentAction.instance"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="org-netbeans-modules-debugger-ui-actions-MakeCallerCurrentAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-MakeCallerCurrentAction.instance"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="Separator5.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="300"/>
+                </file>
+
+                <file name="org-netbeans-modules-debugger-ui-actions-PopTopmostCallAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-PopTopmostCallAction.instance"/>
+                    <attr name="position" intvalue="400"/>
+                </file>
+            </folder>
+
+            <file name="Separator6.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="2200"/>
+            </file>
+
+            <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+                <attr name="position" intvalue="2300"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-AddBreakpointAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-AddBreakpointAction.instance"/>
+                <attr name="position" intvalue="2400"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-ui-actions-AddWatchAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-AddWatchAction.instance"/>
+                <attr name="position" intvalue="2500"/>
+            </file>
+            <file name="org-netbeans-modules-debugger-jpda-ui-actions-CheckDeadlocksAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-jpda-ui-actions-CheckDeadlocksAction.instance"/>
+                <attr name="position" intvalue="2650"/>
+            </file>
+        </folder>
+    </folder>
+
+</filesystem>

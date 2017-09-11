@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.apisupport.crudsample
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/apisupport/crudsample/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.24
+OpenIDE-Module-Layer: org/netbeans/modules/apisupport/crudsample/layer.xml
+AutoUpdate-Show-In-Client: false

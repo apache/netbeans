@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : dtd.dtd
+    Created on : July 24, 2002, 11:35 PM
+    Author     : Petr Kuzel <petr.kuzel@sun.com>
+    Description:
+        DTDPrser test file.
+-->
+
+<!ENTITY toro "toro">
+
+<!ELEMENT root ANY>

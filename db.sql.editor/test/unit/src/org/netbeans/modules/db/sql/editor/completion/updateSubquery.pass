@@ -1,0 +1,6 @@
+Table customer_tab
+Table invoice_tab
+Table purchase_order_tab
+Schema customers_sch
+Catalog catalog_1
+Catalog catalog_2

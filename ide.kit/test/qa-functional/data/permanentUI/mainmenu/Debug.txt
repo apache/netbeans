@@ -1,0 +1,35 @@
+| Debug |                   D (mnemonics)
+=========
+Debug Project               D   - Debug Project (project-name) - Debug Main Project
+Debug File                  g
+Debug Test File             l
+Attach Debugger...          A
+Debug Core File...          O
+=========================
+Finish Debugger Session     F
+Terminate Process           E
+Detach Debugger             D
+=========================
+Restart                     R
+Pause                       P
+Continue                    C
+=========================
+Step Over                   v
+Step Over Expression        E
+Step Into                   I
+Step Into Next Method       N
+Step Out                    O
+Run to Cursor               u
+Step Into Last Function     u
+=========================
+Apply Code Changes          y
+Take GUI Snapshot           S
+=========================
+Set Current Thread...       h
+Stack                   >   S
+=========================
+Toggle Line Breakpoint      T
+New Breakpoint...           B
+New Watch...                W
+Evaluate Expression...      x
+Check for Deadlock          k

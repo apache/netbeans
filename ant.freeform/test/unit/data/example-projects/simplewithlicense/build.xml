@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="all" name="simplewithlicense">
+    
+    <target name="all">
+    </target>
+    
+    <target name="-pre-compile">
+    </target>
+    
+    <target name="compile" depends="-pre-compile">
+    </target>
+    
+    <target name="default" depends="jar">
+    </target>
+    
+    <target name="jar" depends="compile">
+    </target>
+    
+    <target name="run" depends="jar">
+    </target>
+
+    <target name="clean">
+    </target>
+    
+    <target name="javadoc">
+    </target>
+    
+    <target name="test">
+    </target>
+    
+</project>

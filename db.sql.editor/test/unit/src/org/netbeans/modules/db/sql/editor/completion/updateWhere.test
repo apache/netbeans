@@ -1,0 +1,12 @@
+UPDATE customer_tab c1, invoice_tab SET customer_id = 1 WHERE |
+
+--
+catalog_1*
+  customers_sch*
+    customer_tab
+      customer_id
+    invoice_tab
+      invoice_id
+    purchase_order_tab
+      order_id
+catalog_2

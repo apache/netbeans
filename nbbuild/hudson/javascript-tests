@@ -1,0 +1,3 @@
+#!/bin/sh
+ant || exit 2
+ant -f javascript.editing/build-javascript.xml runtests || exit 3

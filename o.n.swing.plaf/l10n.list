@@ -1,0 +1,3 @@
+# core/swing/plaf
+read global
+${l10n-module}/src/org/netbeans/swing/plaf/aqua/*.png

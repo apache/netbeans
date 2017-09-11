@@ -1,0 +1,66 @@
+Calling GenBeans.doIt
+Bean Tree:
+application <application> : Application
+	displayName <display-name> : String
+	description <description> : String
+	module <module> : Module
+		alternateNameEjb <ejb> : String
+		myAltDd <alt-dd> : String
+
+Compiling
+Finished compiling: 0
+out: TestContrivedApp - creating the bean graph
+out: TestContrivedApp - bean graph created
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!DOCTYPE application PUBLIC "-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN" "http://java.sun.com/dtd/application_1_3.dtd">
+out: <application>
+out:   <display-name>Application_EJBModule_Entity2</display-name>
+out:   <description>J2EE Application &amp; &lt; &gt;Application_EJBModule_Entity2&lt;&gt;&amp;"'</description>
+out:   <module>
+out:     <ejb>EJBModule_Entity2.jar</ejb>
+out:     <alt-dd>EJBModule_Entity2.xml</alt-dd>
+out:   </module>
+out: </application>
+out: TestContrivedApp - module.myaltDd = EJBModule_Entity2.xml
+out: TestContrivedApp - Make sure XML metacharacters get escapped
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!DOCTYPE application PUBLIC "-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN" "http://java.sun.com/dtd/application_1_3.dtd">
+out: <application>
+out:   <display-name>Application_EJBModule_Entity2</display-name>
+out:   <description>J2EE Application &amp; &lt; &gt;Application_EJBModule_Entity2&lt;&gt;&amp;"'</description>
+out:   <module>
+out:     <ejb>EJBModule_Entity2.jar</ejb>
+out:     <alt-dd>Foo &amp; Co</alt-dd>
+out:   </module>
+out: </application>
+out: TestContrivedApp - Make sure alt-dd is still there with no whitespace
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!DOCTYPE application PUBLIC "-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN" "http://java.sun.com/dtd/application_1_3.dtd">
+out: <application>
+out:   <display-name>Application_EJBModule_Entity2</display-name>
+out:   <description>J2EE Application &amp; &lt; &gt;Application_EJBModule_Entity2&lt;&gt;&amp;"'</description>
+out:   <module>
+out:     <ejb>EJBModule_Entity2.jar</ejb>
+out:     <alt-dd/>
+out:   </module>
+out: </application>
+out: TestContrivedApp - alt-dd goes away now
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!DOCTYPE application PUBLIC "-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN" "http://java.sun.com/dtd/application_1_3.dtd">
+out: <application>
+out:   <display-name>Application_EJBModule_Entity2</display-name>
+out:   <description>J2EE Application &amp; &lt; &gt;Application_EJBModule_Entity2&lt;&gt;&amp;"'</description>
+out:   <module>
+out:     <ejb>EJBModule_Entity2.jar</ejb>
+out:   </module>
+out: </application>
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <!DOCTYPE application PUBLIC "-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN" "http://java.sun.com/dtd/application_1_3.dtd">
+out: <application>
+out:   <display-name>Application_EJBModule_Entity2</display-name>
+out:   <description>J2EE Application &amp; &lt; &gt;Application_EJBModule_Entity2&lt;&gt;&amp;"'</description>
+out:   <module>
+out:     <ejb>blue</ejb>
+out:   </module>
+out: </application>
+Finished running TestContrivedApp: 0

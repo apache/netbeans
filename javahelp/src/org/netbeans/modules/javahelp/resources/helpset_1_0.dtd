@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+    This is the DTD for helpset
+    Copyright (c) 1998,1999 Sun Microsystems
+
+    @(#)helpset_1_0.dtd 1.5 01/14/99
+-->
+
+
+<!-- A HelpSet.  It is versioned -->
+
+<!ELEMENT helpset (title, maps, view+, subhelpset*)>
+  <!ATTLIST helpset version CDATA #FIXED "1.0">
+  <!ATTLIST helpset xml:lang CDATA #IMPLIED>
+
+
+<!-- The title. -->
+
+<!ELEMENT title (#PCDATA)>
+
+
+<!-- Maps between ids and urls for this helpset -->
+<!-- there is a bug in JH1.0 that forces a single map -->
+
+<!ELEMENT maps (homeID, mapref+)>
+<!ELEMENT homeID (#PCDATA)>
+<!ELEMENT mapref EMPTY>
+  <!ATTLIST mapref location CDATA #REQUIRED>
+
+
+<!-- Views into the information -->
+
+<!ELEMENT view (name | label | type | data?)*>
+  <!ATTLIST view xml:lang CDATA #IMPLIED>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT label (#PCDATA)>
+<!ELEMENT type (#PCDATA)>
+<!ELEMENT data (#PCDATA)>
+  <!ATTLIST data engine CDATA #IMPLIED>
+
+
+<!-- Subhelpsets to merge "statically" -->
+
+<!ELEMENT subhelpset EMPTY>
+  <!ATTLIST subhelpset location CDATA #IMPLIED>
+
+
+<!-- 
+  Change list:
+
+  Cleanup to be more XML-ish - epll, 15 Dec '98
+  xml:lang attributes for title, label, and name are no more.
+  engine is now an attribute of data.
+  impl is no more; use PI's instead.
+  data inside map is now the map tag.
+
+  More cleanup - epll, 16 Dec '98
+  moved homeID into map
+  made data inside map be mapref (for map reference)
+
+ -->

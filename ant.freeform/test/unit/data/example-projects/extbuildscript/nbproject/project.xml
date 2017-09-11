@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.ant.freeform</type>
+    <configuration>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
+            <name>Simple Freeform Project</name>
+            <properties>
+                <property name="ant.script">scripts/build.xml</property>
+            </properties>
+            <folders/>
+        </general-data>
+    </configuration>
+</project>

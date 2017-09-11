@@ -1,0 +1,10 @@
+<?xml version='1.0'?>
+<!DOCTYPE connection PUBLIC '-//NetBeans//DTD Database Connection 1.2//EN' 'http://www.netbeans.org/dtds/connection-1_2.dtd'>
+<connection>
+  <driver-class value='org.bar.BarDriver'/>
+  <driver-name value='bar_driver'/>
+  <database-url value='jdbc:bar:localhost'/>
+  <schema value='schema'/>
+  <user value='user'/>
+  <use-scrollable-cursors value='false'/>
+</connection>

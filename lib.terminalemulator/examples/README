@@ -1,0 +1,29 @@
+"README"
+
+Current examples
+----------------
+
+lib.richexecution
+	A pure NB module (not dependent on other NB modules) which provides
+	native excecution and tty/pty access via JNA.
+
+TermExample
+	A NB module with examples of how to hook up Terminal, the Term-based
+	IOProvider, with io as well as various interactive testing facilities.
+
+TermSuite
+	Suite for hosting lib.richexecution and TermExample.
+
+TermApp
+	A standalone terminal emulator application.
+	-E option enables compiler error processing which requires -t dtterm
+	as well for hyperlinks to work.
+
+Older examples
+--------------
+buildtool
+	A simple make based build tool which demonstrates hyperlinking
+	and glyph gutter functionality in ActiveTerm.
+
+telnet	An old telnet application that depends on an external (not supplied)
+	Java telnet library.

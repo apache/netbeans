@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+   <para>
+            This is one sentence.
+This is another.
+    </para> 
+    <para xml:space="preserve">  eeee
+                This is one sentence.
+This is another.
+    </para><para>  firstLine
+otherLines
+            3rdLine
+                endLine</para>
+    <para>
+        This is <emphasis>one</emphasis> sentence. 
+This sentence should be aligned with the "one" sentence.
+    </para>
+    <para>
+        This is <emphasis>one</emphasis> sentence. 
+This is <emphasis>second</emphasis> sentence, text should align, tags should not wrap.
+    </para>
+    <para>
+                    This is <emphasis>one</emphasis> sentence. 
+This is 
+            <emphasis>second</emphasis> sentence, 
+    text should align, tags should not wrap.
+    </para>
+</root>

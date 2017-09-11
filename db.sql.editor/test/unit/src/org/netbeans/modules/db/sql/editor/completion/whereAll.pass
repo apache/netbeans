@@ -1,0 +1,6 @@
+Alias cus to customer
+Column invoice_id in table accounting.invoice
+Column customer_id in table customer
+Column address_line in table customer
+Table customer
+Schema accounting

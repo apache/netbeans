@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2007, Sun Microsystems, Inc. All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+  * Redistributions of source code must retain the above copyright notice,
+    this list of conditions and the following disclaimer.
+
+  * Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+
+  * Neither the name of Sun Microsystems, Inc. nor the names of its contributors
+    may be used to endorse or promote products derived from this software without
+    specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.sun.com/javaone/05/HotelReservationService" xmlns:ota="http://www.opentravel.org/OTA/2003/05" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" targetNamespace="http://www.sun.com/javaone/05/HotelReservationService">
+    <types>
+        <xs:schema xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:air="http://www.sun.com/javaone/05/HotelReservationService" targetNamespace="http://www.sun.com/javaone/05/HotelReservationService">
+            <xs:import namespace="http://www.opentravel.org/OTA/2003/05" schemaLocation="OTA_TravelItinerary.xsd"/>
+        </xs:schema>
+    </types>
+
+    <message name="ReserveHotelIn">
+        <part name="itinerary" element="ota:TravelItinerary"/>
+    </message>
+    
+    <message name="CancelHotelIn">
+        <part name="itinerary" element="ota:ItineraryRef"/>
+    </message>
+    
+    <message name="CancelHotelOut">
+        <part name="succeeded" element="ota:CancellationStatus"/>
+    </message>
+    
+    <message name="HotelReservedIn">
+        <part name="itinerary" element="ota:TravelItinerary"/>
+    </message>
+
+    <portType name="HotelReservationPortType">
+        <operation name="reserveHotel">
+            <input message="tns:ReserveHotelIn"/>
+        </operation>
+        <operation name="cancelHotel">
+            <input message="tns:CancelHotelIn"/>
+            <output message="tns:CancelHotelOut"/>
+        </operation>
+    </portType>
+
+    <portType name="HotelReservationCallbackPortType">
+        <operation name="hotelReserved">
+            <input message="tns:HotelReservedIn"/>
+        </operation>
+    </portType>
+
+    <binding name="HotelReservationSoapBinding" type="tns:HotelReservationPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="reserveHotel">
+            <soap:operation soapAction="http://www.sun.com/javaone/05/HotelReservationService/reserveHotel" style="document"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+        </operation>
+        <operation name="cancelHotel">
+            <soap:operation soapAction="http://www.sun.com/javaone/05/HotelReservationService/cancelHotel" style="document"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <binding name="HotelReservationCallbackSoapBinding" type="tns:HotelReservationCallbackPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="hotelReserved">
+            <soap:operation/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+        </operation>
+    </binding>
+
+    <wsdl:service xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="HotelReservationService">
+        <wsdl:port name="HotelReservationPortTypePort" binding="tns:HotelReservationSoapBinding">
+            <soap:address location="http://localhost:8080/webservice/HotelReservationService"/>
+        </wsdl:port>
+    </wsdl:service>
+    
+    <plnk:partnerLinkType name="HotelReservationPartnerLinkType">
+        <plnk:role name="HotelReservationServiceRole" 
+                   portType="tns:HotelReservationPortType">
+        </plnk:role>
+        <plnk:role name="HotelReservationCallbackServiceRole"
+                   portType="tns:HotelReservationCallbackPortType">
+        </plnk:role>
+    </plnk:partnerLinkType>
+</definitions>

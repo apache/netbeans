@@ -1,0 +1,11 @@
+DECLARE @StartDate datetime, @EndDate datetime
+SET @StartDate = '2010-01-01'
+SET @EndDate = '2012-01-01'
+# comment
+select |
+
+--
+<unknown>
+  customers*
+    customer
+      customer_id

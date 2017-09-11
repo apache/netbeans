@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component-info-list>
+    <component-info>
+        <description>File Binding</description>
+        <name>sun-file-binding</name>
+        <state>Installed</state>
+        <type>binding</type>
+    </component-info>
+    <component-info>
+        <description>HTTP Soap Binding to send SOAP messages e.g. to and from BPEL service engine.</description>
+        <name>sun-http-binding</name>
+        <state>Installed</state>
+        <type>binding</type>
+    </component-info>
+    <component-info>
+        <description>JMS Binding</description>
+        <name>sun-jms-binding</name>
+        <state>Installed</state>
+        <type>binding</type>
+    </component-info>
+    <component-info>
+        <description>This is a bpel service engine.</description>
+        <name>sun-bpel-engine</name>
+        <state>Installed</state>
+        <type>engine</type>
+    </component-info>
+    <component-info>
+        <description>Java EE service engine.</description>
+        <name>sun-javaee-engine</name>
+        <state>Installed</state>
+        <type>engine</type>
+    </component-info>
+    <component-info>
+        <description>This is a sql service engine.</description>
+        <name>sun-sql-engine</name>
+        <state>Installed</state>
+        <type>engine</type>
+    </component-info>
+    <component-info>
+        <description>This is a xslt service engine.</description>
+        <name>sun-xslt-engine</name>
+        <state>Installed</state>
+        <type>engine</type>
+    </component-info>
+</component-info-list>

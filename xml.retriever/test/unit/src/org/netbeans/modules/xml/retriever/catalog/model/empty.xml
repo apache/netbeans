@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="dummy/dummy" uri="file:/D:/workspace/release551/xml/retriever/build/test/unit/classes/org/netbeans/modules/xml/retriever/catalog/impl/dummyFile.txt"/>
+</catalog>

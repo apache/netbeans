@@ -1,0 +1,14 @@
+diff --git a/file b/file
+index c760c24..a3ea492 100644
+--- a/file
++++ b/file
+@@ -1 +1 @@
+-FILE 1
++FILE 1 CHANGE
+diff --git a/folder/file2 b/folder/file2
+index e2035ce..1f26718 100644
+--- a/folder/file2
++++ b/folder/file2
+@@ -1 +1 @@
+-FILE 2
++FILE 2 CHANGE

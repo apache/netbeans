@@ -1,0 +1,14 @@
+%%TestCase rewrite
+package test;
+public class Test {
+    boolean t(Integer i1, Integer i2) {
+        return i1.equals(i2);
+    }
+}
+%%=>
+package test;
+public class Test {
+    boolean t(Integer i1, Integer i2) {
+        return i2.equals(i1);
+    }
+}

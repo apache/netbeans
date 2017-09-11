@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE bindings PUBLIC "-//NetBeans//DTD Editor KeyBindings settings 1.1//EN" "http://www.netbeans.org/dtds/EditorKeyBindings-1_1.dtd">
+
+<bindings>
+    <bind actionName="abbrev-expand" key="S-SPACE"/>
+    <bind actionName="adjust-caret-center" key="C-L"/>
+    <bind actionName="adjust-window-center" key="C-U$C-L"/>
+    <bind actionName="all-completion-show" key="CO-SPACE"/>
+    <bind actionName="annotations-cycling" key="CS-C"/>
+    <bind actionName="caret-backward" key="C-B"/>
+    <bind actionName="caret-backward" key="LEFT"/>
+    <bind actionName="caret-backward" key="KP_LEFT"/>
+    <bind actionName="caret-begin" key="OS-COMMA"/>
+    <bind actionName="caret-begin" key="C-HOME"/>
+    <bind actionName="caret-begin" key="ESCAPE$S-COMMA"/>
+    <bind actionName="caret-begin-line" key="HOME"/>
+    <bind actionName="caret-down" key="C-N"/>
+    <bind actionName="caret-down" key="DOWN"/>
+    <bind actionName="caret-down" key="KP_DOWN"/>
+    <bind actionName="caret-end" key="OS-PERIOD"/>
+    <bind actionName="caret-end" key="C-END"/>
+    <bind actionName="caret-end" key="ESCAPE$S-PERIOD"/>
+    <bind actionName="caret-end-line" key="C-E"/>
+    <bind actionName="caret-end-line" key="END"/>
+    <bind actionName="caret-forward" key="C-F"/>
+    <bind actionName="caret-forward" key="RIGHT"/>
+    <bind actionName="caret-line-first-column" key="C-A"/>
+    <bind actionName="caret-next-word" key="O-F"/>
+    <bind actionName="caret-next-word" key="C-RIGHT"/>
+    <bind actionName="caret-previous-word" key="O-B"/>
+    <bind actionName="caret-previous-word" key="C-LEFT"/>
+    <bind actionName="caret-up" key="C-P"/>
+    <bind actionName="caret-up" key="UP"/>
+    <bind actionName="caret-up" key="KP_UP"/>
+    <bind actionName="comment" key="C-C$C-C"/>
+    <bind actionName="collapse-fold" key="C-MINUS"/>
+    <bind actionName="collapse-all-folds" key="CS-SUBTRACT"/>
+    <bind actionName="collapse-fold" key="C-SUBTRACT"/>
+    <bind actionName="completion-show" key="C-SPACE"/>
+    <bind actionName="completion-show" key="C-BACK_SLASH"/>
+    <bind actionName="copy-to-clipboard" key="COPY"/>
+    <bind actionName="copy-to-clipboard" key="O-W"/>
+    <bind actionName="copy-to-clipboard" key="C-INSERT"/>
+    <bind actionName="cut-to-clipboard" key="CUT"/>
+    <bind actionName="cut-to-clipboard" key="C-W"/>    
+    <bind actionName="cut-to-line-begin" key="O-0$C-K"/>
+    <bind actionName="cut-to-line-end" key="C-K"/>
+    <bind actionName="delete-next" key="DELETE"/>
+    <bind actionName="delete-next" key="C-D"/> 
+    <bind actionName="delete-previous" key="BACK_SPACE"/>
+    <bind actionName="documentation-show" key="CS-SPACE"/>
+    <bind actionName="expand-all-folds" key="CS-ADD"/>
+    <bind actionName="expand-all-folds" key="CS-EQUALS"/>
+    <bind actionName="expand-all-folds" key="CS-PLUS"/>
+    <bind actionName="expand-fold" key="C-ADD"/>
+    <bind actionName="expand-fold" key="C-EQUALS"/>
+    <bind actionName="expand-fold" key="C-PLUS"/>
+    <bind actionName="find" key="FIND"/>
+    <bind actionName="find" key="C-S"/>    
+    <bind actionName="find-next" key="O-S"/>
+    <bind actionName="find-next" key="F3"/>
+    <bind actionName="find-previous" key="O-R"/>
+    <bind actionName="find-previous" key="C-R"/>
+    <bind actionName="find-previous" key="S-F3"/>
+    <bind actionName="fix-imports" key="OS-F"/>
+    <bind actionName="format" key="CO-BACK_SLASH"/>
+    <bind actionName="goto" key="O-G$G"/>
+    <bind actionName="goto" key="O-G$O-G"/>
+    <bind actionName="goto-declaration" key="O-PERIOD"/>
+    <bind actionName="goto-declaration" key="CO-G"/>
+    <bind actionName="in-place-refactoring" key="D-R"/>
+    <bind actionName="insert-break" key="ENTER"/>
+    <bind actionName="insert-tab" key="C-Q$TAB"/>
+    <bind actionName="make-getter" key="O-U$G"/>
+    <bind actionName="make-is" key="O-U$I"/>
+    <bind actionName="make-setter" key="O-U$S"/>
+    <bind actionName="reindent-line" key="TAB"/>
+    <bind actionName="page-down" key="C-V"/>
+    <bind actionName="page-down" key="PAGE_DOWN"/>
+    <bind actionName="page-up" key="O-V"/>
+    <bind actionName="page-up" key="PAGE_UP"/>
+    <bind actionName="paste-from-clipboard" key="PASTE"/>
+    <bind actionName="paste-from-clipboard" key="C-Y"/>
+    <bind actionName="paste-from-clipboard" key="S-INSERT"/>
+    <bind actionName="remove-tab" key="S-TAB"/>
+    <bind actionName="remove-word-next" key="O-D"/>
+    <bind actionName="remove-word-previous" key="O-BACK_SPACE"/>
+    <bind actionName="remove-word-previous" key="C-BACK_SPACE"/>
+    <bind actionName="replace" key="OS-5"/>
+    <bind actionName="scroll-down" key="C-UP"/>
+    <bind actionName="scroll-up" key="C-DOWN"/>
+    <bind actionName="select-all" key="C-X$H"/>
+    <bind actionName="select-word" key="CO-W"/>
+    <bind actionName="selection-backward" key="S-LEFT"/>
+    <bind actionName="selection-begin" key="CS-HOME"/>
+    <bind actionName="selection-begin-line" key="S-HOME"/>
+    <bind actionName="selection-down" key="S-DOWN"/>
+    <bind actionName="selection-end" key="CS-END"/>
+    <bind actionName="selection-end-line" key="S-END"/>
+    <bind actionName="selection-forward" key="S-RIGHT"/>
+    <bind actionName="selection-next-word" key="CS-RIGHT"/>
+    <bind actionName="selection-page-down" key="S-PAGE_DOWN"/>
+    <bind actionName="selection-page-up" key="S-PAGE_UP"/>
+    <bind actionName="selection-previous-word" key="CS-LEFT"/>
+    <bind actionName="selection-up" key="S-UP"/>
+    <bind actionName="shift-line-left" key="O-0$C-X$TAB"/>
+    <bind actionName="shift-line-right" key="C-X$TAB"/>
+    <bind actionName="split-line" key="C-ENTER"/>
+    <bind actionName="start-macro-recording" key="C-X$S-9"/>
+    <bind actionName="start-new-line" key="S-ENTER"/>
+    <bind actionName="stop-macro-recording" key="C-X$S-0"/>
+    <bind actionName="to-lower-case" key="C-X$C-L"/>
+    <bind actionName="to-upper-case" key="C-X$C-U"/>
+    <bind actionName="toggle-case-identifier-begin" key="O-C"/>
+    <bind actionName="toggle-typing-mode" key="INSERT"/>
+    <bind actionName="tooltip-show" key="O-P"/>
+    <bind actionName="try-catch" key="OS-W"/>
+    <bind actionName="undo" key="UNDO"/>
+    <bind actionName="undo" key="C-X$U"/>
+    <bind actionName="undo" key="C-SLASH"/>    
+    <bind actionName="uncomment" key="O-0$C-C$C-C"/>
+    <bind actionName="word-match-next" key="O-SLASH"/>
+</bindings>

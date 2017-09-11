@@ -1,0 +1,79 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<!--deklarace jednoduchých typů -->
+<xs:simpleType name="plat">
+    <xs:restriction base="xs:decimal">
+	<xs:pattern value="\d*.\d{2}"/>
+	<xs:minExclusive value="0.00"/>
+    </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="SPZ">
+    <xs:restriction base="xs:token">
+        <xs:pattern value="[a-zA-Z]{2,3}\ \d{2}\-\d{2}"/>
+    </xs:restriction>
+</xs:simpleType>	
+
+<xs:simpleType name="rok">
+    <xs:restriction base="xs:positiveInteger">
+        <xs:minInclusive value="1000"/>
+        <xs:maxInclusive value="9999"/>
+    </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="stat">
+    <xs:restriction base="xs:token">
+	<xs:pattern value="[a-zA-Z]{2}"/>
+    </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="palivo">
+    <xs:restriction base="xs:string">
+        <xs:enumeration value="gasoline"/>
+        <xs:enumeration value="diesel"/>
+        <xs:enumeration value="lpg"/>
+        <xs:enumeration value="electricity"/>
+    </xs:restriction>
+</xs:simpleType>
+
+<!--deklarace složených typů -->
+<xs:complexType name="clovek">
+    <xs:sequence>   
+        <xs:element name="name" type="xs:string"/>
+        <xs:element name="surname"  type="xs:string"/>
+        <xs:element name="salary"  type="plat"/>
+        <xs:element name="note" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+        <xs:element name="cars" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="car" maxOccurs="unbounded" type="auto"/>
+                </xs:sequence>     
+            </xs:complexType>
+        </xs:element>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:positiveInteger"/>           
+</xs:complexType>	
+
+<xs:complexType name="auto">
+    <xs:sequence>
+            <xs:element name="type" type="xs:string"/>
+            <xs:element name="fuel" type="palivo"/>
+            <xs:element name="year" type="rok"/>
+            <xs:element name="country" type="stat"/>
+    </xs:sequence>
+     <xs:attribute name="id" type="SPZ" use="required"/>
+</xs:complexType>
+
+<!--vlastní xml dokument -->
+<xs:element name="people">
+    <xs:complexType>
+        <xs:sequence>
+            <xs:element name="person" maxOccurs="unbounded" type="clovek"/>
+        </xs:sequence>    
+    </xs:complexType>
+    <xs:key name="unikatni_id">
+        <xs:selector xpath="person"/>
+        <xs:field xpath="@id" />
+    </xs:key>
+</xs:element>
+
+</xs:schema>

@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<!-- XML Layer for core-windows -->
+<filesystem>
+    <!--
+    Use this folder and subfolders in your XML layer to define
+    desktop layout, modes and groups.
+    -->
+    <folder name="Windows2">
+        <file name="WindowManager.wswmgr" url="windowmanager/windowmanager.wswmgr"/>
+
+        <!-- Winsys implementation requires editor mode to be always defined. -->
+        <folder name="Modes">
+            <file name="editor.wsmode" url="windowmanager/editor.wsmode"/>
+            <folder name="editor">
+            </folder>
+        </folder>
+        
+    </folder>
+
+    <folder name="Windows2Local"/>
+
+    <!-- Folders of old window system are defined here to simplify ImportManager
+         code. Handling of missing reference folders. -->
+    <folder name="Windows">
+        <folder name="WindowManager"/>
+        <folder name="Components"/>
+    </folder>
+
+
+    <folder name="Actions">
+        <folder name="Window">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.core.windows.resources.Bundle"/>
+            <file name="org-netbeans-core-windows-actions-RecentViewListAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-RecentDocumentListAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.core.windows.actions.RecentViewListAction.createDocumentsOnlyInstance"/>
+            </file>
+            <file name="org-netbeans-core-windows-actions-SwitchToRecentDocumentAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-CloseWindowAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-MaximizeWindowAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-CloneDocumentAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-CloseAllDocumentsAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-DocumentsAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-NextTabAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-PreviousTabAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-CloseAllButThisAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-ToggleFullScreenAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-UndockWindowAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-DockWindowAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-CloseModeAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-MinimizeModeAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-MinimizeWindowAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-UndockModeAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-DockModeAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-NewTabGroupAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-CollapseTabGroupAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-ResizeModeAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-MoveModeAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-MoveWindowAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-ToolbarsListAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-MoveWindowLeftAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.core.windows.actions.MoveWindowWithinModeAction.createMoveLeft"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+            </file>
+            <file name="org-netbeans-core-windows-actions-MoveWindowRightAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.core.windows.actions.MoveWindowWithinModeAction.createMoveRight"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+            </file>
+            <file name="org-netbeans-core-windows-actions-ShowEditorOnlyAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.core.windows.actions.ShowEditorOnlyAction.create"/>
+                <attr name="instanceOf" stringvalue="javax.swing.Action"/>
+            </file>
+            <file name="GroupsMenuAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.core.windows.documentgroup.GroupsMenuAction.create"/>
+            </file>
+        </folder>
+    </folder>
+    
+    <folder name="Shortcuts">
+        <file name="OS-ENTER.shadow">
+	    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-ToggleFullScreenAction.instance"/>
+	</file>
+        <file name="DS-ENTER.shadow">
+	    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-ShowEditorOnlyAction.instance"/>
+	</file>
+        <file name="OS-D.shadow">
+            <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-DockWindowAction.instance"/>
+        </file>
+        <file name="SDO-LEFT.shadow">
+            <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-MoveWindowLeftAction.instance"/>
+        </file>
+        <file name="SDO-RIGHT.shadow">
+            <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-MoveWindowRightAction.instance"/>
+        </file>
+    </folder>
+
+    <folder name="Menu">
+        <folder name="View">
+            <attr name="position" intvalue="300"/>
+            <file name="Separator1.instance">
+	        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+	        <attr name="position" intvalue="300"/>
+            </file>
+
+            <file name="Separator2.instance">
+              <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="600"/>
+            </file>
+            
+            <file name="org-netbeans-core-windows-actions-ToolbarsListAction.shadow">
+                <attr name="position" intvalue="700"/>
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-ToolbarsListAction.instance"/>
+            </file>
+
+            <file name="Separator3.instance">
+              <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="1100"/>
+            </file>
+
+            <file name="ShowEditorOnlyAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-ShowEditorOnlyAction.instance"/>
+                <attr name="position" intvalue="1198"/>
+            </file>
+            
+            <file name="ToggleFullScreenAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-ToggleFullScreenAction.instance"/>
+                <attr name="position" intvalue="1200"/>
+            </file>
+        </folder>
+        
+        <folder name="GoTo">
+            <file name="org-netbeans-core-windows-actions-RecentViewListAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-RecentViewListAction.instance"/>
+                <attr name="position" intvalue="600"/>
+            </file>
+
+            <file name="core-windows-SeparatorAfterRecentList.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="700"/>
+            </file>
+                        
+        </folder>
+
+        <folder name="Window">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.core.windows.resources.Bundle"/>
+
+            <attr name="position" intvalue="1200"/>
+            <file name="SwitchToRecentDocumentAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-SwitchToRecentDocumentAction.instance"/>
+                <attr name="position" intvalue="900"/>
+            </file>
+            <file name="Separator3.instance">
+	        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+	        <attr name="position" intvalue="20000"/>
+            </file>
+            <folder name="ConfigureWindow">
+                <attr name="position" intvalue="20100"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.core.windows.resources.Bundle"/>
+                
+                <!-- maximize window -->
+                <file name="MaximizeWindowAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-MaximizeWindowAction.instance"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+                
+                <!-- float window -->
+                <file name="org-netbeans-core-windows-actions-UndockAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-UndockWindowAction.instance"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                
+                <!-- float group -->
+                <file name="org-netbeans-core-windows-actions-UndockModeAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-UndockModeAction.instance"/>
+                    <attr name="position" intvalue="300"/>
+                </file>
+                
+                <!-- minimize window -->
+                <file name="org-netbeans-core-windows-actions-MinimizeWindowAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-MinimizeWindowAction.instance"/>
+                    <attr name="position" intvalue="400"/>
+                </file>
+                
+                <!-- minimize group -->
+                <file name="org-netbeans-core-windows-actions-MinimizeModeAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-MinimizeModeAction.instance"/>
+                    <attr name="position" intvalue="500"/>
+                </file>
+                
+                <!-- dock window -->
+                <file name="org-netbeans-core-windows-actions-DockWindowAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-DockWindowAction.instance"/>
+                    <attr name="position" intvalue="600"/>
+                </file>
+                
+                <!-- dock group -->
+                <file name="org-netbeans-core-windows-actions-DockModeAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-DockModeAction.instance"/>
+                    <attr name="position" intvalue="700"/>
+                </file>
+
+                <file name="Separator1.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="800"/>
+                </file>
+
+                <!-- clone document -->
+                <file name="CloneDocumentAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloneDocumentAction.instance"/>
+                    <attr name="position" intvalue="900"/>
+                </file>
+                
+                <file name="NewDocumentTabGroupAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-NewTabGroupAction.instance"/>
+                    <attr name="position" intvalue="1000"/>
+                </file>
+                
+                <file name="CollapseDocumentTabGroupAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CollapseTabGroupAction.instance"/>
+                    <attr name="position" intvalue="1100"/>
+                </file>
+
+            </folder>
+            <file name="Separator4.instance">
+	        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+	        <attr name="position" intvalue="20300"/>
+            </file>
+            <file name="CloseWindowAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloseWindowAction.instance"/>
+                <attr name="position" intvalue="20400"/>
+            </file>
+            <file name="CloseAllDocumentsAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloseAllDocumentsAction.instance"/>
+                <attr name="position" intvalue="20500"/>
+            </file>
+            <file name="CloseAllButThisAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloseAllButThisAction.instance"/>
+                <attr name="position" intvalue="20600"/>
+            </file>
+            <file name="GroupsMenuAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/GroupsMenuAction.instance"/>
+                <attr name="position" intvalue="20650"/>
+            </file>
+            <file name="DocumentsAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-DocumentsAction.instance"/>
+                <attr name="position" intvalue="20700"/>
+            </file>
+            
+        </folder>
+    </folder>
+
+<!--    <folder name="OptionsDialog">
+        <folder name="Advanced">
+            <file name="Windows.instance">
+                org.netbeans.core.windows.options.WinSysOptionsPanelController
+                <attr methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory" name="instanceCreate"/>
+                <attr name="controller" newvalue="org.netbeans.core.windows.options.WinSysOptionsPanelController"/>
+                <attr bundlevalue="org.netbeans.core.windows.options.Bundle#AdvancedOption_DisplayName_WinSys" name="displayName"/>
+                <attr bundlevalue="org.netbeans.core.windows.options.Bundle#KW_WindowOptions" name="keywords"/>
+                <attr name="keywordsCategory" stringvalue="Advanced/Windows"/>
+            </file>
+        </folder>
+        <folder name="Keywords">
+            <file name="org.netbeans.core.windows.options.WinSysPanel">
+                org.netbeans.core.windows.options.WinSysPanel
+                <attr name="location" stringvalue="Advanced"/>
+                <attr bundlevalue="org.netbeans.core.windows.options.Bundle#AdvancedOption_DisplayName_WinSys" name="tabTitle"/>
+                <attr bundlevalue="org.netbeans.core.windows.options.Bundle#KW_WindowOptions" name="keywords-1"/>
+            </file>
+        </folder>
+    </folder>
+-->
+    <folder name="Toolbars">
+        <!-- this attribute is required to correctly instantiate toolbar configuration XML files -->
+        <attr name="recognizeXML" boolvalue="true"/>
+    </folder>
+
+
+    <folder name="xml">
+        <folder name="lookups">
+            <folder name="NetBeans_IDE">
+                <!-- public ID defined by XMLDataObject -->
+                <file name="DTD_toolbar.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.api.settings.Factory.create"/>
+                    <attr name="settings.convertor" methodvalue="org.netbeans.core.windows.view.ui.toolbars.ToolbarConvertor.create"/>
+                    <attr name="settings.instanceClass" stringvalue="org.netbeans.core.windows.view.ui.toolbars.ToolbarConfiguration"/>
+                    <attr name="settings.instanceOf" stringvalue="org.openide.awt.ToolbarPool.Configuration"/>
+                </file>
+                <file name="DTD_toolbar_1_1.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.api.settings.Factory.create"/>
+                    <attr name="settings.convertor" methodvalue="org.netbeans.core.windows.view.ui.toolbars.ToolbarConvertor.create"/>
+                    <attr name="settings.instanceClass" stringvalue="org.netbeans.core.windows.view.ui.toolbars.ToolbarConfiguration"/>
+                    <attr name="settings.instanceOf" stringvalue="org.openide.awt.ToolbarPool.Configuration"/>
+                </file>
+            </folder>
+        </folder>
+
+        <folder name="entities">
+            <folder name="NetBeans_IDE">
+                <file name="DTD_toolbar" url="nbres:/org/netbeans/core/windows/resources/toolbar.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans IDE//DTD toolbar//EN"/>
+                </file>
+                <file name="DTD_toolbar_1_1" url="nbres:/org/netbeans/core/windows/resources/toolbar1_1.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans IDE//DTD toolbar 1.1//EN"/>
+                </file>
+            </folder>
+
+            <folder name="NetBeans">
+                <!-- Core window system -->
+                <file name="DTD_Workspace_Properties_1_0" url="nbres:/org/netbeans/core/windows/resources/workspace-properties1_0.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Workspace Properties 1.0//EN"/>
+                </file>
+                <file name="DTD_Workspace_Properties_1_1" url="nbres:/org/netbeans/core/windows/resources/workspace-properties1_1.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Workspace Properties 1.1//EN"/>
+                </file>
+
+                <file name="DTD_Mode_Properties_1_0" url="nbres:/org/netbeans/core/windows/resources/mode-properties1_0.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Mode Properties 1.0//EN"/>
+                </file>
+                <file name="DTD_Mode_Properties_1_1" url="nbres:/org/netbeans/core/windows/resources/mode-properties1_1.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Mode Properties 1.1//EN"/>
+                </file>
+                <file name="DTD_Mode_Properties_1_2" url="nbres:/org/netbeans/core/windows/resources/mode-properties1_2.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Mode Properties 1.2//EN"/>
+                </file>
+                <file name="DTD_Mode_Properties_2_0" url="nbres:/org/netbeans/core/windows/resources/mode-properties2_0.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Mode Properties 2.0//EN"/>
+                </file>
+                <file name="DTD_Mode_Properties_2_1" url="nbres:/org/netbeans/core/windows/resources/mode-properties2_1.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Mode Properties 2.1//EN"/>
+                </file>
+                <file name="DTD_Mode_Properties_2_2" url="nbres:/org/netbeans/core/windows/resources/mode-properties2_2.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Mode Properties 2.2//EN"/>
+                </file>
+
+                <file name="DTD_Top_Component_in_Mode_Properties_1_0" url="nbres:/org/netbeans/core/windows/resources/tc-ref1_0.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Top Component in Mode Properties 1.0//EN"/>
+                </file>
+                <file name="DTD_Top_Component_in_Mode_Properties_2_0" url="nbres:/org/netbeans/core/windows/resources/tc-ref2_0.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Top Component in Mode Properties 2.0//EN"/>
+                </file>
+                <file name="DTD_Top_Component_in_Mode_Properties_2_1" url="nbres:/org/netbeans/core/windows/resources/tc-ref2_1.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Top Component in Mode Properties 2.1//EN"/>
+                </file>
+                <file name="DTD_Top_Component_in_Mode_Properties_2_2" url="nbres:/org/netbeans/core/windows/resources/tc-ref2_2.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Top Component in Mode Properties 2.2//EN"/>
+                </file>
+
+                <file name="DTD_Group_Properties_2_0" url="nbres:/org/netbeans/core/windows/resources/group-properties2_0.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Group Properties 2.0//EN"/>
+                </file>
+
+                <file name="DTD_Top_Component_in_Group_Properties_2_0" url="nbres:/org/netbeans/core/windows/resources/tc-group2_0.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Top Component in Group Properties 2.0//EN"/>
+                </file>
+
+                <file name="DTD_Window_Manager_1_0" url="nbres:/org/netbeans/core/windows/resources/windowmanager-properties1_0.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Window Manager 1.0//EN"/>
+                </file>
+                <file name="DTD_Window_Manager_1_1" url="nbres:/org/netbeans/core/windows/resources/windowmanager-properties1_1.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Window Manager 1.1//EN"/>
+                </file>
+                <file name="DTD_Window_Manager_2_0" url="nbres:/org/netbeans/core/windows/resources/windowmanager-properties2_0.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Window Manager 2.0//EN"/>
+                </file>
+                <file name="DTD_Window_Manager_2_2" url="nbres:/org/netbeans/core/windows/resources/windowmanager-properties2_2.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans//DTD Window Manager 2.2//EN"/>
+                </file>
+            </folder>
+    	</folder>
+    </folder>
+
+    <folder name="OptionsExport">
+        <folder name="Advanced">
+            <file name="Toolbars">
+                <attr name="include" stringvalue="config/Toolbars/.*"/>
+                <attr name="exclude" stringvalue="config/Toolbars/Progress/.*"/>
+                <attr name="displayName" bundlevalue="org.netbeans.core.windows.resources.Bundle#Toolbars.Options.Export.displayName"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

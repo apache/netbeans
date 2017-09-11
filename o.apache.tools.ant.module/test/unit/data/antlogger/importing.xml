@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="importing" default="main" basedir=".">
+    <import file="imported.xml"/>
+    <target name="main" depends="subtarget">
+        <echo>main run</echo>
+    </target>
+</project>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<project name="default-properties" default="netbeans" basedir=".">
+  <dirname property="nb_all" file="${ant.file.default-properties}/.."/>
+
+  <!-- Have to be read here, so that they will affect even module builds (e.g. when setting JDK): -->
+  <property file="${nb_all}/nbbuild/user.build.properties"/>
+  <property file="${nb_all}/nbbuild/site.build.properties"/>
+  <property file="${user.home}/.nbbuild.properties"/>
+
+  <property name="-nb.build.dir-default" location="${nb_all}/nbbuild/build"/>
+  <property name="nb.build.dir" value="${-nb.build.dir-default}"/>
+  <condition property="nb.build.dir.nondefault">
+      <not>
+          <equals arg1="${nb.build.dir}" arg2="${-nb.build.dir-default}"/>
+      </not>
+  </condition>
+
+  <property name="nbantext.jar" location="${nb.build.dir}/nbantext.jar"/>
+
+  <property name="license.file" location="${nb_all}/nbbuild/standard-nbm-license.txt"/>
+  <property name="build.sysclasspath" value="ignore"/>
+
+  <property name="clusters.list.file" location="${nb_all}/nbbuild/cluster.properties"/>
+  <condition property="netbeans.dest.dir" value="${nb.build.dir}${file.separator}netbeans">
+      <istrue value="${nb.build.dir.nondefault}"/>
+  </condition>
+  <property name="netbeans.dest.dir" location="${nb_all}/nbbuild/netbeans"/> <!-- historical location, too much work to change default -->
+  <property name="netbeans.javadoc.dir" location="${nb.build.dir}/javadoc"/>
+  <property name="moduleCluster.file" location="${netbeans.dest.dir}/moduleCluster.properties"/>
+
+  <property name="autoupdate.catalog.url" value="http://bits.netbeans.org/dev/nbms-and-javadoc/lastSuccessfulBuild/artifact/nbbuild/nbms/updates.xml.gz"/>
+
+  <macrodef name="resolve">
+    <attribute name="name"/>
+    <attribute name="value"/>
+    <sequential>
+      <property name="@{name}" value="${@{value}}"/>
+    </sequential>
+  </macrodef>
+ 
+  <property file="${clusters.list.file}"/>
+
+  <resolve name="nb.clusters.list" value="clusters.config.${cluster.config}.list"/>
+
+  <property file="${moduleCluster.file}"/>
+
+  <property name="test.dist.dir" location="${nb.build.dir}/testdist"/>
+  
+  <property name="binaries.cache" location="${user.home}/.hgexternalcache"/>
+  <property name="binaries.server" value="http://hg.netbeans.org/binaries/"/>
+
+  <target name="-load-build-properties">
+    <property file="${nb_all}/nbbuild/build.properties"/>
+  </target>
+
+</project>

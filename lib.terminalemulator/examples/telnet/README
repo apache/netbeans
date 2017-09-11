@@ -1,0 +1,30 @@
+A simple telnet application
+===========================
+
+TelnetApp implements a simple telnet client based on ...
+	org.netbeans.lib.terminalemulator.Term
+	de.mud.jta.*
+	de.mud.telnet.*
+
+It illustrates ...
+- Simple Term creation and i/o connectivity.
+- Terminal emulation capabilities through setting of the terminal
+  type to "ansi".
+
+To run it issue from a shell
+	./telnet <hostname>
+
+For telnet connectivity it uses portions of
+	JTA - Telnet/SSH for the JAVA(tm) platform
+by Matthias L. Jugel and Marcus Meisner at
+	http://javassh.org/space/start
+
+I haven't included that stuff under CVS to avoid licensing issues since
+their code is GPL, but you only need:
+
+de/mud/jta/Wrapper.java
+de/mud/telnet/ScriptHandler.java
+de/mud/telnet/TelnetProtocolHandler.java
+de/mud/telnet/TelnetWrapper.java
+
+To build this demo download JTA, copy these files to a local de/ and issue 'ant'

@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<?xml-stylesheet href="../nbbuild/javadoctools/apichanges.xsl" type="text/xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+
+<!-- INFO FOR PEOPLE ADDING CHANGES:
+[most of contents snipped - see openide's apichanges for how-to instructions]
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+-->
+
+<apichanges>
+
+<!-- First, a list of API names you may use: -->
+<apidefs>
+        <apidef name="OptionsAPI">Options Dialog API</apidef>
+</apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+<changes>
+    <change id="OptionsPanelController.setSubcategory">
+        <api name="OptionsAPI"/>
+        <summary>API to handle selection of subcategory from a composite OptionspanelController</summary>
+        <version major="1" minor="38"/>
+        <date day="3" month="12" year="2013"/>
+        <author login="theofanis"/>
+        <compatibility addition="yes"/>
+        <description>
+            Added API to handle selection of subcategory. It is meant to be called from
+            a composite <code>OptionspanelController</code> and delegates to
+            <code>OptionspanelController.setCurrentSubcategory</code>.
+        </description>
+        <class package="org.netbeans.spi.options" name="OptionsPanelController"/>
+        <issue number="180821"/>
+    </change>
+   <change id="Import.restart">
+        <api name="OptionsAPI"/>
+        <summary>Should Import Require Restart?</summary>
+        <version major="1" minor="34"/>
+        <date day="15" month="3" year="2013"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" semantic="incompatible">
+            Compared to previous versions, the default changed - now 
+            the restart is not needed. Applications can change that by using
+            <a href="architecture-summary.html#branding-OPT_RestartAfterImport">
+            this branding API</a> and specifying <code>false</code> as the value
+            of associated key.
+        </compatibility>
+        <description>
+            Should an import of settings require a restart? Some applications 
+            need that, some don't. There is a 
+            <a href="architecture-summary.html#branding-OPT_RestartAfterImport">
+            branding API</a> to control such behavior now.
+        </description>
+        <issue number="226998"/>
+    </change>
+    <change id="OptionsDisplayer.openModal">
+        <api name="OptionsAPI"/>
+        <summary>API to control whether the options window should be modal or not when opened</summary>
+        <version major="1" minor="33"/>
+        <date day="26" month="2" year="2013"/>
+        <author login="theofanis"/>
+        <compatibility addition="yes"/>
+        <description>
+            Added API to control whether the options window should be modal or not when opened.
+        </description>
+        <class package="org.netbeans.api.options" name="OptionsDisplayer"/>
+        <issue number="207120"/>
+    </change>
+    <change id="OptionsPanelController.handleSuccessfulSearch">
+        <api name="OptionsAPI"/>
+        <summary>API to handle successfull search in some panel in options window</summary>
+        <version major="1" minor="30"/>
+        <date day="18" month="10" year="2012"/>
+        <author login="theofanis"/>
+        <compatibility addition="yes"/>
+        <description>
+            Added API to handle successful search in some panel in options window.
+            By default no action is performed. Each implementor should make special actions,
+            for example to choose a specific sub-panel, if this is required.
+        </description>
+        <class package="org.netbeans.spi.options" name="OptionsPanelController"/>
+        <issue number="219457"/>
+    </change>
+    <change id="optionsSearchAnnotation">
+      <api name="OptionsAPI"/>
+      <summary>Annotation to register keywords for some panel in the Options dialog</summary>
+      <version major="1" minor="29"/>
+      <date day="2" month="10" year="2012"/>
+      <author login="theofanis"/>
+      <compatibility addition="yes" binary="compatible" source="compatible" deprecation="no" semantic="compatible" modification="no" deletion="no"/>
+      <description>
+          Introduced an annotation inside <code>OptionsPanelController</code>
+          to register keywords for some panel in the Options dialog declaratively.
+      </description>
+      <class package="org.netbeans.spi.options" name="OptionsPanelController"/>
+      <issue number="218312"/>
+    </change>
+    <change id="annotations">
+        <api name="OptionsAPI"/>
+        <summary>Annotations to register dialog panels</summary>
+        <version major="1" minor="14"/>
+        <date day="14" month="9" year="2009"/>
+        <author login="jglick"/>
+        <compatibility addition="yes" deprecation="yes">
+            <p>
+                Deprecated subclassing <code>AdvancedOption</code> and using
+                <code>OptionsPanelController.createAdvanced</code> as these
+                do not do anything you cannot do more easily using annotations.
+            </p>
+        </compatibility>
+        <description>
+            <p>
+                Introduced three annotations inside <code>OptionsPanelController</code>
+                to register Options dialog panels declaratively.
+            </p>
+        </description>
+        <class package="org.netbeans.spi.options" name="OptionsPanelController"/>
+        <class package="org.netbeans.spi.options" name="AdvancedOption"/>
+        <issue number="171284"/>
+    </change>
+    <change id="classic">
+        <api name="OptionsAPI"/>
+        <summary>"Classic" mode fully implemented in module</summary>
+        <version major="1" minor="12"/>
+        <date day="30" month="3" year="2009"/>
+        <author login="jglick"/>
+        <compatibility semantic="incompatible">
+            <p>
+                Platform applications using the old <code>UI/Services</code> now
+                need to include this module. Module developers are however
+                strongly encouraged to use the new Options SPI.
+            </p>
+        </compatibility>
+        <description>
+            The <b>Advanced Options</b> button (also known as "classic" mode) is
+            now fully implemented in the Options Dialog and SPI module, rather
+            than in Core. The functionality remains the same: any displayable
+            objects (such as beans) present under the <code>UI/Services</code>
+            configuration folder will trigger the button to be displayed which
+            opens a special dialog for them.
+        </description>
+    </change>
+    <change id="DeclarativeController">
+        <api name="OptionsAPI"/>
+        <summary>Support for searchable options</summary>
+        <version major="1" minor="10"/>
+        <date day="17" month="7" year="2008"/>
+        <author login="msauer"/>
+        <compatibility addition="yes"/>
+        <description>
+            Added new declarative way of registering options categories
+            (advancedOptionFolder attr in layer.xml), in order to remove
+            duplicate tabbed controllers for each category with subtabs
+        </description>
+        <class package="org.netbeans.spi.options" name="OptionsPanelController"/>
+        <issue number="137338"/>
+    </change>
+    <change id="OptionsDisplayerAPI.keywords">
+        <api name="OptionsAPI"/>
+        <summary>Support for searchable options</summary>
+        <version major="1" minor="9"/>        
+        <date day="11" month="7" year="2008"/>
+        <author login="msauer"/>
+        <compatibility addition="yes"/>        
+        <description>
+            Added new factory methods enabling declarative loading of option
+            panels (createCategory and createSubCategory) to OptionsCategory
+            and AdvancedOption
+        </description>
+        <class package="org.netbeans.spi.options" name="OptionsPanelController"/>                
+        <issue number="137338"/>
+    </change>
+
+    <change id="OptionsDisplayerAPI.subcategory">
+        <api name="OptionsAPI"/>
+        <summary>API to open the options dialog with some subcategory pre-selected</summary>
+        <version major="1" minor="8"/>        
+        <date day="28" month="5" year="2008"/>
+        <author login="jskrivanek"/>
+        <compatibility addition="yes"/>        
+        <description>
+            Added API to open the options dialog with some subcategory pre-selected.
+        </description>
+        <class package="org.netbeans.api.options" name="OptionsDisplayer"/>                
+        <issue number="109538"/>
+    </change>
+    <change id="OptionsDisplayerAPI">
+        <api name="OptionsAPI"/>
+        <summary>API to open the options dialog with some category pre-selected</summary>
+        <version major="1" minor="5"/>        
+        <date day="19" month="12" year="2006"/>
+        <author login="rmatous"/>
+        <compatibility addition="yes"/>        
+        <description>
+            Added API to open the options dialog with some category pre-selected.
+        </description>
+        <class package="org.netbeans.api.options" name="OptionsDisplayer"/>                
+        <issue number="74855"/>
+    </change>        
+    <change>
+        <api name="OptionsAPI"/>
+        <summary>Options Dialog API integrated.</summary>
+        <date day="18" month="8" year="2005"/>
+        <author login="jjancura"/>
+        <compatibility addition="yes"/>
+        <description>
+            Options Dialog API integrated to NetBeans.
+        </description>
+    </change>
+    <change id="api_stabilization.options">
+        <api name="OptionsAPI"/>
+        <summary>The Options Dialog API has been stabilized.</summary>
+        <version major="1" minor="4"/>
+        <date day="13" month="6" year="2006"/>
+        <author login="rmatous"/>
+        <compatibility deprecation="yes"/>
+        <description>
+            <p>
+                To indicate that this is now considered a stable API, the major release version was
+                incremented to 1 from 0.
+            </p>
+        </description>
+        <issue number="70826"/>
+    </change>          
+</changes>
+
+  <!-- Now the surrounding HTML text and document structure: -->
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE xml/api/doc/changes/apichanges.xml
+
+-->
+    <head>
+      <title>Options Dialog API changes by date</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the Options Dialog APIs. Please ask on the 
+    <code>nbdev@netbeans.org</code>
+    mailing list if you have any questions about the details of a
+    change, or are wondering how to convert existing code to be compatible.
+</p>
+
+      <hr/><standard-changelists module-code-name="org.netbeans.modules.options.api/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+</apichanges>

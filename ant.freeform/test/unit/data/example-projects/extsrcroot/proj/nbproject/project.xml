@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.ant.freeform</type>
+    <configuration>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
+            <name>External Source Root Freeform Project</name>
+            <folders>
+                <source-folder>
+                    <label>Top-Level Dir</label>
+                    <location>..</location>
+                </source-folder>
+                <source-folder>
+                    <label>External Sources</label>
+                    <type>java</type>
+                    <location>../src</location>
+                </source-folder>
+            </folders>
+            <view>
+                <items>
+                    <source-folder style="packages">
+                        <label>External Sources</label>
+                        <location>../src</location>
+                    </source-folder>
+                    <source-file>
+                        <location>nbproject/project.xml</location>
+                    </source-file>
+                </items>
+                <context-menu/>
+            </view>
+            <subprojects>
+                <project>../../simple</project>
+                <project>../../simple</project>
+            </subprojects>
+        </general-data>
+        <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/1">
+            <compilation-unit>
+                <package-root>../src</package-root>
+                <source-level>1.4</source-level>
+            </compilation-unit>
+        </java-data>
+    </configuration>
+</project>

@@ -1,0 +1,251 @@
+Calling GenBeans.doIt
+Bean Tree:
+book <book> : Book
+	[attr: good ENUM ( yes no ) yes]
+	summary <summary> : String[0,1]
+		[attr: length CDATA #REQUIRED ]
+		[attr: lang CDATA #IMPLIED ]
+		[attr: size CDATA #FIXED 12]
+	chapter <chapter> : Chapter[1,n]
+		[attr: title CDATA #IMPLIED ]
+		comment <comment> : String[0,1]
+		paragraph <paragraph> : String[0,n]
+	index <index> : Index[1,n]
+		[attr: color CDATA #IMPLIED ]
+		[attr: cross-ref ENUM ( yes no ) no]
+		[attr: glossary CDATA #FIXED nope]
+		word <word> : String
+			[attr: freq CDATA #IMPLIED ]
+		ref <ref> : Ref[1,n]
+			page <page> : String
+			line <line> : String
+	available <available> : boolean
+		EMPTY : String
+
+Compiling
+Finished compiling: 0
+out: TestAttr - creating the DOM document
+out: TestAttr - creating the bean graph
+out: TestAttr - bean graph created
+out: TestAttr - new listener for Book
+out: TestAttr get enum attribute from root -> OK
+out: TestAttr - Changing to another value - should get an event
+out: TestAttr - <Chg Lnr:Book Evt:/Book:good Src:book.Book>
+out: TestAttr - <Attr:Book.good - ParentName:  - ParentClass:<no class>>
+out: TestAttr get enum attribute from root -> OK
+out: TestAttr - Book DOM content should be yes
+out: book - element
+out: attribute: good=yes
+out: 
+out: TestAttr - Changing to a non-enum value (should get an exception)
+out: TestAttr get enum attribute from root got the proper exception -> OK
+out: TestAttr get #REQUIRED attribute -> OK
+out: TestAttr - Changing to another value
+out: TestAttr - <Chg Lnr:Book Evt:/Book/Summary:length Src:book.Book>
+out: TestAttr - <Attr:Summary.length - ParentName: Book - ParentClass:book.Book>
+out: TestAttr get #REQUIRED attribute -> OK
+out: TestAttr get #IMPLIED attribute -> OK
+out: TestAttr - Setting a new value
+out: TestAttr - <Chg Lnr:Book Evt:/Book/Summary:lang Src:book.Book>
+out: TestAttr - <Attr:Summary.lang - ParentName: Book - ParentClass:book.Book>
+out: TestAttr get #IMPLIED attribute -> OK
+out: TestAttr - <Chg Lnr:Book Evt:/Book/Summary:lang Src:book.Book>
+out: TestAttr - <Attr:Summary.lang - ParentName: Book - ParentClass:book.Book>
+out: TestAttr get #IMPLIED attribute -> OK
+out: TestAttr - <Rmv Lnr:Book Evt:/Book/Summary:lang Src:book.Book>
+out: TestAttr - <Attr:Summary.lang - ParentName: Book - ParentClass:book.Book>
+out: TestAttr get #IMPLIED attribute -> OK
+out: TestAttr - <Add Lnr:Book Evt:/Book/Summary:lang Src:book.Book>
+out: TestAttr - <Attr:Summary.lang - ParentName: Book - ParentClass:book.Book>
+out: TestAttr get #FIXED attribute -> OK
+out: TestAttr - Summary DOM content should be 133/fr/12
+out: book - element
+out: attribute: good=yes
+out:   summary - element
+out:   attribute: lang=fr
+out:   attribute: length=133
+out:   attribute: size=12
+out:   chapter - element
+out:   chapter - element
+out:   chapter - element
+out:   index - element
+out:   index - element
+out: 
+out: TestAttr - Setting a new value (should get an exception)
+out: TestAttr get #FIXED attribute got the proper exception -> OK
+out: TestAttr - Chapter DOM should have no attribute
+out: chapter - element
+out: 
+out: TestAttr get/set non set #IMPLIED attribute -> OK
+out: TestAttr - <Add Lnr:Book Evt:/Book/Chapter.2:title Src:book.Book>
+out: TestAttr - <Attr:Chapter[0].title - ParentName: Book - ParentClass:book.Book>
+out: TestAttr get/set non set #IMPLIED attribute -> OK
+out: TestAttr - Chapter DOM should have one title attribute
+out: chapter - element
+out: attribute: title=My chapter
+out: 
+out: TestAttr access from parent & current bean -> OK
+out: TestAttr attribute stick with elt when mixing -> OK
+out: TestAttr attribute stick with elt when mixing -> OK
+out: TestAttr - <Chg Lnr:Book Evt:/Book/Chapter.-1 Src:book.Book>
+out: TestAttr - <Prop:Chapter - ParentName: Book - ParentClass:book.Book>
+out: TestAttr attribute stick with elt when mixing -> OK
+out: TestAttr attribute stick with elt when mixing -> OK
+out: TestAttr - Chapter DOM should have no attribute
+out: chapter - element
+out: 
+out: TestAttr get/set non set #IMPLIED attribute (idx != 0) -> OK
+out: TestAttr - <Add Lnr:Book Evt:/Book/Chapter.8:title Src:book.Book>
+out: TestAttr - <Attr:Chapter[2].title - ParentName: Book - ParentClass:book.Book>
+out: TestAttr get/set non set #IMPLIED attribute (idx != 0) -> OK
+out: TestAttr - Chapter DOM should have one title attribute
+out: chapter - element
+out: attribute: title=My chapter2
+out: 
+out: TestAttr get unknown attribute got the proper exception -> OK
+out: TestAttr add a brand new element with default attributes -> OK
+out: TestAttr - should have created: cross-ref & glossary, and not color
+out: book - element
+out: attribute: good=yes
+out:   summary - element
+out:   attribute: lang=fr
+out:   attribute: length=133
+out:   attribute: size=12
+out:   chapter - element
+out:   chapter - element
+out:   attribute: title=My chapter
+out:   chapter - element
+out:   attribute: title=My chapter2
+out:   index - element
+out:   index - element
+out:   index - element
+out:   attribute: cross-ref=no
+out:   attribute: glossary=nope
+out: 
+out: TestAttr - should have created: cross-ref (yes), glossary (nope) and color (blue)
+out: book - element
+out: attribute: good=yes
+out:   summary - element
+out:   attribute: lang=fr
+out:   attribute: length=133
+out:   attribute: size=12
+out:     #text=
+out: 	This book is about the life of a book spent between books who dreamed
+out: 	to meet a fairy who could transform it into an XML book and travel
+out: 	in an electronic boundary-less world.
+out: 	 - text
+out:   chapter - element
+out:     paragraph - element
+out:       #text=
+out: 			And the book lived a never ending happy life, read, copied
+out: 			and enjoyed by so many readers.
+out: 		 - text
+out:   chapter - element
+out:   attribute: title=My chapter
+out:     comment - element
+out:       #text=
+out: 		First chapter.
+out: 		 - text
+out:     paragraph - element
+out:       #text=
+out: 			Once upon a time...
+out: 		 - text
+out:     paragraph - element
+out:       #text=
+out: 			And this is how the book met the fairy, and how all this
+out: 			story began.
+out: 		 - text
+out:   chapter - element
+out:   attribute: title=My chapter2
+out:     comment - element
+out:       #text=
+out: 		Empty chapter
+out: 		 - text
+out:   index - element
+out:     word - element
+out:       #text=
+out: 			Good book
+out: 		 - text
+out:     ref - element
+out:       page - element
+out:       line - element
+out:   index - element
+out:     word - element
+out:       #text=
+out: 			E-Tool
+out: 		 - text
+out:     ref - element
+out:       page - element
+out:       line - element
+out:     ref - element
+out:       page - element
+out:       line - element
+out:   index - element
+out:   attribute: color=blue
+out:   attribute: cross-ref=yes
+out:   attribute: glossary=nope
+out:     word - element
+out:     attribute: freq=123
+out:       #text=my word - text
+out: 
+out: TestAttr - 	[Book]
+out: TestAttr - 	<Summary> - class java.lang.String
+out: TestAttr - 	 a:Length
+out: TestAttr - 	 a:Lang
+out: TestAttr - 	 a:Size
+out: TestAttr - 	<Chapter[3]> - class book.Chapter
+out: TestAttr - 	 a:Title
+out: TestAttr - 		[Chapter]
+out: TestAttr - 		<Comment> - class java.lang.String
+out: TestAttr - 		<Paragraph[1]> - class java.lang.String
+out: TestAttr - 		[Chapter]
+out: TestAttr - 		<Comment> - class java.lang.String
+out: TestAttr - 		<Paragraph[2]> - class java.lang.String
+out: TestAttr - 		[Chapter]
+out: TestAttr - 		<Comment> - class java.lang.String
+out: TestAttr - 		<Paragraph[0]> - class java.lang.String
+out: TestAttr - 	<Index[3]> - class book.Index
+out: TestAttr - 	 a:Color
+out: TestAttr - 	 a:CrossRef
+out: TestAttr - 	 a:Glossary
+out: TestAttr - 		[Index]
+out: TestAttr - 		<Word> - class java.lang.String
+out: TestAttr - 		 a:Freq
+out: TestAttr - 		<Ref[1]> - class book.Ref
+out: TestAttr - 			[Ref]
+out: TestAttr - 			<Page> - class java.lang.String
+out: TestAttr - 			<Line> - class java.lang.String
+out: TestAttr - 		[Index]
+out: TestAttr - 		<Word> - class java.lang.String
+out: TestAttr - 		 a:Freq
+out: TestAttr - 		<Ref[2]> - class book.Ref
+out: TestAttr - 			[Ref]
+out: TestAttr - 			<Page> - class java.lang.String
+out: TestAttr - 			<Line> - class java.lang.String
+out: TestAttr - 			[Ref]
+out: TestAttr - 			<Page> - class java.lang.String
+out: TestAttr - 			<Line> - class java.lang.String
+out: TestAttr - 		[Index]
+out: TestAttr - 		<Word> - class java.lang.String
+out: TestAttr - 		 a:Freq
+out: TestAttr - 		<Ref[0]> - class book.Ref
+out: TestAttr - 	<Available> - class java.lang.Boolean
+out: TestAttr - Make sure that default attributes get set.
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <book good="yes">
+out:   <summary size="12">This is my summary.</summary>
+out: </book>
+out: TestAttr attributes as properties -> OK
+out: TestAttr - Checking chapter title
+out: TestAttr - My title
+out: TestAttr - Title before cloning:
+out: TestAttr - Dolly: A Good Clone & A Day
+out: TestAttr - Title after cloning:
+out: TestAttr - Dolly: A Good Clone & A Day
+out: TestAttr - And here is the clone in it's own graph
+out: <?xml version="1.0" encoding="UTF-8"?>
+out: <book good="yes">
+out:   <summary size="12"/>
+out:   <chapter title="Dolly: A Good Clone &amp; A Day"/>
+out: </book>
+Finished running TestAttr: 0

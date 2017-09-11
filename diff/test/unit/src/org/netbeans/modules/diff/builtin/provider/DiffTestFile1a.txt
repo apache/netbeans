@@ -1,0 +1,308 @@
+/*
+ *                 Sun Public License Notice
+ *
+ * The contents of this file are subject to the Sun Public License
+ * Version 1.0 (the "License"). You may not use this file except in
+ * compliance with the License. A copy of the License is available at
+ * http://www.sun.com/
+ *
+ * The Original Code is NetBeans. The Initial Developer of the Original
+ * Code is Sun Microsystems, Inc. Portions Copyright 1997-2005 Sun
+ * Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+ */
+package org.netbeans.modules.debugger.jpda.actions;
+
+import com.sun.jdi.ThreadReference;
+import com.sun.jdi.VMDisconnectedException;
+import com.sun.jdi.event.Event;
+import com.sun.jdi.event.LocatableEvent;
+import com.sun.jdi.request.StepRequest;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.*;
+
+import org.netbeans.api.debugger.ActionsManager;
+
+
+import org.netbeans.spi.debugger.ContextProvider;
+import org.netbeans.spi.debugger.ActionsProvider;
+import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.api.debugger.jpda.JPDAThread;
+import org.netbeans.api.debugger.jpda.SmartSteppingFilter;
+
+import org.netbeans.modules.debugger.jpda.SourcePath;
+import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
+import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
+import org.netbeans.modules.debugger.jpda.util.Executor;
+import org.netbeans.spi.debugger.jpda.SourcePathProvider;
+import org.openide.ErrorManager;
+import org.openide.util.NbBundle;
+
+
+/**
+ * Implements non visual part of stepping through code in JPDA debugger.
+ * It supports standart debugging actions StepInto, Over, Out, RunToCursor, 
+ * and Go. And advanced "smart tracing" action.
+ *
+ * @author  Jan Jancura
+ */
+public class StepIntoActionProvider extends JPDADebuggerActionProvider 
+implements Executor, Runnable, PropertyChangeListener {
+    
+    public static final String SS_STEP_OUT = "SS_ACTION_STEPOUT";
+    private static final boolean ssverbose = 
+        System.getProperty ("netbeans.debugger.smartstepping") != null;
+    
+        
+    private StepRequest stepRequest;
+    private String position;
+    private ContextProvider contextProvider;
+    private boolean smartSteppingStepOut;
+
+    public StepIntoActionProvider (ContextProvider contextProvider) {
+        super (
+            (JPDADebuggerImpl) contextProvider.lookupFirst 
+                (null, JPDADebugger.class)
+        );
+        this.contextProvider = contextProvider;
+        getSmartSteppingFilterImpl ().addPropertyChangeListener (this);
+        SourcePath ec = (SourcePath) contextProvider.
+            lookupFirst (null, SourcePath.class);
+        ec.addPropertyChangeListener (this);
+        Map properties = (Map) contextProvider.lookupFirst (null, Map.class);
+        if (properties != null)
+            smartSteppingStepOut = properties.containsKey (SS_STEP_OUT);
+        setProviderToDisableOnLazyAction(this);
+    }
+
+
+    // ActionProviderSupport ...................................................
+    
+    public Set getActions () {
+        return new HashSet (Arrays.asList (new Object[] {
+            ActionsManager.ACTION_STEP_INTO,
+        }));
+    }
+    
+    public void doAction (Object action) {
+        doLazyAction(this);
+    }
+    
+    public void run() {
+        synchronized (getDebuggerImpl ().LOCK) {
+            if (ssverbose)
+                System.out.println("\nSS:  STEP INTO !!! *************");
+            JPDAThread t = getDebuggerImpl ().getCurrentThread ();
+            if (t == null || !t.isSuspended()) {
+                // Can not step when it's not suspended.
+                return ;
+            }
+            setStepRequest (StepRequest.STEP_INTO);
+            position = t.getClassName () + '.' +
+                       t.getMethodName () + ':' +
+                       t.getLineNumber (null);
+            try {
+                getDebuggerImpl ().resume ();
+            } catch (VMDisconnectedException e) {
+                ErrorManager.getDefault().notify(ErrorManager.USER,
+                    ErrorManager.getDefault().annotate(e,
+                        NbBundle.getMessage(StepIntoActionProvider.class,
+                            "VMDisconnected")));
+            }
+        }
+    }
+    
+    protected void checkEnabled (int debuggerState) {
+        Iterator i = getActions ().iterator ();
+        while (i.hasNext ())
+            setEnabled (
+                i.next (),
+                (debuggerState == JPDADebugger.STATE_STOPPED) &&
+                (getDebuggerImpl ().getCurrentThread () != null)
+            );
+    }
+    
+    public void propertyChange (PropertyChangeEvent ev) {
+        if (ev.getPropertyName () == SmartSteppingFilter.PROP_EXCLUSION_PATTERNS) {
+            if (ev.getOldValue () != null) {
+                // remove some patterns
+                if (ssverbose) {
+                    System.out.println("\nSS:  exclusion patterns removed");
+                }
+                ThreadReference tr = ((JPDAThreadImpl) getDebuggerImpl ().
+                    getCurrentThread ()).getThreadReference ();
+                removeStepRequests (tr);
+            } else {
+                if (ssverbose) {
+                    if (stepRequest == null)
+                        System.out.println("SS:  exclusion patterns has been added");
+                    else
+                        System.out.println("\nSS:    add exclusion patterns:");
+                }
+                addPatternsToRequest ((String[]) 
+                    ((Set) ev.getNewValue ()).toArray (
+                        new String [((Set) ev.getNewValue ()).size()]
+                    )
+                );
+            }
+        } else
+        if (ev.getPropertyName () == SourcePathProvider.PROP_SOURCE_ROOTS) {
+            if (ssverbose)
+                System.out.println("\nSS:  source roots changed");
+            JPDAThreadImpl jtr = (JPDAThreadImpl) getDebuggerImpl ().
+                getCurrentThread ();
+            if (jtr != null) {
+                ThreadReference tr = jtr.getThreadReference ();
+                removeStepRequests (tr);
+            }
+        } else {
+            super.propertyChange (ev);
+        }
+    }
+    
+    
+    // Executor ................................................................
+    
+    /**
+     * Executes all step actions and smart stepping. 
+     *
+     * Should be called from Operator only.
+     */
+    public boolean exec (Event event) {
+        if (stepRequest != null) {
+            stepRequest.disable ();
+        }
+        LocatableEvent le = (LocatableEvent) event;
+
+        ThreadReference tr = le.thread ();
+        JPDAThread t = getDebuggerImpl ().getThread (tr);
+        
+        try {
+            if (tr.frame(0).location().method().isSynthetic()) {
+                //S ystem.out.println("In synthetic method -> STEP INTO again");
+                setStepRequest (StepRequest.STEP_INTO);
+                return true;
+            }
+        } catch (Exception e) {e.printStackTrace();}
+        
+        boolean stop = getCompoundSmartSteppingListener ().stopHere 
+                           (contextProvider, t, getSmartSteppingFilterImpl ());
+        if (stop) {
+            String stopPosition = t.getClassName () + '.' +
+                                  t.getMethodName () + ':' +
+                                  t.getLineNumber (null);
+            if (position.equals(stopPosition)) {
+                // We are where we started!
+                stop = false;
+                setStepRequest (StepRequest.STEP_INTO);
+                return true;
+            }
+        }
+        if (stop) {
+            removeStepRequests (le.thread ());
+            getDebuggerImpl ().setStoppedState (tr);
+        } else {
+            if (ssverbose)
+                System.out.println("SS:  => do next step!");
+            if (smartSteppingStepOut) {
+                setStepRequest (StepRequest.STEP_OUT);
+            } else if (stepRequest != null) {
+                stepRequest.enable ();
+            } else {
+                setStepRequest (StepRequest.STEP_INTO);
+            }
+        }
+
+        if (ssverbose)
+            if (stop) {
+                System.out.println("SS  FINISH IN CLASS " +  
+                    t.getClassName () + " ********\n"
+                );
+            }
+        return !stop;
+    }
+
+    
+    private StepActionProvider stepActionProvider;
+
+    private StepActionProvider getStepActionProvider () {
+        if (stepActionProvider == null) {
+            List l = contextProvider.lookup (null, ActionsProvider.class);
+            int i, k = l.size ();
+            for (i = 0; i < k; i++)
+                if (l.get (i) instanceof StepActionProvider)
+                    stepActionProvider = (StepActionProvider) l.get (i);
+        }
+        return stepActionProvider;
+    }
+
+    // other methods ...........................................................
+    
+    void removeStepRequests (ThreadReference tr) {
+        super.removeStepRequests (tr);
+        stepRequest = null;
+        if (ssverbose)
+            System.out.println("SS:    remove all patterns");
+    }
+    
+    private void setStepRequest (int step) {
+        ThreadReference tr = ((JPDAThreadImpl) getDebuggerImpl ().
+            getCurrentThread ()).getThreadReference ();
+        removeStepRequests (tr);
+        stepRequest = getDebuggerImpl ().getVirtualMachine ().
+        eventRequestManager ().createStepRequest (
+            tr,
+            StepRequest.STEP_LINE,
+            step
+        );
+        getDebuggerImpl ().getOperator ().register (stepRequest, this);
+        stepRequest.setSuspendPolicy (getDebuggerImpl ().getSuspend ());
+        
+        if (ssverbose)
+            System.out.println("SS:    set patterns:");
+        addPatternsToRequest (
+            getSmartSteppingFilterImpl ().getExclusionPatterns ()
+        );
+        stepRequest.enable ();
+    }
+
+    private SmartSteppingFilterImpl smartSteppingFilterImpl;
+    
+    private SmartSteppingFilterImpl getSmartSteppingFilterImpl () {
+        if (smartSteppingFilterImpl == null)
+            smartSteppingFilterImpl = (SmartSteppingFilterImpl) contextProvider.
+                lookupFirst (null, SmartSteppingFilter.class);
+        return smartSteppingFilterImpl;
+    }
+
+    private CompoundSmartSteppingListener compoundSmartSteppingListener;
+    
+    private CompoundSmartSteppingListener getCompoundSmartSteppingListener () {
+        if (compoundSmartSteppingListener == null)
+            compoundSmartSteppingListener = (CompoundSmartSteppingListener) 
+                contextProvider.lookupFirst (null, CompoundSmartSteppingListener.class);
+        return compoundSmartSteppingListener;
+    }
+
+    private void addPatternsToRequest (String[] patterns) {
+        if (stepRequest == null) return;
+        int i, k = patterns.length;
+        for (i = 0; i < k; i++) {
+            stepRequest.addClassExclusionFilter (patterns [i]);
+            if (ssverbose)
+                System.out.println("SS:      " + patterns [i]);
+        }
+    }
+}

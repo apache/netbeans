@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+
+    <folder name="Editors">
+        <folder name="NetBeans">
+            <folder name="Defaults">
+                <file name="defaultColoring.xml" url="fonts-and-colors-all-languages.xml"/>
+            </folder>
+        </folder>
+        
+        <folder name="text">
+            <folder name="x-type-A">
+                <folder name="NetBeans">
+                    <folder name="Defaults">
+                        <file name="coloring.xml" url="fonts-and-colors.xml"/>
+                    </folder>
+                </folder>
+                <folder name="Defaults">
+                    <file name="keybindings.xml" url="key-bindings.xml"/> 
+                </folder>
+            </folder>
+            
+            <folder name="x-type-B">
+                <folder name="NetBeans">
+                    <folder name="Defaults">
+                        <file name="coloring.xml" url="fonts-and-colors-2.xml"/>
+                    </folder>
+                </folder>
+
+                <folder name="text">
+                    <folder name="x-type-A">
+                        <folder name="NetBeans">
+                            <folder name="Defaults">
+                                <file name="coloring.xml" url="fonts-and-colors-5.xml"/>
+                            </folder>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+            
+            <folder name="x-orig">
+                <file name="marker.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.settings.storage.SettingsProviderTest.createMarker" />
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.editor.settings.storage.SettingsProviderTest$Marker" />
+                </file>
+            </folder>
+
+            <folder name="ant+xml">
+                <folder name="NetBeans">
+                    <folder name="Defaults">
+                        <file name="coloring.xml" url="fonts-and-colors-3.xml"/>
+                    </folder>
+                </folder>
+            </folder>
+
+            <folder name="xml">
+                <folder name="NetBeans">
+                    <folder name="Defaults">
+                        <file name="coloring.xml" url="fonts-and-colors-4.xml"/>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+
+        <folder name="text">
+            <folder name="x-type-C">
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="module-coloring.xml">
+<![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+
+<fontscolors>
+    <fontcolor name="test-module" foreColor="000011" bgColor="000022">
+        <font style="italic"/>
+    </fontcolor>
+    <fontcolor name="test-module-and-user" foreColor="BB0000" bgColor="AA0000">
+        <font style="bold"/>
+    </fontcolor>
+</fontscolors>
+                            ]]></file>
+                        </folder>
+                        <file name="user-coloring.xml">
+<![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+
+<fontscolors>
+    <fontcolor name="test-module-and-user" bgColor="CC0000"/>
+</fontscolors>
+                            ]]></file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+
+        <folder name="text">
+            <folder name="x-StorageFilterTest">
+                <folder name="Preferences">
+                    <folder name="Defaults">
+                        <file name="preferences.xml" url="preferences.xml"/>
+                    </folder>
+                </folder>
+                <folder name="Keybindings">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="keybindings.xml" url="key-bindings.xml"/> 
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+</filesystem>

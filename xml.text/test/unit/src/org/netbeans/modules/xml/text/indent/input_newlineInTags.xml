@@ -1,0 +1,14 @@
+<?xml 
+        encoding="UTF8"
+        ?>
+<root
+    attribute1="val"
+    >
+    <middle
+            >
+        <?instruction
+            param="UTF8"
+            ?>
+    </middle>
+</root
+        >

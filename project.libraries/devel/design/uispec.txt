@@ -1,0 +1,262 @@
+Project Libraries UI Specification
+
+Abstract
+
+This paper proposes UI of libraries framework
+it's based on requirements <requirements.html>
+and should be integrated with Java Support UI
+<JavaProjectsUISpecs.html> (I borrowed some
+text from its draft).
+
+
+Status
+  
+Formalization of sketch made by pkuzel, jrojcek
+cledantec and others. An input for the revised
+Java Language Support UI specs. 
+
+There are 3 OPEN ISSUEs that must be addressed.
+
+
+Primary User Tasks
+
+T1: User must be able to manage library
+    definitions
+T2: User must be able to use library as
+    project resource    
+T3: The T2 resource must be then useable
+    in particular context (e.g. classpath
+    customizer)  
+    
+    
+T1 The Library Repository    
+
+The repository allows user to create/delete
+libraries and manage their contents.
+
+The Library Repository is accessible from the Tools menu.
+This modal dialog contains a list of known libraries available
+in the IDE. A library is a specific type of resource 
+that points to Jars and potentially any supporting martierial
+like sources, and documentation.
+
+OPEN ISSUE 1: Project scoped libraries. Where to manage
+them. Tools is a global action. On the other hand it's
+good to have central libraries manager. Compromise the
+manager shows libraries from all opened projects.
+
+The library repository dialog consists from two
+parts: a library selector and selected library
+customizer. Content of selected library customizer
+follows selected library (It may be replaced
+by category description if a category is selected 
+because it's not probably implementable to create
+nonselectable categories.)
+
+ +-Libraries Repository ----------------+
+ |                                      |
+ | +--------------+ +-----------------+ |
+ | |              | |                 | |
+ | | the selector | | the customizer  | |
+ | |              | |                 | |
+ | +--------------+ +-----------------+ |
+ |                                      |
+ |                    [ OK ] [ Cancel ] |
+ +--------------------------------------+
+
+where:
+
+ [OK] applies all changes made so far and
+    closes the dialog
+    
+ [Cancel] cancels all changes
+    (NOTE implementation can ask for applying
+    changes on library selection change)
+ 
+The selector component consistes from categorized
+list with two buttons:
+
+ +------------------------------+
+ | My Libraries                 ^
+ |   Xerces 2.4.0               |
+ | Project 3GNET Accounting     #
+ |   Registry 1.2               #
+ |   Regexp 1.2                 #
+ |   DOM L1 HTML module         #
+ | Remote 3GNET Accounting      #
+ |   Web Services Pack 1.2      #
+ | IDE Libraries                |
+ |   XML APIs                   |
+ |                              v
+ +------------------------------+
+ 
+ [ Create... ] [ Delete ]
+ 
+where:
+
+  "My Libraries" stays for category that contains
+  libraries in user's directory.
+
+  "Project 3GNET Accounting" and "Remote 3GNET Accounting"
+  (names come from project names) are two opened projects
+  that contains given library definitions (NOT usage).
+
+  "IDE Libraries" stays for category that contains
+  libraries bundled with the IDE. These are not user
+  editable, actual content depends on enabled modules.
+
+  [Create...] asks user for entering library
+  name and creates empty library definition in
+  given category (NOTE Category can be determined from
+  selection or explicitly queried in the ask dialog.
+  It future it may also ask for library type i.e.
+  Java vs. C++ vs. FORTRAN.)
+  
+  [Delete] after confirmation deletes selected library.
+  
+All other elements stay for library names.
+
+The library customizer component shows library
+name, its description and content.
+
+ +-----------------------------------------------+
+ | Name:        Xerces 2.4.0______________       |
+ | Description: XML parser compatible    ^       |
+ |              with XML 1.1 draft, XML  #       |
+ |	        Namespaces 1.1 draft and #       |
+ |	        DOM3 Load/Store draft    V       |
+ |  ___________	                                 |
+ | / Classpath \ Sources \ Documentation \_____	 |     	       
+ | |                                           | |
+ | | +-----------------------------^           | |
+ | | | ~/libs/xerces240/xerces.jar # [ Add    ]| |
+ | | | ~/libs/xerces240/examples.j # [ Remove ]| |  
+ | | |                             # [ Up     ]| |
+ | | |                             | [ Down   ]| | 
+ | | +-----------------------------V           | |
+ | +-------------------------------------------+ |
+ +-----------------------------------------------+
+ 
+where:
+
+  Bottom tabbed area shows library content. Number
+  of tabs and their look may vary depending
+  on enabled modules. Shown scenario belongs
+  to typical Java IDE.
+  
+  [Add] let user select additional content. It'll
+  typically present a filechooser. Selected item
+  is appended to the library content list.
+  (NOTE Implementation should open filechooser in
+  context that is derived from other library content
+  types if possible. Otherwise use last selection.)
+  
+  [Remove] after confirmation deletes selected
+  list entry.
+  
+  [Up/Down] moves selected entry one position up/down.
+  These should be available only with content that
+  must be ordered like: classpath and java sources.
+  
+
+T2 Library as Project Resource
+
+Project resources is a pool of various items
+external to current project. Library is an
+example of bundle of such items.
+
+User can add and remove library usage as project
+resource. Standard project resources addition/removal
+task is used. The libraries specifics part
+is the second step in the add resource wizard
+(the one after user selected she wants to add a library
+usage). This step presents available libraries
+in a list.
+
+ +--------------------------------------+
+ | Please select library you wanna use  |
+ | as project resource:                 |
+ |                                      |
+ | +----------------------------^       |
+ | | Xerces 2.4.0               #       |
+ | | Registry 1.2               #       |
+ | | Regexp 1.2                 #       |
+ | | DOM L1 HTML module         #       |
+ | | Web Services Pack 1.2      #       |
+ | | XML APIs                   |       |
+ | |                            |       |
+ | +----------------------------V       |
+ |                                      |
+ | [ Manage Libraries ]                 |
+ +--------------------------------------+
+                   .....      [ Finish ]
+		      
+where:
+
+  The multiselection list contains alphabetically
+  sorted library definitions.
+  
+  {Manage Libraries] can be used to adjust/
+  inspect library definition from the wizard
+  context, it opens the library repository
+  manager modal dialog.
+  
+  [Finish] button owned by wizard framework is
+  enabled if at least one library is selected.
+  It puts library usage under project resources.
+  
+Library resource appearance (a node and its children)
+should allow to browse library content or at least
+provide view action showing read-only library definition.
+
+
+T3 Using Library Resource in Project
+
+OPEN ISSUE 2: This area was not well covered in
+previous Java UI specs, this is my point of view
+and it may need a review from educated HIE guru.
+
+As an example I have chosen the classpath customizer:
+
+   ___________   ______________
+  / Classpath \ /Boot Classpath\          
+ |             \-----------------------------------------+
+ | +------------------------------------^                |
+ | | /path/to/Foobar.jar                #  [ Add...    ] |
+ | | [-] Xerces 2.4.0                   #  [ Remove    ] |
+ | |  +--- xerces.jar                   #                |
+ | |  +--- example.jar                  #  [ Move Up ]   |
+ | |                                    #  [ Move Down ] |
+ | |                                    |                |
+ | +------------------------------------V                |
+ +-------------------------------------------------------+
+
+where:
+
+  Xerces 2.4.0 is one item in list. It may
+  be expandable and shown but by default it
+  is collapsed. It must signalize its
+  validity state (e.g. if resource removed).
+  
+  [Add] shows a project resource selector. 
+  The project resource selector for classpath
+  lists all project resources that can be used
+  at classpath. (NOTE Classpath typing
+  is given by target classpath. Project resource
+  itself does not carry any such flag.)
+  
+All other buttons works as naturally expected.
+
+OPEN ISSUE 3: I may be confusing that adding
+library with classpath to project resources
+does not have any meaning until it's placed
+at first classpath. Some other resources types
+such as XML catalogs has meaning right after
+adding them to project resources. Project resources
+play two roles. It's a repository of things
+useable in project context (the classpath) and
+it's also the usage itself (the XML entity).
+
+----------------------------------------------------
+
+Petr Kuzel on 20th Jun 2003

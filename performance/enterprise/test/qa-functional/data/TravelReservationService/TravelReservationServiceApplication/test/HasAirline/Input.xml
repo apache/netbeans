@@ -1,0 +1,103 @@
+<SOAP-ENV:Envelope
+  xsi:schemaLocation="http://schemas.xmlsoap.org/soap/envelope/ http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+    <SOAP-ENV:Body>
+        <TravelItinerary xmlns="http://www.opentravel.org/OTA/2003/05">
+            <ItineraryRef Type="14" ID="M839LW">
+                <UniqueID>M839LWAA</UniqueID>
+            </ItineraryRef >
+            <CustomerInfos>
+                <CustomerInfo RPH="01">
+                    <Customer>
+                        <PersonName>
+                            <NamePrefix>Mr.</NamePrefix>
+                            <GivenName>Robert</GivenName>
+                            <MiddleName>Anthony</MiddleName>
+                            <Surname>Jones</Surname>
+                        </PersonName>
+                        <Telephone PhoneNumber="2241630" AreaCityCode="302" Extension="5574"/>
+                        <Email>rajones@somewhere.org</Email>
+                        <Address FormattedInd="true">
+                            <StreetNmbr PO_Box="P.O. Box 77">1452 S. 13th St. N.W.</StreetNmbr>
+                            <CityName>Westfinster</CityName>
+                            <PostalCode>90210</PostalCode>
+                            <StateProv>NY</StateProv>
+                            <CountryName>US</CountryName>
+                        </Address>
+                    </Customer>
+                    <AgencyAcctNumber Type="5" ID="UOTWT0122321"/>
+                </CustomerInfo>
+            </CustomerInfos>
+            <ItineraryInfo>
+                <ReservationItems ChronoOrdered="true">
+                    <Item RPH="01" ItinSeqNumber="01">
+                        <Air DepartureDateTime="2003-03-03T08:00:00" FlightNumber="942" ResBookDesigCode="Y">
+                            <DepartureAirport LocationCode="DEN"/>
+                            <ArrivalAirport LocationCode="ORD"/>
+                            <MarketingAirline>UA</MarketingAirline>
+                            <Seats>
+                                <Seat Number="07A" Characteristic="Window" CustomerRPH="01"/>
+                            </Seats>
+                        </Air>
+                    </Item>
+                    <Item RPH="02" ItinSeqNumber="02">
+                        <Air DepartureDateTime="2003-03-03T13:00:00" FlightNumber="3545" ResBookDesigCode="Y">
+                            <DepartureAirport LocationCode="ORD"/>
+                            <ArrivalAirport LocationCode="YUL"/>
+                            <OperatingAirline>AC</OperatingAirline>
+                            <MarketingAirline>UA</MarketingAirline>
+                            <Seats>
+                                <Seat Number="08B" Characteristic="Aisle" CustomerRPH="01"/>
+                            </Seats>
+                        </Air>
+                    </Item>
+                    <Item RPH="03" ItinSeqNumber="05">
+                        <Air DepartureDateTime="2003-03-10T08:00:00" FlightNumber="5568">
+                            <DepartureAirport LocationCode="YUL"/>
+                            <ArrivalAirport LocationCode="BOS"/>
+                            <OperatingAirline>AC</OperatingAirline>
+                            <MarketingAirline>UA</MarketingAirline>
+                            <Seats>
+                                <Seat Number="3D" Characteristic="Window" CustomerRPH="01"/>
+                            </Seats>
+                        </Air>
+                    </Item>
+                    <Item RPH="04" ItinSeqNumber="06">
+                        <Air DepartureDateTime="2003-03-10T10:30:00" FlightNumber="5542">
+                            <DepartureAirport LocationCode="ORD"/>
+                            <ArrivalAirport LocationCode="DEN"/>
+                            <MarketingAirline>UA</MarketingAirline>
+                            <Seats>
+                                <Seat CustomerRPH="01" Number="23B"/>
+                            </Seats>
+                        </Air>
+                    </Item>
+                </ReservationItems>
+                <Ticketing TicketType="eTicket" eTicketNumber="30465876954325" PlatingCarrier="UAL"/>
+                <ItineraryPricing ItemRPH_List="01 02 03 04">
+                    <Cost AmountAfterTax="745.00" CurrencyCode="USD"/>
+                </ItineraryPricing>
+                <SpecialRequestDetails>
+                    <SpecialServiceRequests>
+                        <SpecialServiceRequest FlightRefNumberRPHList="01" TravelerRefNumberRPHList="01" SSRCode="VGML">
+                            <Airline Code="UA">United Airlines</Airline>
+                        </SpecialServiceRequest>
+                    </SpecialServiceRequests>
+                </SpecialRequestDetails>
+            </ItineraryInfo>
+            <TravelCost>
+                <FormOfPayment>
+                    <PaymentCard CardNumber="3151002645983754" ExpireDate="1205" CardType="MC">
+                        <CardHolderName>ROBERT A. JONES</CardHolderName>
+                    </PaymentCard>
+                </FormOfPayment>
+                <CostTotals AmountAfterTax="1957.92" CurrencyCode="USD"/>
+            </TravelCost>
+            <UpdatedBy>
+                <Access ID="U09932147"/>
+            </UpdatedBy>
+        </TravelItinerary>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

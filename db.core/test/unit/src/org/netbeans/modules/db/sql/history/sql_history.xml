@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<history>
+    <sql date='1252931669714' url='jdbc:// mysql'>
+        select * from TRAVEL.PERSON
+    </sql>
+    <sql date='29.6.09 12:55' url='jdbc:// oracle'>
+        select * from PERSON
+    </sql>
+    <sql date='6.01.09 15:31' url='jdbc:// oracle'>
+        select * from PERSON
+    </sql>
+    <sql date='07-04-09 10:33 AM' url='jdbc:// oracle'>
+        select * from PERSON
+    </sql>
+    <sql date='09-3-8 ??6:43' url='jdbc:// oracle'>
+        select * from PERSON
+    </sql>
+</history>

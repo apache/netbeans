@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+    This is the DTD for (flat) Maps
+    Copyright (c) 1998 Sun Microsystems
+
+    @(#)map_2_0.dtd 1.1 03/19/02
+
+-->
+
+
+<!-- A Map.  It is versioned -->
+
+<!ELEMENT map (mapID*)>
+  <!ATTLIST map version (1.0 | 2.0) #IMPLIED>
+  <!ATTLIST map xml:lang CDATA #IMPLIED>
+
+<!-- an map ID pair -->
+
+<!ELEMENT mapID EMPTY>
+  <!ATTLIST mapID xml:lang CDATA #IMPLIED>
+  <!ATTLIST mapID target CDATA #REQUIRED>
+  <!ATTLIST mapID url CDATA #REQUIRED>
+
+<!-- 
+  Change list:
+
+  Created - epll, 16 Dec '98
+
+  Added the version 2.0 update
+ -->

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+<project name="MobileApplicationVisualMIDlet" default="jar" basedir=".">
+    <description>Builds, tests, and runs the project .</description>
+    <import file="nbproject/build-impl.xml"/>
+    <!--
+
+            There exist several targets which are by default empty and which can be
+            used for execution of your tasks. These targets are usually executed
+            before and after some main targets. They are:
+
+            pre-init:                 called before initialization of project properties
+            post-init:                called after initialization of project properties
+            pre-preprocess:           called before text preprocessing of sources
+            post-preprocess:          called after text preprocessing of sources
+            pre-compile:              called before source compilation
+            post-compile:             called after source compilation
+            pre-obfuscate:            called before obfuscation 
+            post-obfuscate:           called after obfuscation
+            pre-preverify:            called before preverification
+            post-preverify:           called after preverification
+            pre-jar:                  called before jar building
+            post-jar:                 called after jar building
+            pre-build:                called before final distribution building
+            post-build:               called after final distribution building
+            pre-clean:                called before cleaning build products
+            post-clean:               called after cleaning build products
+
+            Example of pluging a my-special-task after the compilation could look like
+
+            <target name="post-compile">
+            <my-special-task>
+            <fileset dir="${build.classes.dir}"/>
+            </my-special-task>
+            </target>
+
+            For list of available properties check the imported
+            nbproject/build-impl.xml file.
+
+            Other way how to customize the build is by overriding existing main targets.
+            The target of interest are:
+
+            preprocess:               preprocessing
+            extract-libs:             extraction of libraries and resources
+            compile:                  compilation
+            create-jad:               construction of jad and jar manifest source
+            obfuscate:                obfuscation
+            preverify:                preverification
+            jar:                      jar archive building
+            run:                      execution
+            debug:                    execution in debug mode
+            build:                    building of the final distribution
+            javadoc:                  javadoc generation
+
+            Example of overriding the target for project execution could look like
+
+            <target name="run" depends="init,jar">
+            <my-special-exec jadfile="${dist.dir}/${dist.jad}"/>
+            </target>
+
+            Be careful about correct dependencies when overriding original target. 
+            Again, for list of available properties which you can use check the target 
+            you are overriding in nbproject/build-impl.xml file.
+
+            A special target for-all-configs can be used to run some specific targets for
+            all project configurations in a sequence. File nbproject/build-impl.xml 
+            already contains some "for-all" targets:
+    
+            jar-all
+            javadoc-all
+            clean-all
+      
+            Example of definition of target iterating over all project configurations:
+    
+            <target name="jar-all">
+            <property name="target.to.call" value="jar"/>
+            <antcall target="for-all-configs"/>
+            </target>
+
+            -->
+</project>

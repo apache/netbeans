@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:complexType name="ComplexFunSpec">
+		<xs:annotation>
+			<xs:documentation>ComplexFun Spec Type definition</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="FunSpec">
+				<xs:sequence>
+					<xs:element name="FunSpec" type="FunSpec" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="FunSpec">
+		<xs:annotation>
+			<xs:documentation>Fun Specification Type definition</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Property" type="Element" minOccurs="0" 
+maxOccurs="unbounded"/>
+			<xs:element name="InputRecord" type="Record"/>
+			<xs:element name="OutputRecord" type="Record"/>
+			<xs:element name="Description" type="Description"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="funSpecType" type="xs:string" use="optional"/>
+	</xs:complexType>	
+
+</xs:schema>

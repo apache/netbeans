@@ -1,0 +1,4 @@
+# properties
+read global
+${l10n-module}/src/org/netbeans/modules/properties/*.gif
+${l10n-module}/src/org/netbeans/modules/properties/*.html 

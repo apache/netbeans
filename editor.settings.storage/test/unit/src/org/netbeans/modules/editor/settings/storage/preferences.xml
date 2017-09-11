@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE editor-preferences PUBLIC "-//NetBeans//DTD Editor Preferences 1.0//EN" "http://www.netbeans.org/dtds/EditorPreferences-1_0.dtd">
+
+<editor-preferences>
+    <entry name="setting-1" value="value-of-setting-1"/>
+    <entry name="setting-2" value="value-of-setting-2"/>
+    <entry name="setting-3" value="value-of-setting-3"/>
+</editor-preferences>

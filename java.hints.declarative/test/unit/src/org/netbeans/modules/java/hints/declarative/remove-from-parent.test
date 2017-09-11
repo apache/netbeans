@@ -1,0 +1,27 @@
+%%TestCase pos-1
+package test;
+public class Test {
+     private void g(int i) {}
+}
+%%=>
+package test;
+public class Test {
+     private void g() {}
+}
+%%TestCase pos-2
+package test;
+public class Test {
+     private void g(double d) {}
+}
+%%=>
+package test;
+public class Test {
+     private void g() {}
+}
+%%TestCase neg-1
+package test;
+public class Test {
+     private void g(float f) {}
+}
+%%=>
+remove-from-parent:f

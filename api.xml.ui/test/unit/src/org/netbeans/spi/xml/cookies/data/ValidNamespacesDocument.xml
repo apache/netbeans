@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : ValidNamespacesDocument.xml
+    Created on : July 13, 2002, 12:45 PM
+    Author     : Petr Kuzel
+    Description:
+        Document that is DTD valid. But it also uses namespaces
+        and it confuses some parsers.
+-->
+
+<!DOCTYPE root [
+    <!ELEMENT root (child*)>
+    <!ATTLIST root xmlns CDATA #FIXED "test:ValidNamespacesDocument">
+    <!ELEMENT child EMPTY>
+]>
+<root>
+    <child/>
+    <child/>
+    <child/>
+</root>

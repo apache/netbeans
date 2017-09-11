@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<project basedir="." default="run" name="performance/threaddemo"
+         xmlns="antlib:org.apache.tools.ant"
+         xmlns:nbj="antlib:org.netbeans.modules.debugger.jpda.ant"
+         xmlns:nbb="antlib:org.netbeans.modules.ant.browsetask">
+
+    <!-- Put any overrides here (check against build.properties): -->
+    <property file="user.build.properties"/>
+
+    <!-- Main definitions: -->
+    <property file="build.properties"/>
+
+    <target name="init">
+        <!-- For benefit of various modules: -->
+        <property name="build.compiler.debug" value="true"/>
+        <condition property="openide.available">
+            <available file="${util.jar}"/>
+        </condition>
+        <condition property="looks.and.registry.available">
+            <and>
+                <available file="${looks.jar}"/>
+                <available file="${registry.jar}"/>
+            </and>
+        </condition>
+        <condition property="should.build.openide">
+            <and>
+                <not>
+                    <isset property="openide.available"/>
+                </not>
+                <!-- Building openide/looks will build openide automatically: -->
+                <isset property="looks.and.registry.available"/>
+            </and>
+        </condition>
+    </target>
+    
+    <target name="build-openide" depends="init" if="should.build.openide">
+        <fail>XXX not yet impl; build platform first</fail>
+    </target>
+    
+    <target name="build-looks" depends="init" unless="looks.and.registry.available">
+        <ant dir="${nbroot}/openide/registry" inheritall="false" inheritrefs="false"/>
+        <ant dir="${nbroot}/openide/convertor" inheritall="false" inheritrefs="false"/>
+        <ant dir="${nbroot}/o.n.core/registry" inheritall="false" inheritrefs="false"/>
+        <ant dir="${nbroot}/openide/looks" inheritall="false" inheritrefs="false"/>
+    </target>
+    
+    <target name="compile" depends="build-openide,build-looks">
+        <mkdir dir="${build.classes.dir}"/>
+        <javac srcdir="src" destdir="${build.classes.dir}" debug="true" deprecation="true" source="1.6">
+            <classpath path="${build.cp}"/>
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+        <copy todir="${build.classes.dir}">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+                <exclude name="**/package.html"/>
+                <exclude name="**/doc-files/"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="compile-selected-files-in-src">
+        <fail unless="files">Must set property 'files'</fail>
+        <mkdir dir="${build.classes.dir}"/>
+        <javac srcdir="src" destdir="${build.classes.dir}" debug="true" deprecation="true" source="1.6" includes="${files}">
+            <classpath path="${build.cp}"/>
+            <compilerarg value="-Xlint"/>
+        </javac>
+    </target>
+    
+    <target name="build" depends="compile">
+        <jar jarfile="${threaddemo.jar}" manifest="manifest.mf" compress="false">
+            <fileset dir="${build.classes.dir}"/>
+        </jar>
+    </target>
+    
+    <target name="build-complete" depends="compile">
+        <jar jarfile="${threaddemo-complete.jar}" manifest="manifest.mf" compress="true">
+            <fileset dir="src"/>
+            <fileset dir="${build.classes.dir}"/>
+            <zipfileset src="${util.jar}"/>
+            <zipfileset src="${nodes.jar}"/>
+            <zipfileset src="${actions.jar}"/>
+            <zipfileset src="${explorer.jar}"/>
+            <zipfileset src="${text.jar}"/>
+            <zipfileset src="${dialogs.jar}"/>
+            <zipfileset src="${windows.jar}"/>
+            <zipfileset src="${looks.jar}"/>
+            <zipfileset src="${Spin.jar}"/>
+        </jar>
+    </target>
+
+    <target name="run" depends="build">
+        <java classname="threaddemo.Main" fork="true" failonerror="true">
+            <classpath path="${run.cp}"/>
+            <arg file="${testdir}"/>
+            <jvmarg value="-Xmx256m"/>
+            <jvmarg value="-ea"/>
+            <sysproperty key="java.util.logging.config.file" file="${logging.properties}"/>
+            <sysproperty key="com.sun.management.jmxremote" value="1"/>
+        </java>
+    </target>
+    
+    <target name="debug" depends="build,do-debug"/>
+    
+    <target name="do-debug">
+        <java classname="threaddemo.Main" fork="true" failonerror="true">
+            <classpath path="${run.cp}"/>
+            <arg file="${testdir}"/>
+            <jvmarg value="-Xmx64m"/>
+            <jvmarg value="-ea"/>
+            <sysproperty key="java.util.logging.config.file" file="logging.properties"/>
+            <sysproperty key="com.sun.management.jmxremote" value="1"/>
+            <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address},suspend=n"/>
+        </java>
+    </target>
+    
+    <target name="debug-nb" depends="build">
+        <nbj:nbjpdastart transport="dt_socket" addressproperty="jpda.address" name="threaddemo">
+            <nbj:classpath path="${run.cp}"/>
+        </nbj:nbjpdastart>
+        <antcall target="do-debug"/>
+    </target>
+    
+    <target name="debug-fix-nb">
+        <javac srcdir="src" destdir="${build.classes.dir}" debug="true" deprecation="true" source="1.6">
+            <classpath path="${build.cp}"/>
+            <include name="${fix.file}.java"/>
+        </javac>
+        <nbjpdareload>
+            <fileset dir="${build.classes.dir}">
+                <include name="${fix.file}.class"/>
+            </fileset>
+        </nbjpdareload>
+    </target>
+    
+    <target name="profile" depends="build">
+        <nbprofiledirect>
+            <classpath path="${run.cp}"/>
+        </nbprofiledirect>
+        <property environment="env"/>
+        <java classname="threaddemo.Main" fork="true" failonerror="true" dir="${profiler.session.working.dir}" jvm="${profiler.info.jvm}">
+            <classpath path="${run.cp}"/>
+            <arg file="${testdir}"/>
+            <jvmarg value="-Xmx256m"/>
+            <jvmarg value="-ea"/>
+            <sysproperty key="java.util.logging.config.file" file="${logging.properties}"/>
+            <sysproperty key="com.sun.management.jmxremote" value="1"/>
+            <jvmarg value="${profiler.info.jvmargs.agent}"/>
+            <jvmarg line="${profiler.info.jvmargs}"/>
+            <env key="LD_LIBRARY_PATH" path="${profiler.info.agentpath}:${env.LD_LIBRARY_PATH}"/>
+        </java>
+    </target>
+    
+    <target name="javadoc">
+        <property name="javadoc.docs.jdk" value="http://java.sun.com/javase/6/docs/api/"/>
+        <!--
+        <property name="javadoc.web.root" value="http://www.netbeans.org/download/dev/javadoc"/>
+        -->
+        <mkdir dir="${build.javadoc.dir}"/>
+        <javadoc destdir="${build.javadoc.dir}" source="1.6">
+            <classpath path="${build.cp}"/>
+            <sourcepath>
+                <pathelement location="src"/>
+            </sourcepath>
+            <fileset dir="src"/>
+            <link href="${javadoc.docs.jdk}" offline="true" packagelistloc="${nbroot}/nbbuild/javadoctools"/>
+            <!--
+            <link href="${javadoc.web.root}/org-netbeans-modules-looks" offline="true" packagelistloc="${nbroot}/nbbuild/build/javadoc/org-netbeans-modules-looks"/>
+            -->
+        </javadoc>
+    </target>
+    
+    <target name="javadoc-nb" depends="javadoc">
+        <nbb:nbbrowse file="${build.javadoc.dir}/overview-summary.html"/>
+    </target>
+    
+    <target name="test-build" depends="build">
+        <mkdir dir="${build.test.classes.dir}"/>
+        <javac srcdir="test" destdir="${build.test.classes.dir}" debug="true" deprecation="true" source="1.6">
+            <classpath path="${test.build.cp}"/>
+        </javac>
+        <!-- copy resources if it becomes necessary -->
+    </target>
+    
+    <target name="test" depends="test-build">
+        <mkdir dir="${build.test.results.dir}"/>
+        <junit failureproperty="tests.failed" showoutput="true" fork="true">
+            <batchtest todir="${build.test.results.dir}">
+                <fileset dir="test">
+                    <include name="**/*Test.java"/>
+                </fileset>
+            </batchtest>
+            <classpath path="${test.run.cp}"/>
+            <formatter type="brief" usefile="false"/>
+            <formatter type="xml"/>
+        </junit>
+        <fail if="tests.failed">Some tests failed; see details above.</fail>
+    </target>
+    
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+    
+</project>

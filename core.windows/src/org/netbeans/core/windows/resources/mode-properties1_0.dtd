@@ -1,0 +1,207 @@
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!--
+-//NetBeans//DTD Mode Properties 1.0//EN
+-->
+
+<!-- The root element for mode properties. Consists of name, optional
+     module information and several property sets for various types of
+     user interface.
+     Atribute "version" is optional versioning attribute, which in fact specifies
+     version of this DTD. Attribute is used to perform simple versioning
+     without the need to use time-consuming xml validation using this DTD.
+-->
+<!ELEMENT mode (name, description?, module?, ui-type+) >
+<!ATTLIST mode
+    version CDATA #IMPLIED
+>
+
+<!-- User interface type element, holds mode property set for specific type
+    of user interface. UI type is identified by its only attribute "type",
+    Value "any" is special value which is reserved for default setting set which
+    is used when property set for specific ui-type is not found. Thus, simplest variant is to
+    define only one property set with type "any", which means that for all
+    types of user interface mode will have same properties. -->
+<!ELEMENT ui-type ((bounds | relative-bounds), frame, container, icon?, other?) >
+<!ATTLIST ui-type
+    type (sdi | mdi | any) #REQUIRED
+>
+
+<!-- Optional element for module information. Attribute name specifies name of
+    module which defines this xml description. Module information is used for
+    automatic removal of mode defined by module if module is unistalled.
+    If you want your module's mode to be unistalled automatically when
+    your module is deinstalled, fill this element. When this element is missing,
+    no automatic removal will be done.
+ 1) "name" code name of the module, can be either base code name or full code
+    name with slash and release number. Examples for core module are: 
+    "org.netbeans.core" or "org.netbeans.core/1"
+ 2) "spec" is specification version of the module which defines this xml description.
+-->
+<!ELEMENT module EMPTY >
+<!ATTLIST module
+    name CDATA #REQUIRED
+    spec CDATA #IMPLIED
+>
+
+<!-- Element name has four attributes
+    1) "unique" represents UID of mode unique in context of surrounding workspace
+    2) "display" represents optional display name of the mode.
+       If display name is not specified, unique name is used as display name
+       too. If "from-bundle" flag is enabled, this attribute must contain
+       bundle key where to find localized display name. (example value: "CTL_MyModeName")
+    3) "from-bundle" flag to control if display name is taken from bundle or not
+    4) "bundle" identifies bundle from which localized display name will be read.
+       Format is the same like for fully qualified classes. For example, 
+       localization bundle named "Bundle" in package "my.package" can be pointed
+       to by value "my.package.Bundle".
+       Attributes "bundle" and "display" together give fully qualified bundle
+       pointer. This attribute is optional, has no meaning if "from-bundle" is false
+-->
+<!ELEMENT name      EMPTY >
+<!ATTLIST name
+    unique CDATA #REQUIRED
+    display CDATA #IMPLIED
+    from-bundle (true | false) #IMPLIED
+    bundle CDATA #IMPLIED
+>
+
+<!-- Optional element description has two attributes
+    1) "display" represents bundle key where to find localized 
+        mode description. (example value: "CTL_MyModeDescription")
+    2) "bundle" identifies bundle from which localized description will be read.
+       Format is the same like for fully qualified classes. For example, 
+       localization bundle named "Bundle" in package "my.package" can be pointed
+       to by value "my.package.Bundle".
+       Attributes "bundle" and "display" together give fully qualified bundle
+       pointer.
+-->
+<!ELEMENT description EMPTY >
+<!ATTLIST description
+    display CDATA #REQUIRED
+    bundle CDATA #REQUIRED
+>
+
+<!-- Absolute bounds rectangle of the mode, stored in attributes
+     x, y, width, height, where x, y is location of left top point of bounds 
+     rectangle.
+-->
+<!ELEMENT bounds    EMPTY >
+<!ATTLIST bounds
+    x CDATA #REQUIRED
+    y CDATA #REQUIRED
+    width CDATA #REQUIRED
+    height CDATA #REQUIRED
+>
+
+<!-- Relative (percentage) bounds rectangle of the mode, stored in attributes
+     x, y, width, height, where x, y is location of left top point of bounds 
+     rectangle, it is relative to desktopi: size of main window (mdi) or width 
+     of main window and height of area bellow main window.
+-->
+<!ELEMENT relative-bounds    EMPTY >
+<!ATTLIST relative-bounds
+    x CDATA #REQUIRED
+    y CDATA #REQUIRED
+    width CDATA #REQUIRED
+    height CDATA #REQUIRED
+>
+
+<!-- Frame properties. Attribute "type" represents type of frame, possible values:
+    "window" = standalone frame, used in SDI ui mode
+    "internal" = frame floating in MDI desktop
+    "desktop" = frame attached to side of main window in MDI mode
+    "dialog" = standalone dialog (for future, not implemented yet)
+    Attribute "state" represents iconfified, maximized or normal state of frame,
+    attribute "constraints" stores position of frame inside main window,
+    to which side is attached, valid only for desktop type of frames
+-->
+<!ELEMENT frame    EMPTY >
+<!ATTLIST frame
+    type (window | internal | desktop | dialog) #REQUIRED
+    constraints (center | left | right | top | bottom) #IMPLIED
+    state (normal | iconified  | maximized) #IMPLIED
+>
+
+<!-- Container properties. Required attribute "type" represents type of container,
+     "active" stores reference to top component which was active (should receive
+     focus when frame is activated)
+-->
+<!ELEMENT container  (area*) >
+<!ATTLIST container
+    type (split | tabbed) #REQUIRED
+    active-tc CDATA #IMPLIED
+>
+
+<!-- Area properties describe properties of panes in split frame.
+     "constraint" gives location of pane,
+     "x","y","width","height" relative bounds of area in mode (frame), valid values
+     are from 0 to 100 because areas are always inside of frame.
+-->
+<!ELEMENT area   EMPTY >
+<!ATTLIST area
+    constraint (center | left | right | top | bottom) #REQUIRED
+    relative-x CDATA #REQUIRED
+    relative-y CDATA #REQUIRED
+    relative-width CDATA #REQUIRED
+    relative-height CDATA #REQUIRED
+>
+
+<!-- Icon properties, just url, not required. -->
+<!ELEMENT icon   EMPTY >
+<!ATTLIST icon
+    url CDATA #IMPLIED
+>
+
+<!-- Other, now used only for distinction between modes created by user and 
+     created by modules, optional.
+     "mode-state" is "visible" when mode contains at least one opened top component
+     and "hidden" when mode is empty or contains only closed top components -->
+<!ELEMENT other   EMPTY >
+<!ATTLIST other
+    defined-by (module | user) #IMPLIED
+    mode-state (visible | hidden) #IMPLIED
+>

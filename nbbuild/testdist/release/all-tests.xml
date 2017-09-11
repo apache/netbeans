@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<project name="All tests runner" default="all" basedir=".">
+    <target name="all" depends="runtests,failtests"/>
+    <target name="runtests" depends="-prepare-test-modules,-prepare-modules-list">
+        <fail unless="netbeans.dest.dir" message="Property netbeans.dest.dir doesn't exist."/>
+        <available file="${netbeans.dest.dir}/etc/netbeans.conf" property="exist.netbeans.dest.dir"/>
+        <fail unless="exist.netbeans.dest.dir" message="Path netbeans.dest.dir doesn't contain  netbeans dir."/>
+        <taskdef name="testdistfilter" classpath="../tasks.jar" classname="org.netbeans.nbbuild.testdist.TestDistFilter"/>
+        <!-- only for these module on runtime classpath -->
+        <property name="test.required.modules" value=""/>
+        <property name="test.dist.dir" location=".."/>
+        <property name="test.dist.timeout" value="600000"/>
+        <basename file="${basedir}" property="test.type"/>
+        <testdistfilter testlistproperty="modules.list" testdistdir=".." requiredmodules="${test.required.modules}" testtype="${test.type}"/>
+        <echo>Running modules: ${modules.list}</echo>
+        <property name="extra.test.libs.dir" location="../extralibs"/>
+        <property name="test.results.dir" location="results"/>
+        <subant buildpath="${modules.list}" genericantfile="../one-module.xml" failonerror="false">
+            <property name="test.disable.fails" value="true"/>
+            <property name="test.timeout" value="${test.dist.timeout}"/>
+        </subant>
+        <antcall target="generate-html-results"/>
+        <available file="${test.results.dir}/failed-test-var" type="dir" property="test.failed"/>
+    </target>
+    <target name="generate-html-results" unless="no.html.results">
+        <mkdir dir="${test.results.dir}"/>
+        <junitreport todir="${test.results.dir}">
+            <fileset dir="${test.results.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${test.results.dir}/html"/>
+        </junitreport>
+        <echo>Report is available at ${test.results.dir}/html/index.html</echo>
+    </target>
+    <target name="failtests" unless="test.disable.fails">
+        <fail if="test.failed">Some tests failed; see details above.
+        </fail>
+    </target>
+    <target name="-prepare-modules-list" if="test.modules">
+        <property name="test.clusters" value="*"/>
+        <pathconvert property="test.path" pathsep=",">
+            <path path="${test.modules}"/>
+            <chainedmapper>
+                <flattenmapper/>
+                <filtermapper>
+                    <replacestring from="." to="-"/>
+                </filtermapper>
+                <globmapper from="*" to="${test.clusters}/*"/>
+            </chainedmapper>
+        </pathconvert>
+        <pathconvert property="modules.list">
+            <dirset dir="." includes="${test.path}"/>
+        </pathconvert>
+    </target>
+    <target name="-prepare-test-modules" if="test.clusters">
+        <property name="test.modules" value="*"/>
+    </target>
+</project>

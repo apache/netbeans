@@ -1,0 +1,8 @@
+<?xml version='1.0'?>
+<web-app>
+  <description>This is my Web App</description>
+  <display-name>MyWebApp</display-name>
+  <filter>
+	<filter-name>Bob</filter-name>
+  </filter>
+</web-app>

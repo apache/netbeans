@@ -1,0 +1,9 @@
+%%TestCase first-fix
+package test;
+public class Test {
+     private String g() {
+         return "t".toString();
+     }
+}
+%%=>
+Display Name:toString

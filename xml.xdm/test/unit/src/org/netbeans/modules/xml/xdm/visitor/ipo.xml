@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Alexander Falk (Altova, Inc.) -->
+<ipo:purchaseOrder xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ipo="http://www.altova.com/IPO" orderDate="1999-12-01" xsi:schemaLocation="http://www.altova.com/IPO
+ipo.xsd">
+	<shipTo export-code="1" xsi:type="ipo:EU-Address">
+		<name>Helen Zoe</name>
+		<street>47 Eden Street</street>
+		<city>Cambridge</city>
+		<postcode>126</postcode>
+	</shipTo>
+	<billTo xsi:type="ipo:US-Address">
+		<name>Robert Smith</name>
+		<street>8 Oak Avenue</street>
+		<city>Old Town</city>
+		<state>AK</state>
+		<zip>95819</zip>
+	</billTo>
+	<Items>
+		<item partNum="833-AA">
+			<productName>Lapis necklace</productName>
+			<quantity>2</quantity>
+			<price>99.95</price>
+			<ipo:comment>Need this for the holidays!</ipo:comment>
+			<shipDate>1999-12-05</shipDate>
+		</item>
+		<item partNum="748-OT">
+			<productName>Diamond heart</productName>
+			<quantity>1</quantity>
+			<price>248.90</price>
+			<ipo:comment>Valentine's day packaging.</ipo:comment>
+			<shipDate>2000-02-14</shipDate>
+		</item>
+		<item partNum="783-KL">
+			<productName>Uncut diamond</productName>
+			<quantity>7</quantity>
+			<price>79.90</price>
+			<shipDate>2000-01-07</shipDate>
+		</item>
+		<item partNum="238-KK">
+			<productName>Amber ring</productName>
+			<quantity>3</quantity>
+			<price>89.90</price>
+			<ipo:comment>With no inclusions, please.</ipo:comment>
+			<shipDate>2000-01-07</shipDate>
+		</item>
+		<item partNum="229-OB">
+			<productName>Pearl necklace</productName>
+			<quantity>1</quantity>
+			<price>4879.00</price>
+			<shipDate>1999-12-05</shipDate>
+		</item>
+		<item partNum="128-UL">
+			<productName>Jade earring</productName>
+			<quantity>5</quantity>
+			<price>179.90</price>
+			<shipDate>2000-02-14</shipDate>
+		</item>
+	</Items>
+</ipo:purchaseOrder>

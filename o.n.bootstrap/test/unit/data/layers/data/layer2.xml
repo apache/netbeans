@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="foo">
+        <file name="test1">
+            <attr name="y" stringvalue="two"/>
+        </file>
+        <file name="test2" url="test2a"/>
+        <file name="test3">
+            <![CDATA[hi!]]>
+            <attr name="x" stringvalue="three"/>
+        </file>
+        <file name="test4"/>
+    </folder>
+    <folder name="bar">
+        <file name="test5"/>
+    </folder>
+
+    <folder name="bug21204">
+        <file name="different-attr.txt">
+            <attr name="z" stringvalue="y" />
+        </file>
+        <file name="same-attr.txt">
+            <attr name="x" stringvalue="different-value" />
+        </file>
+    </folder>
+</filesystem>

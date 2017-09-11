@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : Attributes.xml.xml
+    Created on : January 23, 2003, 1:52 PM
+    Author     : rm111737
+    Description:
+        Purpose of the document: testing of attributes.
+-->
+
+<!DOCTYPE filesystem PUBLIC '-//NetBeans//DTD Filesystem 1.2//EN' 'http://www.netbeans.org/dtds/filesystem-1_2.dtd'>
+<filesystem>
+    <folder name="testMethodValue"> 
+        <attr name="test1" methodvalue="org.openide.filesystems.XMLFileSystemTestHid.getObjectViaMethodValue1"/>
+        <attr name="test2" methodvalue="org.openide.filesystems.XMLFileSystemTestHid.getObjectViaMethodValue2"/>
+        <attr name="test3" methodvalue="org.openide.filesystems.XMLFileSystemTestHid.getObjectViaMethodValue3"/>
+        <attr name="test4" methodvalue="org.openide.filesystems.XMLFileSystemTestHid.getObjectViaMethodValue4"/>
+        <attr name="test5" methodvalue="org.openide.filesystems.XMLFileSystemTestHid.getObjectViaMethodValue5"/>
+        <attr name="test6" methodvalue="org.openide.filesystems.XMLFileSystemTestHid.getObjectViaMethodValue6"/>
+        <attr name="test7" methodvalue="org.openide.filesystems.XMLFileSystemTestHid.getObjectViaMethodValue7"/>
+        <attr name="value1" stringvalue="Ahoj1"/>
+        <attr name="testLoc" bundlevalue="org.openide.filesystems.data.TestBundle#AHOJ"/>
+    </folder>
+    <folder name="peer">
+        <file name="base">
+            <attr name="testPeer" newvalue="org.openide.filesystems.XMLFileSystemTestHid$Data"/>
+        </file>
+        <file name="snd">
+            <attr name="testPeer" methodvalue="org.openide.filesystems.XMLFileSystemTestHid.getFO"/>
+        </file>
+    </folder>
+</filesystem>

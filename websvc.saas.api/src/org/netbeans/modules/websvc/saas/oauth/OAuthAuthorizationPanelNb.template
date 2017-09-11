@@ -1,0 +1,77 @@
+class DialogPanel extends javax.swing.JPanel {
+    private javax.swing.JTextField verifierTextField;
+
+    DialogPanel(final String url) {
+
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        javax.swing.JLabel topLabel = new javax.swing.JLabel();
+        verifierTextField = new javax.swing.JTextField();
+        javax.swing.JLabel verifierLabel = new javax.swing.JLabel();
+        javax.swing.JLabel bottomLabel = new javax.swing.JLabel();
+        javax.swing.JButton urlButton = new javax.swing.JButton();
+
+        setLayout(new java.awt.GridBagLayout());
+
+        topLabel.setText("Click the URL link below to open the browser, and authorize the application to access your data:"); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(topLabel, gridBagConstraints);
+
+        urlButton.setForeground(java.awt.Color.BLUE);
+        urlButton.setBorderPainted(false);
+        urlButton.setContentAreaFilled(false);
+        String urlText = url.toString();
+        String text = "<html><b><u>" + urlText + "</u></b></html>";
+        urlButton.setText(text);
+        urlButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        urlButton.addActionListener(new java.awt.event.ActionListener() {
+
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                try {
+                    org.openide.awt.HtmlBrowser.URLDisplayer.getDefault().showURLExternal(new java.net.URL(url));
+                } catch (java.net.MalformedURLException ex) {
+                    java.util.logging.Logger.getLogger(DialogPanel.class.getName()).log(java.util.logging.Level.WARNING, "incorrect URL string", ex);
+                }
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(urlButton, gridBagConstraints);
+
+        verifierLabel.setText("Type oauth_verifier string, taken from authorization(callback) page: "); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
+        add(verifierLabel, gridBagConstraints);
+
+        verifierTextField.setText(""); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
+        add(verifierTextField, gridBagConstraints);
+
+        bottomLabel.setText("After you allow the application to access your data, press OK.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(bottomLabel, gridBagConstraints);
+    }
+
+    public String getVerifier() {
+        return verifierTextField.getText().trim();
+    }
+}

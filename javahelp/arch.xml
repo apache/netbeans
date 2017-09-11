@@ -1,0 +1,819 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+  question-version="1.12"
+  author="jglick@netbeans.org"
+>
+
+  &api-questions;
+
+
+<!--
+        <question id="arch-what">
+            What is this project good for?
+            <hint>
+            Please provide here a few lines describing the project,
+            what problem it should solve, provide links to documentation, 
+            specifications, etc.
+            </hint>
+        </question>
+-->
+    <answer id="arch-what">
+        The JavaHelp integration API wraps the standard JavaHelp extension
+        library. It also provides a small additional API for NetBeans modules to
+        supply help sets to the system, add GUI menu items, and request that
+        particular help topics be displayed.
+        <api name="JavaHelpIntegrationAPI" type="export" category="official" 
+        url="@TOP@/index.html" group="java"/>
+    </answer>
+
+
+
+<!--
+        <question id="compat-i18n">
+            Is your module correctly internationalized?
+            <hint>
+            Correct internationalization means that it obeys instuctions 
+            at <a href="http://www.netbeans.org/devhome/docs/i18n/index.html">
+            NetBeans I18N pages</a>.
+            </hint>
+        </question>
+-->
+    <answer id="compat-i18n">
+        Yes.
+    </answer>
+
+
+
+<!--
+        <question id="compat-standards">
+            Does the module implement or define any standards? Is the 
+            implementation exact or does it deviate somehow?
+        </question>
+-->
+    <answer id="compat-standards">
+        It only implements its own integration API. The JavaHelp reference
+        implementation is bundled and that implements the JavaHelp API.
+    </answer>
+
+
+
+<!--
+        <question id="compat-version">
+            Can your module coexist with earlier and future
+            versions of itself? Can you correctly read all old settings? Will future
+            versions be able to read your current settings? Can you read
+            or politely ignore settings stored by a future version?
+            
+            <hint>
+            Very helpful for reading settings is to store version number
+            there, so future versions can decide whether how to read/convert
+            the settings and older versions can ignore the new ones.
+            </hint>
+        </question>
+-->
+    <answer id="compat-version">
+        N/A
+    </answer>
+
+
+
+<!--
+        <question id="dep-jre">
+            Which version of JRE do you need (1.2, 1.3, 1.4, etc.)?
+            <hint>
+            It is expected that if your module runs on 1.x that it will run 
+            on 1.x+1 if no, state that please. Also describe here cases where
+            you run different code on different versions of JRE and why.
+            </hint>
+        </question>
+-->
+    <answer id="dep-jre">
+        1.3
+    </answer>
+
+
+
+<!--
+        <question id="dep-jrejdk">
+            Do you require the JDK or is the JRE enough?
+        </question>
+-->
+    <answer id="dep-jrejdk">
+        JRE
+    </answer>
+
+
+
+<!--
+        <question id="dep-nb">
+            What other NetBeans projects does this one depend on?
+            <hint>
+            If you want, describe such projects as imported API using
+            the <code>&lt;api name=&quot;identification&quot; type=&quot;import or export&quot; category=&quot;stable&quot; url=&quot;where is the description&quot; /></code>
+            </hint>
+        </question>
+-->
+    <answer id="dep-nb">
+        <ul>
+            <li><api name="ModulesAPI" type="import" category="official" 
+            url="@org-openide-modules@/overview-summary.html" group="java"/></li>
+            <li><api name="UtilitiesAPI" type="import" category="official" 
+            url="@org-openide-util-ui@/overview-summary.html" group="java"/></li>
+            <li><api name="ServicesAPI" type="import" category="official" 
+            url="@org-openide-util-ui@/org/openide/util/doc-files/api.html#service-lookup" group="java"/></li>
+            <li><api name="NodesAPI" type="import" category="official" 
+            url="@org-openide-nodes@/overview-summary.html" group="java"/></li>
+            <li><api name="WindowSystemAPI" type="import" category="official" 
+            url="@org-openide-windows@/overview-summary.html" group="java"/></li>
+            <li><api name="ActionsAPI" type="import" category="official" 
+            url="@org-openide-actions@/overview-summary.html" group="java"/></li>
+        </ul>
+
+    </answer>
+
+
+
+<!--
+        <question id="dep-non-nb">
+            What other projects outside NetBeans does this one depend on?
+            
+            <hint>
+            Some non-NetBeans projects are packaged as NetBeans modules
+            (see <a href="http://libs.netbeans.org">libraries</a>) and
+            it is prefered to use this approach when more modules may
+            depend on such third-party library.
+            </hint>
+        </question>
+-->
+    <answer id="dep-non-nb">
+        Just a JAXP-compliant SAX parser.
+    </answer>
+
+
+
+<!--
+        <question id="dep-platform">
+            On which platforms does your module run? Does it run in the same
+            way on each?
+            <hint>
+            If your module is using JNI or deals with special differences of
+            OSes like filesystems, etc. please describe here what they are.
+            </hint>
+        </question>
+-->
+    <answer id="dep-platform">
+        Any
+    </answer>
+
+
+
+<!--
+        <question id="deploy-jar">
+            Do you deploy just module JAR file(s) or other files as well?
+            <hint>
+            If your module consists of just one module JAR file, just confirm that.
+            If it uses more than one JAR, describe where they are located, how
+            they refer to each other. 
+            If it consist of module JAR(s) and other files, please describe
+            what is their purpose, why other files are necessary. Please 
+            make sure that installation/deinstallation leaves the system 
+            in state as it was before installation.
+            </hint>
+        </question>
+-->
+    <answer id="deploy-jar">
+        <p>
+            The JavaHelp extension library (<samp>jh.jar</samp>) is included,
+            currently at version 1.1.3.
+        </p>
+        <p>
+            <strong>Note</strong> that some versions of Solaris ship with their
+            own copy of this library in the location
+            <samp>/usr/j2se/opt/javahelp/lib/jhall.jar</samp>. Since this JAR is
+            included in the extensions path of the JRE on such machines, it would
+            override the copy of <samp>jh.jar</samp> shipped with the NetBeans
+            integration module. Normally this would be tolerable, but
+            unfortunately the version shipped with Solaris is outdated and
+            exhibits a number of serious bugs, especially in the handling of
+            Japanese search text, which make the NetBeans help system unusable
+            and which were fixed in subsequent official JavaHelp releases. (Note
+            that search databases for JavaHelp help sets are often not cleanly
+            usable in versions of JavaHelp other than the one in which they were
+            built, since details of how HTML substring indices are calculated
+            tend to be unstable between even minor releases.) To avoid such bugs,
+            the NetBeans launcher checks for the existence of the abovementioned
+            file, and if found, prepends the NetBeans <samp>jh.jar</samp> to the
+            JVM's boot classpath. Other options were considered and rejected as
+            unworkable.
+        </p>
+    </answer>
+
+
+
+<!--
+        <question id="deploy-nbm">
+            Can you deploy an NBM via the Update Center?
+            <hint>
+            If not why?
+            </hint>
+        </question>
+-->
+    <answer id="deploy-nbm">
+        Yes.
+    </answer>
+
+
+
+<!--
+        <question id="deploy-packages">
+            Are packages of your module made inaccessible by not declaring them
+            public?
+            
+            <hint>
+            NetBeans module system allows restriction of access rights to
+            public classes of your module from other modules. This prevents
+            unwanted dependencies of others on your code and should be used
+            whenever possible (<a href="http://www.netbeans.org/download/apis/org/openide/doc-files/upgrade.html#3.4-public-packages">
+            public packages
+            </a>). 
+            </hint>
+        </question>
+-->
+    <answer id="deploy-packages">
+        Yes.
+    </answer>
+
+
+
+<!--
+        <question id="deploy-shared">
+            Do you need to be installed in the shared location only, or in the user directory only,
+            or can your module be installed anywhere?
+            <hint>
+            Installation location shall not matter, if it does explain why.
+            Consider also whether <code>InstalledFileLocator</code> can help.
+            </hint>
+        </question>
+-->
+    <answer id="deploy-shared">
+        Either.
+    </answer>
+
+
+
+<!--
+        <question id="exec-classloader">
+            Does your code create its own class loader(s)?
+            <hint>
+            A bit unusual. Please explain why and what for.
+            </hint>
+        </question>
+-->
+    <answer id="exec-classloader">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="exec-component">
+            Is execution of your code influenced by any (string) property
+            of any of your components?
+            
+            <hint>
+            Often <code>JComponent.getClientProperty</code>, <code>Action.getValue</code>
+            or <code>PropertyDescriptor.getValue</code>, etc. are used to influence
+            a behaviour of some code. This of course forms an interface that should
+            be documented. Also if one depends on some interface that an object
+            implements (<code>component instanceof Runnable</code>) that forms an
+            API as well.
+            </hint>
+        </question>
+-->
+    <answer id="exec-component">
+        <ul>
+            <li>
+                <api type="export" group="property" name="OpenIDE-mergeIntoMaster" category="official">
+                    The context and key <code>OpenIDE/mergeIntoMaster</code> can be set as an attribute on a help set
+                    provided programmatically rather than with an XML file to
+                    customize one attribute. Such programmatic provision is rare
+                    but supported.
+                </api>
+            
+            </li>
+            <li>
+                <api type="export" group="property" name="javahelp.ignore.modality" category="friend">
+                     The help window through JDK 1.5.0 handles modal dialogs by reparenting the help 
+                     component into a child dialog of any new modal dialog whenever it is shown, and 
+                     reparenting it back into a frame whenever it is hidden.  Under certain circumstances
+                     (showing two dialogs sequentially before the frame can be re-shown), it can produce
+                     a race condition in the underlying java.awt.Toolkit implementation.  As a workaround,
+                     callers of DialogDisplayer.getDefault().notify(DialogDescriptor) may set the system
+                     property "javahelp.ignore.modality" to the String "true".  This system property will
+                     be reset by notify(), and applied as a client property of the root pane of the dialog
+                     to be shown.  JavaHelp will, in turn, ignore the appearance of any dialog whose root
+                     pane posesses the client property "javahelp.ignore.modality" with the String value
+                     "true".
+                </api>
+            
+            </li>
+        </ul>
+    </answer>
+
+
+
+<!--
+        <question id="exec-introspection">
+            Does your module use any kind of runtime type informations (instanceof,
+            work with java.lang.Class, etc.)?
+            <hint>
+            Check for cases when you have an object of type A and you also
+            expect it to (possibly) be of type B and do some special action. That
+            should be documented. The same applies on operations in meta-level
+            (Class.isInstance(...), Class.isAssignableFrom(...), etc.).
+            </hint>
+        </question>
+-->
+    <answer id="exec-introspection">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="exec-privateaccess">
+            Are you aware of any other parts of the system calling some of 
+            your methods by reflection?
+            <hint>
+            If so, describe the &quot;contract&quot; as an API. Likely private or friend one, but
+            still API and consider rewrite of it.
+            </hint>
+        </question>
+-->
+    <answer id="exec-privateaccess">
+        <samp>openide-deprecated.jar</samp> calls the public API via
+        introspection to avoid a compile-time dependency.
+    </answer>
+
+
+
+<!--
+        <question id="exec-process">
+            Do you execute an external process from your module? How do you ensure
+            that the result is the same on different platforms? Do you parse output?
+            Do you depend on result code?
+            <hint>
+            If you feed an input, parse the output please declare that as an API.
+            </hint>
+        </question>
+-->
+    <answer id="exec-process">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="exec-property">
+            Is execution of your code influenced by any environment or
+            Java system (<code>System.getProperty</code>) property?
+            
+            <hint>
+            If there is a property that can change the behaviour of your 
+            code, somebody will likely use it. You should describe what it does 
+            and the stability category of this API. You may use
+            <pre>
+                &lt;property name=&quot;id&quot; category=&quot;private&quot; >
+                    description of the property, where it is used, what it influence, etc.
+                &lt;/property>            
+            </pre>
+            </hint>
+        </question>
+-->
+    <answer id="exec-property">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="exec-reflection">
+            Does your code use Java Reflection to execute other code?
+            <hint>
+            This usually indicates a missing or unsufficient API in the other
+            part of the system. If the other side is not aware of your dependency
+            this contract can be easily broken.
+            </hint>
+        </question>
+-->
+    <answer id="exec-reflection">
+        There <em>is</em> a workaround for a Java bug (#4675772)
+        which almost involves reflection - manually removing entries from UI
+        defaults. Without this, the module will throw exceptions when disabled
+        and then re&#x00EB;nabled without a restart.
+        <p/>
+        The module is using reflection to access the
+        <api name="ModalityExcludeAPI" category="friend" group="java" type="import">
+        offered by some JDKs and tracked as Java bug (5092094) <!-- see
+        http://ccc.sfbay/5092094 if you can --> allowing to exclude modal
+        dialogs behaviour for certain windows - in this case the help window.
+        </api>.
+    </answer>
+
+
+
+<!--
+        <question id="format-clipboard">
+            Which data flavors (if any) does your code read from or insert to
+            the clipboard (by access to clipboard on means calling methods on <code>java.awt.datatransfer.Transferable</code>?
+            
+            <hint>
+            Often Node's deal with clipboard by usage of <code>Node.clipboardCopy, Node.clipboardCut and Node.pasteTypes</code>.
+            Check your code for overriding these methods.
+            </hint>
+        </question>
+-->
+    <answer id="format-clipboard">
+        N/A
+    </answer>
+
+
+
+<!--
+        <question id="format-dnd">
+            Which protocols (if any) does your code understand during Drag &amp; Drop?
+            <hint>
+            Often Node's deal with clipboard by usage of <code>Node.drag, Node.getDropType</code>. 
+            Check your code for overriding these methods. Btw. if they are not overriden, they
+            by default delegate to <code>Node.clipboardCopy, Node.clipboardCut and Node.pasteTypes</code>.
+            </hint>
+        </question>
+-->
+    <answer id="format-dnd">
+        N/A
+    </answer>
+
+
+
+<!--
+        <question id="format-types">
+            Which protocols and file formats (if any) does your module read or write on disk,
+            or transmit or receive over the network?
+        </question>
+-->
+    <answer id="format-types">
+        <ul>
+            <li>
+                The bundled JavaHelp code reads standard help sets.
+            </li>
+            <li>
+                There is a published XML DTD for declaring the existence of a
+                help set.
+            </li>
+            <li>
+                There is a published XML DTD for creating a menu item pointing to
+                a help topic.
+            </li>
+            <li>
+                <api group="dtd" 
+                     category="friend" 
+                     type="export" 
+                     name="ObjectTag"
+                     url="@TOP@/overview-summary.html">
+                </api>
+                This tag is used in HTML content to create hyperlink like label in JHContentViewer. It invokes IDE
+                default HTML Browser to correctly display external links.
+            </li>
+        </ul>
+    </answer>
+
+
+
+<!--
+        <question id="lookup-lookup">
+            Does your module use <code>org.openide.util.Lookup</code>
+            to find any components to communicate with? Which ones?
+            
+            <hint>
+            Please describe the interfaces you are searching for, where 
+            are defined, whether you are searching for just one or more of them,
+            if the order is important, etc. Also clasify the stability of such
+            API contract.
+            </hint>
+        </question>
+-->
+    <answer id="lookup-lookup">
+        It searches for instances of <code>javax.help.HelpSet</code> in lookup,
+        according to the API specification.
+    </answer>
+
+
+
+<!--
+        <question id="lookup-register">
+            Do you register anything into lookup for other code to find?
+            <hint>
+            Do you register using layer file or using <code>META-INF/services</code>?
+            Who is supposed to find your component?
+            </hint>
+        </question>
+-->
+    <answer id="lookup-register">
+        A singleton instance of <code>org.netbeans.api.javahelp.Help</code> is
+        registered into lookup, according to the API specification. Modules may
+        depend on its existence by requiring a token of the same name. An
+        instance of a handler for the <code>nbdocs</code> URL protocol (covered
+        in the specification) is also registered.
+    </answer>
+
+
+
+<!--
+        <question id="lookup-remove">
+            Do you remove entries of other modules from lookup?
+            <hint>
+            Why? Of course, that is possible, but it can be dangerous. Is the module
+            your are masking resource from aware of what you are doing?
+            </hint>
+        </question>
+-->
+    <answer id="lookup-remove">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="perf-exit">
+            Does your module run any code on exit?
+        </question>
+-->
+    <answer id="perf-exit">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="perf-huge_dialogs">
+            Does your module contain any dialogs or wizards with a large number of
+            GUI controls such as combo boxes, lists, trees, or text areas?
+        </question>
+-->
+    <answer id="perf-huge_dialogs">
+        The JavaHelp window is fairly complex, but the module only provides the
+        frame that contains it.
+    </answer>
+
+
+
+<!--
+        <question id="perf-limit">
+            Are there any hardcoded or practical limits in the number or size of
+            elements your code can handle?
+        </question>
+-->
+    <answer id="perf-limit">
+        When displaying help, all help sets need to be parsed by JavaHelp to
+        determine the ID maps. For a large number of help sets, this might
+        consume too much memory and CPU to be practical. Also when displaying
+        "merged" help (the normal case), all help sets need to be merged
+        together, which can also be time-consuming as their number grows.
+    </answer>
+
+
+
+<!--
+        <question id="perf-mem">
+            How much memory does your component consume? Estimate
+            with a relation to the number of windows, etc.
+        </question>
+-->
+    <answer id="perf-mem">
+        Unknown. Help sets which are not in active use are supposed to be held
+        softly so they could be collected.
+    </answer>
+
+
+
+<!--
+        <question id="perf-menus">
+            Does your module use dynamically updated context menus, or
+            context-sensitive actions with complicated enablement logic?
+        </question>
+-->
+    <answer id="perf-menus">
+        Menu items representing links to help topics are dynamically enabled or
+        disabled. They are always enabled in case help sets have not yet been
+        parsed, to avoid forcing a parse just to display the menu item; if
+        selected at this time when there is no actual corresponding ID, they will
+        do nothing. After help sets have been parsed, menu items referring to
+        help topics which are actually available (the normal case) are enabled.
+        In case a help topic is missing for some reason, the menu item is
+        disabled.
+    </answer>
+
+
+
+<!--
+        <question id="perf-progress">
+            Does your module execute any long-running tasks?
+            <hint>Typically they are tasks like connecting over
+            network, computing huge amount of data, compilation.
+            Such communication should be done asynchronously (for example
+            using <code>RequestProcessor</code>), definitively it should 
+            not block AWT thread.
+            </hint>
+        </question>
+-->
+    <answer id="perf-progress">
+        Loading and merging help sets is done asynchronously since it can be
+        slow.
+    </answer>
+
+
+
+<!--
+        <question id="perf-scale">
+            Which external criteria influence the performance of your
+            program (size of file in editor, number of files in menu, 
+            in source directory, etc.) and how well your code scales?
+            Please include some estimates.
+        </question>
+-->
+    <answer id="perf-scale">
+        Size of help set XML files (the map file especially) probably impacts
+        parsing speed and memory consumption. Number of distinct help sets will
+        probably impact performance as well. Exact numbers unknown, but JavaHelp
+        appears to be pretty slow to parse and merge help sets.
+    </answer>
+
+
+
+<!--
+        <question id="perf-startup">
+            Does your module run any code on startup?
+        </question>
+-->
+    <answer id="perf-startup">
+        Yes, it registers a global AWT window listener. This appears to be the
+        only way to reliably tell whether a modal dialog is showing at a given
+        time (and to receive notification when one is shown). There is a rather
+        complex set of hacks to convert the help viewer into a nonmodal dialog
+        and reparent it to an active modal dialog; otherwise it would be
+        impossible to access help while a modal dialog was showing. There is an
+        open request for AWT to support multiple application contexts, which
+        would permit the help viewer to live in an independent context and not be
+        blocked by modal dialogs used in NetBeans, but until this is fixed there
+        is no known good solution to the modality problem.
+    </answer>
+
+
+
+<!--
+        <question id="perf-wakeup">
+            Does any piece of your code wake up periodically and do something
+            even when the system is otherwise idle (no user interaction)?
+        </question>
+-->
+    <answer id="perf-wakeup">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="resources-file">
+            Does your module use <code>java.io.File</code> directly?
+            
+            <hint>
+            NetBeans provide a logical wrapper over plain files called 
+            <code>org.openide.filesystems.FileObject</code> that
+            provides uniform access to such resources and is the prefered
+            way that should be used. But of course there can be situations when
+            this is not suitable.
+            </hint>
+        </question>
+-->
+    <answer id="resources-file">
+        It uses <code>InstalledFileLocator</code> to implement the
+        <code>nbdocs</code> URL protocol, permitting help sets or files to be
+        loaded from disk files in the NetBeans installation, rather than from
+        inside the module. This is necessary to make it easy for users to
+        customize CSS stylesheets, for example.
+    </answer>
+
+
+
+<!--
+        <question id="resources-layer">
+            Does your module provide own layer? Does it create any files or
+            folders in it? What it is trying to communicate by that and with which 
+            components?
+            
+            <hint>
+            NetBeans allows automatic and declarative installation of resources 
+            by module layers. Module register files into appropriate places
+            and other components use that information to perform their task
+            (build menu, toolbar, window layout, list of templates, set of
+            options, etc.). 
+            </hint>
+        </question>
+-->
+    <answer id="resources-layer">
+        The layer registers the <code>Help</code> singleton, declares some XML
+        DTDs and their processors, installs some menu items, etc.
+    </answer>
+
+
+
+<!--
+        <question id="resources-mask">
+            Does your module mask/hide/override any resources provided by other modules in
+            their layers?
+            
+            <hint>
+            If you mask a file provided by another module, you probably depend
+            on that and do not want the other module to (for example) change
+            the file's name. That module shall thus make that file available as an API
+            of some stability category.
+            </hint>
+        </question>
+-->
+    <answer id="resources-mask">
+        No. However the <code>usersguide</code> module does mask the master help
+        link menu item created by this module, replacing it with a similar one
+        which jumps straight to the introductory page of the main NetBeans online
+        help.
+    </answer>
+
+
+
+<!--
+        <question id="resources-read">
+            Does your module read any resources from layers? For what purpose?
+            
+            <hint>
+            As this is some kind of intermodule dependency, it is a kind of API.
+            Please describe it and clasify according to 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            common stability categories</a>.
+            </hint>
+        </question>
+-->
+    <answer id="resources-read">
+        Not directly. It uses lookup to find help sets, while providing an XML
+        processor to make this easier. It provides another XML processor
+        permitting modules to add menu items, but does not directly interpret
+        these.
+    </answer>
+
+</api-answers>

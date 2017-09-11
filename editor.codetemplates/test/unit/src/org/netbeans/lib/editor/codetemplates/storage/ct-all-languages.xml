@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE codetemplates PUBLIC "-//NetBeans//DTD Editor Code Templates settings 1.0//EN" "http://www.netbeans.org/dtds/EditorCodeTemplates-1_0.dtd">
+
+<codetemplates>
+    <codetemplate abbreviation="sout" descriptionId="CT_sout" contexts="aaa,bbb" uuid="not-a-real-uuid">
+        <code><![CDATA[System.out.println(${cursor});]]></code>
+    </codetemplate>
+    <codetemplate abbreviation="hello"><code>  Hello World!  </code></codetemplate>
+    <codetemplate abbreviation="xyz" contexts="xyz">
+        <code>
+            <![CDATA[<xyz>${cursor}</xyz>]]>
+        </code>
+        <description>
+            <![CDATA[xyz]]>
+        </description>
+    </codetemplate>
+</codetemplates>

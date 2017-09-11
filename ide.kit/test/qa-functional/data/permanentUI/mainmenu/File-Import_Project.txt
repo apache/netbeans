@@ -1,0 +1,3 @@
+Import Project         > Eclipse Project...                E
+                         Resynchronize Eclipse Projects    R
+                         From ZIP...                       Z

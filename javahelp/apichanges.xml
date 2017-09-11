@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 2004 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<?xml-stylesheet href="../nbbuild/javadoctools/apichanges.xsl" type="text/xsl" ?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN"
+                     "../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, this will be done periodically; just
+change the XML. If you can, validate the XML against the DTD, if not
+do not worry about it. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+  <!-- First, a list of API names you may use: -->
+  <apidefs>
+    <!-- Probably should not be used much: -->
+    <apidef name="general">JavaHelp module APIs</apidef>
+  </apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+  <changes>
+
+      <change id="mergeCustomHelpset">
+          <api name="general"/>
+          <summary>Added class <code>HelpUtils</code></summary>
+          <version major="2" minor="34"/>
+          <date day="19" month="8" year="2013"/>
+          <author login="jhavlin"/>
+          <compatibility addition="yes" />
+          <description>
+              <p>
+                  Provide a method for merging of a custom HelpSet object to the
+                  master helpset.
+              </p>
+          </description>
+          <class package="org.netbeans.api.javahelp" name="HelpUtils"/>
+          <issue number="234144"/>
+      </change>
+
+      <change id="HelpSetRegistration">
+          <api name="general"/>
+          <summary>Added <code>@HelpSetRegistration</code></summary>
+          <version major="2" minor="20"/>
+          <date day="8" month="11" year="2010"/>
+          <author login="jglick"/>
+          <compatibility>
+              <p>
+                  Modules registering help sets in their XML layers are encouraged to migrate to the new annotation.
+                  Delete the <code>&lt;helpsetref&gt;</code> file from your layer, move your help set files
+                  into the project's regular source/resource root, remove <code>OpenIDE-Module-Requires: org.netbeans.api.javahelp.Help</code> from your module's manifest,
+                  add a direct dependency on this module, and add a <code>package-info.java</code> with the annotation.
+                  For Ant-based module projects, <code>javahelp.base</code> and <code>javahelp.hs</code> can also be removed from <code>project.properties</code>.
+              </p>
+          </compatibility>
+          <description>
+              <p>
+                  There is a new annotation to make it easier to register help sets.
+              </p>
+          </description>
+          <class package="org.netbeans.api.javahelp" name="HelpSetRegistration"/>
+          <issue number="191452"/>
+      </change>
+  
+        <change id="object">
+            <api name="general"/>
+            <summary>object tag was added to invoke default IDE HTML Browser to correctly display external
+            links</summary>
+            <version major="2" minor="3"/>
+            <date day="5" month="5" year="2004"/>
+            <author login="mslama"/>
+            <compatibility addition="yes" deprecation="no" source="compatible" semantic="compatible">
+            </compatibility>
+            <description>
+                <p>
+                    Object tag can be used in HTML content to show external link in default IDE HTML browser.
+                </p>
+            </description>
+            <issue number="27892"/>
+        </change>
+
+  
+    
+
+  </changes>
+
+  <!-- Now the surrounding HTML text and document structure: -->
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE core/javahelp/api/doc/changes/apichanges.xml
+
+-->
+    <head>
+      <title>NetBeans JavaHelp module API Changes by Date</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+      <meta name="CATEGORY" content="OtherDevelopmentDoc"/>
+      <meta name="DESCRIPTION" content="A cross-indexed list of all changes made to the NetBeans JavaHelp module APIs."/>
+    </head>
+    <body>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the NetBeans
+JavaHelp module APIs. Please ask on the <code>nbdev@netbeans.org</code>
+mailing list if you have any questions.</p>
+
+<div>
+      <hr/><standard-changelists module-code-name="org.netbeans.modules.javahelp/1"/>
+</div>
+    </body>
+  </htmlcontents>
+
+</apichanges>

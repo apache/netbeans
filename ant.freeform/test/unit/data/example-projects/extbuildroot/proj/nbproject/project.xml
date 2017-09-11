@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.ant.freeform</type>
+    <configuration>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
+            <name>External Build Root</name>
+            <properties>
+                <property name="build.dir">../build</property>
+            </properties>
+            <folders>
+                <build-folder>
+                    <location>${build.dir}</location>
+                </build-folder>
+            </folders>
+        </general-data>
+    </configuration>
+</project>

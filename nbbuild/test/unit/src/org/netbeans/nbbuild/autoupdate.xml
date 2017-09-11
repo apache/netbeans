@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="changeme" default="all" basedir=".">
+    <property name="force" value="false"/>
+    <target name="all">
+        <echo message="${root}"/>
+
+        <taskdef classname="org.netbeans.nbbuild.AutoUpdate" name="autoupdate" classpath="${nbantext.jar}"/>
+
+        <autoupdate
+            updatecenter="${url}"
+            installdir="${target}"
+            force="${force}"
+        >
+            <modules includes="${includes}"/>
+        </autoupdate>
+        
+    </target>
+
+    <target name="cluster">
+        <echo message="${root}"/>
+
+        <taskdef classname="org.netbeans.nbbuild.AutoUpdate" name="autoupdate" classpath="${nbantext.jar}"/>
+        <autoupdate
+            updatecenter="${url}"
+            todir="${target}"
+            force="${force}"
+        >
+            <modules includes="${includes}"/>
+        </autoupdate>
+
+    </target>
+    <target name="cluster-select">
+        <echo message="${root}"/>
+
+        <taskdef classname="org.netbeans.nbbuild.AutoUpdate" name="autoupdate" classpath="${nbantext.jar}"/>
+        <autoupdate
+            updatecenter="${url}"
+            todir="${target}"
+            force="${force}"
+        >
+            <modules includes="${includes}" clusters="${cluster}"/>
+        </autoupdate>
+
+    </target>
+
+    <target name="all-nbms">
+        <echo message="${root}"/>
+
+        <taskdef classname="org.netbeans.nbbuild.AutoUpdate" name="autoupdate" classpath="${nbantext.jar}"/>
+
+        <autoupdate
+            todir="${target}"
+            force="${force}"
+        >
+            <nbms dir="${dir}">
+                <include name="*.nbm"/>
+            </nbms>
+            <modules includes="${includes}"/>
+        </autoupdate>
+
+    </target>
+    
+    <target name="mirror">
+        <echo message="${root}"/>
+
+        <taskdef classname="org.netbeans.nbbuild.AutoUpdate" name="autoupdate" classpath="${nbantext.jar}"/>
+
+        <autoupdate downloaddir="${target}">
+            <nbms dir="${dir}">
+                <include name="*.nbm"/>
+            </nbms>
+            <modules includes="${includes}"/>
+        </autoupdate>
+    </target>
+</project>

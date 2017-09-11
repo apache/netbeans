@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!--
+*     Copyright © 1997, 2017, Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+*     Use is subject to license terms.
+-->
+
+<!DOCTYPE toc
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN"
+         "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+
+<toc version="2.0">
+
+<tocitem text="Legal Notices" target="ide.credits" />
+
+<tocitem text="IDE Basics" expand="true">
+  
+    <tocitem text="Using the IDE Help System" target="ide.welcome"/>
+
+</tocitem>
+
+</toc>

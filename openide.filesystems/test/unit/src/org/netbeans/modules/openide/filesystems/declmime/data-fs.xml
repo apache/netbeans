@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+
+<filesystem>
+    <folder name="root">
+        <file name="empty.dtd"/>
+        <file name="root.xml"><![CDATA[<?xml version="1.0"?>
+            <root/>]]>
+        </file>
+        <file name="ns.xml"><![CDATA[<?xml version="1.0"?>
+            <ns:rootns xmlns:ns="test"/>]]>
+        </file>
+        <file name="pid.xml"><![CDATA[<?xml version="1.0"?>
+            <!DOCTYPE root3 PUBLIC "test" "empty.dtd">
+            <root3/>]]>
+        </file>
+        <file name="namespace.axml"><![CDATA[<?xml version="1.0"?>
+            <!DOCTYPE root3 PUBLIC "-//My/Type/EN" "empty.dtd">
+            <root3/>]]>
+        </file>
+        <file name="nodtd.axml"><![CDATA[<?xml version="1.0"?>
+            <root3333/>]]>
+        </file>
+        <file name="namespace.bxml"><![CDATA[<?xml version="1.0"?>
+            <!DOCTYPE root3 PUBLIC "-//Your/Type/EN" "empty.dtd">
+            <root3/>]]>
+        </file>
+        <file name="noelem.bxml"><![CDATA[<?xml version="1.0"?>
+            <myandyour/>]]>
+        </file>
+        <file name="namespace.cxml"><![CDATA[<?xml version="1.0"?>
+            <myandyour xmlns="http://some.org/ns/123"/>]]>
+        </file>
+        <file name="test.exe"><![CDATA[aaa]]></file>
+        <file name="test.elf"><![CDATA[CCC]]></file>
+        <file name="test.txt2"/>        
+        <file name="test.txt3"/>        
+	<file name="build1.xml"><![CDATA[<?xml version="1.0"?>
+<project default="all">
+    <target name="all"/>
+</project>
+]]></file>
+	<file name="build2.xml"><![CDATA[<?xml version="1.0"?>
+<project default="all">
+    <target name="all"/>
+</project>
+]]></file>
+	<file name="bogus.xml"><![CDATA[fail on me!]]></file>
+        <file name="illegal-encoding.xml"><![CDATA[<?xml version="1.0" encoding="${encoding}"?>
+<beans xmlns="http://www.springframework.org/schema/beans"/>
+]]></file>
+	<file name="126496-skipCharNPE.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+    ]]>
+    </file>
+        <file name="php.txt"><![CDATA[
+<?php
+        ]]>
+        </file>
+        <file name="not-php.txt"><![CDATA[
+This is not php file.
+        ]]>
+        </file>
+        <file name="html-php.txt"><![CDATA[
+<!DOCTYPE HTML
+<html>
+0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
+<?php
+define
+        ]]>
+        </file>
+        <file name="ruby.cgi"><![CDATA[
+#!  /usr/bin/ruby
+        ]]>
+        </file>
+        <file name="makefile"/>
+        <file name="Makefile"/>
+        <file name="MaKeFiLe"/>
+        <file name="mymakefile"/>
+        <file name="gnumakefile"/>
+        <file name="makefile1"/>
+        <file name="makefileRakefile"/>
+        <file name="makefile.Rakefile"/>
+        <file name="rakefile"/>
+        <file name="Rakefile"/>
+        <file name="empty-extension"/>
+        <file name="cpp"><![CDATA[
+//    -*- C++ -*-
+        ]]>
+        </file>
+        <file name="cpp.not"><![CDATA[
+//    -*- C++ -*-
+        ]]>
+        </file>
+        <file name="cplusplus.C"/>
+        <file name="c.c"/>
+    </folder>
+</filesystem>

@@ -1,0 +1,2 @@
+beans/src/**/Bundle*.properties
+beans/src/**/*.html

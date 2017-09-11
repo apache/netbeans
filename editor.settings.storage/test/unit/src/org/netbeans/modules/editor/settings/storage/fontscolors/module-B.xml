@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+
+<fontscolors>
+    <fontcolor name="module-B-coloring" bgColor="BB0000" />
+    <fontcolor name="both-modules-coloring" foreColor="00BB00" underline="0000BB" />
+</fontscolors>

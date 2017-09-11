@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : DTD.dtd
+    Created on : July 9, 2002, 6:20 PM
+    Author     : Petr Kuzel
+    Description:
+        It is well-formed DTD declaring one element.
+-->
+
+<!ELEMENT element ANY>

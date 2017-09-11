@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+    This is the DTD for Index
+    Copyright (c) 1998 Sun Microsystems
+
+    @(#)index_2_0.dtd 1.4 06/05/03
+-->
+
+
+<!-- An Index.  It is versioned -->
+
+<!ELEMENT index (indexitem*)>
+  <!ATTLIST index version (1.0 | 2.0) #IMPLIED>
+  <!ATTLIST index xml:lang CDATA #IMPLIED>
+
+<!-- an item -->
+
+<!ELEMENT indexitem (#PCDATA | indexitem)*>
+  <!ATTLIST indexitem xml:lang CDATA #IMPLIED>
+  <!ATTLIST indexitem text CDATA #IMPLIED>
+  <!ATTLIST indexitem target CDATA #IMPLIED>
+  <!ATTLIST indexitem mergetype CDATA #IMPLIED>
+  <!ATTLIST indexitem expand (true | false ) #IMPLIED>
+  <!ATTLIST indexitem presentationtype CDATA #IMPLIED>
+  <!ATTLIST indexitem presentationname CDATA #IMPLIED>
+
+<!-- 
+  Change list:
+
+  Created - epll, 16 Dec '98
+  Added mergetype attribute into indexitem -rgregor 6 June '01
+ -->

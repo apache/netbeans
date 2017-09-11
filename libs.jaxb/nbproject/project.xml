@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2008, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>org.netbeans.libs.jaxb</code-name-base>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.xml.jaxb.api</code-name-base>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.13</specification-version>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
+            <friend-packages>
+                <friend>org.netbeans.modules.aspect.editor</friend>
+                <friend>it.imolinfo.jbi4corba.netbeansplugin.libraries</friend>
+                <friend>org.netbeans.modules.soa.palette.java</friend>
+                <friend>org.netbeans.modules.uml</friend>
+                <friend>org.netbeans.modules.uml.drawingarea</friend>
+                <friend>org.netbeans.modules.websvc.jaxws21</friend>
+                <friend>org.netbeans.modules.websvc.jaxwsmodel</friend>
+                <friend>org.netbeans.modules.websvc.jaxws21api</friend>
+                <package>org.relaxng.datatype</package>
+                <package>com.sun.msv.grammar</package>
+                <package>com.sun.msv.util</package>
+                <package>com.sun.msv.verifier</package>
+                <package>com.sun.msv.verifier.regexp</package>
+                <package>com.sun.tools.xjc</package>
+                <package>com.sun.tools.xjc.addon.at_generated</package>
+                <package>com.sun.tools.xjc.addon.code_injector</package>
+                <package>com.sun.tools.xjc.addon.locator</package>
+                <package>com.sun.tools.xjc.addon.sync</package>
+                <package>com.sun.tools.xjc.api</package>
+                <package>com.sun.tools.xjc.api.impl.j2s</package>
+                <package>com.sun.tools.xjc.api.impl.s2j</package>
+                <package>com.sun.tools.xjc.api.util</package>
+                <package>com.sun.tools.xjc.generator.annotation.ri</package>
+                <package>com.sun.tools.xjc.generator.annotation.spec</package>
+                <package>com.sun.tools.xjc.generator.bean</package>
+                <package>com.sun.tools.xjc.generator.bean.field</package>
+                <package>com.sun.tools.xjc.generator.util</package>
+                <package>com.sun.tools.xjc.model</package>
+                <package>com.sun.tools.xjc.model.nav</package>
+                <package>com.sun.tools.xjc.outline</package>
+                <package>com.sun.tools.xjc.reader</package>
+                <package>com.sun.tools.xjc.reader.dtd</package>
+                <package>com.sun.tools.xjc.reader.dtd.bindinfo</package>
+                <package>com.sun.tools.xjc.reader.internalizer</package>
+                <package>com.sun.tools.xjc.reader.relaxng</package>
+                <package>com.sun.tools.xjc.reader.xmlschema</package>
+                <package>com.sun.tools.xjc.reader.xmlschema.bindinfo</package>
+                <package>com.sun.tools.xjc.reader.xmlschema.ct</package>
+                <package>com.sun.tools.xjc.reader.xmlschema.parser</package>
+                <package>com.sun.tools.xjc.runtime</package>
+                <package>com.sun.tools.xjc.util</package>
+                <package>com.sun.tools.xjc.writer</package>
+                <package>com.sun.xml.bind</package>
+                <package>com.sun.xml.bind.annotation</package>
+                <package>com.sun.xml.bind.api</package>
+                <package>com.sun.xml.bind.api.impl</package>
+                <package>com.sun.xml.bind.marshaller</package>
+                <package>com.sun.xml.bind.unmarshaller</package>
+                <package>com.sun.xml.bind.util</package>
+                <package>com.sun.xml.bind.v2</package>
+                <package>com.sun.xml.bind.v2.bytecode</package>
+                <package>com.sun.xml.bind.v2.model.annotation</package>
+                <package>com.sun.xml.bind.v2.model.core</package>
+                <package>com.sun.xml.bind.v2.model.impl</package>
+                <package>com.sun.xml.bind.v2.model.nav</package>
+                <package>com.sun.xml.bind.v2.model.runtime</package>
+                <package>com.sun.xml.bind.v2.runtime</package>
+                <package>com.sun.xml.bind.v2.runtime.output</package>
+                <package>com.sun.xml.bind.v2.runtime.property</package>
+                <package>com.sun.xml.bind.v2.runtime.reflect</package>
+                <package>com.sun.xml.bind.v2.runtime.reflect.opt</package>
+                <package>com.sun.xml.bind.v2.runtime.unmarshaller</package>
+                <package>com.sun.xml.bind.v2.schemagen</package>
+                <package>com.sun.xml.bind.v2.schemagen.episode</package>
+                <package>com.sun.xml.bind.v2.schemagen.xmlschema</package>
+                <package>com.sun.xml.bind.v2.util</package>
+                <package>com.sun.codemodel</package>
+                <package>com.sun.dtdparser</package>
+                <package>com.sun.istack</package>
+                <package>com.sun.istack.localization</package>
+                <package>com.sun.istack.logging</package>
+                <package>com.sun.istack.tools</package>
+                <package>com.sun.org.apache.xml.internal.resolver</package>
+                <package>com.sun.org.apache.xml.internal.resolver.helpers</package>
+                <package>com.sun.org.apache.xml.internal.resolver.readers</package>
+                <package>com.sun.org.apache.xml.internal.resolver.tools</package>
+                <package>com.sun.tools.xjc</package>
+            </friend-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/jaxb/jaxb-impl.jar</runtime-relative-path>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jaxb/jaxb1-impl.jar</runtime-relative-path>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jaxb/jaxb-xjc.jar</runtime-relative-path>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>

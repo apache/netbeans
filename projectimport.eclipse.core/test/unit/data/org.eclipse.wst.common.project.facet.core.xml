@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faceted-project>
+  <runtime name="GlassFish V2 Java EE 5"/>
+  <installed facet="jst.java" version="6.0"/>
+  <installed facet="jst.web" version="2.4"/>
+  <installed facet="jst.jsf" version="1.1"/>
+</faceted-project>

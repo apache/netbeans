@@ -1,0 +1,4 @@
+# java/j2seproject
+read global
+# include copylibstask submodule
+${l10n-module}/copylibstask/src/**/Bundle*.properties

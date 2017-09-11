@@ -1,0 +1,14 @@
+CONST
+elements
+equals#01#(Object)
+getClass#00#()
+getElement#00#()
+hashCode#00#()
+instance#00#()
+notify#00#()
+notifyAll#00#()
+setElement#01#(Integer)
+toString#00#()
+wait#00#()
+wait#01#(long)
+wait#02#(long,int)

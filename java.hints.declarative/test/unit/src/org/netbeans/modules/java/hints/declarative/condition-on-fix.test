@@ -1,0 +1,28 @@
+%%TestCase first-fix
+package test;
+public class Test {
+     private String g() {
+         return "t".toString();
+     }
+}
+%%=>
+package test;
+public class Test {
+     private String g() {
+         return "t";
+     }
+}
+%%TestCase second-fix
+package test;
+public class Test {
+     private String g() {
+         return this.toString();
+     }
+}
+%%=>
+package test;
+public class Test {
+     private String g() {
+         return String.valueOf(this);
+     }
+}

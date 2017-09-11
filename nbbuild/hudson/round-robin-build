@@ -1,0 +1,37 @@
+#!/bin/sh
+
+dobuild() {
+    RESULT=`pwd`/nbbuild/build/test-results.txt
+    export RESULT
+    rm -f $RESULT
+
+    ant build-nozip $ANT_PARAM || exit 2
+    ant commit-validation $ANT_PARAM || exit 3
+    ant check-sigtests-release $ANT_PARAM || exit 35
+#    ant build-test-dist $ANT_PARAM || exit 4
+    # At least check that there are no cycles in the dep list, as e.g. in 2ca8e9e6fb71:
+    ant init-test-dist $ANT_PARAM || exit 4
+
+    testmodule openide.awt || exit 5
+
+    if ant check-sigtests-version $ANT_PARAM -Dsigtest.fail.on.error=true; then
+        echo Sigtest version check OK
+    else
+        echo ***************************************************
+        echo
+        echo More info at http://wiki.netbeans.org/SignatureTest
+        echo
+        echo ***************************************************
+        exit 6
+    fi
+
+    FAILED=`cat $RESULT | wc -l`
+    if [ "$FAILED" -gt 0 ]; then
+        echo "No push. Failed tests in following modules:"
+        cat $RESULT
+        exit 5
+    fi
+
+    # Clean up some to save on disk space:
+    rm -rf */build/classes */build/javahelp nbbuild/netbeans nbbuild/build/public-package-jars
+}

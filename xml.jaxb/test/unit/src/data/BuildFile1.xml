@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+            *** GENERATED FROM xml_binding_cfg.xml - DO NOT EDIT  ***
+            *** Configure thru JAXB Wizard.                       ***
+        -->
+<project name="testPrj1_jaxb" default="default" basedir=".">
+    <target name="xjc-typedef-target" depends="-init-project">
+        <typedef classname="com.sun.tools.xjc.XJCTask" name="xjc" xmlns:s="http://xml.netbeans.org/schema/JAXBWizConfig">
+            <classpath path="${jaxbwiz.xjcdef.classpath}"/>
+        </typedef>
+    </target>
+    <target name="jaxb-clean-code-generation" depends="clean,jaxb-code-generation"/>
+    <target name="jaxb-code-generation" depends="xjc-typedef-target,-do-init,-init-macrodef-javac">
+        <mkdir dir="${build.generated.sources.dir}/jaxb" xmlns:s="http://xml.netbeans.org/schema/JAXBWizConfig"/>
+        <mkdir dir="build/generated/jaxbCache" xmlns:s="http://xml.netbeans.org/schema/JAXBWizConfig"/>
+        <mkdir dir="build/generated/jaxbCache/schema1"/>
+        <xjc package="ABC" destdir="build/generated/jaxbCache/schema1" catalog="src\META-INF\jaxb\XmlQosPmUtilSchema.bnd">
+            <classpath>
+                <pathelement location="${src.dir}"/>
+                <pathelement path="${jaxbwiz.xjcrun.classpath}"/>
+            </classpath>
+            <arg value="-xmlschema"/>
+            <arg value="quite"/>
+            <schema file="src\META-INF\jaxb\XmlQosPmUtilSchema.xsd"/>
+            <binding file="src\META-INF\jaxb\XmlQosPmUtilSchema.bnd"/>
+            <binding file="src\META-INF\jaxb\XmlQosPmUtilSchema1.bnd"/>
+            <depends file="src\META-INF\jaxb\XmlQosPmUtilSchema.xsd"/>
+            <produces dir="build/generated/jaxbCache/schema1"/>
+        </xjc>
+        <copy todir="${build.generated.sources.dir}/jaxb">
+            <fileset dir="build/generated/jaxbCache/schema1"/>
+        </copy>
+        <mkdir dir="build/generated/jaxbCache/schemaw"/>
+        <xjc package="ggg" destdir="build/generated/jaxbCache/schemaw" catalog="catalog.xml">
+            <classpath>
+                <pathelement location="${src.dir}"/>
+                <pathelement path="${jaxbwiz.xjcrun.classpath}"/>
+            </classpath>
+            <arg value="-xmlschema"/>
+            <arg value="extension"/>
+            <schema file="src\META-INF\jaxb\XmlQosPmUtilSchema.xsd"/>
+            <schema file="src\META-INF\jaxb\XmlVodafoneTroubleTicketSchema.xsd"/>
+            <depends file="src\META-INF\jaxb\XmlQosPmUtilSchema.xsd"/>
+            <produces dir="build/generated/jaxbCache/schemaw"/>
+        </xjc>
+        <copy todir="${build.generated.sources.dir}/jaxb">
+            <fileset dir="build/generated/jaxbCache/schemaw"/>
+        </copy>
+    </target>
+</project>

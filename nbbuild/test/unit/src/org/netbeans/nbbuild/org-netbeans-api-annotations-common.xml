@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE module_updates PUBLIC "-//NetBeans//DTD Autoupdate Catalog 2.6//EN" "http://www.netbeans.org/dtds/autoupdate-catalog-2_6.dtd">
+<module_updates timestamp="46/00/08/13/11/2009">
+
+<non-sence></non-sence>
+<module autoload="true" codenamebase="org.netbeans.api.annotations.common" distribution="org-netbeans-api-annotations-common.nbm" downloadsize="18599" homepage="http://www.netbeans.org/" license="8B813426" moduleauthor="" needsrestart="false" releasedate="2009/11/13" targetcluster="platform">
+    <manifest AutoUpdate-Show-In-Client="false" OpenIDE-Module="org.netbeans.api.annotations.common/1" OpenIDE-Module-Implementation-Version="nbms-and-javadoc-4296-on-091113" OpenIDE-Module-Java-Dependencies="Java &gt; 1.5" OpenIDE-Module-Name="Common Annotations" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.3"/>
+    
+</module>
+</module_updates>
+

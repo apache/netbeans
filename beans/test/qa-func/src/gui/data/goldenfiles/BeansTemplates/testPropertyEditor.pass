@@ -1,0 +1,18 @@
+/*
+ * MyPropertyEditor.java
+ *
+ * Created on
+ */
+
+import java.beans.*;
+
+/**
+ * @author
+ */
+public class MyPropertyEditor extends PropertyEditorSupport {
+    
+    public MyPropertyEditor() {
+    }
+    
+}
+

@@ -1,0 +1,8 @@
+function FindProxyForURL(url, host)
+{
+    // Make everything lower case.
+    url = url.toLowerCase();
+    host = host.toLowerCase();
+    if (isPlainHostName(host)) return "DIRECT";
+    return "PROXY www-proxy.us.oracle.com:80";
+};

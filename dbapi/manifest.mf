@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.dbapi
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/dbapi/resources/Bundle.properties
+AutoUpdate-Show-In-Client: false

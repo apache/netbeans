@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+    <instanceof class="java.io.Serializable"/>
+    <instanceof class="org.netbeans.modules.settings.convertors.ObsoleteClass"/>
+    <instanceof class="java.lang.Object"/>
+    <serialdata class="org.netbeans.modules.settings.convertors.ObsoleteClass">
+        ACED0005737200366F72672E6E65746265616E732E6D6F64756C65732E73657474696E67732E636F6E766572746F72732E4F
+        62736F6C657465436C61737330186ACD98AB1E590200014C000470726F707400124C6A6176612F6C616E672F537472696E67
+        3B787074000D4F62736F6C657465436C617373
+    </serialdata>
+</settings>

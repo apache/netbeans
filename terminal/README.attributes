@@ -1,0 +1,57 @@
+"README.attributes"
+
+Each IO has the following attributes which have to be managed by a
+container:
+			setVia
+-------------------------------------------------------------------
+- callbacks
+- title			immutable			restore
+- toolbarActions		immutable	selection
+- toolTipText		IOTab				restore
+- icon			IOTab				restore
+- connected (shows up as bold text)
+- isClosable
+- findState					selection
+
+'immutable' means that the attribute is set at IO creation time and there
+are no mutator API's for them.
+'IOTab' means attribute is set using the IOTab API.
+
+'selection' means that this attribute has to be multiplexed by the
+container based on the "selected" component. I.e. when a new tab is
+selected the action buttons have to be adjusted.
+
+'restore' means the attribute is managed by the tabbed pane. As a result,
+when a component is added or re-added after having been removed
+(aka closed) these attributes need to be restored.
+
+The interesting question is ... what hapens to these attributes when
+they are not part of a container (aka closed?). For example, the icon
+is set using JTabbedPane.setIconAt(index, icon). How can it
+be "set" when there is no tabbedPane or it's been taken out of
+the tabbedPane?
+
+The answer is that the attributes are saved in class 
+TerminalContainerImpl.Attributes an instance of whch is "attached" to
+the component using JComponent.putClientProperty(PROP_ATTRIBUTES, a).
+
+output2 uses a per-attribute method. Some of them are saved
+using their own client properties, some are saved using 
+existing real JComponent properties (like 'name').
+
+Important methods in TerminalContainerImpl for managing Attributes are:
+
+	attributesFor()
+		Maps components to their Attributes.
+	checkSelectionChange()
+		Multiplexes attributes with the keyword "selection".
+	restoreAttrsFor()
+		Restores attributes with the keyword "restore".
+		output2 does this is a somewhat more ad-hoc way and
+		as a result fails to restore icons and tips for 
+		components that get closed and then re-selected.
+
+These attributes are a bit redundant versus their copies in Terminal.
+The reason for this is that IOContainer only knows about JComponents 
+and we do't want it to have implementation-specific knowledge of
+Terminal ... so it can work with output2 components as well!

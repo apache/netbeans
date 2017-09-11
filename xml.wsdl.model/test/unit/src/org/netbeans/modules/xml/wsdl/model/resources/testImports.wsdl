@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions 
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="testImports" 
+    targetNamespace="http://com.stc.database/pointbase/purchaseOrder" 
+          xmlns:tns="http://com.stc.database/pointbase/purchaseOrder" 
+           xmlns:ns="http://com.stc.database/pointbase/purchaseOrder">
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://com.stc.database/pointbase/purchaseOrder">
+            <include schemaLocation="purchaseOrder_1.xsd"/>
+        </schema>
+    </types>
+    <message name="message_0">
+        <part name="part_0" element="ns:purchaseOrder"/>
+    </message>
+</definitions>

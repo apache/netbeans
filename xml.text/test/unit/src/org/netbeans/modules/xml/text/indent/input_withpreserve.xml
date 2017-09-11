@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root><node><nest xml:space="preserve"><child>Do not format</child><child>And do not format this</child></nest><nest><child>Do format</child><child>And format this</child></nest></node></root>

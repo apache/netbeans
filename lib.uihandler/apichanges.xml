@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+
+<apichanges>
+<apidefs>
+<apidef name="uihandlerLib">UI Handler Library</apidef>
+</apidefs>
+<changes>
+    <change id="MovedToPlatform">
+      <api name="uihandlerLib"/>
+      <summary>UI Handler Library module is moved to NetBeans platform cluster</summary>
+      <version major="1" minor="37"/>
+      <date day="10" month="5" year="2013"/>
+      <author login="mentlicher"/>
+      <compatibility addition="yes" modification="yes" binary="incompatible" source="incompatible" semantic="incompatible" deprecation="no" deletion="yes"/>
+      <description>
+          The module is moved to platform cluster and friend API is changed to
+          public API. However, not all classes, that were exposed via friend
+          API are exposed via public API.
+          Following classes are made public:
+          <ul>
+              <li><code>BugTrackingAccessor</code> (renamed from NBBugzillaAccessor)</li>
+              <li><code>Decorable</code></li>
+              <li><code>InputGesture</code></li>
+              <li><code>LogRecords</code></li>
+              <li><code>PasswdEncryption</code></li>
+          </ul>
+          Following classes, that were a part of friend API are not public:
+          <ul>
+              <li><code>Decorations</code></li>
+              <li><code>MultiPartHandler</code></li>
+              <li><code>NBBugzillaAccessor)</code></li>
+              <li><code>ProjectOp</code></li>
+          </ul>
+      </description>
+      <class package="org.netbeans.lib.uihandler" name="BugTrackingAccessor"/>
+      <class package="org.netbeans.lib.uihandler" name="Decorable"/>
+      <class package="org.netbeans.lib.uihandler" name="InputGesture"/>
+      <class package="org.netbeans.lib.uihandler" name="LogRecords"/>
+      <class package="org.netbeans.lib.uihandler" name="PasswdEncryption"/>
+      <issue number="229019"/>
+    </change>
+    <change id="ProjectOp.isStartup">
+      <api name="uihandlerLib"/>
+      <summary>ProjectOp now recognizes info about startup as well</summary>
+      <version major="1" minor="16"/>
+      <date day="17" month="6" year="2008"/>
+      <author login="jtulach"/>
+      <compatibility addition="yes" modification="no" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no"/>
+      <description>
+          Recognizes info about loaded projects on startup and adds new method
+          that can query for that.
+      </description>
+      <!--class package="org.netbeans.lib.uihandler" name="ProjectOp"/ ProjectOp is not public now. -->
+    </change>    
+    <change id="LogRecords.decorate">
+      <api name="uihandlerLib"/>
+      <summary>LogRecords.decorate extracts UI info about LogRecords</summary>
+      <version major="1" minor="13"/>
+      <date day="30" month="7" year="2007"/>
+      <author login="jtulach"/>
+      <compatibility addition="yes" modification="no" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no"/>
+      <description>
+          LogRecords.decorate inspects the content of the log record and
+          finds its icon, display name, etc.
+      </description>
+      <class package="org.netbeans.lib.uihandler" name="Decorable"/>
+    </change>    
+    <change id="LogRecords.scan.gzip">
+      <api name="uihandlerLib"/>
+      <summary>LogRecords.scan is able to recognize and read GZIP</summary>
+      <version major="1" minor="10"/>
+      <date day="17" month="4" year="2007"/>
+      <author login="jtulach"/>
+      <compatibility addition="yes" modification="no" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no"/>
+      <description>
+          LogRecords.scan is now able to consume also gzipped streams.
+      </description>
+      <class package="org.netbeans.lib.uihandler" name="LogRecords"/>
+    </change>    
+    <change id="LogRecords.read">
+      <api name="uihandlerLib"/>
+      <summary>LogRecords.read removed</summary>
+      <version major="1" minor="9"/>
+      <date day="10" month="3" year="2007"/>
+      <author login="jsedek"/>
+      <compatibility addition="no" modification="no" binary="incompatible" source="incompatible" semantic="compatible" deprecation="no" deletion="yes"/>
+      <description>
+          LogRecords.read has been removed, use LogRecords.scan instead.
+      </description>
+      <class package="org.netbeans.lib.uihandler" name="LogRecords"/>
+    </change>    
+</changes>
+<htmlcontents>
+<head>
+<title>Change History for the UI Handler Library</title>
+<link rel="stylesheet" href="prose.css" type="text/css"/>
+</head>
+<body>
+<p class="overviewlink">
+<a href="overview-summary.html">Overview</a>
+</p>
+<h1>Introduction</h1>
+<h2>What do the Dates Mean?</h2>
+<p>The supplied dates indicate when the API change was made, on the CVS
+trunk. From this you can generally tell whether the change should be
+present in a given build or not; for trunk builds, simply whether it
+was made before or after the change; for builds on a stabilization
+branch, whether the branch was made before or after the given date. In
+some cases corresponding API changes have been made both in the trunk
+and in an in-progress stabilization branch, if they were needed for a
+bug fix; this ought to be marked in this list.</p>
+<ul>
+<li>The <code>release41</code> branch was made on Apr 03 '05 for use in the NetBeans 4.1 release.
+Specification versions: 6.0 begins after this point.</li>
+<li>The <code>release40</code> branch was made on Nov 01 '04 for use in the NetBeans 4.0 release.
+Specification versions: 5.0 begins after this point.</li>
+</ul>
+<hr/>
+<standard-changelists module-code-name="org.netbeans.lib.uihandler"/>
+<hr/>
+<p>@FOOTER@</p>
+</body>
+</htmlcontents>
+</apichanges>

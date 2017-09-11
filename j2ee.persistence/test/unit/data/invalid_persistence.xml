@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persisten
+
+
+ce version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+  <persistence-unit name="JavaApplication10PU" transaction-type="RESOURCE_LOCAL">
+    <provider>oracle.toplink.essentials.ejb.cmp3.EntityManagerFactoryProvider</provider>
+    <properties>
+      <property name="toplink.jdbc.url" value="jdbc:derby://localhost:1527/sample"/>
+      <property name="toplink.jdbc.user" value="app"/>
+      <property name="toplink.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
+      <property name="toplink.jdbc.password" value="app"/>
+      <property name="toplink.ddl-generation" value="create-tables"/>
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="JavaApplication10PUd" transaction-type="RESOURCE_LOCAL">
+    <provider>oracle.toplink.essentials.ejb.cmp3.EntityManagerFactoryProvider</provider>
+    <properties>
+      <property name="toplink.jdbc.url" value="jdbc:derby://localhost:1527/sample"/>
+      <property name="toplink.jdbc.user" value="app"/>
+      <property name="toplink.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
+      <property name="toplink.jdbc.password" value="app"/>
+      <property name="toplink.ddl-generation" value="create-tables"/>
+    </properties>
+  </persistence-unit>
+</persistence>

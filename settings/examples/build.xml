@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<project name="settings/examples" default="netbeans" basedir=".">
+
+    <property name="nbm_alias" value="nb_ide"/>
+    <property name="homepage.base" value="netbeans.org"/>
+    <property name="dist.base" value="www.netbeans.org/download/nbms/40"/>
+    <property name="nb_all" location="../../o.n.core/.."/>
+    <property name="license.file" location="${nb_all}/nbbuild/standard-nbm-license.txt"/>
+
+    <taskdef name="makenbm" classname="org.netbeans.nbbuild.MakeNBM" classpath="${nb_all}/nbbuild/build/nbantext.jar"/>
+    <taskdef name="genlist" classname="org.netbeans.nbbuild.MakeListOfNBM" classpath="${nb_all}/nbbuild/build/nbantext.jar"/>
+    <taskdef name="locjar" classname="org.netbeans.nbbuild.LocalizedJar" classpath="${nb_all}/nbbuild/build/nbantext.jar"/>
+
+    <target name="compile">
+        <javac srcdir="src" destdir="src" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}">
+            <classpath>
+                <fileset dir="${nb_all}/openide/netbeans/lib">
+                    <include name="openide*.jar" />
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="jars" depends="compile">
+        <mkdir dir="netbeans/modules"/>
+        <filter token="BUILD_NUMBER_SUBST" value="${buildnumber}"/>
+        <copy file="manifest.mf" tofile="manifest-subst.mf" filtering="on"/>
+        <locjar jarfile="netbeans/modules/core-settings-examples.jar"
+                basedir="src"
+                manifest="manifest-subst.mf"
+                excludesfile="${nb_all}/nbbuild/standard-jar-excludes.txt"
+	        compress="false">
+            <locale name="ja"/>
+        </locjar>
+    </target>
+
+    <target name="netbeans" depends="jars">
+        <genlist targetname="nbm" outputfiledir="netbeans"/>
+    </target>
+
+    <target name="nbm" depends="netbeans">
+        <makenbm file="core-settings-examples.nbm"
+                 topdir="."
+                 module="netbeans/modules/core-settings-examples.jar"
+                 homepage="http://core.${homepage.base}/"
+                 distribution="http://${dist.base}/core-settings-examples.nbm">
+                 <license file="${license.file}"/>
+                 <signature keystore="${keystore}" storepass="${storepass}" alias="${nbm_alias}"/>
+        </makenbm>
+    </target>
+
+    <target name="clean">
+      <delete>
+        <fileset dir="src">
+          <include name="**/*.class"/>
+        </fileset>
+      </delete>
+      <delete file="manifest-subst.mf"/>
+      <delete file="core-settings-examples.nbm"/>
+      <delete dir="netbeans"/>
+      <delete dir="Info"/>
+    </target>
+
+    <target name="real-clean" depends="clean">
+        <delete dir="reload"/>
+    </target>
+
+</project>

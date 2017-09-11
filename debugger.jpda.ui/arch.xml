@@ -1,0 +1,869 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+  question-version="1.23"
+  author="jjancura@netbeans.org"
+>
+
+  &api-questions;
+
+
+<!-- architecture ********************************************************************** -->
+
+
+<!-- Question: arch-what
+
+     <question id="arch-what">
+            What is this project good for?
+            <hint>
+            Please provide here few lines describing the the project, 
+            what problem it should solve, provide links to documentation, 
+            specifications, etc.
+            </hint>
+        </question>
+-->
+<answer id="arch-what">
+The debuggerjpda module supports debugging of Java applications. 
+It provides <api name="JPDADebuggerAPI" type="export" category="official" url="http://debuggercore.netbeans.org/docs/api/index.html" />.
+See <a href="http://debugger.netbeans.org/">debugger.netbeans.org</a> and
+ <a href="http://debuggercore.netbeans.org/">debuggercore.netbeans.org</a>
+for more information.
+</answer>
+
+<!--
+        <question id="arch-overall" when="init">
+            Describe the overall architecture. 
+            <hint>
+            What will be API for 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi">
+                clients and what support API</a>? 
+            What parts will be pluggable?
+            How will plug-ins be registered? Please use <code>&lt;api type="export"/&gt;</code>
+            to describe your general APIs.
+            If possible please provide 
+            simple diagrams. 
+            </hint>
+        </question>
+-->
+<answer id="arch-overall">
+See <a href="http://debuggercore.netbeans.org/docs/api/ProgrammersGuide.html">Programmers Guide</a>.
+</answer>
+        
+<!--
+        <question id="arch-usecases" when="init">
+            Describe the main <a href="http://openide.netbeans.org/tutorial/api-design.html#usecase">
+            use cases</a> of the new API. Who will use it at
+            what circumstances and what will be the typical code to write
+            to use the module.
+        </question>
+-->
+<answer id="arch-usecases">
+See <a href="http://debuggercore.netbeans.org/docs/api/UseCases.html">Usecases</a>.
+</answer>
+        
+<!--
+        <question id="arch-time" when="init">
+            What are the time estimates of the work?
+            <hint>
+            Please express your estimates of how long the design, implementation,
+            stabilization are likely to last. How many people will be needed to
+            implement this and what is the expected milestone the work should be 
+            ready.
+            </hint>
+        </question>
+-->
+<answer id="arch-time">
+See <a href="http://debuggercore.netbeans.org/plans/NB40Plan.html">Integration Plan</a>.
+</answer>
+        
+<!--
+        <question id="arch-quality" when="init">
+            How the <a href="http://www.netbeans.org/community/guidelines/q-evangelism.html">quality</a>
+            of your code will be tested and 
+            how future regressions are going to be prevented?
+            <hint>
+            What kind of testing
+            you want to use? What/how much area of functionality
+            should be covered by the tests? 
+            </hint>
+        </question>
+-->
+
+<answer id="arch-quality">
+We plan to use standard unit testing to prevent future regressions.
+We would like to test 100% of our APIs.
+</answer>
+
+<!-- dependencies ********************************************************************** -->
+
+
+<!-- Question: dep-jre
+
+     <question id="dep-jre">
+            Which version of JRE you need (1.2, 1.3, 1.4, etc.)?
+            <hint>
+            It is expected that if your module runs on 1.x that it will run 
+            on 1.x+1 if no, state that please. Also describe here cases where
+            you run different code on different versions of JRE and why.
+            </hint>
+        </question>
+-->
+<answer id="dep-jre">
+    Needs at least JRE 1.3.
+</answer>
+
+
+
+<!-- Question: dep-jrejdk
+
+     <question id="dep-jrejdk">
+            Do you require JDK or is JRE enough?
+        </question>
+-->
+<answer id="dep-jrejdk">
+    Need JDK (dt.jar).
+</answer>
+
+
+
+<!-- Question: dep-nb
+
+     <question id="dep-nb">
+            What other NetBeans projects this one depends on?
+            <hint>
+            If you want, describe such projects as imported API using
+            the <code>&lt;api name="identification" type="import or export" category="stable" url="where is the description" /&gt;</code>
+            </hint>
+        </question>
+-->
+<answer id="dep-nb">
+    <api name="OpenAPIs" type="import" category="official" url="http://openide.netbeans.org"/> 
+    <api name="DebuggerCoreAPI" type="import" category="official" url="http://debuggercore.netbeans.org/docs/api/index.html"/> 
+    <api name="JavaHierarchyAPI" type="import" category="official" url="http://www.netbeans.org/download/dev/javadoc/JavaHierarchyAPI/index.html"/>
+    <api name="JavaAPI" type="import" category="official" url="http://www.netbeans.org/download/dev/javadoc/JavaHierarchyAPI/index.html"/>
+    <api name="ExecutionAPI" url="http://www.netbeans.org/download/dev/javadoc/ExecutionAPI/org/openide/execution/doc-files/api.html"
+      type="import" category="official"
+    />
+    <api name="OpenAPIs" type="import" category="official" url="http://openide.netbeans.org"/> 
+</answer>
+
+
+
+<!-- Question: dep-non-nb
+
+     <question id="dep-non-nb">
+            What other non-NetBeans projects this one depends on?
+            
+            <hint>
+            Some non-NetBeans projects are packaged as NetBeans modules
+            (see <a href="http://libs.netbeans.org">libraries</a>) and
+            it is prefered to use this approach when more modules may
+            depend on such third-party library.
+            </hint>
+        </question>
+-->
+<answer id="dep-non-nb">
+    No other dependency.
+</answer>
+
+
+
+<!-- Question: dep-platform
+
+     <question id="dep-platform">
+            On which platforms your module run? Any? Does it run in the same
+            way?
+            <hint>
+            If your module is using JNI or deals with special differences of
+            OSes like filesystems, etc. please describe here what they are.
+            </hint>
+        </question>
+-->
+<answer id="dep-platform">
+    The module is 100% pure Java and runs on any platform.
+</answer>
+
+
+
+<!-- deploy ********************************************************************** -->
+
+
+
+<!-- Question: deploy-jar
+
+     <question id="deploy-jar">
+            Do you deploy just module JAR file(s) or some other files?
+            <hint>
+            If your module consist just from one module JAR file, just confirm that.
+            If it uses more than one JAR, describe where there are located, how
+            they refer to each other. 
+            If it consist of module JAR(s) and other files, please describe
+            what is their purpose, why other files are necessary. Please 
+            make sure that installation/deinstallation leaves the system 
+            in state as it was before installation.
+            </hint>
+        </question>
+-->
+<answer id="deploy-jar">
+<ul>
+    <li>modules\debuggerjpda-ideint.jar - Integration of JPDA Debugger to NB IDE</li>
+    <li>modules\debuggerjpda-ui.jar - JPDA Debugger UI</li>
+    <li>modules\autoload\debuggerjpda-api.jar - JPDA Debnugger APIs</li>
+    <li>modules\autoload\debuggerjpda-impl.jar - Implementation of JPDA Debugger</li>
+</ul>
+See <a href="http://debuggercore.netbeans.org/docs/api/ProgrammersGuide.html">Programmers Guide</a>.
+</answer>
+
+
+
+<!-- Question: deploy-nbm
+
+     <question id="deploy-nbm">
+            Can you deploy NBM via AutoUpdate center?
+            <hint>
+            If not why?
+            </hint>
+        </question>
+-->
+<answer id="deploy-nbm">
+    Yes.
+</answer>
+
+
+
+<!-- Question: deploy-packages
+
+     <question id="deploy-packages">
+            Are packages of your module made inaccessible by not declaring them
+            public?
+            
+            <hint>
+            NetBeans module system allows restriction of access rights to
+            public classes of your module from other modules. This prevents
+            unwanted dependencies of others on your code and should be used
+            whenever possible (<a href="http://www.netbeans.org/download/apis/org/openide/doc-files/upgrade.html#3.4-public-packages">
+            public packages
+            </a>). 
+            </hint>
+        </question>
+-->
+<answer id="deploy-packages">
+    Yes.
+</answer>
+
+
+
+<!-- Question: deploy-shared
+
+     <question id="deploy-shared">
+            Do you need to be installed in shared location or only in user directory?
+            <hint>
+            Installation location shall not matter, if it does explain why.
+            </hint>
+        </question>
+-->
+<answer id="deploy-shared">
+    Module can be installed anywhere.
+</answer>
+
+
+<answer id="deploy-dependencies">
+Nothing.
+</answer>
+
+
+
+<!-- compatibility ********************************************************************** -->
+
+
+<!-- Question: compat-i18n
+
+     <question id="compat-i18n">
+            Is your module correctly internationalized?
+            <hint>
+            Correct internationalization means that it obeys instuctions 
+            at <a href="http://www.netbeans.org/devhome/docs/i18n/index.html">
+            NetBeans I18N pages</a>.
+            </hint>
+        </question>
+-->
+<answer id="compat-i18n">
+    Yes.
+</answer>
+
+
+
+<!-- Question: compat-standards
+
+     <question id="compat-standards">
+            Does the module implements or defines any standards? Is the 
+            implementation exact or it deviates somehow?
+        </question>
+-->
+<answer id="compat-standards">
+    None defined or implemented.
+</answer>
+
+
+
+<!-- Question: compat-version
+
+     <question id="compat-version">
+            Does your module properly coexists with earlier and future
+            versions? Can you correctly read settings? Will future
+            versions be able to read settings?
+            
+            <hint>
+            Very helpful for reading settings is to store version number
+            there, so future versions can decide whether how to read/convert
+            the settings and older versions can ignore the new ones.
+            </hint>
+        </question>
+-->
+<answer id="compat-version">
+    Only one version of the module can be installed at a time. 
+    The settings are shared across different versions, stored
+    and read by Java serialization and will be read in future as well.
+</answer>
+
+
+
+
+<!-- resources ********************************************************************** -->
+
+
+<!-- Question: resources-file
+
+     <question id="resources-file">
+            Does your module use <code>java.io.File</code> directly?
+            
+            <hint>
+            NetBeans provide a logical wrapper over plain files called 
+            <code>org.openide.filesystems.FileObject</code> that
+            provides uniform access to such resources and is the prefered
+            way that should be used. But of course there can be situations when
+            this is not suitable.
+            </hint>
+        </question>
+-->
+<answer id="resources-file">
+    No.
+</answer>
+
+
+
+<!-- Question: resources-layer
+
+     <question id="resources-layer">
+            Does your module provide own layer? Does it create some files or
+            folders on it? What it is trying to communicate by that and with which 
+            component?
+            
+            <hint>
+            NetBeans allows automatic and declarative installation of resources 
+            by module layers. Module register files into appropriate places
+            and other components use that information to perform their task
+            (build menu, toolbar, window layout, list of templates, set of
+            options, etc.). 
+            </hint>
+        </question>
+-->
+<answer id="resources-layer">
+    Yes, files are created for menus, actions, shortcuts, templates, window system layout,
+    settings storage - these are all in standard Open
+    APIs.
+</answer>
+
+
+
+<!-- Question: resources-mask
+
+     <question id="resources-mask">
+            Does your module mask/hide/override any resource provided by another one in
+            module layer? 
+            
+            <hint>
+            If you mask a file provided by another module, you probably depend
+            on that and do not want the other module to (for example) change
+            the file's name. That module shall thus make that file available as an API
+            of some stability category.
+            </hint>
+        </question>
+-->
+<answer id="resources-mask">
+    No.
+</answer>
+
+
+
+<!-- Question: resources-read
+
+     <question id="resources-read">
+            Does your module read any resources from layers? For what purpose?
+            
+            <hint>
+            As this is some kind of intermodule dependency, it is a kind of API.
+            Please describe it and clasify according to 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            common stability categories</a>.
+            </hint>
+        </question>
+-->
+<answer id="resources-read">
+    No.
+</answer>
+
+
+<!-- lookup ********************************************************************** -->
+
+
+<!-- Question: lookup-lookup
+
+     <question id="lookup-lookup">
+            Does your module uses <code>org.openide.util.Lookup</code>
+            to find any components to communicate to? Which ones?
+            
+            <hint>
+            Please describe the interfaces you are searching for, where 
+            are defined, whether you are searching for just one or more of them,
+            if the order is important, etc. Also clasify the stability of such
+            API contract.
+            </hint>
+        </question>
+-->
+<answer id="lookup-lookup">
+    No. But we use our own private implementation of lookup pattern.
+    We are searching for instances of various servies defined in *.spi.* packages.
+    The contract is described in JavaDoc.
+</answer>
+
+
+
+<!-- Question: lookup-register
+
+     <question id="lookup-register">
+            Do you register anything into the lookup for other to find? 
+            <hint>
+            Do you register using layer file or using <code>META-INF/services</code>?
+            Who is supposed to find your component?
+            </hint>
+        </question>
+-->
+<answer id="lookup-register">
+    We use our private namespace <code>META-INF/debugger</code> for registration. 
+    The contract is described in JavaDoc.
+</answer>
+
+
+
+<!-- Question: lookup-remove
+
+     <question id="lookup-remove">
+            Are removing entries of other modules from the lookup? 
+            <hint>
+            Why? Of course, that is possible, but it can be dangerous. Is the module
+            your are masking resource from aware of what you are doing?
+            </hint>
+        </question>
+-->
+<answer id="lookup-remove">
+    No.
+</answer>
+
+
+
+<!-- execution ********************************************************************** -->
+
+
+<!-- Question: exec-property
+
+     <question id="exec-property">
+            Is execution of your code influenced by any environment of
+            system (<code>System.getProperty</code>) property?
+            
+            <hint>
+            If there is a property that can change the behaviour of your 
+            code, somebody will likely use it. You should describe what it does 
+            and the stability category of this API. You may use
+            <PRE>
+                &lt;property name="id" category="private" &gt;
+                    description of the property, where it is used, what it influence, etc.
+                &lt;/property&gt;            
+            </PRE>
+            </hint>
+        </question>
+-->
+<answer id="exec-property">
+    No.
+</answer>
+
+
+<!-- Question: exec-component
+
+     <question id="exec-component">
+            Is execution of your code influenced by (string) property
+            of any of your components?
+            
+            <hint>
+            Often <code>JComponent.getClientProperty</code>, <code>Action.getValue</code>
+            or <code>PropertyDescriptor.getValue</code>, etc. are used to influence
+            a behaviour of some code. This of course forms an interface that should
+            be documented. Also if one depends on some interface that an object
+            implements (<code>component instanceof Runnable</code>) that forms an
+            API as well.
+            </hint>
+        </question>
+-->
+<answer id="exec-component">
+    No.
+</answer>
+
+
+<!-- Question: exec-classloader
+
+     <question id="exec-classloader">
+            Does your code uses own classloader?
+            <hint>
+            A bit unusual. Please explain why and what for.
+            </hint>
+        </question>
+-->
+<answer id="exec-classloader">
+    No.
+</answer>
+
+
+
+
+<!-- Question: exec-reflection
+
+     <question id="exec-reflection">
+            Does your code uses java.lang.reflect to execute some other code?
+            <hint>
+            This usually indicates a missing or unsufficient API in the other
+            part of the system. If the other side is not aware of your dependency
+            this contract can be easily broken.
+            </hint>
+        </question>
+-->
+<answer id="exec-reflection">
+    No.
+</answer>
+
+
+
+
+<!-- Question: exec-privateaccess
+
+     <question id="exec-privateaccess">
+            Are you aware of any other part of the system calling some of 
+            your methods by reflection?
+            <hint>
+            If so, describe the "contract" as an API. Likely private or friend one, but
+            still API and consider rewrite of it.
+            </hint>
+        </question>
+-->
+<answer id="exec-privateaccess">
+    No.
+</answer>
+
+
+        
+<!-- Question: exec-process
+        <question id="exec-process">
+            Do you execute an external process from your module? How do you ensure
+            that the result is the same on different platforms? Do you parse output?
+            Do you depend on result code?
+            <hint>
+            If you feed an input, parse the output please declare that as an API.
+            </hint>
+        </question>
+-->
+
+<answer id="exec-process">
+    No.
+</answer>
+        
+<!-- Question: exec-introspection
+        <question id="exec-introspection">
+            Does your module use any kind of runtime type information (<code>instanceof</code>,
+            work with <code>java.lang.Class</code>, etc.)?
+            <hint>
+            Check for cases when you have an object of type A and you also
+            expect it to (possibly) be of type B and do some special action. That
+            should be documented. The same applies on operations in meta-level
+            (Class.isInstance(...), Class.isAssignableFrom(...), etc.).
+            </hint>
+        </question>
+-->
+
+<answer id="exec-introspection">
+    debuggercore does not use introspection.
+    The cases when an object is tested on various types are quite common, but not documented.
+</answer>
+
+
+
+
+<!-- Question: exec-threading
+        <question id="exec-threading" when="impl">
+            What threading models, if any, does your module adhere to?
+            <hint>
+                If your module calls foreign APIs which have a specific threading model,
+                indicate how you comply with the requirements for multithreaded access
+                (synchronization, mutexes, etc.) applicable to those APIs.
+                If your module defines any APIs, or has complex internal structures
+                that might be used from multiple threads, declare how you protect
+                data against concurrent access, race conditions, deadlocks, etc.,
+                and whether such rules are enforced by runtime warnings, errors, assertions, etc.
+                Examples: a class might be non-thread-safe (like Java Collections); might
+                be fully thread-safe (internal locking); might require access through a mutex
+                (and may or may not automatically acquire that mutex on behalf of a client method);
+                might be able to run only in the event queue; etc.
+                Also describe when any events are fired: synchronously, asynchronously, etc.
+                Ideas: <a href="http://core.netbeans.org/proposals/threading/index.html#recommendations">Threading Recommendations</a> (in progress)
+            </hint>
+        </question>
+-->
+
+
+<answer id="exec-threading">
+    We use standard Java features - synchronized blocks - to synchronize our code.
+</answer>
+
+
+
+<!-- format ********************************************************************** -->
+
+
+
+<!-- Question: format-clipboard
+
+     <question id="format-clipboard">
+            Which protocols your code reads/inserts when communicating with
+            clipboard?
+        </question>
+-->
+<answer id="format-clipboard">
+    <ul>
+    <li>custom DataFlavor type referencing own structures (for copy/cut/paste)</li>
+    <li>standard Open API's NodeTransfer.cookie for InstanceCookie (just for pasting):
+    <api name="InstanceCookie-paste" type="export" category="private"/>
+    </li>
+    </ul>
+</answer>
+
+
+
+<!-- Question: format-dnd
+
+     <question id="format-dnd">
+            Which protocols your code understands during drag-n-drop?
+        </question>
+-->
+<answer id="format-dnd">
+    None.
+</answer>
+
+
+
+<!-- Question: format-types
+
+     <question id="format-types">
+            Which file formats your code reads or writes on disk?
+        </question>
+-->
+<answer id="format-types">
+    None.
+</answer>
+
+
+
+<!-- performance ********************************************************************** -->
+
+
+
+<!-- Question: perf-startup
+
+     <question id="perf-startup">
+            Does your module executes anything on startup?
+        </question>
+-->
+<answer id="perf-startup">
+    No.
+</answer>
+
+
+<!-- Question: perf-exit
+
+     <question id="perf-exit">
+            Does your module executes anything on exit?
+        </question>
+-->
+<answer id="perf-exit">
+    No.
+</answer>
+
+
+
+<!-- Question: perf-scale
+
+     <question id="perf-scale">
+            Which external criteria influence the performance of your
+            program (size of file in editor, number of files in menu, 
+            in source directory, etc.) and how well your code scales?
+            Please include some estimates.
+        </question>
+-->
+<answer id="perf-scale">
+    None.
+</answer>
+
+
+<!-- Question: perf-limit
+
+     <question id="perf-limit">
+            Are there any limits in number/size of elements your code
+            can handle?
+        </question>
+-->
+<answer id="perf-limit">
+    No explicit limits. Technically, the available memory size is the limit...
+</answer>
+
+
+
+<!-- Question: perf-mem
+
+     <question id="perf-mem">
+            What is the amount of memory your component occupies? Estimate
+            with a relaction to the number of windows, etc.
+        </question>
+-->
+<answer id="perf-mem">
+    Rough numbers:
+    <ul>
+    <li>debuggercore with Debugger Window opened: 2MB</li>
+    </ul>
+</answer>
+
+
+<!-- Question: perf-wakeup
+
+     <question id="perf-wakeup">
+            Is any piece of your code waking up periodically?
+        </question>
+-->
+<answer id="perf-wakeup">
+    No.
+</answer>
+
+
+
+<!-- Question: perf-progress
+
+     <question id="perf-progress">
+            Does your module executes some long running task?
+            <hint>Typically they are tasks like connecting over
+            network, computing huge amount of data, compilation.
+            Such communication should be done asynchronously (for example
+            using <code>RequestProcessor</code>), definitively it should 
+            not block AWT thread.
+            </hint>
+        </question>
+-->
+<answer id="perf-progress">
+    No.
+</answer>
+
+
+<!-- Question: perf-huge_dialogs
+
+     <question id="perf-huge_dialogs">
+            Does your module contain any dialogs or wizards with huge
+            amount of GUI controls like combo boxes, lists, trees, text
+            areas?
+        </question>
+-->
+<answer id="perf-huge_dialogs">
+    No.
+</answer>
+
+
+<!-- Question: perf-menus
+
+     <question id="perf-menus">
+            Does your module use dynamically changing context menus or
+            context sensitive actions with complicated logic for enable/disable?
+        </question>
+-->
+<answer id="perf-menus">
+    No. Context menu are rather stable once created. Enabling logic is simple.
+</answer>
+
+
+<!-- Question: perf-spi
+        <question  id="perf-spi" when="init">
+            How the performance of the plugged in code will be enforced?
+            <hint>
+            If you allow foreign code to be plugged into your own module, how
+            do you enforce, that it will behave correctly and fast and will not
+            negatively influence the performance of your own module?
+            </hint>
+        </question>
+-->
+<answer id="perf-spi">
+    We are not able to enforce performance of plugged in code.
+</answer>
+
+
+
+</api-answers>

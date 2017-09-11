@@ -1,0 +1,48 @@
+-element in any context
+-element in a specified context (html element/s or any other custom element/s)
+-attribute of any element (html or custom)
+-attribute of specific element/s (html or custom)
+
+{
+    "elements": {
+        "foo": {
+            "parent": "*", //or [] or null
+            
+            "attributes": {
+                "cool": "boolean",
+                "id": "id",
+                "class": {
+                    "type": "css-class",
+                    "doc": "http://foo.org/elements/foo"
+                }
+            },
+            
+            "elements": {
+                "infoo":{
+                    
+                }
+            }
+        },
+        
+        "infoo2": {
+            "parent" : "foo"
+        },
+        
+        "infoo3": {
+            "parent" : ["infoo", "infoo2"]
+        }
+    }
+    
+    ,
+    
+    "attributes": {
+            "one": {
+                "parent" : "*", //or [] or null
+                "type": "boolean"
+            },
+            "two": {
+                "parent" : ["infoo2", "infoo3"]
+            }
+    }
+
+}

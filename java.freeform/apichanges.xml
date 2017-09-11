@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<?xml-stylesheet type="text/xml" href="../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+<apichanges>
+    <apidefs>
+        <apidef name="general">General</apidef>
+    </apidefs>
+    <changes>
+
+        <change id="annotation-processing">
+            <summary>Support for annotation processing</summary>
+            <version major="1" minor="21"/>
+            <date day="12" month="5" year="2010"/>
+            <author login="tzezula"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible"/>
+            <description>
+                Added complete support for annotation processing into freeform-project-java/3 schema which now supports all metadata for
+                AnnotationProcessingQuery.
+            </description>
+            <issue number="185457"/>
+        </change>
+        <change id="source-16">
+            <summary>Added freeform-project-java/3 schema to support annotation processors and source levels 1.6 and 1.7</summary>
+            <version major="1" minor="16"/>
+            <date day="24" month="3" year="2010"/>
+            <author login="tzezula"/>
+            <compatibility binary="compatible" source="compatible" semantic="compatible"/>
+            <description>
+                Added freeform-project-java/3 schema to support annotation processors and source levels 1.6 and 1.7
+            </description>
+            <issue number="181439"/>
+        </change>
+        <change id="friend-packages">
+            <summary>Declare SPI packages for friends only</summary>
+            <version major="1" minor="2"/>
+            <date day="14" month="4" year="2005"/>
+            <author login="jglick"/>
+            <compatibility binary="incompatible" source="incompatible" semantic="compatible">
+                Only permitted clients can now use this SPI, and they were all updated.
+            </compatibility>
+            <description>
+                <p>
+                    Use of this SPI was restricted to known client modules.
+                </p>
+            </description>
+        </change>
+
+    </changes>
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE java/freeform/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Java Freeform SPI</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="http://projects.netbeans.org/">Java Freeform SPI</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.java.freeform/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

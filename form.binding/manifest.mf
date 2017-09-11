@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.form.binding/0
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/form/binding/Bundle.properties
+OpenIDE-Module-Layer: org/netbeans/modules/form/binding/resources/layer.xml
+OpenIDE-Module-Implementation-Version: 1
+OpenIDE-Module-Provides: org.netbeans.modules.form.BindingDesignSupportProvider
+AutoUpdate-Show-In-Client: false

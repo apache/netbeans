@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2012 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2008 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<?xml-stylesheet type="text/xml" href="../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="general">Autoupdate Services API</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change id="visible-ancestor">
+            <api name="general"/>
+            <summary>Find a visible ancestor of UpdateUnit</summary>
+            <version major="1" minor="37"/>
+            <date day="31" month="10" year="2012"/>
+            <author login="jrechtacek"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" semantic="compatible" source="compatible"/>
+            <description>
+                <p>
+                    Added a method {@link org.netbeans.api.autoupdate.UpdateUnit#getVisibleAncestor} which returns a visible plugin
+                    which depending upon this unit. Returns a unit if this unit is installed in the system and some of visible
+                    units depending upon this one, otherwise returns null.
+                </p>
+            </description>
+            <class package="org.netbeans.api.autoupdate" name="UpdateUnit"/>
+            <issue number="190246"/>
+        </change>
+        <change id="preffered-update">
+            <api name="general"/>
+            <summary>Mark an update as preferred just if needed</summary>
+            <version major="1" minor="33"/>
+            <date day="16" month="5" year="2012"/>
+            <author login="jrechtacek"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" semantic="compatible" source="compatible"/>
+            <description>
+                <p>
+                    Added a <code>preferredupdate</code> attribute into <code>Update Center Descriptor</code>
+                    to specify if an update has to be installed before other updates or not. This flag is <b>off</b> as default.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.autoupdate" name="UpdateItem"/>
+            <issue number="211734"/>
+        </change>
+        <change id="content-description">
+            <api name="general"/>
+            <summary>Added a method to get a descprition of content of Upadate Center</summary>
+            <version major="1" minor="33"/>
+            <date day="16" month="5" year="2012"/>
+            <author login="jrechtacek"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" semantic="compatible" source="compatible"/>
+            <description>
+                <p>
+                    {@link org.netbeans.api.autoupdate.UpdateUnitProvider#getContentDescription} returns
+                    a description of content staging by this provider. The description might contains HTML tags e.g. HTML Links.
+                </p>
+            </description>
+            <class package="org.netbeans.api.autoupdate" name="UpdateUnitProvider"/>
+            <issue number="211741"/>
+        </change>
+        <change id="get-license-id">
+            <api name="general"/>
+            <summary>Added a method to get ID of license agreement</summary>
+            <version major="1" minor="33"/>
+            <date day="16" month="5" year="2012"/>
+            <author login="jrechtacek"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" semantic="compatible" source="compatible"/>
+            <description>
+                <p>
+                    Added a method {@link org.netbeans.api.autoupdate.UpdateElement#getLicenseId}
+                    to get ID of license agreement if the <code>UpdateElement</code> has a copyright.
+                </p>
+                <p>
+                    This ID could be stored somewhere once an user approves the license and
+                    will not be asked for approval again the same license ID.                
+                </p>
+            </description>
+            <class package="org.netbeans.api.autoupdate" name="UpdateElement"/>
+            <issue number="211736"/>
+        </change>
+        <change id="check-write-permission">
+            <api name="general"/>
+            <summary>Check write permissions to installation directory</summary>
+            <version major="1" minor="33"/>
+            <date day="16" month="5" year="2012"/>
+            <author login="jrechtacek"/>
+            <compatibility addition="yes" binary="compatible" deletion="no"
+                deprecation="yes" semantic="compatible" source="compatible"
+            />
+            <description>
+                <p>
+                    <code>InstallSupport</code> find out the right directory where a plugin
+                    should be installed. After that it checks if an user has privilege to write there.
+                    In the case a lack of write permission, throws 
+                    {@link org.netbeans.api.autoupdate.OperationException.WRITE_PERMISSION}.
+                </p>
+                <p>
+                    Beside this it allows to write into 
+                    <code>userdir</code> as a fallback in the case of insufficient privilege.
+                </p>
+            </description>
+            <class package="org.netbeans.api.autoupdate" name="InstallSupport"/>
+            <class package="org.netbeans.api.autoupdate" name="OperationException"/>
+            <issue number="211777"/>
+        </change>
+        <change id="nbm-external-size">
+            <api name="general"/>
+            <summary>Allowing to specify external NBM content size</summary>
+            <version major="1" minor="32"/>
+            <date day="14" month="5" year="2012"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes" />
+            <description>
+                <p>
+                    You can now specify the size of the external NBM content in the <code>.external</code> file
+                    by using <code>SIZE:</code> property (e.g. <code>SIZE:42</code>). The size will then be incorporated
+                    in the download size of the NBM.
+                </p>
+            </description>
+            <issue number="212068"/>
+        </change>
+        <change id="nbm-external">
+            <api name="general"/>
+            <summary>External NBM contents</summary>
+            <version major="1" minor="24"/>
+            <date day="10" month="2" year="2011"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes" />
+            <description>
+                <p>
+                    You can now ask that publicly downloadable files be included in an NBM.
+                    Just replace <code>netbeans/file</code> with a text file <code>netbeans/file.external</code>
+                    with lines:
+                </p>
+                <ol>
+                    <li><code>CRC:123456789</code> to specify an expected CRC-32 checksum (nonnegative decimal format)</li>
+                    <li><code>URL:http://.../...</code> to specify a download location (may be repeated to offer alternatives)</li>
+                </ol>
+                <p>
+                    You can embed system properties in a URL using Ant-like syntax: <samp>http://.../feature-for-${java.specification.version}.nbm</samp>
+                </p>
+                <p>
+                    The <code>&lt;makenbm&gt;</code> Ant task will automatically
+                    avoid packing the actual file if the <code>*.external</code>
+                    variant is also in the input cluster.
+                </p>
+                <p>
+                    For convenience, the <code>org.netbeans.modules.maven.embedder</code>
+                    module (if present) can also handle URLs of the forms
+                    <code>m2:/org.grp:art:1.0:jar</code> or <code>m2:/org.grp:art:1.0:jar:javadoc</code>
+                    which can take advantage of the local repository as a cache.
+                </p>
+            </description>
+            <issue number="195041"/>
+        </change>
+        <change id="custom-icons">
+            <api name="general"/>
+            <summary>Icons for update centers</summary>
+            <version major="1" minor="23"/>
+            <date day="10" month="1" year="2011"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes" binary="compatible" deletion="no"
+                deprecation="yes" semantic="compatible" source="compatible"
+            />
+            <description>
+                <p>
+                Define icon when specifying an update center using
+                <code>categoryIconBase</code> attribute.
+                </p>
+            </description>
+            <class package="org.netbeans.api.autoupdate" name="UpdateElement"/>
+            <class package="org.netbeans.api.autoupdate" name="UpdateUnitProvider"/>
+            <issue number="183778"/>
+        </change>
+        <change id="source-group-modifier">
+            <api name="general"/>
+            <summary>Feature enabled only when all its dependencies are enabled</summary>
+            <version major="1" minor="8"/>
+            <date day="15" month="4" year="2009"/>
+            <author login="jtulach"/>
+            <compatibility semantic="incompatible"/>
+            <description>
+                <p>
+                    The behaviour of <code>UpdateItem.createFeature().getInstalled().isEnabled()</code>
+                    has been changed. Now it returns <code>true</code> only if
+                    all dependencies are enabled.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.autoupdate" name="UpdateItem"/>
+            <issue number="162673"/>
+        </change>
+        
+        <change id="new-operation-container">
+            <api name="general"/>
+            <summary>New operation type introduced together with method for create appropriate container</summary>
+            <version major="1" minor="11"/>
+            <date day="19" month="8" year="2009"/>
+            <author login="dlipin"/>
+            <compatibility semantic="compatible"/>
+            <description>
+                <p>
+                    New operation type - <code>OperationSupport.OperationType.INTERNAL_UPDATE</code> is introduced.
+                    This operation can be used to find out elements which have updates and
+                    which the particular element has the dependency on.
+                </p>
+            </description>
+            <class package="org.netbeans.api.autoupdate" name="OperationSupport"/>
+            <class package="org.netbeans.api.autoupdate" name="OperationContainer"/>
+            <issue number="141714"/>
+        </change>
+
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE projects/projectapi/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Autoupdate Services API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@org-netbeans-modules-autoupdate-services@/index.html">Autoupdate Services API</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.autoupdate.services"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

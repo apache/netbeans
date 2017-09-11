@@ -1,0 +1,19 @@
+# The "customers" schema should not show up (not needed). The "customer" table should. The "customization" table should not,
+# because it's not in the default schema.
+
+select * from customers.customer, customizations.customization, discount_code cus group by cus|
+
+--
+<unknown>
+  customers*
+    customer
+      customer_id
+      address_line
+    discount_code
+      id
+    asummary[view]
+      asummary_id
+  customizations
+    customization
+      invoice_id
+      customer_id

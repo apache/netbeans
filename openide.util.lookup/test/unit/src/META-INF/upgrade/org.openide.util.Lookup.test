@@ -1,0 +1,60 @@
+%%TestCase convert-1
+package test;
+
+import org.openide.util.Lookup;
+
+public class Test {
+     Collection<? extends String> t(Lookup lkp) {
+         return lkp.lookup(new Lookup.Template(String.class)).allInstances();
+     }
+}
+%%=>
+package test;
+
+import org.openide.util.Lookup;
+
+public class Test {
+     Collection<? extends String> t(Lookup lkp) {
+         return lkp.lookupAll(String.class);
+     }
+}
+%%TestCase convert-2
+package test;
+
+import org.openide.util.Lookup;
+
+public class Test {
+     Lookup.Result<String> t(Lookup lkp) {
+         return lkp.lookup(new Lookup.Template(String.class));
+     }
+}
+%%=>
+package test;
+
+import org.openide.util.Lookup;
+
+public class Test {
+     Lookup.Result<String> t(Lookup lkp) {
+         return lkp.lookupResult(String.class);
+     }
+}
+%%TestCase convert-3
+package test;
+
+import org.openide.util.Lookup;
+
+public class Test {
+     Collection<? extends String> t(Lookup lkp) {
+         return lkp.lookup(new Lookup.Template<String>(String.class)).allInstances();
+     }
+}
+%%=>
+package test;
+
+import org.openide.util.Lookup;
+
+public class Test {
+     Collection<? extends String> t(Lookup lkp) {
+         return lkp.lookupAll(String.class);
+     }
+}

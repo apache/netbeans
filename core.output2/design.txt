@@ -1,0 +1,164 @@
+A BRIEF OUTLINE OF THE DESIGN OF THE NEW OUTPUT WINDOW
+
+The new output window is designed to solve several problems:
+ - Accessibility/Usability (uses standard swing text pane rather than a terminal emulator)
+ - Performance - minimize heap use, memory copies and event queue flooding
+
+At its core, the output window is a javax.swing.text.Document which gets its data directly 
+from a memory mapped file (PENDING: heap based storage is implemented and may be more 
+efficient for small amounts of output).  Fetching IOProvider instances and InputOutput objects, and 
+writing to them is thread safe.
+
+The classes of interest are these, interfaces implemented in brackets:
+
+
+IO/INFRASTRUCTURE:
+ - NbIOProvider [IOProvider]- does little except provide instances of NbIO and track them by name
+
+ - NbIO [InputOutput] - Constructs/manages the lifecycle of an OutWriter; forwards calls setters that
+      affect GUI presentation on the event queue.
+
+ - OutWriter [OutputWriter] - handles asynchronous reads and writes to the data storage, 
+      creating it on first use and retaining it until it is disposed (which happens when an
+      output tab is explicitly closed by the user if the tab is not being written to).  Each write call creates a new
+      direct allocated ByteBuffer; when a write is completed the buffer is "disposed",
+      causing it to be written to the memory mapped file (this really meaning that the memory
+      it references becomes a section of the memory mapped file).  For concurrent write calls, the order
+      is non-deterministic, just as it is in a shell.
+
+      Reading is accomplished via FileChannel and ByteBuffer.asCharBuffer(), and is synchronized
+      against new writes.
+
+      Change notifications are handled via simple support for ChangeListeners.  Changes are
+      fired only when the file is flushed or closed, and on the first write to the file.  
+      For general repainting, a polling mechanism is supported - on each write, a dirty flag 
+      is set, which the Document implementation can check (clearing it) by calling checkDirty().
+      Change notifications are posted from the thread causing the change.
+
+ - Storage - an interface to abstract the byte-based data store the OutWriter reads and writes
+      from.  There are two implementations, FileMapStorage and HeapStorage. 
+
+ - OutputDocument - This is an implementation of the java text Document interface directly
+     over the read methods of OutWriter.  A number of optimizations are possible due to the
+     fact that the file will only grow, only at the end and never shrink (if a writer is reset 
+     due to OutputWriter.reset(), a new OutputDocument should be constructed).
+
+     Change and updates are handled by generating DocumentEvents as follows:  On the
+     initial change (first write) event a timer is started, initially running at 500ms intervals, and slowing
+     down if no changes have happened for 15 seconds.  When the timer fires, the following
+     sequence of events happens:
+        - Check if the file is dirty or has been closed, if not, return.  If closed, stop the timer.
+        - Check if an event has been previously posted which has not been asked for its
+             data.  If yes, return
+        - Create a new OutWriter.DO, which implements DocumentEvent and post it on the
+             event queue
+ 
+ - OutputDocument.DO [DocumentEvent] - this is a somewhat unusual event implementation.
+    What happens is this:  An event is created knowing only the end position of the last
+    posted event (or 0).  It will have no other information until something calls one of its
+    methods.  At that point it briefly synchronizes on the writer and gets the *current*
+    line count and number of characters written, storing those values.  In this way, we do
+    not generate events unless 1. There is something new to report, and 2. There is no
+    unprocessed event capable of reporting it.
+
+The output file is created in the system temp directory, and set to be deleted on JVM exit.
+For throughput reasons, it is in UTF-16 format for its lifetime.  A Save As function is supported,
+which will copy the file to a user-specified location, converting its encoding in the process.
+
+
+WORD WRAPPING
+Doing effective, fast-performing word wrapping is harder than it seems - making it scale
+is the biggie.  So this is heavily optimized.  Main points:
+ - javax.swing.text's WrappedPlainView (what you get if you set word wrap on a JTextArea)
+   is absolutely out - to figure out where to put the caret, it will iterate every char
+   in the document, to expand tabs & such).  Solution:  Don't expand tabs, and don't use 
+   WrappedPlainView.
+ - There are a bunch of optimizations possible because of a couple things:
+     - The document will never change except at the end
+     - We know we're always using a fixed width font
+
+Consider that, if you want to know what position in the document a wrapped character position
+on a component is, you need to iterate from the top of the document down, counting wrapped lines
+until you find the one you're on.  Once you hit a few hundred thousand lines, it can take a
+second or so for the caret to move when you click!
+
+What we do is, above a small output file, we cache the number of logical lines
+*above* each line which is wrapped.  For a query of any given line, we find the first line
+above it which *is* wrapped, take the cached value and add in the distance to that line.
+Caching only those lines which are wrapped keeps the cache nice and small, and so at worst
+it's a couple binary searches and integer adds to get the right value.
+
+The cache is initially built the first time something asks for wrap information.  If the
+document is still being written, it will be added to for any lines that go over the wrap
+point.
+
+The achilles heel is that, if the output window width changes, the cache must be rebuilt,
+and that can be expensive (though even at 400000 lines it's less than 1s on a reasonable
+machine, and not many people are reading 400000 lines of output).
+
+
+UI ARCHITECTURE
+The GUI design is built around pure MVC design and limiting usage of the listener pattern.
+It is composed of two layers:
+ - Base ui classes in org.netbeans.core.output2.ui, which implement things like custom
+    caret and scrollbar handling, and automatically using a tabbed pane for multiple 
+    components
+ - Implementation classes - the GUI components contain no output-specific logic - rather
+    they find (via the component hierarchy) the OutputController which is managing the
+    parent component; it handles all of the logic
+
+The result of this design is that all information lives in one place only, and all logic
+(which can apply to the output window, the output tab, or the text view inside it) is 
+handled in a single location, by a stateless controller.  For everything the gui does,
+there is a method on the controller class - much more understandable than smidgins of
+logic embedded in a handful of listeners.
+
+
+THREAD SAFETY
+In addition to the above mentioned mechanism for threading between output writes and
+document events, Operations on InputOutput[NbIO] (setting the input area visible, causing an output view to become
+selected, etc.) are handled by dispatching IOEvents (a simple event class with an integer
+ID and a boolean value) on the event thread.  Operations invoked from the event thread will
+be run synchronously.  
+
+
+CARE AND FEEDING 
+For writing patches/maintaining this package, there are a few simple rules:
+
+1.  There shall be no listeners!  Yes it's all doable with listeners, it's just not 
+    maintainable that way.  Resist the temptation and do it right.
+2.  For any information that needs to go back and forth, create a getter or setter on the
+    GUI component closest to that information, and a set of callbacks through the hierarchy to
+    the controller (just see what any of the existing calls do)
+3.  There shall be no dependencies in classes in the ui package on classes in the output2
+    package (with a minor exception for logging purposes only).  Pure GUI logic lives in the
+    components.  Functional logic lives in the controller.
+
+
+AMBIGUITIES IN THE API AND HOW THEY ARE DEALT WITH
+There are a number of ambiguities in the original API, which any implementation must resolve somehow.
+They are as follows:
+ - reset() method should be on InputOutput, but is instead on OutputWriter.  Given a single
+   merged output, there is no meaningful way to handle the situation of error output that has been reset 
+   plus a stdout that has not been reset.  Calls to reset() on the error writer are ignored.
+ - close() method should be on InputOutput, not OutputWriter.  There is no meaningful way to 
+   handle a closed error + an unclosed output, so this is handled as follows:
+    - If getErr() has never been called, the stream will be considered closed when getOut().close()
+      has been called
+    - If getErr() *has* been called, the stream will not be considered closed until both 
+      getErr().close() and getOut().close() have been called
+ - Behavior of writes or other calls after calling closeInputOutput() are undefined.  For this
+   implementation, they are no-ops.  Once you have called closeInputOutput(), the InputOutput
+   is dead for good and should be discarded.
+ - How to handle output when the user has closed a tab (there is no way to notify the client
+   that the output component has been closed).  If the user closes a tab, the problem flag is
+   set on the output.  Any subsequent writes will go to dev/null until reset() is called, at
+   which point a tab for the InputOutput may be opened again.
+
+
+OPEN QUESTIONS:
+ - Need to measure the overhead of using a memory mapped file by default - for large amounts of
+   output there is no measurable difference, but there may be a penalty for small ones.  To
+   try heap-based storage, run with -J-Dnb.output.heap=true
+
+

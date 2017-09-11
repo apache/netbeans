@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>test</type>
+    <configuration>
+        <data xmlns="urn:test:shared">
+            <name>somename</name>
+            <display-name>Some Name</display-name>
+            <shared-stuff/>
+        </data>
+        <data xmlns="urn:test:shared-aux">
+            <aux-shared-stuff/>
+        </data>
+    </configuration>
+</project>

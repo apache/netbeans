@@ -1,0 +1,3 @@
+# subversion/main
+read global
+${l10n-module}/src/org/netbeans/modules/subversion/ui/browser/wait.gif

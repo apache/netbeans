@@ -1,0 +1,27 @@
+| Edit |                   E (mnemonics)
+========
+Undo                       U
+Redo                       R
+========================
+Cut                        t
+Copy                       y
+Paste                      P
+Paste Formatted            o
+Paste from History         H
+Delete                     D
+Select All                 A
+Select Identifier          I
+========================
+Find Selection             S
+Find Next                  x
+Find Previous              v
+========================
+Find...                    F
+Replace...                 e
+Find Usages                n
+========================
+Find in Projects...        j
+Replace in Projects...     c
+========================
+Start Macro Recording      M
+Stop Macro Recording       g

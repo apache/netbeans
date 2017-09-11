@@ -1,0 +1,60 @@
+<LayoutModel>
+  <Root id="Form">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Group type="sequential" attributes="0">
+              <EmptySpace max="$pref" attributes="0"/>
+              <Group type="parallel" groupAlignment="leading" attributes="0">
+                  <Group type="sequential" attributes="0">
+                      <Group type="parallel" groupAlignment="center" attributes="0">
+                          <Component id="messageLabel" alignment="center" pref="388" max="Short.MAX_VALUE" attributes="0"/>
+                          <Group type="sequential" attributes="0">
+                              <Group type="parallel" groupAlignment="trailing" attributes="0">
+                                  <Component id="jLabel3" alignment="trailing" min="$pref" max="$pref" attributes="0"/>
+                                  <Component id="jLabel2" alignment="trailing" min="$pref" max="$pref" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="$pref" attributes="0"/>
+                              <Group type="parallel" groupAlignment="leading" max="$pref" attributes="0">
+                                  <Component id="passwordField1" pref="106" max="Short.MAX_VALUE" attributes="1"/>
+                                  <Component id="passwordField2" max="Short.MAX_VALUE" attributes="1"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="$pref" attributes="0"/>
+                  </Group>
+                  <Group type="sequential" alignment="trailing" attributes="0">
+                      <Component id="okButton" min="$pref" max="$pref" attributes="0"/>
+                      <EmptySpace type="separate" max="$pref" attributes="0"/>
+                      <Component id="cancelButton" min="$pref" max="$pref" attributes="0"/>
+                      <EmptySpace min="12" pref="12" max="12" attributes="0"/>
+                  </Group>
+              </Group>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace max="$pref" attributes="16"/>
+              <Component id="messageLabel" min="$pref" max="$pref" attributes="16"/>
+              <EmptySpace max="$pref" attributes="16"/>
+              <Group type="parallel" groupAlignment="baseline" attributes="16">
+                  <Component id="jLabel2" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="passwordField1" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace max="$pref" attributes="16"/>
+              <Group type="parallel" groupAlignment="baseline" attributes="16">
+                  <Component id="passwordField2" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="jLabel3" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace pref="43" max="Short.MAX_VALUE" attributes="12"/>
+              <Group type="parallel" groupAlignment="baseline" attributes="16">
+                  <Component id="cancelButton" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+                  <Component id="okButton" alignment="baseline" min="$pref" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace max="$pref" attributes="16"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Root>
+</LayoutModel>

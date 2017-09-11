@@ -1,0 +1,3 @@
+# diff
+read global
+${l10n-module}/src/**/image/*.gif

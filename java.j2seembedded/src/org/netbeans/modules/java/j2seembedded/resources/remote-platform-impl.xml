@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2013, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+
+<project default="default" basedir=".." xmlns:remote="http://www.netbeans.org/ns/j2se-project/remote-platform/1" xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3">
+
+    <target name="default">
+        <echo message="Default target is not set, you must specify which target you want to run."/>
+    </target>
+
+    <target name="-init-remote-platform-properties" depends="init">
+        <fail unless="platform.runtime">Runtime platform (platform.runtime) must be set.</fail>
+        <j2seproject1:property name="remote.platform.home.dir" value="platforms.${platform.runtime}.platform.install.folder"/>
+        <j2seproject1:property name="remote.platform.work.dir" value="platforms.${platform.runtime}.platform.work.folder"/>
+        <j2seproject1:property name="remote.platform.host" value="platforms.${platform.runtime}.platform.host"/>
+        <j2seproject1:property name="remote.platform.port" value="platforms.${platform.runtime}.platform.port"/>
+        <j2seproject1:property name="remote.platform.user" value="platforms.${platform.runtime}.platform.auth.username"/>
+        <j2seproject1:property name="remote.platform.auth" value="platforms.${platform.runtime}.platform.auth.kind"/>
+        <j2seproject1:property name="remote.platform.keyfile" value="platforms.${platform.runtime}.platform.auth.keystore"/>
+        <j2seproject1:property name="remote.platform.exec.decorator" value="platforms.${platform.runtime}.platform.exec.decorator"/>
+        <fail unless="remote.platform.home.dir">Must set remote.platform.home.dir</fail>
+        <fail unless="remote.platform.work.dir">Must set remote.platform.work.dir</fail>
+        <fail unless="remote.platform.host">Must set remote.platform.host</fail>
+        <fail unless="remote.platform.port">Must set remote.platform.port</fail>
+        <fail unless="remote.platform.user">Must set remote.platform.user</fail>
+        <fail unless="remote.platform.auth">Must set remote.platform.auth</fail>
+        <condition property="remote.platform.auth.passwd">
+            <equals arg1="${remote.platform.auth}" arg2="PASSWORD"/>
+        </condition>
+        <condition property="remote.platform.auth.key">
+            <equals arg1="${remote.platform.auth}" arg2="KEY"/>
+        </condition>
+        <basename file="${basedir}" property="remote.project.name"/>
+        <basename file="${dist.dir}" property="remote.dist.dir.name"/>
+        <basename file="${dist.jar}" property="remote.dist.jar.name"/>
+        <property name="remote.project.dir" value="${remote.platform.work.dir}/${remote.project.name}"/>
+        <property name="remote.dist.dir" value="${remote.project.dir}/${remote.dist.dir.name}"/>
+        <property name="remote.dist.jar" value="${remote.dist.dir}/${remote.dist.jar.name}"/>
+        <property name="remote.java.executable" value="${remote.platform.home.dir}/bin/java"/>
+        <scriptdef name="addressport" language="javascript">
+            <attribute name="address" />
+            <attribute name="property" />
+         <![CDATA[
+           var address = attributes.get("address");
+           project.setProperty(attributes.get("property"), address.split(":")[1]);
+         ]]>
+      </scriptdef>
+      <condition property="remote.platform.exec.prefix" value="'${remote.platform.exec.decorator}' " else="">
+        <not>
+            <equals arg1="${remote.platform.exec.decorator}" arg2="$${platforms.${platform.runtime}.platform.exec.decorator}"/>
+        </not>
+      </condition>
+    </target>
+    
+    <target name="-copy-to-remote-platform">
+      <macrodef name="runwithpasswd" uri="http://www.netbeans.org/ns/j2se-project/remote-platform/1">
+            <attribute name="additionaljvmargs" default=""/>
+            <sequential>
+                <sshexec host="${remote.platform.host}" port="${remote.platform.port}" username="${remote.platform.user}" password="${remote.platform.password}" trust="true" command="mkdir -p '${remote.dist.dir}'"/>
+                <scp todir="${remote.platform.user}@${remote.platform.host}:${remote.dist.dir}" port="${remote.platform.port}" password="${remote.platform.password}" trust="true">
+                    <fileset dir="${dist.dir}"/>
+                </scp>
+                <antcall target="profile-rp-calibrate-passwd"/>
+                <sshexec host="${remote.platform.host}" port="${remote.platform.port}" username="${remote.platform.user}" password="${remote.platform.password}" trust="true" usepty="true"
+                    command="cd '${remote.project.dir}'; ${remote.platform.exec.prefix}'${remote.java.executable}' @{additionaljvmargs} -Dfile.encoding=${runtime.encoding} ${run.jvmargs} ${run.jvmargs.ide} -jar ${remote.dist.jar} ${application.args}"/>
+            </sequential>
+        </macrodef>
+        <macrodef name="runwithkey" uri="http://www.netbeans.org/ns/j2se-project/remote-platform/1">
+            <attribute name="additionaljvmargs" default=""/>
+            <sequential>
+                <fail unless="remote.platform.keyfile">Must set remote.platform.keyfile</fail>
+                <sshexec host="${remote.platform.host}" port="${remote.platform.port}" username="${remote.platform.user}" keyfile="${remote.platform.keyfile}" passphrase="${remote.platform.passphrase}" trust="true" command="mkdir -p '${remote.dist.dir}'"/>
+                <scp todir="${remote.platform.user}@${remote.platform.host}:${remote.dist.dir}" port="${remote.platform.port}" keyfile="${remote.platform.keyfile}" passphrase="${remote.platform.passphrase}" trust="true">
+                    <fileset dir="${dist.dir}"/>
+                </scp>
+                <antcall target="profile-rp-calibrate-key"/>
+                <sshexec host="${remote.platform.host}" port="${remote.platform.port}" username="${remote.platform.user}" keyfile="${remote.platform.keyfile}" passphrase="${remote.platform.passphrase}" trust="true" usepty="true"
+                    command="cd '${remote.project.dir}'; ${remote.platform.exec.prefix}'${remote.java.executable}' @{additionaljvmargs} -Dfile.encoding=${runtime.encoding} ${run.jvmargs} ${run.jvmargs.ide} -jar ${remote.dist.jar} ${application.args}"/>
+            </sequential>
+        </macrodef>
+    </target>
+
+    <target name="-check-vm-debug" depends="init, -init-remote-platform-properties, -copy-to-remote-platform">
+        <j2seproject1:property name="remote.platform.jvm.debug" value="platforms.${platform.runtime}.platform.jvm.debug"/>
+        <condition property="remote.platform.jvm.debug.available" value="true">
+            <or>
+                <contains string="${remote.platform.jvm.debug}" substring="$${platforms."/>
+                <istrue value="${remote.platform.jvm.debug}"/>
+            </or>
+        </condition>
+        <fail unless="remote.platform.jvm.debug.available" message="The Runtime JVM ${remote.platform.host}:${remote.platform.home.dir} does not support debugging."/>
+    </target>
+
+    <target name="-ask-password" unless="remote.platform.password" if="remote.platform.auth.passwd">
+        <input message="Password ${remote.platform.user}@${remote.platform.host}:" addproperty="remote.platform.password">
+            <handler type="secure"/>
+        </input>
+    </target>
+
+    <target name="-ask-passphrase" unless="remote.platform.passphrase" if="remote.platform.auth.key">
+        <input message="Passphrase ${remote.platform.user}@${remote.platform.host}:" addproperty="remote.platform.passphrase">
+            <handler type="secure"/>
+        </input>
+    </target>
+
+    <target name="-run-remote-passwd" depends="init, jar, -init-remote-platform-properties, -copy-to-remote-platform, -ask-password" if="remote.platform.auth.passwd">
+        <remote:runwithpasswd/>
+    </target>
+
+    <target name="-debug-remote-passwd" depends="init, jar, -init-remote-platform-properties, -copy-to-remote-platform, -ask-password, -debug-start-debugger" if="remote.platform.auth.passwd">
+        <addressport address="${jpda.address}" property="jpda.port"/>
+        <sshsession host="${remote.platform.host}" port="${remote.platform.port}" username="${remote.platform.user}" password="${remote.platform.password}" trust="true">
+            <remotetunnel lport="${jpda.port}" lhost="localhost" rport="${jpda.port}"/>
+            <sequential>
+                <remote:runwithpasswd additionaljvmargs="${debug-args-line} -Xrunjdwp:transport=${debug-transport},address=${jpda.address}"/>
+            </sequential>
+        </sshsession>
+    </target>
+
+    <target name="-run-remote-key" depends="init, jar, -init-remote-platform-properties, -copy-to-remote-platform, -ask-passphrase" if="remote.platform.auth.key">
+        <remote:runwithkey/>
+    </target>
+
+    <target name="-debug-remote-key" depends="init, jar, -init-remote-platform-properties, -copy-to-remote-platform, -ask-passphrase, -debug-start-debugger" if="remote.platform.auth.key">
+        <addressport address="${jpda.address}" property="jpda.port"/>
+        <sshsession host="${remote.platform.host}" port="${remote.platform.port}" username="${remote.platform.user}" keyfile="${remote.platform.keyfile}" passphrase="${remote.platform.passphrase}" trust="true">
+            <remotetunnel lport="${jpda.port}" lhost="localhost" rport="${jpda.port}"/>
+            <sequential>
+                <remote:runwithkey additionaljvmargs="${debug-args-line} -Xrunjdwp:transport=${debug-transport},address=${jpda.address}"/>
+            </sequential>
+        </sshsession>
+    </target>
+    
+    <target name="profile-clean-rp" depends="profile-rp-renew-local-calibration" if="profiling.started">
+        <delete dir="${dist.dir}/remotepack"/>
+        <delete file="${user.home}/.nbprofiler/machinedata.jdk${remote.platform.java.spec.ver}.${remote.platform.host}.new"/>
+    </target>
+    
+    <target name="profile-rp-renew-local-check">
+        <condition property="profiler.calibration.local-remote.replace">
+            <and>
+                <available file="${user.home}/.nbprofiler/machinedata.jdk${remote.platform.java.spec.ver}.${remote.platform.host}.new" type="file"/>
+                <not>
+                    <filesmatch 
+                        file1="${user.home}/.nbprofiler/machinedata.jdk${remote.platform.java.spec.ver}.${remote.platform.host}" 
+                        file2="${user.home}/.nbprofiler/machinedata.jdk${remote.platform.java.spec.ver}.${remote.platform.host}.new"/>
+                </not>
+            </and>
+        </condition>
+    </target>
+    
+    <target name="profile-rp-renew-local-calibration" depends="profile-rp-renew-local-check" if="profiler.calibration.local-remote.replace">
+         <move 
+             file="${user.home}/.nbprofiler/machinedata.jdk${remote.platform.java.spec.ver}.${remote.platform.host}.new" 
+             tofile="${user.home}/.nbprofiler/machinedata.jdk${remote.platform.java.spec.ver}.${remote.platform.host}"
+             force="true"
+             verbose="true"/>
+    </target>
+    
+    <target name="profile-rp-unzip" if="profiling.started" depends="profile-rp-create">        
+        <unzip src="${java.io.tmpdir}/profiler-server-${remote.platform.rp.filename}.zip" dest="${dist.dir}/remotepack"/>
+        <chmod perm="a+x">
+            <fileset dir="${dist.dir}/remotepack">
+                <include name="**/*.so"/>
+                <include name="**/*.dll"/>
+                <include name="**/*.sh"/>
+                <include name="**/*.jnilib"/>
+                <exclude name="**/*.jar"/>
+            </fileset>
+        </chmod>
+        
+    </target>
+    
+    <target name="profile-rp-create" if="profiling.started">
+        <property name="profile.cluster" value="${netbeans.home}/../profiler"/>
+        <ant dir="${profile.cluster}/remote-pack-defs" target="profiler-server-${remote.platform.rp.target}" inheritall="false">
+           <property name="cluster" location="${profile.cluster}"/>
+           <property name="dest.dir" location="${java.io.tmpdir}"/>
+       </ant>
+    </target>
+        
+    <target name="profile-toggle">
+        <property name="profiling.started" value="true"/>
+    </target>
+    
+    <target name="profile-rp-calibrate-passwd" if="profiling.started">
+        <sshexec host="${remote.platform.host}" port="${remote.platform.port}" 
+                 username="${remote.platform.user}" password="${remote.platform.password}" 
+                 trust="true" usepty="true" 
+                 command="export JAVA_HOME=${remote.platform.home.dir}; [ -f ~/.nbprofiler/machinedata.jdk${remote.platform.java.spec.ver} ] &amp;&amp; echo &quot;Calibration data exists: skipping calibration&quot; || /bin/sh ${remote.dist.dir}/remotepack/bin/calibrate.sh"/>
+        <scp file="${remote.platform.user}:${remote.platform.password}@${remote.platform.host}:~/.nbprofiler/machinedata.jdk${remote.platform.java.spec.ver}"
+            localTofile="${user.home}/.nbprofiler/machinedata.jdk${remote.platform.java.spec.ver}.${remote.platform.host}.new" trust="true"/>
+        <antcall target="profile-clean-rp"/>
+    </target>
+    
+    <target name="profile-rp-calibrate-key" if="profiling.started">
+        <fail unless="remote.platform.keyfile">Must set remote.platform.keyfile</fail>
+        <sshexec host="${remote.platform.host}" port="${remote.platform.port}" 
+                 username="${remote.platform.user}" keyfile="${remote.platform.keyfile}" 
+                 passphrase="${remote.platform.passphrase}" trust="true" usepty="true" 
+                 command="export JAVA_HOME=${remote.platform.home.dir}; [ -f ~/.nbprofiler/machinedata.jdk${remote.platform.java.spec.ver} ] &amp;&amp; echo &quot;Calibration data exists: skipping calibration&quot; || /bin/sh ${remote.dist.dir}/remotepack/bin/calibrate.sh"/>
+        <scp file="${remote.platform.user}:${remote.platform.password}@${remote.platform.host}:~/.nbprofiler/machinedata.jdk${remote.platform.java.spec.ver}"
+             localTofile="${user.home}/.nbprofiler/machinedata.jdk${remote.platform.java.spec.ver}.${remote.platform.host}.new" trust="true"
+             keyfile="${remote.platform.keyfile}" passphrase="${remote.platform.passphrase}"/>
+        <antcall target="profile-clean-rp"/>
+    </target>
+    
+    <target name="run-remote" depends="init, jar, -init-remote-platform-properties, -copy-to-remote-platform, -run-remote-passwd, -run-remote-key"/>
+    <target name="debug-remote" depends="init, jar, -init-remote-platform-properties, -copy-to-remote-platform, -check-vm-debug, -debug-remote-passwd, -debug-remote-key"/>
+    <target name="profile-remote" depends="init, jar, profile-toggle, -init-remote-platform-properties, profile-rp-unzip, -profile-check" if="profiler.configured">
+        <startprofiler/>
+        <mkdir dir="${user.home}/.nbprofiler"/>
+        <antcall target="-run-remote-passwd"/>
+        <antcall target="-run-remote-key"/>        
+    </target>
+</project>

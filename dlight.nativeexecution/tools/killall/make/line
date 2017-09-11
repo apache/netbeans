@@ -1,0 +1,7 @@
+#!/bin/sh
+
+SYM=${1:-=}
+COLS=`(stty -a | sed -n "s/.*columns[^0-9]*\([0-9]*\).*/\1/p") 2>/dev/null`;
+test -z "${COLS}" && COLS=`(stty -a | sed -n "s/.*; \([0-9]*\) columns;.*/\1/p") 2>/dev/null`;
+echo ${SYM} | sed -e :a -e "s/^.\\{1,${COLS:-80}\\}$/&${SYM}/;ta" -e "s/${SYM}//"
+

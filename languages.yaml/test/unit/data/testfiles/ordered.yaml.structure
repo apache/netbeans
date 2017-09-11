@@ -1,0 +1,10 @@
+list item:ATTRIBUTE:[]:list item:
+  parent:ATTRIBUTE:[]:parent:
+    id:ATTRIBUTE:[]:id:
+    parent_id:ATTRIBUTE:[]:parent_id:
+    title:ATTRIBUTE:[]:title:
+list item:ATTRIBUTE:[]:list item:
+  child:ATTRIBUTE:[]:child:
+    id:ATTRIBUTE:[]:id:
+    parent_id:ATTRIBUTE:[]:parent_id:
+    title:ATTRIBUTE:[]:title:

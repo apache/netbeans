@@ -1,0 +1,19 @@
+select |
+
+--
+<unknown>
+  customers*
+    customer
+      customer_id
+    overview[view]
+      overview_id
+  accounting
+    invoice
+      invoice_id
+    purchase_order
+      order_id
+    summary[view]
+      summary_id
+anotherapp
+  registrations
+    regdata

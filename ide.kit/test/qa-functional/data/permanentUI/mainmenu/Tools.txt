@@ -1,0 +1,20 @@
+| Tools |                      T (mnemonics)
+=========
+Add to Palette...              E
+Internationalization       >   z
+============================
+Java Platforms                 J
+NetBeans Platforms             N
+Ant Variables                  V
+Libraries                  L
+Servers                        S
+Cloud Providers                C
+Mobility Deployment            m
+Keystores                      K
+Templates                      T
+DTDs and XML Schemas           D
+Palette                    >   P
+============================
+Plugins                        g
+============================
+Options                        O

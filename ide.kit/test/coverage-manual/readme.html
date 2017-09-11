@@ -1,0 +1,117 @@
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2008, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+    <head>
+        <title>EMMA Instrumentation for Manual Testing</title>
+        <style type="text/css">
+            body {
+                background-color: #ffffff;
+                font-size: 12px;
+                font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+                color: #000000;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>How to instrument IDE for manual testing</h2>
+        Ant and JDK must be installed on your system before you can run coverage tests.
+        <p>
+        Before starting be sure you have xtest module checked out and folder
+        xtest/external contains emma.jar and emma_ant.jar, those files can be downloaded
+        from <a href="http://emma.sourceforge.net/downloads.html">EMMA download site</a>
+        (last 2.0.x version of EMMA).
+        Or you can use script that downloads emma libraries for you, in that case you
+        need to provide proxy settings on command line when executing Ant script:<br/>
+        <code>-Dproxy.host=[proxy_host] -Dproxy.port=[proxy_port]</code>
+        </p>
+        
+        <h4>User defined properties</h4>
+        There are couple of properties that are needed to be correctly set in 
+        build.xml file before you can instrument IDE. Those properties are:
+        <dl>
+            <dt><code><b>jdkhome</b></code> 
+                <dd>Location of JDK that will be used to run instrumented IDE
+            <dt><code><b>netbeans.dir</b></code>
+                <dd>NetBeans installation dir, IDE on this location will be copied 
+                over and instrumented (default value: nbbuild/netbeans)
+            <dt><code><b>included.packages</b></code>
+                <dd>List of packages that will be instrumented
+                (default value: org.netbeans.*, org.openide.*, org.openidex.*, 
+                javax.jmi.*, org.apache.tools.ant.module.*)
+            <dt><code><b>coverage.runtime.file</b></code>
+                <dd>Name of the file for writing EMMA runtime coverage data for given session 
+                (default value: coverage.ec)
+        </dl>
+        
+        <h3>Important notes</h3>
+        When performing tests on instrumented IDE:
+        <ul>
+            <li><b>Do not run more instances</b> of NetBeans with the same .ec file (file will be corrupted)
+            <li>When doing extensive long tests make sure you log <b>each session into separate .ec file</b>
+        </ul>
+        Use following system property to extend available memory for Ant process 
+        <code><b>ANT_OPTS=Xmx512m</b></code> when generating report, 
+        otherwise OutOfMemoryError will be thrown.
+        
+        <h3>Targets</h3>
+        List of main Ant targets:
+        <dl>
+            <dt><code><b>instrument-ide</b></code>
+                <dd>Executes all necessary subtargets and creates instrumented IDE
+            <dt><code><b>run-ide</b></code>
+                <dd>Runs instrumented IDE
+            <dt><code><b>clean-ide</b></code>
+                <dd>Deletes instrumented IDE, with userdir
+            <dt><code><b>clean-emma</b></code>
+                <dd>Deletes EMMA data files
+            <dt><code><b>clean-report</b></code>
+                <dd>Deletes EMMA report
+            <dt><code><b>clean-userdir</b></code>
+                <dd>Deletes IDE uderdir
+            <dt><code><b>real-clean</b></code>
+                <dd>Runs all clean targets above
+            <dt><code><b>emma-report</b></code>
+                <dd>Creates report from all available EMMA data files
+        </ul>
+        
+  </body>
+</html>

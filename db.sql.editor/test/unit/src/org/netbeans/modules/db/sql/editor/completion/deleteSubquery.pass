@@ -1,0 +1,6 @@
+Alias c1 to customer_tab
+Column invoice_id in table invoice_tab
+Column order_id in table purchase_order_tab
+Column customer_id in table customer_tab
+Table invoice_tab
+Table purchase_order_tab

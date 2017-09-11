@@ -1,0 +1,2 @@
+Mercurial      >  Initialize Repository...     N
+                  Clone Other...               R

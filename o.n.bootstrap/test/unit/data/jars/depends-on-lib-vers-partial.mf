@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.dol
+OpenIDE-Module-Name: Depends on per-folder versioned library
+OpenIDE-Module-Package-Dependencies: pkg.subpkg[Something] > 2.3
+Class-Path: library-vers-partial.jar
+

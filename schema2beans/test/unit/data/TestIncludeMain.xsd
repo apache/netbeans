@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://test.org/test" xmlns:test="http://test.org/test"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified" 
+  attributeFormDefault="unqualified">
+	
+  <xs:include schemaLocation="TestIncludeDependency.xsd"/>
+
+  <xs:element name="root" type="test:rootType"/>
+
+  <xs:complexType name="rootType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="item" type="test:itemType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:choice>
+  </xs:complexType>
+</xs:schema>

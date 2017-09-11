@@ -1,0 +1,33 @@
+| Navigate |                     N (mnemonics)
+============
+Go to File...                    F
+Go to Type...                    T
+Go to Symbol...                  y
+Go to Spring Bean...             B
+Go to Test/Tested class          G
+Go to Grails Domain class
+Go to Grails Controller
+Go to Grails View                e
+Go to Previous Document
+==============================
+Go to Source                     S
+Go to Declaration                D
+Go to Super Implementation       I
+Inspect                      >   n
+==============================
+Last Edit Location               E
+Back                             B
+Forward                          w
+==============================
+Go to Line...                    L
+Toggle Bookmark                  k
+Bookmark History Popup Next
+Bookmark History Popup Previous
+==============================
+Next Error                       x
+Previous Error                   P
+==============================
+Select in Projects               j
+Select in Files                  c
+Select in Classes                C
+Select in Favorites              a

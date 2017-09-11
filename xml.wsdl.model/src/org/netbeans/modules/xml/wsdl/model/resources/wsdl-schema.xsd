@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+ The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+ Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+
+<schema xmlns="http://www.w3.org/2000/10/XMLSchema"
+        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+        targetNamespace="http://schemas.xmlsoap.org/wsdl/"
+        elementFormDefault="qualified">
+   <element name="documentation">
+      <complexType mixed="true">
+         <choice minOccurs="0" maxOccurs="unbounded">
+            <any minOccurs="0" maxOccurs="unbounded"/>
+         </choice>
+         <anyAttribute/>
+      </complexType>
+   </element>
+   <complexType name="documented" abstract="true">
+      <sequence>
+         <element ref="wsdl:documentation" minOccurs="0"/>
+      </sequence>
+   </complexType>
+   <complexType name="openAtts" abstract="true">
+      <annotation>
+         <documentation>
+         This type is extended by  component types
+         to allow attributes from other namespaces to be added.
+         </documentation>
+      </annotation>
+      <sequence>
+         <element ref="wsdl:documentation" minOccurs="0"/>
+      </sequence>
+      <anyAttribute namespace="##other"/>
+   </complexType>
+   <element name="definitions" type="wsdl:definitionsType">
+      <key name="message">
+         <selector xpath="message"/>
+         <field xpath="@name"/>
+      </key>
+      <key name="portType">
+         <selector xpath="portType"/>
+         <field xpath="@name"/>
+      </key>
+      <key name="binding">
+         <selector xpath="binding"/>
+         <field xpath="@name"/>
+      </key>
+      <key name="service">
+         <selector xpath="service"/>
+         <field xpath="@name"/>
+      </key>
+      <key name="import">
+            <selector xpath="import"/>
+            <field xpath="@namespace"/>
+         </key>
+      <key name="port">
+         <selector xpath="service/port"/>
+         <field xpath="@name"/>
+      </key>
+   </element>
+   <complexType name="definitionsType">
+      <complexContent>
+         <extension base="wsdl:documented">
+            <sequence>
+               <element ref="wsdl:import" minOccurs="0" maxOccurs="unbounded"/>
+               <element ref="wsdl:types" minOccurs="0"/>
+               <element ref="wsdl:message" minOccurs="0" maxOccurs="unbounded"/>
+               <element ref="wsdl:portType" minOccurs="0" maxOccurs="unbounded"/>
+               <element ref="wsdl:binding" minOccurs="0" maxOccurs="unbounded"/>
+               <element ref="wsdl:service" minOccurs="0" maxOccurs="unbounded"/>
+               <any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+                  <annotation>
+                     <documentation>to support extensibility elements </documentation>
+                  </annotation>
+               </any>
+            </sequence>
+            <attribute name="targetNamespace" type="uriReference" use="optional"/>
+            <attribute name="name" type="NMTOKEN" use="optional"/>
+         </extension>
+      </complexContent>
+  </complexType>
+   <element name="import" type="wsdl:importType"/>
+   <complexType name="importType">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <attribute name="namespace" type="uriReference" use="required"/>
+      <attribute name="location" type="uriReference" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <element name="types" type="wsdl:typesType"/>
+   <complexType name="typesType">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <sequence>
+   <any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+  </sequence>
+   </extension>
+  </complexContent>
+  </complexType>
+   <element name="message" type="wsdl:messageType">
+      <unique name="part">
+         <selector xpath="part"/>
+         <field xpath="@name"/>
+      </unique>
+   </element>
+   <complexType name="messageType">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <sequence>
+   <element ref="wsdl:part" minOccurs="0" maxOccurs="unbounded"/>
+  </sequence>
+      <attribute name="name" type="NCName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <element name="part" type="wsdl:partType"/>
+   <complexType name="partType">
+      <complexContent>
+   <extension base="wsdl:openAtts">
+   <attribute name="name" type="NMTOKEN" use="optional"/>
+      <attribute name="type" type="QName" use="optional"/>
+      <attribute name="element" type="QName" use="optional"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <element name="portType" type="wsdl:portTypeType"/>
+   <complexType name="portTypeType">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <sequence>
+   <element ref="wsdl:operation" minOccurs="0" maxOccurs="unbounded"/>
+  </sequence>
+      <attribute name="name" type="NCName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <element name="operation" type="wsdl:operationType"/>
+   <complexType name="operationType">
+      <complexContent>
+   <extension base="wsdl:documented">
+      <choice>
+         <group ref="wsdl:one-way-operation"/>
+         <group ref="wsdl:request-response-operation"/>
+         <group ref="wsdl:solicit-response-operation"/>
+         <group ref="wsdl:notification-operation"/>
+      </choice>
+      <attribute name="name" type="NCName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <group name="one-way-operation">
+      <sequence>
+         <element ref="wsdl:input"/>
+      </sequence>
+   </group>
+   <group name="request-response-operation">
+      <sequence>
+         <element ref="wsdl:input"/>
+         <element ref="wsdl:output"/>
+         <element ref="wsdl:fault" minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+   </group>
+   <group name="solicit-response-operation">
+      <sequence>
+         <element ref="wsdl:output"/>
+         <element ref="wsdl:input"/>
+         <element ref="wsdl:fault" minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+   </group>
+   <group name="notification-operation">
+      <sequence>
+         <element ref="wsdl:output"/>
+      </sequence>
+   </group>
+   <element name="input" type="wsdl:paramType"/>
+   <element name="output" type="wsdl:paramType"/>
+   <element name="fault" type="wsdl:faultType"/>
+   <complexType name="paramType">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <attribute name="name" type="NMTOKEN" use="optional"/>
+      <attribute name="message" type="QName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <complexType name="faultType">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <attribute name="name" type="NMTOKEN" use="required"/>
+      <attribute name="message" type="QName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <complexType name="startWithExtensionsType" abstract="true">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <sequence>
+   <any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+  </sequence>
+   </extension>
+  </complexContent>
+  </complexType>
+   <element name="binding" type="wsdl:bindingType"/>
+   <complexType name="bindingType">
+      <complexContent>
+   <extension base="wsdl:startWithExtensionsType">
+   <sequence>
+   <element name="operation" type="wsdl:binding_operationType" minOccurs="0" maxOccurs="unbounded"/>
+  </sequence>
+      <attribute name="name" type="NCName" use="required"/>
+      <attribute name="type" type="QName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <complexType name="binding_operationType">
+      <complexContent>
+   <extension base="wsdl:startWithExtensionsType">
+   <sequence>
+   <element name="input" type="wsdl:startWithExtensionsType" minOccurs="0"/>
+      <element name="output" type="wsdl:startWithExtensionsType" minOccurs="0"/>
+      <element name="fault" minOccurs="0" maxOccurs="unbounded">
+         <complexType>
+            <complexContent>
+   <extension base="wsdl:startWithExtensionsType">
+   <attribute name="name" type="NMTOKEN" use="required"/>
+         </extension>
+  </complexContent>
+  </complexType>
+      </element>
+  </sequence>
+      <attribute name="name" type="NCName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <element name="service" type="wsdl:serviceType"/>
+   <complexType name="serviceType">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <sequence>
+   <element ref="wsdl:port" minOccurs="0" maxOccurs="unbounded"/>
+      <any namespace="##other" minOccurs="0"/>
+  </sequence>
+      <attribute name="name" type="NCName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+   <element name="port" type="wsdl:portType"/>
+   <complexType name="portType">
+      <complexContent>
+   <extension base="wsdl:documented">
+   <sequence>
+   <any namespace="##other" minOccurs="0"/>
+  </sequence>
+      <attribute name="name" type="NCName" use="required"/>
+      <attribute name="binding" type="QName" use="required"/>
+   </extension>
+  </complexContent>
+  </complexType>
+  <attribute name="arrayType" type="string"/>
+</schema>

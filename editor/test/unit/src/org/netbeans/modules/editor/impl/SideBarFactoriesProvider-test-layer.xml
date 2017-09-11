@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.0//EN" "http://www.netbeans.org/dtds/filesystem-1_0.dtd">
+<filesystem>
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-type-A">
+                <folder name="SideBar">
+                    <file name="sidebar1.instance">
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.editor.impl.SideBarFactoriesProviderTest$SBF1"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.impl.SideBarFactoriesProviderTest.c1"/>
+                        
+                        <attr name="location" stringvalue="West"/>
+                        <attr name="position" intvalue="200"/>
+                    </file>
+                    <file name="sidebar2.instance">
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.editor.impl.SideBarFactoriesProviderTest$SBF2"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.impl.SideBarFactoriesProviderTest.c2"/>
+
+                        <attr name="location" stringvalue="North"/>
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                    <file name="sidebar3.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.impl.SideBarFactoriesProviderTest.c3"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.editor.SideBarFactory"/>
+
+                        <attr name="location" stringvalue="South"/>
+                        <attr name="position" intvalue="200"/>
+                    </file>
+                    <file name="sidebar4.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.impl.SideBarFactoriesProviderTest.c4"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.SideBarFactory"/>
+
+                        <attr name="location" stringvalue="West"/>
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                    
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

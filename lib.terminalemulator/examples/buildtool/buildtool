@@ -1,0 +1,3 @@
+#!/bin/ksh
+TERM=../../build/classes
+java -classpath "classes:$TERM" BuildTool $*

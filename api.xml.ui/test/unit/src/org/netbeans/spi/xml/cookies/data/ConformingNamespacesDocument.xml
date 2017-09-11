@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : ConformingNamespacesDocument.xml
+    Created on : July 13, 2002, 12:56 PM
+    Author     : Petr Kuzel
+    Description:
+        It conforms to the simple schema.
+-->
+
+<root xmlns='test:XMLSchema'
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:schemaLocation='test:XMLSchema XMLSchema.xsd'
+    flag="on">
+    <child1/>
+    <child2/>
+</root>

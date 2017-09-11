@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.feedreader
+OpenIDE-Module-Layer: org/netbeans/feedreader/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/feedreader/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.1
+

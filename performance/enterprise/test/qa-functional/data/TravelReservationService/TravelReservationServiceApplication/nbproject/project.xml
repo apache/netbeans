@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.compapp.projects.jbi</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/j2ee-jbi/1">
+            <name>TravelReservationServiceApplication</name>
+            <minimum-ant-version>1.6</minimum-ant-version>
+            <included-library>reference.TravelReservationService.dist_se</included-library>
+        </data>
+        <references xmlns="http://www.netbeans.org/ns/ant-project-references/1">
+            <reference>
+                <foreign-project>TravelReservationService</foreign-project>
+                <artifact-type>CAPS.asa:sun-bpel-engine</artifact-type>
+                <script>build.xml</script>
+                <target>dist_se</target>
+                <clean-target>clean</clean-target>
+                <id>dist_se</id>
+            </reference>
+        </references>
+    </configuration>
+</project>

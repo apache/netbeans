@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+                                           
+<definitions
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsdLocal0="http://www.foobar.com/xml/Account%20Interface"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    targetNamespace="http://foobar.com/asi/"
+    xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://foobar.com/asi/"
+
+    >    <types>
+        <xsd:schema
+            elementFormDefault="qualified"
+            xmlns:xsdLocal0="http://www.foobar.com/xml/Account%20Interface"
+            attributeFormDefault="unqualified"
+            targetNamespace="http://www.foobar.com/xml/Account%20Interface"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <!-- weird format -->
+           <foo   />
+           <bar/>
+       </xsd:schema
+>
+       <foobar/>
+    </types
+    >
+</definitions>

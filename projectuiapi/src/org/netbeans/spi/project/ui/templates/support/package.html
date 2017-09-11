@@ -1,0 +1,164 @@
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2004, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<html>
+<body>
+
+Support for providing own templates visible in <b>New File...</b> action.
+
+<p>Project types may declare the templates for projects using {@link org.netbeans.api.templates.TemplateRegistration}
+with a path as a subfolder of <code>Projects/</code>.
+Registering project type templates is similar to registering
+file templates described below. The wizard for a project can return {@link org.openide.loaders.DataObject}s or
+{@link org.openide.loaders.FileObject}s corresponding to the project directories of created files and/or files
+to be selected in newly created projects.
+</p>
+
+<p>Each project can also declare own file templates to be exposed it in <b>New File...</b> wizard. This
+permits users to create new files, which are of types supported by given project type. The project may also
+provide own iterator for project-specific customization of given file type.</p>
+
+<p>File templates may be declared using {@link org.netbeans.api.templates.TemplateRegistration}, e.g.:</p>
+<pre>
+&#64;TemplateRegistration(
+    folder="JSP_Servlet",
+    position=123,
+    displayName="#JSP.template",
+    iconBase="org/netbeans/modules/web/core/resources/jsp.png",
+    description="JSP.html",
+    category="web-types"
+)
+public class JSPIterator implements WizardDescriptor.InstantiatingIterator {
+    // ...
+}
+</pre>
+The <code>folder</code> attribute specifies the folder in which
+this template will be present in the <i>template chooser</i> invoked from either <b>New File...</b>
+or <b>New Project...</b> wizard.
+<blockquote>
+<b>Note:</b> a project type can declare own custom iterator with some project-specific customization,
+it's <b>recommended</b> to use the standardized target chooser exposed in
+{@link org.netbeans.spi.project.ui.templates.support.Templates#buildSimpleTargetChooser},
+a similar target chooser offers
+<a href="@org-netbeans-modules-java-project-ui@/org/netbeans/spi/java/project/support/ui/templates/JavaTemplates.html#createPackageChooser-org.netbeans.api.project.Project-org.netbeans.api.project.SourceGroup:A-"><code>JavaTemplates.createPackageChooser(...)</code></a>
+for Java-oriented projects.
+The project type also can use a <code>InstantiatingIterator</code> published by other module,
+i.e. <a href="@org-netbeans-modules-java-project-ui@/org/netbeans/spi/java/project/support/ui/templates/JavaTemplates.html#createJavaTemplateIterator--"><code>JavaTemplates.createJavaTemplateIterator()</code></a>
+useful for Java-oriented templates in case of no needs to own customization.
+The last possibility is declaration no iterator, in this case will be used a generic iterator
+useful for simple file types without any specific needs, i.e. <code>properties file</code>.<br>
+For project templates the <code>instantiate()</code> method should return a Set of FileObjects. FileObjects
+representing project directories will automatically be opened in the project and files tab. Other FileObjects 
+(e.g. Java classes created by the wizard) will be opened in the editor area. Path of corresponding nodes will be
+expanded in the project or files tab.<br>
+For file templates the <code>instantiate()</code> method should return Set of FileObjects which will then
+automatically opened in the editor. Path of corresponding nodes will be
+expanded in the project or files tab.<br>
+</blockquote>
+<code>category</code> files the template to some category. The template's categories
+helps to filter the templates according to type of project.
+You may specify multiple categories separated by commas, e.g.: <samp>some-type,some-other-type</samp>
+<p>
+There is currently no annotation to define template <em>folders</em>;
+they should be defined in the XML layer as subfolders of <code>Templates</code>
+with <code>displayName</code> and <code>position</code> attributes.
+Note that it is possible to set the attribute <code>simple</code> to (boolean) <code>false</code>
+in order to hide templates from the list shown in the standard wizards, while still
+making it possible to use <code>TemplateRegistration</code> and apply templates programmatically.
+To hide templates from the "new" wizards but show them in Template Manager,
+just set a category which is never used (such as <code>invisible</code>).
+<p>
+There are two important interfaces affecting the behavior of the templates. Implementation of these interfaces should
+reside in the project's lookup.
+<p>
+The first one is {@link org.netbeans.spi.project.ui.PrivilegedTemplates}.
+It is used for the initial content of the popup menu of <b>New File...</b>. It simply should return names of file templates from system
+filesystem which should be contained in the popup menu. Example implementation follows:
+<pre><code>
+private static final class PrivilegedTemplatesImpl implements PrivilegedTemplates {
+
+    private static final String[] PRIVILEGED_NAMES = new String[] {
+        "Templates/Classes/Class.java",
+        "Templates/Classes/Package",
+        "Templates/Classes/Interface.java",
+        "Templates/GUIForms/JPanel.java",
+        "Templates/GUIForms/JFrame.java",
+    };
+
+    public String[] getPrivilegedTemplates() {
+        return PRIVILEGED_NAMES;
+    }
+
+}
+</code></pre>
+<p>
+The second interface is {@link org.netbeans.spi.project.ui.RecommendedTemplates},
+which influences the appearance of templates in the New File wizard according to project types. The implementation of the interface has to return
+array of Strings which corresponds to names of template categories listed in the <code>templateCategory</code> attribute of template files. All templates 
+which list at least one recommended category in the <code>templateCategory</code> attribute will be listed for given project type.<br>
+<b>Note:</b> if no <code>templateCategory</code> is declared then this template will be visible for each project regardless its type.<br>
+<p>
+Example implementation of <code>RecommendedTemplates</code> interface:
+<pre><code>
+private static final class RecommendedTemplatesImpl implements RecommendedTemplates {
+    
+    // List of primarily supported templates categories
+    private static final String[] TYPES = new String[] { 
+        "java-classes",         
+        "java-main-class",      
+        "java-forms",           
+        "gui-java-application", 
+        "java-beans",           
+        "oasis-XML-catalogs",   
+        "XML",                  
+        "ant-script",           
+        "ant-task",             
+        "junit",                
+        "simple-files"          
+    };
+
+    public String[] getRecommendedTypes() {
+        return TYPES;
+    }
+
+}
+</code></pre>
+
+</body>
+</html>

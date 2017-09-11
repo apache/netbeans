@@ -1,0 +1,17 @@
+# Ensures colums from the table in the default schema "customers" show up in the completion,
+# not from the one in the "accounting" schema.
+
+select customer.|
+
+--
+<unknown>
+  customers*
+    customer
+      customer_id
+      address_line
+  accounting
+    invoice
+      invoice_id
+      customer_id
+    customer
+      name_surname

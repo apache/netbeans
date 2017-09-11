@@ -1,0 +1,65 @@
+Css modules list (source http://www.css3.info/modules/)
+
+* Selectors 
+* CSS Color 
+
+* CSS Namespaces 
+* CSS Backgrounds & Borders 
+* CSS Multi-column Layout
+(*) Media Queries 
+* CSS Marquee 
+* CSS Ruby 
+* CSS Basic User Interface 
+* CSS Style Attributes 
+
+* CSS Paged Media 
+
+* CSS Values & Units 
+* CSS Cascading & Inheritance 
+* CSS Text 
+* CSS Writing Modes 
+* CSS Generated Content for Paged Media 
+* CSS Fonts 
+* CSS Basic Box Model 
+x CSS Template Layout 
+* CSS Speech 
+* CSS Grid Positioning 
+* CSS Flexible Box Layout 
+* CSS Image Values & Replaced Content 
+* CSS 2D Transformations 
+* CSS 3D Transformations 
+* CSS Transitions 
+* CSS Animations 
+* CSSOM View 
+x CSS Syntax 
+* CSS Lists and Counters
+x CSS Reader Media Type 
+CSS Generated & Replaced Content
+* CSS Line Layout 
+* CSS Hyperlink Presentation 
+* CSS Presentation Levels 
+
+
+
+-------------------------------------------
+general:
+- css module should be able to provide new unit acceptors
+- support for functions providing + completion, checking?
+- inherit property support (parsing, error checking, completion, ...)
+- support for extending property grammar definition by other module/s (merging)
+- characters escaping in grammar definition (like '[' or '*' chars), see GridPositioningModuleTest
+    -uncomment #display=flexbox | inline-flexbox then
+- context aware properties - works only in some context of the css file
+
+
+selectors module:
+--------------------
+
+completion of pseudo elements on pseudo classes:
+    *:target::before { content : url(target.png) }
+
+
+values and units module:
+-------------------------
+- functions
+

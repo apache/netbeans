@@ -1,0 +1,578 @@
+/*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ *
+ * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ * Other names may be trademarks of their respective owners.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common
+ * Development and Distribution License("CDDL") (collectively, the
+ * "License"). You may not use this file except in compliance with the
+ * License. You can obtain a copy of the License at
+ * http://www.netbeans.org/cddl-gplv2.html
+ * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ * specific language governing permissions and limitations under the
+ * License.  When distributing the software, include this License Header
+ * Notice in each file and include the License file at
+ * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the GPL Version 2 section of the License file that
+ * accompanied this code. If applicable, add the following below the
+ * License Header, with the fields enclosed by brackets [] replaced by
+ * your own identifying information:
+ * "Portions Copyrighted [year] [name of copyright owner]"
+ *
+ * Contributor(s):
+ *
+ * The Original Software is NetBeans. The Initial Developer of the Original
+ * Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+ * Microsystems, Inc. All Rights Reserved.
+ *
+ * If you wish your version of this file to be governed by only the CDDL
+ * or only the GPL Version 2, indicate your decision by adding
+ * "[Contributor] elects to include this software in this distribution
+ * under the [CDDL or GPL Version 2] license." If you do not indicate a
+ * single choice of license, a recipient has the option to distribute
+ * your version of this file under either the CDDL, the GPL Version 2 or
+ * to extend the choice of license to its licensees as provided above.
+ * However, if you add GPL Version 2 code and therefore, elected the GPL
+ * Version 2 license, then the option applies only if the new code is
+ * made subject to such option by the copyright holder.
+ */
+
+package org.netbeans.modules.httpserver;
+
+import java.awt.Dialog;
+import java.util.Hashtable;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.Properties;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.prefs.Preferences;
+import javax.swing.event.EventListenerList;
+import org.openide.DialogDescriptor;
+
+import org.openide.util.NbBundle;
+import org.openide.util.HelpCtx;
+import org.openide.util.Utilities;
+import org.openide.NotifyDescriptor;
+import org.openide.DialogDisplayer;
+import org.openide.nodes.BeanNode;
+import org.openide.util.NbPreferences;
+
+/** Options for http server
+*
+* @author Ales Novak, Petr Jiricka
+*/
+public final class HttpServerSettings {
+    private static HttpServerSettings INSTANCE = new HttpServerSettings();
+    private static  BeanNode view = null;
+
+    private static final int MAX_START_RETRIES = 20;
+    private static int currentRetries = 0;
+
+    protected static final EventListenerList listenerList = new EventListenerList();
+
+    /** Has this been initialized ?
+    *  Becomes true if a "running" getter or setter is called
+    */
+    static boolean inited = false;
+
+    /** Contains threads which are or will be asking for access for the given IP address. */
+    private static Hashtable<InetAddress,Thread> whoAsking = new Hashtable<InetAddress,Thread>();
+
+    public static final int SERVER_STARTUP_TIMEOUT = 3000;
+
+    /** constant for local host */
+    public static final String LOCALHOST = "local"; // NOI18N
+    /** constant for any host */
+    public static final String ANYHOST = "any"; // NOI18N
+
+    public static HostProperty hostProperty = null;
+    
+    public static final String PROP_PORT               = "port"; // NOI18N
+    public static final String PROP_HOST_PROPERTY      = "hostProperty"; // NOI18N
+    static final String PROP_WRAPPER_BASEURL    = "wrapperBaseURL"; // NOI18N
+    public static final String PROP_RUNNING            = "running"; // NOI18N
+
+    private static final String PROP_SHOW_GRANT_ACCESS  = "showGrantAccess"; // NOI18N
+
+    /** port */
+     private static final int DEFAULT_PORT = 8082;
+
+    /** mapping of wrapper to URL */
+    private static String wrapperBaseURL = "/resource/"; // NOI18N
+    
+    /** Reflects whether the server is actually running, not the running property */
+    static boolean running = false;
+
+    private static boolean startStopMessages = true;
+
+    private static Properties mappedServlets = new Properties();
+
+    /** http settings
+     * @deprecated use <CODE>SharedClassObject.findObject()</CODE>
+     */
+    public static HttpServerSettings OPTIONS = null;
+
+    /** Lock for the httpserver operations */
+    private static Object httpLock;
+    
+    private  static Preferences getPreferences() {
+        return NbPreferences.forModule(HttpServerSettings.class);
+    }    
+    
+    /**
+     * Obtains lock for httpserver synchronization
+     */
+    static final Object httpLock () {
+        if (httpLock == null) {
+            httpLock = new Object ();
+        }
+        return httpLock;
+    }
+
+    private HttpServerSettings() {
+    }
+
+    public static HttpServerSettings getDefault() {
+        return INSTANCE;
+    }
+    
+    /** getter for running status */
+    public boolean isRunning() {
+        if (inited) {
+            return running;
+        }
+        else {
+            // this used to be true, but it seems more reasonable not to start the server by default
+            // Fixes bug 11347
+            setRunning(false);
+            return running;
+        }
+    }
+
+    /** Intended to be called by the thread which succeeded to start the server */
+    void runSuccess() {
+        synchronized (httpLock ()) {
+            currentRetries = 0;
+            running = true;
+            httpLock ().notifyAll();
+        }
+    }
+
+    /** Intended to be called by the thread which failed to start the server. 
+     * It decides whether try to start server on next port or show appropriate
+     * error message.
+     */
+    void runFailure(Throwable t) {
+        running = false;
+        if (t instanceof IncompatibleClassChangeError) {
+            // likely there is a wrong servlet API version on CLASSPATH
+            DialogDisplayer.getDefault ().notify(new NotifyDescriptor.Message(
+               NbBundle.getMessage (HttpServerSettings.class, "MSG_HTTP_SERVER_incompatbleClasses"),
+               NotifyDescriptor.Message.WARNING_MESSAGE));
+        }
+        else if (t instanceof java.net.BindException) {
+            // can't open socket - we can retry
+            currentRetries ++;
+            if (currentRetries <= MAX_START_RETRIES) {
+                setPort(getPort() + 1);
+                setRunning(true);
+            }
+            else {
+                currentRetries = 0;
+                DialogDisplayer.getDefault ().notify(new NotifyDescriptor.Message(
+                                               NbBundle.getMessage (HttpServerSettings.class, "MSG_HTTP_SERVER_START_FAIL"),
+                                               NotifyDescriptor.Message.WARNING_MESSAGE));
+                int p = getPort ();
+                if (p < 1024 && inited && Utilities.isUnix()) {
+                    DialogDisplayer.getDefault ().notify(new NotifyDescriptor.Message(
+                                               NbBundle.getMessage (HttpServerSettings.class, "MSG_onlyRootOnUnix"),
+                                               NotifyDescriptor.WARNING_MESSAGE));
+                }
+
+            }
+        }
+        else {
+            // unknown problem
+            DialogDisplayer.getDefault ().notify(new NotifyDescriptor.Message(
+               NbBundle.getMessage (HttpServerSettings.class, "MSG_HTTP_SERVER_START_FAIL_unknown"),
+               NotifyDescriptor.Message.WARNING_MESSAGE));
+        }
+    }
+
+    /** Restarts the server if it is running - must be called in a synchronized block 
+     *  No need to restart if it is called during deserialization.
+     */
+    private void restartIfNecessary(boolean printMessages) {
+        if (running) {
+            if (!printMessages)
+                setStartStopMessages(false);
+            HttpServerModule.stopHTTPServer();
+            HttpServerModule.initHTTPServer();
+            // messages will be enabled by the server thread
+        }
+    }
+
+    /** Returns a relative directory URL with a leading and a trailing slash */
+    private String getCanonicalRelativeURL(String url) {
+        String newURL;
+        if (url.length() == 0)
+            newURL = "/";   // NOI18N
+        else {
+            if (url.charAt(0) != '/')
+                newURL = "/" + url; // NOI18N
+            else
+                newURL = url;
+            if (newURL.charAt(newURL.length() - 1) != '/')
+                newURL = newURL + "/";  // NOI18N
+        }
+        return newURL;
+    }
+
+    /** setter for running status */
+    public void setRunning(boolean running) {
+        inited = true;
+        if (this.running == running)
+            return;
+
+        synchronized (httpLock ()) {
+            if (running) {
+                // running status is set by another thread
+                HttpServerModule.initHTTPServer();
+            }
+            else {
+                this.running = false;
+                HttpServerModule.stopHTTPServer();
+            }
+        }
+    }
+
+    // NOT publicly available
+    
+    /** getter for classpath base */
+    String getWrapperBaseURL() {
+        return wrapperBaseURL;
+    }
+
+    /** setter for classpath base */
+    void setWrapperBaseURL(String wrapperBaseURL) {
+        // canonical form starts and ends with a /
+        String oldURL;
+        String newURL = getCanonicalRelativeURL(wrapperBaseURL);
+
+        // check if any change is taking place
+        if (this.wrapperBaseURL.equals(newURL))
+            return;
+
+        // implement the change
+        synchronized (httpLock ()) {
+            oldURL = this.wrapperBaseURL;
+            this.wrapperBaseURL = newURL;
+            restartIfNecessary(false);
+        }
+    }
+
+    /** setter for port */
+    public void setPort(int p) {
+        if (p <= 0 || p >65535) {
+            NotifyDescriptor.Message msg = new NotifyDescriptor.Message(
+                        NbBundle.getMessage(HttpServerSettings.class, "ERR_PortNumberOutOfRange", new Integer(p)), NotifyDescriptor.ERROR_MESSAGE);
+            
+            DialogDisplayer.getDefault().notify(msg);
+            return;
+        }
+        
+        synchronized (httpLock ()) {
+            getPreferences().putInt(PROP_PORT,p);
+            restartIfNecessary(true);
+        }
+    }
+
+    /** getter for port */
+    public int getPort() {
+        return getPreferences().getInt(PROP_PORT, DEFAULT_PORT);
+    }
+
+    public void setStartStopMessages(boolean ssm) {
+        startStopMessages = ssm;
+    }
+
+    public boolean isStartStopMessages() {
+        return startStopMessages;
+    }
+
+    public HelpCtx getHelpCtx () {
+        return new HelpCtx (HttpServerSettings.class);
+    }
+
+    /** Returns string for localhost */
+    private String getLocalHost() {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        }
+        catch (UnknownHostException e) {
+            return "localhost"; // NOI18N
+        }
+    }
+
+    public void addGrantAccessListener(GrantAccessListener l) {
+        listenerList.add(GrantAccessListener.class, l);
+    }
+
+    public void removeGrantAccessListener(GrantAccessListener l) {
+        listenerList.remove(GrantAccessListener.class, l);
+    }
+
+    /** Returns true if oneof the listeners allowed access */
+    protected boolean fireGrantAccessEvent(InetAddress clientAddress, String resource) {
+        Object[] listeners = listenerList.getListenerList();
+        GrantAccessEvent grantAccessEvent = null;
+        for (int i = listeners.length-2; i>=0; i-=2) {
+            if (listeners[i]==GrantAccessListener.class) {
+                if (grantAccessEvent == null)
+                    grantAccessEvent = new GrantAccessEvent(this, clientAddress, resource);
+                ((GrantAccessListener)listeners[i+1]).grantAccess(grantAccessEvent);
+            }
+        }
+        return (grantAccessEvent == null) ? false : grantAccessEvent.isGranted();
+    }
+
+    /** Requests access for address addr. If necessary asks the user. Returns true it the access
+    * has been granted. */  
+    boolean allowAccess(InetAddress addr, String requestPath) {
+        if (accessAllowedNow(addr, requestPath))
+            return true;
+
+        Thread askThread = null;
+        synchronized (whoAsking) {
+            // one more test in the synchronized block
+            if (accessAllowedNow(addr, requestPath))
+                return true;
+
+            askThread = (Thread)whoAsking.get(addr);
+            if (askThread == null) {
+                askThread = Thread.currentThread();
+                whoAsking.put(addr, askThread);
+            }
+        }
+
+        // now ask the user
+        synchronized (HttpServerSettings.class) {
+            if (askThread != Thread.currentThread()) {
+                return accessAllowedNow(addr, requestPath);
+            }
+
+            try {
+                if (!isShowGrantAccessDialog ())
+                    return false;
+                
+                String msg = NbBundle.getMessage (HttpServerSettings.class, "MSG_AddAddress", addr.getHostAddress ());
+                
+                final GrantAccessPanel panel = new GrantAccessPanel (msg);
+                DialogDescriptor descriptor = new DialogDescriptor (
+                    panel,
+                    NbBundle.getMessage (HttpServerSettings.class, "CTL_GrantAccessTitle"),
+                    true,
+                    NotifyDescriptor.YES_NO_OPTION,
+                    NotifyDescriptor.NO_OPTION,
+                    null
+                );
+                descriptor.setMessageType (NotifyDescriptor.QUESTION_MESSAGE);
+                // descriptor.setOptionsAlign (DialogDescriptor.BOTTOM_ALIGN);
+                final Dialog d  = DialogDisplayer.getDefault ().createDialog (descriptor);
+                d.setSize (580, 180);
+                d.setVisible(true);
+
+                setShowGrantAccessDialog (panel.getShowDialog ());
+                if (NotifyDescriptor.YES_OPTION.equals(descriptor.getValue ())) {
+                    appendAddressToGranted(addr.getHostAddress());
+                    return true;
+                }
+                else
+                    return false;
+            }
+            finally {
+                whoAsking.remove(addr);
+            }
+        } // end synchronized
+    }
+
+    /** Checks whether access to the server is now allowed. */
+    private boolean accessAllowedNow(InetAddress addr, String resource) {
+        if (hostProperty.getHost().equals(HttpServerSettings.ANYHOST))
+            return true;
+
+        Set hs = getGrantedAddressesSet();
+        if (hs.contains(addr.getHostAddress()))
+            return true;
+
+        if (fireGrantAccessEvent(addr, resource))
+            return true;
+
+        return false;
+    }
+
+    /** Appends the address to the list of addresses which have been granted access. */
+    private void appendAddressToGranted(String addr) {
+        synchronized (httpLock ()) {
+            String granted = hostProperty.getGrantedAddresses().trim();
+            if ((granted.length() > 0) &&
+                    (granted.charAt(granted.length() - 1) != ';') &&
+                    (granted.charAt(granted.length() - 1) != ','))
+                granted += ',';
+            granted += addr;
+            hostProperty.setGrantedAddresses(granted);
+        }
+    }
+
+    /** Returns a list of addresses which have been granted access to the web server,
+    * including the localhost. Addresses are represented as strings. */
+    Set<String> getGrantedAddressesSet() {
+        HashSet<String> addr = new HashSet<String>();
+        try {
+            addr.add(InetAddress.getByName("localhost").getHostAddress()); // NOI18N
+            addr.add(InetAddress.getLocalHost().getHostAddress());
+        }
+        catch (UnknownHostException e) {}
+        StringTokenizer st = new StringTokenizer(hostProperty.getGrantedAddresses(), ",;"); // NOI18N
+        while (st.hasMoreTokens()) {
+            String ipa = st.nextToken();
+            ipa = ipa.trim();
+            try {
+                addr.add(InetAddress.getByName(ipa).getHostAddress());
+            }
+            catch (UnknownHostException e) {}
+        }
+        return addr;
+    }
+
+    Properties getMappedServlets() {
+        return mappedServlets;
+    }
+
+    /** Converts string into string that is usable in URL. 
+     *  This mangling changes some characters
+     */
+    static String mangle (String name) {
+        StringBuffer sb = new StringBuffer ();
+        for (int i = 0; i < name.length (); i++) {
+            if (Character.isLetterOrDigit (name.charAt (i)) ||
+                name.charAt (i) == '.') {
+                sb.append (name.charAt (i));
+            }
+            else {
+                String code = Integer.toHexString ((int)name.charAt (i)).toUpperCase ();
+                if (code.length ()<2)
+                    code = (code.length () == 0)? "00": "0"+code;   // NOI18N
+                sb.append ("%").                                    // NOI18N
+                append ((code.length () == 2)? code: code.substring (code.length ()-2));
+            }
+        }
+        return sb.toString ();
+    }
+    
+    /** Unconverts string from URL into old string. 
+     *  This mangling decodes '%xy'
+     */
+    static String demangle (String name) {
+        StringBuffer sb = new StringBuffer ();
+        try {
+            for (int i = 0; i < name.length (); i++) {
+                if (name.charAt (i) != '%') {
+                    sb.append (name.charAt (i));
+                }
+                else {
+                    sb.append ((char)Integer.parseInt (name.substring (i+1, i+3), 16));
+                    i += 2;
+                }
+            }
+        }
+        catch (NumberFormatException ex) {
+            ex.printStackTrace ();
+            return "";  // NOI18N
+        }
+        return sb.toString ();
+    }
+    
+    /** Getter for property hostProperty.
+     * @return Value of property hostProperty.
+     */
+    public HttpServerSettings.HostProperty getHostProperty () {
+        if (hostProperty == null) {
+            hostProperty = new HostProperty(getPreferences().get("grantedAddresses",""), 
+                    getPreferences().get("host",LOCALHOST));
+        }
+        return hostProperty;
+    }
+    
+    /** Setter for property hostProperty.
+     * @param hostProperty New value of property hostProperty.
+     */
+    public void setHostProperty (HttpServerSettings.HostProperty hostProperty) {
+        if (ANYHOST.equals(hostProperty.getHost ()) || LOCALHOST.equals(hostProperty.getHost ())) {
+            this.hostProperty.setHost(hostProperty.getHost());
+            this.hostProperty.setGrantedAddresses(hostProperty.getGrantedAddresses());
+            getPreferences().put("host", hostProperty.getHost());//NOI18N
+            getPreferences().put("grantedAddresses", hostProperty.getGrantedAddresses());//NOI18N
+        }
+    }
+    
+    public boolean isShowGrantAccessDialog () {
+        return getPreferences().getBoolean(PROP_SHOW_GRANT_ACCESS, true);
+    }
+    
+    public void setShowGrantAccessDialog (boolean show) {
+        getPreferences().putBoolean(PROP_SHOW_GRANT_ACCESS,show);
+    }
+    
+    /** Property value that describes set of host with granted access
+     */
+    public static class HostProperty implements java.io.Serializable {
+        
+        private String grantedAddresses;
+        
+        private String host;
+        
+        private static final long serialVersionUID = 1927848926692414249L;
+        
+        HostProperty (String grantedAddresses, String host) {
+            this.grantedAddresses = grantedAddresses;
+            this.host = host;
+        }
+        
+        /** Getter for property host.
+         * @return Value of property host.
+         */
+        public String getHost () {
+            return host;
+        }
+        
+        /** Setter for property host.
+         * @param host New value of property host.
+         */
+        public void setHost (String host) {
+            this.host = host;                        
+        }
+        
+        /** Getter for property grantedAddresses.
+         * @return Value of property grantedAddresses.
+         */
+        public String getGrantedAddresses () {
+            return grantedAddresses;
+        }
+        
+        /** Setter for property grantedAddresses.
+         * @param grantedAddresses New value of property grantedAddresses.
+         */
+        public void setGrantedAddresses (String grantedAddresses) {
+            this.grantedAddresses = grantedAddresses;            
+        }
+        
+    }
+}

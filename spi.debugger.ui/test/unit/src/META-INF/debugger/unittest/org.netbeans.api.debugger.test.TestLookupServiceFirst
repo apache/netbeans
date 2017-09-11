@@ -1,0 +1,6 @@
+# comment 1
+
+# comment 2
+org.netbeans.api.debugger.test.TestLookupServiceFirst
+
+org.netbeans.api.debugger.test.NonexistentLookupServiceProvider

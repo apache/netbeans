@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE editor-preferences PUBLIC "-//NetBeans//DTD Editor Preferences 1.0//EN" "http://www.netbeans.org/dtds/EditorPreferences-1_0.dtd">
+
+<editor-preferences>
+    <entry name="simple-value-setting-A" value="value-A"/>
+    <entry name="localized-setting" valueId="localized-setting-bundle-key"/>
+</editor-preferences>

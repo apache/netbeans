@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+<apichanges>
+<apidefs>
+<apidef name="csl.api">Common Scripting Language API</apidef>
+</apidefs>
+<changes>
+    <change id="TypesSplit">
+        <summary>Separate common non UI classes</summary>
+        <version major="2" minor="54"/>
+        <date day="31" month="3" year="2016"/>
+        <author login="phejl"/>
+        <compatibility addition="no" deletion="yes" modification="no" binary="compatible" source="incompatible" deprecation="no"/>
+        <description>
+            <p>
+                Seperating the common non UI classes to avoid Swing dependency in dependent projects.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.csl.api" name="Documentation" link="no"/>
+        <class package="org.netbeans.modules.csl.api" name="ElementHandle" link="no"/>
+        <class package="org.netbeans.modules.csl.api" name="ElementKind" link="no"/>
+        <class package="org.netbeans.modules.csl.api" name="Error" link="no"/>
+        <class package="org.netbeans.modules.csl.api" name="Modifier" link="no"/>
+        <class package="org.netbeans.modules.csl.api" name="OffsetRange" link="no"/>
+        <class package="org.netbeans.modules.csl.api" name="Severity" link="no"/>
+        <class package="org.netbeans.modules.csl.spi" name="ParserResult" link="no"/>
+        <issue number="258520"/>
+    </change>
+    <change id="CancelSuppport">
+        <api name="csl.api"/>
+        <summary>Added <code>CancelSupport</code> to allow scanners and other CSL services to check task cancelling</summary>
+        <version major="2" minor="50"/>
+        <date day="26" month="6" year="2015"/>
+        <author login="tzezula"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" source="compatible" deprecation="no"/>
+        <description>
+            <p>
+                Added <code>CancelSupport</code> to allow scanners and other CSL services to check task cancelling.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.csl.spi.support" name="CancelSupport"/>
+    </change>
+    <change id="CodeCompletionHandler2.documentElement-cancelable">
+        <api name="csl.api"/>
+        <summary>Provide information that the calling task was canceled.</summary>
+        <version major="2" minor="46"/>
+        <date day="28" month="1" year="2014"/>
+        <author login="marfous"/>
+        <compatibility addition="no" deletion="no" modification="yes" binary="incompatible" source="incompatible" deprecation="no"/>
+        <description>
+            <p>
+                Extend CodeCompletionHandler2.documentElement method to provide information
+                that the calling task was cancelled.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.csl.api" name="CodeCompletionHandler2"/>
+        <issue number="240749"/>
+    </change>
+    <change id="DocumentationUrl">
+        <api name="csl.api"/>
+        <summary>Provide a way to configure external documentation URL</summary>
+        <version major="2" minor="44"/>
+        <date day="10" month="9" year="2013"/>
+        <author login="phejl"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" source="compatible" deprecation="no"/>
+        <description>
+            <p>
+                Extending code completion hadler to provide a way client may
+                specify external documentation URL.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.csl.api" name="CodeCompletionHandler2"/>
+        <class package="org.netbeans.modules.csl.api" name="Documentation"/>
+        <issue number="229272"/>
+    </change>
+    <change id="LanguageRegistration.useMultiview">
+        <api name="csl.api"/>
+        <summary>Add useMultiview to @LanguageRegistration</summary>
+        <version major="2" minor="20"/>
+        <date day="16" month="6" year="2011"/>
+        <author login="tstupka"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="incompatible" source="compatible" deprecation="no"/>
+        <description>
+            <p>
+                Add attribute useMultiview to the @LanguageRegistration annotation.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.csl.api" name="LanguageRegistration"/>
+        <issue number="199462"/>
+    </change>
+    <change id="CslTemplateExpansion">
+        <api name="csl.api"/>
+        <summary>Template expansion no longer requires parsing of the source</summary>
+        <version major="2" minor="11"/>
+        <date day="6" month="1" year="2011"/>
+        <author login="dstrupl"/>
+        <compatibility addition="no" deletion="no" modification="yes" binary="incompatible" source="incompatible" deprecation="no"/>
+        <description>
+            <p>
+                Performance fix requires that parsing is not done on template expansion.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.csl.api" name="CodeCompletionHandler"/>
+        <issue number="193935"/>
+    </change>
+    <change id="CslActions">
+        <api name="csl.api"/>
+        <summary>Added CslActions, deprecated currently exposed Actions</summary>
+        <version major="2" minor="10"/>
+        <date day="30" month="9" year="2010"/>
+        <author login="emononen"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" source="compatible" deprecation="yes"/>
+        <description>
+            <p>
+                Added CslActions; a factory class for creating actions provided by CSL. Also deprecated the currently exposed actions in csl.api, CslActions is now the preferred way of accessing them.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.csl.api" name="CslActions"/>
+        <issue number="190209"/>
+    </change>
+    <change id="StructureItem.CollapsedDefault">
+        <api name="csl.api"/>
+        <summary>Adding a new StructureItem.CollapsedDefault interface</summary>
+        <version major="2" minor="7"/>
+        <date day="26" month="8" year="2010"/>
+        <author login="dkaspar"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" source="compatible" deprecation="no"/>
+        <description>
+            <p>
+                Adding StructureItem.CollapsedDefault interface which allows to define whether or not the StructrureItem should be collapsed/expanded by default when shown in a structure tree.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.csl.api" name="StructureItem"/>
+        <issue number="170281"/>
+    </change>
+    <change id="overriding-annotations">
+        <api name="csl.api"/>
+        <summary>Adding OverridingMethods to compute overriding annotations</summary>
+        <version major="2" minor="3"/>
+        <date day="3" month="3" year="2010"/>
+        <author login="jlahoda"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" source="compatible" deprecation="yes"/>
+        <description>
+            <p>
+                Adding OverridingMethods API class that allows to compute overriding/is overridden annotations.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.csl.api" name="OverridingMethods"/>
+        <issue number="177571"/>
+    </change>
+    <change id="ToggleBlockCommentAction-noarg-ctor">
+        <api name="csl.api"/>
+        <summary>Adding no-arg constructor to ToggleBlockCommentAction</summary>
+        <version major="2" minor="2"/>
+        <date day="15" month="2" year="2010"/>
+        <author login="vstejskal"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" source="compatible" deprecation="yes"/>
+        <description>
+            <p>
+            Adding no-arg constructor to <code>ToggleBlockCommentAction</code> class and deprecated
+            the <code>ToggleBlockCommentAction(CommentHandler cH)</code> constructor. The action dynamically
+            determines the type of comments for the document section where it is invoked.
+            </p>
+        </description>
+        <issue number="167300"/>
+    </change>
+    <change id="api-cleanup">
+        <api name="csl.api"/>
+        <summary>Removing o.n.m.csl.core and o.n.m.csl.editor from public API</summary>
+        <version major="2" minor="1"/>
+        <date day="28" month="1" year="2010"/>
+        <author login="vstejskal"/>
+        <compatibility addition="no" deletion="yes" modification="yes" binary="incompatible" source="incompatible"/>
+        <description>
+            <p>
+            The packages <code>o.n.m.csl.core</code> and <code>o.n.m.csl.editor</code> were removed
+            from the public API. They contained implementation classes and should never have been
+            made public in the first place. The only classes in these packages that were needed
+            by language plugins are several editor actions. They were moved to <code>o.n.m.csl.api</code>
+            package.
+            </p>
+        </description>
+        <issue number="169991"/>
+    </change>
+    <change id="LanguageRegistration-annotation">
+        <api name="csl.api"/>
+        <summary>Adding @LanguageRegistration annotation</summary>
+        <version major="1" minor="19"/>
+        <date day="22" month="1" year="2010"/>
+        <author login="vstejskal"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" source="compatible"/>
+        <description>
+            <p>
+            A new annotation <code>@LanguageRegistration</code> was added as a replacement
+            for <code>CslJar</code> ant task. The language plugins now do not have to
+            customize their 'jar' build target and run <code>CslJar</code> task. Instead they
+            should annotate their language class (ie. subclass of <code>DefaultLanguageConfig</code>) with
+            the <code>@LanguageRegistration</code>.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.csl.spi" name="LanguageRegistration"/>
+        <issue number="169991"/>
+    </change>
+    <change id="Error.Badging">
+        <api name="csl.api"/>
+        <summary>Added Error.BadgeError</summary>
+        <version major="1" minor="18"/>
+        <date day="21" month="1" year="2010"/>
+        <author login="jlahoda"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" source="compatible"/>
+        <description>
+            <p>
+            Adding Error.Badging class to allow showing error badges in the projects tab.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.csl.api" name="Error"/>
+        <issue number="179459"/>
+    </change>
+    <change id="Error.isLineError">
+        <api name="csl.api"/>
+        <summary>Add Error.isLineError</summary>
+        <version major="1" minor="11"/>
+        <date day="5" month="6" year="2009"/>
+        <author login="mfukala"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="incompatible" source="incompatible"/>
+        <description>
+            <p>
+            Defines the way how an error annotation for this error behaves in the editor.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.csl.api" name="Error"/>
+        <issue number="162880"/>
+    </change>
+</changes>
+<htmlcontents>
+<head>
+    <title>Change History for the Common Scripting Language API</title>
+    <link rel="stylesheet" href="prose.css" type="text/css"/>
+</head>
+<body>
+    <standard-changelists module-code-name="org.netbeans.modules.csl.api"/>
+</body>
+</htmlcontents>
+</apichanges>

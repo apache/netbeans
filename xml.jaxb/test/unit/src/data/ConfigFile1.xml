@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schemas  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xmlns:ns0='http://xml.netbeans.org/schema/JAXBWizConfig'
+   xmlns='http://xml.netbeans.org/schema/JAXBWizConfig'
+   destdir='build/generated/addons/jaxb' 
+   projectName='testPrj1'
+   xsi:schemaLocation='http://xml.netbeans.org/schema/JAXBWizConfig ..\..\..\..\..\..\src\org\netbeans\modules\jaxb\util\ConfigSchema.xsd'>
+    <schema type="-xmlschema" name="schema1" package="ABC">
+        <xjc-options>        
+            <xjc-option name="nv" value="false"/>
+            <xjc-option name="readOnly" value="false"/>
+            <xjc-option name="npa" value="false"/>
+            <xjc-option name="verbose" value="false"/>
+            <xjc-option name="quite" value="true"/>
+        </xjc-options>
+        <schema-sources>
+            <schema-source location="src\META-INF\jaxb\XmlQosPmUtilSchema.xsd"
+                   origLocation="c:\tools\jaxws21\jaxws21\bin\wsdl\XmlQosPmUtilSchema.xsd"/>             
+        </schema-sources>
+        <bindings>
+            <binding location="src\META-INF\jaxb\XmlQosPmUtilSchema.bnd"
+                       origLocation="c:\tools\jaxws21\jaxws21\bin\wsdl\XmlQosPmUtilSchema.bnd"/> 
+            <binding location="src\META-INF\jaxb\XmlQosPmUtilSchema1.bnd"
+                       origLocation="c:\tools\jaxws21\jaxws21\bin\wsdl\XmlQosPmUtilSchema1.bnd"/> 
+        </bindings>                   
+        <catalog location="src\META-INF\jaxb\XmlQosPmUtilSchema.bnd"
+                   origLocation="c:\tools\jaxws21\jaxws21\bin\wsdl\XmlQosPmUtilSchema.bnd"/>                    
+    </schema>
+    <schema type="-xmlschema" name="schemaw" package="ggg">
+        <xjc-options>
+            <xjc-option name="nv" value="false"/>
+            <xjc-option name="readOnly=" value="false"/>
+            <xjc-option name="npa" value="false"/>
+            <xjc-option name="verbose" value="false"/>
+            <xjc-option name="quite" value="false"/>            
+            <xjc-option name="extension" value="true"/>            
+        </xjc-options> 
+        <schema-sources>
+            <schema-source location="src\META-INF\jaxb\XmlQosPmUtilSchema.xsd"
+                        origLocation="c:\tools\jaxws21\jaxws21\bin\wsdl\XmlQosPmUtilSchema.xsd"/> 
+            <schema-source location="src\META-INF\jaxb\XmlVodafoneTroubleTicketSchema.xsd"
+                       origLocation="c:\tools\jaxws21\jaxws21\bin\wsdl\XmlVodafoneTroubleTicketSchema.xsd"/> 
+        </schema-sources>
+    </schema>
+</schemas>

@@ -1,0 +1,53 @@
+[doc]
+[instruction] target=xml, data=version="1.0" encoding="UTF-8"
+[instruction] target=import, data=java.lang.*
+[instruction] target=import, data=javafx.scene.control.*
+[instruction] target=import, data=javafx.scene.effect.*
+[instruction] target=import, data=javafx.scene.layout.*
+[prefix fx=http://javafx.com/fxml]
+[elem] AnchorPane
+    i=null, d=SimpleForm, minHeight=90.0, minWidth=220.0, prefHeight=300.0, prefWidth=400.0, xmlns:fx=http://javafx.com/fxml
+ [elem] children
+  [elem] CheckBox
+      id=null, text=Keep Me Informed, AnchorPane.bottomAnchor=8.0, AnchorPane.leftAnchor=5.0
+  [end-elem] CheckBox]
+  [elem] Button
+      id=SubmitButto text=, Submit=null, AnchorPane.bottomAnchor=5.0, AnchorPane.rightAnchor=5.0
+  [end-elem] Button]
+  [elem] AnchorPane
+      idx=null, ValuePane=null, minHeight=127.0, minWidth=330.0, prefHeight=127.0, prefWidth=330.0, AnchorPane.leftAnchor=72.0, AnchorPane.rightAnchor=-2.0, AnchorPane.topAnchor=5.0
+   [elem] children
+    [elem] TextField
+        id=null, ameTextField=null, AnchorPane.leftAnchor=0.0, AnchorPane.rightAnchor=0.0, AnchorPane.topAnchor=0.0
+    [end-elem] TextField]
+    [elem] TextField
+        id=newTextField, layoutX=1.0, layoutY=72.0, minHeight=21.310546875, minWidth=321.0, prefHeight=21.310546875, prefWidth=321.0, promptText=asdf, text=Ahoj, fx:id=newTextField
+     [elem] effect
+      [elem] MotionBlur
+          radius=5.0
+      [end-elem] MotionBlur]
+     [end-elem] effect]
+    [end-elem] TextField]
+    [elem] TextField
+        id=EmailTextField, AnchorPane.leftAnchor=0.0, AnchorPane.rightAnchor=0.0, AnchorPane.topAnchor=33.0
+    [end-elem] TextField]
+   [end-elem] children]
+  [end-elem] AnchorPane]
+  [elem] AnchorPane
+      id=LabelPane, AnchorPane.leftAnchor=5.0, AnchorPane.topAnchor=8.0
+   [elem] children
+    [elem] Label
+        id=NameLabel, text=Name:, AnchorPane.leftAnchor=0.0, AnchorPane.rightAnchor=0.0, AnchorPane.topAnchor=0.0
+    [end-elem] Label]
+    [elem] Label
+        id=EmailLabel, text=Email:, AnchorPane.leftAnchor=0.0, AnchorPane.rightAnchor=0.0, AnchorPane.topAnchor=34.0
+    [end-elem] Label]
+   [end-elem] children]
+  [end-elem] AnchorPane]
+  [elem] Label
+      id=Label, layoutX=5.0, layoutY=77.0, text=Label
+  [end-elem] Label]
+ [end-elem] children]
+[end-elem] AnchorPane]
+[end-prefix xmlns:fx
+[end-doc]

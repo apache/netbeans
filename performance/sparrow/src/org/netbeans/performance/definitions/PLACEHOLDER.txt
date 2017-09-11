@@ -1,0 +1,5 @@
+This directory is for XML definitions for charts, queries, filters and so forth
+once the infrastructure for that is completed.  
+
+See org.netbeans.performance.chart.* and 
+org.netbeans.performance.impl.analysis.ChartMaker

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mode version="2.3">
+    <name unique="mode06" />
+    <kind type="sliding" />
+    <slidingSide side="left" />
+    <state type="joined" />
+    <active-tc id="output" />
+    <empty-behavior permanent="false" />
+    <slide-in-size tc-id="output" size="123"/>
+    <slide-in-size tc-id="someOtherTopComponentId" size="321"/>
+</mode>

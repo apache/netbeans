@@ -1,0 +1,708 @@
+
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+
+    <folder name="org-netbeans-api-project-libraries">
+        <folder name="Libraries">
+            <file name="absolutelayout.xml" url="absolutelayout.xml">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.form.resources.Bundle#absolutelayout"/>
+            </file>
+        </folder>
+    </folder>
+  <folder name="Loaders">
+    <folder name="text">
+        <folder name="x-java">
+            <folder name="Factories">
+                <file name="org-netbeans-modules-form-FormDataLoader.instance">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+                        <attr name="position" intvalue="100"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="x-form">
+            <folder name="Factories">
+                <file name="org-netbeans-modules-form-FormDataLoader.instance">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+                        <attr name="position" intvalue="100"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="x-palette-item">
+            <folder name="Factories">
+                <file name="org-netbeans-modules-form-palette-PaletteItemDataObject$PaletteItemDataLoader.instance">
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+                        <attr name="position" intvalue="100"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+   </folder>
+    <folder name="Actions">
+        <folder name="Form">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+
+            <file name="org-netbeans-modules-form-actions-InstallBeanAction.instance"/>
+            <file name="org-netbeans-modules-form-actions-CustomizeLayoutAction.instance"/>
+            <file name="org-netbeans-modules-form-actions-TestAction.instance"/>
+            <file name="org-netbeans-modules-form-actions-ReloadAction.instance"/>
+            <file name="org-netbeans-modules-form-actions-InPlaceEditAction.instance"/>
+            <file name="org-netbeans-modules-form-actions-EditContainerAction.instance"/>
+            <file name="org-netbeans-modules-form-actions-DuplicateAction.instance"/>
+            <!-- XXX no such file:
+            <file name="org-netbeans-modules-form-actions-EditFormAction.instance"/>
+            -->
+        </folder>
+    </folder>
+
+    <folder name="Menu">
+        <folder name="Tools">
+            <folder name="PaletteManager">
+                <file name="org-netbeans-modules-form-actions-InstallBeanAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Form/org-netbeans-modules-form-actions-InstallBeanAction.instance"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="Navigator">
+        <folder name="Panels">
+            <folder name="text">
+                <folder name="x-form">
+                    <file name="org-netbeans-modules-form-ComponentInspector.instance">
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.form.ComponentInspector"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.form.ComponentInspector.getInstance"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="FormDesignerPalette">
+        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+            
+        <folder name="SwingContainers">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+            <attr name="isExpanded" boolvalue="true"/>
+
+            <attr name="position" intvalue="100"/>
+            <file name="JPanel.palette_item" url="palette/JPanel.palette_item">
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="JTabbedPane.palette_item" url="palette/JTabbedPane.palette_item">
+                <attr name="position" intvalue="200"/>
+            </file>
+            <file name="JSplitPane.palette_item" url="palette/JSplitPane.palette_item">
+                <attr name="position" intvalue="300"/>
+            </file>
+            <file name="JScrollPane.palette_item" url="palette/JScrollPane.palette_item">
+                <attr name="position" intvalue="400"/>
+            </file>
+            <file name="JToolBar.palette_item" url="palette/JToolBar.palette_item">
+                <attr name="position" intvalue="500"/>
+            </file>
+            <file name="JDesktopPane.palette_item" url="palette/JDesktopPane.palette_item">
+                <attr name="position" intvalue="600"/>
+            </file>
+            <file name="JInternalFrame.palette_item" url="palette/JInternalFrame.palette_item">
+                <attr name="position" intvalue="700"/>
+            </file>
+            <file name="JLayeredPane.palette_item" url="palette/JLayeredPane.palette_item">
+                <attr name="position" intvalue="800"/>
+            </file>
+
+            </folder>
+
+        <folder name="SwingMenus">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+
+            <attr name="position" intvalue="300"/>
+            <file name="JMenuBar.palette_item" url="palette/JMenuBar.palette_item">
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="JMenu.palette_item" url="palette/JMenu.palette_item">
+                <attr name="position" intvalue="200"/>
+            </file>
+            <file name="JMenuItem.palette_item" url="palette/JMenuItem.palette_item">
+                <attr name="position" intvalue="300"/>
+            </file>
+            <file name="JCheckBoxMenuItem.palette_item" url="palette/JCheckBoxMenuItem.palette_item">
+                <attr name="position" intvalue="400"/>
+            </file>
+            <file name="JRadioButtonMenuItem.palette_item" url="palette/JRadioButtonMenuItem.palette_item">
+                <attr name="position" intvalue="500"/>
+            </file>
+            <file name="JPopupMenu.palette_item" url="palette/JPopupMenu.palette_item">
+                <attr name="position" intvalue="600"/>
+            </file>
+            <file name="JSeparator.palette_item" url="palette/JSeparator.palette_item">
+                <attr name="position" intvalue="700"/>
+            </file>
+            
+            </folder>
+
+        <folder name="SwingWindows">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+
+            <attr name="position" intvalue="400"/>
+            <file name="JDialog.palette_item" url="palette/JDialog.palette_item">
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="JFrame.palette_item" url="palette/JFrame.palette_item">
+                <attr name="position" intvalue="200"/>
+            </file>
+            <file name="JColorChooser.palette_item" url="palette/JColorChooser.palette_item">
+                <attr name="position" intvalue="300"/>
+            </file>
+            <file name="JFileChooser.palette_item" url="palette/JFileChooser.palette_item">
+                <attr name="position" intvalue="400"/>
+            </file>
+            <file name="JOptionPane.palette_item" url="palette/JOptionPane.palette_item">
+                <attr name="position" intvalue="500"/>
+            </file>
+
+            </folder>
+
+        <folder name="SwingControls">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+            <attr name="isExpanded" boolvalue="true"/>
+
+            <attr name="position" intvalue="200"/>
+            <file name="JLabel.palette_item" url="palette/JLabel.palette_item">
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="JButton.palette_item" url="palette/JButton.palette_item">
+                <attr name="position" intvalue="200"/>
+            </file>
+            <file name="JToggleButton.palette_item" url="palette/JToggleButton.palette_item">
+                <attr name="position" intvalue="300"/>
+            </file>
+            <file name="JCheckBox.palette_item" url="palette/JCheckBox.palette_item">
+                <attr name="position" intvalue="400"/>
+            </file>
+            <file name="JRadioButton.palette_item" url="palette/JRadioButton.palette_item">
+                <attr name="position" intvalue="500"/>
+            </file>
+            <file name="ButtonGroup.palette_item" url="palette/ButtonGroup.palette_item">
+                <attr name="position" intvalue="600"/>
+            </file>
+            <file name="JComboBox.palette_item" url="palette/JComboBox.palette_item">
+                <attr name="position" intvalue="700"/>
+            </file>
+            <file name="JList.palette_item" url="palette/JList.palette_item">
+                <attr name="position" intvalue="800"/>
+            </file>
+            <file name="JTextField.palette_item" url="palette/JTextField.palette_item">
+                <attr name="position" intvalue="900"/>
+            </file>
+            <file name="JTextArea.palette_item" url="palette/JTextArea.palette_item">
+                <attr name="position" intvalue="1000"/>
+            </file>
+            <file name="JScrollBar.palette_item" url="palette/JScrollBar.palette_item">
+                <attr name="position" intvalue="1100"/>
+            </file>
+            <file name="JSlider.palette_item" url="palette/JSlider.palette_item">
+                <attr name="position" intvalue="1200"/>
+            </file>
+            <file name="JProgressBar.palette_item" url="palette/JProgressBar.palette_item">
+                <attr name="position" intvalue="1300"/>
+            </file>
+            <file name="JFormattedTextField.palette_item" url="palette/JFormattedTextField.palette_item">
+                <attr name="position" intvalue="1400"/>
+            </file>
+            <file name="JPasswordField.palette_item" url="palette/JPasswordField.palette_item">
+                <attr name="position" intvalue="1500"/>
+            </file>
+            <file name="JSpinner.palette_item" url="palette/JSpinner.palette_item">
+                <attr name="position" intvalue="1600"/>
+            </file>
+            <file name="JSeparator.palette_item" url="palette/JSeparator.palette_item">
+                <attr name="position" intvalue="1700"/>
+            </file>
+            <file name="JTextPane.palette_item" url="palette/JTextPane.palette_item">
+                <attr name="position" intvalue="1800"/>
+            </file>
+            <file name="JEditorPane.palette_item" url="palette/JEditorPane.palette_item">
+                <attr name="position" intvalue="1900"/>
+            </file>
+            <file name="JTree.palette_item" url="palette/JTree.palette_item">
+                <attr name="position" intvalue="2000"/>
+            </file>
+            <file name="JTable.palette_item" url="palette/JTable.palette_item">
+                <attr name="position" intvalue="2100"/>
+            </file>
+
+            </folder>
+
+        <folder name="SwingFillers">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+
+            <attr name="position" intvalue="450"/>
+            <file name="BoxFillerGlue.palette_item" url="palette/BoxFillerGlue.palette_item">
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="BoxFillerHorizontalGlue.palette_item" url="palette/BoxFillerHorizontalGlue.palette_item">
+                <attr name="position" intvalue="200"/>
+            </file>
+            <file name="BoxFillerHorizontalStrut.palette_item" url="palette/BoxFillerHorizontalStrut.palette_item">
+                <attr name="position" intvalue="300"/>
+            </file>
+            <file name="BoxFillerRigidArea.palette_item" url="palette/BoxFillerRigidArea.palette_item">
+                <attr name="position" intvalue="400"/>
+            </file>
+            <file name="BoxFillerVerticalGlue.palette_item" url="palette/BoxFillerVerticalGlue.palette_item">
+                <attr name="position" intvalue="500"/>
+            </file>
+            <file name="BoxFillerVerticalStrut.palette_item" url="palette/BoxFillerVerticalStrut.palette_item">
+                <attr name="position" intvalue="600"/>
+            </file>
+        </folder>
+
+        <folder name="AWT">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+
+            <attr name="position" intvalue="500"/>
+            <file name="Label.palette_item" url="palette/Label.palette_item">
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="Button.palette_item" url="palette/Button.palette_item">
+                <attr name="position" intvalue="200"/>
+            </file>
+            <file name="TextField.palette_item" url="palette/TextField.palette_item">
+                <attr name="position" intvalue="300"/>
+            </file>
+            <file name="TextArea.palette_item" url="palette/TextArea.palette_item">
+                <attr name="position" intvalue="400"/>
+            </file>
+            <file name="Checkbox.palette_item" url="palette/Checkbox.palette_item">
+                <attr name="position" intvalue="500"/>
+            </file>
+            <file name="Choice.palette_item" url="palette/Choice.palette_item">
+                <attr name="position" intvalue="600"/>
+            </file>
+            <file name="List.palette_item" url="palette/List.palette_item">
+                <attr name="position" intvalue="700"/>
+            </file>
+            <file name="Scrollbar.palette_item" url="palette/Scrollbar.palette_item">
+                <attr name="position" intvalue="800"/>
+            </file>
+            <file name="ScrollPane.palette_item" url="palette/ScrollPane.palette_item">
+                <attr name="position" intvalue="900"/>
+            </file>
+            <file name="Panel.palette_item" url="palette/Panel.palette_item">
+                <attr name="position" intvalue="1000"/>
+            </file>
+            <file name="Canvas.palette_item" url="palette/Canvas.palette_item">
+                <attr name="position" intvalue="1100"/>
+            </file>
+            <file name="MenuBar.palette_item" url="palette/MenuBar.palette_item">
+                <attr name="position" intvalue="1200"/>
+            </file>
+            <file name="PopupMenu.palette_item" url="palette/PopupMenu.palette_item">
+                <attr name="position" intvalue="1300"/>
+            </file>
+
+            </folder>
+
+        <folder name="_Layouts_only_for_internal_use_">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+            <attr name="isNoPaletteCategory" boolvalue="true"/>
+            <attr name="position" intvalue="0"/>
+            
+            <file name="FlowLayout.palette_item" url="palette/FlowLayout.palette_item">
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="BorderLayout.palette_item" url="palette/BorderLayout.palette_item">
+                <attr name="position" intvalue="200"/>
+            </file>
+            <file name="GridLayout.palette_item" url="palette/GridLayout.palette_item">
+                <attr name="position" intvalue="300"/>
+            </file>
+            <file name="GridBagLayout.palette_item" url="palette/GridBagLayout.palette_item">
+                <attr name="position" intvalue="400"/>
+            </file>
+            <file name="CardLayout.palette_item" url="palette/CardLayout.palette_item">
+                <attr name="position" intvalue="500"/>
+            </file>
+            <file name="BoxLayout.palette_item" url="palette/BoxLayout.palette_item">
+                <attr name="position" intvalue="600"/>
+            </file>
+            <file name="OverlayLayout.palette_item" url="palette/OverlayLayout.palette_item">
+                <attr name="position" intvalue="700"/>
+            </file>
+            <file name="AbsoluteLayout.palette_item" url="palette/AbsoluteLayout.palette_item">
+                <attr name="position" intvalue="800"/>
+            </file>
+            <file name="NullLayout.palette_item" url="palette/NullLayout.palette_item">
+                <attr name="position" intvalue="900"/>
+            </file>
+
+            </folder>
+
+        <folder name="Borders">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+            <attr name="isVisible" boolvalue="false"/>
+
+            <attr name="position" intvalue="600"/>
+            <file name="EmptyBorder.palette_item" url="palette/EmptyBorder.palette_item">
+                <attr name="position" intvalue="100"/>
+            </file>
+            <file name="LineBorder.palette_item" url="palette/LineBorder.palette_item">
+                <attr name="position" intvalue="200"/>
+            </file>
+            <file name="MatteBorder.palette_item" url="palette/MatteBorder.palette_item">
+                <attr name="position" intvalue="300"/>
+            </file>
+            <file name="TitledBorder.palette_item" url="palette/TitledBorder.palette_item">
+                <attr name="position" intvalue="400"/>
+            </file>
+            <file name="EtchedBorder.palette_item" url="palette/EtchedBorder.palette_item">
+                <attr name="position" intvalue="500"/>
+            </file>
+            <file name="BevelBorder.palette_item" url="palette/BevelBorder.palette_item">
+                <attr name="position" intvalue="600"/>
+            </file>
+            <file name="SoftBevelBorder.palette_item" url="palette/SoftBevelBorder.palette_item">
+                <attr name="position" intvalue="700"/>
+            </file>
+            <file name="CompoundBorder.palette_item" url="palette/CompoundBorder.palette_item">
+                <attr name="position" intvalue="800"/>
+            </file>
+
+            </folder>
+
+        <folder name="Beans">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+            <attr name="position" intvalue="700"/>
+            <file name="ChooseBean.palette_item" url="palette/ChooseBean.palette_item"/>
+        </folder>
+
+        <folder name="LookAndFeels">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+            <attr name="isVisible" boolvalue="false"/>
+            <attr name="isReadonly" boolvalue="true"/>
+            <attr name="position" intvalue="900"/>
+        </folder>
+
+                
+        </folder>
+
+    <folder name="Templates">
+        <folder name="GUIForms">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+            <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/Forms.html"/>
+            
+            <attr name="position" intvalue="1000"/>
+            <file name="JApplet.java" url="templates/SwingForms/JApplet_java">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+                <attr name="position" intvalue="500"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/FormJApplet.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/applet.gif"/>
+                <attr name="SystemFileSystem.icon32" urlvalue="nbresloc:/javax/swing/beaninfo/images/JAppletColor32.gif"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.create"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="JApplet.form" url="templates/SwingForms/JApplet_form">
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+                <attr name="weight" intvalue="100"/>
+            </file>
+
+            <file name="JDialog.java" url="templates/SwingForms/JDialog_java">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+                <attr name="position" intvalue="100"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>                
+                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/JDialog.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/dialog_16.png"/>
+                <attr name="SystemFileSystem.icon32" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/dialog_32.png"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.create"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="JDialog.form" url="templates/SwingForms/JDialog_form">
+                <attr name="template" boolvalue="true"/>                
+                <attr name="templateCategory" stringvalue="java-forms"/>
+            </file>
+
+            <file name="JFrame.java" url="templates/SwingForms/JFrame_java">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+                <attr name="position" intvalue="200"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>                
+                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/JFrame.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/frame_16.png"/>
+                <attr name="SystemFileSystem.icon32" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/frame_32.png"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.create"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="JFrame.form" url="templates/SwingForms/JFrame_form">
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+            </file>
+
+            <file name="JInternalFrame.java" url="templates/SwingForms/JInternalFrame_java">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+                <attr name="position" intvalue="300"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/JInternalFrame.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/internal_frame_16.png"/>
+                <attr name="SystemFileSystem.icon32" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/internal_frame_32.png"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.create"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="JInternalFrame.form" url="templates/SwingForms/JInternalFrame_form">
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+            </file>
+
+            <file name="JPanel.java" url="templates/SwingForms/JPanel_java">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+                <attr name="position" intvalue="400"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/JPanel.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/panel_16.png"/>
+                <attr name="SystemFileSystem.icon32" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/panel_32.png"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.create"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="JPanel.form" url="templates/SwingForms/JPanel_form">
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+            </file>
+
+            <file name="BeanForm.java" url="templates/SwingForms/BeanForm_java">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+                <attr name="position" intvalue="600"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/BeanForm.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/panel_16.png"/>
+                <attr name="SystemFileSystem.icon32" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/panel_32.png"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.createForSuperClass"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="BeanForm.form" url="templates/SwingForms/BeanForm_form">
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+            </file>
+            
+            <file name="Application.java" url="templates/Dialogs/Application_java">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+                <attr name="position" intvalue="700"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/Application.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/frame_16.png"/>
+                <attr name="SystemFileSystem.icon32" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/frame_32.png"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.create"/>
+                <attr name="templateCategory" stringvalue="gui-java-application,java-forms"/>
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="Application.form" url="templates/Dialogs/Application_form">
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+            </file>
+
+            <file name="MDIApplication.java" url="templates/Dialogs/MDIApplication_java">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="position" intvalue="800"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/MDIApplication.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/frame_16.png"/>
+                <attr name="SystemFileSystem.icon32" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/frame_32.png"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.create"/>
+                <attr name="templateCategory" stringvalue="gui-java-application,java-forms"/>
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="MDIApplication.form" url="templates/Dialogs/MDIApplication_form">
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+            </file>
+
+            <file name="OkCancelDialog.java" url="templates/Dialogs/OkCancelDialog_java">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+                <attr name="position" intvalue="1000"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/OKCancelDialog.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/dialog_16.png"/>
+                <attr name="SystemFileSystem.icon32" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/dialog_32.png"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.create"/>
+                <attr name="templateCategory" stringvalue="gui-java-application,java-forms"/>
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="OkCancelDialog.form" url="templates/Dialogs/OkCancelDialog_form">
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+            </file>
+            
+            
+            
+        </folder>
+        <folder name="AWTForms">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+            <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/AWTForms.html"/>
+
+            
+
+            <attr name="position" intvalue="1100"/>
+            <file name="Applet.java" url="templates/AWTForms/Applet_java">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+                <attr name="position" intvalue="100"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/FormApplet.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/applet.gif"/>
+                <attr name="SystemFileSystem.icon32" urlvalue="nbresloc:/javax/swing/beaninfo/images/JAppletColor32.gif"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.create"/>
+                <attr name="templateCategory" stringvalue="java-forms,java-awt-forms"/>
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="Applet.form" url="templates/AWTForms/Applet_form">
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+            </file>
+
+            <file name="Dialog.java" url="templates/AWTForms/Dialog_java">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+                <attr name="position" intvalue="200"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/Dialog.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/dialog_16.png"/>
+                <attr name="SystemFileSystem.icon32" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/dialog_32.png"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.create"/>
+                <attr name="templateCategory" stringvalue="java-forms,java-awt-forms"/>
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="Dialog.form" url="templates/AWTForms/Dialog_form">
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+            </file>
+
+            <file name="Frame.java" url="templates/AWTForms/Frame_java">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+                <attr name="position" intvalue="300"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/Frame.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/frame_16.png"/>
+                <attr name="SystemFileSystem.icon32" urlvalue="nbresloc:/org/netbeans/modules/form/resources/palette/frame_32.png"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.create"/>
+                <attr name="templateCategory" stringvalue="java-forms,java-awt-forms"/>
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="Frame.form" url="templates/AWTForms/Frame_form">
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+            </file>
+
+            <file name="Panel.java" url="templates/AWTForms/Panel_java">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.form.resources.Bundle"/>
+                <attr name="position" intvalue="400"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/form/resources/Panel.html"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/form/beaninfo/awt/panel.gif"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.java.source.queries.api.TemplateWizardFactory.create"/>
+                <attr name="templateCategory" stringvalue="java-forms,java-awt-forms"/>
+                <attr name="weight" intvalue="100"/>
+            </file>
+            <file name="Panel.form" url="templates/AWTForms/Panel_form">
+                <attr name="template" boolvalue="true"/>
+                <attr name="templateCategory" stringvalue="java-forms"/>
+            </file>
+        </folder>
+
+    </folder>
+
+    <folder name="Shortcuts">
+        <file name="C-D.shadow">
+            <attr name="originalFile" stringvalue="Actions/Form/org-netbeans-modules-form-actions-DuplicateAction.instance"/>
+        </file>
+    </folder>
+
+
+    <!-- default workspaces, frames and their layout defined by core -->
+    <folder name="Windows2">
+        <folder name="Groups">
+            <file name="form.wsgrp" url="groups/form.wsgrp"/>
+        </folder>
+
+    </folder>
+
+    <folder name="org-netbeans-modules-form">
+        <!-- form class loader type registration -->
+        <folder name="classloader">
+            <folder name="system">
+                <file name="SystemClasses.txt" url="SystemClasses.txt"/>
+            </folder>
+            <folder name="system_with_project"/>
+        </folder>
+    </folder>
+    
+
+    <folder name="OptionsExport">
+        <folder name="Java">
+            <file name="Form">
+                <attr name="include" stringvalue="config/FormDesignerPalette/.*|config/Services/formsettings[.]settings"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.form.Bundle#Form.Options.Export.displayName"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

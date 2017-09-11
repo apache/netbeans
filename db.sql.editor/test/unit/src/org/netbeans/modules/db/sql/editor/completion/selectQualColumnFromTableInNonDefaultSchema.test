@@ -1,0 +1,18 @@
+# Ensures nothing shows up in the completion, because the "customer"
+# table is not in the default schema.
+
+select customer.| from customers.customer
+
+--
+<unknown>
+  customers
+    customer
+      customer_id
+    asummary[view]
+      asummary_id
+  accounting*
+    invoice
+      invoice_id
+      customer_id
+    bsummary[view]
+      bsummary_id

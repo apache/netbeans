@@ -1,0 +1,3 @@
+# ant
+read global
+${l10n-module}/src-bridge/**/Bundle.properties

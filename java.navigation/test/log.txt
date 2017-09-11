@@ -1,0 +1,1 @@
+ant -verbose -Dnetbeans.dest.dir=/home/pzajac/builds/netbeans -Dxtest.testtype=qa-functional -Dxtest.attribs=validation

@@ -1,0 +1,3 @@
+# xml/tax
+read global
+${l10n-module}/lib/src/**/Bundle*.properties

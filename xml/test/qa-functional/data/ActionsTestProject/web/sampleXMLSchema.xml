@@ -1,0 +1,156 @@
+<?xml version='1.0'?>
+
+<!-- Commented out for IE5 which doesn't understand :
+
+<!DOCTYPE schema SYSTEM "http://www.w3.org/TR/2000/WD-xmlschema-1-20000225/structures.dtd" >
+
+<messagesList xmlns='urn:bigtrust:bizmess:limits:V0.0'>
+
+	--> 
+
+
+
+<!-- Uncomment to format with CSS: <?xml-stylesheet href="limits-mess.css" type="text/css"?> -->
+
+
+
+
+
+<schema targetNamespace='urn:bigtrust:bizmess:limits:V0.0' version="M.n" 
+
+	xmlns="http://www.w3.org/2001/XMLSchema" 
+
+	xmlns:bm="urn:bigtrust:bizmess:limits:V0.0"
+
+	xmlns:html="http://www.w3.org/1999/xhtml"
+
+	elementFormDefault="qualified"
+
+	attributeFormDefault="qualified" >
+
+    
+
+    <annotation><documentation xmlns:dc="http://www.w3.org/TR/1999/PR-rdf-schema-19990303#" >
+
+	    <html:p>Definition of limit messages for bizmess</html:p>
+
+	    A message of bizmess is simply a list of fields, a field being essentially a pair name-value. For performance across network, the messages are sent in a binary form, in form of a pair index-value. Messages sent are constrained by an initial list of fields and messages coming from the server (or in a config. file). This initial message is itself being defined here. 
+
+	    <dc:Author>J.M. Vanel</dc:Author> 
+
+	    <dc:date>2000-01-18</dc:date> 
+
+	</documentation>
+
+    </annotation>
+
+    
+
+    <!-- Abstract types -->
+
+
+
+    <complexType name='genericMessage'><annotation><documentation>Abstract type for all the bizmess messages</documentation></annotation></complexType>
+
+    <complexType name='genericField' type="string" >
+
+	<annotation><documentation>Abstract type for all the fields in bizmess messages</documentation></annotation>
+
+    </complexType>
+
+    
+
+    <!-- fields -->
+
+
+
+    <complexType name='InstrumentType' >
+
+	<annotation><documentation><html:b>Type of Instrument</html:b> (bond, etc) ... [any html content]</documentation>
+
+	    <!-- For implementation of binary messages : -->
+
+	    <appinfo><id>0</id>
+
+		<size>32</size>
+
+	</appinfo></annotation>
+
+	<complexContent>
+
+	    <extension base="bm:genericField">
+
+	</extension> </complexContent>
+
+    </complexType>
+
+    
+
+    <complexType name='CounterParty' >
+
+	<complexContent>
+
+	    <extension base="bm:genericField">
+
+		<annotation><documentation><html:b>Counter-party name</html:b> ... [any html content]</documentation>
+
+		    <appinfo><id>1</id>
+
+		    <size>64</size></appinfo>
+
+		</annotation>
+
+	</extension> </complexContent>
+
+    </complexType>
+
+    
+
+    <!-- messages 
+
+		  -->
+
+
+
+    <complexType name='enquiry' >
+
+	<complexContent>
+
+	    <extension base='bm:genericMessage' >
+
+		<annotation><documentation><html:b>enquiry</html:b> about ... [any html content]</documentation></annotation>
+
+		<all>
+
+		    <element name='InstrumentType' type='bm:InstrumentType'></element> 
+
+		    <element name='CounterParty' type='bm:CounterParty' ></element> 
+
+		</all>
+
+	</extension> </complexContent>
+
+    </complexType>
+
+    
+
+    <!-- root element -->
+
+    <element name="bizmess">
+
+	<complexType>
+
+	    <all>
+
+		<element name='enquiry' type='bm:enquiry' /> 
+
+		<element name='reference' type='string' /> 
+
+	    </all>
+
+	</complexType>
+
+    </element> 
+
+</schema>
+

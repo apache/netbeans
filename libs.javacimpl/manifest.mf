@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.libs.javacimpl/1
+OpenIDE-Module-Implementation-Version: 25
+OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/javacimpl/Bundle.properties
+OpenIDE-Module-Requires: org.openide.modules.ModuleFormat2
+OpenIDE-Module-Hide-Classpath-Packages: com.sun.tools.javac.**, com.sun.tools.javadoc.**, com.sun.tools.javap.**, com.sun.tools.classfile.**, com.sun.tools.doclint.**
+

@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2009 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<?xml-stylesheet type="text/xml" href="../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="api.search">Search in Projects API</apidef>
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+
+        <change id="ComponentUtils_adjustPanelsForOptions">
+            <api name="api.search"/>
+            <summary>Added method ComponentUtils.adjustPanelsForOptions</summary>
+            <version major="1" minor="12"/>
+            <date day="6" month="2" year="2013"/>
+            <author login="jhavlin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Controls for specifying search scope options can now be
+                    split into two panels - one for scope options, and one for
+                    file name options.
+                </p>
+                <p>
+                    Class ComponentUtils has new method
+                    adjustPanelsForOptions(JPanel, JPanel, boolean,
+                    FileNameController), that takes the two panels. It can be
+                    used instead of adjustPanelForOptions(JPanel, boolean,
+                    FileNameController), that puts all controls into a single
+                    panel.
+                </p>
+                <p>
+                    Class ScopeOptionsController has new method
+                    getFileNameComponent() to get the panel with controls
+                    related to file name. (The panel related to search scope can
+                    be get using getComponent()).
+                </p>
+            </description>
+            <class package="org.netbeans.api.search.ui" name="ComponentUtils"/>
+            <class package="org.netbeans.api.search.ui" name="ScopeOptionsController"/>
+            <issue number="226286"/>
+        </change>
+
+        <change id="SearchPattern_MatchType">
+            <api name="api.search"/>
+            <summary>Search pattern supports three match types (literal, basic wildcards, regexp)</summary>
+            <version major="1" minor="11"/>
+            <date day="29" month="1" year="2013"/>
+            <author login="jhavlin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Before, the search pattern distinguished two match types:
+                    Regular Expression and Standard. The standard meant that the
+                    text was searched literally in editor search, and that the
+                    searched text could contain basic wildcards (* and ?) in
+                    Find in Projects.
+                </p>
+                <p>
+                    Now, the Search pattern can specify exact match type:
+                    Regular Expression, Basic Wildcards and Literal. Basic
+                    wildcards are not supported by Editor search, but the
+                    fallback to Literal Search is transparent for the editor.
+                </p>
+                <p>
+                    To support extra match types, a few parts have to be added
+                    to the API:
+                </p>
+                <ul>
+                    <li>Enumeration SearchPattern.MatchType which contains
+                        all supported match types
+                    </li>
+                    <li>Method SearchPattern.create(String searchExpression,
+                        boolean wholeWords, boolean matchCase,
+                        MatchType matchType)
+                    </li>
+                    <li>Method SearchPattern.getMatchType() and
+                        SearchPattern.changeMatchType(MatchType)
+                    </li>
+                    <li>Method SearchPatternController.bindMatchTypeComboBox(
+                        JComboBox) for binding match type property to a combo
+                        box.
+                    </li>
+                </ul>
+            </description>
+            <class package="org.netbeans.api.search" name="SearchPattern"/>
+            <class package="org.netbeans.api.search.ui" name="SearchPatternController"/>
+            <issue number="224328"/>
+        </change>
+
+        <change id="SearchScopeDefinition_getIcon">
+            <api name="api.search"/>
+            <summary>Added method getIcon to class SearchScopeDefinition</summary>
+            <version major="1" minor="10"/>
+            <date day="29" month="1" year="2013"/>
+            <author login="jhavlin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Search scope can define an icon that will be shown in the
+                    UI, usually in the combo box for search scope selection.
+                </p>
+                <p>
+                    To use a custom scope icon, override method
+                    SearchScopeDefinition.getIcon().
+                </p>
+            </description>
+            <class package="org.netbeans.spi.search" name="SearchScopeDefinition"/>
+            <issue number="222406"/>
+        </change>
+
+        <change id="ReplaceHistory">
+            <api name="api.search"/>
+            <summary>Added ReplacePattern and replace history to SearchHistory class</summary>
+            <version major="1" minor="1.8"/>
+            <date day="20" month="11" year="2012"/>
+            <author login="mkristofic"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Search History is extended for replace history.
+                </p>
+                <p> 
+                    New ReplacePattern is a wrap class for replace expression.
+                </p>
+            </description>
+            <class package="org.netbeans.api.search" name="ReplacePattern"/>
+            <class package="org.netbeans.api.search" name="SearchHistory"/>
+        </change>
+        
+        <change id="SearchResultsDisplayer-closed">
+            <api name="api.search"/>
+            <summary>Added method SearchResultsDisplayer.closed()</summary>
+            <version major="1" minor="1.5"/>
+            <date day="25" month="6" year="2012"/>
+            <author login="jhavlin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    The new <code>SearchResultsDisplayer.closed()</code> is
+                    called when the results panel is closed by the user. It can
+                    be overriden to release all resouces held by the panel.
+                </p>
+                <p>
+                    Before this change, <code>HierarchyListener</code>s were
+                    used to detect detaching of search results panels. But it
+                    is quite complicated as the panels can be often detached and
+                    attached again when they are moved from a simple pane to a
+                    tabbed pane or vice versa.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.search.provider" name="SearchResultsDisplayer"/>
+        </change>
+        <change id="UriSupport">
+            <api name="api.search"/>
+            <summary>Support for URI-based searching</summary>
+            <version major="1" minor="1.4"/>
+            <date day="27" month="4" year="2012"/>
+            <author login="jhavlin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Previous versions of this API supported searching based on
+                    traversing of <code>FileObject</code>s only. In some cases
+                    (e.g. remote filesystems), working with
+                    <code>FileObjects</code> is too expensive and slow.
+                    This API change make it possible to work with
+                    <code>URI</code> objects as an alternative to
+                    <code>FileObjects</code>.
+                </p>
+            </description>
+            <class package="org.netbeans.api.search" name="SearchRoot"/>
+            <class package="org.netbeans.api.search.provider" name="FileNameMatcher"/>
+            <class package="org.netbeans.api.search.provider" name="SearchFilter"/>
+            <class package="org.netbeans.api.search.provider" name="SearchInfo"/>
+            <class package="org.netbeans.api.search.provider" name="SearchListener"/>
+            <class package="org.netbeans.spi.search" name="SearchFilterDefinition"/>
+            <class package="org.netbeans.spi.search" name="SearchInfoDefinition"/>
+        </change>
+        <change id="SearchPatternController">
+            <api name="api.search"/>
+            <summary>Added class
+                <code>SearchPatternController</code>
+            </summary>
+            <version major="1" minor="1"/>
+            <date day="20" month="4" year="2012"/>
+            <author login="jhavlin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added method
+                    <code>ComponentUtils.adjustComboForSearchPattern</code>
+                    and class
+                    <code>SearchPatternController</code>, that complements
+                    other controllers for search-related UI components.
+                </p>
+            </description>
+            <class package="org.netbeans.api.search.ui" name="SearchPatternController"/>
+            <class package="org.netbeans.api.search.ui" name="ComponentUtils"/>
+        </change>
+        <change id="DefaultSearchResultsDisplayer">
+            <api name="api.search"/>
+            <summary>Added class
+                <code>DefaultSearchResultsDisplayer</code>
+            </summary>
+            <version major="1" minor="1"/>
+            <date day="20" month="4" year="2012"/>
+            <author login="jhavlin"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Method
+                    <code>SearchResultsDisplayer.createDefault</code> now
+                    returns object of type
+                    <code>DefaultSearchResultsDisplayer</code>
+                    that can be customized, and that let users reuse some features
+                    used in the standard search provider.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.search.provider" name="DefaultSearchResultsDisplayer"/>
+        </change>
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!-- Generated from apichanges.xml -->
+    <head>
+      <title>Change History for the Search in Projects API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="@TOP@/overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@TOP@/overview-summary.html">Search in Projects API</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.api.search/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

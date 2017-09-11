@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.ant.freeform</type>
+    <configuration>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
+            <name>My App</name>
+            <properties>
+                <property-file>build.properties</property-file>
+            </properties>
+            <folders>
+                <source-folder>
+                    <label>Web Module Sources</label>
+                    <type>java</type>
+                    <location>${src.home}</location>
+                </source-folder>
+                <source-folder>
+                    <label>Web Pages</label>
+                    <type>doc_root</type>
+                    <location>${web.home}</location>
+                </source-folder>
+                <!--
+                <build-folder>
+                    <location>${build.home}</location>
+                </build-folder>
+                <build-folder>
+                    <location>${dist.home}</location>
+                </build-folder>
+                -->
+            </folders>
+            <ide-actions>
+                <action name="build">
+                    <target>compile</target>
+                </action>
+                <action name="clean">
+                    <target>clean</target>
+                </action>
+                <action name="rebuild">
+                    <target>clean</target>
+                    <target>compile</target>
+                </action>
+                <action name="run">
+                    <target>install</target>
+                </action>
+                <action name="javadoc">
+                    <target>javadoc</target>
+                </action>
+                <action name="redeploy">
+                    <target>reload</target>
+                </action>
+            </ide-actions>
+            <export>
+                <type>war</type>
+                <location>${dist.home}/${app.name}-${app.version}.war</location>
+                <build-target>dist</build-target>
+            </export>
+            <view>
+                <items>
+                    <source-folder style="packages">
+                        <label>Main Sources</label>
+                        <location>${src.home}</location>
+                    </source-folder>
+                    <source-folder style="tree">
+                        <label>Web Pages</label>
+                        <location>${web.home}</location>
+                    </source-folder>
+                    <source-folder style="tree">
+                        <label>Documents</label>
+                        <location>${docs.home}</location>
+                    </source-folder>
+                    <source-file>
+                        <location>build.xml</location>
+                    </source-file>
+                    <source-file>
+                        <location>build.properties</location>
+                    </source-file>
+                </items>
+                <context-menu>
+                    <ide-action name="build"/>
+                    <ide-action name="clean"/>
+                    <ide-action name="rebuild"/>
+                    <ide-action name="run"/>
+                    <ide-action name="javadoc"/>
+                    <ide-action name="redeploy"/>
+                    <action>
+                        <label>Create Distribution</label>
+                        <target>dist</target>
+                    </action>
+                    <action>
+                        <label>Remove from server</label>
+                        <target>remove</target>
+                    </action>
+                </context-menu>
+            </view>
+        </general-data>
+        <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/1">
+            <compilation-unit>
+                <package-root>${src.home}</package-root>
+                <!--include all jar files in WEB-INF/lib -->
+                <!-- PENDING: reference servlet-api and jsp-api as libraries - need to include nbuser/ -->
+                <classpath mode="compile">${catalina.home}/common/classes:${catalina.home}/common/lib/jsp-api.jar:${catalina.home}/common/lib/servlet-api.jar</classpath>
+                <built-to>${build.home}/WEB-INF/classes</built-to>
+                <source-level>1.4</source-level>
+            </compilation-unit>
+        </java-data>
+        <web-data xmlns="http://www.netbeans.org/ns/freeform-project-web/1">
+            <!--
+            Web module should represent all doc roots in sources that get built 
+            into the same web module (web module should have one web.xml).
+            
+            Any Java sources in project that have built-to folder on classpath 
+            of web module will be associated with the web module 
+            (i.e. WebModule.getWebmodule() will work for them).
+            -->
+            <web-module>
+                <doc-root>${web.home}</doc-root>
+                <classpath>${build.home}/WEB-INF/classes/:${catalina.home}/common/classes:${catalina.home}/common/lib/jsp-api.jar:${catalina.home}/common/lib/servlet-api.jar</classpath>
+                <context-path>${app.path}</context-path>
+                <j2ee-spec-level>1.4</j2ee-spec-level>
+            </web-module>
+        </web-data>
+    </configuration>
+</project>

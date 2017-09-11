@@ -1,0 +1,15 @@
+select accounting.invoice.| from accounting.invoice
+
+--
+<unknown>
+  customers*
+    customer
+      customer_id
+  accounting
+    invoice
+      invoice_id
+      customer_id
+    customer
+      customer_id
+    asummary[view]
+      asummary_id

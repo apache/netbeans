@@ -1,0 +1,18 @@
+%%TestCase simple
+package test;
+public class Test {
+    int l;
+    {System.err.println(l);}
+}
+%%=>
+package test;
+public class Test {
+    int ll;
+    {System.err.println(l);}
+}
+%%=>
+package test;
+public class Test {
+    int l;
+    {System.err.println(ll);}
+}

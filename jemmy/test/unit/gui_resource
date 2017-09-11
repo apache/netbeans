@@ -1,0 +1,106 @@
+#########################################################
+#Forte4Java
+#Windows
+fjie.main_window=Forte for Java
+fjie.explorer_window=Explorer
+fjie.new_workspace_window=New TeamWare Workspace
+fjie.new_from_template_dialog=New... - Template Chooser 
+fjie.newdb_template_one=New...  1 of 2
+fjie.newdb_template_two=New...  2 of 2
+fjie.add_directory_window=Add Directory
+fjie.load_teamware_window=Mount Existing TeamWare Filesystem
+fjie.comments_window=Check-In Comments
+fjie.add_teamware_window=Mount Existing TeamWare Filesystem
+fjie.automatic_update_window=Automatic Update Check
+fjie.question_window=Question
+fjie.mount_directory=Mount Directory
+# Registration window
+fjie.forte_window=Forte for Java
+fjie.editor_window=Editor
+fjie.configuration_window=Configuration
+fjie.add_newline_window=no newline at end of file
+fjie.global_options_window=Global Options
+fjie.unexpected_exception_window=Unexpected Exception
+fjie.configuration_dialog1=Configuration
+fjie.configuration_dialog2=CVS Setup
+fjie.configuration_dialog3=Mount Existing TeamWare Filesystem
+fjie.create_new_package=Create New Package
+
+#Buttons
+fjie.workspace_create_button=Create
+fjie.next_button=Next
+fjie.finish_button=Finish
+fjie.load_button=Load
+fjie.OK_button=OK
+fjie.no_button=No
+fjie.close_button=Close
+fjie.finish_button=Finish
+fjie.cancel_button=Cancel
+fjie.yes_button=Yes
+fjie.dbtemplate_next_button=Next >
+fjie.dbtemplate_newconn="New Connection"
+fjie.mount_button=Mount
+fjie.never_button=Never
+fjie.select_from_list=Select from the list
+
+#Hints
+fjie.codemgrtool_butt_hint=Configuring
+fjie.new_workspace_butt_hint=New TeamWare Workspace...
+fjie.vertool_butt_hint=Versioning
+fjie.filemerge_butt_hint=Merging
+fjie.freezepointing_butt_hint=Freezepointing
+fjie.check_in_button_hint=Check In
+fjie.check_out_button_hint=Check Out
+
+#Menus
+fjie.new_from_template_menu=File/New
+fjie.explorer_menu=View/Explorer
+fjie.add_directory_popup_menu=Add Directory...
+fjie.tools_global_menu=Tools/Global Options...
+#ken
+fjie.tools_database_schema=Tools/Capture Database Schema...
+#
+fjie.add_teamware_vcs_popup_menu=Mount/TeamWare Version Control System
+fjie.teamware_application_close_menu=File/Close
+#
+fjie.check_in_popup_menu=Check In
+fjie.check_out_popup_menu=Check Out
+fjie.uncheckout_popup_menu=Uncheckout
+fjie.version_control_merging_popup_menu=TeamWare/Merging
+fjie.version_control_versioning_popup_menu=TeamWare/Versioning
+fjie.version_control_configuring_popup_menu=TeamWare/Configuring
+fjie.version_control_frezepointing_popup_menu=TeamWare/Freezepointing
+fjie.version_control_bringover_popup_menu=TeamWare/Bringover...
+fjie.version_control_putback_popup_menu=TeamWare/Putback...
+fjie.version_control_history_popup_menu=TeamWare/File History
+fjie.remove_filesystem_menu=Remove Filesystem
+fjie.mount_filesystem=Mount Directory...
+fjie.new_package=New Package
+	
+#Trees
+fjie.text_file_path=Other/Text File
+#in the new chooser below
+fjie.new_database_schema=Databases/DBSchema
+
+#Other
+fjie.check_in_suffix=[CheckedIn]
+fjie.check_out_suffix=[CheckedOut]
+fjie.default_file_name=text
+
+#Text fields
+fjie.dbtemplate_tfdburl=Database URL:
+fjie.dbtemplate_tfuser=User Name:
+fjie.dbtemplate_tfpwd=Password:
+
+#Combo Box
+fjie.dbtemplate_combodriver=Driver:
+
+
+fjie.teamware_filesystem_prefix=TeamWare: 
+
+# ken adds also
+
+fjie.openfile_butt_hint=Open File...
+fjie.openfile_window=Open
+fjie.openfile_button_open=Open
+fjie.openfile_button_cancel=Cancel

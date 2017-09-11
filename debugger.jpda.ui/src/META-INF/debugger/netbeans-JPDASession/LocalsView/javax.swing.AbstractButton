@@ -1,0 +1,2 @@
+org.netbeans.modules.debugger.jpda.ui.views.VariablesViewButtons.createOpenOptionsButton()
+org.netbeans.modules.debugger.jpda.ui.views.VariablesViewButtons.createShowValuePropertyEditorsButton()

@@ -1,0 +1,83 @@
+Element(declaration)[0,62] "
+Element(text)[63,64] "
+
+
+Element(tag)[65,70] " - "html" - {}
+Element(text)[71,75] "
+    
+Element(tag)[76,81] " - "head" - {}
+Element(text)[82,90] "
+        
+Element(tag)[91,158] " - "meta" - {TagAttribute[name=http-equiv; value="Content-Type"; nameOffset=97; valueOffset=108], TagAttribute[name=content; value="text/html; charset=UTF-8"; nameOffset=123; valueOffset=131], }
+Element(text)[159,167] "
+        
+Element(tag)[168,174] " - "title" - {}
+Element(text)[175,180] "A page
+Element(endtag)[181,188] " - "title"
+Element(text)[189,202] "
+    
+        
+Element(tag)[203,307] " - "style" - {TagAttribute[name=type; value="text/css"; nameOffset=210; valueOffset=215], }
+Element(endtag)[308,315] " - "style"
+Element(text)[316,324] "
+        
+Element(tag)[325,499] " - "script" - {TagAttribute[name=language; value="JavaScript"; nameOffset=333; valueOffset=342], TagAttribute[name=type; value="text/javascript"; nameOffset=355; valueOffset=360], }
+Element(endtag)[500,508] " - "script"
+Element(text)[509,518] "
+    
+    
+Element(endtag)[519,525] " - "head"
+Element(text)[526,530] "
+    
+Element(tag)[531,536] " - "body" - {}
+Element(text)[537,545] "
+        
+Element(tag)[546,550] " - "div" - {}
+Element(text)[551,557] " &amp; 
+Element(endtag)[558,563] " - "div"
+Element(text)[564,572] "
+        
+Element(tag)[573,603] " - "table" - {TagAttribute[name=border; value="0"; nameOffset=580; valueOffset=587], }
+Element(tag)[604,607] " - "tr" - {}
+Element(text)[608,624] "
+                
+Element(tag)[625,681] " - "td" - {TagAttribute[name=valign; value="top"; nameOffset=629; valueOffset=636], TagAttribute[name=style; value="width:50%"; nameOffset=642; valueOffset=648], }
+Element(tag)[682,736] " - "div" - {TagAttribute[name=style; value="padding-top:6px;"; nameOffset=687; valueOffset=693], }
+Element(tag)[737,845] " - "a" - {TagAttribute[name=href; value="http://www.netbeans.org/kb/50/jaxws20.html"; nameOffset=740; valueOffset=745], TagAttribute[name=title; value="Building JAX-WS 2.0 Services with NetBeans 5.0"; nameOffset=790; valueOffset=796], }
+Element(tag)[846,1046] " - "img" - {TagAttribute[name=src; value="/images/articles/glassfish.png"; nameOffset=851; valueOffset=855], TagAttribute[name=alt; value="Building JAX-WS 2.0 Services with NetBeans 5.0"; nameOffset=888; valueOffset=892], TagAttribute[name=style; value="float:left; margin-top:6px; margin-right:10px; margin-bottom:6px; position:relative;"; nameOffset=941; valueOffset=947], TagAttribute[name=border; value="0"; nameOffset=1034; valueOffset=1041], }
+Element(endtag)[1047,1048] " - "a"
+Element(text)[1049,1073] "
+                        
+Element(tag)[1074,1186] " - "h2" - {TagAttribute[name=style; value="display:inline; border-bottom:none; margin-bottom:0px;"; nameOffset=1078; valueOffset=1084], }
+Element(endtag)[1187,1191] " - "h2"
+Element(text)[1192,1744] "
+                        This article explains how you can use the built-in features of NetBeans 5.0 to create JAX-WS 2.0 services quickly. Once the project has been created, it can be rebuilt (and tested!) with one command. While newer versions of NetBeans include the ability to create JAX-RPC 1.X web services, the JAX-WS 2.0 code is still under development. The steps to create a web service with JAX-WS 2.0 have been simplified, and you can turn a web application project in NetBeans into a web service with very few steps.
+                        
+Element(tag)[1745,1807] " - "a" - {TagAttribute[name=href; value="http://www.netbeans.org/kb/50/jaxws20.html"; nameOffset=1748; valueOffset=1753], }
+Element(tag)[1808,1892] " - "img" - {TagAttribute[name=src; value="/images/v4/arr_r3.gif"; nameOffset=1813; valueOffset=1817], TagAttribute[name=alt; value="Read more"; nameOffset=1841; valueOffset=1845], TagAttribute[name=width; value="10"; nameOffset=1857; valueOffset=1863], TagAttribute[name=height; value="10"; nameOffset=1868; valueOffset=1875], TagAttribute[name=border; value="0"; nameOffset=1880; valueOffset=1887], }
+Element(endtag)[1893,1894] " - "a"
+Element(text)[1895,1915] "
+                    
+Element(endtag)[1916,1921] " - "div"
+Element(text)[1922,1938] "
+                
+Element(endtag)[1939,1943] " - "td"
+Element(text)[1944,1956] "
+            
+Element(endtag)[1957,1961] " - "tr"
+Element(text)[1962,1970] "
+        
+Element(endtag)[1971,1978] " - "table"
+Element(text)[1979,1990] "
+  
+        
+Element(tag)[1991,1996] " - "div" - {}
+Element(text)[1997,2023] " err="true"/>
+        
+    
+Element(endtag)[2024,2030] " - "body"
+Element(text)[2031,2031] "
+
+Element(endtag)[2032,2038] " - "html"
+Element(text)[2039,2039] "
+

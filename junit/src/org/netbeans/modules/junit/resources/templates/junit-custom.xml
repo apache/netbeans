@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<#--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+
+<project name="Custom junit test" default="test-custom" basedir=".">
+    <target name="-check-run-test-single-method-supported" if="methodname">
+        <available property="run.test.single.method.supported"
+                   resource="org/apache/tools/ant/taskdefs/optional/junit/JUnit4TestMethodAdapter.class"/>
+        <fail unless="run.test.single.method.supported">Execution of a single test method is not supported by this version of Ant.</fail>
+    </target>
+<#noparse>
+    <target name="-prepare-execution">
+        <property name="test.result.dir" location="${basedir}"/>
+        <property  name="tmp.dir" value="${basedir}"/>
+        <macrodef name="junit-template">
+            <element name="test-spec" implicit="yes"/>
+            <sequential>
+                <property name="run.jvmargs" value="" />
+                <property name="work.dir" value="${basedir}"/>
+                <junit showoutput="true" fork="true" dir="${work.dir}" jvm="${platform.java}" tempdir="${tmp.dir}">
+                    <test-spec/>
+                    <classpath path="${classpath}" />
+                    <jvmarg value="-ea"/>
+                    <jvmarg line="${run.jvmargs}"/>
+                    <formatter type="brief" usefile="false"/>
+                    <formatter type="xml" />
+                    <syspropertyset>
+                        <propertyref prefix="test-sys-prop."/>
+                        <mapper from="test-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                </junit>
+            </sequential>
+        </macrodef>
+    </target>
+    <target name="test-custom" depends="-check-run-test-single-method-supported,-prepare-execution">
+        <tstamp>
+            <format property="run.id" pattern="hhmmssSSS"/>
+        </tstamp>
+        <property name="test.result.dir.custom" value="${test.result.dir}/run-${run.id}"/>
+        <mkdir dir="${test.result.dir.custom}"/>
+</#noparse>
+        <junit-template>
+            ${tests}
+        </junit-template>
+<#noparse>
+        <delete dir="${test.result.dir.custom}" deleteonexit="true"/>
+</#noparse>
+    </target>
+</project>

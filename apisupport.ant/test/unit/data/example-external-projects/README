@@ -1,0 +1,13 @@
+Summary of layout:
+
+suite1 contains two modules, action-project and support/lib-project. action-project depends on lib-project. It
+uses the default platform.
+
+suite2 contains just one module, misc-project. It uses the default platform (which mentions this source dir).
+
+suite3 contains a standalone project with a custom fake platform (a fake mini-build).
+
+XXX this layout is largely useless for actually testing current features of apisupport/project, since it has
+been refactored too many times and the test data has not kept up. Tests should probably be rewritten from
+scratch to actually exercise all the possible cases, and to use dynamically generated test data rather than a
+handful of static examples.

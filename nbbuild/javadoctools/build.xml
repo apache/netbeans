@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2009 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!DOCTYPE someant [
+  <!ENTITY properties SYSTEM "properties.xml">
+  <!ENTITY replaces SYSTEM "replaces.xml">
+  <!ENTITY disallowed-links SYSTEM "disallowed-links.xml">
+]>
+
+<project basedir="." name="nbbuild/javadoctools" default="build-javadoc">
+
+    <import file="../default.xml"/>
+
+    <target name="build-javadoc" depends="-jdk-init,-load-build-properties,init-tasks,set-buildnumber" description="Builds Javadoc documentation for modules; on branches pass e.g. -Djavadoc.web.root=http://bits.netbeans.org/6.7/javadoc">
+        <pathconvert property="modules.fullpath">
+            <path>
+                <dirset dir="${nb_all}" includes="${config.javadoc.all}"/>
+            </path>
+            <mapper type="identity"/>
+        </pathconvert>
+        
+        <sortsuitemodules unsortedmodules="${modules.fullpath}" sortedmodulesproperty="modules.sorted"/>
+        
+        <property name="export.interfaces" location="${netbeans.javadoc.dir}/../ModulesExportedInterfaces"/>
+        <property name="export.apichanges" location="${netbeans.javadoc.dir}/../APIChanges"/>
+        <mkdir dir="${export.interfaces}"/>
+        <mkdir dir="${export.apichanges}"/>
+        
+        <property name="javadoc.fail.on.error" value="true"/>
+        <subant-junit target="javadoc" failonerror="${javadoc.fail.on.error}" report="${nb_all}/nbbuild/build/build-all-javadoc.xml">
+            <buildpath path="${modules.sorted}"/>
+        </subant-junit>
+
+        <antcall inheritall="true" inheritrefs="true" target="generate-xml"/>
+        <antcall inheritall="true" inheritrefs="true" target="generate-html"/>
+        <antcall inheritall="true" inheritrefs="true" target="check-broken-links"/>
+
+
+        <property name="javadoc.web.zip" location="${nb_all}/nbbuild/NetBeans-${buildnum}-javadoc-web.zip"/>
+        <property name="javadoc.zip" location="${nb_all}/nbbuild/NetBeans-${buildnum}-javadoc.zip"/>
+        <condition property="skip.javadoc.web.zip" value="true">
+            <equals arg1="${javadoc.web.zip}" arg2=""/>
+        </condition>
+
+
+        <antcall inheritall="true" inheritrefs="true" target="build-zip-web"/>
+        <antcall inheritall="true" inheritrefs="true" target="build-zip-lite"/>
+    </target>
+
+    <target name="build-zip-web" depends="init" unless="skip.javadoc.web.zip">
+        <zip destfile="${javadoc.web.zip}" update="true" duplicate="preserve" compress="true">
+            <zipfileset dir="${netbeans.javadoc.dir}" filemode="644" prefix="">
+                <include name="**/*"/>
+            </zipfileset>
+        </zip>
+    </target>
+    <target name="build-zip-lite" depends="init">
+        <zip destfile="${javadoc.zip}" update="true" duplicate="preserve" compress="true">
+            <zipfileset dir="${nb_all}/nbbuild/build/tmp" filemode="644" prefix="">
+                <include name="overview-summary.html"/>
+            </zipfileset>
+            <zipfileset dir="${netbeans.javadoc.dir}" filemode="644" prefix="">
+                <include name="**/*"/>
+                <exclude name="*.zip"/>
+                <exclude name="overview-summary.html"/>
+                <exclude name="tmp/**"/>
+            </zipfileset>
+        </zip>
+    </target>
+    
+    <target name="generate-xml" depends="init">
+        <echo file="${export.apichanges}/header.gen">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+            &lt;changes&gt;
+        </echo>
+        
+        <echo file="${export.apichanges}/footer.gen">
+            &lt;/changes&gt;
+        </echo>
+        
+        <concat destfile="${netbeans.javadoc.dir}/apichanges.xml">
+            <fileset dir="${export.apichanges}" includes="header.gen"/>
+            <fileset dir="${export.apichanges}" includes="*" excludes="*.gen"/>
+            <fileset dir="${export.apichanges}" includes="footer.gen"/>
+        </concat>
+        
+        <echo file="${export.interfaces}/header.gen">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+            &lt;apis&gt;
+        </echo>
+        
+        <echo file="${export.interfaces}/footer.gen">
+            &lt;/apis&gt;
+        </echo>
+        
+        <concat destfile="${netbeans.javadoc.dir}/modules.xml">
+            <fileset dir="${export.interfaces}" includes="header.gen"/>
+            <fileset dir="${export.interfaces}" includes="*" excludes="*.gen"/>
+            <fileset dir="${export.interfaces}" includes="footer.gen"/>
+        </concat>
+        
+        <taskdef name="javadoc-index" classname="org.netbeans.nbbuild.JavadocIndex" classpath="${nbantext.jar}"/>
+        <javadoc-index target="${netbeans.javadoc.dir}/allclasses.xml">
+            <packageslist dir="${netbeans.javadoc.dir}">
+                <include name="**/allclasses-noframe.html"/>
+            </packageslist>
+        </javadoc-index>
+    </target>
+    
+    <target name="generate-html" depends="init">
+        <tstamp>
+            <format property="modules-javadoc-date" pattern="d MMM yyyy" locale="en"/>
+        </tstamp>
+        
+        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/usecases.html" style="export2usecases.xsl">
+            <param name="date" expression="${modules-javadoc-date}"/>
+        </style>
+        
+        <style in="${netbeans.javadoc.dir}/apichanges.xml" out="${netbeans.javadoc.dir}/apichanges.html" style="export2apichanges.xsl">
+            <param name="date" expression="${modules-javadoc-date}"/>
+            <param name="changes-since-year" expression="${previous.release.year}"/>
+            <param name="changes-since-day" expression="${previous.release.day}"/>
+            <param name="changes-since-month" expression="${previous.release.month}"/>
+            <param name="include-introduction" expression="true"/>
+        </style>
+
+        <tstamp>
+            <format property="atom-date" pattern="yyyy-MM-dd'T'HH:mm:ss'Z'" timezone="UTC"/>
+        </tstamp>
+        <style in="${netbeans.javadoc.dir}/apichanges.xml" out="${netbeans.javadoc.dir}/apichanges.atom" style="export2apichanges-atom.xsl">
+            <param name="date" expression="${atom-date}"/>
+        </style>
+        
+        <copy file="netbeans.css" tofile="${netbeans.javadoc.dir}/netbeans.css"/>
+        <condition property="javadoc.style.sheet.exists">
+            <available file="${netbeans.javadoc.dir}/org-openide-util/javadoc.css"/>
+        </condition>
+        
+        <fail unless="javadoc.style.sheet.exists">
+            The org-openide-util/javadoc.css has to exist as we are referring to
+            it from master module Javadoc pages. If it does not anymore, update
+            the export*.xsl templates.
+        </fail>
+
+        <style in="${netbeans.javadoc.dir}/allclasses.xml" out="${netbeans.javadoc.dir}/allclasses-frame.html" style="export2allclasses.xsl"/>
+        
+        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/overview-frame.html" style="export2allmodules.xsl">
+            <param name="date" expression="${modules-javadoc-date}"/>
+        </style>
+        
+        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/layers.html" style="export2layer.xsl">
+            <param name="date" expression="${modules-javadoc-date}"/>
+        </style>
+        
+        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/properties.html" style="export2property.xsl">
+            <param name="date" expression="${modules-javadoc-date}"/>
+        </style>
+
+        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/branding.html" style="export2branding.xsl">
+            <param name="date" expression="${modules-javadoc-date}"/>
+        </style>
+        
+        <style in="${netbeans.javadoc.dir}/modules.xml" out="${netbeans.javadoc.dir}/overview-summary.html" style="export2html.xsl">
+            <param name="date" expression="${modules-javadoc-date}"/>
+            <param name="download" expression="true"/>
+        </style>
+        
+        <style in="${netbeans.javadoc.dir}/modules.xml" out="${nb_all}/nbbuild/build/tmp/overview-summary.html" style="export2html.xsl">
+            <param name="date" expression="${modules-javadoc-date}"/>
+            <param name="download" expression="false"/>
+        </style>
+        
+        <!-- at the end generate the index.html so people know where to start -->      
+        <echo file="${netbeans.javadoc.dir}/index.html"><![CDATA[
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+<html>
+    <head>
+        <title>NetBeans API Index</title>
+        <link type="application/atom+xml" rel="alternate" href="apichanges.atom"></link>
+    </head>
+    <frameset cols="20%,80%" title="" onLoad="top.loadFrames()">
+        <frameset rows="30%,70%" title="" onLoad="top.loadFrames()">
+            <frame src="overview-frame.html" name="packageListFrame" title="All Modules"></frame>
+            <frame src="allclasses-frame.html" name="packageFrame" title="All classes"></frame>
+        </frameset>
+        <frame src="overview-summary.html" name="classFrame" title="Module, package, class and interface descriptions" scrolling="yes"></frame>
+        <noframes>
+            <h2>Frame Alert</h2>
+            <p>
+                This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.
+                Link to <a href="overview-summary.html">Non-frame version.</a>
+            </p>
+        </noframes>
+    </frameset>
+</html>
+]]>
+        </echo>
+        &properties;
+
+        <replace dir="${netbeans.javadoc.dir}">
+            <include name="*.html"/>
+            <replacefilter token="@JDK@" value="http://download.oracle.com/javase/6/docs/api/"/>
+            &replaces;   
+            <replacefilter token="http://root/" value="."/>
+            <replacefilter token="$${javadoc.web.root}" value="."/>
+        </replace>
+        
+        <echo message="Javadoc index has been generated to ${netbeans.javadoc.dir}/index.html"/>
+    </target>
+    
+    <target name="check-broken-links" depends="init" unless="javadoc.skip.brokenlinks.check">
+        <taskdef name="checklinks" classname="org.netbeans.nbbuild.CheckLinks" classpath="${nbantext.jar}"/>
+        <property name="javadoc.check.forbidden.links" value="true"/>
+        <checklinks basedir="${netbeans.javadoc.dir}" checkexternal="${javadoc.check.external.links}" checkforbidden="${javadoc.check.forbidden.links}" checkspaces="false" report="${netbeans.javadoc.dir}/checklinks-errors.xml">
+            <include name="*/overview-summary.html"/>
+            <include name="*/apichanges.html"/>
+            <include name="*/architecture-summary.html"/>
+            <include name="*/**/package-summary.html"/>
+            <include name="*/**/doc-files/**/*.html"/>
+            <include name="*.html"/>
+            &disallowed-links;
+        </checklinks>
+    </target>
+
+</project>

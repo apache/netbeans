@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="taskdefs" default="run" basedir=".">
+    <target name="run">
+        <property name="clazzdir" location="${java.io.tmpdir}"/>
+        <echo file="${clazzdir}/MyTask.java">
+            import org.apache.tools.ant.*;
+            public class MyTask extends Task {
+                public void execute() throws BuildException {
+                    log("MyTask info message");
+                    log("MyTask verbose message", Project.MSG_VERBOSE);
+                    log("MyTask warn message", Project.MSG_WARN);
+                }
+            }
+        </echo>
+        <delete file="${clazzdir}/MyTask.class"/>
+        <javac srcdir="${clazzdir}" destdir="${clazzdir}" classpath="${ant.home}/lib/ant.jar" includes="MyTask.java"/>
+        <taskdef name="mytask" classname="MyTask" classpath="${clazzdir}"/>
+        <mytask/>
+    </target>
+</project>

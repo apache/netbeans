@@ -1,0 +1,9 @@
+# This is a template for how you might set up your private.properties
+# file for running unit tests using Java DB network server.  Make sure
+# you start the server before running tests.
+test-unit-sys-prop.db.url=jdbc:derby://localhost:1527/testdb;create=true
+test-unit-sys-prop.db.user=foo
+test-unit-sys-prop.db.password=bar
+test-unit-sys-prop.db.schema=APP
+test-unit-sys-prop.db.driver.jarpath=file:///Users/David/glassfish/javadb/lib/derbyclient.jar
+test-unit-sys-prop.db.driver.classname=org.apache.derby.jdbc.ClientDriver

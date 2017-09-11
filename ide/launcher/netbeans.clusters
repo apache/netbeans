@@ -1,0 +1,27 @@
+# platform cluster first
+platform
+# application cluster second
+nb
+# ergonomics cluster if present
+ergonomics
+# and now the rest
+ide
+extide
+java
+apisupport
+webcommon
+websvccommon
+enterprise
+mobility
+profiler
+python
+php
+identity
+harness
+cnd
+cndext
+dlight
+groovy
+extra
+javacard
+javafx

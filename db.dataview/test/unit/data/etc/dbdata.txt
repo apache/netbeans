@@ -1,0 +1,11 @@
+tinyintc=-80
+smallintc=-32766
+varcharc=ala
+intc=123456
+bigintc=123
+datec=Oct 10, 2005
+charc=c
+datetime=Apr 1, 2005 10:12:32 PM
+floatc=2.65
+doublec=-217.5
+doubleprecisionc=4.32

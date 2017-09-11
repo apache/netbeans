@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="windows-1252"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/schema/A"
+            xmlns:tns="http://xml.netbeans.org/schema/A"
+            elementFormDefault="qualified">
+    <xsd:complexType name="C1">
+        <xsd:sequence>
+            <xsd:element name="C11"/>
+            <xsd:element name="C12"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="C2">
+        <xsd:sequence>
+            <xsd:element name="C21"/>
+            <xsd:element name="C22"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

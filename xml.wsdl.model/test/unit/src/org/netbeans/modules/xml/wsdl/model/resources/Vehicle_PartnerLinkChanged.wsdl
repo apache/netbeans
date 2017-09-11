@@ -1,0 +1,92 @@
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" 
+xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns:tns="http://www.sun.com/javaone/05/VehicleReservationService" 
+xmlns:ota="http://www.opentravel.org/OTA/2003/05" 
+xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" 
+targetNamespace="http://www.sun.com/javaone/05/VehicleReservationService">
+
+	<types>
+		<xs:schema targetNamespace="http://www.sun.com/javaone/05/VehicleReservationService" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:air="http://www.sun.com/javaone/05/VehicleReservationService">
+			<xs:import namespace="http://www.opentravel.org/OTA/2003/05" schemaLocation="OTA_TravelItinerary.xsd"/>
+		</xs:schema>
+	</types>
+	
+	<message name="ReserveVehicleIn">
+		<part name="itinerary" element="ota:TravelItinerary"/>
+	</message>
+	<message name="CancelVehicleIn">
+		<part name="itinerary" element="ota:ItineraryRef"/>
+	</message>
+	<message name="CancelVehicleOut">
+		<part name="succeeded" element="ota:CancellationStatus"/>
+	</message>
+	<message name="VehicleReservedIn">
+		<part name="itinerary" element="ota:TravelItinerary"/>
+	</message>
+	
+	<portType name="VehicleReservationPortType">
+		<operation name="reserveVehicle">
+			<input message="tns:ReserveVehicleIn"/>
+		</operation>
+		<operation name="cancelVehicle">
+			<input message="tns:CancelVehicleIn"/>
+			<output message="tns:CancelVehicleOut"/>
+		</operation>
+	</portType>
+	
+	
+	<portType name="VehicleReservationCallbackPortType">
+		<operation name="vehicleReserved">
+			<input message="tns:VehicleReservedIn"/>
+		</operation>
+	</portType>	
+	
+	<binding name="VehicleReservationSoapBinding" type="tns:VehicleReservationPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="reserveVehicle">
+			<soap:operation soapAction="http://www.sun.com/javaone/05/VehicleReservationService/reserveVehicle" style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+		</operation>
+		<operation name="cancelVehicle">
+			<soap:operation soapAction="http://www.sun.com/javaone/05/VehicleReservationService/cancelVehicle" style="document"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+	</binding>
+
+
+	<binding name="VehicleReservationCallbackSoapBinding" type="tns:VehicleReservationCallbackPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="vehicleReserved">
+			<soap:operation/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+		</operation>				
+	</binding>
+
+
+
+	<service name="VehicleReservationSoapService">
+		<port name="VehicleReservationSoapHttpPort" binding="tns:VehicleReservationSoapBinding">
+			<soap:address location="http://localhost:8080/webservice/VehicleReservationService"/>
+		</port>
+	</service>
+	
+	
+	<plnk:partnerLinkType name="VehicleReservationPartnerLinkType">
+		<plnk:role name="VehicleReservationServiceRole">
+			<plnk:portType name="tns:VehicleReservationPortType"/>
+		</plnk:role>
+	</plnk:partnerLinkType>	
+	
+	
+</definitions>

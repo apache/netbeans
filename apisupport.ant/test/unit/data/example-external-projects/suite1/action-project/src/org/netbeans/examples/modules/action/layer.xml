@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Menu">
+        <folder name="Tools">
+            <file name="org-netbeans-examples-modules-action-MagicAction.instance"/>
+        </folder>
+    </folder>
+</filesystem>

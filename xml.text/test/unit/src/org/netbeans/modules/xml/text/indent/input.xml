@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- hello world -->
+<wrap>
+    <root>
+        <a><b>hello world</b></a>
+    </root>
+
+
+    <!-- #135478 -->
+    <root>
+
+        <a>
+
+            <b>test</b>
+
+
+        </a>
+    </root>
+
+    <!-- #135217 -->
+    <root>
+        <a>
+            <b>test</b>
+        </a>
+    </root>
+
+    <!-- #135107 -->
+    <root>
+        <property name="AVERAGE">1</property>
+    </root>
+</wrap>

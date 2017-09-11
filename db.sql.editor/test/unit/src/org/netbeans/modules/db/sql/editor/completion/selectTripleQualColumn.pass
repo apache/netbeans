@@ -1,0 +1,2 @@
+Column invoice_id in table acatalog.accounting.invoice
+Column customer_id in table acatalog.accounting.invoice

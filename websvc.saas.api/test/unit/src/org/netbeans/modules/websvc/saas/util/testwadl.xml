@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+ Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+ Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ Other names may be trademarks of their respective owners.
+
+ The contents of this file are subject to the terms of either the GNU
+ General Public License Version 2 only ("GPL") or the Common
+ Development and Distribution License("CDDL") (collectively, the
+ "License"). You may not use this file except in compliance with the
+ License. You can obtain a copy of the License at
+ http://www.netbeans.org/cddl-gplv2.html
+ or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ specific language governing permissions and limitations under the
+ License.  When distributing the software, include this License Header
+ Notice in each file and include the License file at
+ nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+ particular file as subject to the "Classpath" exception as provided
+ by Oracle in the GPL Version 2 section of the License file that
+ accompanied this code. If applicable, add the following below the
+ License Header, with the fields enclosed by brackets [] replaced by
+ your own identifying information:
+ "Portions Copyrighted [year] [name of copyright owner]"
+ 
+ Contributor(s):
+ 
+ The Original Software is NetBeans. The Initial Developer of the Original
+ Software is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun
+ Microsystems, Inc. All Rights Reserved.
+ 
+ If you wish your version of this file to be governed by only the CDDL
+ or only the GPL Version 2, indicate your decision by adding
+ "[Contributor] elects to include this software in this distribution
+ under the [CDDL or GPL Version 2] license." If you do not indicate a
+ single choice of license, a recipient has the option to distribute
+ your version of this file under either the CDDL, the GPL Version 2 or
+ to extend the choice of license to its licensees as provided above.
+ However, if you add GPL Version 2 code and therefore, elected the GPL
+ Version 2 license, then the option applies only if the new code is
+ made subject to such option by the copyright holder.
+-->
+
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	     xsi:schemaLocation="http://research.sun.com/wadl/2006/10 
+                    ../../../../../../../../../../websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl20061109.xsd"
+	     xmlns="http://research.sun.com/wadl/2006/10">
+    <grammars/> 
+    <resources base="http://www.youtube.com/">
+	<resource path="api2_rest">
+	    <method name="GET" id="youtube.listByTag">
+		<doc xml:lang="en">
+		    Lists all videos that have the specified tag. 
+		    
+		    More at:
+		    http://youtube.com/dev_api_ref?m=youtube.videos.list_by_tag
+		</doc>
+		<request>
+		    <param name="method" type="xsd:string" style="query" required="true" fixed="youtube.videos.list_by_tag" default="youtube.videos.list_by_tag">
+			<doc xml:lang="en">
+                            Read-only. Indicates that the method is youtube.videos.list_by_tag.
+                        </doc>
+		    </param>
+		    <param name="dev_id" type="xsd:string" style="query" required="true">
+			<doc xml:lang="en">
+                            Your developer ID. If you don't have one, you can request one here:
+                            http://youtube.com/my_profile_dev
+                        </doc>
+		    </param>
+		    <param name="tag" type="xsd:string" style="query" required="true">
+			<doc xml:lang="en">The tag to search for.</doc>
+		    </param>
+		    <param name="page" type="xsd:string" style="query" required="false">
+			<doc xml:lang="en">
+                            Optional. The &quot;page number&quot; of results you want to retrieve: 1, 2, 3, etc.
+                        </doc>
+		    </param>
+		    <param name="per_page" type="xsd:string" style="query" required="false">
+			<doc xml:lang="en">Optional. The number of results you want to retrieve per page.
+                            Default is 20, maximum is 100.
+                        </doc>
+		    </param>
+		</request>
+		<response>
+		</response>
+	    </method>
+	    <method name="GET" id="youtube.listFeatured">
+		<doc xml:lang="en">
+		    Lists the most recent 25 videos that have been featured on the front page of the YouTube site.
+		    
+		    More at:
+		    http://youtube.com/dev_api_ref?m=youtube.videos.list_featured
+		</doc>
+		<request>
+		    <param name="method" type="xsd:string" style="query" required="true" fixed="youtube.videos.list_featured" default="youtube.videos.list_featured">
+			<doc xml:lang="en">
+                            Read-only. Indicates that the method is youtube.videos.list_featured.
+                        </doc>
+		    </param>
+		    <param name="dev_id" type="xsd:string" style="query" required="true">
+			<doc xml:lang="en">
+                            Your developer ID. If you don't have one, you can request one here:
+                            http://youtube.com/my_profile_dev
+                        </doc>
+		    </param>
+		</request>
+		<response>
+		</response>
+	    </method>
+	    <method name="GET" id="youtube.listPopular">
+		<doc xml:lang="en">
+		    Lists the most popular videos in the specified time range.
+                    
+		    More at:
+		    http://youtube.com/dev_api_ref?m=youtube.videos.list_popular
+		</doc>
+		<request>
+		    <param name="method" type="xsd:string" style="query" required="true" fixed="youtube.videos.list_popular" default="youtube.videos.list_popular">
+			<doc xml:lang="en">
+                            Read-only. Indicates that the method is youtube.videos.list_popular.
+                        </doc>
+		    </param>
+		    <param name="dev_id" type="xsd:string" style="query" required="true">
+			<doc xml:lang="en">
+                            Your developer ID. If you don't have one, you can request one here:
+                            http://youtube.com/my_profile_dev
+                        </doc>
+		    </param>
+		    <param name="time_range" type="xsd:string" style="query" required="true">
+			<doc xml:lang="en">
+                            The period of time to evaluate for the most
+                            popular videos. Values can be day, week, month, all.</doc>
+		    </param>
+		</request>
+		<response>
+		</response>
+	    </method>
+	    <method name="GET" id="youtube.getDetails">
+		<doc xml:lang="en">
+		    Displays the details for a video.
+		    
+		    More at: 
+		    http://youtube.com/dev_api_ref?m=youtube.videos.getDetails
+		</doc>
+		<request>
+		    <param name="method" type="xsd:string" style="query" required="true" fixed="youtube.videos.get_details" default="youtube.videos.get_details">
+			<doc xml:lang="en">
+                            Read-only. Indicates that the method is youtube.videos.getDetails.
+                        </doc>
+		    </param>
+		    <param name="dev_id" type="xsd:string" style="query" required="true">
+			<doc xml:lang="en">
+                            Your developer ID. If you don't have one, you can request one here:
+                            http://youtube.com/my_profile_dev
+                        </doc>
+		    </param>
+		    <param name="video_id" type="xsd:string" style="query" required="true">
+			<doc xml:lang="en"> 
+                            The ID of the video to get details for. 
+                            You can get an ID by calling one of the supported slist APIs, like
+                            listPopular, listFeatured, or listByTag. 
+                        </doc>
+		    </param>
+		</request>
+		<response>
+		</response>
+	    </method>
+	</resource>
+    </resources> 
+
+</application>

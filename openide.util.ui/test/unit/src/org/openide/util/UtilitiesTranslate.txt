@@ -1,0 +1,18 @@
+# The format should handle comments
+# And also empty lines
+
+# and also comments at the end of line
+org.openide.util org.nb.util # first line comment
+
+# lines without comments
+org.netbeans.api.MyClass org.nb.api.MyClass
+
+# and those that use = instead of space
+org.openide.TheSame=org.openide.TheSame
+
+# and of course also innerclasses with $
+org.openide.util.UtilitiesTranslateTest$A=org.openide.util.UtilitiesTranslateTest$Ahoj
+
+# test to see that . is not treated as general character
+com.o=something
+

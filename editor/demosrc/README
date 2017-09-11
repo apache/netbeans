@@ -1,0 +1,66 @@
+Introduction:
+	This is the implementation of simple standalone editor application.
+It is based on the fact that NetBeans editors are pure swing editors.
+Everything you need for this editor is editor-lib.jar archive from NetBeans
+build (modules/editor-lib.jar) and a set of classes from this directory
+and subdirectories.
+
+How to compile/setup it/run it:
+	Basically, you need only Editor.java located under the base subdir
+and editor-lib.jar to compile it and make it working with other Swing
+EditorKits. To use NetBeans' Java and HTML editor, you also need to
+compile JavaKit and HTMLKit. At best, just compile the whole content
+of base/org/netbeans/editor/example:
+
+  cd base/org/netbeans/editor/example
+  javac -classpath $NB_HOME/modules/editor-lib.jar *.java
+
+and make jar of classes and resources subdirectory:
+
+  cd ../../../..
+  jar -cvf editor.jar org/netbeans/editor/example/*.class org/netbeans/editor/example/res
+
+now you can edit a configuration file settings.properties and setup
+the kits you'd like. The file is thoroughly commented so it should be clear
+how to add another kit or remove/reconfigure existing.
+	The only thing that is not documented is Java_Completion key.
+It is the key the JavaKit looks for on initialization. It should be the name
+of JavaCompletion database, e.g. "/home/user/NetBeans/system/ParserDB/jdk13".
+You have to update it to point to your ParserDB database in order
+to JC work for you. Currently only one database is supported.
+	It is also possible to set this file up earlier and add it to the jar
+above (to the root of the jar), but I preffer to have it out of jar.
+Also note that there is also an enabled definition of Properties editor,
+for this editor, you also needs the files from properties-addon
+directory and the properties module ($NB_HOME/modules/properties.jar).
+Unless you are going to include properties support, remove the string
+",Properties" from the end of "InstalledEditor" line.
+	Finally there is a run.sh script in the "base" directory.
+It is simple and it should be easy to write a .bat file for OS without
+a suitable shell.
+	Now, to run it, just copy/link editor-lib.jar to base directory
+and use ./run.sh
+	To add the support for properties files, compile and jar the files
+in properties-addon to base/properties-addon.jar and copy the file
+modules/properties.jar from your NetBeans instalation directory to
+"base" directory. Don't forget to leave the Properties definition
+in settings.properties enabled.
+	I've also made a very simple script, "make.sh", that should build
+everything up and place the result to the ~/StandAlone directory. 
+
+	You can add any other swing editor kit to the standalone editor
+just by adding its .jar to classpath and filling its record
+in settings.properties. You could try e.g. Swings HTML Kit by modifying
+line Html_KitClass=javax.swing.text.html.HTMLEditorKit
+
+Why such a piece of SW:
+	This work was originally intended to help editors and particulary
+NetBeans editors writers. From this point of view, its major strength
+is in its ability to start very quickly (below 4 seconds), se when you
+are debugging lexical analyzer for your language, this would greatly
+reduce the turnaroud time for elementar changes.
+	It turned out this would be usable to end users too, because
+of its second major strength - memory footprint. It runs with memory
+footprint of about 20MB on Linux, or 14MB on Windows, so it could be
+*very* usable to people with limited RAM, even when the Java editor
+keeps most of its features, particulary Java Completion.

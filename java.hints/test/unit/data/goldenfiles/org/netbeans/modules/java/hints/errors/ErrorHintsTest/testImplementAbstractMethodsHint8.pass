@@ -1,0 +1,25 @@
+package org.netbeans.test.java.hints;
+
+import javax.swing.JList;
+import org.netbeans.test.java.hints.pkg.ImplementAbstractMethods8Usee;
+
+/**
+ * @author leon
+ */
+public class ImplementAbstractMethods8 {
+    
+    private static class Inner {
+        
+        private static class InnerInner extends ImplementAbstractMethods8Usee {
+            @Override
+            public void doStuff(JList list) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }
+        
+    }
+    
+    public ImplementAbstractMethods8() {
+    }
+    
+}

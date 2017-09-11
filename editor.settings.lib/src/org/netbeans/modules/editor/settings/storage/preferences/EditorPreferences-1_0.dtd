@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!--
+    Created on : December 12, 2007, 2:51 PM
+    Author     : vstejskal
+    Description:
+        The vocabulary for an editor preferences file.
+
+    PUBLIC ID  : -//NetBeans//DTD Editor Preferences 1.0//EN
+    SYSTEM ID  : http://www.netbeans.org/dtds/EditorPreferences-1_0.dtd
+-->
+
+<!ELEMENT editor-preferences ( entry )* >
+<!ATTLIST editor-preferences >
+
+
+<!--
+    A single setting entry. Each setting is identified by its unique name and
+    has a value attached to it.
+    
+    name:       (String) A unique identifier of this setting.
+    
+    value:      (Any) The setting's value. In general editor preferences can have
+                values that are convertible to/from strings. The conversion methods
+                are those provided for primitive types in java. More specifically,
+                anything that can be get/set on java.util.prefs.Preferences can be
+                stored here. For other values the modules are required to provide
+                their own conversion to/from string and store the string value here.
+                
+                Please note, that only one from the 'value', 'valueId' attributes
+                or 'value' child element can be used.
+                
+    valueId:    (String) A resource bundle key that will be used for reading the
+                value for this setting. This is primarily designed for modules
+                that use localized setting values. User changes will always be
+                stored in the 'value' attribute or subelement.
+
+    javaType:   (String) Fully qualified name of a java class representing this
+                setting. This attribute is used purely for backwards compatibilty
+                reasons. If you are sure that all your clients and your own
+                code accesses this setting through MimeLookup and
+                java.util.prefs.Preferences then you don't need this.
+                
+    category:   (String) Determines the API stability of the setting. It can
+                be one of 'module' (the same as the API stability of a module declaring
+                this setting), 'private', 'deprecated'.
+                This attribute is ignored when loading settings, but should be
+                provided to indicate the availability of the setting for other
+                modules. If not specified or its value is not one of those listed
+                above the setting should be considered 'private'. Only modules that
+                'own' the setting should specify this attribute, if you are just supplying
+                value for a setting defined (owned) by somebody else do not specify this attribute. 
+
+    remove:     When 'true' this entry will be removed and all its
+                optional attributes and elements will be ignored.
+-->
+<!ELEMENT entry ( value? ) >
+<!ATTLIST entry
+          name              CDATA #REQUIRED
+          value             CDATA #IMPLIED
+          valueId           CDATA #IMPLIED
+          javaType          CDATA #IMPLIED
+          category          CDATA #IMPLIED
+          remove            ( true | false ) "false"
+          xml:space         ( default | preserve ) "default"
+>
+
+<!--
+    The value of a setting. If specified it should contain <![CDATA[...]]> section
+    with a value of the enclosing setting entry. If this is used the attributes
+    'value' and 'valueId' must not be specified.
+-->
+<!ELEMENT value ( #PCDATA ) >
+<!ATTLIST value >

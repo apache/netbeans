@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<?xml-stylesheet href="../nbbuild/javadoctools/apichanges.xsl" type="text/xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+
+<apichanges>
+
+<!-- First, a list of API names you may use: -->
+<apidefs>
+        <apidef name="junit-plugin">JUnit Plugin SPI</apidef>
+</apidefs>
+
+<!-- ACTUAL CHANGES BEGIN HERE: -->
+
+<changes>
+
+        <change id="issue-74160">
+            <api name="junit-plugin"/>
+            <summary>Added SPI for JUnit plugins</summary>
+            <version major="2" minor="21"/>
+            <date day="7" month="4" year="2006"/>
+            <author login="mpetras"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Introduced new SPI - abstract class <code>JUnitPlugin</code> (with a nested
+                    enum <code>CreateTestParam</code> and a nested final class <code>Location</code>).
+                    Introduced to allow non-J2SE projects to plug in their own implementation
+                    of JUnit support, i.e.:
+                </p>
+                <ul>
+                    <li>jumping to a test for the current class/method and back</li>
+                    <li>generating of test skeletons</li>
+                </ul>
+            </description>
+            <class package="org.netbeans.modules.junit.plugin" name="JUnitPlugin"/>
+            <issue number="74160"/>
+            <issue number="42349"/>
+        </change>
+
+        <change id="issue-72819">
+            <api name="junit-plugin"/>
+            <summary>Added enum members
+                     INC_CLASS_SETUP and INC_CLASS_TEARDOWN</summary>
+            <version major="2" minor="23"/>
+            <date day="16" month="3" year="2007"/>
+            <author login="mpetras"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added members <code>INC_CLASS_SETUP</code> and
+                    <code>INC_CLASS_TEARDOWN</code>
+                    to enum <code>JUnitPlugin.CreateTestParam</code>.
+                    Added method
+                    <code>createTestActionCalled(FileObject[])</code>
+                    to class <code>JUnitPlugin</code>.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.junit.plugin" name="JUnitPlugin"/>
+            <issue number="72819"/>
+        </change>
+
+</changes>
+
+  <!-- Now the surrounding HTML text and document structure: -->
+
+  <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <======================
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE xml/api/doc/changes/apichanges.xml
+
+-->
+    <head>
+      <title>JUnit API changes by date</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the JUnit APIs. Please ask on the 
+<code>dev@junit.netbeans.org</code> or <code>nbdev@netbeans.org</code>
+mailing list if you have any questions about the details of a
+change, or are wondering how to convert existing code to be compatible.</p>
+
+      <hr/><standard-changelists module-code-name="org.netbeans.modules.junit/2"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+</apichanges>

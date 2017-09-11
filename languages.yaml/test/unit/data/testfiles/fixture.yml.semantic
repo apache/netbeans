@@ -1,0 +1,207 @@
+# :title, :string, :limit => 255
+# :permalink, :string, :limit => 255
+# :excerpt, :text
+# :body, :text
+# :created_at, :datetime
+# :updated_at, :datetime
+# :published_at, :datetime
+|>METHOD:welcome<|:
+  |>METHOD:id<|: 1
+  |>METHOD:site_id<|: 1
+  |>METHOD:title<|: Welcome to Mephisto
+  |>METHOD:permalink<|: welcome-to-mephisto
+  |>METHOD:excerpt<|: welcome summary
+  |>METHOD:excerpt_html<|: welcome summary
+  |>METHOD:body<|: "quentin's \"welcome\" *description* <script>hi</script><a onclick=\"foo\" href=\"#\">linkage</a>"
+  |>METHOD:body_html<|: "<p>quentin&#8217;s &#8220;welcome&#8221; <strong>description</strong> <script>hi</script><a onclick=\"foo\" href=\"#\">linkage</a></p>"
+  |>METHOD:created_at<|: <%= 5.days.ago.utc.to_s(:db) %>
+  |>METHOD:updated_at<|: <%= 5.days.ago.utc.to_s(:db) %>
+  |>METHOD:published_at<|: <%= 3.days.ago.utc.to_s(:db) %>
+  |>METHOD:comment_age<|: 30
+  |>METHOD:user_id<|: 1
+  |>METHOD:comments_count<|: 1
+  |>METHOD:type<|: Article
+  |>METHOD:filter<|: textile_filter
+  |>METHOD:version<|: 2
+  |>METHOD:updater_id<|: 1
+|>METHOD:another<|:
+  |>METHOD:id<|: 2
+  |>METHOD:site_id<|: 1
+  |>METHOD:title<|: Another Welcome to Mephisto
+  |>METHOD:permalink<|: another-welcome-to-mephisto
+  |>METHOD:body<|: another welcome description
+  |>METHOD:body_html<|: another welcome description
+  |>METHOD:created_at<|: <%= 4.days.ago.utc.to_s(:db) %>
+  |>METHOD:updated_at<|: <%= 4.days.ago.utc.to_s(:db) %>
+  |>METHOD:published_at<|: <%= 4.days.ago.utc.to_s(:db) %>
+  |>METHOD:comment_age<|: 1
+  |>METHOD:user_id<|: 3
+  |>METHOD:type<|: Article
+|>METHOD:welcome_comment<|:
+  |>METHOD:id<|: 3
+  |>METHOD:site_id<|: 1
+  |>METHOD:article_id<|: 1
+  |>METHOD:title<|: Welcome to Mephisto
+  |>METHOD:permalink<|: welcome-to-mephisto
+  |>METHOD:body<|: "rico's evil <script>hi</script> and <a onclick=\"foo\" href=\"#\">linkage</a>"
+  |>METHOD:body_html<|: "<p>rico&#8217;s evil <script>hi</script> and <a onclick=\"foo\" href=\"#\">linkage</a></p>"
+  |>METHOD:created_at<|: <%= (3.days + 55.minutes).ago.utc.to_s(:db) %>
+  |>METHOD:updated_at<|: <%= (3.days + 55.minutes).ago.utc.to_s(:db) %>
+  |>METHOD:published_at<|: <%= 3.days.ago.utc.to_s(:db) %>
+  |>METHOD:type<|: Comment
+  |>METHOD:author<|: rico
+  |>METHOD:author_ip<|: 1dfasd
+  |>METHOD:approved<|: true
+  |>METHOD:filter<|: textile_filter
+|>METHOD:future<|:
+  |>METHOD:id<|: 5
+  |>METHOD:site_id<|: 1
+  |>METHOD:title<|: Article in the Future
+  |>METHOD:body<|: future
+  |>METHOD:permalink<|: article-in-the-future
+  |>METHOD:excerpt<|: This is my own little blogging tool
+  |>METHOD:excerpt_html<|: This is my own little blogging tool
+  |>METHOD:created_at<|: <%= (4.days - 15.minutes).ago.utc.to_s(:db) %>
+  |>METHOD:updated_at<|: <%= (4.days - 15.minutes).ago.utc.to_s(:db) %>
+  |>METHOD:published_at<|: <%= (4.days - 15.minutes).from_now.to_s(:db) %>
+  |>METHOD:comment_age<|: 30
+  |>METHOD:user_id<|: 1
+  |>METHOD:type<|: Article
+|>METHOD:about<|:
+  |>METHOD:id<|: 6
+  |>METHOD:site_id<|: 1
+  |>METHOD:title<|: About this page
+  |>METHOD:permalink<|: about-this-page
+  |>METHOD:excerpt<|: This is my own about page
+  |>METHOD:excerpt_html<|: This is my own about page
+  |>METHOD:body<|: This is my own about page
+  |>METHOD:body_html<|: This is my own about page
+  |>METHOD:created_at<|: <%= (4.days - 13.minutes).ago.utc.to_s(:db) %>
+  |>METHOD:updated_at<|: <%= (4.days - 13.minutes).ago.utc.to_s(:db) %>
+  |>METHOD:published_at<|: <%= (4.days - 13.minutes).ago.utc.to_s(:db) %>
+  |>METHOD:comment_age<|: 2
+  |>METHOD:user_id<|: 1
+  |>METHOD:type<|: Article
+|>METHOD:site_map<|:
+  |>METHOD:id<|: 7
+  |>METHOD:site_id<|: 1
+  |>METHOD:title<|: The Site Map
+  |>METHOD:permalink<|: the-site-map
+  |>METHOD:excerpt<|: This is my own site map
+  |>METHOD:excerpt_html<|: This is my own site map
+  |>METHOD:body<|: This is my own site map
+  |>METHOD:body_html<|: This is my own site map
+  |>METHOD:created_at<|: <%= (4.days - 5.minutes).ago.utc.to_s(:db) %>
+  |>METHOD:updated_at<|: <%= (4.days - 5.minutes).ago.utc.to_s(:db) %>
+  |>METHOD:published_at<|: <%= (4.days - 5.minutes).ago.utc.to_s(:db) %>
+  |>METHOD:comment_age<|: -1
+  |>METHOD:user_id<|: 4
+  |>METHOD:type<|: Article
+|>METHOD:cupcake_welcome<|:
+  |>METHOD:id<|: 8
+  |>METHOD:site_id<|: 2
+  |>METHOD:title<|: Welcome to Cupcake
+  |>METHOD:permalink<|: welcome-to-cupcake
+  |>METHOD:excerpt<|: welcome summary
+  |>METHOD:excerpt_html<|: welcome summary
+  |>METHOD:body<|: welcome description
+  |>METHOD:body_html<|: welcome description
+  |>METHOD:created_at<|: <%= 5.days.ago.utc.to_s(:db) %>
+  |>METHOD:updated_at<|: <%= 5.days.ago.utc.to_s(:db) %>
+  |>METHOD:published_at<|: <%= 3.days.ago.utc.to_s(:db) %>
+  |>METHOD:comment_age<|: 30
+  |>METHOD:user_id<|: 1
+  |>METHOD:comments_count<|: 1
+  |>METHOD:type<|: Article
+|>METHOD:cupcake_welcome_comment<|:
+  |>METHOD:id<|: 9
+  |>METHOD:site_id<|: 2
+  |>METHOD:article_id<|: 8
+  |>METHOD:title<|: Welcome to Cupcake
+  |>METHOD:permalink<|: welcome-to-cupcake
+  |>METHOD:body<|: This blogging tool tastes like fudge.
+  |>METHOD:body_html<|: This blogging tool tastes like fudge.
+  |>METHOD:created_at<|: <%= (3.days + 55.minutes).ago.utc.to_s(:db) %>
+  |>METHOD:updated_at<|: <%= (3.days + 55.minutes).ago.utc.to_s(:db) %>
+  |>METHOD:published_at<|: <%= 3.days.ago.utc.to_s(:db) %>
+  |>METHOD:type<|: Comment
+  |>METHOD:author<|: rico
+  |>METHOD:approved<|: true
+|>METHOD:unwelcome_comment<|:
+  |>METHOD:id<|: 10
+  |>METHOD:site_id<|: 1
+  |>METHOD:article_id<|: 1
+  |>METHOD:title<|: Welcome to Mephisto
+  |>METHOD:permalink<|: welcome-to-mephisto
+  |>METHOD:body<|: This blogging tool sucks.
+  |>METHOD:body_html<|: This blogging tool sucks.
+  |>METHOD:created_at<|: <%= (2.days + 55.minutes).ago.utc.to_s(:db) %>
+  |>METHOD:updated_at<|: <%= (2.days + 55.minutes).ago.utc.to_s(:db) %>
+  |>METHOD:published_at<|: <%= 3.days.ago.utc.to_s(:db) %>
+  |>METHOD:type<|: Comment
+  |>METHOD:author<|: rico
+  |>METHOD:author_ip<|: '127.0.0.1'
+|>METHOD:draft<|:
+  |>METHOD:id<|: 11
+  |>METHOD:site_id<|: 1
+  |>METHOD:title<|: Test Draft
+  |>METHOD:permalink<|: test-draft
+  |>METHOD:body<|: This is a test draft
+  |>METHOD:body_html<|: This is a test draft
+  |>METHOD:created_at<|: <%= 1.day.ago.utc.to_s(:db) %>
+  |>METHOD:updated_at<|: <%= 1.day.ago.utc.to_s(:db) %>
+  |>METHOD:comment_age<|: 30
+  |>METHOD:user_id<|: 1
+  |>METHOD:type<|: Article
+|>METHOD:at_beginning_of_month<|:
+  |>METHOD:id<|: 12
+  |>METHOD:site_id<|: 1
+  |>METHOD:title<|: At beginning of the month
+  |>METHOD:permalink<|: at-beginning-of-the-month
+  |>METHOD:body<|: Lalala
+  |>METHOD:body_html<|: Lalala
+  |>METHOD:created_at<|: <%= date = Time.now.utc.beginning_of_month.advance(:months => -2).to_s(:db) %>
+  |>METHOD:updated_at<|: <%= date %>
+  |>METHOD:published_at<|: <%= date %>
+  |>METHOD:comment_age<|: 30
+  |>METHOD:user_id<|: 1
+  |>METHOD:type<|: Article
+|>METHOD:at_middle_of_month<|:
+  |>METHOD:id<|: 13
+  |>METHOD:site_id<|: 1
+  |>METHOD:title<|: At middle of the month
+  |>METHOD:permalink<|: at-middle-of-the-month
+  |>METHOD:body<|: Lalala
+  |>METHOD:body_html<|: Lalala
+  |>METHOD:created_at<|: <%= date = Time.now.utc.beginning_of_month.advance(:months => -1, :days => -15).to_s(:db) %>
+  |>METHOD:updated_at<|: <%= date %>
+  |>METHOD:published_at<|: <%= date %>
+  |>METHOD:comment_age<|: 30
+  |>METHOD:user_id<|: 1
+  |>METHOD:type<|: Article
+|>METHOD:at_end_of_month<|:
+  |>METHOD:id<|: 14
+  |>METHOD:site_id<|: 1
+  |>METHOD:title<|: At end of the month
+  |>METHOD:permalink<|: at-end-of-the-month
+  |>METHOD:body<|: Lalala
+  |>METHOD:body_html<|: Lalala
+  |>METHOD:created_at<|: <%= date = (Time.now.utc.beginning_of_month.advance(:months => -1) -1).to_s(:db) %>
+  |>METHOD:updated_at<|: <%= date %>
+  |>METHOD:published_at<|: <%= date %>
+  |>METHOD:comment_age<|: 30
+  |>METHOD:user_id<|: 1
+  |>METHOD:type<|: Article
+|>METHOD:at_beginning_of_next_month<|:
+  |>METHOD:id<|: 15
+  |>METHOD:site_id<|: 1
+  |>METHOD:title<|: At beginning of next month
+  |>METHOD:permalink<|: at-beginning-of-next-month
+  |>METHOD:body<|: Lalala
+  |>METHOD:body_html<|: Lalala
+  |>METHOD:created_at<|: <%= date = Time.now.utc.beginning_of_month.advance(:months => -1).to_s(:db) %>
+  |>METHOD:updated_at<|: <%= date %>
+  |>METHOD:published_at<|: <%= date %>
+  |>METHOD:comment_age<|: 30
+  |>METHOD:user_id<|: 1
+  |>METHOD:type<|: Article

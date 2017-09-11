@@ -1,0 +1,2 @@
+This directory should hold jcommon and jfreechart.jar, available from sourceforge.  There is an ant task
+in the build script that will download them.

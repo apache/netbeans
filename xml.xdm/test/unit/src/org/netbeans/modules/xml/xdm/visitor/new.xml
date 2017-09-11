@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<casa xmlns="http://java.sun.com/xml/ns/casa" xmlns:ns1="http://enterprise.netbeans.org/bpel/HelloSample/HelloSample" xmlns:ns2="http://j2ee.netbeans.org/wsdl/HelloSample.wsdl" xmlns:xlink="http://www.w3.org/2000/xlink" xmlns:ns="SampleCompositeApp">
+<endpoints>
+<endpoint endpoint-name="role1_myRole" interface-name="ns2:portType1" name="endpoint1" service-name="ns1:PartnerLink1"/>
+    <endpoint name="endpoint2" endpoint-name="casaPort1" interface-name="ns:dummyCasaPortType" service-name="ns:casaService1"/>
+</endpoints>
+<service-units>
+    <binding-component-service-unit unit-name="sun-file-binding" component-name="sun-file-binding" name="sun-file-binding" description="Represents this Service Unit" artifacts-zip="sun-file-binding.jar">
+        <ports>
+            <port x="67" y="217" bindingType="file">
+                <link xlink:href="../jbiasa/SampleCompositeApp.wsdl#xpointer(/definitions/service[@name=&apos;casaService1&apos;]/port[@name=&apos;casaPort1&apos;])" xlink:type="simple"/>
+                <consumes endpoint="endpoint2"/>
+                <provides endpoint="endpoint2"/>
+            </port>
+        </ports>
+    </binding-component-service-unit>
+    <service-engine-service-unit artifacts-zip="HelloSample.jar" component-name="sun-bpel-engine" defined="true" description="Represents this Service Unit" internal="true" name="SampleCompositeApp-HelloSample" unit-name="HelloSample" unknown="false" x="253" y="208">
+<provides endpoint="endpoint1"/>
+</service-engine-service-unit>
+</service-units>
+<connections/>
+<porttypes>
+<link xlink:href="../jbiServiceUnits/HelloSample/HelloSample.wsdl.wsdl#xpointer(/definitions/portType[@name='portType1'])" xlink:type="simple"/>
+    <link xlink:href="../jbiasa/SampleCompositeApp.wsdl#xpointer(/definitions/portType[@name=&apos;dummyCasaPortType&apos;])" xlink:type="simple"/>
+</porttypes>
+<bindings/>
+<services/>
+<regions>
+        <region name="WSDL Endpoints" width="150"/>
+        <region name="JBI Modules" width="500"/>
+        <region name="External Modules" width="200"/>
+    </regions>
+</casa>

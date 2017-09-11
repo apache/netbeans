@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!-- Created by mschovanek on October 25, 2000, 3:49 PM -->
+
+<?target processing instruction data?>
+
+<!DOCTYPE Books PUBLIC "+//XML Test//EN" "any.dtd" [
+    <!ELEMENT Books (Product+,Price?)*>         <!ELEMENT Product (#PCDATA|Descript)*>
+    <!ELEMENT Price (#PCDATA)>                  <!ENTITY % states SYSTEM "states.dtd">
+    %states;                                    <!NOTATION eps SYSTEM "ghg">
+    <!ENTITY % Y "INCLUDE">                     <?format Bold!?>
+    <!ELEMENT XMLwithDTD (#PCDATA|ANY)*>        <!-- FULL ATTLIST -->
+    <!NOTATION pdf SYSTEM "xpdf">               <!ELEMENT Image EMPTY>
+    <!ATTLIST Image                             src       ENTITY      #REQUIRED
+      descr     CDATA       #IMPLIED            visible   CDATA       #FIXED      "true"
+      format    (jpg | gif) #IMPLIED            os        (unix | os2)             "unix"
+      entity    ENTITY      #IMPLIED            entities  ENTITIES    #IMPLIED
+      id        ID          #IMPLIED            idref     IDREF       #IMPLIED
+      idrefs    IDREFS      #IMPLIED            nmtoken   NMTOKEN     #IMPLIED
+      nmtokens  NMTOKENS    #IMPLIED            notation  NOTATION    (pdf|dvi) #IMPLIED>
+    <!-- GENERAL ENTITY -->                     <!ENTITY company "Tisk &amp; spol.">
+    <!ENTITY thorn "&#222;">                    <!-- EXTERNAL ENTITY -->
+    <!ENTITY extern SYSTEM "externalEntity.xml"><!-- PARAMETR ENTITY -->
+   <!ENTITY % sourceinfo "lang   CDATA #REQUIRED cprght CDATA #IMPLIED">
+]>
+
+<?target processing instruction data?>
+
+<Books><?pi data?>
+  <Product>Product 1 - &#100; &gt; &#x99;  
+    <Descript lang="x &lt; &#100; value'''">text data made in &cz;</Descript>
+    <![CDATA[CDATA <a a='"""&#x23;'><!----> <?t d?><!DOCTYPE Books PUBLIC "+//XML Test//EN" "any.dtd" [
+      ]></a>section data]]>
+    `1234567890-=\qwertyuiop[]asdfghjkl;'zxcvbnm,./
+    ~!@#$%^*()_+|QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM?
+  </Product>
+</Books>
+

@@ -1,0 +1,142 @@
+/*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright (c) 2002, 2016 Oracle and/or its affiliates. All rights reserved.
+ *
+ * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ * Other names may be trademarks of their respective owners.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common
+ * Development and Distribution License("CDDL") (collectively, the
+ * "License"). You may not use this file except in compliance with the
+ * License. You can obtain a copy of the License at
+ * http://www.netbeans.org/cddl-gplv2.html
+ * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ * specific language governing permissions and limitations under the
+ * License.  When distributing the software, include this License Header
+ * Notice in each file and include the License file at
+ * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the GPL Version 2 section of the License file that
+ * accompanied this code. If applicable, add the following below the
+ * License Header, with the fields enclosed by brackets [] replaced by
+ * your own identifying information:
+ * "Portions Copyrighted [year] [name of copyright owner]"
+ *
+ * If you wish your version of this file to be governed by only the CDDL
+ * or only the GPL Version 2, indicate your decision by adding
+ * "[Contributor] elects to include this software in this distribution
+ * under the [CDDL or GPL Version 2] license." If you do not indicate a
+ * single choice of license, a recipient has the option to distribute
+ * your version of this file under either the CDDL, the GPL Version 2 or
+ * to extend the choice of license to its licensees as provided above.
+ * However, if you add GPL Version 2 code and therefore, elected the GPL
+ * Version 2 license, then the option applies only if the new code is
+ * made subject to such option by the copyright holder.
+ *
+ * Contributor(s):
+ */
+/*
+ * Javacc grammar file for the Calc demo.
+ * Copy this grammar and modify the [MODIFY] sections as necessary.
+ */
+
+options {
+    // do not remove or modify the following 5 lines:
+    STATIC = false; // more instances of the token manager will be allowed
+    USER_CHAR_STREAM = true; // user provided CharStream
+    BUILD_PARSER = false; // do not build parser
+    BUILD_TOKEN_MANAGER = true; // build token manager
+    UNICODE_INPUT = true; // input will be unicode characters
+}
+
+/*
+ * The following "PARSER" section is necessary in order to add the proper
+ * header section to generated token manager.
+ */
+PARSER_BEGIN(Calc) // [MODIFY] Change the "Calc" to the target name of the language e.g. "MyLang".
+
+package org.netbeans.modules.lexer.demo.javacc; // [MODIFY] Target package of the generated classes:
+
+import org.netbeans.spi.lexer.javacc.CharStream; // do not remove or modify this line
+import org.netbeans.spi.lexer.javacc.Token; // do not remove or modify this line
+import org.netbeans.spi.lexer.javacc.TokenMgrError; // do not remove or modify this line
+
+/*
+ * The definition of the parser class must be present
+ * otherwise the javacc will not continue.
+ */
+class Calc { // [MODIFY] Change the "Calc" to the target name of the language e.g. "MyLang".
+
+}
+
+PARSER_END(Calc) // [MODIFY] Change the "Calc" to the target name of the language e.g. "MyLang".
+
+/* 
+ * The token definitions of the lexer for the target language folow.
+ */
+TOKEN:
+{
+    <WHITESPACE: (" " | "\t" | "\r" | "\n")+>
+}
+
+
+TOKEN: // Multi-line (traditional) comment start
+{
+    <INCOMPLETE_ML_COMMENT: "/*" > : IN_ML_COMMENT
+}
+
+<IN_ML_COMMENT> // Inside multi-line comment
+TOKEN:
+{
+    <ML_COMMENT: (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/" > : DEFAULT
+}
+
+TOKEN: // Operators
+{
+    <PLUS: "+">
+    | <MINUS: "-">
+    | <MUL: "*">
+    | <DIV: "/">
+    | <MUL3: "***">   /* to get two tokens lookback */
+    | <PLUS5: "+++++">
+}
+
+TOKEN: // Separators
+{
+    <LPAREN: "(">
+    | <RPAREN: ")">
+}
+
+TOKEN: // Constant ('#' means internal tokens)
+{
+    <CONSTANT: <FLOAT>
+        | <FLOAT> (["e","E"] (["-","+"])? <INTEGER>)? 
+    >
+
+    | <#FLOAT: <INTEGER> ("." <INTEGER>)?
+        | "." <INTEGER>
+    >
+
+    | <#INTEGER: (<DIGIT>)+>
+    | <#DIGIT: ["0" - "9"]>
+
+}
+
+TOKEN: // Errorneous constructions
+{
+    <ML_COMMENT_END: "*/">
+}
+
+TOKEN:
+{
+    /* All other things are considered to be error character.
+     * Only one character must be matched because the (~[])+
+     * would be the longest match so it would be always
+     * preferred. The ERROR clause must be the last
+     * in the grammar specification so that other one-char
+     * clauses are matched preferably.
+     */
+    <ERROR: ~[] >
+}

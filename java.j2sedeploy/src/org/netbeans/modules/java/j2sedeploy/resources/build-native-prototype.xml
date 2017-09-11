@@ -1,0 +1,970 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+*** GENERATED FROM TEMPLATE - DO NOT EDIT ***
+***       EDIT ../build.xml INSTEAD       ***
+-->
+
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 2013 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+
+Portions Copyrighted 2013 Sun Microsystems, Inc.
+-->
+
+
+<project name="Build Native Packages" default="build-native" xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" 
+         xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:fx="javafx:com.sun.javafx.tools.ant">
+    <description>Native Packager Ant calls based on SE support in JavaFX packager</description>
+    
+    <!-- Check system and JDK version -->
+
+    <target name="-check-operating-system">
+        <condition property="running.on.mac">
+            <os family="mac"/>
+        </condition>
+        <condition property="running.on.unix">
+            <os family="unix"/>
+        </condition>
+        <condition property="running.on.windows">
+            <os family="windows"/>
+        </condition>
+        <echo message="running.on.mac = ${running.on.mac}" level="verbose"/>
+        <echo message="running.on.unix = ${running.on.unix}" level="verbose"/>
+        <echo message="running.on.windows = ${running.on.windows}" level="verbose"/>
+     </target>
+
+
+    <!-- Check availability of JavaFX SDK deployment support (ant-javafx.jar) -->
+
+    <target name="-check-endorsed-javafx-ant-classpath">
+        <condition property="endorsed-javafx-ant-classpath-available">
+            <and>
+                <isset property="endorsed.javafx.ant.classpath"/>
+                <not>
+                    <equals arg1="${endorsed.javafx.ant.classpath}" arg2=""/>
+                </not>
+            </and>
+        </condition>
+        <echo message="endorsed-javafx-ant-classpath-available = ${endorsed-javafx-ant-classpath-available}" level="verbose"/>
+    </target>
+
+    <target name="-check-property-javafx.sdk">
+        <echo message="javafx.sdk = ${javafx.sdk}" level="verbose"/>
+        <condition property="javafx.sdk.defined">
+            <and>
+                <isset property="javafx.sdk"/>
+                <not><contains string="${javafx.sdk}" substring="$${platform" casesensitive="false"/></not>
+            </and>
+        </condition>
+        <condition property="javafx.sdk.missing+default">
+            <and>
+                <equals arg1="${platform.active}" arg2="Default_JavaFX_Platform" trim="true"/>
+                <not><isset property="javafx.sdk.defined"/></not>
+            </and>
+        </condition>
+        <condition property="javafx.sdk.missing-default">
+            <and>
+                <not><equals arg1="${platform.active}" arg2="Default_JavaFX_Platform" trim="true"/></not>
+                <not><isset property="javafx.sdk.defined"/></not>
+            </and>
+        </condition>
+        <echo message="javafx.sdk.defined = ${javafx.sdk.defined}" level="verbose"/>
+        <echo message="javafx.sdk.missing+default = ${javafx.sdk.missing+default}" level="verbose"/>
+        <echo message="javafx.sdk.missing-default = ${javafx.sdk.missing-default}" level="verbose"/>
+    </target>
+
+    <target name="-check-ant-javafx-in-fxsdk-lib" depends="-check-property-javafx.sdk" if="javafx.sdk.defined">
+        <condition property="do.set.ant-javafx.in.fxsdk.lib">
+            <and>
+                <not><isset property="ant-javafx.jar.location"/></not>
+                <available file="${javafx.sdk}${file.separator}lib${file.separator}ant-javafx.jar"/>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-ant-javafx-in-fxsdk-lib" depends="-check-ant-javafx-in-fxsdk-lib" if="do.set.ant-javafx.in.fxsdk.lib">
+        <property name="ant-javafx.jar.location" value="${javafx.sdk}${file.separator}lib${file.separator}ant-javafx.jar"/>
+    </target>
+    <target name="-check-ant-javafx-in-fxsdk-tools" depends="-check-property-javafx.sdk" if="javafx.sdk.defined">
+        <condition property="do.set.ant-javafx.in.fxsdk.tools">
+            <and>
+                <not><isset property="ant-javafx.jar.location"/></not>
+                <available file="${javafx.sdk}${file.separator}tools${file.separator}ant-javafx.jar"/>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-ant-javafx-in-fxsdk-tools" depends="-set-ant-javafx-in-fxsdk-lib,-check-ant-javafx-in-fxsdk-tools" if="do.set.ant-javafx.in.fxsdk.tools">
+        <property name="ant-javafx.jar.location" value="${javafx.sdk}${file.separator}tools${file.separator}ant-javafx.jar"/>
+    </target>
+    <target name="-check-ant-javafx-in-platform-home-lib" if="platform.home">
+        <condition property="do.set.ant-javafx.in.platform.home.lib">
+            <and>
+                <not><isset property="ant-javafx.jar.location"/></not>
+                <available file="${platform.home}${file.separator}lib${file.separator}ant-javafx.jar"/>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-ant-javafx-in-platform-home-lib" depends="-set-ant-javafx-in-fxsdk-tools,-check-ant-javafx-in-platform-home-lib" if="do.set.ant-javafx.in.platform.home.lib">
+        <property name="ant-javafx.jar.location" value="${platform.home}${file.separator}lib${file.separator}ant-javafx.jar"/>
+    </target>
+    <target name="-check-ant-javafx-in-platform-home-tools" if="platform.home">
+        <condition property="do.set.ant-javafx.in.platform.home.tools">
+            <and>
+                <not><isset property="ant-javafx.jar.location"/></not>
+                <available file="${platform.home}${file.separator}tools${file.separator}ant-javafx.jar"/>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-ant-javafx-in-platform-home-tools" depends="-set-ant-javafx-in-platform-home-lib,-check-ant-javafx-in-platform-home-tools" if="do.set.ant-javafx.in.platform.home.tools">
+        <property name="ant-javafx.jar.location" value="${platform.home}${file.separator}tools${file.separator}ant-javafx.jar"/>
+    </target>
+    <target name="-check-ant-javafx-in-probjdk-lib" unless="ant-javafx.jar.location">
+        <condition property="do.set.ant-javafx.in.probjdk.lib">
+            <and>
+                <not><isset property="ant-javafx.jar.location"/></not>
+                <available file="${java.home}${file.separator}..${file.separator}lib${file.separator}ant-javafx.jar"/>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-ant-javafx-in-probjdk-lib" depends="-set-ant-javafx-in-platform-home-tools,-check-ant-javafx-in-probjdk-lib" if="do.set.ant-javafx.in.probjdk.lib">
+        <property name="ant-javafx.jar.location" value="${java.home}${file.separator}..${file.separator}lib${file.separator}ant-javafx.jar"/>
+    </target>
+    <target name="-check-ant-javafx-in-probjdk-tools" unless="ant-javafx.jar.location">
+        <condition property="do.set.ant-javafx.in.probjdk.tools">
+            <and>
+                <not><isset property="ant-javafx.jar.location"/></not>
+                <available file="${java.home}${file.separator}..${file.separator}tools${file.separator}ant-javafx.jar"/>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-ant-javafx-in-probjdk-tools" depends="-set-ant-javafx-in-probjdk-lib,-check-ant-javafx-in-probjdk-tools" if="do.set.ant-javafx.in.probjdk.tools">
+        <property name="ant-javafx.jar.location" value="${java.home}${file.separator}..${file.separator}tools${file.separator}ant-javafx.jar"/>
+    </target>
+    <target name="-check-ant-javafx-in-macjdk-lib" unless="ant-javafx.jar.location">
+        <condition property="do.set.ant-javafx.in.macjdk.lib">
+            <and>
+                <not><isset property="ant-javafx.jar.location"/></not>
+                <available file="${java.home}${file.separator}lib${file.separator}ant-javafx.jar"/>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-ant-javafx-in-macjdk-lib" depends="-set-ant-javafx-in-probjdk-tools,-check-ant-javafx-in-macjdk-lib" if="do.set.ant-javafx.in.macjdk.lib">
+        <property name="ant-javafx.jar.location" value="${java.home}${file.separator}lib${file.separator}ant-javafx.jar"/>
+    </target>
+    <target name="-check-ant-javafx-in-envjdk-lib" unless="ant-javafx.jar.location">
+        <property environment="env"/>
+        <condition property="do.set.ant-javafx.in.envjdk.lib">
+            <and>
+                <not><isset property="ant-javafx.jar.location"/></not>
+                <available file="${env.JAVA_HOME}${file.separator}lib${file.separator}ant-javafx.jar"/>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-ant-javafx-in-envjdk-lib" depends="-set-ant-javafx-in-macjdk-lib,-check-ant-javafx-in-envjdk-lib" if="do.set.ant-javafx.in.envjdk.lib">
+        <property name="ant-javafx.jar.location" value="${env.JAVA_HOME}${file.separator}lib${file.separator}ant-javafx.jar"/>
+    </target>
+    <target name="-check-ant-javafx-in-envjdk-tools" unless="ant-javafx.jar.location">
+        <property environment="env"/>
+        <condition property="do.set.ant-javafx.in.envjdk.tools">
+            <and>
+                <not><isset property="ant-javafx.jar.location"/></not>
+                <available file="${env.JAVA_HOME}${file.separator}tools${file.separator}ant-javafx.jar"/>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-ant-javafx-in-envjdk-tools" depends="-set-ant-javafx-in-envjdk-lib,-check-ant-javafx-in-envjdk-tools" if="do.set.ant-javafx.in.envjdk.tools">
+        <property name="ant-javafx.jar.location" value="${env.JAVA_HOME}${file.separator}tools${file.separator}ant-javafx.jar"/>
+    </target>
+    <target name="-pre-check-ant-javafx-version" depends="-set-ant-javafx-in-envjdk-tools" unless="ant-javafx-version-already-checked-in-jfximpl">
+        <condition property="do.check.ant-javafx.version">
+            <and>
+                <isset property="ant-javafx.jar.location"/>
+                <not><isset property="ant-javafx-version-already-checked-in-jfximpl"/></not>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-endorsed-javafx-ant-classpath" depends="-check-endorsed-javafx-ant-classpath,-pre-check-ant-javafx-version" if="endorsed-javafx-ant-classpath-available">
+        <property name="javafx.ant.classpath" value="${endorsed.javafx.ant.classpath}:${ant-javafx.jar.location}"/>
+    </target>
+    <target name="-set-javafx-ant-classpath" depends="-check-endorsed-javafx-ant-classpath,-pre-check-ant-javafx-version" unless="endorsed-javafx-ant-classpath-available">
+        <property name="javafx.ant.classpath" value="${ant-javafx.jar.location}"/>
+    </target>
+    
+    <target name="-check-ant-javafx-version" depends="-pre-check-ant-javafx-version,
+            -set-endorsed-javafx-ant-classpath,-set-javafx-ant-classpath" if="do.check.ant-javafx.version">
+        <echo message="ant-javafx.jar.location = ${ant-javafx.jar.location}" level="verbose"/>
+        <echo message="javafx.ant.classpath = ${javafx.ant.classpath}" level="verbose"/>
+        <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+            uri="javafx:com.sun.javafx.tools.ant"
+            classpath="${javafx.ant.classpath}"/>
+        <condition property="have-fx-ant-init">
+            <typefound name="javafx:com.sun.javafx.tools.ant:init-ant"/>
+        </condition>
+        <property name="ant-javafx-version-already-checked-in-jfximpl" value="true"/>
+        <echo message="have-fx-ant-init = ${have-fx-ant-init}" level="verbose"/>
+    </target>
+    <target name="-check-jfx-sdk-version-old" depends="-check-ant-javafx-version" unless="have-fx-ant-init">
+        <property name="javafx.ant.version" value="1.0"/>
+    </target>
+    <target name="-check-jfx-sdk-version-new" depends="-check-ant-javafx-version" if="have-fx-ant-init">
+        <fx:init-ant/>
+        <condition property="have-fx-ant-api-1.1">
+            <!-- new features from JavaFX 2.0.2 are available in API version 1.1 or later -->
+            <matches pattern="1.[1-9]" string="${javafx.ant.version}"/>
+        </condition>
+        <condition property="have-fx-ant-api-1.2">
+            <!-- new features from JavaFX 2.2 are available in API version 1.2 or later -->
+            <matches pattern="1.[2-9]" string="${javafx.ant.version}"/>
+        </condition>
+    </target>
+    
+    <target name="-check-jfx-sdk-version" depends="-check-jfx-sdk-version-old, -check-jfx-sdk-version-new" unless="jfx.sdk.version.checked">
+        <echo message="Detected JavaFX Ant API version ${javafx.ant.version}" level="info"/>
+        <echo message="have-fx-ant-api-1.1 = ${have-fx-ant-api-1.1}" level="verbose"/>
+        <echo message="have-fx-ant-api-1.2 = ${have-fx-ant-api-1.2}" level="verbose"/>
+        <echo message="javafx.ant.classpath = ${javafx.ant.classpath}" level="verbose"/>
+        <property name="jfx.sdk.version.checked" value="true"/>
+    </target>
+
+    <target name="-check-ant-jre-version" unless="ant-jre-version-checked-in-jfximpl">
+        <local name="version-output"/>
+        <exec executable="${java.home}${file.separator}bin${file.separator}java" outputproperty="version-output">
+            <arg value="-version"/>
+        </exec>
+        <echo message="version-output:${line.separator}${version-output}" level="verbose"/>
+        <condition property="have-ant-jre-pre7u6">
+            <or>
+                <contains string="${version-output}" substring="java version &quot;1.0"/>
+                <contains string="${version-output}" substring="java version &quot;1.1"/>
+                <contains string="${version-output}" substring="java version &quot;1.2"/>
+                <contains string="${version-output}" substring="java version &quot;1.3"/>
+                <contains string="${version-output}" substring="java version &quot;1.4"/>
+                <contains string="${version-output}" substring="java version &quot;1.5"/>
+                <contains string="${version-output}" substring="java version &quot;1.6"/>
+                <contains string="${version-output}" substring="java version &quot;1.7.0&quot;"/>
+                <contains string="${version-output}" substring="java version &quot;1.7.0_01"/>
+                <contains string="${version-output}" substring="java version &quot;1.7.0_02"/>
+                <contains string="${version-output}" substring="java version &quot;1.7.0_03"/>
+                <contains string="${version-output}" substring="java version &quot;1.7.0_04"/>
+                <contains string="${version-output}" substring="java version &quot;1.7.0_05"/>
+            </or>
+        </condition>
+        <property name="ant-jre-version-checked-in-jfximpl" value="true"/>
+        <echo message="have-ant-jre-pre7u6 = ${have-ant-jre-pre7u6}" level="verbose"/>
+    </target>
+
+        
+    <!-- Native Packaging main target -->    
+    
+    <target name="build-native" depends="-set-do-build-native-package, -check-ant-jre-supports-native-packaging, -check-native-packager-external-tools, -fx-jar-impl, -build-native-impl, -post-build-native-cleanup"/>
+
+    <target name="build-native-noscript">
+        <fail message="Java Application Native Packager requires JDK JavaScript support but has not found any."/>
+    </target>
+
+    <target name="-check-do-jar">
+        <condition property="do-jar-false">
+            <and>
+                <isset property="do.jar"/>
+                <equals arg1="${do.jar}" arg2="false"/>
+            </and>
+        </condition>
+    </target>
+
+    <target name="-set-do-build-native-package">
+        <property name="do.build.native.package" value="true"/>
+        <echo message="do.build.native.package = ${do.build.native.package}" level="verbose"/>
+    </target>
+    <target name="-check-ant-jre-supports-native-packaging" depends="-check-jfx-sdk-version, -check-ant-javafx-version, -check-ant-jre-version">
+        <fail message="Error:${line.separator}JavaFX native packager requires NetBeans to run on JDK 1.7u6 or later !" if="have-ant-jre-pre7u6"/>
+    </target>
+    
+    <target name="-check-native-bundling-type" depends="-check-operating-system" if="do.build.native.package">
+        <condition property="need.Inno.presence">
+            <and>
+                <isset property="running.on.windows"/>
+                <isset property="native.bundling.type"/>
+                <or>
+                    <equals arg1="${native.bundling.type}" arg2="all" casesensitive="false"/>
+                    <equals arg1="${native.bundling.type}" arg2="installer" casesensitive="false"/>
+                    <equals arg1="${native.bundling.type}" arg2="exe" casesensitive="false"/>
+                </or>
+            </and>
+        </condition>
+        <condition property="need.WiX.presence">
+            <and>
+                <isset property="running.on.windows"/>
+                <isset property="native.bundling.type"/>
+                <or>
+                    <equals arg1="${native.bundling.type}" arg2="all" casesensitive="false"/>
+                    <equals arg1="${native.bundling.type}" arg2="installer" casesensitive="false"/>
+                    <equals arg1="${native.bundling.type}" arg2="msi" casesensitive="false"/>
+                </or>
+            </and>
+        </condition>
+        <condition property="need.dpkg.presence">
+            <and>
+                <isset property="running.on.unix"/>
+                <isset property="native.bundling.type"/>
+                <or>
+                    <equals arg1="${native.bundling.type}" arg2="deb" casesensitive="false"/>
+                </or>
+            </and>
+        </condition>
+        <condition property="need.rpmbuild.presence">
+            <and>
+                <isset property="running.on.unix"/>
+                <isset property="native.bundling.type"/>
+                <or>
+                    <equals arg1="${native.bundling.type}" arg2="rpm" casesensitive="false"/>
+                </or>
+            </and>
+        </condition>
+        <echo message="need.Inno.presence:${need.Inno.presence}" level="verbose"/>
+        <echo message="need.WiX.presence:${need.WiX.presence}" level="verbose"/>
+        <echo message="need.dpkg.presence:${need.dpkg.presence}" level="verbose"/>
+        <echo message="need.rpmbuild.presence:${need.rpmbuild.presence}" level="verbose"/>
+    </target>
+    <target name="-check-Inno-presence" depends="-check-native-bundling-type" if="need.Inno.presence">
+        <local name="exec-output"/>
+        <local name="exec-error"/>
+        <local name="exec-result"/>
+        <exec executable="iscc" outputproperty="exec-output" failifexecutionfails="false" errorproperty="exec-error" resultproperty="exec-result"/>
+        <echo message="exec-output:${exec-output}" level="verbose"/>
+        <echo message="exec-error:${exec-error}" level="verbose"/>
+        <echo message="exec-result:${exec-result}" level="verbose"/>
+        <condition property="missing.Inno">
+            <not><and>
+                <contains string="${exec-output}" substring="Inno Setup"/>
+                <not><contains string="${exec-output}" substring="Inno Setup 1"/></not>
+                <not><contains string="${exec-output}" substring="Inno Setup 2"/></not>
+                <not><contains string="${exec-output}" substring="Inno Setup 3"/></not>
+                <not><contains string="${exec-output}" substring="Inno Setup 4"/></not>
+            </and></not>
+        </condition>
+    </target>
+    <target name="-check-WiX-presence" depends="-check-native-bundling-type" if="need.WiX.presence">
+        <local name="exec-output"/>
+        <local name="exec-error"/>
+        <local name="exec-result"/>
+        <exec executable="candle" outputproperty="exec-output" failifexecutionfails="false" errorproperty="exec-error" resultproperty="exec-result">
+            <arg value="-?"/>
+        </exec>
+        <echo message="exec-output:${exec-output}" level="verbose"/>
+        <echo message="exec-error:${exec-error}" level="verbose"/>
+        <echo message="exec-result:${exec-result}" level="verbose"/>
+        <condition property="missing.WiX">
+            <not>
+                <matches string="${exec-output}" pattern="windows\s+installer\s+xml\s+(toolset\s+)?compiler\s+version\s+3.*" casesensitive="false"/>
+            </not>
+        </condition>
+    </target>
+    <target name="-check-dpkg-presence" depends="-check-native-bundling-type" if="need.dpkg.presence">
+        <local name="exec.which.dpkg.result"/>
+        <local name="exec.which.dpkg.output"/>
+        <exec executable="command" failifexecutionfails="false" failonerror="false" resultproperty="exec.which.dpkg.result" outputproperty="exec.which.dpkg.output">
+            <arg line="-v dpkg"/>
+        </exec>
+        <condition property="missing.dpkg">
+            <not><and>
+                <isset property="exec.which.dpkg.result"/>
+                <equals arg1="${exec.which.dpkg.result}" arg2="0"/>
+                <isset property="exec.which.dpkg.output"/>
+                <not><equals arg1="${exec.which.dpkg.output}" arg2=""/></not>
+            </and></not>
+        </condition>
+    </target>
+    <target name="-check-rpmbuild-presence" depends="-check-native-bundling-type" if="need.rpmbuild.presence">
+        <local name="exec.which.rpmbuild.result"/>
+        <local name="exec.which.rpmbuild.output"/>
+        <exec executable="command" failifexecutionfails="false" failonerror="false" resultproperty="exec.which.rpmbuild.result" outputproperty="exec.which.rpmbuild.output">
+            <arg line="-v rpmbuild"/>
+        </exec>
+        <condition property="missing.rpmbuild">
+            <not><and>
+                <isset property="exec.which.rpmbuild.result"/>
+                <equals arg1="${exec.which.rpmbuild.result}" arg2="0"/>
+                <isset property="exec.which.rpmbuild.output"/>
+                <not><equals arg1="${exec.which.rpmbuild.output}" arg2=""/></not>
+            </and></not>
+        </condition>
+    </target>
+    <target name="-check-native-packager-external-tools" depends="-check-Inno-presence, -check-WiX-presence, -check-dpkg-presence, -check-rpmbuild-presence">
+        <property name="missing.Inno.message" value="JavaFX native packager requires external Inno Setup 5+ tools installed and included on PATH to create EXE installer. See http://www.jrsoftware.org/"/>
+        <property name="missing.WiX.message" value="JavaFX native packager requires external WiX 3.0+ tools installed and included on PATH to create MSI installer. See http://wix.sourceforge.net/"/>
+        <property name="missing.dpkg.message" value="JavaFX native packager requires Debian Packager tools to create DEB package, but dpkg could not be found."/>
+        <property name="missing.rpmbuild.message" value="JavaFX native packager requires RPMBuild to create RPM package, but rpmbuild could not be found."/>
+        <condition property="missing.Inno.WiX">
+            <and>
+                <isset property="missing.Inno"/>
+                <isset property="missing.WiX"/>
+            </and>
+        </condition>
+        <fail message="Error:${line.separator}${missing.Inno.message}${line.separator}${missing.WiX.message}" if="missing.Inno.WiX"/>
+        <fail message="Error:${line.separator}${missing.Inno.message}" if="missing.Inno"/>
+        <fail message="Error:${line.separator}${missing.WiX.message}" if="missing.WiX"/>
+        <fail message="Error:${line.separator}${missing.dpkg.message}" if="missing.dpkg"/>
+        <fail message="Error:${line.separator}${missing.rpmbuild.message}" if="missing.rpmbuild"/>
+    </target>
+
+
+    <!-- Copy dependent libraries -->
+
+    <target name="-jfx-copylibs" depends="init,compile,-pre-pre-jar,-pre-jar,-jfx-copylibs-warning" unless="fallback.no.javascript">
+        <jfx-copylibs-js-impl/>
+    </target>
+    <target name="-jfx-copylibs-warning" if="fallback.no.javascript">
+        <echo message="Warning: Dependent Libraries copy (-jfx-copylibs) skipped in fallback build mode due to JDK missing JavaScript support."/>
+    </target>
+    <macrodef name="jfx-copylibs-js-impl">
+        <sequential>
+            <local name="run.classpath.without.build.classes.and.dist.dir"/>
+            <pathconvert property="run.classpath.without.build.classes.and.dist.dir">
+                <path path="${run.classpath}"/>
+                <map from="${basedir}${file.separator}${build.classes.dir}" to=""/>
+                <map from="${basedir}${file.separator}${dist.jar}" to=""/>
+                <scriptmapper language="javascript">
+                    self.addMappedName(
+                        (source.indexOf("jfxrt.jar") >= 0) ||
+                        (source.indexOf("deploy.jar") >= 0) ||
+                        (source.indexOf("javaws.jar") >= 0) ||
+                        (source.indexOf("plugin.jar") >= 0)
+                        ? "" : source
+                    );
+                </scriptmapper>
+            </pathconvert>
+            <!-- add possibly missing dependencies at distance 2 (build system logic thus provides transitive closure) -->
+            <local name="run.and.lib.classpath"/>
+            <echo message="JavaScript: -jfx-copylibs" level="verbose"/>
+            <script language="javascript">
+                <![CDATA[
+                    function prefix(s, len) {
+                        if(s == null || len <= 0 || s.length == 0) {
+                            return new String("");
+                        }
+                        return new String(s.substr(0, len));
+                    }
+                    function defined(s) {
+                        return (s != null) && (s != "null") && (s.length > 0);
+                    }
+                    var classPath = new String(project.getProperty("run.classpath.without.build.classes.and.dist.dir"));
+                    if(defined(classPath)) {
+                        var fileSeparator = new String(project.getProperty("file.separator"));
+                        var pathConvert = project.createTask("pathconvert");
+                        pathConvert.setProperty("run.and.lib.classpath");
+                        var classPathCopy = pathConvert.createPath();
+                        classPathCopy.setPath(classPath);
+                        var pathArray;
+                        if(classPath.indexOf(";") != -1) {
+                            pathArray = classPath.split(";");
+                        } else {
+                            pathArray = classPath.split(":");
+                        }
+                        var added = new java.lang.StringBuilder();
+                        for (var i = 0; i < pathArray.length; i++) {
+                            var index = pathArray[i].lastIndexOf(fileSeparator);
+                            if (index >= 0) {
+                                var onePath = prefix(pathArray[i], index+1).concat("lib");
+                                var oneDir = new java.io.File(onePath);
+                                if(oneDir.exists()) {
+                                    var fs = project.createDataType( "fileset" );
+                                    fs.setDir( oneDir );
+                                    fs.setIncludes("*.jar");
+                                    var ds = fs.getDirectoryScanner(project);
+                                    var srcFiles = ds.getIncludedFiles();
+                                    for (var j = 0; j < srcFiles.length; j++) {
+                                        if(classPath.indexOf( srcFiles[j] ) == -1 && added.indexOf( srcFiles[j] ) == -1) {
+                                            var path = pathConvert.createPath();
+                                            path.setPath( onePath.concat(fileSeparator).concat(srcFiles[j]) );
+                                            added.append( srcFiles[j] );
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        pathConvert.perform();
+                    }
+                ]]>
+            </script>
+            <echo message="run.and.lib.classpath = ${run.and.lib.classpath}" level="verbose"/>
+            <property name="run.and.lib.classpath" value=""/> <!-- fallback -->
+            <delete dir="${dist.dir}${file.separator}lib" includeEmptyDirs="true" quiet="true"/>
+            <copy todir="${dist.dir}${file.separator}lib" flatten="true" preservelastmodified="true" overwrite="true">
+                <path>
+                    <pathelement path="${run.and.lib.classpath}"/>
+                </path>
+            </copy>
+        </sequential>
+    </macrodef>
+
+
+    <!-- <fx:jar> replacing standard jar, because native packager up to JDK7u21 refuses to package standard jars -->
+
+    <target name="-fx-jar-impl" depends="-check-jfx-sdk-version, -check-ant-javafx-version, -check-ant-jre-version, clean, compile, -jfx-copylibs">
+        <echo message="javafx.ant.classpath = ${javafx.ant.classpath}" level="verbose"/>
+        <typedef name="fx_jar" classname="com.sun.javafx.tools.ant.FXJar" classpath="${javafx.ant.classpath}"/>
+        <echo message="Launching &lt;fx:jar&gt; task from ${ant-javafx.jar.location}" level="info"/>
+        <property name="deployment.dir" location="${dist.dir}"/>
+        <basename property="deployment.jar" file="${dist.jar}"/>
+        <property name="pp_jar_destfile" value="${deployment.dir}${file.separator}${deployment.jar}"/>
+        <property name="pp_jar_buildclasses" value="${basedir}${file.separator}${build.classes.dir}"/>
+        <property name="pp_jar_dir" value="${deployment.dir}"/>
+        <property name="pp_jar_fs2" value="lib${file.separator}*.jar"/>
+        <echo message="fx_jar: pp_jar_destfile = ${pp_jar_destfile}" level="verbose"/>
+        <echo message="fx_jar: pp_jar_buildclasses = ${pp_jar_buildclasses}" level="verbose"/>
+        <echo message="fx_jar: pp_jar_dir = ${pp_jar_dir}" level="verbose"/>
+        <echo message="fx_jar: pp_jar_fs2 = ${pp_jar_fs2}" level="verbose"/>
+        <echo message="JavaScript: fx-jar" level="verbose"/>
+        <script language="javascript">
+            <![CDATA[
+                function isTrue(prop) {
+                    return prop != null &&
+                       ( prop.toLowerCase() == "true" || prop.toLowerCase() == "yes" || prop.toLowerCase() == "on" );
+                }
+                function prefix(s, len) {
+                    if(s == null || len <= 0 || s.length == 0) {
+                        return new String("");
+                    }
+                    return new String(s.substr(0, len));
+                }
+                function replaceSuffix(s, os, ns) {
+                    return prefix(s, s.indexOf(os)).concat(ns);
+                }
+                function startsWith(s, prefix) {
+                    return (s != null) && (s.indexOf(prefix) == 0);
+                }
+                function endsWith(s, suffix) {
+                    var i = s.lastIndexOf(suffix);
+                    return  (i != -1) && (i == (s.length - suffix.length));
+                }
+                function defined(s) {
+                    return (s != null) && (s != "null") && (s.length > 0);
+                }
+                function contains(array, prop) {
+                    for (var i = 0; i < array.length; i++) {
+                        var s1 = new String(array[i]);
+                        var s2 = new String(prop);
+                        if( s1.toLowerCase() == s2.toLowerCase() ) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                var S = new String(java.io.File.separator);
+                var JFXLAZY = "download.mode.lazy.jar";
+                var fx_ant_api_1_1 = new String(project.getProperty("have-fx-ant-api-1.1"));
+                var fx_ant_api_1_2 = new String(project.getProperty("have-fx-ant-api-1.2"));
+
+                // get jars with lazy download mode property set
+                function getLazyJars() {
+                    var jars = new Array();
+                    var keys = project.getProperties().keys();
+                    while(keys.hasMoreElements()) {
+                        var pn = new String(keys.nextElement());
+                        if(startsWith(pn, JFXLAZY)) {
+                            var fname = new String(pn.substring(JFXLAZY.length+1));
+                            jars.push(fname);
+                        }
+                    }
+                    return jars.length > 0 ? jars : null;
+                }
+                // set download mode of dependent libraries
+                function setDownloadMode(fsEager, fsLazy, jars) {
+                    for(var i = 0; i < jars.length; i++) {
+                        fsEager.setExcludes("lib" + S + jars[i]);
+                        fsLazy.setIncludes("lib" + S + jars[i]);
+                    }
+                }
+
+                // fx:jar
+                var jar = project.createTask("fx_jar");
+                jar.setProject(project);
+                var destfile = new String(project.getProperty("pp_jar_destfile"));
+                jar.setDestfile(destfile);
+
+                // fx:application
+                var app = jar.createApplication();
+                app.setProject(project);
+                var title = new String(project.getProperty("application.title"));
+                var mainclass;
+                mainclass = new String(project.getProperty("main.class"));
+                if(isTrue(fx_ant_api_1_2)) {
+                    app.setToolkit("swing");
+                }
+                app.setName(title);
+                app.setMainClass(mainclass);
+                var appversion = new String(project.getProperty("application.implementation.version"));
+                if(defined(appversion)) {
+                    app.setVersion(appversion);
+                } else {
+                    app.setVersion("1.0");
+                }
+
+                // fx:resources
+                var res = jar.createResources();
+                res.setProject(project);
+                var pdir = new String(project.getProperty("pp_jar_dir"));
+                var fn = res.createFileSet();
+                fn.setProject(project);
+                fn.setDir(new java.io.File(pdir));
+                var ia = new String(project.getProperty("deployment.jar"));
+                var ib = new String(project.getProperty("pp_jar_fs2"));
+                fn.setIncludes(ia);
+                fn.setIncludes(ib);
+                fn.setRequiredFor("startup");
+                var lazyjars = getLazyJars();
+                if(lazyjars != null) {
+                    var fn2 = res.createFileSet();
+                    fn2.setProject(project);
+                    fn2.setDir(new java.io.File(pdir));
+                    fn2.setRequiredFor("runtime");
+                    setDownloadMode(fn,fn2,lazyjars);
+                }
+
+                // fileset to include classes
+                var fs = jar.createFileSet();
+                fs.setProject(project);
+                var buildcls = new String(project.getProperty("pp_jar_buildclasses"));
+                fs.setDir(new java.io.File(buildcls));
+
+                // manifest
+                var man = jar.createManifest();
+                var userManifestPath = project.getProperty("manifest.file");
+                if (userManifestPath) {
+                    var userManifestFile = project.resolveFile(userManifestPath);
+                    if (userManifestFile.isFile()) {
+                        var manifestEncoding = project.getProperty("manifest.encoding");
+                        var userManifestReader = manifestEncoding ?
+                                new java.io.InputStreamReader(
+                                    new java.io.FileInputStream(userManifestFile),
+                                    manifestEncoding) :
+                                new java.io.InputStreamReader(
+                                    new java.io.FileInputStream(userManifestFile));
+                        try {
+                            var userManifest = new org.apache.tools.ant.taskdefs.Manifest(userManifestReader);
+                            man.merge(userManifest);
+                        } finally {
+                            userManifestReader.close();
+                        }
+                    }
+                }
+                var a1val = new String(project.getProperty("application.vendor"));
+                var a1 = new org.apache.tools.ant.taskdefs.Manifest.Attribute();
+                a1.setName("Implementation-Vendor");
+                a1.setValue(a1val);
+                man.addConfiguredAttribute(a1);
+                var a2val = new String(project.getProperty("application.title"));
+                var a2 = new org.apache.tools.ant.taskdefs.Manifest.Attribute();
+                a2.setName("Implementation-Title");
+                a2.setValue(a2val);
+                man.addConfiguredAttribute(a2);
+                if(defined(appversion)) {
+                    var a3 = new org.apache.tools.ant.taskdefs.Manifest.Attribute();
+                    a3.setName("Implementation-Version");
+                    a3.setValue(appversion);
+                    man.addConfiguredAttribute(a3);
+                }
+                var profileAvailable = new String(project.getProperty("profile.available"));
+                if (defined(profileAvailable)) {
+                    var profileAttribute = new org.apache.tools.ant.taskdefs.Manifest.Attribute();
+                    profileAttribute.setName("Profile");
+                    profileAttribute.setValue(new String(project.getProperty("javac.profile")));
+                    man.addConfiguredAttribute(profileAttribute);
+                }
+                var splashScreenAvailable = new String(project.getProperty("splashscreen.available"));
+                if (defined(splashScreenAvailable)) {
+                    project.setProperty("deploy.splash.image",new String(project.getProperty("application.splash")));
+                }
+                jar.perform();
+            ]]>
+        </script>
+    </target>
+
+    
+    <!-- Native Packaging main implementation -->    
+    
+    <target name="-build-native-impl" depends="-check-ant-jre-supports-native-packaging, -check-native-packager-external-tools, -fx-jar-impl">
+
+        <!--<property name="runtime.jre.home" value="${platform.home}"/>-->
+        <echo message="javafx.ant.classpath = ${javafx.ant.classpath}" level="verbose"/>
+        <typedef name="fx_deploy" classname="com.sun.javafx.tools.ant.DeployFXTask" classpath="${javafx.ant.classpath}"/>
+        <echo message="Launching &lt;fx:deploy&gt; task from ${ant-javafx.jar.location}" level="info"/>
+        <property name="deployment.dir" location="${dist.dir}"/>
+        <property name="pp_deploy_fs2" value="lib${file.separator}*.jar"/>
+        <basename property="deployment.jar" file="${dist.jar}"/>
+        <basename property="deployment.base" file="${deployment.jar}" suffix=".jar"/>
+        <echo message="deploy_deploy: pp_deploy_fs2 = ${pp_deploy_fs2}" level="verbose"/>
+        <echo message="deploy_deploy: deployment.dir = ${deployment.dir}" level="verbose"/>
+        <echo message="deploy_deploy: deployment.jar = ${deployment.jar}" level="verbose"/>
+        <echo message="deploy_deploy: deployment.base = ${deployment.base}" level="verbose"/>
+        <echo message="JavaScript: deploy-deploy" level="verbose"/>
+        <script language="javascript">
+            <![CDATA[
+                function isTrue(prop) {
+                    return prop != null && 
+                       (prop.toLowerCase()=="true" || prop.toLowerCase()=="yes" || prop.toLowerCase()=="on");
+                }                    
+                function prefix(s, len) {
+                    if(s == null || len <= 0 || s.length == 0) {
+                        return new String("");
+                    }
+                    return new String(s.substr(0, len));
+                }
+                function replaceSuffix(s, os, ns) {
+                    return prefix(s, s.indexOf(os)).concat(ns);
+                }
+                function startsWith(s, prefix) {
+                    return (s != null) && (s.indexOf(prefix) == 0);
+                }
+                function endsWith(s, suffix) {
+                    var i = s.lastIndexOf(suffix);
+                    return  (i != -1) && (i == (s.length - suffix.length));
+                }
+                function defined(s) {
+                    return (s != null) && (s != "null") && (s.length > 0);
+                }
+                function contains(array, prop) {
+                    for (var i = 0; i < array.length; i++) {
+                        var s1 = new String(array[i]);
+                        var s2 = new String(prop);
+                        if( s1.toLowerCase() == s2.toLowerCase() ) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                var S = java.io.File.separator;
+                var JFXLAZY = "download.mode.lazy.jar";
+                var fx_ant_api_1_1 = new String(project.getProperty("have-fx-ant-api-1.1"));
+                var fx_ant_api_1_2 = new String(project.getProperty("have-fx-ant-api-1.2"));
+                var have_jdk_pre7u14 = new String(project.getProperty("have-jdk-pre7u14"));
+
+                // get jars with lazy download mode property set
+                function getLazyJars() {
+                    var jars = new Array();
+                    var keys = project.getProperties().keys();
+                    while(keys.hasMoreElements()) {
+                        var pn = new String(keys.nextElement());
+                        if(startsWith(pn, JFXLAZY)) {
+                            var fname = pn.substring(JFXLAZY.length+1);
+                            jars.push(fname);
+                        }
+                    }
+                    return jars.length > 0 ? jars : null;
+                }
+                // set download mode of dependent libraries
+                function setDownloadMode(fsEager, fsLazy, jars) {
+                    for(var i = 0; i < jars.length; i++) {
+                        fsEager.setExcludes("lib" + S + jars[i]);
+                        fsLazy.setIncludes("lib" + S + jars[i]);
+                    }
+                }
+                // convert path to absolute if relative
+                function derelativizePath(path) {
+                    var f = new java.io.File(path);
+                    if(!f.exists()) {
+                        f = new java.io.File(new String(project.getBaseDir()) + S + path);
+                    }
+                    if(f.exists()) {
+                        try {
+                            return f.getCanonicalPath();
+                        } catch(err) {
+                            return path;
+                        }
+                    }
+                    return path;
+                }
+
+                // fx:deploy
+                var deploy = project.createTask("fx_deploy");
+                deploy.setProject(project);
+                var width = new String(project.getProperty("javafx.width"));
+                var height = new String(project.getProperty("javafx.height"));
+                var outdir = new String(project.getProperty("deployment.dir"));
+                var outfile = new String(project.getProperty("application.title"));
+                if(!defined(width)) width=new String("0");
+                if(!defined(height)) height=new String("0");
+                deploy.setWidth(width);
+                deploy.setHeight(height);
+                deploy.setOutdir(outdir);
+                deploy.setOutfile(outfile);
+
+                // native packaging (time consuming, thus applied in explicit build only)
+                var nativeEnabled = new String(project.getProperty("do.build.native.package"));
+                var nativeType = new String(project.getProperty("native.bundling.type"));
+                var projStateRun = new String(project.getProperty("project.state.running"));
+                var projStateDbg = new String(project.getProperty("project.state.debugging"));
+                var projStatePrf = new String(project.getProperty("project.state.profiling"));
+                if(isTrue(nativeEnabled) && defined(nativeType) && nativeType != "none") {
+                    if(!isTrue(projStateRun) && !isTrue(projStateDbg) && !isTrue(projStatePrf)) {
+                        if(isTrue(fx_ant_api_1_2)) {
+                            deploy.setNativeBundles(nativeType);
+                            print("Note: To create native bundles the <fx:deploy> task may require external tools. See JavaFX 2.2+ documentation for details.");
+                            print("");
+                            print("Launching <fx:deploy> in native packager mode...");
+                        } else {
+                            print("Warning: Native packaging is not supported by this version of JavaFX SDK deployment Ant task. Please upgrade to JDK 7u6 or higher.");
+                        }
+                    }
+                }
+
+                // fx:application
+                var app = deploy.createApplication();
+                app.setProject(project);
+                var title = new String(project.getProperty("application.title"));
+                var mainclass;
+                mainclass = new String(project.getProperty("main.class"));
+                if(isTrue(fx_ant_api_1_2)) {
+                    app.setToolkit("swing");
+                }
+                app.setName(title);
+                app.setMainClass(mainclass);
+                var appversion = new String(project.getProperty("application.implementation.version"));
+                if(defined(appversion)) {
+                    app.setVersion(appversion);
+                } else {
+                    app.setVersion("1.0");
+                }
+
+                // fx:resources
+                var res = deploy.createResources();
+                res.setProject(project);
+                var deploydir = new String(project.getProperty("deployment.dir"));
+                var fn = res.createFileSet();
+                fn.setProject(project);
+                fn.setDir(new java.io.File(deploydir));
+                var ia = new String(project.getProperty("deployment.jar"));
+                var ib = new String(project.getProperty("pp_deploy_fs2"));
+                fn.setIncludes(ia);
+                fn.setIncludes(ib);
+                fn.setRequiredFor("startup");
+                var lazyjars = getLazyJars();
+                if(lazyjars != null) {
+                    var fn2 = res.createFileSet();
+                    fn2.setProject(project);
+                    fn2.setDir(new java.io.File(deploydir));
+                    fn2.setRequiredFor("runtime");
+                    setDownloadMode(fn,fn2,lazyjars);
+                }
+
+                // fx:info
+                var info = deploy.createInfo();
+                info.setProject(project);
+                var vendor = new String(project.getProperty("application.vendor"));
+                var description = new String(project.getProperty("application.desc"));
+                info.setTitle(title); // title known from before
+                info.setVendor(vendor);
+                info.setDescription(description);
+                var splash = new String(project.getProperty("deploy.splash.image"));
+                if(defined(splash)) {
+                    if(isTrue(fx_ant_api_1_1)) {
+                        var sicon = info.createSplash();
+                        sicon.setHref(splash);
+                        sicon.setMode("any");
+                        print("Adding splash image reference: " + splash);
+                    } else {
+                        print("Warning: Splash Image not supported by this version of JavaFX SDK deployment Ant task. Please upgrade JavaFX to 2.0.2 or higher.");
+                    }
+                }
+                if(isTrue(nativeEnabled) && defined(nativeType) && nativeType != "none") {
+                    var icon = new String(project.getProperty("deploy.icon.native"));
+                    if(defined(icon)) {
+                        if(isTrue(fx_ant_api_1_2) && !isTrue(have_jdk_pre7u14)) {
+                            var dicon = derelativizePath(icon);
+                            // create temporary icon copy renamed to application name (required by native packager)
+                            var baseDir = new String(project.getProperty("basedir"));
+                            var buildDir = new String(project.getProperty("build.dir"));
+                            var deployBase = new String(project.getProperty("deployment.base"));
+                            var copyTask = project.createTask("copy");
+                            var source = new java.io.File(dicon);
+                            var sourceName = new String(source.getName());
+                            var lastDot = sourceName.lastIndexOf(".");
+                            var sourceExt;
+                            if(lastDot >=0) {
+                                sourceExt = sourceName.substr(lastDot);
+                            } else {
+                                sourceExt = new String("");
+                            }
+                            var target = new java.io.File(baseDir.concat(S).concat(buildDir).concat(S).concat("icon").concat(S).concat(deployBase).concat(sourceExt));
+                            copyTask.setFile(source);
+                            copyTask.setTofile(target);
+                            copyTask.setFlatten(true);
+                            copyTask.setFailOnError(false);
+                            copyTask.perform();
+                            var tempicon;
+                            if(target.exists()) {
+                                try {
+                                    tempicon = target.getCanonicalPath();
+                                } catch(err) {
+                                    tempicon = dicon;
+                                }
+                            } else {
+                                tempicon = dicon;
+                            }
+                            var nicon = info.createIcon();
+                            nicon.setHref(tempicon);
+                            print("Source native icon reference: " + dicon);
+                            print("Processed native icon reference: " + tempicon);
+                        } else {
+                            print("Warning: Native Package icon not supported by this version of JavaFX SDK deployment Ant task. Please upgrade to JDK7u14.");
+                        }
+                    }
+                } else {
+                    var icon = new String(project.getProperty("deploy.icon.webstart"));
+                    if(defined(icon)) {
+                        if(isTrue(fx_ant_api_1_1)) {
+                            var iicon = info.createIcon();
+                            iicon.setHref(icon);
+                            print("Adding WebStart icon reference: " + icon);
+                        } else {
+                            print("Warning: WebStart Icon not supported by this version of JavaFX SDK deployment Ant task. Please upgrade JavaFX to 2.0.2 or higher.");
+                        }
+                    }
+                }
+
+                deploy.perform();
+            ]]>
+        </script>
+    </target>
+    
+    <target name="-post-build-native-cleanup">
+        <delete file="${dist.dir}/${application.title}.html" quiet="true"/>
+        <delete file="${dist.dir}/${application.title}.jnlp" quiet="true"/>
+        <delete file="${dist.dir}/${application.title}_browser.jnlp" quiet="true"/>
+    </target>
+</project>

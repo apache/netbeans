@@ -1,0 +1,1161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Search for CHANGEME in this document when copying and using it: -->
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2010 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<?xml-stylesheet type="text/xml" href="../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="general">Java Source API</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change id="server.is.free">
+            <api name="general"/>
+            <summary>Desktop independent parts of the Java Source module extracted</summary>
+            <version major="1" minor="0"/>
+            <date day="30" month="4" year="2014"/>
+            <author login="dbalek"/>
+            <compatibility modification="yes" addition="yes" binary="compatible" source="incompatible">
+            </compatibility>
+            <description>
+                <p>
+                    Runtime compatibility remains, compile time compatibility is
+                    mostly preserved too. It is however recommended to upgrade
+                    dependencies of client modules. Try running
+                    <code>ant fix-dependencies</code> in your Ant module.
+                </p>
+            </description>
+            <package name="org.netbeans.api.java.source"/>
+            <package name="org.netbeans.api.java.source.matching" link="no"/>
+            <package name="org.netbeans.api.java.source.support"/>
+        </change>
+        <change id="newUtilityMethods">
+             <api name="general"/>
+             <summary>Added couple of new utility methods to TreeUtilities, ElementUtilities, and SourceUtils.</summary>
+             <version major="0" minor="141"/>
+             <date day="14" month="4" year="2014"/>
+             <author login="dbalek"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Added new utility methods getPathElementOfKind and getUninitializedFields to TreeUtilities.
+                Added new utility methods getElementName, findOverridableMethods, hasGetter and hasSetter to ElementUtilities.
+                Added new utility methods resolveCapturedType and getForwardReferences to SourceUtils.
+            </description>
+             <class package="org.netbeans.api.java.source" name="TreeUtilities" link="no"/>
+             <class package="org.netbeans.api.java.source" name="ElementUtilities" link="no"/>
+             <class package="org.netbeans.api.java.source" name="SourceUtils" link="no"/>           
+        </change>  
+        <change id="RemoteJavadocPolicy">
+            <api name="general"/>
+            <summary>Added a possibility to specify remote javadoc handling policy</summary>
+            <version major="0" minor="138"/>
+            <date day="15" month="7" year="2014"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Added a possibility to specify remote javadoc handling policy in <code>JavadocHelper</code>
+            </description>
+             <issue number="240501"/>
+        </change>
+        <change id="nodeReplacemenHints">
+            <api name="general"/>
+            <summary>Added API to preserve comments and whitespaces in transformations</summary>
+            <version major="0" minor="137"/>
+            <date day="10" month="7" year="2014"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                If a transformation moves a Tree node elsewhere, or produces a replacement of it, it can now mark the new tree as a 'replacement' for the old one,
+                which causes whitespaces (most notably comments) to attach to the replacement node.
+            </description>
+        </change>
+        <change id="findLabelSpan">
+             <api name="general"/>
+             <summary>Added utility methods to find span of a Label's name in the source.</summary>
+             <version major="0" minor="131"/>
+             <date day="19" month="11" year="2013"/>
+             <author login="ralphbenjamin"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Added utility methods to find span of a Label's name in the source.
+                Returns starting and ending offset of the label's name in the source code that was parsed
+                (ie. CompilationInfo.getText()), which may differ from the positions in the source
+                document if it has been already altered.
+            </description>
+             <class package="org.netbeans.api.java.source" name="TreeUtilities" link="no"/>
+             <issue number="238560"/>
+        </change>
+        <change id="toScopeWithDisabledAccessibilityChecks">
+            <api name="general"/>
+            <summary>Adding <code>TreeUtilities.toScopeWithDisabledAccessibilityChecks</code> method.</summary>
+            <version major="0" minor="129"/>
+            <date day="20" month="8" year="2013"/>
+            <author login="dbalek"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Adding the utility method to create a Scope capable to access
+                all private methods and fields when parsing and evaluating expressions.
+            </description>
+            <class package="org.netbeans.api.java.source" name="TreeUtilities" link="no"/>
+            <issue number="234645"/>
+        </change>
+        <change id="findBodySpan">
+             <api name="general"/>
+             <summary>Added utility method to find span of a ClassTree's body in the source.</summary>
+             <version major="0" minor="127"/>
+             <date day="27" month="5" year="2013"/>
+             <author login="ralphbenjamin"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Added utility method to find span of a ClassTree's body in the source.
+                Returns starting and ending offset of the body in the source code that was parsed
+                (ie. CompilationInfo.getText()), which may differ from the positions in the source
+                document if it has been already altered.
+            </description>
+             <class package="org.netbeans.api.java.source" name="TreeUtilities" link="no"/>
+             <issue number="229734"/>
+        </change>
+        <change id="GeneratorUtilities-createDefaultConstructor">
+            <api name="general"/>
+            <summary>Adding <code>GeneratorUtilities.createDefaultConstructor</code> method.</summary>
+            <version major="0" minor="126"/>
+            <date day="16" month="5" year="2013"/>
+            <author login="dbalek"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                A utility method createDefaulConstructor has been added to org.netbeans.api.java.source.GeneratorUtilities class.
+            </description>
+            <issue number="229233" />
+        </change>
+        <change id="DocTreesSupport">
+             <api name="general"/>
+             <summary>Added support for DocTrees.</summary>
+             <version major="0" minor="124"/>
+             <date day="3" month="5" year="2013"/>
+             <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added new methods to support working with DocTrees.
+             </description>
+             <class package="org.netbeans.api.java.source" name="CompilationInfo" link="no"/>
+             <class package="org.netbeans.api.java.source" name="WorkingCopy" link="no"/>
+             <class package="org.netbeans.api.java.source" name="TreeMaker" link="no"/>
+             <issue number="229081"/>
+        </change>
+        <change id="CodeStyle-Naming">
+             <api name="general"/>
+             <summary>Added <code>CodeStyleUtils</code>.</summary>
+             <version major="0" minor="123"/>
+             <date day="30" month="4" year="2013"/>
+             <author login="ralphbenjamin"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added class <code>CodeStyleUtils</code>, which helps with
+                 conforming java names to the naming codestyle. Used for
+                 variable naming and getter/setter names.
+             </description>
+             <class package="org.netbeans.api.java.source" name="CodeStyleUtils" link="no"/>
+             <issue number="228870"/>
+        </change>
+        <change id="ProfileSupport">
+             <api name="general"/>
+             <summary>Added support for JDK 8 Profiles.</summary>
+             <version major="0" minor="119"/>
+             <date day="12" month="4" year="2013"/>
+             <author login="tzezula"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>ProfileSupport</code> class providing utility methods for JDK 8 profiles.
+             </description>
+             <class package="org.netbeans.api.java.source.support" name="ProfileSupport" link="no"/>
+             <issue number="228384"/>
+        </change>
+         <change id="getSymbols">
+             <api name="general"/>
+             <summary>Added several methods to support Java 8 features.</summary>
+             <version major="0" minor="117"/>
+             <date day="28" month="2" year="2013"/>
+             <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>ClassIndex.getDeclaredSymbols</code>.
+             </description>
+             <class package="org.netbeans.api.java.source" name="ClassIndex" link="no"/>
+             <issue number="227607"/>
+        </change>
+         <change id="ElementUtilities-findElement">
+             <api name="general"/>
+             <summary>Added ElementUtilities.findElement</summary>
+             <version major="0" minor="115"/>
+             <date day="22" month="3" year="2013"/>
+             <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added a new method to find an element based on its description:
+                 <code>ElementUtilities.findElement</code>.
+             </description>
+             <issue number="227285"/>
+        </change>
+         <change id="LambdaEnhancements">
+             <api name="general"/>
+             <summary>Added several methods to support Java 8 features.</summary>
+             <version major="0" minor="112"/>
+             <date day="13" month="2" year="2013"/>
+             <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added several new methods to support Java 8 features. Namely: <code>ElementUtilities.isEffectivelyFinal</code>,
+                 <code>TreeMaker.TypeAnnotation</code>, <code>TreeMaker.LambdaExpression</code>,
+                 <code>TreeMaker.addLambdaParameter</code>, <code>TreeMaker.insertLambdaParameter</code>,
+                 <code>TreeMaker.removeLambdaParameter</code>, <code>TreeMaker.setLambdaBody</code>,
+                 <code>TreeMaker.MemberReference</code> and <code>TypeUtilities.getDescriptorType</code>.
+                 <code>TreeMaker.setLabel</code> was updated to understand MemberReferences.
+             </description>
+             <issue number="225533"/>
+        </change>
+         <change id="SourceUtils-getDependentRoots">
+             <api name="general"/>
+             <summary>Added overloaded method <code>SourceUtils.getDependentRoots</code>.</summary>
+             <version major="0" minor="110"/>
+             <date day="31" month="12" year="2012"/>
+             <author login="ralphbenjamin"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added a new overloaded method <code>getDependentRoots</code> to class <code>SourceUtils</code>,
+                 that adds an option to filter non opened projects.
+             </description>
+             <class package="org.netbeans.api.java.source" name="SourceUtils" link="no"/>
+             <issue number="223917"/>
+        </change>
+        <change id="WorkingCopy-resolveRewriteTarget">
+             <api name="general"/>
+             <summary>Added <code>WorkingCopy.resolveRewriteTarget</code>.</summary>
+             <version major="0" minor="102"/>
+             <date day="11" month="4" year="2012"/>
+             <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added a method <code>resolveRewriteTarget</code> to class <code>WorkingCopy</code>,
+                 that returns the tree into which the given tree has been rewritten.
+             </description>
+             <class package="org.netbeans.api.java.source" name="WorkingCopy" link="no"/>
+             <issue number="209375"/>
+        </change>
+        <change id="GeneratorUtilities-createFromTemplate">
+             <api name="general"/>
+             <summary>Added <code>GeneratorUtilities.createFromTemplate</code>.</summary>
+             <version major="0" minor="100"/>
+             <date day="5" month="4" year="2012"/>
+             <author login="ralphbenjamin"/>
+             <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible" deletion="no" deprecation="no" modification="no"/>
+             <description>
+                 Added the method <code>createFromTemplate</code> to class <code>GeneratorUtilities</code>,
+                 which will create a new CompilationUnitTree from a template.
+             </description>
+             <class package="org.netbeans.api.java.source" name="GeneratorUtilities" link="no"/>
+             <issue number="209798"/>
+        </change>
+        <change id="GeneratorUtilities-appendToAnnotationValue">
+             <api name="general"/>
+             <summary>Added <code>GeneratorUtilities.appendToAnnotationValue</code>.</summary>
+             <version major="0" minor="99"/>
+             <date day="13" month="3" year="2012"/>
+             <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added two overloaded methods <code>appendToAnnotationValue</code> to class <code>GeneratorUtilites</code>,
+                 which augment <code>ModifiersTree</code> or <code>CompilationUnitTree</code> with
+                 annotation with the given attribute values.
+             </description>
+             <class package="org.netbeans.api.java.source" name="GeneratorUtilities" link="no"/>
+             <issue number="208570"/>
+        </change>
+        <change id="elementhandle-create">
+             <api name="general"/>
+             <summary>Added factory methods to create an <code>ElementHandle</code> for type and package.</summary>
+             <version major="0" minor="98"/>
+             <date day="13" month="3" year="2012"/>
+             <author login="tzezula"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added a factory methods to create an <code>ElementHandle</code> for type and package from binary name.
+             </description>
+             <class package="org.netbeans.api.java.source" name="ElementHandle" link="no"/>
+             <issue number="209082"/>
+        </change>
+        <change id="references-count">
+             <api name="general"/>
+             <summary>Added <code>ReferencesCount</code> support class which provides frequences of type usage in a source root.</summary>
+             <version major="0" minor="97"/>
+             <date day="13" month="3" year="2012"/>
+             <author login="tzezula"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>ReferencesCount</code> support class which provides information how many classes on the source path (source root) are using
+                 given type or package.
+             </description>
+             <issue number="209038"/>
+        </change>
+        <change id="class-members-order">
+             <api name="general"/>
+             <summary>Added several methods to <code>CodeStyle</code> supporting customization of the generated class members order and other minor formatting enhancements.</summary>
+             <version major="0" minor="96"/>
+             <date day="21" month="2" year="2012"/>
+             <author login="dbalek"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>CodeStyle.getClassMemberGroups</code>, <code>CodeStyle.getClassMemberInsertionPoint</code>,
+                 to support customization of the generated class members order, and <code>CodeStyle.wrapAfterDotInChainedMethodCalls</code>,
+                 <code>CodeStyle.getBlankLinesAfterAnonymousClassHeader</code>, <code>CodeStyle.spaceAroundAnnotationValueAssignOps</code>
+                 to support minor formatting enhancements.
+             </description>
+             <issue number="208503"/>
+        </change>
+        <change id="SourceUtils-backgroundScan">
+             <api name="general"/>
+             <summary>Added <code>SourceUtils.waitUserActionTask</code>.</summary>
+             <version major="0" minor="95"/>
+             <date day="26" month="1" year="2012"/>
+             <author login="sdedic"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added class <code>ScanUtils</code>, which help to check completness of parsing data and allow to
+                 restart processing after project scan finishes to see most complete data. Elements can be 
+                 checked using new methods
+                 <code>checkElement</code>, <code>resolveElement</code>, <code>findElement</code> and <code>findTypeElement</code>
+                 that throws an exception indicating the user task should be aborted and restarted later. See javadoc for more info.
+             </description>
+             <class package="org.netbeans.api.java.source" name="ScanUtils" link="no"/>
+             <issue number="207704"/>
+        </change>
+        <change id="Indexing-aware-JavaSourceTaskFactories">
+             <api name="general"/>
+             <summary>Added <code>TaskIndexingMode</code> into <code>JavaSourceTaskFactory</code>s</summary>
+             <version major="0" minor="94"/>
+             <date day="26" month="1" year="2012"/>
+             <author login="tzezula"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 The <code>CancellableTask</code>s created by the <code>JavaSourceTaskFactory</code>s are not executed during the scan to keep the semantic backward compatibility.
+                 Constructors with the <code>TaskIndexingMode</code> were added into these factories to allow tasks to run during the scan.
+             </description>
+             <class package="org.netbeans.api.java.source" name="JavaParserResultTask" link="no"/>
+             <class package="org.netbeans.api.java.source" name="JavaSourceTaskFactory" link="no"/>
+             <class package="org.netbeans.api.java.source.support" name="SelectionAwareJavaSourceTaskFactory"/>
+             <class package="org.netbeans.api.java.source.support" name="LookupBasedJavaSourceTaskFactory"/>
+             <class package="org.netbeans.api.java.source.support" name="EditorAwareJavaSourceTaskFactory"/>
+             <class package="org.netbeans.api.java.source.support" name="CaretAwareJavaSourceTaskFactory"/>
+             <issue number="207459"/>
+        </change>
+        <change id="TreePathHandle-getElementHandle">
+             <api name="general"/>
+             <summary>Added <code>TreePathHandle.getElementHandle</code>.</summary>
+             <version major="0" minor="93"/>
+             <date day="30" month="11" year="2011"/>
+             <author login="jbecicka"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>TreePathHandle.getElementHandle</code> that returns corresponding ElementHandle for given TreePathHandle.
+             </description>
+             <issue number="205719"/>
+        </change>
+        <change id="TreeUtilities-isCompileTimeConstantExpression">
+             <api name="general"/>
+             <summary>Added <code>TreeUtilities.isCompileTimeConstantExpression</code>.</summary>
+             <version major="0" minor="91"/>
+             <date day="7" month="11" year="2011"/>
+             <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>TreeUtilities.isCompileTimeConstantExpression</code> that tests whether the given expression is a compile-time constant.
+             </description>
+             <issue number="204435"/>
+        </change>
+        <change id="CompilationInfo-cache">
+             <api name="general"/>
+             <summary>Added <code>CompilationInfo.getCachedValue</code>, <code>CompilationInfo.putCachedValue</code> and <code>CompilationInfo.CacheClearPolicy</code>.</summary>
+             <version major="0" minor="90"/>
+             <date day="26" month="10" year="2011"/>
+             <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>CompilationInfo.getCachedValue</code> and <code>CompilationInfo.putCachedValue</code> methods and
+                 <code>CompilationInfo.CacheClearPolicy</code> enum so that tasks can easily store temporary data with predictable termination.
+             </description>
+             <issue number="203890"/>
+        </change>
+        <change id="PackageUsages">
+             <api name="general"/>
+             <summary>Added <code>ClassIndex.getResourcesForPackage</code> and <code>ClassIndex.getElementsForPackage</code>to allow to find package usages.</summary>
+             <version major="0" minor="89"/>
+             <date day="20" month="10" year="2011"/>
+             <author login="tzezula"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>ClassIndex.getResourcesForPackage</code> and <code>ClassIndex.getElementsForPackage</code>to allow to find package usages.
+                 Currently the client which needs to find usages of all types declared in the package has to list the package and query usages of each type
+                 individually which is inefficient.
+             </description>
+             <issue number="131944"/>
+        </change>
+        <change id="OrganizeImports">
+             <api name="general"/>
+             <summary>Added <code>GeneratorUtilities.addImports</code> and several methods to <code>CodeStyle</code> to support organizing imports.</summary>
+             <version major="0" minor="86"/>
+             <date day="29" month="8" year="2011"/>
+             <author login="dbalek"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>GeneratorUtilities.addImports</code> method to add import statements for given elements to a compilation unit
+                 in a way that complies with the rules specified in <code>CodeStyle</code>. Added <code>CodeStyle.importInnerClasses</code>,
+                 <code>CodeStyle.getImportGroups</code>, and <code>CodeStyle.separateImportGroups</code> to specify the rules.
+             </description>
+             <issue number="201254"/>
+        </change>
+        <change id="SourceUtils-computeDuplicates">
+             <api name="general"/>
+             <summary>Added SourceUtils.computeDuplicates to get code duplicates of provided expression</summary>
+             <version major="0" minor="85"/>
+             <date day="26" month="8" year="2011"/>
+             <author login="jbecicka"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added a method <code>SourceUtils.computeDuplicates</code> to get code duplicates of provided expression.
+             </description>
+             <class package="org.netbeans.api.java.source" name="SourceUtils" link="no"/>
+             <issue number="199106"/>
+        </change>
+        <change id="ElementHandle-jvm-signature">
+             <api name="general"/>
+             <summary>Added SourceUtils.getJVMSignature to obtain the JVM signature for an ElementHandle</summary>
+             <version major="0" minor="84"/>
+             <date day="1" month="8" year="2011"/>
+             <author login="tzezula"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added a method <code>SourceUtils.getJVMSignature</code> to obtain the JVM signature for an <code>ElementHandle</code>.
+             </description>
+             <class package="org.netbeans.api.java.source" name="SourceUtils" link="no"/>
+             <issue number="200237"/>
+        </change>
+        <change id="comments-reformat">
+             <api name="general"/>
+             <summary>Added several methods to <code>CodeStyle</code> to support reformatting of comments.</summary>
+             <version major="0" minor="83"/>
+             <date day="13" month="7" year="2011"/>
+             <author login="dbalek"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>CodeStyle.enableBlockCommentFormatting</code>, <code>CodeStyle.enableJavadocFormatting</code>,
+                 <code>CodeStyle.wrapCommentText</code>, <code>CodeStyle.wrapOneLineComments</code>,
+                 <code>CodeStyle.preserveNewLinesInCommentst</code>, <code>CodeStyle.blankLineAfterJavadocDescription</code>,
+                 <code>CodeStyle.blankLineAfterJavadocParameterDescriptions</code>, <code>CodeStyle.blankLineAfterJavadocReturnTag</code>,
+                 <code>CodeStyle.generateParagraphTagOnBlankLines</code>, <code>CodeStyle.alignJavadocParameterDescriptions</code>,
+                 <code>CodeStyle.alignJavadocReturnDescriptions</code>, <code>CodeStyle.alignJavadocExceptionDescriptions</code>,
+                 to support reformatting of comments.
+             </description>
+             <issue number="20672"/>
+        </change>
+        <change id="ClassIndex-package-scope">
+             <api name="general"/>
+             <summary>Added package search scope into <code>ClassIndex</code> to restrict search in given packages</summary>
+             <version major="0" minor="82"/>
+             <date day="22" month="6" year="2011"/>
+             <author login="tzezula"/>
+             <compatibility addition="yes"/>
+             <description>
+                 Added package search scope into <code>ClassIndex</code> to restrict search in given packages.
+             </description>
+             <class package="org.netbeans.api.java.source" name="ClassIndex" link="no"/>
+             <issue number="197194"/>
+        </change>
+        <change id="TreeUtilities.findMethodParameterSpan">
+             <api name="general"/>
+             <summary>Find span of the MethodTree#getParameters() parameter list in the source.</summary>
+             <version major="0" minor="81"/>
+             <date day="1" month="6" year="2011"/>
+             <author login="ralphbenjamin"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 <code>TreeUtilities</code> has a new <code>findMethodParameterSpan(MethodTree method)</code> method.
+             </description>
+             <class package="org.netbeans.api.java.source" name="TreeUtilities" link="no"/>
+             <issue number="199080"/>
+        </change>
+        <change id="TreePathHandle-from-ElementHandle">
+             <api name="general"/>
+             <summary>TreePathHandle can be created from ElementHandle</summary>
+             <version major="0" minor="79"/>
+             <date day="26" month="4" year="2011"/>
+             <author login="jlahoda"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 <code>TreePathHandle</code> has a new <code>from(ElementHandle)</code> method.
+             </description>
+             <class package="org.netbeans.api.java.source" name="TreePathHandle" link="no"/>
+             <issue number="197848"/>
+        </change>
+        <change id="run-modification-task-sourceless">
+             <api name="general"/>
+             <summary>JavaSource.runModificationTask can run on source-less JavaSources</summary>
+             <version major="0" minor="74"/>
+             <date day="21" month="1" year="2011"/>
+             <author login="jlahoda"/>
+             <compatibility addition="no" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 <code>JavaSource.runModificationTask</code> method works on source-less <code>JavaSource</code>s.
+             </description>
+             <class package="org.netbeans.api.java.source" name="JavaSource" link="no"/>
+             <issue number="119887"/>
+        </change>
+        <change id="index-based-is-main">
+             <api name="general"/>
+             <summary>Added a method for checking the existence of the main method using index only</summary>
+             <version major="0" minor="71"/>
+             <date day="10" month="12" year="2010"/>
+             <author login="tzezula"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added a new version of the <code>isMain</code> method into <code>org.netbeans.api.java.source.SourceUtils</code> which allows
+                 check based only on index information.
+             </description>
+             <class package="org.netbeans.api.java.source" name="SourceUtils" link="no"/>
+             <issue number="191648"/>
+        </change>
+        <change id="jdk7-update-2">
+             <api name="general"/>
+             <summary>DisjointTypeTree renamed to DisjunctiveTypeTree, AnnotationTypeTree has been removed</summary>
+             <version major="0" minor="70"/>
+             <date day="12" month="11" year="2010"/>
+             <author login="jlahoda"/>
+             <compatibility binary="incompatible" deletion="no" deprecation="no" modification="yes" semantic="compatible" source="incompatible"/>
+             <description>
+                 <code>com.sun.source.tree.DisjointTypeTree</code> renamed to <code>com.sun.source.tree.DisjunctiveTypeTree</code> from javac,
+                 so adjusting <code>TreeMaker</code> to it. <code>com.sun.source.tree.AnnotationTypeTree</code> has been removed from javac and
+                 is no longer available.
+             </description>
+             <class package="org.netbeans.api.java.source" name="TreeMaker" link="no"/>
+        </change>
+        <change id="jdk7-update">
+             <api name="general"/>
+             <summary>Added several methods to support new API for modeling JDK7 features.</summary>
+             <version major="0" minor="67"/>
+             <date day="12" month="10" year="2010"/>
+             <author login="jlahoda"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>CodeStyle.alignMultilineTryResources</code>, <code>CodeStyle.spaceBeforeTryParen</code>,
+                 <code>CodeStyle.spaceWithinTryParens</code>, <code>CodeStyle.wrapTryResources</code>
+                 <code>TreeMaker.DisjointType</code>, <code>CodeStyle.Try</code> and <code>TreeUtilities.CLASS_TREE_KINDS</code>
+                 to support new language features in JDK7.
+             </description>
+             <issue number="190767"/>
+        </change>
+        <change id="TreeMaker.PackageAnnotations">
+             <api name="general"/>
+             <summary>Added TreeMaker.CompilationUnit(List&lt;AnnotationTree&gt;, ...), TreeMaker.addPackageAnnotation, TreeMaker.insertPackageAnnotation, TreeMaker.removePackageAnnotation methods.</summary>
+             <version major="0" minor="66"/>
+             <date day="27" month="9" year="2010"/>
+             <author login="jlahoda"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>TreeMaker.CompilationUnit(List&lt;AnnotationTree&gt;, ...)</code>,
+                 <code>TreeMaker.addPackageAnnotation</code>, <code>TreeMaker.insertPackageAnnotation</code>,
+                 <code>TreeMaker.removePackageAnnotation</code> to allow modification of the list of package annotations.
+             </description>
+             <class package="org.netbeans.api.java.source" name="TreeMaker" link="no"/>
+             <issue number="157760"/>
+        </change>
+        <change id="TreeMaker.QualIdent_String">
+             <api name="general"/>
+             <summary>Added TreeMaker.QualIdent(String) and TreeMaker.Type(String) method.</summary>
+             <version major="0" minor="65"/>
+             <date day="16" month="9" year="2010"/>
+             <author login="jlahoda"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>TreeMaker.QualIdent(String)</code> and <code>TreeMaker.Type(String)</code> method, which allow
+                 to construct QualIdents and Types from String specification.
+             </description>
+             <class package="org.netbeans.api.java.source" name="TreeMaker" link="no"/>
+             <issue number="190123"/>
+        </change>
+        <change id="TreeUtilities.translate">
+             <api name="general"/>
+             <summary>Added TreeUtilities.translate method.</summary>
+             <version major="0" minor="64"/>
+             <date day="8" month="9" year="2010"/>
+             <author login="jlahoda"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>TreeUtilities.translate</code> method, which allows
+                 to construct new tree based on a given set of changes.
+             </description>
+             <class package="org.netbeans.api.java.source" name="TreeUtilities" link="no"/>
+             <issue number="190019"/>
+        </change>
+        <change id="TypeUtilities.getTypeName">
+             <api name="general"/>
+             <summary>Added TypeUtilities.getTypeName method.</summary>
+             <version major="0" minor="62"/>
+             <date day="13" month="7" year="2010"/>
+             <author login="jlahoda"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>TypeUtilities.getTypeName</code> method, which
+                 allows to print type to string.
+             </description>
+             <class package="org.netbeans.api.java.source" name="TypeUtilities" link="no"/>
+             <issue number="104194"/>
+        </change>
+        <change id="SourceUtils.getAttributeValueCompletions">
+             <api name="general"/>
+             <summary>Added SourceUtils.getAttributeValueCompletions method.</summary>
+             <version major="0" minor="57"/>
+             <date day="2" month="3" year="2010"/>
+             <author login="dbalek"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>SourceUtils.getAttributeValueCompletions</code> method, which
+                 returns a list of completions for an annotation attribute value suggested by
+                 annotation processors.
+             </description>
+             <class package="org.netbeans.api.java.source" name="SourceUtils" link="no"/>
+             <issue number="111292"/>
+        </change>
+        <change id="TreeUtilities.exotic">
+             <api name="general"/>
+             <summary>Added support for encoding/decoding exotic identifiers to TreeUtilities.</summary>
+             <version major="0" minor="56"/>
+             <date day="24" month="2" year="2010"/>
+             <author login="jlahoda"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                Added support for encoding/decoding exotic identifiers to <code>TreeUtilities</code>.
+             </description>
+             <class package="org.netbeans.api.java.source" name="TreeUtilities" link="no"/>
+             <issue number="180842"/>
+        </change>
+        <change id="GeneratorUtilities.copyComments">
+             <api name="general"/>
+             <summary>Added GeneratorUtilities.copyComments method.</summary>
+             <version major="0" minor="51"/>
+             <date day="27" month="10" year="2009"/>
+             <author login="jlahoda"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>GeneratorUtilities.copyComments</code> method, which
+                 copies comments from one tree to another tree.
+             </description>
+             <class package="org.netbeans.api.java.source" name="GeneratorUtilities" link="no"/>
+             <issue number="175020"/>
+        </change>
+        <change id="TreeUtilities.isEnumConstant">
+             <api name="general"/>
+             <summary>Added TreeUtilities.isEnumConstant() method.</summary>
+             <version major="0" minor="48"/>
+             <date day="14" month="8" year="2009"/>
+             <author login="msauer"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>TreeUtilities.isEnumConstant()</code> method, which
+                 determines whether tree represents an enum constant.
+             </description>
+             <class package="org.netbeans.api.java.source" name="TreeUtilities" link="no"/>
+             <issue number="170373"/>
+        </change>
+        <change id="CompilationInfo.getSourceVersion">
+             <api name="general"/>
+             <summary>Added CompilationInfo.getSourceVersion() method.</summary>
+             <version major="0" minor="47"/>
+             <date day="12" month="8" year="2009"/>
+             <author login="dbalek"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>CompilationInfo.getSourceVersion()</code> to return the SourceVersion used by the javac compiler.
+             </description>
+             <class package="org.netbeans.api.java.source" name="CompilationInfo" link="no"/>
+             <issue number="169970"/>
+        </change>
+        <change id="JavaSource.patchedPublic">
+             <api name="general"/>
+             <summary>Removing the binary compatibility methods (using bytecode patching) from JavaSource</summary>
+             <version major="0" minor="46"/>
+             <date day="6" month="8" year="2009"/>
+             <author login="tzezula"/>
+             <compatibility binary="incompatible" deletion="yes" source="compatible"/>
+             <description>
+                 The JavaSource class contains methods introduced to keep binary compatibility among milestones of NB 6.0.
+                 These methods are not needed anymore and will be removed.
+             </description>
+             <class package="org.netbeans.api.java.source" name="JavaSource" link="no"/>
+             <issue number="169974"/>
+        </change>
+        <change id="TreeMaker.Method">
+             <api name="general"/>
+             <summary>Added new Method allowing creating varargs methods.</summary>
+             <version major="0" minor="44"/>
+             <date day="7" month="5" year="2009"/>
+             <author login="moonko"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Adding <code>TreeMake.Method(..., boolean isVarArg)</code> to allow creation of methods with variable lenght of arguments.
+             </description>
+            <class package="org.netbeans.api.java.source" name="TreeMaker" link="no"/>
+        </change>
+        <change id="Comment.create">
+             <api name="general"/>
+             <summary>Changed Comment API</summary>
+             <version major="0" minor="43"/>
+             <date day="31" month="3" year="2009"/>
+             <author login="moonko"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Adding <code>Comment.create(Comment.Style, String)</code> to create new comment of any style from string.
+             </description>
+             <class package="org.netbeans.api.java.source" name="Comment" link="no"/>
+        </change>
+        <change id="parsing.api">
+             <api name="general"/>
+             <summary>Migrated to the parsing.api</summary>
+             <version major="0" minor="42"/>
+             <date day="24" month="11" year="2008"/>
+             <author login="tzezula"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="yes" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 The java source module migrated to use the common parsing api.
+             </description>
+             <class package="org.netbeans.api.java.source" name="JavaParserResultTask" link="no"/>
+             <class package="org.netbeans.api.java.source" name="ClasspathInfo" link="no"/>
+             <class package="org.netbeans.api.java.source" name="CompilationInfo" link="no"/>
+             <class package="org.netbeans.api.java.source" name="CompilationController" link="no"/>
+             <class package="org.netbeans.api.java.source" name="ModificationResult" link="no"/>
+             <class package="org.netbeans.api.java.source" name="WorkingCopy" link="no"/>
+        </change>
+        <change id="CodeStyle.getDefault">
+             <api name="general"/>
+             <summary>Better ways of getting CodeStyle instance</summary>
+             <version major="0" minor="39"/>
+             <date day="13" month="8" year="2008"/>
+             <author login="vstejskal"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="yes" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added <code>CodeStyle.getDefault(FileObject)</code>, <code>CodeStyle.getDefault(Document)</code>.
+                 Deprecated <code>CodeStyle.getDefault(Project)</code>.
+             </description>
+             <class package="org.netbeans.api.java.source" name="CodeStyle"  link="no"/>
+        </change>
+        <change id="BuildArtifactMapper">
+             <api name="general"/>
+             <summary>Added BuildArtifactMapper</summary>
+             <version major="0" minor="38"/>
+             <date day="7" month="7" year="2008"/>
+             <author login="jlahoda"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added BuildArtifactMapper.
+             </description>
+             <class package="org.netbeans.api.java.source" name="BuildArtifactMapper"  link="no"/>
+        </change>
+        <change id="TaggingSupport">
+             <api name="general"/>
+             <summary>Added ModificationResult.getSpan and WorkingCopy.tag</summary>
+             <version major="0" minor="37"/>
+             <date day="25" month="6" year="2008"/>
+             <author login="msauer"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added Methods allowing tagging of trees and getting their span inside modified document.
+             </description>
+        </change>
+        <change id="TypeUtilities.substitute">
+             <api name="general"/>
+             <summary>Added TypeUtilities.substitute</summary>
+             <version major="0" minor="36"/>
+             <date day="6" month="5" year="2008"/>
+             <author login="jlahoda"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added TypeUtilities.substitute.
+             </description>
+             <class package="org.netbeans.api.java.source" name="TypeUtilities"  link="no"/>
+        </change>
+        <change id="GeneratorUtilities.createMethod">
+             <api name="general"/>
+             <summary>Added GeneratorUtilities.createMethod</summary>
+             <version major="0" minor="34"/>
+             <date day="25" month="3" year="2008"/>
+             <author login="jlahoda"/>
+             <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added method to create a new method tree for given method element.
+             </description>
+            <issue number="130240"/>
+        </change>
+        <change id="CommitToGuards">
+            <api name="general"/>
+            <summary>Added ModificationResult.Difference.setCommitToGuards(boolean) and isCommitToGuards() methods permitting to write modifications even to guarded sections</summary>
+            <version major="0" minor="33"/>
+            <date day="15" month="3" year="2008"/>
+            <author login="jpokorsky"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Added methods to allow ModificationResult to write changes into guarded sections of a document in case the API client
+                is aware of what he does.
+            </description>
+        </change>
+        <change id="PartialReparseAPI">
+            <api name="general"/>
+            <summary>Added CompilationInfo.getChangedTree method returning the reparsed subtree</summary>
+            <version major="0" minor="31"/>
+            <date day="25" month="1" year="2008"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Added method to return the reparsed subtree of the CompilationUnit tree, the result of this method should be used as a hint
+                for the registered tasks to update model only for the changed subtree rather than for the whole CompilationUnit tree.
+            </description>
+        </change>
+        <change id="CancellableScannerAtomicBoolean">
+            <api name="general"/>
+            <summary>Added CancellableTreePathScanner(AtomicBoolean) and CancellableTreeScanner(AtomicBoolean)</summary>
+            <version major="0" minor="30"/>
+            <date day="21" month="12" year="2007"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Added constructors taking AtomicBoolean to the CancellableTreePathScanner and CancellableTreeScanner.
+            </description>
+            <issue number="123762"/>
+        </change>
+        <change id="ElementHandle-from">
+            <api name="general"/>
+            <summary>Added a method to obtain ElementHandles from TypeMirrorHandles representing DeclaredTypes</summary>
+            <version major="0" minor="29"/>
+            <date day="14" month="12" year="2007"/>
+            <author login="dbalek"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Added a method to obtain ElementHandles from TypeMirrorHandles representing DeclaredTypes.
+            </description>
+            <issue number="123971"/>
+        </change>
+        <change id="CAMEL_CASE_INSENSITIVE">
+            <api name="general"/>
+            <summary>Added ClassIndex.NameKind.CAMEL_CASE_INSENSITIVE</summary>
+            <version major="0" minor="28"/>
+            <date day="26" month="11" year="2007"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Added ClassIndex.NameKind.CAMEL_CASE_INSENSITIVE used by code completion for getting camel case names.
+            </description>
+            <issue number="122864"/>
+        </change>
+        <change id="jsp-dialogs">
+            <api name="general"/>
+            <summary>Support for JSPs and dialogs</summary>
+            <version major="0" minor="21"/>
+            <date day="15" month="6" year="2007"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Adding ability to use Java infrastructure for non-Java file (eg. JSP files) and inside dialogs.
+            </description>
+            <issue number="106629"/>
+        </change>
+        <change id="GeneratorUtilities">
+            <api name="general"/>
+            <summary>Adding GeneratorUtilities</summary>
+            <version major="0" minor="20"/>
+            <date day="15" month="6" year="2007"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                A utility class, org.netbeans.api.java.source.GeneratorUtilities has been added.
+            </description>
+            <issue number="106678" />
+        </change>
+        <change id="JavaSource-Cleanup1">
+            <api name="general"/>
+            <summary>Removal of obsolete, duplicated and deprecated methods from java/source</summary>
+            <version major="0" minor="19"/>
+            <date day="15" month="6" year="2007"/>
+            <author login="jlahoda"/>
+            <compatibility addition="no" binary="incompatible" deletion="yes" deprecation="yes" modification="no" semantic="incompatible" source="incompatible"/>
+            <description>
+                Removal of a few obsolete, duplicated and deprecated methods from java/source.
+            </description>
+            <issue number="106719" />
+        </change>
+        <change id="JavaSource-Task">
+            <api name="general"/>
+            <summary>CancellableTask split into Task and CancellableTask.</summary>
+            <version major="0" minor="18"/>
+            <date day="15" month="6" year="2007"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                The JavaSource.runModificationTask(), runWhenScanFinished() and runUserActionTask() never call the cancel method of the
+                CancellableTask, the implementor of such a CancellableTask just writes an empty cancel method. The compatible API
+                change splits the CancellableTask into Task with run method and CancellableTask which extends the Task by cancel method.
+                The JavaSource methods mentioned above take Task rather than CancellableTask. The CancellableTask is used only for tasks
+                registered by factories.
+            </description>
+        </change>
+        <change id="ClassIndex-interruption">
+            <api name="general"/>
+            <summary>ClassIndex methods are cancellable</summary>
+            <version major="0" minor="16"/>
+            <date day="13" month="6" year="2007"/>
+            <author login="tzezula"/>
+            <compatibility addition="no" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="incompatible" source="compatible"/>
+            <description>
+                The ClassIndex methods called from the CancellableTask are cancellable. In case when they are cancelled by the JavaSource infrastructure
+                they return null instead of the Set to allow client to determine this state. The incompatible semantic change is that tasks registered by
+                factories have to check if the value returned from class index is null.
+            </description>
+        </change>
+        <change id="CompilationInfo-getTopLevelElements">
+            <api name="general"/>
+            <summary>Added a method to obtain top level elements defined in the source/class file.</summary>
+            <version major="0" minor="14"/>
+            <date day="5" month="6" year="2007"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Added a method to obtain top level elements defined in the given source or class file.
+            </description>
+            <issue number="93100"/>
+        </change>
+        
+        <change id="TreePathHandle-create-Element">
+            <api name="general"/>
+            <summary>Added factory method which returns a new TreePathHandle for given Element and CompilationInfo.</summary>
+            <version major="0" minor="13"/>
+            <date day="24" month="4" year="2007"/>
+            <author login="jbecicka"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                There is no simple way how to weakly reference all elements from javac. For instance local variables cannot be referenced by
+                ElementHandles while source-less Elements cannot be referenced by TreePathHandles. This fix allows to create TreePathHandles 
+                for any javac Element (both local and source less).
+            </description>
+            <issue number="102333"/>
+        </change>
+
+        <change id="runWhenScanFinished">
+            <api name="general"/>
+            <summary>Added a method to run a CancellableTask when the backgound scan is finished.</summary>
+            <version major="0" minor="12"/>
+            <date day="19" month="4" year="2007"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                The JavaSource.runWhenScanFinished performs the given task either synchronously when no background scan is running. When the background
+                scan is running the task is performed asynchronously when the scan completes.
+            </description>
+            <issue number="91117"/>
+            <issue number="99923"/>
+        </change>
+        
+        <change id="dependent-roots">
+            <api name="general"/>
+            <summary>Added a method which returns all the project source roots depending on a given source root.</summary>
+            <version major="0" minor="10"/>
+            <date day="13" month="4" year="2007"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                The refactoring and find usages need to find the dependent roots of a project root in which the refactored type
+                is declared, but finding such an information using the project API may be very expensive especially when lots of
+                projects is opened. The goal of this API is to provide and cache this information.
+            </description>
+            <issue number="92030"/>
+        </change>
+
+        <change id="ClassIndexListener">
+            <api name="general"/>
+            <summary>Added a listener for listening on changes in the <code>ClassIndex</code>.</summary>
+            <version major="0" minor="8"/>
+            <date day="4" month="4" year="2007"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                The listener for listening on changes in the <code>ClassIndex</code> was added. The listener fires
+                events when a declared type was removed, added, changed in the <code>ClassIndex</code> oe when the underlaying
+                <code>ClassPath</code> was changed.
+            </description>
+            <issue number="91763"/>
+        </change>
+
+        <change id="package-property">
+            <api name="general"/>
+            <summary>Adding template attribute <code>package</code></summary>
+            <version major="0" minor="7"/>
+            <date day="26" month="3" year="2007"/>
+            <author login="jpokorsky"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Added the template attribute <code>package</code> for templates using scripting language.
+            </description>
+            <issue number="95399"/>
+        </change>
+
+        <change id="type-utilities">
+            <api name="general"/>
+            <summary>Removing CommentUtilities, adjusting TreeMaker and introducing TypeUtilities</summary>
+            <version major="0" minor="6"/>
+            <date day="18" month="3" year="2007"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible">
+            </compatibility>
+            <description>
+                <ul>
+                    <li>removed org.netbeans.api.java.source.CommentUtilities</li>
+                    <li>removed org.netbeans.api.java.source.TreeMaker.Variable(..., TypeElement)</li>
+                    <li>removed org.netbeans.api.java.source.TreeMaker.Method(..., TypeElement)</li>
+                    <li>added org.netbeans.api.java.source.TypeUtilities</li>
+                </ul>
+            </description>
+            <class package="org.netbeans.api.java.source" name="TypeUtilities" link="no"/>
+            <issue number="97542"/>
+        </change>
+        
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE CHANGEME/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Java Source API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <!--<a href="@org-netbeans-modules-java-source@/architecture-summary.html">-->Java Source API<!--</a>-->.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.java.source"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

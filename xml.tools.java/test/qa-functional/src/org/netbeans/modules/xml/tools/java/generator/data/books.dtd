@@ -1,0 +1,158 @@
+<?xml encoding="UTF-8" ?>
+
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Sun designates this
+particular file as subject to the "Classpath" exception as provided
+by Sun in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!--- <i>Doc comment for Books declaration:</i><p />
+A set of books.
+ -->
+<!ELEMENT Books (Product+,Price?,Image?,Custom?)*>
+
+<!--- <i>Doc comment for Product declaration:</i><p />
+Book's description.
+ -->
+<!ELEMENT Product (#PCDATA|Descript)*>
+
+<!--- <i>Doc comment for Descript declaration:</i><p />
+More detail book's description.
+ -->
+<!ELEMENT Descript (#PCDATA)>
+
+<!--- <i>Doc comment for Custom declaration:</i><p />
+Field intended for custom purpose.
+ -->
+<!ELEMENT Custom ANY>
+
+<!ATTLIST Books
+  owner CDATA #IMPLIED
+  idow ID #IMPLIED
+>
+
+<!ATTLIST Price 
+  isbn CDATA #IMPLIED
+  id ID #IMPLIED  
+>
+
+<!ATTLIST Price 
+    bla CDATA #IMPLIED
+>
+
+<!ATTLIST Product 
+  isbn CDATA #IMPLIED
+  id ID #IMPLIED  
+>
+
+<!--- <i>Doc comment for Price declaration:</i><p />
+Book's price..
+ -->
+<!ELEMENT Price (#PCDATA)>
+
+<!-- FULL ATTLIST -->
+<!NOTATION pdf SYSTEM "xpdf">
+<!NOTATION dvi SYSTEM "gv">
+<!ELEMENT Image EMPTY>
+<!ATTLIST Image 
+  src       ENTITY      #REQUIRED
+  descr     CDATA       #IMPLIED
+  visible   CDATA       #FIXED      "true"
+  format    (jpg | gif) #IMPLIED
+  os        (unix | os2)             "unix"
+  entity    ENTITY      #IMPLIED
+  entities  ENTITIES    #IMPLIED
+  id        ID          #IMPLIED
+  idref     IDREF       #IMPLIED
+  idrefs    IDREFS      #IMPLIED
+  nmtoken   NMTOKEN     #IMPLIED
+  nmtokens  NMTOKENS    #IMPLIED
+  notation  NOTATION    (pdf|dvi) #IMPLIED
+>
+
+<!-- GENERAL ENTITY -->
+<!ENTITY company "Tisk &amp; spol.">
+<!ENTITY thorn "&#222;">
+<!ENTITY xamp "&#x26;">
+
+<!-- EXTERNAL ENTITY -->
+<!ENTITY extern SYSTEM "externalEntity.xml">
+
+<!-- PARAMETR ENTITY -->
+<!ENTITY % sourceinfo
+ "lang   CDATA #REQUIRED
+  cprght CDATA #IMPLIED">
+<!ATTLIST Descript %sourceinfo;>
+
+<!-- EXTERNAL PARAMETR ENTITY -->
+<!ENTITY % states SYSTEM "states.dtd">
+%states;
+
+<!-- UNPARSED ENTITY -->
+<!ENTITY image1 SYSTEM "http://www.oreily.com/ora.gif" NDATA GIF89a>
+<!NOTATION GIF89a PUBLIC "-//CompuServe//NOTATION Graphics Interchange Format 89a//EN">
+
+<!NOTATION eps SYSTEM "gv">
+
+<!ENTITY % X "INCLUDE">
+<!ENTITY % Y "IGNORE">
+
+<![%X; [
+  <!ENTITY notice "X = INCLUDE">
+  <!ELEMENT x-include (#PCDATA)>
+]]> 
+
+<![%Y; [
+  <!ENTITY notice "Y = INCLUDE">
+  <!ELEMENT y-include (#PCDATA)>
+]]> 
+
+<![ INCLUDE [
+  <!ELEMENT inc-level-1 (#PCDATA)>
+  <![ INCLUDE [<!ELEMENT inc-level-2 (#PCDATA)>]]> 
+  <![ IGNORE  [<!ELEMENT ign-in-include (#PCDATA)>]]> 
+]]>
+
+<![ IGNORE [
+  <!ELEMENT ign_level_1 (#PCDATA)>
+  <![ INCLUDE [<!ELEMENT inc-in-ignore (#PCDATA)>]]> 
+]]>
+
+<?Test finish?>
+

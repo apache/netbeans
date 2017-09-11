@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<documentation>
+	<node key = "a"	context = "TAG"	deprecated = "false"	endTag = ""	description = "anchor"/>
+	<node key = "abbr"	context = "TAG"	deprecated = "false"	endTag = ""	description = "abbreviated form (e.g., WWW, HTTP,
+etc.)"/>
+	<node key = "acronym"	context = "TAG"	deprecated = "false"	endTag = ""	description = ""/>
+	<node key = "address"	context = "TAG"	deprecated = "false"	endTag = ""	description = "information on author"/>
+	<node key = "applet"	context = "TAG"	deprecated = "true"	endTag = ""	description = "Java applet"/>
+	<node key = "area"	context = "TAG"	deprecated = "false"	endTag = "F"	description = "client-side image map area"/>
+	<node key = "b"	context = "TAG"	deprecated = "false"	endTag = ""	description = "bold text style"/>
+	<node key = "base"	context = "TAG"	deprecated = "false"	endTag = "F"	description = "document base URI"/>
+	<node key = "basefont"	context = "TAG"	deprecated = "true"	endTag = "F"	description = "base font size"/>
+	<node key = "bdo"	context = "TAG"	deprecated = "false"	endTag = ""	description = "I18N BiDi over-ride"/>
+	<node key = "big"	context = "TAG"	deprecated = "false"	endTag = ""	description = "large text style"/>
+	<node key = "blockquote"	context = "TAG"	deprecated = "false"	endTag = ""	description = "long quotation"/>
+	<node key = "body"	context = "TAG"	deprecated = "false"	endTag = "O"	description = "document body"/>
+	<node key = "br"	context = "TAG"	deprecated = "false"	endTag = "F"	description = "forced line break"/>
+	<node key = "button"	context = "TAG"	deprecated = "false"	endTag = ""	description = "push button"/>
+	<node key = "caption"	context = "TAG"	deprecated = "false"	endTag = ""	description = "table caption"/>
+	<node key = "center"	context = "TAG"	deprecated = "true"	endTag = ""	description = "shorthand for DIV align=center"/>
+	<node key = "cite"	context = "TAG"	deprecated = "false"	endTag = ""	description = "citation"/>
+	<node key = "code"	context = "TAG"	deprecated = "false"	endTag = ""	description = "computer code fragment"/>
+	<node key = "col"	context = "TAG"	deprecated = "false"	endTag = "F"	description = "table column"/>
+	<node key = "colgroup"	context = "TAG"	deprecated = "false"	endTag = "O"	description = "table column group"/>
+	<node key = "dd"	context = "TAG"	deprecated = "false"	endTag = "O"	description = "definition description"/>
+	<node key = "del"	context = "TAG"	deprecated = "false"	endTag = ""	description = "deleted text"/>
+	<node key = "dfn"	context = "TAG"	deprecated = "false"	endTag = ""	description = "instance definition"/>
+	<node key = "dir"	context = "TAG"	deprecated = "true"	endTag = ""	description = "directory list"/>
+	<node key = "div"	context = "TAG"	deprecated = "false"	endTag = ""	description = "generic language/style container"/>
+	<node key = "dl"	context = "TAG"	deprecated = "false"	endTag = ""	description = "definition list"/>
+	<node key = "dt"	context = "TAG"	deprecated = "false"	endTag = "O"	description = "definition term"/>
+	<node key = "em"	context = "TAG"	deprecated = "false"	endTag = ""	description = "emphasis"/>
+	<node key = "fieldset"	context = "TAG"	deprecated = "false"	endTag = ""	description = "form control group"/>
+	<node key = "font"	context = "TAG"	deprecated = "true"	endTag = ""	description = "local change to font"/>
+	<node key = "form"	context = "TAG"	deprecated = "false"	endTag = ""	description = "interactive form"/>
+	<node key = "frame"	context = "TAG"	deprecated = "false"	endTag = "F"	description = "subwindow"/>
+	<node key = "frameset"	context = "TAG"	deprecated = "false"	endTag = ""	description = "window subdivision"/>
+	<node key = "h1"	context = "TAG"	deprecated = "false"	endTag = ""	description = "heading"/>
+	<node key = "h2"	context = "TAG"	deprecated = "false"	endTag = ""	description = "heading"/>
+	<node key = "h3"	context = "TAG"	deprecated = "false"	endTag = ""	description = "heading"/>
+	<node key = "h4"	context = "TAG"	deprecated = "false"	endTag = ""	description = "heading"/>
+	<node key = "h5"	context = "TAG"	deprecated = "false"	endTag = ""	description = "heading"/>
+	<node key = "h6"	context = "TAG"	deprecated = "false"	endTag = ""	description = "heading"/>
+	<node key = "head"	context = "TAG"	deprecated = "false"	endTag = "O"	description = "document head"/>
+	<node key = "hr"	context = "TAG"	deprecated = "false"	endTag = "F"	description = "horizontal rule"/>
+	<node key = "html"	context = "TAG"	deprecated = "false"	endTag = "O"	description = "document root element"/>
+	<node key = "i"	context = "TAG"	deprecated = "false"	endTag = ""	description = "italic text style"/>
+	<node key = "iframe"	context = "TAG"	deprecated = "false"	endTag = ""	description = "inline subwindow"/>
+	<node key = "img"	context = "TAG"	deprecated = "false"	endTag = "F"	description = "Embedded image"/>
+	<node key = "input"	context = "TAG"	deprecated = "false"	endTag = "F"	description = "form control"/>
+	<node key = "ins"	context = "TAG"	deprecated = "false"	endTag = ""	description = "inserted text"/>
+	<node key = "isindex"	context = "TAG"	deprecated = "true"	endTag = "F"	description = "single line prompt"/>
+	<node key = "kbd"	context = "TAG"	deprecated = "false"	endTag = ""	description = "text to be entered by the user"/>
+	<node key = "label"	context = "TAG"	deprecated = "false"	endTag = ""	description = "form field label text"/>
+	<node key = "legend"	context = "TAG"	deprecated = "false"	endTag = ""	description = "fieldset legend"/>
+	<node key = "li"	context = "TAG"	deprecated = "false"	endTag = "O"	description = "list item"/>
+	<node key = "link"	context = "TAG"	deprecated = "false"	endTag = "F"	description = "a media-independent link"/>
+	<node key = "map"	context = "TAG"	deprecated = "false"	endTag = ""	description = "client-side image map"/>
+	<node key = "menu"	context = "TAG"	deprecated = "true"	endTag = ""	description = "menu list"/>
+	<node key = "meta"	context = "TAG"	deprecated = "false"	endTag = "F"	description = "generic metainformation"/>
+	<node key = "noframes"	context = "TAG"	deprecated = "false"	endTag = ""	description = "alternate content container for non
+frame-based rendering"/>
+	<node key = "noscript"	context = "TAG"	deprecated = "false"	endTag = ""	description = "alternate content container for non
+script-based rendering"/>
+	<node key = "object"	context = "TAG"	deprecated = "false"	endTag = ""	description = "generic embedded object"/>
+	<node key = "ol"	context = "TAG"	deprecated = "false"	endTag = ""	description = "ordered list"/>
+	<node key = "optgroup"	context = "TAG"	deprecated = "false"	endTag = ""	description = "option group"/>
+	<node key = "option"	context = "TAG"	deprecated = "false"	endTag = "O"	description = "selectable choice"/>
+	<node key = "p"	context = "TAG"	deprecated = "false"	endTag = "O"	description = "paragraph"/>
+	<node key = "param"	context = "TAG"	deprecated = "false"	endTag = "F"	description = "named property value"/>
+	<node key = "pre"	context = "TAG"	deprecated = "false"	endTag = ""	description = "preformatted text"/>
+	<node key = "q"	context = "TAG"	deprecated = "false"	endTag = ""	description = "short inline quotation"/>
+	<node key = "s"	context = "TAG"	deprecated = "true"	endTag = ""	description = "strike-through text style"/>
+	<node key = "samp"	context = "TAG"	deprecated = "false"	endTag = ""	description = "sample program output, scripts,
+etc."/>
+	<node key = "script"	context = "TAG"	deprecated = "false"	endTag = ""	description = "script statements"/>
+	<node key = "select"	context = "TAG"	deprecated = "false"	endTag = ""	description = "option selector"/>
+	<node key = "small"	context = "TAG"	deprecated = "false"	endTag = ""	description = "small text style"/>
+	<node key = "span"	context = "TAG"	deprecated = "false"	endTag = ""	description = "generic language/style container"/>
+	<node key = "strike"	context = "TAG"	deprecated = "true"	endTag = ""	description = "strike-through text"/>
+	<node key = "strong"	context = "TAG"	deprecated = "false"	endTag = ""	description = "strong emphasis"/>
+	<node key = "style"	context = "TAG"	deprecated = "false"	endTag = ""	description = "style info"/>
+	<node key = "sub"	context = "TAG"	deprecated = "false"	endTag = ""	description = "subscript"/>
+	<node key = "sup"	context = "TAG"	deprecated = "false"	endTag = ""	description = "superscript"/>
+	<node key = "table"	context = "TAG"	deprecated = "false"	endTag = ""	description = ""/>
+	<node key = "tbody"	context = "TAG"	deprecated = "false"	endTag = "O"	description = "table body"/>
+	<node key = "td"	context = "TAG"	deprecated = "false"	endTag = "O"	description = "table data cell"/>
+	<node key = "textarea"	context = "TAG"	deprecated = "false"	endTag = ""	description = "multi-line text field"/>
+	<node key = "tfoot"	context = "TAG"	deprecated = "false"	endTag = "O"	description = "table footer"/>
+	<node key = "th"	context = "TAG"	deprecated = "false"	endTag = "O"	description = "table header cell"/>
+	<node key = "thead"	context = "TAG"	deprecated = "false"	endTag = "O"	description = "table header"/>
+	<node key = "title"	context = "TAG"	deprecated = "false"	endTag = ""	description = "document title"/>
+	<node key = "tr"	context = "TAG"	deprecated = "false"	endTag = "O"	description = "table row"/>
+	<node key = "tt"	context = "TAG"	deprecated = "false"	endTag = ""	description = "teletype or monospaced text style"/>
+	<node key = "u"	context = "TAG"	deprecated = "true"	endTag = ""	description = "underlined text style"/>
+	<node key = "ul"	context = "TAG"	deprecated = "false"	endTag = ""	description = "unordered list"/>
+	<node key = "var"	context = "TAG"	deprecated = "false"	endTag = ""	description = "instance of a variable or program
+argument"/>
+
+	<node key = "abbr"	context = "td,th"	deprecated = "false"	description = "abbreviation for header cell"/>
+	<node key = "accept-charset"	context = "form"	deprecated = "false"	description = "list of supported charsets"/>
+	<node key = "accept"	context = "input"	deprecated = "false"	description = "list of MIME types for file upload"/>
+	<node key = "accesskey"	context = "a,area,button,input,label,legend,textarea"	deprecated = "false"	description = "accessibility key character"/>
+	<node key = "action"	context = "form"	deprecated = "false"	description = "server-side form handler"/>
+	<node key = "align"	context = "caption"	deprecated = "true"	description = "relative to table"/>
+	<node key = "align"	context = "applet,iframe,img,input,object"	deprecated = "true"	description = "vertical or horizontal alignment"/>
+	<node key = "align"	context = "legend"	deprecated = "true"	description = "relative to fieldset"/>
+	<node key = "align"	context = "table"	deprecated = "true"	description = "table position relative to window"/>
+	<node key = "align"	context = "hr"	deprecated = "true"	description = ""/>
+	<node key = "align"	context = "div,h1,h2,h3,h4,h5,h6,p"	deprecated = "true"	description = "align, text alignment"/>
+	<node key = "align"	context = "col,colgroup,tbody,td,tfoot,th,thead,tr"	deprecated = "false"	description = ""/>
+	<node key = "alink"	context = "body"	deprecated = "true"	description = "color of selected links"/>
+	<node key = "alt"	context = "applet"	deprecated = "true"	description = "short description"/>
+	<node key = "alt"	context = "area,img"	deprecated = "false"	description = "short description"/>
+	<node key = "alt"	context = "input"	deprecated = "false"	description = "short description"/>
+	<node key = "archive"	context = "object"	deprecated = "false"	description = "space separated archive list"/>
+	<node key = "archive"	context = "applet"	deprecated = "true"	description = "comma separated archive list"/>
+	<node key = "axis"	context = "td,th"	deprecated = "false"	description = "names groups of related headers"/>
+	<node key = "background"	context = "body"	deprecated = "true"	description = "texture tile for document background"/>
+	<node key = "bgcolor"	context = "table"	deprecated = "true"	description = "background color for cells"/>
+	<node key = "bgcolor"	context = "tr"	deprecated = "true"	description = "background color for row"/>
+	<node key = "bgcolor"	context = "td,th"	deprecated = "true"	description = "cell background color"/>
+	<node key = "bgcolor"	context = "body"	deprecated = "true"	description = "document background color"/>
+	<node key = "border"	context = "table"	deprecated = "false"	description = "controls frame width around table"/>
+	<node key = "border"	context = "img,object"	deprecated = "true"	description = "link border width"/>
+	<node key = "cellpadding"	context = "table"	deprecated = "false"	description = "spacing within cells"/>
+	<node key = "cellspacing"	context = "table"	deprecated = "false"	description = "spacing between cells"/>
+	<node key = "char"	context = "col,colgroup,tbody,td,tfoot,th,thead,tr"	deprecated = "false"	description = "alignment char, e.g. char=':'"/>
+	<node key = "charoff"	context = "col,colgroup,tbody,td,tfoot,th,thead,tr"	deprecated = "false"	description = "offset for alignment char"/>
+	<node key = "charset"	context = "a,link,script"	deprecated = "false"	description = "char encoding of linked resource"/>
+	<node key = "checked"	context = "input"	deprecated = "false"	description = "for radio buttons and check boxes"/>
+	<node key = "cite"	context = "blockquote,q"	deprecated = "false"	description = "URI for source document or msg"/>
+	<node key = "cite"	context = "del,ins"	deprecated = "false"	description = "info on reason for change"/>
+	<node key = "class"	context = "colgroup,table,frameset,kbd,p,isindex,caption,col,q,tr,button,dir,tfoot,th,font,small,ins,code,td,fieldset,object,a,option,optgroup,u,abbr,noframes,hr,h4,menu,body,pre,var,iframe,b,em,select,legend,strong,big,applet,dt,map,del,thead,input,h5,form,sub,address,h6,blockquote,h2,i,div,ul,img,tt,center,s,tbody,textarea,dd,sup,h1,link,noscript,cite,dl,frame,label,dfn,strike,br,li,samp,h3,area,ol,span,bdo,acronym"	deprecated = "false"	description = "space separated list of classes"/>
+	<node key = "classid"	context = "object"	deprecated = "false"	description = "identifies an implementation"/>
+	<node key = "clear"	context = "br"	deprecated = "true"	description = "control of text flow"/>
+	<node key = "code"	context = "applet"	deprecated = "true"	description = "applet class file"/>
+	<node key = "codebase"	context = "object"	deprecated = "false"	description = "base URI for classid, data, archive"/>
+	<node key = "codebase"	context = "applet"	deprecated = "true"	description = "optional base URI for applet"/>
+	<node key = "codetype"	context = "object"	deprecated = "false"	description = "content type for code"/>
+	<node key = "color"	context = "basefont,font"	deprecated = "true"	description = "text color"/>
+	<node key = "cols"	context = "frameset"	deprecated = "false"	description = "list of lengths, default: 100% (1 col)"/>
+	<node key = "cols"	context = "textarea"	deprecated = "false"	description = ""/>
+	<node key = "colspan"	context = "td,th"	deprecated = "false"	description = "number of cols spanned by cell"/>
+	<node key = "compact"	context = "dir,dl,menu,ol,ul"	deprecated = "true"	description = "reduced interitem spacing"/>
+	<node key = "content"	context = "meta"	deprecated = "false"	description = "associated information"/>
+	<node key = "coords"	context = "area"	deprecated = "false"	description = "comma separated list of lengths"/>
+	<node key = "coords"	context = "a"	deprecated = "false"	description = "for use with client-side image maps"/>
+	<node key = "data"	context = "object"	deprecated = "false"	description = "reference to object's data"/>
+	<node key = "datetime"	context = "del,ins"	deprecated = "false"	description = "date and time of change"/>
+	<node key = "declare"	context = "object"	deprecated = "false"	description = "declare but don't instantiate flag"/>
+	<node key = "defer"	context = "script"	deprecated = "false"	description = "UA may defer execution of script"/>
+	<node key = "dir"	context = "colgroup,table,kbd,html,p,isindex,caption,col,q,tr,button,dir,meta,tfoot,th,font,small,ins,code,td,fieldset,object,a,option,optgroup,u,abbr,style,noframes,hr,h4,menu,body,pre,var,b,em,select,legend,strong,big,dt,map,del,thead,input,h5,form,title,sub,address,h6,blockquote,h2,i,div,ul,img,tt,center,s,tbody,textarea,dd,sup,h1,link,noscript,cite,dl,label,dfn,strike,head,li,samp,h3,area,ol,span,acronym"	deprecated = "false"	description = "direction for weak/neutral text"/>
+	<node key = "dir"	context = "bdo"	deprecated = "false"	description = "directionality"/>
+	<node key = "disabled"	context = "button,input,optgroup,option,select,textarea"	deprecated = "false"	description = "unavailable in this context"/>
+	<node key = "enctype"	context = "form"	deprecated = "false"	description = ""/>
+	<node key = "face"	context = "basefont,font"	deprecated = "true"	description = "comma separated list of font names"/>
+	<node key = "for"	context = "label"	deprecated = "false"	description = "matches field ID value"/>
+	<node key = "frame"	context = "table"	deprecated = "false"	description = "which parts of frame to render"/>
+	<node key = "frameborder"	context = "frame,iframe"	deprecated = "false"	description = "request frame borders?"/>
+	<node key = "headers"	context = "td,th"	deprecated = "false"	description = "list of id's for header cells"/>
+	<node key = "height"	context = "iframe"	deprecated = "false"	description = "frame height"/>
+	<node key = "height"	context = "img,object"	deprecated = "false"	description = "override height"/>
+	<node key = "height"	context = "applet"	deprecated = "true"	description = "initial height"/>
+	<node key = "height"	context = "td,th"	deprecated = "true"	description = "height for cell"/>
+	<node key = "href"	context = "a,area,link"	deprecated = "false"	description = "URI for linked resource"/>
+	<node key = "href"	context = "base"	deprecated = "false"	description = "URI that acts as base URI"/>
+	<node key = "hreflang"	context = "a,link"	deprecated = "false"	description = "language code"/>
+	<node key = "hspace"	context = "applet,img,object"	deprecated = "true"	description = "horizontal gutter"/>
+	<node key = "http-equiv"	context = "meta"	deprecated = "false"	description = "HTTP response header name"/>
+	<node key = "id"	context = "colgroup,table,frameset,kbd,p,isindex,caption,col,q,tr,button,dir,tfoot,th,font,small,ins,code,td,fieldset,object,a,option,optgroup,u,abbr,noframes,hr,h4,menu,body,pre,var,iframe,b,em,select,legend,strong,big,applet,dt,map,del,thead,input,h5,form,sub,basefont,address,h6,blockquote,h2,i,div,ul,img,tt,center,s,tbody,textarea,dd,sup,h1,link,noscript,cite,dl,frame,label,dfn,strike,br,li,param,samp,h3,area,ol,span,bdo,acronym"	deprecated = "false"	description = "document-wide unique id"/>
+	<node key = "ismap"	context = "img,input"	deprecated = "false"	description = "use server-side image map"/>
+	<node key = "label"	context = "option"	deprecated = "false"	description = "for use in hierarchical menus"/>
+	<node key = "label"	context = "optgroup"	deprecated = "false"	description = "for use in hierarchical menus"/>
+	<node key = "lang"	context = "colgroup,table,kbd,html,p,isindex,caption,col,q,tr,button,dir,meta,tfoot,th,font,small,ins,code,td,fieldset,object,a,option,optgroup,u,abbr,style,noframes,hr,h4,menu,body,pre,var,b,em,select,legend,strong,big,dt,map,del,thead,input,h5,form,title,sub,address,h6,blockquote,h2,i,div,ul,img,tt,center,s,tbody,textarea,dd,sup,h1,link,noscript,cite,dl,label,dfn,strike,head,li,samp,h3,area,ol,span,bdo,acronym"	deprecated = "false"	description = "language code"/>
+	<node key = "language"	context = "script"	deprecated = "true"	description = "predefined script language name"/>
+	<node key = "link"	context = "body"	deprecated = "true"	description = "color of links"/>
+	<node key = "longdesc"	context = "img"	deprecated = "false"	description = "link to long description (complements
+alt)"/>
+	<node key = "longdesc"	context = "frame,iframe"	deprecated = "false"	description = "link to long description (complements
+title)"/>
+	<node key = "marginheight"	context = "frame,iframe"	deprecated = "false"	description = "margin height in pixels"/>
+	<node key = "marginwidth"	context = "frame,iframe"	deprecated = "false"	description = "margin widths in pixels"/>
+	<node key = "maxlength"	context = "input"	deprecated = "false"	description = "max chars for text fields"/>
+	<node key = "media"	context = "style"	deprecated = "false"	description = "designed for use with these media"/>
+	<node key = "media"	context = "link"	deprecated = "false"	description = "for rendering on these media"/>
+	<node key = "method"	context = "form"	deprecated = "false"	description = "HTTP method used to submit the form"/>
+	<node key = "multiple"	context = "select"	deprecated = "false"	description = "default is single selection"/>
+	<node key = "name"	context = "button,textarea"	deprecated = "false"	description = ""/>
+	<node key = "name"	context = "applet"	deprecated = "true"	description = "allows applets to find each other"/>
+	<node key = "name"	context = "select"	deprecated = "false"	description = "field name"/>
+	<node key = "name"	context = "form"	deprecated = "false"	description = "name of form for scripting"/>
+	<node key = "name"	context = "frame,iframe"	deprecated = "false"	description = "name of frame for targetting"/>
+	<node key = "name"	context = "img"	deprecated = "false"	description = "name of image for scripting"/>
+	<node key = "name"	context = "a"	deprecated = "false"	description = "named link end"/>
+	<node key = "name"	context = "input,object"	deprecated = "false"	description = "submit as part of form"/>
+	<node key = "name"	context = "map"	deprecated = "false"	description = "for reference by usemap"/>
+	<node key = "name"	context = "param"	deprecated = "false"	description = "property name"/>
+	<node key = "name"	context = "meta"	deprecated = "false"	description = "metainformation name"/>
+	<node key = "nohref"	context = "area"	deprecated = "false"	description = "this region has no action"/>
+	<node key = "noresize"	context = "frame"	deprecated = "false"	description = "allow users to resize frames?"/>
+	<node key = "noshade"	context = "hr"	deprecated = "true"	description = ""/>
+	<node key = "nowrap"	context = "td,th"	deprecated = "true"	description = "suppress word wrap"/>
+	<node key = "object"	context = "applet"	deprecated = "true"	description = "serialized applet file"/>
+	<node key = "onblur"	context = "a,area,button,input,label,select,textarea"	deprecated = "false"	description = "the element lost the focus"/>
+	<node key = "onchange"	context = "input,select,textarea"	deprecated = "false"	description = "the element value was changed"/>
+	<node key = "onclick"	context = "colgroup,table,kbd,p,caption,col,q,tr,button,dir,tfoot,th,small,ins,code,td,fieldset,object,a,option,optgroup,u,abbr,noframes,hr,h4,menu,body,pre,var,b,em,select,legend,strong,big,dt,map,del,thead,input,h5,form,sub,address,h6,blockquote,h2,i,div,ul,img,tt,center,s,tbody,textarea,dd,sup,h1,link,noscript,cite,dl,label,dfn,strike,li,samp,h3,area,ol,span,acronym"	deprecated = "false"	description = "a pointer button was clicked"/>
+	<node key = "ondblclick"	context = "colgroup,table,kbd,p,caption,col,q,tr,button,dir,tfoot,th,small,ins,code,td,fieldset,object,a,option,optgroup,u,abbr,noframes,hr,h4,menu,body,pre,var,b,em,select,legend,strong,big,dt,map,del,thead,input,h5,form,sub,address,h6,blockquote,h2,i,div,ul,img,tt,center,s,tbody,textarea,dd,sup,h1,link,noscript,cite,dl,label,dfn,strike,li,samp,h3,area,ol,span,acronym"	deprecated = "false"	description = "a pointer button was double clicked"/>
+	<node key = "onfocus"	context = "a,area,button,input,label,select,textarea"	deprecated = "false"	description = "the element got the focus"/>
+	<node key = "onkeydown"	context = "colgroup,table,kbd,p,caption,col,q,tr,button,dir,tfoot,th,small,ins,code,td,fieldset,object,a,option,optgroup,u,abbr,noframes,hr,h4,menu,body,pre,var,b,em,select,legend,strong,big,dt,map,del,thead,input,h5,form,sub,address,h6,blockquote,h2,i,div,ul,img,tt,center,s,tbody,textarea,dd,sup,h1,link,noscript,cite,dl,label,dfn,strike,li,samp,h3,area,ol,span,acronym"	deprecated = "false"	description = "a key was pressed down"/>
+	<node key = "onkeypress"	context = "colgroup,table,kbd,p,caption,col,q,tr,button,dir,tfoot,th,small,ins,code,td,fieldset,object,a,option,optgroup,u,abbr,noframes,hr,h4,menu,body,pre,var,b,em,select,legend,strong,big,dt,map,del,thead,input,h5,form,sub,address,h6,blockquote,h2,i,div,ul,img,tt,center,s,tbody,textarea,dd,sup,h1,link,noscript,cite,dl,label,dfn,strike,li,samp,h3,area,ol,span,acronym"	deprecated = "false"	description = "a key was pressed and released"/>
+	<node key = "onkeyup"	context = "colgroup,table,kbd,p,caption,col,q,tr,button,dir,tfoot,th,small,ins,code,td,fieldset,object,a,option,optgroup,u,abbr,noframes,hr,h4,menu,body,pre,var,b,em,select,legend,strong,big,dt,map,del,thead,input,h5,form,sub,address,h6,blockquote,h2,i,div,ul,img,tt,center,s,tbody,textarea,dd,sup,h1,link,noscript,cite,dl,label,dfn,strike,li,samp,h3,area,ol,span,acronym"	deprecated = "false"	description = "a key was released"/>
+	<node key = "onload"	context = "frameset"	deprecated = "false"	description = "all the frames have been loaded"/>
+	<node key = "onload"	context = "body"	deprecated = "false"	description = "the document has been loaded"/>
+	<node key = "onmousedown"	context = "colgroup,table,kbd,p,caption,col,q,tr,button,dir,tfoot,th,small,ins,code,td,fieldset,object,a,option,optgroup,u,abbr,noframes,hr,h4,menu,body,pre,var,b,em,select,legend,strong,big,dt,map,del,thead,input,h5,form,sub,address,h6,blockquote,h2,i,div,ul,img,tt,center,s,tbody,textarea,dd,sup,h1,link,noscript,cite,dl,label,dfn,strike,li,samp,h3,area,ol,span,acronym"	deprecated = "false"	description = "a pointer button was pressed down"/>
+	<node key = "onmousemove"	context = "colgroup,table,kbd,p,caption,col,q,tr,button,dir,tfoot,th,small,ins,code,td,fieldset,object,a,option,optgroup,u,abbr,noframes,hr,h4,menu,body,pre,var,b,em,select,legend,strong,big,dt,map,del,thead,input,h5,form,sub,address,h6,blockquote,h2,i,div,ul,img,tt,center,s,tbody,textarea,dd,sup,h1,link,noscript,cite,dl,label,dfn,strike,li,samp,h3,area,ol,span,acronym"	deprecated = "false"	description = "a pointer was moved within"/>
+	<node key = "onmouseout"	context = "colgroup,table,kbd,p,caption,col,q,tr,button,dir,tfoot,th,small,ins,code,td,fieldset,object,a,option,optgroup,u,abbr,noframes,hr,h4,menu,body,pre,var,b,em,select,legend,strong,big,dt,map,del,thead,input,h5,form,sub,address,h6,blockquote,h2,i,div,ul,img,tt,center,s,tbody,textarea,dd,sup,h1,link,noscript,cite,dl,label,dfn,strike,li,samp,h3,area,ol,span,acronym"	deprecated = "false"	description = "a pointer was moved away"/>
+	<node key = "onmouseover"	context = "colgroup,table,kbd,p,caption,col,q,tr,button,dir,tfoot,th,small,ins,code,td,fieldset,object,a,option,optgroup,u,abbr,noframes,hr,h4,menu,body,pre,var,b,em,select,legend,strong,big,dt,map,del,thead,input,h5,form,sub,address,h6,blockquote,h2,i,div,ul,img,tt,center,s,tbody,textarea,dd,sup,h1,link,noscript,cite,dl,label,dfn,strike,li,samp,h3,area,ol,span,acronym"	deprecated = "false"	description = "a pointer was moved onto"/>
+	<node key = "onmouseup"	context = "colgroup,table,kbd,p,caption,col,q,tr,button,dir,tfoot,th,small,ins,code,td,fieldset,object,a,option,optgroup,u,abbr,noframes,hr,h4,menu,body,pre,var,b,em,select,legend,strong,big,dt,map,del,thead,input,h5,form,sub,address,h6,blockquote,h2,i,div,ul,img,tt,center,s,tbody,textarea,dd,sup,h1,link,noscript,cite,dl,label,dfn,strike,li,samp,h3,area,ol,span,acronym"	deprecated = "false"	description = "a pointer button was released"/>
+	<node key = "onreset"	context = "form"	deprecated = "false"	description = "the form was reset"/>
+	<node key = "onselect"	context = "input,textarea"	deprecated = "false"	description = "some text was selected"/>
+	<node key = "onsubmit"	context = "form"	deprecated = "false"	description = "the form was submitted"/>
+	<node key = "onunload"	context = "frameset"	deprecated = "false"	description = "all the frames have been removed"/>
+	<node key = "onunload"	context = "body"	deprecated = "false"	description = "the document has been removed"/>
+	<node key = "profile"	context = "head"	deprecated = "false"	description = "named dictionary of meta info"/>
+	<node key = "prompt"	context = "isindex"	deprecated = "true"	description = "prompt message"/>
+	<node key = "readonly"	context = "textarea"	deprecated = "false"	description = ""/>
+	<node key = "readonly"	context = "input"	deprecated = "false"	description = "for text and passwd"/>
+	<node key = "rel"	context = "a,link"	deprecated = "false"	description = "forward link types"/>
+	<node key = "rev"	context = "a,link"	deprecated = "false"	description = "reverse link types"/>
+	<node key = "rows"	context = "frameset"	deprecated = "false"	description = "list of lengths, default: 100% (1 row)"/>
+	<node key = "rows"	context = "textarea"	deprecated = "false"	description = ""/>
+	<node key = "rowspan"	context = "td,th"	deprecated = "false"	description = "number of rows spanned by cell"/>
+	<node key = "rules"	context = "table"	deprecated = "false"	description = "rulings between rows and cols"/>
+	<node key = "scheme"	context = "meta"	deprecated = "false"	description = "select form of content"/>
+	<node key = "scope"	context = "td,th"	deprecated = "false"	description = "scope covered by header cells"/>
+	<node key = "scrolling"	context = "frame,iframe"	deprecated = "false"	description = "scrollbar or none"/>
+	<node key = "selected"	context = "option"	deprecated = "false"	description = ""/>
+	<node key = "shape"	context = "area"	deprecated = "false"	description = "controls interpretation of coords"/>
+	<node key = "shape"	context = "a"	deprecated = "false"	description = "for use with client-side image maps"/>
+	<node key = "size"	context = "hr"	deprecated = "true"	description = ""/>
+	<node key = "size"	context = "font"	deprecated = "true"	description = "[+|-]nn e.g. size=+1, size=4"/>
+	<node key = "size"	context = "input"	deprecated = "false"	description = "specific to each type of field"/>
+	<node key = "size"	context = "basefont"	deprecated = "true"	description = "base font size for FONT elements"/>
+	<node key = "size"	context = "select"	deprecated = "false"	description = "rows visible"/>
+	<node key = "span"	context = "col"	deprecated = "false"	description = "COL attributes affect N columns"/>
+	<node key = "span"	context = "colgroup"	deprecated = "false"	description = "default number of columns in group"/>
+	<node key = "src"	context = "script"	deprecated = "false"	description = "URI for an external script"/>
+	<node key = "src"	context = "input"	deprecated = "false"	description = "for fields with images"/>
+	<node key = "src"	context = "frame,iframe"	deprecated = "false"	description = "source of frame content"/>
+	<node key = "src"	context = "img"	deprecated = "false"	description = "URI of image to embed"/>
+	<node key = "standby"	context = "object"	deprecated = "false"	description = "message to show while loading"/>
+	<node key = "start"	context = "ol"	deprecated = "true"	description = "starting sequence number"/>
+	<node key = "style"	context = "colgroup,table,frameset,kbd,p,isindex,caption,col,q,tr,button,dir,tfoot,th,font,small,ins,code,td,fieldset,object,a,option,optgroup,u,abbr,noframes,hr,h4,menu,body,pre,var,iframe,b,em,select,legend,strong,big,applet,dt,map,del,thead,input,h5,form,sub,address,h6,blockquote,h2,i,div,ul,img,tt,center,s,tbody,textarea,dd,sup,h1,link,noscript,cite,dl,frame,label,dfn,strike,br,li,samp,h3,area,ol,span,bdo,acronym"	deprecated = "false"	description = "associated style info"/>
+	<node key = "summary"	context = "table"	deprecated = "false"	description = "purpose/structure for speech output"/>
+	<node key = "tabindex"	context = "a,area,button,input,object,select,textarea"	deprecated = "false"	description = "position in tabbing order"/>
+	<node key = "target"	context = "a,area,base,form,link"	deprecated = "false"	description = "render in this frame"/>
+	<node key = "text"	context = "body"	deprecated = "true"	description = "document text color"/>
+	<node key = "title"	context = "colgroup,table,frameset,kbd,p,isindex,caption,col,q,tr,button,dir,tfoot,th,font,small,ins,code,td,fieldset,object,a,option,optgroup,u,abbr,style,noframes,hr,h4,menu,body,pre,var,iframe,b,em,select,legend,strong,big,applet,dt,map,del,thead,input,h5,form,sub,address,h6,blockquote,h2,i,div,ul,img,tt,center,s,tbody,textarea,dd,sup,h1,link,noscript,cite,dl,frame,label,dfn,strike,br,li,samp,h3,area,ol,span,bdo,acronym"	deprecated = "false"	description = "advisory title"/>
+	<node key = "type"	context = "a,link"	deprecated = "false"	description = "advisory content type"/>
+	<node key = "type"	context = "object"	deprecated = "false"	description = "content type for data"/>
+	<node key = "type"	context = "param"	deprecated = "false"	description = "content type for value when
+valuetype=ref"/>
+	<node key = "type"	context = "script"	deprecated = "false"	description = "content type of script language"/>
+	<node key = "type"	context = "style"	deprecated = "false"	description = "content type of style language"/>
+	<node key = "type"	context = "input"	deprecated = "false"	description = "what kind of widget is needed"/>
+	<node key = "type"	context = "li"	deprecated = "true"	description = "list item style"/>
+	<node key = "type"	context = "ol"	deprecated = "true"	description = "numbering style"/>
+	<node key = "type"	context = "ul"	deprecated = "true"	description = "bullet style"/>
+	<node key = "type"	context = "button"	deprecated = "false"	description = "for use as form button"/>
+	<node key = "usemap"	context = "img,input,object"	deprecated = "false"	description = "use client-side image map"/>
+	<node key = "valign"	context = "col,colgroup,tbody,td,tfoot,th,thead,tr"	deprecated = "false"	description = "vertical alignment in cells"/>
+	<node key = "value"	context = "option"	deprecated = "false"	description = "defaults to element content"/>
+	<node key = "value"	context = "param"	deprecated = "false"	description = "property value"/>
+	<node key = "value"	context = "input"	deprecated = "false"	description = "required for radio and checkboxes"/>
+	<node key = "value"	context = "button"	deprecated = "false"	description = "sent to server when submitted"/>
+	<node key = "value"	context = "li"	deprecated = "true"	description = "reset sequence number"/>
+	<node key = "valuetype"	context = "param"	deprecated = "false"	description = "How to interpret value"/>
+	<node key = "version"	context = "html"	deprecated = "true"	description = "Constant"/>
+	<node key = "vlink"	context = "body"	deprecated = "true"	description = "color of visited links"/>
+	<node key = "vspace"	context = "applet,img,object"	deprecated = "true"	description = "vertical gutter"/>
+	<node key = "width"	context = "hr"	deprecated = "true"	description = ""/>
+	<node key = "width"	context = "iframe"	deprecated = "false"	description = "frame width"/>
+	<node key = "width"	context = "img,object"	deprecated = "false"	description = "override width"/>
+	<node key = "width"	context = "table"	deprecated = "false"	description = "table width"/>
+	<node key = "width"	context = "applet"	deprecated = "true"	description = "initial width"/>
+	<node key = "width"	context = "col"	deprecated = "false"	description = "column width specification"/>
+	<node key = "width"	context = "colgroup"	deprecated = "false"	description = "default width for enclosed COLs"/>
+	<node key = "width"	context = "td,th"	deprecated = "true"	description = "width for cell"/>
+	<node key = "width"	context = "pre"	deprecated = "true"	description = ""/>
+</documentation>

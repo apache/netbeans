@@ -1,0 +1,13 @@
+package org.netbeans.test.codegen;
+
+import static java.lang.Math.max;
+
+public abstract class ImportsTest5 {
+    
+    
+    public ImportsTest5() {
+        max(Math.PI, 2);
+        Math.min(Math.PI, 2);
+    }
+    
+}

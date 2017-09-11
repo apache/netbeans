@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <data xmlns="urn:test:private">
+        <private-stuff/>
+    </data>
+    <data xmlns="urn:test:private-aux">
+        <aux-private-stuff/>
+    </data>
+</project-private>

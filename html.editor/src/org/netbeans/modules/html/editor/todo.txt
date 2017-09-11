@@ -1,0 +1,5 @@
+HTML EDITOR
+============
+
+P3 - add custom filter to the html CSL navigator - at least add "show attributes", possibly show text nodes, entity references
+

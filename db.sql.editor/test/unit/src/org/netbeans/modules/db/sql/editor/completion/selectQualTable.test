@@ -1,0 +1,17 @@
+select customers.|
+
+--
+<unknown>
+  customers*
+    customer
+      customer_id
+    asummary[view]
+      asummary_id
+  accounting
+    invoice
+      invoice_id
+      customer_id
+    customer
+      customer_id
+    bsummary[view]
+      bsummary_id

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root name="a" xml:space="preserve">
+Keep
+this
+as
+is<nest xml:space="default"><child>Do format</child><child>And format this</child></nest>,
+and this
+too
+</root>

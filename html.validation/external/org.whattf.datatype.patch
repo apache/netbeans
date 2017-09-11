@@ -1,0 +1,497 @@
+diff -r a8c706c41383 relaxng/datatype/java/src/org/whattf/datatype/FunctionBody.java
+--- a/relaxng/datatype/java/src/org/whattf/datatype/FunctionBody.java	Mon May 27 13:11:20 2013 +0300
++++ b/relaxng/datatype/java/src/org/whattf/datatype/FunctionBody.java	Thu May 30 16:42:24 2013 +0200
+@@ -27,9 +27,9 @@
+ import java.io.Reader;
+ import java.io.StringReader;
+ 
+-import org.mozilla.javascript.Context;
+-import org.mozilla.javascript.ContextFactory;
+-import org.mozilla.javascript.RhinoException;
++//import org.mozilla.javascript.Context;
++//import org.mozilla.javascript.ContextFactory;
++//import org.mozilla.javascript.RhinoException;
+ import org.relaxng.datatype.DatatypeException;
+ 
+ public class FunctionBody extends AbstractDatatype {
+@@ -44,25 +44,25 @@
+     }
+ 
+     public void checkValid(CharSequence literal) throws DatatypeException {
+-        try {
+-            Reader reader = new BufferedReader((new StringReader(
+-                    "function(event){" + literal.toString() + "}")));
+-            reader.mark(1);
+-            try {
+-                Context context = ContextFactory.getGlobal().enterContext();
+-                context.setOptimizationLevel(0);
+-                context.setLanguageVersion(Context.VERSION_1_6);
+-                // -1 for lineno arg prevents Rhino from appending
+-                // "(unnamed script#1)" to all error messages
+-                context.compileReader(reader, null, -1, null);
+-            } finally {
+-                Context.exit();
+-            }
+-        } catch (IOException e) {
+-            throw newDatatypeException(e.getMessage());
+-        } catch (RhinoException e) {
+-            throw newDatatypeException(e.getMessage());
+-        }
++//        try {
++//            Reader reader = new BufferedReader((new StringReader(
++//                    "function(event){" + literal.toString() + "}")));
++//            reader.mark(1);
++//            try {
++//                Context context = ContextFactory.getGlobal().enterContext();
++//                context.setOptimizationLevel(0);
++//                context.setLanguageVersion(Context.VERSION_1_6);
++//                // -1 for lineno arg prevents Rhino from appending
++//                // "(unnamed script#1)" to all error messages
++//                context.compileReader(reader, null, -1, null);
++//            } finally {
++//                Context.exit();
++//            }
++//        } catch (IOException e) {
++//            throw newDatatypeException(e.getMessage());
++//        } catch (RhinoException e) {
++//            throw newDatatypeException(e.getMessage());
++//        }
+     }
+ 
+     @Override public String getName() {
+diff -r a8c706c41383 relaxng/datatype/java/src/org/whattf/datatype/IriRef.java
+--- a/relaxng/datatype/java/src/org/whattf/datatype/IriRef.java	Mon May 27 13:11:20 2013 +0300
++++ b/relaxng/datatype/java/src/org/whattf/datatype/IriRef.java	Thu May 30 16:42:24 2013 +0200
+@@ -29,9 +29,9 @@
+ import java.io.Reader;
+ import java.io.StringReader;
+ 
+-import org.mozilla.javascript.Context;
+-import org.mozilla.javascript.ContextFactory;
+-import org.mozilla.javascript.RhinoException;
++//import org.mozilla.javascript.Context;
++//import org.mozilla.javascript.ContextFactory;
++//import org.mozilla.javascript.RhinoException;
+ import org.relaxng.datatype.DatatypeException;
+ import org.whattf.io.DataUri;
+ import org.whattf.io.DataUriException;
+@@ -101,188 +101,188 @@
+     }
+ 
+     public void checkValid(CharSequence literal) throws DatatypeException {
+-        // TODO Find out if it is safe to put this in a field
+-        IRIFactory fac = new IRIFactory();
+-        fac.shouldViolation(true, false);
+-        fac.securityViolation(true, false);
+-        fac.dnsViolation(true, false);
+-        fac.mintingViolation(false, false);
+-        fac.useSpecificationIRI(true);
+-        fac.useSchemeSpecificRules("http", true);
+-        fac.useSchemeSpecificRules("https", true);
+-        fac.useSchemeSpecificRules("ftp", true);
+-        fac.useSchemeSpecificRules("mailto", true); // XXX broken
+-        fac.useSchemeSpecificRules("file", true);
+-        fac.useSchemeSpecificRules("data", true); // XXX broken
+-        // XXX javascript?
+-        // fac.setQueryCharacterRestrictions(false);
+-        IRI iri;
+-        boolean data = false;
+-        try {
+-            CharSequencePair pair = splitScheme(literal);
+-            if (pair == null) {
+-                // no scheme or scheme is private
+-                iri = fac.construct(trimHtmlSpaces(literal.toString()));
+-            } else {
+-                CharSequence scheme = pair.getHead();
+-                CharSequence tail = pair.getTail();
+-                if (isWellKnown(scheme)) {
+-                    iri = fac.construct(trimHtmlSpaces(literal.toString()));
+-                } else if ("javascript".contentEquals(scheme)) {
+-                    // StringBuilder sb = new StringBuilder(2 +
+-                    // literal.length());
+-                    // sb.append("x-").append(literal);
+-                    // iri = fac.construct(sb.toString());
+-                    iri = null; // Don't bother user with generic IRI syntax
+-                    Reader reader = new BufferedReader(
+-                            new Utf8PercentDecodingReader(new StringReader(
+-                                    "function(event){" + tail.toString() + "}")));
+-                    // XXX CharSequenceReader
+-                    reader.mark(1);
+-                    int c = reader.read();
+-                    if (c != 0xFEFF) {
+-                        reader.reset();
+-                    }
+-                    try {
+-                        Context context = ContextFactory.getGlobal().enterContext();
+-                        context.setOptimizationLevel(0);
+-                        context.setLanguageVersion(Context.VERSION_1_6);
+-                        // -1 for lineno arg prevents Rhino from appending
+-                        // "(unnamed script#1)" to all error messages
+-                        context.compileReader(reader, null, -1, null);
+-                    } finally {
+-                        Context.exit();
+-                    }
+-                } else if ("data".contentEquals(scheme)) {
+-                    data = true;
+-                    iri = fac.construct(trimHtmlSpaces(literal.toString()));
+-                } else if (isHttpAlias(scheme)) {
+-                    StringBuilder sb = new StringBuilder(5 + tail.length());
+-                    sb.append("http:").append(tail);
+-                    iri = fac.construct(trimHtmlTrailingSpaces(sb.toString()));
+-                } else {
+-                    StringBuilder sb = new StringBuilder(2 + literal.length());
+-                    sb.append("x-").append(literal);
+-                    iri = fac.construct(trimHtmlTrailingSpaces(sb.toString()));
+-                }
+-            }
+-        } catch (IRIException e) {
+-            Violation v = e.getViolation();
+-            /*
+-             * Violation codes that are not "known" codes get assigned the
+-             * dummy value so that handling of them will fall through to
+-             * the default case.
+-             */
+-            KnownViolationCode vc = KnownViolationCode.valueOf("ZZZ_DUMMY_DEFAULT");
+-            try {
+-                /*
+-                 * If this violation code is one of the "known" Jena IRI
+-                 * violation codes we want to handle specifically, then use it
+-                 * as-is.
+-                 */
+-                vc = KnownViolationCode.valueOf(v.codeName());
+-            } catch (Exception ex) { }
+-            switch (vc) {
+-                case HAS_PASSWORD:
+-                    if (WARN) {
+-                        throw newDatatypeException(
+-                                underbarStringToSentence(v.component())
+-                                        + " component contains a password.",
+-                                WARN);
+-                    } else {
+-                        return;
+-                    }
+-                case NON_INITIAL_DOT_SEGMENT:
+-                    if (WARN) {
+-                        throw newDatatypeException(
+-                                "Path component contains a segment \u201C/../\u201D not at the beginning of a relative reference, or it contains a \u201C/./\u201D. These should be removed.",
+-                                WARN);
+-                    } else {
+-                        return;
+-                    }
+-                case PORT_SHOULD_NOT_BE_WELL_KNOWN:
+-                    if (WARN) {
+-                        throw newDatatypeException(
+-                                "Ports under 1024 should be accessed using the appropriate scheme name.",
+-                                WARN);
+-                    } else {
+-                        return;
+-                    }
+-                case COMPATIBILITY_CHARACTER:
+-                    if (WARN) {
+-                        throw newDatatypeException(
+-                                underbarStringToSentence(v.codeName()) + " in "
+-                                        + toAsciiLowerCase(v.component())
+-                                        + " component.", WARN);
+-                    } else {
+-                        return;
+-                    }
+-                case DNS_LABEL_DASH_START_OR_END:
+-                    throw newDatatypeException("Host component contains a DNS name with a \u201C-\u201D (dash) character at the beginning or end.");
+-                case DOUBLE_WHITESPACE:
+-                case WHITESPACE:
+-                    throw newDatatypeException("Whitespace in "
+-                            + toAsciiLowerCase(v.component()) + " component. "
+-                            + "Use \u201C%20\u201D in place of spaces.");
+-                case EMPTY_SCHEME:
+-                    throw newDatatypeException("Scheme component is empty.");
+-                case ILLEGAL_PERCENT_ENCODING:
+-                    throw newDatatypeException(underbarStringToSentence(v.component())
+-                            + " component contains a percent sign that is not followed by two hexadecimal digits.");
+-                case IP_V4_HAS_FOUR_COMPONENTS:
+-                    throw newDatatypeException("Host component is entirely numeric but does not have four components like an IPv4 address.");
+-                case IP_V4_OCTET_RANGE:
+-                    throw newDatatypeException("Host component contains a number not in the range 0-255, or a number with a leading zero.");
+-                case IP_V6_OR_FUTURE_ADDRESS_SYNTAX:
+-                    throw newDatatypeException("Host component contains an IPv6 (or IPvFuture) syntax violation.");
+-                case NOT_DNS_NAME:
+-                    throw newDatatypeException("Host component did not meet the restrictions on DNS names.");
+-                case REQUIRED_COMPONENT_MISSING:
+-                    throw newDatatypeException("A component that is required by the scheme is missing.");
+-                case SCHEME_MUST_START_WITH_LETTER:
+-                    throw newDatatypeException("Scheme component must start with a letter.");
+-                case UNREGISTERED_NONIETF_SCHEME_TREE:
+-                    throw newDatatypeException("Scheme component has a \u201C-\u201D (dash) character, but does not start with \u201Cx-\u201D, and the prefix is not known as the prefix of an alternative tree for URI schemes.");
+-                case CONTROL_CHARACTER:
+-                case ILLEGAL_CHARACTER:
+-                case UNDEFINED_UNICODE_CHARACTER:
+-                case UNICODE_WHITESPACE:
+-                    throw newDatatypeException(underbarStringToSentence(v.codeName())
+-                            + " in "
+-                            + toAsciiLowerCase(v.component())
+-                            + " component.");
+-                default:
+-                    throw newDatatypeException(v.codeName() + " in "
+-                            + toAsciiLowerCase(v.component()) + " component.");
+-            }
+-        } catch (IOException e) {
+-            throw newDatatypeException(e.getMessage());
+-        } catch (RhinoException e) {
+-            throw newDatatypeException(e.getMessage());
+-        }
+-        if (isAbsolute()) {
+-            if (iri != null && !iri.isAbsolute()) {
+-                throw newDatatypeException("Not an absolute IRI.");
+-            }
+-        }
+-        if (iri != null) {
+-            if ("".equals(iri.toString())) {
+-                    throw newDatatypeException("Must be non-empty.");
+-            }
+-            if (data) {
+-                try {
+-                    DataUri dataUri = new DataUri(iri);
+-                    InputStream is = dataUri.getInputStream();
+-                    while (is.read() >= 0) {
+-                        // spin
+-                    }
+-                } catch (DataUriException e) {
+-                    throw newDatatypeException(e.getIndex(), e.getHead(), e.getLiteral(), e.getTail());
+-                } catch (IOException e) {
+-                    throw newDatatypeException(e.getMessage());
+-                }                    
+-            }
+-        }
++//        // TODO Find out if it is safe to put this in a field
++//        IRIFactory fac = new IRIFactory();
++//        fac.shouldViolation(true, false);
++//        fac.securityViolation(true, false);
++//        fac.dnsViolation(true, false);
++//        fac.mintingViolation(false, false);
++//        fac.useSpecificationIRI(true);
++//        fac.useSchemeSpecificRules("http", true);
++//        fac.useSchemeSpecificRules("https", true);
++//        fac.useSchemeSpecificRules("ftp", true);
++//        fac.useSchemeSpecificRules("mailto", true); // XXX broken
++//        fac.useSchemeSpecificRules("file", true);
++//        fac.useSchemeSpecificRules("data", true); // XXX broken
++//        // XXX javascript?
++//        // fac.setQueryCharacterRestrictions(false);
++//        IRI iri;
++//        boolean data = false;
++//        try {
++//            CharSequencePair pair = splitScheme(literal);
++//            if (pair == null) {
++//                // no scheme or scheme is private
++//                iri = fac.construct(trimHtmlSpaces(literal.toString()));
++//            } else {
++//                CharSequence scheme = pair.getHead();
++//                CharSequence tail = pair.getTail();
++//                if (isWellKnown(scheme)) {
++//                    iri = fac.construct(trimHtmlSpaces(literal.toString()));
++//                } else if ("javascript".contentEquals(scheme)) {
++//                    // StringBuilder sb = new StringBuilder(2 +
++//                    // literal.length());
++//                    // sb.append("x-").append(literal);
++//                    // iri = fac.construct(sb.toString());
++//                    iri = null; // Don't bother user with generic IRI syntax
++//                    Reader reader = new BufferedReader(
++//                            new Utf8PercentDecodingReader(new StringReader(
++//                                    "function(event){" + tail.toString() + "}")));
++//                    // XXX CharSequenceReader
++//                    reader.mark(1);
++//                    int c = reader.read();
++//                    if (c != 0xFEFF) {
++//                        reader.reset();
++//                    }
++//                    try {
++//                        Context context = ContextFactory.getGlobal().enterContext();
++//                        context.setOptimizationLevel(0);
++//                        context.setLanguageVersion(Context.VERSION_1_6);
++//                        // -1 for lineno arg prevents Rhino from appending
++//                        // "(unnamed script#1)" to all error messages
++//                        context.compileReader(reader, null, -1, null);
++//                    } finally {
++//                        Context.exit();
++//                    }
++//                } else if ("data".contentEquals(scheme)) {
++//                    data = true;
++//                    iri = fac.construct(trimHtmlSpaces(literal.toString()));
++//                } else if (isHttpAlias(scheme)) {
++//                    StringBuilder sb = new StringBuilder(5 + tail.length());
++//                    sb.append("http:").append(tail);
++//                    iri = fac.construct(trimHtmlTrailingSpaces(sb.toString()));
++//                } else {
++//                    StringBuilder sb = new StringBuilder(2 + literal.length());
++//                    sb.append("x-").append(literal);
++//                    iri = fac.construct(trimHtmlTrailingSpaces(sb.toString()));
++//                }
++//            }
++//        } catch (IRIException e) {
++//            Violation v = e.getViolation();
++//            /*
++//             * Violation codes that are not "known" codes get assigned the
++//             * dummy value so that handling of them will fall through to
++//             * the default case.
++//             */
++//            KnownViolationCode vc = KnownViolationCode.valueOf("ZZZ_DUMMY_DEFAULT");
++//            try {
++//                /*
++//                 * If this violation code is one of the "known" Jena IRI
++//                 * violation codes we want to handle specifically, then use it
++//                 * as-is.
++//                 */
++//                vc = KnownViolationCode.valueOf(v.codeName());
++//            } catch (Exception ex) { }
++//            switch (vc) {
++//                case HAS_PASSWORD:
++//                    if (WARN) {
++//                        throw newDatatypeException(
++//                                underbarStringToSentence(v.component())
++//                                        + " component contains a password.",
++//                                WARN);
++//                    } else {
++//                        return;
++//                    }
++//                case NON_INITIAL_DOT_SEGMENT:
++//                    if (WARN) {
++//                        throw newDatatypeException(
++//                                "Path component contains a segment \u201C/../\u201D not at the beginning of a relative reference, or it contains a \u201C/./\u201D. These should be removed.",
++//                                WARN);
++//                    } else {
++//                        return;
++//                    }
++//                case PORT_SHOULD_NOT_BE_WELL_KNOWN:
++//                    if (WARN) {
++//                        throw newDatatypeException(
++//                                "Ports under 1024 should be accessed using the appropriate scheme name.",
++//                                WARN);
++//                    } else {
++//                        return;
++//                    }
++//                case COMPATIBILITY_CHARACTER:
++//                    if (WARN) {
++//                        throw newDatatypeException(
++//                                underbarStringToSentence(v.codeName()) + " in "
++//                                        + toAsciiLowerCase(v.component())
++//                                        + " component.", WARN);
++//                    } else {
++//                        return;
++//                    }
++//                case DNS_LABEL_DASH_START_OR_END:
++//                    throw newDatatypeException("Host component contains a DNS name with a \u201C-\u201D (dash) character at the beginning or end.");
++//                case DOUBLE_WHITESPACE:
++//                case WHITESPACE:
++//                    throw newDatatypeException("Whitespace in "
++//                            + toAsciiLowerCase(v.component()) + " component. "
++//                            + "Use \u201C%20\u201D in place of spaces.");
++//                case EMPTY_SCHEME:
++//                    throw newDatatypeException("Scheme component is empty.");
++//                case ILLEGAL_PERCENT_ENCODING:
++//                    throw newDatatypeException(underbarStringToSentence(v.component())
++//                            + " component contains a percent sign that is not followed by two hexadecimal digits.");
++//                case IP_V4_HAS_FOUR_COMPONENTS:
++//                    throw newDatatypeException("Host component is entirely numeric but does not have four components like an IPv4 address.");
++//                case IP_V4_OCTET_RANGE:
++//                    throw newDatatypeException("Host component contains a number not in the range 0-255, or a number with a leading zero.");
++//                case IP_V6_OR_FUTURE_ADDRESS_SYNTAX:
++//                    throw newDatatypeException("Host component contains an IPv6 (or IPvFuture) syntax violation.");
++//                case NOT_DNS_NAME:
++//                    throw newDatatypeException("Host component did not meet the restrictions on DNS names.");
++//                case REQUIRED_COMPONENT_MISSING:
++//                    throw newDatatypeException("A component that is required by the scheme is missing.");
++//                case SCHEME_MUST_START_WITH_LETTER:
++//                    throw newDatatypeException("Scheme component must start with a letter.");
++//                case UNREGISTERED_NONIETF_SCHEME_TREE:
++//                    throw newDatatypeException("Scheme component has a \u201C-\u201D (dash) character, but does not start with \u201Cx-\u201D, and the prefix is not known as the prefix of an alternative tree for URI schemes.");
++//                case CONTROL_CHARACTER:
++//                case ILLEGAL_CHARACTER:
++//                case UNDEFINED_UNICODE_CHARACTER:
++//                case UNICODE_WHITESPACE:
++//                    throw newDatatypeException(underbarStringToSentence(v.codeName())
++//                            + " in "
++//                            + toAsciiLowerCase(v.component())
++//                            + " component.");
++//                default:
++//                    throw newDatatypeException(v.codeName() + " in "
++//                            + toAsciiLowerCase(v.component()) + " component.");
++//            }
++//        } catch (IOException e) {
++//            throw newDatatypeException(e.getMessage());
++//        } catch (RhinoException e) {
++//            throw newDatatypeException(e.getMessage());
++//        }
++//        if (isAbsolute()) {
++//            if (iri != null && !iri.isAbsolute()) {
++//                throw newDatatypeException("Not an absolute IRI.");
++//            }
++//        }
++//        if (iri != null) {
++//            if ("".equals(iri.toString())) {
++//                    throw newDatatypeException("Must be non-empty.");
++//            }
++//            if (data) {
++//                try {
++//                    DataUri dataUri = new DataUri(iri);
++//                    InputStream is = dataUri.getInputStream();
++//                    while (is.read() >= 0) {
++//                        // spin
++//                    }
++//                } catch (DataUriException e) {
++//                    throw newDatatypeException(e.getIndex(), e.getHead(), e.getLiteral(), e.getTail());
++//                } catch (IOException e) {
++//                    throw newDatatypeException(e.getMessage());
++//                }                    
++//            }
++//        }
+     }
+ 
+     private final boolean isHttpAlias(CharSequence scheme) {
+diff -r a8c706c41383 relaxng/datatype/java/src/org/whattf/datatype/Pattern.java
+--- a/relaxng/datatype/java/src/org/whattf/datatype/Pattern.java	Mon May 27 13:11:20 2013 +0300
++++ b/relaxng/datatype/java/src/org/whattf/datatype/Pattern.java	Thu May 30 16:42:24 2013 +0200
+@@ -22,10 +22,10 @@
+ 
+ package org.whattf.datatype;
+ 
+-import org.mozilla.javascript.Context;
+-import org.mozilla.javascript.ContextFactory;
+-import org.mozilla.javascript.EcmaError;
+-import org.mozilla.javascript.regexp.RegExpImpl;
++//import org.mozilla.javascript.Context;
++//import org.mozilla.javascript.ContextFactory;
++//import org.mozilla.javascript.EcmaError;
++//import org.mozilla.javascript.regexp.RegExpImpl;
+ import org.relaxng.datatype.DatatypeException;
+ 
+ /**
+@@ -58,18 +58,18 @@
+      */
+     public void checkValid(CharSequence literal)
+             throws DatatypeException {
+-        // TODO find out what kind of thread concurrency guarantees are made
+-        ContextFactory cf = new ContextFactory();
+-        Context cx = cf.enterContext();
+-        RegExpImpl rei = new RegExpImpl();
+-        String anchoredRegex = "^(?:" + literal + ")$";
+-        try {
+-            rei.compileRegExp(cx, anchoredRegex, "");
+-        } catch (EcmaError ee) {
+-            throw newDatatypeException(ee.getErrorMessage());
+-        } finally {
+-            Context.exit();
+-        }
++//        // TODO find out what kind of thread concurrency guarantees are made
++//        ContextFactory cf = new ContextFactory();
++//        Context cx = cf.enterContext();
++//        RegExpImpl rei = new RegExpImpl();
++//        String anchoredRegex = "^(?:" + literal + ")$";
++//        try {
++//            rei.compileRegExp(cx, anchoredRegex, "");
++//        } catch (EcmaError ee) {
++//            throw newDatatypeException(ee.getErrorMessage());
++//        } finally {
++//            Context.exit();
++//        }
+     }
+ 
+     @Override

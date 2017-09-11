@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions 
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="echo" 
+    targetNamespace="http://localhost/echo/echo" 
+    xmlns:tns="http://localhost/echo/echo" 
+    xmlns:plink="http://schemas.xmlsoap.org/ws/2004/03/partner-link/"
+    xmlns:foo="someNS" >
+    
+    <message name="message_0">
+        <part name="part_0" type="xsd:string"/>
+    </message>
+    <portType name="portType_0">
+        <operation name="operation_0">
+            <input name="input" message="tns:message_0"/>
+            <output name="output" message="tns:message_0"/>
+        </operation>
+    </portType>
+    <binding name="binding_0" type="tns:portType_0">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="operation_0">
+            <soap:operation style="document"/>
+            <input name="input">
+                <soap:body/>
+            </input>
+            <output name="output">
+                <soap:body>
+                    <foo:bar/>
+                </soap:body>
+            </output>
+        </operation>
+    </binding>
+    <service name="service_0">
+        <port name="port_0" binding="tns:binding_0">
+            <soap:address location="http://localhost:12010/echo"/>
+        </port>
+    </service>
+    <plink:partnerLinkType name="SLT">
+        <plink:role name="server" portType="tns:portType_0"/>
+    </plink:partnerLinkType>
+</definitions>

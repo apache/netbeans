@@ -1,0 +1,34 @@
+CSS RULE EDITOR (css.visual)
+============================
+
+P1 - implement the inlined editors for known property types - color, length, fixed sets of values etc.
+
+P2 - implement the 'asterix editors' for semantic content (box model, background ... editors) as separate panels available from the the rule editor property sheet
+   ! depends on the semantic models from css.model module
+
+P2 - implement "add new css rule" support
+
+P3 - the add property dialog should allow to edit the added properties and visual distinguish them from those coming from the source.
+
+P3 - Rule editor to follow navigator selection
+
+P4 - add own popup menu to the rule editor
+
+P4 - in the all properties + categorized view collapse all the categories containing no existing properties items and render the other categories names in bold font
+
+P3 - show documentation when hovering the properties in the property sheet
+
+P4 - tooltip on property categories could show the semantic representation of the content in some form?!
+
+CSS EDITOR (css.editor)
+=======================
+
+P2 - css.editor.module.spi & related classes (css.editor, css.lib) modifications so the properties provided to the global registry are contextual (issues with javafx stuff injected to the common editor)
+
+P3 - reasonable icons for the navigator categories and items
+
+CSS MODEL (css.model)
+=====================
+
+P2 - implement the semantic models for most of the css modules. Now there are just two: box model (r/w) and background (r/o)
+

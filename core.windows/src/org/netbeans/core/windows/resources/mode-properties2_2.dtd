@@ -1,0 +1,210 @@
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!--
+-//NetBeans//DTD Mode Properties 2.2//EN
+-->
+
+<!-- The root element for mode properties. Consists of name, optional
+     module information and several property sets for various types of
+     user interface.
+     Attribute "version" is versioning attribute which in fact specifies
+     version of this DTD. Attribute is used to perform simple versioning
+     without the need to use time-consuming xml validation using this DTD.
+-->
+<!ELEMENT mode (module?, name, kind, state, constraints?, (bounds | relative-bounds)?, frame?, active-tc?, empty-behavior?, slidingSide?, slideInSize*) >
+<!ATTLIST mode
+    version CDATA #REQUIRED
+>
+
+<!-- Optional element for module information. Attribute name specifies name of
+    module which defines this xml description. Module information is used for
+    automatic removal of mode defined by module if module is disabled.
+    If you want your module's mode to be removed automatically when
+    your module is disabled, fill this element. When this element is missing,
+    no automatic removal will be done.
+ 1) "name" code name of the module, can be either base code name or full code
+    name with slash and release number. Examples for core module are: 
+    "org.netbeans.core" or "org.netbeans.core/1"
+ 2) "spec" is specification version of the module which defines this xml description.
+-->
+<!ELEMENT module EMPTY >
+<!ATTLIST module
+    name CDATA #REQUIRED
+    spec CDATA #IMPLIED
+>
+
+<!-- Element name
+    "unique" represents unique ID of mode
+-->
+<!ELEMENT name      EMPTY >
+<!ATTLIST name
+    unique CDATA #REQUIRED
+>
+
+<!-- Element kind
+    "type" kind of mode "editor" or "view" or "sliding".
+-->
+<!ELEMENT kind      EMPTY >
+<!ATTLIST kind
+    type (editor | view | sliding) #REQUIRED
+>
+
+<!-- Element sliding side
+    "side" direction of slide
+-->
+<!ELEMENT slidingSide      EMPTY >
+<!ATTLIST slidingSide
+    side (left | right | bottom) #REQUIRED
+>
+
+
+<!-- Element slide-in size
+    "tc-id" TopComponent's ID
+    "size" the size of the TopComponent (width or height) when it is slided-in
+-->
+<!ELEMENT slideInSize      EMPTY >
+<!ATTLIST slideInSize
+    tc-id CDATA #REQUIRED
+    size CDATA #REQUIRED
+>
+
+<!-- Element state
+    "type" state of mode "joined" (is inside of main window) or "separated" 
+    (is in its own native window separated from main window).
+-->
+<!ELEMENT state      EMPTY >
+<!ATTLIST state
+    type (joined | separated) #REQUIRED
+>
+
+<!-- Absolute bounds rectangle of the mode, stored in attributes
+     x, y, width, height, where x, y is location of left top point of bounds 
+     rectangle.
+     Relevant only for separate mode (window).
+-->
+<!ELEMENT bounds    EMPTY >
+<!ATTLIST bounds
+    x CDATA #REQUIRED
+    y CDATA #REQUIRED
+    width CDATA #REQUIRED
+    height CDATA #REQUIRED
+>
+
+<!-- Relative (percentage) bounds rectangle of the mode, stored in attributes
+     x, y, width, height, where x, y is location of left top point of bounds
+     rectangle, it is relative to width of main window and height of area below
+     main window.
+     Relevant only for separate mode (window).
+-->
+<!ELEMENT relative-bounds    EMPTY >
+<!ATTLIST relative-bounds
+    x CDATA #REQUIRED
+    y CDATA #REQUIRED
+    width CDATA #REQUIRED
+    height CDATA #REQUIRED
+>
+
+<!-- Frame properties.
+    Relevant only for separate mode (window).
+    Attribute "state" represents current state of frame.
+    It is represented as bitwise mask - integer value.
+    See java.awt.Frame for possible values.
+    Default value is Frame.NORMAL (0).
+-->
+<!ELEMENT frame    EMPTY >
+<!ATTLIST frame
+    state CDATA #IMPLIED
+>
+
+<!-- Constraints describes path of mode in model tree.
+     Path consists of array of values to describe path eg. [H1;V2].
+     Relevant only for mode inside desktop
+-->
+<!ELEMENT constraints  (path*) >
+<!ATTLIST constraints
+>
+
+<!-- Path describe path to mode in model tree.
+     "orientation" sets orientation of splitter. "horizontal" means splitting
+     along x axis - components are from left to right. "vertical" means splitting
+     along y axis - components are from top to bottom.
+     "number" sets number of cell in given split cell. It is integer number. Number defines
+     position of given cell in array of cells. It is possible to define for example
+     20 for first cell and 40 for second cell. Later it is possible to insert third cell between
+     first and second by using 30 for third cell. It is usefull for platform to allow third party
+     modules to modify (insert) their own modes to existing layout.
+     Cells are counted from left to right in case of vertical split and
+     from top to bottom in case of horizontal split.
+     "weight" is double number from 0 to 1. It sets relative size of cell
+     in given splitter. Default value is 0.5.
+-->
+<!ELEMENT path   EMPTY >
+<!ATTLIST path
+    orientation (horizontal | vertical) #REQUIRED
+    number CDATA #REQUIRED
+    weight CDATA #IMPLIED
+>
+
+<!-- Active TopComponent.
+     "id" stores unique ID of active TopComponent
+-->
+<!ELEMENT active-tc  EMPTY >
+<!ATTLIST active-tc
+    id CDATA #IMPLIED
+>
+
+<!-- Element "empty-behavior" describes behavior of mode when it is empty ie. does not contain
+     any opened TopComponent.
+     Attribute "permanent" can be "true" of "false". "true" means that mode remains in window
+     system when it is empty ie. it does not contain any opened TopComponent. "false" means that
+     mode is completely destroyed when it is empty. 
+     Optional attribute, default value is "true".
+     When mode is defined in module layer it is usually permanent ie. "true" is used.
+-->
+<!ELEMENT empty-behavior   EMPTY >
+<!ATTLIST empty-behavior
+    permanent (true | false) #IMPLIED
+>

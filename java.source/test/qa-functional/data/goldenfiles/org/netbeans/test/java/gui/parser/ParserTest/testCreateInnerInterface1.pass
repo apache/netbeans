@@ -1,0 +1,24 @@
+Type Element: testCreateInnerInterface 2332 2561
+public class testCreateInnerInterface {
+    
+public interface Iface {
+        String method();
+ }
+    /** Creates a new instance of testCreateInnerInterface */
+    public testCreateInnerInterface() {
+    }
+ 
+    
+    
+    
+    
+}
+Type Element: Iface 2377 2429
+public interface Iface {
+        String method();
+ }
+Executable Element: method 2410 2426
+String method();
+Executable Element: <init> 2496 2537
+public testCreateInnerInterface() {
+    }

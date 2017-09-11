@@ -1,0 +1,14 @@
+net.java.html
+net.java.html.boot
+net.java.html.boot.fx
+net.java.html.boot.script
+net.java.html.geo
+net.java.html.js
+net.java.html.json
+net.java.html.sound
+org.netbeans.html.boot.spi
+org.netbeans.html.context.spi
+org.netbeans.html.geo.spi
+org.netbeans.html.json.spi
+org.netbeans.html.json.tck
+org.netbeans.html.sound.spi

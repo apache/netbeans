@@ -1,0 +1,12 @@
+select * from invoice inv inner join customer on inv.|
+
+--
+<unknown>
+  accounting*
+    invoice
+      invoice_id
+      customer_id
+    customer
+      customer_id
+    summary[view]
+      summary_id

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2009 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Templates">
+        <folder name="JFX">
+            <attr name="position" intvalue="0"/>
+            <file name="jfx-impl.xml" url="templates/jfx-impl.xml_">
+                <attr name="position" intvalue="25"/>
+            </file>
+            <file name="FXSwingTemplate.html" url="templates/FXSwingTemplate.html_">
+                <attr name="position" intvalue="35"/>
+            </file>
+            <file name="FXSwingTemplateApplet.jnlp" url="templates/FXSwingTemplateApplet.jnlp_">
+                <attr name="position" intvalue="45"/>
+            </file>
+            <file name="FXSwingTemplateApplication.jnlp" url="templates/FXSwingTemplateApplication.jnlp_">
+                <attr name="position" intvalue="55"/>
+            </file>
+        </folder>
+
+        <folder name="Project">
+            <folder name="JavaFX">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/Project/JavaFX"/>
+                <attr name="position" intvalue="195"/>
+
+                <file name="javafxApp.xml">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/Project/JavaFX/javafxApp.xml"/>
+                    <attr name="iconBase" stringvalue="org/netbeans/modules/javafx2/project/ui/resources/jfx_project.png"/>
+                    <attr name="position" intvalue="105"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/JavaFXApp.html"/>
+                    <attr name="instantiatingIterator" newvalue="org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator"/>
+                </file>
+
+                <file name="preloaderApp.xml">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/Project/JavaFX/preloaderApp.xml"/>
+                    <attr name="iconBase" stringvalue="org/netbeans/modules/javafx2/project/ui/resources/jfx_project.png"/>
+                    <attr name="position" intvalue="205"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/JavaFXPreloaderApp.html"/>
+                    <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator.preloader"/>
+                </file>
+
+                <file name="fxml.xml">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.fxml.Bundle#Templates/Project/JavaFX/fxml.xml"/>
+                    <attr name="iconBase" stringvalue="org/netbeans/modules/javafx2/project/ui/resources/jfx_project.png"/>
+                    <attr name="position" intvalue="305"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/JavaFXMLApp.html"/>
+                    <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator.fxml"/>
+                </file>
+
+                <file name="javafxSwingApp.xml">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/Project/JavaFX/javafxSwingApp.xml"/>
+                    <attr name="iconBase" stringvalue="org/netbeans/modules/javafx2/project/ui/resources/jfx_project.png"/>
+                    <attr name="position" intvalue="405"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/JavaFXSwingApp.html"/>
+                    <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator.swing"/>
+                </file>
+
+                <file name="javafxExisting.xml">
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/Project/JavaFX/javafxExisting.xml"/>
+                    <attr name="iconBase" stringvalue="org/netbeans/modules/javafx2/project/ui/resources/jfx_project.png"/>
+                    <attr name="position" intvalue="505"/>
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/JavaFXExistingSources.html"/>
+                    <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.javafx2.project.JavaFXProjectWizardIterator.existing"/>
+                </file>
+            </folder>
+        </folder>
+
+        <folder name="javafx">
+            <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/javafx"/>
+            <attr name="position" intvalue="909"/>
+
+            <file name="FXMain.java" url="templates/FXMain.template">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/javafx/FXMain.java"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.spi.java.project.support.ui.templates.JavaTemplates.createJavaTemplateIterator"/>
+                <attr name="position" intvalue="100"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/FXMain.html"/>
+                <attr name="templateCategory" stringvalue="javafx"/>
+            </file>
+
+            <file name="FXPreloader.java" url="templates/FXPreloader.template">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/javafx/FXPreloader.java"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.spi.java.project.support.ui.templates.JavaTemplates.createJavaTemplateIterator"/>
+                <attr name="position" intvalue="200"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/FXPreloader.html"/>
+                <attr name="templateCategory" stringvalue="javafx"/>
+            </file>
+
+            <file name="FXML.java" url="templates/FXML_java_1.template">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.fxml.Bundle#Templates/javafx/FXML.java"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="position" intvalue="300"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/FXML.html"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.modules.javafx2.project.fxml.FXMLTemplateWizardIterator.create"/>
+                <attr name="templateCategory" stringvalue="javafx"/>
+            </file>
+
+            <file name="FXML.fxml" url="templates/FXML_fxml.template">
+                <attr name="position" intvalue="400"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>
+
+            <file name="FXML2.java" url="templates/FXML_java_2.template">
+                <attr name="position" intvalue="500"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>
+
+            <file name="FXMLController.java" url="templates/FXML_controller.template">
+                <attr name="position" intvalue="600"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>
+
+            <file name="FXML.css" url="templates/CSS_empty.template">
+                <attr name="position" intvalue="700"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>
+
+            <file name="NewProjectFXML.fxml" url="templates/NewProjectFXML.template">
+                <attr name="position" intvalue="800"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+            </file>
+
+            <file name="FXSwingMain.java" url="templates/FXSwingMain.template">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.project.Bundle#Templates/javafx/FXSwingMain.java"/>
+                <attr name="iconBase" stringvalue="org/netbeans/modules/java/resources/class.gif"/>
+                <attr name="instantiatingIterator" methodvalue="org.netbeans.spi.java.project.support.ui.templates.JavaTemplates.createJavaTemplateIterator"/>
+                <attr name="position" intvalue="900"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/project/templates/FXSwingMain.html"/>
+                <attr name="templateCategory" stringvalue="javafx"/>
+            </file>
+
+        </folder>
+
+    </folder>
+</filesystem>

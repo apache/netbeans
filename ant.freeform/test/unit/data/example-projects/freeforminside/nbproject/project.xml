@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.ant.freeform</type>
+    <configuration>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
+            <name>Simple Freeform Project</name>
+            <properties>
+                <property name="build.properties">build.properties</property>
+                <property-file>${build.properties}</property-file>
+            </properties>
+            <folders>
+                <source-folder>
+                    <label>Main Sources</label>
+                    <type>java</type>
+                    <location>${src.dir}</location>
+                </source-folder>
+                <source-folder>
+                    <label>Ant Task Sources</label>
+                    <type>java</type>
+                    <location>${ant.src.dir}</location>
+                </source-folder>
+                <!--
+                <build-folder>
+                    <location>${build.dir}</location>
+                </build-folder>
+                <build-folder>
+                    <location>${dist.dir}</location>
+                </build-folder>
+                -->
+            </folders>
+            <ide-actions>
+                <action name="build">
+                    <target>jar</target>
+                </action>
+                <action name="clean">
+                    <target>clean</target>
+                </action>
+                <action name="rebuild">
+                    <target>clean</target>
+                    <target>jar</target>
+                </action>
+                <action name="run">
+                    <target>start</target>
+                </action>
+                <action name="javadoc">
+                    <target>build-javadoc</target>
+                    <property name="from-ide">true</property>
+                </action>
+                <action name="compile.single">
+                    <target>compile-some-files</target>
+                    <context>
+                        <property>files</property>
+                        <folder>${src.dir}</folder>
+                        <pattern>\.java$</pattern>
+                        <format>relative-path</format>
+                        <arity>
+                            <separated-files>,</separated-files>
+                        </arity>
+                    </context>
+                </action>
+                <action name="compile.single">
+                    <target>ant-compile-some-files</target>
+                    <context>
+                        <property>files</property>
+                        <folder>${ant.src.dir}</folder>
+                        <pattern>\.java$</pattern>
+                        <format>relative-path</format>
+                        <arity>
+                            <separated-files>,</separated-files>
+                        </arity>
+                    </context>
+                </action>
+                <action name="run.single">
+                    <target>start-with-specified-class</target>
+                    <context>
+                        <property>class</property>
+                        <folder>${src.dir}</folder>
+                        <pattern>\.java$</pattern>
+                        <format>java-name</format>
+                        <arity>
+                            <one-file-only/>
+                        </arity>
+                    </context>
+                </action>
+            </ide-actions>
+            <export>
+                <type>jar</type>
+                <location>${main.jar}</location>
+                <build-target>jar</build-target>
+            </export>
+            <view>
+                <items>
+                    <source-folder style="packages">
+                        <label>Main Sources</label>
+                        <location>${src.dir}</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>Ant Task Sources</label>
+                        <location>${ant.src.dir}</location>
+                    </source-folder>
+                    <source-folder style="tree">
+                        <label>XML Documents</label>
+                        <location>xdocs</location>
+                    </source-folder>
+                    <source-file>
+                        <location>build.xml</location>
+                    </source-file>
+                    <source-file>
+                        <location>build.properties</location>
+                    </source-file>
+                </items>
+                <context-menu>
+                    <ide-action name="build"/>
+                    <ide-action name="clean"/>
+                    <ide-action name="rebuild"/>
+                    <separator/>
+                    <ide-action name="run"/>
+                    <separator/>
+                    <ide-action name="javadoc"/>
+                    <action>
+                        <label>Generate XDocs</label>
+                        <target>generate-xdocs</target>
+                        <property name="from-ide">true</property>
+                    </action>
+                    <separator/>
+                    <action>
+                        <label>Create Distribution</label>
+                        <target>dist</target>
+                    </action>
+                </context-menu>
+            </view>
+        </general-data>
+        <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/1">
+            <compilation-unit>
+                <package-root>${src.dir}</package-root>
+                <classpath mode="compile">${src.cp}</classpath>
+                <built-to>${classes.dir}</built-to>
+                <built-to>${main.jar}</built-to>
+                <source-level>1.4</source-level>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>${ant.src.dir}</package-root>
+                <classpath mode="compile">${ant.src.cp}</classpath>
+                <built-to>${ant.classes.dir}</built-to>
+                <source-level>1.4</source-level>
+            </compilation-unit>
+        </java-data>
+    </configuration>
+</project>

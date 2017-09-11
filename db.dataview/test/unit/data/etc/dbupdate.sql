@@ -1,0 +1,1 @@
+update simpletable set tinyintc='-40' where tinyintc='-80';

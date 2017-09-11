@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+  Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+  Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+  Other names may be trademarks of their respective owners.
+
+  The contents of this file are subject to the terms of either the GNU General Public
+  License Version 2 only ("GPL") or the Common Development and Distribution
+  License("CDDL") (collectively, the "License"). You may not use this file except in
+  compliance with the License. You can obtain a copy of the License at
+  http://www.netbeans.org/cddl-gplv2.html or nbbuild/licenses/CDDL-GPL-2-CP. See the
+  License for the specific language governing permissions and limitations under the
+  License.  When distributing the software, include this License Header Notice in
+  each file and include the License file at nbbuild/licenses/CDDL-GPL-2-CP.  Oracle
+  designates this particular file as subject to the "Classpath" exception as provided
+  by Oracle in the GPL Version 2 section of the License file that accompanied this code.
+  If applicable, add the following below the License Header, with the fields enclosed
+  by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+  
+  Contributor(s):
+  
+  The Original Software is NetBeans. The Initial Developer of the Original Software
+  is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun Microsystems, Inc. All
+  Rights Reserved.
+  
+  If you wish your version of this file to be governed by only the CDDL or only the
+  GPL Version 2, indicate your decision by adding "[Contributor] elects to include
+  this software in this distribution under the [CDDL or GPL Version 2] license." If
+  you do not indicate a single choice of license, a recipient has the option to
+  distribute your version of this file under either the CDDL, the GPL Version 2 or
+  to extend the choice of license to its licensees as provided above. However, if you
+  add GPL Version 2 code and therefore, elected the GPL Version 2 license, then the
+  option applies only if the new code is made subject to such option by the copyright
+  holder.
+-->
+
+<project name="NBI_Engine" default="default" basedir=".">
+    <property file="build.properties"/>
+    <property file="${native.dirname}/build.properties"/>
+
+    <import file="nbproject/build-impl.xml"/>
+    <import file="${native.dirname}/build.xml"/>
+    
+    <!-- =======================================================================
+        Target overrides
+    ======================================================================== -->
+    <target name="-post-clean" depends="native-clean"/>
+    <target name="-post-compile" depends="native-build,copy-native,create-jar-contents-list"/>
+    
+    <!-- =======================================================================
+        NetBeans Installer engine specific targets
+    ======================================================================== -->
+    
+    <target name="create-jar-contents-list">
+        <pathconvert property="build.classes.dir.normalized" dirsep="/">
+           <path location="${build.classes.dir}"/>
+        </pathconvert>
+        <pathconvert pathsep="${line.separator}" property="engine.files" dirsep="/">
+        <fileset dir="${build.classes.dir}" includes="${jar.contents.includes}"/>
+        <mapper>
+          <chainedmapper>
+            <globmapper handledirsep="true" from="${build.classes.dir.normalized}/*" to="*"/>
+          </chainedmapper>
+        </mapper>
+        </pathconvert>
+        <echo file="${build.classes.dir}/${jar.contents.list}">${engine.files}</echo>
+    </target>
+    
+    <target name="copy-unix-launcher">
+        <mkdir dir="${build.classes.dir}/${native.dirname}/${native.launcher.unix.stub.dst.dir}"/>
+        
+        <!-- copy windows launcher stub -->
+        <copy file="${native.dirname}/${native.launcher.unix.stub.src}" 
+              todir="${build.classes.dir}/${native.dirname}/${native.launcher.unix.stub.dst.dir}"/>
+        
+        <!-- copy windows launcher i18n messages -->
+        <copy todir="${build.classes.dir}/${native.dirname}/${native.launcher.unix.i18n.dir}">
+            <fileset dir="${native.dirname}/${native.launcher.unix.i18n.dir}">
+                <include name="*"/>
+            </fileset>
+        </copy>
+    </target>
+
+   <target name="copy-windows-launcher">	
+        <mkdir dir="${build.classes.dir}/${native.dirname}/${native.launcher.windows.stub.dst.dir}"/>
+        
+        <!-- copy windows launcher stub -->
+        <copy file="${native.dirname}/${native.launcher.windows.stub.src}" 
+              todir="${build.classes.dir}/${native.dirname}/${native.launcher.windows.stub.dst.dir}"/>
+        
+        <!-- copy windows launcher i18n messages -->
+        <copy todir="${build.classes.dir}/${native.dirname}/${native.launcher.windows.i18n.dir}">
+            <fileset dir="${native.dirname}/${native.launcher.windows.i18n.dir}">
+                <include name="*"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="copy-native">
+	
+	<antcall target="copy-jnilibs"/>
+	
+	<antcall target="copy-launchers"/>
+        <antcall target="copy-cleaners"/>
+	
+    </target>
+
+    <target name="copy-jnilibs">
+	<mkdir dir="${build.classes.dir}/${native.dirname}/${native.jnilib.dir}"/>
+	<mkdir dir="${build.classes.dir}/${native.dirname}/${native.jnilib.dir.windows}"/>
+	<mkdir dir="${build.classes.dir}/${native.dirname}/${native.jnilib.dir.linux}"/>
+	<mkdir dir="${build.classes.dir}/${native.dirname}/${native.jnilib.dir.solaris-sparc}"/>
+	<mkdir dir="${build.classes.dir}/${native.dirname}/${native.jnilib.dir.solaris-x86}"/>
+	<mkdir dir="${build.classes.dir}/${native.dirname}/${native.jnilib.dir.macosx}"/>
+
+        <copy file="${native.dirname}/${native.jnilib.dir.windows}/${native.dist.dir}/${native.jnilib.file.windows.i386}" 
+              todir="${build.classes.dir}/${native.dirname}/${native.jnilib.dir.windows}"/>
+        <copy file="${native.dirname}/${native.jnilib.dir.windows}/${native.dist.dir}/${native.jnilib.file.windows.amd64}" 
+              todir="${build.classes.dir}/${native.dirname}/${native.jnilib.dir.windows}"/>
+        <copy file="${native.dirname}/${native.jnilib.dir.windows}/${native.dist.dir}/${native.jnilib.file.windows.ia64}" 
+              todir="${build.classes.dir}/${native.dirname}/${native.jnilib.dir.windows}"/>
+        <copy file="${native.dirname}/${native.jnilib.dir.linux}/${native.dist.dir}/${native.jnilib.file.linux.i386}" 
+              todir="${build.classes.dir}/${native.dirname}/${native.jnilib.dir.linux}"/>
+	<copy file="${native.dirname}/${native.jnilib.dir.linux}/${native.dist.dir}/${native.jnilib.file.linux.amd64}" 
+              todir="${build.classes.dir}/${native.dirname}/${native.jnilib.dir.linux}"/>
+        <copy file="${native.dirname}/${native.jnilib.dir.solaris-x86}/${native.dist.dir}/${native.jnilib.file.solaris-x86}" 
+              todir="${build.classes.dir}/${native.dirname}/${native.jnilib.dir.solaris-x86}"/>
+	<copy file="${native.dirname}/${native.jnilib.dir.solaris-x86}/${native.dist.dir}/${native.jnilib.file.solaris-amd64}" 
+              todir="${build.classes.dir}/${native.dirname}/${native.jnilib.dir.solaris-x86}"/>
+        <copy file="${native.dirname}/${native.jnilib.dir.solaris-sparc}/${native.dist.dir}/${native.jnilib.file.solaris-sparc}" 
+              todir="${build.classes.dir}/${native.dirname}/${native.jnilib.dir.solaris-sparc}"/>
+	<copy file="${native.dirname}/${native.jnilib.dir.solaris-sparc}/${native.dist.dir}/${native.jnilib.file.solaris-sparcv9}" 
+              todir="${build.classes.dir}/${native.dirname}/${native.jnilib.dir.solaris-sparc}"/>
+        <copy file="${native.dirname}/${native.jnilib.dir.macosx}/${native.dist.dir}/${native.jnilib.file.macosx}" 
+              todir="${build.classes.dir}/${native.dirname}/${native.jnilib.dir.macosx}"/>
+    </target>
+
+    <target name="copy-launchers">
+	
+	<antcall target="copy-windows-launcher"/>	
+        <antcall target="copy-unix-launcher"/>
+	
+    </target>
+
+    <target name="copy-cleaners">
+	<mkdir dir="${build.classes.dir}/${native.dirname}/${native.cleaner.dir}"/>
+	<mkdir dir="${build.classes.dir}/${native.dirname}/${native.cleaner.windows.dir}"/>
+	<mkdir dir="${build.classes.dir}/${native.dirname}/${native.cleaner.unix.dir}"/>
+
+	<copy file="${native.dirname}/${native.cleaner.windows.srcdir}/${native.cleaner.windows.file}" 
+              todir="${build.classes.dir}/${native.dirname}/${native.cleaner.windows.dir}"/>
+	<copy file="${native.dirname}/${native.cleaner.unix.srcdir}/${native.cleaner.unix.file}" 
+              todir="${build.classes.dir}/${native.dirname}/${native.cleaner.unix.dir}"/>
+        
+    </target>
+
+</project>

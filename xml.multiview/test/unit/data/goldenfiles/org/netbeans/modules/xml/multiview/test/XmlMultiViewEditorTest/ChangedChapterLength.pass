@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//BookCompany//Entity ID//EN" "file://book.dtd">
+<book instock="yes">
+  <title lang="en">A bean on the beach</title>
+  <chapter length="110">
+    <title lang="en">The sand castle 1</title>
+    <paragraph>Once upon a time, on a far sunny island, ...</paragraph>
+  </chapter>
+  <chapter length="12">
+    <title lang="en">The sand castle 2</title>
+    <paragraph>Once upon a time, a bean was born in the garden, ...</paragraph>
+    <paragraph>Suddenly clouds disapeared ...</paragraph>
+  </chapter>
+</book>

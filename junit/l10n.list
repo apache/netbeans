@@ -1,0 +1,3 @@
+# junit
+read global
+${l10n-module}/src/org/netbeans/modules/junit/output/res/*.gif

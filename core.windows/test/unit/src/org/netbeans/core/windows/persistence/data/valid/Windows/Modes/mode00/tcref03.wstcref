@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tc-ref version="2.2">
+    <tc-id id="tcref03" />
+    <state opened="false" />
+    <previousMode name="explorer" index="2"/>
+    <docking-status maximized-mode="docked" default-mode="slided" />
+    <slide-in-status maximized="true" />
+</tc-ref>

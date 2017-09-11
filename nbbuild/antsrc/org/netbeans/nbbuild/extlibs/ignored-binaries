@@ -1,0 +1,41 @@
+# List of patterns (one per line) to skip over in VerifyLibsAndLicenses.testNoStrayThirdPartyBinaries.
+# Uses standard Ant pattern syntax, in ${nb_all} among modules included in cluster config.
+# Implicit includes is **/*.jar,**/*.zip.
+# Only files under version control will be checked, so no need to exclude build products.
+
+# General subdirs not used in the build:
+**/test/
+*/www/
+
+#verify if templates are Sun owned or under which license are distributed
+projectimport/bluej/src/org/netbeans/bluej/EmptyBluejProject.zip
+
+#OK
+j2me.cdc.project.ricoh/external/samples/*
+#consider consolidation
+vmd.components.*/*/dist/*
+
+# Samples (should probably be packed during build instead):
+swingapp/src/org/netbeans/modules/swingapp/resources/*App.zip
+
+#not 100% sure for this entry, but probably OK
+web.core.syntax/tlddoc/
+
+# Not used by the build:
+performance/performancetestutilities/
+
+# Seems harmless:
+j2ee.sun.appsrv81/src/org/netbeans/modules/j2ee/sun/ide/j2ee/db/pointbasescripts.zip
+
+# Sample database:
+derby/release/modules/ext/derbysampledb.zip
+
+# Not distributed with product, only used during build:
+nbbuild/external/apitest*.jar
+
+# Developed under CDDL inside nb.org (later snapshot moved to dev.java.net):
+apisupport.paintapp/PaintApp-suite/ColorChooser/release/modules/ext/ColorChooser.jar
+
+# Build by NetBeans team
+mobility.databindingme/lib/*
+

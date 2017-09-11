@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mode version="2.0">
+    <module name="org.netbeans.core.ui/1" spec="1.2" />
+    <name unique="mode01" />
+    <kind type="editor" />
+    <state type="joined" />
+    <constraints>
+    </constraints>
+    <active-tc id="" />
+    <empty-behavior permanent="true" />
+</mode>

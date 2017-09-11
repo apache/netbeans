@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<purchaseOrder orderDate="" orderDate1="" orderDate2="">
+    <Sequence>
+        <Choice>
+            <Sequence>
+                <shipTo country="" language="">
+                    <Sequence>
+                        <name/>
+                        <street/>
+                        <city/>
+                        <state/>
+                        <zip/>
+                    </Sequence>
+                </shipTo>
+                <billTo country="" language="">
+                    <Sequence>
+                        <name/>
+                        <street/>
+                        <city/>
+                        <state/>
+                        <zip/>
+                    </Sequence>
+                </billTo>
+            </Sequence>
+            <singleUSAddress country="" language="">
+                <Sequence>
+                    <name/>
+                    <street/>
+                    <city/>
+                    <state/>
+                    <zip/>
+                </Sequence>
+            </singleUSAddress>
+        </Choice>
+        <comment/>
+        <items>
+            <Sequence>
+                <item partNum="">
+                    <Sequence>
+                        <productName/>
+                        <quantity/>
+                        <USPrice Currency="" ForeignAmount=""/>
+                        <comment/>
+                        <shipDate/>
+                        <any/>
+                    </Sequence>
+                </item>
+            </Sequence>
+        </items>
+    </Sequence>
+    <Choice>
+        <nameA/>
+        <nameB/>
+    </Choice>
+</purchaseOrder>

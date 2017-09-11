@@ -1,0 +1,1064 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<?xml-stylesheet type="text/xml" href="../nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="general">Project UI API</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+
+    <changes>
+        <change id="newProjectAction.preselectCategory">
+            <api name="general"/>
+            <summary>Provide a method to create an action that invokes the new project wizard, 
+                preselects a category and propagates a set of properties to the wizard descriptor.</summary>
+            <version major="1" minor="81"/>
+            <date day="14" month="4" year="2015"/>
+            <author login="tstupka"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code>CommonProjectActions.newProjectAction</code> makes it 
+                    so far posible to set the new projects parent folder by a 
+                    property. It would be also usefull to preselect the category 
+                    and to propagate custom properties to the new project wizard 
+                    descriptor.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="CommonProjectActions"/>
+            <issue number="251563"/>
+        </change>
+        
+        <change id="server.is.free">
+            <api name="general"/>
+            <summary>Split the api into a desktop (swing, awt) and NetBeans dependent and independent part.</summary>
+            <version major="1" minor="78"/>
+            <date day="26" month="5" year="2014"/>
+            <author login="tstupka"/>
+            <compatibility addition="yes">
+                <p>
+                    Runtime compatibility remains, compile time compatibility is
+                    mostly preserved too. It is however recommended to upgrade
+                    dependencies of client modules. Try running
+                    <code>ant fix-dependencies</code> in your Ant module.
+                </p>     
+            </compatibility>               
+            <description>
+                <p>
+                    The following classes were moved into the
+                    <a href="@org-netbeans-modules-projectuiapi-base@/overview-summary.html">org.netbeans.modules.projectuiapi.base</a> module:
+                </p>
+                <ul>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/api/project/ui/OpenProjects.html">OpenProjects</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/api/project/ui/ProjectGroup.html">ProjectGroup</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/api/project/ui/ProjectGroupChangeEvent.html">ProjectGroupChangeEvent</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/api/project/ui/ProjectGroupChangeListener.html">ProjectGroupChangeListener</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/PrivilegedTemplates.html">PrivilegedTemplates</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/ProjectOpenedHook.html">ProjectOpenedHook</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/ProjectProblemResolver.html">ProjectProblemResolver</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/ProjectProblemsProvider.html">ProjectProblemsProvider</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/RecommendedTemplates.html">RecommendedTemplates</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/support/ProjectProblemsProviderSupport.html">ProjectProblemsProviderSupport</a></li>
+                    <li><a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/support/UILookupMergerSupport.html">UILookupMergerSupport</a></li>
+                </ul>
+            </description>
+        </change>
+
+        <change id="BuildExecutionSupport.lastItem">
+            <api name="general"/>
+            <summary>Provide last runing item from BuildExecutionSupport. Listen on changes of it.</summary>
+            <version major="1" minor="78"/>
+            <date day="15" month="7" year="2014"/>
+            <author login="tstupka"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code>BuildExecutionSupport</code> makes it so far posible to register a running build/run/debug task. 
+                    It would be also usefull to provide the last run item and to be notified about changes of it.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="BuildExecutionSupport"/>
+            <issue number="245350"/>
+        </change>
+                
+         <change id="ProjectProblemsProvider.unresolvable">
+            <api name="general"/>
+            <summary>Allow creating ProjectProblemsProvider.ProjectProblem without a ProjectProblemResolver </summary>
+            <version major="1" minor="74"/>
+            <date day="7" month="10" year="2013"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code>ProjectProblemsProvider.ProjectProblem</code> has so far required a <code>ProjectProblemResolver</code> effectively
+                    making all problems resolvable, however a few places emerged where an automated resolution is not at hand and still we want to report the
+                    error/warning. 2 new factory methods introduced.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui" name="ProjectProblemsProvider" link="no"/>
+            <issue number="236325"/>
+        </change>
+
+        <change id="CustomizerProvider2">
+            <api name="general"/>
+            <summary>Moved CustomizerProvider2 from java.api.common</summary>
+            <version major="1" minor="71"/>
+            <date day="13" month="5" year="2013"/>
+            <author login="psomol"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    <code>CustomizerProvider2</code> has been available so far in <code>java.api.common</code> but
+                    requests have been made to move it to <code>projectuiapi</code>, where its parent
+                    <code>CustomizerProvider</code> resides, before <code>CustomizerProvider3</code> is defined. 
+                    For reasoning see Issue 229161.
+                </p>
+            </description>
+            <issue number="229161"/>
+        </change>
+
+        <change id="project.licensePath">
+            <api name="general"/>
+            <summary>Project system related file templates can include shared license header file</summary>
+            <version major="1" minor="69"/>
+            <date day="27" month="2" year="2013"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    When including license headers into templates, the only license templates from IDE's configuration were accessible. 
+                    Now templates can include new expression to set a path to a license template within the project's own space.
+                    The new way to include license headers is <code>&lt;#include "${project.licensePath}"&gt;</code>. 
+                    Project types need to provide their own way of defining the license template location and mapping it to project.licensePath item in
+                    their <code>CreateFromTemplateAttributesProvider</code> implementation.
+                    
+                </p>
+            </description>
+            <issue number="193981"/>
+        </change>
+        
+        <change id="BuildExecutionSupport.ActionItem">
+            <api name="general"/>
+            <summary>Added BuildExecutionSupport.ActionItem extension to BuildExecutionSupport.Item</summary>
+            <version major="1" minor="69"/>
+            <date day="22" month="2" year="2013"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Implementing <code>BuildExecutionSupport.ActionItem</code> allows creating execution history lists at various places, currently the toolbar for Run action.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="BuildExecutionSupport"/>
+            <issue number="193873"/>
+        </change>        
+        <change id="CommonProjectActions.PROJECT_PARENT_FOLDER">
+            <api name="general"/>
+            <summary>Added CommonProjectActions.PROJECT_PARENT_FOLDER constant</summary>
+            <version major="1" minor="67"/>
+            <date day="24" month="1" year="2013"/>
+            <author login="psomol"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added CommonProjectActions.PROJECT_PARENT_FOLDER constant that is respected by the <code>CommonProjectActions.newProject()</code> action
+                    and the project's parent directory can be set that way.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="CommonProjectActions"/>
+            <issue number="217087"/>
+        </change>
+        <change id="ProjectCustomizer.Category.CloseListener">
+            <api name="general"/>
+            <summary>Added Close listener to ProjectCustomizer.Category.</summary>
+            <version major="1" minor="65"/>
+            <date day="10" month="11" year="2012"/>
+            <author login="psomol"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added a Close listener to ProjectCustomizer.Category to enable
+                    correct memory management when specific project properties are
+                    to be maintained while Project Properties dialog is displayed,
+                    containing various, possibly extended, categories. This is the case
+                    with JWSProjectProperties and JFXProjectProperties, where cleanup
+                    is needed at the time of dialog closing. The introduction of
+                    a Close listener here actually enables to deprecate J2SECustomPropertySaver
+                    interface and thus make the same mechanism available even outside
+                    J2SE projects.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="ProjectCustomizer"/>
+            <issue number="219827"/>
+        </change>
+        <change id="ProjectProblemsProviderSupport">
+            <api name="general"/>
+            <summary>Added a support class for ProjectProblemsProvider.</summary>
+            <version major="1" minor="63"/>
+            <date day="2" month="10" year="2012"/>
+            <author login="tmysik"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added support class for provider of project metadata problems.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="ProjectProblemsProviderSupport" link="no"/>
+            <issue number="219313"/>
+        </change>
+        <change id="ProjectGroup">
+            <api name="general"/>
+            <summary>API to get current active project group and listen to project groups switching</summary>
+            <version major="1" minor="61"/>
+            <date day="25" month="8" year="2012"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added methods to 
+                    <code>OpenProjects</code> to figure the currently active project group, access preferences related to it
+                    and listen to changes in currently active group.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project.ui" name="OpenProjects" link="no"/>
+            <class package="org.netbeans.api.project.ui" name="ProjectGroup" link="no"/>
+            <class package="org.netbeans.api.project.ui" name="ProjectGroupChangeListener" link="no"/>
+            <class package="org.netbeans.api.project.ui" name="ProjectGroupChangeEvent" link="no"/>
+            <issue number="91031"/>
+        </change>
+        <change id="ProjectProblems">
+            <api name="general"/>
+            <summary>Added an SPI to provide project metadata problems.</summary>
+            <version major="1" minor="60"/>
+            <date day="24" month="7" year="2012"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added a SPI allowing project to provide project metadata problems.
+                    These problems are shown in the Resolve Project Problems Customizer,
+                    project with project problems are annotated by broken project badge.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project.ui" name="ProjectProblems"/>
+            <class package="org.netbeans.spi.project.ui" name="ProjectProblemsProvider" link="no"/>
+            <class package="org.netbeans.spi.project.ui" name="ProjectProblemResolver" link="no"/>
+            <issue number="215628"/>
+        </change>
+        <change id="PathFinder">
+            <api name="general"/>
+            <summary>Extracted <code>findPath</code> method into a new interface <code>PathFinder</code></summary>
+            <version major="1" minor="59"/>
+            <date day="13" month="7" year="2012"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Extracted <code>findPath</code> method from <code>LogicalViewProvider</code> into a new interface <code>PathFinder</code>.
+                    A new <code>PathFinder</code> simplifies delegation of <code>findPath</code> method.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui" name="PathFinder"/>
+            <issue number="208241"/>
+        </change>
+        <change id="setAsMain">
+            <api name="general"/>
+            <summary>Programmatically setting main project deprecated</summary>
+            <version major="1" minor="56"/>
+            <date day="19" month="3" year="2012"/>
+            <author login="jglick"/>
+            <compatibility deprecation="yes"/>
+            <description>
+                <p>
+                    Setting a main project programmatically is now deprecated.
+                    Checking for a main project set explicitly by the user is still common.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project.ui" name="OpenProjects" link="no"/>
+            <class package="org.netbeans.spi.project.ui.templates.support" name="Templates" link="no"/>
+            <issue number="166780"/>
+        </change>
+        <change id="FileSensitiveAction.performer">
+            <api name="general"/>
+            <summary>Adding ability to create a file sensitive action with custom performer</summary>
+            <version major="1" minor="56"/>
+            <date day="13" month="1" year="2012"/>
+            <author login="yardus"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added <code>FileSensitiveActions.fileSensitiveAction(performer, name, icon)</code> method for creating file sensitive actions with custom performers.
+                    This method is a logical counterpart to <code>ProjectSensitiveActions.projectSensitiveAction(performer, name, icon)</code>
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="FileSensitiveActions"/>
+            <class package="org.netbeans.spi.project.ui.support" name="FileActionPerformer"/>
+            <issue number="51571"/>
+        </change>
+        <change id="willOpenProjects">
+            <api name="general"/>
+            <summary>Will open project notification</summary>
+            <version major="1" minor="55"/>
+            <date day="12" month="12" year="2011"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    A <a href="@TOP@/architecture-summary.html#property-willOpenProjects">
+                    new friend contract</a> added for benefit of ide.ergonomics
+                    module.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project.ui" name="OpenProjects" link="no"/>
+            <issue number="203220"/>
+        </change>
+        <change id="Templates.definesMainProject">
+            <api name="general"/>
+            <summary>Added <code>definesMainProject</code> property to wizards</summary>
+            <version major="1" minor="47"/>
+            <date day="21" month="4" year="2010"/>
+            <author login="jglick"/>
+            <compatibility addition="yes">
+                <p>
+                    Internally, an unspecified wizard property is used to store
+                    this information, which was previously hard-coded in certain
+                    modules. All modules using the magic constant should switch
+                    to using the new methods instead.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    Added official way to specify whether a New Project wizard
+                    should set a main project.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.templates.support" name="Templates"/>
+            <issue number="184213"/>
+        </change>
+        <change id="Templates.buildSimpleTargetChooser">
+            <api name="general"/>
+            <summary>Added <code>Templates.buildSimpleTargetChooser</code></summary>
+            <version major="1" minor="45"/>
+            <date day="13" month="4" year="2010"/>
+            <author login="jglick"/>
+            <compatibility addition="yes" deprecation="yes"/>
+            <description>
+                <p>
+                    Added a builder for simple target choosers.
+                    <code>freeFileExtension()</code> permits the user to pick a
+                    file extension for the new file distinct from that of the template.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.templates.support" name="Templates"/>
+            <issue number="141886"/>
+        </change>
+        <change id="CommonProjectActions.forType">
+            <api name="general"/>
+            <summary>Added <code>CommonProjectActions.forType</code></summary>
+            <version major="1" minor="43"/>
+            <date day="1" month="4" year="2010"/>
+            <author login="jglick"/>
+            <compatibility addition="yes">
+                <p>
+                    Project types which <code>LogicalViewProvider</code>'s root
+                    node currently implements <code>getActions</code> with a
+                    hard-coded list are encouraged to switch to declarative
+                    registration.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    Added a standard way for the context menu of a project's root
+                    node to be defined declaratively.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="CommonProjectActions"/>
+            <issue number="182488"/>
+        </change>
+        <change id="ProjectChooser.encodingRenderer">
+            <api name="general"/>
+            <summary>Added public static ProjectCustomizer.encodingModel(String) and public static ProjectCustomizer.encodingRenderer()</summary>
+            <version major="1" minor="42"/>
+            <date day="25" month="3" year="2010"/>
+            <author login="tboudreau"/>
+            <compatibility addition="yes" source="compatible" semantic="compatible"/>
+            <description>
+                <p>
+                    Added factory methods to ProjectCustomizer,
+                    for creating a ComboBoxModel of Charsets for all available
+                    character encodings with an initial selection, and a
+                    ListCellRenderer for Charset objects, for use in
+                    combo boxes.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="ProjectCustomizer"/>
+            <issue number="182711"/>
+        </change>
+        <change id="CompositeCategoryProvider.Registration">
+            <api name="general"/>
+            <summary>Customizer panel registrations using annotations</summary>
+            <version major="1" minor="38"/>
+            <date day="10" month="9" year="2009"/>
+            <author login="jglick"/>
+            <compatibility semantic="compatible"/>
+            <description>
+                <p>
+                  <code>@CompositeCategoryProvider.Registration</code> may be used
+                  to register project customizer panels.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="ProjectCustomizer"/>
+            <issue number="171029"/>
+        </change>
+        <change id="ActionProvider.global">
+            <api name="general"/>
+            <summary>Globally registered <code>ActionProvider</code>s</summary>
+            <version major="1" minor="37"/>
+            <date day="23" month="7" year="2009"/>
+            <author login="jglick"/>
+            <compatibility semantic="compatible"/>
+            <description>
+                <p>
+                  <code>ActionProvider</code>s may now be registered in global
+                  lookup so as to enable certain file-sensitive actions on certain
+                  selections without the support of any project.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="FileSensitiveActions"/>
+            <issue number="102081"/>
+        </change>
+        <change id="open-with-progress">
+            <api name="general"/>
+            <summary>OpenProjects.open() supports visual progress</summary>
+            <version major="1" minor="35"/>
+            <date day="6" month="5" year="2009"/>
+            <author login="ovrabec"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                <p>
+                  <code>OpenProjects.open</code> has now new overloaded
+                  variant that supports visual indication of the open progress.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project.ui" name="OpenProjects" link="no"/>
+            <issue number="162588"/>
+        </change>
+        <change id="isProjectOpen">
+            <api name="general"/>
+            <summary>Utility method OpenProjects.isProjectOpen</summary>
+            <version major="1" minor="34"/>
+            <date day="7" month="4" year="2009"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                <p>
+                  It came to our attention that often users of <code>OpenProjects</code>
+                  want to find out if their project is opened or not. To simplify
+                  such code we offer a handy utility method.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project.ui" name="OpenProjects" link="no"/>
+            <issue number="161120"/>
+        </change>
+        <change id="nodefactory-ann">
+            <api name="general"/>
+            <summary>Add annotation @NodeFactory.Registration</summary>
+            <version major="1" minor="33"/>
+            <date day="20" month="11" year="2008"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                <p>
+                  Add annotation @NodeFactory.Registration to replace registration in layer files.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="NodeFactory"/>
+            <issue number="153015"/>
+        </change>
+        
+        <change id="stop-repeat-build">
+           <api name="general"/>
+           <summary>Pluggable Repeat/Stop build actions</summary>
+           <version major="1" minor="32"/>
+           <date day="23" month="10" year="2008"/>
+           <author login="mkleint"/>
+           <compatibility modification="yes" semantic="compatible"/>
+           <description>
+               <p>
+                    Added spi for plugging into the Repeat Build/Run and Stop Build/Run
+                    actions that were previously accessible by ant based projects only.
+               </p>
+           </description>
+           <class package="org.netbeans.spi.project.ui.support" name="BuildExecutionSupport"/>
+           <issue number="110465"/>
+        </change>
+
+        <change id="ProjectsRootNode-badging">
+           <api name="general"/>
+           <summary>Project root nodes automatically badged</summary>
+           <version major="1" minor="31"/>
+           <date day="9" month="6" year="2008"/>
+           <author login="jglick"/>
+           <compatibility modification="yes" semantic="compatible"/>
+           <description>
+               <p>
+                   Project root nodes will now automatically be badged
+                   according to VCS status of contained files.
+               </p>
+           </description>
+           <class package="org.netbeans.spi.project.ui" name="LogicalViewProvider"/>
+           <issue number="135399"/>
+        </change>
+
+        <change id="project-encoding-property">
+           <api name="general"/>
+           <summary>Adding template attribute <code>project.encoding</code></summary>
+           <version major="1" minor="29"/>
+           <date day="26" month="3" year="2008"/>
+           <author login="abadea"/>
+           <compatibility addition="yes"/>
+           <description>
+                Added the template attribute <code>project.encoding</code> for templates using scripting language.
+           </description>
+           <issue number="129685"/>
+        </change>
+        
+        <change id="folder-based-privileged-templates">
+            <api name="general"/>
+            <summary>PrivilegedTemplates instance in global action context is preferred</summary>
+            <version major="1" minor="28"/>
+            <date day="21" month="3" year="2008"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                The previous scope of PrivilegedTemplates was the whole project. Now the selected Node (active context) can
+                also provide an instance in it's lookup and it will be used instead of the default one from project's lookup.
+                In this case the last used templates will not be considered.
+            </description>
+            <class package="org.netbeans.spi.project.ui" name="PrivilegedTemplates" link="no"/>
+            <issue number="122942"/>
+        </change>
+        
+        <change id="observe-opening-closing">
+            <api name="general"/>
+            <summary>Added ways to track projects opening and closing</summary>
+            <version major="1" minor="27"/>
+            <date day="6" month="2" year="2008"/>
+            <author login="mkubec"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Added a method to track progress of projects opening and closing. As the
+                opening of a project may take long time, and as there can be multiple
+                projects open at once, it may be necessary to be notified that the process
+                of open project list modification started or that it has
+                finished.
+            </description>
+            <class package="org.netbeans.api.project.ui" name="OpenProjects" link="no"/>
+            <issue number="124980"/>
+        </change>
+        
+        <change id="store-listener-added">
+            <api name="general"/>
+            <summary>Added methods for creating customizer UI with additional listener for saving outside of AWT EQ</summary>
+            <version major="1" minor="26"/>
+            <date day="9" month="1" year="2008"/>
+            <author login="mkubec"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                New methods were added to allow to use additional listener for saving data after user presses OK button
+                on Project Customzer UI. The listener will be executed after all OkListeners and will be executed off the
+                AWT Event Queue. During save operation modal dialog with progress bar is displayed.
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="ProjectCustomizer"/>
+            <issue number="91291"/>
+        </change>
+        
+        <change id="project-open-hook-merger">
+            <api name="general"/>
+            <summary>Add <code>LookupMerger</code>implementation for <code>ProjectOpenedHook</code></summary>
+            <version major="1" minor="24"/>
+            <date day="10" month="5" year="2007"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+               New method <code>UILookupMergerSupport.createProjectOpenHookMerger(ProjectOpenedHook)</code> creates an instance of 
+               <code>LookupMerger</code> that ensures that from the <code>ProjectOpenedHook</code> instances in project's lookup, the 
+               project's own is always called first.
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="UILookupMergerSupport" link="no"/>
+            <issue number="103106"/>
+        </change>
+        
+        <change id="project-license-property">
+            <api name="general"/>
+            <summary>Adding template attribute <code>project.license</code></summary>
+            <version major="1" minor="23"/>
+            <date day="26" month="3" year="2007"/>
+            <author login="jpokorsky"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+            <description>
+                Added the template attribute <code>project.license</code> for templates using scripting language.
+            </description>
+            <issue number="95399"/>
+        </change>
+        
+        <change id="non-leaf-category-node-customizer">
+            <api name="general"/>
+            <summary>Added a way how to define UI component for non-leaf category node in project customizer</summary>
+            <version major="1" minor="22"/>
+            <date day="5" month="1" year="2007"/>
+            <author login="mkubec"/>
+            <compatibility addition="no" binary="compatible" deletion="no" deprecation="no" modification="yes" semantic="incompatible" source="compatible">
+                Semantic change of handling files according to location and name on layer filesystem - File of particular filename 
+                under category folder is handled differently.
+            </compatibility>
+            <description>
+                Allow to define UI component for non-leaf category node in project customizer by setting name of the 
+                file in folder on layer filesystem. If there is a category with some subcategories and 
+                UI component is needed for the category, the folder that defines the category in layer needs 
+                to contain file with name 'Self.instance'. Instance of the file will be used to create 
+                customizer component for the category.
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="ProjectCustomizer"/>
+            <issue number="91276"/>
+        </change>
+        
+        <change id="ProjectCustomizer.Category.buttonListener">
+            <api name="general"/>
+            <summary>Ability to attach a ok button listener on single customizer category.</summary>
+            <version major="1" minor="21"/>
+            <date day="23" month="10" year="2006"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible">
+            </compatibility>
+            <description>
+                Allow to attach a listener to <code>ProjectCustomizer.Category</code> that will notify the Category
+                and it's panel that the changes ought to be applied. This is generally useful as a fallback, general
+                solution for 3rd party plugging into the project customizer in case the given project type doesn't provide
+                model-driven project updating mechanism.
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="ProjectCustomizer"/>
+            <issue number="85405"/>
+        </change>
+        
+        <change id="PROPERTY_MAIN_PROJECT">
+            <api name="general"/>
+            <summary>Added OpenProjects.PROPERTY_MAIN_PROJECT property</summary>
+            <version major="1" minor="20"/>
+            <date day="16" month="10" year="2006"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="yes" semantic="compatible" source="compatible">
+            </compatibility>
+            <description>
+                Added <code>OpenProjects.PROPERTY_MAIN_PROJECT</code> property and firing changes in main project property value
+                to listeners attached to OpenProjects.
+            </description>
+             <class package="org.netbeans.api.project.ui" name="OpenProjects" link="no"/>
+            <issue number="64491"/>
+        </change>
+        
+        <change id="lookup-provider.ui">
+            <api name="general"/>
+            <summary>Added LookupMerger implementations for PrivilegedTemplates and RecommendedTemplates</summary>
+            <version major="1" minor="19"/>
+            <date day="5" month="10" year="2006"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible">
+            </compatibility>
+            <description>
+	        <p>
+                    Related to 1.12 change in Project API.
+                    <code>LookupMerger</code> implementation for <code>PrivilegedTemplates</code> and
+                    <code>RecommendedTemplates</code> added.
+		</p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="UILookupMergerSupport" link="no"/>
+            <issue number="83343"/>
+        </change>
+        
+        <change id="NodeFactory">
+            <api name="general"/>
+            <summary>Ability to construct project node's children from multiple sources.</summary>
+            <version major="1" minor="18"/>
+            <date day="18" month="9" year="2006"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible">
+            </compatibility>
+            <description>
+                Added way to declaratively layout the subnodes of the project node, allowing 3rd party contributions 
+                to project's Logical/Projects View.
+                The project's node is constructed based on layer folder content. This api change provides just 
+                the infrastructure, the actual extension point location is up to the project type implementations.
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="NodeFactory"/>
+            <class package="org.netbeans.spi.project.ui.support" name="NodeList"/>
+            <class package="org.netbeans.spi.project.ui.support" name="NodeFactorySupport"/>
+            <issue number="72441"/>
+        </change>
+        
+        <change id="CommonProjectActions.setProjectConfigurationAction">
+            <api name="general"/>
+            <summary>Added <code>CommonProjectActions.setProjectConfigurationAction</code></summary>
+            <version major="1" minor="17"/>
+            <date day="8" month="9" year="2006"/>
+            <author login="jglick"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added method <code>CommonProjectActions.setProjectConfigurationAction()</code>
+                    to permit projects supporting configurations to include a context menu
+                    item in their logical view to change the active configuration.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="CommonProjectActions"/>
+            <issue number="49652"/>
+        </change>
+
+        <change id="CompositeCategoryProvider">
+            <api name="general"/>
+            <summary>Ability to construct a project customizer from panels declared in layers.</summary>
+            <version major="1" minor="15"/>
+            <date day="11" month="4" year="2006"/>
+            <author login="mkleint"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible">
+            </compatibility>
+            <description>
+                Added <code>createCustomizerDialog(String, Lookup, String, ActionListener, HelpCtx)</code> method to ProjectCustomizer.
+                That allows to construct project customizer from a layer folder content. It assumes to find instances of
+                <code>ProjectCustomizer.CompositeCategoryProvider</code>in the layer and constructs the UI from them.
+                The context is passed into the panel via a Lookup instance. What is in the lookup, is up to the individual project
+                implementations.
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="ProjectCustomizer"/>
+            <issue number="74373"/>
+        </change>
+        
+        <change id="getSetMainProject">
+            <api name="general"/>
+            <summary>Ability to get and set main project</summary>
+            <version major="1" minor="11"/>
+            <date day="26" month="8" year="2005"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible">
+            </compatibility>
+            <description>
+                Added <code>getMainProject</code> and <code>setMainProject</code> methods to OpenProjects.
+            </description>
+            <issue number="58461"/>
+        </change>
+        
+        <change id="delete-copy-move-support">
+            <api name="general"/>
+            <summary>Project Delete/Copy/Rename/Move Support Added, Support for Default Project Delete/Copy/Rename/Move Added</summary>
+            <version major="1" minor="10"/>
+            <date day="22" month="8" year="2005"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes" />
+            <description>
+                Introduced:
+                <ul>
+                    <li><code>CommonProjectActions.deleteProjectAction</code>, <code>CommonProjectActions.copyProjectAction</code>,
+                        <code>CommonProjectActions.moveProjectAction</code>, <code>CommonProjectActions.removeProjectAction</code> methods.</li>
+                    <li><code>DefaultProjectOperations</code> support to simplify implementation of project delete/copy/rename/move for simple projects.</li>
+                </ul>
+            </description>
+            <issue number="61546" />
+        </change>
+        
+        <change id="ProjectCustomizer.Category.errorMessage">
+            <api name="general"/>
+            <summary>Added ability to set an error message for project customizer's categories.</summary>
+            <version major="1" minor="9"/>
+            <date day="28" month="7" year="2005"/>
+            <author login="mkrauskopf"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added <code>ProjectCustomizer.Category.setErrorMessage</code> and
+                    <code>ProjectCustomizer.Category.getErrorMessage</code>
+                    methods. With those methods client can set an error message
+                    for individual categories.
+                    Also the default implementation of a customizer dialog uses
+                    these methods for showing a message on the bottom of
+                    category views and to mark category nodes for invalid
+                    categories (similar to the error message in wizards).
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="ProjectCustomizer"/>
+            <issue number="61036"/>
+        </change>
+    
+        <change id="ProjectCustomizer.Category.valid">
+            <api name="general"/>
+            <summary>Added ability to set whether a project customizer's categories are valid.</summary>
+            <version major="1" minor="9"/>
+            <date day="28" month="7" year="2005"/>
+            <author login="mkrauskopf"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added <code>ProjectCustomizer.Category.setValid</code> and
+                    <code>ProjectCustomizer.Category.isValid</code> methods.
+                    With those methods client can affect whether the OK button
+                    of the Customizer dialog is enabled.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="ProjectCustomizer"/>
+            <issue number="58457"/>
+        </change>
+    
+        <change id="ProjectActions">
+            <api name="general"/>
+            <summary>Ability to extend project context menus</summary>
+            <version major="1" minor="7"/>
+            <date day="5" month="5" year="2005"/>
+            <author login="pkuzel"/>
+            <compatibility addition="yes" semantic="incompatible">
+                <p>
+                    Existing project types need to add support for the new folder
+                    in order to comply with the guideline.
+                </p>
+            </compatibility>
+            <description>
+                Defined a folder <code>Projects/Actions/</code> which may hold
+                actions to be added to the context menu of any project type.
+            </description>
+            <issue number="57874"/>
+        </change>
+
+        <change id="CommonProjectActions.EXISTING_SOURCES_FOLDER">
+            <api name="general"/>
+            <summary>New Project Wizard Action</summary>
+            <version major="1" minor="3"/>
+            <date day="17" month="5" year="2005"/>
+            <author login="pkuzel"/>
+            <compatibility source="compatible"/>
+            <description>            
+                Introduced:
+                <ul>
+                    <li><code>CommonProjectActions.newProjectAction</code> method</li>
+                    <li><code>CommonProjectActions.EXISTING_SOURCES_FOLDER</code> property</li>
+                    <li><code>Templates.getExistingSourcesFolder</code> method</li>
+                </ul>                
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="CommonProjectActions"/>
+            <class package="org.netbeans.spi.project.ui.templates.support" name="Templates"/>
+            <issue number="58489" />            
+        </change>
+            
+        <change id="ProjectOpenedHook.fire-to-all">
+            <api name="general"/>
+            <summary>The <code>projectOpened</code> and <code>projectClosed</code> methods are called on
+                     all <code>ProjectOpenedHook</code> instances in the lookup.
+            </summary>
+            <version major="1" minor="3"/>
+            <date day="12" month="5" year="2005"/>
+            <author login="jlahoda"/>
+            <compatibility semantic="incompatible" source="compatible">
+                <p>
+                    This change is incompatible because a project type can return a lookup with several
+                    <code>ProjectOpenedHook</code>s and depend on only first one being notified on open/close.
+                    Such a code should be rewritten using <code>org.openide.util.lookup.Lookups.exclude</code>.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    The <code>projectOpened</code> and <code>projectClosed</code> methods are called on
+                    all <code>ProjectOpenedHook</code> instances found in a project's lookup.
+                </p>
+            </description>
+            <issue number="57025" />
+        </change>
+        
+        <change id="OpenProjects.open-close">
+            <api name="general"/>
+            <summary>Added open and close methods into <code>OpenProjects</code> class</summary>
+            <version major="1" minor="2"/>
+            <date day="14" month="12" year="2004"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added <code>open</code> and <code>close</code> methods to <code>org.netbeans.api.project.ui.OpenProjects</code>. The <code>open</code> method
+                    opens the specified projects. The <code>close</code> method closes the specified projects.
+                </p>
+            </description>
+            <class package="org.netbeans.api.project.ui" name="OpenProjects" link="no"/>
+        </change>
+
+        <change id="rel-vers-1">
+            <api name="general"/>
+            <summary>Switched to major release version 1</summary>
+            <version major="1" minor="3"/>
+            <date day="22" month="12" year="2004"/>
+            <author login="jglick"/>
+            <compatibility>
+                <p>
+                    Clients should begin requesting the new version to avoid a warning at startup.
+                </p>
+            </compatibility>
+            <description>
+                <p>
+                    To indicate that this is now considered a stable API, the major release version was
+                    incremented to 1 from 0.
+                </p>
+            </description>
+            <issue number="51468"/>
+        </change>
+
+        <change id="ProjectCustomizer.addition">
+            <api name="general"/>
+            <summary>Added support class for creating standard project customizer dialogs</summary>
+            <version major="1" minor="4"/>
+            <date day="16" month="1" year="2005"/>
+            <author login="phrebejk"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added <code>org.netbeans.spi.project.ui.support.ProjectCustomizer</code> 
+                    containing support methods for creating standard looking project customizer
+                    dialogs.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.project.ui.support" name="ProjectCustomizer"/>
+            <issue number="49647"/>
+        </change>
+    
+        
+    </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE projects/projectuiapi/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Project UI API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the <a href="@org-netbeans-modules-projectuiapi@/index.html">Project UI API</a>.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+      <hr/>
+      <standard-changelists module-code-name="org.netbeans.modules.projectuiapi/1"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

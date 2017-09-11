@@ -1,0 +1,15 @@
+Description of the properties file format:
+===========================================
+
+1) meta data properties:
+
+name         | meaning
+-------------|-----------------
+$category    | defines category of the property definitions below.
+             | In none defined the properties have "other" category. 
+             | For all the possible values see PropertyCategory class in css.lib module 
+
+
+2) grammar of the property values:
+
+See PropertyDefinition class javadoc from css.lib module

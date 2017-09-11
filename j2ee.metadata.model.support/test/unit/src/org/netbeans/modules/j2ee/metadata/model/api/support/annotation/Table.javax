@@ -1,0 +1,401 @@
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+@Entity
+@Table(name = "table__NUM__")
+@NamedQueries( {@NamedQuery(name = "Table__NUM__.findById", query = "SELECT t FROM Table__NUM__ t WHERE t.id = :id"), @NamedQuery(name = "Table__NUM__.findByA", query = "SELECT t FROM Table__NUM__ t WHERE t.a = :a"), @NamedQuery(name = "Table__NUM__.findByC", query = "SELECT t FROM Table__NUM__ t WHERE t.c = :c"), @NamedQuery(name = "Table__NUM__.findByE", query = "SELECT t FROM Table__NUM__ t WHERE t.e = :e"), @NamedQuery(name = "Table__NUM__.findByF", query = "SELECT t FROM Table__NUM__ t WHERE t.f = :f"), @NamedQuery(name = "Table__NUM__.findByG", query = "SELECT t FROM Table__NUM__ t WHERE t.g = :g"), @NamedQuery(name = "Table__NUM__.findByH", query = "SELECT t FROM Table__NUM__ t WHERE t.h = :h"), @NamedQuery(name = "Table__NUM__.findByI", query = "SELECT t FROM Table__NUM__ t WHERE t.i = :i"), @NamedQuery(name = "Table__NUM__.findByJ", query = "SELECT t FROM Table__NUM__ t WHERE t.j = :j"), @NamedQuery(name = "Table__NUM__.findByL", query = "SELECT t FROM Table__NUM__ t WHERE t.l = :l"), @NamedQuery(name = "Table__NUM__.findByM", query = "SELECT t FROM Table__NUM__ t WHERE t.m = :m"), @NamedQuery(name = "Table__NUM__.findByN", query = "SELECT t FROM Table__NUM__ t WHERE t.n = :n"), @NamedQuery(name = "Table__NUM__.findByO", query = "SELECT t FROM Table__NUM__ t WHERE t.o = :o"), @NamedQuery(name = "Table__NUM__.findByP", query = "SELECT t FROM Table__NUM__ t WHERE t.p = :p"), @NamedQuery(name = "Table__NUM__.findByQ", query = "SELECT t FROM Table__NUM__ t WHERE t.q = :q")})
+public class __NAME__ implements Serializable {
+
+    @Id
+    @Column(name = "ID", nullable = false)
+    private Integer id;
+
+    @Column(name = "A")
+    private BigInteger a;
+
+    @Lob
+    @Column(name = "B")
+    private byte [] b;
+
+    @Column(name = "C")
+    private Character c;
+
+    @Column(name = "E")
+    @Temporal(TemporalType.DATE)
+    private Date e;
+
+    @Column(name = "F")
+    private Long f;
+
+    @Column(name = "G")
+    private Double g;
+
+    @Column(name = "H")
+    private Double h;
+
+    @Column(name = "I")
+    private Float i;
+
+    @Column(name = "J")
+    private Integer j;
+
+    @Lob
+    @Column(name = "K")
+    private String k;
+
+    @Column(name = "L")
+    private Long l;
+
+    @Column(name = "M")
+    private Double m;
+
+    @Column(name = "N")
+    private Short n;
+
+    @Column(name = "O")
+    @Temporal(TemporalType.TIME)
+    private Date o;
+
+    @Column(name = "P")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date p;
+
+    @Column(name = "Q")
+    private String q;
+    
+    /** Creates a new instance of Table__NUM__ */
+    public __NAME__() {
+    }
+
+    /**
+     * Creates a new instance of Table__NUM__ with the specified values
+     * @param id the id of the Table__NUM__
+     */
+    public __NAME__(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * Gets the id of this Table__NUM__.
+     * @return the id
+     */
+    public Integer getId() {
+        return this.id;
+    }
+
+    /**
+     * Sets the id of this Table__NUM__ to the specified value.
+     * @param id the new id
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * Gets the a of this Table__NUM__.
+     * @return the a
+     */
+    public BigInteger getA() {
+        return this.a;
+    }
+
+    /**
+     * Sets the a of this Table__NUM__ to the specified value.
+     * @param a the new a
+     */
+    public void setA(BigInteger a) {
+        this.a = a;
+    }
+
+    /**
+     * Gets the b of this Table__NUM__.
+     * @return the b
+     */
+    public byte [] getB() {
+        return this.b;
+    }
+
+    /**
+     * Sets the b of this Table__NUM__ to the specified value.
+     * @param b the new b
+     */
+    public void setB(byte [] b) {
+        this.b = b;
+    }
+
+    /**
+     * Gets the c of this Table__NUM__.
+     * @return the c
+     */
+    public Character getC() {
+        return this.c;
+    }
+
+    /**
+     * Sets the c of this Table__NUM__ to the specified value.
+     * @param c the new c
+     */
+    public void setC(Character c) {
+        this.c = c;
+    }
+
+    /**
+     * Gets the e of this Table__NUM__.
+     * @return the e
+     */
+    public Date getE() {
+        return this.e;
+    }
+
+    /**
+     * Sets the e of this Table__NUM__ to the specified value.
+     * @param e the new e
+     */
+    public void setE(Date e) {
+        this.e = e;
+    }
+
+    /**
+     * Gets the f of this Table__NUM__.
+     * @return the f
+     */
+    public Long getF() {
+        return this.f;
+    }
+
+    /**
+     * Sets the f of this Table__NUM__ to the specified value.
+     * @param f the new f
+     */
+    public void setF(Long f) {
+        this.f = f;
+    }
+
+    /**
+     * Gets the g of this Table__NUM__.
+     * @return the g
+     */
+    public Double getG() {
+        return this.g;
+    }
+
+    /**
+     * Sets the g of this Table__NUM__ to the specified value.
+     * @param g the new g
+     */
+    public void setG(Double g) {
+        this.g = g;
+    }
+
+    /**
+     * Gets the h of this Table__NUM__.
+     * @return the h
+     */
+    public Double getH() {
+        return this.h;
+    }
+
+    /**
+     * Sets the h of this Table__NUM__ to the specified value.
+     * @param h the new h
+     */
+    public void setH(Double h) {
+        this.h = h;
+    }
+
+    /**
+     * Gets the i of this Table__NUM__.
+     * @return the i
+     */
+    public Float getI() {
+        return this.i;
+    }
+
+    /**
+     * Sets the i of this Table__NUM__ to the specified value.
+     * @param i the new i
+     */
+    public void setI(Float i) {
+        this.i = i;
+    }
+
+    /**
+     * Gets the j of this Table__NUM__.
+     * @return the j
+     */
+    public Integer getJ() {
+        return this.j;
+    }
+
+    /**
+     * Sets the j of this Table__NUM__ to the specified value.
+     * @param j the new j
+     */
+    public void setJ(Integer j) {
+        this.j = j;
+    }
+
+    /**
+     * Gets the k of this Table__NUM__.
+     * @return the k
+     */
+    public String getK() {
+        return this.k;
+    }
+
+    /**
+     * Sets the k of this Table__NUM__ to the specified value.
+     * @param k the new k
+     */
+    public void setK(String k) {
+        this.k = k;
+    }
+
+    /**
+     * Gets the l of this Table__NUM__.
+     * @return the l
+     */
+    public Long getL() {
+        return this.l;
+    }
+
+    /**
+     * Sets the l of this Table__NUM__ to the specified value.
+     * @param l the new l
+     */
+    public void setL(Long l) {
+        this.l = l;
+    }
+
+    /**
+     * Gets the m of this Table__NUM__.
+     * @return the m
+     */
+    public Double getM() {
+        return this.m;
+    }
+
+    /**
+     * Sets the m of this Table__NUM__ to the specified value.
+     * @param m the new m
+     */
+    public void setM(Double m) {
+        this.m = m;
+    }
+
+    /**
+     * Gets the n of this Table__NUM__.
+     * @return the n
+     */
+    public Short getN() {
+        return this.n;
+    }
+
+    /**
+     * Sets the n of this Table__NUM__ to the specified value.
+     * @param n the new n
+     */
+    public void setN(Short n) {
+        this.n = n;
+    }
+
+    /**
+     * Gets the o of this Table__NUM__.
+     * @return the o
+     */
+    public Date getO() {
+        return this.o;
+    }
+
+    /**
+     * Sets the o of this Table__NUM__ to the specified value.
+     * @param o the new o
+     */
+    public void setO(Date o) {
+        this.o = o;
+    }
+
+    /**
+     * Gets the p of this Table__NUM__.
+     * @return the p
+     */
+    public Date getP() {
+        return this.p;
+    }
+
+    /**
+     * Sets the p of this Table__NUM__ to the specified value.
+     * @param p the new p
+     */
+    public void setP(Date p) {
+        this.p = p;
+    }
+
+    /**
+     * Gets the q of this Table__NUM__.
+     * @return the q
+     */
+    public String getQ() {
+        return this.q;
+    }
+
+    /**
+     * Sets the q of this Table__NUM__ to the specified value.
+     * @param q the new q
+     */
+    public void setQ(String q) {
+        this.q = q;
+    }
+
+    /**
+     * Returns a hash code value for the object.  This implementation computes 
+     * a hash code value based on the id fields in this object.
+     * @return a hash code value for this object
+     */
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (this.id != null ? this.id.hashCode() : 0);
+        return hash;
+    }
+
+    /**
+     * Determines whether another object is equal to this Table__NUM__.  The result is 
+     * <code>true</code> if and only if the argument is not null and is a Table__NUM__ object that 
+     * has the same id field values as this object.
+     * @param object the reference object with which to compare
+     * @return <code>true</code> if this object is the same as the argument;
+     * <code>false</code> otherwise
+     */
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof __NAME__)) {
+            return false;
+        }
+        __NAME__ other = (__NAME__)object;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) return false;
+        return true;
+    }
+
+    /**
+     * Returns a string representation of the object.  This implementation constructs 
+     * that representation based on the id fields.
+     * @return a string representation of the object
+     */
+    @Override
+    public String toString() {
+        return "__NAME__[id=" + id + "]";
+    }
+    
+}

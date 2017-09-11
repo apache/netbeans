@@ -1,0 +1,84 @@
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2009, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<html>
+<body>
+
+<a href="http://top/org/openide/loaders/doc-files/api.html"><em>Datasystems</em></a>
+
+are the logical layer between a filesystem and higher-level file-oriented operations.
+
+<p>The
+
+<a href="doc-files/api.html"><b>Datasystems API</b></a>
+
+provides a higher-level view of files in terms of useful data - data
+which has specific types, actions that can be performed on these
+types, and relationships to other files. For example, NetBeans might
+find these files in a newly-opened directory:
+
+<ul>
+<li> <code>myform.form</code>
+<li> <code>myform.java</code>
+<li> <code>myform.class</code>
+<li> <code>myform$1.class</code>
+<li> <code>myform$2.class</code>
+</ul>
+
+Logically, all of these files are interlinked, and it is the job of a
+
+<a href="DataLoader.html"><em>data loader</em></a>
+
+to associate them. In this case, a loader installed by the Form Editor
+into the system's
+
+<a href="DataLoaderPool.html"><em>loader pool</em></a>
+
+would recognize the common basename of the files, and produce a
+special
+
+<a href="DataObject.html"><em>data object</em></a>
+
+which encapsulates that there is a Java source with an accompanying
+form and compiled class files. This data object would then provide
+operations appropriate to a form on disk, and assist in creating an
+Explorer node subtree for it.
+
+</body>
+</html>

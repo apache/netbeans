@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : InvalidDTD.dtd
+    Created on : July 9, 2002, 6:22 PM
+    Author     : Petr Kuzel
+    Description:
+        Must not pass.
+-->
+
+<!ELEMENT InvalidDTD ANY>
+<error/>

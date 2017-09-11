@@ -1,0 +1,10 @@
+%%TestCase no-mods
+package test;
+public class Test {
+    String h = null;
+}
+%%=>
+package test;
+public class Test {
+    CharSequence h = null;
+}

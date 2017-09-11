@@ -1,0 +1,32 @@
+%%TestCase convert-to-lambda-positive-1
+package test;
+public abstract class Test {
+    {
+        Test t = new Test() {
+            public void test(String s1, String s2) { s1 = s2; }
+        };
+    }
+    public abstract void test(String s1, String s2);
+}
+%%=>
+LambdaInput:new Test() {
+%%TestCase convert-to-lambda-positive-constructor-param
+package test;
+import java.io.PrintWriter;
+import java.io.OutputStream;
+public abstract class Test {
+    private final PrintWriter silent = new PrintWriter(new OutputStream(){
+        public void write(int b) {}
+    });
+}
+%%=>
+LambdaInput:new OutputStream(){
+%%TestCase convert-to-lambda-negative-needs-abstract
+package test;
+public class Test {
+    
+    public static final Runnable m = new Runnable() {
+        public void run() {}
+        private int foo;
+    }
+}

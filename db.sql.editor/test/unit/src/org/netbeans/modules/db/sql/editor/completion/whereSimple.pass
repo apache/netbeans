@@ -1,0 +1,7 @@
+Alias cus to discount_code
+Column cus_summary_id in view cus_summary
+Column customer_id in table customer
+Column customer_id in table customizations.customization
+Table customer
+View cus_summary
+Schema customizations

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mode version="2.0">
+    <module name="org.netbeans.core.ui/1" spec="1.2" />
+    <name unique="mode00" />
+    <kind type="view" />
+    <state type="joined" />
+    <constraints>
+        <path orientation="vertical" number="0" weight="0.7" />
+        <path orientation="horizontal" number="0" weight="0.3" />
+    </constraints>
+    <active-tc id="filesystems" />
+    <empty-behavior permanent="true" />
+</mode>

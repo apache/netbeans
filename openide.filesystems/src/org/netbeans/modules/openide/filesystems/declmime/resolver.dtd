@@ -1,0 +1,140 @@
+<?xml encoding="UTF-8" ?>
+
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+
+<!---
+  MIME resolver description root element.
+  <p>
+  <samp>PUBLIC "-//NetBeans//DTD MIME Resolver 1.0//EN"</samp>
+  </p>
+-->
+<!ELEMENT MIME-resolver (file)+ >
+
+
+<!--
+  Plugin rule entities:
+-->
+<!ENTITY % xml-rules-component PUBLIC "-//NetBeans//DTD MIME Resolver XML Rules 1.0//EN" "http://www.netbeans.org/dtds/mime-resolver-xml-component-1_0.dtd">
+%xml-rules-component;
+
+<!--
+  Update this entity after you plug in a new component.
+  Update also the public ID version.
+  You must maintain backwards compatibility.
+-->
+<!ENTITY % components "(xml-rule)?">
+
+
+
+
+<!--- 
+  A file (resource) represents the MIME resolver input.
+  The resource is tested on attributes obtained from lower layers (OS) such
+  as extension, header bytes and wrapping <code>FileObject</code> attributes.
+  Some of them must match to proceed to the <code>resolver</code> element.
+  <p>
+  Implementation Note: 
+  Lower level MIME type is obtained by <code>FileUtil.getMIMEType()</code>. It may not be 
+  retrieved by a call to <code>FileObject.getMIMEType</code> to avoid recursion. A better way
+  to determine MIME type as assigned by the OS may be introduced in the future.
+  </p>
+  <p>
+  Implementation Note: 
+  All other tests are performed by calling appropriate methods on <code>FileObject</code>
+  so there is a danger of recursion if these call <code>this.getMIMEType()</code>.
+  </p>
+-->
+<!ELEMENT file ((ext | mime | magic | fattr)+, (resolver | exit)) >
+
+<!---
+  Tests resource extension for full equality.
+-->
+<!ELEMENT ext EMPTY>
+<!ATTLIST ext name CDATA #REQUIRED>
+
+<!---
+  Tests resource MIME type for equality (RFC2045) or suffix equality if it 
+  starts with '+' (RFC 3023). 
+-->
+<!ELEMENT mime EMPTY>
+<!ATTLIST mime name CDATA #REQUIRED>
+
+<!--- 
+  Look at initial bytes of the file and test for a complete match of masked
+  bits. The default mask is the hexadecimal byte <samp>FF</samp> repeated as
+  many times as the <code>hex</code> attribute is long.
+  E.g. <samp>&lt;magic hex="0a0001" mask="FF00FF"/&gt;</samp>
+-->
+<!ELEMENT magic EMPTY>
+<!ATTLIST magic hex CDATA #REQUIRED>
+<!ATTLIST magic mask CDATA #IMPLIED>
+
+<!---
+  Test on <code>FileObject</code> attributes. Matching attributes are converted
+  to strings via <code>Object.toString()</code> and compared to the <code>text</code>
+  attribute.
+  <p>
+  <code>FileObject</code> attributes can be used for out-of-band tagging of standard documents.
+  </p>
+-->
+<!ELEMENT fattr EMPTY>
+<!ATTLIST fattr name CDATA #REQUIRED>
+<!ATTLIST fattr text CDATA #REQUIRED>
+
+<!---
+  You may apply additional rules based on resource content.
+  The <code>mime</code> element value is returned. Use the reserved value of <code>null</code>
+  to indicate you are not interested in such files (same as <samp>&lt;exit/&gt;</samp>).
+-->
+<!ELEMENT resolver %components;>
+<!ATTLIST resolver mime CDATA #REQUIRED>
+
+<!--- 
+  Declares that this file is not recognized by this resolver. 
+  A shortcut for <samp>&lt;resolver mime="null"/&gt;</samp>.
+-->
+<!ELEMENT exit EMPTY>

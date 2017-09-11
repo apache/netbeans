@@ -1,0 +1,6 @@
+Column customer_id in table customer
+Column cus_summary_id in view cus_summary
+Table customer
+View cus_summary
+Schema customers
+Schema customizations

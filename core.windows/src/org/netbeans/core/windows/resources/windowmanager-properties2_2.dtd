@@ -1,0 +1,322 @@
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!--
+-//NetBeans//DTD Window Manager Properties 2.2//EN
+-->
+
+<!-- The root element for window manager properties. Consists of subelements
+     for specific properties.
+     Attribute "version" is versioning attribute which in fact specifies
+     version of this DTD. Attribute is used to perform simple versioning
+     without the need to use time-consuming xml validation using this DTD.
+-->
+<!ELEMENT windowmanager (main-window?, editor-area, screen?, active-mode?, maximized-mode?, toolbar?, tc-list?, imported-tcrefs?) >
+<!ATTLIST windowmanager
+    version CDATA #REQUIRED
+>
+
+<!-- Element "main-window" contains properties of main window.
+-->
+<!ELEMENT main-window   (joined-properties | separated-properties | 
+                         (joined-properties, separated-properties) |
+                         (separated-properties, joined-properties)) >
+<!ATTLIST main-window
+>
+
+<!-- Element "joined-properties" contains properties of main window in joined state.
+     "x" gives position of main window on screen on horizontal axis left is 0
+
+     "y" gives position of main window on screen on vertical axis top is 0
+
+     "width" gives absolute width of main window
+
+     "height" gives absolute height of main window
+
+     "relative-x" gives relative width of main window
+     Either x or relative-x or centered-horizontally true must be specified.
+
+     "relative-y" gives relative width of main window       
+     Either y or relative-y or centered-vertically must be specified.
+
+     "relative-width" gives relative width of main window
+     Either width or relative-width must be specified.
+
+     "relative-height" gives relative width of main window
+     Either height or relative-height must be specified.
+
+     "centered-horizontally" is true when main window is centered horizontally
+
+     "centered-vertically" is true when main window is centered vertically
+
+     "maximize-if-width-below" and
+
+     "maximize-if-height-below" are optional,
+     they specify limit on computed absolute width/height,
+     IF min(screen.width, maximize-if-width-below) > main-window.width OR
+        min(screen.height, maximize-if-height-below) > main-window.height THEN
+         IF screen.width > maximize-if-width-below AND screen.height > maximize-if-height-below THEN
+             set main window size to maximize-if-width-below, maximize-if-height-below
+         ELSE
+             let window maximized
+         ENDIF
+     ENDIF 
+     It is to avoid main window size bigger than screen size (width or height).
+
+     "frame-state" represents state of frame.
+     It is represented as bitwise mask - integer value.
+     See java.awt.Frame for possible values.
+     Default value is Frame.NORMAL (0).
+-->
+<!ELEMENT joined-properties   EMPTY >
+<!ATTLIST joined-properties
+    x                     CDATA            #IMPLIED
+    y                     CDATA            #IMPLIED
+    width                 CDATA            #IMPLIED
+    height                CDATA            #IMPLIED
+    relative-x            CDATA            #IMPLIED
+    relative-y            CDATA            #IMPLIED
+    relative-width        CDATA            #IMPLIED
+    relative-height       CDATA            #IMPLIED
+    centered-horizontally (true | false)   #IMPLIED
+    centered-vertically   (true | false)   #IMPLIED
+    maximize-if-width-below  CDATA         #IMPLIED
+    maximize-if-height-below CDATA         #IMPLIED
+    frame-state           CDATA            #IMPLIED
+>
+
+<!-- Element "separated-properties" contains properties of main window in separated state.
+     "x" gives position of main window on screen on horizontal axis left is 0
+
+     "y" gives position of main window on screen on vertical axis top is 0
+
+     "width" gives absolute width of main window
+
+     "height" gives absolute height of main window
+
+     "relative-x" gives relative width of main window
+     Either x or relative-x or centered-horizontally true must be specified.
+
+     "relative-y" gives relative width of main window
+     Either y or relative-y or centered-vertically must be specified.
+
+     "relative-width" gives relative width of main window
+     Either width or relative-width must be specified.
+
+     "relative-height" gives relative width of main window
+     Either height or relative-height must be specified.
+
+     "centered-horizontally" is true when main window is centered horizontally
+
+     "centered-vertically" is true when main window is centered vertically
+
+     "frame-state" represents state of frame.
+     It is represented as bitwise mask - integer value. 
+     See java.awt.Frame for possible values.
+     Default value is Frame.NORMAL (0).
+-->
+<!ELEMENT separated-properties   EMPTY >
+<!ATTLIST separated-properties
+    x                     CDATA            #IMPLIED
+    y                     CDATA            #IMPLIED
+    width                 CDATA            #IMPLIED
+    height                CDATA            #IMPLIED
+    relative-x            CDATA            #IMPLIED
+    relative-y            CDATA            #IMPLIED
+    relative-width        CDATA            #IMPLIED
+    relative-height       CDATA            #IMPLIED
+    centered-horizontally (true | false)   #IMPLIED
+    centered-vertically   (true | false)   #IMPLIED
+    frame-state           CDATA            #IMPLIED
+>
+
+<!-- Element "editor-area" contains bounds and constraints of editor area
+     according to state of editor area.
+     "state" sets state of editor area (desktop) joined when all windows are
+     part of main window or separated when main window, windows and EA are separate
+     into their own native windows.
+
+     "frame-state" represents state of frame.
+     It is represented as bitwise mask - integer value.
+     See java.awt.Frame for possible values.
+     Relevant for separated state of editor area when editor area resides in its own frame.
+     Default value is Frame.NORMAL (0).
+-->
+<!ELEMENT editor-area   (constraints, (bounds | relative-bounds)?) >
+<!ATTLIST editor-area
+    state (joined | separated) #REQUIRED
+    frame-state CDATA          #IMPLIED
+>
+
+<!-- Element "bounds" contains bounds of editor area.
+     "x" gives position of editor area on screen on horizontal axis
+     left is 0.
+     "y" gives position of editor area on screen on vertical axis
+     top is 0.
+     "width" gives absolute width of editor area.
+     "height" gives absolute height of editor area.
+     Relevant only when editor area is separated from main window.
+-->
+<!ELEMENT bounds EMPTY >
+<!ATTLIST bounds
+    x CDATA #REQUIRED
+    y CDATA #REQUIRED
+    width  CDATA #REQUIRED
+    height CDATA #REQUIRED
+>
+
+<!-- Relative (percentage) bounds of editor area, stored in attributes
+     x, y, width, height, where x, y is location of left top point of bounds
+     rectangle, it is relative to width of main window and height of area below
+     main window.
+     Relative bounds can be used to define starting position of separated editor area
+     in module layer (relative bounds are independent of screen size).
+     Relevant only when editor area is separated from main window.
+-->
+<!ELEMENT relative-bounds    EMPTY >
+<!ATTLIST relative-bounds
+    x CDATA #REQUIRED
+    y CDATA #REQUIRED
+    width CDATA #REQUIRED
+    height CDATA #REQUIRED
+>
+
+<!-- Constraints describes path of editor area in model tree.
+     Path consists of array of values to describe path eg. [H1;V2].
+     Relevant only for editor area inside desktop
+-->
+<!ELEMENT constraints  (path*) >
+<!ATTLIST constraints
+>
+
+<!-- Path describe path to mode in model tree.
+     "orientation" sets orientation of splitter. "horizontal" means splitting
+     along x axis - components are from left to right. "vertical" means splitting
+     along y axis - components are from top to bottom.
+     "number" sets number of cell in given split cell. It is integer number. Number defines
+     position of given cell in array of cells. It is possible to define for example
+     20 for first cell and 40 for second cell. Later it is possible to insert third cell between
+     first and second by using 30 for third cell. It is usefull for platform to allow third party
+     modules to modify (insert) their own modes to existing layout.
+     Cells are counted from left to right in case of vertical split and
+     from top to bottom in case of horizontal split.
+     "weight" is double number from 0 to 1. It sets relative size of cell
+     in given splitter. Default value is 0.5.
+-->
+<!ELEMENT path   EMPTY >
+<!ATTLIST path
+    orientation (horizontal | vertical) #REQUIRED
+    number CDATA #REQUIRED
+    weight CDATA #IMPLIED
+>
+
+<!-- Element "screen" contains properties of screen.
+     "width" is width of screen in pixels
+     "height" is height of screen in pixels
+-->
+<!ELEMENT screen    EMPTY >
+<!ATTLIST screen
+    width  CDATA #REQUIRED
+    height CDATA #REQUIRED
+>
+
+<!-- Element "active-mode" contains unique name of active mode or is empty
+     when no mode is active.
+     "name" unique name of active mode
+-->
+<!ELEMENT active-mode  EMPTY >
+<!ATTLIST active-mode
+    name CDATA #IMPLIED
+>
+
+<!-- Element "maximized-mode" contains unique name of maximized mode or is empty
+     when no mode is maximized.
+     "editor" unique name of editor maximized mode. It is empty when the editor mode is not maximized.
+     "view" unique name of view maximized mode. It is empty when no view mode is maximized. -->
+<!ELEMENT maximized-mode   EMPTY >
+<!ATTLIST maximized-mode
+    editor CDATA #IMPLIED
+    view CDATA #IMPLIED
+>
+
+<!-- Toolbar attributes.
+     "configuration" name of active toolbar configuration 
+     "preferred-icon-size" preferred size of icons used in toolbar buttons -->
+<!ELEMENT toolbar   EMPTY >
+<!ATTLIST toolbar
+    configuration       CDATA     #IMPLIED
+    preferred-icon-size (16 | 24) #IMPLIED
+>
+
+<!-- Element "tc-list" contains ordered list of TopComponent Ids. Used to save state of
+     RecentViewList. -->
+<!ELEMENT tc-list (tc-id*) >
+<!ATTLIST tc-list
+>
+
+<!-- Element "tc-id" contains TopComponent Id. It is part of element "tc-list".
+     "id" is unique id of TopComponent -->
+<!ELEMENT tc-id   EMPTY >
+<!ATTLIST tc-id
+    id CDATA #REQUIRED
+>
+
+<!-- Element "imported-tcrefs" contains list of imported TopComponent Ids with source
+     workspace name and source mode name. -->
+<!ELEMENT imported-tcrefs (tcref-item*) >
+<!ATTLIST imported-tcrefs
+>
+
+<!-- Element "tcref-item" contains information about imported TopComponent.
+     It is part of element "imported-tcrefs".
+     "workspace" unique name of workspace from which TopComponent was imported
+     "mode" unique name of mode from which TopComponent was imported
+     "id" is unique id of imported TopComponent -->
+<!ELEMENT tcref-item   EMPTY >
+<!ATTLIST tcref-item
+    workspace CDATA #REQUIRED
+    mode      CDATA #REQUIRED
+    id        CDATA #REQUIRED
+>

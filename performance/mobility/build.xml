@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2007, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<!-- You may freely edit this file. See harness/README in the NetBeans platform -->
+<!-- for some information on what you could do (e.g. targets to override). -->
+<!-- If you delete this file and reopen the project it will be recreated. -->
+<project name="org.netbeans.performance.mobility" default="netbeans" basedir=".">
+    <description>Builds, tests, and runs the project org.netbeans.performance.mobility</description>
+
+    <property name="nbextra.dir" location="../../../nbextra"/>
+    <property name="test.timeout" value="3600000"/>
+    <property name="test.run.args" value="-Dnetbeans.keyring.no.master=true -client -Xss4m -Xms64m -Xmx1024m -XX:PermSize=64m -XX:MaxPermSize=300m -Xverify:none -Dcom.sun.aas.installRoot=&quot;${j2ee.appserver.path}&quot; -Dtomcat.installRoot=&quot;${tomcat.webserver.path}&quot;  -Dorg.netbeans.performance.repeat=&quot;${repeat}&quot;"/>
+    <property environment="env"/>
+    <property name="hudson.buildnumber" value="${env.BUILD_NUMBER}"/>
+    <property name="hudson.jobname" value="${env.JOB_NAME}"/>
+
+    <loadfile property="perftestrun.buildnumber"
+      srcFile="../../../build.number"
+      failonerror="false"
+    />
+
+    <target name="test-preinit" depends="init, prepare-wtk"/>
+
+
+    <target name="set-wtk-path" unless="wtk.zipfile.name">
+        <condition property="wtk.zipfile.name" value="wtk252-windows.zip">
+            <os family="windows"/>
+        </condition>
+        <condition property="wtk.zipfile.name" value="wtk252-linux.zip">
+            <os family="unix" name="linux"/>
+        </condition>
+    </target>
+
+    <target name="prepare-wtk" depends="set-wtk-path">
+        <fail unless="wtk.zipfile.name" message="Not supported platform."/>
+
+        <unzip src="${nbextra.dir}/data/${wtk.zipfile.name}" dest="${netbeans.dest.dir}/mobility"/>
+    </target>
+
+<!-- why UML is here?
+    <target name="test" description="Uses test-single to run each suite in different VM">
+        <antcall target="test-single">
+            <param name="test.includes" value="**\MeasureUMLSetupTest*"/>
+            <param name="test.type" value="qa-functional"/>
+        </antcall>
+        <antcall target="test-single">
+            <param name="test.includes" value="**\MeasureUMLActionsTest*"/>
+            <param name="test.type" value="qa-functional"/>
+        </antcall>
+        <antcall target="test-single">
+            <param name="test.includes" value="**\MeasureUMLDialogsTest*"/>
+            <param name="test.type" value="qa-functional"/>
+        </antcall>
+        <antcall target="test-single">
+            <param name="test.includes" value="**\*"/>
+            <param name="test.type" value="unit"/>
+        </antcall>
+    </target>
+-->
+
+    <import file="nbproject/build-impl.xml"/>
+</project>

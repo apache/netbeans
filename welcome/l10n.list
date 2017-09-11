@@ -1,0 +1,5 @@
+# diff
+read global
+${l10n-module}/release/docs/images/*.png
+${l10n-module}/release/docs/images/*.gif
+${l10n-module}/release/docs/*.html

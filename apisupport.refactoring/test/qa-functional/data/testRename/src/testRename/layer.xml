@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Build">
+            <file name="testRename-MyAction.instance">
+                <attr name="instanceClass" stringvalue="testRename.MyAction"/>
+            </file>
+            <file name="testRename-WhereUsedAction.instance">
+                <attr name="instanceClass" stringvalue="testRename.WhereUsedAction"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Editors">
+        <folder name="application">
+            <folder name="xml-dtd">
+                <folder name="Popup">
+                    <file name="testRename-WhereUsedAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Build/testRename-WhereUsedAction.instance"/>
+                    </file>
+                    <attr name="testRename-WhereUsedAction.shadow/testRename-MyAction.shadow" boolvalue="true"/>
+                    <file name="testRename-MyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Build/testRename-MyAction.instance"/>
+                    </file>
+                    <attr name="testRename-MyAction.shadow/org-netbeans-modules-xml-core-actions-CollectDTDAction.instance" boolvalue="true"/>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Loaders">
+        <folder name="application">
+            <folder name="pdf">
+                <folder name="Actions">
+                    <file name="testRename-WhereUsedAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Build/testRename-WhereUsedAction.instance"/>
+                    </file>
+                    <attr name="testRename-WhereUsedAction.shadow/testRename-MyAction.shadow" boolvalue="true"/>
+                    <file name="testRename-MyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Build/testRename-MyAction.instance"/>
+                    </file>
+                    <attr name="testRename-MyAction.shadow/OpenAction.instance" boolvalue="true"/>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="text">
+            <folder name="x-my">
+                <folder name="Actions">
+                    <file name="org-openide-actions-OpenAction.instance"/>
+                    <attr name="org-openide-actions-OpenAction.instance/org-openide-actions-FileSystemAction.instance" boolvalue="true"/>
+                    <file name="org-openide-actions-FileSystemAction.instance"/>
+                    <attr name="org-openide-actions-FileSystemAction.instance/sep-1.instance" boolvalue="true"/>
+                    <file name="sep-1.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    </file>
+                    <attr name="sep-1.instance/org-openide-actions-CutAction.instance" boolvalue="true"/>
+                    <file name="org-openide-actions-CutAction.instance"/>
+                    <attr name="org-openide-actions-CutAction.instance/org-openide-actions-CopyAction.instance" boolvalue="true"/>
+                    <file name="org-openide-actions-CopyAction.instance"/>
+                    <attr name="org-openide-actions-CopyAction.instance/sep-2.instance" boolvalue="true"/>
+                    <file name="sep-2.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    </file>
+                    <attr name="sep-2.instance/org-openide-actions-DeleteAction.instance" boolvalue="true"/>
+                    <file name="org-openide-actions-DeleteAction.instance"/>
+                    <attr name="org-openide-actions-DeleteAction.instance/org-openide-actions-RenameAction.instance" boolvalue="true"/>
+                    <file name="org-openide-actions-RenameAction.instance"/>
+                    <attr name="org-openide-actions-RenameAction.instance/sep-3.instance" boolvalue="true"/>
+                    <file name="sep-3.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    </file>
+                    <attr name="sep-3.instance/org-openide-actions-SaveAsTemplateAction.instance" boolvalue="true"/>
+                    <file name="org-openide-actions-SaveAsTemplateAction.instance"/>
+                    <attr name="org-openide-actions-SaveAsTemplateAction.instance/sep-4.instance" boolvalue="true"/>
+                    <file name="sep-4.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    </file>
+                    <attr name="sep-4.instance/org-openide-actions-ToolsAction.instance" boolvalue="true"/>
+                    <file name="org-openide-actions-ToolsAction.instance"/>
+                    <attr name="org-openide-actions-ToolsAction.instance/org-openide-actions-PropertiesAction.instance" boolvalue="true"/>
+                    <file name="org-openide-actions-PropertiesAction.instance"/>
+                </folder>
+            </folder>
+            <folder name="x-whu">
+                <folder name="Actions">
+                    <file name="org-openide-actions-OpenAction.instance"/>
+                    <attr name="org-openide-actions-OpenAction.instance/org-openide-actions-FileSystemAction.instance" boolvalue="true"/>
+                    <file name="org-openide-actions-FileSystemAction.instance"/>
+                    <attr name="org-openide-actions-FileSystemAction.instance/sep-1.instance" boolvalue="true"/>
+                    <file name="sep-1.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    </file>
+                    <attr name="sep-1.instance/org-openide-actions-CutAction.instance" boolvalue="true"/>
+                    <file name="org-openide-actions-CutAction.instance"/>
+                    <attr name="org-openide-actions-CutAction.instance/org-openide-actions-CopyAction.instance" boolvalue="true"/>
+                    <file name="org-openide-actions-CopyAction.instance"/>
+                    <attr name="org-openide-actions-CopyAction.instance/sep-2.instance" boolvalue="true"/>
+                    <file name="sep-2.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    </file>
+                    <attr name="sep-2.instance/org-openide-actions-DeleteAction.instance" boolvalue="true"/>
+                    <file name="org-openide-actions-DeleteAction.instance"/>
+                    <attr name="org-openide-actions-DeleteAction.instance/org-openide-actions-RenameAction.instance" boolvalue="true"/>
+                    <file name="org-openide-actions-RenameAction.instance"/>
+                    <attr name="org-openide-actions-RenameAction.instance/sep-3.instance" boolvalue="true"/>
+                    <file name="sep-3.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    </file>
+                    <attr name="sep-3.instance/org-openide-actions-SaveAsTemplateAction.instance" boolvalue="true"/>
+                    <file name="org-openide-actions-SaveAsTemplateAction.instance"/>
+                    <attr name="org-openide-actions-SaveAsTemplateAction.instance/sep-4.instance" boolvalue="true"/>
+                    <file name="sep-4.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    </file>
+                    <attr name="sep-4.instance/org-openide-actions-ToolsAction.instance" boolvalue="true"/>
+                    <file name="org-openide-actions-ToolsAction.instance"/>
+                    <attr name="org-openide-actions-ToolsAction.instance/org-openide-actions-PropertiesAction.instance" boolvalue="true"/>
+                    <file name="org-openide-actions-PropertiesAction.instance"/>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="File">
+            <file name="testRename-WhereUsedAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Build/testRename-WhereUsedAction.instance"/>
+            </file>
+            <attr name="testRename-WhereUsedAction.shadow/testRename-MyAction.shadow" boolvalue="true"/>
+            <file name="testRename-MyAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Build/testRename-MyAction.instance"/>
+            </file>
+            <attr name="testRename-MyAction.shadow/RescanAction.instance" boolvalue="true"/>
+        </folder>
+    </folder>
+    <folder name="Services">
+        <folder name="MIMEResolver">
+            <file name="MyResolver.xml" url="MyResolver.xml">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="testRename.Bundle"/>
+            </file>
+            <file name="WhereUsedResolver.xml" url="WhereUsedResolver.xml">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="testRename.Bundle"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Templates">
+        <folder name="Other">
+            <file name="MyTemplate.my" url="MyTemplate.my">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="testRename.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+            <file name="WhereUsedTemplate.whu" url="WhereUsedTemplate.whu">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="testRename.Bundle"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

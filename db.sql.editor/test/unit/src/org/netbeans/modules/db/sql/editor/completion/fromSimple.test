@@ -1,0 +1,15 @@
+select from c|
+
+--
+<unknown>
+  customers*
+    customer
+      customer_id
+    casummary[view]
+      casummary_id
+  accounting
+    invoice
+      invoice_id
+    purchase_order
+      order_id
+custom

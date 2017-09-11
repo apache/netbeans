@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="newWSDL1" targetNamespace="http://j2ee.netbeans.org/wsdl/newWSDL1"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://j2ee.netbeans.org/wsdl/newWSDL1">
+    <documentation>
+        Contains a list of up to 10 MessageID values.
+                &lt;br /&gt;&lt;br /&gt;            
+                Either AlertIDs, MessageIDs, or both must be included in
+	the request. Messages in the Sent box cannot be moved,
+	marked as Read, or Flagged.
+    </documentation>
+</definitions>

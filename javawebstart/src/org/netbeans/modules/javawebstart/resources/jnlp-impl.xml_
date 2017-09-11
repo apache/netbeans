@@ -1,0 +1,911 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2013 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<project name="jnlp-impl" default="default" basedir=".." xmlns:jnlp="http://www.netbeans.org/ns/j2se-project/jnlp" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3">
+
+    <property name="jnlp.file.name.default" value="launch.jnlp"/>
+    <property name="jnlp.dest.dir" location="dist"/>
+    
+    <!-- helper file to create list of arguments, etc. -->
+    <property name="helper.file" location="helper.txt"/>
+    
+    <target name="default">
+        <echo message="Default target is not set, you must specify which target you want to run."/>
+    </target>
+
+    <target name="-check-operating-system">
+        <condition property="running.on.mac">
+            <os family="mac"/>
+        </condition>
+        <condition property="running.on.unix">
+            <os family="unix"/>
+        </condition>
+        <condition property="running.on.windows">
+            <os family="windows"/>
+        </condition>
+        <echo message="running.on.mac = ${running.on.mac}" level="verbose"/>
+        <echo message="running.on.unix = ${running.on.unix}" level="verbose"/>
+        <echo message="running.on.windows = ${running.on.windows}" level="verbose"/>
+    </target>
+
+    <target name="-substitute-platform-home" unless="platform.home">
+        <property name="platform.home" value="${java.home}"/>
+    </target>
+
+    <target name="-init-platform" depends="-substitute-platform-home">
+        <condition property="java.exe.found">
+            <or>
+                <available file="${platform.home}${file.separator}bin${file.separator}java"/>
+                <available file="${platform.home}${file.separator}bin${file.separator}java.exe"/>
+            </or>
+        </condition>
+        <fail message="Error: java executable not found in current platform." unless="java.exe.found"/>
+        <local name="version-output"/>
+        <exec executable="${platform.home}${file.separator}bin${file.separator}java" outputproperty="version-output">
+            <arg value="-version"/>
+        </exec>
+        <echo message="java executable version-output:${line.separator}${version-output}" level="verbose"/>
+        <condition property="have-jdk-7u4-mac">
+            <and>
+                <contains string="${version-output}" substring="java version &quot;1.7.0_04"/>
+                <os family="mac"/>
+            </and>
+        </condition>
+        <fail message="Error:${line.separator}JDK 7u4 Mac does not support WebStart technology.${line.separator}Please upgrade to JDK 7u6 or later." if="have-jdk-7u4-mac"/>
+    </target>
+
+    <!-- Check availability of WebStart executable -->
+
+    <target name="-check-webstart-in-platform-home-jre" if="platform.home">
+        <condition property="do.set.webstart.in.platform.home.jre">
+            <and>
+                <not><isset property="active.webstart.executable"/></not>
+                <or>
+                    <available file="${platform.home}${file.separator}jre${file.separator}bin${file.separator}javaws.exe"/>
+                    <available file="${platform.home}${file.separator}jre${file.separator}bin${file.separator}javaws"/>
+                </or>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-webstart-in-platform-home-jre" depends="-check-webstart-in-platform-home-jre" if="do.set.webstart.in.platform.home.jre">
+        <property name="active.webstart.executable" value="${platform.home}${file.separator}jre${file.separator}bin${file.separator}javaws"/>
+    </target>
+    <target name="-check-webstart-in-platform-home" if="platform.home">
+        <condition property="do.set.webstart.in.platform.home">
+            <and>
+                <not><isset property="active.webstart.executable"/></not>
+                <or>
+                    <available file="${platform.home}${file.separator}bin${file.separator}javaws.exe"/>
+                    <available file="${platform.home}${file.separator}bin${file.separator}javaws"/>
+                </or>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-webstart-in-platform-home" depends="-set-webstart-in-platform-home-jre,-check-webstart-in-platform-home" if="do.set.webstart.in.platform.home">
+        <property name="active.webstart.executable" value="${platform.home}${file.separator}bin${file.separator}javaws"/>
+    </target>
+    <target name="-check-webstart-in-platform-home-220918workaround" if="platform.home">
+        <condition property="do.set.webstart.in.platform.home.220918workaround">
+            <and>
+                <not><isset property="active.webstart.executable"/></not>
+                <or>
+                    <available file="${platform.home}${file.separator}..${file.separator}bin${file.separator}javaws.exe"/>
+                    <available file="${platform.home}${file.separator}..${file.separator}bin${file.separator}javaws"/>
+                </or>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-webstart-in-platform-home-220918workaround" depends="-set-webstart-in-platform-home,-check-webstart-in-platform-home-220918workaround" if="do.set.webstart.in.platform.home.220918workaround">
+        <property name="active.webstart.executable" value="${platform.home}${file.separator}..${file.separator}bin${file.separator}javaws"/>
+    </target>
+    <target name="-check-webstart-in-jre" unless="active.webstart.executable">
+        <condition property="do.set.webstart.in.jre">
+            <and>
+                <not><isset property="active.webstart.executable"/></not>
+                <or>
+                    <available file="${java.home}${file.separator}bin${file.separator}javaws.exe"/>
+                    <available file="${java.home}${file.separator}bin${file.separator}javaws"/>
+                </or>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-webstart-in-jre" depends="-set-webstart-in-platform-home-220918workaround,-check-webstart-in-jre" if="do.set.webstart.in.jre">
+        <property name="active.webstart.executable" value="${java.home}${file.separator}bin${file.separator}javaws"/>
+    </target>
+    <target name="-check-webstart-in-probjdk" unless="active.webstart.executable">
+        <condition property="do.set.webstart.in.probjdk">
+            <and>
+                <not><isset property="active.webstart.executable"/></not>
+                <or>
+                    <available file="${java.home}${file.separator}..${file.separator}bin${file.separator}javaws.exe"/>
+                    <available file="${java.home}${file.separator}..${file.separator}bin${file.separator}javaws"/>
+                </or>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-webstart-in-probjdk" depends="-set-webstart-in-jre,-check-webstart-in-probjdk" if="do.set.webstart.in.probjdk">
+        <property name="active.webstart.executable" value="${java.home}${file.separator}..${file.separator}bin${file.separator}javaws"/>
+    </target>
+    <target name="-check-webstart-in-envjdk" unless="active.webstart.executable">
+        <property environment="env"/>
+        <condition property="do.set.webstart.in.envjdk">
+            <and>
+                <not><isset property="active.webstart.executable"/></not>
+                <or>
+                    <available file="${env.JAVA_HOME}${file.separator}bin${file.separator}javaws.exe"/>
+                    <available file="${env.JAVA_HOME}${file.separator}bin${file.separator}javaws"/>
+                </or>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-webstart-in-envjdk" depends="-set-webstart-in-probjdk,-check-webstart-in-envjdk" if="do.set.webstart.in.envjdk">
+        <property name="active.webstart.executable" value="${env.JAVA_HOME}${file.separator}bin${file.separator}javaws"/>
+    </target>
+    <target name="-check-webstart-in-usr-bin" unless="active.webstart.executable">
+        <condition property="do.set.webstart.in.usr.bin">
+            <and>
+                <not><isset property="active.webstart.executable"/></not>
+                <available file="${file.separator}usr${file.separator}bin${file.separator}javaws"/>
+            </and>
+        </condition>
+    </target>
+    <target name="-set-webstart-in-usr-bin" depends="-set-webstart-in-envjdk,-check-webstart-in-usr-bin" if="do.set.webstart.in.usr.bin">
+        <property name="active.webstart.executable" value="${file.separator}usr${file.separator}bin${file.separator}javaws"/>
+    </target>
+    <target name="-pre-check-webstart-in-unix" depends="-check-operating-system,-set-webstart-in-usr-bin" unless="active.webstart.executable">
+        <condition property="running.on.unix-active.webstart.executable">
+            <and>
+                <not><isset property="active.webstart.executable"/></not>
+                <isset property="running.on.unix"/>
+            </and>
+        </condition>
+    </target>
+    <target name="-check-webstart-in-unix" depends="-pre-check-webstart-in-unix" if="running.on.unix-active.webstart.executable">
+        <local name="exec.which.javaws.result"/>
+        <exec executable="which" failifexecutionfails="false" failonerror="false" resultproperty="exec.which.javaws.result" outputproperty="exec.which.javaws.output">
+            <arg value="javaws"/>
+        </exec>
+        <condition property="do.set.webstart.in.unix">
+            <and>
+                <not><isset property="active.webstart.executable"/></not>
+                <isset property="exec.which.javaws.result"/>
+                <equals arg1="${exec.which.javaws.result}" arg2="0"/>
+                <isset property="exec.which.javaws.output"/>
+                <not><equals arg1="${exec.which.javaws.output}" arg2=""/></not>
+            </and>
+        </condition>
+        <echo message="do.set.webstart.in.unix = ${do.set.webstart.in.unix}" level="verbose"/>
+    </target>
+    <target name="-set-webstart-in-unix" depends="-set-webstart-in-envjdk,-check-webstart-in-unix" if="do.set.webstart.in.unix">
+        <property name="active.webstart.executable" value="${exec.which.javaws.output}"/>
+    </target>
+    <target name="-pre-check-webstart" depends="-set-webstart-in-unix">
+        <echo message="active.webstart.executable = ${active.webstart.executable}" level="verbose"/>
+    </target>
+
+    <target name="-check-webstart" depends="-pre-check-webstart">
+        <condition property="webstart-available">
+            <and>
+                <or>
+                    <isset property="do.set.webstart.in.platform.home.jre"/>
+                    <isset property="do.set.webstart.in.platform.home"/>
+                    <isset property="do.set.webstart.in.platform.home.220918workaround"/>
+                    <isset property="do.set.webstart.in.jre"/>
+                    <isset property="do.set.webstart.in.probjdk"/>
+                    <isset property="do.set.webstart.in.envjdk"/>
+                    <isset property="do.set.webstart.in.usr.bin"/>
+                    <isset property="do.set.webstart.in.unix"/>
+                </or>
+                <isset property="active.webstart.executable"/>
+            </and>
+        </condition>
+        <fail message="Error:${line.separator}WebStart executable could not be found." unless="webstart-available"/>
+        <echo message="webstart-available = ${webstart-available}" level="verbose"/>
+    </target>
+
+    <!-- Main target -->
+
+    <target name="jnlp" depends="-init-filename,-test-jnlp-enabled,-do-jar-jnlp" if="is.jnlp.enabled">
+        <makeurl property="jnlp.local.codebase.url" file="${basedir}/dist" validate="false"/>
+        <antcall target="generate-jnlp"/>
+        <antcall target="generate-html-preview"/>
+        <antcall target="-warn-insufficient-signing"/>
+    </target>
+
+    <!-- JNLP archiving -->
+
+    <target name="-init-macrodef-extend-manifest">
+        <macrodef name="extend-manifest" uri="http://www.netbeans.org/ns/j2se-project/jnlp">
+            <element name="customize"/>
+            <sequential>
+                <manifest file="${tmp.manifest.file}" mode="update" encoding="UTF-8">
+                    <customize/>
+                </manifest>
+            </sequential>
+        </macrodef>
+    </target>
+
+    <target name="-test-jnlp-type" depends="-test-jnlp-enabled" if="is.jnlp.enabled">
+        <condition property="is.applet">
+            <equals arg1="${jnlp.descriptor}" arg2="applet" trim="true"/>
+        </condition>
+        <condition property="is.application">
+            <equals arg1="${jnlp.descriptor}" arg2="application" trim="true"/>
+        </condition>
+        <condition property="is.component">
+            <equals arg1="${jnlp.descriptor}" arg2="component" trim="true"/>
+        </condition>
+        <condition property="is.applet+mkdist.available">
+            <and>
+                <isset property="libs.CopyLibs.classpath"/>
+                <istrue value="${is.applet}"/>
+            </and>
+        </condition>
+        <condition property="is.application+mkdist.available">
+            <and>
+                <isset property="libs.CopyLibs.classpath"/>
+                <istrue value="${is.application}"/>
+            </and>
+        </condition>
+        <condition property="is.component+mkdist.available">
+            <and>
+                <isset property="libs.CopyLibs.classpath"/>
+                <istrue value="${is.component}"/>
+            </and>
+        </condition>
+    </target>
+
+    <target name="-create-tmp-manifest" unless="manifest.file">
+        <property name="tmp.manifest.file" value="${build.dir}/manifest.mf"/>
+        <delete file="${tmp.manifest.file}" failonerror="false"/>
+        <touch file="${tmp.manifest.file}"/>
+    </target>
+
+    <target name="-copy-tmp-manifest" if="manifest.file">
+        <property name="tmp.manifest.file" value="${build.dir}/manifest.mf"/>
+        <copy file="${manifest.file}" tofile="${build.dir}/manifest.mf" encoding="${manifest.encoding}" outputencoding="UTF-8"/>
+    </target>
+
+    <target name="-set-mixed-code-properties" depends="-check-signing-possible" if="jnlp.signed.true+signjars.task.available">
+        <property name="jnlp.mixed.code" value=""/>
+        <condition property="mixed.code.trusted.only">
+            <equals arg1="trusted_only" arg2="${jnlp.mixed.code}"/>
+        </condition>
+        <condition property="mixed.code.trusted.library">
+            <equals arg1="trusted_library" arg2="${jnlp.mixed.code}"/>
+        </condition>
+    </target>
+
+    <target name="-add-trusted-only-attribute" depends="-set-mixed-code-properties,-init-macrodef-extend-manifest" if="mixed.code.trusted.only">
+        <jnlp:extend-manifest>
+            <customize>
+                <attribute name="Trusted-Only" value="true"/>
+            </customize>
+        </jnlp:extend-manifest>
+    </target>
+    <target name="-add-trusted-library-attribute" depends="-set-mixed-code-properties,-init-macrodef-extend-manifest" if="mixed.code.trusted.library">
+        <jnlp:extend-manifest>
+            <customize>
+                <attribute name="Trusted-Library" value="true"/>
+            </customize>
+        </jnlp:extend-manifest>
+    </target>
+    
+    <target name="-check-manifest-codebase">
+        <condition property="manifest.codebase.copy" value="${jnlp.dest.dir}">
+            <and>
+                <isset property="jnlp.codebase.type"/>
+                <equals arg1="${jnlp.codebase.type}" arg2="local"/>
+                <or>
+                    <not><isset property="manifest.custom.codebase"/></not>
+                    <equals arg1="${manifest.custom.codebase}" arg2=""/>
+                </or>
+            </and>
+        </condition>
+        <condition property="manifest.codebase.copy" value="${jnlp.codebase.user}">
+            <and>
+                <isset property="jnlp.codebase.type"/>
+                <equals arg1="${jnlp.codebase.type}" arg2="user"/>
+                <isset property="jnlp.codebase.user"/>
+                <not><equals arg1="${jnlp.codebase.type}" arg2=""/></not>
+                <or>
+                    <not><isset property="manifest.custom.codebase"/></not>
+                    <equals arg1="${manifest.custom.codebase}" arg2=""/>
+                </or>
+            </and>
+        </condition>
+        <condition property="manifest.codebase.web">
+            <and>
+                <isset property="jnlp.codebase.type"/>
+                <equals arg1="${jnlp.codebase.type}" arg2="web"/>
+                <or>
+                    <not><isset property="manifest.custom.codebase"/></not>
+                    <equals arg1="${manifest.custom.codebase}" arg2=""/>
+                </or>
+            </and>
+        </condition>
+        <condition property="manifest.codebase.other">
+            <and>
+                <not><isset property="manifest.codebase.copy"/></not>
+                <not><isset property="manifest.codebase.web"/></not>
+                <or>
+                    <not><isset property="manifest.custom.codebase"/></not>
+                    <equals arg1="${manifest.custom.codebase}" arg2=""/>
+                </or>
+            </and>
+        </condition>
+        <condition property="manifest.codebase.override">
+            <and>
+                <isset property="manifest.custom.codebase"/>
+                <not><equals arg1="${manifest.custom.codebase}" arg2=""/></not>
+            </and>
+        </condition>
+        <condition property="manifest.codebase.override.warning">
+            <and>
+                <isset property="manifest.codebase.override"/>
+                <equals arg1="${manifest.custom.codebase}" arg2="*"/>
+            </and>
+        </condition>
+        <echo message="manifest.codebase.copy = ${manifest.codebase.copy}" level="verbose"/>
+        <echo message="manifest.codebase.web = ${manifest.codebase.web}" level="verbose"/>
+        <echo message="manifest.codebase.other = ${manifest.codebase.other}" level="verbose"/>
+        <echo message="manifest.codebase.override = ${manifest.codebase.override}" level="verbose"/>
+    </target>
+    <target name="-extend-manifest-codebase-copy" depends="-check-manifest-codebase" if="manifest.codebase.copy">
+        <property name="manifest.codebase.attribute" value="${manifest.codebase.copy}"/>
+    </target>
+    <target name="-extend-manifest-codebase-web" depends="-check-manifest-codebase" if="manifest.codebase.web">
+        <property name="manifest.codebase.attribute" value="*"/>
+        <echo message="Warning: Setting Codebase manifest attribute to '*' due to current JNLP Codebase setting. Set manifest.custom.codebase property to override the non-secure value '*'." level="warning"/>
+    </target>
+    <target name="-extend-manifest-codebase-other" depends="-check-manifest-codebase" if="manifest.codebase.other">
+        <property name="manifest.codebase.attribute" value="*"/>
+        <echo message="Warning: Setting Codebase manifest attribute to '*' due to current JNLP Codebase. Set manifest.custom.codebase property to override the non-secure value '*'." level="warning"/>
+    </target>
+    <target name="-extend-manifest-codebase-override-warning" depends="-check-manifest-codebase" if="manifest.codebase.override.warning">
+        <echo message="Warning: Codebase manifest attribute should be used to restrict JAR repurposing. Preferably set manifest.custom.codebase to more specific value than the non-secure '*'" level="warning"/>
+    </target>
+    <target name="-extend-manifest-codebase-override" depends="-check-manifest-codebase,-extend-manifest-codebase-override-warning" if="manifest.codebase.override">
+        <property name="manifest.codebase.attribute" value="${manifest.custom.codebase}"/>
+    </target>
+
+    <target name="-check-manifest-application-library-allowable-codebase">
+        <condition property="manifest.application.library.allowable.codebase.copy" value="${jnlp.dest.dir}">
+            <and>
+                <isset property="jnlp.codebase.type"/>
+                <equals arg1="${jnlp.codebase.type}" arg2="local"/>
+                <or>
+                    <not><isset property="manifest.custom.application.library.allowable.codebase"/></not>
+                    <equals arg1="${manifest.custom.application.library.allowable.codebase}" arg2=""/>
+                </or>
+            </and>
+        </condition>
+        <condition property="manifest.application.library.allowable.codebase.copy" value="${jnlp.codebase.user}">
+            <and>
+                <isset property="jnlp.codebase.type"/>
+                <equals arg1="${jnlp.codebase.type}" arg2="user"/>
+                <isset property="jnlp.codebase.user"/>
+                <not><equals arg1="${jnlp.codebase.type}" arg2=""/></not>
+                <or>
+                    <not><isset property="manifest.custom.application.library.allowable.codebase"/></not>
+                    <equals arg1="${manifest.custom.application.library.allowable.codebase}" arg2=""/>
+                </or>
+            </and>
+        </condition>
+        <condition property="manifest.application.library.allowable.codebase.web">
+            <and>
+                <isset property="jnlp.codebase.type"/>
+                <equals arg1="${jnlp.codebase.type}" arg2="web"/>
+                <or>
+                    <not><isset property="manifest.custom.application.library.allowable.codebase"/></not>
+                    <equals arg1="${manifest.custom.application.library.allowable.codebase}" arg2=""/>
+                </or>
+            </and>
+        </condition>
+        <condition property="manifest.application.library.allowable.codebase.other">
+            <and>
+                <not><isset property="manifest.application.library.allowable.codebase.copy"/></not>
+                <not><isset property="manifest.application.library.allowable.codebase.web"/></not>
+                <or>
+                    <not><isset property="manifest.custom.application.library.allowable.codebase"/></not>
+                    <equals arg1="${manifest.custom.application.library.allowable.codebase}" arg2=""/>
+                </or>
+            </and>
+        </condition>
+        <condition property="manifest.application.library.allowable.codebase.override">
+            <and>
+                <isset property="manifest.custom.application.library.allowable.codebase"/>
+                <not><equals arg1="${manifest.custom.application.library.allowable.codebase}" arg2=""/></not>
+            </and>
+        </condition>
+        <condition property="manifest.application.library.allowable.codebase.override.warning">
+            <and>
+                <isset property="manifest.application.library.allowable.codebase.override"/>
+                <equals arg1="${manifest.custom.application.library.allowable.codebase}" arg2="*"/>
+            </and>
+        </condition>
+    </target>
+    <target name="-extend-manifest-application-library-allowable-codebase-copy" depends="-check-manifest-application-library-allowable-codebase" if="manifest.application.library.allowable.codebase.copy">
+        <property name="manifest.application.library.allowable.codebase.attribute" value="${manifest.application.library.allowable.codebase.copy}"/>
+    </target>
+    <target name="-extend-manifest-application-library-allowable-codebase-web" depends="-check-manifest-application-library-allowable-codebase" if="manifest.application.library.allowable.codebase.web">
+        <property name="manifest.application.library.allowable.codebase.attribute" value="*"/>
+        <echo message="Warning: Setting Application-Library-Allowable-Codebase manifest attribute to '*' due to current JNLP Codebase setting. Set manifest.custom.application.library.allowable.codebase property to override the non-secure value '*'." level="warning"/>
+    </target>
+    <target name="-extend-manifest-application-library-allowable-codebase-other" depends="-check-manifest-application-library-allowable-codebase" if="manifest.application.library.allowable.codebase.other">
+        <property name="manifest.application.library.allowable.codebase.attribute" value="*"/>
+        <echo message="Warning: Setting Application-Library-Allowable-Codebase manifest attribute to '*' due to current JNLP Codebase setting. Set manifest.custom.application.library.allowable.codebase property to override the non-secure value '*'." level="warning"/>
+    </target>
+    <target name="-extend-manifest-application-library-allowable-codebase-override-warning" depends="-check-manifest-application-library-allowable-codebase" if="manifest.application.library.allowable.codebase.override.warning">
+        <echo message="Warning: Application-Library-Allowable-Codebase manifest attribute should be used to restrict JAR repurposing. Preferably set manifest.custom.application.library.allowable.codebase to more specific value than the non-secure '*'" level="warning"/>
+    </target>
+    <target name="-extend-manifest-application-library-allowable-codebase-override" depends="-check-manifest-application-library-allowable-codebase,-extend-manifest-application-library-allowable-codebase-override-warning" if="manifest.application.library.allowable.codebase.override">
+        <property name="manifest.application.library.allowable.codebase.attribute" value="${manifest.custom.application.library.allowable.codebase}"/>
+    </target>
+    <target name="-check-manifest-caller-allowable-codebase">
+        <condition property="manifest.caller.allowable.codebase.copy" value="${jnlp.dest.dir}">
+            <and>
+                <isset property="jnlp.codebase.type"/>
+                <equals arg1="${jnlp.codebase.type}" arg2="local"/>
+                <or>
+                    <not><isset property="manifest.custom.caller.allowable.codebase"/></not>
+                    <equals arg1="${manifest.custom.caller.allowable.codebase}" arg2=""/>
+                </or>
+            </and>
+        </condition>
+        <condition property="manifest.caller.allowable.codebase.copy" value="${jnlp.codebase.user}">
+            <and>
+                <isset property="jnlp.codebase.type"/>
+                <equals arg1="${jnlp.codebase.type}" arg2="user"/>
+                <isset property="jnlp.codebase.user"/>
+                <not><equals arg1="${jnlp.codebase.type}" arg2=""/></not>
+                <or>
+                    <not><isset property="manifest.custom.caller.allowable.codebase"/></not>
+                    <equals arg1="${manifest.custom.caller.allowable.codebase}" arg2=""/>
+                </or>
+            </and>
+        </condition>
+        <condition property="manifest.caller.allowable.codebase.web">
+            <and>
+                <isset property="jnlp.codebase.type"/>
+                <equals arg1="${jnlp.codebase.type}" arg2="web"/>
+                <or>
+                    <not><isset property="manifest.custom.caller.allowable.codebase"/></not>
+                    <equals arg1="${manifest.custom.caller.allowable.codebase}" arg2=""/>
+                </or>
+            </and>
+        </condition>
+        <condition property="manifest.caller.allowable.codebase.other">
+            <and>
+                <not><isset property="manifest.caller.allowable.codebase.copy"/></not>
+                <not><isset property="manifest.caller.allowable.codebase.web"/></not>
+                <or>
+                    <not><isset property="manifest.custom.caller.allowable.codebase"/></not>
+                    <equals arg1="${manifest.custom.caller.allowable.codebase}" arg2=""/>
+                </or>
+            </and>
+        </condition>
+        <condition property="manifest.caller.allowable.codebase.override">
+            <and>
+                <isset property="manifest.custom.caller.allowable.codebase"/>
+                <not><equals arg1="${manifest.custom.caller.allowable.codebase}" arg2=""/></not>
+            </and>
+        </condition>
+        <condition property="manifest.caller.allowable.codebase.override.warning">
+            <and>
+                <isset property="manifest.caller.allowable.codebase.override"/>
+                <equals arg1="${manifest.custom.caller.allowable.codebase}" arg2="*"/>
+            </and>
+        </condition>
+    </target>
+    <target name="-extend-manifest-caller-allowable-codebase-copy" depends="-check-manifest-caller-allowable-codebase" if="manifest.caller.allowable.codebase.copy">
+        <property name="manifest.caller.allowable.codebase.attribute" value="${manifest.caller.allowable.codebase.copy}"/>
+    </target>
+    <target name="-extend-manifest-caller-allowable-codebase-web" depends="-check-manifest-caller-allowable-codebase" if="manifest.caller.allowable.codebase.web">
+        <property name="manifest.caller.allowable.codebase.attribute" value="*"/>
+        <echo message="Warning: Setting Caller-Allowable-Codebase manifest attribute to '*' due to current JNLP Codebase setting. Set manifest.custom.caller.allowable.codebase property to override the non-secure value '*'." level="warning"/>
+    </target>
+    <target name="-extend-manifest-caller-allowable-codebase-other" depends="-check-manifest-caller-allowable-codebase" if="manifest.caller.allowable.codebase.other">
+        <property name="manifest.caller.allowable.codebase.attribute" value="*"/>
+        <echo message="Warning: Setting Caller-Allowable-Codebase manifest attribute to '*' due to current JNLP Codebase setting. Set manifest.custom.caller.allowable.codebase property to override the non-secure value '*'." level="warning"/>
+    </target>
+    <target name="-extend-manifest-caller-allowable-codebase-override-warning" depends="-check-manifest-caller-allowable-codebase" if="manifest.caller.allowable.codebase.override.warning">
+        <echo message="Warning: Caller-Allowable-Codebase manifest attribute should be used to restrict JavaScript access. Preferably set manifest.custom.caller.allowable.codebase to more specific value than the non-secure '*'" level="warning"/>
+    </target>
+    <target name="-extend-manifest-caller-allowable-codebase-override" depends="-check-manifest-caller-allowable-codebase,-extend-manifest-caller-allowable-codebase-override-warning" if="manifest.caller.allowable.codebase.override">
+        <property name="manifest.caller.allowable.codebase.attribute" value="${manifest.custom.caller.allowable.codebase}"/>
+    </target>
+    <target name="-check-manifest-permissions">
+        <condition property="manifest.permissions.all">
+            <and>
+                <istrue value="${jnlp.signed}"/>
+                <or>
+                    <not><isset property="manifest.custom.permissions"/></not>
+                    <equals arg1="${manifest.custom.permissions}" arg2=""/>
+                </or>
+            </and>
+        </condition>
+        <condition property="manifest.permissions.sandbox">
+            <and>
+                <not><istrue value="${jnlp.signed}"/></not>
+                <or>
+                    <not><isset property="manifest.custom.permissions"/></not>
+                    <equals arg1="${manifest.custom.permissions}" arg2=""/>
+                </or>
+            </and>
+        </condition>
+        <condition property="manifest.permissions.override">
+            <and>
+                <isset property="manifest.custom.permissions"/>
+                <not><equals arg1="${manifest.custom.permissions}" arg2=""/></not>
+            </and>
+        </condition>
+        <echo message="manifest.permissions.all = ${manifest.permissions.all}" level="verbose"/>
+        <echo message="manifest.permissions.sandbox = ${manifest.permissions.sandbox}" level="verbose"/>
+        <echo message="manifest.permissions.override = ${manifest.permissions.override}" level="verbose"/>
+    </target>    
+    <target name="-extend-manifest-permissions-sandbox" depends="-check-manifest-permissions" if="manifest.permissions.sandbox">
+        <property name="manifest.permissions.attribute" value="sandbox"/>
+    </target>
+    <target name="-extend-manifest-permissions-all" depends="-check-manifest-permissions" if="manifest.permissions.all">
+        <property name="manifest.permissions.attribute" value="all-permissions"/>
+    </target>
+    <target name="-extend-manifest-permissions-override" depends="-check-manifest-permissions" if="manifest.permissions.override">
+        <property name="manifest.permissions.attribute" value="${manifest.custom.permissions}"/>
+    </target>
+    <target name="-extend-manifest-application-name">
+        <condition property="manifest.application.name.attribute" value="${manifest.custom.application.name}" else="${application.title}">
+            <and>
+                <isset property="manifest.custom.application.name"/>
+                <not><equals arg1="${manifest.custom.application.name}" arg2=""/></not>
+            </and>
+        </condition>
+    </target>
+    <target name="-add-manifest-security" depends="-init-macrodef-extend-manifest,
+                    -extend-manifest-codebase-copy,-extend-manifest-codebase-web,-extend-manifest-codebase-other,-extend-manifest-codebase-override,
+                    -extend-manifest-permissions-sandbox,-extend-manifest-permissions-all,-extend-manifest-permissions-override,
+                    -extend-manifest-application-name, -extend-manifest-application-library-allowable-codebase-copy, -extend-manifest-application-library-allowable-codebase-web,
+                    -extend-manifest-application-library-allowable-codebase-other, -extend-manifest-application-library-allowable-codebase-override,
+                    -extend-manifest-caller-allowable-codebase-copy, -extend-manifest-caller-allowable-codebase-web, -extend-manifest-caller-allowable-codebase-other,
+                    -extend-manifest-caller-allowable-codebase-override">
+        <jnlp:extend-manifest>
+            <customize>
+                <attribute name="Codebase" value="${manifest.codebase.attribute}"/>
+                <attribute name="Application-Library-Allowable-Codebase" value="${manifest.application.library.allowable.codebase.attribute}"/>
+                <attribute name="Caller-Allowable-Codebase" value="${manifest.caller.allowable.codebase.attribute}"/>
+                <attribute name="Permissions" value="${manifest.permissions.attribute}"/>
+                <attribute name="Application-Name" value="${manifest.application.name.attribute}"/>
+            </customize>
+        </jnlp:extend-manifest>
+        <echo message="Added manifest attribute Codebase: ${manifest.codebase.attribute}" level="verbose"/>
+        <echo message="Added manifest attribute Permissions: ${manifest.permissions.attribute}" level="verbose"/>
+        <echo message="Added manifest attribute Application-Name: ${manifest.application.name.attribute}" level="verbose"/>
+    </target>
+
+    <target name="-do-jar-applet" depends="-test-jnlp-type,-init-macrodef-copylibs" if="is.applet+mkdist.available">
+        <j2seproject3:copylibs manifest="${tmp.manifest.file}"/>
+    </target>
+    <target name="-do-jar-jnlp-application" depends="-init-filename,-test-jnlp-type,-init-macrodef-copylibs" if="is.application+mkdist.available">
+        <j2seproject3:copylibs manifest="${tmp.manifest.file}">
+            <customize>
+                <attribute name="Main-Class" value="${main.class}"/>
+            </customize>
+        </j2seproject3:copylibs>
+        <echo>To run this application from the command line without Ant, try:</echo>
+        <property location="${jnlp.dest.dir}/${jnlp.file}" name="jnlp.file.resolved"/>
+        <echo>javaws "${jnlp.file.resolved}"</echo>
+    </target>
+    <target name="-do-jar-jnlp-component" depends="-test-jnlp-type,-init-macrodef-copylibs" if="is.component+mkdist.available">
+        <j2seproject3:copylibs manifest="${tmp.manifest.file}"/>
+    </target>
+    <target name="-do-jar-jnlp" depends="-create-tmp-manifest,-copy-tmp-manifest,-add-trusted-only-attribute,-add-trusted-library-attribute,-add-manifest-security,-do-jar-applet,-do-jar-jnlp-application,-do-jar-jnlp-component"/>
+
+    <!-- Init jnlp filename -->
+    
+    <target name="-init-filename" depends="-check-filename-prop,-set-jnlp-filename-custom,-set-jnlp-filename-default"/>
+    
+    <target name="-set-jnlp-filename-custom" if="jnlp.file.name.set">
+        <property name="jnlp.file" value="${jnlp.file.name}"/>
+    </target>
+    
+    <target name="-set-jnlp-filename-default" unless="jnlp.file.name.set">
+        <property name="jnlp.file" value="${jnlp.file.name.default}"/>
+    </target>
+    
+    <target name="-check-filename-prop">
+        <condition property="jnlp.file.name.set">
+            <and>
+                <isset property="jnlp.file.name"/>
+                <not>
+                    <equals arg1="jnlp.file.name" arg2="" trim="true"/>
+                </not>
+            </and>
+        </condition>
+    </target>
+    
+    <!-- Test JNLP enabled-->
+    
+    <target name="-test-jnlp-enabled">
+        <condition property="is.jnlp.enabled">
+            <istrue value="${jnlp.enabled}"/>
+        </condition>
+    </target>
+    
+    <target name="-test-signing-security">
+        <condition property="is.signing.unsafe">
+            <and>
+                <istrue value="${jnlp.enabled}"/>
+                <or>
+                    <not><istrue value="${jnlp.signed}"/></not>
+                    <equals arg1="${jnlp.signing}" arg2="generated" casesensitive="false" trim="true"/>
+                </or>
+            </and>
+        </condition>
+    </target>
+    
+    <!-- Generating JNLP file -->
+    
+    <target name="generate-jnlp" depends="sign-jars,-test-generate-task-available,-unavailable-generate-task" if="generate.task.available">
+        <taskdef name="generate-jnlp" classname="org.netbeans.modules.javawebstart.anttasks.GenerateJnlpFileTask" 
+            classpath="${libs.JWSAntTasks.classpath}"/>
+        <property name="jnlp.lazy.jars" value=""/>
+        <generate-jnlp destfile="${jnlp.dest.dir}/${jnlp.file}_" template="master-${jnlp.descriptor}.jnlp" destdir="dist" lazyJars="${jnlp.lazy.jars}"/>
+        <antcall target="-strip-empty-lines"/>
+    </target>
+    
+    <target name="-strip-empty-lines">
+        <copy file="${jnlp.dest.dir}/${jnlp.file}_" tofile="${jnlp.dest.dir}/${jnlp.file}" overwrite="true" encoding="UTF-8">
+            <filterchain>
+                <tokenfilter>
+                    <ignoreblank/>
+                </tokenfilter>
+            </filterchain>
+        </copy>
+        <delete file="${jnlp.dest.dir}/${jnlp.file}_" failonerror="false"/>
+    </target>
+    
+    <target name="-test-generate-task-available">
+        <available property="generate.task.available" classname="org.netbeans.modules.javawebstart.anttasks.GenerateJnlpFileTask" 
+        classpath="${libs.JWSAntTasks.classpath}"/>
+    </target>
+    
+    <target name="-unavailable-generate-task" unless="generate.task.available">
+        <echo message="Task required to generate JNLP file is missing, probably the library 'JWS Ant Tasks' is missing either from shared folder or from IDE installation."/>
+        <fail/>
+    </target>
+    
+    <!-- Codebase processing -->
+    
+    <target name="-codebase-props-check">
+        <condition property="local.codebase">
+            <or>
+                <not>
+                    <isset property="jnlp.codebase.type"/>
+                </not>
+                <equals arg1="${jnlp.codebase.type}" arg2="local" trim="true"/>
+            </or>
+        </condition>
+        <condition property="non.user.codebase">
+            <or>
+                <not>
+                    <isset property="jnlp.codebase.type"/>
+                </not>
+                <equals arg1="${jnlp.codebase.type}" arg2="local" trim="true"/>
+                <equals arg1="${jnlp.codebase.type}" arg2="web" trim="true"/>
+            </or>
+        </condition>
+        <condition property="user.codebase">
+            <equals arg1="${jnlp.codebase.type}" arg2="user" trim="true"/>
+        </condition>
+        <condition property="no.codebase">
+            <equals arg1="${jnlp.codebase.type}" arg2="no.codebase" trim="true"/>
+        </condition>
+        <condition property="local.codebase+no.codebase">
+            <or>
+                <istrue value="${local.codebase}"/>
+                <istrue value="${no.codebase}"/>
+            </or>
+        </condition>
+    </target>
+    
+    <target name="-init-non-user-codebase" if="non.user.codebase">
+        <property name="jnlp.codebase.value" value="${jnlp.codebase.url}"/>
+    </target>
+    
+    <target name="-init-user-codebase" if="user.codebase">
+        <property name="jnlp.codebase.value" value="${jnlp.codebase.user}"/>
+    </target>
+
+    <!-- Security -->
+    
+    <target name="-security-props-check">
+        <condition property="jnlp.signed.true">
+            <istrue value="${jnlp.signed}"/>
+        </condition>
+    </target>
+    
+    <target name="-jnlp-init-keystore" depends="-jnlp-init-signing,-jnlp-init-keystore1,-jnlp-init-keystore2,-check-keystore-exists" if="do.init.keystore">
+        <echo message="${application.vendor}" file="${helper.file}"/>
+        <loadfile property="application.vendor.filtered" srcfile="${helper.file}">
+            <filterchain>
+                <deletecharacters chars=","/>
+            </filterchain>
+        </loadfile>
+        <delete file="${helper.file}"/>
+        <property name="jnlp.signjar.vendor" value="CN=${application.vendor.filtered}"/>
+        <echo message="Going to create default keystore in ${jnlp.signjar.keystore}"/>
+        <genkey dname="${jnlp.signjar.vendor}" alias="${jnlp.signjar.alias}" keystore="${jnlp.signjar.keystore}"
+            storepass="${jnlp.signjar.storepass}" keypass="${jnlp.signjar.keypass}"/>
+    </target>
+    
+    <target name="-check-keystore-exists" depends="-security-props-check">
+        <available property="jnlp.signjar.keystore.exists" file="${jnlp.signjar.keystore}"/>
+        <condition property="do.init.keystore">
+            <and>
+                <isset property="jnlp.signed.true"/>
+                <not><isset property="jnlp.signjar.keystore.exists"/></not>
+            </and>
+        </condition>
+    </target>
+
+    <target name="-jnlp-init-signing">
+        <condition property="generated.key.signing">
+            <equals arg1="${jnlp.signing}" arg2="generated" trim="true"/>
+        </condition>
+    </target>
+
+    <target name="-jnlp-init-keystore1" if="generated.key.signing">
+        <local name="generated.signing.alias"/>
+        <condition property="generated.signing.alias" value="${jnlp.signing.alias}" else="nb-jws">
+            <isset property="jnlp.signing.alias"/>
+        </condition>
+        <property name="jnlp.signjar.keystore" value="${basedir}/build/${generated.signing.alias}.ks" />
+        <property name="jnlp.signjar.storepass" value="storepass"/>
+        <property name="jnlp.signjar.keypass" value="keypass"/>
+        <property name="jnlp.signjar.alias" value="${generated.signing.alias}"/>
+    </target>
+
+    <target name="-jnlp-init-keystore2" unless="generated.key.signing">
+        <property name="jnlp.signjar.keystore" value="${jnlp.signing.keystore}" />
+        <property name="jnlp.signjar.storepass" value="${jnlp.signing.storepass}"/>
+        <property name="jnlp.signjar.keypass" value="${jnlp.signing.keypass}"/>
+        <property name="jnlp.signjar.alias" value="${jnlp.signing.alias}"/>
+    </target>
+
+    <!-- Signing -->
+
+    <target name="-test-signjars-task-available">
+        <available property="signjars.task.available" 
+            classname="org.netbeans.modules.javawebstart.anttasks.SignJarsTask" 
+            classpath="${libs.JWSAntTasks.classpath}"/>
+    </target>
+    
+    <target name="-check-signing-possible" depends="-security-props-check,-test-signjars-task-available,-unavailable-signjars-task">
+        <condition property="jnlp.signed.true+signjars.task.available">
+            <and>
+                <isset property="jnlp.signed.true"/>
+                <isset property="signjars.task.available"/>
+            </and>
+        </condition>
+    </target>
+    
+    <target name="-unavailable-signjars-task" depends="-test-signjars-task-available" unless="signjars.task.available">
+        <echo message="Task required to sign JAR file is missing, probably the library 'JWS Ant Tasks' is missing either from shared folder or from IDE installation. JAR files will not be signed."/>
+    </target>
+
+    <target name="sign-jars" depends="-jnlp-init-keystore,-check-signing-possible" if="jnlp.signed.true+signjars.task.available">
+        <taskdef name="sign-jars" classname="org.netbeans.modules.javawebstart.anttasks.SignJarsTask" 
+            classpath="${libs.JWSAntTasks.classpath}"/>
+        <sign-jars keystore="${jnlp.signjar.keystore}" storepass="${jnlp.signjar.storepass}" 
+                keypass="${jnlp.signjar.keypass}" alias="${jnlp.signjar.alias}" mainjar="${dist.jar}" destdir="dist"
+                codebase="${jnlp.codebase.value}" signedjarsprop="jnlp.signed.jars"
+                componentsprop="jnlp.components">
+            <fileset dir="dist/lib">
+                <include name="*.jar"/>
+            </fileset>
+        </sign-jars>
+    </target>
+    
+    <target name="-warn-insufficient-signing" depends="-test-signing-security" if="is.signing.unsafe">
+        <echo message="Warning: Unsigned and self-signed WebStart applications and Applets are deprecated from JDK7u21 onwards due to security reasons.${line.separator}         To ensure future correct functionality please sign WebStart applications and Applets using trusted certificate."/>
+    </target>
+
+    <!-- Running/Debugging -->
+    
+    <target name="jws-run" depends="jar,-verify-jnlp-enabled,-verify-codebase,-init-platform,-check-webstart" description="Start javaws execution">
+        <echo message="Executing ${jnlp.dest.dir}${file.separator}${jnlp.file} using ${active.webstart.executable}"/>
+        <exec executable="${active.webstart.executable}">
+            <arg file="${jnlp.dest.dir}${file.separator}${jnlp.file}"/>
+        </exec>
+    </target>
+    
+    <target name="jws-debug" if="netbeans.home" depends="jar,-verify-jnlp-enabled,-verify-codebase,-debug-start-debugger,-debug-javaws-debuggee" 
+        description="Debug javaws project in IDE"/>
+        
+    <target name="-init-debug-args">
+        <condition else="dt_socket" property="debug-transport-by-os" value="dt_shmem">
+            <os family="windows"/>
+        </condition>
+        <condition else="${debug-transport-by-os}" property="debug-transport" value="${debug.transport}">
+            <isset property="debug.transport"/>
+        </condition>
+    </target>
+
+    <target name="-debug-javaws-debuggee" depends="-init-debug-args,-init-platform,-check-webstart">
+        <echo message="Executing ${jnlp.dest.dir}${file.separator}${jnlp.file} in debug mode using ${active.webstart.executable}"/>
+        <exec executable="${active.webstart.executable}">
+            <env key="JAVAWS_VM_ARGS" value="-agentlib:jdwp=transport=${debug-transport},address=${jpda.address}"/>
+            <arg value="-wait"/>
+            <arg file="${jnlp.dest.dir}${file.separator}${jnlp.file}"/>
+        </exec>
+    </target>
+    
+    <target name="-verify-codebase" depends="-codebase-props-check" unless="local.codebase+no.codebase">
+        <fail message="Project cannot be run with non-local codebase. Open project properties dialog and set Web Start Codebase to Local Execution or No Codebase Execution."/>
+    </target>
+    
+    <target name="-verify-jnlp-enabled" depends="-test-jnlp-enabled" unless="is.jnlp.enabled">
+        <fail message="Project cannot be run with selected Run Configuration when Java Web Start is disabled."/>
+    </target>
+    
+    <!-- Generate simple HTML preview page -->
+
+    <target name="-check-html-preview">
+         <condition property="generate.html.preview">
+             <or>
+                 <equals arg1="${jnlp.descriptor}" arg2="application"/>
+                 <equals arg1="${jnlp.descriptor}" arg2="applet"/>
+             </or>
+         </condition>
+     </target>
+
+    <target name="generate-html-preview" depends="-check-html-preview" if="generate.html.preview">
+        <taskdef name="copy-template-page" classname="org.netbeans.modules.javawebstart.anttasks.CopyTemplatePageTask"
+            classpath="${libs.JWSAntTasks.classpath}"/>
+        <copy-template-page destfile="${jnlp.dest.dir}/launch.html" template="preview-${jnlp.descriptor}.html" destdir="${jnlp.dest.dir}"/>
+    </target>
+    
+</project>

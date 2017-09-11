@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE bindings PUBLIC "-//NetBeans//DTD Editor KeyBindings settings 1.1//EN" "http://www.netbeans.org/dtds/EditorKeyBindings-1_1.dtd">
+
+<bindings>
+    <bind actionName="test-action-1" key="D-1$A"/>
+    <bind actionName="test-action-2" key="D-2$A"/>
+    <bind actionName="test-action-3" key="D-3$A"/>
+    <bind actionName="test-action-5" key="D-5$A"/>
+</bindings>

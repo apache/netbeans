@@ -1,0 +1,4 @@
+Column table_catalog in table columns
+Column table_schema in table columns
+Column table_name in table columns
+Column column_name in table columns

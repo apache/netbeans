@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="travel.Person" table="PERSON">
+    <id column="PERSONID" name="personId">
+      <generator class=""/>
+    </id>
+    <property column="NAME" name="name"/>
+    <property column="JOBTITLE" name="jobTitle"/>
+    <property column="FREQUENTFLYER" name="frequentFlyer"/>
+    <set cascade="all-delete-orphan" inverse="true" lazy="true" name="trips" table="TRIP">
+      <key column="PERSONID"/>
+      <one-to-many class="travel.Trip"/>
+    </set>
+  </class>
+</hibernate-mapping>

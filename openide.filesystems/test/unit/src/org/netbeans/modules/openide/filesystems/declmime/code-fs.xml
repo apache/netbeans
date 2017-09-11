@@ -1,0 +1,281 @@
+<?xml version="1.0"?>
+
+<filesystem>
+    <folder name="root">
+        <file name="root.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <ext name="xml"/>
+                    <resolver mime="root.xml">
+                        <xml-rule>
+                            <element name="root"/>
+                        </xml-rule>
+                    </resolver>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+
+        <file name="ns.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <ext name="xml"/>
+                    <resolver mime="ns.xml">
+                        <xml-rule>
+                            <element ns="test"/>
+                        </xml-rule>
+                    </resolver>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+
+        <file name="ns1.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <ext name="xml"/>
+                    <resolver mime="ns1">
+                        <xml-rule>
+                            <element>
+                                <ns ns="test"/>
+                            </element>
+                        </xml-rule>
+                    </resolver>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+
+        <file name="pid.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <ext name="xml"/>
+                    <resolver mime="pid.xml">
+                        <xml-rule>
+                            <doctype public-id="test"/>
+                        </xml-rule>
+                    </resolver>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+
+        <file name="magic.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <magic hex="6161"/>
+                    <resolver mime="magic.xml"/>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+
+        <file name="magic-mask.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <magic hex="0303" mask="0303"/>
+                    <resolver mime="magic-mask.xml"/>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+	<file name="ant.xml"><![CDATA[<?xml version="1.0"?>
+<MIME-resolver>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-ant+xml">
+            <xml-rule>
+                <element name="project">
+                    <attr name="default"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+</MIME-resolver>
+]]>
+	</file>
+        
+	<file name="springconfig.xml"><![CDATA[<?xml version="1.0"?>
+<MIME-resolver>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-springconfig+xml">
+            <xml-rule>
+                <element name="beans" ns="http://www.springframework.org/schema/beans"/>
+            </xml-rule>
+        </resolver>
+    </file>
+</MIME-resolver>
+]]>
+	</file>
+
+        <file name="pattern-resolver-valid.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <pattern value="valid1" range="255"/>
+                    <pattern value="valid2" range="255">
+                        <pattern value="inner1" range="255" ignorecase="true"/>
+                    </pattern>
+                    <pattern value="valid3" range="255">
+                        <pattern value="inner1" range="255" ignorecase="true">
+                            <pattern value="inner2" range="4000"/>
+                        </pattern>
+                    </pattern>
+                    <resolver mime="text/x-php5"/>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+        <file name="pattern-resolver-invalid1.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <pattern value="invalid1" range="255" ignorecase="true">
+                        <pattern value="inner1" range="4000"/>
+                        <pattern value="inner2" range="4000"/>
+                    </pattern>
+                    <pattern value="invalid2" range="255" ignorecase="true">
+                        <pattern value="inner1" range="4000">
+                            <pattern value="inner2" range="4000"/>
+                            <pattern value="inner3" range="4000"/>
+                        </pattern>
+                    </pattern>
+                    <resolver mime="text/x-php5"/>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+        <file name="pattern-resolver-invalid2.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <pattern value="invalid2" range="255" ignorecase="true">
+                        <pattern value="inner1" range="4000">
+                            <pattern value="inner2" range="4000"/>
+                            <pattern value="inner3" range="4000"/>
+                        </pattern>
+                    </pattern>
+                    <resolver mime="text/x-php5"/>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+        <file name="php-resolver1.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <!-- Pattern <?php in first 100 bytes -->
+                    <pattern value="&lt;?php" range="100"/>
+                    <!-- Pattern <HTML> or <html> in first 100 bytes and pattern <?php in first 500 bytes. -->
+                    <pattern value="&lt;HTML&gt;" range="100" ignorecase="true">
+                        <pattern value="&lt;?php" range="500"/>
+                    </pattern>
+                    <resolver mime="text/x-php5"/>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+        <file name="php-resolver2.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <!-- Pattern <html> in first 500 bytes and pattern <?php in first 500 bytes. -->
+                    <pattern value="&lt;html&gt;" range="500">
+                        <pattern value="&lt;?php" range="500"/>
+                    </pattern>
+                    <resolver mime="text/x-php5"/>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+        <file name="php-resolver3.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <!-- Pattern <!doctype html in first 100 bytes and pattern <?php in first 500 bytes. -->
+                    <pattern value="&lt;!doctype html" range="100">
+                        <pattern value="&lt;?php" range="500"/>
+                    </pattern>
+                    <!-- Pattern <HTML> in first 100 bytes and pattern <?php in first 500 bytes. -->
+                    <pattern value="&lt;HTML&gt;" range="100">
+                        <pattern value="&lt;?php" range="500"/>
+                    </pattern>
+                    <!-- Pattern <html> in first 100 bytes and pattern <?php in first 500 bytes and pattern Define in first 500 bytes. -->
+                    <pattern value="&lt;html&gt;" range="100">
+                        <pattern value="&lt;?php" range="500">
+                            <pattern value="Define" range="500"/>
+                        </pattern>
+                    </pattern>
+                    <resolver mime="text/x-php5"/>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+        <file name="ruby-resolver.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <ext name=""/>
+                    <ext name="cgi"/>
+                    <!-- Pattern #! in first 2 bytes and pattern ruby in first 80 bytes.
+                         Should match for example #!/usr/bin/ruby but it can mistakenly
+                         match if ruby is in the middle of path.
+                    -->
+                    <pattern value="#!" range="2">
+                        <pattern value="ruby" range="80"/>
+                    </pattern>
+                    <resolver mime="text/x-ruby"/>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+        <file name="makefile-resolver.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <!-- Filename matches makefile, Makefile, MaKeFiLe, mymakefile, gnumakefile, makefile1, .... -->
+                    <name name="makefile" substring="true" ignorecase="true"/>
+                    <resolver mime="text/x-make"/>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+        <file name="rakefile-resolver.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <!-- Filename matches exactly rakefile and Rakefile. -->
+                    <name name="rakefile" ignorecase="false"/>
+                    <name name="Rakefile" ignorecase="false"/>
+                    <resolver mime="text/x-ruby"/>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+        <file name="empty-extension-resolver.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <ext name=""/>
+                    <resolver mime="empty/extension"/>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+        <file name="c-resolver.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <ext name="C"/>
+                    <resolver mime="text/x-c++"/>
+                </file>
+                <file>
+                    <ext name="c"/>
+                    <resolver mime="text/x-c"/>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+        <file name="cpp-resolver.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <ext name=""/>
+                    <!-- Pattern // in first 2 bytes and pattern -*- C++ -*- in first 80 bytes. -->
+                    <pattern value="//" range="2">
+                        <pattern value="-*- C++ -*-" range="80"/>
+                    </pattern>
+                    <!-- Pattern #include in first 80 bytes. -->
+                    <pattern value="#include" range="80"/>
+                    <resolver mime="text/x-c++"/>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+        <file name="exit-resolver.xml"><![CDATA[<?xml version="1.0"?>
+            <MIME-resolver>
+                <file>
+                    <!-- Do not resolve *.txt files. -->
+                    <ext name="txt"/>
+                    <exit/>
+                </file>
+                <file>
+                    <!-- Use this only for other than *.txt files. -->
+                    <ext name="txt"/>
+                    <resolver mime="text/plain"/>
+                </file>
+            </MIME-resolver>]]>
+        </file>
+    </folder>
+</filesystem>

@@ -1,0 +1,5 @@
+# apisupport/project
+read global
+${l10n-module}/src/org/netbeans/modules/apisupport/project/metainf/*.png
+${l10n-module}/src/org/netbeans/modules/apisupport/project/ui/wizard/javahelp/template_myplugin-about.html
+${l10n-module}/src/org/netbeans/modules/apisupport/project/ui/wizard/wizard/wizardDescription.html

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<project name="coverage-manual" default="default" basedir=".">
+
+    <dirname property="coverage-manual.basedir" file="${ant.file.coverage-manual}"/>
+
+    <property name="nb_all" location="${coverage-manual.basedir}/../../.."/>
+    <property name="emma.dir" location="${nb_all}/xtest/external/"/>
+
+    <property name="netbeans.instr.dir" location="netbeans-instrumented"/>
+    <property name="netbeans.user.dir" location="${netbeans.instr.dir}/coverage-userdir"/>
+    <property name="coverage.data.dir" location="coverage-data"/>
+    <property name="coverage.report.dir" location="coverage-report"/>
+    
+    <!-- ===== User defined properties ! ===== -->
+    
+    <!-- Provide path to JDK which you want to run the IDE with -->
+    <property name="jdkhome" value="e:/jdks/jdk1.5.0_04"/>
+    <!-- Define what build of NetBeans you want to instrument -->
+    <property name="netbeans.dir" location="${nb_all}/nbbuild/netbeans"/>
+    <!-- Provide filter for included packages -->
+    <property name="included.packages" 
+        value="org.netbeans.*,org.openide.*,org.openidex.*,org.apache.tools.ant.module.*,javax.jmi.*"/>
+    <!-- File for writing EMMA runtime coverage data -->
+    <property name="coverage.runtime.file" value="coverage.ec"/>
+    <!-- Provide additional IDE arguments -->
+    <property name="ide.args" 
+        value="--cp:p ${emma.dir}/emma.jar -J-Dnetbeans.security.nocheck=true -J-Demma.coverage.out.file=${coverage.data.dir}/${coverage.runtime.file}"/>
+    <!-- File for logging instrumentation details; not defined == no logging -->
+    <property name="emma.logfile" value="instrumented.txt"/>
+    
+    <!-- ===== End of User defined properties ===== -->
+    
+    <property name="emma.enabled" value="true"/>
+    
+    <!-- EMMA setup -->
+    
+    <path id="emma.lib">
+        <pathelement location="${emma.dir}/emma.jar"/>
+        <pathelement location="${emma.dir}/emma_ant.jar"/>
+    </path>
+    
+    <target name="define-emma-tasks">
+        <ant dir="${emma.dir}" target="emma"/>
+        <taskdef resource="emma_ant.properties" classpathref="emma.lib"/>
+    </target>
+    
+    <target name="define-other-tasks">
+        <ant dir="selectjars" antfile="build.xml" target="jar"/>
+        <taskdef name="select-jars" classname="selectjars.SelectJars" 
+             classpath="selectjars/dist/selectjars.jar"/>
+    </target>
+    
+    <target name="define-tasks" depends="define-emma-tasks,define-other-tasks"/>
+    
+    <target name="default">
+        <echo message="Please specify target (run 'ant -projecthelp')"/>
+    </target>
+    
+    <!-- IDE instrumentation -->
+    
+    <target name="instrument-ide" depends="define-tasks,create-instrpath,pre-instrument">
+        <mkdir dir="${coverage.data.dir}"/>
+        <emma enabled="${emma.enabled}">
+            <instr instrpathref="instr.path.id" mode="overwrite" merge="true"
+                outfile="${coverage.data.dir}/coverage.em">
+                <filter includes="${included.packages}"/>
+            </instr>
+        </emma>
+        <antcall target="post-instrument"/>
+    </target>
+    
+    <!-- We must instrument only jars containing selected packages !!! -->
+    <target name="create-instrpath" depends="copy-ide">
+        <select-jars pathrefprop="instr.path.id" inclpackages="${included.packages}" logfile="${emma.logfile}">
+            <fileset dir="${netbeans.instr.dir}">
+                <include name="**/*.jar"/>
+            </fileset>
+        </select-jars>
+    </target>
+    
+    <!-- Creates own copy of IDE for coverage, because 
+         instrumented IDE cannot be used for anything else -->
+    <target name="copy-ide">
+        <mkdir dir="${netbeans.instr.dir}"/>
+        <copy todir="${netbeans.instr.dir}">
+            <fileset dir="${netbeans.dir}"/>
+        </copy>
+    </target>
+    
+    <target name="pre-instrument">
+        <!-- Following is needed because EMMA processes also class archives that 
+             are reachable by Class-Path entry in manifest file and this particular
+             jar is signed and therefore cannot be processed and rejarred.
+             If there is another signed jar being processed add it here! -->
+        <copy file="${netbeans.instr.dir}/platform/modules/ext/jh-2.0_02.jar" 
+              tofile="${netbeans.instr.dir}/platform/modules/ext/jh-2.0_02.jar_orig"/>
+    </target>
+    
+    <target name="post-instrument">
+        <copy file="${netbeans.instr.dir}/platform/modules/ext/jh-2.0_02.jar_orig" 
+              tofile="${netbeans.instr.dir}/platform/modules/ext/jh-2.0_02.jar"
+              overwrite="true"/>
+    </target>
+    
+    <!-- Running instrumented IDE -->
+    
+    <target name="run-ide" depends="instrument-ide">
+        <exec os="Windows XP Windows 2000 Windows NT" executable="${netbeans.instr.dir}/bin/nb.exe" failonerror="yes">
+            <arg value="--jdkhome"/>
+            <arg file="${jdkhome}"/>
+            <arg value="--userdir"/>
+            <arg file="${netbeans.user.dir}"/>
+            <arg line="${ide.args}"/>
+        </exec>
+        <exec os="Linux SunOS Solaris" dir="." executable="sh" failonerror="yes">
+            <arg value="${netbeans.instr.dir}/bin/netbeans"/>
+            <arg value="--jdkhome"/>
+            <arg file="${jdkhome}"/>
+            <arg value="--userdir"/>
+            <arg file="${netbeans.user.dir}"/>
+            <arg line="${ide.args}"/>
+        </exec>
+        <exec os="Mac OS X" dir="." executable="sh" failonerror="yes">
+            <arg value="${netbeans.instr.dir}/bin/netbeans"/>
+            <arg value="--jdkhome"/>
+            <arg file="/Library/Java/Home"/>
+            <arg value="--userdir"/>
+            <arg file="${netbeans.user.dir}"/>
+            <arg line="${ide.args}"/>
+        </exec>
+    </target>
+    
+    <!-- Clean'em all -->
+    
+    <target name="clean-ide">
+        <delete dir="${netbeans.instr.dir}"/>
+    </target>
+    
+    <target name="clean-emma">
+        <delete dir="${coverage.data.dir}"/>
+    </target>
+    
+    <target name="clean-report">
+        <delete dir="${coverage.report.dir}"/>
+    </target>
+    
+    <target name="clean-userdir">
+        <delete dir="${netbeans.user.dir}"/>
+    </target>
+    
+    <target name="real-clean" depends="clean-ide,clean-emma,clean-report,clean-userdir">
+        <delete file="${emma.logfile}"/>
+    </target>
+    
+    <!-- EMMA Report -->
+    
+    <target name="emma-report" depends="define-emma-tasks">
+        <mkdir dir="${coverage.report.dir}"/>
+        <emma enabled="${emma.enabled}">
+            <report sort="+name,+block,+method,+class">
+                <fileset dir="${coverage.data.dir}">
+                    <include name="*.em"/>
+                    <include name="*.ec"/>
+                </fileset>
+                <txt outfile="${coverage.report.dir}/coverage.txt"/>
+                <html outfile="${coverage.report.dir}/coverage.html"/>
+            </report>
+        </emma>
+    </target>
+        
+</project>

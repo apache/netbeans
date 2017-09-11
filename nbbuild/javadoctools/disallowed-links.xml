@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+    <!-- if you find a general URL from netbeans.org site that make sence to reference, feel free
+      to add it here with accept='true'
+      -->
+    <!-- link to any API changes are ok -->
+    <filter pattern="http://www\.netbeans\.org/download/dev/javadoc/apichanges\.html" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/download/release41/javadoc/apichanges\.html" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/download/[0-9]_[0-9]/javadoc/apichanges\.html" accept="true"/>
+    <filter pattern="http://bits\.netbeans\.org/[0-9.]+/javadoc/apichanges\.html" accept="true"/>
+    <!-- sources -->
+    <filter pattern="http://www\.netbeans\.org/(unbranded-)?source/browse/.*" accept="true"/>
+    <filter pattern="http://hg\.netbeans\.org.*" accept="true"/>
+    <filter pattern="http://openide\.netbeans\.org/versioning-policy\.html.*" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/issues/show_bug\.cgi.*" accept="true"/>
+    <filter pattern="http://openide\.netbeans\.org.*tutorial.*api-design.*" accept="true"/>
+    <filter pattern="http://openide\.netbeans\.org.*tutorial.*api.html.*" accept="true"/>
+    <filter pattern="http://platform\.netbeans\.org/" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org.products.ide.index.html" accept="true"/>
+    <filter pattern="http://mdr\.netbeans\.org/example\.html" accept="true"/>
+    <filter pattern="http://mdr\.netbeans\.org/uml2mof.*" accept="true"/>
+    <filter pattern="http://java\.netbeans\.org/models/java/java\.xml" accept="true"/>
+    <filter pattern="http://autoupdate\.netbeans\.org/nbm/nbm_package\.html.*" accept="true"/>
+    <!-- Winsys important documents -->
+    <filter pattern="http://core\.netbeans\.org/windowsystem/.*html.*" accept="true"/>
+    <!-- UI specifications -->
+    <filter pattern="http://ui\.netbeans\.org/docs/hi/javamdr/.*" accept="true"/>
+    <filter pattern="http://ui.netbeans.org/docs/ui/VersioningSpecification.*" accept="true"/>
+    <filter pattern="http://ui\.netbeans\.org/docs/ui/code_folding/cf_uispec\.html" accept="true"/>
+    <!-- is used in generated question from arch.xml -->
+    <filter pattern="http://www\.netbeans\.org/community/guidelines/q-evangelism\.html" accept="true"/>
+    <!-- direct link to main website is ok as well -->
+    <filter pattern="http://www\.netbeans\.org/" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/community/lists/top\.html" accept="true"/>
+    <filter pattern="http://translatedfiles\.netbeans\.org/" accept="true"/>
+    <!-- dtd are fine they cannot change anyway -->
+    <filter pattern="http://www\.netbeans\.org/dtds/.*" accept="true"/>
+    <filter pattern="http://www\.netbeans\.org/servlets/.*" accept="true"/>
+    <filter pattern="http://openide\.netbeans\.org/proposals/.*" accept="true"/>        
+    <!-- logger module uses references to real website pages -->
+    <filter pattern="http://logger\.netbeans\.org/nonav/welcome/.*" accept="true"/>        
+    <!-- allow xsd files -->
+    <filter pattern="http://www\.netbeans\.org/ns/.*" accept="true"/>
+    <!-- allow Project Design document -->
+    <filter pattern="http://projects\.netbeans\.org/buildsys/.*" accept="true"/>
+    <filter pattern="http://platform\.netbeans\.org/articles/.*" accept="true"/>
+    <filter pattern="http://ui\.netbeans\.org/docs/ui/themes/themes\.html" accept="true"/>
+    <filter pattern="http://wiki.netbeans.org/.*" accept="true"/>
+    <!-- Useful to point to open layer positions (see e.g. HOWTO-MIME.html): -->
+    <filter pattern="http://deadlock\.netbeans\.org/hudson/job/nbms-and-javadoc/lastSuccessfulBuild/artifact/nbbuild/build/generated/layers\.txt" accept="true"/>
+    <filter pattern="http://deadlock\.netbeans\.org/job/nbms-and-javadoc/lastSuccessfulBuild/artifact/nbbuild/build/generated/layers\.txt" accept="true"/>
+    <!-- forbid the rest of NetBeans sites -->
+    <filter pattern="http://.*netbeans\.org/.*" accept="false"/>

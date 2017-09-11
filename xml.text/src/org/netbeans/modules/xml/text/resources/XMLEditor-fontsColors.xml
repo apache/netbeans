@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.0//EN"
+                             "http://www.netbeans.org/dtds/EditorFontsColors-1_0.dtd">
+
+<fontscolors>
+    <fontcolor syntaxName="xml-cdata-section" foreColor="#7C6200">
+        <font name="Monospaced" style="plain" />
+    </fontcolor>
+    <fontcolor syntaxName="xml-pi-target" foreColor="#00007C">
+        <font name="Monospaced" style="bold" />
+    </fontcolor>
+    <fontcolor syntaxName="xml-ref" foreColor="#B20000">
+        <font name="Monospaced" style="plain" />
+    </fontcolor>
+    <fontcolor syntaxName="xml-pi-end" foreColor="#00007C">
+        <font name="Monospaced" style="bold" />
+    </fontcolor>
+    <fontcolor syntaxName="xml-doctype" foreColor="#00007C">
+        <font name="Monospaced" style="bold" />
+    </fontcolor>
+    <fontcolor syntaxName="xml-pi-content" foreColor="#00007C">
+        <font name="Monospaced" style="plain" />
+    </fontcolor>
+    <fontcolor syntaxName="xml-value" foreColor="#99006B">
+        <font name="Monospaced" style="plain" />
+    </fontcolor>
+    <fontcolor syntaxName="xml-operator" foreColor="#007C00">
+        <font name="Monospaced" style="plain" />
+    </fontcolor>
+    <fontcolor syntaxName="xml-comment" foreColor="#808080">
+        <font name="Monospaced" style="italic" />
+    </fontcolor>
+    <fontcolor syntaxName="xml-attribute" foreColor="#007C00">
+        <font name="Monospaced" style="plain" />
+    </fontcolor>
+    <fontcolor syntaxName="xml-tag" foreColor="#0000FF">
+        <font name="Monospaced" style="plain" />
+    </fontcolor>
+    <fontcolor syntaxName="xml-pi-start" foreColor="#00007C">
+        <font name="Monospaced" style="bold" />
+    </fontcolor>
+    <fontcolor syntaxName="xml-text">
+        <font name="Monospaced" style="plain" />
+    </fontcolor>
+    <fontcolor syntaxName="xml-error" foreColor="#FFFFFF" bgColor="#FF0000">
+        <font name="Monospaced" style="plain" />
+    </fontcolor>
+    <fontcolor syntaxName="xml-ws">
+        <font name="Monospaced" style="plain" />
+    </fontcolor>
+    <fontcolor syntaxName="default" foreColor="#000000" bgColor="#FFFFFF">
+        <font name="Monospaced" size="15" style="plain" />
+    </fontcolor>
+</fontscolors>

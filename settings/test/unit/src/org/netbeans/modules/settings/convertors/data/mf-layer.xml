@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2009 Sun Microsystems, Inc. All rights reserved.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Sun designates this
+particular file as subject to the "Classpath" exception as provided
+by Sun in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 2002 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Services">
+        <file name="org-netbeans-modules-settings-convertors-FooSetting.settings" url="FooSetting.xml"/>
+    </folder>
+    <folder name="Settings">
+        <file name="org-netbeans-modules-settings-convertors-FooSettingSerialData.settings" url="FooSetting_serialdata.xml"/>
+        <file name="org-netbeans-modules-settings-convertors-FooSettingSerialDataUnknownClass.settings" url="FooSetting_serialdata_unknown_class.xml"/>
+        <file name="org-netbeans-modules-settings-convertors-testModuleDisabling.settings" url="testModuleDisabling.xml"/>
+        <file name="org-netbeans-modules-settings-convertors-testDisplayName.settings" url="FooSetting.xml">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.settings.convertors.data.Bundle"/>
+        </file>
+        <!-- SerialDataConvertorTest.testCorruptedSettingsFile -->
+        <file name="org-netbeans-modules-settings-convertors-FooSettingSerialDataCorruptedTest.settings">
+<![CDATA[<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+    <module name="org.netbeans.modules.settings.xtest"/>
+    <instanceof class="org.netbeans.modules.settings.convertors.FooSetting"/>
+    <serialdata class="org.netbeans.modules.settings.convertors.FooSetting">ACED00057372002</serialdata>
+</settings>
+]]>
+        </file>
+        <file name="org-netbeans-modules-settings-convertors-FooSettingSerialDataCorruptedTest2.settings">
+<![CDATA[<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+    <module name="org.netbeans.modules.settings.xtest"/>
+    <instanceof class="org.netbeans.modules.settings.convertors.FooSetting"/>
+    <instance class="org.netbeans.modules.settings.convertors.FooSetting"/>
+</settings>
+]]>
+        </file>
+        <file name="org-netbeans-modules-settings-convertors-FooSettingUnrecognizedSettingsFile.settings">
+<![CDATA[<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+    <module name="org.netbeans.modules.settings.unknownmodule"/>
+    <instanceof class="org.netbeans.modules.settings.convertors.FooSetting"/>
+    <serialdata class="org.netbeans.modules.settings.convertors.FooSetting">ACED00057372002</serialdata>
+</settings>
+]]>
+        </file>
+        
+        <file name="org-netbeans-modules-settings-convertors-FooSettingDisabledOrUnknownModule.settings">
+<![CDATA[<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+    <module name="org.netbeans.modules.settings.unknownmodule"/>
+    <instanceof class="org.netbeans.modules.settings.convertors.FooSetting"/>
+    <instance class="org.netbeans.modules.settings.convertors.FooSetting"/>
+</settings>
+]]>
+        </file>
+
+        <file name="org-netbeans-modules-settings-convertors-FooSettingRemovedClassInstanceOf.settings">
+<![CDATA[<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+    <module name="org.netbeans.modules.settings.xtest"/>
+    <instanceof class="org.netbeans.modules.settings.convertors.RemovedClass"/>
+    <instance class="org.netbeans.modules.settings.convertors.Bar1Setting"/>
+</settings>
+]]>
+        </file>
+
+        <file name="org-netbeans-modules-settings-convertors-FooSettingRemovedClass.settings">
+<![CDATA[<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+    <module name="org.netbeans.modules.settings.xtest"/>
+    <instanceof class="org.netbeans.modules.settings.convertors.RemovedClass"/>
+    <instance class="org.netbeans.modules.settings.convertors.RemovedClass"/>
+</settings>
+]]>
+        </file>
+
+        <file name="org-netbeans-modules-settings-convertors-FooSettingRemovedClassSerial.settings">
+<![CDATA[<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+    <module name="org.netbeans.modules.settings.xtest"/>
+    <instanceof class="org.netbeans.modules.settings.convertors.RemovedClass"/>
+    <serialdata class="org.netbeans.modules.settings.convertors.RemovedClass">ACED00057372</serialdata>
+</settings>
+]]>
+        </file>
+        
+        <!-- SerialDataConvertorTest.testCorruptedSettingsFile -->
+        
+        <!-- XMLPropertiesConvertorTest.testCorruptedSettingsFile -->
+        <file name="org-netbeans-modules-settings-convertors-FooSettingXMLPropCorruptedTest.settings">
+<![CDATA[<!DOCTYPE properties PUBLIC "-//NetBeans org.netbeans.modules.settings.xtest//DTD XML FooSetting 1.0//EN"
+"http://www.netbeans.org/dtds/properties-1_0.dtd">
+<properties>
+]]>
+        </file>
+        <!-- XMLPropertiesConvertorTest.testCorruptedSettingsFile -->
+        <folder name="testUpgradeSetting2">
+            <file name="ObsoleteClass.settings"
+                url="obsolete_class.xml" />
+        </folder>
+    </folder>
+    
+    
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="NetBeans_org_netbeans_modules_settings_xtest">
+                <file name="DTD_XML_FooSetting_1_0" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans org.netbeans.modules.settings.xtest//DTD XML FooSetting 1.0//EN"/>
+                </file>
+                <file name="DTD_ComposedSetting_1_0"> <!--faked dtd-->
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans org.netbeans.modules.settings.xtest//DTD ComposedSetting 1.0//EN"/>
+                </file>
+            </folder>
+            <folder name="NetBeans_org_netbeans_modules_settings_testModuleDisabling">
+                <file name="DTD_XML_FooSetting_1_0" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans org.netbeans.modules.settings.testModuleDisabling//DTD XML FooSetting 1.0//EN"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="NetBeans_org_netbeans_modules_settings_xtest">
+                <file name="DTD_XML_FooSetting_1_0.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.api.settings.Factory.create"/>
+                    <attr name="settings.convertor" methodvalue="org.netbeans.api.settings.Factory.properties"/>
+                    <attr name="settings.instanceClass" stringvalue="org.netbeans.modules.settings.convertors.FooSetting"/>
+                    <attr name="settings.instanceOf" stringvalue="org.netbeans.modules.settings.convertors.FooSetting"/>
+                </file>
+                <file name="DTD_ComposedSetting_1_0.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.api.settings.Factory.create"/>
+                    <attr name="settings.convertor" newvalue="org.netbeans.spi.settings.DOMConvertorTest$ComposedSettingConvertor"/>
+                    <attr name="settings.instanceClass" stringvalue="org.netbeans.spi.settings.DOMConvertorTest$ComposedSetting"/>
+                    <attr name="settings.instanceOf" stringvalue="org.netbeans.spi.settings.DOMConvertorTest$ComposedSetting"/>
+                </file>
+            </folder>
+            <folder name="NetBeans_org_netbeans_modules_settings_testModuleDisabling">
+                <file name="DTD_XML_FooSetting_1_0.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.api.settings.Factory.create"/>
+                    <attr name="settings.convertor" methodvalue="org.netbeans.api.settings.Factory.properties"/>
+                    <attr name="settings.instanceClass" stringvalue="org.netbeans.modules.settings.convertors.FooSetting"/>
+                    <attr name="settings.instanceOf" stringvalue="org.netbeans.modules.settings.convertors.FooSetting"/>
+                </file>
+            </folder>
+        </folder>
+        
+        <folder name="memory">
+            <folder name="org">
+                <folder name="netbeans">
+                    <folder name="modules">
+                        <folder name="settings">
+                            <folder name="convertors">
+                                <file name="FooSetting">
+                                    <attr name="settings.providerPath"
+                                    stringvalue="xml/lookups/NetBeans_org_netbeans_modules_settings_xtest/DTD_XML_FooSetting_1_0.instance"/>
+                                </file>
+                                <file name="Bar1Setting">
+                                    <attr name="settings.subclasses" boolvalue="true"/>
+                                    <attr name="settings.providerPath"
+                                    stringvalue="xml/lookups/NetBeans_org_netbeans_modules_settings_xtest/DTD_XML_FooSetting_1_0.instance"/>
+                                </file>
+                                <file name="Bar2Setting">
+                                    <attr name="settings.providerPath"
+                                    stringvalue="xml/lookups/NetBeans_org_netbeans_modules_settings_xtest/DTD_XML_FooSetting_1_0.instance"/>
+                                </file>
+                            </folder>
+                        </folder>
+                    </folder>
+                    
+                    <folder name="spi">
+                        <folder name="settings">
+                            <file name="DOMConvertorTest$ComposedSetting">
+                                <attr name="settings.providerPath"
+                                stringvalue="xml/lookups/NetBeans_org_netbeans_modules_settings_xtest/DTD_ComposedSetting_1_0.instance"/>
+                            </file>
+                        </folder>
+                    </folder>
+                    
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

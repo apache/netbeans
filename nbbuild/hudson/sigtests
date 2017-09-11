@@ -1,0 +1,44 @@
+#!/bin/sh
+
+if [ -z "$JOB_URL" ]; then
+  JOB_URL=http://deadlock.netbeans.org/job/nbms-and-javadoc/
+fi
+
+sigtest_prev=$WORKSPACE/nbbuild/build/prior-sigtest
+if [ -d $sigtest_prev ]
+then
+    echo SigTest: Previous Snapshots
+    ls $sigtest_prev
+    echo SigTest: Checking All Changes
+    ANT_OPTS='-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/ant-check-sigtests.hprof' ant -Dsigtest.basedir=$sigtest_prev check-sigtests
+    for report in `pwd`/nbbuild/build/sigtest/check-snapshot/*; do
+    if ! expr "$report" : ".*/TESTS-.*" && grep 'failures="1"' $report >/dev/null; then
+        sigtest_email=`cat $report | grep "^email:" | grep -v commit.mail | cut -c 8-`
+        if [ -z "$sigtest_email" ]; then
+        sigtest_email="api-changes@netbeans.org"
+        fi
+        content=`cat $report`
+        (
+            echo "Code changes:";
+            echo "${BUILD_URL}changes"; 
+            echo "API changes:";
+            echo "${BUILD_URL}artifact/nbbuild/build/sigtest/check-snapshot/html/index.html"; 
+            echo "Failure output is available as StdErr output of sigtest test for appropriate module.";
+    #                echo "${BUILD_URL}artifact/$sigtest_out/`basename $report`"; 
+            echo; 
+            expr "$content" : ".*CDATA\[\(.*\)\]\].*"
+        ) | mail -s "`basename $report` - sigchanges in $JOB_NAME build #$BUILD_NUMBER" $sigtest_email
+    fi
+    done
+    echo SigTest: Checking All Changes Done
+else
+    echo SigTest: Did not find previous Snapshot
+fi
+
+echo SigTest: Generating Golden Files
+ant gen-sigtests || exit 1
+echo SigTest: Golden Files generated successfully
+
+echo SigTest: Finding Incompatible Changes
+ant check-sigtests-release -Dfail.on.error=false || exit 1
+echo SigTest: Finding Incompatible Changes finished successfully

@@ -1,0 +1,7 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}Refactoring License
+<#if licenseLast??>
+${licenseLast}
+</#if>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : NamespacesDocument.xml
+    Created on : July 13, 2002, 12:41 PM
+    Author     : Petr Kuzel
+    Description:
+        This document uses namespaces, it often confuses
+        some parsers and try to locate defining schemas for
+        every descendant.
+        It is not schema aware document nor DTD valid one.
+-->
+
+<root xmlns="test:NamespacesDocument">
+    <child1/>
+    <child2/>
+</root>

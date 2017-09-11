@@ -1,0 +1,11 @@
+IDE Tools               > Palette                 a
+                          Properties              r
+                          Test Results            T
+                          Bookmarks               B
+                          Javadoc Documentation   J
+                          C/C++ Documentation     C
+                          ======================
+                          Notifications           N
+                          Exception Reporter      x
+                          Terminal                e
+                          Processes               P

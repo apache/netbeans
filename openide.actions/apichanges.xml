@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+
+<apichanges>
+<apidefs>
+<apidef name="actions">Actions API</apidef>
+</apidefs>
+<changes>
+<change>
+      <api name="actions"/>
+      <summary><code>SelectionType ANY in SaveAction</code></summary>
+      <version major="6" minor="20"/>
+      <date day="14" month="12" year="2010"/>
+      <author login="krissco"/>
+      <compatibility binary="compatible" source="compatible" semantic="compatible" addition="no" deprecation="no" deletion="no" modification="yes"/>
+      <description>
+          <code>SaveAction</code> has been modified to allow one or more <code>SaveCookie</code>s
+          into it's context. The previous behavior was to allow EXACTLY_ONE.
+      </description>
+      <class package="org.openide.actions" name="SaveAction"/>
+      <issue number="192948"/>
+</change>
+<change>
+      <api name="actions"/>
+      <summary><code>ToolsAction</code> via layers</summary>
+      <version major="6" minor="15"/>
+      <date day="26" month="2" year="2010"/>
+      <author login="jtulach"/>
+      <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="yes" deletion="no" modification="no"/>
+      <description>
+          Register your actions for <code>ToolsAction</code> via
+          layer, don't use the deprecated manifest style.
+      </description>
+      <class package="org.openide.actions" name="ToolsAction"/>
+      <issue number="180979 "/>
+</change>
+<change>
+      <api name="actions"/>
+      <summary><code>HeapView</code> preserves its settings between sessions</summary>
+      <version major="6" minor="5"/>
+      <date day="24" month="6" year="2008"/>
+      <author login="rmichalsky"/>
+      <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+      <description>
+        Settings of <code>showDropShadow</code>, <code>showText</code> and <code>tickStyle</code>
+        are now preserved between sessions in NBPreferences of the same corresponding names.
+      </description>
+      <class package="org.openide.actions" name="HeapView" link="no"/>
+      <issue number="135104"/>
+</change>
+<change id="jump-prev-next">
+        <api name="actions"/>
+        <summary>A way how to implement "Jump Next" and "Jump Prev" action handlers</summary>
+        <version major="5" minor="8"/>
+        <date day="23" month="3" year="2005"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" binary="compatible" semantic="compatible" source="compatible" deprecation="no" deletion="no" modification="no"/>
+        <description>
+          Use
+          <pre xml:space="preserve">
+ topComponent.getActionMap().put("jumpPrev", new YourPrevAction());
+ topComponent.getActionMap().put("jumpNext", new YourNextAction());
+          </pre>
+          if your component provides items and you want the user to jump
+          among them using standard next/prev actions.
+        </description>
+        <issue number="40185"/>
+    </change>
+    <change>
+     <api name="actions"/>
+     <summary>org.openide.actions.InstantiateAction deprecated</summary>
+     <version major="3" minor="42"/>
+     <date day="27" month="2" year="2003"/>
+     <author login="dkonecny"/>
+     <compatibility deprecation="yes" binary="compatible" source="compatible" semantic="compatible" addition="no" deletion="no" modification="no"/>
+     <description>
+        This action was used only as default action on templates. It instantiates the
+        template when it was double clicked in the Options dialog. This behaviour
+        was changed and action is not useful anymore. It is deprecated and it usage
+        should be avoided. Part of the deprecatation was that
+        org.openide.loadersDataNode.getDefaultAction() does not return this action
+        on templates anymore.
+     </description>
+     <class package="org.openide.actions" name="InstantiateAction" link="no"/>
+     <issue number="27135"/>
+    </change>
+<change>
+        <api name="actions"/>
+        <summary>New Actions system - part I.</summary>
+        <version major="3" minor="29"/>
+        <date day="8" month="1" year="2003"/>
+        <author login="jtulach"/>
+        <author login="pzavadsky"/>
+        <compatibility deprecation="yes" addition="yes" modification="yes" binary="compatible" source="compatible" semantic="compatible" deletion="no"/>
+        <description>
+            <p>
+            Introduction of new action system, which generally means
+            move from usage of <code>SystemAction</code> to <code>Action</code> instances.
+            Look at <a href="http://openide.netbeans.org/proposals/actions/index.html" shape="rect">
+            general proposal</a>. That document also focuses on declarative actions
+            usage which is not subject of current change, it will be part of later changes.
+            </p>
+<p>
+            Current change is described by <a href="http://openide.netbeans.org/proposals/actions/impl.html" shape="rect">
+            description of already implemented changes</a> which also summarizes
+            <a href="http://openide.netbeans.org/proposals/actions/impl.html#summaryAPI" shape="rect">
+            these API changes</a>.
+            </p>
+        </description>
+        <class package="org.openide.actions" name="CutAction"/>
+        <class package="org.openide.actions" name="CopyAction"/>
+        <class package="org.openide.actions" name="DeleteAction"/>
+        <class package="org.openide.actions" name="PasteAction"/>
+        <class package="org.openide.actions" name="FileSystemAction" link="no"/>
+        <class package="org.openide.actions" name="ToolsAction"/>
+        <issue number="27868"/>
+    </change>
+<change>
+      <api name="actions"/>
+      <summary>
+<code>ActionManager.getDefault()</code> added</summary>
+      <version major="4" minor="2"/>
+      <date day="18" month="3" year="2003"/>
+      <author login="jglick"/>
+      <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+      <description>
+        This method should be more convenient than looking for an instance in
+        lookup. Also there is a simple implementation for standalone use
+        available.
+      </description>
+      <class package="org.openide.actions" name="ActionManager"/>
+      <issue number="32092"/>
+    </change>
+<change>
+      <api name="actions"/>
+      <summary>Action manager can invoke actions in request processor</summary>
+      <date day="6" month="10" year="2000"/>
+      <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+      <description>
+        Method <code>invokeAction</code> added to the <code>ActionManager</code>.
+        It allows all actions code to happen in one request processor.
+      </description>
+      <class package="org.openide.actions" name="ActionManager"/>
+    </change>
+<change id="ActionManager">
+      <api name="actions"/>
+      <summary>
+<code>ActionManager</code> added</summary>
+      <date day="14" month="3" year="2000"/>
+      <compatibility addition="yes" deprecation="yes" binary="compatible" source="compatible" semantic="compatible" deletion="no" modification="no">
+        <code>ToolsAction</code> model first removed, later re-added but deprecated
+        in trunk and <code>boston</code>.
+      </compatibility>
+      <description>
+        Class <code>ActionManager</code> added, along with
+        <code>TopManager.getActionManager</code>. This class replaces the
+        functionality of <code>ToolsAction.Model</code> and
+        <code>ToolsAction.setModel</code> which have been deprecated. No one other
+        than <code>ToolsAction</code> and the core implementation ought to have
+        been directly using the model class, and the same applies to the new
+        action manager.
+      </description>
+      <class package="org.openide.actions" name="ActionManager"/>
+      <class package="org.openide.actions" name="ToolsAction"/>
+    </change>
+<change id="SaveAsTemplateAction.iconResource">
+      <api name="actions"/>
+      <summary>
+<code>SaveAsTemplateAction.iconResource</code> removed</summary>
+      <date day="23" month="3" year="2000"/>
+      <compatibility deletion="yes" deprecation="yes" binary="compatible" source="compatible" semantic="compatible" addition="no" modification="no">
+        First removed, later re-added but deprecated in trunk and
+        <code>boston</code>.
+      </compatibility>
+      <description>
+        <code>iconResource</code> was accidentally a public method; no longer
+        needed, and deprecated. Technically backwards incompatible, but no one
+        should have been calling this method as public, as it was protected in the
+        superclass <code>SystemAction</code>.
+      </description>
+      <class package="org.openide.actions" name="SaveAsTemplateAction" link="no"/>
+    </change>
+</changes>
+<htmlcontents>
+<head>
+<title>Change History for the Actions API</title>
+<link rel="stylesheet" href="prose.css" type="text/css"/>
+</head>
+<body>
+<p class="overviewlink">
+<a href="overview-summary.html">Overview</a>
+</p>
+<h1>Introduction</h1>
+<h2>What do the Dates Mean?</h2>
+<p>The supplied dates indicate when the API change was made, on the CVS
+trunk. From this you can generally tell whether the change should be
+present in a given build or not; for trunk builds, simply whether it
+was made before or after the change; for builds on a stabilization
+branch, whether the branch was made before or after the given date. In
+some cases corresponding API changes have been made both in the trunk
+and in an in-progress stabilization branch, if they were needed for a
+bug fix; this ought to be marked in this list.</p>
+<ul>
+<li>The <code>release41</code> branch was made on Apr 03 '05 for use in the NetBeans 4.1 release.
+Specification versions: 6.0 begins after this point.</li>
+<li>The <code>release40</code> branch was made on Nov 01 '04 for use in the NetBeans 4.0 release.
+Specification versions: 5.0 begins after this point.</li>
+</ul>
+<hr/>
+<standard-changelists module-code-name="org.openide.actions"/>
+<hr/>
+<p>@FOOTER@</p>
+</body>
+</htmlcontents>
+</apichanges>

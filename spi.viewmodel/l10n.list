@@ -1,0 +1,3 @@
+# core/javahelp
+read global
+${l10n-module}/src/**/*.gif

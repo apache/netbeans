@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+    This is the DTD for helpset
+    Copyright (c) 1998,1999 Sun Microsystems
+
+    @(#)helpset_2_0.dtd 1.5 06/05/03
+-->
+
+
+<!-- A HelpSet.  It is versioned -->
+
+<!ELEMENT helpset (title, maps, view+, subhelpset*, presentation*, impl?)>
+  <!ATTLIST helpset version ( 1.0 | 2.0) #IMPLIED>
+  <!ATTLIST helpset xml:lang CDATA #IMPLIED>
+
+
+<!-- The title. -->
+
+<!ELEMENT title (#PCDATA)>
+
+
+<!-- Maps between ids and urls for this helpset -->
+<!-- there is a bug in JH1.0 that forces a single map -->
+
+<!ELEMENT maps (homeID, mapref+)>
+<!ELEMENT homeID (#PCDATA)>
+<!ELEMENT mapref EMPTY>
+  <!ATTLIST mapref location CDATA #REQUIRED>
+
+
+<!-- Views into the information -->
+
+<!ELEMENT view (name | label | image? | type | data?)*>
+  <!ATTLIST view xml:lang CDATA #IMPLIED>
+  <!ATTLIST view mergetype CDATA #IMPLIED>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT label (#PCDATA)>
+<!ELEMENT image (#PCDATA)>
+<!ELEMENT type (#PCDATA)>
+<!ELEMENT data (#PCDATA)>
+  <!ATTLIST data engine CDATA #IMPLIED>
+
+
+<!-- Subhelpsets to merge "statically" -->
+
+<!ELEMENT subhelpset EMPTY>
+  <!ATTLIST subhelpset location CDATA #IMPLIED>
+
+
+<!-- Presentation of the HelpSet -->
+
+<!ELEMENT presentation (name, size?, location?, title?, image?, toolbar?)*>
+  <!ATTLIST presentation xml:lang CDATA #IMPLIED>
+  <!ATTLIST presentation default (true | false) #IMPLIED> 
+  <!ATTLIST presentation displayviews (true | false) #IMPLIED> 
+  <!ATTLIST presentation displayviewimages (true | false) #IMPLIED> 
+<!ELEMENT size EMPTY>
+  <!ATTLIST size width CDATA #REQUIRED> 
+  <!ATTLIST size height CDATA #REQUIRED> 
+<!ELEMENT location EMPTY>
+  <!ATTLIST location x CDATA #REQUIRED> 
+  <!ATTLIST location y CDATA #REQUIRED> 
+<!ELEMENT toolbar (helpaction*)>
+<!ELEMENT helpaction (#PCDATA)>
+  <!ATTLIST helpaction image CDATA #IMPLIED>
+
+<!-- Implementation specific data -->
+
+<!ELEMENT impl (helpsetregistry?, viewerregistry*)> 
+<!ELEMENT helpsetregistry EMPTY>
+  <!ATTLIST helpsetregistry helpbrokerclass CDATA #REQUIRED>
+<!ELEMENT viewerregistry EMPTY>
+  <!ATTLIST viewerregistry viewertype CDATA #REQUIRED>
+  <!ATTLIST viewerregistry viewerclass CDATA #REQUIRED>
+
+<!--
+
+  Change list:
+
+  Cleanup to be more XML-ish - epll, 15 Dec '98
+  xml:lang attributes for title, label, and name are no more.
+  engine is now an attribute of data.
+  impl is no more; use PI's instead.
+  data inside map is now the map tag.
+
+  More cleanup - epll, 16 Dec '98
+  moved homeID into map
+  made data inside map be mapref (for map reference)
+
+  Added mergetype attribute into view - rgregor 6 June '01
+
+  Added versions
+
+  Added presentation
+
+  Added impl
+
+ -->

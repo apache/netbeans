@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!--
+XML Schema to define the project.xml for a freeform project.
+Cf. http://projects.netbeans.org/buildsys/design.html#freeform
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.netbeans.org/ns/freeform-project-java/3"
+            xmlns="http://www.netbeans.org/ns/freeform-project-java/3"
+            elementFormDefault="qualified">
+
+    <xsd:element name="java-data">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="compilation-unit" minOccurs="0" maxOccurs="unbounded" type="compilation-unit"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:complexType name="compilation-unit">
+        <xsd:sequence>
+            <xsd:element name="package-root" maxOccurs="unbounded" type="substitutable-text"/>
+            <xsd:element name="unit-tests" minOccurs="0"><xsd:complexType/></xsd:element>
+            <xsd:element name="classpath" minOccurs="0" maxOccurs="unbounded">
+                <!-- XXX use schema to declare that the mode must be unique within this group -->
+                <xsd:complexType>
+                    <xsd:simpleContent>
+                        <xsd:extension base="substitutable-text">
+                            <xsd:attribute name="mode" use="required">
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:NMTOKEN">
+                                        <xsd:enumeration value="boot"/>
+                                        <xsd:enumeration value="compile"/>
+                                        <xsd:enumeration value="execute"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:attribute>
+                        </xsd:extension>
+                    </xsd:simpleContent>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="built-to" minOccurs="0" maxOccurs="unbounded" type="substitutable-text"/>
+            <xsd:element name="javadoc-built-to" minOccurs="0" maxOccurs="unbounded" type="substitutable-text"/>
+            <xsd:element name="source-level" minOccurs="0">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:NMTOKEN">
+                        <xsd:enumeration value="1.3"/>
+                        <xsd:enumeration value="1.4"/>
+                        <xsd:enumeration value="1.5"/>
+                        <xsd:enumeration value="1.6"/>
+                        <xsd:enumeration value="1.7"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="annotation-processing" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Annotation processing support</xsd:documentation>   
+                </xsd:annotation>
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="scan-trigger" minOccurs="0">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    When this element exists the annotation processors are invoked during the scan
+                                    of the project and when a file is saved
+                                </xsd:documentation>
+                             </xsd:annotation>
+                            <xsd:complexType/>
+                        </xsd:element>
+                        <xsd:element name="editor-trigger" minOccurs="0">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    When this element exists the annotation processors are also invoked during
+                                    typing in the editor which may slow down editing. This element requires presence
+                                    of the scan-trigger element
+                                </xsd:documentation>
+                             </xsd:annotation>
+                            <xsd:complexType/>
+                        </xsd:element>
+                        <xsd:element name="source-output" minOccurs="0" type="substitutable-text">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    The folder to which annotation processors generate files
+                                </xsd:documentation>
+                             </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="processor-path" minOccurs="0" type="substitutable-text">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    Explicit classpath holding the annotation processors. When available
+                                    this classpath is used to lookup the processors otherwise the compile 
+                                    classpath is used
+                                </xsd:documentation>
+                             </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="processor" minOccurs="0" maxOccurs="unbounded" type="substitutable-text">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    Explicit processor(s) to be invoked. If available these processor(s)
+                                    are executed otherwise the processors are looked up in META-INF/services
+                                </xsd:documentation>
+                             </xsd:annotation>
+                        </xsd:element>    
+                        <xsd:element name="processor-option" minOccurs="0" maxOccurs="unbounded" type="processor-option">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    Processor specific options
+                                </xsd:documentation>
+                             </xsd:annotation>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!-- XXX: this type was copied from freeform-project-general.xsd -->
+    <!-- Some text that might be substituted with Ant property references. -->
+    <xsd:simpleType name="substitutable-text">
+        <xsd:restriction base="xsd:string">
+            <!-- XXX limit by regexp, perhaps -->
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="processor-option">
+        <xsd:sequence>
+            <xsd:element name="key" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Name of the option
+                    </xsd:documentation>
+                 </xsd:annotation>
+            </xsd:element><!-- xsd:token???? -->
+            <xsd:element name="value" type="substitutable-text">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Option value
+                    </xsd:documentation>
+                 </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+</xsd:schema>

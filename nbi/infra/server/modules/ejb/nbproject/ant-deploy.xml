@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+  Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+  Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+  Other names may be trademarks of their respective owners.
+
+  The contents of this file are subject to the terms of either the GNU General Public
+  License Version 2 only ("GPL") or the Common Development and Distribution
+  License("CDDL") (collectively, the "License"). You may not use this file except in
+  compliance with the License. You can obtain a copy of the License at
+  http://www.netbeans.org/cddl-gplv2.html or nbbuild/licenses/CDDL-GPL-2-CP. See the
+  License for the specific language governing permissions and limitations under the
+  License.  When distributing the software, include this License Header Notice in
+  each file and include the License file at nbbuild/licenses/CDDL-GPL-2-CP.  Oracle
+  designates this particular file as subject to the "Classpath" exception as provided
+  by Oracle in the GPL Version 2 section of the License file that accompanied this code.
+  If applicable, add the following below the License Header, with the fields enclosed
+  by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+  
+  Contributor(s):
+  
+  The Original Software is NetBeans. The Initial Developer of the Original Software
+  is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun Microsystems, Inc. All
+  Rights Reserved.
+  
+  If you wish your version of this file to be governed by only the CDDL or only the
+  GPL Version 2, indicate your decision by adding "[Contributor] elects to include
+  this software in this distribution under the [CDDL or GPL Version 2] license." If
+  you do not indicate a single choice of license, a recipient has the option to
+  distribute your version of this file under either the CDDL, the GPL Version 2 or
+  to extend the choice of license to its licensees as provided above. However, if you
+  add GPL Version 2 code and therefore, elected the GPL Version 2 license, then the
+  option applies only if the new code is made subject to such option by the copyright
+  holder.
+-->
+
+<project default="-deploy-ant" basedir=".">
+    <target name="-init-cl-deployment-env" if="deploy.ant.enabled">
+        <property file="${deploy.ant.properties.file}" />
+        <available file="${deploy.ant.docbase.dir}/WEB-INF/sun-web.xml" property="sun.web.present"/>
+        <available file="${deploy.ant.resource.dir}" property="has.setup"/>
+        <tempfile prefix="sjsas" property="sjsas.password.file" destdir="${java.io.tmpdir}"/>  <!-- do not forget to delete this! -->
+        <echo message="AS_ADMIN_PASSWORD=${sjsas.password}" file="${sjsas.password.file}"/>
+    </target>
+    
+    <target name="-parse-sun-web" depends="-init-cl-deployment-env" if="sun.web.present">
+        <tempfile prefix="sjsas" property="temp.sun.web" destdir="${java.io.tmpdir}"/>
+        <copy file="${deploy.ant.docbase.dir}/WEB-INF/sun-web.xml" tofile="${temp.sun.web}"/>
+        <!-- The doctype triggers resolution which can fail -->
+        <replace file="${temp.sun.web}">
+            <replacetoken><![CDATA[<!DOCTYPE]]></replacetoken>
+            <replacevalue><![CDATA[<!-- <!DOCTYPE]]></replacevalue>
+        </replace>
+        <replace file="${temp.sun.web}">
+            <replacetoken><![CDATA[<sun-web-app]]></replacetoken>
+            <replacevalue><![CDATA[--> <sun-web-app]]></replacevalue>
+        </replace>
+        <xmlproperty file="${temp.sun.web}" validate="false">
+        </xmlproperty>    
+        <delete file="${temp.sun.web}"/>
+        <property name="deploy.ant.client.url" value="${sjsas.url}${sun-web-app.context-root}"/>
+    </target>
+    <target name="-add-resources" depends="-init-cl-deployment-env" if="has.setup">
+        <tempfile prefix="sjsas" property="sjsas.resources.dir" destdir="${java.io.tmpdir}"/>
+        <mkdir dir="${sjsas.resources.dir}"/>
+        <mkdir dir="${sjsas.resources.dir}/META-INF"/>
+        <property name="sjsas.resources.file" value="${sjsas.resources.dir}/META-INF/sun-resources.xml"/>
+        <property name="lefty" value="&lt;"/>
+         
+        <property name="righty" value="&gt;"/>
+        <concat destfile="${sjsas.resources.file}">${lefty}?xml version="1.0" encoding="UTF-8"?${righty}
+${lefty}!DOCTYPE resources PUBLIC 
+   "-//Sun Microsystems Inc.//DTD Application Server 9.0 Resource Definitions //EN" 
+   "${sjsas.root}/lib/dtds/sun-resources_1_2.dtd"${righty}
+${lefty}resources${righty}
+${lefty}/resources${righty}
+        </concat>
+        <concat append="true" destfile="${sjsas.resources.file}">
+            <fileset dir="${deploy.ant.resource.dir}"/>
+        </concat>
+        <replace file="${sjsas.resources.file}" value="">
+            <replacetoken><![CDATA[</resources>
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>]]></replacetoken>
+        </replace>
+        <replace file="${sjsas.resources.file}" value="">
+            <replacetoken><![CDATA[</resources>
+        <?xml version="1.0" encoding="UTF-8"?>
+<resources>]]></replacetoken>
+        </replace>
+        <replace file="${sjsas.resources.file}" value="">
+            <replacetoken><![CDATA[transaction-isolation-level="JDBC Driver Default"]]></replacetoken>
+        </replace>
+        <!-- work-around 434 and its variants -->
+        <replace file="${sjsas.resources.file}" value="">
+            <replacetoken><![CDATA[<description/>]]></replacetoken>
+        </replace>
+        <!-- do the right thing for Topics and Queues.
+            Need fix for TopicConnectionFactory and QueueConnectionfactory -->
+        <replace file="${sjsas.resources.file}">
+            <replacetoken><![CDATA[<jms-resource ]]></replacetoken>
+            <replacevalue><![CDATA[<admin-object-resource res-adapter="jmsra" ]]></replacevalue>
+        </replace>
+        <replace file="${sjsas.resources.file}">
+            <replacetoken><![CDATA[</jms-resource>]]></replacetoken>
+            <replacevalue><![CDATA[</admin-object-resource>]]></replacevalue>
+        </replace>
+        <jar destfile="${deploy.ant.archive}" update="true">
+            <fileset dir="${sjsas.resources.dir}"/>
+        </jar>
+        <delete dir="${sjsas.resources.dir}"/>
+    </target>
+    <target name="-deploy-ant" depends="-parse-sun-web,-add-resources" if="deploy.ant.enabled">
+        <echo message="Deploying ${deploy.ant.archive}"/>
+        <taskdef name="sun-appserv-deploy" classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.DeployTask"
+                 classpath="${sjsas.root}/lib/sun-appserv-ant.jar" />
+        <sun-appserv-deploy user="${sjsas.username}"
+                passwordfile="${sjsas.password.file}"
+                host="${sjsas.host}" port="${sjsas.port}"
+                file="${deploy.ant.archive}" asinstalldir="${sjsas.root}"/>
+        <delete file="${sjsas.password.file}"/>
+    </target>
+    <target name="-undeploy-ant" depends="-init-cl-deployment-env" if="deploy.ant.enabled">
+        <taskdef name="sun-appserv-undeploy" classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.UndeployTask"
+                 classpath="${sjsas.root}/lib/sun-appserv-ant.jar" />
+        <sun-appserv-undeploy user="${sjsas.username}"
+                passwordfile="${sjsas.password.file}"
+                host="${sjsas.host}" port="${sjsas.port}"
+                file="${deploy.ant.archive}" asinstalldir="${sjsas.root}"/>
+        <delete file="${sjsas.password.file}"/>
+    </target>
+</project>

@@ -1,0 +1,99 @@
+#!/bin/sh
+
+if [ -z $repository && -n $1 ]; then
+    repository = $1
+fi
+
+if [ -z $action && -n $2]; then
+    action = $2
+fi
+
+if [ -z $push_username && -n $3 ]; then
+    push_username = $3
+fi
+
+if [ -z $push_password && -n $4 ]; then
+    push_password = $4
+fi
+
+[ "$action" = "build" ] || [ "$action" = "sync" ] || exit 101
+
+[ -n "$push_username" ] || exit 102
+[ -n "$push_password" ] || exit 103
+
+[ -n "$repository" ] || exit 104
+
+ANT_OPTS="-Xmx512m"
+export ANT_OPTS
+HGMERGE=merge
+export HGMERGE
+
+rm -rf real.workspace
+hg clone . real.workspace || exit 1
+cd real.workspace
+
+testmodule() {
+    ant -f $1/build.xml test -Dtest-unit-sys-prop.ignore.random.failures=true
+}
+
+if [ "$action" = "build" ]; then
+#    hg fetch http://hg.netbeans.org/main || exit 1
+#    hg pull http://hg.netbeans.org/main || exit 1
+#    if [ `hg heads --template '{node|short}\n' | wc -l` = 1 ]
+#    then
+#       hg up || exit 6
+#    else
+#       hg merge || exit 7
+#       hg ci -m 'Automated merge' || exit 8
+#    fi
+
+    ant build || exit 2
+    ant commit-validation # || exit 3
+    testmodule openide.util  || exit 4
+    testmodule openide.modules || exit 4
+    testmodule openide.filesystems || exit 4
+# masterfs is currently broken, Radek wants me to disable it until 6.1M2:
+#    ant -f masterfs|| exit 4
+    testmodule openide.nodes|| exit 4
+    testmodule openide.options || exit 4
+    testmodule openide.dialogs || exit 4
+    testmodule openide.awt || exit 4
+    testmodule openide.windows || exit 4
+    testmodule core.startup # || exit 4
+#    testmodule openide.io || exit 4
+    if [ `hg out --template '{node|short}\n' http://hg.netbeans.org/main | wc -l` > 0 ]; then
+        echo No outgoing changes
+#        exit 0
+    fi
+
+    for i in 1 2 3; do
+       hg pull http://hg.netbeans.org/main || exit 5
+       if [ `hg heads --template '{node|short}\n' | wc -l` = 1 ]
+       then
+           hg up || exit 6
+       else
+           hg merge || exit 7
+           hg ci -m 'Automated merge' || exit 8
+       fi
+       hg out http://hg.netbeans.org/main
+       hg in http://hg.netbeans.org/main
+       hg push https://"$push_username":"$push_password"@hg.netbeans.org/main && exit 0
+    done
+    exit 5
+fi
+
+if [ "$action" = "sync" ]; then
+    HEADS=`hg heads --template "{node}\n" | wc -l`
+    if [ $HEADS = 2 ]; then
+      hg merge
+      hg ci -m "Automated merge"
+      hg up -C
+    fi
+    hg fetch http://hg.netbeans.org/$repository
+    hg push https://"$push_username":"$push_password"@hg.netbeans.org/$repository
+    exit 0
+fi
+
+
+
+

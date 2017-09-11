@@ -1,0 +1,48 @@
+O:Cannot start REPL, see IDE log for more details.
+x:|  Welcome to the Java REPL NetBeans integration
+x:|  Type /help for help
+x:
+I:-> `System.err.println("");` System.err.println("");
+M:| ` Error:
+x:| ` illegal start of expression
+x:| ` |  Welcome to the Java REPL NetBeans integration
+x:| ` ^
+x:
+I:-> `
+M:| ` Error:
+x:| ` illegal start of expression
+x:| ` |  Welcome to the Java REPL NetBeans integration
+x:| ` ^
+x:
+I:-> `System.err.println("");
+M:| ` Error:
+x:| ` ';' expected
+x:| ` s integration
+x:| `              ^
+x:
+I:-> `System.err.println("x");
+M:| `x
+x:
+I:-> `System.err.println("ahoj");
+M:| `ahoj
+x:
+I:-> `System
+M:| ` Error:
+x:| ` cannot find symbol
+x:| `   symbol:   variable System
+x:| ` System
+x:| ` ^----^
+x:
+I:-> `System.err
+M:| ` Expression value is: java.io.PrintStream@3d04a311
+x:| `   assigned to temporary variable $3 of type PrintStream
+x:
+I:-> `System.err.
+x:>> `println
+M:| ` Error:
+x:| ` cannot find symbol
+x:| `   symbol:   variable println
+x:| ` System.err.
+x:| ` ^----------...
+x:
+In:-> `System.err.

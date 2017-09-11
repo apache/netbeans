@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.paint
+OpenIDE-Module-Layer: org/netbeans/paint/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/paint/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.1
+

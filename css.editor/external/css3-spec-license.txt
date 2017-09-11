@@ -1,0 +1,277 @@
+Name: CSS 3 Specification
+License: W3C (the original at http://www.w3.org/Style/CSS/current-work)
+OSR: 
+Version: 
+Description: Documentation for the CSS 3 standard
+Origin: http://www.w3.org/TR/css3-*
+
+W3C (R) Intellectual Rights Notice and Legal Disclaimers
+
+This page includes notices and disclaimers related to:
+
+  1. Copyright
+  2. Notices
+  3. Trademarks
+  4. Disclaimers_and_Liabilities
+
+
+Copyright (C) 1994-2002 W3C (R) (Massachusetts_Institute_of_Technology, Institut
+National_de_Recherche_en_Informatique_et_en_Automatique, Keio_University), All
+Rights Reserved.
+
+World Wide Web Consortium (W3C (R)) web site pages may contain other proprietary
+notices and copyright information, the terms of which must be observed and
+followed. Specific notices do exist for W3C documents and software. Also, there
+are specific_usage_policies_associated_with_some_of_the_W3C_Icons. Please see
+our Intellectual_Rights_FAQ for common questions about using materials from our
+site.
+
+Notice and Disclaimers
+
+1. Unless otherwise noted, all materials contained in this Site are copyrighted
+and may not be used except as provided in these terms and conditions or in the
+copyright notice (documents and software) or other proprietary notice provided
+with the relevant materials.
+2. The materials contained in the Site may be downloaded or copied provided
+that ALL copies retain the copyright and any other proprietary notices
+contained on the materials. No material may be modified, edited or taken out of
+context such that its use creates a false or misleading statement or impression
+as to the positions, statements or actions of W3C.
+3. The name and trademarks of copyright holders may NOT be used in advertising
+or publicity pertaining to the Web site, its content, specifications, or
+software without specific, written prior permission. Title to copyright in Web
+site documents will at all times remain with copyright holders. Use of W3C
+trademarks and service marks is covered by the W3C_Trademark_and_Servicemark
+License.
+4. Caches of W3C materials should comply with the "maximum time to live"
+information provided with the materials. After such materials have expired they
+should not be served from caches without first validating the contents of the
+W3C Site. Organizations that want to mirror W3C content must abide by the W3C
+Mirroring_Policy.
+
+W3C (R)Trademarks and Generic Terms
+
+
+Trademarks owned by W3C host institutions on behalf of W3C and generic terms
+used by the W3C
+
+5. The trademarks, logos, and service marks (collectively the "Trademarks")
+displayed on the Site are registered and unregistered Trademarks of the
+Massachusetts Institute of Technology (MIT), Institut National de Recherche en
+Informatique et en Automatique (INRIA), or Keio University (Keio). All use of
+the W3C Trademarks is governed by the W3C_Trademark_and_Servicemark_License. No
+additional rights are granted by implication, estoppel, or otherwise. Terms
+which claimed as generic are not governed by any W3C license and are used as
+common descriptors by the W3C.
+The following is a list of W3C terms claimed as a trademark or generic term by
+MIT, INRIA, and/or Keio on behalf of the W3C:
+
+     W3C (R), World Wide Web Consortium (registered in numerous countries)
+     AmayaTM, a Web Browser
+     CSSTM, Cascading Style Sheets Specification
+     DOMTM, Document Object Model
+     HTML (generic), HyperText Markup Language
+     HTTP (generic), Hypertext Transfer Protocol
+     MathMLTM, Mathematical Markup Language
+     Metadata (generic)
+     P3PTM, Platform for Privacy Preferences Project
+     PICSTM, Platform for Internet Content Selection
+     RDF (generic), Resource Description Framework
+     SMILTM, Synchronized Multimedia Integration Language
+     SVGTM, Scalable Vector Graphics
+     WAITM, Web Accessibility Initiative
+     XENC (generic), XML Encryption
+     XHTMLTM, The Extensible HyperText Markup Language
+     XML (generic), Extensible Markup Language
+     XSLTM, Extensible Stylesheet Language
+
+     ACSSTM, Aural Cascading Style Sheets
+     DSigTM, Digital Signature Initiative
+     JEPITM, Joint Electronic Payment Initiative
+     JigsawTM
+     PICSRulesTM
+     WebFontsTM
+
+The absence of a product or service name or logo from this list does not
+constitute a waiver of MIT's, INRIA's, or Keio's trademark or other
+intellectual rights concerning that name or logo.
+Any questions concerning the use, status, or standing of W3C trademarks should
+be directed to: site-policy@w3.org or to W3C (c/o Joseph Reagle), Laboratory
+for Computer Science NE43-358, Massachusetts Institute of Technology, 200
+Technology Square, Cambridge, MA 02139.
+
+Non-W3C Trademarks; Member Trademarks
+
+The trademarks, logos, and service marks not owned on behalf of the W3C and
+that are displayed on the Site are the registered and unregistered marks of
+their respective owners. No rights are granted by the W3C to use such marks,
+whether by implication, estoppel, or otherwise.
+"METADATA" is a trademark of the Metadata Company. W3C uses the term "metadata"
+in a descriptive sense, meaning "data about data". W3C is not in any way
+affiliated with the Metadata Company.
+
+Legal Disclaimers
+
+6. W3C has not reviewed any or all of the web sites linked to this Site and is
+not responsible for the content of any off-site pages or any other web sites
+linked to this Site. Please understand that any non-W3C web site is independent
+from W3C, and W3C has no control over the content on that web site. In
+addition, a link to a non-W3C web site does not mean that W3C endorses or
+accepts any responsibility for the content, or the use, of such site. It is the
+user's responsibility to take precautions to ensure that whatever is selected
+is free of such items as viruses, worms, Trojan horses and other items of a
+destructive nature.
+7. Information W3C publishes on its Site may contain references or cross
+references to W3C specifications, projects, programs and services that are not
+announced or available in your country. Such references do not imply that W3C
+intends to announce such specifications, projects, programs or services in your
+country.
+8. Information on this Site may contain technical inaccuracies or typographical
+errors. Information may be changed or updated without notice. W3C may make
+improvements and/or changes in the materials contained in or described on this
+site at any time without notice. W3C may also make changes in these Terms and
+Conditions without notice. User is bound by such revisions and should therefore
+periodically visit this page to review the then current Terms and Conditions.
+
+9. Limitation on Warranties.
+
+ALL MATERIALS ON THE W3C SITE ARE PROVIDED "AS IS." W3C, MIT, INRIA, AND KEIO
+MAKE NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, INCLUDING, BUT NOT
+LIMITED TO, WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE,
+TITLE OR NON-INFRINGEMENT. AS TO DOCUMENTS AND GRAPHICS PUBLISHED ON THIS SITE,
+W3C, MIT, INRIA, AND KEIO MAKE NO REPRESENTATION OR WARRANTY THAT THE CONTENTS
+OF SUCH DOCUMENT OR GRAPHICS ARE FREE FROM ERROR OR SUITABLE FOR ANY PURPOSE;
+NOR THAT IMPLEMENTATION OF SUCH CONTENTS WILL NOT INFRINGE ANY THIRD PARTY
+PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.
+Please note that some jurisdictions may not allow the exclusion of implied
+warranties, so some of the above exclusions may not apply to you.
+
+10. Limitation on Liability.
+
+IN NO EVENT WILL W3C, MIT, INRIA, AND KEIO BE LIABLE TO ANY PARTY FOR ANY
+DIRECT, INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES FOR ANY USE OF THIS SITE, OR
+ON ANY OTHER HYPERLINKED WEB SITE, INCLUDING, WITHOUT LIMITATION, ANY LOST
+PROFITS, BUSINESS INTERRUPTION, LOSS OF PROGRAMS OR OTHER DATA ON YOUR
+INFORMATION HANDLING SYSTEM OR OTHERWISE, EVEN IF W3C, MIT, INRIA, OR KEIO IS
+EXPRESSLY ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+______________
+Please see our Intellectual_Rights_FAQ for common questions about using
+materials from our site. Questions about this notice can be directed to site-
+policy@w3.org .
+Created by reagle
+last updated by reagle on $ Date: 1999/07/28 13:54:29 $
+Copyright (C) 1998-2002 W3C (R) (MIT, INRIA, Keio), All Rights Reserved. W3C
+liability, trademark, document_use and software_licensing rules apply.
+-------------------------------------------------------------------------------
+
+
+W3C (R) DOCUMENT NOTICE AND LICENSE
+
+
+Copyright (C) 1994-2002 World Wide Web Consortium, (Massachusetts Institute of
+Technology, Institut National de Recherche en Informatique et en Automatique,
+Keio University). All Rights Reserved.
+http://www.w3.org/Consortium/Legal/
+
+Public documents on the W3C site are provided by the copyright holders under
+the following license. The software or Document Type Definitions (DTDs)
+associated with W3C specifications are governed by the Software Notice. By
+using and/or copying this document, or the W3C document from which this
+statement is linked, you (the licensee) agree that you have read, understood,
+and will comply with the following terms and conditions:
+Permission to use, copy, and distribute the contents of this document, or the
+W3C document from which this statement is linked, in any medium for any purpose
+and without fee or royalty is hereby granted, provided that you include the
+following on ALL copies of the document, or portions thereof, that you use:
+
+  1. A link or URL to the original W3C document.
+  2. The pre-existing copyright notice of the original author, or if it doesn't
+     exist, a notice of the form: "Copyright (C) [$date-of-document] World Wide
+     Web Consortium, (Massachusetts Institute of Technology, Institut National
+     de Recherche en Informatique et en Automatique, Keio University). All
+     Rights Reserved. http://www.w3.org/Consortium/Legal/" (Hypertext is
+     preferred, but a textual representation is permitted.)
+  3. If it exists, the STATUS of the W3C document.
+
+When space permits, inclusion of the full text of this NOTICE should be
+provided. We request that authorship attribution be provided in any software,
+documents, or other items or products that you create pursuant to the
+implementation of the contents of this document, or any portion thereof.
+No right to create modifications or derivatives of W3C documents is granted
+pursuant to this license. However, if additional requirements (documented in
+the Copyright FAQ) are satisfied, the right to create modifications or
+derivatives is sometimes granted by the W3C to individuals complying with those
+requirements.
+THIS DOCUMENT IS PROVIDED "AS IS," AND COPYRIGHT HOLDERS MAKE NO
+REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED
+TO, WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-
+INFRINGEMENT, OR TITLE; THAT THE CONTENTS OF THE DOCUMENT ARE SUITABLE FOR ANY
+PURPOSE; NOR THAT THE IMPLEMENTATION OF SUCH CONTENTS WILL NOT INFRINGE ANY
+THIRD PARTY PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.
+COPYRIGHT HOLDERS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL OR
+CONSEQUENTIAL DAMAGES ARISING OUT OF ANY USE OF THE DOCUMENT OR THE PERFORMANCE
+OR IMPLEMENTATION OF THE CONTENTS THEREOF.
+The name and trademarks of copyright holders may NOT be used in advertising or
+publicity pertaining to this document or its contents without specific, written
+prior permission. Title to copyright in this document will at all times remain
+with copyright holders.
+----------------------------------------------------------------------------
+This formulation of W3C's notice and license became active on April 05 1999 so
+as to account for the treatment of DTDs, schema's and bindings. See the older
+formulation for the policy prior to this date. Please see our Copyright FAQ for
+common questions about using materials from our site, including specific terms
+and conditions for packages like libwww, Amaya, and Jigsaw. Other questions
+about this notice can be directed to site-policy@w3.org.
+-------------------------------------------------------------------------------
+
+
+W3C(R) SOFTWARE NOTICE AND LICENSE
+
+
+Copyright (c) 1994-2002 World Wide Web Consortium, (Massachusetts Institute of
+Technology, Institut National de Recherche en Informatique et en Automatique,
+Keio University). All Rights Reserved. http://www.w3.org/Consortium/Legal/
+
+This W3C work (including software, documents, or other related items) is being
+provided by the copyright holders under the following license. By obtaining,
+using and/or copying this work, you (the licensee) agree that you have read,
+understood, and will comply with the following terms and conditions:
+Permission to use, copy, modify, and distribute this software and its
+documentation, with or without modification, for any purpose and without fee or
+royalty is hereby granted, provided that you include the following on ALL
+copies of the software and documentation or portions thereof, including
+modifications, that you make:
+
+  1. The full text of this NOTICE in a location viewable to users of the
+     redistributed or derivative work.
+  2. Any pre-existing intellectual property disclaimers, notices, or terms and
+     conditions. If none exist, a short notice of the following form (hypertext
+     is preferred, text is permitted) should be used within the body of any
+     redistributed or derivative code: "Copyright (c) [$date-of-software] World
+     Wide Web Consortium, (Massachusetts Institute of Technology, Institut
+     National de Recherche en Informatique et en Automatique, Keio University).
+     All Rights Reserved. http://www.w3.org/Consortium/Legal/"
+  3. Notice of any changes or modifications to the W3C files, including the
+     date changes were made. (We recommend you provide URIs to the location
+     from which the code is derived.)
+
+THIS SOFTWARE AND DOCUMENTATION IS PROVIDED "AS IS," AND COPYRIGHT HOLDERS MAKE
+NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO, WARRANTIES OF MERCHANTABILITY OR FITNESS FOR ANY PARTICULAR PURPOSE OR THAT
+THE USE OF THE SOFTWARE OR DOCUMENTATION WILL NOT INFRINGE ANY THIRD PARTY
+PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.
+COPYRIGHT HOLDERS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL OR
+CONSEQUENTIAL DAMAGES ARISING OUT OF ANY USE OF THE SOFTWARE OR DOCUMENTATION.
+The name and trademarks of copyright holders may NOT be used in advertising or
+publicity pertaining to the software without specific, written prior
+permission. Title to copyright in this software and any associated
+documentation will at all times remain with copyright holders.
+____________________________________
+This formulation of W3C's notice and license became active on August 14 1998 so
+as to improve compatibility with GPL. This version ensures that W3C software
+licensing terms are no more restrictive than GPL and consequently W3C software
+may be distributed in GPL packages. See the older_formulation for the policy
+prior to this date. Please see our Copyright_FAQ for common questions about
+using materials from our site, including specific terms and conditions for
+packages like libwww, Amaya, and Jigsaw. Other questions about this notice can
+be directed to site-policy@w3.org.

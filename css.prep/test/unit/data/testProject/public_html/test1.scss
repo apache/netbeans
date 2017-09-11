@@ -1,0 +1,10 @@
+ul {
+    padding: 0 0 0 25px;
+    li {
+        @include incr(18px);
+        text-transform: uppercase;
+        a {     
+            @include incr(20px);
+        }
+    }
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : schemaWithNS.xsd
+    Created on : July 24, 2002, 11:45 PM
+    Author     : Petr Kuzel <petr.kuzel@sun.com>
+    Description:
+        Test Schema parser, it should detect just root element decl.
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="test:schemaWithNS"
+            xmlns="test:schemaWithNS"
+            elementFormDefault="unqualified">
+
+    <element name="root"/>
+    <complexType>
+        <sequence>
+            <element name="seq1"/>
+            <element name="seq2"/>
+        </sequence>
+    </complexType>
+</xsd:schema>

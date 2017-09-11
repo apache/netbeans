@@ -1,0 +1,17 @@
+# Ensures columns from the "customer" table show up, even if the table
+# is qualified with the (default) schema name in the SELECT clause.
+
+select customer.cus| from customers.customer
+
+--
+<unknown>
+  customers*
+    customer
+      customer_id
+      address_line
+  accounting
+    invoice
+      invoice_id
+      customer_id
+    customer
+      name_surname

@@ -1,0 +1,522 @@
+<?xml version="1.0"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2009 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd" [
+    <!ENTITY eclipse-global-keymap SYSTEM "eclipse-global-keymap.xml">
+]>
+<filesystem>
+
+    <folder name="Actions">
+        <folder name="Edit">
+<!--            <file name="org-netbeans-modules-editor-java-JavaFastOpenAction.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaFastOpenAction.getInstance"/>
+            </file> -->
+        </folder>
+        <folder name="Source">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.editor.resources.Bundle"/>
+            <file name="org-netbeans-modules-editor-java-JavaKit$JavaFixImports$GlobalAction.instance"/>
+        </folder>
+    </folder>
+
+    <folder name="Menu">
+        <folder name="Edit">
+<!--            <file name="org-netbeans-modules-editor-java-JavaFastOpenAction.shadow">            
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-editor-java-JavaFastOpenAction.instance"/>            
+            </file> -->
+
+                       
+
+        </folder>
+        <folder name="Source">
+            <file name="org-netbeans-modules-editor-java-JavaKit$JavaFixImports$GlobalAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Source/org-netbeans-modules-editor-java-JavaKit$JavaFixImports$GlobalAction.instance"/>
+                <attr name="position" intvalue="2400"/>
+            </file>
+            </folder>
+    </folder>
+                
+    <folder name="Shortcuts">
+<!--        <file name="OS-O.shadow">
+	    <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-editor-java-JavaFastOpenAction.instance"/>
+        </file> -->
+    </folder>
+
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-jsp">
+                <file name="org-netbeans-modules-java-editor-semantic-HighlightsLayerFactoryImpl.instance" />
+            </folder>
+            <folder name="x-tag">
+                <file name="org-netbeans-modules-java-editor-semantic-HighlightsLayerFactoryImpl.instance" />
+            </folder>
+            <folder name="x-java">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.editor.resources.Bundle"/>
+                
+                <file name="org-netbeans-modules-java-editor-semantic-HighlightsLayerFactoryImpl.instance" />
+                <file name="org-netbeans-modules-java-editor-semantic-SemanticHighlighterFactory.instance" />
+                <file name="org-netbeans-modules-java-editor-semantic-MarkOccurrencesHighlighterFactory.instance" />
+                <file name="org-netbeans-modules-java-editor-overridden-ComputeAnnotations$FactoryImpl.instance" />
+                
+                <folder name="Preferences">
+                    <folder name="Defaults">
+                        <file name="org-netbeans-modules-editor-java-preferences.xml" url="DefaultPreferences.xml" />
+                    </folder>
+                </folder>
+                    
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-editor-java-token-colorings.xml" url="fontsColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.editor.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+                
+                <folder name="Keybindings">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="org-netbeans-modules-editor-java-keybindings.xml" url="DefaultKeyBindings.xml"/> 
+                            <file name="org-netbeans-modules-editor-java-keybindings-mac.xml" url="DefaultKeyBindings-Mac.xml"> 
+                                <attr name="nbeditor-settings-targetOS" stringvalue="OS_MAC"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+
+                <folder name="CodeTemplates">
+                    <folder name="Defaults">
+                        <file name="org-netbeans-modules-editor-java-codetemplates.xml" url="DefaultAbbrevs.xml">
+                            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.editor.resources.Bundle"/>
+                        </file>
+                    </folder>
+                </folder>
+                
+                <folder name="Macros">
+                    <folder name="Defaults">
+                        <file name="org-netbeans-modules-editor-java-macros.xml" url="DefaultMacros.xml"/>
+                    </folder>
+                </folder>
+                
+                <folder name="FoldManager">
+                    <file name="CustomFoldManager.instance">
+                	<attr name="position" intvalue="1100"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.fold.FoldManagerFactory"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.api.editor.fold.FoldingSupport.userFoldManagerFactory"/>
+                    </file>
+                    <file name="org-netbeans-modules-java-editor-fold-JavaElementFoldManagerFactory.instance">
+                	<attr name="position" intvalue="1200"/>
+                    </file>
+                    <file name="JavadocReader.instance">
+                	<attr name="position" intvalue="1300"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.fold.ContentReader$Factory"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.api.editor.fold.FoldingSupport.contentReaderFactory"/>
+                        <attr name="start" stringvalue="*"/>
+                        <attr name="terminator" stringvalue="\."/>
+                        <attr name="stop" stringvalue="@"/>
+                    </file>
+                </folder>
+                
+                <file name="EditorKit.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.editor.java.JavaKit"/>
+                </file>
+
+                <folder name="BracesMatchers">
+                    <file name="org-netbeans-modules-editor-java-JavaBracesMatcher.instance">
+                        <attr name="position" intvalue="0"/>
+                    </file>
+                </folder>
+
+                <folder name="Actions">
+<!--                    <file name="default-typed.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="make-getter.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="make-setter.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="make-is.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="abbrev-debug-line.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="toggle-comment.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="generate-goto-popup.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="insert-break.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="delete-previous.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="delete-next.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="expand-all-javadoc-folds.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="collapse-all-javadoc-folds.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="expand-all-code-block-folds.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="collapse-all-code-block-folds.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="generate-fold-popup.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="goto-declaration.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="goto-source.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="goto-help.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="in-place-refactoring.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="fix-imports.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="complete-line-newline.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="complete-line.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="select-element-next.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="select-element-previous.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="caret-next-word.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="caret-previous-word.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="selection-next-word.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="selection-previous-word.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="remove-word-next.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="remove-word-previous.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="fast-import.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="goto-super-implementation.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="java-prev-marked-occurrence.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+                    <file name="java-next-marked-occurrence.instance">
+                        <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.java.JavaKit.create" />
+                    </file>
+-->
+                </folder>
+                
+                <folder name="Popup">
+                    <folder name="goto">
+                        <attr name="position" intvalue="500"/>
+                        <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.editor.Bundle"/>
+                        <file name="goto-source">
+                            <attr name="position" intvalue="100"/>
+                        </file>
+                        <file name="goto-declaration">
+                            <attr name="position" intvalue="200"/>
+                        </file>
+                        <file name="goto-super-implementation">
+                            <attr name="position" intvalue="300"/>
+                        </file>  
+                        <file name="goto-implementation">
+                            <attr name="position" intvalue="330"/>
+                        </file>
+                    </folder>
+                    
+                    <file name="goto-help">
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+
+                    <file name="SeparatorAfterGoToHelp.instance">
+			<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1430"/>
+                    </file>
+
+                    <file name="generate-code">
+                        <attr name="position" intvalue="1480"/>
+                    </file>
+
+                    <file name="fix-imports">
+                        <attr name="position" intvalue="1520"/>
+                    </file>
+
+                    <file name="format">
+                        <attr name="position" intvalue="1580"/>
+                    </file>                    
+                                                            
+
+                    <file name="SeparatorBeforeCut.instance">
+			<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1960"/>
+                    </file>
+                    
+                    <file name="SeparatorAfterPaste.instance">
+			<attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="4100"/>
+                    </file>
+                    
+                    <file name="generate-fold-popup">
+                        <attr name="position" intvalue="4200"/>
+                    </file>
+
+                </folder>
+                <folder name="Toolbars">
+                    <folder name="Default">
+                        <file name="Separator-before-comment.instance">
+                            <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                            <attr name="position" intvalue="19100"/>
+                        </file>
+                        <file name="comment">
+                            <attr name="position" intvalue="19200"/>
+                        </file>
+                        <file name="uncomment">
+                            <attr name="position" intvalue="19300"/>
+                        </file>
+                    </folder>
+                </folder>
+                
+                <folder name="HyperlinkProviders">
+                    <file name="JavaHyperlinkProvider.instance">
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.java.editor.hyperlink.JavaHyperlinkProvider"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                </folder>
+                
+                <folder name="UpToDateStatusProvider">
+                    <file name="org-netbeans-modules-java-editor-semantic-OccurrencesMarkProviderCreator.instance">
+                    </file>
+                </folder>
+
+                <folder name="CodeTemplateProcessorFactories">
+                    <file name="org-netbeans-modules-editor-java-JavaCodeTemplateProcessor$Factory.instance"/>
+                </folder>                
+                
+                <folder name="CodeTemplateFilterFactories">
+                    <file name="org-netbeans-modules-editor-java-JavaCodeTemplateFilter$Factory.instance"/>
+                </folder>                
+
+                <folder name="GlyphGutterActions">
+                    <file name="org-netbeans-modules-java-editor-overridden-IsOverriddenAnnotationAction.instance">
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                </folder>
+                
+                <folder name="CodeGeneratorContextProviders">
+                    <file name="org-netbeans-modules-java-editor-codegen-ContextProvider.instance"/>
+                </folder>
+                
+                <folder name="CodeGenerators">
+                    <file name="org-netbeans-modules-java-editor-codegen-ConstructorGenerator$Factory.instance">
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                    <file name="org-netbeans-modules-java-editor-codegen-LoggerGenerator$Factory.instance">
+                        <attr name="position" intvalue="150"/>
+                    </file>
+                    <file name="org-netbeans-modules-java-editor-codegen-GetterSetterGenerator$Factory.instance">
+                        <attr name="position" intvalue="200"/>
+                    </file>
+                    <file name="org-netbeans-modules-java-editor-codegen-EqualsHashCodeGenerator$Factory.instance">
+                        <attr name="position" intvalue="300"/>
+                    </file>
+                    <file name="org-netbeans-modules-java-editor-codegen-ToStringGenerator$Factory.instance">
+                        <attr name="position" intvalue="350"/>
+                    </file>
+                    <file name="org-netbeans-modules-java-editor-codegen-DelegateMethodGenerator$Factory.instance">
+                        <attr name="position" intvalue="400"/>
+                    </file>
+                    <file name="org-netbeans-modules-java-editor-codegen-ImplementOverrideMethodGenerator$Factory.instance">
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                </folder>
+                <folder name="AnnotationProcessors">
+                    <file name="org-netbeans-modules-editor-java-SupportedAnnotationTypesCompletion.instance" />
+                </folder>
+                <folder name="text">
+                    <folder name="x-java-string">
+                        <folder name="CodeTemplates">
+                            <folder name="Defaults">
+                                <file name="codetemplates.shadow">
+                                    <attr name="originalFile" stringvalue="Editors/text/x-java"/>
+                                </file>
+                            </folder>
+                        </folder>
+                        <folder name="CodeTemplateProcessorFactories">
+                            <file name="org-netbeans-modules-editor-java-JavaCodeTemplateProcessor$Factory.shadow">
+                                <attr name="originalFile" stringvalue="Editors/text/x-java/CodeTemplateProcessorFactories/org-netbeans-modules-editor-java-JavaCodeTemplateProcessor$Factory.instance"/>
+                            </file>
+                        </folder>                
+
+                        <folder name="CodeTemplateFilterFactories">
+                            <file name="org-netbeans-modules-editor-java-JavaCodeTemplateFilter$Factory.shadow">
+                                <attr name="originalFile" stringvalue="Editors/text/x-java/CodeTemplateFilterFactories/org-netbeans-modules-editor-java-JavaCodeTemplateFilter$Factory.instance"/>
+                            </file>
+                        </folder>                
+
+                        <folder name="BracesMatchers">
+                            <file name="org-netbeans-modules-editor-java-JavaBracesMatcher.shadow">
+                                <attr name="originalFile" stringvalue="Editors/text/x-java/BracesMatchers/org-netbeans-modules-editor-java-JavaBracesMatcher.instance"/>
+                            </file>
+                        </folder>                
+
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="x-dialog-binding">
+                <file name="org-netbeans-modules-java-editor-semantic-HighlightsLayerFactoryImpl.instance" />
+                <folder name="CompletionProviders">
+                    <file name="org-netbeans-modules-editor-java-JavaCompletionProvider.instance"/>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    
+    <folder name="Keymaps">
+        &eclipse-global-keymap;
+    </folder>
+
+    <folder name="OptionsDialog">
+        <folder name="PreviewExamples">
+            <folder name="text">
+                <file name="x-java" url="JavaExample"/>
+            </folder>
+        </folder>
+        <folder name="Editor">
+            <folder name="MarkOccurrences">
+                <folder name="text">
+                    <folder name="x-java">
+                        <file name="JavaMarkOccurences.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.options.OptionsPanelController"/>
+                            <attr name="instanceCreate" newvalue="org.netbeans.modules.java.editor.options.MarkOccurencesOptionsPanelController"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+            <folder name="CodeCompletion">
+                <folder name="text">
+                    <folder name="x-java">
+                        <file name="JavaSpecific.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
+                            <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.editor.options.CodeCompletionPanel.getCustomizerFactory"/>
+                            <attr name="position" intvalue="100"/>
+                        </file>
+                        <file name="JavaSpecificCustomCustomizer.instance">
+                            <attr name="instanceCreate" newvalue="org.netbeans.modules.java.editor.options.CodeCompletionPanel$CustomCustomizerImpl"/>
+                            <attr name="position" intvalue="110"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="TaskList">
+        <folder name="Groups">
+            <file name="whitelist.instance">
+                <attr name="instanceCreate" methodvalue="org.netbeans.spi.tasklist.Task.createGroup"/>
+                <attr name="localizingBundle" stringvalue="org.netbeans.modules.java.editor.resources.Bundle"/>
+                <attr name="groupName" stringvalue="nb-whitelist-warning"/>
+                <attr name="diplayNameKey" stringvalue="LBL_whitelist_group"/>
+                <attr name="descriptionKey" stringvalue="HINT_whitelist_group"/>
+                <attr name="iconKey" stringvalue="ICON_whitelist"/>
+                <attr name="position" intvalue="51"/>
+            </file>
+         </folder>
+        <folder name="Scanners">
+            <file name="WhiteListsViolationsProvider.instance">
+                <attr name="instanceOf" stringvalue="org.netbeans.spi.tasklist.PushTaskScanner"/>
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.java.editor.whitelist.WhiteListTaskProvider"/>
+            </file>
+        </folder>
+    </folder>
+
+    <!--
+    <folder name="org.netbeans.modules.java.source">
+      <folder name="options">
+          <file name="MarkOccurences.instance">
+              <attr name="Formating.instance/MarkOccurences.instance" boolvalue="true"/>
+
+              <attr name="instanceCreate" methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory"/>
+
+              <attr name="controller" newvalue="org.netbeans.modules.java.editor.options.MarkOccurencesOptionsPanelController"/>
+              <attr name="displayName" bundlevalue="org.netbeans.modules.java.editor.options.Bundle#CTL_MarkOccurences_DisplayName"/>
+              <attr name="toolTip" bundlevalue="org.netbeans.modules.java.editor.options.Bundle#CTL_MarkOccurences_ToolTip"/>
+              <attr name="keywords" bundlevalue="org.netbeans.modules.java.editor.options.Bundle#KW_Mark"/>
+              <attr name="keywordsCategory" stringvalue="JavaOptions/MarkOccurences"/>
+
+          </file>
+      </folder>
+  </folder>
+  -->
+    
+</filesystem>

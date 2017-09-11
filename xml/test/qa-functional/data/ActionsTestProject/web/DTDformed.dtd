@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : DTDexample.dtd
+    Created on : October 10, 2006, 7:02 PM
+    Author     : jindra
+    Description:
+        Purpose of the document follows.
+
+    TODO define vocabulary identification data
+    PUBLIC ID  : -//vendor//vocabulary//EN
+    SYSTEM ID  : http://server/path/DTDexample.dtd
+-->
+
+<!-- TODO define your own vocabulary/syntax. Example follows:  -->
+<!ELEMENT collection (description,recipe*)>
+
+<!ELEMENT description ANY>
+
+<!ELEMENT recipe (title,ingredient*,preparation,comment?,nutrition)>
+
+<!ELEMENT title (#PCDATA)>
+
+<!ELEMENT ingredient (ingredient*,preparation)?>
+<!ATTLIST ingredient name CDATA #REQUIRED
+                     amount CDATA #IMPLIED
+                     unit CDATA #IMPLIED>
+
+<!ELEMENT preparation (step*)>
+
+<!ELEMENT step (#PCDATA)>
+
+<!ELEMENT comment (#PCDATA)>
+
+<!ELEMENT nutrition EMPTY>
+<!ATTLIST nutrition protein CDATA #REQUIRED
+                    carbohydrates CDATA #REQUIRED
+                    fat CDATA #REQUIRED
+                    calories CDATA #REQUIRED
+                    alcohol CDATA #IMPLIED>

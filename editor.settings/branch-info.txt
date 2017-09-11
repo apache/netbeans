@@ -1,0 +1,7 @@
+Branch created from: editor_settings_90403_base
+Last update from trunk (rebased to): before_hg
+Last merge to trunk (delivered from): editor_settings_90403_delivery_3
+
+Additional modules branched off from the editor_settings_90403_base_2 tag: editor/codetemplates, editor/options
+Additional modules branched off from the editor_settings_90403_base_3 tag: the rest of the editor modules (ie. editor, bookmarks, bracesmatching, completion, demosrc, errorstripe, fold, guards, hints, indent, kit, lib, lib2, mimelookup, plain, util, www)
+

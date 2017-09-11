@@ -1,0 +1,141 @@
+#!/bin/sh
+
+[ -n "$pop_url" ] || exit 101
+if [ -z "$pop_build_info" ]; then
+    pop_build_info="nbbuild/build/build_info"
+fi
+[ -n "$pop_job" ] || exit 103
+
+[ -n "$push_url" ] || exit 113
+[ -n "$push_username" ] || exit 114
+
+
+testresult() {
+    if [ -z "$4" ]; then
+        FAILURES="0"
+    else
+        FAILURES="$4"
+    fi
+
+    FILE="$1/TEST-hg.$2.xml"
+    echo '<?xml version="1.0" encoding="UTF-8" ?>' >$FILE
+    echo '<testsuite errors="0" failures="'$FAILURES'" name="hg.'$2'" tests="1" time="1">' >>$FILE
+    echo '  <properties>' >>$FILE
+    echo '  </properties>' >>$FILE
+    echo '  <testcase classname="hg.'$2'" name="hg.'$2'" time="1">' >>$FILE
+    if [ "$FAILURES" -gt "0" ]; then
+        echo '  <failure message="Failed"/>' >>$FILE
+    fi
+    echo '  </testcase>' >>$FILE
+    echo '  <system-out><![CDATA[' >>$FILE
+    echo "$3" >>$FILE
+    echo ']]></system-out>' >>$FILE
+    echo '  <system-err></system-err>' >>$FILE
+    echo '</testsuite>' >>$FILE
+}
+
+testmodule() {
+    if ant $ANT_PARAM -f $1/build.xml test-unit -Dtest-unit-sys-prop.ignore.random.failures=true; then
+        echo Test OK: $1
+    else
+        echo $1 >>$RESULT
+        exit 5
+    fi
+}
+
+rollback() {
+  EXIT="$?"
+  if [ -n "$BASETIP" ]; then
+    echo "Script failed with exitcode $EXIT rolling back to $BASETIP"
+    hg update -C
+    hg --config extensions.mq= strip -n "$BASETIP"
+    hg pull -r "$BASETIP"
+  else
+    echo "No rollback, exitcode $EXIT"
+  fi
+}
+
+if [ -z "$TMP" ]; then
+  TMP="/tmp"
+fi
+
+ANT_OPTS="-Xmx512m -XX:MaxPermSize=128m"
+export ANT_OPTS
+
+BASETIP=`hg log -r . --template '{node}'`
+trap rollback EXIT
+
+hg up -C tip
+hg --config extensions.purge= clean --all
+
+TESTDIR="nbbuild/build/test/results/"
+mkdir -p $TESTDIR
+
+mkdir -p "nbbuild/build"
+STATUS="nbbuild/build/build-info"
+curl -H "Cache-Control: no-cache" $pop_job/buildStatus -D "$STATUS"
+cat "$STATUS"
+
+echo Getting Build Info
+HGINFO=`curl -vvvv -H "Cache-Control: no-cache" $pop_job/lastStableBuild/artifact/$pop_build_info`
+echo Build info: $HGINFO
+testresult "$TESTDIR" "build.info" "$HGINFO"
+[ -n "$HGINFO" ] || exit 1
+
+HGID=`echo "$HGINFO" | grep "Hg ID"`
+echo Last build_info line: "$HGID"
+HGTIP=`echo "$HGID" | cut -f 2 -d ":" | while read X; do echo $X; done`
+echo Last OK revision: "$HGTIP"
+
+hg pull -r "$HGTIP" "$pop_url" || exit 5
+echo 'hg parent:'
+hg parent
+if [ `hg heads --template '{node|short}\n' | wc -l` = 1 ]
+then
+   hg up || exit 6
+else
+   if hg --config ui.merge=internal:merge --config ui.interactive=1 merge "$HGTIP" < /dev/null; then
+     echo Merge OK.
+   else
+     echo Merge failed.
+     hg heads
+     exit 7
+   fi
+   hg ci -u "$push_username"@netbeans.org -m "Merge of $pop_url" || exit 8
+fi
+HGOUT=`hg out $push_url`
+testresult "$TESTDIR" "outgoing.changes" "$HGOUT"
+
+OUT_COUNT=`hg out --no-merges --template 'change: {node|short}\n' $push_url | grep '^change: ' | wc -l`
+if [ "$OUT_COUNT" -gt 0 ]; then
+    echo "Let the build start. There are $OUT_COUNT outgoing changes."
+else
+    echo "No outgoing changes. No reason to do build."
+    echo >"nbbuild/no-outgoing-changes-no-build.zip"
+    if egrep "Location:.*/blue(_anime)?[.]" "$STATUS"; then
+        echo Build seems to be stable
+        testresult "$TESTDIR" "check.build.stable" "`cat $STATUS`"
+    else
+        echo Build is not stable
+        testresult "$TESTDIR" "check.build.stable" "`cat $STATUS`" "1"
+        echo >"nbbuild/downstream-builder-not-stable-no-push.zip"
+    fi
+    exit 0
+fi
+
+. `dirname $0`/round-robin-build
+
+if dobuild; then
+    for i in 1 2 3 4 5 6 7 8 9 10; do
+        if hg push -f "$push_url"; then
+            echo "Build and push successful"
+            unset BASETIP
+            exit 0
+        fi
+    done
+    echo "Push failed"
+    exit 1
+else
+    echo "Failure, rolling back own commits to $BASETIP"
+    exit 1
+fi

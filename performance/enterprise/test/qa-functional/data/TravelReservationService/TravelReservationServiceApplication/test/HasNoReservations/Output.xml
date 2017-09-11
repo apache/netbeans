@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.xmlsoap.org/soap/envelope/ http://schemas.xmlsoap.org/soap/envelope/">
+  <SOAP-ENV:Header/>
+  <SOAP-ENV:Body>
+    <TravelItinerary xmlns="http://www.opentravel.org/OTA/2003/05">
+            <ItineraryRef Type="14">
+                <UniqueID>M839LWNN</UniqueID>
+            </ItineraryRef>
+            <CustomerInfos>
+                <CustomerInfo RPH="01">
+                    <Customer>
+                        <PersonName>
+                            <NamePrefix>Mr.</NamePrefix>
+                            <GivenName>Robert</GivenName>
+                            <MiddleName>Anthony</MiddleName>
+                            <Surname>Jones</Surname>
+                        </PersonName>
+                        <Telephone AreaCityCode="302" Extension="5574" PhoneNumber="2241630"/>
+                        <Email>rajones@somewhere.org</Email>
+                        <Address FormattedInd="true">
+                            <StreetNmbr PO_Box="P.O. Box 77">1452 S. 13th St. N.W.</StreetNmbr>
+                            <CityName>Westfinster</CityName>
+                            <PostalCode>90210</PostalCode>
+                            <StateProv>NY</StateProv>
+                            <CountryName>US</CountryName>
+                        </Address>
+                    </Customer>
+                    <AgencyAcctNumber ID="UOTWT0122321" Type="5"/>
+                </CustomerInfo>
+            </CustomerInfos>
+            <ItineraryInfo>
+                <ReservationItems ChronoOrdered="true">
+                    <Item ItinSeqNumber="01" RPH="01">
+                        <Air DepartureDateTime="2003-03-03T08:00:00" FlightNumber="942" ResBookDesigCode="Y">
+                            <DepartureAirport LocationCode="DEN"/>
+                            <ArrivalAirport LocationCode="ORD"/>
+                            <MarketingAirline>UA</MarketingAirline>
+                            <Seats>
+                                <Seat Characteristic="Window" CustomerRPH="01" Number="07A"/>
+                            </Seats>
+                        </Air>
+                    </Item>
+                    <Item ItinSeqNumber="02" RPH="02">
+                        <Air DepartureDateTime="2003-03-03T13:00:00" FlightNumber="3545" ResBookDesigCode="Y">
+                            <DepartureAirport LocationCode="ORD"/>
+                            <ArrivalAirport LocationCode="YUL"/>
+                            <OperatingAirline>AC</OperatingAirline>
+                            <MarketingAirline>UA</MarketingAirline>
+                            <Seats>
+                                <Seat Characteristic="Aisle" CustomerRPH="01" Number="08B"/>
+                            </Seats>
+                        </Air>
+                    </Item>
+                    <Item ItinSeqNumber="05" RPH="03">
+                        <Air DepartureDateTime="2003-03-10T08:00:00" FlightNumber="5568">
+                            <DepartureAirport LocationCode="YUL"/>
+                            <ArrivalAirport LocationCode="BOS"/>
+                            <OperatingAirline>AC</OperatingAirline>
+                            <MarketingAirline>UA</MarketingAirline>
+                            <Seats>
+                                <Seat Characteristic="Window" CustomerRPH="01" Number="3D"/>
+                            </Seats>
+                        </Air>
+                    </Item>
+                    <Item ItinSeqNumber="06" RPH="04">
+                        <Air DepartureDateTime="2003-03-10T10:30:00" FlightNumber="5542">
+                            <DepartureAirport LocationCode="ORD"/>
+                            <ArrivalAirport LocationCode="DEN"/>
+                            <MarketingAirline>UA</MarketingAirline>
+                            <Seats>
+                                <Seat CustomerRPH="01" Number="23B"/>
+                            </Seats>
+                        </Air>
+                    </Item>
+                    <Item ItinSeqNumber="03" RPH="05">
+                        <Vehicle>
+                            <ConfID ID="02138525448412" Type="14"/>
+                            <VehRentalCore PickUpDateTime="2003-03-03T15:30:00" ReturnDateTime="2003-03-10T06:00:00">
+                                <PickUpLocation LocationCode="YUL">Montreal Dorval Airport</PickUpLocation>
+                                <ReturnLocation LocationCode="YUL">Montreal Dorval Airport</ReturnLocation>
+                            </VehRentalCore>
+                            <Vehicle AirConditionInd="true" TransmissionType="Automatic">
+                                <VehType DoorCount="4" VehicleCategory="CAR"/>
+                                <VehClass Size="FUL"/>
+                                <VehMakeModel Name="Ford Taurus"/>
+                            </Vehicle>
+                            <RentalRate>
+                                <RateDistance DistUnitName="Mile" Unlimited="true" VehiclePeriodUnitName="Week"/>
+                            </RentalRate>
+                            <TotalCharge CurrencyCode="CAD" RateTotalAmount="345.00"/>
+                        </Vehicle>
+                    </Item>
+                    <Item ItinSeqNumber="04" RPH="06">
+                        <Hotel>
+                            <Reservation>
+                                <RoomTypes>
+                                    <RoomType NumberOfUnits="1" RoomTypeCode="KNGSTE"/>
+                                </RoomTypes>
+                                <RoomRates>
+                                    <RoomRate>
+                                        <Rates>
+                                            <Rate AgeQualifyingCode="10" EffectiveDate="2003-03-03" ExpireDate="2003-03-10" MinAge="18">
+                                                <Base AmountAfterTax="1495.00" CurrencyCode="CAD"/>
+                                            </Rate>
+                                        </Rates>
+                                    </RoomRate>
+                                </RoomRates>
+                                <GuestCounts>
+                                    <GuestCount AgeQualifyingCode="10" Count="1"/>
+                                </GuestCounts>
+                                <TimeSpan End="2003-03-10" Start="2003-03-03"/>
+                                <BasicPropertyInfo ChainCode="HH" HotelCityCode="YUL" HotelName="Hilton Bonaventure"/>
+                            </Reservation>
+                        </Hotel>
+                    </Item>
+                </ReservationItems>
+                <Ticketing PlatingCarrier="UAL" TicketType="eTicket" eTicketNumber="30465876954325"/>
+                <ItineraryPricing ItemRPH_List="01 02 03 04">
+                    <Cost AmountAfterTax="745.00" CurrencyCode="USD"/>
+                </ItineraryPricing>
+                <SpecialRequestDetails>
+                    <SpecialServiceRequests>
+                        <SpecialServiceRequest FlightRefNumberRPHList="01" SSRCode="VGML" TravelerRefNumberRPHList="01">
+                            <Airline Code="UA">United Airlines</Airline>
+                        </SpecialServiceRequest>
+                    </SpecialServiceRequests>
+                </SpecialRequestDetails>
+            </ItineraryInfo>
+            <TravelCost>
+                <FormOfPayment>
+                    <PaymentCard CardNumber="3151002645983754" CardType="MC" ExpireDate="1205">
+                        <CardHolderName>ROBERT A. JONES</CardHolderName>
+                    </PaymentCard>
+                </FormOfPayment>
+                <CostTotals AmountAfterTax="1957.92" CurrencyCode="USD"/>
+            </TravelCost>
+            <UpdatedBy>
+                <Access ID="U09932147"/>
+            </UpdatedBy>
+        </TravelItinerary>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

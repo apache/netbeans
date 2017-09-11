@@ -1,0 +1,21 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}Copyright (C) ${date?date?string("yyyy")} ${project.organization!user}
+${licensePrefix?replace(" +$", "", "r")}
+${licensePrefix}This program is free software; you can redistribute it and/or
+${licensePrefix}modify it under the terms of the GNU General Public License
+${licensePrefix}as published by the Free Software Foundation; either version 2
+${licensePrefix}of the License, or (at your option) any later version.
+${licensePrefix?replace(" +$", "", "r")}
+${licensePrefix}This program is distributed in the hope that it will be useful,
+${licensePrefix}but WITHOUT ANY WARRANTY; without even the implied warranty of
+${licensePrefix}MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+${licensePrefix}GNU General Public License for more details.
+${licensePrefix?replace(" +$", "", "r")}
+${licensePrefix}You should have received a copy of the GNU General Public License
+${licensePrefix}along with this program; if not, write to the Free Software
+${licensePrefix}Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+<#if licenseLast??>
+${licenseLast}
+</#if>

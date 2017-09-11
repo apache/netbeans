@@ -1,0 +1,13 @@
+drop table c|
+
+--
+catalog_1*
+  customers_sch*
+    customer_tab
+      customer_id
+  accounting_sch
+    invoice_tab
+      invoice_id
+    purchase_order_tab
+      order_id
+catalog_2

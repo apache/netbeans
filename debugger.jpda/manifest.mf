@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.debugger.jpda/2
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/debugger/jpda/Bundle.properties
+OpenIDE-Module-Implementation-Version: 80
+OpenIDE-Module-Provides: org.netbeans.api.debugger.jpda.JPDADebuggerEngineImpl
+OpenIDE-Module-Requires: org.netbeans.spi.debugger.jpda.EditorContext, org.netbeans.spi.debugger.jpda.SourcePathProvider
+OpenIDE-Module-Package-Dependencies: com.sun.jdi[VirtualMachineManager]

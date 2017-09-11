@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : Valid.xml
+    Created on : July 9, 2002, 6:24 PM
+    Author     : Petr Kuzel
+    Description:
+        Must pass check and validity tests
+-->
+
+<!DOCTYPE element SYSTEM "DTD.dtd">
+<element/>
+

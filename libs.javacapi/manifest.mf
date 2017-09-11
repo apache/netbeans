@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.libs.javacapi
+OpenIDE-Module-Implementation-Version: 3
+OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/javacapi/Bundle.properties
+OpenIDE-Module-Layer: org/netbeans/libs/javacapi/layer.xml
+OpenIDE-Module-Requires: org.openide.modules.ModuleFormat2
+OpenIDE-Module-Hide-Classpath-Packages: com.sun.javadoc.**, com.sun.source.**, javax.annotation.processing.**, javax.lang.model.**, javax.tools.**, com.sun.tools.javac.**

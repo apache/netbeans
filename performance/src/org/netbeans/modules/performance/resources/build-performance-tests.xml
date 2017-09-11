@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<project name="Template For Performance Test build scripts" basedir="." default="jar">
+
+    <property file="${nball.dir}/performance/performancetestutilities/dist/performance-tests.properties"/>
+    
+    <!-- ================================== -->
+    <!-- Use tests from performance module  -->
+    <!-- ================================== -->
+    <target name="check-perf-tests-built">
+        <available file="${nb_all}/performance/build/test/qa-functional/classes/performance-tests.jar" property="perf.classes.exist" type="dir"/>
+    </target>
+    
+    <target name="build-performance" unless="perf.classes.exist" depends="check-perf-tests-built">
+        <java classname="org.apache.tools.ant.Main" dir="${nball.dir}/performance/test" failonerror="true" fork="true">
+            <jvmarg value="-Dant.home=${ant.home}"/>
+            <arg value="buildtests"/>
+            <arg value="-Dpermit.jdk6.builds=true"/>
+            <arg value="-Dxtest.testtype=qa-functional"/>
+            <arg value="-Dxtest.attribs=all"/>
+            <arg value="-Dxtest.home=${xtest.home}"/>
+            <arg value="-Dnetbeans.dest.dir=${netbeans.dest.dir}"/>
+            <classpath path="${java.class.path}"/>
+        </java>
+        
+        <jar basedir="${nb_all}/performance/build/test/qa-functional/classes" jarfile="${nb_all}/performance/build/test/qa-functional/performance-tests.jar">
+            <include name="gui/**"/>
+            <include name="footprint/**"/>
+            <exclude name="gui/Measure*.class"/>
+        </jar>
+    </target>
+    
+    <target name="clean-performance" unless="perf.classes.exist">
+        <java classname="org.apache.tools.ant.Main" dir="${nball.dir}/performance/test" failonerror="true" fork="true">
+            <jvmarg value="-Dant.home=${ant.home}"/>
+            <arg value="cleantests"/>
+            <arg value="-Dpermit.jdk6.builds=true"/>
+            <arg value="-Dxtest.testtype=qa-functional"/>
+            <arg value="-Dxtest.attribs=all"/>
+            <arg value="-Dxtest.home=${xtest.home}"/>
+            <arg value="-Dnetbeans.dest.dir=${netbeans.dest.dir}"/>
+            <classpath path="${java.class.path}"/>
+        </java>
+    </target>
+    
+    <!-- ========= -->
+    <!-- Utils     -->
+    <!-- ========= -->
+
+    <!-- Replace original netbeans.conf with released netbeans.conf -->
+    <target name="copy_released_ide_cfg_file">
+        <move file="${netbeans.dest.dir}/etc/netbeans.conf" tofile="${netbeans.dest.dir}/etc/netbeans.conf.original" />
+        <copy file="${performance.testutilities.dist.dir}/netbeans.conf" tofile="${netbeans.dest.dir}/etc/netbeans.conf" />
+    </target>
+    
+    <!-- Replace released netbeans.conf with original netbeans.conf -->
+    <target name="copy_original_ide_cfg_file">
+        <move file="${netbeans.dest.dir}/etc/netbeans.conf.original" tofile="${netbeans.dest.dir}/etc/netbeans.conf" />
+    </target>
+    
+    <!-- Copy and unzip project JEdit from close source path, will be used for Performance tests -->
+    <target name="copy_unzip_jedit_project">
+        <unzip src="${nbextra.dir}/qa/projectized/jEdit41.zip" dest="${xtest.tmpdir}/"/>
+    </target>
+    
+    <!-- Copy and unzip project PerformanceTestFolderData from close source path, will be used for Performance tests -->
+    <target name="copy_unzip_test_folder_project">
+        <unzip src="${nbextra.dir}/qa/projectized/PerformanceTestFoldersData.zip" dest="${xtest.tmpdir}/"/>
+    </target>
+    
+    <!-- Copy and unzip project NB Project from close source path, will be used for Performance tests -->
+    <target name="copy_unzip_nb_project">
+        <unzip src="${nbextra.dir}/qa/projectized/SystemProperties.zip" dest="${xtest.tmpdir}/"/>
+    </target>
+    
+    <!-- Copy and unzip project PerformanceTestData from close source path, will be used for Performance tests -->
+    <target name="copy_unzip_test_data_project">
+        <unzip src="${nbextra.dir}/qa/projectized/PerformanceTestData.zip" dest="${xtest.tmpdir}/"/>
+    </target>
+    
+    <!-- Copy and unzip project PerformanceTestWebApplication from close source path, will be used for Performance tests -->
+    <target name="copy_unzip_test_web_app_project">
+        <unzip src="${nbextra.dir}/qa/projectized/PerformanceTestWebApplication.zip" dest="${xtest.tmpdir}/"/>
+    </target>
+    
+    <!-- Copy and unzip all test projects from close source path, will be used for Performance tests -->
+    <target name="copy_unzip_test_projects">
+        <antcall target="copy_unzip_jedit_project"/>
+        <antcall target="copy_unzip_test_folder_project"/>
+        <antcall target="copy_unzip_nb_project"/>
+        <antcall target="copy_unzip_test_data_project"/>
+        <antcall target="copy_unzip_test_web_app_project"/>
+    </target>
+    
+    <!-- Prepare utils to be available from IDE during test, copy ps.exe & ps_vista.exe -->    
+    <target name="prepare_measure_footprint">
+        <copy todir="${xtest.tmpdir}">
+            <fileset dir="${nbextra.qa.performance.dist.dir}">
+                <include name="**/*.exe"/>
+            </fileset>
+        </copy>
+    </target>
+    
+    <!-- Make ide executable -->
+    <target name="make_netbeans_executable">
+        <chmod perm="ugo+rx" file="${netbeans.dest.dir}/bin/netbeans"/>
+        <chmod perm="ugo+rx" dir="${netbeans.dest.dir}" includes="platform?/lib/nbexec"/>
+    </target>
+    
+    <!-- Remove emulators & uml directories from userdirs - to avoid saving MBs of data on our test results server -->
+    <target name="clean_userdirs">
+        <delete failonerror="false" includeemptydirs="true">
+            <fileset dir="${xtest.workdir}" includes="**/emulators/**"/>
+            <fileset dir="${xtest.workdir}" includes="**/.uml/**"/>
+        </delete>
+    </target>
+    
+    <!-- =========================== -->
+    <!-- IDE Command Line Suffix     -->
+    <!-- =========================== -->
+    <target name="ide_command_line_suffix" depends="ide_command_line_suffix_yes,ide_command_line_suffix_no" />
+    
+    <target name="ide_command_line_suffix_yes" depends="ide_command_line_suffix_new" if="new.suffix">
+        <property name="xtest.ide.commandline.suffix" value="${ide.commandline.suffix} ${xtest.perf.commandline.suffix}"/>
+    </target>
+    
+    <target name="ide_command_line_suffix_no" depends="ide_command_line_suffix_new" unless="new.suffix">
+        <property name="xtest.ide.commandline.suffix" value="${ide.commandline.suffix}"/>
+    </target>
+    
+    <target name="ide_command_line_suffix_new">
+        <condition property="new.suffix">
+            <isset property="xtest.perf.commandline.suffix" />
+        </condition>
+    </target>
+    
+</project>

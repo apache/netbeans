@@ -1,0 +1,244 @@
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+#
+# Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+#
+# Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+# Other names may be trademarks of their respective owners.
+#
+# The contents of this file are subject to the terms of either the GNU
+# General Public License Version 2 only ("GPL") or the Common
+# Development and Distribution License("CDDL") (collectively, the
+# "License"). You may not use this file except in compliance with the
+# License. You can obtain a copy of the License at
+# http://www.netbeans.org/cddl-gplv2.html
+# or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+# specific language governing permissions and limitations under the
+# License.  When distributing the software, include this License Header
+# Notice in each file and include the License file at
+# nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+# particular file as subject to the "Classpath" exception as provided
+# by Oracle in the GPL Version 2 section of the License file that
+# accompanied this code. If applicable, add the following below the
+# License Header, with the fields enclosed by brackets [] replaced by
+# your own identifying information:
+# "Portions Copyrighted [year] [name of copyright owner]"
+#
+# Contributor(s):
+#
+# The Original Software is NetBeans. The Initial Developer of the Original
+# Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+# Microsystems, Inc. All Rights Reserved.
+#
+# If you wish your version of this file to be governed by only the CDDL
+# or only the GPL Version 2, indicate your decision by adding
+# "[Contributor] elects to include this software in this distribution
+# under the [CDDL or GPL Version 2] license." If you do not indicate a
+# single choice of license, a recipient has the option to distribute
+# your version of this file under either the CDDL, the GPL Version 2 or
+# to extend the choice of license to its licensees as provided above.
+# However, if you add GPL Version 2 code and therefore, elected the GPL
+# Version 2 license, then the option applies only if the new code is
+# made subject to such option by the copyright holder.
+
+
+
+########### no token definition - the tokens are created by handcoded HTML Lexer
+
+########### grammar ############################################################
+
+#SKIP:BLOCK_COMMENT
+SKIP:WS
+SKIP:DECLARATION
+
+S = tags;
+tags = ( tag | etext | comment )*;
+
+etext = <TEXT> | <CHARACTER> | <SCRIPT> | <STYLE>;
+
+tag = <TAG_OPEN_SYMBOL> ( startTag | endTag );
+startTag = <TAG_OPEN> (attribute)* <TAG_CLOSE_SYMBOL>;
+endTag = <TAG_CLOSE> <TAG_CLOSE_SYMBOL>;
+comment = (<BLOCK_COMMENT>)*;
+
+attribute = <ARGUMENT>;
+attribute = <VALUE>;
+attribute = <ARGUMENT> <OPERATOR,'='> <VALUE>;
+
+# AST generator
+AST {
+    process:org.netbeans.modules.html.editor.HTML.process;
+    process_embedded: "true";
+    skip_embedded: "true";
+}
+
+########### indentation ########################################################
+
+#REFORMAT:startTag:"i++"
+#REFORMAT:endTag:"--i"
+#REFORMAT:simpleTag:"i"
+#REFORMAT:etext:"i"
+#REFORMAT:text:" "
+#REFORMAT:element:"i"
+#REFORMAT:html_comment:"i"
+#REFORMAT:unpairedStartTag:"i"
+#REFORMAT:html_attribute_name:" "
+#REFORMAT:html_operator:""
+#REFORMAT:html_attribute_value:""
+#REFORMAT:html_element_end:""
+#REFORMAT:attributes:">b "
+#REFORMAT:attribute:"b"
+
+
+########### colors #############################################################
+
+
+#HACK: IT LOOK LIKE HANZ NEEDS TO HAVE SOME OF THE COLORING TO BE THE SCHLIEMANN ONES
+#OTHERWISE THE NAVIGATOR DOESN'T SHOW NODES?!?!?!?
+
+#COLOR:TAG_OPEN_SYMBOL: {
+#    foreground_color:"blue";
+#}
+#COLOR:TAG_OPEN: {
+#    foreground_color:"blue";
+#}
+#COLOR:TAG_CLOSE: {
+#    foreground_color:"blue";
+#}
+#COLOR:TAG_CLOSE_SYMBOL: {
+#    foreground_color:"blue";
+#}
+
+
+#COLOR:element: {
+#    default_coloring:"keyword";
+#}
+#COLOR:html_end_element_start: {
+#    foreground_color:"blue";
+#}
+#COLOR:html_element_end: {
+#    default_coloring:"keyword";
+#}
+#COLOR:html_end_element_end: {
+#    default_coloring:"keyword";
+#}
+#COLOR:html_attribute_value: {
+#    default_coloring:"string";
+#
+#COLOR:attribute: {
+#    strike_through_color:"black";
+#    condition:org.netbeans.modules.html.editor.HTML.isDeprecatedAttribute;
+#}
+#COLOR:startTag: {
+#    strike_through_color:"blue";
+#    condition:org.netbeans.modules.html.editor.HTML.isDeprecatedTag;
+#}
+#COLOR:simpleTag: {
+#    strike_through_color:"blue";
+#    condition:org.netbeans.modules.html.editor.HTML.isDeprecatedTag;
+#}
+#COLOR:endTag: {
+#    strike_through_color:"blue";
+#    condition:org.netbeans.modules.html.editor.HTML.isDeprecatedTag;
+#}
+
+
+########### code folding #######################################################
+
+FOLD:tag: {
+    fold_display_name:"<$startTag.TAG_OPEN$>...</$startTag.TAG_OPEN$>";
+    expand_type_action_name:"LBL_Expand_HTML_Tag";
+    collapse_type_action_name:"LBL_Collapse_HTML_Tag";
+}
+
+FOLD:comment: {
+    fold_display_name:"LBL_HTML_Comment";
+    expand_type_action_name:"LBL_Expand_HTML_Comment";
+    collapse_type_action_name:"LBL_Collapse_HTML_Comment";
+}
+
+########### navigator ##########################################################
+
+NAVIGATOR:tag: {
+    display_name: "$startTag.TAG_OPEN$";
+    tooltip: "$$";
+    icon: "org/netbeans/modules/html/editor/resources/htmlTag.png";
+}
+NAVIGATOR:simpleTag: {
+    display_name: "$TAG_OPEN$";
+    tooltip: "$$";
+    icon: "org/netbeans/modules/html/editor/resources/htmlTag.png";
+}
+
+NAVIGATOR:unpairedStartTag: {
+    display_name: "$TAG_OPEN$";
+    tooltip: "$$";
+    icon: "org/netbeans/modules/html/editor/resources/htmlTag.png";
+}
+NAVIGATOR:unpairedEndTag: {
+    display_name: "$TAG_CLOSE$";
+    tooltip: "$$";
+    icon: "org/netbeans/modules/html/editor/resources/htmlTag.png";
+}
+
+
+########### other ##############################################################
+
+COMPLETE "\":\""
+COMPLETE "':'"
+COMPLETE org.netbeans.modules.html.editor.HTML.complete
+
+#INDENT org.netbeans.modules.html.editor.HTML.indent
+
+#HYPERLINK:attribute_value: org.netbeans.modules.html.editor.HTML.hyperlink
+
+MARK:unsupportedTag: {
+    type:"Warning";
+    message:"LBL_Unsupported_tag";
+}
+
+MARK:unpairedStartTag: {
+    type:"Warning";
+    message:"LBL_Unfinished_tag";
+}
+MARK:unpairedEndTag: {
+    type:"Error";
+    message:"LBL_Unpaired_end_tag";
+}
+MARK:html_ERROR: {
+    type:"Error";
+    message:"LBL_Unpaired_end_tag";
+}
+MARK:error: {
+    type:"Error";
+    message:"LBL_Unexpected_character";
+}
+
+MARK:startTag: {
+    type:"Deprecation";
+    message:"LBL_Deprecated_tag";
+    condition:org.netbeans.modules.html.editor.HTML.isDeprecatedTag;
+}
+MARK:simpleTag: {
+    type:"Deprecation";
+    message:"LBL_Deprecated_tag";
+    condition:org.netbeans.modules.html.editor.HTML.isDeprecatedTag;
+}
+MARK:endTag: {
+    type:"Deprecation";
+    message:"LBL_Deprecated_tag";
+    condition:org.netbeans.modules.html.editor.HTML.isDeprecatedTag;
+}
+
+MARK:attribute: {
+    type:"Deprecation";
+    message:"LBL_Deprecated_attribute";
+    condition:org.netbeans.modules.html.editor.HTML.isDeprecatedAttribute;
+}
+
+BUNDLE "org.netbeans.modules.html.editor.resources.Bundle"
+
+#PROPERTIES {
+#    printFirst: "true";
+#    printRules: "true";
+#    ignoreCase:"true";
+#}

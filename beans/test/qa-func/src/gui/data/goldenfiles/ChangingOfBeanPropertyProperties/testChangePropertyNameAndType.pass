@@ -1,0 +1,29 @@
+public class TestFile {
+    
+    /**
+     * Holds value of property requiredName.
+     */
+    private initialType requiredName;
+    
+    /** Creates a new instance of TestFile */
+    public TestFile() {
+    }
+    
+    /**
+     * Getter for property initialName.
+     * @return Value of property initialName.
+     */
+    public initialType getRequiredName() {
+        return this.initialName;
+    }
+    
+    /**
+     * Setter for property initialName.
+     * @param initialName New value of property initialName.
+     */
+    public void setRequiredName(initialType initialName) {
+        this.initialName = initialName;
+    }
+    
+}
+

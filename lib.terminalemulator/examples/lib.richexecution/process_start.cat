@@ -1,0 +1,56 @@
+
+process_start(1)                                                process_start(1)
+
+SYNOPSIS
+    process_start-<platform> [ <options> ] <executable> [ <argv1> ... ]
+    process_start.sh         [ <options> ] <executable> [ <argv1> ... ]
+
+OPTIONS
+    -pty <ptyname>
+        <ptyname> must be a slave pty file like /dev/pts/14.
+        Both input and output for file descriptors 0, 1 and 2 will
+        be redirected through it.
+            Why this overkill?
+            Among other reasons because, believe it or not, 'more' reads from
+            file descriptor 2 (sdterr).
+
+        At the moment no provision is made for separating stderror from stdout.
+
+PLATFORM
+    <platform> is one of
+        solaris-sparc
+        solaris-intel
+        linux-intel
+        mac-intel
+    otherwise process_start.sh should be used.
+
+DESCRIPTION
+    Start a process based on <executable> with the given <argv>.
+    <argv0> is set to <executable>.
+
+    process_start will exec, not fork, <executable> so it's PID will
+    also be the PID of <executable>.
+
+    It will always echo the following:
+        PID <pid>
+    followed by, in case of failure,
+        ERROR <specific-error-message>
+
+    Setting process group or session leader.
+        This is neccessary in order for ^C, ^Z etc to work.
+
+        The native version will become a session leader using setsid(2).
+
+        process_start.sh has to be itself executed using one of 
+            /usr/bin/setsid
+            /usr/bin/setpgrp
+        depending on availability.
+
+    Restoring SIGINT default handling
+        The native version will restore the handling of SIGINT to SIG_DFL.
+
+        This helps with cases where the parent process has been started
+        in the background which causes SIGINT handling to be set to SIG_IGN
+        which is inherited by children processes.
+
+        process_start.sh cannot do this.

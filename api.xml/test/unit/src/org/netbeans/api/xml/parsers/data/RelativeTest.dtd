@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : RelativeTest.dtd
+    Created on : July 1, 2002, 7:00 PM
+    Author     : Petr Kuzel
+    Description:
+        There used to be problem in relative entity refs.    
+-->
+
+<!ENTITY % entity SYSTEM "Entity.dtd">
+%entity;

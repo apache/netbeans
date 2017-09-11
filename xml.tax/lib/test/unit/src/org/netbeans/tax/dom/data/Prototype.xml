@@ -1,0 +1,8 @@
+<root>
+    <child attribute="value1"/>
+    <text>data</text>
+    <nest>
+        <child at1="1" at2="2"/>
+        <text>jo<a href="href">link</a></text>
+    </nest>
+</root>

@@ -1,0 +1,7 @@
+org.netbeans.modules.form.**
+org.netbeans.beaninfo.editors.*
+org.netbeans.modules.i18n.form.*
+org.netbeans.lib.awtextra.*
+org.openide.explorer.propertysheet.editors.*
+org.jdesktop.layout.*
+javafx.**

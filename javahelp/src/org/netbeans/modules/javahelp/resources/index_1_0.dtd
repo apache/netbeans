@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+    This is the DTD for Index
+    Copyright (c) 1998 Sun Microsystems
+
+    @(#)index_1_0.dtd 1.2 01/03/99
+-->
+
+
+<!-- An Index.  It is versioned -->
+
+<!ELEMENT index (indexitem*)>
+  <!ATTLIST index version CDATA #FIXED "1.0">
+  <!ATTLIST index xml:lang CDATA #IMPLIED>
+
+<!-- an item -->
+
+<!ELEMENT indexitem (#PCDATA | indexitem)*>
+  <!ATTLIST indexitem xml:lang CDATA #IMPLIED>
+  <!ATTLIST indexitem text CDATA #IMPLIED>
+  <!ATTLIST indexitem image CDATA #IMPLIED>
+  <!ATTLIST indexitem target CDATA #IMPLIED>
+
+<!-- 
+  Change list:
+
+  Created - epll, 16 Dec '98
+ -->

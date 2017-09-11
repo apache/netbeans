@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" >
+
+   <xsd:annotation>
+      <xsd:documentation>
+         This is a test XML Schema for Castor XML.
+      </xsd:documentation>
+   </xsd:annotation>
+
+   <!--
+       A simple representation of an invoice. This is simply an example
+       and not meant to be an exact or even complete representation of an invoice.
+     -->
+   	
+   <!-- Shipping Method -->
+   <xsd:element name="shipping-method">
+      <xsd:complexType>
+      	  <xsd:sequence>
+          	<xsd:element name="carrier" type="xsd:string"/>
+          	<xsd:element name="option"  type="xsd:string"/>
+          	<xsd:element name="estimated-delivery" type="xsd:duration"/>
+      	  </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+
+   <!-- Shipping date -->
+   <xsd:element name="shipping-date">
+   		<xsd:complexType>
+   			<xsd:sequence>
+   				<xsd:element name="date" type="xsd:date"/>
+   				<xsd:element name="time" type="xsd:time"/>
+   			</xsd:sequence>
+   		</xsd:complexType>
+   	</xsd:element>
+   
+   <!-- A simple U.S. based Address structure -->
+   <xsd:element name="address">
+      <xsd:annotation>
+         <xsd:documentation>
+            Represents a U.S. Address
+         </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:complexType>
+      	 <xsd:sequence>
+         	<!-- street address 1 -->
+         	<xsd:element name="street1" type="xsd:string"/>
+         	<!-- optional street address 2 -->
+         	<xsd:element name="street2" type="xsd:string" minOccurs="0"/>
+         	<!-- city-->
+         	<xsd:element name="city" type="xsd:string"/>
+         	<!-- state code -->
+         	<xsd:element name="state" type="stateCodeType"/>
+         	<!-- zip-code -->
+         	<xsd:element ref="zip-code"/>
+      	</xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+
+   <!-- A U.S. Zip Code -->
+   <xsd:element name="zip-code">
+      <xsd:simpleType>
+         <xsd:restriction base="xsd:string">
+        	 <xsd:pattern value="[0-9]{5}(-[0-9]{4})?"/>
+      	 </xsd:restriction>
+      </xsd:simpleType>
+   </xsd:element>
+
+   <!-- State Code
+        obviously not a valid state code....but this is just
+        an example and I don't feel like creating all the valid
+        ones.
+    -->
+	<xsd:simpleType name="stateCodeType">
+		<xsd:restriction base="xsd:string">
+      		<xsd:pattern value="[A-Z]{2}"/>
+   		</xsd:restriction>
+   </xsd:simpleType>
+   
+   <!-- Telephone Number -->
+   <xsd:simpleType name="TelephoneNumberType">
+   		<xsd:restriction base="xsd:string">
+   			<xsd:length value="12"/>
+   			<xsd:pattern value="[0-9]{3}-[0-9]{3}-[0-9]{4}"/>
+   		</xsd:restriction>
+   </xsd:simpleType> 
+
+   <!-- Cool price type -->
+   <xsd:simpleType name="PriceType">
+   		<xsd:restriction base="xsd:decimal">
+   			<xsd:fractionDigits value="2"/>
+    		        <xsd:totalDigits value="5"/>
+    		        <xsd:minInclusive value="1"/>
+   			<xsd:maxInclusive value="100"/>
+   		</xsd:restriction>
+   </xsd:simpleType>
+
+   <!-- The attributes for an Item -->
+   <xsd:attributeGroup name="ItemAttributes">
+        <xsd:attribute name="Id" type="xsd:ID" use="required"/>
+   	<xsd:attribute name="InStock" type="xsd:boolean" default="false"/>
+   	<xsd:attribute name="Category" type="xsd:string" use="required"/>
+    </xsd:attributeGroup>
+
+   <xsd:element name="invoice">
+      <xsd:annotation>
+         <xsd:documentation>
+             A simple representation of an invoice
+         </xsd:documentation>
+      </xsd:annotation>
+
+      <xsd:complexType>
+      	 <xsd:sequence>
+      		<xsd:element name="ship-to">
+            	<xsd:complexType>
+                 	<xsd:group ref="customer"/>
+                </xsd:complexType>
+         	</xsd:element>
+        	<xsd:element ref="item" maxOccurs="unbounded" minOccurs="1"/>
+        	<xsd:element ref="shipping-method"/>
+        	<xsd:element ref="shipping-date"/>
+      	</xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+
+   <!-- Description of a customer -->
+   <xsd:group name="customer">
+        <xsd:sequence>
+             <xsd:element name="name" type="xsd:string"/>
+             <xsd:element ref="address"/>
+             <xsd:element name="phone" type="TelephoneNumberType"/>
+         </xsd:sequence>
+	</xsd:group>
+  
+   <!-- Description of an item -->
+   <xsd:element name="item">
+   		<xsd:complexType>
+   			<xsd:sequence>
+   				<xsd:element name="Quantity" type="xsd:integer" minOccurs="1" maxOccurs="1"/>
+        		<xsd:element name="Price" type="PriceType" minOccurs="1" maxOccurs="1"/>
+    		</xsd:sequence>
+    		<xsd:attributeGroup ref="ItemAttributes"/>
+    	</xsd:complexType>
+   	</xsd:element>
+
+</xsd:schema>

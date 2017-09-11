@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE taglib PUBLIC "hello" "hello">
+<!--
+     Hello World.
+-->
+<root name="value">
+    <A>
+        <B>hello</B>
+        <C><![CDATA[hello world]]></C>
+    </A>
+</root>

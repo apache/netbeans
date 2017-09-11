@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<definitions name="StockQuote"
+        targetNamespace="http://example.com/stockquote.wsdl"
+        xmlns:tns="http://example.com/stockquote.wsdl"
+        xmlns:xsd1="http://example.com/stockquote.xsd"
+        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns="http://schemas.xmlsoap.org/wsdl/">
+</definitions>
+

@@ -1,0 +1,7 @@
++ yaml:
+|   id: 1
+|   name: YAML
++   description: |
+|     YAML is a human friendly data serialization
+|     standard for all programming languages.
+- 

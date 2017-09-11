@@ -1,0 +1,252 @@
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!-- [PENDING] <!ENTITY % xhtml PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> -->
+<!-- [PENDING] %xhtml;-->
+
+<!--
+  The xxxLanguage.xml contains information used once
+  the xxxLanguage.java source code is being generated.
+
+  Language element starts description of all the tokenIds
+  for the language.
+-->
+<!ELEMENT Language (TokenId | HiddenTokenType)*>
+<!--
+  TokenId element describes the identification
+  ot the token produced by the lexer.
+-->
+<!ELEMENT TokenId ((SampleText | Category)*, Comment?, (SampleText | Category)*) >
+<!--
+  name:
+  Each tokenId must have a unique name that should
+  ideally contain just alphanumeric characters and hyphens.
+  It should never contain dots.
+  
+  tokenType:
+   Lexer generators usually generate a token-types
+   class (e.g. xxxConstants for javacc
+  or xxxTokenTypes for antlr) that contains static integer fields
+  that map names used in the grammar file to integer constants
+  (called e.g. token kinds for javacc) returned as token identification
+  numbers by the corresponding generated lexer (token manager for javacc
+  or char-scanner for antlr). The generated lexers typically work
+  with the integer constants instead with named tokens.
+  By default the lexer generation framework inspects
+  the token-types class and creates tokenId for each token
+  constant found in token-types class. The generated tokenId inherits
+  the integer constant (from the corresponding field in the token-types class)
+  as its intId field and for certain lexer generators such as javacc
+  it's also possible to determine the sample text(s)
+  from the token-types class and add them to the generated tokenId.
+  That default behavior can be suspended
+  by using the <HiddenTokenType> element for the particular
+  token-type.
+
+  In some cases it may be necessary to map
+  a token id to some token-type explicitly to make the token id
+  use the integer constant value of the corresponding field
+  in the token-types class.
+  For example it's not possible to have a token
+  named DEFAULT in the javacc grammar file because "DEFAULT"
+  name is reserved for a default state of the token manager.
+  In case of creation of e.g. java grammar it's necessary
+  to use a token with different name e.g. _DEFAULT
+  in the javacc grammar.
+  To still have tokenId
+
+      public static final TokenId DEFAULT = ...
+  
+  generated in the JavaLanguage.java (instead of _DEFAULT)
+  it's necessary to use the following construction:
+    
+    <HiddenTokenType name="_DEFAULT"/>
+    <TokenId name="default" tokenType="_DEFAULT">
+
+  Using tokenType attribute ensures that an artificial "default" TokenId
+  will be created and that it will inherit
+  the integer identification constant from the "_DEFAULT" token type
+  which ensures that the lexer will work correctly.
+  The automatically generated "-default" token (translated from "_DEFAULT"
+  token-type) will be hidden by using the HiddenTokenType element.
+
+  sampleTextCheck:
+   The sampleTextCheck attribute is described
+   below in the description of the SampleText's
+   caseInsensitive attribute.
+
+  caseInsensitive
+   When set to true then zero to two additional sample texts
+   are added automatically in addition to either existing
+   sample texts added by token-types or to the ones added
+   by using SampleText element.
+   No additional sample texts
+   are generated in case there is no difference between
+   the lowercase and uppercase version of the sample text
+   e.g. for a sample text "+" there would be no additional
+   sample text added.
+    One additional sample text
+   is generated in case the given SampleText is all in uppercase
+   or all in lowercase e.g. for "html" the "HTML" will be added
+   automatically.
+    Two additional sample texts
+   are generated if the specified SampleText is in mixed-case text
+   e.g. for "Public" the "public" and "PUBLIC" sample texts will
+   be added automatically.
+  
+  resetSamples
+   If set to "true" then possibly existing
+   sample texts (from scanning of the token-types class)
+   will be ignored. Only the samples added
+   by subsequent <SampleText> elements
+   will be used.
+-->
+<!ATTLIST TokenId name CDATA #REQUIRED
+                  tokenType CDATA ""
+                  sampleTextCheck (none | length | text) "text"
+                  caseInsensitive (true | false) "false"
+                  resetSamples (true | false) "false"
+>
+<!--
+  The tokenId is an identificaion of the token
+  and therefore there is no information about a text (also called image)
+  of the particular token returned by lexer.
+   However tokens with certain tokenIds will always have
+  the same token text each time the lexer recognizes them
+  in the text. For example a keyword or operator token
+  occurrences have always the same text for the given tokenId.
+  To save memory it's useful to define such text
+  as a sample text for such token. All the occurrences of
+  such tokens will then use a single (flyweight) token instance
+  for their representation.
+   Some tokens with certain tokenId will very often
+  but not always have a certain text. For example a whitespace token
+  will very often be a single space. There is often
+  many occurrences of a single space in a document.
+  It's useful to define a sample text " " for a WHITESPACE token
+  in such case. If the WHITESPACE token's text matches " "
+  the token will become a flyweight token with just one shared instance.
+  Otherwise it will be regular whitespace token. Still considerable amount
+  of memory can be saved.
+   Some lexer generators such as JavaCC provide information
+  about sample texts e.g. in JavaCC's generated xxxConstants class
+  so the lexer framework will read it automatically.
+   The "sampleTextCheck" attribute of the TokendId element
+  contains the type of checking
+  that the lexer framework does to match the token
+  found by lexer to one of the defined sample texts.
+   By default the sampleTextCheck attribute is "text"
+   which means that the lexer framework checks whether content
+  of the token's text matches exactly to the particular sample text.
+   If there's just one sample text for the given token
+  e.g. "public" for the PUBLIC keyword token and it's clear
+  that the lexer will always return only that text
+  then the sampleTextCheck can be set to "none".
+  Lexer framework then performs no checking of the token's text
+  to the sample text.
+   If there's just one sample text for the given token
+  but besides the sample text the lexer can also
+  match another text (such as in java "pu\u0062lic"
+  would also mean the PUBLIC keyword) however that
+  text would always be longer than the defined sample text
+  "pu\u0062lic".length() > "public".length()
+  then the sampleTextCheck can be set to "length".
+  Lexer framework will only compare the length
+  of the token's text to the sample text
+  in order to match to the sample text. It will
+  however not compare the individual characters.
+   If there is more than one sample text defined
+  for a tokenId then the sample text checking will automatically
+  be set to "text" regardless of the value of the sampleTextCheck
+  attribute.
+   Adding the same sample text to the tokenId multiple times
+  has no effect.
+
+   Special characters handling: it's possible to use
+  java notation for sample texts e.g. \n or \u003c etc.
+  \u003c is '<'
+  \u003e is '>'
+  \u0026 is '&'
+  Sample text example: <SampleText>public</SampleText>
+-->
+<!ELEMENT SampleText (#PCDATA)>
+
+<!--
+  Each tokenId can be in zero or more named categories.
+  For example there can be "comment" category
+  for both single-line-comment and multi-line-comment
+  tokenIds.
+-->
+<!ELEMENT Category EMPTY>
+<!--
+  Category name should be in lowercase composed from alphanumeric letters
+  or hyphens. There should never be dots.
+-->
+<!ATTLIST Category name CDATA #REQUIRED>
+<!--
+  javadoc comment text that will be added before the tokenId declaration
+  in the generated xxxLanguage.java
+-->
+<!-- [PENDING] <!ELEMENT Comment %Flow;> -->
+<!ELEMENT Comment (#PCDATA)>
+
+<!--
+  HiddenTokenType element describes the named field
+  in the corresponding token-types class (e.g. xxxConstants for javacc
+  or xxxTokenTypes for antlr) that will be excluded
+  from the automatic generation of a corresponding TokenId.
+  For example each xxxConstants class defines
+  EOF token which should not be present in the target language
+  and therefore a HiddenTokenType element should
+  be present for it:
+  
+  <HiddenTokenType name="EOF"/>
+
+  name
+   Name of the token type to hide.
+   
+-->
+<!ELEMENT HiddenTokenType EMPTY>
+<!ATTLIST HiddenTokenType name CDATA #REQUIRED>

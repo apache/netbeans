@@ -1,0 +1,29 @@
+package org.netbeans.test.java.hints;
+
+/**
+ *
+ * @author sdedic
+ */
+public class ImplementEnumMethods {
+    enum E {
+        ONE {
+            @Override
+            public String kuk() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, TWO {
+            @Override
+            public String kuk() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, THREE {
+            @Override
+            public String kuk() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        };
+        
+        public abstract String kuk();
+    }
+    
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <a>
+        <b><![CDATA[some content
+                ]]></b>
+    </a>
+    <a><b><![CDATA[another content]]></b></a>
+    <a><b><![CDATA[should indent after newline]]>
+       </b></a>
+</root>

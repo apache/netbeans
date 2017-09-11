@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.0//EN" "http://www.netbeans.org/dtds/filesystem-1_0.dtd">
+<filesystem>
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-type-A">
+                <file name="EditorKit.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.editor.impl.KitsTrackerTest$TestAKit"/>
+                    <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit,org.netbeans.modules.editor.impl.KitsTrackerTest$TestAKit"/>
+                </file>
+            </folder>
+            <folder name="x-type-B-1">
+                <file name="EditorKit.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.editor.impl.KitsTrackerTest$SharedKit"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.impl.KitsTrackerTest.sharedKit"/>
+                    <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit,org.netbeans.modules.editor.impl.KitsTrackerTest$SharedKit"/>
+                </file>
+            </folder>
+            <folder name="x-type-B-2">
+                <file name="EditorKit.instance">
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.editor.impl.KitsTrackerTest$SharedKit"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.editor.impl.KitsTrackerTest.sharedKit"/>
+                    <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit,org.netbeans.modules.editor.impl.KitsTrackerTest$SharedKit"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

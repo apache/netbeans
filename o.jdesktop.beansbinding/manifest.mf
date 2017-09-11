@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.jdesktop.beansbinding/1
+OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/beansbinding/Bundle.properties
+OpenIDE-Module-Implementation-Version: 121

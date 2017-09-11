@@ -1,0 +1,20 @@
+%%TestCase convert-1
+package test;
+
+import org.openide.nodes.Node;
+
+public class Test {
+     String t(Node node) {
+         return node.getCookie(String.class);
+     }
+}
+%%=>
+package test;
+
+import org.openide.nodes.Node;
+
+public class Test {
+     String t(Node node) {
+         return node.getLookup().lookup(String.class);
+     }
+}

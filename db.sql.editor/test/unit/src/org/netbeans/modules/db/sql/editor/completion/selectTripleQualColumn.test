@@ -1,0 +1,14 @@
+select acatalog.accounting.invoice.|
+
+--
+<unknown>
+acatalog
+  customers
+    customer
+      customer_id
+  accounting
+    invoice
+      invoice_id
+      customer_id
+    customer
+      customer_id

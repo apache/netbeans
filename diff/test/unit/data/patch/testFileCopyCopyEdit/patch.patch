@@ -1,0 +1,42 @@
+diff --git a/NewClass.java b/NewClass.java
+index 3f1dbc2..7671044 100644
+--- a/NewClass.java
++++ b/NewClass.java
+@@ -7,7 +7,7 @@
+ 
+ /**
+  *
+- * @author ondra
++ * @author Ondra Vrabec
+  */
+ public class NewClass {
+diff --git a/NewClass.java b/NewClassCopy1.java
+similarity index 89%
+copy from NewClass.java
+copy to NewClassCopy1.java
+index 3f1dbc2..1f53e8d 100644
+--- a/NewClass.java
++++ b/NewClassCopy1.java
+@@ -9,6 +9,6 @@
+  *
+  * @author ondra
+  */
+-public class NewClass {
++public class NewClassCopy1 {
+     
+ }
+diff --git a/NewClass.java b/NewClassCopy2.java
+similarity index 89%
+copy from NewClass.java
+copy to NewClassCopy2.java
+index 3f1dbc2..1f53e8d 100644
+--- a/NewClass.java
++++ b/NewClassCopy2.java
+@@ -9,6 +9,6 @@
+  *
+  * @author ondra
+  */
+-public class NewClass {
++public class NewClassCopy2 {
+     
+ }

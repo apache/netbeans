@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.form/2
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/form/Bundle2.properties
+OpenIDE-Module-Implementation-Version: 4
+OpenIDE-Module-Install: org/netbeans/modules/form/FormEditorModule.class
+OpenIDE-Module-Needs: javax.script.ScriptEngine.freemarker
+OpenIDE-Module-Requires: 
+  org.netbeans.api.editor.guards.Java,
+  org.openide.modules.InstalledFileLocator
+OpenIDE-Module-Layer: org/netbeans/modules/form/resources/layer.xml
+AutoUpdate-Show-In-Client: false

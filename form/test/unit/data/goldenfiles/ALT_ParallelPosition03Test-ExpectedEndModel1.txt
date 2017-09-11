@@ -1,0 +1,34 @@
+<LayoutModel>
+  <Root id="Form">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace max="$pref" attributes="16"/>
+              <Group type="parallel" groupAlignment="leading" max="$pref" attributes="16">
+                  <Component id="jToggleButton1" max="Short.MAX_VALUE" attributes="1"/>
+                  <Component id="jButton1" max="Short.MAX_VALUE" attributes="1"/>
+              </Group>
+              <EmptySpace max="$pref" attributes="16"/>
+              <Component id="jScrollPane1" min="$pref" max="$pref" attributes="16"/>
+              <EmptySpace pref="175" max="Short.MAX_VALUE" attributes="12"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="0">
+          <Group type="sequential" alignment="leading" attributes="0">
+              <EmptySpace max="$pref" attributes="16"/>
+              <Group type="parallel" groupAlignment="leading" attributes="16">
+                  <Component id="jScrollPane1" min="$pref" max="$pref" attributes="0"/>
+                  <Group type="sequential" attributes="0">
+                      <Component id="jToggleButton1" min="$pref" max="$pref" attributes="0"/>
+                      <EmptySpace max="$pref" attributes="0"/>
+                      <Component id="jButton1" min="$pref" max="$pref" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace pref="225" max="Short.MAX_VALUE" attributes="12"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Root>
+</LayoutModel>

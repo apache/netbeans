@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mode PUBLIC
+          "-//NetBeans//DTD Mode Properties 2.1//EN"
+          "http://www.netbeans.org/dtds/mode-properties2_1.dtd">
+
+<mode version="2.1">
+    <module name="org.netbeans.core.ui/1" spec="1.2" />
+    <name unique="topSlidingSide" />
+    <kind type="sliding" />
+    <slidingSide side="top" />
+<!-- initial dimension is 0,0, we set it according to the first component to be docked -->
+    <relative-bounds x="10" y="18" width="0" height="0" />
+    <empty-behavior permanent="true" />
+</mode>

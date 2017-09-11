@@ -1,0 +1,1 @@
+OpenIDE-Module: com.googlecode.javaewah.JavaEWAH

@@ -1,0 +1,13 @@
+simple:
+- checking & completion of attribute values!
+- add hyperlinking to the definition file from the usages in html code
+
+normal:
+- semantic checking for the configuration file
+- configuration in userdir + merging w/ the project conf
+- refactoring configuration when renaming usages?
+
+harder:
+- fix the context-awareness of the features (checks, completion) - now it is very poorly supported even if the configuration allows to define it.
+
+

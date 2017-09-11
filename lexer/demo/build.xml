@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<project name="lexer-gen" default="compile-src" basedir=".">
+
+  <property name="lexer.module.root" location=".."/>
+  <property name="src.demo" location="src/org/netbeans/modules/lexer/demo"/>
+  <!-- <property name="build.compiler.debug" value="on"/> -->
+  <!-- <property name="build.compiler.deprecation" value="on"/> -->
+
+  <target name="compile-base">
+    <ant dir="${lexer.module.root}" target="netbeans" inheritAll="false"/>
+    <ant dir="${lexer.module.root}/gen" target="compile" inheritAll="false"/>
+  </target>
+
+  <target name="compile-src" depends="compile-base">
+    <mkdir dir="build/classes"/>
+    <javac srcdir="src" destdir="build/classes"
+           deprecation="${build.compiler.deprecation}"
+           debug="${build.compiler.debug}">
+      <classpath>
+        <pathelement location="${lexer.module.root}/build/classes"/>
+        <fileset id="antlr.runtime" dir="${lexer.module.root}/external">
+          <include name="antlr*.jar"/>
+        </fileset>
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="lexer-type-check" unless="lexer.type">
+    <fail message="Use -Dlexer.type=antlr to specify 'antlr' lexer type or 'javacc', 'handcoded/plain' or 'handcoded/link'."/>
+  </target>
+
+  <target name="compile" depends="lexer-type-check" description="Generate/compile lexer sources">
+    <ant dir="${src.demo}/${lexer.type}" target="compile" inheritAll="false"/>
+  </target>
+
+  <target name="demo" depends="lexer-type-check" description="Run editor pane demo">
+    <ant dir="${src.demo}/${lexer.type}" target="demo" inheritAll="false"/>
+  </target>
+
+  <target name="test" depends="lexer-type-check" description="Run random test to verify lexer correctness">
+    <ant dir="${src.demo}/${lexer.type}" target="test" inheritAll="false"/>
+  </target>
+
+  <target name="clean" depends="lexer-type-check" description="Clean class files and generated sources">
+    <ant dir="${src.demo}/${lexer.type}" target="clean" inheritAll="false"/>
+  </target>
+
+  <target name="rebuild" depends="lexer-type-check" description="Clean then Compile">
+    <ant dir="${src.demo}/${lexer.type}" target="rebuild" inheritAll="false"/>
+  </target>
+
+  <target name="compile-all" depends="compile-base">
+    <!-- compile all known lexers -->
+    <ant dir="${src.demo}/antlr" target="compile" inheritAll="false"/>
+    <ant dir="${src.demo}/javacc" target="compile" inheritAll="false"/>
+    <ant dir="${src.demo}/handcoded/plain" target="compile" inheritAll="false"/>
+    <ant dir="${src.demo}/handcoded/link" target="compile" inheritAll="false"/>
+
+    <antcall target="compile-src"/>
+  </target>
+
+  <target name="clean-base">
+    <ant dir="${lexer.module.root}" target="clean" inheritAll="false"/>
+    <ant dir="${lexer.module.root}/gen" target="clean" inheritAll="false"/>
+  </target>
+
+  <target name="clean-src">
+    <delete quiet="true">
+      <fileset dir="build"/>
+    </delete>
+  </target>
+
+  <target name="clean-all" depends="clean-base, clean-src">
+    <!-- clean all known lexers -->
+    <ant dir="${src.demo}/antlr" target="clean" inheritAll="false"/>
+    <ant dir="${src.demo}/javacc" target="clean" inheritAll="false"/>
+    <ant dir="${src.demo}/handcoded/plain" target="clean" inheritAll="false"/>
+    <ant dir="${src.demo}/handcoded/link" target="clean" inheritAll="false"/>
+  </target>
+
+  <target name="rebuild-all" depends="clean-all, compile-all">
+  </target>
+  
+  <target name="help">
+    <echo message="Targets that require lexer type such as -Dlexer.type=antlr for 'antlr' lexer type"/>
+    <echo message="    or 'javacc', 'handcoded/plain' or 'handcoded/link':"/>
+    <echo message="compile     Generate demo language sources and compile them (Requires JDK1.4)"/>
+    <echo message="demo        Run demo editor pane (Requires JDK1.4)"/>
+    <echo message="test        Run random test that checks generated lexer correctness (Requires JDK1.4)"/>
+    <echo message="clean       Clean generated language sources and class files"/>
+    <echo message="rebuild     Clean then Compile"/>
+    <echo message=""/>
+    <echo message="Global targets:"/>
+    <echo message="compile-all Generate all demo languages and compile all demo sources"/>
+    <echo message="clean-all   Clean all demo language sources and classes"/>
+    <echo message="rebuild-all Run clean-all followed by compile-all targets"/>
+  </target>
+
+</project>
+

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : BlacklistedClassesHandlerConfig.xml
+    Author     : mrkam@netbeans.og
+    Description:
+        Configuration information for BlacklistedClassesHandler.
+-->
+
+<!DOCTYPE properties SYSTEM 'http://java.sun.com/dtd/properties.dtd'>
+<properties>
+    <entry key="blacklist.enabled">true</entry>
+    <entry key="blacklist">blacklist.txt</entry>
+    <entry key="whitelist.enabled">false</entry>
+    <entry key="whitelist">whitelist_1.txt</entry>
+    <!-- Whitelist checking is automaticaly disabled when in whitelist generation mode.
+         However if whiltelist.enabled is true then whitelist is initially loaded from the specified file. -->
+    <entry key="generate.whitelist">true</entry>
+    <entry key="use.whitelist.storage">false</entry>
+</properties>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mode PUBLIC
+          "-//NetBeans//DTD Mode Properties 2.0//EN"
+          "http://www.netbeans.org/dtds/mode-properties2_0.dtd">
+
+<mode version="2.0">
+    <name unique="mode00" />
+    <kind type="view" />
+    <state type="separated" />
+    <bounds x="0" y="0" width="400" height="200" />
+    <frame state="normal" />
+    <active-tc id="output" />
+    <empty-behavior permanent="true" />
+</mode>

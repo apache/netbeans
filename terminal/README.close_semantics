@@ -1,0 +1,232 @@
+"README.close_semantics"
+
+Semantics of InputOutput (IO) close operations
+	or
+Major state transitions of an IO.
+
+TOC
+---
+Introduction
+Motivation
+Dramatis personae
+Major state transitions
+Typical lifecycle
+Querying the state
+Misc. notes on IOContainer
+
+Introduction
+------------
+This writeup evolved in an attempt to analyze the existing default
+implementation (output2) while implementing a second provider (terminal).
+It is written as a "best effort" and undoubtedly still contains errors 
+regarding the default 'output2' provider.
+
+It is primarily intended for implementors/maintainers but should be useful
+to API users as well.
+
+While the general analysis pertains to both the 'output2' and the 'terminal'
+providers, some methods are only available for terminal.
+
+Motivation
+----------
+The I/O APIs contain many methods and user visible actions with the
+word "close" in them:
+	InputOutput.closeInputOutput().
+	The Close action in the popup menu.
+	The Close Tab/Close All Tabs/Close Other Tabs actions.
+	IOContainer.CallBacks.closed().
+	OutputWriter.close() (inherited from PrintWriter).
+
+There also exist various predicates like:
+	InputOutput.isClosed().
+	IOContainer.isClosable().
+
+There seems to be no corresponding "open" operation.
+Instead we have various gets's and select's:
+	IOProvider.getIO()
+	InputOutput.getOut().
+
+	InputOutput.select().
+	IOContainer.select().
+
+It turns out that methods based on the words "close" or "select" don't
+all mean or do the same thing.
+
+Dramatis personae
+-----------------
+IOProvider	Has a list of IO's
+InputOutput	Abstract entity owned by an IOProvider
+		Has Streams.
+		Has a "Component".
+IOContainer Abstract entity.
+		Has a list of Components that are visible.
+		The actual container implementation is hidden.
+Component	Concrete entity (Typically a JComponent) that appears in an
+	    IOContainer. (IOTab in output2/Terminal in terminal).
+
+Major state transitions
+-----------------------
+There are three major state "variables" that control the overall state
+of an IO:
+
+- Existence
+  An IO comes into existence via one of the family IOProvider.getIO().
+
+  Calling IO.closeInputOutput() disposes it. It is of course still available
+  until it is GC'ed but any operation on it after closeInputOutput() is
+  undefined.
+
+  Both output2 and terminal use the words dispose[d] internally. So
+  we'll adopt dispose for our terminology.
+
+  Disposal frees all resources used by an IO and additionally calls eof()
+  in IO.getIn().
+
+  There is no associated UI action for disposal so clients need to ensure
+  that they call closeInputOutput() when appropriate (heh-heh).
+
+  Disposing was called "Strong closing" in some earlier discussions.
+
+- Visibility
+  An IO is visible when it is visible in it's container (with or without a tab)
+  _regardless_ of whether the container is visible as a window. I.e.
+  an IO tab may be added to the Output window even though the output
+  window itself is closed.
+
+  An IO can be made visible (opened?) using ...
+  o IO.select()
+    Also ensures that the container (it's TopComponent) is visible.
+  o IOSelect.select() which allows finer control over the visibility
+    of the containing TopComponent.
+  o IOVisibility.setVisible(true)
+    This one is independent of the visibility of the container itself.
+
+  A freshly created IO is visible by default but not selected! That is,
+  it is added to a container but the TopComponent will not be made
+  visible.
+
+  An IO can be made invisible (closed) using ...
+  o Close Action in context menu
+  o Clicking on the X of it's tab.
+  o IOVisibility.setVisible(false)
+
+  By far the most common use of the term "close" applies to this
+  state transition so we'll adopt close for our terminology.
+
+  This kind of closing was called "Weak closing" in some earlier discussions.
+
+  Conditional vs Unconditional closing
+  ....................................
+  The following closing operations ...
+  o Close Action in context menu
+  o Clicking on the X of it's tab.
+  are tempered using IOVisibility.setClosable() and additionally via
+  the vetoing mechanism provided by IONotifier.addVetoableChangeListener()
+  and IOVisibility.PROP_VISIBILITY.
+
+  The following closing operations succeed unconditionally:
+  o IOVisibility.setVisible(false)
+  o InputOutput.closeInputOutput()
+
+- Connectedness
+  An IO starts life in a disconnected state.
+
+  An IO is connected if one of IO.getOut(), IO.getErr() or IOTerm.connect()
+  are used.
+  A connected IO has it's title rendered in bold.
+
+  An IO is disconnected if the OutputWriters returned by getOut() and
+  getIn() are close()ed and once IOTerm.disconnect()'s continuation is called.
+  As a convenience closing getOut() will close getErr().
+
+  	Not quite sure about this: With the output2 provider
+	an IO can go back to the connected state after a reset() and/or
+	the first write.
+
+	With the terminal provider IO goes back to connected state 
+	as explained above.
+
+  The use of the word close in this context is highly misleading because even
+  after closing them one can write to the OutputWriters provided by getOut()
+  and getErr()!
+
+  It's probably best to never save the OutputWriter returned by getOut/Err()
+  and call getOut/Err() every time. That will ensure the correct maintenance
+  of the connected state.
+
+  So, if close() doesn't really close anything, what does it really mean to be
+  disconnected? It serves two purposes:
+
+  o A disconnected IO is eligible for reuse via
+    	IOProvider.getIO(String name, boolean newIO = false)
+    provided the names match.
+    This is the original and primary use of this state.
+    The precise semantics of reuse are as follows:
+	- choose a set of disconnecetd IO's with matching names.
+	- if any are found close all but one and return it.
+	- else return null
+
+  o IONotifier.addVetoableChangeListener() together with
+    IOVisibility.PROP_VISIBLE provide a way of accidentally preventing the
+    closure (setVisible(false)) of an IO which cannot be made visible again.
+
+  A disconnected IO retains it's buffer so if it's is to be reused, 
+  IO.getOut().reset() should be used to clear the buffer.
+
+  Disconnecting was called "Stream closing" in some earlier discussions.
+  [ The output2 implementation seems to track this state in two ways:
+    - OutputWriter.isClosed().
+    - An internal property streamClosed. ]
+
+The visibility and connected states are independent of each other. All
+four combinations make sense and are allowed.
+
+A disposed (IO.closeInputOutput()) IO becomes invisible and is disconnected.
+It is not eligible for reuse via IOProvider.getIO(..., newIO = false).
+	- output2 allows a disposed IO to be re-select()ed.
+	- terminal ignores all operations on a dispose IO.
+
+Typical lifecycle
+-----------------
+
+	IOProvider ioProvider = IOProvider.getDefault();
+	InputOutput io = ioProvider.getIO("name", null);
+	io.select();
+
+	OutputWriter ow = io.getOut();
+	ow.println("Hello");
+
+	ow.close();				// optional
+	if (IOVisibility.isSupported(IO))
+		IOVisibility.setVisible(false);	// optional
+	io.closeInputOutptu();
+
+
+Querying the state
+------------------
+Operations on an IO may be requested on any thread. However, they
+are mostly performed on the EDT. As a result the state transition will
+not happen serially with request to the request!
+
+Querying of state, e.g. using IOVisibility.isClosable(), works as follows:
+If the call is performed on the EDT the result is returned immediately.
+Otherwise the call is blocked while the result is computed on the EDT
+and passed back via a Future.
+
+Misc. notes on IOContainer
+--------------------------
+Although IOContainer is part of the API it is primarily intended for use
+by implementations (analog of a protected final method).
+
+- IOContainer.remove() is used to implement closing (setVisible(false)).
+  It removes the Component and calls IOContainer.CallBacks.closed().
+
+  Because a disconnected IO may be reused, CallBacks.closed() should not
+  free any resources! [ output2 impl tries some heuristics and sometimes
+  frees stuff anyway ].
+
+- What about IOContainer[.Provider].isClosable()?
+  It's original semantics are unclear.
+  The 'output2' provider always returns true.
+  In the 'terminal' provider I took it to mean "can the component
+  be made invisible"?

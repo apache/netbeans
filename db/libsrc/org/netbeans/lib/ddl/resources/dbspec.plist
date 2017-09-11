@@ -1,0 +1,2282 @@
+/*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ *
+ * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ * Other names may be trademarks of their respective owners.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common
+ * Development and Distribution License("CDDL") (collectively, the
+ * "License"). You may not use this file except in compliance with the
+ * License. You can obtain a copy of the License at
+ * http://www.netbeans.org/cddl-gplv2.html
+ * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ * specific language governing permissions and limitations under the
+ * License.  When distributing the software, include this License Header
+ * Notice in each file and include the License file at
+ * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the GPL Version 2 section of the License file that
+ * accompanied this code. If applicable, add the following below the
+ * License Header, with the fields enclosed by brackets [] replaced by
+ * your own identifying information:
+ * "Portions Copyrighted [year] [name of copyright owner]"
+ *
+ * Contributor(s):
+ *
+ * The Original Software is NetBeans. The Initial Developer of the Original
+ * Software is Sun Microsystems, Inc. Portions Copyright 1997-2010 Sun
+ * Microsystems, Inc. All Rights Reserved.
+ *
+ * If you wish your version of this file to be governed by only the CDDL
+ * or only the GPL Version 2, indicate your decision by adding
+ * "[Contributor] elects to include this software in this distribution
+ * under the [CDDL or GPL Version 2] license." If you do not indicate a
+ * single choice of license, a recipient has the option to distribute
+ * your version of this file under either the CDDL, the GPL Version 2 or
+ * to extend the choice of license to its licensees as provided above.
+ * However, if you add GPL Version 2 code and therefore, elected the GPL
+ * Version 2 license, then the option applies only if the new code is
+ * made subject to such option by the copyright holder.
+ */
+
+{
+  GenericDatabaseSystem = {
+    DatabaseProductName = GenericDatabaseSystem;
+    StringDelimiter = "'";
+    ColumnListHeader = "";
+    ColumnListDelimiter = ",\n\t";
+    ArgumentListDelimiter = ", ";
+    TypeMap = {
+//      java.sql.Types.ARRAY = ?; //JDBC 2.0 A type representing an SQL ARRAY
+//      java.sql.Types.BIGINT = BIGINT;
+//      java.sql.Types.BINARY = BINARY;
+      java.sql.Types.BIT = BIT;
+//      java.sql.Types.BLOB = BLOB;  //JDBC 2.0 A type representing an SQL Binary Large Object
+     java.sql.Types.CHAR = CHAR;
+//      java.sql.Types.CLOB = CLOB;  //JDBC 2.0 A type representing an SQL Character Large Object
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+//      java.sql.Types.DISTINCT = ?; //JDBC 2.0 A type based on a built-in type
+      java.sql.Types.DOUBLE = "DOUBLE PRECISION";
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INT;
+//      java.sql.Types.JAVA_OBJECT = ?; //JDBC 2.0 A type representing a Java Object
+//      java.sql.Types.LONGVARBINARY = "LONG BINARY";
+//      java.sql.Types.LONGVARCHAR = "LONG VARCHAR";
+//      java.sql.Types.NULL = ?;
+      java.sql.Types.NUMERIC = NUMERIC;
+//      java.sql.Types.OTHER = ?; //OTHER indicates that the SQL type is database-specific and gets mapped to a Java object that can be accessed via the methods getObject and setObject
+      java.sql.Types.REAL = REAL;
+//      java.sql.Types.REF = ?; //JDBC 2.0 A type representing an SQL REF
+      java.sql.Types.SMALLINT = SMALLINT;
+//      java.sql.Types.STRUCT = ?; //JDBC 2.0 A type consisting of attributes that may be any type
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+//      java.sql.Types.TINYINT = TINYINT;
+//      java.sql.Types.VARBINARY = VARBINARY;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BIT,DATE,"DOUBLE PRECISION",INT,REAL,SMALLINT,TIME,TIMESTAMP);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+//    ProcedureArgumentMap = {
+//      IN = IN;
+//      OUT = OUT;
+//      INOUT = INOUT;
+//    };
+//    TriggerEventMap = {
+//      INSERT = INSERT;
+//      UPDATE = UPDATE;
+//      DELETE = DELETE;
+//    };
+
+/////////////////////
+// Columns definition
+/////////////////////
+
+    Column = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})]";
+    };
+
+    UniqueColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})] unique";
+    };
+
+    PrimaryKeyColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})] primary key";
+    };
+
+    ForeignKeyColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})] references {fkobject.name}[({fkcolumn.name})]";
+    };
+
+    CheckColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null] check ({check.condition})";
+    };
+
+    UniqueConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "unique ({column.name})";
+    };
+
+    PrimaryKeyConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "primary key ({constraint.columns})";
+    };
+
+    ForeignKeyConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "foreign key ({column.name}) references {fkobject.name}[({fkcolumn.name})]";
+    };
+
+    CheckConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "check ({check.condition})";
+    };
+
+    ColumnName = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name}[ {direction}]";
+    };
+
+//    ProcedureArgument = {
+//      Class = org.netbeans.lib.ddl.impl.ProcedureArgument;
+//      Format = "{argument.name}[ {argument.type}] {argument.datatype}";
+//    };
+
+//    TriggerEvent = {
+//      Class = org.netbeans.lib.ddl.impl.TriggerEvent;
+//      Format = "{event.name}[ OF {event.column}]";
+//    };
+
+//////////////////////
+// Commands definition
+//////////////////////
+
+    CreateTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateTable;
+      Format = "create table [{object.owner}.]{object.name}\n(\n\t{columns}\n)";
+      Binding = {
+        COLUMN = Column;
+        UNIQUE = UniqueColumn;
+        PRIMARY_KEY = PrimaryKeyColumn;
+        FOREIGN_KEY = ForeignKeyColumn;
+        CHECK = CheckColumn;
+        UNIQUE_CONSTRAINT = UniqueConstraint;
+        PRIMARY_KEY_CONSTRAINT = PrimaryKeyConstraint;
+        FOREIGN_KEY_CONSTRAINT = ForeignKeyConstraint;
+        CHECK_CONSTRAINT = CheckConstraint;
+      };
+    };
+
+    DropTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop table [{object.owner}.]{object.name}";
+    };
+
+    AddColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.AddColumn;
+      Format = "alter table [{object.owner}.]{object.name} add {columns}";
+      Binding = {
+        COLUMN = Column;
+        UNIQUE = UniqueColumn;
+        PRIMARY_KEY = PrimaryKeyColumn;
+        FOREIGN_KEY = ForeignKeyColumn;
+        CHECK = CheckColumn;
+        UNIQUE_CONSTRAINT = UniqueConstraint;
+        PRIMARY_KEY_CONSTRAINT = PrimaryKeyConstraint;
+        FOREIGN_KEY_CONSTRAINT = ForeignKeyConstraint;
+        CHECK_CONSTRAINT = CheckConstraint;
+      };
+    };
+
+    RemoveColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.RemoveColumn;
+      Format = "alter table [{object.owner}.]{object.name} drop {column}";
+      Binding = {
+        COLUMN = ColumnName;
+      };
+      Supported = true;
+    };
+
+    CreateViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateView;
+      Format = "create view [{object.owner}.]{object.name} as {query}";
+    };
+
+    DropViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop view [{object.owner}.]{object.name}";
+    };
+
+    CreateIndexCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateIndex;
+      Format = "create {index.unique} index {index.name} on [{object.owner}.]{object.name}\n(\n\t{columns}\n)";
+      Binding = {
+        COLUMN = ColumnName;
+      };
+    };
+
+    DropIndexCommand = {
+      Class = org.netbeans.lib.ddl.impl.DropIndex;
+      Format = "drop index [{object.owner}.]{object.name}";
+    };
+
+    SetDefaultDatabaseCommand = {
+      Supported = false;
+    };
+
+    SetDefaultSchemaCommand = {
+      Supported = false;
+    };
+
+  };
+
+//  ********************************************************************************
+//
+//  SYBASE SQL ANYWHERE (JDBC type 4)
+//
+//  ********************************************************************************/
+
+  "Sybase SQL Anywhere" = {
+    DatabaseProductName = "Sybase SQL Anywhere";
+    DatabaseProductVersion = 6;
+    TriggerEventListDelimiter = ", ";
+    TypeMap = {
+      java.sql.Types.BIGINT = BIGINT;
+      java.sql.Types.BINARY = BINARY;
+      java.sql.Types.BIT = BIT;
+      java.sql.Types.BLOB = IMAGE;  //JDBC 2.0 A type representing an SQL Binary Large Object
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.CLOB = TEXT;  //JDBC 2.0 A type representing an SQL Character Large Object
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = DOUBLE;
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INT;
+      java.sql.Types.LONGVARBINARY = "LONG BINARY";
+      java.sql.Types.LONGVARCHAR = "LONG VARCHAR";
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+      java.sql.Types.TINYINT = TINYINT;
+      java.sql.Types.VARBINARY = VARBINARY;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    ProcedureArgumentMap = {
+      IN = IN;
+      OUT = OUT;
+      INOUT = INOUT;
+    };
+    TriggerEventMap = {
+      INSERT = INSERT;
+      UPDATE = UPDATE;
+      DELETE = DELETE;
+    };
+    SizelessTypes = (BIGINT,BINARY,BIT,IMAGE,DATE,INT,"LONG VARCHAR","LONG BINARY",REAL,SMALLINT,TIME,TIMESTAMP,TINYINT,VARBINARY);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+
+//
+// Definice sloupcu
+//
+    ColumnTypeless = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} [{column.notnull}not null][ default {default.value}][ check ({check.condition})]";
+    };
+
+    UniqueColumnTypeless = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} [{column.notnull}not null][ default {default.value}][ check ({check.condition})] unique";
+    };
+
+    CheckColumnTypeless = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} [{column.notnull}not null][ default {default.value}][ check ({check.condition})] check ({check.condition})";
+    };
+
+//
+// Definice prikazu
+//
+
+    CommentTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.CommentTable;
+      Format = "comment on table [{object.owner}.]{object.name} is {comment}";
+    };
+
+    RenameColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.RenameColumn;
+      Format = "alter table [{object.owner}.]{object.name} rename {column} to {column.newname}";
+      Binding = {
+        COLUMN = ColumnName;
+      };
+    };
+
+    ModifyColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.ModifyColumn;
+      Format = "alter table [{object.owner}.]{object.name} modify {column}";
+      Binding = {
+        COLUMN = ColumnTypeless;
+        UNIQUE = UniqueColumnTypeless;
+        CHECK = CheckColumnTypeless;
+      };
+    };
+
+    RemoveColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.RemoveColumn;
+      Format = "alter table [{object.owner}.]{object.name} delete {column}";
+      Binding = {
+        COLUMN = ColumnName;
+        UNIQUE = UniqueColumnName;
+        PRIMARY_KEY = PrimaryKey;
+        FOREIGN_KEY = ForeignKeyColumnName;
+      };
+    };
+
+    CommentViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.CommentView;
+      Format = "comment on view [{object.owner}.]{object.name} is {comment}";
+    };
+
+    RenameTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.RenameTable;
+      Format = "alter table [{object.owner}.]{object.name} rename {object.newname}";
+
+    };
+
+    CreateProcedureCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateProcedure;
+      Format = "create procedure [{object.owner}.]{object.name} [({arguments})] as\n{body}";
+      Binding = {
+        ARGUMENT = ProcedureArgument;
+      };
+    };
+
+    DropProcedureCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop procedure [{object.owner}.]{object.name}";
+    };
+
+    CreateFunctionCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateFunction;
+      Format = "create function [{object.owner}.]{object.name} [({arguments})] returns {return.type} as\n{body}";
+      Binding = {
+        ARGUMENT = ProcedureArgument;
+      };
+    };
+
+    DropFunctionCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop function [{object.owner}.]{object.name}";
+    };
+
+    CreateTriggerCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateTrigger;
+      Format = "create trigger [{object.owner}.]{object.name}\n{trigger.timing} {trigger.events}\non {table.name}\nreferencing old as old_{object.name} new as new_{object.name}[\n{each.row}for each row][\nwhen {trigger.condition}\n{trigger.body}";
+      Binding = {
+        EVENT = TriggerEvent;
+      };
+    };
+
+    DropTriggerCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop trigger [{object.owner}.]{object.name}";
+    };
+  };
+
+//  ********************************************************************************
+//
+//  SYBASE SQL ANYWHERE (JDBC-ODBC)
+//
+//  ********************************************************************************/
+
+  "Adaptive Server Anywhere" = {
+    DatabaseProductName = "Adaptive Server Anywhere";
+    DatabaseProductVersion = 6;
+    TriggerEventListDelimiter = ", ";
+    TypeMap = {
+      java.sql.Types.BIGINT = BIGINT;
+      java.sql.Types.BINARY = BINARY;
+      java.sql.Types.BIT = BIT;
+      java.sql.Types.BLOB = IMAGE;  //JDBC 2.0 A type representing an SQL Binary Large Object
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.CLOB = TEXT;  //JDBC 2.0 A type representing an SQL Character Large Object
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = DOUBLE;
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INT;
+      java.sql.Types.LONGVARBINARY = "LONG BINARY";
+      java.sql.Types.LONGVARCHAR = "LONG VARCHAR";
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+      java.sql.Types.TINYINT = TINYINT;
+      java.sql.Types.VARBINARY = VARBINARY;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    ProcedureArgumentMap = {
+      IN = IN;
+      OUT = OUT;
+      INOUT = INOUT;
+    };
+    TriggerEventMap = {
+      INSERT = INSERT;
+      UPDATE = UPDATE;
+      DELETE = DELETE;
+    };
+    SizelessTypes = (BIGINT,BINARY,BIT,IMAGE,DATE,INT,"LONG VARCHAR","LONG BINARY",REAL,SMALLINT,TIME,TIMESTAMP,TINYINT,VARBINARY);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+
+//
+// Definice sloupcu
+//
+    ColumnTypeless = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} [{column.notnull}not null][ default {default.value}][ check ({check.condition})]";
+    };
+
+    UniqueColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ {column.notnull}not null][ default {default.value}][ check ({check.condition})] unique";
+    };
+
+    UniqueColumnTypeless = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} [{column.notnull}not null][ default {default.value}][ check ({check.condition})] unique";
+    };
+
+    PrimaryKeyColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ {column.notnull}not null][ default {default.value}][ check ({check.condition})] primary key";
+    };
+
+    ForeignKeyColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ {column.notnull}not null][ default {default.value}][ check ({check.condition})] references {fkobject.name}[({fkcolumn.name})]";
+    };
+
+    CheckColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ {column.notnull}not null][ default {default.value}] check ({check.condition})";
+    };
+
+    CheckColumnTypeless = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} [{column.notnull}not null][ default {default.value}] check ({check.condition})";
+    };
+
+    UniqueConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "unique {column.name}";
+    };
+
+    PrimaryKeyConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "primary key ({constraint.columns})";
+    };
+
+    ForeignKeyConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "foreign key {column.name} references {fkobject.name}[({fkcolumn.name})]";
+    };
+
+    CheckConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "check ({check.condition})";
+    };
+
+//
+// Definice prikazu
+//
+
+    CommentTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.CommentTable;
+      Format = "comment on table [{object.owner}.]{object.name} is {comment}";
+    };
+
+    RenameColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.RenameColumn;
+      Format = "alter table [{object.owner}.]{object.name} rename {column} to {column.newname}";
+      Binding = {
+        COLUMN = ColumnName;
+      };
+    };
+
+    ModifyColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.ModifyColumn;
+      Format = "alter table [{object.owner}.]{object.name} modify {column}";
+      Binding = {
+        COLUMN = ColumnTypeless;
+        UNIQUE = UniqueColumnTypeless;
+        CHECK = CheckColumnTypeless;
+      };
+    };
+
+    RemoveColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.RemoveColumn;
+      Format = "alter table [{object.owner}.]{object.name} delete {column}";
+      Binding = {
+        COLUMN = ColumnName;
+        UNIQUE = UniqueColumnName;
+        PRIMARY_KEY = PrimaryKey;
+        FOREIGN_KEY = ForeignKeyColumnName;
+      };
+    };
+
+    CommentViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.CommentView;
+      Format = "comment on view [{object.owner}.]{object.name} is {comment}";
+    };
+
+    RenameTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.RenameTable;
+      Format = "alter table [{object.owner}.]{object.name} rename {object.newname}";
+
+    };
+
+    CreateProcedureCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateProcedure;
+      Format = "create procedure [{object.owner}.]{object.name} [({arguments})] as\n{body}";
+      Binding = {
+        ARGUMENT = ProcedureArgument;
+      };
+    };
+
+    DropProcedureCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop procedure [{object.owner}.]{object.name}";
+    };
+
+    CreateFunctionCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateFunction;
+      Format = "create function [{object.owner}.]{object.name} [({arguments})] returns {return.type} as\n{body}";
+      Binding = {
+        ARGUMENT = ProcedureArgument;
+      };
+    };
+
+    DropFunctionCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop function [{object.owner}.]{object.name}";
+    };
+
+    CreateTriggerCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateTrigger;
+      Format = "create trigger [{object.owner}.]{object.name}\n{trigger.timing} {trigger.events}\non {table.name}\nreferencing old as old_{object.name} new as new_{object.name}[\n{each.row}for each row][\nwhen {trigger.condition}\n{trigger.body}";
+      Binding = {
+        EVENT = TriggerEvent;
+      };
+    };
+
+    DropTriggerCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop trigger [{object.owner}.]{object.name}";
+    };
+  };
+
+//  ********************************************************************************
+//
+//  ORACLE 8i //7 (JDBC, ODBC - Microsoft)
+//
+//  ********************************************************************************/
+
+  "Oracle" = {
+    DatabaseProductName = "Oracle";
+    DatabaseProductVersion = 8;
+    TriggerEventListDelimiter = " OR ";
+    TypeMap = {
+      java.sql.Types.BIGINT = BIGINT;
+      java.sql.Types.BLOB = BLOB;  //JDBC 2.0 A type representing an SQL Binary Large Object
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INT;
+      java.sql.Types.BIGINT = INTEGER;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.VARCHAR = VARCHAR2;
+    };
+    ProcedureArgumentMap = {
+      IN = IN;
+      OUT = OUT;
+      INOUT = INOUT;
+    };
+    TriggerEventMap = {
+      INSERT = INSERT;
+      UPDATE = UPDATE;
+      DELETE = DELETE;
+    };
+    SizelessTypes = (BIGINT,BLOB,DATE,INT,INTEGER,REAL,SMALLINT);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR2);
+
+//
+// Definice sloupcu
+//
+
+    Column = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})]";
+    };
+
+    UniqueColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})] constraint {object.name} unique";
+    };
+
+    PrimaryKeyColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})] constraint {object.name} primary key";
+    };
+
+    ForeignKeyColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})] constraint {object.name} references {fkobject.name}[({fkcolumn.name})]";
+    };
+
+    CheckColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null] constraint {object.name} check ({check.condition})";
+    };
+
+    UniqueConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "constraint {object.name} unique {column.name}";
+    };
+
+    PrimaryKeyConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "primary key ({constraint.columns})";
+    };
+
+    ForeignKeyConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "constraint {object.name} foreign key {column.name} references {fkobject.name}[({fkcolumn.name})]";
+    };
+
+    CheckConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "constraint {object.name} check ({check.condition})";
+    };
+
+//
+// Definice prikazu
+//
+
+    CommentTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.CommentTable;
+      Format = "comment on table [{object.owner}.]{object.name} is {comment}";
+    };
+
+    RenameTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.RenameTable;
+      Format = "rename [{object.owner}.]{object.name} to {object.newname}";
+
+    };
+
+    CommentViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.CommentView;
+      Format = "comment on view [{object.owner}.]{object.name} is {comment}";
+    };
+
+/*    RenameColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.RenameColumn;
+      Format = "alter table [{object.owner}.]{object.name} rename {column} to {column.newname}";
+      Binding = {
+        COLUMN = ColumnName;
+      };
+    };
+*/
+    RemoveColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.RemoveColumn;
+      Format = "alter table [{object.owner}.]{object.name} drop ({column})";
+      Binding = {
+        COLUMN = ColumnName;
+        UNIQUE = UniqueColumnName;
+        PRIMARY_KEY = PrimaryKey;
+        FOREIGN_KEY = ForeignKeyColumnName;
+      };
+    };
+
+    RenameViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.RenameView;
+      Format = "rename [{object.owner}.]{object.name} to {object.newname}";
+    };
+
+    CreateProcedureCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateProcedure;
+      Format = "create procedure [{object.owner}.]{object.name} [({arguments})] as\n{body}";
+      Binding = {
+        ARGUMENT = ProcedureArgument;
+      };
+    };
+
+    DropProcedureCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop procedure [{object.owner}.]{object.name}";
+    };
+
+    CreateFunctionCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateFunction;
+      Format = "create function [{object.owner}.]{object.name} [({arguments})] returns {return.type} as\n{body}";
+      Binding = {
+        ARGUMENT = ProcedureArgument;
+      };
+    };
+
+    DropFunctionCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop function [{object.owner}.]{object.name}";
+    };
+
+    CreateTriggerCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateTrigger;
+      Format = "create trigger [{object.owner}.]{object.name}\n{trigger.timing} {trigger.events}\non {table.name}\nreferencing old as old_{object.name} new as new_{object.name}[\n{each.row}for each row][\nwhen {trigger.condition}\n{trigger.body}";
+      Binding = {
+        EVENT = TriggerEvent;
+      };
+    };
+
+    DropTriggerCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop trigger [{object.owner}.]{object.name}";
+    };
+
+    CreateIndexCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateIndex;
+      Format = "create {index.unique} index {index.name} on [{object.owner}.]{object.name}[\n(\n\t{columns}\n)]";
+      Binding = {
+        COLUMN = ColumnName;
+      };
+    };
+
+    DropIndexCommand = {
+      Class = org.netbeans.lib.ddl.impl.DropIndex;
+      Format = "drop index [{object.owner}.]{object.name}";
+    };
+
+    CreateViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateView;
+      Format = "create view [{object.owner}.]{object.name} as {query}";
+    };
+
+    DropViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop view [{object.owner}.]{object.name}";
+    };
+  };
+
+//  ********************************************************************************
+//
+//  Cloudscape
+//
+//  ********************************************************************************/
+
+  "DBMS:cloudscape" = {
+    DatabaseProductName = "DBMS:cloudscape";
+    DatabaseProductVersion = 2;
+    TriggerEventListDelimiter = ", ";
+    TypeMap = {
+      java.sql.Types.BIGINT = LONGINT;
+      java.sql.Types.BINARY = BIT;
+      java.sql.Types.BIT = BOOLEAN;
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = "DOUBLE PRECISION";
+      java.sql.Types.REAL = FLOAT;
+      java.sql.Types.INTEGER = INTEGER;
+      java.sql.Types.LONGVARBINARY = "LONG VARBINARY";
+      java.sql.Types.LONGVARCHAR = "LONG VARCHAR";
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+      java.sql.Types.TINYINT = TINYINT;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+//    ProcedureArgumentMap = {
+//      IN = IN;
+//      OUT = OUT;
+//      INOUT = INOUT;
+//    };
+//    TriggerEventMap = {
+//      INSERT = INSERT;
+//      UPDATE = UPDATE;
+//      DELETE = DELETE;
+//    };
+    SizelessTypes = (BOOLEAN,DATE,INT,"LONG VARCHAR","LONG VARBINARY",LONGINT,SMALLINT,TIME,TIMESTAMP,TINYINT);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+
+  };
+
+//  ********************************************************************************
+//
+//  Apache Derby
+//
+//  ********************************************************************************/
+
+  "Apache Derby" = {
+    DatabaseProductName = "Apache Derby";
+    DatabaseProductVersion = 10;
+    TriggerEventListDelimiter = ", ";
+    TypeMap = {
+      java.sql.Types.BIGINT = BIGINT;
+      java.sql.Types.BLOB = BLOB;
+      java.sql.Types.BOOLEAN = BOOLEAN;
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.BINARY = "CHAR FOR BIT DATA";
+      java.sql.Types.CLOB = CLOB;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = DOUBLE;
+//      java.sql.Types.DOUBLE = "DOUBLE PRECISION";
+//      java.sql.Types.DOUBLE = FLOAT;
+      java.sql.Types.INTEGER = INTEGER;
+      java.sql.Types.LONGVARCHAR = "LONG VARCHAR";
+//      java.sql.Types.VARBINARY = "LONG VARCHAR FOR BIT DATA";
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+      java.sql.Types.VARCHAR = VARCHAR;
+      java.sql.Types.VARBINARY = "VARCHAR FOR BIT DATA";
+    };
+//    ProcedureArgumentMap = {
+//      IN = IN;
+//      OUT = OUT;
+//      INOUT = INOUT;
+//    };
+//    TriggerEventMap = {
+//      INSERT = INSERT;
+//      UPDATE = UPDATE;
+//      DELETE = DELETE;
+//    };
+    SizelessTypes = (BIGINT,BOOLEAN, CLOB,DATE,DOUBLE,INTEGER,"LONG VARCHAR",REAL,SMALLINT,TIME,TIMESTAMP);
+    DecimalTypes = (DECIMAL,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+
+    TypePrefixSuffixMap = {
+      "CHAR FOR BIT DATA" = {
+        Prefix = "CHAR";
+        Suffix = "FOR BIT DATA";
+      };
+      "VARCHAR FOR BIT DATA" = {
+        Prefix = VARCHAR;
+        Suffix = "FOR BIT DATA";
+      };
+    };
+
+/////////////////////
+// Columns definition
+/////////////////////
+
+    Column = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ {column.type.suffix}][ default {default.value}][ {column.notnull}not null][ check ({check.condition})]";
+    };
+
+    UniqueColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ {column.type.suffix}][ default {default.value}][ {column.notnull}not null][ check ({check.condition})] unique";
+    };
+
+    PrimaryKeyColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ {column.type.suffix}][ default {default.value}][ {column.notnull}not null][ check ({check.condition})] primary key";
+    };
+
+    ForeignKeyColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ {column.type.suffix}][ default {default.value}][ {column.notnull}not null][ check ({check.condition})] references {fkobject.name}[({fkcolumn.name})]";
+    };
+
+    CheckColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ {column.type.suffix}][ default {default.value}][ {column.notnull}not null] check ({check.condition})";
+    };
+
+    SetDefaultSchemaCommand = {
+      Class = org.netbeans.lib.ddl.impl.SetDefaultSchema;
+      Format = "set schema {schemaName}";
+      Supported = true;
+    };
+  };
+
+//  ********************************************************************************
+//
+//  Microsoft SQL Server
+//
+//  ********************************************************************************/
+
+  "Microsoft SQL Server" = {
+    DatabaseProductName = "Microsoft SQL Server";
+    DatabaseProductVersion = 7;
+
+    TypeMap = {
+      java.sql.Types.BINARY = BINARY;
+      java.sql.Types.BIT = BIT;
+      java.sql.Types.BLOB = IMAGE;
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DATE = DATETIME;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = "DOUBLE PRECISION";
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INT;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+      java.sql.Types.TINYINT = TINYINT;
+      java.sql.Types.VARBINARY = VARBINARY;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BINARY,BIT,IMAGE,DATETIME,"DOUBLE PRECISION",INT,REAL,SMALLINT,TIMESTAMP,TINYINT,VARBINARY);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+
+//////////////////////
+// Commands definition
+//////////////////////
+
+    RemoveColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.RemoveColumn;
+      Format = "alter table [{object.owner}.]{object.name} drop column {column}";
+      Binding = {
+        COLUMN = ColumnName;
+      };
+    };
+
+    DropIndexCommand = {
+      Class = org.netbeans.lib.ddl.impl.DropIndex;
+      Format = "drop index [{object.owner}].{table.name}.{object.name}";
+    };
+
+    DropProcedureCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop procedure [{object.owner}.]{object.name}";
+    };
+
+  };
+
+//  ********************************************************************************
+//
+//  IBM DB2
+//
+//  ********************************************************************************/
+
+  "DB2/" = {
+    DatabaseProductName = "DB2/";
+    DatabaseProductVersion = 6;
+
+    TypeMap = {
+      java.sql.Types.BIGINT = BIGINT;
+//      java.sql.Types.BLOB = BLOB;  //JDBC 2.0 A type representing an SQL Binary Large Object
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.CLOB = CLOB;  //JDBC 2.0 A type representing an SQL Character Large Object
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = DOUBLE;
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INTEGER;
+      java.sql.Types.LONGVARBINARY = BLOB;
+      java.sql.Types.LONGVARCHAR = "LONG VARCHAR";
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BIGINT,DATE,DOUBLE,INTEGER,"LONG VARCHAR",REAL,SMALLINT,TIME,TIMESTAMP);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (BLOB,CLOB,CHAR,VARCHAR);
+
+    RemoveColumnCommand = {
+      Supported = false;
+    };
+
+  };
+
+//  ********************************************************************************
+//
+//  Hypersonic SQL
+//
+//  ********************************************************************************/
+
+  "HypersonicSQL" = {
+    DatabaseProductName = "HypersonicSQL";
+    DatabaseProductVersion = 1;
+    TriggerEventListDelimiter = ", ";
+
+    TypeMap = {
+      java.sql.Types.BIGINT = BIGINT;
+      java.sql.Types.BINARY = BINARY;
+      java.sql.Types.BIT = BIT;
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = DOUBLE;
+      java.sql.Types.INTEGER = INTEGER;
+      java.sql.Types.LONGVARBINARY = LONGVARBINARY;
+      java.sql.Types.LONGVARCHAR = LONGVARCHAR;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+      java.sql.Types.TINYINT = TINYINT;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BIGINT,BINARY,BIT,DATE,DOUBLE,INTEGER,LONGVARBINARY,LONGVARCHAR,REAL,SMALLINT,TIME,TIMESTAMP,TINYINT);
+    DecimalTypes = (DECIMAL,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+
+    CreateTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateTable;
+      Format = "create table [{object.owner}.]{object.name}\n(\n\t{columns}\n)";
+      Binding = {
+        COLUMN = Column;
+        PRIMARY_KEY = PrimaryKeyColumn;
+      };
+    };
+
+    Column = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})]";
+    };
+
+    PrimaryKeyColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})] primary key";
+    };
+  };
+
+//  ********************************************************************************
+//
+//  Microsoft Access
+//
+//  ********************************************************************************/
+
+  "ACCESS" = {
+    DatabaseProductName = "ACCESS";
+    DatabaseProductVersion = 2;
+    TypeMap = {
+      java.sql.Types.BIGINT = "BIG INTEGER";
+      java.sql.Types.BINARY = BINARY;
+      java.sql.Types.BIT = BOOLEAN;
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = DOUBLE;
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INTEGER;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = "TIME STAMP";
+      java.sql.Types.VARBINARY = VARBINARY;
+    };
+    SizelessTypes = ("BIG INTEGER",BINARY,BOOLEAN,DATE,DOUBLE,INTEGER,TIME,"TIME STAMP",VARBINARY);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR);
+
+  };
+
+//  ********************************************************************************
+//
+//  PointBase
+//
+//  ********************************************************************************/
+
+  "PointBase" = {
+    DatabaseProductName = "PointBase";
+    DatabaseProductVersion = 2;
+    TypeMap = {
+      java.sql.Types.BIT = BOOLEAN;
+      java.sql.Types.BLOB = BLOB;
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.CLOB = CLOB;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = "DOUBLE PRECISION";
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INTEGER;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BOOLEAN,BLOB,CLOB,DATE,"DOUBLE PRECISION",INTEGER,REAL,SMALLINT,TIME,TIMESTAMP);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+
+//////////////////////
+// Commands definition
+//////////////////////
+
+    DropIndexCommand = {
+      Class = org.netbeans.lib.ddl.impl.DropIndex;
+      Format = "drop index [{object.owner}.]{table.name}.{object.name}";
+    };
+
+  };
+
+//  ********************************************************************************
+//
+//  Informix 7.3
+//
+//  ********************************************************************************/
+
+  "INFORMIX-OnLine" = {
+    DatabaseProductName = "INFORMIX-OnLine";
+    DatabaseProductVersion = "7.31.TC2";
+    TypeMap = {
+      java.sql.Types.BLOB = BLOB;  //JDBC 2.0 A type representing an SQL Binary Large Object
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = "DOUBLE PRECISION";
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INT;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BLOB,DATE,"DOUBLE PRECISION",INT,REAL,SMALLINT);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+  };
+
+//  ********************************************************************************
+//
+//  Informix 9.2
+//
+//  ********************************************************************************/
+
+  "Informix Dynamic Server" = {
+    DatabaseProductName = "Informix Dynamic Server";
+    DatabaseProductVersion = 9.20;
+//    DatabaseProductVersion = 9.21.TC3;
+    TypeMap = {
+      java.sql.Types.BIT = BOOLEAN;
+      java.sql.Types.BLOB = BLOB;  //JDBC 2.0 A type representing an SQL Binary Large Object
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = "DOUBLE PRECISION";
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INT;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BOOLEAN,BLOB,DATE,"DOUBLE PRECISION",INT,REAL,SMALLINT);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+  };
+
+//  ********************************************************************************
+//
+//  Informix (ODBC)
+//
+//  ********************************************************************************/
+
+  "Informix" = {
+    DatabaseProductName = "Informix";
+    DatabaseProductVersion = 9.20;
+//    DatabaseProductVersion = 9.21.TC3;
+    TypeMap = {
+      java.sql.Types.BIT = BOOLEAN;
+      java.sql.Types.BLOB = BLOB;  //JDBC 2.0 A type representing an SQL Binary Large Object
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = "DOUBLE PRECISION";
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INT;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BOOLEAN,BLOB,DATE,"DOUBLE PRECISION",INT,REAL,SMALLINT);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+  };
+
+//  ********************************************************************************
+//
+//  InstantDB
+//
+//  ********************************************************************************/
+
+  "InstantDB" = {
+    DatabaseProductName = "InstantDB";
+    TypeMap = {
+      java.sql.Types.BINARY = BINARY;
+      java.sql.Types.BLOB = IMAGE;  //JDBC 2.0 A type representing an SQL Binary Large Object
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = DOUBLE;
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INT;
+      java.sql.Types.LONGVARBINARY = LONGVARBINARY;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TINYINT = TINYINT;
+      java.sql.Types.VARBINARY = VARBINARY;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BINARY,IMAGE,DATE,DOUBLE,INT,LONGVARBINARY,SMALLINT,TINYINT,VARBINARY);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+
+//////////////////////
+// Commands definition
+//////////////////////
+
+    CreateTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateTable;
+      Format = "create table {object.name}\n(\n\t{columns}\n)";
+      Binding = {
+        COLUMN = Column;
+        UNIQUE = UniqueColumn;
+        PRIMARY_KEY = PrimaryKeyColumn;
+        CHECK = CheckColumn;
+        UNIQUE_CONSTRAINT = UniqueConstraint;
+        PRIMARY_KEY_CONSTRAINT = PrimaryKeyConstraint;
+        CHECK_CONSTRAINT = CheckConstraint;
+      };
+    };
+
+  };
+
+//  ********************************************************************************
+//
+//  InterBase
+//
+//  ********************************************************************************/
+
+  "InterBase" = {
+    DatabaseProductName = "InterBase";
+    TypeMap = {
+      java.sql.Types.BLOB = BLOB;  //JDBC 2.0 A type representing an SQL Binary Large Object
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = "DOUBLE PRECISION";
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INTEGER;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BLOB,DATE,"DOUBLE PRECISION",INTEGER,SMALLINT);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+
+//////////////////////
+// Commands definition
+//////////////////////
+
+    CreateTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateTable;
+      Format = "create table {object.name}\n(\n\t{columns}\n)";
+      Binding = {
+        COLUMN = Column;
+        UNIQUE = UniqueColumn;
+        PRIMARY_KEY = PrimaryKeyColumn;
+        CHECK = CheckColumn;
+        UNIQUE_CONSTRAINT = UniqueConstraint;
+        PRIMARY_KEY_CONSTRAINT = PrimaryKeyConstraint;
+        CHECK_CONSTRAINT = CheckConstraint;
+      };
+    };
+  };
+
+//  ********************************************************************************
+//
+//  MySQL
+//
+//  ********************************************************************************/
+
+  "MySQL" = {
+    DatabaseProductName = "MySQL";
+    TypeMap = {
+      java.sql.Types.BIGINT = BIGINT;
+      java.sql.Types.OTHER = BIT; // not true for MySQL prior to 5.0
+      java.sql.Types.BLOB = BLOB;  //JDBC 2.0 A type representing an SQL Binary Large Object
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.LONGVARCHAR = TEXT;
+      java.sql.Types.DATE = DATE;
+//      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = "DOUBLE PRECISION";
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INT;
+//      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+      java.sql.Types.TINYINT = TINYINT;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BIGINT,BLOB,DATE,"DOUBLE PRECISION",FLOAT,INT,REAL,SMALLINT,TIME,TIMESTAMP,TINYINT,TEXT);
+//    DecimalTypes = (DECIMAL,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR,TEXT);
+
+    DropIndexCommand = {
+      Class = org.netbeans.lib.ddl.impl.DropIndex;
+      Format = "drop index {object.name} on {object.owner}.{table.name}";
+    };
+
+    DropProcedureCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop procedure [{object.owner}.]{object.name}";
+    };
+
+    SetDefaultDatabaseCommand = {
+      Class = org.netbeans.lib.ddl.impl.SetDefaultDatabase;
+      Format = "use {database}";
+      Supported = true;
+    };
+  };
+
+//  ********************************************************************************
+//
+//  Oracle8 (ODBC - Oracle)
+//
+//  ********************************************************************************/
+
+  "Oracle8" = {
+    DatabaseProductName = "Oracle8";
+    DatabaseProductVersion = 8;
+    TriggerEventListDelimiter = " OR ";
+    TypeMap = {
+      java.sql.Types.BIGINT = BIGINT;
+      java.sql.Types.BLOB = BLOB;  //JDBC 2.0 A type representing an SQL Binary Large Object
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INT;
+      java.sql.Types.BIGINT = INTEGER;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.VARCHAR = VARCHAR2;
+    };
+    ProcedureArgumentMap = {
+      IN = IN;
+      OUT = OUT;
+      INOUT = INOUT;
+    };
+    TriggerEventMap = {
+      INSERT = INSERT;
+      UPDATE = UPDATE;
+      DELETE = DELETE;
+    };
+    SizelessTypes = (BIGINT,BLOB,DATE,INT,INTEGER,REAL,SMALLINT);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR2);
+
+//
+// Definice sloupcu
+//
+
+    Column = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})]";
+    };
+
+    UniqueColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})] constraint {object.name} unique";
+    };
+
+    PrimaryKeyColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})] constraint {object.name} primary key";
+    };
+
+    ForeignKeyColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})] constraint {object.name} references {fkobject.name}[({fkcolumn.name})]";
+    };
+
+    CheckColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null] constraint {object.name} check ({check.condition})";
+    };
+
+    UniqueConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "constraint {object.name} unique {column.name}";
+    };
+
+    PrimaryKeyConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "primary key ({constraint.columns})";
+    };
+
+    ForeignKeyConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "constraint {object.name} foreign key {column.name} references {fkobject.name}[({fkcolumn.name})]";
+    };
+
+    CheckConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "constraint {object.name} check ({check.condition})";
+    };
+
+//
+// Definice prikazu
+//
+
+    CommentTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.CommentTable;
+      Format = "comment on table [{object.owner}.]{object.name} is {comment}";
+    };
+
+    RenameTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.RenameTable;
+      Format = "rename [{object.owner}.]{object.name} to {object.newname}";
+
+    };
+
+    CommentViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.CommentView;
+      Format = "comment on view [{object.owner}.]{object.name} is {comment}";
+    };
+
+/*    RenameColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.RenameColumn;
+      Format = "alter table [{object.owner}.]{object.name} rename {column} to {column.newname}";
+      Binding = {
+        COLUMN = ColumnName;
+      };
+    };
+*/
+    RemoveColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.RemoveColumn;
+      Format = "alter table [{object.owner}.]{object.name} drop ({column})";
+      Binding = {
+        COLUMN = ColumnName;
+        UNIQUE = UniqueColumnName;
+        PRIMARY_KEY = PrimaryKey;
+        FOREIGN_KEY = ForeignKeyColumnName;
+      };
+    };
+
+    RenameViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.RenameView;
+      Format = "rename [{object.owner}.]{object.name} to {object.newname}";
+    };
+
+    CreateProcedureCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateProcedure;
+      Format = "create or replace procedure [{object.owner}.]{object.name} [({arguments})] as\n{body}";
+      Binding = {
+        ARGUMENT = ProcedureArgument;
+      };
+    };
+
+    DropProcedureCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop procedure [{object.owner}.]{object.name}";
+    };
+
+    CreateFunctionCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateFunction;
+      Format = "create function [{object.owner}.]{object.name} [({arguments})] returns {return.type} as\n{body}";
+      Binding = {
+        ARGUMENT = ProcedureArgument;
+      };
+    };
+
+    DropFunctionCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop function [{object.owner}.]{object.name}";
+    };
+
+    CreateTriggerCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateTrigger;
+      Format = "create trigger [{object.owner}.]{object.name}\n{trigger.timing} {trigger.events}\non {table.name}\nreferencing old as old_{object.name} new as new_{object.name}[\n{each.row}for each row][\nwhen {trigger.condition}\n{trigger.body}";
+      Binding = {
+        EVENT = TriggerEvent;
+      };
+    };
+
+    DropTriggerCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop trigger [{object.owner}.]{object.name}";
+    };
+
+    CreateIndexCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateIndex;
+      Format = "create {index.unique} index {index.name} on [{object.owner}.]{object.name}[\n(\n\t{columns}\n)]";
+      Binding = {
+        COLUMN = ColumnName;
+      };
+    };
+
+    DropIndexCommand = {
+      Class = org.netbeans.lib.ddl.impl.DropIndex;
+      Format = "drop index [{object.owner}.]{object.name}";
+    };
+
+    CreateViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateView;
+      Format = "create view [{object.owner}.]{object.name} as {query}";
+    };
+
+    DropViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop view [{object.owner}.]{object.name}";
+    };
+  };
+
+//  ********************************************************************************
+//
+//  Oracle8 (ODBC - Merant)
+//
+//  ********************************************************************************/
+
+  "Oracle 8" = {
+    DatabaseProductName = "Oracle 8";
+    DatabaseProductVersion = 8;
+    TriggerEventListDelimiter = " OR ";
+    TypeMap = {
+      java.sql.Types.BIGINT = BIGINT;
+      java.sql.Types.BLOB = BLOB;  //JDBC 2.0 A type representing an SQL Binary Large Object
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INT;
+      java.sql.Types.BIGINT = INTEGER;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.VARCHAR = VARCHAR2;
+    };
+    ProcedureArgumentMap = {
+      IN = IN;
+      OUT = OUT;
+      INOUT = INOUT;
+    };
+    TriggerEventMap = {
+      INSERT = INSERT;
+      UPDATE = UPDATE;
+      DELETE = DELETE;
+    };
+    SizelessTypes = (BIGINT,BLOB,DATE,INT,INTEGER,REAL,SMALLINT);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR2);
+
+//
+// Definice sloupcu
+//
+
+    Column = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})]";
+    };
+
+    UniqueColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})] constraint {object.name} unique";
+    };
+
+    PrimaryKeyColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})] constraint {object.name} primary key";
+    };
+
+    ForeignKeyColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null][ check ({check.condition})] constraint {object.name} references {fkobject.name}[({fkcolumn.name})]";
+    };
+
+    CheckColumn = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ default {default.value}][ {column.notnull}not null] constraint {object.name} check ({check.condition})";
+    };
+
+    UniqueConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "constraint {object.name} unique {column.name}";
+    };
+
+    PrimaryKeyConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "primary key ({constraint.columns})";
+    };
+
+    ForeignKeyConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "constraint {object.name} foreign key {column.name} references {fkobject.name}[({fkcolumn.name})]";
+    };
+
+    CheckConstraint = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "constraint {object.name} check ({check.condition})";
+    };
+
+//
+// Definice prikazu
+//
+
+    CommentTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.CommentTable;
+      Format = "comment on table [{object.owner}.]{object.name} is {comment}";
+    };
+
+    RenameTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.RenameTable;
+      Format = "rename [{object.owner}.]{object.name} to {object.newname}";
+
+    };
+
+    CommentViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.CommentView;
+      Format = "comment on view [{object.owner}.]{object.name} is {comment}";
+    };
+
+/*    RenameColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.RenameColumn;
+      Format = "alter table [{object.owner}.]{object.name} rename {column} to {column.newname}";
+      Binding = {
+        COLUMN = ColumnName;
+      };
+    };
+*/
+    RemoveColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.RemoveColumn;
+      Format = "alter table [{object.owner}.]{object.name} drop ({column})";
+      Binding = {
+        COLUMN = ColumnName;
+        UNIQUE = UniqueColumnName;
+        PRIMARY_KEY = PrimaryKey;
+        FOREIGN_KEY = ForeignKeyColumnName;
+      };
+    };
+
+    RenameViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.RenameView;
+      Format = "rename [{object.owner}.]{object.name} to {object.newname}";
+    };
+
+    CreateProcedureCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateProcedure;
+      Format = "create procedure [{object.owner}.]{object.name} [({arguments})] as\n{body}";
+      Binding = {
+        ARGUMENT = ProcedureArgument;
+      };
+    };
+
+    DropProcedureCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop procedure [{object.owner}.]{object.name}";
+    };
+
+    CreateFunctionCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateFunction;
+      Format = "create function [{object.owner}.]{object.name} [({arguments})] returns {return.type} as\n{body}";
+      Binding = {
+        ARGUMENT = ProcedureArgument;
+      };
+    };
+
+    DropFunctionCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop function [{object.owner}.]{object.name}";
+    };
+
+    CreateTriggerCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateTrigger;
+      Format = "create trigger [{object.owner}.]{object.name}\n{trigger.timing} {trigger.events}\non {table.name}\nreferencing old as old_{object.name} new as new_{object.name}[\n{each.row}for each row][\nwhen {trigger.condition}\n{trigger.body}";
+      Binding = {
+        EVENT = TriggerEvent;
+      };
+    };
+
+    DropTriggerCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop trigger [{object.owner}.]{object.name}";
+    };
+
+    CreateIndexCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateIndex;
+      Format = "create {index.unique} index {index.name} on [{object.owner}.]{object.name}[\n(\n\t{columns}\n)]";
+      Binding = {
+        COLUMN = ColumnName;
+      };
+    };
+
+    DropIndexCommand = {
+      Class = org.netbeans.lib.ddl.impl.DropIndex;
+      Format = "drop index [{object.owner}.]{object.name}";
+    };
+
+    CreateViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateView;
+      Format = "create view [{object.owner}.]{object.name} as {query}";
+    };
+
+    DropViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop view [{object.owner}.]{object.name}";
+    };
+  };
+
+//  ********************************************************************************
+//
+//  PostgreSQL
+//
+//  ********************************************************************************/
+
+  "PostgreSQL" = {
+    DatabaseProductName = "PostgreSQL";
+    TypeMap = {
+      java.sql.Types.BIT = BOOL;
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = FLOAT8;
+      java.sql.Types.FLOAT = FLOAT4;
+      java.sql.Types.INTEGER = INT4;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.SMALLINT = INT2;
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BOOL,DATE,FLOAT8,FLOAT4,INT4,INT2,TIME,TIMESTAMP);
+    DecimalTypes = (DECIMAL,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+
+//////////////////////
+// Commands definition
+//////////////////////
+
+    CreateTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateTable;
+      Format = "create table [{object.owner}.]{object.name}\n(\n\t{columns}\n)";
+      Binding = {
+        COLUMN = Column;
+        UNIQUE = UniqueColumn;
+        PRIMARY_KEY = PrimaryKeyColumn;
+        CHECK = CheckColumn;
+        UNIQUE_CONSTRAINT = UniqueConstraint;
+        PRIMARY_KEY_CONSTRAINT = PrimaryKeyConstraint;
+        CHECK_CONSTRAINT = CheckConstraint;
+      };
+    };
+
+    CreateViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateView;
+      Format = "create view {object.name} as {query}";
+    };
+
+    DropViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop view {object.name}";
+    };
+
+    CreateIndexCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateIndex;
+      Format = "create {index.unique} index {index.name} on {object.name}\n(\n\t{columns}\n)";
+      Binding = {
+        COLUMN = ColumnName;
+      };
+    };
+
+    DropIndexCommand = {
+      Class = org.netbeans.lib.ddl.impl.DropIndex;
+      Format = "drop index {object.name}";
+    };
+
+  };
+
+//  ********************************************************************************
+//
+//  SYBASE SQL SERVER 11 (JDBC type 4)
+//
+//  ********************************************************************************/
+
+  "Sybase SQL Server" = {
+    DatabaseProductName = "Sybase SQL Server";
+    DatabaseProductVersion = 11.5.1;
+    TriggerEventListDelimiter = ", ";
+    TypeMap = {
+      java.sql.Types.BIT = BIT;
+      java.sql.Types.BLOB = IMAGE;  //JDBC 2.0 A type representing an SQL Binary Large Object
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.CLOB = TEXT;  //JDBC 2.0 A type representing an SQL Character Large Object
+      java.sql.Types.DATE = DATETIME;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = "DOUBLE PRECISION";
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INT;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TINYINT = TINYINT;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    ProcedureArgumentMap = {
+      IN = IN;
+      OUT = OUT;
+      INOUT = INOUT;
+    };
+    TriggerEventMap = {
+      INSERT = INSERT;
+      UPDATE = UPDATE;
+      DELETE = DELETE;
+    };
+    SizelessTypes = (BIT,IMAGE,TEXT,DATETIME,"DOUBLE PRECISION",INT,REAL,SMALLINT,TINYINT);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+
+//
+// Definice sloupcu
+//
+    Column = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ {column.notnull}not] null[ default {default.value}][ check ({check.condition})]";
+    };
+
+//    ColumnTypeless = {
+//      Class = org.netbeans.lib.ddl.impl.TableColumn;
+//      Format = "{column.name}[ {column.notnull}not] null[ default {default.value}][ check ({check.condition})]";
+//    };
+
+//    UniqueColumnTypeless = {
+//      Class = org.netbeans.lib.ddl.impl.TableColumn;
+//      Format = "{column.name}[ {column.notnull}not] null[ default {default.value}][ check ({check.condition})] unique";
+//    };
+
+//    CheckColumnTypeless = {
+//      Class = org.netbeans.lib.ddl.impl.TableColumn;
+//      Format = "{column.name}[ {column.notnull}not] null[ default {default.value}] check ({check.condition})";
+//    };
+
+//
+// Definice prikazu
+//
+
+    AddColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.AddColumn;
+      Format = "alter table [{object.owner}.]{object.name} add {columns}";
+      Binding = {
+        COLUMN = Column;
+      };
+    };
+
+    CommentTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.CommentTable;
+      Format = "comment on table [{object.owner}.]{object.name} is {comment}";
+    };
+
+//    RenameColumnCommand = {
+//      Class = org.netbeans.lib.ddl.impl.RenameColumn;
+//      Format = "alter table [{object.owner}.]{object.name} rename {column} to {column.newname}";
+//      Binding = {
+//        COLUMN = ColumnName;
+//      };
+//    };
+
+//    ModifyColumnCommand = {
+//      Class = org.netbeans.lib.ddl.impl.ModifyColumn;
+//      Format = "alter table [{object.owner}.]{object.name} modify {column}";
+//      Binding = {
+//        COLUMN = ColumnTypeless;
+//        UNIQUE = UniqueColumnTypeless;
+//        CHECK = CheckColumnTypeless;
+//      };
+//    };
+
+    CommentViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.CommentView;
+      Format = "comment on view [{object.owner}.]{object.name} is {comment}";
+    };
+
+//    RenameTableCommand = {
+//      Class = org.netbeans.lib.ddl.impl.RenameTable;
+//      Format = "alter table [{object.owner}.]{object.name} rename {object.newname}";
+//    };
+
+    CreateProcedureCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateProcedure;
+      Format = "create procedure [{object.owner}.]{object.name} [({arguments})] as\n{body}";
+      Binding = {
+        ARGUMENT = ProcedureArgument;
+      };
+    };
+
+    DropProcedureCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop procedure [{object.owner}.]{object.name}";
+    };
+
+    CreateFunctionCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateFunction;
+      Format = "create function [{object.owner}.]{object.name} [({arguments})] returns {return.type} as\n{body}";
+      Binding = {
+        ARGUMENT = ProcedureArgument;
+      };
+    };
+
+    DropFunctionCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop function [{object.owner}.]{object.name}";
+    };
+
+    CreateTriggerCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateTrigger;
+      Format = "create trigger [{object.owner}.]{object.name}\n{trigger.timing} {trigger.events}\non {table.name}\nreferencing old as old_{object.name} new as new_{object.name}[\n{each.row}for each row][\nwhen {trigger.condition}\n{trigger.body}";
+      Binding = {
+        EVENT = TriggerEvent;
+      };
+    };
+
+    DropTriggerCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop trigger [{object.owner}.]{object.name}";
+    };
+  };
+
+//  ********************************************************************************
+//
+//  SYBASE Adaptive Server Enterprise 11 (JDBC type 4)
+//
+//  ********************************************************************************/
+
+  "Adaptive Server Enterprise" = {
+    DatabaseProductName = "Adaptive Server Enterprise";
+    DatabaseProductVersion = 11.5.1;
+    TriggerEventListDelimiter = ", ";
+    TypeMap = {
+      java.sql.Types.BIT = BIT;
+      java.sql.Types.BLOB = IMAGE;  //JDBC 2.0 A type representing an SQL Binary Large Object
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.CLOB = TEXT;  //JDBC 2.0 A type representing an SQL Character Large Object
+      java.sql.Types.DATE = DATETIME;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = "DOUBLE PRECISION";
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INT;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TINYINT = TINYINT;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    ProcedureArgumentMap = {
+      IN = IN;
+      OUT = OUT;
+      INOUT = INOUT;
+    };
+    TriggerEventMap = {
+      INSERT = INSERT;
+      UPDATE = UPDATE;
+      DELETE = DELETE;
+    };
+    SizelessTypes = (BIT,IMAGE,TEXT,DATETIME,"DOUBLE PRECISION",INT,REAL,SMALLINT,TINYINT);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+
+//
+// Definice sloupcu
+//
+    Column = {
+      Class = org.netbeans.lib.ddl.impl.TableColumn;
+      Format = "{column.name} {column.type}[({column.size}[,{column.decsize}])][ {column.notnull}not] null[ default {default.value}][ check ({check.condition})]";
+    };
+
+//    ColumnTypeless = {
+//      Class = org.netbeans.lib.ddl.impl.TableColumn;
+//      Format = "{column.name}[ {column.notnull}not] null[ default {default.value}][ check ({check.condition})]";
+//    };
+
+//    UniqueColumnTypeless = {
+//      Class = org.netbeans.lib.ddl.impl.TableColumn;
+//      Format = "{column.name}[ {column.notnull}not] null[ default {default.value}][ check ({check.condition})] unique";
+//    };
+
+//    CheckColumnTypeless = {
+//      Class = org.netbeans.lib.ddl.impl.TableColumn;
+//      Format = "{column.name}[ {column.notnull}not] null[ default {default.value}] check ({check.condition})";
+//    };
+
+//
+// Definice prikazu
+//
+
+    AddColumnCommand = {
+      Class = org.netbeans.lib.ddl.impl.AddColumn;
+      Format = "alter table [{object.owner}.]{object.name} add {columns}";
+      Binding = {
+        COLUMN = Column;
+      };
+    };
+
+    CommentTableCommand = {
+      Class = org.netbeans.lib.ddl.impl.CommentTable;
+      Format = "comment on table [{object.owner}.]{object.name} is {comment}";
+    };
+
+//    RenameColumnCommand = {
+//      Class = org.netbeans.lib.ddl.impl.RenameColumn;
+//      Format = "alter table [{object.owner}.]{object.name} rename {column} to {column.newname}";
+//      Binding = {
+//        COLUMN = ColumnName;
+//      };
+//    };
+
+//    ModifyColumnCommand = {
+//      Class = org.netbeans.lib.ddl.impl.ModifyColumn;
+//      Format = "alter table [{object.owner}.]{object.name} modify {column}";
+//      Binding = {
+//        COLUMN = ColumnTypeless;
+//        UNIQUE = UniqueColumnTypeless;
+//        CHECK = CheckColumnTypeless;
+//      };
+//    };
+
+    CommentViewCommand = {
+      Class = org.netbeans.lib.ddl.impl.CommentView;
+      Format = "comment on view [{object.owner}.]{object.name} is {comment}";
+    };
+
+//    RenameTableCommand = {
+//      Class = org.netbeans.lib.ddl.impl.RenameTable;
+//      Format = "alter table [{object.owner}.]{object.name} rename {object.newname}";
+//    };
+
+    CreateProcedureCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateProcedure;
+      Format = "create procedure [{object.owner}.]{object.name} [({arguments})] as\n{body}";
+      Binding = {
+        ARGUMENT = ProcedureArgument;
+      };
+    };
+
+    DropProcedureCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop procedure [{object.owner}.]{object.name}";
+    };
+
+    CreateFunctionCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateFunction;
+      Format = "create function [{object.owner}.]{object.name} [({arguments})] returns {return.type} as\n{body}";
+      Binding = {
+        ARGUMENT = ProcedureArgument;
+      };
+    };
+
+    DropFunctionCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop function [{object.owner}.]{object.name}";
+    };
+
+    CreateTriggerCommand = {
+      Class = org.netbeans.lib.ddl.impl.CreateTrigger;
+      Format = "create trigger [{object.owner}.]{object.name}\n{trigger.timing} {trigger.events}\non {table.name}\nreferencing old as old_{object.name} new as new_{object.name}[\n{each.row}for each row][\nwhen {trigger.condition}\n{trigger.body}";
+      Binding = {
+        EVENT = TriggerEvent;
+      };
+    };
+
+    DropTriggerCommand = {
+      Class = org.netbeans.lib.ddl.impl.AbstractCommand;
+      Format = "drop trigger [{object.owner}.]{object.name}";
+    };
+  };
+
+//  ********************************************************************************
+//
+//  Firebird
+//
+//  ********************************************************************************/
+
+  "Firebird something == notyet impelemented" = {
+    DatabaseProductName = "Firebird something == notyet impelemented";
+    TypeMap = {
+      java.sql.Types.BLOB = BLOB;  //JDBC 2.0 A type representing an SQL Binary Large Object
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = "DOUBLE PRECISION";
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INTEGER;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BLOB,DATE,"DOUBLE PRECISION",INTEGER,SMALLINT);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+  };
+
+//  ********************************************************************************
+//
+//  FirstSQL
+//
+//  ********************************************************************************/
+
+  "FirstSQL/J" = {
+    DatabaseProductName = "FirstSQL/J";
+    TypeMap = {
+      java.sql.Types.BIGINT = BIGINT;
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = DOUBLE;
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INTEGER;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+      java.sql.Types.TINYINT = TINYINT;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BIGINT,DATE,DOUBLE,INTEGER,REAL,SMALLINT,TINYINT);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+  };
+
+//  ********************************************************************************
+//
+//  Mckoi SQL Database
+//
+//  ********************************************************************************/
+
+  "Mckoi SQL Database ( 1.0.2 )" = {
+    DatabaseProductName = "Mckoi SQL Database ( 1.0.2 )";
+    TypeMap = {
+      java.sql.Types.BIGINT = BIGINT;
+      java.sql.Types.BINARY = BINARY;
+      java.sql.Types.BIT = BIT;
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = DOUBLE;
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INTEGER;
+      java.sql.Types.LONGVARBINARY = LONGVARBINARY;
+      java.sql.Types.LONGVARCHAR = LONGVARCHAR;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+      java.sql.Types.TINYINT = TINYINT;
+      java.sql.Types.VARBINARY = VARBINARY;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BIGINT,BINARY,BIT,DATE,DOUBLE,INTEGER,LONGVARBINARY,REAL,SMALLINT,TIME,TIMESTAMP,TINYINT,VARBINARY);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,LONGVARCHAR,VARCHAR);
+  };
+
+//  ********************************************************************************
+//
+//  HSQLDB
+//
+//  ********************************************************************************/
+
+  "HSQL Database Engine" = {
+    DatabaseProductName = "HSQL Database Engine";
+    TypeMap = {
+      java.sql.Types.BIGINT = BIGINT;
+      java.sql.Types.BINARY = BINARY;
+      java.sql.Types.BIT = BIT;
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = DOUBLE;
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INTEGER;
+      java.sql.Types.LONGVARBINARY = LONGVARBINARY;
+      java.sql.Types.LONGVARCHAR = LONGVARCHAR;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.OTHER = OTHER; //OTHER indicates that the SQL type is database-specific and gets mapped to a Java object that can be accessed via the methods getObject and setObject
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+      java.sql.Types.TINYINT = TINYINT;
+      java.sql.Types.VARBINARY = VARBINARY;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BIGINT,BINARY,BIT,DATE,DOUBLE,INTEGER,LONGVARBINARY,OTHER,REAL,SMALLINT,TIME,TIMESTAMP,TINYINT,VARBINARY);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,LONGVARCHAR,VARCHAR);
+  };
+
+//  ********************************************************************************
+//
+//  QED
+//
+//  ********************************************************************************/
+
+  "QED" = {
+    DatabaseProductName = "QED";
+    TypeMap = {
+      java.sql.Types.BIGINT = BIGINT;
+      java.sql.Types.BINARY = BINARY;
+      java.sql.Types.BIT = BIT;
+      java.sql.Types.BLOB = BLOB;  //JDBC 2.0 A type representing an SQL Binary Large Object
+      java.sql.Types.CHAR = CHAR;
+      java.sql.Types.CLOB = CLOB;  //JDBC 2.0 A type representing an SQL Character Large Object
+      java.sql.Types.DATE = DATE;
+      java.sql.Types.DECIMAL = DECIMAL;
+      java.sql.Types.DOUBLE = "DOUBLE PRECISION";
+      java.sql.Types.FLOAT = FLOAT;
+      java.sql.Types.INTEGER = INTEGER;
+      java.sql.Types.NUMERIC = NUMERIC;
+      java.sql.Types.REAL = REAL;
+      java.sql.Types.SMALLINT = SMALLINT;
+      java.sql.Types.TIME = TIME;
+      java.sql.Types.TIMESTAMP = TIMESTAMP;
+      java.sql.Types.VARBINARY = VARBINARY;
+      java.sql.Types.VARCHAR = VARCHAR;
+    };
+    SizelessTypes = (BIGINT,BINARY,BIT,BLOB,CLOB,DATE,"DOUBLE PRECISION",INTEGER,REAL,SMALLINT,TIME,TIMESTAMP,VARBINARY);
+    DecimalTypes = (DECIMAL,FLOAT,NUMERIC);
+    CharacterTypes = (CHAR,VARCHAR);
+  };
+
+}

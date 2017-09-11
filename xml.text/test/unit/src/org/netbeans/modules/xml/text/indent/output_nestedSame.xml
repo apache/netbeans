@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <elem1>
+        <elem1></elem1>
+        <elem2>
+            <elem3>
+                <elem2></elem2>
+                <elem3></elem3>
+            </elem3>
+        </elem2>
+    </elem1>
+    <m1>
+        <m1></m1>
+    </m1>
+</root>

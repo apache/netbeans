@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!DOCTYPE codetemplates PUBLIC  "-//NetBeans//DTD Editor Code Templates settings 1.0//EN"
+                                "http://www.netbeans.org/dtds/EditorCodeTemplates-1_0.dtd">
+
+<codetemplates>
+    <!--NetBeans Module Development-specific-->
+    <codetemplate abbreviation="lkp"><code><![CDATA[${Type} ${obj newVarName default="obj"} = ${lkp instanceof="org.openide.util.Lookup" default="Lookup.getDefault()"}.lookup(${Type}.class);
+       ${cursor}
+    ]]></code></codetemplate>
+    <codetemplate abbreviation="lko"><code><![CDATA[${Type} ${obj newVarName default="obj"} = ${prov instanceof="org.openide.util.Lookup.Provider"}.getLookup().lookup(${Type}.class);
+       ${cursor}
+    ]]></code></codetemplate>
+    <codetemplate abbreviation="lka"><code><![CDATA[${coltype type="java.util.Collection" default="Collection" editable="false"} <? extends ${Type}> ${all newVarName default="all"} = ${lkp instanceof="org.openide.util.Lookup" default="Lookup.getDefault()"}.lookupAll(${Type}.class);
+       ${cursor}
+    ]]></code></codetemplate>
+    <codetemplate abbreviation="lkr"><code><![CDATA[${coltype type="org.openide.util.Lookup.Result" default="Result" editable="false"} <? extends ${Type}> ${res newVarName default="all"} = ${lkp instanceof="org.openide.util.Lookup" default="Lookup.getDefault()"}.lookupResult(${Type}.class);
+       ${cursor}
+    ]]></code></codetemplate>
+    <codetemplate abbreviation="Lkp"><code><![CDATA[${Type} ${obj newVarName default="obj"} = ${lkptype editable="false" default="Lookup" type="org.openide.util.Lookup"}.getDefault().lookup(${Type}.class);
+       ${cursor}
+    ]]></code></codetemplate>
+    <codetemplate abbreviation="Lka"><code><![CDATA[${coltype type="java.util.Collection" default="Collection" editable="false"} <? extends ${Type}> ${obj newVarName default="obj"} = ${lkptype editable="false" default="Lookup" type="org.openide.util.Lookup"}.getDefault().lookupAll(${Type}.class);
+       ${cursor}
+    ]]></code></codetemplate>
+    <codetemplate abbreviation="Lkr"><code><![CDATA[${coltype type="org.openide.util.Lookup.Result" default="Lookup.Result" editable="false"} <? extends ${Type}> ${obj newVarName default="res"} = ${lkptype editable="false" default="Lookup" type="org.openide.util.Lookup"}.getDefault().lookupResult(${Type}.class);
+       ${cursor}
+    ]]></code></codetemplate>
+    <codetemplate abbreviation="stat"><code><![CDATA[${coltype type="org.openide.awt.StatusDisplayer" default="StatusDisplayer" editable="false"}.getDefault().setStatusText(${bundletype type="org.openide.util.NbBundle" default="NbBundle" editable="false"}.getMessage(getClass(), "${KEY}"));
+${cursor}]]></code></codetemplate>
+    <codetemplate abbreviation="pn"><code><![CDATA[${coltype type="org.openide.util.Parameters" default="Parameters" editable="false"}.notNull("${param instanceof="java.lang.Object"}", ${param});
+${cursor}]]></code></codetemplate>
+
+    <codetemplate abbreviation="rp"><code>${rp type="org.openide.util.RequestProcessor" default="RequestProcessor" editable="false"}.getDefault().post(${toRun instanceof="java.lang.Runnable" default="new Runnable&#x0028;&#x0029; &#x007B;
+        public void run&#x0028;&#x0029; &#x007B;
+        &#x007D;
+    &#x007D;"});</code></codetemplate>
+
+    <codetemplate abbreviation="2f"><code><![CDATA[${fileType type="java.io.File" default="File" editable="false"} ${file newVarName default="f"} = ${FileUtilType type="org.openide.filesystems.FileUtil" editable="false")}.toFile(${fo instanceof="org.openide.filesystems.FileObject" default="fo"});
+${cursor}]]></code></codetemplate>
+    <codetemplate abbreviation="2fo"><code><![CDATA[${fileType type="org.openide.filesystems.FileObject" default="FileObject" editable="false"} ${file newVarName default="f"} = ${FileUtilType type="org.openide.filesystems.FileUtil" editable="false")}.toFileObject(${FileUtilType}.normalizeFile(${f instanceof="java.io.File" default="f"}));
+${cursor}]]></code></codetemplate>
+    <codetemplate abbreviation="2do"><code><![CDATA[try {
+    ${dobType type="org.openide.loaders.DataObject" editable="false" default="DataObject"} ${dob newVarName default="dob"} = ${dobType}.find(${fo instanceof="org.openide.filesystems.FileObject" default="fo"});
+    ${cursor}
+} catch (${etype type="org.openide.loaders.DataObjectNotFoundException" default="DataObjectNotFoundException" editable="false"} ${exName newVarName default="ex" editable="false"}) {
+    ${exctype type="org.openide.util.Exceptions" editable="false" default=""}.printStackTrace(${exName});
+}]]></code></codetemplate>
+
+    <codetemplate abbreviation="log"><code><![CDATA[${loggerType type="java.util.logging.Logger" default="Logger" editable="false"}.getLogger(${classVar editable="false" currClassName default="getClass()"}.class.getName()).log(${levelType type="java.util.logging.Level" editable="false" default="Level"}.${logLevel default="INFO" completionInvoke}, "${message}");]]></code></codetemplate>
+    <codetemplate abbreviation="loge"><code><![CDATA[${loggerType type="java.util.logging.Logger" default="Logger" editable="false"}.getLogger(${classVar editable="false" currClassName default="getClass()"}.class.getName()).log(${levelType type="java.util.logging.Level" editable="false" default="Level"}.${logLevel default="INFO" completionInvoke}, "${message}", ${exc instanceof="java.lang.Throwable" default="ex"});]]></code></codetemplate>
+    <codetemplate abbreviation="logp"><code><![CDATA[${loggerType type="java.util.logging.Logger" default="Logger" editable="false"}.getLogger(${classVar editable="false" currClassName default="getClass()"}.class.getName()).log(${levelType type="java.util.logging.Level" editable="false" default="Level"}.${logLevel default="INFO" completionInvoke}, "${message} {0}", ${param instanceof="java.lang.Object" default="arg"});]]></code></codetemplate>
+    <codetemplate abbreviation="nb"><code><![CDATA[${coltype type="org.openide.util.NbBundle" default="NbBundle" editable="false"}.getMessage(${classVar editable="false" currClassName default="getClass()"}.class, "${KEY}")]]></code></codetemplate>
+    <codetemplate abbreviation="nbb"><code><![CDATA[${coltype type="org.openide.util.NbBundle" default="NbBundle" editable="false"}.getMessage(${classVar editable="false" currClassName default="getClass()"}.class, "${KEY}", ${arg instanceof="java.lang.Object" default="arg1"})]]></code></codetemplate>
+    </codetemplates>

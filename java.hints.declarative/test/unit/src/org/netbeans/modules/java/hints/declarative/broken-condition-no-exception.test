@@ -1,0 +1,8 @@
+%%TestCase simple
+package test;
+public class Test {
+    private void test() {
+        int a = 0;
+        boolean b = a != a;
+    }
+}

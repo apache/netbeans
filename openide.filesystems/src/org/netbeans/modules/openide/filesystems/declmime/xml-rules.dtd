@@ -1,0 +1,122 @@
+<?xml encoding="UTF-8" ?>
+
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!---
+  MIME component checking XML resource header, permitting matches against
+  XML constructs: processing instructions, document type declarations, and root element (start tag).
+  <p>
+  <samp>PUBLIC "-//NetBeans//DTD MIME Resolver XML Rules 1.0//EN"</samp>
+  </p>
+  It should work well for:
+  <dl>
+  <dt>Well-formed document type detection</dt>
+  <dd>Using: PIs, root element name and root element attributes.</dd>
+  <dt>DTD-constrained document detection</dt>
+  <dd>Using: PIs and DOCTYPE public IDs.</dd>
+  <dt>NS-constrained documents</dt>
+  <dd>Using: PIs and root element namespaces.</dd>
+  </dl>
+-->
+<!ELEMENT xml-rule (pi*, doctype?, element?)>
+
+<!---
+  Processing instructions can be tested on target and pseudo-attributes.
+  <p>
+  It should be used for in-band tagging that is specified by some
+  accepted specification. For NetBeans-specific tagging of third party standards it is
+  recommended to use out-of-band tagging such as <code>FileObject</code> attributes.
+  </p>
+-->
+<!ELEMENT pi (attr*) >
+<!ATTLIST pi target CDATA #REQUIRED>
+
+<!---
+  Match one of the DOCTYPE's public IDs.
+  Use of <code>public-id</code> subelements is mutually exclusive with the attribute.
+-->
+<!ELEMENT doctype (public-id*) >
+<!ATTLIST doctype public-id CDATA #IMPLIED>
+
+<!---
+  A public ID is checked for an exact match.
+-->
+<!ELEMENT public-id EMPTY>
+<!ATTLIST public-id id CDATA #REQUIRED>
+
+<!---
+  Matches a root element by specified name, attributes or namespace.
+  <p>
+  The namespace <code>ns</code> attribute or the presence of any <code>ns</code> subelements 
+  implies that the <code>name</code> attribute represents a local element name,
+  otherwise the <code>name</code> attribute represents a full element name ("QName").
+  One of the namespaces must match.
+  </p>
+-->
+<!ELEMENT element (ns*, attr*)>
+<!ATTLIST element ns CDATA #IMPLIED>
+<!ATTLIST element name CDATA #IMPLIED>
+
+<!---
+  Test namespace equality (exact match).
+-->
+<!ELEMENT ns EMPTY>
+<!ATTLIST ns ns CDATA #REQUIRED>
+
+
+<!---
+  Element attribute template, also used for pseudo-attributes in processing instructions.
+  <p>
+  The <code>name</code> attribute contains the full attribute name (QName).
+  This is inteded to be used for documents that cannot be indentified by public ID nor
+  root element namespace.
+  </p>
+  If <code>text</code> is specified then the attribute's normalized text must
+  exactly match the specified text, otherwise the attribute just needs to be present.
+-->
+<!ELEMENT attr EMPTY>
+<!ATTLIST attr name CDATA #REQUIRED>
+<!ATTLIST attr text CDATA #IMPLIED>

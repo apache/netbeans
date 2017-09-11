@@ -1,0 +1,14 @@
+select "customer"."cus|
+
+--
+<unknown>
+  customers*
+    customer
+      customer_id
+      customer_rating
+      address_line
+  accounting
+    invoice
+      invoice_id
+    purchase_order
+      order_id

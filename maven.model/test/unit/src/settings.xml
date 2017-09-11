@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+    <servers>
+        <server>
+            <id>mevenide-site-upload</id>
+            <username>mkleint</username>
+            <password>foobar</password>
+        </server>
+    <!-- To publish a snapshot of some part of Maven -->
+        <server>
+            <id>apache.snapshots</id>
+            <username>mkleint</username>
+            <filePermissions>664</filePermissions>
+            <directoryPermissions>775</directoryPermissions>
+        </server>
+    <!-- To publish a website of some part of Maven -->
+        <server>
+            <id>apache.website</id>
+            <username>mkleint</username>
+            <filePermissions>664</filePermissions>
+            <directoryPermissions>775</directoryPermissions>
+        </server>
+    <!-- To publish a release of some part of Maven - ONLY FOR PMC -->
+        <server>
+            <id>apache.releases</id>
+            <username>mkleint</username>
+            <filePermissions>664</filePermissions>
+            <directoryPermissions>775</directoryPermissions>
+        </server>
+    </servers>
+    <profiles>
+        <profile>
+            <id>rafale</id>
+            <repositories>
+                <repository>
+                    <id>rafale</id>
+                    <url>http://people.apache.org/~rafale/archetype-stage-repository/</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>rafale</id>
+                    <url>http://people.apache.org/~rafale/archetype-stage-repository/</url>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+        
+    
+        <profile>
+            <id>mkleint</id>
+            <properties>
+                <keystorepass>foobar</keystorepass>
+                <keystore>/home/mkleint/.keystore</keystore>
+            </properties>
+        </profile>
+        <profile>
+            <id>sonatype</id>
+            <repositories>
+                <repository>
+                    <id>Codehaus Snapshots</id>
+                    <url>http://snapshots.repository.codehaus.org</url>
+                    <snapshots>
+                    </snapshots>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                </repository>
+                <repository>
+                    <id>Maven Snapshots</id>
+                    <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+                    <snapshots>
+                    </snapshots>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                </repository>
+                <repository>
+                    <id>restlet-org-releases</id>
+                    <url>http://maven.restlet.org</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                    </releases>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>Codehaus Snapshots</id>
+                    <url>http://snapshots.repository.codehaus.org</url>
+                    <snapshots>
+                    </snapshots>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>Maven Snapshots</id>
+                    <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+                    <snapshots>
+                    </snapshots>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
+    <pluginGroups>
+        <pluginGroup>org.codehaus.mojo</pluginGroup>
+        <pluginGroup>org.mortbay.jetty</pluginGroup>
+        <pluginGroup>com.octo.mtg</pluginGroup>
+    </pluginGroups>
+    <activeProfiles>
+        <activeProfile>mkleint</activeProfile>
+        <!--activeProfile>rafale</activeProfile-->
+    </activeProfiles>
+</settings>

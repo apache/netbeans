@@ -1,0 +1,1370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- *** GENERATED FROM project.xml - DO NOT EDIT *** -->
+<project name="MobileApplicationSwitchConfiguration-impl" default="jar" basedir="..">
+    <!--load-properties-->
+    <target name="pre-load-properties">
+        <property file="nbproject/private/private.properties"/>
+        <property name="user.properties.file" location="${netbeans.user}/build.properties"/>
+        <available property="user.properties.file.exists" file="${user.properties.file}"/>
+    </target>
+    <target name="exists.config.active" unless="config.active">
+        <echo level="warning" message="Active configuration (config.active property) is not set - using default."/>
+        <property value="" name="config.active"/>
+    </target>
+    <target name="exists.netbeans.user" unless="netbeans.user">
+        <echo level="warning" message="NetBeans IDE user directory (netbeans.user property) is not set. By specifying this property many properties required by the project will be automatically evaluated (e.g.: ant-ext library home, ...). You could also open this project in the NetBeans IDE - in this case this property would be set automatically."/>
+    </target>
+    <target name="exists.user.properties.file" unless="user.properties.file.exists">
+        <echo level="warning" message="User properties file (user.properties.file) property is not set. By specifying this property many properties required by the project will be automatically evaluated (e.g.: libraries, platforms, ...)."/>
+    </target>
+    <target name="load-properties" depends="pre-load-properties,exists.config.active,exists.netbeans.user,exists.user.properties.file">
+        <loadproperties srcfile="nbproject/project.properties">
+            <filterchain>
+                <containsregex pattern="^configs\.${config.active}\.(.*)" replace="\1"/>
+                <concatfilter prepend="nbproject/project.properties"/>
+                <containsregex pattern="^platform.active=|^deployment.method=|^deployment.instance="/>
+            </filterchain>
+        </loadproperties>
+        <property name="deployment.instance" value="default"/>
+        <loadproperties srcfile="${user.properties.file}">
+            <filterchain>
+                <replaceregex pattern="^platforms\.${platform.active}\." replace="platform."/>
+                <replaceregex pattern="^deployment\.${deployment.method}\.scriptfile=" replace="deployment.scriptfile="/>
+                <replaceregex pattern="^deployments\.${deployment.method}\.${deployment.instance}\.([^=]+)=" replace="\1="/>
+            </filterchain>
+        </loadproperties>
+        <loadproperties srcfile="nbproject/project.properties">
+            <filterchain>
+                <containsregex pattern="^configs\.${config.active}\.(.*)" replace="\1"/>
+                <concatfilter prepend="nbproject/project.properties"/>
+            </filterchain>
+        </loadproperties>
+    </target>
+    <!--basic-init-->
+    <target name="exists.platform.active" unless="platform.active">
+        <echo level="warning" message="Active platform (platform.active property) in not set. If you set this and user.properties.file property, many properties required by the project will be automatically evaluated (e.g.: platform home, platform classpath, ...)."/>
+    </target>
+    <target name="exists.platform.configuration" unless="platform.configuration">
+        <echo level="warning" message="Platform configuration (platform.configuration) is not set. Using default (CLDC-1.0) configuration."/>
+        <property name="platform.configuration" value="CLDC-1.0"/>
+    </target>
+    <target name="exists.platform.profile" unless="platform.profile">
+        <echo level="warning" message="Platform profile (platform.profile) is not set. Using default (MIDP-1.0) profile."/>
+        <property name="platform.profile" value="MIDP-1.0"/>
+    </target>
+    <target name="basic-init" depends="exists.platform.active,exists.platform.configuration,exists.platform.profile">
+        <fail unless="libs.j2me_ant_ext.classpath">Classpath to J2ME Ant extension library (libs.j2me_ant_ext.classpath property) is not set. For example: location of mobility/modules/org-netbeans-mobility-antext.jar file in the IDE installation directory.</fail>
+        <fail unless="platform.home">Platform home (platform.home property) is not set. Value of this property should be ${platform.active.description} emulator home directory location.</fail>
+        <fail unless="platform.bootclasspath">Platform boot classpath (platform.bootclasspath property) is not set. Value of this property should be ${platform.active.description} emulator boot classpath containing all J2ME classes provided by emulator.</fail>
+        <fail unless="src.dir">Must set src.dir</fail>
+        <fail unless="build.dir">Must set build.dir</fail>
+        <fail unless="dist.dir">Must set dist.dir</fail>
+        <fail unless="dist.jar">Must set dist.jar</fail>
+        <property name="javac.source" value="1.3"/>
+        <property name="javac.target" value="1.1"/>
+        <property name="javac.encoding" value="${file.encoding}"/>
+        <property name="deployment.number" value="0.0.1"/>
+        <property name="deployment.counter" value="000002"/>
+        <condition property="no.deps">
+            <istrue value="${no.dependencies}"/>
+        </condition>
+        <condition property="no.preprocess">
+            <isfalse value="${use.preprocessor}"/>
+        </condition>
+        <condition property="no.javadoc.preview">
+            <isfalse value="${javadoc.preview}"/>
+        </condition>
+        <condition property="filter.excludes.evaluated" value="${filter.excludes},${filter.more.excludes},**/*Test.java,**/test,**/test/**">
+            <istrue value="${filter.exclude.tests}"/>
+        </condition>
+        <property name="filter.excludes.evaluated" value="${filter.excludes},${filter.more.excludes}"/>
+        <condition property="deployment.do.override.jarurl" value="">
+            <istrue value="${deployment.override.jarurl}"/>
+        </condition>
+        <condition property="config.active.name" value="DefaultConfiguration">
+            <length string="${config.active}" trim="true" length="0"/>
+        </condition>
+        <property name="config.active.name" value="${config.active}"/>
+        <taskdef resource="org/netbeans/mobility/antext/defs.properties">
+            <classpath>
+                <pathelement path="${libs.j2me_ant_ext.classpath}"/>
+            </classpath>
+        </taskdef>
+        <condition property="skip.deployment">
+            <equals arg1="${deployment.method}" arg2="NONE" casesensitive="false" trim="true"/>
+        </condition>
+        <condition property="app-version.autoincrement.trigger">
+            <istrue value="${app-version.autoincrement}"/>
+        </condition>
+        <nb-overrideproperty name="buildsystem.baton" value="${src.dir}"/>
+    </target>
+    <!--cldc-init-->
+    <target name="cldc-pre-init">
+        <condition property="cldc-platform.trigger">
+            <equals arg1="CLDC" arg2="${platform.trigger}" casesensitive="false"/>
+        </condition>
+    </target>
+    <target name="cldc-init" depends="cldc-pre-init" if="cldc-platform.trigger">
+        <property name="preverify.sources.dir" location="${build.dir}/preverifysrc"/>
+        <property name="manifest.build.file" location="${build.dir}/manifest.mf"/>
+        <property name="platform.device" value=""/>
+        <property name="dist.jad.url" value="file://"/>
+        <property name="run.cmd.options" value=""/>
+        <condition property="evaluated.run.security.domain" value="">
+            <isfalse value="${run.use.security.domain}"/>
+        </condition>
+        <property name="evaluated.run.security.domain" value="${run.security.domain}"/>
+        <condition property="override.jarurl.trigger">
+            <and>
+                <istrue value="${cldc-platform.trigger}"/>
+                <istrue value="${deployment.override.jarurl}"/>
+            </and>
+        </condition>
+        <property name="deployment.jad" location="${dist.dir}/${dist.jad}"/>
+        <property name="deployment.jar" location="${dist.dir}/${dist.jar}"/>
+        <property name="deployment.dir" location="${dist.dir}"/>
+        <patternset id="deployment.patternset">
+            <include name="${dist.jad}"/>
+            <include name="${dist.jar}"/>
+        </patternset>
+    </target>
+    <!--cdc-init-->
+    <target name="cdc-init">
+        <condition property="cdc-platform.trigger">
+            <equals arg1="CDC" arg2="${platform.trigger}" casesensitive="false"/>
+        </condition>
+        <available file="${manifest.file}" property="manifest.available"/>
+        <condition property="main.class.applet">
+            <equals arg1="${main.class.class}" arg2="applet" casesensitive="false"/>
+        </condition>
+        <condition property="main.class.xlet">
+            <equals arg1="${main.class.class}" arg2="xlet" casesensitive="false"/>
+        </condition>
+        <condition property="manifest.available+main.class+fat.jar">
+            <and>
+                <isset property="manifest.available"/>
+                <isset property="main.class"/>
+                <istrue value="${platform.fat.jar}"/>
+                <not>
+                    <equals arg1="${main.class}" arg2="" trim="true"/>
+                </not>
+            </and>
+        </condition>
+        <condition property="manifest.available+main.class">
+            <and>
+                <isset property="manifest.available"/>
+                <isset property="main.class"/>
+                <isfalse value="${platform.fat.jar}"/>
+                <not>
+                    <equals arg1="${main.class}" arg2="" trim="true"/>
+                </not>
+            </and>
+        </condition>
+        <condition property="application.version.invalid" value="true">
+            <equals arg1="${deployment.number}" arg2="" trim="true"/>
+        </condition>
+        <fail if="application.version.invalid" message="Property deployment.number must not be empty and must contain version in format %d.%d.%d!"/>
+    </target>
+    <!--ricoh-init-->
+    <target name="ricoh-pre-init" if="cdc-platform.trigger">
+        <condition property="ricoh-platform.trigger">
+            <equals arg1="ricoh" arg2="${platform.type}" casesensitive="false"/>
+        </condition>
+    </target>
+    <target name="ricoh-init" depends="ricoh-pre-init" if="ricoh-platform.trigger">
+        <available property="jcifs" classname="jcifs.smb.SmbFile" classpath="${libs.RicohAntTools.classpath}"/>
+        <condition property="no.vendor.name" value="true">
+            <equals arg1="${application.vendor}" arg2="" trim="true"/>
+        </condition>
+        <condition property="ricoh.dalp.install.mode" value="auto" else="manual">
+            <istrue value="${ricoh.dalp.install.mode.auto}"/>
+        </condition>
+        <condition property="ricoh.dalp.display-mode.type" value="COLOR" else="MONO">
+            <istrue value="${ricoh.dalp.display-mode.color}"/>
+        </condition>
+        <property name="xml.dir" value="${build.dir}/dalp"/>
+        <property name="xlet.dalp" value="${application.name}.dalp"/>
+        <property name="xlet.dalp.name-only" value="${application.name}.dalp"/>
+        <property name="deploy.dir" value="${dist.dir}/deploy"/>
+        <property name="rideploy.zip" value="${dist.dir}/${application.name}.zip"/>
+        <property name="ricoh.dalp.is-managed" value="true"/>
+        <property name="ricoh.dalp.information.is-icon-used" value="true"/>
+        <property name="ricoh.platform.target.version" value="2.0"/>
+        <property name="ricoh.dalp.version" value="${deployment.number}"/>
+        <property name="ricoh.dalp.application-desc.visible" value="true"/>
+        <property name="ricoh.dalp.install.destination" value="hdd"/>
+        <property name="ricoh.dalp.install.work-dir" value="hdd"/>
+        <property name="ricoh.dalp.information.abbreviation" value="RICOH"/>
+        <taskdef name="taskIf" classname="ricoh.ant.ConditionalTask" classpath="${libs.ricoh-ant-utils.classpath}"/>
+        <taskdef name="dalp" classname="org.netbeans.modules.j2me.cdc.project.ricoh.DalpBuilder" classpath="${libs.ricoh-ant-utils.classpath}"/>
+        <property name="dalp.dist" value="${build.dir}/dalp/${application.name}.dalp"/>
+        <property name="deployment.dir" location="${dist.dir}"/>
+        <patternset id="deployment.patternset">
+            <include name="${dist.jar}"/>
+            <include name="${application.name}.dalp"/>
+            <include name="lib/*"/>
+        </patternset>
+    </target>
+    <!--semc-init-->
+    <target name="semc-pre-init" if="cdc-platform.trigger">
+        <condition property="semc-platform.trigger">
+            <equals arg1="semc" arg2="${platform.type}" casesensitive="false"/>
+        </condition>
+    </target>
+    <target name="semc-init" depends="semc-pre-init" if="semc-platform.trigger">
+        <condition property="semc.icon.invalid" value="true">
+            <or>
+                <contains string="${semc.application.icon}" substring="$${"/>
+                <equals arg1="${semc.application.icon}" arg2="" trim="true"/>
+            </or>
+        </condition>
+        <condition property="no.certificateorkey" value="true">
+            <or>
+                <isset property="no.application.uid"/>
+                <equals arg1="${semc.certificate.path}" arg2="" trim="true"/>
+                <contains string="${semc.certificate.path}" substring="$${semc.certificate.path"/>
+                <equals arg1="${semc.private.key.path}" arg2="" trim="true"/>
+                <contains string="${semc.private.key.path}" substring="$${semc.private.key.path"/>
+            </or>
+        </condition>
+        <property name="j9.dist" location="${build.dir}/j9/${semc.application.uid}.j9"/>
+        <taskdef resource="org/netbeans/modules/j2me/cdc/project/defs.properties">
+            <classpath>
+                <pathelement path="${libs.cdc-ant-utils.classpath}"/>
+            </classpath>
+        </taskdef>
+        <taskdef resource="org/netbeans/modules/j2me/cdc/project/semc/defs.properties">
+            <classpath>
+                <pathelement path="${libs.semc-ant-utils.classpath}"/>
+            </classpath>
+        </taskdef>
+        <property name="deployment.dir" location="${dist.dir}"/>
+        <patternset id="deployment.patternset">
+            <include name="*.sis"/>
+            <include name="*.SIS"/>
+        </patternset>
+    </target>
+    <!--savaje-init-->
+    <target name="savaje-pre-init" if="cdc-platform.trigger">
+        <condition property="savaje-platform.trigger">
+            <equals arg1="savaje" arg2="${platform.type}" casesensitive="false"/>
+        </condition>
+    </target>
+    <target name="savaje-init" depends="savaje-pre-init" if="savaje-platform.trigger">
+        <property name="savaje.application.uid" value="TBD"/>
+        <condition property="savaje.bundle.base.invalid" value="true">
+            <or>
+                <equals arg1="${savaje.bundle.base}" arg2="" trim="true"/>
+                <contains string="${savaje.bundle.base}" substring="$${savaje.bundle.base"/>
+            </or>
+        </condition>
+        <condition property="savaje.unsupported.main" value="true">
+            <or>
+                <equals arg1="${main.class.applet}" arg2="true"/>
+            </or>
+        </condition>
+        <condition property="savaje.icon.invalid" value="true">
+            <or>
+                <isset property="no.application.uid"/>
+                <contains string="${savaje.application.icon}" substring="$${"/>
+                <equals arg1="${savaje.application.icon}" arg2="" trim="true"/>
+            </or>
+        </condition>
+        <property name="jnlp.dist" value="${build.dir}/jnlp/bundle.jnlp"/>
+        <property name="deployment.dir" location="${dist.dir}"/>
+        <patternset id="deployment.patternset">
+            <include name="bundle.jnlp"/>
+            <include name="bundle.policy"/>
+            <include name="lib/*"/>
+        </patternset>
+    </target>
+    <!--nokiaS80-init-->
+    <target name="nokiaS80-pre-init" if="cdc-platform.trigger">
+        <condition property="nokiaS80-platform.trigger">
+            <equals arg1="nokiaS80" arg2="${platform.type}" casesensitive="false"/>
+        </condition>
+    </target>
+    <target name="nokiaS80-init" depends="nokiaS80-pre-init" if="nokiaS80-platform.trigger">
+        <property name="j9.dist" location="${build.dir}/j9/NOKIA.j9"/>
+        <property name="manifest.build.file" location="${build.dir}/manifest.mf"/>
+        <condition property="nokia.icon.invalid">
+            <or>
+                <contains string="${nokiaS80.application.icon}" substring="$${"/>
+                <equals arg1="${nokiaS80.application.icon}" arg2="" trim="true"/>
+            </or>
+        </condition>
+        <property name="deployment.dir" location="${dist.dir}"/>
+        <patternset id="deployment.patternset">
+            <include name="${dist.jar}"/>
+        </patternset>
+    </target>
+    <!--nsicom-init-->
+    <target name="nsicom-pre-init" if="cdc-platform.trigger">
+        <condition property="nsicom-platform.trigger">
+            <equals arg1="nsicom" arg2="${platform.type}" casesensitive="false"/>
+        </condition>
+    </target>
+    <target name="nsicom-init" depends="nsicom-pre-init" if="nsicom-platform.trigger">
+        <property name="deployment.dir" location="${dist.dir}"/>
+        <patternset id="deployment.patternset">
+            <include name="${dist.jar}"/>
+        </patternset>
+    </target>
+    <!--bdj-init-->
+    <target name="-bdj-pre-pre-init" if="cdc-platform.trigger">
+        <echo message="Calling BD-J init"/>
+        <condition property="bdj-platform.trigger">
+            <equals arg1="bdj" arg2="${platform.type}" casesensitive="false"/>
+        </condition>
+    </target>
+    <target name="-pre-bdj-init" if="bdj-platform.trigger"/>
+    <target name="-bdj-init" if="bdj-platform.trigger">
+        <condition property="bdj.organization.id.invalid">
+            <or>
+                <contains string="${bdj.organization.id}" substring="$${"/>
+                <equals arg1="${bdj.organization.id}" arg2="" trim="true"/>
+            </or>
+        </condition>
+        <fail if="bdj.organization.id.invalid">Missing organization ID!</fail>
+        <condition property="bdj.application.id.invalid">
+            <or>
+                <contains string="${bdj.application.id}" substring="$${"/>
+                <equals arg1="${bdj.application.id}" arg2="" trim="true"/>
+            </or>
+        </condition>
+        <fail if="bdj.application.id.invalid">Missing application ID!</fail>
+        <condition property="bdj.deployment.dir.invalid">
+            <or>
+                <contains string="${bdj.deployment.dir}" substring="$${"/>
+                <equals arg1="${bdj.deployment.dir}" arg2="" trim="true"/>
+            </or>
+        </condition>
+        <fail if="bdj.deployment.dir.invalid">Deployment directory is set!</fail>
+        <property name="deployment.dir" location="${dist.dir}"/>
+        <patternset id="deployment.patternset">
+            <include name="${dist.jar}"/>
+        </patternset>
+    </target>
+    <target name="-post-bdj-init" if="bdj-platform.trigger"/>
+    <target name="bdj-init" depends="-bdj-pre-pre-init, -pre-bdj-init, -bdj-init, -post-bdj-init" if="bdj-platform.trigger"/>
+    <!--init-->
+    <target name="pre-init"/>
+    <target name="post-init"/>
+    <target name="init" depends="pre-init,load-properties,basic-init,cldc-init,cdc-init,ricoh-init,semc-init,savaje-init,nokiaS80-init,nsicom-init,bdj-init,post-init"/>
+    <!--conditional clean-->
+    <target name="conditional-clean-init">
+        <uptodate property="no.clean.before.build" targetfile="${build.dir}/.timestamp">
+            <srcfiles dir="nbproject">
+                <include name="project.properties"/>
+                <include name="build-impl.xml"/>
+            </srcfiles>
+        </uptodate>
+    </target>
+    <target name="conditional-clean" depends="init,conditional-clean-init" unless="no.clean.before.build" description="Clean project in case its meta information has changed.">
+        <antcall target="do-clean" inheritall="true" inheritrefs="true"/>
+    </target>
+    <!--deps-jar-->
+    <target name="deps-jar" depends="conditional-clean" unless="no.deps"/>
+    <!--preprocess-->
+    <target name="pre-preprocess"/>
+    <target name="do-preprocess" unless="no.preprocess">
+        <fail unless="preprocessed.dir">Must set preprocessed.dir</fail>
+        <property name="abilities" value=""/>
+        <property name="debug.level" value="debug"/>
+        <mkdir dir="${preprocessed.dir}"/>
+        <echo message="ignore me" file="${build.dir}/.timestamp"/>
+        <nb-prep destdir="${preprocessed.dir}" preprocessfor="${config.active.name},${abilities},DebugLevel=${debug.level}" encoding="${javac.encoding}">
+            <fileset dir="${buildsystem.baton}" defaultexcludes="${filter.use.standard}" excludes="${filter.excludes.evaluated}"/>
+        </nb-prep>
+        <copy todir="${preprocessed.dir}">
+            <fileset dir="${buildsystem.baton}" defaultexcludes="${filter.use.standard}" excludes="${filter.excludes.evaluated},${build.classes.excludes}"/>
+        </copy>
+        <nb-overrideproperty name="buildsystem.baton" value="${preprocessed.dir}"/>
+    </target>
+    <target name="post-preprocess"/>
+    <target name="preprocess" depends="deps-jar,pre-preprocess,do-preprocess,post-preprocess" description="Preprocess project sources."/>
+    <!--compile-->
+    <target name="pre-compile"/>
+    <target name="do-compile">
+        <fail unless="build.classes.dir">Must set build.classes.dir</fail>
+        <mkdir dir="${build.classes.dir}"/>
+        <javac includeantruntime="false" source="${javac.source}" target="${javac.target}" deprecation="${javac.deprecation}" optimize="${javac.optimize}" debug="${javac.debug}" destdir="${build.classes.dir}" srcdir="${buildsystem.baton}" bootclasspath="${platform.bootclasspath}" encoding="${javac.encoding}">
+            <classpath>
+                <path path="${libs.classpath}"/>
+            </classpath>
+        </javac>
+        <copy todir="${build.classes.dir}">
+            <fileset dir="${buildsystem.baton}" defaultexcludes="${filter.use.standard}" excludes="${filter.excludes.evaluated},${build.classes.excludes}"/>
+        </copy>
+        <nb-overrideproperty name="buildsystem.baton" value="${build.classes.dir}"/>
+    </target>
+    <target name="extract-libs" description="Extracts all bundled libraries.">
+        <mkdir dir="${build.classes.dir}"/>
+        <nb-extract dir="${build.classes.dir}" excludeManifest="true" classpath="${libs.classpath}" excludeclasspath="${extra.classpath}"/>
+    </target>
+    <target name="post-compile"/>
+    <target name="compile" depends="preprocess,pre-compile,extract-libs,do-compile,post-compile" description="Compile project classes."/>
+    <!--compile-single-->
+    <target name="pre-compile-single"/>
+    <target name="do-compile-single">
+        <fail unless="javac.includes">Must select some files in the IDE or set javac.includes</fail>
+        <mkdir dir="${build.classes.dir}"/>
+        <javac includeantruntime="false" source="${javac.source}" target="${javac.target}" deprecation="${javac.deprecation}" optimize="${javac.optimize}" debug="${javac.debug}" srcdir="${buildsystem.baton}" destdir="${build.classes.dir}" bootclasspath="${platform.bootclasspath}" includes="${javac.includes}" encoding="${javac.encoding}">
+            <classpath>
+                <path path="${libs.classpath}"/>
+            </classpath>
+        </javac>
+    </target>
+    <target name="post-compile-single"/>
+    <target name="compile-single" depends="preprocess,pre-compile-single,do-compile-single,post-compile-single" description="Compile selected project classes."/>
+    <!--proguard-->
+    <target name="proguard-init" description="Up-to-date check before obfuscation.">
+        <property name="obfuscation.level" value="0"/>
+        <condition property="no.obfusc">
+            <or>
+                <equals arg1="${obfuscation.level}" arg2="0"/>
+                <uptodate targetfile="${obfuscator.destjar}">
+                    <srcfiles dir="${buildsystem.baton}"/>
+                </uptodate>
+            </or>
+        </condition>
+        <uptodate property="obfuscation.up-to-date" targetfile="${obfuscator.destjar}">
+            <srcfiles dir="${buildsystem.baton}"/>
+        </uptodate>
+    </target>
+    <target name="skip-obfuscation" depends="proguard-init" if="obfuscation.up-to-date">
+        <fail unless="obfuscated.classes.dir">Must set obfuscated.classes.dir</fail>
+        <nb-overrideproperty name="buildsystem.baton" value="${obfuscated.classes.dir}"/>
+    </target>
+    <target name="proguard" depends="skip-obfuscation" description="Obfuscate project classes." unless="no.obfusc">
+        <fail unless="obfuscated.classes.dir">Must set obfuscated.classes.dir</fail>
+        <fail unless="obfuscator.srcjar">Must set obfuscator.srcjar</fail>
+        <fail unless="obfuscator.destjar">Must set obfuscator.destjar</fail>
+        <property name="obfuscator.classpath" value=""/>
+        <dirname file="${obfuscator.srcjar}" property="obfuscator.srcjar.dir"/>
+        <dirname file="${obfuscator.destjar}" property="obfuscator.destjar.dir"/>
+        <mkdir dir="${obfuscator.srcjar.dir}"/>
+        <mkdir dir="${obfuscator.destjar.dir}"/>
+        <jar jarfile="${obfuscator.srcjar}" basedir="${buildsystem.baton}"/>
+        <property name="obfuscation.custom" value=""/>
+        <nb-obfuscate srcjar="${obfuscator.srcjar}" destjar="${obfuscator.destjar}" obfuscatorclasspath="${obfuscator.classpath}" classpath="${platform.bootclasspath}:${extra.classpath}" obfuscationLevel="${obfuscation.level}" extraScript="${obfuscation.custom}"/>
+        <mkdir dir="${obfuscated.classes.dir}"/>
+        <unjar src="${obfuscator.destjar}" dest="${obfuscated.classes.dir}"/>
+        <nb-overrideproperty name="buildsystem.baton" value="${obfuscated.classes.dir}"/>
+    </target>
+    <!--obfuscate-->
+    <target name="pre-obfuscate"/>
+    <target name="post-obfuscate"/>
+    <target name="obfuscate" depends="compile,pre-obfuscate,proguard,post-obfuscate" description="Obfuscate project classes."/>
+    <!--preverify-->
+    <target name="pre-preverify"/>
+    <target name="do-preverify" if="cldc-platform.trigger">
+        <fail unless="preverify.classes.dir">Must set preverify.classes.dir</fail>
+        <mkdir dir="${preverify.sources.dir}"/>
+        <copy todir="${preverify.sources.dir}">
+            <fileset dir="${buildsystem.baton}" includes="**/*.class"/>
+        </copy>
+        <mkdir dir="${preverify.classes.dir}"/>
+        <nb-preverify srcdir="${preverify.sources.dir}" destdir="${preverify.classes.dir}" classpath="${platform.bootclasspath}:${extra.classpath}" configuration="${platform.configuration}" platformhome="${platform.home}" platformtype="${platform.type}" commandline="${platform.preverifycommandline}"/>
+        <copy todir="${preverify.classes.dir}">
+            <fileset dir="${buildsystem.baton}" defaultexcludes="${filter.use.standard}" excludes="${filter.excludes.evaluated},${build.classes.excludes}"/>
+        </copy>
+        <nb-overrideproperty name="buildsystem.baton" value="${preverify.classes.dir}"/>
+    </target>
+    <target name="post-preverify"/>
+    <target name="preverify" depends="obfuscate,pre-preverify,do-preverify,post-preverify" description="Preverify project classes."/>
+    <!--set-password-->
+    <target name="set-password-init">
+        <property name="sign.enabled" value="false"/>
+        <condition property="skip-sign-keystore-password-input">
+            <or>
+                <isfalse value="${sign.enabled}"/>
+                <and>
+                    <isset property="sign.keystore"/>
+                    <isset property="sign.keystore.password"/>
+                    <not>
+                        <equals arg1="${sign.keystore}" arg2="" trim="true"/>
+                    </not>
+                    <not>
+                        <equals arg1="${sign.keystore.password}" arg2="" trim="true"/>
+                    </not>
+                </and>
+            </or>
+        </condition>
+        <condition property="skip-sign-alias-password-input">
+            <or>
+                <isfalse value="${sign.enabled}"/>
+                <and>
+                    <isset property="sign.keystore"/>
+                    <isset property="sign.alias"/>
+                    <isset property="sign.alias.password"/>
+                    <not>
+                        <equals arg1="${sign.keystore}" arg2="" trim="true"/>
+                    </not>
+                    <not>
+                        <equals arg1="${sign.alias}" arg2="" trim="true"/>
+                    </not>
+                    <not>
+                        <equals arg1="${sign.alias.password}" arg2="" trim="true"/>
+                    </not>
+                </and>
+            </or>
+        </condition>
+    </target>
+    <target name="set-keystore-password" if="netbeans.home" unless="skip-sign-keystore-password-input">
+        <nb-enter-password keystore="${sign.keystore}" passwordproperty="sign.keystore.password"/>
+    </target>
+    <target name="set-alias-password" if="netbeans.home" unless="skip-sign-alias-password-input">
+        <nb-enter-password keystore="${sign.keystore}" keyalias="${sign.alias}" passwordproperty="sign.alias.password"/>
+    </target>
+    <target name="set-password" depends="set-password-init,set-keystore-password,set-alias-password"/>
+    <!--create JAD-->
+    <target name="add-configuration" unless="contains.manifest.configuration">
+        <nb-output file="${dist.dir}/${dist.jad}" encoding="UTF-8" append="true">MicroEdition-Configuration: ${platform.configuration}
+</nb-output>
+        <nb-output file="${manifest.build.file}" encoding="UTF-8" append="true">MicroEdition-Configuration: ${platform.configuration}
+</nb-output>
+    </target>
+    <target name="add-profile" unless="contains.manifest.profile">
+        <nb-output file="${dist.dir}/${dist.jad}" encoding="UTF-8" append="true">MicroEdition-Profile: ${platform.profile}
+</nb-output>
+        <nb-output file="${manifest.build.file}" encoding="UTF-8" append="true">MicroEdition-Profile: ${platform.profile}
+</nb-output>
+    </target>
+    <target name="create-jad" if="cldc-platform.trigger">
+        <fail unless="dist.jad">Must set dist.jad</fail>
+        <mkdir dir="${build.dir}"/>
+        <dirname file="${dist.dir}/${dist.jad}" property="dist.jad.dir"/>
+        <mkdir dir="${dist.jad.dir}"/>
+        <condition property="evaluated.manifest.apipermissions" value="${manifest.apipermissions}">
+            <not>
+                <equals arg1="${platform.profile}" arg2="MIDP-1.0"/>
+            </not>
+        </condition>
+        <condition property="evaluated.manifest.pushregistry" value="${manifest.pushregistry}">
+            <not>
+                <equals arg1="${platform.profile}" arg2="MIDP-1.0"/>
+            </not>
+        </condition>
+        <condition property="contains.manifest.configuration">
+            <contains substring="MicroEdition-Configuration: " string="${manifest.others}"/>
+        </condition>
+        <condition property="contains.manifest.profile">
+            <contains substring="MicroEdition-Profile: " string="${manifest.others}"/>
+        </condition>
+        <property value="" name="evaluated.manifest.apipermissions"/>
+        <property value="" name="evaluated.manifest.pushregistry"/>
+        <property name="manifest.jad" value=""/>
+        <property name="manifest.manifest" value=""/>
+        <nb-output file="${dist.dir}/${dist.jad}" encoding="UTF-8">${manifest.midlets}${evaluated.manifest.apipermissions}${evaluated.manifest.pushregistry}${manifest.others}${manifest.jad}</nb-output>
+        <nb-output file="${manifest.build.file}" encoding="UTF-8">${manifest.midlets}${evaluated.manifest.apipermissions}${evaluated.manifest.pushregistry}${manifest.others}${manifest.manifest}</nb-output>
+        <antcall target="add-configuration" inheritall="true" inheritrefs="true"/>
+        <antcall target="add-profile" inheritall="true" inheritrefs="true"/>
+        <property name="manifest.available" value="true"/>
+    </target>
+    <!--do-extra-libs-->
+    <target name="do-extra-libs" if="extra.classpath">
+        <property name="dist.lib.dir" value="${dist.dir}/lib"/>
+        <mkdir dir="${dist.lib.dir}"/>
+        <copypath destdir="${dist.lib.dir}" path="${extra.classpath}">
+            <flattenmapper/>
+        </copypath>
+    </target>
+    <!--nokiaS80-manifest-->
+    <target name="nokiaS80-prepare-j9" if="nokiaS80-platform.trigger">
+        <fail message="Main class is not set!">
+            <condition>
+                <equals arg1="${main.class}" arg2="" trim="true"/>
+            </condition>
+        </fail>
+        <mkdir dir="${build.dir}/j9"/>
+        <taskdef name="j9builder" classname="org.netbeans.modules.j2me.cdc.project.J9Builder" classpath="${libs.cdc-ant-utils.classpath}"/>
+        <j9builder jvmargs="${run.jvmargs}" mainclass="${main.class}" args="${application.args}" home="${platform.home}" dist="${j9.dist}" id="NOKIA" platform="${platform.type}" xlet="${main.class.xlet}" applet="${main.class.applet}" jarname="${dist.jar}"/>
+        <copy file="${manifest.file}" tofile="${manifest.build.file}" failonerror="false"/>
+        <property name="manifest.available" value="true"/>
+        <loadfile property="nokia.manifest.j9" srcFile="${j9.dist}"/>
+    </target>
+    <target name="nokiaS80-prepare-manifest" depends="nokiaS80-prepare-j9" if="nokiaS80-platform.trigger" unless="nokia.icon.invalid">
+        <pathconvert property="logo.icon.name" pathsep=" ">
+            <path path="${nokiaS80.application.icon}"/>
+            <chainedmapper>
+                <flattenmapper/>
+                <globmapper from="*" to="*"/>
+            </chainedmapper>
+        </pathconvert>
+        <copy file="${nokiaS80.application.icon}" todir="${buildsystem.baton}"/>
+        <manifest file="${manifest.build.file}" mode="update">
+            <attribute name="Main-Class" value="${main.class}"/>
+            <attribute name="PproApp-Name" value="${application.name}"/>
+            <attribute name="PproApp-Vendor" value="${application.vendor}"/>
+            <attribute name="PproApp-Version" value="${deployment.number}"/>
+            <attribute name="PproApp-Icon" value="${logo.icon.name}"/>
+            <attribute name="x-ibm-pp-j9" value="${nokia.manifest.j9}"/>
+        </manifest>
+    </target>
+    <target name="nokiaS80-prepare-manifest-no-icon" depends="nokiaS80-prepare-j9" if="nokia.icon.invalid">
+        <manifest file="${manifest.build.file}" mode="update">
+            <attribute name="Main-Class" value="${main.class}"/>
+            <attribute name="PproApp-Name" value="${application.name}"/>
+            <attribute name="PproApp-Vendor" value="${application.vendor}"/>
+            <attribute name="PproApp-Version" value="${deployment.number}"/>
+            <attribute name="x-ibm-pp-j9" value="${nokia.manifest.j9}"/>
+        </manifest>
+    </target>
+    <target name="nokiaS80-create-manifest" depends="nokiaS80-prepare-j9,nokiaS80-prepare-manifest,nokiaS80-prepare-manifest-no-icon" if="nokiaS80-platform.trigger"/>
+    <!--semc-build-j9-->
+    <target name="semc-build-j9" if="semc-platform.trigger">
+        <epocpathsetter home="${platform.home}"/>
+        <property name="semc.application.caps" value=""/>
+        <mkdir dir="${platform.home}/epoc32/winscw/c/private/${semc.application.uid}"/>
+        <mkdir dir="${build.dir}/j9"/>
+        <fail message="Main class is not set!">
+            <condition>
+                <equals arg1="${main.class}" arg2="" trim="true"/>
+            </condition>
+        </fail>
+        <j9builder jvmargs="${run.jvmargs}" mainclass="${main.class}" args="${application.args}" home="${platform.home}" dist="${j9.dist}" id="${semc.application.uid}" platform="${platform.type}" xlet="${main.class.xlet}" applet="${main.class.applet}" jarname="${dist.jar}"/>
+    </target>
+    <!--do-jar-->
+    <target name="do-jar" if="manifest.available">
+        <dirname file="${dist.dir}/${dist.jar}" property="dist.jar.dir"/>
+        <mkdir dir="${dist.jar.dir}"/>
+        <property name="manifest.build.file" location="${manifest.file}"/>
+        <jar compress="${jar.compress}" jarfile="${dist.dir}/${dist.jar}" manifest="${manifest.build.file}" manifestencoding="UTF-8">
+            <fileset dir="${buildsystem.baton}"/>
+        </jar>
+    </target>
+    <!--nsicom-create-manifest-->
+    <target name="nsicom-create-manifest" if="nsicom-platform.trigger">
+        <jar jarfile="${dist.dir}/${dist.jar}" compress="${jar.compress}" update="true">
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}"/>
+            </manifest>
+        </jar>
+    </target>
+    <!--do-jar-no-manifest-->
+    <target name="do-jar-no-manifest" unless="manifest.available">
+        <dirname file="${dist.dir}/${dist.jar}" property="dist.jar.dir"/>
+        <mkdir dir="${dist.jar.dir}"/>
+        <jar compress="${jar.compress}" jarfile="${dist.dir}/${dist.jar}">
+            <fileset dir="${buildsystem.baton}"/>
+        </jar>
+    </target>
+    <!--bdj-build-image-->
+    <target name="-pre-bdj-build-perm-file" if="bdj-platform.trigger"/>
+    <target name="-do-bdj-build-perm-file" if="bdj-platform.trigger">
+        <fail message="Main class is not set!">
+            <condition>
+                <equals arg1="${main.class}" arg2="" trim="true"/>
+            </condition>
+        </fail>
+        <property name="bdj.tmp.dir" value="${build.dir}/bdj"/>
+        <property name="bluray.bdjoxml.file" value="${bdj.tmp.dir}/bdjo00000.xml"/>
+        <property name="bluray.bdjo.file" value="${bdj.tmp.dir}/00000.bdjo"/>
+        <mkdir dir="${bdj.tmp.dir}"/>
+        <taskdef name="buildbdjperm" classname="org.netbeans.modules.j2me.cdc.project.bdj.BdjBuildPermTask" classpath="${libs.bdj-ant-utils.classpath}"/>
+        <buildbdjperm jarFile="${dist.dir}/${dist.jar}" xletClass="${main.class}" orgId="${bdj.organization.id}" appId="${bdj.application.id}" fileAccess="${bdj.file.access}" appLifecycle="${bdj.application.lifecycle}" serviceSelect="${bdj.service.selection}" prefRead="${bdj.user.preferences.read}" prefWrite="${bdj.user.preferences.write}" networkPerm="${bdj.network.permissions}"/>
+    </target>
+    <target name="-post-bdj-build-perm-file" if="bdj-platform.trigger"/>
+    <target name="-bdj-build-perm-file" if="bdj-platform.trigger" depends="-pre-bdj-build-perm-file, -do-bdj-build-perm-file, -post-bdj-build-perm-file"/>
+    <target name="-pre-bdj-generate-certificate" if="bdj-platform.trigger"/>
+    <target name="-do-bdj-generate-certificate" if="bdj-platform.trigger">
+        <java classpath="${libs.bdj-ant-utils.classpath}" classname="net.java.bd.tools.security.BDCertGenerator" dir="${bdj.tmp.dir}" fork="true">
+            <arg value="-root"/>
+            <arg value="${bdj.organization.id}"/>
+        </java>
+        <java classpath="${libs.bdj-ant-utils.classpath}" classname="net.java.bd.tools.security.BDCertGenerator" dir="${bdj.tmp.dir}" fork="true">
+            <arg value="-app"/>
+            <arg value="${bdj.organization.id}"/>
+        </java>
+    </target>
+    <target name="-post-bdj-generate-certificate" if="bdj-platform.trigger"/>
+    <target name="-bdj-generate-certificate" if="bdj-platform.trigger" depends="-bdj-build-perm-file, -pre-bdj-generate-certificate, -do-bdj-generate-certificate, -post-bdj-generate-certificate"/>
+    <target name="-pre-bdj-prepare-jar" if="bdj-platform.trigger"/>
+    <target name="-do-bdj-prepare-jar" if="bdj-platform.trigger">
+        <copy file="${dist.dir}/${dist.jar}" tofile="${bdj.tmp.dir}/00000.jar"/>
+    </target>
+    <target name="-post-bdj-prepare-jar" if="bdj-platform.trigger"/>
+    <target name="-bdj-prepare-jar" depends="-bdj-generate-certificate, -pre-bdj-prepare-jar, -do-bdj-prepare-jar, -post-bdj-prepare-jar" if="bdj-platform.trigger"/>
+    <target name="-pre-bdj-sign-jar" if="bdj-platform.trigger"/>
+    <target name="-do-bdj-sign-jar" if="bdj-platform.trigger">
+        <property name="java.home.parent" location="${java.home}/.."/>
+        <condition property="nbjdk.home" value="${java.home.parent}">
+            <available file="${java.home.parent}/lib/tools.jar" type="file"/>
+        </condition>
+        <fail unless="nbjdk.home">Can not find tools.jar</fail>
+        <java classpath="${libs.bdj-ant-utils.classpath}:${java.home.parent}/lib/tools.jar" classname="net.java.bd.tools.security.BDSigner" dir="${bdj.tmp.dir}" fork="true">
+            <arg value="00000.jar"/>
+        </java>
+    </target>
+    <target name="-post-bdj-sign-jar" if="bdj-platform.trigger"/>
+    <target name="-bdj-sign-jar" depends="-bdj-prepare-jar, -pre-bdj-sign-jar, -do-bdj-sign-jar, -post-bdj-sign-jar" if="bdj-platform.trigger"/>
+    <target name="-pre-bdj-generate-bdjo-xml" if="bdj-platform.trigger"/>
+    <target name="-do-bdj-generate-bdjo-xml" if="bdj-platform.trigger">
+        <taskdef name="buildbdjo" classname="org.netbeans.modules.j2me.cdc.project.bdj.BdjBuildBdjo" classpath="${libs.bdj-ant-utils.classpath}"/>
+        <buildbdjo bdjoFile="${bluray.bdjoxml.file}" orgId="${bdj.organization.id}" appId="${bdj.application.id}" mainClass="${main.class}"/>
+    </target>
+    <target name="-post-bdj-generate-bdjo-xml" depends="-bdj-sign-jar" if="bdj-platform.trigger"/>
+    <target name="-bdj-generate-bdjo-xml" depends="-bdj-sign-jar, -pre-bdj-generate-bdjo-xml, -do-bdj-generate-bdjo-xml, -post-bdj-generate-bdjo-xml" if="bdj-platform.trigger"/>
+    <target name="-pre-bdj-generate-bdjo" if="bdj-platform.trigger"/>
+    <target name="-do-bdj-generate-bdjo" if="bdj-platform.trigger">
+        <java classpath="${libs.bdj-ant-utils.classpath}" classname="net.java.bd.tools.bdjo.Converter" fork="true">
+            <arg value="${bluray.bdjoxml.file}"/>
+            <arg value="${bluray.bdjo.file}"/>
+        </java>
+    </target>
+    <target name="-post-bdj-generate-bdjo" if="bdj-platform.trigger"/>
+    <target name="-bdj-generate-bdjo" depends="-bdj-generate-bdjo-xml, -pre-bdj-generate-bdjo, -do-bdj-generate-bdjo, -post-bdj-generate-bdjo" if="bdj-platform.trigger"/>
+    <target name="-pre-bdj-build-bdmv" if="bdj-platform.trigger"/>
+    <target name="-do-bdj-build-bdmv" if="bdj-platform.trigger">
+        <property name="bluray.bdmv.index.file" value="${bdj.tmp.dir}/index.bdmv"/>
+        <property name="bluray.bdmv.movieobject.file" value="${bdj.tmp.dir}/MovieObject.bdmv"/>
+        <taskdef name="buildbdmv" classname="org.netbeans.modules.j2me.cdc.project.bdj.BdjBuildBdmv" classpath="${libs.bdj-ant-utils.classpath}"/>
+        <buildbdmv file="${bluray.bdmv.index.file}" type="index"/>
+        <buildbdmv file="${bluray.bdmv.movieobject.file}" type="movie"/>
+    </target>
+    <target name="-post-bdj-build-bdmv" if="bdj-platform.trigger"/>
+    <target name="-bdj-build-bdmv" depends="-bdj-generate-bdjo, -pre-bdj-build-bdmv, -do-bdj-build-bdmv, -post-bdj-build-bdmv" if="bdj-platform.trigger"/>
+    <target name="-pre-bdj-build-bdjo-image" if="bdj-platform.trigger"/>
+    <target name="-do-bdj-build-bdjo-image" if="bdj-platform.trigger">
+        <property name="bdj.deployment.bdmv.dir" value="${bdj.deployment.dir}/BDMV"/>
+        <property name="bdj.deployment.bdmv.backup.dir" value="${bdj.deployment.bdmv.dir}/BACKUP"/>
+        <property name="bdj.deployment.certificate.dir" value="${bdj.deployment.dir}/CERTIFICATE"/>
+        <property name="bdj.deployment.certificate.backup.dir" value="${bdj.deployment.certificate.dir}/BACKUP"/>
+        <mkdir dir="${bdj.deployment.bdmv.dir}"/>
+        <mkdir dir="${bdj.deployment.bdmv.dir}/AUXDATA"/>
+        <mkdir dir="${bdj.deployment.bdmv.dir}/BDJO"/>
+        <mkdir dir="${bdj.deployment.bdmv.dir}/CLIPINF"/>
+        <mkdir dir="${bdj.deployment.bdmv.dir}/JAR"/>
+        <mkdir dir="${bdj.deployment.bdmv.dir}/META"/>
+        <mkdir dir="${bdj.deployment.bdmv.dir}/PLAYLIST"/>
+        <mkdir dir="${bdj.deployment.bdmv.dir}/STREAM"/>
+        <mkdir dir="${bdj.deployment.bdmv.backup.dir}"/>
+        <mkdir dir="${bdj.deployment.bdmv.backup.dir}/BDJO"/>
+        <mkdir dir="${bdj.deployment.bdmv.backup.dir}/CLIPINF"/>
+        <mkdir dir="${bdj.deployment.bdmv.backup.dir}/JAR"/>
+        <mkdir dir="${bdj.deployment.bdmv.backup.dir}/PLAYLIST"/>
+        <copy todir="${bdj.deployment.bdmv.dir}" file="${bluray.bdmv.index.file}"/>
+        <copy todir="${bdj.deployment.bdmv.dir}" file="${bluray.bdmv.movieobject.file}"/>
+        <copy todir="${bdj.deployment.bdmv.backup.dir}" file="${bluray.bdmv.index.file}"/>
+        <copy todir="${bdj.deployment.bdmv.backup.dir}" file="${bluray.bdmv.movieobject.file}"/>
+        <copy todir="${bdj.deployment.bdmv.dir}/JAR">
+            <fileset dir="${bdj.tmp.dir}">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+        <copy todir="${bdj.deployment.bdmv.dir}/BDJO">
+            <fileset dir="${bdj.tmp.dir}">
+                <include name="*.bdjo"/>
+            </fileset>
+        </copy>
+        <copy todir="${bdj.deployment.bdmv.backup.dir}/BDJO">
+            <fileset dir="${bdj.tmp.dir}">
+                <include name="*.bdjo"/>
+            </fileset>
+        </copy>
+        <mkdir dir="${bdj.deployment.certificate.dir}"/>
+        <mkdir dir="${bdj.deployment.certificate.backup.dir}"/>
+        <copy todir="${bdj.deployment.certificate.dir}">
+            <fileset dir="${bdj.tmp.dir}">
+                <include name="app.discroot.crt"/>
+            </fileset>
+        </copy>
+        <copy todir="${bdj.deployment.certificate.backup.dir}">
+            <fileset dir="${bdj.tmp.dir}">
+                <include name="app.discroot.crt"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="-post-bdj-build-bdjo-image" if="bdj-platform.trigger"/>
+    <target name="-bdj-build-bdjo-image" depends="-bdj-build-bdmv, -pre-bdj-build-bdjo-image, -do-bdj-build-bdjo-image, -post-bdj-build-bdjo-image" if="bdj-platform.trigger"/>
+    <target name="bdj-build-image" depends="-bdj-build-perm-file, -bdj-generate-certificate, -bdj-prepare-jar, -bdj-sign-jar, -bdj-generate-bdjo-xml, -bdj-generate-bdjo, -bdj-build-bdmv, -bdj-build-bdjo-image" if="bdj-platform.trigger"/>
+    <!--update-jad-->
+    <target name="update-jad" if="cldc-platform.trigger">
+        <nb-jad jadfile="${dist.dir}/${dist.jad}" jarfile="${dist.dir}/${dist.jar}" url="${dist.jar}" sign="${sign.enabled}" keystore="${sign.keystore}" keystorepassword="${sign.keystore.password}" alias="${sign.alias}" aliaspassword="${sign.alias.password}" encoding="UTF-8"/>
+    </target>
+    <!--ricoh-init-dalp-->
+    <target name="ricoh-init-dalp" if="ricoh-platform.trigger">
+        <property name="ricoh.application.telephone" value=""/>
+        <property name="ricoh.application.fax" value=""/>
+        <property name="ricoh.application.email" value=""/>
+        <condition property="no.unmanaged.dalp">
+            <and>
+                <isfalse value="${ricoh.dalp.is-managed}"/>
+                <not>
+                    <available file="./${application.name}.dalp"/>
+                </not>
+            </and>
+        </condition>
+        <fail if="no.unmanaged.dalp" message="Dalp file ${application.name}.dalp is required in project directory when DALP management is set to off."/>
+        <condition property="no.vendor.name" value="true">
+            <equals arg1="${application.vendor}" arg2="" trim="true"/>
+        </condition>
+        <condition property="ricoh.icon.invalid" value="true">
+            <or>
+                <contains string="${ricoh.application.icon}" substring="$${"/>
+                <equals arg1="${ricoh.application.icon}" arg2="" trim="true"/>
+            </or>
+        </condition>
+        <mkdir dir="${dist.dir}/lib"/>
+    </target>
+    <!--ricoh-add-app-icon-->
+    <target name="ricoh-add-app-icon" depends="ricoh-init-dalp" if="ricoh-platform.trigger" unless="ricoh.icon.invalid">
+        <pathconvert property="icon.name" pathsep=" ">
+            <path path="${ricoh.application.icon}"/>
+            <chainedmapper>
+                <flattenmapper/>
+                <globmapper from="*" to="*"/>
+            </chainedmapper>
+        </pathconvert>
+        <jar jarfile="${dist.jar}" compress="${jar.compress}" update="true">
+            <fileset file="${ricoh.application.icon}"/>
+        </jar>
+    </target>
+    <!--ricoh-build-dalp-with-icon-->
+    <target name="ricoh-build-dalp-with-icon" depends="ricoh-add-app-icon" if="ricoh-platform.trigger" unless="ricoh.icon.invalid">
+        <mkdir dir="${build.dir}/dalp/"/>
+        <taskIf if="ricoh.dalp.is-managed" value="true">
+            <dalp file="${dalp.dist}" iconname="${icon.name}">
+                <fileset dir="${dist.dir}/lib"/>
+            </dalp>
+            <echo message="Managed dalp file ${dalp.dist} created w/ icon"/>
+        </taskIf>
+        <taskIf if="ricoh.dalp.is-managed" value="false">
+            <copy tofile="${dalp.dist}">
+                <fileset file="./${application.name}.dalp"/>
+            </copy>
+            <echo message="Non-managed dalp file ${dalp.dist} w/ icon imported"/>
+        </taskIf>
+    </target>
+    <!--ricoh-build-dalp-without-icon-->
+    <target name="ricoh-build-dalp-without-icon" if="ricoh.icon.invalid">
+        <mkdir dir="${build.dir}/dalp/"/>
+        <taskIf if="ricoh.dalp.is-managed" value="true">
+            <dalp file="${dalp.dist}">
+                <fileset dir="${dist.dir}/lib"/>
+            </dalp>
+            <echo message="Managed dalp file ${dalp.dist} created w/o icon"/>
+        </taskIf>
+        <taskIf if="ricoh.dalp.is-managed" value="false">
+            <copy tofile="${dalp.dist}">
+                <fileset file="./${application.name}.dalp"/>
+            </copy>
+            <echo message="Non-managed dalp file ${dalp.dist} w/o icon imported"/>
+        </taskIf>
+    </target>
+    <target name="ricoh-build-dalp" depends="ricoh-build-dalp-with-icon,ricoh-build-dalp-without-icon" if="ricoh-platform.trigger">
+        <copy todir="${dist.dir}" file="${dalp.dist}" overwrite="true"/>
+    </target>
+    <!--savaje-build-jnlp-->
+    <target name="savaje-prepare-icon" if="savaje-platform.trigger" unless="savaje.icon.invalid">
+        <pathconvert property="savaje.application.icon.name" pathsep=" ">
+            <path path="${savaje.application.icon}"/>
+            <chainedmapper>
+                <flattenmapper/>
+                <globmapper from="*" to="*"/>
+            </chainedmapper>
+        </pathconvert>
+        <mkdir dir="${dist.dir}/lib"/>
+        <copy tofile="${dist.dir}/lib/${savaje.application.icon.name}" file="${savaje.application.icon}" overwrite="true" failonerror="false"/>
+    </target>
+    <target name="savaje-build-jnlp" depends="savaje-prepare-icon" if="savaje-platform.trigger">
+        <mkdir dir="${build.dir}/jnlp/"/>
+        <taskdef resource="org/netbeans/modules/j2me/cdc/project/savaje/defs.properties">
+            <classpath>
+                <pathelement path="${libs.savaje-ant-utils.classpath}"/>
+            </classpath>
+        </taskdef>
+        <jnlp dir="${build.dir}/jnlp/" file="bundle.jnlp" codebase="WTK_AGUI" distjar="lib/${dist.jar.name}" applicationicon="lib/${savaje.application.icon.name}" smallicon="${savaje.application.icon.small}" focusedicon="${savaje.application.icon.focused}" applicationtitle="${application.name}" applicationvendor="${application.vendor}" applicationDescription="${application.description}" applicationArgs="${application.args}" mainClass="${main.class}" debug="${savaje.bundle.debug}" debugport="${savaje.bundle.debug.port}">
+            <fileset dir="${dist.dir}/lib"/>
+        </jnlp>
+        <policy file="${build.dir}/jnlp/bundle.policy" codebase="WTK_AGUI"/>
+        <copy tofile="${dist.dir}/lib/classes.jar" file="${dist.dir}/${dist.jar}" overwrite="true"/>
+        <copy todir="${dist.dir}" file="${build.dir}/jnlp/bundle.jnlp" overwrite="true"/>
+        <copy tofile="${dist.dir}/bundle.policy" file="${build.dir}/jnlp/bundle.policy" overwrite="true"/>
+        <copy todir="${dist.dir}/lib" overwrite="true" failonerror="false">
+            <fileset dir="${resources.dir}"/>
+        </copy>
+    </target>
+    <!--jar-->
+    <target name="pre-jar"/>
+    <target name="post-jar"/>
+    <target name="jar" depends="preverify,pre-jar,set-password,create-jad,do-extra-libs,nokiaS80-create-manifest,semc-build-j9,do-jar,nsicom-create-manifest,do-jar-no-manifest,bdj-build-image,update-jad,ricoh-build-dalp,savaje-build-jnlp,post-jar" description="Build jar and application descriptor."/>
+    <!--override-jad-->
+    <target name="override-jad" if="override.jarurl.trigger">
+        <property name="deployment.jarurl" value="${dist.jar}"/>
+        <nb-jad jadfile="${dist.dir}/${dist.jad}" jarfile="${dist.dir}/${dist.jar}" url="${deployment.jarurl}" sign="${sign.enabled}" keystore="${sign.keystore}" keystorepassword="${sign.keystore.password}" alias="${sign.alias}" aliaspassword="${sign.alias.password}" encoding="UTF-8"/>
+    </target>
+    <!--semc-make-sis-->
+    <target name="-semc-sis-init" if="semc-platform.trigger" description="Init necessary properties for SEMC platform">
+        <property name="pprolauncher.dir" value="${platform.home}/epoc32/tools/ppro-custom-launcher/output/arm/PProLauncher${semc.application.uid}"/>
+    </target>
+    <target name="semc-ppro-arm" if="semc-platform.trigger" description="Builds neccessary files for semc device">
+        <exec executable="${platform.home}/epoc32/tools/create-ppro-app.bat" dir="${platform.home}/epoc32/tools/">
+            <arg value="arm"/>
+            <arg value="${application.name}"/>
+            <arg value="${semc.application.uid}"/>
+            <arg value="${j9.dist}"/>
+            <arg value="${semc.application.caps}"/>
+            <env key="SDKDRIVE" value="${sdkdrive}"/>
+            <env key="EPOCROOT" value="${epocroot}"/>
+            <env key="Path" value="${epocpath}"/>
+        </exec>
+    </target>
+    <target name="semc-make-sis-icon" if="semc-platform.trigger" unless="semc.icon.invalid">
+        <copy file="${semc.application.icon}" tofile="${pprolauncher.dir}/${semc.application.uid}.mbm" failonerror="false"/>
+    </target>
+    <target name="semc-make-sis" depends="semc-ppro-arm,semc-make-sis-icon" if="semc-platform.trigger" unless="no.application.uid" description="Builds SIS file for device">
+        <property name="dll.dir" location="dll"/>
+        <mkdir dir="${dll.dir}"/>
+        <copy todir="${pprolauncher.dir}">
+            <fileset dir="${dist.dir}">
+                <exclude name="javadoc/**"/>
+            </fileset>
+        </copy>
+        <copy todir="${pprolauncher.dir}">
+            <fileset dir="${dll.dir}">
+                <include name="**/*.dll"/>
+            </fileset>
+        </copy>
+        <copy todir="${pprolauncher.dir}" failonerror="false">
+            <fileset dir="${resources.dir}"/>
+        </copy>
+        <pkgmake workdir="${pprolauncher.dir}" id="${semc.application.uid}" appname="${application.name}" appicon="${semc.application.uid}.mbm" vendor="${application.vendor}" version="${deployment.number}" logo="${logo.image}" logoinstallonly="${logo.image.installonly}">
+            <fileset dir="${dist.dir}">
+                <exclude name="javadoc/**"/>
+            </fileset>
+            <fileset dir="${dll.dir}">
+                <include name="**/*.dll"/>
+            </fileset>
+            <fileset dir="${resources.dir}"/>
+        </pkgmake>
+        <exec executable="${platform.home}/epoc32/tools/makesis" dir="${pprolauncher.dir}">
+            <arg value="-d${pprolauncher.dir}"/>
+            <arg value="PProLauncher${semc.application.uid}.pkg"/>
+            <arg value="${application.name}.sis"/>
+            <env key="SDKDRIVE" value="${sdkdrive}"/>
+            <env key="EPOCROOT" value="${epocroot}"/>
+            <env key="Path" value="${epocpath}"/>
+        </exec>
+        <copy todir="${dist.dir}">
+            <fileset dir="${pprolauncher.dir}">
+                <include name="**/*.SIS"/>
+                <include name="**/*.sis"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="semc-sign-sis" if="semc-platform.trigger" depends="semc-make-sis" unless="no.certificateorkey" description="Sign SIS file">
+        <exec executable="${platform.home}/epoc32/tools/signsis" dir="${pprolauncher.dir}">
+            <arg value="-s"/>
+            <arg value="${pprolauncher.dir}/${application.name}.sis"/>
+            <arg value="${pprolauncher.dir}/${application.name}-SIGNED.sis"/>
+            <arg value="${semc.certificate.path}"/>
+            <arg value="${semc.private.key.path}"/>
+            <arg value="${semc.private.key.password}"/>
+            <env key="SDKDRIVE" value="${sdkdrive}"/>
+            <env key="EPOCROOT" value="${epocroot}"/>
+            <env key="Path" value="${epocpath}"/>
+        </exec>
+        <copy todir="${dist.dir}">
+            <fileset dir="${pprolauncher.dir}">
+                <include name="**/*.SIS"/>
+                <include name="**/*.sis"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="semc-no-sign-sis" depends="semc-make-sis" if="no.certificateorkey" unless="no.application.uid" description="Prints out only info when SIS is not signed ">
+        <echo message="Signed SIS was not created! Set up path to certificate and private key in project properties!"/>
+    </target>
+    <target name="-pre-semc-sis" if="semc-platform.trigger" description="Customizable target called before SIS file is built"/>
+    <target name="semc-sis" if="semc-platform.trigger" depends="-semc-sis-init, -pre-semc-sis, semc-sign-sis,semc-no-sign-sis, -post-semc-sis" unless="no.application.uid"/>
+    <target name="-post-semc-sis" if="semc-platform.trigger" description="Customizable target called after SIS file is built"/>
+    <!--increment-app-version-->
+    <target name="increment-app-version" if="app-version.autoincrement.trigger">
+        <propertyfile file="nbproject/private/private.properties">
+            <entry key="deployment.counter" type="int" operation="+" default="2" pattern="0"/>
+            <entry key="deployment.number" value="000000${deployment.counter}"/>
+        </propertyfile>
+        <property name="deployment.number.pattern" value="\2\3.\5\6.\8\9"/>
+        <replaceregexp byline="true" file="nbproject/private/private.properties" match="^deployment.number=[0-9]*(0|([1-9]))([0-9])(0|([1-9]))([0-9])(0|([1-9]))([0-9])$" replace="deployment.number=${deployment.number.pattern}"/>
+    </target>
+    <!--build-->
+    <target name="pre-build"/>
+    <target name="post-build"/>
+    <target name="build" depends="jar,pre-build,override-jad,semc-sis,increment-app-version,post-build" description="Builds final distribution of the application."/>
+    <!--cldc-run-->
+    <target name="cldc-run" if="cldc-platform.trigger">
+        <nb-run jadfile="${dist.dir}/${dist.jad}" jarfile="${dist.dir}/${dist.jar}" jadurl="${dist.jad.url}" device="${platform.device}" platformhome="${platform.home}" platformtype="${platform.type}" execmethod="${run.method}" securitydomain="${evaluated.run.security.domain}" commandline="${platform.runcommandline}" classpath="${platform.bootclasspath}:${dist.dir}/${dist.jar}" cmdoptions="${run.cmd.options}"/>
+    </target>
+    <!--ricoh-run-->
+    <target name="ricoh-run" if="ricoh-platform.trigger">
+        <copy todir="${platform.home}/mnt/sd3/sdk/dsdk/dist/${ricoh.application.uid}" overwrite="true">
+            <fileset dir="${dist.dir}">
+                <patternset refid="deployment.patternset"/>
+            </fileset>
+            <flattenmapper/>
+        </copy>
+        <ant antfile="${platform.home}/startemulator.xml" target="start_emulator" dir="${platform.home}">
+            <property name="emulator.skin" value="WVGA.xml"/>
+            <property name="emulator.autolaunchid" value="${ricoh.application.uid}"/>
+        </ant>
+    </target>
+    <!--semc-run-and-debug-prepare-targets-->
+    <target name="semc-icon-assembly" if="semc-platform.trigger" unless="semc.icon.invalid">
+        <copy file="${semc.application.icon}" tofile="${platform.home}/epoc32/release/winscw/udeb/z/Resource/Apps/${semc.application.uid}.mbm" failonerror="false"/>
+        <iconassembly home="${platform.home}" uid="${semc.application.uid}" count="${application.icon.count}"/>
+    </target>
+    <target name="semc-ppro-emulator" if="semc-platform.trigger" description="Builds neccessary files for semc emulator">
+        <exec executable="${platform.home}/epoc32/tools/create-ppro-app.bat" dir="${platform.home}/epoc32/tools/">
+            <arg value="win32"/>
+            <arg value="${application.name}"/>
+            <arg value="${semc.application.uid}"/>
+            <arg value="${j9.dist}"/>
+            <arg value="${semc.application.caps}"/>
+            <env key="SDKDRIVE" value="${sdkdrive}"/>
+            <env key="EPOCROOT" value="${epocroot}"/>
+            <env key="Path" value="${epocpath}"/>
+        </exec>
+    </target>
+    <target name="semc-do-run" if="semc-platform.trigger" description="Prepare log folders, copy necessary files">
+        <copy todir="${platform.home}/epoc32/winscw/C/private/${semc.application.uid}">
+            <fileset dir="${dist.dir}">
+                <exclude name="javadoc/**"/>
+            </fileset>
+        </copy>
+        <mkdir dir="${platform.home}/epoc32/winscw/c/logs/j9vm"/>
+        <epocinipath file="${platform.home}/epoc32/data/epoc.ini"/>
+        <exec executable="${platform.home}/epoc32/release/winscw/udeb/epoc.exe">
+            <env key="SDKDRIVE" value="${sdkdrive}"/>
+            <env key="EPOCROOT" value="${epocroot}"/>
+            <env key="Path" value="${epocpath}"/>
+        </exec>
+    </target>
+    <!--semc-run-->
+    <target name="semc-run" depends="semc-icon-assembly,semc-ppro-emulator,semc-do-run" if="semc-platform.trigger"/>
+    <!--savaje-run-->
+    <target name="savaje-run" if="savaje-platform.trigger">
+        <sunEmulatorExec home="${platform.home}" mainclass="${main.class}" args="${application.args}" jvmargs="${run.jvmargs}" device="${platform.device}" profile="${platform.profile}" xlet="${main.class.xlet}" applet="${main.class.applet}">
+            <fileset dir="${dist.dir}">
+                <exclude name="javadoc/**"/>
+            </fileset>
+        </sunEmulatorExec>
+    </target>
+    <!--nokiaS80-run-->
+    <target name="nokiaS80-run" if="nokiaS80-platform.trigger">
+        <mkdir dir="${platform.home}/epoc32/wins/c/PP_Applications"/>
+        <mkdir dir="${platform.home}/epoc32/wins/c/logs/j9vm"/>
+        <taskdef name="nokiaexec" classname="org.netbeans.modules.j2me.cdc.project.nokiaS80.NokiaEmulatorExecTask" classpath="${libs.nokiaS80-ant-utils.classpath}"/>
+        <nokiaexec jvmargs="${run.jvmargs}" mainclass="${main.class}" args="${application.args}" home="${platform.home}" device="${platform.device}" xlet="${main.class.xlet}" applet="${main.class.applet}">
+            <fileset dir="${dist.dir}">
+                <exclude name="javadoc/**"/>
+            </fileset>
+        </nokiaexec>
+    </target>
+    <!--nsicom-run-->
+    <target name="nsicom-run" if="nsicom-platform.trigger">
+        <nsicomExecDeploy home="${platform.home}" mainclass="${main.class}" args="${application.args}" jvmargs="${run.jvmargs}" device="${platform.device}" profile="${platform.profile}" xlet="${main.class.xlet}" applet="${main.class.applet}" verbose="${nsicom.application.runverbose}" hostip="${nsicom.application.monitorhost}" runondevice="${nsicom.application.runremote}" remotevmlocation="${nsicom.remotevm.location}" remoteDataLocation="${nsicom.remoteapp.location}">
+            <fileset dir="${dist.dir}">
+                <exclude name="javadoc/**"/>
+            </fileset>
+        </nsicomExecDeploy>
+    </target>
+    <!--bdj-run-->
+    <target name="-pre-bdj-run" if="bdj-platform.trigger"/>
+    <target name="-bdj-run" if="bdj-platform.trigger">
+        <taskdef name="runbdj" classname="org.netbeans.modules.j2me.cdc.project.bdj.BdjRun" classpath="${libs.bdj-ant-utils.classpath}"/>
+        <runbdj platformhome="${platform.home}" deploymentroot="${bdj.deployment.dir}" jvmargs="${run.jvmargs}" args="${application.args}"/>
+    </target>
+    <target name="-post-bdj-run" if="bdj-platform.trigger"/>
+    <target name="bdj-run" if="bdj-platform.trigger" depends="-pre-bdj-run, -bdj-run, -post-bdj-run"/>
+    <!--run-->
+    <target name="pre-run"/>
+    <target name="run" depends="jar,pre-run,cldc-run,ricoh-run,semc-run,savaje-run,nokiaS80-run,nsicom-run,bdj-run" description="Run MIDlet suite."/>
+    <target name="run-no-build" depends="init,pre-run,cldc-run,ricoh-run,semc-run,savaje-run,nokiaS80-run,nsicom-run,bdj-run" description="Quick Run already built MIDlet suite."/>
+    <!--cldc-debug-->
+    <target name="cldc-debug" if="cldc-platform.trigger">
+        <parallel>
+            <nb-run debug="true" debugsuspend="true" debugserver="true" debuggeraddressproperty="jpda.port" platformtype="${platform.type}" platformhome="${platform.home}" device="${platform.device}" jadfile="${dist.dir}/${dist.jad}" jadurl="${dist.jad.url}" jarfile="${dist.dir}/${dist.jar}" execmethod="${run.method}" securitydomain="${evaluated.run.security.domain}" commandline="${platform.debugcommandline}" classpath="${platform.bootclasspath}:${dist.dir}/${dist.jar}" cmdoptions="${run.cmd.options}"/>
+            <sequential>
+                <sleep seconds="5"/>
+                <antcall target="nbdebug"/>
+            </sequential>
+        </parallel>
+    </target>
+    <!--ricoh-debug-->
+    <target name="ricoh-debug" if="ricoh-platform.trigger">
+        <copy todir="${platform.home}/mnt/sd3/sdk/dsdk/dist/${ricoh.application.uid}" overwrite="true">
+            <fileset dir="${dist.dir}">
+                <patternset refid="deployment.patternset"/>
+            </fileset>
+            <flattenmapper/>
+        </copy>
+        <parallel>
+            <ant antfile="${platform.home}/startemulator_debug.xml" target="debug_emulator" dir="${platform.home}">
+                <property name="emulator.skin" value="WVGA.xml"/>
+                <property name="emulator.autolaunchid" value="${ricoh.application.uid}"/>
+            </ant>
+            <sequential>
+                <sleep seconds="5"/>
+                <property name="jpda.port" value="8000"/>
+                <property name="debug.period" value="3000"/>
+                <property name="debug.timeout" value="30000"/>
+                <antcall target="nbdebug" inheritall="true" inheritrefs="true"/>
+            </sequential>
+        </parallel>
+    </target>
+    <!--semc-debug-->
+    <!--semc-build-j9-debug-->
+    <target name="semc-build-j9-debug" if="semc-platform.trigger">
+        <fail message="Main class is not set!">
+            <condition>
+                <equals arg1="${main.class}" arg2=""/>
+            </condition>
+        </fail>
+        <j9builder jvmargs="${run.jvmargs} -Xrunjdwp:server=n,address=${jpda.port}" mainclass="${main.class}" args="${application.args}" platform="${platform.type}" home="${platform.home}" dist="${j9.dist}" id="${semc.application.uid}" xlet="${main.class.xlet}" applet="${main.class.applet}" jarname="${dist.jar}"/>
+    </target>
+    <target name="semc-debug-start" if="semc-platform.trigger">
+        <nbjpdastart transport="dt_socket" addressproperty="jpda.port" name="${main.class}">
+            <classpath>
+                <path path="${build.classes.dir}"/>
+            </classpath>
+            <bootclasspath>
+                <path path="${platform.bootclasspath}"/>
+            </bootclasspath>
+        </nbjpdastart>
+    </target>
+    <target name="semc-debug" depends="semc-debug-start,semc-build-j9-debug,semc-icon-assembly,semc-ppro-emulator,semc-do-run" if="semc-platform.trigger"/>
+    <!--savaje-debug-->
+    <target name="savaje-debug" if="savaje-platform.trigger">
+        <parallel>
+            <sunEmulatorExec home="${platform.home}" mainclass="${main.class}" args="${application.args}" jvmargs="${run.jvmargs}" device="${platform.device}" profile="${platform.profile}" xlet="${main.class.xlet}" applet="${main.class.applet}" debug="true" debuggeraddressproperty="jpda.port">
+                <fileset dir="${dist.dir}">
+                    <exclude name="javadoc/**"/>
+                </fileset>
+            </sunEmulatorExec>
+            <sequential>
+                <sleep seconds="5"/>
+                <antcall target="nbdebug"/>
+            </sequential>
+        </parallel>
+    </target>
+    <!--nokiaS80-debug-->
+    <target name="nokiaS80-debug" if="nokiaS80-platform.trigger">
+        <taskdef name="j9builder" classname="org.netbeans.modules.j2me.cdc.project.J9Builder" classpath="${libs.cdc-ant-utils.classpath}"/>
+        <j9builder jvmargs="${run.jvmargs} -Xrunjdwp:server=n,address=${jpda.port}" mainclass="${main.class}" args="${application.args}" platform="${platform.type}" home="${platform.home}" dist="${j9.dist}" id="NOKIA" xlet="${main.class.xlet}" applet="${main.class.applet}" jarname="${dist.jar}"/>
+        <mkdir dir="${platform.home}/epoc32/wins/c/logs/j9vm"/>
+        <taskdef name="nokiaexec" classname="org.netbeans.modules.j2me.cdc.project.nokiaS80.NokiaEmulatorExecTask" classpath="${libs.nokiaS80-ant-utils.classpath}"/>
+        <parallel>
+            <nokiaexec debug="true" debuggeraddressproperty="jpda.port" jvmargs="${run.jvmargs}" mainclass="${main.class}" args="${application.args}" home="${platform.home}" device="${platform.device}" xlet="${main.class.xlet}" applet="${main.class.applet}">
+                <fileset dir="${dist.dir}">
+                    <exclude name="javadoc/**"/>
+                </fileset>
+            </nokiaexec>
+            <sequential>
+                <sleep seconds="10"/>
+                <antcall target="nbdebug"/>
+            </sequential>
+        </parallel>
+    </target>
+    <!--nsicom-debug-->
+    <target name="nsicom-debug" if="nsicom-platform.trigger">
+        <fail message="Debugging is not supported in this NSIcom VM version. Use monitoring facility instead!"/>
+    </target>
+    <!--bdj-debug-->
+    <target name="-pre-bdj-debug" if="bdj-platform.trigger"/>
+    <target name="-bdj-debug" if="bdj-platform.trigger">
+        <taskdef name="runbdj" classname="org.netbeans.modules.j2me.cdc.project.bdj.BdjRun" classpath="${libs.bdj-ant-utils.classpath}"/>
+        <parallel>
+            <runbdj platformhome="${platform.home}" deploymentroot="${bdj.deployment.dir}" debug="true" debuggeraddressproperty="jpda.port" jvmargs="${run.jvmargs}" args="${application.args}"/>
+            <sequential>
+                <sleep seconds="1"/>
+                <antcall target="nbdebug"/>
+            </sequential>
+        </parallel>
+    </target>
+    <target name="-post-bdj-debug" if="bdj-platform.trigger"/>
+    <target name="bdj-debug" if="bdj-platform.trigger" depends="-pre-bdj-debug, -bdj-debug, -post-bdj-debug"/>
+    <!--debug-->
+    <target name="remove-timestamp">
+        <delete file="$/.timestamp"/>
+    </target>
+    <target name="pre-debug"/>
+    <target name="debug" description="Debug project." depends="clean,jar,remove-timestamp,pre-debug,cldc-debug,ricoh-debug,semc-debug,savaje-debug,nokiaS80-debug,nsicom-debug,bdj-debug"/>
+    <target name="nbdebug" description="Start NetBeans debugger" if="netbeans.home">
+        <property name="debug.delay" value="5000"/>
+        <nb-mobility-debug address="${jpda.port}" name="${app.codename}" delay="${debug.delay}" timeout="30000" period="2000"/>
+    </target>
+    <!--javadoc-->
+    <target name="browse-javadoc" if="netbeans.home" unless="no.javadoc.preview">
+        <nbbrowse file="${dist.javadoc.dir}/index.html"/>
+    </target>
+    <target name="javadoc" depends="preprocess">
+        <fail unless="dist.javadoc.dir">Must set dist.javadoc.dir</fail>
+        <mkdir dir="${dist.javadoc.dir}"/>
+        <javadoc source="${javac.source}" destdir="${dist.javadoc.dir}" bootclasspath="${platform.bootclasspath}" notree="${javadoc.notree}" use="${javadoc.use}" nonavbar="${javadoc.nonavbar}" noindex="${javadoc.noindex}" splitindex="${javadoc.splitindex}" author="${javadoc.author}" version="${javadoc.version}" windowtitle="${javadoc.windowtitle}" private="${javadoc.private}" encoding="${javac.encoding}" docencoding="${javac.encoding}" charset="${javac.encoding}">
+            <classpath>
+                <path path="${libs.classpath}"/>
+            </classpath>
+            <sourcepath>
+                <pathelement location="${buildsystem.baton}"/>
+            </sourcepath>
+        </javadoc>
+        <antcall target="browse-javadoc"/>
+    </target>
+    <!--clean and build-->
+    <target name="rebuild" depends="clean,build" description="Rebuild the application."/>
+    <target name="clean-timestamp">
+        <delete file="${build.dir}/.timestamp"/>
+    </target>
+    <target name="clean-preprocessed">
+        <delete dir="${preprocessed.dir}"/>
+    </target>
+    <target name="clean-classes">
+        <delete dir="${build.classes.dir}"/>
+    </target>
+    <target name="clean-obfuscated">
+        <delete file="${obfuscator.srcjar}"/>
+        <delete file="${obfuscator.destjar}"/>
+        <delete dir="${obfuscated.classes.dir}"/>
+    </target>
+    <target name="clean-preverified">
+        <delete dir="${preverify.sources.dir}"/>
+        <delete dir="${preverify.classes.dir}"/>
+    </target>
+    <target name="clean-manifest" if="manifest.build.file">
+        <delete file="${manifest.build.file}"/>
+    </target>
+    <target name="clean-jar">
+        <delete file="${dist.dir}/${dist.jar}"/>
+    </target>
+    <target name="clean-jad">
+        <delete file="${dist.dir}/${dist.jad}"/>
+    </target>
+    <target name="clean-javadoc">
+        <delete dir="${dist.javadoc.dir}"/>
+    </target>
+    <target name="clean-j9" if="j9.dist">
+        <delete file="${j9.dist}"/>
+    </target>
+    <target name="clean-ricoh" if="ricoh-platform.trigger">
+        <delete dir="${platform.home}/mnt/sd3/sdk/dsdk/dist/${ricoh.application.uid}"/>
+        <delete dir="${build.dir}/dalp"/>
+        <delete file="${dist.dir}/${application.name}.dalp"/>
+        <delete dir="${dist.dir}/lib"/>
+    </target>
+    <target name="clean-semc" if="semc-platform.trigger">
+        <delete dir="${dist.dir}" includes="*.sis,*.SIS"/>
+        <delete dir="${platform.home}/epoc32/tools/ppro-custom-launcher/output/win32/PProLauncher${semc.application.uid}"/>
+        <delete dir="${platform.home}/epoc32/tools/ppro-custom-launcher/output/arm/PProLauncher${semc.application.uid}"/>
+        <delete file="${platform.home}/epoc32/release/winscw/udeb/PProLauncher${semc.application.uid}.exe"/>
+        <delete file="${platform.home}/epoc32/release/winscw/udeb/z/Resource/Apps/PProLauncher${semc.application.uid}.rsc"/>
+        <delete file="${platform.home}/epoc32/release/winscw/udeb/z/private/10003a3f/apps/PProLauncher${semc.application.uid}_reg.rsc"/>
+        <delete file="${platform.home}/epoc32/release/winscw/udeb/z/Resource/Apps/PProLauncher${semc.application.uid}_loc.R01"/>
+        <delete file="${platform.home}/epoc32/release/winscw/udeb/z/Resource/Apps/${semc.application.uid}.mbm"/>
+        <delete file="${platform.home}/epoc32/data/Z/private/10003a3f/apps/PProLauncher${semc.application.uid}_reg.rsc"/>
+        <delete file="${platform.home}/epoc32/data/Z/Resource/Apps/PProLauncher${semc.application.uid}.rsc"/>
+        <delete file="${platform.home}/epoc32/data/Z/Resource/Apps/PProLauncher${semc.application.uid}_loc.R01"/>
+        <delete dir="${platform.home}/epoc32/winscw/C/private/${semc.application.uid}"/>
+    </target>
+    <target name="clean-savaje" if="savaje-platform.trigger">
+        <delete dir="${build.dir}/jnlp"/>
+        <delete file="${dist.dir}/bundle.jnlp"/>
+        <delete file="${dist.dir}/bundle.policy"/>
+        <delete dir="${dist.dir}/lib"/>
+    </target>
+    <!--clean-->
+    <target name="pre-clean"/>
+    <target name="post-clean"/>
+    <target name="-clean-configuration">
+        <condition property="can.clean.config.completely">
+            <not>
+                <equals arg1="${config.active}" arg2="" trim="true"/>
+            </not>
+        </condition>
+    </target>
+    <target name="-clean-configuration-root" depends="-clean-configuration" if="can.clean.config.completely">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+    <target name="-clean-default-configuration-root" depends="-clean-configuration" unless="can.clean.config.completely">
+        <tempfile deleteonexit="true" property="tmp.exclude" prefix="convert"/>
+        <echo file="${tmp.exclude}">${all.configurations}</echo>
+        <replaceregexp file="${tmp.exclude}" match="(.)(,|$)" replace="\1/**\2" flags="g"/>
+        <loadfile srcfile="${tmp.exclude}" property="exclude.pattern"/>
+        <delete file="${tmp.exclude}"/>
+        <delete quiet="true">
+            <fileset dir="${build.dir}" excludes="${exclude.pattern}"/>
+        </delete>
+        <delete quiet="true">
+            <fileset dir="${dist.dir}" excludes="${exclude.pattern}"/>
+        </delete>
+    </target>
+    <target name="do-clean" depends="pre-clean,clean-timestamp,clean-preprocessed,clean-classes,clean-obfuscated,clean-preverified,clean-manifest,clean-jar,clean-jad,clean-javadoc,clean-j9,clean-ricoh,clean-semc,clean-savaje,-clean-default-configuration-root,-clean-configuration-root,post-clean"/>
+    <target name="clean" depends="conditional-clean" if="no.clean.before.build" description="Clean build products.">
+        <antcall target="do-clean" inheritall="true" inheritrefs="true"/>
+    </target>
+    <!--deploy-->
+    <target name="pre-deploy"/>
+    <target name="do-deploy" if="deployment.method" unless="skip.deployment">
+        <fail unless="deployment.scriptfile">Property deployment.${deployment.method}.scriptfile not set. The property should point to an Ant script providing ${deployment.method} deployment.</fail>
+        <ant antfile="${deployment.scriptfile}" inheritall="true" inheritrefs="true"/>
+        <antcall target="post-deploy" inheritall="true" inheritrefs="true"/>
+    </target>
+    <target name="post-deploy"/>
+    <target name="deploy" depends="build,pre-deploy,do-deploy,post-deploy"/>
+    <!--for-all-configs targets-->
+    <target name="for-all-configs" depends="load-properties">
+        <fail unless="libs.ant-contrib.classpath">Classpath to Ant Contrib library (libs.ant-contrib.classpath property) is not set.</fail>
+        <property name="selected.configurations" value="${all.configurations}"/>
+        <taskdef resource="net/sf/antcontrib/antlib.xml">
+            <classpath>
+                <pathelement path="${libs.ant-contrib.classpath}"/>
+            </classpath>
+        </taskdef>
+        <for list="${selected.configurations}" param="cfg" keepgoing="true" trim="true">
+            <sequential>
+                <echo>Active project configuration: @{cfg}</echo>
+                <antcall target="${target.to.call}" inheritall="false" inheritrefs="false">
+                    <param name="config.active" value="@{cfg}"/>
+                    <propertyset>
+                        <propertyref name="no.deps"/>
+                    </propertyset>
+                </antcall>
+                <property name="no.deps" value="true"/>
+            </sequential>
+        </for>
+    </target>
+    <target name="jar-all">
+        <antcall target="for-all-configs">
+            <param name="target.to.call" value="jar"/>
+        </antcall>
+    </target>
+    <target name="build-all">
+        <antcall target="for-all-configs">
+            <param name="target.to.call" value="build"/>
+        </antcall>
+    </target>
+    <target name="javadoc-all">
+        <antcall target="for-all-configs">
+            <param name="target.to.call" value="javadoc"/>
+        </antcall>
+    </target>
+    <target name="deploy-all">
+        <antcall target="for-all-configs">
+            <param name="target.to.call" value="deploy"/>
+        </antcall>
+    </target>
+    <target name="rebuild-all">
+        <antcall target="for-all-configs">
+            <param name="target.to.call" value="rebuild"/>
+        </antcall>
+    </target>
+    <target name="clean-all">
+        <property file="nbproject/project.properties"/>
+        <fail unless="build.root.dir">Property build.root.dir is not set. By default its value should be \"build\".</fail>
+        <fail unless="dist.root.dir">Property dist.root.dir is not set. By default its value should be \"dist\".</fail>
+        <antcall target="for-all-configs">
+            <param name="target.to.call" value="clean"/>
+        </antcall>
+    </target>
+</project>

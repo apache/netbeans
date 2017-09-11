@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE module_updates PUBLIC "-//NetBeans//DTD Autoupdate Catalog 2.3//EN" "http://www.netbeans.org/dtds/autoupdate-catalog-2_3.dtd">
+<module_updates timestamp="31/17/17/31/01/2007">
+
+
+<module codenamebase="org.yourorghere.depending" distribution="nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-depending.nbm" downloadsize="2642" homepage="" license="AD9FBBC9" moduleauthor="" needsrestart="false" releasedate="2007/01/30">
+    <manifest OpenIDE-Module="org.yourorghere.depending" OpenIDE-Module-Implementation-Version="070130" OpenIDE-Module-Java-Dependencies="Java &gt; 1.4" OpenIDE-Module-Module-Dependencies="org.yourorghere.engine &gt; 1.0" OpenIDE-Module-Name="depending" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+    
+</module>
+
+<module codenamebase="org.yourorghere.depending_on_new_one_engine" distribution="nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-depending_on_new_one_engine.nbm" downloadsize="2642" homepage="" license="AD9FBBC9" moduleauthor="" needsrestart="false" releasedate="2007/01/30">
+    <manifest OpenIDE-Module="org.yourorghere.depending_on_new_one_engine" OpenIDE-Module-Implementation-Version="070130" OpenIDE-Module-Java-Dependencies="Java &gt; 1.4"
+    OpenIDE-Module-Module-Dependencies="org.yourorghere.engine &gt; 1.1" OpenIDE-Module-Name="depending_on_new_one_engine" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+    
+</module>
+
+<!--<module codenamebase="org.yourorghere.brokendepending" distribution="nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-brokendepending.nbm" downloadsize="2642" homepage="" license="AD9FBBC9" moduleauthor="" needsrestart="false" releasedate="2007/01/30">
+    <manifest OpenIDE-Module="org.yourorghere.brokendepending" OpenIDE-Module-Implementation-Version="070130" OpenIDE-Module-Java-Dependencies="Java &gt; 1.4" OpenIDE-Module-Module-Dependencies="org.yourorghere.unreachable &gt; 1.0" OpenIDE-Module-Name="brokendepending" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+    
+</module>-->
+
+
+<module codenamebase="org.yourorghere.engine"
+  distribution="nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-engine.nbm" downloadsize="2809" homepage="" license="AD9FBBC9" moduleauthor="" needsrestart="false" releasedate="2007/01/31">
+    <manifest OpenIDE-Module="org.yourorghere.engine" OpenIDE-Module-Implementation-Version="070131" OpenIDE-Module-Java-Dependencies="Java &gt; 1.4" OpenIDE-Module-Module-Dependencies="org.yourorghere.independent &gt; 1.0" OpenIDE-Module-Name="engine" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+    
+</module>
+
+<module codenamebase="org.yourorghere.engine"
+  distribution="nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-engine-1-1.nbm" downloadsize="2815" homepage="" license="AD9FBBC9" moduleauthor="" needsrestart="false" releasedate="2007/01/31">
+    <manifest OpenIDE-Module="org.yourorghere.engine" OpenIDE-Module-Implementation-Version="070131" OpenIDE-Module-Java-Dependencies="Java &gt; 1.4" OpenIDE-Module-Module-Dependencies="org.yourorghere.independent &gt; 1.0" OpenIDE-Module-Name="engine" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.1"/>
+</module>
+
+<module codenamebase="org.yourorghere.independent" distribution="nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-independent.nbm" downloadsize="2633" homepage="" license="AD9FBBC9" moduleauthor="" needsrestart="false" releasedate="2007/01/30">
+    <manifest OpenIDE-Module="org.yourorghere.independent" OpenIDE-Module-Implementation-Version="070130" OpenIDE-Module-Java-Dependencies="Java &gt; 1.4" OpenIDE-Module-Name="independent" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+    
+</module>
+
+<module codenamebase="org.yourorghere.refresh-providers-test" distribution="nbresloc:/org/netbeans/api/autoupdate/data/refresh-providers-test.nbm" downloadsize="2633" homepage="" license="AD9FBBC9" moduleauthor="" needsrestart="false" releasedate="2007/01/30">
+    <manifest OpenIDE-Module="org.yourorghere.refresh-providers-test" OpenIDE-Module-Implementation-Version="070130" OpenIDE-Module-Java-Dependencies="Java &gt; 1.4" OpenIDE-Module-Name="refresh-providers-test" OpenIDE-Module-Requires="org.openide.modules.ModuleFormat1" OpenIDE-Module-Specification-Version="1.0"/>
+    
+</module>
+
+<license name="AD9FBBC9">[NO LICENSE SPECIFIED]
+</license>
+</module_updates>
+

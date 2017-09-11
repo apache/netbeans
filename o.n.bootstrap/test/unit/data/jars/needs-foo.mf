@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module: needs_foo
+OpenIDE-Module-Name: Needs foo
+OpenIDE-Module-Needs: foo

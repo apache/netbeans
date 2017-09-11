@@ -1,0 +1,3 @@
+org.netbeans.api.debugger.test.actions.StartActionProvider
+org.netbeans.api.debugger.test.actions.KillActionProvider
+org.netbeans.api.debugger.test.actions.TestDebuggerActionsProvider

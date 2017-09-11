@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<MIME-resolver>
+    <file>
+        <ext name="bnm"/>
+        <resolver mime="text/x-bnm"/>
+    </file>
+
+    <!-- BNM PROJECT -->
+    <file>
+        <!--
+            Duplicite resolver that accept less files than the following one.
+            Should not be used in the filter.
+        -->
+        <ext name=""/>
+        <name name="bnmProject" substring="false" ignorecase="false" />
+        <resolver mime="text/x-bnm-project"/>
+    </file>
+    <file>
+        <ext name=""/>
+        <name name="bnmProject" substring="true" ignorecase="false" />
+        <resolver mime="text/x-bnm-project"/>
+    </file>
+
+    <!-- BNM SETTINGS -->
+    <file>
+        <ext name=""/>
+        <name name="bnmSettings" substring="false" />
+        <resolver mime="text/x-bnm-settings"/>
+    </file>
+    <file>
+        <!--
+            Duplicite resolver that accept less files than the previous one.
+            Should not be used in the filter.
+        -->
+        <ext name=""/>
+        <name name="bnmSettings" substring="false" ignorecase="true" />
+        <resolver mime="text/x-bnm-settings"/>
+    </file>
+
+    <!-- BNM INFO -->
+    <file>
+        <ext name=""/>
+        <name name="bnmInfo" substring="true" />
+        <resolver mime="text/x-bnm-info"/>
+    </file>
+    <file>
+        <!--
+            Duplicite resolver that accept the same files as the previous one,
+            only differs in case of file name, that is ignored.
+            Should not be used in the filter.
+        -->
+        <ext name=""/>
+        <name name="BNMInfo" substring="true" />
+        <resolver mime="text/x-bnm-info"/>
+    </file>
+
+    <!-- BNM HELP -->
+    <file>
+        <ext name=""/>
+        <name name="bnmHelp" substring="false" ignorecase="false" />
+        <resolver mime="text/x-bnm-help"/>
+    </file>
+</MIME-resolver>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+
+<fontscolors>
+    <fontcolor name="test-bgColor" bgColor="AA0000" />
+    <fontcolor name="test-foreColor" foreColor="00BB00" />
+    <fontcolor name="test-underline" underline="0000CC"/>
+    <fontcolor name="test-strikeThrough" strikeThrough="DD0000" />
+    <fontcolor name="test-waveUnderlined" waveUnderlined="00EE00" />
+    <fontcolor name="test-all" bgColor="0A0B0C" foreColor="0D0E0F" underline="010203" strikeThrough="040506" waveUnderlined="070809" />
+
+    <fontcolor name="test-set-all" bgColor="0A0B0C" foreColor="0D0E0F" underline="010203" strikeThrough="040506" waveUnderlined="070809" />
+    <fontcolor name="test-events" bgColor="0A0B0C" foreColor="0D0E0F" underline="010203" strikeThrough="040506" waveUnderlined="070809" />
+    <fontcolor name="test-immutable" bgColor="0A0B0C" foreColor="0D0E0F" underline="010203" strikeThrough="040506" waveUnderlined="070809" />
+    
+    <fontcolor name="test-font-cute-A">
+        <font name="Test Font Cute A" size="17" style="bold" />
+    </fontcolor>
+    <fontcolor name="test-font-cute-B">
+        <font name="Test Font Cute B" size="13" style="italic" />
+    </fontcolor>
+
+    <fontcolor name="test-inheritance-typeA-specific" bgColor="AA0000" />
+    <fontcolor name="test-inheritance-typeA-typeB" bgColor="AAAA00" />
+</fontscolors>

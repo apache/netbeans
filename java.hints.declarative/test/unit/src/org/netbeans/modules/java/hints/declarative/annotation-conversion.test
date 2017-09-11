@@ -1,0 +1,22 @@
+%%TestCase test
+package test;
+import test.Test.Ann;
+@Ann(bool=true)
+public class Test {
+    public static @interface Ann {
+        public boolean bool();
+        public int pref() default 0;
+        public int suff() default 0;
+    }
+}
+%%=>
+package test;
+import test.Test.Ann;
+@Ann(nue=false)
+public class Test {
+    public static @interface Ann {
+        public boolean bool();
+        public int pref() default 0;
+        public int suff() default 0;
+    }
+}

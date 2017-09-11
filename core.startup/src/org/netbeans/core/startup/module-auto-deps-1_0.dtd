@@ -1,0 +1,177 @@
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!--
+Structure of XML files present in a NetBeans installation
+with names system/ModuleAutoDeps/*.xml (conventionally named
+according to code name base, e.g. org-netbeans-modules-foo.xml).
+
+Each file contribute some module dependency transformations
+to the system, helping backward compatibility.
+
+This file can be processed with the Generate Documentation
+context menu item in NetBeans to create an HTML summary.
+
+Public ID: "-//NetBeans//DTD Module Automatic Dependencies 1.0//EN"
+Public URL: http://www.netbeans.org/dtds/module-auto-deps-1_0.dtd
+
+@see "#30161"
+-->
+
+<!ENTITY % dependency 'module-dependency | package-dependency | token-dependency'>
+
+<!---
+A set of transformations to apply to all module dependencies,
+to retain backward compatibility during refactorings.
+This should be the root element of auto-deps.xml.
+Note that transformations are applied <em>in parallel</em>, so
+later transformations cannot be triggered by results from earlier
+transformations.
+-->
+<!ELEMENT transformations (transformationgroup*)>
+<!ATTLIST transformations
+          version (1.0) #REQUIRED
+>
+
+<!---
+A module to exclude from dependency transformation.
+You may give a specific module, or all modules whose code name base
+begins with some prefix.
+(For prefix: name <samp>a.b</samp> matches the module named
+<samp>a.b</samp> and all modules whose names start with <samp>a.b.</samp>.)
+-->
+<!ELEMENT exclusion EMPTY>
+<!ATTLIST exclusion
+          codenamebase CDATA #REQUIRED
+          prefix (true | false) #REQUIRED
+>
+
+<!---
+A group of transformations to apply, related to one another.
+-->
+<!ELEMENT transformationgroup (description, exclusion*, transformation+)>
+
+<!---
+Textual description of a transformation group.
+Informational only.
+-->
+<!ELEMENT description (#PCDATA)>
+
+<!---
+One dependency transformation.
+Each non-excluded module matching the trigger will
+get the specified resulting dependencies.
+-->
+<!ELEMENT transformation (trigger-dependency, implies)>
+
+<!---
+The trigger for a transformation.
+Contains an old dependency declaration.
+Cancel triggers match when the module had that dependency
+(if versioned, must be at least that new, in both major and spec)
+and when matching, delete the old dependency.
+Older triggers match when the dependency was there but on an older
+version than the one specified. (Should use a spec dep normally;
+no version at all matches only plain or spec deps on an earlier major version).
+-->
+<!ELEMENT trigger-dependency (%dependency;)>
+<!-- add as needed: (newer | negative)
+Newer triggers match when the module had that dependency
+(if it was versioned, must be at least that new, in both major and spec).
+Negative triggers match if the module did not have it.
+-->
+<!ATTLIST trigger-dependency
+          type (cancel | older) #REQUIRED
+>
+
+<!---
+Dependencies to create as a result of this transformation.
+-->
+<!ELEMENT implies (result+)>
+
+<!---
+One dependency to create as a result of this transformation.
+If the module already had a dependency on the specified object (module, ...),
+and that dependency was older than the specified one,
+then it will be <em>replaced</em> by the specified dependency.
+Otherwise a fresh dependency will be added.
+-->
+<!ELEMENT result (%dependency;)>
+
+<!---
+A dependency on a module, similar to
+<code>OpenIDE-Module-Module-Dependencies</code>.
+Never applies to implementation dependencies.
+For <code>OpenIDE-Module-IDE-Dependencies</code>,
+use codenamebase=org.openide (and major=1).
+-->
+<!ELEMENT module-dependency EMPTY>
+<!ATTLIST module-dependency
+          codenamebase CDATA #REQUIRED
+          major CDATA #IMPLIED
+          spec CDATA #IMPLIED
+>
+
+<!---
+A dependency on a package, similar to
+<code>OpenIDE-Module-Package-Dependencies</code>.
+Never applies to implementation dependencies.
+<code>name</code> here may include sample class information
+only when used in a result, not in a trigger!
+-->
+<!ELEMENT package-dependency EMPTY>
+<!ATTLIST package-dependency
+          name CDATA #REQUIRED
+          spec CDATA #IMPLIED
+>
+
+<!---
+A dependency on a token, similar to
+<code>OpenIDE-Module-Requires</code>.
+-->
+<!ELEMENT token-dependency EMPTY>
+<!ATTLIST token-dependency
+          name CDATA #REQUIRED
+>

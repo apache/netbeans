@@ -1,0 +1,1227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+  question-version="1.25"
+  author="mmetelka@netbeans.org"
+>
+
+  &api-questions;
+
+
+<!-- Question: arch-what
+
+     <question id="arch-what">
+            What is this project good for?
+            <hint>
+            Please provide here few lines describing the the project,
+            what problem it should solve, provide links to documentation, 
+            specifications, etc.
+            </hint>
+        </question>
+-->
+<answer id="arch-what">
+The editor module provides a full-featured source text editor
+that is integrated with the Form Editor, Explorer, compiler, and debugger. 
+<p>List of the main features:</p>
+<ul>
+
+    <li>Syntax highlighting of java, HTML, XML and other languages.</li>
+  <li>Code Completion enables to type a few characters 
+        and then display a list of suggestions appropriate
+        in the given context that can be then used 
+        to automatically complete the expression.
+  </li>
+  <li>Word Matching enables enables to type the beginning characters
+        of a word used elsewhere in the code and then have the editor
+        generate the rest of the word.
+  </li>
+  <li>Abbreviations allow to expand typed text from a few
+        predefined characters into a full word or phrase.
+  </li>
+  <li>Goto Class enables to open a Java file in the Source Editor 
+        by typing only the class name.
+        The IDE helps to identify the correct package name for the class.
+  </li>
+  <li>The Fast Import feature enables to quickly add import statements
+        for Java classes in the source file.
+  </li>
+  <li>Goto Declaration feature allows to quickly jump to a declaration
+        of a variable under the cursor.
+  </li>
+  <li>Goto Source allows to open source file containing
+        definition of a type that the variable under the cursor is of.
+  </li>
+  <li>Code folding allows to collapse sections of the code that are
+        unimportant to the user at the given time.
+        For example in java source the collapsable sections include
+        imports section, inner classes, methods and javadocs.
+  </li>
+</ul>
+</answer>
+
+
+
+<!--
+        <question id="arch-overall" when="init">
+            Describe the overall architecture. 
+            <hint>
+            What will be API for 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi">
+                clients and what support API</a>? 
+            What parts will be pluggable?
+            How will plug-ins be registered? Please use <code>&lt;api type=&quot;export&quot;/></code>
+            to describe your general APIs.
+            If possible please provide 
+            simple diagrams. 
+            </hint>
+        </question>
+-->
+<answer id="arch-overall">
+The editor functionality are mainly implementations of the Swing Text package APIs
+plus extension features such as Syntax Coloring, Code Completion,
+Word Matching, Abbreviations or Macros.
+
+<p>
+The editor consists of a library part (located under <i>editor/lib</i>
+and described in a separate arch document)
+and the module part (under <i>src</i> subfolder)
+that depends on  NetBeans APIs specified in this document.
+</p>
+
+</answer>
+
+
+
+<!-- Question: compat-i18n
+
+     <question id="compat-i18n">
+            Is your module correctly internationalized?
+            <hint>
+            Correct internationalization means that it obeys instuctions 
+            at <a href="http://www.netbeans.org/devhome/docs/i18n/index.html">
+            NetBeans I18N pages</a>.
+            </hint>
+        </question>
+-->
+<answer id="compat-i18n">
+    Yes.
+</answer>
+
+
+
+<!-- Question: compat-standards
+
+     <question id="compat-standards">
+            Does the module implements or defines any standards? Is the 
+            implementation exact or it deviates somehow?
+        </question>
+-->
+<answer id="compat-standards">
+    It conforms to the Swing Text Package API.
+</answer>
+
+
+
+<!-- Question: compat-version
+
+     <question id="compat-version">
+            Does your module properly coexists with earlier and future
+            versions? Can you correctly read settings? Will future
+            versions be able to read settings?
+            
+            <hint>
+            Very helpful for reading settings is to store version number
+            there, so future versions can decide whether how to read/convert
+            the settings and older versions can ignore the new ones.
+            </hint>
+        </question>
+-->
+<answer id="compat-version">
+    Only one version of the module can be installed at a time. 
+    The settings are shared across different versions, they are stored
+    in a human readable form in XML files.
+</answer>
+
+
+
+<!-- Question: dep-jre
+
+     <question id="dep-jre">
+            Which version of JRE you need (1.2, 1.3, 1.4, etc.)?
+            <hint>
+            It is expected that if your module runs on 1.x that it will run 
+            on 1.x+1 if no, state that please. Also describe here cases where
+            you run different code on different versions of JRE and why.
+            </hint>
+        </question>
+-->
+<answer id="dep-jre">
+    Needs at least JRE 1.4.
+</answer>
+
+
+
+<!-- Question: dep-jrejdk
+
+     <question id="dep-jrejdk">
+            Do you require JDK or is JRE enough?
+        </question>
+-->
+<answer id="dep-jrejdk">
+    Requires JRE only.
+</answer>
+
+
+
+<!-- Question: dep-nb
+
+     <question id="dep-nb">
+            What other NetBeans projects this one depends on?
+            <hint>
+            If you want, describe such projects as imported API using
+            the <code>&lt;api name="identification" type="import or export" category="stable" url="where is the description" /&gt;</code>
+            </hint>
+        </question>
+-->
+<answer id="dep-nb">
+    <defaultanswer generate='none'/>
+    <br/>
+    <api group="java" name="EditorModuleAPI" type="export" category="devel">
+        Editor defines APIs and SPIs both by 
+        <ul>
+            <li> Providing java classes in public packages for further reuse.
+                <br/>
+                Most of the classes were created spontaneously (several years ago)
+                without fulfilling of the rules imposed on APIs and SPIs
+                at the present time.
+                <br/>
+                There is an ongoing work to revisit the existing classes
+                and create stable APIs and SPIs (and possibly extract functionality
+                into a submodule where appropriate). However this is a long-term
+                task spanning several promotions.
+            </li>
+            <li> Being sensitive to content of certain directories in xml layer.
+            </li>
+        </ul>
+    </api> 
+    <br/>
+    <api group="java" name="OpenAPIs" type="import" category="official" url="http://openide.netbeans.org"/> 
+    <br/>
+    <api group="java" name="CodeFoldingAPI" type="import" category="official"
+        url="@org-netbeans-modules-editor-fold@/architecture-summary.html#java-CodeFoldingAPI"
+    />
+    <api group="java" name="EditorUtilAPI" type="import" category="friend">
+        Set of various editor-related utility classes and methods.
+    </api>
+</answer>
+
+
+
+<!-- Question: dep-non-nb
+
+     <question id="dep-non-nb">
+            What other non-NetBeans projects this one depends on?
+            
+            <hint>
+            Some non-NetBeans projects are packaged as NetBeans modules
+            (see <a href="http://libs.netbeans.org">libraries</a>) and
+            it is prefered to use this approach when more modules may
+            depend on such third-party library.
+            </hint>
+        </question>
+-->
+<answer id="dep-non-nb">
+    <api group="java" name="JAXP" type="import" category="standard" url="http://java.sun.com/xml/jaxp/dist/1.1/docs/api/"> 
+    Standard XML APIs (DOM, SAX) - distributed with the IDE (in ../editor.lib/ext/xml-apis*.jar),
+    already part of JDK 1.4 and newer).
+    </api>
+</answer>
+
+
+
+<!-- Question: dep-platform
+
+     <question id="dep-platform">
+            On which platforms your module run? Any? Does it run in the same
+            way?
+            <hint>
+            If your module is using JNI or deals with special differences of
+            OSes like filesystems, etc. please describe here what they are.
+            </hint>
+        </question>
+-->
+<answer id="dep-platform">
+    The module is 100% pure Java and runs on any platform.
+</answer>
+
+
+
+<!-- Question: deploy-jar
+
+     <question id="deploy-jar">
+            Do you deploy just module JAR file(s) or some other files?
+            <hint>
+            If your module consist just from one module JAR file, just confirm that.
+            If it uses more than one JAR, describe where there are located, how
+            they refer to each other. 
+            If it consist of module JAR(s) and other files, please describe
+            what is their purpose, why other files are necessary. Please 
+            make sure that installation/deinstallation leaves the system 
+            in state as it was before installation.
+            </hint>
+        </question>
+-->
+<answer id="deploy-jar">
+<code>org-netbeans-modules-editor.jar</code> - standard module jar file
+</answer>
+
+
+
+<!-- Question: deploy-nbm
+
+     <question id="deploy-nbm">
+            Can you deploy NBM via AutoUpdate center?
+            <hint>
+            If not why?
+            </hint>
+        </question>
+-->
+<answer id="deploy-nbm">
+    Yes.
+</answer>
+
+
+
+<!-- Question: deploy-packages
+
+     <question id="deploy-packages">
+            Are packages of your module made inaccessible by not declaring them
+            public?
+            
+            <hint>
+            NetBeans module system allows restriction of access rights to
+            public classes of your module from other modules. This prevents
+            unwanted dependencies of others on your code and should be used
+            whenever possible (<a href="http://www.netbeans.org/download/apis/org/openide/doc-files/upgrade.html#3.4-public-packages">
+            public packages
+            </a>). 
+            </hint>
+        </question>
+-->
+<answer id="deploy-packages">
+
+Description of public packages:
+<ul>
+    <li> <code>org.netbeans.modules.editor</code> - NetBeans-specific editor infrastructure
+    </li>
+    <li> <code>org.netbeans.modules.editor.html</code> - NetBeans-specific editor infrastructure
+    </li>
+    <li> <code>org.netbeans.modules.editor.java</code> - NetBeans-specific java editor infrastructure
+    </li>
+    <li> <code>org.netbeans.modules.editor.options</code> - Editor generic options support plus options for ../editor.plain, html and java editors
+    </li>
+    <li> <code>org.netbeans.modules.editor.plain</code> - NetBeans-specific plain text editor infrastructure
+    </li>
+</ul>
+    
+</answer>
+
+
+
+<!-- Question: deploy-shared
+
+     <question id="deploy-shared">
+            Do you need to be installed in shared location or only in user directory?
+            <hint>
+            Installation location shall not matter, if it does explain why.
+            </hint>
+        </question>
+-->
+<answer id="deploy-shared">
+    Module can be installed anywhere.
+</answer>
+
+
+
+<!-- Question: exec-classloader
+
+     <question id="exec-classloader">
+            Does your code uses own classloader?
+            <hint>
+            A bit unusual. Please explain why and what for.
+            </hint>
+        </question>
+-->
+<answer id="exec-classloader">
+    No.
+</answer>
+
+
+
+<!-- Question: exec-component
+
+     <question id="exec-component">
+            Is execution of your code influenced by (string) property
+            of any of your components?
+            
+            <hint>
+            Often <code>JComponent.getClientProperty</code>, <code>Action.getValue</code>
+            or <code>PropertyDescriptor.getValue</code>, etc. are used to influence
+            a behaviour of some code. This of course forms an interface that should
+            be documented. Also if one depends on some interface that an object
+            implements (<code>component instanceof Runnable</code>) that forms an
+            API as well.
+            </hint>
+        </question>
+-->
+<answer id="exec-component">
+    There are certain document properties (<code>javax.swing.text.Document.getProperty()</code>)
+    that influence the document execution:
+    <br/>
+    <api type="import" name="mimeType" category="stable" group="property">
+        Document property containing mime-type of the particular document e.g. "text/x-java".
+        <br/>
+        It allows to search for particular editor settings based on
+        the mime-type such as tooltip annotations providers etc.
+        <br/>
+        Maintained by <code>org.openide.text</code> package.
+    </api>
+    <br/>
+    <api type="import" name="Document.StreamDescriptionProperty" category="stable" group="property">
+        Document property containing either <code>DataObject</code> or <code>FileObject</code>
+        from which the <code>Document</code> content was loaded.
+        <br/>
+        Maintained by <code>org.openide.text</code> package.
+    </api>
+    <br/>
+    <api type="export" name="DefaultEditorKit.EndOfLineStringProperty" category="stable" group="property">
+        Document property containing line separator that was used when the document content was
+        loaded from a <code>java.io.Reader</code> by an <code>EditorKit.read()</code>.
+    </api>
+    <br/>
+    <api type="export" name="line-limit" category="private" group="property">
+        Document property that determines the number of characters in the longest line
+        determined during the document loading from a reader by the editor kit. 
+    </api>
+    
+    <p>Following component client properties incluence the component behavior:</p>
+    <br/>
+    <api type="import" name="errorStripeOnly" category="private" group="property">
+        The component should only be displayed with the error stripe side bar.
+        The other side bars will not be displayed.
+    </api>
+    
+</answer>
+
+
+
+<!-- Question: exec-privateaccess
+
+     <question id="exec-privateaccess">
+            Are you aware of any other part of the system calling some of 
+            your methods by reflection?
+            <hint>
+            If so, describe the "contract" as an API. Likely private or friend one, but
+            still API and consider rewrite of it.
+            </hint>
+        </question>
+-->
+<answer id="exec-privateaccess">
+No.
+</answer>
+
+
+
+<!-- Question: exec-property
+
+     <question id="exec-property">
+            Is execution of your code influenced by any environment of
+            system (<code>System.getProperty</code>) property?
+            
+            <hint>
+            If there is a property that can change the behaviour of your 
+            code, somebody will likely use it. You should describe what it does 
+            and the stability category of this API. You may use
+            <PRE>
+                &lt;property name="id" category="private" &gt;
+                    description of the property, where it is used, what it influence, etc.
+                &lt;/property&gt;            
+            </PRE>
+            </hint>
+        </question>
+-->
+<answer id="exec-property">
+    <br/>
+    <br/>
+    <api type="import" group="systemproperty" name="netbeans.debug.editor.warmup" category="private">
+        System property to debug execution of the editor's warmup task (e.g. time intervals that each warmup section takes etc.).
+    </api>
+    <br/>
+    <api type="import" group="systemproperty" name="netbeans.debug.exceptions" category="private">
+        Obsolete now, we will remove those when time allows.
+    </api>
+    <br/>
+    <api type="import" group="systemproperty" name="org.netbeans.modules.editor.search.closeOnEnter" category="private">
+        Boolean system property to set whether the search bar will close on hitting Enter key.
+    </api>
+
+</answer>
+
+
+
+<!-- Question: exec-reflection
+
+     <question id="exec-reflection">
+            Does your code uses java.lang.reflect to execute some other code?
+            <hint>
+            This usually indicates a missing or unsufficient API in the other
+            part of the system. If the other side is not aware of your dependency
+            this contract can be easily broken.
+            </hint>
+        </question>
+-->
+<answer id="exec-reflection">
+    Reflection is used for:
+    <ul>
+    <li>in the src/org/netbeans/modules/editor/EditorModule.java
+        the "kitRegistryKey" field JEditorPane is accessed in order
+        to plug the layer.xml registration of editor kits
+        into the JeditorPane's method of kit registration seamlessly.
+    </li>
+    <li>in the src/org/netbeans/modules/editor/options/MIMEOptionFolder.java
+        there are two fields "TAG_ROOT" and "FILENAME" accessed by reflection
+        from a MIMEOptionFile class associated with a given MIMEProcessor.
+        This could possibly be fixed by adding corresponding package-private methods
+        into MIMEOptionFile abstract class and access those in the MIMEOptionFolder.
+    </li>
+    </ul>
+
+    <api type="import" name="NbKeymap.context" category="friend" group="java"
+     url="http://www.netbeans.org/source/browse/editor/src/org/netbeans/core/NbKeymap.html">
+        The <code>context</code> field is accessed by reflection
+        from <a href="@org-netbeans-modules-editor-lib@/org/netbeans/editor/MultiKeymap.html">MultiKeymap</a>.
+    </api>
+</answer>
+
+
+
+<!-- Question: format-clipboard
+
+     <question id="format-clipboard">
+            Which protocols your code reads/inserts when communicating with
+            clipboard?
+        </question>
+-->
+<answer id="format-clipboard">
+    <ul>
+        <li>Editor just forwards the clipboard operation requests
+            into javax.swing.text.JTextComponent's cut(), copy() and paste() methods.
+        </li>
+    </ul>
+</answer>
+
+
+
+<!-- Question: format-dnd
+
+     <question id="format-dnd">
+            Which protocols your code understands during drag-n-drop?
+        </question>
+-->
+<answer id="format-dnd">
+    None.
+</answer>
+
+
+
+<!-- Question: format-types
+
+     <question id="format-types">
+            Which file formats your code reads or writes on disk?
+        </question>
+-->
+<answer id="format-types">
+    <ul>
+        <li>
+            Editor settings are stored in .xml files of custom XML format
+            (DTDs in /src/org/netbeans/modules/editor/resources/DTDs/Options directory)
+        </li>
+        <li>
+            Annotations are stored in the .xml files
+            (DTDs in /cvs/editor/src/org/netbeans/modules/editor/AnnotationTypes/annotation-type-1_0.dtd and
+            /cvs/editor/src/org/netbeans/modules/editor/AnnotationTypes/annotation-type-1_1.dtd).
+        </li>
+        <li>
+            Key Bindings are stored in keybindings.xml files
+
+        </li>
+    </ul>
+</answer>
+
+
+
+<!-- Question: lookup-lookup
+
+     <question id="lookup-lookup">
+            Does your module uses <code>org.openide.util.Lookup</code>
+            to find any components to communicate to? Which ones?
+            
+            <hint>
+            Please describe the interfaces you are searching for, where 
+            are defined, whether you are searching for just one or more of them,
+            if the order is important, etc. Also clasify the stability of such
+            API contract.
+            </hint>
+        </question>
+-->
+<answer id="lookup-lookup">
+        In src/org/netbeans/modules/editor/EditorModule.java: Lookup.getDefault().lookup(DataLoaderPool.class)
+        In src/org/netbeans/modules/editor/EditorModule.java: Lookup.getDefault().lookup(DataLoaderPool.class))
+        In src/org/netbeans/modules/editor/EditorModule.java: Lookup.getDefault().lookup(WindowManager.class)
+        In src/org/netbeans/modules/editor/NbEditorKit.java: Lookup.getDefault().lookup(Keymap.class)
+        In src/org/netbeans/modules/editor/NbEditorKit.java: Lookup.getDefault().lookup(ClassLoader.class)
+        In src/org/netbeans/modules/editor/NbEditorUtilities.java: Lookup.getDefault().lookup(ErrorManager.class)
+        In src/org/netbeans/modules/editor/NbImplementationProvider.java: Lookup.getDefault().lookup(ClassLoader.class)
+        In src/org/netbeans/modules/editor/options/BaseOptions.java: Lookup.getDefault().lookup(getDefaultIndentEngineClass())
+        In src/org/netbeans/modules/editor/options/ColoringArrayEditorPanel.java: Lookup.getDefault().lookup(ClassLoader.class)
+        In src/org/netbeans/modules/editor/options/KeyBindingsEditorPanel.java: Lookup.getDefault().lookup(ClassLoader.class);
+        In src/org/netbeans/modules/editor/options/MIMEOptionFile.java: Lookup.getDefault().lookup(ModuleInfo.class);
+</answer>
+
+
+
+<!-- Question: lookup-register
+
+     <question id="lookup-register">
+            Do you register anything into the lookup for other to find? 
+            <hint>
+            Do you register using layer file or using <code>META-INF/services</code>?
+            Who is supposed to find your component?
+            </hint>
+        </question>
+-->
+<answer id="lookup-register">
+    <code>org.netbeans.modules.editor.hyperlink.LayerHyperlinkProviderManager</code>
+    is registered using <code>META-INF/services</code>.
+    <br/>
+    It is an extension of <code>org.netbeans.lib.editor.hyperlink.HyperlinkProviderManager</code>
+    allowing to instantiate the <code>org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider</code>
+    instances from the xml layer of the System FS for particular mime-types.
+</answer>
+
+
+
+<!-- Question: lookup-remove
+
+     <question id="lookup-remove">
+            Are removing entries of other modules from the lookup? 
+            <hint>
+            Why? Of course, that is possible, but it can be dangerous. Is the module
+            your are masking resource from aware of what you are doing?
+            </hint>
+        </question>
+-->
+<answer id="lookup-remove">
+    No.
+</answer>
+
+
+
+<!-- Question: perf-exit
+
+     <question id="perf-exit">
+            Does your module executes anything on exit?
+        </question>
+-->
+<answer id="perf-exit">
+    No.
+</answer>
+
+
+
+<!-- Question: perf-huge_dialogs
+
+     <question id="perf-huge_dialogs">
+            Does your module contain any dialogs or wizards with huge
+            amount of GUI controls like combo boxes, lists, trees, text
+            areas?
+        </question>
+-->
+<answer id="perf-huge_dialogs">
+    No.
+</answer>
+
+
+
+<!-- Question: perf-limit
+
+     <question id="perf-limit">
+            Are there any limits in number/size of elements your code
+            can handle?
+        </question>
+-->
+<answer id="perf-limit">
+    No explicit limits. Technically, the available memory size is the limit...
+</answer>
+
+
+
+<!-- Question: perf-mem
+
+     <question id="perf-mem">
+            What is the amount of memory your component occupies? Estimate
+            with a relaction to the number of windows, etc.
+        </question>
+-->
+<answer id="perf-mem">
+    Rough numbers:
+    <ul>
+    <li>one source file opened in the editor: 534KB</li>
+    </ul>
+</answer>
+
+
+
+<!-- Question: perf-menus
+
+     <question id="perf-menus">
+            Does your module use dynamically changing context menus or
+            context sensitive actions with complicated logic for enable/disable?
+        </question>
+-->
+<answer id="perf-menus">
+    The "goto declaration" and "goto source" are somewhat complicated
+    especially during the first invocation.
+</answer>
+
+
+
+<!-- Question: perf-progress
+
+     <question id="perf-progress">
+            Does your module executes some long running task?
+            <hint>Typically they are tasks like connecting over
+            network, computing huge amount of data, compilation.
+            Such communication should be done asynchronously (for example
+            using <code>RequestProcessor</code>), definitively it should 
+            not block AWT thread.
+            </hint>
+        </question>
+-->
+<answer id="perf-progress">
+    Opening a editor can be quite long task.
+    <br/>
+    The creation of the text component (JEditorPane instance) has to be done in AWT event queue
+    thread.
+    <br/>
+    Setting of the document into the text component has to be done in AWT as well
+    as the document is regular property and thus it must be modified in AWT only.
+    <br/>
+    Other tasks during editor opening (such as parsing)
+    do not need to be run in the AWT and they are run on the background.
+</answer>
+
+
+
+<!-- Question: perf-scale
+
+     <question id="perf-scale">
+            Which external criteria influence the performance of your
+            program (size of file in editor, number of files in menu, 
+            in source directory, etc.) and how well your code scales?
+            Please include some estimates.
+        </question>
+-->
+<answer id="perf-scale">
+    The number of characters of the source file multiplied by 2 to respect
+    2bytes for each unicode characters.
+    Each line separator adds another line element plus a position
+    object.
+</answer>
+
+
+
+<!-- Question: perf-startup
+
+     <question id="perf-startup">
+            Does your module executes anything on startup?
+        </question>
+-->
+<answer id="perf-startup">
+    It registers an operation listener to watch for changes in dataobjects.
+</answer>
+
+
+
+<!-- Question: perf-wakeup
+
+     <question id="perf-wakeup">
+            Is any piece of your code waking up periodically?
+        </question>
+-->
+<answer id="perf-wakeup">
+    No.
+</answer>
+
+
+
+<!-- Question: resources-file
+
+     <question id="resources-file">
+            Does your module use <code>java.io.File</code> directly?
+            
+            <hint>
+            NetBeans provide a logical wrapper over plain files called 
+            <code>org.openide.filesystems.FileObject</code> that
+            provides uniform access to such resources and is the prefered
+            way that should be used. But of course there can be situations when
+            this is not suitable.
+            </hint>
+        </question>
+-->
+<answer id="resources-file">
+    No.
+</answer>
+
+
+
+<!-- Question: resources-layer
+
+     <question id="resources-layer">
+            Does your module provide own layer? Does it create some files or
+            folders on it? What it is trying to communicate by that and with which 
+            component?
+            
+            <hint>
+            NetBeans allows automatic and declarative installation of resources 
+            by module layers. Module register files into appropriate places
+            and other components use that information to perform their task
+            (build menu, toolbar, window layout, list of templates, set of
+            options, etc.). 
+            </hint>
+        </question>
+-->
+<answer id="resources-layer">
+    Yes, files are created for menus, actions, shortcuts, annotations, 
+    settings storage:
+    <ul>
+        <li>Global Goto Source action (<code>JavaFastOpenAction</code>) registered into <i>/Actions/Edit</i>
+            and its shortcut into <i>/Shortcuts</i> folder.
+        </li>
+        <li>Appropriate menu actions under <i>/Menu/File</i>, <i>/Menu/Edit</i> and <i>/Menu/View</i>.
+        </li>
+        <li>Indentation Engines under <i>/Services/IndentEngine</i> folder and <i>/Templates/Services/IndentEngine</i>.
+        </li>
+        <li>Editor's warm-up task under <i>/WarmUp</i> folder.
+        </li>
+        <li>Editor's options and Annotation Type nodes under <i>/UI/Services/Editing</i> folder
+        </li>
+
+        <li>
+            Annotation Types can be registered as .xml files under <i>Editors/AnnotationTypes</i>.
+            <br/>
+            An example of a bookmark annotation descrioption xml file can be found
+            <a href="http://www.netbeans.org/source/browse/editor/src/org/netbeans/modules/editor/resources/AnnotationTypes/bookmark.xml">here</a>.
+            <br/>
+            DTDs can be found
+            <a href="http://www.netbeans.org/source/browse/editor/src/org/netbeans/modules/editor/resources/AnnotationTypes/annotation-type-1_0.dtd">here</a>
+            and
+            <a href="http://www.netbeans.org/source/browse/editor/src/org/netbeans/modules/editor/resources/AnnotationTypes/annotation-type-1_1.dtd">here</a>.
+        </li>
+
+        <li>Mime-type specific editor data under <i>/Editors/mime-type</i> folder (e.g. <i>/Editors/text/plain</i>).
+            <br/>
+            A special mime-type <b>"text/base"</b> means global level inherited by each particular mime-type.
+        </li>
+    </ul>
+
+    <p>
+    Files and subfolders of <i>Editors/|mime-type|</i>:
+    </p>
+    <ul>
+        <li>
+            Editor kit registration by using <i>EditorKit.instance</i>:
+            <pre>
+&lt;file name="EditorKit.instance"&gt;
+    &lt;attr name="instanceClass" stringvalue="org.netbeans.modules.html.editor.HTMLKit"/&gt;
+&lt;/file&gt;
+            </pre>
+
+        </li>
+
+        <li>
+            <p>
+            Popup menu items (actions) can be registered in the <code>Popup</code> subfolder.
+            Both system actions and editor's actions can be added to the popup.
+            The actions can be ordered using a standard filesystem ordering attributes.
+            </p>
+            
+            <pre>
+&lt;folder name="Editors/Popup"&gt;
+    &lt;file name="org-openide-actions-CutAction.instance"&gt;
+    &lt;attr name="position" intvalue="100"/&gt;
+    &lt;/file&gt;
+    &lt;file name="org-openide-actions-CopyAction.instance"&gt;
+    &lt;attr name="position" intvalue="110"/&gt;
+    &lt;/file&gt;
+&lt;/folder&gt;
+            </pre>
+
+            <br/>
+            <b>Note:</b> The ordering attributes should take in account the fact that
+            popup items for a mime type are merged with "all languages" (global)
+            items from the root of the hierarchy under <code>Editors/Popup</code> folder.
+
+            <p>
+            The editor actions are referenced by their name (<code>Action.NAME</code> property;
+            mandatory for all editor actions). For example the code below will add
+            the editor action for code formatting.
+            </p>
+            
+            <pre>
+&lt;folder name="Editors/Popup"&gt;
+    &lt;file name="format"/&gt;
+&lt;/folder&gt;
+            </pre>
+        </li>
+
+        <li>
+            <p>
+            <b>Since version 1.39</b> the editor actions, ie the actions that are installed
+            to every JEditorPane that acts as a Netbeans editor,
+            can be registered in the <code>Actions</code> subfolder.
+            </p>
+            
+            <pre>
+&lt;folder name="Editors"&gt;
+  &lt;folder name="text"&gt;
+    &lt;folder name="x-java"&gt;
+      &lt;folder name="Actions"&gt;
+        &lt;file name="org-netbeans-modules-java-editor-imports-FastImportAction.instance" /&gt;
+      &lt;/folder&gt;
+    &lt;/folder&gt;
+  &lt;/folder&gt;
+&lt;/folder&gt;
+            </pre>
+        </li>
+            
+        <li>Side bar components can be registered in the <code>SideBar</code> subfolder.
+            Their appearance can be specified using two optional attributes - <code>location</code>
+	    (accepting values <code>"North"</code>, <code>"South"</code>, <code>"East"</code> and
+	    <code>"West"</code>) and boolean <code>scrollable</code>. Default values are
+	    <code>"West"</code> and <code>"true"</code> (i.e. the side bar component
+            will appear in the row header of a <code>JScrollPane</code> displaying
+            the editor's <code>JEditoPane</code>).
+            
+	    <pre>
+&lt;folder name="SideBar"&gt;
+    &lt;file name="org-netbeans-editor-GlyphGutter.instance"/&gt;
+    &lt;file name="org-netbeans-editor-StatusBar$StatusBarFactory.instance"&gt;
+        &lt;attr name="location" stringvalue="South"/&gt;
+	&lt;attr name="scrollable" boolvalue="false"/&gt;
+    &lt;/file&gt;
+&lt;/folder&gt;
+            </pre>
+        </li>
+
+    </ul>
+
+    <p>
+    Please see <a href="http://www.netbeans.org/source/browse/editor/src/org/netbeans/modules/editor/resources/layer.xml">layer.xml</a> for further details.
+    </p>
+    
+    <p>
+    The <code>org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider</code>
+    instances can be registered by editors for the particular mime-types
+    into <i>Editors/|mime-type|/HyperlinkProviders</i>.
+    <br/>
+    There can be multiple providers registered and their order
+    will be respected during querying by the hyperlinking infrastructure
+    (first provider which recognizes the given offset as a hyperlinking point
+    will be used).
+    </p>
+</answer>
+
+
+
+<!-- Question: resources-mask
+
+     <question id="resources-mask">
+            Does your module mask/hide/override any resource provided by another one in
+            module layer? 
+            
+            <hint>
+            If you mask a file provided by another module, you probably depend
+            on that and do not want the other module to (for example) change
+            the file's name. That module shall thus make that file available as an API
+            of some stability category.
+            </hint>
+        </question>
+-->
+<answer id="resources-mask">
+    No.
+</answer>
+
+
+
+<!-- Question: resources-read
+
+     <question id="resources-read">
+            Does your module read any resources from layers? For what purpose?
+            
+            <hint>
+            As this is some kind of intermodule dependency, it is a kind of API.
+            Please describe it and clasify according to 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            common stability categories</a>.
+            </hint>
+        </question>
+-->
+<answer id="resources-read">
+    No.
+</answer>
+
+
+<!--
+        <question id="exec-introspection">
+            Does your module use any kind of runtime type informations (instanceof,
+            work with java.lang.Class, etc.)?
+            <hint>
+            Check for cases when you have an object of type A and you also
+            expect it to (possibly) be of type B and do some special action. That
+            should be documented. The same applies on operations in meta-level
+            (Class.isInstance(...), Class.isAssignableFrom(...), etc.).
+            </hint>
+        </question>
+-->
+<answer id="exec-introspection">
+    No.
+</answer>
+
+
+
+<!--
+        <question id="exec-process">
+            Do you execute an external process from your module? How do you ensure
+            that the result is the same on different platforms? Do you parse output?
+            Do you depend on result code?
+            <hint>
+            If you feed an input, parse the output please declare that as an API.
+            </hint>
+        </question>
+-->
+<answer id="exec-process">
+    No.
+</answer>
+
+
+<!--
+        <question id="arch-quality" when="init">
+            How the quality of your code will be tested and 
+            how future regressions are going to be prevented?
+            <hint>
+            What kind of testing you want to use? What/how much area of functionality
+            should be covered by the tests? 
+            </hint>
+        </question>
+-->
+<answer id="arch-quality">
+No answer
+</answer>
+
+
+
+<!--
+        <question id="arch-time" when="init">
+            What are the time estimates of the work?
+            <hint>
+            Please express your estimates of how long the design, implementation,
+            stabilization are likely to last. How many people will be needed to
+            implement this and what is the expected milestone the work should be 
+            ready.
+            </hint>
+        </question>
+-->
+<answer id="arch-time">
+No answer
+</answer>
+
+
+
+<!--
+        <question id="arch-usecases" when="init">
+            Describe the main <a href="http://openide.netbeans.org/tutorial/api-design.html#usecase">
+            use cases</a> of the new API. Who will use it at
+            what circumstances and what will be the typical code to write
+            to use the module.
+        </question>
+-->
+<answer id="arch-usecases">
+No answer
+</answer>
+
+
+
+<answer id="deploy-dependencies">
+Nothing.
+</answer>
+
+
+
+<!--
+        <question id="exec-threading" when="impl">
+            What threading models, if any, does your module adhere to?
+            <hint>
+                If your module calls foreign APIs which have a specific threading model,
+                indicate how you comply with the requirements for multithreaded access
+                (synchronization, mutexes, etc.) applicable to those APIs.
+                If your module defines any APIs, or has complex internal structures
+                that might be used from multiple threads, declare how you protect
+                data against concurrent access, race conditions, deadlocks, etc.,
+                and whether such rules are enforced by runtime warnings, errors, assertions, etc.
+                Examples: a class might be non-thread-safe (like Java Collections); might
+                be fully thread-safe (internal locking); might require access through a mutex
+                (and may or may not automatically acquire that mutex on behalf of a client method);
+                might be able to run only in the event queue; etc.
+                Also describe when any events are fired: synchronously, asynchronously, etc.
+                Ideas: <a href="http://core.netbeans.org/proposals/threading/index.html#recommendations">Threading Recommendations</a> (in progress)
+            </hint>
+        </question>
+-->
+<answer id="exec-threading">
+    <p>
+    Threading model of the document model adheres to javax.swing.text.Document
+    interface. There can be multiple reader threads accessing
+    the document simultaneously but only one mutating thread at the time.
+    </p>
+
+    <p>
+    Document.render(Runnable) must be used for all the readonly operations
+    accessing the document. The editor fully supports org.openide.text.NbDocument.runAtomic()
+    and NbDocument.runAtomicAsUser() extensions that allow transactions
+    on top of the document.
+    </p>
+
+    <p>
+    All the UI-related tasks adhere to Swing/AWT conventions i.e. they
+    must be performed in EQ thread.
+    </p>
+</answer>
+
+
+
+<!--
+        <question id="perf-spi" when="init">
+            How the performance of the plugged in code will be enforced?
+            <hint>
+            If you allow foreign code to be plugged into your own module, how
+            do you enforce, that it will behave correctly and fast and will not
+            negatively influence the performance of your own module?
+            </hint>
+        </question>
+-->
+<answer id="perf-spi">
+No answer
+</answer>
+
+
+<!--
+        <question id="security-grant" when="final">
+            Does your code grant additional rights to some other code?
+            <hint>Avoid using a class loader that adds extra
+            permissions to loaded code unless really necessary.
+            Also note that your API implementation
+            can also expose unneeded permissions to enemy code by
+            calling AccessController.doPrivileged().</hint>
+        </question>
+-->
+ <answer id="security-grant">
+  <p>
+   XXX no answer for security-grant
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="security-policy" when="final">
+            Does your functionality require modifications to the standard policy file?
+            <hint>Your code might pass control to third-party code not
+            coming from trusted domains. This could be code downloaded over the
+            network or code coming from libraries that are not bundled
+            with NetBeans. Which permissions need to be granted to which domains?</hint>
+        </question>
+-->
+ <answer id="security-policy">
+  <p>
+   XXX no answer for security-policy
+  </p>
+ </answer>
+
+<!--
+        <question id="exec-ant-tasks" when="impl">
+            Do you define or register any ant tasks that other can use?
+            
+            <hint>
+            If you provide an ant task that users can use, you need to be very
+            careful about its syntax and behaviour, as it most likely forms an
+	          API for end users and as there is a lot of end users, their reaction
+            when such API gets broken can be pretty strong.
+            </hint>
+        </question>
+-->
+ <answer id="exec-ant-tasks">
+  <p>
+  No.
+  </p>
+ </answer>
+
+</api-answers>
+

@@ -1,0 +1,41 @@
+%%TestCase realCurrDir
+package test;
+class C {
+    void m() {
+        javax.swing.JFileChooser c = new javax.swing.JFileChooser();
+        org.openide.filesystems.FileUtil.preventFileChooserSymlinkTraversal(c, new java.io.File("whatever"));
+    }
+}
+%%=>
+package test;
+class C {
+    void m() {
+        javax.swing.JFileChooser c = new javax.swing.JFileChooser();
+        c.setCurrentDirectory(new java.io.File("whatever"));
+    }
+}
+
+%%TestCase nullCurrDir
+package test;
+class C {
+    void m() {
+        javax.swing.JFileChooser c = new javax.swing.JFileChooser();
+        org.openide.filesystems.FileUtil.preventFileChooserSymlinkTraversal(c, null);
+    }
+}
+%%=>
+package test;
+import javax.swing.JFileChooser;
+class C {
+    void m() {
+        JFileChooser c = new JFileChooser();
+    }
+}
+%%=>
+package test;
+class C {
+    void m() {
+        javax.swing.JFileChooser c = new javax.swing.JFileChooser();
+        c.setCurrentDirectory(null);
+    }
+}

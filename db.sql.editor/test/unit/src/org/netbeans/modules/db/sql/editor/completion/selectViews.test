@@ -1,0 +1,12 @@
+select |
+
+--
+<unknown>
+  customers*
+    overview[view]
+      overview_id
+    summary[view]
+      summary_id
+anotherapp
+  registrations
+    regdata

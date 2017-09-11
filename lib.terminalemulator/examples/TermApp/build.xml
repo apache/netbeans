@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright (c) 2012, 2016 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+
+Contributor(s):
+-->
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+<!-- By default, only the Clean and Build commands use this build script. -->
+<!-- Commands such as Run, Debug, and Test only use this build script if -->
+<!-- the Compile on Save feature is turned off for the project. -->
+<!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
+<!-- in the project's Project Properties dialog box.-->
+<project name="TermApp" default="default" basedir=".">
+    <description>Builds, tests, and runs the project TermApp.</description>
+    <import file="nbproject/build-impl.xml"/>
+
+
+    <target name="distribution">
+        <echo message="Creating distribution..."/>
+
+        <!-- doesn't like ${dist.jar.dir} -->
+        <tar destfile="dist/termapp.tar">
+            <tarfileset dir="dist"
+                        prefix="termapp"
+                        includes="**/*.jar" />
+            <tarfileset dir="dist"
+                        prefix="termapp"
+                        includes="nbterm,nbterm64"
+                        filemode="775"/>
+            <tarfileset dir="dist"
+                        prefix="termapp"
+                        includes="term,lib/process_start.sh,lib/process_start-*"
+                        filemode="775"/>
+        </tar>
+    </target>
+
+    <target name="copy-binaries">
+        <!-- we have to do this by hand because the release/ convention is
+             only for bonafide NB modules
+          -->
+
+        <echo message="Copying nbterm to dist ..." />
+        <copy file="release/nbterm"
+              preservelastmodified="true"
+              todir="${dist.jar.dir}" />
+        <chmod file="${dist.jar.dir}/nbterm"
+               perm="+x" />
+
+        <echo message="Copying nbterm64 to dist ..." />
+        <copy file="release/nbterm64"
+              preservelastmodified="true"
+              todir="${dist.jar.dir}" />
+        <chmod file="${dist.jar.dir}/nbterm64"
+               perm="+x" />
+
+        <echo message="Copying process_start* to dist/lib ..." />
+        <dirname property="richexecution.dist.dir"
+                 file="${reference.org_netbeans_lib_richexecution.module}" />
+        <echo message="richexecution dist is at ${richexecution.dist.dir}" />
+        <property name="richexecution.module.dir"
+                  value="${project.org_netbeans_lib_richexecution}" />
+        <echo message="richexecution module is at ${richexecution.module.dir}" />
+
+        <mkdir dir="${dist.jar.dir}/lib"/>
+
+	<!-- unzip all existing process-starts -->
+        <unzip src="${richexecution.module.dir}/process_start-mac-intel.zip"
+               dest="${dist.jar.dir}/lib" />
+        <unzip src="${richexecution.module.dir}/process_start-linux-intel.zip"
+               dest="${dist.jar.dir}/lib" />
+        <unzip src="${richexecution.module.dir}/process_start-solaris-intel.zip"
+               dest="${dist.jar.dir}/lib" />
+        <unzip src="${richexecution.module.dir}/process_start-solaris-sparc.zip"
+               dest="${dist.jar.dir}/lib" />
+
+	<!-- copy the latest process-start on the current platform for good measure -->
+        <copy todir="${dist.jar.dir}/lib" flatten="true" verbose="true">
+            <fileset dir="${richexecution.dist.dir}/lib"
+                     includes="process_start.sh,process_start-*" />
+        </copy>
+        <chmod perm="+x" >
+            <fileset dir="${dist.jar.dir}/lib"
+                     includes="process_start.sh,process_start-*" />
+        </chmod>
+    </target>
+
+    <target name="-post-jar" depends="copy-binaries,distribution" />
+
+    <!--
+
+    There exist several targets which are by default empty and which can be 
+    used for execution of your tasks. These targets are usually executed 
+    before and after some main targets. They are: 
+
+      -pre-init:                 called before initialization of project properties
+      -post-init:                called after initialization of project properties
+      -pre-compile:              called before javac compilation
+      -post-compile:             called after javac compilation
+      -pre-compile-single:       called before javac compilation of single file
+      -post-compile-single:      called after javac compilation of single file
+      -pre-compile-test:         called before javac compilation of JUnit tests
+      -post-compile-test:        called after javac compilation of JUnit tests
+      -pre-compile-test-single:  called before javac compilation of single JUnit test
+      -post-compile-test-single: called after javac compilation of single JUunit test
+      -pre-jar:                  called before JAR building
+      -post-jar:                 called after JAR building
+      -post-clean:               called after cleaning build products
+
+    (Targets beginning with '-' are not intended to be called on their own.)
+
+    Example of inserting an obfuscator after compilation could look like this:
+
+        <target name="-post-compile">
+            <obfuscate>
+                <fileset dir="${build.classes.dir}"/>
+            </obfuscate>
+        </target>
+
+    For list of available properties check the imported 
+    nbproject/build-impl.xml file. 
+
+
+    Another way to customize the build is by overriding existing main targets.
+    The targets of interest are: 
+
+      -init-macrodef-javac:     defines macro for javac compilation
+      -init-macrodef-junit:     defines macro for junit execution
+      -init-macrodef-debug:     defines macro for class debugging
+      -init-macrodef-java:      defines macro for class execution
+      -do-jar-with-manifest:    JAR building (if you are using a manifest)
+      -do-jar-without-manifest: JAR building (if you are not using a manifest)
+      run:                      execution of project 
+      -javadoc-build:           Javadoc generation
+      test-report:              JUnit report generation
+
+    An example of overriding the target for project execution could look like this:
+
+        <target name="run" depends="TermApp-impl.jar">
+            <exec dir="bin" executable="launcher.exe">
+                <arg file="${dist.jar}"/>
+            </exec>
+        </target>
+
+    Notice that the overridden target depends on the jar target and not only on 
+    the compile target as the regular run target does. Again, for a list of available 
+    properties which you can use, check the target you are overriding in the
+    nbproject/build-impl.xml file. 
+
+    -->
+</project>

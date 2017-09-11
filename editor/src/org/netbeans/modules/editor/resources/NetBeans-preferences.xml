@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2008 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE editor-preferences PUBLIC "-//NetBeans//DTD Editor Preferences 1.0//EN" "http://www.netbeans.org/dtds/EditorPreferences-1_0.dtd">
+
+<editor-preferences>
+    <entry category="private" javaType="java.lang.Integer" name="caret-blink-rate" xml:space="preserve">
+        <value><![CDATA[300]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="caret-italic-insert-mode" xml:space="preserve">
+        <value><![CDATA[false]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="caret-italic-overwrite-mode" xml:space="preserve">
+        <value><![CDATA[false]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Boolean" name="caret-simple-match-brace" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.String" name="caret-type-insert-mode" xml:space="preserve">
+        <value><![CDATA[line-caret]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.String" name="caret-type-overwrite-mode" xml:space="preserve">
+        <value><![CDATA[block-caret]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="code-folding-enable" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="completion-auto-popup" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Integer" name="completion-auto-popup-delay" xml:space="preserve">
+        <value><![CDATA[250]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="completion-case-sensitive" xml:space="preserve">
+        <value><![CDATA[false]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="completion-instant-substitution" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="completion-natural-sort" xml:space="preserve">
+        <value><![CDATA[false]]></value>
+    </entry>
+    <entry category="private" javaType="java.awt.Dimension" name="completion-pane-max-size" xml:space="preserve">
+        <value><![CDATA[400,300]]></value>
+    </entry>
+    <entry category="private" javaType="java.awt.Dimension" name="completion-pane-min-size" xml:space="preserve">
+        <value><![CDATA[60,17]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Integer" name="completion-refresh-delay" xml:space="preserve">
+        <value><![CDATA[200]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.awt.Dimension" name="component-size-increment" xml:space="preserve">
+        <value><![CDATA[-5,-30]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="expand-tabs" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Boolean" name="fast-import-package" xml:space="preserve">
+        <value><![CDATA[false]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Integer" name="fast-import-selection" xml:space="preserve">
+        <value><![CDATA[0]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Boolean" name="find-backward-search" xml:space="preserve">
+        <value><![CDATA[false]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Boolean" name="find-highlight-search" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Integer" name="find-history-size" xml:space="preserve">
+        <value><![CDATA[30]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Boolean" name="find-inc-search" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Boolean" name="find-match-case" xml:space="preserve">
+        <value><![CDATA[false]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Boolean" name="find-reg-exp" xml:space="preserve">
+        <value><![CDATA[false]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Boolean" name="find-whole-words" xml:space="preserve">
+        <value><![CDATA[false]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Boolean" name="find-wrap-search" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="highlight-caret-row" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+<!-- these settings are no longer used
+    <entry category="private" javaType="java.lang.Boolean" name="highlight-match-brace" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Integer" name="highlight-match-brace-delay" xml:space="preserve">
+        <value><![CDATA[100]]></value>
+    </entry>
+-->
+    <entry category="deprecated" javaType="java.lang.Boolean" name="home-key-column-one" xml:space="preserve">
+        <value><![CDATA[false]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Integer" name="indent-shift-width" xml:space="preserve">
+        <value><![CDATA[4]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Boolean" name="input-methods-enabled" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="javadoc-auto-popup" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Integer" name="javadoc-auto-popup-delay" xml:space="preserve">
+        <value><![CDATA[200]]></value>
+    </entry>
+    <entry category="private" javaType="java.awt.Dimension" name="javadoc-preferred-size" xml:space="preserve">
+        <value><![CDATA[500,300]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Integer" name="line-batch-size" xml:space="preserve">
+        <value><![CDATA[2]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Float" name="line-height-correction" xml:space="preserve">
+        <value><![CDATA[1.0]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="line-number-visible" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="private" javaType="java.awt.Insets" name="margin" xml:space="preserve">
+        <value><![CDATA[0,0,0,0]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Integer" name="mark-distance" xml:space="preserve">
+        <value><![CDATA[100]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Integer" name="max-mark-distance" xml:space="preserve">
+        <value><![CDATA[150]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Integer" name="min-mark-distance" xml:space="preserve">
+        <value><![CDATA[50]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="pair-characters-completion" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="popup-menu-enabled" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Boolean" name="print-line-number-visible" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Integer" name="read-buffer-size" xml:space="preserve">
+        <value><![CDATA[16384]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Integer" name="read-mark-distance" xml:space="preserve">
+        <value><![CDATA[180]]></value>
+    </entry>
+    <entry category="private" javaType="java.awt.Insets" name="scroll-find-insets" xml:space="preserve">
+        <value><![CDATA[-10,-10,-10,-10]]></value>
+    </entry>
+    <entry category="private" javaType="java.awt.Insets" name="scroll-jump-insets" xml:space="preserve">
+        <value><![CDATA[-5,-10,-5,-30]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="show-deprecated-members" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Integer" name="spaces-per-tab" xml:space="preserve">
+        <value><![CDATA[4]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Integer" name="status-bar-caret-delay" xml:space="preserve">
+        <value><![CDATA[200]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="status-bar-visible" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Integer" name="syntax-update-batch-size" xml:space="preserve">
+        <value><![CDATA[700]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Integer" name="tab-size" xml:space="preserve">
+        <value><![CDATA[8]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Integer" name="text-left-margin-width" xml:space="preserve">
+        <value><![CDATA[2]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="text-limit-line-visible" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Integer" name="text-limit-width" xml:space="preserve">
+        <value><![CDATA[80]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Boolean" name="word-match-match-case" xml:space="preserve">
+        <value><![CDATA[false]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Boolean" name="word-match-match-one-char" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Integer" name="word-match-search-len" xml:space="preserve">
+        <value><![CDATA[2147483647]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Boolean" name="word-match-smart-case" xml:space="preserve">
+        <value><![CDATA[false]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Boolean" name="word-match-wrap-search" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Boolean" name="word-move-newline-stop" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="deprecated" javaType="java.lang.Integer" name="write-buffer-size" xml:space="preserve">
+        <value><![CDATA[16384]]></value>
+    </entry>
+
+    <entry category="private" javaType="java.lang.Boolean" name="toolbarVisible" xml:space="preserve">
+        <value><![CDATA[true]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.Boolean" name="lineNumberVisible" xml:space="preserve">
+        <value><![CDATA[false]]></value>
+    </entry>
+    <entry category="private" javaType="java.lang.String" name="text-line-wrap" xml:space="preserve">
+        <value><![CDATA[none]]></value>
+    </entry>
+
+    <entry category="deprecated" javaType="methodvalue" name="rendering-hints" xml:space="preserve">
+        <value><![CDATA[org.netbeans.modules.editor.impl.ComplexValueSettingsFactory.getRenderingHintsValue]]></value>
+    </entry>
+    <entry category="deprecated" javaType="methodvalue" name="identifier-acceptor" xml:space="preserve">
+        <value><![CDATA[org.netbeans.modules.editor.impl.ComplexValueSettingsFactory.getIdentifierAcceptorValue]]></value>
+    </entry>
+    <entry category="deprecated" javaType="methodvalue" name="whitespace-acceptor" xml:space="preserve">
+        <value><![CDATA[org.netbeans.modules.editor.impl.ComplexValueSettingsFactory.getWhitespaceAcceptorValue]]></value>
+    </entry>
+
+    <entry name="hyperlink-activation-modifiers" value="128" javaType="java.lang.Integer" /> <!-- InputEvent.CTRL_DOWN_MASK -->
+    <entry name="alt-hyperlink-activation-modifiers" value="640" javaType="java.lang.Integer" /> <!-- InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK -->
+
+<!--
+            settingsMap.put(SettingsNames.TAB_SIZE, SettingsDefaults.defaultTabSize);
+            settingsMap.put(SettingsNames.EXPAND_TABS, SettingsDefaults.defaultExpandTabs);
+            settingsMap.put(SettingsNames.SPACES_PER_TAB, SettingsDefaults.defaultSpacesPerTab);
+
+            settingsMap.put(SettingsNames.CARET_TYPE_INSERT_MODE, SettingsDefaults.defaultCaretTypeInsertMode);
+            settingsMap.put(SettingsNames.CARET_TYPE_OVERWRITE_MODE, SettingsDefaults.defaultCaretTypeOverwriteMode);
+            settingsMap.put(SettingsNames.CARET_ITALIC_INSERT_MODE, SettingsDefaults.defaultCaretItalicInsertMode);
+            settingsMap.put(SettingsNames.CARET_ITALIC_OVERWRITE_MODE, SettingsDefaults.defaultCaretItalicOverwriteMode);
+            settingsMap.put(SettingsNames.CARET_BLINK_RATE, SettingsDefaults.defaultCaretBlinkRate);
+            settingsMap.put(SettingsNames.LINE_NUMBER_VISIBLE, SettingsDefaults.defaultLineNumberVisible);
+
+            settingsMap.put(SettingsNames.LINE_HEIGHT_CORRECTION, SettingsDefaults.defaultLineHeightCorrection);
+            settingsMap.put(SettingsNames.TEXT_LEFT_MARGIN_WIDTH, SettingsDefaults.defaultTextLeftMarginWidth);
+            settingsMap.put(SettingsNames.MARGIN, SettingsDefaults.defaultMargin);
+            settingsMap.put(SettingsNames.SCROLL_FIND_INSETS, SettingsDefaults.defaultScrollFindInsets);
+            settingsMap.put(SettingsNames.COMPONENT_SIZE_INCREMENT, SettingsDefaults.defaultComponentSizeIncrement);
+            settingsMap.put(SettingsNames.STATUS_BAR_VISIBLE, SettingsDefaults.defaultStatusBarVisible);
+            settingsMap.put(SettingsNames.STATUS_BAR_CARET_DELAY, SettingsDefaults.defaultStatusBarCaretDelay);
+
+            settingsMap.put(SettingsNames.TEXT_LIMIT_LINE_VISIBLE, SettingsDefaults.defaultTextLimitLineVisible);
+            settingsMap.put(SettingsNames.TEXT_LIMIT_WIDTH, SettingsDefaults.defaultTextLimitWidth);
+            settingsMap.put(SettingsNames.WORD_MOVE_NEWLINE_STOP, SettingsDefaults.defaultWordMoveNewlineStop);
+            settingsMap.put(SettingsNames.INPUT_METHODS_ENABLED, SettingsDefaults.defaultInputMethodsEnabled);
+            settingsMap.put(SettingsNames.FIND_HIGHLIGHT_SEARCH, SettingsDefaults.defaultFindHighlightSearch);
+            settingsMap.put(SettingsNames.FIND_INC_SEARCH, SettingsDefaults.defaultFindIncSearch);
+            settingsMap.put(SettingsNames.FIND_BACKWARD_SEARCH, SettingsDefaults.defaultFindBackwardSearch);
+            settingsMap.put(SettingsNames.FIND_WRAP_SEARCH, SettingsDefaults.defaultFindWrapSearch);
+            settingsMap.put(SettingsNames.FIND_MATCH_CASE, SettingsDefaults.defaultFindMatchCase);
+            settingsMap.put(SettingsNames.FIND_WHOLE_WORDS, SettingsDefaults.defaultFindWholeWords);
+            settingsMap.put(SettingsNames.FIND_REG_EXP, SettingsDefaults.defaultFindRegExp);
+            settingsMap.put(SettingsNames.FIND_HISTORY_SIZE, SettingsDefaults.defaultFindHistorySize);
+            settingsMap.put(SettingsNames.WORD_MATCH_SEARCH_LEN, SettingsDefaults.defaultWordMatchSearchLen);
+            settingsMap.put(SettingsNames.WORD_MATCH_WRAP_SEARCH, SettingsDefaults.defaultWordMatchWrapSearch);
+            settingsMap.put(SettingsNames.WORD_MATCH_MATCH_ONE_CHAR, SettingsDefaults.defaultWordMatchMatchOneChar);
+            settingsMap.put(SettingsNames.WORD_MATCH_MATCH_CASE, SettingsDefaults.defaultWordMatchMatchCase);
+            settingsMap.put(SettingsNames.WORD_MATCH_SMART_CASE, SettingsDefaults.defaultWordMatchSmartCase);
+            settingsMap.put(SettingsNames.CODE_FOLDING_ENABLE, SettingsDefaults.defaultCodeFoldingEnable);
+            settingsMap.put(SettingsNames.READ_BUFFER_SIZE, SettingsDefaults.defaultReadBufferSize);
+            settingsMap.put(SettingsNames.WRITE_BUFFER_SIZE, SettingsDefaults.defaultWriteBufferSize);
+            settingsMap.put(SettingsNames.READ_MARK_DISTANCE, SettingsDefaults.defaultReadMarkDistance);
+            settingsMap.put(SettingsNames.MARK_DISTANCE, SettingsDefaults.defaultMarkDistance);
+            settingsMap.put(SettingsNames.MAX_MARK_DISTANCE, SettingsDefaults.defaultMaxMarkDistance);
+            settingsMap.put(SettingsNames.MIN_MARK_DISTANCE, SettingsDefaults.defaultMinMarkDistance);
+            settingsMap.put(SettingsNames.SYNTAX_UPDATE_BATCH_SIZE, SettingsDefaults.defaultSyntaxUpdateBatchSize);
+            settingsMap.put(SettingsNames.LINE_BATCH_SIZE, SettingsDefaults.defaultLineBatchSize);
+
+            settingsMap.put(ExtSettingsNames.POPUP_MENU_ENABLED, Boolean.TRUE);
+            settingsMap.put(ExtSettingsNames.COMPLETION_AUTO_POPUP, ExtSettingsDefaults.defaultCompletionAutoPopup);
+            settingsMap.put(ExtSettingsNames.COMPLETION_CASE_SENSITIVE, ExtSettingsDefaults.defaultCompletionCaseSensitive);
+            settingsMap.put(ExtSettingsNames.COMPLETION_NATURAL_SORT, ExtSettingsDefaults.defaultCompletionNaturalSort);
+            settingsMap.put(ExtSettingsNames.COMPLETION_INSTANT_SUBSTITUTION, ExtSettingsDefaults.defaultCompletionInstantSubstitution);
+            settingsMap.put(ExtSettingsNames.COMPLETION_AUTO_POPUP_DELAY, ExtSettingsDefaults.defaultCompletionAutoPopupDelay);
+            settingsMap.put(ExtSettingsNames.COMPLETION_REFRESH_DELAY, ExtSettingsDefaults.defaultCompletionRefreshDelay);
+            settingsMap.put(ExtSettingsNames.COMPLETION_PANE_MIN_SIZE, ExtSettingsDefaults.defaultCompletionPaneMinSize);
+            settingsMap.put(ExtSettingsNames.COMPLETION_PANE_MAX_SIZE, ExtSettingsDefaults.defaultCompletionPaneMaxSize);
+
+            settingsMap.put(ExtSettingsNames.REINDENT_WITH_TEXT_BEFORE, Boolean.TRUE);
+            settingsMap.put(ExtSettingsNames.JAVADOC_AUTO_POPUP_DELAY, ExtSettingsDefaults.defaultJavaDocAutoPopupDelay);
+            settingsMap.put(ExtSettingsNames.JAVADOC_PREFERRED_SIZE, ExtSettingsDefaults.defaultJavaDocPreferredSize);
+            settingsMap.put(ExtSettingsNames.JAVADOC_AUTO_POPUP, ExtSettingsDefaults.defaultJavaDocAutoPopup);
+
+            settingsMap.put(BaseOptions.TOOLBAR_VISIBLE_PROP, Boolean.TRUE);
+            settingsMap.put(BaseOptions.LINE_NUMBER_VISIBLE_PROP, SettingsDefaults.defaultLineNumberVisible);
+            activationMask = Utilities.isMac()? InputEvent.META_MASK: InputEvent.CTRL_DOWN_MASK;
+            settingsMap.put(SettingsNames.HYPERLINK_ACTIVATION_MODIFIERS, Integer.valueOf(activationMask));
+-->
+</editor-preferences>

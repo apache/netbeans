@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mode version="2.4">
+    <name unique="mode06" includes="mode00,mode01"/>
+    <kind type="sliding" />
+    <state type="joined" minimized="false"/>
+    <constraints>
+        <path orientation="vertical" number="0" weight="0.7" />
+        <path orientation="horizontal" number="0" weight="0.3" />
+    </constraints>
+    <active-tc id="filesystems" prev-id="explorer"/>
+    <empty-behavior permanent="true" />
+</mode>

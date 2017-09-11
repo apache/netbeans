@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+  Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+  Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+  Other names may be trademarks of their respective owners.
+
+  The contents of this file are subject to the terms of either the GNU General Public
+  License Version 2 only ("GPL") or the Common Development and Distribution
+  License("CDDL") (collectively, the "License"). You may not use this file except in
+  compliance with the License. You can obtain a copy of the License at
+  http://www.netbeans.org/cddl-gplv2.html or nbbuild/licenses/CDDL-GPL-2-CP. See the
+  License for the specific language governing permissions and limitations under the
+  License.  When distributing the software, include this License Header Notice in
+  each file and include the License file at nbbuild/licenses/CDDL-GPL-2-CP.  Oracle
+  designates this particular file as subject to the "Classpath" exception as provided
+  by Oracle in the GPL Version 2 section of the License file that accompanied this code.
+  If applicable, add the following below the License Header, with the fields enclosed
+  by brackets [] replaced by your own identifying information:
+  "Portions Copyrighted [year] [name of copyright owner]"
+  
+  Contributor(s):
+  
+  The Original Software is NetBeans. The Initial Developer of the Original Software
+  is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun Microsystems, Inc. All
+  Rights Reserved.
+  
+  If you wish your version of this file to be governed by only the CDDL or only the
+  GPL Version 2, indicate your decision by adding "[Contributor] elects to include
+  this software in this distribution under the [CDDL or GPL Version 2] license." If
+  you do not indicate a single choice of license, a recipient has the option to
+  distribute your version of this file under either the CDDL, the GPL Version 2 or
+  to extend the choice of license to its licensees as provided above. However, if you
+  add GPL Version 2 code and therefore, elected the GPL Version 2 license, then the
+  option applies only if the new code is made subject to such option by the copyright
+  holder.
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+            elementFormDefault="qualified">
+    <xsd:element name="registry">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="includes" 
+                             type="extended-uris-list-type" 
+                             minOccurs="0"/>
+                <xsd:element name="properties" 
+                             type="properties-list-type" 
+                             minOccurs="0"/>
+                <xsd:element name="features" 
+                             type="features-list-type" 
+                             minOccurs="0"/>
+                <xsd:element name="components" 
+                             type="components-list-type" 
+                             minOccurs="0"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    
+    <xsd:complexType name="properties-list-type">
+        <xsd:sequence>
+            <xsd:element name="property" 
+                         type="property-type" 
+                         maxOccurs="unbounded">
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="property-type">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="name" 
+                               type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="features-list-type">
+        <xsd:sequence>
+            <xsd:element name="feature" 
+                         type="feature-type" 
+                         maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="feature-type">
+        <xsd:sequence>
+            <xsd:element name="icon"
+                         type="extended-uri-type"/>
+            <xsd:element name="display-name" 
+                         type="localizable-string-type"/>
+            <xsd:element name="description" 
+                         type="localizable-string-type"/>
+        </xsd:sequence>
+        <xsd:attribute name="id" 
+                       type="xsd:string"/>
+        <xsd:attribute name="offset" 
+                       type="xsd:integer"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="components-list-type">
+        <xsd:group ref="components-group" 
+                   maxOccurs="unbounded"/>
+    </xsd:complexType>
+    
+    <xsd:group name="components-group">
+        <xsd:choice>
+            <xsd:element name="product" 
+                         type="product-type"/>
+            <xsd:element name="group" 
+                         type="group-type"/>
+        </xsd:choice>
+    </xsd:group>
+    
+    <xsd:complexType name="group-type">
+        <xsd:sequence>
+            <xsd:element name="display-name" 
+                         type="localizable-string-type"/>
+            <xsd:element name="description" 
+                         type="localizable-string-type"/>
+            <xsd:element name="icon" 
+                         type="extended-uri-type"/>
+            <xsd:element name="properties" 
+                         type="properties-list-type" 
+                         minOccurs="0"/>
+            <xsd:element name="components" 
+                         type="components-list-type" 
+                         minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="uid" 
+                       type="uid-type"/>
+        <xsd:attribute name="offset" 
+                       type="xsd:integer"/>
+        <xsd:attribute name="visible" 
+                       type="xsd:boolean"/>
+        <xsd:attribute name="expand" 
+                       type="xsd:boolean"/>
+        <xsd:attribute name="built" 
+                       type="xsd:long"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="product-type">
+        <xsd:sequence>
+            <xsd:element name="display-name" 
+                         type="localizable-string-type"/>
+            <xsd:element name="description" 
+                         type="localizable-string-type"/>
+            <xsd:element name="icon" 
+                         type="extended-uri-type"/>
+            <xsd:element name="properties" 
+                         type="properties-list-type" 
+                         minOccurs="0"/>
+            <xsd:element name="configuration-logic" 
+                         type="extended-uris-list-type"/>
+            <xsd:element name="installation-data" 
+                         type="extended-uris-list-type"/>
+            <xsd:element name="system-requirements" 
+                         type="system-requirements-type"/>
+            <xsd:element name="dependencies" 
+                         type="dependencies-list-type" 
+                         minOccurs="0"/>
+            <xsd:element name="components" 
+                         type="components-list-type" 
+                         minOccurs="0"/>
+        </xsd:sequence>
+        <xsd:attribute name="uid" 
+                       type="uid-type"/>
+        <xsd:attribute name="version" 
+                       type="version-type"/>
+        <xsd:attribute name="platforms" 
+                       type="platforms-list-type"/>
+        <xsd:attribute name="status" 
+                       type="status-type"/>
+        <xsd:attribute name="offset" 
+                       type="xsd:integer"/>
+        <xsd:attribute name="visible" 
+                       type="xsd:boolean"/>
+        <xsd:attribute name="expand" 
+                       type="xsd:boolean"/>
+        <xsd:attribute name="built" 
+                       type="xsd:long"/>
+        <xsd:attribute name="features" 
+                       type="xsd:string"/>
+    </xsd:complexType>
+    
+    <xsd:simpleType name="uid-type">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[a-z\-]+"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="version-type">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[0-9]+.[0-9]+.[0-9]+.[0-9]+.[0-9]+"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:complexType name="dependencies-list-type">
+        <xsd:group ref="dependencies-group" 
+                   maxOccurs="unbounded"/>
+    </xsd:complexType>
+    
+    <xsd:group name="dependencies-group">
+        <xsd:choice>
+            <xsd:element name="requirement" 
+                         type="requirement-type"/>
+            <xsd:element name="conflict" 
+                         type="conflict-type"/>
+            <xsd:element name="install-after" 
+                         type="install-after-type"/>
+        </xsd:choice>
+    </xsd:group>
+    
+    <xsd:complexType name="system-requirements-type">
+        <xsd:sequence>
+            <xsd:element name="disk-space" 
+                         type="xsd:nonNegativeInteger"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="localizable-string-type">
+        <xsd:sequence>
+            <xsd:element name="default" 
+                         type="xsd:string"/>
+            <xsd:element name="localized" 
+                         type="localized-string-type" 
+                         minOccurs="0" 
+                         maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="localized-string-type">
+        <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+                <xsd:attribute name="locale" 
+                               type="xsd:string"/>
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="extended-uris-list-type">
+        <xsd:sequence>
+            <xsd:element name="file" 
+                         type="extended-uri-type" 
+                         minOccurs="0" 
+                         maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="extended-uri-type">
+        <xsd:sequence>
+            <xsd:element name="default-uri" 
+                         type="xsd:anyURI"/>
+            <xsd:element name="alternate-uri" 
+                         type="xsd:anyURI" 
+                         minOccurs="0" 
+                         maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="size" 
+                       type="xsd:nonNegativeInteger"/>
+        <xsd:attribute name="md5" 
+                       type="xsd:string"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="dependency-type">
+        <xsd:complexContent>
+            <xsd:restriction base="xsd:anyType">
+                <xsd:attribute name="uid" 
+                               type="uid-type"/>
+                <xsd:attribute name="version-lower" 
+                               type="version-type"/>
+                <xsd:attribute name="version-upper" 
+                               type="version-type"/>
+            </xsd:restriction>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="conflict-type">
+        <xsd:complexContent>
+            <xsd:extension base="dependency-type"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="requirement-type">
+        <xsd:complexContent>
+            <xsd:extension base="dependency-type">
+                <xsd:attribute name="version-resolved" 
+                               type="version-type"/>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:complexType name="install-after-type">
+        <xsd:complexContent>
+            <xsd:restriction base="xsd:anyType">
+                <xsd:attribute name="uid"
+                               type="uid-type"/>
+            </xsd:restriction>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <xsd:simpleType name="platform-type">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern 
+                value="([A-Za-z0-9\-\._])+"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="platforms-list-type">
+        <xsd:list itemType="platform-type"/>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="status-type">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="not-installed"/>
+            <xsd:enumeration value="installed"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+</xsd:schema>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.netbeans.org/ns/nb-module-project/3"
+            xmlns="http://www.netbeans.org/ns/nb-module-project/3"
+            elementFormDefault="qualified">
+
+    <xsd:element name="data">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="code-name-base" type="javaPackageType"/>
+                <xsd:choice minOccurs="0">
+                    <xsd:element name="suite-component"><xsd:complexType/></xsd:element>
+                    <xsd:element name="standalone"><xsd:complexType/></xsd:element>
+                </xsd:choice>
+                <xsd:element name="module-dependencies" type="moduleDependenciesType"/>
+                <xsd:element name="test-dependencies" type="testDependenciesType" minOccurs="0"/>
+                <xsd:choice>
+                    <xsd:element name="public-packages" type="publicPackagesType"/>
+                    <xsd:element name="friend-packages" type="friendPackagesType"/>
+                </xsd:choice>
+                <xsd:element name="class-path-extension" minOccurs="0" maxOccurs="unbounded" type="classPathExtensionType"/>
+                <xsd:element name="extra-compilation-unit" minOccurs="0" maxOccurs="unbounded" type="compilation-unit"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="moduleDependenciesType">
+        <xsd:sequence>
+            <xsd:element name="dependency" type="moduleDependencyType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="moduleDependencyType">
+        <xsd:sequence>
+            <xsd:element name="code-name-base" type="javaPackageType"/>
+            <!-- location in source tree is derived from code-name-base -->
+            <!-- It is senseless to have *none* of the following. -->
+            <!-- compile-dependency implies build-prerequisite. -->
+            <xsd:element name="build-prerequisite" minOccurs="0"><xsd:complexType/></xsd:element>
+            <xsd:element name="compile-dependency" minOccurs="0"><xsd:complexType/></xsd:element>
+            <xsd:element name="run-dependency" minOccurs="0" type="runDependencyType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="runDependencyType">
+        <xsd:sequence>
+            <xsd:element name="release-version" type="releaseVersionType" minOccurs="0"/>
+            <xsd:choice minOccurs="0">
+                <xsd:element name="specification-version" type="specificationVersionType"/>
+                <xsd:element name="implementation-version">
+                    <!-- Empty; actual impl version to use determined during the build -->
+                    <xsd:complexType/>
+                </xsd:element>
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="javaPackageType">
+        <xsd:restriction base="xsd:token">
+            <xsd:pattern value="[\p{L}\p{Nl}\p{Sc}\p{Pc}][\p{L}\p{N}\p{Sc}\p{Pc}\p{Cc}\p{Cf}\p{Mn}\p{Mc}]*(\.[\p{L}\p{Nl}\p{Sc}\p{Pc}][\p{L}\p{N}\p{Sc}\p{Pc}\p{Cc}\p{Cf}\p{Mn}\p{Mc}]*)*"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="releaseVersionType">
+        <xsd:union memberTypes="xsd:nonNegativeInteger">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:NMTOKEN">
+                    <xsd:pattern value="(0|[1-9][0-9]*)-[1-9][0-9]*"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:union>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="specificationVersionType">
+        <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:pattern value="(0|[1-9][0-9]*)(\.(0|[1-9][0-9]*))*"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="publicPackagesType">
+        <xsd:sequence>
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                <xsd:element name="package" type="javaPackageType"/>
+                <xsd:element name="subpackages" type="javaPackageType"/>
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="friendPackagesType">
+        <xsd:sequence>
+            <xsd:choice minOccurs="1" maxOccurs="unbounded">
+                <xsd:element name="friend" type="javaPackageType"/>
+            </xsd:choice>
+            <xsd:choice minOccurs="1" maxOccurs="unbounded">
+                <xsd:element name="package" type="javaPackageType"/>
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!-- Loosely borrowed from ant/freeform: -->
+
+    <!-- Some text that might be substituted with Ant property references. -->
+    <xsd:simpleType name="substitutable-text">
+        <xsd:restriction base="xsd:string">
+            <!-- XXX limit by regexp, perhaps -->
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="compilation-unit">
+        <xsd:sequence>
+            <xsd:element name="package-root" type="substitutable-text"/>
+            <xsd:element name="classpath" type="substitutable-text"/>
+            <xsd:element name="built-to" minOccurs="0" maxOccurs="unbounded" type="substitutable-text"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="classPathExtensionType">
+        <xsd:sequence>
+            <xsd:element name="runtime-relative-path" type="xsd:string"/>
+            <xsd:element name="binary-origin" minOccurs="0" type="substitutable-text"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!-- Test Dependencies -->
+
+    <xsd:complexType name="testDependenciesType">
+        <xsd:sequence>
+            <xsd:element name="test-type" type="testTypeType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="testTypeType">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="test-dependency" type="testDependencyType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+   <xsd:complexType name="testDependencyType">
+        <xsd:sequence>
+            <xsd:element name="code-name-base" type="javaPackageType"/>
+            <xsd:element name="recursive" minOccurs="0"><xsd:complexType/></xsd:element>
+            <xsd:element name="compile-dependency" minOccurs="0"><xsd:complexType/></xsd:element>
+            <xsd:element name="test" minOccurs="0"><xsd:complexType/></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+</xsd:schema>

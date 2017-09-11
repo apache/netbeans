@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Tests treating of spaces in catalog paths.
+   Three URL space syntaxes are supported:
+     - '+'   it caused problems recently
+     - '%20' general HEX escaping. It's 32.
+     - ' '   it violates URL spec, but is used by users so we relax it
+-->
+
+<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN"
+         "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">                
+    <public publicId="-//NetBeans//IZ53710 1//EN" uri="a space/empty.dtd"/>
+    <public publicId="-//NetBeans//IZ53710 2//EN" uri="a+space/empty.dtd"/>
+    <public publicId="-//NetBeans//IZ53710 3//EN" uri="a%20space/empty.dtd"/>
+    <public publicId="-//NetBeans//IZ53710//EN" uri="empty.dtd"/>
+</catalog>

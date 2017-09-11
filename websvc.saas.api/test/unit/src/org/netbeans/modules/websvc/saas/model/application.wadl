@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<application xmlns="http://research.sun.com/wadl/2006/10">
+    <resources base="http://localhost:8080/FlowerRest/resources/">
+        <resource path="/flowers/">
+            <method name="GET"><response>
+                <representation mediaType="application/xml"/></response>
+            </method>
+            <resource path="{id}/">
+                <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="template" name="id"/>
+            </resource>
+            <resource path="{id}/image">
+                <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="template" name="id"/>
+            </resource>
+        </resource>
+    </resources>
+</application>

@@ -1,0 +1,19 @@
+Name: exechlp
+Version: 1.0
+Description: binaries that used by dlight.nativeexecution module
+License: TBD
+OSR: -
+Origin: -
+Files: exechlp-1.0.zip contains killall process_start pty pty_open sigqueue stat unbuffer.so for different platforms
+Source: -
+Comment: needed for dlight.nativeexecution module to provide system-dependent services
+
+process_start, pty, pty_open - used for dealing with pseude terminals
+sigqueue, killall - sending signals to processes
+stat - getting detailed file information
+unbuffer.so - used when unbuffering is required
+
+Use of exechlp version 1.0 is governed by the terms of the license below:
+
+TBD
+

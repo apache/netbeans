@@ -1,0 +1,11 @@
+<?xml version='1.0'?>
+<!DOCTYPE driver PUBLIC '-//NetBeans//DTD JDBC Driver 1.1//EN' 'http://www.netbeans.org/dtds/jdbc-driver-1_1.dtd'>
+<driver>
+  <name value='bar_driver'/>
+  <display-name value='Bar Driver'/>
+  <class value='org.bar.BarDriver'/>
+  <urls>
+  	<url value='file:/bar1.jar'/>
+        <url value='file:/bar2.jar'/>
+  </urls>
+</driver>

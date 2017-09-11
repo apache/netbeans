@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<windowmanager version="2.2">
+    <main-window>
+        <joined-properties
+             x="100"
+             y="100"
+             width="800"
+             height="600"
+             relative-x="-1.0"
+             relative-y="-1.0"
+             relative-width="-1.0"
+             relative-height="-1.0"
+             centered-horizontally="false"
+             centered-vertically="false"
+             maximize-if-width-below="-1"
+             maximize-if-height-below="-1"
+             frame-state="0"
+        />
+        <separated-properties
+             x="-1"
+             y="-1"
+             width="-1"
+             height="-1"
+             relative-x="-1.0"
+             relative-y="-1.0"
+             relative-width="-1.0"
+             relative-height="-1.0"
+             centered-horizontally="false"
+             centered-vertically="false"
+             frame-state="0"
+        />
+    </main-window>
+    <editor-area state="joined" frame-state="0">
+        <constraints>
+            <path orientation="vertical" number="0" weight="0.7" />
+            <path orientation="horizontal" number="1" weight="0.5" />
+        </constraints>
+        <relative-bounds x="0" y="0" width="100" height="60" />
+    </editor-area>
+    <screen width="1280" height="1024" />
+    <active-mode name="editor" />
+    <maximized-mode view="explorer" editor="editor"/>
+    <toolbar configuration="Standard" />
+</windowmanager>

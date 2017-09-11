@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC
+          "-//NetBeans//DTD Filesystem 1.0//EN"
+          "http://www.netbeans.org/dtds/filesystem-1_0.dtd">
+<filesystem>
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="NetBeans_org_netbeans_modules_settings">
+                <file name="DTD_XML_FooSetting_1_0" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans org.netbeans.modules.settings//DTD XML FooSetting 1.0//EN"/>
+                </file>
+                <file name="DTD_XML_FooSetting1_1_0" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans org.netbeans.modules.settings//DTD XML FooSetting1 1.0//EN"/>
+                </file>
+                <file name="DTD_XML_FooSetting2_1_0" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans org.netbeans.modules.settings//DTD XML FooSetting2 1.0//EN"/>
+                </file>
+                <file name="DTD_XML_FooSetting3_1_0" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <attr name="hint.originalPublicID" stringvalue="-//NetBeans org.netbeans.modules.settings//DTD XML FooSetting3 1.0//EN"/>
+                </file>
+                
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="NetBeans_org_netbeans_modules_settings">
+                <file name="DTD_XML_FooSetting_1_0.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.api.settings.Factory.create"/>
+                    <attr name="settings.convertor" methodvalue="org.netbeans.api.settings.Factory.properties"/>
+                    <attr name="settings.instanceClass" stringvalue="org.netbeans.modules.settings.convertors.FooSetting"/>
+                    <attr name="settings.instanceOf" stringvalue="org.netbeans.modules.settings.convertors.FooSetting"/>
+                </file>
+                <file name="DTD_XML_FooSetting1_1_0.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.api.settings.Factory.create"/>
+                    <attr name="settings.convertor" methodvalue="org.netbeans.api.settings.Factory.properties"/>
+                    <attr name="settings.instanceClass" stringvalue="org.netbeans.modules.settings.convertors.FooSetting"/>
+                    <attr name="settings.instanceOf" stringvalue="org.netbeans.modules.settings.convertors.FooSetting"/>
+                    <attr name="xmlproperties.ignoreChanges" stringvalue="aaa, property1"/>
+                </file>
+                <file name="DTD_XML_FooSetting2_1_0.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.api.settings.Factory.create"/>
+                    <attr name="settings.convertor" methodvalue="org.netbeans.api.settings.Factory.properties"/>
+                    <attr name="settings.instanceClass" stringvalue="org.netbeans.modules.settings.convertors.FooSetting"/>
+                    <attr name="settings.instanceOf" stringvalue="org.netbeans.modules.settings.convertors.FooSetting"/>
+                    <attr name="xmlproperties.ignoreChanges" stringvalue="all"/>
+                </file>
+                <file name="DTD_XML_FooSetting3_1_0.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.api.settings.Factory.create"/>
+                    <attr name="settings.convertor" methodvalue="org.netbeans.api.settings.Factory.properties"/>
+                    <attr name="settings.instanceClass" stringvalue="org.netbeans.modules.settings.convertors.FooSetting"/>
+                    <attr name="settings.instanceOf" stringvalue="org.netbeans.modules.settings.convertors.FooSetting"/>
+                    <attr name="xmlproperties.preventStoring" boolvalue="true"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    
+</filesystem>

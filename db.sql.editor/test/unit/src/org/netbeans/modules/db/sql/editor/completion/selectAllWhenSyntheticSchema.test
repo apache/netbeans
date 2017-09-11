@@ -1,0 +1,9 @@
+# Ensures tables from a model with no schemas show up.
+
+select |
+
+--
+<unknown>
+  <no-schema>
+    customer
+    invoice

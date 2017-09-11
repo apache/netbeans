@@ -1,0 +1,178 @@
+#!/bin/bash
+#
+# DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+#
+# Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+#
+# Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+# Other names may be trademarks of their respective owners.
+#
+# The contents of this file are subject to the terms of either the GNU
+# General Public License Version 2 only ("GPL") or the Common
+# Development and Distribution License("CDDL") (collectively, the
+# "License"). You may not use this file except in compliance with the
+# License. You can obtain a copy of the License at
+# http://www.netbeans.org/cddl-gplv2.html
+# or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+# specific language governing permissions and limitations under the
+# License.  When distributing the software, include this License Header
+# Notice in each file and include the License file at
+# nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+# particular file as subject to the "Classpath" exception as provided
+# by Oracle in the GPL Version 2 section of the License file that
+# accompanied this code. If applicable, add the following below the
+# License Header, with the fields enclosed by brackets [] replaced by
+# your own identifying information:
+# "Portions Copyrighted [year] [name of copyright owner]"
+#
+# Contributor(s):
+#
+# The Original Software is NetBeans. The Initial Developer of the Original
+# Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+# Microsystems, Inc. All Rights Reserved.
+#
+# If you wish your version of this file to be governed by only the CDDL
+# or only the GPL Version 2, indicate your decision by adding
+# "[Contributor] elects to include this software in this distribution
+# under the [CDDL or GPL Version 2] license." If you do not indicate a
+# single choice of license, a recipient has the option to distribute
+# your version of this file under either the CDDL, the GPL Version 2 or
+# to extend the choice of license to its licensees as provided above.
+# However, if you add GPL Version 2 code and therefore, elected the GPL
+# Version 2 license, then the option applies only if the new code is
+# made subject to such option by the copyright holder.
+
+create()
+{
+   testMethodName="test$1$2";
+   echo -e "public void $testMethodName() throws Exception {" >>$output;
+   echo -e "    log(\"$testMethodName() start\");" >>$output;
+   echo -e "    PrintWriter outputWriter  = null;" >>$output;
+   echo -e "    PrintWriter logWriter = null;" >>$output;
+   echo -e "    try {" >>$output;
+   echo -e "        outputWriter  = new PrintWriter(getRef());" >>$output;
+   echo -e "        logWriter = new PrintWriter(getLog());" >>$output;
+   echo -e "        new CompletionTest().test(outputWriter, logWriter, \"$text\", $sorted, getDataDir(), \"$project\", \"$sourcefile\", $lineinsource);" >>$output;
+   echo -e "    } finally {" >>$output;
+   echo -e "        if (outputWriter != null) {" >>$output;
+   echo -e "            outputWriter.flush();" >>$output;
+   echo -e "        }" >>$output;
+   echo -e "        if (logWriter != null) {" >>$output;
+   echo -e "            logWriter.flush();" >>$output;
+   echo -e "        }" >>$output;
+   echo -e "      log(\"$testMethodName() end\");" >>$output;
+   echo -e "    }\n" >>$output;
+   echo -e "    assertFile(\"Output does not match golden file.\", resolveGoldenFile(\"$proposedGoldenFile\"), new File(getWorkDir(), this.getName() + \".ref\"), null, new LineDiff(false));" >>$output;
+   echo -e "}" >>$output;
+
+   testMethodNames="$testMethodNames $testMethodName";
+}
+
+go() 
+{
+   output="CompletionTestPerformer.java";
+
+
+   rm -f $output;
+   touch $output;
+   cat >>$output <<END_OF_SOURCE
+//This class is automatically generated - DO NOT MODIFY (ever)
+/*
+ *                 Sun Public License Notice
+ * 
+ * The contents of this file are subject to the Sun Public License
+ * Version 1.0 (the "License"). You may not use this file except in
+ * compliance with the License. A copy of the License is available at
+ * http://www.sun.com/
+ * 
+ * The Original Code is NetBeans. The Initial Developer of the Original
+ * Code is Sun Microsystems, Inc. Portions Copyright 1997-2001 Sun
+ * Microsystems, Inc. All Rights Reserved.
+ */
+package org.netbeans.test.java.editor.completion;
+import java.io.PrintWriter;
+
+import org.openide.filesystems.*;
+
+import org.netbeans.junit.NbTestCase;
+import org.netbeans.junit.NbTestSuite;
+import org.netbeans.jellytools.JellyTestCase;
+import org.netbeans.test.editor.LineDiff;
+import java.io.File;
+
+/**This class is automatically generated from <I>config.txt</I> using bash
+ * script <I>create</I>. For any changes, change the code generating script
+ * and re-generate.
+ *
+ * Althought this class is runned as a test, there is no real code. This class
+ * is only wrapper between xtest and harness independet test code. Main information
+ * source is <B>CompletionTest</B> class ({@link CompletionTest}).
+ *
+ * @see CompletionTest
+ */
+public class CompletionTestPerformer extends NbTestCase {
+
+    /** Need to be defined because of JUnit */
+    public CompletionTestPerformer(String name) {
+        super(name);
+    }
+
+    protected void setUp() {
+        log("CompletionTestPerformer.setUp started.");
+        log("CompletionTestPerformer.setUp finished.");
+    }
+
+    private String getJDKVersionCode() {
+        String specVersion = System.getProperty("java.version");
+        
+        if (specVersion.startsWith("1.4"))
+            return "jdk14";
+        
+        if (specVersion.startsWith("1.5"))
+            return "jdk15";
+        
+        throw new IllegalStateException("Specification version: " + specVersion + " not recognized.");
+    }
+
+    private File resolveGoldenFile(String proposedGoldenFileName) {
+        if ("@".equals(proposedGoldenFileName.trim()))
+            return getGoldenFile(getJDKVersionCode() + "-" + getName() + ".pass");
+        else
+            return getGoldenFile(getJDKVersionCode() + "-" + proposedGoldenFileName + ".pass");
+    }
+
+END_OF_SOURCE
+
+    testMethodNames="";
+while read line; do
+   echo $line >/tmp/line.tmp
+   name=`cut -d ':' -f 1 </tmp/line.tmp`;
+   echo "Creating test case: $name";
+   text=`cut -d ':' -f 2 </tmp/line.tmp`;
+   sorted=`cut -d ':' -f 3 </tmp/line.tmp`;
+   proposedGoldenFile=`cut -d ':' -f 4 </tmp/line.tmp`;
+   project=`cut -d ':' -f 5 </tmp/line.tmp`;
+   sourcefile=`cut -d ':' -f 6 </tmp/line.tmp`;
+   lineinsource=`cut -d ':' -f 7 </tmp/line.tmp`;
+   if test "$sorted" == "true"; then
+      create $name "sorted";
+   else
+      if test "$sorted" == "false"; then
+          create $name "unsorted";
+      else
+         echo "Unknown sorted modifier: \"$sorted\"" 1>&2;
+      fi;
+   fi; 
+done;
+
+#   echo -e "    public static NbTestSuite suite() {\nNbTestSuite suite = new NbTestSuite();" >>$output;
+#   for method in $testMethodNames; do
+#      echo -e "suite.addTest(new CompletionTestPerformer(\"$method\"));" >>$output;
+#   done;
+#   echo -e "return suite;\n}" >>$output;
+
+   echo -e "}" >>$output;
+
+}
+
+grep -v <config.cfg "^#" | go

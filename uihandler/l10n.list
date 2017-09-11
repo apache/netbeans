@@ -1,0 +1,4 @@
+# logger/uihandler
+read global
+${l10n-module}/src/org/netbeans/modules/uihandler/Connecting.html
+${l10n-module}/src/org/netbeans/modules/uihandler/UnknownHostException.html

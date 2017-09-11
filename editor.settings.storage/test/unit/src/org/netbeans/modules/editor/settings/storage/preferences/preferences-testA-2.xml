@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE editor-preferences PUBLIC "-//NetBeans//DTD Editor Preferences 1.0//EN" "http://www.netbeans.org/dtds/EditorPreferences-1_0.dtd">
+
+<editor-preferences>
+    <!-- setting from preferences-testA-1.xml -->
+    <entry name="testA-1-setting-2" remove="true"/>
+    <entry name="testA-1-setting-3" value="value-of-testA-1-setting-3-from-testA-2"/>
+
+    <!-- settings from this file -->
+    <entry name="testA-2-setting-1" value="value-of-testA-2-setting-1"/>
+</editor-preferences>

@@ -1,0 +1,3 @@
+Column customer_id in table customer
+Column customer_rating in table customer
+Column address_line in table customer

@@ -1,0 +1,9 @@
+# core
+# explicit exclude for core/javahelp, what is regular module
+${l10n-module}/src/**/Bundle*.properties
+exclude ${l10n-module}/src/**/Bundle_noi18n.properties 
+${l10n-module}/src/**/resources/**/*.gif
+${l10n-module}/src/**/resources/**/*.html
+${l10n-module}/src/**/resources/**/*.png 
+${l10n-module}/**/*.url
+exclude ${l10n-module}/**/package.html

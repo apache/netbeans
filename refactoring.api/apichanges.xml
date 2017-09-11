@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">
+<apichanges>
+<apidefs>
+    <apidef name="refactoring">Refactoring API</apidef>
+</apidefs>
+<changes>
+    <change id="ScopeProblem">
+        <api name="refactoring"/>
+        <summary>Let ScopeProvider report a Problem.</summary>
+        <version major="1" minor="44"/>
+        <date day="27" month="6" year="2015"/>
+        <author login="ralphbenjamin"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                When a ScopeProvider should be displayed, it returns true from the
+                initialize method, but it will not work or work as expected the 
+                ScopeProvider can return a Problem. Added the method
+                getProblem() to ScopeProvider and getScopeProvider() to ScopePanel.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.refactoring.spi.ui" name="ScopeProvider"/>
+        <class package="org.netbeans.modules.refactoring.spi.ui" name="ScopePanel"/>
+        <issue number="252995"/>
+    </change>
+    <change id="ScopeDependencies">
+        <api name="refactoring"/>
+        <summary>Add property to include dependencies in Scope.</summary>
+        <version major="1" minor="43"/>
+        <date day="27" month="6" year="2015"/>
+        <author login="ralphbenjamin"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Added the property dependencies in class Scope to include dependencies of the specified scope, like libraries, used by WhereUsedQuery.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.refactoring.api" name="Scope"/>
+        <issue number="252993"/>
+    </change>
+    <change id="FilterSetSelected">
+        <api name="refactoring"/>
+        <summary>Introduce a way to update a filter's selected state after creation.</summary>
+        <version major="1" minor="36"/>
+        <date day="10" month="6" year="2013"/>
+        <author login="ralphbenjamin"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Added the method setSelected, to introduce a way to update a filter's selected state after creation.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.refactoring.spi.ui" name="FiltersDescription"/>
+        <issue number="230538"/>
+    </change>
+    <change id="TransactionProgress">
+        <api name="refactoring"/>
+        <summary>RefactoringCommit implements the interface ProgressProvider.</summary>
+        <version major="1" minor="33"/>
+        <date day="27" month="11" year="2012"/>
+        <author login="ralphbenjamin"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                RefactoringCommit now implements the interface ProgressProvider
+                to notify the progress of the commit.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.refactoring.spi" name="RefactoringCommit"/>
+        <issue number="221295"/>
+    </change>
+    <change id="ServerSideQueries">
+        <api name="refactoring"/>
+        <summary>Added support for Scope Providers and ExpandableTreeElements.</summary>
+        <version major="1" minor="30"/>
+        <date day="31" month="8" year="2012"/>
+        <author login="ralphbenjamin"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Added an ExpandableTreeElement and a declarative way to add new scopes.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.refactoring.spi.ui" name="ExpandableTreeElement"/>
+        <class package="org.netbeans.modules.refactoring.spi.ui" name="ScopeProvider"/>
+        <class package="org.netbeans.modules.refactoring.spi.ui" name="ScopeReference"/>
+        <class package="org.netbeans.modules.refactoring.spi.ui" name="ScopeReferences"/>
+        <class package="org.netbeans.modules.refactoring.spi.ui" name="ScopePanel"/>
+        <issue number="217347"/>
+    </change>
+    <change id="RefactoringResultsFilters">
+        <api name="refactoring"/>
+        <summary>Added an API to support filters of the Find Usages results.</summary>
+        <version major="1" minor="29"/>
+        <date day="8" month="8" year="2012"/>
+        <author login="ralphbenjamin"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                This API allows refactoring plugins to add/enable filters to the
+                results window and refactoring elements to specify if they should
+                be included in the results.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.refactoring.api" name="RefactoringElement"/>
+        <class package="org.netbeans.modules.refactoring.spi" name="FiltersManager"/>
+        <class package="org.netbeans.modules.refactoring.spi.ui" name="FiltersDescription"/>
+        <issue number="215361"/>
+    </change>
+    <change id="FinishSession">
+        <api name="refactoring"/>
+        <summary>Changed access level of #finish() to public.</summary>
+        <version major="1" minor="28"/>
+        <date day="4" month="7" year="2012"/>
+        <author login="ralphbenjamin"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Changed access level of #finish() to public.
+            </p>    
+        </description>
+        <class package="org.netbeans.modules.refactoring.api" name="RefactoringSession"/>
+        <issue number="214926"/>
+    </change>
+    <change id="ContextRemove">
+        <api name="refactoring"/>
+        <summary>Added method to remove value from Context.</summary>
+        <version major="1" minor="24"/>
+        <date day="11" month="4" year="2012"/>
+        <author login="ralphbenjamin"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Added the method remove to the refactoring Context.
+            </p>    
+        </description>
+        <class package="org.netbeans.modules.refactoring.api" name="Context"/>
+        <issue number="210673"/>
+    </change>
+    <change id="RefactoringCommit">
+        <api name="refactoring"/>
+        <summary>Added RefactoringCommit and ModificationResult SPI classes.</summary>
+        <version major="1" minor="23"/>
+        <date day="20" month="3" year="2011"/>
+        <author login="jbecicka"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Added RefactoringCommit and ModificationResult SPI classes.
+            </p>    
+        </description>
+        <class package="org.netbeans.modules.refactoring.spi" name="ModificationResult"/>
+        <class package="org.netbeans.modules.refactoring.spi" name="RefactoringCommit"/>
+        <issue number="209110"/>
+    </change>
+    <change id="CopyRefactoring">
+        <api name="refactoring"/>
+        <summary>Added CopyRefactoring to support Copy of multiple files.</summary>
+        <version major="1" minor="21"/>
+        <date day="21" month="12" year="2011"/>
+        <author login="ralphbenjamin"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Added support to copy multiple files at once.
+            </p>    
+        </description>
+        <class package="org.netbeans.modules.refactoring.api" name="CopyRefactoring"/>
+        <issue number="206623"/>
+    </change>
+    <change id="Scope">
+        <api name="refactoring"/>
+        <summary>Scope added to allow to specify a limited scope for WhereUsedQuery</summary>
+        <version major="1" minor="18"/>
+        <date day="30" month="6" year="2011"/>
+        <author login="ralphbenjamin"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Scope is used to limit the WhereUsedQuery to a specific scope.<br />
+                An instance is added to the context of WhereUsedQuery to limit the
+                scope. A custom scope can be any combination of source roots, folders
+                and files.
+            </p>    
+        </description>
+        <class package="org.netbeans.modules.refactoring.api" name="Scope"/>
+        <issue number="199779"/>
+    </change>
+    <change id="ExplorerContext">
+        <api name="refactoring"/>
+        <summary>ExplorerContext added to allow handling of Explorer's Move, Copy, Delete and Rename actions</summary>
+        <version major="1" minor="2"/>
+        <date day="4" month="9" year="2007"/>
+        <author login="jbecicka"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                ExplorerContext is refactoring specific context, which is passed via Lookup
+                to ContextAwareActions in following cases: <br/>
+                1. Instant rename in Explorer <br/>
+                2. Nodes are transfered using DnD. <br/>
+                3. Nodes are moved using Cut/Paste. <br/>
+                4. Nodes are copied using Copy/Paste. <br/>
+                5. Nodes are deleted from Explorer. <br/>
+            </p>    
+        </description>
+        <class package="org.netbeans.modules.refactoring.api.ui" name="ExplorerContext"/>
+        <issue number="116857"/>
+    </change>
+</changes>
+    <htmlcontents>
+        <head>
+            <title>Change History for the Refactoing API</title>
+            <link rel="stylesheet" href="prose.css" type="text/css"/>
+        </head>
+        <body>
+            <p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+            <h1>Introduction</h1>
+            <p>This document lists changes made to the Refactoing API.</p>
+            
+            <!-- The actual lists of changes, as summaries and details: -->
+            <hr/>
+            <standard-changelists module-code-name="$codebase"/>
+            
+            <hr/><p>@FOOTER@</p>
+        </body>
+    </htmlcontents>
+</apichanges>
+

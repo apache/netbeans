@@ -1,0 +1,1769 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+]>
+
+<api-answers
+  question-version="1.12"
+  author="jglick@netbeans.org"
+>
+
+  &api-questions;
+
+
+<!--
+        <question id="arch-what">
+            What is this project good for?
+            <hint>
+            Please provide here few lines describing the the project,
+            what problem it should solve, provide links to documentation, 
+            specifications, etc.
+            </hint>
+        </question>
+-->
+    <answer id="arch-what">
+        The NetBeans launcher starts the application. Different launchers are
+        provided for different supported platforms - Unix/Linux, Windows, and
+        others. There are also a handful of classes in the
+        <code>org.netbeans</code> and <code>org.netbeans.core</code> packages
+        which directly support early startup features, such as command-line
+        options.
+    </answer>
+
+
+
+<!--
+        <question id="compat-i18n">
+            Is your module correctly internationalized?
+            <hint>
+            Correct internationalization means that it obeys instuctions 
+            at <a href="http://www.netbeans.org/devhome/docs/i18n/index.html">
+            NetBeans I18N pages</a>.
+            </hint>
+        </question>
+-->
+    <answer id="compat-i18n">
+        Yes, except for early-startup code (including the native launcher) that
+        deals with the command line.
+    </answer>
+
+
+
+<!--
+        <question id="compat-standards">
+            Does the module implement or define any standards? Is the 
+            implementation exact or does it deviate somehow?
+        </question>
+-->
+    <answer id="compat-standards">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="compat-version">
+            Can your module coexist with earlier and future
+            versions? Can you correctly read all old settings? Will future
+            versions be able to read your current settings? Can you read
+            or politely ignore settings stored by a future version?
+            
+            <hint>
+            Very helpful for reading settings is to store version number
+            there, so future versions can decide whether how to read/convert
+            the settings and older versions can ignore the new ones.
+            </hint>
+        </question>
+-->
+    <answer id="compat-version">
+        N/A
+    </answer>
+
+
+
+<!--
+        <question id="dep-jre">
+            Which version of JRE do you need (1.2, 1.3, 1.4, etc.)?
+            <hint>
+            It is expected that if your module runs on 1.x that it will run 
+            on 1.x+1 if no, state that please. Also describe here cases where
+            you run different code on different versions of JRE and why.
+            </hint>
+        </question>
+-->
+    <answer id="dep-jre">
+        1.4 or later.
+    </answer>
+
+
+
+<!--
+        <question id="dep-jrejdk">
+            Do you require the JDK or is the JRE enough?
+        </question>
+-->
+    <answer id="dep-jrejdk">
+        The launcher itself does not use the JDK. The Unix and windows launchers permit
+        either the JDK or JRE to be specified - if the JRE is specified, modules
+        with hard dependencies on JDK tools (e.g. the JPDA Debugger module) will
+        simply not be loaded. For other launchers, unknown.
+    </answer>
+
+
+
+<!--
+        <question id="dep-nb">
+            What other NetBeans projects does this one depend on?
+            <hint>
+            If you want, describe such projects as imported API using
+            the <code>&lt;api name=&quot;identification&quot; type=&quot;import or export&quot; category=&quot;stable&quot; url=&quot;where is the description&quot; /></code>
+            </hint>
+        </question>
+-->
+    <answer id="dep-nb">
+        The core/startup module depends on 
+        <api category="official" group="java" name="FileSystems" type="import" url="@org-openide-filesystems@/overview-summary.html" />,
+        <api category="official" group="java" name="Modules" type="import" url="@org-openide-modules@/overview-summary.html" />,
+        <api category="official" group="java" name="Utilities" type="import" url="@org-openide-util@/overview-summary.html" />
+        and core/bootstrap.
+        
+        <defaultanswer generate="none"/>
+    </answer>
+
+
+
+<!--
+        <question id="dep-non-nb">
+            What other projects outside NetBeans does this one depend on?
+            
+            <hint>
+            Some non-NetBeans projects are packaged as NetBeans modules
+            (see <a href="http://libs.netbeans.org">libraries</a>) and
+            it is prefered to use this approach when more modules may
+            depend on such third-party library.
+            </hint>
+        </question>
+-->
+    <answer id="dep-non-nb">
+        None.
+    </answer>
+
+
+
+<!--
+        <question id="dep-platform">
+            On which platforms does your module run? Does it run in the same
+            way on each?
+            <hint>
+            If your module is using JNI or deals with special differences of
+            OSes like filesystems, etc. please describe here what they are.
+            </hint>
+        </question>
+-->
+    <answer id="dep-platform">
+        <dl>
+            <dt>Unix (incl. Linux)</dt>
+            <dd>
+                <p>
+                    The <api 
+                        category="stable" 
+                        group="java.io.File" 
+                        name="nbexec" 
+                        type="export" 
+                        url="http://platform.netbeans.org/articles/installation.html#launcher"
+                    /> launcher is fully featured and
+                    supported. It should work on any Unix flavor. Implemented as
+                    a shell script. 
+                </p>
+                <p>
+                    <api 
+                        category="private"
+                        group="java.io.File"
+                        name="lock-file"
+                        type="export"
+                    >
+                    The lock file <samp>${netbeans.user}/lock</samp> will have file
+                    permissions changed to <samp>go-rwx</samp> for safety on Unix
+                    systems (requires presence of <code>chmod</code>)</api>
+                </p>
+            </dd>
+            <dt>Windows (all variants?)</dt>
+            <dd>
+                <p>
+                    The <api 
+                        category="stable" 
+                        group="java.io.File" 
+                        name="nbexec.exe" 
+                        type="export" 
+                        url="http://platform.netbeans.org/articles/installation.html#launcher"
+                    />
+                    launcher is fully featured and
+                    supported. <!-- <samp>runidew.exe</samp> is similar but avoids
+                    showing a DOS console (this is recommended for most users). -->
+                    Implemented using Visual C++; prebuilt binary is kept in CVS
+                    along with sources.
+                </p>
+            </dd>
+            <!-- Currently removed from the build:
+            <dt>OpenVMS</dt>
+            <dd>
+                <p>
+                    <samp>runideopenvms.com</samp> includes most relevant
+                    features (plus some platform-specific additions) and is
+                    supported by OpenVMS engineers at HP. Batch script.
+                </p>
+            </dd>
+            <dt>Mac OS X</dt>
+            <dd>
+                <p>
+                    <samp>macosx_launcher.dmg</samp> is probably fully featured
+                    (TBD) and is optimized for the Mac OS X desktop over the Unix
+                    launcher. Unofficially supported by Sun engineers.
+                    Implemented in Objective C; prebuilt binary is kept in CVS
+                    along with sources.
+                </p>
+            </dd>
+            -->
+        </dl>
+    </answer>
+
+
+
+<!--
+        <question id="deploy-jar">
+            Do you deploy just module JAR file(s) or other files as well?
+            <hint>
+            If your module consist just from one module JAR file, just confirm that.
+            If it uses more than one JAR, describe where there are located, how
+            they refer to each other. 
+            If it consist of module JAR(s) and other files, please describe
+            what is their purpose, why other files are necessary. Please 
+            make sure that installation/deinstallation leaves the system 
+            in state as it was before installation.
+            </hint>
+        </question>
+-->
+    <answer id="deploy-jar">
+        Consists of various launcher scripts in the
+        <samp>lib/</samp> directory of the NetBeans installation. Bootstrap Java
+        code (part of core) resides in <samp>lib/boot.jar</samp> and
+        <samp>core/core.jar</samp>.
+    </answer>
+
+
+
+<!--
+        <question id="deploy-nbm">
+            Can you deploy an NBM via the Update Center?
+            <hint>
+            If not why?
+            </hint>
+        </question>
+-->
+    <answer id="deploy-nbm">
+        As part of core. But <a
+        href="http://www.netbeans.org/issues/show_bug.cgi?id=24361">not on
+        Windows</a>.
+    </answer>
+
+
+
+<!--
+        <question id="deploy-packages">
+            Are packages of your module made inaccessible by not declaring them
+            public?
+            
+            <hint>
+            NetBeans module system allows restriction of access rights to
+            public classes of your module from other modules. This prevents
+            unwanted dependencies of others on your code and should be used
+            whenever possible (<a href="http://www.netbeans.org/download/apis/org/openide/doc-files/upgrade.html#3.4-public-packages">
+            public packages
+            </a>). 
+            </hint>
+        </question>
+-->
+    <answer id="deploy-packages">
+        N/A for the launcher itself. For bootstrap code: no; the core execution
+        engine (<samp>core-execution.jar</samp>) needs access to
+        <code>org.netbeans.TopSecurityManager</code>.
+        Modules may use <code>org.netbeans.CLIHandler</code> to add command-line
+        option handling (currently used by <code>utilities</code>).
+    </answer>
+
+
+
+<!--
+        <question id="deploy-shared">
+            Do you need to be installed in the shared location only, or in the user directory only,
+            or can your module be installed anywhere?
+            <hint>
+            Installation location shall not matter, if it does explain why.
+            Consider also whether <code>InstalledFileLocator</code> can help.
+            </hint>
+        </question>
+-->
+    <answer id="deploy-shared">
+        Shared location only, for obvious reasons.
+    </answer>
+
+
+
+<!--
+        <question id="exec-classloader">
+            Does your code create its own class loader(s)?
+            <hint>
+            A bit unusual. Please explain why and what for.
+            </hint>
+        </question>
+-->
+    <answer id="exec-classloader">
+        <api name="ClassPath-Composition" category="private" group="java.io.File" type="export">
+            Bootstrap code creates a class loader to load the rest of the core from.
+            The bootstrap code is loaded from the Java application class loader,
+            using the classpath <samp>lib/*.jar</samp>.
+        </api>    
+        <p/>
+        
+        <api name="Dynamic-ClassPath-Composition" category="friend" group="java.io.File" type="export" >
+            After creating bootstrap classpath another low level set of JARs is loaded with a new
+            classloader from <samp>core/*.jar</samp> directories in each clusters.
+        </api>
+    </answer>
+
+
+
+<!--
+        <question id="exec-component">
+            Is execution of your code influenced by any (string) property
+            of any of your components?
+            
+            <hint>
+            Often <code>JComponent.getClientProperty</code>, <code>Action.getValue</code>
+            or <code>PropertyDescriptor.getValue</code>, etc. are used to influence
+            a behaviour of some code. This of course forms an interface that should
+            be documented. Also if one depends on some interface that an object
+            implements (<code>component instanceof Runnable</code>) that forms an
+            API as well.
+            </hint>
+        </question>
+-->
+    <answer id="exec-component">
+        <api group="property" category="deprecated" name="java.util.logging.Level.1973" type="export">
+            LogRecords sent to registered logger may be marked as those intended
+            for user. This can be done by logging with level which has intValue() == 1973.
+            Localized message of such log records is then shown in a special 
+            dialog. This behaviour is supported for backward compatibility, but
+            in fact it is deprecated. The preferred way is to directly show
+            dialog using <code>DialogDisplayer</code>.
+        </api>
+        <api group="systemproperty" category="devel" name="netbeans.exception.alert.min.level" type="export">
+            Minimum integer level that triggers the blinking icon signaling an
+            exceptional state. By default 900 - e.g. WARNING.
+        </api>
+        <api group="systemproperty" category="devel" name="netbeans.exception.report.min.level" type="export">
+            Minimum integer level that triggers the dialog with exception.
+            By default 900 with assertions on and 1001 without them.
+        </api>
+    </answer>
+
+
+
+<!--
+        <question id="exec-privateaccess">
+            Are you aware of any other parts of the system calling some of 
+            your methods by reflection?
+            <hint>
+            If so, describe the &quot;contract&quot; as an API. Likely private or friend one, but
+            still API and consider rewrite of it.
+            </hint>
+        </question>
+-->
+    <answer id="exec-privateaccess">
+        None known.
+    </answer>
+
+
+
+<!--
+        <question id="exec-property">
+            Is execution of your code influenced by any environment or
+            Java system (<code>System.getProperty</code>) property?
+            
+            <hint>
+            If there is a property that can change the behaviour of your 
+            code, somebody will likely use it. You should describe what it does 
+            and the stability category of this API. You may use
+            <pre>
+                &lt;property name=&quot;id&quot; category=&quot;private&quot; >
+                    description of the property, where it is used, what it influence, etc.
+                &lt;/property>            
+            </pre>
+            </hint>
+        </question>
+-->
+    <answer id="exec-property">
+        <ul>
+            <li>
+                <api type="import" group="property" name="JDK_HOME" category="standard">
+                    Default JDK installation directory to use, unless
+                    <samp>--jdkhome</samp> is given. [Unix only]
+                </api>
+            </li>
+            <li>
+                <api type="import" group="property" name="JAVA_PATH" category="standard">
+                    Backup variable to check for JDK installation directory.
+                    [Unix only]
+                </api>
+            </li>
+            <li>
+                <api type="import" group="property" name="NB_JDK_HOME" category="devel">
+                    Overriding JDK installation directory specifically for
+                    NetBeans. [Unix only]
+                </api>
+            </li>
+            <li>
+                <api type="import" group="property" name="JavaDevelopmentKit" category="standard">
+                    The registry key <code>Software\JavaSoft\Java Development Kit</code> is the
+                    default JDK installation directory to use, unless
+                    <samp>--jdkhome</samp> is given. [Windows only]
+                </api>
+            </li>
+            <li>
+                <api type="export" group="systemproperty" name="netbeans.mainclass" category="friend">
+                    Main Java class for bootstrap code to start (currently <code>org.netbeans.core.startup.Main</code>).
+                    Might be used by alternate launchers.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="property" name="NetBeans-IDE-Dev" category="private">
+                    The registry key <code>Software\netbeans.org\NetBeans IDE\Dev</code>
+                    Default user directory, unless <samp>--userdir</samp> is
+                    given. The name of this registry key is brandable, as is its
+                    default value. [Windows only]
+                </api>
+            </li>
+            <li>
+                <api type="export" group="systemproperty" name="netbeans.home" category="devel">
+                    NetBeans installation directory (where the launcher is).
+                </api>
+            </li>
+            <li>
+                <api type="export" group="systemproperty" name="netbeans.user.dir" category="devel">
+                    If this property is provided, it is used as the current working
+                    directory regardless of the value of <code>user.dir</code>.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="systemproperty" name="netbeans.dirs" category="friend">
+                    Additional secondary NetBeans installation directories as proposed in <a
+                    href="https://platform.netbeans.org/articles/installation.html">installation structure</a>
+                    design document.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="systemproperty" name="netbeans.fallback.cache" category="friend">
+                    Alternative location of NetBeans fallback cache generated during
+                    installation (see <a href="#java.io.File-installation.cache">installation cache</a>
+                    for description of the files layout). 
+                    If the property is set to <code>none</code>,
+                    then the fallback cache check is completely disabled.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="systemproperty" name="netbeans.classpath" category="friend">
+                    Classpath to prepend to core loader (normally just
+                    <samp>lib/*.jar</samp>). Possibly useful for testing
+                    infrastructure etc.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="systemproperty" name="netbeans.systemclassloader.patches" category="devel">
+                    By setting this system property
+                    to a classpath (list of directories and JARs separated by the normal
+                    path separator) you may append to the system class loader.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="systemproperty" name="netbeans.patches.cnb" category="devel">
+                    By setting a system property to <code>"netbeans.patches." + module.getCodeNameBase()</code>
+                    one can influence installed modules without changing the build.
+                    Format is <code>-Dnetbeans.patches.org.nb.mods.foo=/path/to.file.jar:/path/to/dir</code>.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="logger" name="org.netbeans.ProxyClassLoader" category="private">
+                    This logger logs at <code>WARNING</code> level about accessing resources from the default package.
+                </api>
+            </li>
+            <li>
+                <api name="netbeans.importclass" category="friend" group="systemproperty" type="export" >
+                    There is a special support for importing the settings from previous
+                    versions. As only the product itself knows about what to import and
+                    where this cannot be done directly in the launcher, but we need at 
+                    a well defined moment (user directory is missing and no modules
+                    have been initialized yet) to call the product to ask the user 
+                    and do the actual copy of userdir. 
+                    <p/>
+                    After all <code>core/*.jar</code> files has been initialized
+                    and the user dir has not yet been updated (see bellow) the 
+                    launcher checks for value of <code>netbeans.importclass</code>
+                    system property and if provided it loads that class and invokes
+                    its main method (in AWT thread) and if no exception is thrown it 
+                    marks the userdir as already upgraded.
+                </api>
+                <api name="imported-marker" category="friend" group="java.io.File" type="export">
+                    <samp>${netbeans.user}/var/imported</samp> is used to identify whether a userdir has already been updated
+                    or it still needs an update. Can be created by installer if no update
+                    check should be performed, no other code is supposed to realy on 
+                    this file.
+                </api>
+                <api name="netbeans.accept_license_class" category="friend" group="systemproperty" type="export" >
+                    Before first usage of IDE user must accept license. If user does not install IDE
+                    by installer (user must accept license during installation) user must accept license
+                    during IDE first start.
+                    <p>Launcher calls method <code>showLicensePanel</code> of <code>netbeans.acceptlicenseclass</code>
+                    if license was not yet accepted by user and it is necessary to show license
+                    in dialog to user.</p>
+                </api>. 
+                <api name="license-check-marker-file" category="friend" group="java.io.File" type="export">
+                    <samp>${netbeans.user}/var/license_accepted</samp> and <samp>${nbcluster.dir}/var/license_accepted</samp>
+                    are used to identify whether user accepted license.
+                </api>
+             </li>
+            <li>
+                <api type="export" group="systemproperty" name="netbeans.logger.console" category="friend">
+                    <p>
+                        Controls whether to log messages to the console, or just to the log file.
+                    </p>
+                </api>
+            </li>
+            <li>
+                <api type="export" group="systemproperty" name="org.netbeans.CLIHandler" category="private">
+                    <p>
+                        Setting this property to less than zero value enables logging of what is
+                        going on in the CLIHandler - e.g. in the code that locks user directory and
+                        handles processing of command line options. Use <code>-J-Dorg.netbeans.CLIHandler=-1</code>
+                        to send the logging to <code>System.err</code>.
+                    </p>
+                </api>
+            </li>
+            <li>
+                <api type="export" group="systemproperty" name="org.netbeans.CLIHandler.server" category="devel">
+                    <p>
+                        One can disable the CLI server (listening on commands
+                        from subsequent invocations) by setting property
+                        <code>org.netbeans.CLIHandler.server</code> to <code>false</code>.
+                    </p>
+                </api>
+            </li>
+            <li>
+                <api type="export" group="systemproperty" name="org.netbeans.core.systemfilesystem.custom" category="friend">
+                    <p>
+                        Contains class name of a class that can serve as provider of the writable layer of the
+                        system file system. The class must be a subclass of 
+                        <code>org.openide.filesystems.FileSystem</code> and have public default constructor.
+                        Morevoer the class denoted by the property must be on the classpath.
+                    </p>
+                </api>
+            </li>
+            <li>
+                <api type="export" group="systemproperty" name="netbeans.security.nocheck" category="devel">
+                    By default NetBeans prevent certain operations like <code>System.exit</code>. 
+                    One can disable this behavior by providing <code>-Dnetbeans.security.nocheck=true</code>.
+                    Since version 2.47 such property also allows the <code>SecurityManager</code>
+                    to be replaced by another.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="systemproperty" name="sun.awt.datatransfer.timeout" category="devel">
+                    Specifies the amount of milliseconds the call to
+                    <code>getContent()</code> method of <code>ExClipboard</code>
+                    waits to synchronize with system clipboard. Defaults to 1000ms.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="systemproperty" name="netbeans.ignore.dupmodule" category="devel">
+                    By default ModuleManager throws <code>DuplicateException</code> when an attempt is made
+                    to load an already loaded module.
+                    One can change this behavior by providing <code>-Dnetbeans.ignore.dupmodule=true</code>
+                    since version 2.63. When <code>-Dnetbeans.ignore.dupmodule=true</code> is provided,
+                    attempt of duplicate loading is logged instead of throwing <code>DuplicateException</code>.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="systemproperty" name="org.netbeans.PatchByteCode.disable" category="friend">
+                    For backward compatibility, the NetBeans startup code performs bytecode manipulation such as 
+                    making marked methods <i>public</i> or injecting code that was deprecated and removed from
+                    the NetBeans codebase. For debugging, or simply in order to disable preprocessing, patching
+                    may be disabled. Note that older modules, which were not recompiled against the released version's sources may
+                    become broken, if bytecode patching is disabled.
+                </api>
+            </li>
+        </ul>
+        <p>
+            There are also some options passed to the launcher (interpreted
+            either by the script itself, or by early startup Java code).
+            Options parsed by plugins using <code>org.netbeans.CLIHandler</code>
+            (e.g. <samp>-open&#160;<i>FILE</i></samp>) are not included in this list:
+        </p>
+        <ul>
+            <li>
+                <api type="export" group="cli" name="--jdkhome" category="devel">
+                    JDK (or perhaps JRE) installation directory.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="cli" name="--clusters" category="devel">
+                    The list of clusters to intialize the system from. Is
+                    used to set the value of <code>netbeans.dirs</code>.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="cli" name="--userdir" category="devel">
+                    User directory, if not the default.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="cli" name="-JWHATEVER" category="devel">
+                    Pass option <samp>WHATEVER</samp> to the JVM.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="cli" name="--cp" category="devel">
+                    <samp>-cp:a</samp> and <samp>-cp:p</samp> append and prepend
+                    to the startup classpath; deprecated except for special
+                    purposes such as installing a custom look &amp; feel.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="cli" name="--ui" category="devel">
+                    Specify a look &amp; feel. The same as --laf.
+                    To make human life easier simple translation was added to convert L&amp;F ID to
+                    L&amp;F class name for known L&amp;Fs.
+                    <ul>
+                    <li>Metal is translated to javax.swing.plaf.metal.MetalLookAndFeel</li>
+                    <li>GTK is translated to com.sun.java.swing.plaf.gtk.GTKLookAndFeel</li>
+                    <li>Nimbus is translated to com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel</li>
+                    <li>Windows is translated to com.sun.java.swing.plaf.windows.WindowsLookAndFeel</li>
+                    <li>Aqua is translated to apple.laf.AquaLookAndFeel</li>
+                    </ul>
+                    
+                </api>
+            </li>
+            <li>
+                <api type="export" group="cli" name="--laf" category="devel">
+                    Specify a look &amp; feel. The same as --ui.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="cli" name="--bootclass" category="devel">
+                    Alternative main class used to initialize the system.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="cli" name="--fontsize" category="deprecated">
+                    Specify base fontsize. Deprecated in favor of using <a
+                    href="http://ui.netbeans.org/docs/ui/themes/themes.html">themes</a>
+                    which is much more general. But this is a convenient quick
+                    settings, handy for projection screens and so on.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="cli" name="--locale" category="devel">
+                    Specify system locale.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="cli" name="--branding" category="devel">
+                    Specify application branding.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="cli" name="--nologging" category="private">
+                    Do not write a log file.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="cli" name="--nosplash" category="friend">
+                    Do not show the splash screen.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="cli" name="--nogui" category="friend">
+                    Do not show any GUI at all.
+                </api>
+            </li>
+            <li>
+                <api type="export" group="cli" name="--reload" category="devel">
+                    Reload a test module.
+                </api>
+            </li>
+        </ul>
+        <p>
+            Some of the branded keys may also be of some interest, they are
+            enumerated under the property group, but all of them are currently
+            part of <code>org/netbeans/core/startup/Bundle.properties</code> file and thus
+            can be branded by overriding them in
+            <code>org/netbeans/core/startup/Bundle_brandingname.properties</code>
+        </p>
+        <ul>
+            <li>
+                <api type="export" group="property" name="SplashOnByDefault" category="devel">
+                    can be <code>true</code> or <code>false</code>, allows
+                    some applications build on top of the platform to disable
+                    splash by default
+                </api>
+            </li>
+        </ul>
+    </answer>
+
+
+
+<!--
+        <question id="exec-reflection">
+            Does your code use Java Reflection to execute other code?
+            <hint>
+            This usually indicates a missing or unsufficient API in the other
+            part of the system. If the other side is not aware of your dependency
+            this contract can be easily broken.
+            </hint>
+        </question>
+-->
+    <answer id="exec-reflection">
+        <p>
+        The bootstrap code of course uses reflection to start the normal core.
+        Currently some reflection is used in bootstrap class loaders to work
+        around a variety of JRE bugs in handling loading from JAR files,
+        especially on Windows which has mandatory file locking - the JRE code to
+        load from JARs is rather buggy when it comes to changing or removing the
+        JAR during the JVM session.
+        </p>
+        <api category="friend" group="java" name="Javeleon" type="import" url="https://netbeans.org/bugzilla/show_bug.cgi?id=195074">
+            <p>When present as a Java agent on the boot classpath, Javeleon is invoked reflectively to enhance module reloading.</p>
+        </api>
+    </answer>
+
+
+
+<!--
+        <question id="format-clipboard">
+            Which data flavors (if any) does your code read from or insert to
+            the clipboard?
+        </question>
+-->
+    <answer id="format-clipboard">
+        N/A
+    </answer>
+
+
+
+<!--
+        <question id="format-dnd">
+            Which protocols (if any) does your code understand during Drag &amp; Drop?
+        </question>
+-->
+    <answer id="format-dnd">
+        N/A
+    </answer>
+
+
+
+<!--
+        <question id="format-types">
+            Which file formats (if any) does your code read or write on disk?
+        </question>
+-->
+    <answer id="format-types">
+        The <samp>bin/ide.cfg</samp> (or <samp>~/ide.cfg</samp>, Unix only)
+        configuration file is read if present. This consists of zero or more
+        valid launcher options, separated by spaces and/or newlines.
+    </answer>
+
+
+
+<!--
+        <question id="lookup-lookup">
+            Does your module use <code>org.openide.util.Lookup</code>
+            to find any components to communicate with? Which ones?
+            
+            <hint>
+            Please describe the interfaces you are searching for, where 
+            are defined, whether you are searching for just one or more of them,
+            if the order is important, etc. Also clasify the stability of such
+            API contract.
+            </hint>
+        </question>
+-->
+    <answer id="lookup-lookup">
+        <api name="lookup.org.netbeans.CLIHandler" type="export" category="friend" group="lookup">
+            <p>
+                Instances of <code>org.netbeans.CLIHandler</code> are found using
+                services lookup in the "dynamic classpath loader" (i.e. startup
+                classpath plus <samp>${netbeans.home}/core/*.jar</samp>).
+            </p>
+        </api>
+
+        <api name="org.netbeans.ModuleFactory" type="export" category="friend" group="lookup">
+            <p>
+                Instances of <code>org.netbeans.ModuleFactory</code> are found using
+                services lookup in the "dynamic classpath loader" (i.e. startup
+                classpath plus <samp>${netbeans.home}/core/*.jar</samp>). ModuleFactory
+                can be used to create alternative module implementations.
+            </p>
+        </api>
+        
+        <api name="CoreBridge" type="export" category="private" group="lookup" >
+            <p>
+                The communication between <code>core.jar</code> and rest of the platform code
+                in <code>org-netbeans-core.jar</code> is handled thru 
+                handled thru <code>CoreBridge</code> calls.
+            </p>
+        </api>
+        
+        <api name="RunLevel" type="export" category="friend" group="lookup" >
+            <p>
+                Additional callbacks from <code>core.jar</code> after the module system is started
+                are done using <code>RunLevel</code> interface. Currently it starts window system.
+            </p>
+        </api>
+
+        <api name="java.util.logging.Handler" type="export" category="friend" group="lookup" >
+            <p>
+                There is a communication bridge between the default logging handler
+                registered by core/startup and the UI handler in core that
+                presents certain log records in the UI.
+            </p>
+        </api>
+    </answer>
+
+
+
+<!--
+        <question id="lookup-register">
+            Do you register anything into lookup for other code to find?
+            <hint>
+            Do you register using layer file or using <code>META-INF/services</code>?
+            Who is supposed to find your component?
+            </hint>
+        </question>
+-->
+    <answer id="lookup-register">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="lookup-remove">
+            Do you remove entries of other modules from lookup?
+            <hint>
+            Why? Of course, that is possible, but it can be dangerous. Is the module
+            your are masking resource from aware of what you are doing?
+            </hint>
+        </question>
+-->
+    <answer id="lookup-remove">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="perf-exit">
+            Does your module run any code on exit?
+        </question>
+-->
+    <answer id="perf-exit">
+        When the launcher finds that the JVM has exited, it may run
+        <samp>core/updater.jar</samp> if there are available NBM updates
+        downloaded.
+    </answer>
+
+
+
+<!--
+        <question id="perf-huge_dialogs">
+            Does your module contain any dialogs or wizards with a large number of
+            GUI controls such as combo boxes, lists, trees, or text areas?
+        </question>
+-->
+    <answer id="perf-huge_dialogs">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="perf-limit">
+            Are there any hardcoded or practical limits in the number or size of
+            elements your code can handle?
+        </question>
+-->
+    <answer id="perf-limit">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="perf-mem">
+            How much memory does your component consume? Estimate
+            with a relation to the number of windows, etc.
+        </question>
+-->
+    <answer id="perf-mem">
+        Trivial.
+    </answer>
+
+
+
+<!--
+        <question id="perf-menus">
+            Does your module use dynamically updated context menus, or
+            context-sensitive actions with complicated enablement logic?
+        </question>
+-->
+    <answer id="perf-menus">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="perf-progress">
+            Does your module execute any long-running tasks?
+            <hint>Typically they are tasks like connecting over
+            network, computing huge amount of data, compilation.
+            Such communication should be done asynchronously (for example
+            using <code>RequestProcessor</code>), definitively it should 
+            not block AWT thread.
+            </hint>
+        </question>
+-->
+    <answer id="perf-progress">
+        N/A
+    </answer>
+
+
+
+<!--
+        <question id="perf-scale">
+            Which external criteria influence the performance of your
+            program (size of file in editor, number of files in menu, 
+            in source directory, etc.) and how well your code scales?
+            Please include some estimates.
+        </question>
+-->
+    <answer id="perf-scale">
+        N/A
+    </answer>
+
+
+
+<!--
+        <question id="perf-startup">
+            Does your module run any code on startup?
+        </question>
+-->
+    <answer id="perf-startup">
+        Of course - NetBeans!
+    </answer>
+
+
+
+<!--
+        <question id="perf-wakeup">
+            Does any piece of your code wake up periodically and do something
+            even when the system is otherwise idle (no user interaction)?
+        </question>
+-->
+    <answer id="perf-wakeup">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="resources-file">
+            Does your module use <code>java.io.File</code> directly?
+            
+            <hint>
+            NetBeans provide a logical wrapper over plain files called 
+            <code>org.openide.filesystems.FileObject</code> that
+            provides uniform access to such resources and is the prefered
+            way that should be used. But of course there can be situations when
+            this is not suitable.
+            </hint>
+        </question>
+-->
+    <answer id="resources-file">
+        Yes, it must. The Filesystems API has not been loaded when it runs.
+        
+        <api category="devel" group="java.io.File" name=".lastModified" type="export">
+            <p>
+            To speedup testing that module caches are up-to-date, the system
+            recognizes special file inside of each cluster. If <code>.lastModified</code>
+            file is present in a cluster, then the content of the cluster is not 
+            scanned any more deeply and instead the time stamp of the file is
+            used as last modification for the whole content of the cluster.
+            </p>
+            
+            <p>
+            This API is primarily intended for use by installer and RPM packagers
+            and also autoupdate, that are supposed to create such file, as soon
+            as they finish modifications to any cluster. 
+            </p>
+            
+            <p>
+            This file is ignored when accessing user directory, as it is expected
+            that user can modify it, while the user usually does not have access
+            permision or need to modify the shared installation clusters.
+            </p>
+        </api>
+        <api category="private" group="java.io.File" name="cached.lastModified" type="export">
+            <p>
+            If the <code>.lastModified</code> file is not present in cluster
+            directory, it is recomputed on startup and stored in
+            <code>$userdir/var/cache/lastModified/$clustername</code>. This
+            file and its content is meant just for private consumption of the
+            IDE.
+            </p>
+        </api>
+        <api category="friend" group="java.io.File" name="installation.cache" type="export">
+            <p>
+                Installer can speed NetBeans IDE start by generating caches when the
+                installation is over. Such caches are stored in the installation,
+                in first cluster listed by <a href="#systemproperty-netbeans.dirs">
+                netbeans.dirs</a> 
+                (or in a location specified by <a href="#systemproperty-netbeans.fallback.cache">
+                netbeans.fallback.cache</a> property, if available)    
+                and have the same layout as user caches 
+                (including here in described caches like <a href="@TOP@/architecture-summary.html#java.io.File-all-resources.dat">all-resources.dat</a>, 
+                as well as caches provided by other subsystems like 
+                <a href="@org-netbeans-core-netigso@/architecture-summary.html#java.io.File-netigso-bundles">
+                netigso-bundles</a>)
+                in the user directory - e.g. they are under <code>var/cache</code>.
+            </p>
+            <p>
+                If a file <code>var/cache/populate.zip</code> is found, its 
+                content is unzipped into user directory (if it is empty).
+            </p>
+        </api>
+
+        <api category="friend" group="java.io.File" name="all-resources.dat" type="export">
+            <p>
+            To speedup class loading during startup, the system keeps a cache
+            of resources needed during startup in var/cache/all-resources.dat.
+            If the cache is valid, it is loaded during startup and class
+            and resource loading requests are redirected there.
+            </p>
+                        
+            <p>
+            The file is binary and shouldn't be modified by other code than
+            <code>org.netbeans.Archive</code>. The file content uses magic header
+            and versioning to allow evolution of its (private) format.
+            The location is however well known for 
+            <a href="@TOP@/architecture-summary.html#java.io.File-installation.cache">purposes of installer</a>.
+            </p>
+        </api>
+        <api category="friend" group="java.io.File" name="all-files.dat" type="export">
+            <p>
+            Rather than seeking on disk and using <code>access</code> OS call uselessly
+            to find that some file is not present, the layout of files under
+            the clusters is recorded in <code>var/cache/all-files.data</code>.
+            </p>
+                        
+            <p>
+            The file is binary and its format is <em>private</em>. The location
+            is however well known for 
+            <a href="#java.io.File-installation.cache">purposes of installer</a>.
+            </p>
+        </api>
+        <api category="friend" group="java.io.File" name="all-layers.dat" type="export">
+            <p>
+            Modules register their functionality into the system using 
+            <a href="@org-openide-modules@/org/openide/modules/doc-files/api.html#how-layer">layers</a>.
+            To avoid parsing and merging of content of these files on each start, 
+            the system creates a cached, binary representation of the layers
+            structure in <code>var/cache/all-layers.dat</code> and
+            <code>var/cache/all-local-layers.dat</code>.
+            </p>
+                        
+            <p>
+            The file is binary and its format is <em>private</em>. The location
+            is however well known for 
+            <a href="#java.io.File-installation.cache">purposes of installer</a>.
+            </p>
+        </api>
+        <api category="friend" group="java.io.File" name="all-clusters.dat" type="export">
+            <p>
+                Lists relative paths of clusters (those defined by
+                <a href="#systemproperty-netbeans.home">netbeans.home</a> and
+                <a href="#systemproperty-netbeans.dirs">netbeans.dirs</a>)
+                for which the cache has been created. This is an important file
+                in the 
+                <a href="#java.io.File-installation.cache">shared cache</a> as
+                it helps to ensure the set of clusters has not changed since
+                the cache has been generated.
+            </p>
+            <p>
+                The file is binary and its format is <em>private</em>. The location
+                is however well known for 
+                <a href="#java.io.File-installation.cache">purposes of installer</a>.
+            </p>
+        </api>
+        <api category="friend" group="java.io.File" name="all-installer.dat" type="export">
+            <p>
+                Additional information about modules (like <em>deprecation message</em>, etc.)
+                is stored in <code>var/cache/all-installer.dat</code> to avoid the need
+                to parse it out on each start.
+            </p>
+                        
+            <p>
+                The file is binary and its format is <em>private</em>. The location
+                is however well known for 
+                <a href="#java.io.File-installation.cache">purposes of installer</a>.
+            </p>
+        </api>
+        <api category="friend" group="java.io.File" name="all-manifests.dat" type="export">
+            <p>
+                Graph of dependencies between modules, sorted startup order,
+                state of modules 
+                is stored in <code>var/cache/all-manifests.dat</code> to avoid the need
+                to compute this information on every start.
+            </p>
+                        
+            <p>
+                The file is binary and its format is <em>private</em>. The location
+                is however well known for 
+                <a href="#java.io.File-installation.cache">purposes of installer</a>.
+            </p>
+        </api>
+        <api category="friend" group="java.io.File" name="all-modules.dat" type="export">
+            <p>
+                Pre-parsed content of <code>config/Modules/*.xml</code>
+                is cached in <code>var/cache/all-modules.dat</code>.
+            </p>
+                        
+            <p>
+                The file is binary and its format is <em>private</em>. The location
+                is however well known for 
+                <a href="#java.io.File-installation.cache">purposes of installer</a>.
+            </p>
+        </api>
+        <api category="friend" group="java.io.File" name="package-attrs.dat" type="export">
+            <p>
+                Cache of various attributes of packages (vendor, spec &amp; impl version, etc.)
+                is stored in <code>var/cache/package-attrs.dat</code>. This
+                file is often almost empty to signal such information 
+                is not provided by any module.
+            </p>
+                        
+            <p>
+                The file is binary and its format is <em>private</em>. The location
+                is however well known for 
+                <a href="#java.io.File-installation.cache">purposes of installer</a>.
+            </p>
+        </api>
+        <api category="friend" group="java.io.File" name="localeVariants" type="export">
+            <p>
+                File <code>var/cache/localeVariants</code> contains information
+                about used branding and L10N files for each module. Avoids checking
+                for <code>locale/xyz_cs_CZ.jar</code> files when (for example) only English
+                L10N are present.
+            </p>
+                        
+            <p>
+                The file is binary and its format is <em>private</em>. The location
+                is however well known for 
+                <a href="#java.io.File-installation.cache">purposes of installer</a>.
+            </p>
+            
+            <p>
+            One can control creation of the <code>all-resources.dat</code> file in
+            the user directory via 
+            <a href="@org-netbeans-core-startup@/architecture-summary.html#systemproperty-org.netbeans.core.update.all.resources">
+                org.netbeans.core.update.all.resources
+            </a> property.
+            </p>
+        </api>
+    </answer>
+
+
+
+<!--
+        <question id="resources-layer">
+            Does your module provide own layer? Does it create any files or
+            folders in it? What it is trying to communicate by that and with which 
+            components?
+            
+            <hint>
+            NetBeans allows automatic and declarative installation of resources 
+            by module layers. Module register files into appropriate places
+            and other components use that information to perform their task
+            (build menu, toolbar, window layout, list of templates, set of
+            options, etc.). 
+            </hint>
+        </question>
+-->
+    <answer id="resources-layer">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="resources-mask">
+            Does your module mask/hide/override any resources provided by other modules in
+            their layers?
+            
+            <hint>
+            If you mask a file provided by another module, you probably depend
+            on that and do not want the other module to (for example) change
+            the file's name. That module shall thus make that file available as an API
+            of some stability category.
+            </hint>
+        </question>
+-->
+    <answer id="resources-mask">
+        No.
+    </answer>
+
+
+
+<!--
+        <question id="resources-read">
+            Does your module read any resources from layers? For what purpose?
+            
+            <hint>
+            As this is some kind of intermodule dependency, it is a kind of API.
+            Please describe it and clasify according to 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
+            common stability categories</a>.
+            </hint>
+        </question>
+-->
+    <answer id="resources-read">
+        No.
+    </answer>
+
+<!--
+        <question id="exec-introspection">
+            Does your module use any kind of runtime type information (<code>instanceof</code>,
+            work with <code>java.lang.Class</code>, etc.)?
+            <hint>
+            Check for cases when you have an object of type A and you also
+            expect it to (possibly) be of type B and do some special action. That
+            should be documented. The same applies on operations in meta-level
+            (Class.isInstance(...), Class.isAssignableFrom(...), etc.).
+            </hint>
+        </question>
+-->
+    <answer id="exec-introspection">
+        <p>
+        <code>ProxyClassLoader</code> (the general NetBeans class loader which
+        loads all of core and modules) checks to see if its parent loaders
+        include instances of <code>ProxyClassLoader</code>, in which case it
+        delegates to them differently. This is necessary due to the design of
+        that loader.
+        </p>
+        <p>
+            <api category="friend" group="java" name="ExceptionAnnotatableUsingLogRecords"
+               type="export">
+               To support classification of exceptions and also annotation of
+               exceptions with logging levels and additional localized messages,
+               logged exceptions and their initCause's are searched for 
+               implementation of <code>Callable&lt;LogRecord[]&gt;</code>. 
+               If an exception implements this interface, the <code>call()</code>
+               method is called and returned <code>LogRecords</code> then
+               scanned for messages, levels, etc.
+            </api>
+            
+        </p>
+    </answer>
+
+
+
+<!--
+        <question id="exec-process">
+            Do you execute an external process from your module? How do you ensure
+            that the result is the same on different platforms? Do you parse output?
+            Do you depend on result code?
+            <hint>
+            If you feed an input, parse the output please declare that as an API.
+            </hint>
+        </question>
+-->
+    <answer id="exec-process">
+        No, except for the updater tool (part of Auto Update, q.v.).
+        <code>chmod</code> is run if available to disable read access for other users
+        to <samp>${netbeans.user}/lock</samp>; no output is parsed but the result
+        code is checked (if the executable in fact exists).
+    </answer>
+
+
+
+
+<!--
+        <question id="arch-overall" when="init">
+            Describe the overall architecture. 
+            <hint>
+            What will be API for 
+            <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi" shape="rect">
+                clients and what support API</a>? 
+            What parts will be pluggable?
+            How will plug-ins be registered? Please use <code>&lt;api type="export"/&gt;</code>
+            to describe your general APIs.
+            If possible please provide 
+            simple diagrams. 
+            </hint>
+        </question>
+-->
+ <answer id="arch-overall">
+  <p>
+  The heart of NetBeans Runtime Container. Handles 
+    <a href="@org-openide-modules@/org/openide/modules/doc-files/api.html">lifecycle of 
+        installed modules and OSGi bundles</a>.
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="arch-quality" when="init">
+            How will the <a href="http://www.netbeans.org/community/guidelines/q-evangelism.html" shape="rect">quality</a>
+            of your code be tested and 
+            how are future regressions going to be prevented?
+            <hint>
+            What kind of testing do
+            you want to use? How much functionality, in which areas,
+            should be covered by the tests? 
+            </hint>
+        </question>
+-->
+ <answer id="arch-quality">
+  <p>
+   XXX no answer for arch-quality
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="arch-time" when="init">
+            What are the time estimates of the work?
+            <hint>
+            Please express your estimates of how long the design, implementation,
+            stabilization are likely to last. How many people will be needed to
+            implement this and what is the expected milestone by which the work should be 
+            ready?
+            </hint>
+        </question>
+-->
+ <answer id="arch-time">
+  <p>
+   XXX no answer for arch-time
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="arch-usecases" when="init">
+            <hint>
+                Content of this answer will be displayed as part of page at
+                http://www.netbeans.org/download/dev/javadoc/usecases.html 
+                You can use tags &lt;usecase name="name&gt; regular html description &lt;/usecase&gt;
+                and if you want to use an URL you can prefix if with @TOP@ to begin
+                at the root of your javadoc
+            </hint>
+        
+            Describe the main <a href="http://openide.netbeans.org/tutorial/api-design.html#usecase" shape="rect">
+            use cases</a> of the new API. Who will use it under
+            what circumstances? What kind of code would typically need to be written
+            to use the module?
+        </question>
+-->
+ <answer id="arch-usecases">
+     <usecase id="invalidate.cache" name="Invalidating Caches">
+        <a name="usecase-invalidate.cache"></a>
+        <p>
+            NetBeans Module system is optimized to eliminate useless I/O
+            operations on start (as a result the <a href="http://netbinox.apidesign.org">
+            embedded OSGi container</a> is fastest on the planet -- with respect to 
+            application start up time). This is achieved by caching information
+            known to have been needed in previous starts and using it
+            rather than obtaining it again from the module JAR files.
+        </p>
+        <p>
+            There are various caches (like 
+                <a href="@TOP@/architecture-summary.html#java.io.File-all-layers.dat">all-layers.dat</a>,
+                <a href="@TOP@/architecture-summary.html#java.io.File-all-manifests.dat">all-manifests.dat</a>,
+                <a href="@TOP@/architecture-summary.html#java.io.File-all-resources.dat">all-resources.dat</a>,
+                <a href="@org-netbeans-core-netigso@/architecture-summary.html#java.io.File-netigso-bundles">netigso-bundles</a>,
+                etc.
+            ) provided by the module system or by other subsystems of the application.
+            Together, working in orchestration, they eliminate the need to
+            touch the disk (which is very slow operation especially during
+            <a href="http://wiki.apidesign.org/wiki/Startup#Morning_Launch">morning launch</a>).
+            Btw. there is a <a href="http://hg.netbeans.org/releases/file/cdbdc70050a8/core.startup/test/unit/src/org/netbeans/core/startup/layers/CachingPreventsFileTouchesTest.java">
+            test which verifies</a> 
+            the caching system really works
+            -- it is recommended for each product built on top of NetBeans Platform
+            to copy and adjust it to verify the caches are really used.
+        </p>
+        <p>
+            Of course, the caches may get out of date, for example when an external
+            tool modifies the installation layout. 
+            How can the system detect whether the caches are valid and 
+            still be usable? The only way to verify the
+            caches are 100% correct is to regenerate them and compare whether the
+            cached bits are the same. However that would be terribly slow and defeat 
+            the whole purpose of using caches.
+        </p>
+        <p>
+            As such we have the <a href="@TOP@/architecture-summary.html#java.io.File-.lastModified">lastModified API</a>.
+            Every cluster (as enumerated by <a href="@TOP@/architecture-summary.html#systemproperty-netbeans.dirs">netbeans.dirs</a>
+            and <a href="@TOP@/architecture-summary.html#systemproperty-netbeans.home">netbeans.home</a> properties)
+            is supposed to contain such file. Whenever an external tool changes something
+            inside some cluster, it is supposed to touch the file and change its 
+            timestamp. That will tell the system that caches are invalid 
+            (as their timestamps will become older than newest <code>.lastModified</code> file).
+        </p>
+     </usecase>
+     <usecase id="shared.cache" name="Generating Shared Cache">
+         <p>
+             The caches (as introduced in <a href="@TOP@/architecture-summary.html#usecase-invalidate.cache">
+             invalidating caches</a> section) are optimized to reflect the state of 
+             previous start. However that means, the very first start runs
+             without them. This may not be a problem (if the start follows
+             immediately after installation), however in <a href="http://wiki.apidesign.org/wiki/Startup#Multi_User_Initial_Launch">
+             multi user environment</a> (when the installation is done by administrator), 
+             the first start may be slow. 
+         </p>
+         <p>
+             To mitigate that the system offers support for <em>shared caches</em>.
+             As part of installation, one can also copy <a href="@TOP@/architecture-summary.html#java.io.File-installation.cache">
+             certain cache files
+             </a> into the shared location. Those files will then be used
+             on a first start of the system (when the user directory is empty).
+         </p>
+         <p>
+             To generate the shared cache files start NetBeans with an empty,
+             temporary user directory and then copy the desired files into
+             first cluster directory:
+         </p>
+         <pre>
+$ netbeans --userdir /tmp/nb -J-Dnetbeans.close=true -J-Dorg.netbeans.core.WindowSystem.show=false
+$ cd /tmp/nb
+$ zip -r $INSTALL/$first_netbeans_dirs_dir/var/cache/populate.zip var/cache/netigso
+$ cp var/cache/* $INSTALL/$first_netbeans_dirs_dir/var/cache
+$ rm -r /tmp/nb/
+         </pre>
+         <p>
+             The meaning of <code>populate.zip</code> and list of known cache
+             files is described <a href="@TOP@/architecture-summary.html#java.io.File-installation.cache">here</a>.
+             Additional modules and subsystems may add new files however. The 
+             ultimate knowledge is available only to those who understand overall
+             product installation structure.
+         </p>
+     </usecase>
+     <usecase name="Patch classes" id="patch">
+         <a name="usecase-patch"></a>
+         <p>
+         In case one wants to modify other classes before they get loaded into
+         the VM, one can register its own
+         <code>Agent-Class</code> and then be called whenever another
+         class is defined. The behavior matches as closely as possible the one
+         provided by <a href="@JDK@/java/lang/instrument/package-summary.html">
+         JDK instrument package</a>. To patch bytecode of other classes
+         register your class in manifest and in its static <code>agentmain</code> method
+         add your own <a href="@JDK@/java/lang/instrument/ClassFileTransformer.html">ClassFileTransformer</a>
+         which will then be consulted whenever new classes are loaded.
+         </p>
+         <pre>
+# following line should be in manifest of your module
+Agent-Class: your.pkg.Transformer             
+
+// this should be your class
+package your.pkg;
+public class Transformer implements ClassFileTransformer {
+    public static void agentmain(String args, Instrumentation i) {
+        i.addTransformer(new Transformer());
+    }
+             
+    public byte[] transform(
+        ClassLoader loader, String className, Class classBeingRedefined, 
+        ProtectionDomain protectionDomain, byte[] classfileBuffer
+    ) {
+        // do your transformation
+    }
+}
+</pre>
+        <p>
+        The implementation tries to be as complient as possible with the
+        original JDK's specification, but 
+        some differences are inevitable. For example the <code>classBeingRedefined</code>
+        parameter in the previous example is always <code>null</code>
+        as NetBeans runtime container does not
+        have access to the class instance that is being defined yet.
+        </p>
+     </usecase>
+     
+     <usecase id="modfrag" name="Module Fragments">
+         <a name="usecase-modfrag"></a>
+         <p>
+            This is a specific case of <a href="#usecase-patch">Patch Classes</a> use-case.
+            To maintain binary compatibility when <b>removing</b> methods from API classes,
+            the "removed" implementation is actually moved to a special class, which becomes
+            a <i>superclass</i> of the original API class. Such special classes should be
+            separated into a 'compat' module, which is only loaded in presence of old clients.
+         </p>
+         <p>
+            The compat module should declare it is a fragment of the original API module in its
+            <code>MANIFEST.MF</code>
+         </p>
+            <pre>
+OpenIDE-Module-Fragment-Host: orignal.module.codename
+            </pre>
+        <p>
+            which ensures contents of the compat module will be loaded using classloader
+            of the 'fragment host' module. The compat module will not get its own classloader.
+            The special class itself should be marked using <a href="@org-openide-modules@/org/openide/modules/PatchFor.html">PatchFor</a> annotation,
+            which causes it will be patched as superclass and inserted into the inheritance
+            chain.
+         </p>
+     </usecase>
+ </answer>
+
+
+<!--
+        <question id="arch-where" when="init">
+            Where one can find sources for your module?
+            <hint>
+                Please provide link to the CVS web client at
+                http://www.netbeans.org/download/source_browse.html
+                or just use tag defaultanswer generate='here'
+            </hint>
+        </question>
+-->
+ <answer id="arch-where">
+  <defaultanswer generate='here' />
+ </answer>
+
+
+
+<!--
+        <question id="deploy-dependencies" when="final">
+            What do other modules need to do to declare a dependency on this one,
+            in addition to or instead of the normal module dependency declaration
+            (e.g. tokens to require)?
+            <hint>
+                Provide a sample of the actual lines you would add to a module manifest
+                to declare a dependency, for example OpenIDE-Module-Requires: some.token.
+                If other modules should not depend on this module, or should just use a
+                simple regular module dependency, you can just answer "nothing". If you
+                intentionally expose a semistable API to clients using implementation
+                dependencies, you should mention that here (but there is no need to give
+                an example of usage).
+            </hint>
+        </question>
+-->
+ <answer id="deploy-dependencies">
+  <p>
+   XXX no answer for deploy-dependencies
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="exec-ant-tasks" when="impl">
+            Do you define or register any ant tasks that other can use?
+            
+            <hint>
+            If you provide an ant task that users can use, you need to be very
+            careful about its syntax and behaviour, as it most likely forms an
+	          API for end users and as there is a lot of end users, their reaction
+            when such API gets broken can be pretty strong.
+            </hint>
+        </question>
+-->
+ <answer id="exec-ant-tasks">
+  <p>
+   XXX no answer for exec-ant-tasks
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="exec-threading" when="impl">
+            What threading models, if any, does your module adhere to?
+            <hint>
+                If your module calls foreign APIs which have a specific threading model,
+                indicate how you comply with the requirements for multithreaded access
+                (synchronization, mutexes, etc.) applicable to those APIs.
+                If your module defines any APIs, or has complex internal structures
+                that might be used from multiple threads, declare how you protect
+                data against concurrent access, race conditions, deadlocks, etc.,
+                and whether such rules are enforced by runtime warnings, errors, assertions, etc.
+                Examples: a class might be non-thread-safe (like Java Collections); might
+                be fully thread-safe (internal locking); might require access through a mutex
+                (and may or may not automatically acquire that mutex on behalf of a client method);
+                might be able to run only in the event queue; etc.
+                Also describe when any events are fired: synchronously, asynchronously, etc.
+                Ideas: <a href="http://core.netbeans.org/proposals/threading/index.html#recommendations" shape="rect">Threading Recommendations</a> (in progress)
+            </hint>
+        </question>
+-->
+ <answer id="exec-threading">
+  <p>
+   XXX no answer for exec-threading
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="perf-spi" when="init">
+            How the performance of the plugged in code will be enforced?
+            <hint>
+            If you allow foreign code to be plugged into your own module, how
+            do you enforce that it will behave correctly and quickly and will not
+            negatively influence the performance of your own module?
+            </hint>
+        </question>
+-->
+ <answer id="perf-spi">
+  <p>
+   XXX no answer for perf-spi
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="security-grant" when="final">
+            Does your code grant additional rights to some other code?
+            <hint>Avoid using a class loader that adds extra
+            permissions to loaded code unless really necessary.
+            Also note that your API implementation
+            can also expose unneeded permissions to enemy code by
+            calling AccessController.doPrivileged().</hint>
+        </question>
+-->
+ <answer id="security-grant">
+  <p>
+   XXX no answer for security-grant
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="security-policy" when="final">
+            Does your functionality require modifications to the standard policy file?
+            <hint>Your code might pass control to third-party code not
+            coming from trusted domains. This could be code downloaded over the
+            network or code coming from libraries that are not bundled
+            with NetBeans. Which permissions need to be granted to which domains?</hint>
+        </question>
+-->
+ <answer id="security-policy">
+  <p>
+   XXX no answer for security-policy
+  </p>
+ </answer>
+
+
+
+
+<!--
+        <question id="compat-deprecation" when="init">
+            How the introduction of your project influences functionality
+            provided by previous version of the product?
+            <hint>
+            If you are planning to deprecate/remove/change any existing APIs,
+            list them here accompanied with the reason explaining why you
+            are doing so.
+            </hint>
+        </question>
+-->
+ <answer id="compat-deprecation">
+  <p>
+   XXX no answer for compat-deprecation
+  </p>
+ </answer>
+
+
+
+<!--
+        <question id="resources-preferences" when="final">
+            Does your module uses preferences via Preferences API? Does your module use NbPreferences or
+            or regular JDK Preferences ? Does it read, write or both ? 
+            Does it share preferences with other modules ? If so, then why ?
+            <hint>
+                You may use
+                    &lt;api type="export" group="preferences"
+                    name="preference node name" category="private"&gt;
+                    description of individual keys, where it is used, what it
+                    influences, whether the module reads/write it, etc.
+                    &lt;/api&gt;
+                Due to XML ID restrictions, rather than /org/netbeans/modules/foo give the "name" as org.netbeans.modules.foo.
+                Note that if you use NbPreferences this name will then be the same as the code name base of the module.
+            </hint>
+        </question>
+-->
+ <answer id="resources-preferences">
+  <p>
+   XXX no answer for resources-preferences
+  </p>
+ </answer>
+
+</api-answers>

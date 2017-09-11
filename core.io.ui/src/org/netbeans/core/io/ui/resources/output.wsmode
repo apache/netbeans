@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mode PUBLIC
+          "-//NetBeans//DTD Mode Properties 2.0//EN"
+          "http://www.netbeans.org/dtds/mode-properties2_0.dtd">
+
+<mode version="2.0">
+    <name unique="output" />
+    <kind type="view" />
+    <state type="joined" />
+    <constraints>
+        <path orientation="horizontal" number="60" weight="0.7" />
+        <path orientation="vertical" number="80" weight="0.3" />
+        <path orientation="horizontal" number="30" weight="0.8" />
+    </constraints>
+    <relative-bounds x="10" y="68" width="40" height="20" />
+    <active-tc id="output" />
+    <empty-behavior permanent="true" />
+</mode>

@@ -1,0 +1,27 @@
+%%TestCase positive
+package test;
+public class Test {
+    private void test() {
+        double a = 1.0;
+        double b = 2.0;
+        double c = a + b;
+    }
+}
+%%=>
+package test;
+public class Test {
+    private void test() {
+        double a = 1.0;
+        double b = 2.0;
+        double c = b + a;
+    }
+}
+%%TestCase positive
+package test;
+public class Test {
+    private void test() {
+        int a = 1;
+        int b = 2;
+        int c = a + b;
+    }
+}

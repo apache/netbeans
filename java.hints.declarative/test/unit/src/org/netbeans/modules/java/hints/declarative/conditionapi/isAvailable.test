@@ -1,0 +1,21 @@
+%%TestCase is-available-1
+package test;
+public class Test extends ThreadLocal {
+    private int t() {
+        return 1 + 1;
+    }
+}
+%%=>
+package test;
+public class Test extends ThreadLocal {
+    private int t() {
+        return 2;
+    }
+}
+%%TestCase is-not-available-1
+package test;
+public class Test {
+    private int t() {
+        return 2 + 2;
+    }
+}

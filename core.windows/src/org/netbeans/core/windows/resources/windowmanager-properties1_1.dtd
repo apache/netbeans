@@ -1,0 +1,127 @@
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+
+<!--
+-//NetBeans//DTD Window Manager Properties 1.1//EN
+-->
+
+<!-- The root element for window manager properties. Consists of subelements
+     for specific properties.
+     Atribute "version" is optional versioning attribute, which in fact specifies
+     version of this DTD. Attribute is used to perform simple versioning
+     without the need to use time-consuming xml validation using this DTD.
+-->
+<!ELEMENT windowmanager (main-window?, screen?, ui-mode, active) >
+<!ATTLIST windowmanager
+    version CDATA #IMPLIED
+>
+
+<!-- Element "main-window" contains properties of main window.
+     "x" gives position of main window on screen on horizontal axis
+     left is 0, if value is "center" main window will be centered
+     horizontaly
+     "y" gives position of main window on screen on vertical axis
+     top is 0, if value is "center" main window will be centered
+     verticaly
+     Note: the "center" values are taken into account for MDI mode only!
+     "width" gives absolute width of main window
+     "height" gives absolute height of main window
+     "relative-width" gives relative width of main window, either width or
+     relative-width must be specified
+     "relative-height" gives relative width of main window, either height or
+     relative height must be specified
+     "maximize-if-width-bellow" and 
+     "maximize-if-height-bellow" are optional,
+     they specify limit on computed absolute width/height, 
+     IF min(screen.width, maximize-if-width-bellow) > main-window.width OR 
+        min(screen.height, maximize-if-height-bellow) > main-window.height THEN
+         IF screen.width > maximize-if-width-bellow AND screen.height > maximize-if-height-bellow THEN
+             set main window size to maximize-if-width-bellow, maximize-if-height-bellow
+         ELSE
+             let window maximized
+         ENDIF
+     ENDIF
+     It is simply to avoid set bounds bigger than screen size (width or height)
+-->
+<!ELEMENT main-window   EMPTY >
+<!ATTLIST main-window
+    x CDATA #REQUIRED
+    y CDATA #REQUIRED
+    width  CDATA #IMPLIED
+    height CDATA #IMPLIED
+    relative-width  CDATA #IMPLIED
+    relative-height CDATA #IMPLIED
+    maximize-if-width-bellow  CDATA #IMPLIED
+    maximize-if-height-bellow CDATA #IMPLIED
+>
+
+<!-- Element "screen" contains properties of screen.
+     "size" size of screen in pixels, format is width, height
+-->
+<!ELEMENT screen    EMPTY >
+<!ATTLIST screen
+    width  CDATA #REQUIRED
+    height CDATA #REQUIRED
+>
+
+<!-- Element "ui-mode" gives type of ui.
+     "ui" type of ui, possible values are "sdi","mdi"
+     This attribute should NOT be used for setting default mode. Use command line
+     switch -J-Dnetbeans.windows=sdi or -J-Dnetbeans.windows=mdi to set mode instead
+     of this attribute.
+-->
+<!ELEMENT ui-mode    EMPTY >
+<!ATTLIST ui-mode
+    ui (sdi | mdi) #REQUIRED
+>
+
+<!-- Element "active" contains ID of active workspace.
+     "workspace" ID of active workspace
+-->
+<!ELEMENT active  EMPTY >
+<!ATTLIST active
+    workspace CDATA #IMPLIED
+>
+

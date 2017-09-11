@@ -1,0 +1,153 @@
+/*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright (c) 2006, 2016 Oracle and/or its affiliates. All rights reserved.
+ *
+ * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ * Other names may be trademarks of their respective owners.
+ *
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common
+ * Development and Distribution License("CDDL") (collectively, the
+ * "License"). You may not use this file except in compliance with the
+ * License. You can obtain a copy of the License at
+ * http://www.netbeans.org/cddl-gplv2.html
+ * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ * specific language governing permissions and limitations under the
+ * License.  When distributing the software, include this License Header
+ * Notice in each file and include the License file at
+ * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the GPL Version 2 section of the License file that
+ * accompanied this code. If applicable, add the following below the
+ * License Header, with the fields enclosed by brackets [] replaced by
+ * your own identifying information:
+ * "Portions Copyrighted [year] [name of copyright owner]"
+ *
+ * If you wish your version of this file to be governed by only the CDDL
+ * or only the GPL Version 2, indicate your decision by adding
+ * "[Contributor] elects to include this software in this distribution
+ * under the [CDDL or GPL Version 2] license." If you do not indicate a
+ * single choice of license, a recipient has the option to distribute
+ * your version of this file under either the CDDL, the GPL Version 2 or
+ * to extend the choice of license to its licensees as provided above.
+ * However, if you add GPL Version 2 code and therefore, elected the GPL
+ * Version 2 license, then the option applies only if the new code is
+ * made subject to such option by the copyright holder.
+ *
+ * Contributor(s):
+ */
+
+body {
+    margin:             0px 0px 0px 0px;
+    padding:            10px 10px 10px 10px;
+    background-color:   #ffffff;
+    font-family:        Verdana, Arial, sans-serif;
+    font-size:          12px;
+}
+
+p {
+    width:              700px;
+    margin:             0px 0px 10px 0px;
+    padding:            5px 10px 5px 10px;
+    background-color:   #fcfcfc;
+}
+
+p.small {
+    font-size:          10px;
+}
+
+div.top-menu {
+    width:              680px;
+    margin:             0px 0px 10px 0px;
+    padding:            5px 10px 5px 10px;
+    border:             1px solid #c0c0c0;
+    background-color:   #fcfcfc;
+}
+
+select#registries-select, select#platforms-select {
+    display:            block;
+    margin:             10px 0px 10px 0px;
+    width:              700px;
+}
+
+div.registry {
+    margin:             10px 0px 10px 0px;
+    width:              700px;
+}
+
+table.registry {
+    width:              100%;
+    margin:             0px 0px 0px 0px;
+    border:             0px solid #ff0000;
+    border-collapse:    collapse;
+}
+
+table.registry tr {
+    border:             0px solid #ffffff;
+}
+
+table.registry td {
+    border:             0px solid #ffffff;
+    padding:            0px 0px 0px 0px;
+}
+
+table.registry td.tree-handle {
+    width:              16px;
+}
+
+table.registry td.tree-handle img {
+    cursor:             pointer;
+}
+
+table.registry td.icon {
+}
+
+table.registry td.display-name {
+    width:              100%;
+    padding:            2px 5px 2px 5px;
+    font-family:        Tahoma, Arial, sans-serif;
+    font-size:          12px;
+    cursor:             default;
+}
+
+table.registry td.option {
+    padding:            2px 5px 2px 5px;
+    font-family:        Tahoma, Arial, sans-serif;
+    font-size:          12px;
+    white-space:        nowrap;
+}
+
+table.registry td.children {
+    border:             0px solid #000000;
+}
+
+div.pop-up {
+    width:              500px;
+    border:             1px solid black;
+    background-color:   #fcfcfc;
+    display:            none;
+    padding:            50px 10px 50px 10px;
+}
+
+div#form-registry {
+    position:           absolute;
+    top:                100px;
+    left:               100px;
+}
+
+div#form-archive {
+    position:           absolute;
+    top:                100px;
+    left:               100px;
+}
+
+div.pop-up table {
+    width:              100%;
+    margin:             auto 0px auto 0px;
+    border-collapse:    collapse;
+}
+
+div.pop-up table td {
+    padding:            2px 5px 2px 5px;
+}

@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: prov_bar_dep_cyclic
+OpenIDE-Module-Name: Provides bar, depends cyclically
+OpenIDE-Module-Provides: bar
+OpenIDE-Module-Module-Dependencies: prov_foo_req_bar

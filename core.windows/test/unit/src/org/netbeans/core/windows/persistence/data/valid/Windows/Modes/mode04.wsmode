@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mode version="2.0">
+    <name unique="mode04" />
+    <kind type="view" />
+    <state type="separated" />
+    <relative-bounds x="0" y="0" width="40" height="20" />
+    <frame state="6" />
+    <active-tc id="output" />
+    <empty-behavior permanent="true" />
+</mode>

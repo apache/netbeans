@@ -1,0 +1,35 @@
+%%TestCase run-condition-pass
+package test;
+public class Test {
+    private void test() {
+        String[] a = new String[2];
+
+        for (int c = 0; c < a.length; c++) {
+            String s = a[c];
+            System.err.println(s);
+        }
+    }
+}
+%%=>
+package test;
+public class Test {
+    private void test() {
+        String[] a = new String[2];
+
+        for (String s : a) {
+            System.err.println(s);
+        }
+    }
+}
+%%TestCase run-condition-fail
+package test;
+public class Test {
+    private void test() {
+        String[] a = new String[2];
+
+        for (int c = 0; c < a.length; c++) {
+            String s = a[c];
+            System.err.println(s + "" + c);
+        }
+    }
+}

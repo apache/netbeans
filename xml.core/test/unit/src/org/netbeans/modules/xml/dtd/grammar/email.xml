@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE email SYSTEM "email.dtd" [
+    <!ELEMENT testANYElement ANY>
+    <!NOTATION testNotation PUBLIC "not-pub" "not-sys">
+    <!ENTITY   testExternalEntity SYSTEM "ext-ent-sys">
+    <!ATTLIST  subject testSubjectAttr CDATA #IMPLIED>
+]>
+
+<!-- Look of this document is driven by a CSS referenced by an href attribute. -->
+<!--<?XML:stylesheet type="text/css" href="http://linux2.netbeans.com:8082/repository//XMLsamples/email.css" ?>-->
+<email> whatever broken text we should stop at 
+root anyway

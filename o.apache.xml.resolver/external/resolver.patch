@@ -1,0 +1,129 @@
+Index: resolver.xml
+===================================================================
+RCS file: /home/cvspublic/xml-commons/java/resolver.xml,v
+retrieving revision 1.12
+diff -u -b -r1.12 resolver.xml
+--- resolver.xml	5 Nov 2003 03:02:10 -0000	1.12
++++ resolver.xml	25 Feb 2005 13:42:14 -0000
+@@ -83,7 +83,7 @@
+ 
+    <echo message="Compiling..." />
+ 
+-   <javac srcdir="${src.dir}" destdir="${build.classes.dir}">
++   <javac srcdir="${src.dir}" destdir="${build.classes.dir}" source="1.4" debug="on">
+      <!-- <classpath> not needed since Ant already supplies these Sep-03 -sc -->
+      <include name="${resolver.subdir}/*.java"/>
+      <include name="${resolver.subdir}/helpers/*.java"/>
+Index: src/org/apache/xml/resolver/Catalog.java
+===================================================================
+RCS file: /home/cvspublic/xml-commons/java/src/org/apache/xml/resolver/Catalog.java,v
+retrieving revision 1.7
+diff -u -b -r1.7 Catalog.java
+--- src/org/apache/xml/resolver/Catalog.java	2 Sep 2003 07:05:07 -0000	1.7
++++ src/org/apache/xml/resolver/Catalog.java	25 Feb 2005 13:42:18 -0000
+@@ -64,6 +64,7 @@
+ import java.util.Enumeration;
+ import java.util.Hashtable;
+ import java.util.Vector;
++import java.util.Iterator;
+ import java.net.URL;
+ import java.net.MalformedURLException;
+ import org.apache.xml.resolver.CatalogManager;
+@@ -1166,6 +1167,23 @@
+ 
+ 
+   /**
++   * Return all registered public IDs.
++   */
++  public Iterator getPublicIDs() {
++      Vector v = new Vector();
++      Enumeration enum = catalogEntries.elements();
++
++      while (enum.hasMoreElements()) {
++        CatalogEntry e = (CatalogEntry) enum.nextElement();
++        if (e.getEntryType() == PUBLIC) {
++            v.add(e.getEntryArg(0));
++        }
++      }
++      return v.iterator();
++  }
++
++
++  /**
+    * Return the applicable DOCTYPE system identifier.
+    *
+    * @param entityName The name of the entity (element) for which
+Index: src/org/apache/xml/resolver/CatalogManager.java
+===================================================================
+RCS file: /home/cvspublic/xml-commons/java/src/org/apache/xml/resolver/CatalogManager.java,v
+retrieving revision 1.6
+diff -u -b -r1.6 CatalogManager.java
+--- src/org/apache/xml/resolver/CatalogManager.java	2 Sep 2003 07:05:07 -0000	1.6
++++ src/org/apache/xml/resolver/CatalogManager.java	25 Feb 2005 13:42:20 -0000
+@@ -249,7 +249,11 @@
+     // to avoid it.
+   }
+ 
+-  /** Constructor that specifies an explicit property file. */
++  /**
++   * Constructor that specifies an explicit property file.
++   * @param propertyFile path to poperty file (e.g. com/resources/CatalogManager).
++   * <code>null</code> means that no property file is consulted at all.
++   */
+   public CatalogManager(String propertyFile) {
+     this.propertyFile = propertyFile;
+ 
+@@ -276,13 +280,14 @@
+    * resources from it.
+    */
+   private synchronized void readProperties() {
++      if (propertyFile == null) return;
+     try {
+       propertyFileURI = CatalogManager.class.getResource("/"+propertyFile);
+       InputStream in =
+ 	CatalogManager.class.getResourceAsStream("/"+propertyFile);
+       if (in==null) {
+ 	if (!ignoreMissingProperties) {
+-	  System.err.println("Cannot find "+propertyFile);
++	  debug.message(2, "Cannot find "+propertyFile);
+ 	  // there's no reason to give this warning more than once
+ 	  ignoreMissingProperties = true;
+ 	}
+Index: src/org/apache/xml/resolver/tools/CatalogResolver.java
+===================================================================
+RCS file: /home/cvspublic/xml-commons/java/src/org/apache/xml/resolver/tools/CatalogResolver.java,v
+retrieving revision 1.5
+diff -u -b -r1.5 CatalogResolver.java
+--- src/org/apache/xml/resolver/tools/CatalogResolver.java	2 Sep 2003 07:05:08 -0000	1.5
++++ src/org/apache/xml/resolver/tools/CatalogResolver.java	25 Feb 2005 13:42:20 -0000
+@@ -223,30 +223,9 @@
+     String resolved = getResolvedEntity(publicId, systemId);
+ 
+     if (resolved != null) {
+-      try {
+ 	InputSource iSource = new InputSource(resolved);
+ 	iSource.setPublicId(publicId);
+-
+-	// Ideally this method would not attempt to open the
+-	// InputStream, but there is a bug (in Xerces, at least)
+-	// that causes the parser to mistakenly open the wrong
+-	// system identifier if the returned InputSource does
+-	// not have a byteStream.
+-	//
+-	// It could be argued that we still shouldn't do this here,
+-	// but since the purpose of calling the entityResolver is
+-	// almost certainly to open the input stream, it seems to
+-	// do little harm.
+-	//
+-	URL url = new URL(resolved);
+-	InputStream iStream = url.openStream();
+-	iSource.setByteStream(iStream);
+-
+ 	return iSource;
+-      } catch (Exception e) {
+-	catalogManager.debug.message(1, "Failed to create InputSource", resolved);
+-	return null;
+-      }
+     }
+ 
+     return null;

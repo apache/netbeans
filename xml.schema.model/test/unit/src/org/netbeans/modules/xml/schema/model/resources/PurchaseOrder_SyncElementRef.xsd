@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:po="http://www.example.com/PO1"
+        targetNamespace="http://www.example.com/PO1"
+        elementFormDefault="unqualified"
+        attributeFormDefault="unqualified">
+
+  <element name="purchaseOrder" type="po:PurchaseOrderType"/>
+  <element name="comment"       type="string"/>
+  
+  <complexType name="PurchaseOrderType">
+    <sequence>
+      <element name="shipTo"    type="po:USAddress"/>
+      <element name="billTo"    type="po:USAddress"/>
+      <element name="comment" type="string" minOccurs="0"/>
+      <!-- etc. -->
+    </sequence>
+    <!-- etc. -->
+  </complexType>
+
+  <complexType name="USAddress">
+    <sequence>
+      <element name="name"   type="string"/>
+      <element name="street" type="string"/>
+      <!-- etc. -->
+    </sequence>
+  </complexType>
+  
+  <simpleType name="allNNI">
+  <annotation>
+    <documentation>for maxOccurs</documentation>
+  </annotation>
+  <union memberTypes="nonNegativeInteger nonPositiveInteger">
+   <simpleType>
+    <restriction base="NMTOKEN">
+     <enumeration value="unbounded"/>
+    </restriction>
+   </simpleType>
+  </union>
+ </simpleType>
+
+
+
+  <!-- etc. -->
+
+</schema>

@@ -1,0 +1,71 @@
+package inspectAndTransform;
+
+public class Class_A_G {
+
+    public boolean m1(int value) {
+        return value > 10;
+    }
+
+    public boolean m2(String value) {
+        return "".equals(value);
+    }
+
+    public void m3(String value) {
+        if(!"".equals(value)){
+            System.out.println("...");
+        }
+    }
+}
+package inspectAndTransform_1;
+
+public class Class_B {
+
+    public boolean m1(int value) {
+        if(value > 10){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public boolean m2(String value) {
+        if(value == ""){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public void m3(String value) {
+        if(value != ""){
+            System.out.println("...");
+        }
+    }
+}
+package inspectAndTransform_2;
+
+public class Class_B {
+
+    public boolean m1(int value) {
+        if(value > 10){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public boolean m2(String value) {
+        if(value == ""){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public void m3(String value) {
+        if(value != ""){
+            System.out.println("...");
+        }
+    }
+}
+

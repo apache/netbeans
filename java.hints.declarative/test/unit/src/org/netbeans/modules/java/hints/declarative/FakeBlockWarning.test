@@ -1,0 +1,13 @@
+%%TestCase simple
+package test;
+import java.util.concurrent.locks.Lock;
+public class Test {
+    private void test() {
+        Lock lock = null;
+        lock.lock();
+        System.err.println("aaa");
+        lock.unlock();
+    }
+}
+%%=>
+FakeBlockWarning:lock.lock();

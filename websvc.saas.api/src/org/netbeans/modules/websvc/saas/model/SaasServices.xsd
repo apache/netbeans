@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+ Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+ Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+ Other names may be trademarks of their respective owners.
+
+ The contents of this file are subject to the terms of either the GNU
+ General Public License Version 2 only ("GPL") or the Common
+ Development and Distribution License("CDDL") (collectively, the
+ "License"). You may not use this file except in compliance with the
+ License. You can obtain a copy of the License at
+ http://www.netbeans.org/cddl-gplv2.html
+ or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ specific language governing permissions and limitations under the
+ License.  When distributing the software, include this License Header
+ Notice in each file and include the License file at
+ nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+ particular file as subject to the "Classpath" exception as provided
+ by Oracle in the GPL Version 2 section of the License file that
+ accompanied this code. If applicable, add the following below the
+ License Header, with the fields enclosed by brackets [] replaced by
+ your own identifying information:
+ "Portions Copyrighted [year] [name of copyright owner]"
+ 
+ Contributor(s):
+ 
+ The Original Software is NetBeans. The Initial Developer of the Original
+ Software is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun
+ Microsystems, Inc. All Rights Reserved.
+ 
+ If you wish your version of this file to be governed by only the CDDL
+ or only the GPL Version 2, indicate your decision by adding
+ "[Contributor] elects to include this software in this distribution
+ under the [CDDL or GPL Version 2] license." If you do not indicate a
+ single choice of license, a recipient has the option to distribute
+ your version of this file under either the CDDL, the GPL Version 2 or
+ to extend the choice of license to its licensees as provided above.
+ However, if you add GPL Version 2 code and therefore, elected the GPL
+ Version 2 license, then the option applies only if the new code is
+ made subject to such option by the copyright holder.
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://xml.netbeans.org/websvc/saas/services/1.0"
+            xmlns:saas="http://xml.netbeans.org/websvc/saas/services/1.0"
+            elementFormDefault="qualified">
+    <xsd:annotation>
+        <xsd:documentation>
+            This document describes the schema to build rest components. This 
+            document describes the name, description, icons for the
+            strike iron component. wsdl element define the wsdl for the service from 
+            the strike iron. Rest is self explanatory.
+            'name' attribute represents the category in the palette. There can be any
+            hierarchy. For Eg:- /StrikeIron/ZipCode etc. Use the 'bundle' attribute
+            to localize the names shown on the palette. For eg:- In Bundle file specify
+            /StrikeIron=Strike Iron or /StrikeIron/ZipCode=Zip Code etc.,
+        </xsd:documentation>
+    </xsd:annotation>
+    
+    <!-- Represents each SaaS service such as AmazonS3, Flickr, Facebook etc.,-->
+    <xsd:element name="saas-services" type="saas:SaasServices"/>
+    
+    <!-- Represents each SaaS service's metadata-->
+    <xsd:element name="saas-metadata" type="saas:SaasMetadata"/>
+    
+    <!-- 
+        Represents a group/category to which each SaaS service belong.
+        This information is used in the IDE to group and display various SaaS 
+        services.
+    -->
+    <xsd:element name="group" type="saas:Group"/>
+    
+    <!-- SaaS services type -->
+    <xsd:complexType name="SaasServices">
+        <xsd:sequence>
+            <!-- 
+                This describes the SaaS service. 
+                For example:
+                <description>AmazonS3 Bucket Service</description>
+            -->
+            <xsd:element name="description">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string"/>
+                </xsd:simpleType> 
+            </xsd:element>
+            <!-- 
+                Used by the IDE to display the SaaS service. 
+                For example:
+                <display-name>S3 Buckets Service</display-name> 
+            -->
+            <xsd:element name="display-name" minOccurs="1" maxOccurs="1" type="xsd:string"/>
+            <xsd:element ref="saas:saas-metadata" minOccurs="0" maxOccurs="1"/>
+            <!-- If the SaaS service uses header params, then it should be specified here. -->
+            <xsd:element name="header" minOccurs="0" maxOccurs="1">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="params" type="saas:Params" minOccurs="0" maxOccurs="1"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <!-- 
+                This is the place to define the methods to display for each 
+                SaaS service. If it is not available, then the IDE displays all
+                the available methods found in the WADL or WSDL. For Custom
+                services, you need to define this method, although not enforced
+                by the schema.
+            -->
+            <xsd:element name="methods" minOccurs="0" type="saas:Methods"/>
+        </xsd:sequence>
+        <!-- 
+               type="http://research.sun.com/wadl/2006/10" for WADL services
+               type="http://schemas.xmlsoap.org/wsdl/" for WSDL services
+               type="custom" for custom services
+        -->
+        <xsd:attribute name="type" type="xsd:string" use="required"/>
+        <!-- 
+               To specify WADL url
+               url="org/netbeans/modules/websvc/saas/services/amazon/resources/AmazonS3BucketWadl.xml">
+               
+               To specify WSDL url
+               url="http://wsparam.strikeiron.com/USAddressVerification4_0?WSDL"
+        -->
+        <xsd:attribute name="url" type="xsd:string" use="optional"/>
+        <!-- 
+            Used to specify the API documentation for each SaaS service.
+            This is used by the IDE to show the API doc when user invokes
+            "View API Documentation" action on the SaaS service node.
+            For example:
+            api-doc="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/RESTAPI.html"
+        -->
+        <xsd:attribute name="api-doc" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    
+    <!-- SaaS service's metadata type -->
+    <xsd:complexType name="SaasMetadata">
+        <xsd:sequence>
+            <!-- 
+                Used to localize the SaaS service metadata. Usually used in 
+                IDE to localize SaaS service name
+            -->
+            <xsd:element name="localizing-bundle" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <!-- Specifies a group/category to which each SaaS service belong. -->
+            <xsd:element ref="saas:group"  minOccurs="1" maxOccurs="1"/>
+            <!-- 
+                Used by the SaaS code generator to generate code when user
+                drag-and-drop the service method to a target document.
+            -->
+            <xsd:element name="code-gen" minOccurs="0">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!-- Specifies a list of artifacts for each set of language -->
+                        <xsd:element name="artifacts" type="saas:Artifacts" minOccurs="0" maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                    <!-- Optionally specify the package name of the generated code -->
+                    <xsd:attribute name="packageName" type="xsd:string" use="optional"/>
+                </xsd:complexType>
+            </xsd:element>
+            
+            <!-- 
+                Used to specify various authentication scheme used by a 
+                SaaS service. This mechanism is used by WADL based services,
+                since WSDL and custom based services use thier own authentication
+                mechanisms. In popular WADL based services, there are 4
+                types of authentication. 
+                - API key
+                - Http basic
+                - Signed url
+                - Session key
+                
+                Let's take an example for each one
+                
+                - API key
+                
+                    BookStoreWadl.xml
+                    
+                    <application xsi:xmlns="http://research.sun.com/wadl/2006/10> 
+                        <grammars>
+                            <include href="Chart.xsd"/>
+                        </grammars>
+                        <resources base="http://mybookstore.com">
+                            <resource path="/bookstore" id=”bookstore”> 
+                                <method name="GET" id="getBooks"> 
+                                    <request> 
+                                        <param name="api-key" type="xsd:string" style="query" required="true"/> 
+                                    </request> 
+                                    <response> 
+                                        <representation mediaType="text/xml" element="chart:chart"/> 
+                                    </response> 
+                                </method> 
+                            </resource> 
+                        </resources> 
+                    </application> 
+
+                    BookStore.xml
+                    <saas-services xmlns="http://xml.netbeans.org/websvc/saas/services/1.0" ...
+                            type="http://research.sun.com/wadl/2006/10"
+                            api-doc="http://mybookstore.com/apidoc.html"
+                            url="org/netbeans/modules/websvc/saas/services/bookstore/resources/BookStoreWadl.xml"> 
+                        <display-name>Book Store Service</display-name> 
+                        <saas-metadata> 
+                            <group name="MyBookStore"/> 
+                            <code-gen>
+                                <artifacts targets="java,servlet,resource,jsp" profile="Templates/SaaSServices/apikey.properties"/>
+                                <artifacts targets="php" profile="Templates/SaaSServices/apikey.php"/>
+                            </code-gen>
+                            <authentication> 
+                                <api-key id="api-key"/> <- refers to the api-key parameter in the wadl above ->
+                            </authentication> 
+                        </saas-metadata> 
+                        <methods/>
+                    </saas-services>
+
+                    Code generation: 
+                    
+                    The generated code for this type of authentication will have a
+                    static method called getAPIKey() which would fetch the 
+                    api-key value from the generated profile file.
+                    
+                    The service invocation code will use the method 
+                    “MyBookStoreServiceAuthenticator.getApiKey()” in order to 
+                    get the api key to pass this as a url parameter to the service.
+                    
+                    
+                - Http basic
+                
+                    Delicious.xml
+                    <saas-services xmlns="http://xml.netbeans.org/websvc/saas/services/1.0" ...
+                               type="http://research.sun.com/wadl/2006/10"
+                               api-doc="http://del.icio.us/help/api/"
+                               url="org/netbeans/modules/websvc/saas/services/delicious/resources/DeliciousWadl.xml">
+                        <description>Bookmarking Service</description>
+                        <display-name>Bookmarking Service</display-name>
+                        <saas-metadata>
+                            <localizing-bundle>org.netbeans.modules.websvc.saas.services.delicious.Bundle</localizing-bundle>
+                            <group name="Delicious"/>
+                            <code-gen>
+                                <artifacts targets="java,servlet,resource,jsp" profile="Templates/SaaSServices/httpbasic.properties">
+                                    <artifact id="HttpBasicAuthenticatorDesktop" type="template"
+                                        url="Templates/SaaSServices/HttpBasicAuthenticatorDesktop.java"/>
+                                    <artifact id="HttpBasicAuthenticator" type="template"
+                                        url="Templates/SaaSServices/HttpBasicAuthenticator.java"/>
+                                    <artifact id="HttpBasicAuthenticatorLogin" type="template"
+                                        url="Templates/SaaSServices/HttpBasicLogin.java"/>
+                                    <artifact id="HttpBasicAuthenticatorCallback" type="template"
+                                        url="Templates/SaaSServices/HttpBasicCallback.java"/>
+                                </artifacts>
+                                <artifacts targets="php" profile="Templates/SaaSServices/httpbasic.php">
+                                    <artifact id="HttpBasicAuthenticator" type="template"
+                                        url="Templates/SaaSServices/HttpBasicAuthenticator.php"/>
+                                    <artifact id="HttpBasicAuthenticatorLogin" type="template"
+                                        url="Templates/SaaSServices/HttpBasicLogin.php"/>
+                                    <artifact id="HttpBasicAuthenticatorCallback" type="template"
+                                        url="Templates/SaaSServices/HttpBasicCallback.php"/>
+                                </artifacts>
+                            </code-gen>
+                            <authentication>
+                                <http-basic username="username" password="password">
+                                    <authenticator>
+                                        <use-templates>
+                                            <desktop>
+                                                <template type="auth" href="HttpBasicAuthenticatorDesktop"/>
+                                            </desktop>
+                                            <web>
+                                                <template type="auth" href="HttpBasicAuthenticator"/>
+                                                <template type="login" href="HttpBasicAuthenticatorLogin"/>
+                                                <template type="callback" href="HttpBasicAuthenticatorCallback"/>
+                                            </web>
+                                        </use-templates>
+                                    </authenticator>
+                                </http-basic>
+                            </authentication>
+                        </saas-metadata>
+                        <methods/>
+                    </saas-services>
+                    
+                    Code generation: 
+                    
+                    The generated code for this type of authentication will have a
+                    static method called login() which would fetch the 
+                    username, password value from the generated profile file.
+                    
+                    The service invocation code will use the method 
+                    “DeliciousAuthenticator.login()” in order to 
+                    authenticate before using this service.
+                
+                - Signed url
+                
+                    AmazonS3Bucket.xml
+                    <saas-services xmlns="http://xml.netbeans.org/websvc/saas/services/1.0" ...
+                                   type="http://research.sun.com/wadl/2006/10"
+                                   api-doc="http://docs.amazonwebservices.com/AmazonS3/2006-03-01/RESTAPI.html"
+                                   url="org/netbeans/modules/websvc/saas/services/amazon/resources/AmazonS3BucketWadl.xml">
+                        <description>AmazonS3 Bucket Service</description>
+                        <display-name>S3 Buckets Service</display-name>
+                        <saas-metadata>
+                            <localizing-bundle>org.netbeans.modules.websvc.saas.services.amazon.Bundle</localizing-bundle>
+                            <group name="Amazon"/>
+                            <code-gen>
+                                <artifacts targets="java,servlet,resource,jsp" profile="Templates/SaaSServices/signedurl.properties">
+                                    <artifact id="AmazonS3Authenticator" type="template"
+                                        url="Templates/SaaSServices/AmazonS3Authenticator.java"/>
+                                </artifacts>
+                                <artifacts targets="php" profile="Templates/SaaSServices/signedurl.php">
+                                    <artifact id="AmazonS3Authenticator" type="template"
+                                        url="Templates/SaaSServices/AmazonS3Authenticator.php"/>
+                                </artifacts>
+                            </code-gen>
+                            <authentication>
+                                <authenticator name="amazons3_templates">
+                                    <use-templates>
+                                        <desktop>
+                                            <template type="auth" href="AmazonS3Authenticator"/>
+                                        </desktop>
+                                        <web>
+                                            <template type="auth" href="AmazonS3Authenticator"/>
+                                        </web>
+                                    </use-templates>
+                                </authenticator>
+                                <- 
+                                    "sig-id" refers to the Authorization header parameter in the AmazonS3 wadl.
+                                    "id" refers to the method/@id in the wadl
+                                ->
+                                <signed-url sig-id="Authorization" id="amazons3.bucket">
+                                    <sign id="authorization">
+                                        <params>
+                                            <param name="HTTP-Verb" type="httpMethod" required="true"/>
+                                            <param name="Date" type="date" required="true"/>
+                                            <param name="HTTP-Request-URI" type="string"/>
+                                            <param name="Bucket" type="string" required="true" default=""/>
+                                            <param name="Content-Type" type="string" required="true"/>
+                                        </params>
+                                    </sign>
+                                    <authenticator xref="amazons3_templates"/>
+                                </signed-url>
+                            </authentication>
+                        </saas-metadata>
+                        <methods/>
+                    </saas-services>
+                    
+                    Code generation: 
+                    
+                    The generated code for this type of authentication will have a
+                    static method called sign() which would sign the url using 
+                    the access key and the secret key fetched from the generated profile file.
+                    
+                    The service invocation code will use the method 
+                    “AmazonS3ServiceAuthenticator.sign(
+                    String array of signed-url params from the metadata);” in 
+                    order to authenticate before using this service.
+                    
+                - Session key
+                
+                    Facebook.xml
+                    <saas-services xmlns="http://xml.netbeans.org/websvc/saas/services/1.0" ...
+                                   type="http://research.sun.com/wadl/2006/10"
+                                   api-doc="http://wiki.developers.facebook.com/index.php/API"
+                                   url="org/netbeans/modules/websvc/saas/services/facebook/resources/FacebookWadl.xml">
+                        <description>Social Networking Service</description>
+                        <display-name>Social Networking Service</display-name>
+                        <saas-metadata>
+                            <localizing-bundle>org.netbeans.modules.websvc.saas.services.facebook.Bundle</localizing-bundle>
+                            <group name="Facebook"/>
+                            <code-gen>
+                                <artifacts targets="java,servlet,resource,jsp" profile="Templates/SaaSServices/sessionkey.properties">
+                                    <artifact id="FacebookAuthenticatorDesktop" type="template"
+                                        url="Templates/SaaSServices/FacebookAuthenticatorDesktop.java"/>
+                                    <artifact id="FacebookAuthenticator" type="template"
+                                        url="Templates/SaaSServices/FacebookAuthenticator.java"/>
+                                    <artifact id="FacebookAuthenticatorLogin" type="template"
+                                        url="Templates/SaaSServices/FacebookLogin.java"/>
+                                    <artifact id="FacebookAuthenticatorCallback" type="template"
+                                        url="Templates/SaaSServices/FacebookCallback.java"/>
+                                </artifacts>
+                                <artifacts targets="php" profile="Templates/SaaSServices/sessionkey.php">
+                                    <artifact id="FacebookAuthenticatorDesktop" type="template"
+                                        url="Templates/SaaSServices/FacebookAuthenticatorDesktop.php"/>
+                                    <artifact id="FacebookAuthenticator" type="template"
+                                        url="Templates/SaaSServices/FacebookAuthenticator.php"/>
+                                    <artifact id="FacebookAuthenticatorLogin" type="template"
+                                        url="Templates/SaaSServices/FacebookLogin.php"/>
+                                    <artifact id="FacebookAuthenticatorCallback" type="template"
+                                        url="Templates/SaaSServices/FacebookCallback.php"/>
+                                </artifacts>
+                            </code-gen>
+                            <authentication>
+                                <- 
+                                    "api-id" refers to the "api_key" parameter in the method for the service in Facebook wadl
+                                    "session-id" refers to the "session_key" parameter in the method for the service in Facebook wadl
+                                    "sig-id" refers to the "sig" parameter in the method for the service in Facebook wadl
+                                    "id" refers to the method/@id in the wadl
+                                ->
+                                <session-key api-id="api_key" session-id="session_key" sig-id="sig">
+                                    <sign id="sig">
+                                        <params>
+                                            <param name="call_id" type="time" required="true"/>
+                                            <param id="api_key={api_key}" name="api_key" type="string" required="true"/>
+                                            <param id="session_key={session_key}" name="session_key" type="string" required="true"/>
+                                        </params>
+                                    </sign>
+                                    <authenticator>
+                                        <use-templates>
+                                            <desktop>
+                                                <template type="auth" href="FacebookAuthenticatorDesktop"/>
+                                            </desktop>
+                                            <web>
+                                                <template type="auth" href="FacebookAuthenticator"/>
+                                                <template type="login" href="FacebookAuthenticatorLogin"/>
+                                                <template type="callback" href="FacebookAuthenticatorCallback"/>
+                                            </web>
+                                        </use-templates>
+                                    </authenticator>
+                                </session-key>
+                            </authentication>
+                        </saas-metadata>
+                        <methods/>
+                    </saas-services>
+                    
+                    Code generation: 
+                    
+                    The service invocation code will use the method 
+                    “DeliciousAuthenticator.login()” (which would do the l the url 
+                    using the access key and the secret key fetched from the 
+                    generated profile file.) in order to authenticate before 
+                    using this service. 
+                    
+                    Consumers of the “bookstore” service would just need to do following
+                    - FacebookAuthenticator.login(); 
+                    - String apiKey = FacebookAuthenticator.getApiKey(); 
+                    - String sessionKey = FacebookAuthenticator.getSessionKey(); 
+                    - String sig = FacebookAuthenticator.sign(String array of signed-url params from the metadata); 
+                    - Now send the request with the sig as well as session key as 
+                      parameters in the request for “bookstore” service.
+            -->
+            <xsd:element name="authentication" minOccurs="0" maxOccurs="1">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <!--  -->
+                        <xsd:element name="authenticator" minOccurs="0" maxOccurs="unbounded">
+                            <xsd:complexType>
+                                <xsd:complexContent>
+                                    <xsd:extension base="saas:Authenticator">
+                                        <xsd:attribute name="name" type="xsd:string" use="required"/>
+                                    </xsd:extension>
+                                </xsd:complexContent>
+                            </xsd:complexType>
+                        </xsd:element>
+                        <xsd:choice>
+                            <xsd:element name="http-basic">
+                                <xsd:complexType>
+                                    <xsd:sequence>
+                                        <xsd:element name="authenticator" type="saas:Authenticator" minOccurs="1" maxOccurs="1"/>
+                                    </xsd:sequence>
+                                    <xsd:attribute name="username" type="xsd:string" use="required"/>
+                                    <xsd:attribute name="password" type="xsd:string" use="required"/>
+                                </xsd:complexType>
+                            </xsd:element>
+                            <xsd:element name="api-key">
+                                <xsd:complexType>
+                                    <xsd:attribute name="id" type="xsd:string"/>
+                                </xsd:complexType>
+                            </xsd:element>
+                            <xsd:element name="signed-url" minOccurs="0" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                    <xsd:sequence>
+                                        <xsd:element name="sign" type="saas:Sign" minOccurs="0" maxOccurs="1"/>
+                                        <xsd:element name="authenticator" type="saas:Authenticator" minOccurs="0" maxOccurs="1"/>
+                                    </xsd:sequence>
+                                    <xsd:attribute name="sig-id" type="xsd:string" use="required"/>
+                                    <xsd:attribute name="id" type="xsd:string" use="optional"/>
+                                </xsd:complexType>
+                            </xsd:element>
+                            <xsd:element name="session-key" minOccurs="0" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                    <xsd:sequence>
+                                        <xsd:element name="sign" type="saas:Sign" minOccurs="1" maxOccurs="1"/>
+                                        <xsd:element name="authenticator" type="saas:Authenticator" minOccurs="1" maxOccurs="1"/>
+                                    </xsd:sequence>
+                                    <xsd:attribute name="session-id" type="xsd:string" use="required"/>
+                                    <xsd:attribute name="api-id" type="xsd:string" use="required"/>
+                                    <xsd:attribute name="sig-id" type="xsd:string" use="required"/>
+                                    <xsd:attribute name="id" type="xsd:string" use="optional"/>
+                                </xsd:complexType>
+                            </xsd:element>
+                            <xsd:element name="custom"/>
+                        </xsd:choice>
+                    </xsd:sequence>
+                    <xsd:attribute name="profile" type="xsd:string" use="optional"/>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Authenticator">
+        <xsd:choice>
+            <xsd:element name="use-templates" type="saas:UseTemplates" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="use-generator" type="saas:UseGenerator" minOccurs="0" maxOccurs="1"/>
+        </xsd:choice>
+        <xsd:attribute name="xref" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="UseTemplates">
+        <xsd:sequence>
+            <xsd:element name="desktop" type="saas:TemplateType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="nb-module" type="saas:TemplateType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="web" type="saas:TemplateType" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="web-ee7" type="saas:TemplateType" minOccurs="0" maxOccurs="1"/>  
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="MethodDescriptor">
+        <xsd:attribute name="modifiers" type="xsd:string"/> <!-- private, protected, public, static (comma selected) -->
+        <xsd:attribute name="id" type="xsd:string"/>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="return-type" type="xsd:string"/>
+        <xsd:attribute name="throws" type="xsd:string"/>
+        <xsd:attribute name="body" type="xsd:string"/>
+        <xsd:attribute name="body-ref" type="xsd:string"/>
+        <xsd:attribute name="param-types" type="xsd:string"/>
+        <xsd:attribute name="param-names" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="FieldDescriptor">
+        <xsd:attribute name="modifiers" type="xsd:string"/> <!-- private, protected, public, static (comma selected) -->
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="type" type="xsd:string"/>
+        <xsd:attribute name="init-value" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="ServletDescriptor">
+        <xsd:sequence>
+            <xsd:element name="method-descriptor" type="saas:MethodDescriptor" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="field-descriptor" type="saas:FieldDescriptor" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="modifiers" type="xsd:string"/> <!-- private, protected, public, static (comma selected) -->
+        <xsd:attribute name="class-name" type="xsd:string"/>
+        <xsd:attribute name="servlet-mapping" type="xsd:string"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="TemplateType">
+        <xsd:sequence>
+            <xsd:element name="template" minOccurs="0" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:attribute name="type" type="xsd:string"/>
+                    <xsd:attribute name="href" type="xsd:string"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="field-descriptor" type="saas:FieldDescriptor" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="method-descriptor" type="saas:MethodDescriptor" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="servlet-descriptor" type="saas:ServletDescriptor" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="UseGenerator">
+        <xsd:sequence>
+            <xsd:element name="login" minOccurs="0" maxOccurs="1">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="sign" type="saas:Sign" minOccurs="0" maxOccurs="1"/>
+                        <xsd:element name="method" type="saas:Method" minOccurs="1" maxOccurs="1"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="token" minOccurs="0" maxOccurs="1">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="sign" type="saas:Sign" minOccurs="0" maxOccurs="1"/>
+                        <xsd:element name="method" type="saas:Method" minOccurs="1" maxOccurs="1"/>
+                    </xsd:sequence>
+                    <xsd:attribute name="id" type="xsd:string" use="required"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="logout" minOccurs="0" maxOccurs="1">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="sign" type="saas:Sign" minOccurs="0" maxOccurs="1"/>
+                        <xsd:element name="method" type="saas:Method" minOccurs="1" maxOccurs="1"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Artifacts">
+        <xsd:sequence>
+            <xsd:element name="artifact" type="saas:Artifact" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="targets" type="xsd:string" use="optional"/>
+        <xsd:attribute name="profile" type="xsd:string" use="optional"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Artifact">
+        <xsd:attribute name="id" type="xsd:string"/>
+        <xsd:attribute name="type" type="xsd:string" default="library"/>
+        <xsd:attribute name="url" type="xsd:string" default="location of jar"/>
+        <xsd:attribute name="requires" type="xsd:string" default="id of another artifact"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Methods">
+        <xsd:sequence>
+            <xsd:element name="method" type="saas:Method" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Method">                      
+        <xsd:annotation>
+            <xsd:documentation>
+                a method represents one operation in case of WSDL. In case
+                of wsdl 'input' and 'output' can be empty. The implementation
+                will use the wsdl document to determine the input and output.
+                the input and output here is to support REST components
+                where there is no WADL file available.
+            </xsd:documentation>
+        </xsd:annotation>           
+        <xsd:sequence>
+            <xsd:element name="documentation" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="input" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        This element is mainly used if infact the WADL url 
+                        is not available and is not specified in component.xml.
+                        For WSDL, this element can be ommited.
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="params" type="saas:Params" minOccurs="0" maxOccurs="1"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element> 
+            <xsd:element name="output" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        This element is mainly used if infact the WADL url 
+                        is not available and is not specified in component.xml.
+                        For WSDL, this element can be ommited.
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="media" minOccurs="0" maxOccurs="1">
+                            <xsd:complexType>
+                                <xsd:attribute name="type" type="xsd:string" use="required"/>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element> 
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string" use="optional"/>
+        <xsd:attribute name="name" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation>
+                    'name' represents name of the method
+                </xsd:documentation>
+            </xsd:annotation>                                 
+        </xsd:attribute>
+        <xsd:attribute name="href" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>
+                    'url' defines the url of the WSDL or WADL document
+                </xsd:documentation>
+            </xsd:annotation>                                 
+        </xsd:attribute>
+        <xsd:attribute name="serviceName" type="xsd:string"/>
+        <xsd:attribute name="portName" type="xsd:string"/>
+        <xsd:attribute name="operationName" type="xsd:string"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Params">
+        <xsd:sequence>
+            <xsd:element name="param" minOccurs="0" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:sequence minOccurs="0" maxOccurs="1">
+                        <xsd:element name="set">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="value" minOccurs="1" maxOccurs="unbounded"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                    <xsd:attribute name="id" type="xsd:string" use="optional"/>
+                    <xsd:attribute name="name" type="xsd:string" use="required"/>
+                    <xsd:attribute name="type" type="xsd:string" use="required"/>
+                    <xsd:attribute name="default" type="xsd:string" use="optional"/>
+                    <xsd:attribute name="fixed" type="xsd:string"/>
+                    <xsd:attribute name="required" type="xsd:boolean" use="optional"/>
+                </xsd:complexType>
+            </xsd:element>  
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Group">
+        <xsd:sequence minOccurs="0">
+            <xsd:element name="group" type="saas:Group" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="xsd:string"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Sign">
+        <xsd:sequence>
+            <xsd:element name="params" type="saas:Params" minOccurs="0" maxOccurs="1"/>  
+        </xsd:sequence>
+        <xsd:attribute name="id" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="Prompt">
+        <xsd:attribute name="url" type="xsd:string"/>
+    </xsd:complexType>
+    
+</xsd:schema>

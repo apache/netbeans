@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fontscolors PUBLIC "-//NetBeans//DTD Editor Fonts and Colors settings 1.1//EN" "http://www.netbeans.org/dtds/EditorFontsColors-1_1.dtd">
+
+<fontscolors>
+    <fontcolor name="test-inheritance-coloring-1" bgColor="AA0000" />
+    <fontcolor name="test-inheritance-coloring-2" default="test-inheritance-coloring-1" />
+
+    <fontcolor name="test-inheritance-coloring-A" default="test-all-languages-super-default" />
+    <fontcolor name="test-inheritance-coloring-B" default="test-inheritance-coloring-A" />
+
+    <fontcolor name="test-inheritance-coloring-X" default="test-all-languages-super-default" bgColor="BB0000"/>
+    <fontcolor name="test-inheritance-coloring-Y" default="test-inheritance-coloring-X" />
+
+    <fontcolor name="test-inheritance-typeB-specific" bgColor="BB0000" />
+    <fontcolor name="test-inheritance-typeA-typeB" bgColor="BBBB00" />
+</fontscolors>

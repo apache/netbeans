@@ -1,0 +1,3 @@
+# j2ee/persistence
+read global
+${l10n-module}/src/org/netbeans/modules/j2ee/persistence/wizard/dao/*.html

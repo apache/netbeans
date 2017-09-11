@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.ant.freeform</type>
+    <configuration>
+        <general-data xmlns="http://www.netbeans.org/ns/freeform-project/1">
+            <name>Simple Freeform Project for NB 4.1</name>
+            <properties>
+                <property name="src1.dir">src1</property>
+                <property name="src1a.dir">src1a</property>
+                <property name="src2.dir">src2</property>
+                <property name="test1.dir">test1</property>
+                <property name="test2.dir">test2</property>
+                <property name="classes1.dir">classes1</property>
+                <property name="classes1.jar">classes1.jar</property>
+                <property name="classes2.dir">classes2</property>
+                <property name="javadoc1.dir">javadoc1</property>
+                <property name="javadoc2.zip">javadoc2.zip</property>
+            </properties>
+            <folders>
+                <source-folder>
+                    <label>Sources #1</label>
+                    <type>java</type>
+                    <location>${src1.dir}</location>
+                </source-folder>
+                <source-folder>
+                    <label>Sources #1a</label>
+                    <type>java</type>
+                    <location>${src1a.dir}</location>
+                </source-folder>
+                <source-folder>
+                    <label>Sources #2</label>
+                    <type>java</type>
+                    <location>${src2.dir}</location>
+                </source-folder>
+                <source-folder>
+                    <label>Tests #1</label>
+                    <type>java</type>
+                    <location>${test1.dir}</location>
+                </source-folder>
+                <source-folder>
+                    <label>Tests #2</label>
+                    <type>java</type>
+                    <location>${test2.dir}</location>
+                </source-folder>
+            </folders>
+            <!-- XXX no <ide-actions> or <export> currently -->
+            <view>
+                <items>
+                    <source-folder style="packages">
+                        <label>Sources #1</label>
+                        <location>${src1.dir}</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>Sources #1a</label>
+                        <location>${src1a.dir}</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>Sources #2</label>
+                        <location>${src2.dir}</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>Tests #1</label>
+                        <location>${test1.dir}</location>
+                    </source-folder>
+                    <source-folder style="packages">
+                        <label>Tests #2</label>
+                        <location>${test2.dir}</location>
+                    </source-folder>
+                </items>
+                <!-- XXX no <context-menu> currently -->
+            </view>
+            <subprojects>
+	        <project>does-not-exist</project>
+            </subprojects>
+        </general-data>
+        <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/2">
+            <compilation-unit>
+                <package-root>${src1.dir}</package-root>
+                <package-root>${src1a.dir}</package-root>
+                <built-to>${classes1.dir}</built-to>
+                <built-to>${classes1.jar}</built-to>
+                <javadoc-built-to>${javadoc1.dir}</javadoc-built-to>
+                <javadoc-built-to>${javadoc2.zip}</javadoc-built-to>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>${src2.dir}</package-root>
+                <built-to>${classes2.dir}</built-to>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>${test1.dir}</package-root>
+                <unit-tests/>
+            </compilation-unit>
+            <compilation-unit>
+                <package-root>${test2.dir}</package-root>
+                <unit-tests/>
+            </compilation-unit>
+        </java-data>
+    </configuration>
+</project>

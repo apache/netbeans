@@ -1,0 +1,95 @@
+6 key editing group
+-------------------
+Insert	Insert	VK_INSERT	\ESC[2~
+Del	Delete	VK_DELETE	\ESC[3~
+
+PageUp	Page Up	VK_PAGE_UP	\ESC[5~
+PageDown
+	Page Down	
+		VK_PAGE_DOWN	\ESC[6~
+
+				xterm		gnome
+						DECCKM	?
+					
+Home	Home	VK_HOME		\ESC[H		\ESCOH	\ESC[1~
+End	End	VK_END		\ESC[F		\ESCOF	\ESC[4~
+
+
+Arrow keys			normal		DECCKM \ESC[?1h \ESC[?1l
+----------
+<up>	Up	VK_UP		\ESC[A		\ESCOA
+<down>	Down	VK_DOWN		\ESC[B		\ESCOB
+<left>	Left	VK_LEFT		\ESC[C		\ESCOC
+<right>	Right	VK_RIGHT	\ESC[D		\ESCOD
+
+Function keys
+-------------
+F1	F1	VK_F1		\ESCOP
+F2	F2	VK_F2		\ESCOQ
+F3	F3	VK_F3		\ESCOR
+F4	F4	VK_F4		\ESCOS
+
+F5	F5	VK_F5		\ESC[15~
+F6	F6	VK_F6		\ESC[17~
+F7	F7	VK_F7		\ESC[18~
+F8	F8	VK_F8		\ESC[19~
+
+F9	F9	VK_F9		\ESC[20~
+F10	F10	VK_F10		\ESC[21~
+F11	F11	VK_F11		\ESC[23~
+F12	F12	VK_F12		\ESC[24~
+
+Num pad with NumLock		DECPNM overrides application mode
+--------------------
+/	NumPad /
+		VK_DIVIDE
+*	NumPad *
+		VK_MULTIPLY 
+-	NumPad -
+		VK_SUBTRACT
++	NumPad +
+		VK_PLUS
+Enter	Enter	VK_ENTER
+
+0-9	NumPad-<N>
+		VK_NUMPAD<N>
+.	NumPad .
+		VK_DECIMAL
+
+Num pad without NumLock		DECPAM | !NumLock
+-----------------------
+/	NumPad /	
+		VK_DIVIDE	\ESCOo
+*	NumPad *
+		VK_MULTIPLY 	\ESCOj
+-	NumPad -
+		VK_SUBTRACT	\ESCOm
++	NumPad +
+		VK_PLUS		\ESCOk
+Enter	Enter	VK_ENTER	\ESCOM
+
+Home	Home	VK_HOME		\ESCOH	\ESC[H
+End	End	VK_END		\ESCOF	\ESC[F
+
+<up>	Up	VK_KP_UP	\ESC[A
+<down>	Down	VK_KP_DOWN	\ESC[B
+<right>	Right	VK_KP_RIGHT	\ESC[C
+<left>	Left	VK_KP_LEFT	\ESC[D
+<center>Begin	VK_BEGIN	\ESC[E
+
+Ins	Insert	VK_INSERT	\ESC[2~
+Del	Delete	VK_DELETE	\ESC[3~
+PgUp	Page Up	VK_PAGE_UP	\ESC[5~
+PgDn	Page Down
+		VK_PAGE_DOWN	\ESC[6~
+
+Specialized keypads?
+--------------------
+Space
+Tab
+,
+=
+
+Modifier parameters?
+--------------------
+Yup, it's real ...

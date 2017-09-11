@@ -1,0 +1,5 @@
+<project default="x">
+    <target name="x">
+        <touch file="${java.io.tmpdir}/something"/>
+    </target>
+</project>

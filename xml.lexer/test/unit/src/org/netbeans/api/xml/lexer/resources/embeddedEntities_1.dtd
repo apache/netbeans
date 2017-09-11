@@ -1,0 +1,16 @@
+<!ELEMENT other %pa>
+<!ELEMENT other %1;>
+<!ELEMENT other %;>
+<!ELEMENT some "a&#xzz;">
+<!ELEMENT some "a&#x;">
+<!ELEMENT some "a&;">
+<!ELEMENT some "a&ent">
+%parsed;
+%;
+%par
+<!-- Comment &#32; comment &ent; -->
+<!ELEMENT other %parsed;>
+<!ELEMENT some "a&#xaa;">
+<!ELEMENT some "a&entRef;b">
+<!ELEMENT some "&#111;b">
+<!ELEMENT some "&#111;b">

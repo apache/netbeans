@@ -1,0 +1,231 @@
+<?xml version="1.0"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="OptionsDialog">
+        <folder name="Editor">
+            <folder name="Formatting">
+                <attr name="position" intvalue="0"/>
+            </folder>
+            <folder name="CodeCompletion">
+                <attr name="position" intvalue="0"/>
+                <file name="GeneralCodeCompletionCustomCustomizer.instance">
+                    <attr name="instanceCreate" newvalue="org.netbeans.modules.options.editor.completion.GeneralCompletionOptionsPanelController$CustomCustomizerImpl"/>
+                </file>
+            </folder>
+            <folder name="Hints">
+                <attr name="position" intvalue="0"/>
+            </folder>
+            <folder name="MarkOccurrences">
+                <attr name="position" intvalue="0"/>
+            </folder>
+        </folder>
+        <folder name="PreviewExamples">
+            <attr name="position" intvalue="0"/>
+            <file name="Defaults" url="../colors/AllLanguagesExample"/>
+        </folder>
+        <folder name="Actions">
+            <attr name="position" intvalue="0"/>
+            <folder name="Edit">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.options.editor.Bundle"/>
+                <file name="start-macro-recording"/>
+                <file name="stop-macro-recording"/>
+                <file name="find"/>
+                <file name="find-next"/>
+                <file name="find-previous"/>
+                <file name="find-selection"/>
+                <file name="replace"/>
+                <file name="redo"/>
+                <file name="undo"/>
+                <file name="cut-to-clipboard"/>
+                <file name="copy-to-clipboard"/>
+                <file name="paste-from-clipboard"/>
+                <file name="delete-next"/>
+            </folder>
+            <folder name="GoTo">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.options.editor.Bundle"/>
+                <file name="goto-declaration"/>
+                <file name="goto-source"/>
+                <file name="goto-super-implementation"/>
+                <file name="goto-help"/>
+            </folder>
+            <folder name="Source">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.options.editor.Bundle"/>
+                <file name="comment"/>
+                <file name="fix-imports"/>
+                <file name="format"/>
+                <file name="try-catch"/>
+                <file name="shift-line-left"/>
+                <file name="shift-line-right"/>
+                <file name="uncomment"/>
+                <file name="word-match-next"/>
+                <file name="word-match-prev"/>
+            </folder>
+            <folder name="View">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.options.editor.Bundle"/>
+                <file name="collapse-all-folds"/>
+                <file name="collapse-all-comment-folds"/>
+                <file name="collapse-all-code-block-folds"/>
+                <file name="collapse-all-javadoc-folds"/>
+                <file name="collapse-all-scripting-folds"/>
+                <file name="collapse-fold"/>
+                <file name="expand-all-folds"/>
+                <file name="expand-all-comment-folds"/>
+                <file name="expand-all-code-block-folds"/>
+                <file name="expand-all-javadoc-folds"/>
+                <file name="expand-all-scripting-folds"/>
+                <file name="expand-fold"/>
+            </folder>
+            <folder name="Refactor">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.options.editor.Bundle"/>
+                <file name="introduce-method"/>
+                <file name="introduce-field"/>
+                <file name="introduce-variable"/>
+                <file name="introduce-constant"/>
+            </folder>
+
+<!--            <folder name="Hidden">
+                <file name="Add.shadow">
+                    <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-NewAction.instance"/>
+                </file>
+                <file name="Zoom In.shadow">
+                    <attr name="originalFile" stringvalue="Actions/View/org.netbeans.modules.image.ZoomInAction.instance"/>
+                </file>
+                <file name="All XML actions.shadow">
+                    <attr name="originalFile" stringvalue="Actions/XML/org-netbeans-modules-xml-core-actions-CollectXMLAction.instance"/>
+                </file>
+                <file name="Customize Zoom.shadow">
+                    <attr name="originalFile" stringvalue="Actions/View/org.netbeans.modules.image.CustomZoomAction.instance"/>
+                </file>
+                <file name="Zoom Out.shadow">
+                    <attr name="originalFile" stringvalue="Actions/View/org.netbeans.modules.image.ZoomOutAction.instance"/>
+                </file>
+                <file name="All DTD actions.shadow">
+                    <attr name="originalFile" stringvalue="Actions/XML/org-netbeans-modules-xml-core-actions-CollectDTDAction.instance"/>
+                </file>
+                <file name="Open Recent Project.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-RecentProjects.instance"/>
+                </file>
+                <file name="Processes.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-progress-module-ProgressListAction.instance"/>
+                </file>
+                <file name="Customize.shadow">
+                    <attr name="originalFile" stringvalue="Actions/View/org-openide-actions-CustomizeAction.instance"/>
+                </file>
+                <file name="CustomizeBreakpoint.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-jpda-ui-actions-BreakpointCustomizeAction.instance"/>
+                </file>
+            </folder>
+-->                
+        </folder>
+    </folder>
+
+    <folder name="OptionsExport">
+        <folder name="Editor">
+            <attr name="displayName" bundlevalue="org.netbeans.modules.options.editor.Bundle#Editor.Options.Export.Category.displayName"/>
+            <attr name="position" intvalue="200"/>
+            <file name="General">
+                <attr name="include" stringvalue="config/Preferences.properties"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.options.editor.Bundle#Editor.Options.Export.General.displayName"/>
+            </file>
+            <file name="Macros">
+                <attr name="include" stringvalue="config/Editors/Macros/.*"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.options.editor.Bundle#Editor.Options.Export.Macros.displayName"/>
+            </file>
+            <file name="CodeTemplates">
+                <attr name="include" stringvalue="config/Editors.*/CodeTemplates/.*"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.options.editor.Bundle#Editor.Options.Export.CodeTemplates.displayName"/>
+            </file>
+            <file name="Other">
+                <attr name="include" stringvalue="config/Editors/(?!.*(Macros|CodeTemplates|FontsColors)).+|config/.nbattrs|config/Preferences/org/netbeans/modules/options/editor.properties"/>
+                <attr name="exclude" stringvalue="config/Editors/.*/(macros.xml|Popup.*|Settings\.settings|.*\.instance)"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.options.editor.Bundle#Editor.Options.Export.Other.displayName"/>
+            </file>
+        </folder>
+        <folder name="Formatting">
+                <attr name="position" intvalue="250"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.options.editor.Bundle#Editor.Options.Export.Formatting.displayName"/>
+                <file name="Indentation">
+                    <attr name="include" stringvalue="config/Editors/Preferences/org-netbeans-modules-editor-settings-CustomPreferences.xml"/>
+                    <attr name="displayName" bundlevalue="org.netbeans.modules.options.editor.Bundle#Editor.Options.Export.Indentation.displayName"/>
+                </file>
+        </folder>
+        <folder name="FontsAndColors">
+            <attr name="displayName" bundlevalue="org.netbeans.modules.options.colors.Bundle#FontsAndColors.Options.Export.Category.displayName"/>
+            <attr name="position" intvalue="300"/>
+            <file name="FontsAndColors">
+                <attr name="include" stringvalue="config/Editors.*/FontsColors/([^/]*)/.*|config/.nbattrs"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.options.colors.Bundle#FontsAndColors.Options.Export.displayName"/>
+            </file>
+            <file name="AnnotationsColors">
+                <attr name="include" stringvalue="config/Editors/AnnotationTypes/.*"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.options.colors.Bundle#AnnotationsColors.Options.Export.displayName"/>
+            </file>
+        </folder>
+    </folder>
+
+    <folder name="org-netbeans-modules-options-editor">
+        <folder name="OptionsDialogCategories">
+            <folder name="FontsColors">
+                <file name="SyntaxColoringPanel.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.options.colors.spi.FontsColorsController"/>
+                    <attr name="instanceCreate" newvalue="org.netbeans.modules.options.colors.SyntaxColoringPanel"/>
+                    <attr name="position" intvalue="100"/>
+                </file>
+                <file name="HighlightingPanel.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.options.colors.spi.FontsColorsController"/>
+                    <attr name="instanceCreate" newvalue="org.netbeans.modules.options.colors.HighlightingPanelController"/>
+                    <attr name="position" intvalue="200"/>
+                </file>
+                <file name="AnnotationsPanel.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.options.colors.spi.FontsColorsController"/>
+                    <attr name="instanceCreate" newvalue="org.netbeans.modules.options.colors.AnnotationsPanel"/>
+                    <attr name="position" intvalue="300"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

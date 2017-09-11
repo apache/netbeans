@@ -1,0 +1,118 @@
+Calling GenBeans.doIt
+Bean Tree:
+book <book> : Book
+	index <index> : Index[1,n]
+		word <word> : String
+		ref <ref> : Ref[1,n]
+			page <page> : String
+			line <line> : String
+	chapter <chapter> : Chapter[1,n]
+		comment <comment> : String[0,1]
+		paragraph <paragraph> : String[0,n]
+	summary <summary> : String[0,1]
+	author <author> : String[1,n]
+	good <good> : boolean
+		EMPTY : String
+	available <available> : boolean
+		EMPTY : String
+
+Compiling
+Finished compiling: 0
+out: TestEvents - creating the DOM document
+out: TestEvents - creating the bean graph
+out: TestEvents - bean graph created
+out: TestEvents - new listener for Book
+out: TestEvents - <Lnr:Book Evt:/Book/Summary Src:book.Book>
+out: TestEvents - <Summary[-1] - Parent: Book/book.Book>
+out: TestEvents simple change event on the root (old value) -> OK
+out: TestEvents simple change event on the root (new value) -> OK
+out: TestEvents - <Lnr:Book Evt:/Book/Summary Src:book.Book>
+out: TestEvents - <Summary[-1] - Parent: Book/book.Book>
+out: TestEvents change the same property on the root (old value) -> OK
+out: TestEvents change the same property on the root (new value) -> OK
+out: TestEvents - <Lnr:Book Evt:/Book/Summary Src:book.Book>
+out: TestEvents - <Summary[-1] - Parent: Book/book.Book>
+out: TestEvents remove this same property (old value) -> OK
+out: TestEvents remove this same property (new value) -> OK
+out: TestEvents - <Lnr:Book Evt:/Book/Chapter.1/Comment Src:book.Chapter>
+out: TestEvents - <Comment[-1] - Parent: Chapter/book.Chapter>
+out: TestEvents propagation of the event (oldvalue) -> OK
+out: TestEvents propagation of the event (newvalue) -> OK
+out: TestEvents - <Lnr:Book Evt:/Book/Chapter.1/Paragraph.18 Src:book.Chapter>
+out: TestEvents - <Paragraph[2] - Parent: Chapter/book.Chapter>
+out: TestEvents event on indexed property - add new (no old value - new element) -> OK
+out: TestEvents event on indexed property - add new (new value) -> OK
+out: TestEvents event on indexed property - add new (correct index) -> OK
+out: TestEvents - <Lnr:Book Evt:/Book/Chapter.1/Paragraph.19 Src:book.Chapter>
+out: TestEvents - <Paragraph[3] - Parent: Chapter/book.Chapter>
+out: TestEvents event on indexed property - add new (no old value - new element) -> OK
+out: TestEvents event on indexed property - add new (new value) -> OK
+out: TestEvents event on indexed property - add new (correct index) -> OK
+out: TestEvents - <Lnr:Book Evt:/Book/Chapter.1/Paragraph.1a Src:book.Chapter>
+out: TestEvents - <Paragraph[4] - Parent: Chapter/book.Chapter>
+out: TestEvents event on indexed property - add new (no old element - new element) -> OK
+out: TestEvents event on indexed property - add new (new value) -> OK
+out: TestEvents event on indexed property - add new (correct index) -> OK
+out: TestEvents - <Lnr:Book Evt:/Book/Chapter.1/Paragraph.18i2 Src:book.Chapter>
+out: TestEvents - <Paragraph[2] - Parent: Chapter/book.Chapter>
+out: TestEvents event on indexed property - remove index (old value) -> OK
+out: TestEvents event on indexed property - remove index (no new value) -> OK
+out: TestEvents event on indexed property - remove index (correct index) -> OK
+out: TestEvents - <Lnr:Book Evt:/Book/Chapter.1/Paragraph.1b Src:book.Chapter>
+out: TestEvents - <Paragraph[2] - Parent: Chapter/book.Chapter>
+out: TestEvents event on indexed property - reset new (old value) -> OK
+out: TestEvents event on indexed property - reset new (no new value) -> OK
+out: TestEvents event on indexed property - reset new (correct index) -> OK
+out: TestEvents - new listener for Chapter
+out: TestEvents - <Lnr:Chapter Evt:/Book/Chapter.5/Paragraph.1c Src:book.Chapter>
+out: TestEvents - <Paragraph[1] - Parent: Chapter/book.Chapter>
+out: TestEvents - <Lnr:Book Evt:/Book/Chapter.5/Paragraph.1c Src:book.Chapter>
+out: TestEvents - <Paragraph[1] - Parent: Chapter/book.Chapter>
+out: TestEvents two listeners - both receiving (no old value) -> OK
+out: TestEvents two listeners - both receiving (new value) -> OK
+out: TestEvents two listeners - both receiving (same old value - both listeners) -> OK
+out: TestEvents two listeners - both receiving (same new value - both listeners) -> OK
+out: TestEvents two listeners - both receiving (same index - both listeners) -> OK
+out: TestEvents two listeners - both receiving (same source - both listeners) -> OK
+out: TestEvents - <Lnr:Book Evt:/Book/Chapter.5/Comment Src:book.Chapter>
+out: TestEvents - <Comment[-1] - Parent: Chapter/book.Chapter>
+out: TestEvents two listeners - one receiving (root listener: yep) -> OK
+out: TestEvents two listeners - one receiving (chapter listener: noop) -> OK
+out: TestEvents one listener - no receiving (root listener: noop) -> OK
+out: TestEvents one listener - no receiving (chapter listener: noop) -> OK
+out: TestEvents - <Lnr:Chapter Evt:/Book/Chapter.5/Paragraph.1e Src:book.Chapter>
+out: TestEvents - <Paragraph[2] - Parent: Chapter/book.Chapter>
+out: TestEvents one listener - one receiving (root listener: noop) -> OK
+out: TestEvents one listener - one receiving (chapter listener: yep) -> OK
+out: TestEvents no listener - no receiving (root listener: noop) -> OK
+out: TestEvents no listener - no receiving (chapter listener: noop) -> OK
+out: TestEvents - <Lnr:Chapter Evt:/Book/Chapter.-1i1/Paragraph.6i0 Src:book.Chapter>
+out: TestEvents - <Paragraph[0] - Parent: Chapter>
+out: TestEvents - <Lnr:Chapter Evt:/Book/Chapter.-1i1/Paragraph.1ci1 Src:book.Chapter>
+out: TestEvents - <Paragraph[1] - Parent: Chapter>
+out: TestEvents - <Lnr:Chapter Evt:/Book/Chapter.-1i1/Paragraph.1ei2 Src:book.Chapter>
+out: TestEvents - <Paragraph[2] - Parent: Chapter>
+out: TestEvents - <Lnr:Chapter Evt:/Book/Chapter.-1i1/Paragraph.1fi3 Src:book.Chapter>
+out: TestEvents - <Paragraph[3] - Parent: Chapter>
+out: TestEvents - <Lnr:Book Evt:/Book/Chapter.5i1 Src:book.Book>
+out: TestEvents - <Chapter[1] - Parent: Book>
+out: TestEvents - should have received paragraph events on Chapter and Chapter event on Book
+out: TestEvents - should receive Chapter event and get 4 strings from the event
+out: TestEvents - <Lnr:Book Evt:/Book/Chapter.24 Src:book.Book>
+out: TestEvents - <Chapter[2] - Parent: Book>
+out: TestEvents - From event listener: 1. this is a paragraph
+out: TestEvents - From event listener: 2. this is a paragraph
+out: TestEvents - From event listener: 3. this is a paragraph
+out: TestEvents - From event listener: 4. this is a paragraph
+out: TestEvents - should receive Chapter event and get 3 strings from the event (1, 4, 3)
+out: TestEvents - <Lnr:Book Evt:/Book/Chapter.24/Paragraph.21i1 Src:book.Chapter>
+out: TestEvents - <Paragraph[1] - Parent: Chapter>
+out: TestEvents - From event listener: 1. this is a paragraph
+out: TestEvents - From event listener: 4. this is a paragraph
+out: TestEvents - From event listener: 3. this is a paragraph
+out: TestEvents - <Lnr:Book Evt:/Book/Chapter.24/Paragraph.-1 Src:book.Chapter>
+out: TestEvents - <Paragraph[-1] - Parent: Chapter>
+out: TestEvents - From event listener: 1. this is a paragraph
+out: TestEvents - From event listener: 4. this is a paragraph
+out: TestEvents - From event listener: 3. this is a paragraph
+Finished running TestEvents: 0

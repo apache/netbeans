@@ -1,0 +1,55 @@
+body#body{
+    font-family:  sans-serif;
+    font-weight: 100;
+}
+
+input[type=text]{
+    border-radius: 0;
+    border-width: 1px;
+    border-color: #b2b2b2;
+    border-top-color: #b2b2b2;
+    border-style: solid;
+}
+
+input[type=text]:focus{
+    outline-style: none;
+    border-color: #78A7D8;
+    box-shadow: 0 0 4px 0px #97C5F5;
+}
+
+input[type=checkbox],
+input[type=radio]
+{
+    -webkit-appearance: none;
+}
+
+input[type=checkbox]{
+    background: url('cb-mac-u.png') no-repeat;
+    padding: 7.5px;
+    background-size: 100%
+}
+
+input[type=checkbox]:checked {
+    background: url('cb-mac-s.png') no-repeat;
+    background-size: 100%
+}
+
+input[type=radio]{
+    background: url('radio-mac-u.png') no-repeat;
+    padding: 10px;
+    background-size: 100%
+}
+
+input[type=radio]:checked {
+    background: url('radio-mac-s.png') no-repeat;
+    background-size: 100%
+}
+
+button{
+    background: #ffffff;
+    border-radius: 4px;
+    border-style: solid;
+    outline-style: none;
+    border-color: #D7D7D7;
+    border-width: 1px;
+}

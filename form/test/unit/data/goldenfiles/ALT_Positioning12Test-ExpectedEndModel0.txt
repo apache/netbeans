@@ -1,0 +1,39 @@
+<LayoutModel>
+  <Root id="Form">
+    <DimensionLayout dim="horizontal">
+      <Group type="parallel" groupAlignment="leading" attributes="512">
+          <Group type="sequential" alignment="leading" attributes="512">
+              <EmptySpace min="$pref" pref="70" max="$pref" attributes="0"/>
+              <Component id="jScrollPane1" min="$pref" max="$pref" attributes="0"/>
+              <Group type="parallel" groupAlignment="leading" attributes="512">
+                  <Group type="sequential" attributes="512">
+                      <EmptySpace type="unrelated" max="$pref" attributes="0"/>
+                      <Component id="jLabel1" min="$pref" max="$pref" attributes="0"/>
+                  </Group>
+                  <Group type="sequential" alignment="leading" attributes="512">
+                      <EmptySpace min="$pref" pref="93" max="$pref" attributes="0"/>
+                      <Component id="jButton1" min="$pref" max="$pref" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace pref="129" max="Short.MAX_VALUE" attributes="4"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="vertical">
+      <Group type="parallel" groupAlignment="leading" attributes="512">
+          <Group type="sequential" alignment="leading" attributes="512">
+              <EmptySpace min="$pref" pref="49" max="$pref" attributes="0"/>
+              <Group type="parallel" groupAlignment="leading" attributes="512">
+                  <Group type="sequential" attributes="512">
+                      <Component id="jLabel1" min="$pref" max="$pref" attributes="0"/>
+                      <EmptySpace min="$pref" pref="44" max="$pref" attributes="0"/>
+                      <Component id="jButton1" min="$pref" max="$pref" attributes="0"/>
+                  </Group>
+                  <Component id="jScrollPane1" min="$pref" max="$pref" attributes="0"/>
+              </Group>
+              <EmptySpace pref="121" max="Short.MAX_VALUE" attributes="4"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Root>
+</LayoutModel>

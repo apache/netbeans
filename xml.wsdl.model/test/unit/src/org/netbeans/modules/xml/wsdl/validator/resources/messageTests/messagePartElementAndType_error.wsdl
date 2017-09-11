@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="messagePartElementAndType" 
+    targetNamespace="http://j2ee.netbeans.org/wsdl/messagePartElementAndType"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    xmlns:tns="http://j2ee.netbeans.org/wsdl/messagePartElementAndType" 
+    xmlns:plink="http://schemas.xmlsoap.org/ws/2004/03/partner-link/" xmlns:ns="http://xml.netbeans.org/schema/newXMLSchema">
+    <types>
+        <xsd:schema elementFormDefault="qualified" targetNamespace="http://j2ee.netbeans.org/wsdl/messagePartElementAndType" >
+ 
+            <xsd:element name="String" type="xsd:string"></xsd:element>
+        </xsd:schema>
+    </types>
+        
+        <message name="goodBasicWSDLOperationRequest">
+        <part name="part1" type="xsd:string" element="tns:String"/>
+    </message>
+    
+</definitions>

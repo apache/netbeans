@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : Wellformed.xml
+    Created on : July 9, 2002, 6:17 PM
+    Author     : Peyr Kuzel
+    Description:
+        Must pass check and fail validation.
+-->
+
+<wellformed/>

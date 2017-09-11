@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root       var1="not indented"
+var2="aligned with var1">
+    <child
+                var3="indented after child tag"
+var4="aligned with var3">
+    </child>
+    <child var5="nothing"
+                ><!-- indented below opening child > sign --></child>
+    <child xml:space="preserve">
+        <indent
+attr="indent, this is not content"
+    ><!-- THis will be also indented --></indent>
+        </child>
+</root>

@@ -1,0 +1,29 @@
+# This file contains thread names which are allowed to be running after startup.
+# Each line consists of a thread name
+
+
+# Thread that executes the test itself:
+main
+
+# Jaroslav Tulach's own thread, added to whitelist 081201
+Flushing caches
+
+# Added to whitelist 081201
+Signal Dispatcher
+CLI Requests Server
+Active Reference Queue Daemon
+
+# Added to whitelist 081215
+Reference Handler
+AWT-EventQueue-1
+Java2D Disposer
+AWT-Shutdown
+Timer-0
+TimerQueue
+Attach Listener
+
+# Added to whitelist 081222
+Thread-4
+
+# Added to whitelist 090701 - Mac Specific
+AWT-AppKit

@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2007, Sun Microsystems, Inc. All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+  * Redistributions of source code must retain the above copyright notice,
+    this list of conditions and the following disclaimer.
+
+  * Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+
+  * Neither the name of Sun Microsystems, Inc. nor the names of its contributors
+    may be used to endorse or promote products derived from this software without
+    specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+  THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<process name="TravelReservationService" 
+         targetNamespace="tres" 
+         xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" 
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+         xmlns:bpws="http://docs.oasis-open.org/wsbpel/2.0/process/executable" 
+         xmlns:tns="tres" xmlns:tres="http://www.sun.com/javaone/05/TravelReservationService" 
+         xmlns:ares="http://www.sun.com/javaone/05/AirlineReservationService" 
+         xmlns:vres="http://www.sun.com/javaone/05/VehicleReservationService" 
+         xmlns:hres="http://www.sun.com/javaone/05/HotelReservationService" 
+         xmlns:ota="http://www.opentravel.org/OTA/2003/05">
+    
+    <documentation>
+        The Travel Reservation Service is an example of real-life
+        service for travel organization. An .xsd schema for the sample
+        was taken from an existing  travel agency. The process works as
+        follows. It gets an itinerary from the client, examines it, and
+        processes the itinerary to completion. By the end of the process
+        the client  has an airline, a vehicle and a hotel reserved.
+    </documentation>
+
+    <import namespace="http://www.opentravel.org/OTA/2003/05"
+            location="OTA_TravelItinerary.xsd" 
+            importType="http://www.w3.org/2001/XMLSchema"/>
+
+    <import namespace="http://www.sun.com/javaone/05/TravelReservationService" 
+            location="TravelReservationService.wsdl" 
+            importType="http://schemas.xmlsoap.org/wsdl/"/>
+    
+    <import namespace="http://www.sun.com/javaone/05/AirlineReservationService" 
+            location="AirlineReservationService.wsdl" 
+            importType="http://schemas.xmlsoap.org/wsdl/"/>
+    
+    <import namespace="http://www.sun.com/javaone/05/VehicleReservationService" 
+            location="VehicleReservationService.wsdl" 
+            importType="http://schemas.xmlsoap.org/wsdl/"/>
+    
+    <import namespace="http://www.sun.com/javaone/05/HotelReservationService" 
+            location="HotelReservationService.wsdl" 
+            importType="http://schemas.xmlsoap.org/wsdl/"/>
+    
+    <partnerLinks>
+        <partnerLink
+            name="Travel" 
+            partnerLinkType="tres:TravelReservationPartnerLinkType" 
+            myRole="TravelReservationServiceRole">
+            <documentation>
+                The partnerlink represents a client who sends an itinerarary
+                to the process and then gets it back after procession.
+            </documentation>
+        </partnerLink>
+
+        <partnerLink
+            name="Airline" 
+            partnerLinkType="ares:AirlineReservationPartnerLinkType" 
+            partnerRole="AirlineReservationServiceRole" 
+            myRole="AirlineReservationCallbackServiceRole">
+            <documentation>
+                The partner link defines interaction with airline reservation
+                partner service. This partner link has three operations: to
+                receive a request for reservation from the process, to receive
+                a message about cancellation of the request in case time-out
+                occurs, and to send a message back to the process if the
+                reservation is successful.
+            </documentation>
+        </partnerLink>
+        
+        <partnerLink
+            name="Vehicle" 
+            partnerLinkType="vres:VehicleReservationPartnerLinkType" 
+            partnerRole="VehicleReservationServiceRole" 
+            myRole="VehicleReservationCallbackServiceRole">
+            <documentation>
+                The partner link defines interaction with vehicle reservation
+                partner service. This partner link has three operations: to
+                receive a request for reservation from the process, to receive
+                a message about cancellation of the request in case time-out
+                occurs, and to send a message back to the process if the
+                reservation is successful.
+            </documentation>
+        </partnerLink>
+
+        <partnerLink
+            name="Hotel" 
+            partnerLinkType="hres:HotelReservationPartnerLinkType" 
+            partnerRole="HotelReservationServiceRole" 
+            myRole="HotelReservationCallbackServiceRole">
+            <documentation>
+                The partner link defines interaction with hotel reservation
+                partner service. This partnerlink has three operations: to
+                receive a request for reservation from the process, to receive
+                a message about cancellation of the request in case time-out
+                occurs, and to send a message back to the process if the
+                reservation is successful.
+            </documentation>
+        </partnerLink>
+    </partnerLinks>
+    
+    <variables>
+        <variable name="CancelVehicleOut" messageType="vres:CancelVehicleOut"/>
+        <variable name="CancelVehicleIn" messageType="vres:CancelVehicleIn"/>
+        <variable name="CancelAirlineOut" messageType="ares:CancelAirlineOut"/>
+        <variable name="CancelAirlineIn" messageType="ares:CancelAirlineIn"/>
+        <variable name="ItineraryIn" messageType="tres:ItineraryIn"/>
+        <variable name="ItineraryOut" messageType="tres:ItineraryOut"/>
+        <variable name="ItineraryFault" messageType="tres:ItineraryFault"/>
+        <variable name="ReserveAirlineIn" messageType="ares:ReserveAirlineIn"/>
+        <variable name="AirlineReservedIn" messageType="ares:AirlineReservedIn"/>
+        <variable name="ReserveVehicleIn" messageType="vres:ReserveVehicleIn"/>
+        <variable name="VehicleReservedIn" messageType="vres:VehicleReservedIn"/>
+        <variable name="ReserveHotelIn" messageType="hres:ReserveHotelIn"/>
+        <variable name="CancelHotelIn" messageType="hres:CancelHotelIn"/>
+        <variable name="CancelHotelOut" messageType="hres:CancelHotelOut"/>
+        <variable name="HotelReservedIn" messageType="hres:HotelReservedIn"/>
+    </variables>
+
+    <correlationSets>
+        <documentation>
+            BPEL runtime uses correlation sets to route messages to
+            the right process instance. Correlation set is made up
+            of one or more property values. Properties in turn are
+            defined in a WSDL file and get their value through property
+            aliases (also defined in WSDL). Property aliases are the
+            rules that tell the BPEL runtime how to map data from a
+            message into a property value.
+        </documentation>
+        <correlationSet name="ItineraryCorrelator" properties="tres:ItineraryRefId"/>
+    </correlationSets>
+
+    <sequence name="Main">
+        <receive
+            name="ReceiveItinerary" 
+            partnerLink="Travel" 
+            portType="tres:TravelReservationPortType" 
+            operation="buildItinerary" 
+            createInstance="yes" 
+            variable="ItineraryIn">
+            <documentation>The process waits for the incoming message to arrive.</documentation>
+            <correlations>
+                <documentation>
+                    Correlation set is initiated with the data received in this
+                    activity. The defined correlation set is associated with
+                    several activities of the process.
+                </documentation>
+                <correlation set="ItineraryCorrelator" initiate="yes"/>
+            </correlations>
+        </receive>
+
+        <assign name="CopyItineraryIn">
+            <documentation>
+                The Assign activity copies input data to four variables: output
+                variable and three input variables that will be processed for
+                airline, vehicle and hotel reservation.
+            </documentation>
+            <copy>
+                <from variable="ItineraryIn" part="itinerary"/>
+                <to variable="ItineraryOut" part="itinerary"/>
+            </copy>
+            <copy>
+                <from variable="ItineraryIn" part="itinerary"/>
+                <to variable="ReserveAirlineIn" part="itinerary"/>
+            </copy>
+            <copy>
+                <from variable="ItineraryIn" part="itinerary"/>
+                <to variable="ReserveVehicleIn" part="itinerary"/>
+            </copy>
+            <copy>
+                <from variable="ItineraryIn" part="itinerary"/>
+                <to variable="ReserveHotelIn" part="itinerary"/>
+            </copy>
+        </assign>
+        <if name="HasAirline">
+            <documentation>
+                The If activity examines if the client has an airline reserved
+                or not. If the airline is not reserved, the process will
+                communicate with an appropriate partner and reserve it.
+            </documentation>
+            <condition>
+                not($ItineraryIn.itinerary/ota:ItineraryInfo/ota:ReservationItems/ota:Item/ota:Air)
+            </condition>
+            <sequence>
+                <documentation>
+                    Sequence of actions that will be performed in case specified
+                    condition is met (if a client has no airline reservation).
+                </documentation>
+                <invoke
+                    name="ReserveAirline" 
+                    partnerLink="Airline" 
+                    portType="ares:AirlineReservationPortType" 
+                    operation="reserveAirline" 
+                    inputVariable="ReserveAirlineIn">
+                    <documentation>The activity calls a partner service for airline reservation.</documentation>
+                    <correlations>
+                        <correlation set="ItineraryCorrelator">
+                            <documentation>
+                                Correlation for the  Invoke activity is used to
+                                verify that outbound message contains data that
+                                is consistent with the data found within specified
+                                correlation set instances.
+                            </documentation>
+                        </correlation>
+                    </correlations>
+                </invoke>
+                <pick name="Pick1">
+                    <documentation>
+                        The process waits for the message to arrive
+                        or for a time-out to occur.
+                    </documentation>
+                    <onMessage partnerLink="Airline" 
+                               operation="airlineReserved" 
+                               portType="ares:AirlineReservationCallbackPortType" 
+                               variable="AirlineReservedIn">
+                        <documentation>
+                            If a message from airline reservation service arrives
+                            it is received and data about reservation are copied
+                            to the output variable.
+                        </documentation>
+                        <correlations>
+                            <correlation set="ItineraryCorrelator" initiate="no">
+                                <documentation>
+                                    The activity uses a correlation set that has been
+                                    initiated before. The correlation ensures that the
+                                    message will arrive to the right process instance.
+                                </documentation>
+                            </correlation>
+                        </correlations>
+                        <assign name="CopyAirlineReservation">
+                            <copy>
+                                <from variable="AirlineReservedIn" part="itinerary"/>
+                                <to variable="ItineraryOut" part="itinerary"/>
+                            </copy>
+                            <copy>
+                                <from variable="AirlineReservedIn" part="itinerary"/>
+                                <to variable="ReserveVehicleIn" part="itinerary"/>
+                            </copy>
+                        </assign>
+                    </onMessage>
+                    <onAlarm>
+                        <documentation>
+                            In case the process doesn't get a response from the
+                            partner service in 20 seconds the request for the
+                            reservation is cancelled.
+                        </documentation>
+                        <for>'P0Y0M0DT0H0M20S'</for>
+                        <sequence name="AirlineCancelSequence">
+                            <assign name="CopyAirlineCancellation">
+                                <copy>
+                                    <from>$ReserveAirlineIn.itinerary/ota:ItineraryRef</from>
+                                    <to variable="CancelAirlineIn" part="itinerary"/>
+                                </copy>
+                            </assign>
+                            <invoke name="CancelAirline" 
+                                    partnerLink="Airline" 
+                                    operation="cancelAirline" 
+                                    portType="ares:AirlineReservationPortType" 
+                                    inputVariable="CancelAirlineIn" 
+                                    outputVariable="CancelAirlineOut"/>
+                        </sequence>
+                    </onAlarm>
+                </pick>
+            </sequence>
+        </if>
+        <if name="HasVehicle">
+            <documentation>
+                This If activity allows to reserve a vehicle in case
+                the client hasn't one reserved. Vehicle reservation
+                works quite similar to the airline reservation.
+            </documentation>
+            <condition>
+                not($ItineraryIn.itinerary/ota:ItineraryInfo/ota:ReservationItems/ota:Item/ota:Vehicle)
+            </condition>
+            <sequence>
+                <invoke name="ReserveVehicle" 
+                        partnerLink="Vehicle" 
+                        portType="vres:VehicleReservationPortType" 
+                        operation="reserveVehicle" 
+                        inputVariable="ReserveVehicleIn">
+                    <correlations>
+                        <correlation set="ItineraryCorrelator"/>
+                    </correlations>
+                </invoke>
+                <pick name="Pick2">
+                    <onMessage partnerLink="Vehicle" 
+                               operation="vehicleReserved" 
+                               portType="vres:VehicleReservationCallbackPortType" 
+                               variable="VehicleReservedIn">
+                        <correlations>
+                            <correlation set="ItineraryCorrelator" initiate="no"/>
+                        </correlations>
+                        <assign name="CopyVehicleReservation">
+                            <copy>
+                                <from variable="VehicleReservedIn" part="itinerary"/>
+                                <to variable="ItineraryOut" part="itinerary"/>
+                            </copy>
+                            <copy>
+                                <from variable="VehicleReservedIn" part="itinerary"/>
+                                <to variable="ReserveHotelIn" part="itinerary"/>
+                            </copy>
+                        </assign>
+                    </onMessage>
+                    <onAlarm>
+                        <for>'P0Y0M0DT0H0M20S'</for>
+                        <sequence name="CancelVehicleSequence">
+                            <assign name="CopyVehicleCancellation">
+                                <copy>
+                                    <from>$ReserveVehicleIn.itinerary/ota:ItineraryRef</from>
+                                    <to variable="CancelVehicleIn" part="itinerary"/>
+                                </copy>
+                            </assign>
+                            <invoke name="CancelVehicle" 
+                                    partnerLink="Vehicle" 
+                                    operation="cancelVehicle" 
+                                    portType="vres:VehicleReservationPortType" 
+                                    inputVariable="CancelVehicleIn" 
+                                    outputVariable="CancelVehicleOut"/>
+                        </sequence>
+                    </onAlarm>
+                </pick>
+            </sequence>
+        </if>
+        <if name="HasHotel">
+            <documentation>
+                This If activity allows to reserve a hotel in case
+                the client hasn't one reserved. Hotel reservation works
+                quite similar to the airline and vehicle reservation.
+            </documentation>
+            <condition>
+                not($ItineraryIn.itinerary/ota:ItineraryInfo/ota:ReservationItems/ota:Item/ota:Hotel)
+            </condition>
+            <sequence>
+                <invoke name="ReserveHotel" 
+                        partnerLink="Hotel" 
+                        portType="hres:HotelReservationPortType" 
+                        operation="reserveHotel" 
+                        inputVariable="ReserveHotelIn">
+                    <correlations>
+                        <correlation set="ItineraryCorrelator"/>
+                    </correlations>
+                </invoke>
+                <pick name="Timeout" createInstance="no">
+                    <onMessage partnerLink="Hotel" 
+                               portType="hres:HotelReservationCallbackPortType" 
+                               operation="hotelReserved" 
+                               variable="HotelReservedIn">
+                        <correlations>
+                            <correlation set="ItineraryCorrelator"/>
+                        </correlations>
+                        <sequence name="HotelReserved">
+                            <assign name="CopyHotelReservation">
+                                <copy>
+                                    <from variable="HotelReservedIn" part="itinerary"/>
+                                    <to variable="ItineraryOut" part="itinerary"/>
+                                </copy>
+                            </assign>
+                        </sequence>
+                    </onMessage>
+                    <onAlarm>
+                        <for>'P0Y0M0DT0H0M20S'</for>
+                        <sequence name="Timer">
+                            <assign name="CopyHotelCancellation">
+                                <copy>
+                                    <from>$ReserveHotelIn.itinerary/ota:ItineraryRef</from>
+                                    <to variable="CancelHotelIn" part="itinerary"/>
+                                </copy>
+                            </assign>
+                            <invoke name="CancelHotel" 
+                                    partnerLink="Hotel" 
+                                    portType="hres:HotelReservationPortType" 
+                                    operation="cancelHotel" 
+                                    inputVariable="CancelHotelIn" 
+                                    outputVariable="CancelHotelOut"/>
+                        </sequence>
+                    </onAlarm>
+                </pick>
+            </sequence>
+        </if>
+        <reply
+            name="ReturnItinerary" 
+            partnerLink="Travel" 
+            portType="tres:TravelReservationPortType" 
+            operation="buildItinerary" 
+            variable="ItineraryOut">
+            <documentation>The business process returns a message to the client.</documentation>
+        </reply>
+    </sequence>
+</process>

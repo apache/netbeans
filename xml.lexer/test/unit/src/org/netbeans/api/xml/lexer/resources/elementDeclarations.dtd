@@ -1,0 +1,11 @@
+<!ELEMENT __ROOT__ ANY>
+<!ATTLIST __ROOT__ version CDATA #REQUIRED>
+<!WHATEVER name version CDATA #IMPLIED>
+<!ELEMENT whatever #PCDATA>
+<!ELEMENT >
+<!ELEMENT ?>
+<!ELEMENT name>
+<!ELEMENT name ?>
+<!ELEMENT some &entRef;>
+<!ELEMENT some &#111;>
+<!ELEMENT some &#xaa;>

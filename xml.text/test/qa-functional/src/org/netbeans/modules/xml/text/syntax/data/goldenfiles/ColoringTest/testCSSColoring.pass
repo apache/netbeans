@@ -1,0 +1,518 @@
+comment: /*
+comment:  File name:  CSSEdit 
+plain: 
+
+comment: `1234567890-=\qwertyuiop[]asdfghjkl;'zxcvbnm,./
+plain: 
+
+comment: ~!@#$%^*()_+|QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM?&<>
+plain: 
+
+comment: */
+plain: 
+
+selector: root 
+plain: {
+property: azimuth:
+plain:  
+plain: x,
+plain:  
+plain: y;
+plain:  
+property: background:
+plain:  
+plain: 70%;
+plain:  
+property: background-attachment:
+plain:  
+plain: #0123456789ABCDEFabcdef;
+plain:  
+property: background-color:
+plain:  
+plain: 1.5em;
+plain:  
+plain:  
+property: background-image:
+plain:  
+plain: x;
+plain: 
+
+property: background-position:
+plain:  
+plain: "Myriad
+plain:  
+plain: Web",
+plain:  
+plain: x;
+plain:  
+property: background-position:
+plain:  
+plain: x;
+plain:  
+property: border:
+plain:  
+plain: x;
+plain:  
+property: border-collapse:
+plain:  
+plain: x;
+plain:  
+property: border-color:
+plain:  
+plain: x;
+plain: 
+
+property: border-spacing:
+plain:  
+plain: x;
+plain:  
+property: border-style:
+plain:  
+plain: x;
+plain:  
+property: border-top:
+plain:  
+plain: x;
+plain:  
+property: border-right:
+plain:  
+plain: x;
+plain:  
+property: border-bottom:
+plain:  
+plain: x;
+plain:  
+property: border-left:
+plain:  
+plain: x;
+plain: 
+
+property: border-top-color:
+plain:  
+plain: x;
+plain:  
+property: border-right-color:
+plain:  
+plain: x;
+plain:  
+property: border-bottom-color:
+plain:  
+plain: x;
+plain:  
+property: border-left-color:
+plain:  
+plain: x;
+plain:  
+property: border-top-style:
+plain:  
+plain: x;
+plain: 
+
+property: border-right-style:
+plain:  
+plain: x;
+plain:  
+property: border-bottom-style:
+plain:  
+plain: x;
+plain:  
+property: border-left-style:
+plain:  
+plain: x;
+plain:  
+property: border-width:
+plain:  
+plain: x;
+plain:  
+property: bottom:
+plain:  
+plain: x;
+plain:  
+plain: 
+
+property: caption-side:
+plain:  
+plain: x;
+plain:  
+property: clear:
+plain:  
+plain: x;
+plain:  
+property: clip:
+plain:  
+plain: x;
+plain:  
+property: color:
+plain:  
+plain: x;
+plain:  
+property: content:
+plain:  
+plain: x;
+plain:  
+property: counter-increment:
+plain:  
+plain: x;
+plain:  
+property: counter-reset:
+plain:  
+plain: x;
+plain:  
+property: cue:
+plain:  
+plain: x;
+plain: 
+
+property: cue-after:
+plain:  
+plain: x;
+plain:  
+property: cue-before:
+plain:  
+plain: x;
+plain:  
+property: cursor:
+plain:  
+plain: x;
+plain:  
+property: direction:
+plain:  
+plain: x;
+plain:  
+property: display:
+plain:  
+plain: x;
+plain:  
+property: elevation:
+plain:  
+plain: x;
+plain:  
+property: empty-cells:
+plain:  
+plain: x;
+plain:  
+property: float:
+plain:  
+plain: x;
+plain: 
+
+property: font:
+plain:  
+plain: x;
+plain:  
+property: font-family:
+plain:  
+plain: x;
+plain:  
+property: font-size:
+plain:  
+plain: x;
+plain:  
+property: font-size-adjust:
+plain:  
+plain: x;
+plain:  
+property: font-stretch:
+plain:  
+plain: x;
+plain:  
+property: font-style:
+plain:  
+plain: x;
+plain:  
+property: font-variant:
+plain:  
+plain: x;
+plain: 
+
+property: font-weight:
+plain:  
+plain: x;
+plain:  
+property: height:
+plain:  
+plain: x;
+plain:  
+property: left:
+plain:  
+plain: x;
+plain:  
+property: letter-spacing:
+plain:  
+plain: x;
+plain:  
+property: line-height:
+plain:  
+plain: x;
+plain:  
+property: list-style:
+plain:  
+plain: x;
+plain:  
+property: list-style-image:
+plain:  
+plain: x;
+plain: 
+
+property: list-style-position:
+plain:  
+plain: x;
+plain:  
+property: list-style-type:
+plain:  
+plain: x;
+plain:  
+property: margin:
+plain:  
+plain: x;
+plain:  
+property: margin-top:
+plain:  
+plain: x;
+plain:  
+property: margin-right:
+plain:  
+plain: x;
+plain:  
+property: margin-bottom:
+plain:  
+plain: x;
+plain: 
+
+property: margin-left:
+plain:  
+plain: x;
+plain:  
+property: marker-offset:
+plain:  
+plain: x;
+plain:  
+property: marks:
+plain:  
+plain: x;
+plain:  
+property: max-height:
+plain:  
+plain: x;
+plain:  
+property: max-width:
+plain:  
+plain: x;
+plain:  
+property: min-height:
+plain:  
+plain: x;
+plain:  
+property: min-width:
+plain:  
+plain: x;
+plain: 
+
+property: orphan:
+plain:  
+plain: x;
+plain:  
+property: outline:
+plain:  
+plain: x;
+plain:  
+property: outline-color:
+plain:  
+plain: x;
+plain:  
+property: outline-style:
+plain:  
+plain: x;
+plain:  
+property: outline-width:
+plain:  
+plain: x;
+plain:  
+property: overflow:
+plain:  
+plain: x;
+plain:  
+property: padding:
+plain:  
+plain: x;
+plain: 
+
+property: padding-top:
+plain:  
+plain: x;
+plain:  
+property: padding-right:
+plain:  
+plain: x;
+plain:  
+property: padding-bottom:
+plain:  
+plain: x;
+plain:  
+property: padding-left:
+plain:  
+plain: x;
+plain:  
+property: page:
+plain:  
+plain: x;
+plain:  
+property: page-break-after:
+plain:  
+plain: x;
+plain: 
+
+property: page-break-before:
+plain:  
+plain: x;
+plain:  
+property: page-break-inside:
+plain:  
+plain: x;
+plain:  
+property: pause:
+plain:  
+plain: x;
+plain:  
+property: pause-after:
+plain:  
+plain: x;
+plain:  
+property: pause-before:
+plain:  
+plain: x;
+plain:  
+property: pitch:
+plain:  
+plain: x;
+plain: 
+
+property: pitch-range:
+plain:  
+plain: x;
+plain:  
+property: play-during:
+plain:  
+plain: x;
+plain:  
+property: position:
+plain:  
+plain: x;
+plain:  
+property: quotes:
+plain:  
+plain: x;
+plain:  
+property: richness:
+plain:  
+plain: x;
+plain:  
+property: right:
+plain:  
+plain: x;
+plain:  
+property: size:
+plain:  
+plain: x;
+plain:  
+property: speak:
+plain:  
+plain: x;
+plain: 
+
+property: speak-header:
+plain:  
+plain: x;
+plain:  
+property: speak-numeral:
+plain:  
+plain: x;
+plain:  
+property: speak-punctuation:
+plain:  
+plain: x;
+plain:  
+property: speech-rate:
+plain:  
+plain: x;
+plain:  
+property: stress:
+plain:  
+plain: x;
+plain:  
+property: table-layout:
+plain:  
+plain: x;
+plain: 
+
+property: text-align:
+plain:  
+plain: x;
+plain:  
+property: text-decoration:
+plain:  
+plain: x;
+plain:  
+property: text-indent:
+plain:  
+plain: x;
+plain:  
+property: text-shadow:
+plain:  
+plain: x;
+plain:  
+property: text-transform:
+plain:  
+plain: x;
+plain:  
+property: top:
+plain:  
+plain: x;
+plain: 
+
+property: unicode-bidi:
+plain:  
+plain: x;
+plain:  
+property: vertical-align:
+plain:  
+plain: x;
+plain:  
+property: visibility:
+plain:  
+plain: x;
+plain:  
+property: voice-family:
+plain:  
+plain: x;
+plain:  
+property: volume:
+plain:  
+plain: x;
+plain:  
+property: white-space:
+plain:  
+plain: x;
+plain: 
+
+property: widows:
+plain:  
+plain: x;
+plain:  
+property: width:
+plain:  
+plain: x;
+plain:  
+property: word-spacing:
+plain:  
+plain: x;
+plain: 
+
+property: z-index:
+plain:  
+plain: 1234567890\qwertyuiopasdfghjklzxcvbnm,QWERTYUIOPASDFGHJKLZXCVBNM;
+plain: 
+
+plain: }
+plain: 
+

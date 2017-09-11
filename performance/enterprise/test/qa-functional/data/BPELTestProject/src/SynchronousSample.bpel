@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process 
+    name="SynchronousSample" 
+    targetNamespace="http://enterprise.netbeans.org/bpel/SynchronousSample/SynchronousSample_1"
+    xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:bpws="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+    xmlns:wsdlNS="http://enterprise.netbeans.org/bpel/SynchronousSample/SynchronousSample_1" xmlns:ns1="http://localhost/SynchronousSample/SynchronousSample">
+    <import location="SynchronousSample.xsd" importType="http://www.w3.org/2001/XMLSchema" namespace="http://xml.netbeans.org/schema/SynchronousSample"/>
+    <import namespace="http://localhost/SynchronousSample/SynchronousSample" location="SynchronousSample.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+
+    <partnerLinks>
+        <partnerLink name="SynchronousSample" partnerLinkType="ns1:partnerlinktype1" myRole="partnerlinktyperole1"/>
+    </partnerLinks>
+
+    <variables>
+        <variable name="outputVar" messageType="ns1:responseMessage"/>
+        <variable name="inputVar" messageType="ns1:requestMessage"/>
+    </variables>
+
+    <sequence>
+        <receive name="start" partnerLink="SynchronousSample" operation="operation1" portType="ns1:portType1" variable="inputVar" createInstance="yes"/>
+        <assign name="Assign1">
+            <copy>
+            <from>$inputVar.inputType/paramA</from><to>$outputVar.resultType/paramA</to>
+            </copy>
+        </assign>
+        <reply name="end" partnerLink="SynchronousSample" operation="operation1" portType="ns1:portType1" variable="outputVar"/>
+    </sequence>
+</process>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- bug#131223 -->
+
+<root>
+    <a>
+        <b>hello world</b>
+    </a>
+</root>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+<project name="PerformanceTestData" default="default" basedir=".">
+    <description>Builds, tests, and runs the project PerformanceTestData.</description>
+    <import file="nbproject/build-impl.xml"/>
+    <import file="nbproject/profiler-build-impl.xml"/>
+    <import file="nbproject/profiler-build-impl.xml"/>
+
+    <import file="nbproject/profiler-build-impl.xml"/>
+    <target name="pre-init">
+        <echo message="called before initialization of project properties"/>
+    </target>
+         
+    <target name="post-init">
+        <echo message="called after initialization of project properties"/>
+    </target>
+        
+    <target name="pre-compile">
+        <echo message="called before javac compilation"/>
+    </target>
+        
+    <target name="post-compile">
+        <echo message="called after javac compilation"/>
+    </target>
+        
+    <target name="pre-compile-single">
+        <echo message="called before javac compilation of single file"/>
+    </target>
+        
+    <target name="post-compile-single">
+        <echo message="called after javac compilation of single file"/>
+    </target>
+        
+    <target name="pre-compile-test">
+        <echo message="called before javac compilation of JUnit tests"/>
+    </target>
+        
+    <target name="post-compile-test">
+        <echo message="called after javac compilation of JUnit tests"/>
+    </target>
+        
+    <target name="pre-compile-test-single">
+        <echo message="called before javac compilation of single JUnit test"/>
+    </target>
+        
+    <target name="post-compile-test-single">
+        <echo message="called after javac compilation of single JUunit test"/>
+    </target>
+        
+    <target name="pre-jar">
+        <echo message="called before jar building "/>
+    </target>
+        
+    <target name="post-jar">
+        <echo message="called after jar building "/>
+    </target>
+        
+    <target name="post-clean">
+        <echo message="called after cleaning build products "/>
+    </target>
+        
+
+    <target name="init-macrodef-javac">
+        <echo message="defines macro for javac compilation"/>
+    </target>
+        
+    <target name="init-macrodef-junit">
+        <echo message="defines macro for junit execution"/>
+    </target>
+        
+    <target name="init-macrodef-debug">
+        <echo message="defines macro for class debugging"/>
+    </target>
+        
+    <target name="init-macrodef-java">
+        <echo message="defines macro for class execution"/>
+    </target>
+        
+    <target name="do-jar">
+        <echo message="jar archive building"/>
+    </target>
+        
+    <target name="run">
+        <echo message="execution of project "/>
+    </target>
+        
+    <target name="javadoc-build">
+        <echo message="javadoc generation "/>
+    </target>
+        
+    <target name="test-report">
+        <echo message="JUnit report generation"/>
+    </target>
+        
+
+</project>

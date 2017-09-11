@@ -1,0 +1,4 @@
+P4 remove wrapping of the ElementDescriptor as HtmlTags, implement directly
+P3 properly resolve the conflicts in the tag names between html-mathml-svg specs,
+   so far the conflicting elements' enums are prefixed with SVG_ prefix
+

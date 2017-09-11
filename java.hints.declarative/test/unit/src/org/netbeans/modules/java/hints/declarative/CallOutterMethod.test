@@ -1,0 +1,38 @@
+%%TestCase test
+package test;
+public class Test {
+
+    class SuperClass {
+
+        public boolean superMethod() {
+            return true;
+        }
+    }
+
+    class SubClass extends SuperClass {
+
+        public boolean subMethod() {
+            return superMethod();
+        }
+
+    }
+}
+%%=>
+package test;
+public class Test {
+
+    class SuperClass {
+
+        public boolean superMethod() {
+            return true;
+        }
+    }
+
+    class SubClass extends SuperClass {
+
+        public boolean subMethod() {
+            return !c();
+        }
+
+    }
+}

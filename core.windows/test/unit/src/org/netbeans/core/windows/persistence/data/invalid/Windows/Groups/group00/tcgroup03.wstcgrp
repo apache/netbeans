@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tc-group version="2.0">
+    <module name="org.netbeans.modules.projects/1" spec="1.7" />
+    <tc-id id="tcgroup" />
+    <open-close-behavior open="true" close="false" />
+</tc-group>

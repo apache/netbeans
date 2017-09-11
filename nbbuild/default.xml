@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+
+Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+
+The contents of this file are subject to the terms of either the GNU
+General Public License Version 2 only ("GPL") or the Common
+Development and Distribution License("CDDL") (collectively, the
+"License"). You may not use this file except in compliance with the
+License. You can obtain a copy of the License at
+http://www.netbeans.org/cddl-gplv2.html
+or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+specific language governing permissions and limitations under the
+License.  When distributing the software, include this License Header
+Notice in each file and include the License file at
+nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
+particular file as subject to the "Classpath" exception as provided
+by Oracle in the GPL Version 2 section of the License file that
+accompanied this code. If applicable, add the following below the
+License Header, with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted [year] [name of copyright owner]"
+
+Contributor(s):
+
+The Original Software is NetBeans. The Initial Developer of the Original
+Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
+Microsystems, Inc. All Rights Reserved.
+
+If you wish your version of this file to be governed by only the CDDL
+or only the GPL Version 2, indicate your decision by adding
+"[Contributor] elects to include this software in this distribution
+under the [CDDL or GPL Version 2] license." If you do not indicate a
+single choice of license, a recipient has the option to distribute
+your version of this file under either the CDDL, the GPL Version 2 or
+to extend the choice of license to its licensees as provided above.
+However, if you add GPL Version 2 code and therefore, elected the GPL
+Version 2 license, then the option applies only if the new code is
+made subject to such option by the copyright holder.
+-->
+<project name="default" default="init" basedir=".">
+  <import file="default-properties.xml"/>
+  <import file="jdk.xml"/>
+
+  <defaultexcludes add="**/.ade_path/**"/>
+
+  <target name="init-tasks" unless="tasks-already-set">
+    <taskdef name="jnlpupdatemanifeststartup"
+         classname="org.netbeans.nbbuild.JNLPUpdateManifestStartup"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="jnlpupdatemanifestbranding"
+         classname="org.netbeans.nbbuild.JNLPUpdateManifestBranding"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="jhindexer"
+         classname="org.netbeans.nbbuild.JHIndexer"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="makenbm"
+         classname="org.netbeans.nbbuild.MakeNBM"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="makejnlp"
+         classname="org.netbeans.nbbuild.MakeJNLP"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="makemasterjnlp"
+         classname="org.netbeans.nbbuild.MakeMasterJNLP"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="genlist"
+         classname="org.netbeans.nbbuild.MakeListOfNBM"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="setcluster"
+         classname="org.netbeans.nbbuild.SetCluster"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="getmodulename"
+         classname="org.netbeans.nbbuild.GetModuleName"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="createmodulexml"
+         classname="org.netbeans.nbbuild.CreateModuleXML"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="locjar"
+         classname="org.netbeans.nbbuild.LocalizedJar"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="locjhindexer"
+         classname="org.netbeans.nbbuild.LocJHIndexer"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="locfiles"
+         classname="org.netbeans.nbbuild.LocFiles"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="locmakenbm"
+         classname="org.netbeans.nbbuild.LocMakeNBM"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="parseprojectxml"
+         classname="org.netbeans.nbbuild.ParseProjectXml"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="processjsannotation"
+         classname="org.netbeans.nbbuild.ProcessJsAnnotationsTask"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="jarwithmoduleattributes"
+         classname="org.netbeans.nbbuild.JarWithModuleAttributes"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="arch"
+         classname="org.netbeans.nbbuild.Arch"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="autoupdate"
+         classname="org.netbeans.nbbuild.AutoUpdate"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="fixdependencies"
+         classname="org.netbeans.nbbuild.FixDependencies"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="sortsuitemodules"
+         classname="org.netbeans.nbbuild.SortSuiteModules"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="verifyclasslinkage"
+         classname="org.netbeans.nbbuild.VerifyClassLinkage"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="checklicense"
+         classname="org.netbeans.nbbuild.CheckLicense"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="fixtestdeps"
+         classname="org.netbeans.nbbuild.FixTestDependencies"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="shorterpaths"
+         classname="org.netbeans.nbbuild.ShorterPaths"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="convertimport"
+         classname="org.netbeans.nbbuild.ConvertImport"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="hgid"
+         classname="org.netbeans.nbbuild.HgId"
+         classpath="${nbantext.jar}"/>
+    <typedef name="pathfileset" classname="org.netbeans.nbbuild.PathFileSet"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="parsemanifest" classname="org.netbeans.nbbuild.ParseManifest"
+         classpath="${nbantext.jar}"/>
+    <typedef name="islocked" classname="org.netbeans.nbbuild.IsLocked"
+         classpath="${nbantext.jar}"/>
+    <taskdef name="subant-junit" classname="org.netbeans.nbbuild.SubAntJUnitReport" classpath="${nbantext.jar}"/>
+    <taskdef name="resolvelist" classname="org.netbeans.nbbuild.ResolveList" classpath="${nbantext.jar}"/>
+    <taskdef name="checkmoduleconfigs" classname="org.netbeans.nbbuild.CheckModuleConfigs" classpath="${nbantext.jar}"/>
+    <property name="tasks-already-set" value="true"/>
+  </target>
+
+  <target name="init" depends="init-tasks,-define-cluster-path">
+    <!-- Gets the module name -->
+    <getmodulename name="module.name" root="${nb_all}"/>
+    
+    <property name="cluster.dir.fallback" value="extra" />
+    <setcluster name="cluster.dir" module="${module.name}" defaultLocation="${cluster.dir.fallback}" clusterName="module.cluster.name"/>
+
+    <property name="cluster" location="${netbeans.dest.dir}/${cluster.dir}"/> <!-- #59872 -->
+
+    <!-- Creating the output directory -->
+    <mkdir dir="${cluster}"/>
+
+    <!-- Writing the module's cluster to property file -->
+    <propertyfile file="${moduleCluster.file}">
+      <entry  key="${module.name}.dir" value="$${netbeans.dest.dir}/${cluster.dir}"/>
+    </propertyfile>
+    <property name="${module.name}.dir" value="${netbeans.dest.dir}/${cluster.dir}"/>
+  </target>
+
+  <target name="-define-cluster-path">
+    <!-- netbeans.dest.dir -> cluster.path.id translation for NB.org modules -->
+    <loadfile property="cluster.path.evaluated" srcfile="${nb_all}/nbbuild/cluster.properties">
+        <filterchain>
+            <linecontainsregexp><regexp pattern="^nb[.]cluster[.].+[.]dir="/></linecontainsregexp>
+            <replaceregex pattern="^nb[.]cluster[.].+[.]dir=" replace="=" byline="true"/>
+            <replacestring from="=" to="${path.separator}${netbeans.dest.dir}${file.separator}" byline="true"/>
+            <striplinebreaks/>
+        </filterchain>
+    </loadfile>
+    <path id="cluster.path.id" path="${cluster.path.evaluated}"/>
+    <property name="cluster.path.final" refid="cluster.path.id"/>
+  </target>
+  
+  <target name="-do-set-buildnumber" depends="init-tasks" unless="buildnumber">
+    <tstamp>
+    	<format property="buildstamp" pattern="yyyyMMdd"/>
+    </tstamp>
+    <tstamp>
+    	<format property="buildday" pattern="d MMM yyyy" locale="en" />
+    </tstamp>
+
+    <property environment="hudson"/>
+    <condition property="buildnumber" value="${hudson.JOB_NAME}-${hudson.BUILD_NUMBER}-on-${buildstamp}">
+      <and>
+        <isset property="hudson.JOB_NAME"/>
+        <isset property="hudson.BUILD_NUMBER"/>
+      </and>
+    </condition>
+    <hgid property="hg.id" file="."/>
+    <property name="buildnumber" value="${buildstamp}-${hg.id}"/>
+    <echo message="${buildnumber}" level="verbose"/>
+  </target>
+  <target name="set-buildnumber" depends="-do-set-buildnumber">
+    <!-- Overridable. Note: need not necessarily be a number at all): -->
+    <property name="buildnum" value="dev-${buildnumber}"/>
+  </target>
+
+</project>

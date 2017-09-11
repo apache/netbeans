@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.modules.parsing.api/1
+OpenIDE-Module-Implementation-Version: 8
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/parsing/impl/Bundle.properties
+OpenIDE-Module-Layer: org/netbeans/modules/parsing/impl/layer.xml
+AutoUpdate-Show-In-Client: false

@@ -1,0 +1,26 @@
+Subversion     >  Checkout...                         k
+                  Import into Repository...           m
+                  Relocate...                         e
+                  =================================
+                  Update Project with Dependencies    p
+                  =================================
+                  Show Changes                        w
+                  Diff                                D
+                  Update                              U
+                  Commit...                           o
+                  =================================
+                  Export Diff Patch...                x
+                  Apply Diff Patch...                 y
+                  =================================
+                  Copy to...                          C
+                  Switch to...                        t
+                  Merge to...                         M
+                  =================================
+                  Show Annotations                    A
+                  Search History...                   H
+                  =================================
+                  Revert Modifications...             R
+                  Resolve Conflicts...                v
+                  Ignore (Unignore)                   g
+                  =================================
+                  Svn Properies                       n

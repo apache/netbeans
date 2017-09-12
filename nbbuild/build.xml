@@ -1959,4 +1959,18 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
 
     </target>
 
+    <target name="rat">
+        <taskdef uri="antlib:org.apache.rat.anttasks" resource="org/apache/rat/anttasks/antlib.xml">
+            <classpath>
+                <pathelement location="external/apache-rat-0.12.jar"/>
+            </classpath>
+        </taskdef>
+        <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="build/rat-report.txt">
+            <fileset dir="${nb_all}">
+                <exclude name="*/build/**" />
+                <exclude name="nbbuild/netbeans/**" />
+            </fileset>
+        </rat:report>
+    </target>
+
 </project>

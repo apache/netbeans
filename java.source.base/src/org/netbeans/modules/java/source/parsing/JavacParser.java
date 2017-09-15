@@ -1058,15 +1058,20 @@ public class JavacParser extends Parser {
                 xmoduleSeen = true;
             } else if (option.equals("-parameters") || option.startsWith("-Xlint")) {     //NOI18N
                 res.add(option);
-            } else if (i+1 < options.size() && (
-                    option.equals("--add-modules") ||   //NOI18N
-                    option.equals("--limit-modules") || //NOI18N
-                    option.equals("--add-exports") ||   //NOI18N
-                    option.equals("--add-reads")  ||
-                    option.equals(OPTION_PATCH_MODULE))) {
-                res.add(option);
-                option = options.get(++i);
-                res.add(option);
+            } else if (
+                    option.startsWith("--add-modules") ||   //NOI18N
+                    option.startsWith("--limit-modules") || //NOI18N
+                    option.startsWith("--add-exports") ||   //NOI18N
+                    option.startsWith("--add-reads")  ||
+                    option.startsWith(OPTION_PATCH_MODULE)) {
+                int idx = option.indexOf('=');
+                if (idx > 0) {
+                   res.add(option);
+                } else if (i+1 < options.size()) {
+                    res.add(option);
+                    option = options.get(++i);
+                    res.add(option);
+                }
             }
         }
         return res;

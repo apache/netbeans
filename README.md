@@ -8,14 +8,19 @@ Build the full project:
 ```
 $ ant
 ```
+Build the NetBeans Platform:
+```
+$ ant -Dcluster.config=platform
+```
+
 ### Running NetBeans
 
-Run the built project:
+Run the build:
 ```
 $ ant tryme
 ```
 
-Also, look in nbbuild/netbeans for the NetBeans installation created by the build process.
+**Note:** Look in nbbuild/netbeans for the NetBeans installation created by the build process.
 
 ### Get In Touch
 

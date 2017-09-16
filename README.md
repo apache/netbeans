@@ -17,7 +17,7 @@ $ ant tryme
 
 Also, look in nbbuild/netbeans for the NetBeans installation created by the build process.
 
-###Get In Touch
+### Get In Touch
 
 [Subscribe](mailto:users-subscribe@netbeans.incubator.apache.org) or [mail](mailto:users@netbeans.incubator.apache.org) the [users@netbeans.incubator.apache.org](mailto:users@netbeans.incubator.apache.org) list - Ask questions, find answers, and also help other users.
 

@@ -43,6 +43,7 @@
  */
 package org.netbeans.core;
 
+import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.logging.Level;
@@ -50,6 +51,7 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.NetworkSettings;
@@ -61,6 +63,7 @@ import org.openide.util.NetworkSettings;
  */
 final class NbAuthenticator extends java.net.Authenticator {
 
+    private static final Logger LOGGER = Logger.getLogger(NbAuthenticator.class.getName());
     private static final long TIMEOUT = 3000;
     private static long lastTry = 0;
 
@@ -71,7 +74,19 @@ final class NbAuthenticator extends java.net.Authenticator {
 
     static void install() {
         if (Boolean.valueOf(NbBundle.getMessage(GuiRunLevel.class, "USE_Authentication"))) {
-            setDefault(new NbAuthenticator());
+            // Look for custom authenticator
+            Authenticator authenticator = Lookup.getDefault().lookup(Authenticator.class);
+            if (authenticator == null) {
+                authenticator = new NbAuthenticator();
+            }
+            if (authenticator.getClass().equals(NbAuthenticator.class)) {
+                LOGGER.log(Level.FINE, "Standard Authenticator, {0}, will be used as Authenticator.",
+                        authenticator.getClass().getName());
+            } else {
+                LOGGER.log(Level.FINE, "Custom Authenticator, {0}, was found in Global Lookup and will be used as Authenticator.",
+                        authenticator.getClass().getName());
+            }
+            setDefault(authenticator);
         }
     }
 

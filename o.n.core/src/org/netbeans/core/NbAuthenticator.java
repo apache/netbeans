@@ -54,7 +54,8 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.NetworkSettings;
 
-/** Global password protected sites Authenticator for IDE
+/** Global password protected sites/proxies Authenticator for IDE
+ *  or Platform apps.
  *
  * @author Jiri Rechtacek
  */

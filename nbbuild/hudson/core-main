@@ -23,11 +23,7 @@ api.progress.nb,\
 api.templates,\
 api.visual,\
 apisupport.ant,\
-apisupport.crudsample,\
-apisupport.feedreader,\
 apisupport.harness,\
-apisupport.osgidemo,\
-apisupport.paintapp,\
 apisupport.project,\
 apisupport.refactoring,\
 apisupport.wizards,\

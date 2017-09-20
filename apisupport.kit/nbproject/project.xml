@@ -51,19 +51,6 @@ Contributor(s):
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.apisupport.crudsample</code-name-base>
-                    <run-dependency>
-                        <specification-version>1.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.apisupport.feedreader</code-name-base>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.4</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.modules.apisupport.harness</code-name-base>
                     <run-dependency>
                         <specification-version>1.10</specification-version>
@@ -73,18 +60,6 @@ Contributor(s):
                     <code-name-base>org.netbeans.modules.apisupport.installer</code-name-base>
                     <run-dependency>
                         <specification-version>1.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.apisupport.osgidemo</code-name-base>
-                    <run-dependency>
-                        <specification-version>1.1</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.apisupport.paintapp</code-name-base>
-                    <run-dependency>
-                        <specification-version>1.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

@@ -13,6 +13,10 @@
 /nbi/engine/native/*/*/dist/
 /nb-javac/
 
+# OS generated files #
+######################
+.DS_Store
+
 #the following should only be transient, until resolved more appropriately:
 /applemenu/src/java/
 /db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/JavaCharStream.java

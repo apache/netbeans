@@ -39,11 +39,11 @@ public class TestCaseDataFactory {
     public static  String DB_SQLINSERT="dbinsert.sql";
     public static String DB_SQLSELECT="dbselect.sql";
     public static String DB_SQLUPDATE="dbupdate.sql";
-    public static  String DB_TEXT= "dbdata.txt";
+    public static  String DB_DATA= "dbdata.properties";
     public static  String DB_PROP= "dbprop.properties";
     public static String DB_SQLDEL="dbdel.sql";
     public static String DB_JARS="jar";
-    public static String[] FILES={DB_SQLCREATE,DB_SQLINSERT,DB_SQLUPDATE,DB_PROP,DB_SQLDEL,DB_SQLSELECT,DB_TEXT};
+    public static String[] FILES={DB_SQLCREATE,DB_SQLINSERT,DB_SQLUPDATE,DB_PROP,DB_SQLDEL,DB_SQLSELECT,DB_DATA};
     private List<TestCaseContext> list=new ArrayList<TestCaseContext>();
     private static  TestCaseDataFactory factory;
     

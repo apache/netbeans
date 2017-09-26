@@ -1,0 +1,7 @@
+language: java
+install: ant deps
+jdk:
+  - oraclejdk8
+script:
+  - ant build
+

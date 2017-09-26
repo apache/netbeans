@@ -160,7 +160,7 @@ public class UtilitiesTranslateTest extends NbTestCase {
 
             if (line.startsWith("#")) {
                 //comment
-                break;
+                continue;
             }
             
             int space = line.indexOf (' ');

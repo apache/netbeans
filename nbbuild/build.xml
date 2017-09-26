@@ -1955,6 +1955,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="*/external/*-license.txt" /> <!--licenses for external dependencies-->
                 <exclude name="*/external/*-notice.txt" /> <!--notices for external dependencies-->
                 <exclude name="**/*.pass" /> <!--generated test files-->
+                <exclude name="**/*.pass2" /> <!--generated test files-->
+                <exclude name="**/.list" /> <!--no degree of creativity-->
+                <exclude name="**/src/META-INF/**" /> <!--no degree of creativity-->
             </fileset>
         </rat:report>
     </target>

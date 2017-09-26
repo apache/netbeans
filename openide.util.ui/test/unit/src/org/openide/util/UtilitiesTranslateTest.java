@@ -157,6 +157,11 @@ public class UtilitiesTranslateTest extends NbTestCase {
             if (line == null) {
                 break;
             }
+
+            if (line.startsWith("#")) {
+                //comment
+                break;
+            }
             
             int space = line.indexOf (' ');
             assertTrue ("Line does not have spaces" + line, space >= 0);

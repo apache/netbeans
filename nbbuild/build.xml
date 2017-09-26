@@ -1954,6 +1954,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="*/nbproject/*.sig" /> <!--generated signatures for past versions-->
                 <exclude name="*/external/*-license.txt" /> <!--licenses for external dependencies-->
                 <exclude name="*/external/*-notice.txt" /> <!--notices for external dependencies-->
+                <exclude name="**/*.pass" /> <!--generated test files-->
             </fileset>
         </rat:report>
     </target>

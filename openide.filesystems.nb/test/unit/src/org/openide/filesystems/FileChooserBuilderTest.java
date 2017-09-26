@@ -173,7 +173,7 @@ public class FileChooserBuilderTest extends NbTestCase {
         FileChooserBuilder instance = new FileChooserBuilder("i");
         File tmp = new File(System.getProperty("java.io.tmpdir"));
         assertTrue ("Environment is insane", tmp.exists() && tmp.isDirectory());
-        File sel = new File("tmp" + System.currentTimeMillis());
+        File sel = new File(tmp, "tmp" + System.currentTimeMillis());
         if (!sel.exists()) {
             assertTrue (sel.createNewFile());
         }

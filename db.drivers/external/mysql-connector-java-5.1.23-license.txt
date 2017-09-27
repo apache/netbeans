@@ -4,7 +4,7 @@ Description: Allows Java programs to interact with a MySQL database
 License: GPL
 OSR: 7015
 Origin: Oracle (http://dev.mysql.com/downloads/connector/j/)
-Files: mysql-connector-java-5.1.23-bin.jar
+Files: mysql-connector-java-5.1.23.jar
 Source: http://dev.mysql.com/downloads/connector/j/
 Comment: Out-of-the-box support for MySQL Java database applications
 

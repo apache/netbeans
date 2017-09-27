@@ -171,7 +171,7 @@ public class FileChooserBuilderTest extends NbTestCase {
 
     public void testSetSelectionApprover() throws Exception {
         FileChooserBuilder instance = new FileChooserBuilder("i");
-        File tmp = new File(System.getProperty("java.io.tmpdir"));
+        File tmp = getWorkDir();
         assertTrue ("Environment is insane", tmp.exists() && tmp.isDirectory());
         File sel = new File(tmp, "tmp" + System.currentTimeMillis());
         if (!sel.exists()) {

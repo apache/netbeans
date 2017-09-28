@@ -4,10 +4,10 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
 ### Requirements
 
-⋅⋅* Git
-⋅⋅* Ant 1.9.9 or above
-⋅⋅* JDK 8 (to build NetBeans)
-⋅⋅* JDK 9 (to run NetBeans)
+  * Git
+  * Ant 1.9.9 or above
+  * JDK 8 (to build NetBeans)
+  * JDK 9 (to run NetBeans)
 
 **Note:** NetBeans also runs with JDK 8, although then it will not include tools for the JDK 9 Shell.
 

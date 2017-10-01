@@ -35,7 +35,6 @@ import junit.framework.TestSuite;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.db.explorer.test.api.SQLIdentifiersTestUtilities;
 import org.netbeans.modules.db.metadata.model.api.Metadata;
-import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -125,9 +124,9 @@ public class SelectCompletionQueryTest extends NbTestCase {
 
     public void testCompletion() throws Exception {
         StringBuilder sqlData = new StringBuilder();
-        List<String> modelData = new ArrayList<String>();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(SelectCompletionQueryTest.class.getResource(getName() + ".test").openStream(), "utf-8"));
-        try {
+        List<String> modelData = new ArrayList<>();
+        try (InputStream is = SelectCompletionQueryTest.class.getResourceAsStream(getName() + ".test");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"))) {
             boolean separatorRead = false;
             for (String line; (line = reader.readLine()) != null;) {
                 if (line.startsWith("#") || line.trim().length() == 0) {
@@ -143,8 +142,6 @@ public class SelectCompletionQueryTest extends NbTestCase {
                     }
                 }
             }
-        } finally {
-            reader.close();
         }
         String sql = sqlData.toString();
         Metadata metadata = TestMetadata.create(modelData);
@@ -152,18 +149,12 @@ public class SelectCompletionQueryTest extends NbTestCase {
             performTest(sql, metadata, System.out);
         } else {
             File result = new File(getWorkDir(), getName() + ".result");
-            Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(result), "utf-8"));
-            try {
+            try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(result), "utf-8"))) {
                 performTest(sql, metadata, writer);
-            } finally {
-                writer.close();
             }
             File pass = new File(getWorkDir(), getName() + ".pass");
-            InputStream input = SelectCompletionQueryTest.class.getResource(getName() + ".pass").openStream();
-            try {
-                copyStream(input, pass);
-            } finally {
-                input.close();
+            try (InputStream input = SelectCompletionQueryTest.class.getResourceAsStream(getName() + ".pass")) {
+                createReferenceFile(input, pass);
             }
             assertFile(getName(), result, pass, null);
         }
@@ -184,12 +175,19 @@ public class SelectCompletionQueryTest extends NbTestCase {
         }
     }
 
-    private static void copyStream(InputStream input, File dest) throws IOException {
-        OutputStream output = new FileOutputStream(dest);
-        try {
-            FileUtil.copy(input, output);
-        } finally {
-            output.close();
+    private static void createReferenceFile(InputStream is, File dest) throws IOException {
+        try (   InputStreamReader isr = new InputStreamReader(is, "utf-8");
+                BufferedReader reader = new BufferedReader(isr);
+                OutputStream os = new FileOutputStream(dest);
+                OutputStreamWriter osr = new OutputStreamWriter(os, "utf-8");
+                BufferedWriter writer = new BufferedWriter(osr)) {
+            for (String line; (line = reader.readLine()) != null;) {
+                if (line.startsWith("#") || line.trim().length() == 0) {
+                    continue;
+                }
+                writer.write(line);
+                writer.write("\n");
+            }
         }
     }
 

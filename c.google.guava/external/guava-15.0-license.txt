@@ -1,5 +1,5 @@
 Name: Guava
-Version: 15.0.0
+Version: 15.0
 License: Apache-2.0
 Origin: https://code.google.com/p/guava-libraries/
 Description: collections, caching, primitives support, concurrency libraries, common annotations, string processing, I/O, and so forth

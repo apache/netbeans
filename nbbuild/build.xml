@@ -1971,6 +1971,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="javafx2.project/src/org/netbeans/modules/javafx2/project/templates/**" /> <!--license would be visible when users edit the templates inside their IDE-->
                 <exclude name="utilities/test/unit/src/org/netbeans/modules/openfile/resources/recent_files/*" /> <!--test data-->
                 <exclude name="**/*.url" /> <!--no degree of creativity-->
+		<exclude name="spi.navigator/test/unit/src/org/netbeans/modules/navigator/resources/lastsel/file.lastsel_mime1" /> <!--empty file-->    
+                <exclude name="xsl/src/org/netbeans/modules/xsl/resources/templates/stylesheet.xsl" /> <!-- Template for user - very limited degree of creativity -->
+                <exclude name="xsl/test/unit/src/org/netbeans/modules/xsl/utils/data/*" /> <!--test data-->
                 <exclude name="spi.navigator/test/unit/src/org/netbeans/modules/navigator/resources/lastsel/file.lastsel_mime1" /> <!--empty file-->    
                 <exclude name="templates/src/org/netbeans/modules/templates/resources/userprop.txt" /> <!--no degree of creativity-->
                 <exclude name="api.search/test/unit/data/textFiles/utf8file.txt" /> <!--test data-->

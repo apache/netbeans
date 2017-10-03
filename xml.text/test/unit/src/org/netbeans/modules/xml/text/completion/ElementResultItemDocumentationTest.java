@@ -199,7 +199,7 @@ public class ElementResultItemDocumentationTest extends NbTestCase {
         CompletionDocumentation  file = doc.resolveLink(url.toString());
         assertNotNull(file);
         assertEquals("URL must be openable in browser", url, file.getURL());
-        assertTrue("Invalid content of the linked doc", file.getText().startsWith("This is an URL resource with <a href="));
+        assertTrue("Invalid content of the linked doc", file.getText().contains("This is an URL resource with <a href="));
     }
     
     /**
@@ -283,7 +283,7 @@ public class ElementResultItemDocumentationTest extends NbTestCase {
         assertNull("Must not be openable in browser", resolved.getURL());
         // fwk is able to fetch contents
         assertTrue("Framework must fetch contents of linked URL", 
-                resolved.getText().startsWith("Resource referenced by relative link"));
+                resolved.getText().contains("Resource referenced by relative link"));
         
         CompletionDocumentation parent = doc.resolveLink("customContent");
         assertEquals(PLAIN_DESCRIPTION_TEXT, parent.getText());

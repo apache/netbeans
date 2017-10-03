@@ -86,7 +86,7 @@ public class XMLLexerFormatterTest extends AbstractTestCase {
         BaseDocument inputDoc = getDocument("indent/input_sub.xml");
         //format a subsection of the inputDoc
         XMLLexerFormatter formatter = new XMLLexerFormatter(null);
-        LineDocument formattedDoc = formatter.doReformat(inputDoc, 72, 97);
+        LineDocument formattedDoc = formatter.doReformat(inputDoc, 893, 918);
         System.out.println(formattedDoc.getText(0, formattedDoc.getLength()));
         LineDocument outputDoc = getDocument("indent/output_sub.xml");
         assertTrue (compare(formattedDoc, outputDoc));
@@ -126,7 +126,7 @@ public class XMLLexerFormatterTest extends AbstractTestCase {
         BaseDocument inputDoc = getDocument("indent/input_sub1.xml");
         //format a subsection of the inputDoc
         XMLLexerFormatter formatter = new XMLLexerFormatter(null);
-        LineDocument formattedDoc = formatter.doReformat(inputDoc, 46, 74);
+        LineDocument formattedDoc = formatter.doReformat(inputDoc, 868, 896);
         System.out.println(formattedDoc.getText(0, formattedDoc.getLength()));
         LineDocument outputDoc = getDocument("indent/output_sub1.xml");
         assertTrue (compare(formattedDoc, outputDoc));
@@ -136,7 +136,7 @@ public class XMLLexerFormatterTest extends AbstractTestCase {
         BaseDocument inputDoc = getDocument("indent/input_sub2.xml");
         //format a subsection of the inputDoc
         XMLLexerFormatter formatter = new XMLLexerFormatter(null);
-        LineDocument formattedDoc = formatter.doReformat(inputDoc, 63, 80);
+        LineDocument formattedDoc = formatter.doReformat(inputDoc, 885, 899);
         System.out.println(formattedDoc.getText(0, formattedDoc.getLength()));
         LineDocument outputDoc = getDocument("indent/output_sub2.xml");
         assertTrue (compare(formattedDoc, outputDoc));
@@ -169,8 +169,8 @@ public class XMLLexerFormatterTest extends AbstractTestCase {
         BaseDocument inputDoc = getDocument("indent/input_preserve.xml");
         //format the inputDoc
         XMLLexerFormatter formatter = new XMLLexerFormatter(null);
-        System.out.println("SECTION:" + inputDoc.getText(91, 87));
-        LineDocument formattedDoc = formatter.doReformat(inputDoc, 91, 91 + 87);
+        System.out.println("SECTION:" + inputDoc.getText(913, 87));
+        LineDocument formattedDoc = formatter.doReformat(inputDoc, 913, 913 + 87);
         System.out.println(formattedDoc.getText(0, formattedDoc.getLength()));
         LineDocument outputDoc = getDocument("indent/output_preserve.xml");
         assertTrue(compare(formattedDoc, outputDoc));

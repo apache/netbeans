@@ -17,9 +17,10 @@
  * under the License.
  */
 
-package org.netbeans.modules.java.source.indexing;
+package org.netbeans.modules.java.source.nbjavac.indexing;
 
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.tools.javac.api.ClassNamesForFileOraculum;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symtab;
@@ -59,12 +60,17 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.modules.java.source.TreeLoader;
+import org.netbeans.modules.java.source.indexing.APTUtils;
+//import org.netbeans.modules.java.source.TreeLoader;
+import org.netbeans.modules.java.source.indexing.CompileWorker;
+import org.netbeans.modules.java.source.indexing.DiagnosticListenerImpl;
+import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
+import org.netbeans.modules.java.source.indexing.JavaIndex;
+import org.netbeans.modules.java.source.indexing.JavaParsingContext;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.OutputFileManager;
-import org.netbeans.modules.java.source.usages.ClassNamesForFileOraculumImpl;
 import org.netbeans.modules.java.source.usages.ExecutableFilesIndex;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
@@ -81,7 +87,7 @@ final class MultiPassCompileWorker extends CompileWorker {
     private boolean checkForMemLow = true;
 
     @Override
-    ParsingOutput compile(
+    protected ParsingOutput compile(
             final ParsingOutput previous,
             final Context context,
             final JavaParsingContext javaContext,
@@ -158,7 +164,6 @@ final class MultiPassCompileWorker extends CompileWorker {
                                 diagnosticListener,
                                 javaContext.getSourceLevel(),
                                 javaContext.getProfile(),
-                                cnffOraculum,
                                 javaContext.getFQNs(),
                                 new CancelService() {
                                     public @Override boolean isCanceled() {
@@ -166,7 +171,9 @@ final class MultiPassCompileWorker extends CompileWorker {
                                     }
                                 },
                                 active.aptGenerated ? null : APTUtils.get(context.getRoot()),
-                                CompilerOptionsQuery.getOptions(context.getRoot()));
+                                CompilerOptionsQuery.getOptions(context.getRoot()),
+                                Collections.emptyList());
+                        jt.getContext().put(ClassNamesForFileOraculum.class, cnffOraculum);
                         Iterable<? extends Processor> processors = jt.getProcessors();
                         aptEnabled = processors != null && processors.iterator().hasNext();
                         if (JavaIndex.LOG.isLoggable(Level.FINER)) {
@@ -342,7 +349,7 @@ final class MultiPassCompileWorker extends CompileWorker {
                 }
             } catch (CouplingAbort ca) {
                 //Coupling error
-                TreeLoader.dumpCouplingAbort(ca, null);
+//                TreeLoader.dumpCouplingAbort(ca, null);
                 jt = null;
                 diagnosticListener.cleanDiagnostics();
                 if ((state & ERR) != 0) {
@@ -465,8 +472,8 @@ final class MultiPassCompileWorker extends CompileWorker {
                                 if (stEnv != null && env != stEnv) {
                                     if (checked.add(stEnv)) {
                                         scan(stEnv.tree);
-                                        if (TreeLoader.pruneTree(stEnv.tree, syms, syms2trees))
-                                            dependencies.add(stEnv);
+//                                        if (TreeLoader.pruneTree(stEnv.tree, syms, syms2trees))
+//                                            dependencies.add(stEnv);
                                     }
                                     envForSuperTypeFound = true;
                                 }
@@ -487,8 +494,8 @@ final class MultiPassCompileWorker extends CompileWorker {
                                 dumpSymFile(jfm, jti, dep.enclClass.sym, alreadyCreated, classes, syms2trees);
                             }
                         }
-                        if (TreeLoader.pruneTree(env.tree, syms, syms2trees))
-                            dumpSymFile(jfm, jti, env.enclClass.sym, alreadyCreated, classes, syms2trees);
+//                        if (TreeLoader.pruneTree(env.tree, syms, syms2trees))
+//                            dumpSymFile(jfm, jti, env.enclClass.sym, alreadyCreated, classes, syms2trees);
                     }
                 }
             } finally {
@@ -512,7 +519,7 @@ final class MultiPassCompileWorker extends CompileWorker {
         JavaFileObject file = jfm.getJavaFileForOutput(StandardLocation.CLASS_OUTPUT,
                 cs.flatname.toString(), JavaFileObject.Kind.CLASS, cs.sourcefile);
         if (file instanceof FileObjects.FileBase && !alreadyCreated.contains(((FileObjects.FileBase)file).getFile())) {
-            TreeLoader.dumpSymFile(jfm, jti, cs, classes, syms2trees);
+//            TreeLoader.dumpSymFile(jfm, jti, cs, classes, syms2trees);
         }
     }
 }

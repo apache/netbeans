@@ -51,7 +51,7 @@ import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.source.TreeLoader;
+//import org.netbeans.modules.java.source.TreeLoader;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -73,7 +73,8 @@ public abstract class BulkSearchTestPerformer extends NbTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[0]);
-        TreeLoader.DISABLE_CONFINEMENT_TEST = true;
+        //XXX:
+//        TreeLoader.DISABLE_CONFINEMENT_TEST = true;
     }
 
 //    public static TestSuite suite() {

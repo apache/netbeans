@@ -22,7 +22,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -634,7 +634,7 @@ nextCpE:for (ClassPath.Entry e : cp.entries()) {
     }
 
     //@NonThreadSafe
-    private static final class FindPosScanner extends TreePathScanner<Void, Void> {
+    private static final class FindPosScanner extends ErrorAwareTreePathScanner<Void, Void> {
 
         private final FileObject target;
         private final Elements elements;

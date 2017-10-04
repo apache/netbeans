@@ -26,7 +26,7 @@ import com.sun.source.tree.*;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTrees;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -606,7 +606,7 @@ public class RenameTransformer extends RefactoringVisitor {
     }
 
     private boolean duplicateDeclaration() {
-        TreeScanner<Boolean, String> duplicateIds = new TreeScanner<Boolean, String>() {
+        ErrorAwareTreeScanner<Boolean, String> duplicateIds = new ErrorAwareTreeScanner<Boolean, String>() {
             @Override public Boolean visitClass(ClassTree node, String p) {
                 if(node.getSimpleName().contentEquals(p)) {
                     return Boolean.TRUE;

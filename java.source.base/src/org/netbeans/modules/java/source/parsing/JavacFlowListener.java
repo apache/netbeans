@@ -36,7 +36,7 @@ import org.openide.filesystems.FileObject;
  *
  * @author Tomas Zezula
  */
-class JavacFlowListener {
+public class JavacFlowListener {
         
     protected static final Context.Key<JavacFlowListener> flowListenerKey =
         new Context.Key<JavacFlowListener>();
@@ -58,7 +58,7 @@ class JavacFlowListener {
         jti.setTaskListener(new TaskListenerImpl());
     }
 
-    final boolean hasFlowCompleted (final FileObject fo) {
+    public final boolean hasFlowCompleted (final FileObject fo) {
         if (fo == null) {
             return false;
         }

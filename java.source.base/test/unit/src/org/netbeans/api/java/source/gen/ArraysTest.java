@@ -32,7 +32,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -512,7 +512,7 @@ public class ArraysTest extends GeneratorTestMDRCompat {
     }
 
     public void testRewriteType() throws Exception {
-        final class ReplaceQualifiedNames extends TreePathScanner<Void, Void> {
+        final class ReplaceQualifiedNames extends ErrorAwareTreePathScanner<Void, Void> {
             private final WorkingCopy copy;
 
             public ReplaceQualifiedNames(WorkingCopy copy) {

@@ -27,7 +27,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -211,7 +211,7 @@ public class ElementScanningTask implements CancellableTask<CompilationInfo>{
         }
     }
 
-    private static class PositionVisitor extends TreePathScanner<Context, Void> {
+    private static class PositionVisitor extends ErrorAwareTreePathScanner<Context, Void> {
 
         private final Trees trees;
         private final SourcePositions sourcePositions;

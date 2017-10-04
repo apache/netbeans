@@ -40,9 +40,9 @@ import org.netbeans.modules.parsing.spi.indexing.Indexable;
  *
  * @author Jan Lahoda, Dusan Balek
  */
-abstract class CompileWorker {
+public abstract class CompileWorker {
 
-    abstract ParsingOutput compile(ParsingOutput previous, Context context, JavaParsingContext javaContext, Collection<? extends CompileTuple> files);
+    protected abstract ParsingOutput compile(ParsingOutput previous, Context context, JavaParsingContext javaContext, Collection<? extends CompileTuple> files);
 
     protected void computeFQNs(final Map<JavaFileObject, List<String>> file2FQNs, CompilationUnitTree cut, CompileTuple tuple) {
         String pack;
@@ -89,26 +89,26 @@ abstract class CompileWorker {
         lm.free(freeCaches);
     }
     
-    static class ModuleName {
-        String name;
-        boolean assigned;
+    protected static class ModuleName {
+        public String name;
+        public boolean assigned;
         
-        ModuleName(final String name) {
+        public ModuleName(final String name) {
             this.name = name;
         }
     }
 
-    static class ParsingOutput {
-        final boolean success;
-        final boolean lowMemory;
-        final String moduleName;
-        final Map<JavaFileObject, List<String>> file2FQNs;
-        final Set<ElementHandle<TypeElement>> addedTypes;
-        final Set<ElementHandle<ModuleElement>> addedModules;
-        final Set<File> createdFiles;
-        final Set<Indexable> finishedFiles;
-        final Set<ElementHandle<TypeElement>> modifiedTypes;
-        final Set<javax.tools.FileObject> aptGenerated;
+    public static class ParsingOutput {
+        public final boolean success;
+        public final boolean lowMemory;
+        public final String moduleName;
+        public final Map<JavaFileObject, List<String>> file2FQNs;
+        public final Set<ElementHandle<TypeElement>> addedTypes;
+        public final Set<ElementHandle<ModuleElement>> addedModules;
+        public final Set<File> createdFiles;
+        public final Set<Indexable> finishedFiles;
+        public final Set<ElementHandle<TypeElement>> modifiedTypes;
+        public final Set<javax.tools.FileObject> aptGenerated;
 
         private ParsingOutput(
                 final boolean success,
@@ -134,7 +134,7 @@ abstract class CompileWorker {
             this.aptGenerated = aptGenerated;
         }
 
-        static ParsingOutput success (
+        public static ParsingOutput success (
                 @NullAllowed final String moduleName,
                 final Map<JavaFileObject, List<String>> file2FQNs,
                 final Set<ElementHandle<TypeElement>> addedTypes,
@@ -148,7 +148,7 @@ abstract class CompileWorker {
                     modifiedTypes, aptGenerated);
         }
 
-        static ParsingOutput failure(
+        public static ParsingOutput failure(
                 @NullAllowed final String moduleName,
                 final Map<JavaFileObject, List<String>> file2FQNs,
                 final Set<ElementHandle<TypeElement>> addedTypes,
@@ -162,7 +162,7 @@ abstract class CompileWorker {
                     modifiedTypes, aptGenerated);
         }
 
-        static ParsingOutput lowMemory(
+        public static ParsingOutput lowMemory(
                 @NullAllowed final String moduleName,
                 final Map<JavaFileObject, List<String>> file2FQNs,
                 final Set<ElementHandle<TypeElement>> addedTypes,

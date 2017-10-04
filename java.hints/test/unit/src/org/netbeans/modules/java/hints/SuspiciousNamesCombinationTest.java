@@ -20,7 +20,7 @@ package org.netbeans.modules.java.hints;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
@@ -146,7 +146,7 @@ public class SuspiciousNamesCombinationTest extends NbTestCase {
         final SuspiciousNamesCombination snc = new SuspiciousNamesCombination();
         final List<ErrorDescription> errors = new ArrayList<ErrorDescription>();
         
-        class ScannerImpl extends TreePathScanner {
+        class ScannerImpl extends ErrorAwareTreePathScanner {
             @Override
             public Object scan(Tree tree, Object p) {
                 if (tree != null && snc.getTreeKinds().contains(tree.getKind())) {

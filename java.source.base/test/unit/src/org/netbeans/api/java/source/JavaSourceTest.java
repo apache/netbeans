@@ -44,8 +44,9 @@ import javax.tools.Diagnostic;
 import com.sun.source.tree.*;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.SourcePositions;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
+import com.sun.tools.javac.api.JavacTaskImpl;
 import junit.framework.*;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.FieldSelector;
@@ -160,6 +161,8 @@ public class JavaSourceTest extends NbTestCase {
         suite.addTest(new JavaSourceTest("testModificationJob"));
 //        suite.addTest(new JavaSourceTest("testInterference"));
         suite.addTest(new JavaSourceTest("testDocumentChanges"));
+        suite.addTest(new JavaSourceTest("testMultipleFiles"));
+        suite.addTest(new JavaSourceTest("testMultipleFilesSameJavac"));
         /*
         suite.addTest(new JavaSourceTest("testParsingDelay"));
 //        suite.addTest(new JavaSourceTest("testJavaSourceIsReclaimable"));     fails in trunk
@@ -259,6 +262,59 @@ public class JavaSourceTest extends NbTestCase {
         CountDownLatch latch = new CountDownLatch (2);
         js.runModificationTask(new WorkingCopyJob (latch)).commit();
         assertTrue ("Time out",latch.await(15,TimeUnit.SECONDS));
+    }
+
+    public void testMultipleFiles () throws Exception {
+        final FileObject testFile1 = createTestFile("Test1");
+        final FileObject testFile2 = createTestFile("Test2");
+        final ClassPath bootPath = createBootPath();
+        final ClassPath compilePath = createCompilePath();
+        final ClassPath srcPath = createSourcePath();
+        final JavaSource js = JavaSource.create(ClasspathInfo.create(bootPath, compilePath, srcPath), testFile1, testFile2);
+        boolean[] test1 = new boolean[1];
+        boolean[] test2 = new boolean[1];
+        js.runUserActionTask(new Task<CompilationController>() {
+            @Override
+            public void run(CompilationController parameter) throws Exception {
+                parameter.toPhase(Phase.RESOLVED);
+                
+                //TODO: safer checks!
+                if (parameter.getCompilationUnit().toString().contains("Test1")) {
+                    test1[0] = true;
+                } else if (parameter.getCompilationUnit().toString().contains("Test2")) {
+                    test2[0] = true;
+                } else {
+                   fail();
+                }
+            }
+        }, true);
+        assertTrue ("Test1", test1[0]);
+        assertTrue ("Test2", test2[0]);
+    }
+
+    public void testMultipleFilesSameJavac() throws Exception {
+        final FileObject testFile1 = createTestFile("Test1");
+        final FileObject testFile2 = createTestFile("Test2");
+        final ClassPath bootPath = createBootPath();
+        final ClassPath compilePath = createCompilePath();
+        final ClassPath srcPath = createSourcePath();
+        final JavaSource js = JavaSource.create(ClasspathInfo.create(bootPath, compilePath, srcPath), testFile1, testFile2);
+        js.runUserActionTask(new Task<CompilationController>() {
+            private JavacTaskImpl seenTask;
+
+            @Override
+            public void run(CompilationController parameter) throws Exception {
+                parameter.toPhase(Phase.RESOLVED);
+                
+                JavacTaskImpl currentTask = parameter.impl.getJavacTask();
+                
+                if (seenTask == null) {
+                    seenTask= currentTask;
+                } else if (seenTask != currentTask) {
+                   fail();
+                }
+            }
+        }, true);
     }
 
     public void testInterference () throws MalformedURLException, IOException, InterruptedException {
@@ -2020,7 +2076,7 @@ public class JavaSourceTest extends NbTestCase {
         }
     }
 
-    private static class ScannerImpl extends TreePathScanner<Void, Void> {
+    private static class ScannerImpl extends ErrorAwareTreePathScanner<Void, Void> {
 
         private CompilationInfo info;
 
@@ -2054,7 +2110,7 @@ public class JavaSourceTest extends NbTestCase {
         }
     }
 
-    private static class TransformImpl extends TreeScanner<Void, Object> {
+    private static class TransformImpl extends ErrorAwareTreeScanner<Void, Object> {
 
         private WorkingCopy copy;
 

@@ -20,7 +20,7 @@ package org.netbeans.modules.java.hints;
 
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
 import java.util.regex.Pattern;
 import org.netbeans.api.java.source.JavaSource;
@@ -50,7 +50,7 @@ public class ConvertAnonymousToInnerTest extends NbTestCase {
         SourceUtilsTestUtil.prepareTest(new String[0], new Object[0]);
     }
 
-    private static final class FindNewClassTree extends TreePathScanner<TreePath, Void> {
+    private static final class FindNewClassTree extends ErrorAwareTreePathScanner<TreePath, Void> {
         @Override
         public TreePath visitNewClass(NewClassTree node, Void p) {
             return getCurrentPath();

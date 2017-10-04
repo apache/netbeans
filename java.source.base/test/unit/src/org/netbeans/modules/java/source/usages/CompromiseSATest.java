@@ -50,6 +50,7 @@ import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.classfile.ClassName;
 import org.netbeans.modules.classfile.Method;
 import org.netbeans.modules.classfile.Variable;
+import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl.UsageType;
 
 /**
@@ -223,8 +224,7 @@ public class CompromiseSATest extends NbTestCase {
         InputStream in = this.prepareData (testClassName);
 	try {
 	    JavacTask jt = prepareJavac ();
-	    JavacElements elements = (JavacElements) jt.getElements();
-	    TypeElement be = elements.getTypeElementByBinaryName(testClassName);
+	    TypeElement be = ElementUtils.getTypeElementByBinaryName(jt, testClassName);
             assertNotNull ("Javac Error", be);
 	    String className = ClassFileUtil.encodeClassName(be);
 	    ClassFile cf = new ClassFile (in, true);

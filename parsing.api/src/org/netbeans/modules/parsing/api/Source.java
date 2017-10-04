@@ -570,6 +570,8 @@ public final class Source implements Lookup.Provider {
     }
 
     private void setSourceModification (boolean sourceChanged, int startOffset, int endOffset) {
+        if (!sourceChanged)
+            return ;
         ASourceModificationEvent oldSourceModificationEvent;
         ASourceModificationEvent newSourceModificationEvent;
         do {

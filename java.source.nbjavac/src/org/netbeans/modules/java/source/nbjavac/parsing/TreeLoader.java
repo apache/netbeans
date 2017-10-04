@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.java.source;
+package org.netbeans.modules.java.source.nbjavac.parsing;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -29,6 +29,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.JavacTask;
 import com.sun.source.util.TaskEvent;
 import com.sun.source.util.TaskListener;
+import com.sun.tools.javac.api.DuplicateClassChecker;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Kinds;
 import com.sun.tools.javac.code.Scope;
@@ -76,6 +77,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javax.lang.model.element.Name;
 import javax.swing.text.ChangedCharSetException;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.html.HTML;
@@ -91,16 +93,23 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.modules.java.source.JavaSourceAccessor;
+import org.netbeans.modules.java.source.JavadocHelper;
+import org.netbeans.modules.java.source.indexing.FQN2Files;
 import org.netbeans.modules.java.source.indexing.JavaBinaryIndexer;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
 import org.netbeans.modules.java.source.parsing.FileObjects;
+import org.netbeans.modules.java.source.parsing.JavacParser;
+import org.netbeans.modules.java.source.parsing.JavacParser.DuplicateClassRegistry;
+import org.netbeans.modules.java.source.parsing.JavacParser.TreeLoaderRegistry;
 import org.netbeans.modules.java.source.parsing.OutputFileManager.InvalidSourcePath;
 import org.netbeans.modules.java.source.usages.ClasspathInfoAccessor;
 import org.netbeans.modules.parsing.impl.indexing.IndexingUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -775,5 +784,31 @@ public class TreeLoader extends LazyTreeLoader {
         assert fmTx != null;
         return fmTx.canWrite();
     }
+
+    @ServiceProvider(service=TreeLoaderRegistry.class)
+    public static final class TreeLoaderRegistryImpl implements TreeLoaderRegistry {
+
+        @Override
+        public void enhance(Context context, ClasspathInfo cpInfo, boolean detached) {
+            TreeLoader.preRegister(context, cpInfo, detached);
+        }
+        
+    }
     
+    @ServiceProvider(service=DuplicateClassRegistry.class)
+    public static final class DuplicateClassRegistryImpl implements DuplicateClassRegistry {
+
+        @Override
+        public void enhance(Context context, FQN2Files fqn2Files) {
+            if (fqn2Files == null)
+                return;
+            context.put(DuplicateClassChecker.class, new DuplicateClassChecker() {
+                @Override
+                public boolean check(Name name, JavaFileObject jfo) {
+                    return fqn2Files.check(name, jfo);
+                }
+            });
+        }
+        
+    }
 }

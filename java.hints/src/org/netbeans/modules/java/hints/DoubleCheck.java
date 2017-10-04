@@ -34,7 +34,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -393,7 +393,7 @@ public class DoubleCheck {
         }
     }
     
-    private static final class VariableAccessWalker extends TreePathScanner {
+    private static final class VariableAccessWalker extends ErrorAwareTreePathScanner {
         private final VariableElement originalVariable;
         private final ExpressionTree  fieldAccessTree;
         /**

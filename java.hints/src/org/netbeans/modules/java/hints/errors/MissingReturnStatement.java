@@ -27,7 +27,7 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.ArrayList;
 import java.util.Arrays;

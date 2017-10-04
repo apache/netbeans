@@ -99,7 +99,6 @@ import org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
 import org.netbeans.modules.java.hints.test.Utilities.TestLookup;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
-import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.modules.parsing.impl.indexing.MimeTypes;
@@ -224,7 +223,6 @@ public class HintTest {
         MimeTypes.setAllMimeTypes(amt);
         org.netbeans.api.project.ui.OpenProjects.getDefault().getOpenProjects();
 
-        TreeLoader.DISABLE_CONFINEMENT_TEST = true;
         testPreferences = new TempPreferences();
         hintSettings = new HintsSettings() {
             @Override public boolean isEnabled(HintMetadata hint) {

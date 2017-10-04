@@ -32,7 +32,7 @@ import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -41,7 +41,7 @@ import org.netbeans.api.java.source.CompilationInfo;
  *
  * @author Jan Becicka
  */
-public class LocalVarScanner extends TreePathScanner<Boolean, Element> {
+public class LocalVarScanner extends ErrorAwareTreePathScanner<Boolean, Element> {
 
     private CompilationInfo info;
     private String newName;

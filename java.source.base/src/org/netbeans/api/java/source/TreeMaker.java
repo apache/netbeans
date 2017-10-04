@@ -52,7 +52,7 @@ import static com.sun.source.tree.Tree.*;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
@@ -1096,7 +1096,7 @@ public final class TreeMaker {
         Tree typeTree = copy.getTreeUtilities().parseType(type);
         final Map<Tree, Tree> translate = new HashMap<Tree, Tree>();
 
-        new TreeScanner<Void, Void>() {
+        new ErrorAwareTreeScanner<Void, Void>() {
             @Override
             public Void visitMemberSelect(MemberSelectTree node, Void p) {
                 translate.put(node, QualIdent(node.toString()));
@@ -3344,7 +3344,7 @@ public final class TreeMaker {
         }*/
     }
 
-    private static class TreePosCleaner extends TreeScanner<Void, Void> {
+    private static class TreePosCleaner extends ErrorAwareTreeScanner<Void, Void> {
 
         @Override
         public Void scan(Tree tree, Void p) {

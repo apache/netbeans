@@ -20,8 +20,8 @@ package org.netbeans.api.java.source.gen;
 
 import com.sun.source.tree.*;
 import com.sun.source.util.SourcePositions;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -220,7 +220,7 @@ public class AnnotationTest extends GeneratorTestBase {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(MethodTree node, Void p) {
                         workingCopy.rewrite(node, workingCopy.getTreeMaker().setInitialValue(node, workingCopy.getTreeMaker().Identifier("A.E")));
@@ -257,7 +257,7 @@ public class AnnotationTest extends GeneratorTestBase {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(MethodTree node, Void p) {
                         workingCopy.rewrite(node, workingCopy.getTreeMaker().setInitialValue(node, null));
@@ -733,7 +733,7 @@ public class AnnotationTest extends GeneratorTestBase {
 
                 final TreeMaker make = workingCopy.getTreeMaker();
 
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitModifiers(ModifiersTree node, Void p) {
                         String toParse = "new Object() {" + annotationSpecification + " void test() {} }";
@@ -951,7 +951,7 @@ public class AnnotationTest extends GeneratorTestBase {
                 final TreeMaker make = workingCopy.getTreeMaker();
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override public Void visitIdentifier(IdentifierTree node, Void p) {
                         if (node.getName().contentEquals("MyEntity"))
                             workingCopy.rewrite(node, make.Identifier("MyEntity1"));

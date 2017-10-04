@@ -20,7 +20,7 @@ package org.netbeans.modules.refactoring.java.plugins;
 
 import com.sun.source.tree.*;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.*;
@@ -250,7 +250,7 @@ public class InlineRefactoringPlugin extends JavaRefactoringPlugin {
                 if (initializer.getKind().equals(Tree.Kind.METHOD_INVOCATION)) {
                     skipFirstMethodInvocation++;
                 }
-                TreeScanner<Boolean, Boolean> scanner = new UnsafeTreeScanner(skipFirstMethodInvocation);
+                ErrorAwareTreeScanner<Boolean, Boolean> scanner = new UnsafeTreeScanner(skipFirstMethodInvocation);
                 Boolean isChanged = scanner.scan(initializer, false);
                 if (isChanged != null && isChanged) {
                     preCheckProblem = createProblem(preCheckProblem, false, WRN_InlineChange()); //NOI18N
@@ -542,7 +542,7 @@ public class InlineRefactoringPlugin extends JavaRefactoringPlugin {
         }
     }
 
-    private static class UnsafeTreeScanner extends TreeScanner<Boolean, Boolean> {
+    private static class UnsafeTreeScanner extends ErrorAwareTreeScanner<Boolean, Boolean> {
 
         private int skipFirstMethodInvocation;
 

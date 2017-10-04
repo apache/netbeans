@@ -22,7 +22,7 @@ package org.netbeans.modules.java.source.parsing;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.tools.javac.code.Source;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -158,7 +158,7 @@ public class JavacParserTest extends NbTestCase {
                 
                 assertSame(tree.get(), parameter.getCompilationUnit());
                 
-                new TreePathScanner<Void, long[]>() {
+                new ErrorAwareTreePathScanner<Void, long[]>() {
 
                     @Override
                     public Void scan(Tree tree, long[] parentSpan) {
@@ -249,7 +249,7 @@ public class JavacParserTest extends NbTestCase {
                 
                 assertSame(tree.get(), parameter.getCompilationUnit());
                 
-                new TreePathScanner<Void, long[]>() {
+                new ErrorAwareTreePathScanner<Void, long[]>() {
 
                     @Override
                     public Void scan(Tree tree, long[] parentSpan) {

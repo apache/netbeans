@@ -36,7 +36,7 @@ import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.source.util.DocTrees;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -98,7 +98,7 @@ public final class JavadocImports {
         
         new DocTreePathScanner<Void, Void>() {
             @Override public Void visitReference(ReferenceTree node, Void p) {
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override public Void visitIdentifier(IdentifierTree node, Void p) {
                         Element el = trees.getElement(getCurrentPath());
                         
@@ -143,7 +143,7 @@ public final class JavadocImports {
         
         new DocTreePathScanner<Void, Void>() {
             @Override public Void visitReference(ReferenceTree node, Void p) {
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override public Void visitIdentifier(IdentifierTree node, Void p) {
                         if (toFind.equals(trees.getElement(getCurrentPath()))) {
                             handleUsage((int) trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), node));
@@ -269,7 +269,7 @@ public final class JavadocImports {
                     result[0] = trees.getElement(getCurrentPath());
                     return null;
                 }
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override public Void visitIdentifier(IdentifierTree node, Void p) {
                         if (   positions.getStartPosition(javac.getCompilationUnit(), node) <= offset
                             && positions.getEndPosition(javac.getCompilationUnit(), node) >= offset) {
@@ -350,7 +350,7 @@ public final class JavadocImports {
                     handleUsage(offset);
                     return null;
                 }
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override public Void visitIdentifier(IdentifierTree node, Void p) {
                         if (   positions.getStartPosition(javac.getCompilationUnit(), node) <= offset
                             && positions.getEndPosition(javac.getCompilationUnit(), node) >= offset) {
@@ -509,7 +509,7 @@ public final class JavadocImports {
         return javadoc;
     }
 
-    private static final class UnresolvedImportScanner extends TreePathScanner<Void, Void> {
+    private static final class UnresolvedImportScanner extends ErrorAwareTreePathScanner<Void, Void> {
         
         private final CompilationInfo javac;
         private Set<String> unresolved = new HashSet<String>();
@@ -544,7 +544,7 @@ public final class JavadocImports {
             
             new DocTreePathScanner<Void, Void>() {
                 @Override public Void visitReference(ReferenceTree node, Void p) {
-                    new TreePathScanner<Void, Void>() {
+                    new ErrorAwareTreePathScanner<Void, Void>() {
                         @Override public Void visitIdentifier(IdentifierTree node, Void p) {
                             Element el = trees.getElement(getCurrentPath());
                             

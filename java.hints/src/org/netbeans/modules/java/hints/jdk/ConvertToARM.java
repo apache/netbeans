@@ -32,8 +32,8 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -841,7 +841,7 @@ public class ConvertToARM {
             }
         }
         final Set<VariableTree> result = new HashSet<VariableTree>();
-        final TreeScanner<Void,Void> scanner = new TreeScanner<Void,Void>(){
+        final ErrorAwareTreeScanner<Void,Void> scanner = new ErrorAwareTreeScanner<Void,Void>(){
             @Override
             public Void visitIdentifier(IdentifierTree node, Void p) {
                 final Element elm = trees.getElement(trees.getPath(cu, node));
@@ -863,7 +863,7 @@ public class ConvertToARM {
             final Trees trees) {
         final List<TreePath> usages = new LinkedList<>();
         if (statements != null) {
-            final TreePathScanner<List<TreePath>,List<TreePath>> scanner = new TreePathScanner<List<TreePath>, List<TreePath>>() {
+            final ErrorAwareTreePathScanner<List<TreePath>,List<TreePath>> scanner = new ErrorAwareTreePathScanner<List<TreePath>, List<TreePath>>() {
                 @Override
                 public List<TreePath> visitIdentifier(IdentifierTree node, List<TreePath> p) {
                     final TreePath path = getCurrentPath();
@@ -910,7 +910,7 @@ public class ConvertToARM {
             final Element what,
             final Iterable<? extends TreePath> where,
             final Trees trees) {
-        TreePathScanner<Boolean, Void> scanner = new TreePathScanner<Boolean, Void>() {
+        ErrorAwareTreePathScanner<Boolean, Void> scanner = new ErrorAwareTreePathScanner<Boolean, Void>() {
             @Override public Boolean visitAssignment(AssignmentTree node, Void p) {
                 if (trees.getElement(new TreePath(getCurrentPath(), node.getVariable())) == what) {
                     return true;
@@ -955,7 +955,7 @@ public class ConvertToARM {
             usedAfterCloseVarNames.add(vt.getName().toString());
         }
         
-        TreeScanner<Boolean, Void> scanner = new TreeScanner<Boolean, Void>() {
+        ErrorAwareTreeScanner<Boolean, Void> scanner = new ErrorAwareTreeScanner<Boolean, Void>() {
             @Override public Boolean visitVariable(VariableTree node, Void p) {
                 if (usedAfterCloseVarNames.contains(node.getName().toString()) && !usedAfterCloseVarDecls.contains(node)) {
                     return true;

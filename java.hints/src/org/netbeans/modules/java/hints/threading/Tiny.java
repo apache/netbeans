@@ -32,7 +32,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -195,7 +195,7 @@ public class Tiny {
 
         if (!report) {
             try {
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitClass(ClassTree node, Void p) {
                         return null;

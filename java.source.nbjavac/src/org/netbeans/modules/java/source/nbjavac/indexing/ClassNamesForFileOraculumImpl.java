@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.java.source.usages;
+package org.netbeans.modules.java.source.nbjavac.indexing;
 
 import com.sun.tools.javac.api.ClassNamesForFileOraculum;
 import java.util.LinkedList;

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.lib.nbjavac.services;
+package org.netbeans.modules.java.source.nbjavac.parsing;
 
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
@@ -34,6 +34,9 @@ import com.sun.tools.javac.comp.Flow;
 import com.sun.tools.javac.comp.TypeEnter;
 import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.parser.LazyDocCommentTable;
+import com.sun.tools.javac.parser.Scanner;
+import com.sun.tools.javac.parser.ScannerFactory;
+import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
@@ -49,20 +52,22 @@ import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
 import java.nio.CharBuffer;
 import java.util.Map;
+import org.netbeans.lib.nbjavac.services.CancelService;
+import org.netbeans.lib.nbjavac.services.NBParserFactory;
 
 /**
  *
  * @author Tomas Zezula
  */
-public class PartialReparser {
+public class PartialReparserService {
     
-    protected static final Context.Key<PartialReparser> partialReparserKey = new Context.Key<PartialReparser>();
+    protected static final Context.Key<PartialReparserService> partialReparserKey = new Context.Key<PartialReparserService>();
     
-    public static PartialReparser instance(Context ctx) {
-        PartialReparser res = ctx.get(partialReparserKey);
+    public static PartialReparserService instance(Context ctx) {
+        PartialReparserService res = ctx.get(partialReparserKey);
         
         if (res == null) {
-            ctx.put(partialReparserKey, res = new PartialReparser(ctx));
+            ctx.put(partialReparserKey, res = new PartialReparserService(ctx));
         }
         
         return res;
@@ -70,15 +75,14 @@ public class PartialReparser {
 
     private final Context context;
 
-    public PartialReparser(Context context) {
+    public PartialReparserService(Context context) {
         this.context = context;
     }
 
     public JCBlock reparseMethodBody(CompilationUnitTree topLevel, MethodTree methodToReparse, String newBodyText, int annonIndex,
             final Map<? super JCTree,? super LazyDocCommentTable.Entry> docComments) {
-        NBParserFactory parserFactory = (NBParserFactory) NBParserFactory.instance(context);
         CharBuffer buf = CharBuffer.wrap((newBodyText+"\u0000").toCharArray(), 0, newBodyText.length());
-        JavacParser parser = parserFactory.newParser(buf, ((JCBlock)methodToReparse.getBody()).pos, ((JCCompilationUnit)topLevel).endPositions);
+        JavacParser parser = newParser(context, buf, ((JCBlock)methodToReparse.getBody()).pos, ((JCCompilationUnit)topLevel).endPositions);
         final JCStatement statement = parser.parseStatement();
         NBParserFactory.assignAnonymousClassIndices(Names.instance(context), statement, Names.instance(context).empty, annonIndex);
         if (statement.getKind() == Tree.Kind.BLOCK) {
@@ -88,6 +92,54 @@ public class PartialReparser {
             return (JCBlock) statement;
         }
         return null;
+    }
+
+    public JavacParser newParser(Context context, CharSequence input, int startPos, final EndPosTable endPos) {
+        NBParserFactory parserFactory = (NBParserFactory) NBParserFactory.instance(context); //TODO: eliminate the cast
+        ScannerFactory scannerFactory = ScannerFactory.instance(context);
+        CancelService cancelService = CancelService.instance(context);
+        Scanner lexer = scannerFactory.newScanner(input, true);
+        lexer.seek(startPos);
+        ((NBParserFactory.NBJavacParser.EndPosTableImpl)endPos).resetErrorEndPos();
+        return new NBParserFactory.NBJavacParser(parserFactory, lexer, true, false, true, false, cancelService) {
+            @Override protected JavacParser.AbstractEndPosTable newEndPosTable(boolean keepEndPositions) {
+                return new JavacParser.AbstractEndPosTable(this) {
+
+                    @Override
+                    public void storeEnd(JCTree tree, int endpos) {
+                        ((NBParserFactory.NBJavacParser.EndPosTableImpl)endPos).storeEnd(tree, endpos);
+                    }
+
+                    @Override
+                    protected <T extends JCTree> T to(T t) {
+                        storeEnd(t, token.endPos);
+                        return t;
+                    }
+
+                    @Override
+                    protected <T extends JCTree> T toP(T t) {
+                        storeEnd(t, S.prevToken().endPos);
+                        return t;
+                    }
+
+                    @Override
+                    public int getEndPos(JCTree tree) {
+                        return endPos.getEndPos(tree);
+                    }
+
+                    @Override
+                    public int replaceTree(JCTree oldtree, JCTree newtree) {
+                        return endPos.replaceTree(oldtree, newtree);
+                    }
+
+                    @Override
+                    public void setErrorEndPos(int errPos) {
+                        super.setErrorEndPos(errPos);
+                        ((NBParserFactory.NBJavacParser.EndPosTableImpl)endPos).setErrorEndPos(errPos);
+                    }
+                };
+            }
+        };
     }
 
     public BlockTree reattrMethodBody(MethodTree methodToReparse, BlockTree block) {

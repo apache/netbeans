@@ -19,14 +19,14 @@
 package org.netbeans.api.java.source.support;
 
 import com.sun.source.tree.Tree;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  *
  * @author Jan Lahoda
  */
-public class CancellableTreePathScanner<R,P> extends TreePathScanner<R,P> {
+public class CancellableTreePathScanner<R,P> extends ErrorAwareTreePathScanner<R,P> {
 
     private final AtomicBoolean internalCanceled;
     private final AtomicBoolean canceled;

@@ -49,7 +49,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import java.awt.Image;
 import java.io.CharConversionException;
@@ -511,7 +511,7 @@ public class BreadCrumbsNodeImpl implements BreadcrumbsElement {
                         return;
                     }
 
-                    tp.getLeaf().accept(new TreeScanner<Void, TreePath>() {
+                    tp.getLeaf().accept(new ErrorAwareTreeScanner<Void, TreePath>() {
                         @Override public Void scan(Tree node, TreePath p) {
                             if (node == null) return null;
                             if (node.getKind() == Kind.IF) {

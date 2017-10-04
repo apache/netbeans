@@ -53,7 +53,7 @@ import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.editor.codegen.ui.ElementNode;
-import org.netbeans.modules.java.source.TreeLoader;
+//import org.netbeans.modules.java.source.TreeLoader;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -68,7 +68,7 @@ public class DelegateMethodGeneratorTest extends NbTestCase {
     }
 
     protected void setUp() throws Exception {
-        TreeLoader.DISABLE_CONFINEMENT_TEST = true;
+//        TreeLoader.DISABLE_CONFINEMENT_TEST = true;
     }
 
     public void testFindUsableFields() throws Exception {

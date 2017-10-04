@@ -21,7 +21,7 @@ package org.netbeans.modules.refactoring.java.plugins;
 
 import com.sun.source.tree.*;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -376,7 +376,7 @@ public class PushDownTransformer extends RefactoringVisitor {
             return;
         }
         
-        new TreePathScanner() {
+        new ErrorAwareTreePathScanner() {
 
             @Override
             public Object visitIdentifier(IdentifierTree node, Object p) {

@@ -34,7 +34,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -187,7 +187,7 @@ final class MagicSurroundWithTryCatchFix implements Fix {
         return null;
     }
     
-    private final class TransformerImpl extends TreePathScanner<Void, Void> {
+    private final class TransformerImpl extends ErrorAwareTreePathScanner<Void, Void> {
         
         private WorkingCopy info;
         private List<TypeMirrorHandle> thandles;

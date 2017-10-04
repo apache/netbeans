@@ -32,8 +32,8 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Context;
 
@@ -66,9 +66,11 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocTrees;
+
 import java.util.Collection;
 import java.util.Comparator;
 
+import com.sun.tools.javac.parser.ParserFactory;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.annotations.common.NullUnknown;
@@ -85,6 +87,7 @@ import org.netbeans.modules.java.source.builder.CommentSetImpl;
 import org.netbeans.modules.java.source.builder.TreeFactory;
 import org.netbeans.modules.java.source.parsing.CompilationInfoImpl;
 import org.netbeans.modules.java.source.parsing.FileObjects;
+import org.netbeans.modules.java.source.parsing.ParsingUtils;
 import org.netbeans.modules.java.source.pretty.ImportAnalysis2;
 import org.netbeans.modules.java.source.query.CommentSet.RelativePosition;
 import org.netbeans.modules.java.source.save.CasualDiff;
@@ -275,7 +278,7 @@ public class WorkingCopy extends CompilationController {
         return ok || introducedTrees.containsKey(t);
     }
     
-    private static class TreeCollector extends TreeScanner {
+    private static class TreeCollector extends ErrorAwareTreeScanner {
         private final Map<Tree, Boolean> collectTo;
         private final boolean add;
 
@@ -577,7 +580,7 @@ public class WorkingCopy extends CompilationController {
 
         final Map<Tree, Boolean> presentInResult = new IdentityHashMap<Tree, Boolean>();
         if (CasualDiff.OLD_TREES_VERBATIM) {
-            new TreeScanner<Void, Void>() {
+            new ErrorAwareTreeScanner<Void, Void>() {
                 private boolean synthetic = false;
                 @Override
                 public Void scan(Tree node, Void p) {
@@ -624,7 +627,7 @@ public class WorkingCopy extends CompilationController {
                 
             }.scan(diffContext.origUnit, null);
         } else {
-            new TreeScanner<Void, Void>() {
+            new ErrorAwareTreeScanner<Void, Void>() {
                 @Override
                 public Void scan(Tree node, Void p) {
                     addSyntheticTrees(diffContext, node);
@@ -635,7 +638,7 @@ public class WorkingCopy extends CompilationController {
         }
 
         if (!REWRITE_WHOLE_FILE) {
-            new TreePathScanner<Void, Void>() {
+            new ErrorAwareTreePathScanner<Void, Void>() {
                 private TreePath currentParent;
                 private final Map<Tree, TreePath> tree2Path = new IdentityHashMap<Tree, TreePath>();
                 private final FQNComputer fqn = new FQNComputer();
@@ -1031,7 +1034,7 @@ public class WorkingCopy extends CompilationController {
      * <li>copies comments from a tree to an associated tree
      * <li>
      */
-    private class CommentReplicator extends TreePathScanner<Object, Object> {
+    private class CommentReplicator extends ErrorAwareTreePathScanner<Object, Object> {
         private final Set<Tree>   stillPresent;
         
         private boolean collectCommentsFromRemovedNodes;
@@ -1188,7 +1191,7 @@ public class WorkingCopy extends CompilationController {
         for (CompilationUnitTree t : externalChanges.values()) {
             try {
                 FileObject targetFile = doCreateFromTemplate(t);
-                CompilationUnitTree templateCUT = impl.getJavacTask().parse(FileObjects.sourceFileObject(targetFile, targetFile.getParent())).iterator().next();
+                CompilationUnitTree templateCUT = ParsingUtils.parseArbitrarySource(impl.getJavacTask(), FileObjects.sourceFileObject(targetFile, targetFile.getParent()));
                 CompilationUnitTree importComments = GeneratorUtilities.get(this).importComments(templateCUT, templateCUT);
 
                 rewrite(importComments, getTreeMaker().asRemoved(t));
@@ -1296,7 +1299,7 @@ public class WorkingCopy extends CompilationController {
                 fqn.setCompilationUnit(t);
                 overlay.registerPackage(fqn.getFQN());
 
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitClass(ClassTree node, Void p) {
                         String parent = fqn.getFQN();

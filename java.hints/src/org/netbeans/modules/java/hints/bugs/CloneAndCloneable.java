@@ -26,7 +26,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.Collections;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -93,7 +93,7 @@ public class CloneAndCloneable {
      * Finder provides true, if it finds a call to 'superClone' method element passed
      * in the constructor.
      */
-    private static final class SuperCloneFinder extends TreePathScanner<Boolean, Void> {
+    private static final class SuperCloneFinder extends ErrorAwareTreePathScanner<Boolean, Void> {
         private final CompilationInfo info;
         private final ExecutableElement superClone;
 

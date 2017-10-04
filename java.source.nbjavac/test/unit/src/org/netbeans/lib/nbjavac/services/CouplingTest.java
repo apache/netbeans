@@ -20,7 +20,7 @@ package org.netbeans.lib.nbjavac.services;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Flags;
@@ -45,7 +45,7 @@ import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 import junit.framework.TestCase;
 
-/**
+/**XXX: why is this passing?????
  *
  * @author lahvac
  */
@@ -108,7 +108,7 @@ public class CouplingTest extends TestCase {
 
         final List<String> result = new ArrayList<String>();
 
-        new TreePathScanner<Void, Void>() {
+        new ErrorAwareTreePathScanner<Void, Void>() {
             @Override public Void visitClass(ClassTree node, Void p) {
                 Element el = Trees.instance(ct).getElement(getCurrentPath());
 

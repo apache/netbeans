@@ -21,7 +21,7 @@ package org.netbeans.modules.spellchecker.bindings.java;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -159,7 +159,7 @@ public class JavaSemanticTokenList implements TokenList {
             l.set(pos, parameter.getDocument());
         }
         
-        private static final class ScannerImpl extends TreeScanner<Void, List<Position[]>> {
+        private static final class ScannerImpl extends ErrorAwareTreeScanner<Void, List<Position[]>> {
             private Document doc;
             private CompilationInfo info;
 

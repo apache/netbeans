@@ -44,7 +44,7 @@ import com.sun.source.tree.TryTree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -260,7 +260,7 @@ public class RemoveUnnecessary {
      * Transforms expression tree into series of statements.
      * 
      */
-    static class ExpressionToStatement extends TreePathScanner {
+    static class ExpressionToStatement extends ErrorAwareTreePathScanner {
         private boolean remove = true;
         private List<StatementTree>    statements = new ArrayList<>(); 
         private final TreeMaker mk;

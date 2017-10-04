@@ -44,8 +44,8 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacScope;
 import com.sun.tools.javac.api.JavacTaskImpl;
@@ -59,6 +59,7 @@ import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Env;
+import com.sun.tools.javac.comp.Modules;
 import com.sun.tools.javac.comp.Todo;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.parser.JavacParser;
@@ -93,6 +94,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.nio.CharBuffer;
 import java.util.Arrays;
@@ -109,6 +111,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.AnnotationValueVisitor;
@@ -441,7 +445,7 @@ public class Utilities {
                     CompilationUnitTree cut = ((JavacScope) scope).getEnv().toplevel;
                     final boolean[] found = new boolean[1];
 
-                    new TreePathScanner<Void, Void>() {
+                    new ErrorAwareTreePathScanner<Void, Void>() {
                         @Override public Void visitMemberSelect(MemberSelectTree node, Void p) {
                             Element currentElement = trees.getElement(getCurrentPath());
 
@@ -546,7 +550,7 @@ public class Utilities {
     }
     
     private static boolean containsError(Tree t) {
-        return new TreeScanner<Boolean, Void>() {
+        return new ErrorAwareTreeScanner<Boolean, Void>() {
             @Override
             public Boolean scan(Tree node, Void p) {
                 if (node != null && isErrorTree(node)) {
@@ -635,10 +639,10 @@ public class Utilities {
         };
         NBResolve resolve = NBResolve.instance(jti.getContext());
         resolve.disableAccessibilityChecks();
-        Enter enter = Enter.instance(jti.getContext());
-        enter.shadowTypeEnvs(true);
-        ArgumentAttr argumentAttr = ArgumentAttr.instance(jti.getContext());
-        ArgumentAttr.LocalCacheContext cacheContext = argumentAttr.withLocalCacheContext();
+//        Enter enter = Enter.instance(jti.getContext());
+//        enter.shadowTypeEnvs(true);
+//        ArgumentAttr argumentAttr = ArgumentAttr.instance(jti.getContext());
+//        ArgumentAttr.LocalCacheContext cacheContext = argumentAttr.withLocalCacheContext();
         try {
             Attr attr = Attr.instance(jti.getContext());
             Env<AttrContext> env = ((JavacScope) scope).getEnv();
@@ -646,11 +650,11 @@ public class Utilities {
                 return attr.attribExpr((JCTree) tree,env, Type.noType);
             return attr.attribStat((JCTree) tree,env);
         } finally {
-            cacheContext.leave();
+//            cacheContext.leave();
             log.useSource(prev);
             log.popDiagnosticHandler(discardHandler);
             resolve.restoreAccessbilityChecks();
-            enter.shadowTypeEnvs(false);
+//            enter.shadowTypeEnvs(false);
         }
     }
 
@@ -732,6 +736,7 @@ public class Utilities {
         JavacTaskImpl jti = JavaSourceAccessor.getINSTANCE().getJavacTask(info);
         Context context = jti.getContext();
         JavaCompiler compiler = JavaCompiler.instance(context);
+        Modules modules = Modules.instance(context);
         Log log = Log.instance(context);
         NBResolve resolve = NBResolve.instance(context);
         Annotate annotate = Annotate.instance(context);
@@ -739,18 +744,24 @@ public class Utilities {
 
         JavaFileObject jfo = FileObjects.memoryFileObject("$", "$", new File("/tmp/$" + count + ".java").toURI(), System.currentTimeMillis(), clazz.toString());
 
-        boolean oldSkipAPs = compiler.skipAnnotationProcessing;
-
         try {
-            compiler.skipAnnotationProcessing = true;
             resolve.disableAccessibilityChecks();
             if (compiler.isEnterDone()) {
                 annotate.blockAnnotations();
-                compiler.resetEnterDone();
+//                try {
+//                    Field f = compiler.getClass().getDeclaredField("enterDone");
+//                    f.setAccessible(true);
+//                    f.set(compiler, false);
+//                } catch (Throwable t) {
+//                    Logger.getLogger(Utilities.class.getName()).log(Level.FINE, null, t);
+//                }
+                //was:
+//                compiler.resetEnterDone();
             }
             
             JCCompilationUnit cut = compiler.parse(jfo);
-            compiler.enterTrees(compiler.initModules(com.sun.tools.javac.util.List.of(cut)));
+            modules.enter(com.sun.tools.javac.util.List.of(cut), null);
+            compiler.enterTrees(com.sun.tools.javac.util.List.of(cut));
 
             Todo todo = compiler.todo;
             ListBuffer<Env<AttrContext>> defer = new ListBuffer<Env<AttrContext>>();
@@ -774,11 +785,10 @@ public class Utilities {
         } finally {
             resolve.restoreAccessbilityChecks();
             log.popDiagnosticHandler(discardHandler);
-            compiler.skipAnnotationProcessing = oldSkipAPs;
         }
     }
 
-    private static final class ScannerImpl extends TreePathScanner<Scope, CompilationInfo> {
+    private static final class ScannerImpl extends ErrorAwareTreePathScanner<Scope, CompilationInfo> {
 
         @Override
         public Scope visitBlock(BlockTree node, CompilationInfo p) {
@@ -1075,7 +1085,7 @@ public class Utilities {
         }
     }
     
-    private static final class GeneralizePattern extends TreePathScanner<Void, Void> {
+    private static final class GeneralizePattern extends ErrorAwareTreePathScanner<Void, Void> {
 
         public final Map<Tree, Tree> tree2Variable = new HashMap<Tree, Tree>();
         private final Map<Element, String> element2Variable = new HashMap<Element, String>();
@@ -1214,7 +1224,7 @@ public class Utilities {
     }
 
     public static long patternValue(Tree pattern) {
-        class VisitorImpl extends TreeScanner<Void, Void> {
+        class VisitorImpl extends ErrorAwareTreeScanner<Void, Void> {
             private int value;
             @Override
             public Void scan(Tree node, Void p) {

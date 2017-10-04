@@ -71,7 +71,7 @@ import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -105,7 +105,7 @@ import org.netbeans.api.java.source.CompilationInfo;
  *
  * @author Jan Lahoda
  */
-public class CopyFinder extends TreeScanner<Boolean, TreePath> {
+public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
 
     private final TreePath searchingFor;
     private final CompilationInfo info;

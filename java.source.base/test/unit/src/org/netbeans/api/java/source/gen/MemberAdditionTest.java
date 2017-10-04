@@ -28,7 +28,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -200,7 +200,7 @@ public class MemberAdditionTest extends NbTestCase {
         return i.topLevel;
     }
 
-    private static class TopLevelClassInfo extends TreeScanner<Void, Boolean> {
+    private static class TopLevelClassInfo extends ErrorAwareTreeScanner<Void, Boolean> {
 
         private ClassTree topLevel;
 
@@ -211,7 +211,7 @@ public class MemberAdditionTest extends NbTestCase {
 
     }
 
-    private static class FindVariableDeclaration extends TreeScanner<Void, Boolean> {
+    private static class FindVariableDeclaration extends ErrorAwareTreeScanner<Void, Boolean> {
 
         private VariableTree var;
 

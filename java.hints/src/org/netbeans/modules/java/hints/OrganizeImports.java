@@ -46,7 +46,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
@@ -232,7 +232,7 @@ public class OrganizeImports {
         final Set<Element> ret = new HashSet<Element>();
         final Trees trees = info.getTrees();
         final Types types = info.getTypes();
-        new TreePathScanner<Void, Void>() {
+        new ErrorAwareTreePathScanner<Void, Void>() {
 
             @Override
             public Void visitIdentifier(IdentifierTree node, Void p) {

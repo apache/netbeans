@@ -29,7 +29,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -490,7 +490,7 @@ public class TreeUtilitiesTest extends NbTestCase {
 
         final List<Boolean> result = new ArrayList<Boolean>();
 
-        new TreePathScanner<Void, Void>() {
+        new ErrorAwareTreePathScanner<Void, Void>() {
             @Override public Void visitAssignment(AssignmentTree node, Void p) {
                 result.add(info.getTreeUtilities().isCompileTimeConstantExpression(new TreePath(getCurrentPath(), node.getExpression())));
                 return super.visitAssignment(node, p);
@@ -507,6 +507,22 @@ public class TreeUtilitiesTest extends NbTestCase {
             @Override
             public void run(CompilationController parameter) throws Exception {
                 parameter.getTreeUtilities().parseExpression("1 + 1", new SourcePositions[1]);
+            }
+        }, true);
+    }
+    
+    public void testStaticBlock() throws Exception {
+        ClassPath boot = ClassPathSupport.createClassPath(SourceUtilsTestUtil.getBootClassPath().toArray(new URL[0]));
+        JavaSource js = JavaSource.create(ClasspathInfo.create(boot, ClassPath.EMPTY, ClassPath.EMPTY));
+        js.runUserActionTask(new Task<CompilationController>() {
+            @Override
+            public void run(CompilationController parameter) throws Exception {
+                final SourcePositions[] sp = new SourcePositions[1];
+                BlockTree block = parameter.getTreeUtilities().parseStaticBlock("static { }", sp);
+                assertNotNull(block);
+                assertEquals(0, sp[0].getStartPosition(null, block));
+                assertEquals(10, sp[0].getEndPosition(null, block));
+                assertNull(parameter.getTreeUtilities().parseStaticBlock("static", new SourcePositions[1]));
             }
         }, true);
     }

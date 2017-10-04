@@ -22,7 +22,7 @@ package org.netbeans.modules.refactoring.java.callhierarchy;
 import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.awt.EventQueue;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -530,7 +530,7 @@ final class CallHierarchyTasks {
         
     }
     
-    private static final class CalleeScanner extends TreePathScanner<Void, Void> {
+    private static final class CalleeScanner extends ErrorAwareTreePathScanner<Void, Void> {
         private final CompilationInfo   javac;
         /** map of all executables and their occurrences in the method body */
         private Map<Element, OccurrencesDesc> refs = new HashMap<Element, OccurrencesDesc>();

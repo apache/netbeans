@@ -20,7 +20,7 @@ package org.netbeans.api.java.source.gen;
 
 import java.io.File;
 import com.sun.source.tree.*;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.JavaSource;
 import static org.netbeans.api.java.source.JavaSource.*;
@@ -160,7 +160,7 @@ public class BlockTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws java.io.IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
 
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitIdentifier(IdentifierTree node, Void p) {
                         if (node.getName().contentEquals("a")) {

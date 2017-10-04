@@ -40,7 +40,7 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.editor.base.imports.UnusedImports;
-import org.netbeans.modules.java.source.TreeLoader;
+//import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -335,7 +335,7 @@ public class UnusedImportsTest extends NbTestCase {
 
     private void performUnusedImportsTest(String... golden) throws Exception {
         CompilationInfo ci = SourceUtilsTestUtil.getCompilationInfo(JavaSource.forFileObject(src.getFileObject("test/Main.java")), Phase.RESOLVED);
-        TreeLoader.DISABLE_CONFINEMENT_TEST = true;
+//        TreeLoader.DISABLE_CONFINEMENT_TEST = true;
         Document doc = ci.getSnapshot().getSource().getDocument(true);
         doc.putProperty(Language.class, JavaTokenId.language());
         List<TreePathHandle> unused = UnusedImports.computeUnusedImports(ci);

@@ -42,8 +42,8 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -438,7 +438,7 @@ public class Lambda {
             }
             types.put(samTypeElement.getSimpleName(), samTypeElement);
             
-            new TreePathScanner<Void, Boolean>() {
+            new ErrorAwareTreePathScanner<Void, Boolean>() {
                 @Override public Void visitIdentifier(final IdentifierTree node, Boolean p) {
                     boolean rewrite = false;
                     boolean statRef = false;

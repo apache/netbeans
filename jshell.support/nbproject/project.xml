@@ -120,7 +120,7 @@
                         <specification-version>8.19</specification-version>
                     </run-dependency>
                 </dependency>
-                <dependency>
+<!--                <dependency>
                     <code-name-base>org.netbeans.libs.javacimpl</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -128,7 +128,7 @@
                         <release-version>1</release-version>
                         <specification-version>0.47</specification-version>
                     </run-dependency>
-                </dependency>
+                </dependency>-->
                 <dependency>
                     <code-name-base>org.netbeans.libs.jshell.compile</code-name-base>
                     <build-prerequisite/>

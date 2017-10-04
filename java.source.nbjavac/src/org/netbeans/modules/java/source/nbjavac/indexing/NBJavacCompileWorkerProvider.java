@@ -16,26 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.source.indexing;
+package org.netbeans.modules.java.source.nbjavac.indexing;
 
-import java.util.Collection;
-import org.netbeans.modules.java.source.indexing.CompileWorker.ParsingOutput;
+import java.util.List;
+import org.netbeans.modules.java.source.indexing.CompileWorker;
+import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
-import org.netbeans.modules.parsing.spi.indexing.Context;
+import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileWorkerProvider;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author lahvac
  */
-public class SuperOnePassCompileWorkerTest extends CompileWorkerTestBase {
-    
-    public SuperOnePassCompileWorkerTest(String name) {
-        super(name);
-    }
-    
+@ServiceProvider(service=JavaCustomIndexer.CompileWorkerProvider.class, position=100)
+public class NBJavacCompileWorkerProvider implements CompileWorkerProvider {
+
+    private static final int TRESHOLD = 500;
+
     @Override
-    protected ParsingOutput runCompileWorker(Context context, JavaParsingContext javaContext, Collection<? extends CompileTuple> files) {
-        return new SuperOnePassCompileWorker().compile(null, context, javaContext, files);
+    public CompileWorker[] getWorkers(List<CompileTuple> toCompile) {
+        return new CompileWorker[] {
+            toCompile.size() < TRESHOLD ? new SuperOnePassCompileWorker() : new OnePassCompileWorker(),
+            new MultiPassCompileWorker()
+        };
     }
-    
+
 }

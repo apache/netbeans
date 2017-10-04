@@ -19,7 +19,7 @@
 package org.netbeans.api.java.source.gen;
 
 import com.sun.source.tree.*;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -137,7 +137,7 @@ public class MultiCatchTest extends GeneratorTestBase {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
 
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitIdentifier(IdentifierTree node, Void p) {
                         if (node.getName().contentEquals("FileNotFoundException")) {
                             workingCopy.rewrite(node, make.Identifier("IOException"));
@@ -186,7 +186,7 @@ public class MultiCatchTest extends GeneratorTestBase {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
 
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitUnionType(UnionTypeTree node, Void p) {
                         List<Tree> alternatives = new ArrayList<Tree>(node.getTypeAlternatives());
                         alternatives.add(make.Identifier("IOException"));
@@ -235,7 +235,7 @@ public class MultiCatchTest extends GeneratorTestBase {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
 
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitUnionType(UnionTypeTree node, Void p) {
                         List<Tree> alternatives = new ArrayList<Tree>(node.getTypeAlternatives());
                         alternatives.add(0, make.Identifier("IOException"));
@@ -284,7 +284,7 @@ public class MultiCatchTest extends GeneratorTestBase {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
 
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitUnionType(UnionTypeTree node, Void p) {
                         List<Tree> alternatives = new ArrayList<Tree>(node.getTypeAlternatives());
                         alternatives.add(1, make.Identifier("IOException"));

@@ -20,7 +20,7 @@ package org.netbeans.modules.refactoring.java.plugins;
 
 import com.sun.source.tree.*;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -318,7 +318,7 @@ public class PullUpTransformer extends RefactoringVisitor {
         final Types types = workingCopy.getTypes();
 
         final Map<IdentifierTree, Tree> original2Translated = new HashMap<IdentifierTree, Tree>();
-        TreeScanner<Void, Void> scanner = new TreeScanner<Void, Void>() {
+        ErrorAwareTreeScanner<Void, Void> scanner = new ErrorAwareTreeScanner<Void, Void>() {
 
             @Override
             public Void visitIdentifier(IdentifierTree node, Void p) {
@@ -359,7 +359,7 @@ public class PullUpTransformer extends RefactoringVisitor {
     private BlockTree updateSuperThisReferences(BlockTree body, final TreePath mpath) {
         final Map<ExpressionTree, ExpressionTree> original2Translated = new HashMap<ExpressionTree, ExpressionTree>();
         final Trees trees = workingCopy.getTrees();
-        TreeScanner<Boolean, Void> idScan = new TreeScanner<Boolean, Void>() {
+        ErrorAwareTreeScanner<Boolean, Void> idScan = new ErrorAwareTreeScanner<Boolean, Void>() {
             @Override
             public Boolean visitMemberSelect(MemberSelectTree node, Void nothing) {
                 String isThis = node.getExpression().toString();

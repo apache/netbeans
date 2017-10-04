@@ -28,7 +28,7 @@ import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -226,7 +226,7 @@ public class TryCatchFinally {
         return errs;
     }
     
-    private static final class ExitsFromBranches extends TreePathScanner<Void, Collection<TreePath>> {
+    private static final class ExitsFromBranches extends ErrorAwareTreePathScanner<Void, Collection<TreePath>> {
         private final  boolean analyzeThrows;
         private final CompilationInfo info;
         private final Set<Tree> seenTrees = new HashSet<Tree>();

@@ -29,14 +29,14 @@ import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.WhileLoopTree;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 
 /**
  * Counts the maximum depth of the Tree
  * 
  * @author sdedic
  */
-public final class DepthVisitor extends TreePathScanner {
+public final class DepthVisitor extends ErrorAwareTreePathScanner {
     private int depth;
     private int maxDepth;
     

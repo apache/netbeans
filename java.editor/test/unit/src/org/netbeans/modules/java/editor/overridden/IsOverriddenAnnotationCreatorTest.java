@@ -32,9 +32,10 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
+import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.TestUtil;
-import org.netbeans.modules.java.source.TreeLoader;
+//import org.netbeans.modules.java.source.TreeLoader;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -120,8 +121,8 @@ public class IsOverriddenAnnotationCreatorTest extends NbTestCase {
 
         ComputeOverriders.dependenciesOverride = Collections.singletonMap(sourceRoot.getURL(), Collections.<URL>emptyList());
         ComputeOverriders.reverseSourceRootsInOrderOverride = Arrays.asList(sourceRoot.getURL());
-        TreeLoader.DISABLE_CONFINEMENT_TEST = true;
-        TreeLoader.DISABLE_ARTIFICAL_PARAMETER_NAMES = true;
+//        TreeLoader.DISABLE_CONFINEMENT_TEST = true;
+        SourceUtilsTestUtil2.disableArtificalParameterNames();
     }
     
     //does not work as recursive lookup does not work:

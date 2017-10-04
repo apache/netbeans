@@ -30,7 +30,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -264,7 +264,7 @@ public class AddParameterOrLocalFix implements EnhancedFix {
             return;
         }
         
-        class FirstUsage extends TreePathScanner<TreePath, Void> {
+        class FirstUsage extends ErrorAwareTreePathScanner<TreePath, Void> {
             public @Override TreePath visitIdentifier(IdentifierTree tree, Void v) {
                 if (tree.getName().contentEquals(el.getSimpleName()) && isError(wc, wc.getTrees().getElement(getCurrentPath()))) {
                     return findStatement(getCurrentPath());

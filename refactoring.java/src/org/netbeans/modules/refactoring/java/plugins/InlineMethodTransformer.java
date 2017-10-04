@@ -31,6 +31,8 @@ import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.netbeans.modules.refactoring.java.spi.RefactoringVisitor;
@@ -208,7 +210,7 @@ public class InlineMethodTransformer extends RefactoringVisitor {
             body = (BlockTree) treeUtilities.translate(body, original2TranslatedBody);
             
             final Boolean[] multiplereturn = {null};
-            new TreeScanner<Void, Void>() {
+            new ErrorAwareTreeScanner<Void, Void>() {
 
                 @Override
                 public Void scan(Tree node, Void p) {
@@ -396,7 +398,7 @@ public class InlineMethodTransformer extends RefactoringVisitor {
         final ElementUtilities elementUtilities = workingCopy.getElementUtilities();
         final TypeElement bodyEnclosingTypeElement = elementUtilities.enclosingTypeElement(method);
 
-        TreePathScanner<Void, ExecutableElement> idScan = new TreePathScanner<Void, ExecutableElement>() {
+        ErrorAwareTreePathScanner<Void, ExecutableElement> idScan = new ErrorAwareTreePathScanner<Void, ExecutableElement>() {
             @Override
             public Void visitIdentifier(IdentifierTree node, ExecutableElement p) {
                 TreePath currentPath = getCurrentPath();
@@ -524,7 +526,7 @@ public class InlineMethodTransformer extends RefactoringVisitor {
         final CompilationUnitTree compilationUnitTree = workingCopy.getTrees().getPath(resolved).getCompilationUnit();
         final LinkedList<Pair<Element, String>> renames = new LinkedList<>();
         // Scan the body and look for name clashes
-        TreeScanner<Void, ExecutableElement> nameClashScanner = new TreeScanner<Void, ExecutableElement>() {
+        ErrorAwareTreeScanner<Void, ExecutableElement> nameClashScanner = new ErrorAwareTreeScanner<Void, ExecutableElement>() {
             @Override
             public Void visitVariable(VariableTree node, ExecutableElement p) {
                 TreePath path = trees.getPath(compilationUnitTree, node);
@@ -577,7 +579,7 @@ public class InlineMethodTransformer extends RefactoringVisitor {
             
         };
         nameClashScanner.scan(body, (ExecutableElement) p);
-        TreeScanner<Void, Pair<Element, String>> idScan = new TreeScanner<Void, Pair<Element, String>>() {
+        ErrorAwareTreeScanner<Void, Pair<Element, String>> idScan = new ErrorAwareTreeScanner<Void, Pair<Element, String>>() {
             @Override
             public Void visitIdentifier(IdentifierTree node, Pair<Element, String> p) {
                 TreePath path = trees.getPath(compilationUnitTree, node);
@@ -617,7 +619,7 @@ public class InlineMethodTransformer extends RefactoringVisitor {
         final CompilationUnitTree compilationUnitTree = workingCopy.getTrees().getPath(resolved).getCompilationUnit();
         final LinkedList<Pair<Element, String>> renames = new LinkedList<>();
         
-        TreeScanner<Void, Pair<VariableElement, ExpressionTree>> idScan = new TreeScanner<Void, Pair<VariableElement, ExpressionTree>>() {
+        ErrorAwareTreeScanner<Void, Pair<VariableElement, ExpressionTree>> idScan = new ErrorAwareTreeScanner<Void, Pair<VariableElement, ExpressionTree>>() {
             @Override
             public Void visitIdentifier(IdentifierTree node, Pair<VariableElement, ExpressionTree> p) {
                 TreePath currentPath = trees.getPath(compilationUnitTree, node);
@@ -675,7 +677,7 @@ public class InlineMethodTransformer extends RefactoringVisitor {
             }
         }
 
-        TreeScanner<Void, Pair<Element, String>> renameScan = new TreeScanner<Void, Pair<Element, String>>() {
+        ErrorAwareTreeScanner<Void, Pair<Element, String>> renameScan = new ErrorAwareTreeScanner<Void, Pair<Element, String>>() {
             @Override
             public Void visitIdentifier(IdentifierTree node, Pair<Element, String> p) {
                 TreePath path = trees.getPath(compilationUnitTree, node);

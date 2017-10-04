@@ -37,8 +37,8 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -342,7 +342,7 @@ public class Tiny {
         final LabeledStatementTree lt = (LabeledStatementTree)lPath.getLeaf();
         final Name l = lt.getLabel();
         final CompilationInfo info = ctx.getInfo();
-        Boolean b = new TreePathScanner<Boolean, Void>() {
+        Boolean b = new ErrorAwareTreePathScanner<Boolean, Void>() {
 
             @Override
             public Boolean reduce(Boolean r1, Boolean r2) {

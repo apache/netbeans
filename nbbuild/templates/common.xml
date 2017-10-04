@@ -534,6 +534,7 @@
                     <pathelement path="${module.run.classpath}"/>
                     <pathelement path="${test.@{test.type}.run.cp.extra}"/>
                     <pathelement path="${test.@{test.type}.cp.extra}"/>
+                    <pathelement path="${test.extra.nb.javac.deps}"/>
                 </path>
                 <!-- path reference used in both compiler and executor -->
                 <propertyset id="test.@{test.type}.properties">

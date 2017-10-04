@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.java.source.indexing;
 
-import com.sun.tools.javac.api.DuplicateClassChecker;
 import com.sun.tools.javac.code.Symbol;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -48,7 +47,7 @@ import org.openide.util.Exceptions;
  *
  * @author Dusan Balek
  */
-public final class FQN2Files implements DuplicateClassChecker {
+public final class FQN2Files {
 
     private static final Logger LOG = Logger.getLogger(FQN2Files.class.getName());
     private static final String FQN2FILES_FILE = "fqn2files.properties"; //NOI18N
@@ -134,7 +133,6 @@ public final class FQN2Files implements DuplicateClassChecker {
         }
     }
 
-    @Override
     public boolean check(final Name fqn, final JavaFileObject jfo) {
         String value = props.getProperty(fqn.toString());
         try {

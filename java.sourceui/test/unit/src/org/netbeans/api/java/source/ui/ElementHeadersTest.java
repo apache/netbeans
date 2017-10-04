@@ -33,7 +33,7 @@ import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.JavaDataLoader;
-import org.netbeans.modules.java.source.TreeLoader;
+//import org.netbeans.modules.java.source.TreeLoader;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -121,7 +121,7 @@ public class ElementHeadersTest extends NbTestCase {
     }
     
     public void test134664() throws Exception {
-        TreeLoader.DISABLE_CONFINEMENT_TEST = true;
+//        TreeLoader.DISABLE_CONFINEMENT_TEST = true;
         performTest("test/Test.java", "package test; public class Test { public Tfst {} }", 43, ElementHeaders.NAME, "Tfst");
     }
 }

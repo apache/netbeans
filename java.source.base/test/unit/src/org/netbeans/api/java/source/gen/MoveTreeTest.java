@@ -34,7 +34,7 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -721,7 +721,7 @@ public class MoveTreeTest extends GeneratorTestBase {
                 VariableTree locVar = (VariableTree) method.getBody().getStatements().get(0);
                 TypeCastTree tct = (TypeCastTree) locVar.getInitializer();
                 
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
                         if (node.getArguments().size() == 1) {
                             workingCopy.tag(node, "test");
@@ -784,7 +784,7 @@ public class MoveTreeTest extends GeneratorTestBase {
                 VariableTree locVar = (VariableTree) method.getBody().getStatements().get(0);
                 TreeMaker make = workingCopy.getTreeMaker();
                 
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
                         if (node.getArguments().size() == 1) {
                             workingCopy.tag(node, "test");

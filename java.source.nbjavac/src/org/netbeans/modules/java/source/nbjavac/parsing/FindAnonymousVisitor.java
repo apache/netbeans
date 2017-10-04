@@ -17,13 +17,13 @@
  * under the License.
  */
 
-package org.netbeans.modules.java.source.parsing;
+package org.netbeans.modules.java.source.nbjavac.parsing;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,7 +34,7 @@ import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
  * Finds anonymous and local classes in given method tree.
  * @author Tomas Zezula
  */
-class FindAnonymousVisitor extends TreeScanner<Void,Void> {
+class FindAnonymousVisitor extends ErrorAwareTreeScanner<Void,Void> {
 
     private static enum Mode {COLLECT, CHECK};
 

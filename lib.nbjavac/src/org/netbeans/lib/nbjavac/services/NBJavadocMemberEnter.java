@@ -21,7 +21,9 @@ package org.netbeans.lib.nbjavac.services;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.comp.MemberEnter;
+import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCImport;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
@@ -66,7 +68,13 @@ public class NBJavadocMemberEnter extends JavadocMemberEnter {
     @Override
     public void visitMethodDef(JCMethodDecl tree) {
         cancelService.abortIfCanceled();
-        super.visitMethodDef(tree);
+        JCBlock body = tree.body;
+        try {
+            super.visitMethodDef(tree);
+        } finally {
+            //reinstall body:
+            tree.body = body;
+        }
         if (trees instanceof NBJavacTrees && !env.enclClass.defs.contains(tree)) {
             ((NBJavacTrees)trees).addPathForElement(tree.sym, new TreePath(trees.getPath(env.toplevel, env.enclClass), tree));
         }
@@ -75,7 +83,13 @@ public class NBJavadocMemberEnter extends JavadocMemberEnter {
     @Override
     public void visitVarDef(JCVariableDecl tree) {
         cancelService.abortIfCanceled();
-        super.visitVarDef(tree);
+        JCExpression init = tree.init;
+        try {
+            super.visitVarDef(tree);
+        } finally {
+            //reinstall init:
+            tree.init = init;
+        }
     }
 
 }

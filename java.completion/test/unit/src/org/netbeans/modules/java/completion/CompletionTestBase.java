@@ -54,7 +54,7 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.JavaDataLoader;
-import org.netbeans.modules.java.source.TreeLoader;
+//import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.modules.java.source.indexing.TransactionContext;
 import org.netbeans.modules.java.source.usages.BinaryAnalyser;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
@@ -83,7 +83,7 @@ public class CompletionTestBase extends NbTestCase {
     
     static {
         JavaCompletionTaskBasicTest.class.getClassLoader().setDefaultAssertionStatus(true);
-        TreeLoader.DISABLE_ARTIFICAL_PARAMETER_NAMES = true;
+        SourceUtilsTestUtil2.disableArtificalParameterNames();
     }
 
     static final int FINISH_OUTTIME = 5 * 60 * 1000;

@@ -187,8 +187,6 @@ public class APIIsSelfContainedTest extends NbTestCase {
         
         return new FileObject[] {
             FileUtil.getArchiveRoot(root.getFileObject("java/modules/org-netbeans-modules-java-source.jar")),
-            FileUtil.getArchiveRoot(root.getFileObject("java/modules/ext/nb-javac-api.jar")),
-            FileUtil.getArchiveRoot(root.getFileObject("java/modules/ext/nb-javac-impl.jar")),
         };
     }
     

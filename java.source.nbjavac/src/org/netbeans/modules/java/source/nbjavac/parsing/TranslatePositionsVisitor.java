@@ -17,24 +17,23 @@
  * under the License.
  */
 
-package org.netbeans.modules.java.source.parsing;
+package org.netbeans.modules.java.source.nbjavac.parsing;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
-import org.netbeans.lib.nbjavac.services.NBParserFactory.NBJavacParser.EndPosTableImpl;
 
 /**
  * Helper visitor for partial reparse.
  * Updates tree positions by the given delta.
  * @author Tomas Zezula
  */
-class TranslatePositionsVisitor extends TreeScanner<Void,Void> {
+class TranslatePositionsVisitor extends ErrorAwareTreeScanner<Void,Void> {
 
     private final MethodTree changedMethod;
     private final EndPosTable endPos;
@@ -72,7 +71,7 @@ class TranslatePositionsVisitor extends TreeScanner<Void,Void> {
                 else {
                     newPos = pos+delta;
                 }
-                ((EndPosTableImpl) endPos).storeEnd((JCTree)node,newPos);
+                endPos.storeEnd((JCTree)node,newPos);
             }                
         }
         return result;

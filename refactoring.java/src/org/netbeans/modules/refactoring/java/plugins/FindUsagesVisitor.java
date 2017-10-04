@@ -21,7 +21,7 @@ package org.netbeans.modules.refactoring.java.plugins;
 import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.*;
@@ -51,7 +51,7 @@ import org.openide.util.Exceptions;
  *
  * @author Jan Becicka
  */
-public class FindUsagesVisitor extends TreePathScanner<Tree, Element> {
+public class FindUsagesVisitor extends ErrorAwareTreePathScanner<Tree, Element> {
 
     private Collection<TreePath> usages = new ArrayList<>();
     private List<WhereUsedElement> elements = new ArrayList<>();

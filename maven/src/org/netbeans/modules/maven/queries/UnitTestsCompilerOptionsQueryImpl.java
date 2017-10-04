@@ -290,7 +290,7 @@ public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQ
                         cc.toPhase(JavaSource.Phase.PARSED);
                         final CompilationUnitTree cu = cc.getCompilationUnit();
                         for (Tree decl : cu.getTypeDecls()) {
-                            if (decl.getKind() == Tree.Kind.MODULE) {
+                            if (decl.getKind().name().equals("MODULE")) {
                                 res[0] = ((ModuleTree)decl).getName().toString();
                                 break;
                             }

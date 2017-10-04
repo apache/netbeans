@@ -23,7 +23,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.beans.PropertyChangeEvent;
@@ -228,7 +228,7 @@ public class TreeNavigatorProviderImpl implements NavigatorPanel {
             }
         }
 
-        class PathFinder extends TreePathScanner<Void,Void> {
+        class PathFinder extends ErrorAwareTreePathScanner<Void,Void> {
             private int pos;
             private SourcePositions sourcePositions;
 

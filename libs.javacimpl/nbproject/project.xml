@@ -30,11 +30,11 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>8.17</specification-version>
+                        <implementation-version/>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <friend-packages>
+<!--            <friend-packages>
                 <friend>org.netbeans.modules.jackpot.rules</friend>
                 <friend>org.netbeans.modules.java.hints</friend>
                 <friend>org.netbeans.modules.java.source</friend>
@@ -57,11 +57,12 @@
                 <package>com.sun.tools.javac.tree</package>
                 <package>com.sun.tools.javac.util</package>
                 <package>com.sun.tools.javadoc</package>
-            </friend-packages>
-            <class-path-extension>
+            </friend-packages>-->
+            <public-packages/>
+<!--            <class-path-extension>
                 <runtime-relative-path>ext/nb-javac-impl.jar</runtime-relative-path>
                 <binary-origin>external/nb-javac-impl.jar</binary-origin>
-            </class-path-extension>
+            </class-path-extension>-->
         </data>
     </configuration>
 </project>

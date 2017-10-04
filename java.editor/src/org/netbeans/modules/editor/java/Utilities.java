@@ -39,9 +39,9 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 
 import java.awt.Color;
 import java.util.*;
@@ -467,7 +467,7 @@ public final class Utilities {
     public static Set<Element> getUsedElements(final CompilationInfo info) {
         final Set<Element> ret = new HashSet<>();
         final Trees trees = info.getTrees();
-        new TreePathScanner<Void, Void>() {
+        new ErrorAwareTreePathScanner<Void, Void>() {
 
             @Override
             public Void visitIdentifier(IdentifierTree node, Void p) {
@@ -516,7 +516,7 @@ public final class Utilities {
     
     public static boolean containErrors(Tree tree) {
         final AtomicBoolean containsErrors = new AtomicBoolean();
-        new TreeScanner<Void, Void>() {
+        new ErrorAwareTreeScanner<Void, Void>() {
             @Override
             public Void visitErroneous(ErroneousTree node, Void p) {
                 containsErrors.set(true);

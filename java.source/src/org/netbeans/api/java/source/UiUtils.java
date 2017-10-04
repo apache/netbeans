@@ -24,7 +24,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.tools.javac.util.Context;
 import java.io.IOException;
 import java.util.Collection;
@@ -435,7 +435,7 @@ public final class  UiUtils {
     
     // Private innerclasses ----------------------------------------------------
     
-    private static class FindDeclarationVisitor extends TreePathScanner<Void, Void> {
+    private static class FindDeclarationVisitor extends ErrorAwareTreePathScanner<Void, Void> {
         
         private Element element;
         private Tree declTree;

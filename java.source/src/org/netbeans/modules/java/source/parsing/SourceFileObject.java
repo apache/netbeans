@@ -76,7 +76,7 @@ public class SourceFileObject extends AbstractSourceFileObject implements Docume
         @NullAllowed final JavaFileFilterImplementation filter,
         @NullAllowed final CharSequence content,
         final boolean renderNow) throws IOException {
-        super(handle, filter);
+        super(handle, filter, content != null);
         this.hasFilter = filter != null;
         if (content != null || renderNow) {
             update(content);

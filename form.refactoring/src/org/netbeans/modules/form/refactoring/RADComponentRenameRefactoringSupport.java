@@ -22,7 +22,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -106,7 +106,7 @@ public class RADComponentRenameRefactoringSupport implements RenameSupport.Refac
     }
 
     private static class MemberVisitor
-            extends TreePathScanner<Void, Void>
+            extends ErrorAwareTreePathScanner<Void, Void>
             implements CancellableTask<CompilationController>{
         
         private CompilationInfo info;

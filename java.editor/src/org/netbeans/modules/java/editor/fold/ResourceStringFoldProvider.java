@@ -28,7 +28,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -177,7 +177,7 @@ public class ResourceStringFoldProvider extends ParsingFoldSupport{
     }
     
 
-    private static class V extends TreePathScanner<Void, Void> {
+    private static class V extends ErrorAwareTreePathScanner<Void, Void> {
         private final FileObject                  anchor;
         private final Proc                         proc;
         private final CompilationInfo info;

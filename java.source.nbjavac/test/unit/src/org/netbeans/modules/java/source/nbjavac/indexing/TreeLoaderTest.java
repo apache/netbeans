@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.java.source;
+package org.netbeans.modules.java.source.nbjavac.indexing;
 
 import java.io.File;
 import java.io.IOException;

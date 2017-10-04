@@ -18,6 +18,12 @@
  */
 package org.netbeans.api.java.source;
 
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.nio.CharBuffer;
+
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.doctree.ReferenceTree;
@@ -28,8 +34,8 @@ import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacScope;
 import com.sun.tools.javac.api.JavacTrees;
@@ -45,9 +51,12 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Context;
+
 import java.util.*;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
@@ -57,6 +66,24 @@ import javax.lang.model.type.UnionType;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
+import javax.tools.SimpleJavaFileObject;
+
+import com.sun.source.util.DocTrees;
+import com.sun.tools.javac.api.JavacTaskImpl;
+import com.sun.tools.javac.comp.ArgumentAttr;
+import com.sun.tools.javac.comp.Attr;
+import com.sun.tools.javac.main.JavaCompiler;
+import com.sun.tools.javac.parser.JavacParser;
+import com.sun.tools.javac.parser.Parser;
+import com.sun.tools.javac.parser.ParserFactory;
+import com.sun.tools.javac.parser.ScannerFactory;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.util.JCDiagnostic;
+import com.sun.tools.javac.util.Log;
+import com.sun.tools.javac.util.Names;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -64,6 +91,8 @@ import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.lexer.JavadocTokenId;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.lib.nbjavac.services.CancelService;
+import org.netbeans.lib.nbjavac.services.NBParserFactory;
 import org.netbeans.lib.nbjavac.services.NBResolve;
 import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
@@ -71,6 +100,7 @@ import org.netbeans.modules.java.source.builder.CommentSetImpl;
 import org.netbeans.modules.java.source.pretty.ImportAnalysis2;
 import org.netbeans.modules.java.source.transform.ImmutableDocTreeTranslator;
 import org.netbeans.modules.java.source.transform.ImmutableTreeTranslator;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -301,7 +331,7 @@ public final class TreeUtilities {
             }
         }
         
-        class PathFinder extends TreePathScanner<Void,Void> {
+        class PathFinder extends ErrorAwareTreePathScanner<Void,Void> {
             private int pos;
             private SourcePositions sourcePositions;
             
@@ -345,6 +375,7 @@ public final class TreeUtilities {
                 
                 return super.visitMethod(node, p);
             }
+
         }
         
         try {
@@ -534,13 +565,7 @@ public final class TreeUtilities {
      * @return parsed {@link TypeMirror} or null if the given specification cannot be parsed
      */
     Tree parseType(String expr) {
-        com.sun.tools.javac.tree.TreeMaker jcMaker = com.sun.tools.javac.tree.TreeMaker.instance(info.impl.getJavacTask().getContext());
-        int oldPos = jcMaker.pos;
-        try {
-            return info.impl.getJavacTask().parseType(expr);
-        } finally {
-            jcMaker.pos = oldPos;
-        }
+        return doParse(expr, null, 0, Parser::parseType);
     }
     
     /**Parses given statement.
@@ -550,16 +575,9 @@ public final class TreeUtilities {
      * @return parsed {@link StatementTree} or null?
      */
     public StatementTree parseStatement(String stmt, SourcePositions[] sourcePositions) {
-        com.sun.tools.javac.tree.TreeMaker jcMaker = com.sun.tools.javac.tree.TreeMaker.instance(info.impl.getJavacTask().getContext());
-        int oldPos = jcMaker.pos;
-        
-        try {
-            return (StatementTree)info.impl.getJavacTask().parseStatement(stmt, sourcePositions);
-        } finally {
-            jcMaker.pos = oldPos;
-        }
+        return doParse(stmt, sourcePositions, 0, Parser::parseStatement);
     }
-    
+
     /**Parses given expression.
      * 
      * @param expr expression code
@@ -567,14 +585,7 @@ public final class TreeUtilities {
      * @return parsed {@link ExpressionTree} or null?
      */
     public ExpressionTree parseExpression(String expr, SourcePositions[] sourcePositions) {
-        com.sun.tools.javac.tree.TreeMaker jcMaker = com.sun.tools.javac.tree.TreeMaker.instance(info.impl.getJavacTask().getContext());
-        int oldPos = jcMaker.pos;
-        
-        try {
-            return (ExpressionTree) info.impl.getJavacTask().parseExpression(expr, sourcePositions);
-        } finally {
-            jcMaker.pos = oldPos;
-        }
+        return doParse(expr, sourcePositions, 0, Parser::parseExpression);
     }
     
     /**Parses given variable initializer.
@@ -584,14 +595,7 @@ public final class TreeUtilities {
      * @return parsed {@link ExpressionTree} or null?
      */
     public ExpressionTree parseVariableInitializer(String init, SourcePositions[] sourcePositions) {
-        com.sun.tools.javac.tree.TreeMaker jcMaker = com.sun.tools.javac.tree.TreeMaker.instance(info.impl.getJavacTask().getContext());
-        int oldPos = jcMaker.pos;
-        
-        try {
-            return (ExpressionTree)info.impl.getJavacTask().parseVariableInitializer(init, sourcePositions);
-        } finally {
-            jcMaker.pos = oldPos;
-        }
+        return doParse(init, sourcePositions, 0, p -> ((JavacParser) p).variableInitializer());
     }
 
     /**Parses given static block.
@@ -601,13 +605,84 @@ public final class TreeUtilities {
      * @return parsed {@link BlockTree} or null?
      */
     public BlockTree parseStaticBlock(String block, SourcePositions[] sourcePositions) {
+        return doParse("{ class C { " + block + " }", sourcePositions, "{ class C { ".length(), p -> {
+            JCClassDecl decl = (JCClassDecl) ((BlockTree) p.parseStatement()).getStatements().get(0);
+            return decl.defs.head.getKind() == Kind.BLOCK ? (BlockTree) decl.defs.head : null; //check result
+        });
+    }
+
+    /**Parses given statement.
+     * 
+     * @param text code
+     * @param sourcePositions return value - new SourcePositions for the new tree
+     * @return parsed {@link T} or null?
+     */
+    private <T extends Tree> T doParse(String text, SourcePositions[] sourcePositions, int offset, Function<Parser, T> actualParse) {
+        if (text == null || (sourcePositions != null && sourcePositions.length != 1))
+            throw new IllegalArgumentException();
+        //use a working init order:
+        com.sun.tools.javac.main.JavaCompiler.instance(info.impl.getJavacTask().getContext());
         com.sun.tools.javac.tree.TreeMaker jcMaker = com.sun.tools.javac.tree.TreeMaker.instance(info.impl.getJavacTask().getContext());
         int oldPos = jcMaker.pos;
         
         try {
-            return (BlockTree)info.impl.getJavacTask().parseStaticBlock(block, sourcePositions);
+            //from org/netbeans/modules/java/hints/spiimpl/Utilities.java:
+            Context context = info.impl.getJavacTask().getContext();
+            JavaCompiler compiler = JavaCompiler.instance(context);
+            JavaFileObject prev = compiler.log.useSource(new DummyJFO());
+            Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(compiler.log) {
+                @Override
+                public void report(JCDiagnostic diag) {
+                    //ignore:
+                }            
+            };
+            try {
+                CharBuffer buf = CharBuffer.wrap((text+"\u0000").toCharArray(), 0, text.length());
+                ParserFactory factory = ParserFactory.instance(context);
+                Parser parser = factory.newParser(buf, false, true, false, false);
+                if (parser instanceof JavacParser) {
+                    if (sourcePositions != null)
+                        sourcePositions[0] = new ParserSourcePositions((JavacParser)parser, offset);
+                    return actualParse.apply(parser);
+                }
+                return null;
+            } finally {
+                compiler.log.useSource(prev);
+                compiler.log.popDiagnosticHandler(discardHandler);
+            }
         } finally {
             jcMaker.pos = oldPos;
+        }
+    }
+    
+    //from org/netbeans/modules/java/hints/spiimpl/Utilities.java:
+    private static final class DummyJFO extends SimpleJavaFileObject {
+        private DummyJFO() {
+            super(URI.create("dummy.java"), JavaFileObject.Kind.SOURCE);
+        }
+        @Override
+        public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
+            return "";
+        }
+    }
+
+    //from org/netbeans/modules/java/hints/spiimpl/Utilities.java:
+    private static class ParserSourcePositions implements SourcePositions {
+
+        private final JavacParser parser;
+        private final int offset;
+
+        private ParserSourcePositions(JavacParser parser, int offset) {
+            this.parser = parser;
+            this.offset = offset;
+        }
+
+        public long getStartPosition(CompilationUnitTree file, Tree tree) {
+            return parser.getStartPos((JCTree)tree) - offset;
+        }
+
+        public long getEndPosition(CompilationUnitTree file, Tree tree) {
+            return parser.getEndPos((JCTree)tree) - offset;
         }
     }
 
@@ -687,7 +762,7 @@ public final class TreeUtilities {
             NBResolve.instance(info.impl.getJavacTask().getContext()).disableAccessibilityChecks();
         }
         try {
-            return info.impl.getJavacTask().attributeTree((JCTree) tree, ((JavacScope) scope).getEnv());
+            return attributeTree(info.impl.getJavacTask(), (JCTree) tree, scope, new ArrayList<>());
         } finally {
             NBResolve.instance(info.impl.getJavacTask().getContext()).restoreAccessbilityChecks();
         }
@@ -701,7 +776,7 @@ public final class TreeUtilities {
             NBResolve.instance(info.impl.getJavacTask().getContext()).disableAccessibilityChecks();
         }
         try {
-            return info.impl.getJavacTask().attributeTreeTo((JCTree)tree, ((JavacScope)scope).getEnv(), (JCTree)to);
+            return attributeTreeTo(info.impl.getJavacTask(), (JCTree)tree, scope, (JCTree)to, new ArrayList<>());
         } finally {
             NBResolve.instance(info.impl.getJavacTask().getContext()).restoreAccessbilityChecks();
         }
@@ -714,7 +789,7 @@ public final class TreeUtilities {
             NBResolve.instance(info.impl.getJavacTask().getContext()).disableAccessibilityChecks();
         }
         try {
-            return info.impl.getJavacTask().attributeTree((JCTree)tree, env);
+            return attributeTree(info.impl.getJavacTask(), (JCTree)tree, scope, new ArrayList<>());
         } finally {
             NBResolve.instance(info.impl.getJavacTask().getContext()).restoreAccessbilityChecks();
         }
@@ -727,12 +802,80 @@ public final class TreeUtilities {
             NBResolve.instance(info.impl.getJavacTask().getContext()).disableAccessibilityChecks();
         }
         try {
-            return info.impl.getJavacTask().attributeTreeTo((JCTree)tree, env, (JCTree)to);
+            return attributeTreeTo(info.impl.getJavacTask(), (JCTree)tree, scope, (JCTree)to, new ArrayList<>());
         } finally {
             NBResolve.instance(info.impl.getJavacTask().getContext()).restoreAccessbilityChecks();
         }
     }
     
+    //from org/netbeans/modules/java/hints/spiimpl/Utilities.java:
+    private static TypeMirror attributeTree(JavacTaskImpl jti, Tree tree, Scope scope, final List<Diagnostic<? extends JavaFileObject>> errors) {
+        Log log = Log.instance(jti.getContext());
+        JavaFileObject prev = log.useSource(new DummyJFO());
+        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(log) {
+            @Override
+            public void report(JCDiagnostic diag) {
+                errors.add(diag);
+            }            
+        };
+        NBResolve resolve = NBResolve.instance(jti.getContext());
+        resolve.disableAccessibilityChecks();
+//        Enter enter = Enter.instance(jti.getContext());
+//        enter.shadowTypeEnvs(true);
+//        ArgumentAttr argumentAttr = ArgumentAttr.instance(jti.getContext());
+//        ArgumentAttr.LocalCacheContext cacheContext = argumentAttr.withLocalCacheContext();
+        try {
+            Attr attr = Attr.instance(jti.getContext());
+            Env<AttrContext> env = ((JavacScope) scope).getEnv();
+            if (tree instanceof JCExpression)
+                return attr.attribExpr((JCTree) tree,env, Type.noType);
+            return attr.attribStat((JCTree) tree,env);
+        } finally {
+//            cacheContext.leave();
+            log.useSource(prev);
+            log.popDiagnosticHandler(discardHandler);
+            resolve.restoreAccessbilityChecks();
+//            enter.shadowTypeEnvs(false);
+        }
+    }
+
+    private static Scope attributeTreeTo(JavacTaskImpl jti, Tree tree, Scope scope, Tree to, final List<Diagnostic<? extends JavaFileObject>> errors) {
+        Log log = Log.instance(jti.getContext());
+        JavaFileObject prev = log.useSource(new DummyJFO());
+        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(log) {
+            @Override
+            public void report(JCDiagnostic diag) {
+                errors.add(diag);
+            }            
+        };
+        NBResolve resolve = NBResolve.instance(jti.getContext());
+        resolve.disableAccessibilityChecks();
+//        Enter enter = Enter.instance(jti.getContext());
+//        enter.shadowTypeEnvs(true);
+//        ArgumentAttr argumentAttr = ArgumentAttr.instance(jti.getContext());
+//        ArgumentAttr.LocalCacheContext cacheContext = argumentAttr.withLocalCacheContext();
+        try {
+            Attr attr = Attr.instance(jti.getContext());
+            Env<AttrContext> env = ((JavacScope) scope).getEnv();
+            Env<AttrContext> result = tree instanceof JCExpression ?
+                attr.attribExprToTree((JCExpression) tree, env, (JCTree) to) :
+                attr.attribStatToTree((JCTree) tree, env, (JCTree) to);
+            try {
+                Constructor<JavacScope> c = JavacScope.class.getDeclaredConstructor(Env.class);
+                c.setAccessible(true);
+                return c.newInstance(result);
+            } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                throw new IllegalStateException(ex);
+            }
+        } finally {
+//            cacheContext.leave();
+            log.useSource(prev);
+            log.popDiagnosticHandler(discardHandler);
+            resolve.restoreAccessbilityChecks();
+//            enter.shadowTypeEnvs(false);
+        }
+    }
+
     /**Returns tokens for a given tree.
      */
     public TokenSequence<JavaTokenId> tokensFor(Tree tree) {
@@ -764,7 +907,7 @@ public final class TreeUtilities {
     /**Checks whether the given scope is in "static" context.
      */
     public boolean isStaticContext(Scope scope) {
-        return Resolve.instance(info.impl.getJavacTask().getContext()).isStatic(((JavacScope)scope).getEnv());
+        return NBResolve.isStatic(((JavacScope)scope).getEnv());
     }
     
     /**Returns uncaught exceptions inside the given tree path.
@@ -797,7 +940,7 @@ public final class TreeUtilities {
                 fields.add(ve);
             }
         }
-        new TreePathScanner<Void, Boolean>() {
+        new ErrorAwareTreePathScanner<Void, Boolean>() {
             @Override
             public Void visitAssignment(AssignmentTree node, Boolean p) {
                 Element el = trees.getElement(new TreePath(getCurrentPath(), node.getVariable()));
@@ -1454,7 +1597,7 @@ public final class TreeUtilities {
     
     private void copyInnerClassIndexes(Tree from, Tree to) {
         final int[] fromIdx = {-3};
-        TreeScanner<Void, Void> scanner = new TreeScanner<Void, Void>() {
+        ErrorAwareTreeScanner<Void, Void> scanner = new ErrorAwareTreeScanner<Void, Void>() {
             @Override
             public Void scan(Tree node, Void p) {
                 return fromIdx[0] < -1 ? super.scan(node, p) : null;
@@ -1486,7 +1629,7 @@ public final class TreeUtilities {
         scanner.scan(from, null);
         if (fromIdx[0] < -1)
             return;
-        scanner = new TreeScanner<Void, Void>() {
+        scanner = new ErrorAwareTreeScanner<Void, Void>() {
             @Override
             public Void visitClass(ClassTree node, Void p) {
                 ((IndexedClassDecl)node).index = fromIdx[0]++;
@@ -1496,7 +1639,7 @@ public final class TreeUtilities {
         scanner.scan(to, null);
     }
 
-    private static class UncaughtExceptionsVisitor extends TreePathScanner<Void, Set<TypeMirror>> {
+    private static class UncaughtExceptionsVisitor extends ErrorAwareTreePathScanner<Void, Set<TypeMirror>> {
         
         private final CompilationInfo info;
         
@@ -1657,7 +1800,9 @@ public final class TreeUtilities {
         TreePath tp = path.getTreePath();
         DCReference ref = (DCReference) path.getLeaf();
         
-        ((JavacTrees) this.info.getTrees()).ensureDocReferenceAttributed(tp, ref);
+        ((DocTrees) this.info.getTrees()).getElement(path);
+//        was:
+//        ((JavacTrees) this.info.getTrees()).ensureDocReferenceAttributed(tp, ref);
         
         return (ExpressionTree) ref.qualifierExpression;
     }
@@ -1682,19 +1827,44 @@ public final class TreeUtilities {
         TreePath tp = path.getTreePath();
         DCReference ref = (DCReference) path.getLeaf();
         
-        ((JavacTrees) this.info.getTrees()).ensureDocReferenceAttributed(tp, ref);
+        ((DocTrees) this.info.getTrees()).getElement(path);
+//        was:
+//        ((JavacTrees) this.info.getTrees()).ensureDocReferenceAttributed(tp, ref);
         
         return ref.paramTypes;
     }
     
-    private static final class NBScope extends JavacScope {
+    private static final class NBScope implements Scope {
 
-        private NBScope(JavacScope scope) {
-            super(scope.getEnv());
+        private final JavacScope delegate;
+
+        private NBScope(JavacScope delegate) {
+            this.delegate = delegate;
         }
         
         private boolean areAccessibilityChecksDisabled() {
             return true;
+        }
+
+        @Override
+        public Scope getEnclosingScope() {
+            //TODO: wrap?
+            return delegate.getEnclosingScope();
+        }
+
+        @Override
+        public TypeElement getEnclosingClass() {
+            return delegate.getEnclosingClass();
+        }
+
+        @Override
+        public ExecutableElement getEnclosingMethod() {
+            return delegate.getEnclosingMethod();
+        }
+
+        @Override
+        public Iterable<? extends Element> getLocalElements() {
+            return delegate.getLocalElements();
         }
     }
 }

@@ -35,6 +35,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.gen.WhitespaceIgnoringDiff;
 import org.netbeans.api.lexer.Language;
@@ -45,7 +46,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.editor.completion.CompletionItemComparator;
 import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.JavaDataLoader;
-import org.netbeans.modules.java.source.TreeLoader;
+//import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.modules.java.source.indexing.TransactionContext;
 import org.netbeans.modules.java.source.parsing.JavacParserFactory;
 import org.netbeans.modules.java.source.usages.BinaryAnalyser;
@@ -85,7 +86,7 @@ public class FXMLCompletionTestBase extends NbTestCase {
         System.setProperty("org.openide.util.Lookup", Lkp.class.getName());
         Assert.assertEquals(Lkp.class, Lookup.getDefault().getClass());
 
-        TreeLoader.DISABLE_ARTIFICAL_PARAMETER_NAMES = true;
+        SourceUtilsTestUtil2.disableArtificalParameterNames();
     }
 
     static final int FINISH_OUTTIME = 5 * 60 * 1000;

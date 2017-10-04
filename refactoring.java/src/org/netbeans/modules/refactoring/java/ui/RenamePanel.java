@@ -19,7 +19,7 @@
 package org.netbeans.modules.refactoring.java.ui;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.io.IOException;
@@ -190,7 +190,7 @@ public class RenamePanel extends JPanel implements CustomRefactoringPanel {
         initialized = true;
     }
 
-    private class TestClassMethodsVisitor extends TreePathScanner<Void, Void> {
+    private class TestClassMethodsVisitor extends ErrorAwareTreePathScanner<Void, Void> {
 
 	private CompilationInfo info;
 	private List<ExecutableElement> testClassMethods;

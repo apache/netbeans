@@ -25,7 +25,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.Collections;
@@ -301,7 +301,7 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
         return semicolon;
     }
 
-    private static final class ImportFQNsHack extends TreePathScanner<Void, Void> {
+    private static final class ImportFQNsHack extends ErrorAwareTreePathScanner<Void, Void> {
 
         private WorkingCopy wc;
         private int start;

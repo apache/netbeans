@@ -21,7 +21,7 @@ package org.netbeans.modules.refactoring.java.ui;
 import com.sun.source.tree.*;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.awt.*;
 import java.awt.event.*;
@@ -1088,7 +1088,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
         }
     }
 
-    private static class PositionVisitor extends TreePathScanner<Void, Map<Element, Long>> {
+    private static class PositionVisitor extends ErrorAwareTreePathScanner<Void, Map<Element, Long>> {
 
         private final Trees trees;
         private final SourcePositions sourcePositions;

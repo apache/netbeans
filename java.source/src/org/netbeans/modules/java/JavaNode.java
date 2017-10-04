@@ -21,7 +21,7 @@ package org.netbeans.modules.java;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -475,7 +475,7 @@ public final class JavaNode extends DataNode implements ChangeListener {
                 return res[0];
             }
 
-            private static final class ClasssFinder extends TreeScanner<Collection<ClassTree>, Collection<ClassTree>> {
+            private static final class ClasssFinder extends ErrorAwareTreeScanner<Collection<ClassTree>, Collection<ClassTree>> {
 
                 @Override
                 public Collection<ClassTree> visitCompilationUnit(CompilationUnitTree node, Collection<ClassTree> p) {

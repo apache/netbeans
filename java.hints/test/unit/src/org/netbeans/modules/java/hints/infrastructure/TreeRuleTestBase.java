@@ -45,7 +45,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.java.hints.legacy.spi.RulesManager;
 import org.netbeans.modules.java.hints.legacy.spi.RulesManager.LegacyHintConfiguration;
-import org.netbeans.modules.java.source.TreeLoader;
+//import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.openide.LifecycleManager;
@@ -74,7 +74,8 @@ public abstract class TreeRuleTestBase extends NbTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[0]);
-        TreeLoader.DISABLE_CONFINEMENT_TEST = true;
+        //XXX:
+//        TreeLoader.DISABLE_CONFINEMENT_TEST = true;
     }
 
     private void prepareTest(String fileName, String code) throws Exception {

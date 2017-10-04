@@ -32,7 +32,7 @@ import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.util.Collection;
 import java.util.Collections;
@@ -223,7 +223,7 @@ public class ConvertToLambdaConverter {
         return make.TypeCast(expectedType, tree);
     }
 
-    private class ShadowedVariableRenameScanner extends TreePathScanner<Tree, Trees> {
+    private class ShadowedVariableRenameScanner extends ErrorAwareTreePathScanner<Tree, Trees> {
 
         private final Map<Element, CharSequence> originalToNewName = new HashMap<Element, CharSequence>();
 

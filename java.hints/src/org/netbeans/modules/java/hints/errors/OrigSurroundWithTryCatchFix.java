@@ -29,7 +29,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -171,7 +171,7 @@ class OrigSurroundWithTryCatchFix implements Fix {
         return path;
     }
     
-    private static final class FindUsages extends TreePathScanner<Boolean, VariableElement> {
+    private static final class FindUsages extends ErrorAwareTreePathScanner<Boolean, VariableElement> {
 
         private Tree ignore;
         private CompilationInfo info;

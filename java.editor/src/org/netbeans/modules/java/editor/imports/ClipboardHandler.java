@@ -29,7 +29,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.awt.Dialog;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -427,7 +427,7 @@ public class ClipboardHandler {
                         @Override public void run(final CompilationController parameter) throws Exception {
                             parameter.toPhase(JavaSource.Phase.RESOLVED);
 
-                            new TreePathScanner<Void, Void>() {
+                            new ErrorAwareTreePathScanner<Void, Void>() {
                                 private final Set<Element> declaredInCopiedText = new HashSet<>();
                                 @Override public Void visitIdentifier(IdentifierTree node, Void p) {
                                     int s = (int) parameter.getTrees().getSourcePositions().getStartPosition(parameter.getCompilationUnit(), node);

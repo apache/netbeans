@@ -20,7 +20,7 @@ package org.netbeans.modules.refactoring.java.plugins;
 
 import com.sun.source.tree.*;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.*;

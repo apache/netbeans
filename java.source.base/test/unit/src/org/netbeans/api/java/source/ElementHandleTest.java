@@ -43,6 +43,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -171,7 +172,7 @@ public class ElementHandleTest extends NbTestCase {
                     }
                 }
                 assertNotNull (retentionPolicyClassHandle[0]);
-                Element csl = elements.getTypeElementByBinaryName("java.util.Collections$SingletonList");
+                Element csl = ElementUtils.getTypeElementByBinaryName(parameter, "java.util.Collections$SingletonList");
                 assertNotNull (csl);
                 innerClassHandle[0] = ElementHandle.create(csl);
                 assertNotNull (innerClassHandle[0]);
@@ -179,16 +180,16 @@ public class ElementHandleTest extends NbTestCase {
                 assertNotNull (cadd);
                 collectionAddHandle[0] = ElementHandle.create(cadd);
                 assertNotNull (collectionAddHandle[0]);
-                TypeElement annonClass = elements.getTypeElementByBinaryName("java.lang.String$1"); //NOI18N
+                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1"); //NOI18N
                 assertNotNull (annonClass);
                 annonClassHandle[0] = ElementHandle.create(annonClass);
                 assertNotNull (annonClassHandle[0]);
-                TypeElement listClass = elements.getTypeElementByBinaryName("java.util.List"); //NOI18N
+                TypeElement listClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.util.List"); //NOI18N
                 assertNotNull(listClass);
                 List<? extends TypeParameterElement> tpes = listClass.getTypeParameters();
                 assertEquals(tpes.size(), 1);
                 genParList[0] = ElementHandle.create(tpes.get(0));
-                TypeElement collsClass = elements.getTypeElementByBinaryName("java.util.Collections"); //NOI18N
+                TypeElement collsClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.util.Collections"); //NOI18N
                 assertNotNull(collsClass);
                 for (Element member : collsClass.getEnclosedElements()) {
                     if (member.getKind() == ElementKind.METHOD && member.getSimpleName().contentEquals("min")) {
@@ -249,7 +250,7 @@ public class ElementHandleTest extends NbTestCase {
                 assertEquals(resolved,retentionClassElement);
                 resolved = innerClassHandle[0].resolve(parameter);
                 assertNotNull (resolved);
-                Element csl = elements.getTypeElementByBinaryName("java.util.Collections$SingletonList");
+                Element csl = ElementUtils.getTypeElementByBinaryName(parameter, "java.util.Collections$SingletonList");
                 assertNotNull (csl);
                 assertEquals(resolved,csl);
                 resolved = collectionAddHandle[0].resolve(parameter);
@@ -259,18 +260,18 @@ public class ElementHandleTest extends NbTestCase {
                 assertEquals (resolved, cadd);
                 resolved = annonClassHandle[0].resolve(parameter);
                 assertNotNull (resolved);
-                TypeElement annonClass = elements.getTypeElementByBinaryName("java.lang.String$1"); //NOI18N
+                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1"); //NOI18N
                 assertNotNull (annonClass);
                 assertEquals(resolved,annonClass);
                 
-                TypeElement listClass = elements.getTypeElementByBinaryName("java.util.List"); //NOI18N
+                TypeElement listClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.util.List"); //NOI18N
                 assertNotNull(listClass);
                 TypeParameterElement tpe = listClass.getTypeParameters().get(0);
                 resolved = genParList[0].resolve(parameter);
                 assertEquals(tpe, resolved);
                 
                 tpe = null;
-                TypeElement collsClass = elements.getTypeElementByBinaryName("java.util.Collections"); //NOI18N
+                TypeElement collsClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.util.Collections"); //NOI18N
                 assertNotNull(collsClass);
                 for (Element member : collsClass.getEnclosedElements()) {
                     if (member.getKind() == ElementKind.METHOD && member.getSimpleName().contentEquals("min")) {
@@ -345,7 +346,7 @@ public class ElementHandleTest extends NbTestCase {
                 assertNotNull (cadd);
                 collectionAddHandle[0] = ElementHandle.create(cadd);
                 assertNotNull (collectionAddHandle[0]);
-                TypeElement annonClass = elements.getTypeElementByBinaryName("java.lang.String$1"); //NOI18N
+                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1"); //NOI18N
                 assertNotNull (annonClass);
                 annonClassHandle[0] = ElementHandle.create(annonClass);
                 assertNotNull (annonClassHandle[0]);
@@ -383,13 +384,13 @@ public class ElementHandleTest extends NbTestCase {
                 }
                 assertNotNull (retentionClassElement);
                 assertTrue(retentionPolicyClassHandle[0].signatureEquals(retentionClassElement));
-                Element csl = elements.getTypeElementByBinaryName("java.util.Collections$SingletonList");
+                Element csl = ElementUtils.getTypeElementByBinaryName(parameter, "java.util.Collections$SingletonList");
                 assertNotNull (csl);
                 assertTrue(innerClassHandle[0].signatureEquals(csl));
                 Element cadd = getCollectionAdd(elements.getTypeElement(java.util.Collection.class.getName()));
                 assertNotNull(cadd);
                 assertTrue (collectionAddHandle[0].signatureEquals(cadd));
-                TypeElement annonClass = elements.getTypeElementByBinaryName("java.lang.String$1"); //NOI18N
+                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1"); //NOI18N
                 assertNotNull (annonClass);
                 assertTrue(annonClassHandle[0].signatureEquals(annonClass));
             }
@@ -483,7 +484,7 @@ public class ElementHandleTest extends NbTestCase {
                 assertNotNull (cadd);
                 collectionAddHandle[0] = ElementHandle.create(cadd);
                 assertNotNull (collectionAddHandle[0]);
-                TypeElement annonClass = elements.getTypeElementByBinaryName("java.lang.String$1"); //NOI18N
+                TypeElement annonClass = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1"); //NOI18N
                 assertNotNull (annonClass);
                 annonClassHandle[0] = ElementHandle.create(annonClass);
                 assertNotNull (annonClassHandle[0]);
@@ -565,7 +566,7 @@ public class ElementHandleTest extends NbTestCase {
                 assertEquals("java.lang.annotation.RetentionPolicy", handle.getBinaryName());
                 assertEquals("java.lang.annotation.RetentionPolicy", handle.getQualifiedName());
                 
-                element = elements.getTypeElementByBinaryName("java.util.Collections$SingletonList");
+                element = ElementUtils.getTypeElementByBinaryName(parameter, "java.util.Collections$SingletonList");
                 assertNotNull (element);                
                 handle = ElementHandle.create(element);
                 assertEquals("java.util.Collections$SingletonList", handle.getBinaryName());
@@ -597,7 +598,7 @@ public class ElementHandleTest extends NbTestCase {
 
             public void run(CompilationController parameter) throws Exception {
                 JavacElements elements = (JavacElements) parameter.getElements();
-                TypeElement te = elements.getTypeElementByBinaryName("java.lang.String$1");
+                TypeElement te = ElementUtils.getTypeElementByBinaryName(parameter, "java.lang.String$1");
                 List<? extends Element> content = elements.getAllMembers(te);                
             }
         }, true);

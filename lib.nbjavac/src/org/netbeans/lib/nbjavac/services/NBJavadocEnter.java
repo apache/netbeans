@@ -72,7 +72,7 @@ public class NBJavadocEnter extends JavadocEnter {
         super.visitClassDef(tree);
     }
 
-    @Override
+    //no @Override to ensure compatibility with ordinary javac:
     protected int getIndex(JCClassDecl clazz) {
         return clazz instanceof IndexedClassDecl ? ((IndexedClassDecl) clazz).index : -1;
     }

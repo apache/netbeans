@@ -23,16 +23,19 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.DocTrees;
+import com.sun.source.util.JavacTask;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.model.JavacElements;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ModuleElement;
@@ -41,6 +44,7 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.swing.text.Document;
 import javax.tools.Diagnostic;
+
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.CheckReturnValue;
 import org.netbeans.api.annotations.common.NonNull;
@@ -48,6 +52,8 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.annotations.common.NullUnknown;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.modules.java.preprocessorbridge.spi.WrapperFactory;
+import org.netbeans.modules.java.source.CompilationInfoAccessor;
+import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.parsing.CompilationInfoImpl;
 import org.netbeans.modules.java.source.parsing.DocPositionRegion;
 import org.netbeans.modules.java.source.parsing.FileObjects;
@@ -222,8 +228,8 @@ public class CompilationInfo {
                             SourceUtils.getModuleName(impl.getRoot().toURL(), true) :
                             null)
                     .map(elements::getModuleElement)
-                    .map((module) -> elements.getTypeElementByBinaryName(module, name))
-                    .orElseGet(() -> elements.getTypeElementByBinaryName(name));
+                    .map((module) -> ElementUtils.getTypeElementByBinaryName(this, module, name))
+                    .orElseGet(() -> ElementUtils.getTypeElementByBinaryName(this, name));
             if (e != null) {                
                 result.add (e);
             }
@@ -257,6 +263,8 @@ public class CompilationInfo {
     public synchronized @NonNull Trees getTrees() {
         checkConfinement();
         if (trees == null) {
+            //use a working init order:
+            com.sun.tools.javac.main.JavaCompiler.instance(impl.getJavacTask().getContext());
             trees = JavacTrees.instance(impl.getJavacTask().getContext());
             Snapshot snapshot = impl.getSnapshot();
             Document doc = snapshot != null ? snapshot.getSource().getDocument(false) : null;
@@ -283,6 +291,8 @@ public class CompilationInfo {
      */
     public @NonNull Types getTypes() {
         checkConfinement();
+        //use a working init order:
+        com.sun.tools.javac.main.JavaCompiler.instance(impl.getJavacTask().getContext());
         return impl.getJavacTask().getTypes();
     }
     
@@ -292,6 +302,8 @@ public class CompilationInfo {
      */
     public @NonNull Elements getElements() {
         checkConfinement();
+        //use a working init order:
+        com.sun.tools.javac.main.JavaCompiler.instance(impl.getJavacTask().getContext());
 	return impl.getJavacTask().getElements();
     }
         
@@ -473,5 +485,14 @@ public class CompilationInfo {
         ON_CHANGE,
         /** The cached value will be cleared when a method/field/class is added, removed or its signature changes. */
         ON_SIGNATURE_CHANGE;
+    }
+
+    static {
+        CompilationInfoAccessor.setInstance(new CompilationInfoAccessor() {
+            @Override
+            public JavacTask getJavacTask(CompilationInfo info) {
+                return info.impl.getJavacTask();
+            }
+        });
     }
 }

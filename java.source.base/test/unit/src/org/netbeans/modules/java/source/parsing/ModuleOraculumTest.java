@@ -91,7 +91,6 @@ public class ModuleOraculumTest extends NbTestCase {
                 cpInfo,
                 parser,
                 null,
-                null,
                 false);
         assertNotNull(impl);
         final Options opts = Options.instance(impl.getContext());
@@ -112,7 +111,6 @@ public class ModuleOraculumTest extends NbTestCase {
                 cpInfo,
                 parser,
                 null,
-                null,
                 false);
         assertNotNull(impl);
         final Options opts = Options.instance(impl.getContext());
@@ -128,7 +126,6 @@ public class ModuleOraculumTest extends NbTestCase {
                 null,
                 cpInfo,
                 parser,
-                null,
                 null,
                 false);
         assertNotNull(impl);
@@ -147,7 +144,6 @@ public class ModuleOraculumTest extends NbTestCase {
                 cpInfo,
                 parser,
                 null,
-                null,
                 false);
         assertNotNull(impl);
         final Options opts = Options.instance(impl.getContext());
@@ -164,7 +160,6 @@ public class ModuleOraculumTest extends NbTestCase {
                 root1,
                 cpInfo,
                 parser,
-                null,
                 null,
                 false);
         assertNotNull(impl);
@@ -184,7 +179,6 @@ public class ModuleOraculumTest extends NbTestCase {
                 root1,
                 cpInfo,
                 parser,
-                null,
                 null,
                 false);
         assertNotNull(impl);
@@ -218,7 +212,6 @@ public class ModuleOraculumTest extends NbTestCase {
                     cpInfo,
                     parser,
                     null,
-                    null,
                     false);
             assertEquals("Test", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
             List<? extends FileObject> roots = h.getRoots();
@@ -231,7 +224,6 @@ public class ModuleOraculumTest extends NbTestCase {
                     cpInfo,
                     parser,
                     null,
-                    null,
                     false);
             assertEquals("Test", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
             roots = h.getRoots();
@@ -241,7 +233,6 @@ public class ModuleOraculumTest extends NbTestCase {
                     null,
                     cpInfo,
                     parser,
-                    null,
                     null,
                     false);
             assertEquals("Next", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
@@ -269,7 +260,6 @@ public class ModuleOraculumTest extends NbTestCase {
                     cpInfo,
                     parser,
                     null,
-                    null,
                     false);
             assertEquals("Test", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
             List<? extends String> names = h.getModuleNames();
@@ -282,7 +272,6 @@ public class ModuleOraculumTest extends NbTestCase {
                     cpInfo,
                     parser,
                     null,
-                    null,
                     false);
             assertEquals("Test", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
             names = h.getModuleNames();
@@ -292,7 +281,6 @@ public class ModuleOraculumTest extends NbTestCase {
                     root2,
                     cpInfo,
                     parser,
-                    null,
                     null,
                     false);
             assertEquals("Next", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
@@ -320,7 +308,6 @@ public class ModuleOraculumTest extends NbTestCase {
                     cpInfo,
                     parser,
                     null,
-                    null,
                     false);
             assertEquals("Test", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
             List<? extends String> names = h.getModuleNames();
@@ -334,7 +321,6 @@ public class ModuleOraculumTest extends NbTestCase {
                     cpInfo,
                     parser,
                     null,
-                    null,
                     false);
             assertEquals("TestUpdated", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
             names = h.getModuleNames();
@@ -346,7 +332,6 @@ public class ModuleOraculumTest extends NbTestCase {
                     root1,
                     cpInfo,
                     parser,
-                    null,
                     null,
                     false);
             assertEquals("TestUpdated", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
@@ -373,7 +358,6 @@ public class ModuleOraculumTest extends NbTestCase {
                     cpInfo,
                     parser,
                     null,
-                    null,
                     false);
             assertEquals("Test", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
             List<? extends String> names = h.getModuleNames();
@@ -387,7 +371,6 @@ public class ModuleOraculumTest extends NbTestCase {
                     cpInfo,
                     parser,
                     null,
-                    null,
                     false);
             assertNull(Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
             names = h.getModuleNames();
@@ -399,7 +382,6 @@ public class ModuleOraculumTest extends NbTestCase {
                     root1,
                     cpInfo,
                     parser,
-                    null,
                     null,
                     false);
             assertNull(Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
@@ -427,7 +409,6 @@ public class ModuleOraculumTest extends NbTestCase {
                     cpInfo,
                     parser,
                     null,
-                    null,
                     false);
             assertNull(Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
             List<? extends String> names = h.getModuleNames();
@@ -441,7 +422,6 @@ public class ModuleOraculumTest extends NbTestCase {
                     cpInfo,
                     parser,
                     null,
-                    null,
                     false);
             assertEquals("TestNew", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N
             names = h.getModuleNames();
@@ -453,7 +433,6 @@ public class ModuleOraculumTest extends NbTestCase {
                     root1,
                     cpInfo,
                     parser,
-                    null,
                     null,
                     false);
             assertEquals("TestNew", Options.instance(impl.getContext()).get("-Xmodule:"));    //NOI18N

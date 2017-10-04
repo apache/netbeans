@@ -34,8 +34,8 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -189,7 +189,7 @@ public class PreconditionsChecker {
         return false;
     }
 
-    public static class VariablesVisitor extends TreeScanner<Tree, Trees> {
+    public static class VariablesVisitor extends ErrorAwareTreeScanner<Tree, Trees> {
 
         private Set<Name> innerVariables = new HashSet<Name>();
         private Set<Name> allLocalVariables = new HashSet<Name>();
@@ -234,7 +234,7 @@ public class PreconditionsChecker {
     /*
      * This class visits the loop to check if there are any failed preconditions.
      */
-    private static class ForLoopTreeVisitor extends TreePathScanner<Tree, Trees> {
+    private static class ForLoopTreeVisitor extends ErrorAwareTreePathScanner<Tree, Trees> {
 
         private Set<Name> inners;
         private CompilationInfo workingCopy;

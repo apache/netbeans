@@ -30,7 +30,7 @@ import com.sun.source.util.DocSourcePositions;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTrees;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -430,7 +430,7 @@ public final class InstantRefactoringUIImpl implements InstantRefactoringUI {
                         }
                     }
                     final Name label = ((LabeledStatementTree)labeledStatement.getLeaf()).getLabel();
-                    new TreePathScanner <Void, Void>() {
+                    new ErrorAwareTreePathScanner <Void, Void>() {
                         @Override
                         public Void visitBreak(BreakTree node, Void p) {
                             if (node.getLabel() != null && label.contentEquals(node.getLabel())) {

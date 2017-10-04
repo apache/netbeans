@@ -31,7 +31,7 @@ import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1453,7 +1453,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
-                new TreeScanner() {
+                new ErrorAwareTreeScanner() {
                     @Override
                     public Object visitVariable(VariableTree var, Object p) {
                         ModifiersTree mods = var.getModifiers();
@@ -1495,7 +1495,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
-                new TreeScanner() {
+                new ErrorAwareTreeScanner() {
                     @Override public Object visitMethod(MethodTree node, Object p) {
                         if (node.getName().contentEquals("add")) {
                             workingCopy.rewrite(node.getModifiers(), make.addModifiersModifier(node.getModifiers(), Modifier.DEFAULT));
@@ -1537,7 +1537,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
-                new TreeScanner() {
+                new ErrorAwareTreeScanner() {
                     @Override public Object visitMethod(MethodTree node, Object p) {
                         if (node.getName().contentEquals("find")) {
                             workingCopy.rewrite(node.getModifiers(), make.Modifiers(Collections.emptySet()));

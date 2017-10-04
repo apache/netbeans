@@ -31,7 +31,7 @@ import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.source.TreeLoader;
+//import org.netbeans.modules.java.source.TreeLoader;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -51,7 +51,8 @@ public class TestBase extends NbTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         SourceUtilsTestUtil.prepareTest(new String[0], new Object[0]);
-        TreeLoader.DISABLE_CONFINEMENT_TEST = true;
+        //XXX:
+//        TreeLoader.DISABLE_CONFINEMENT_TEST = true;
         clearWorkDir();
 
         FileUtil.refreshFor(File.listRoots());

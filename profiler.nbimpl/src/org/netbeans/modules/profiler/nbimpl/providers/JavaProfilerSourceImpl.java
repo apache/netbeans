@@ -26,7 +26,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -194,7 +194,7 @@ public class JavaProfilerSourceImpl implements AbstractJavaProfilerSource {
                         return;
                     }
 
-                    TreePathScanner<Void, Void> scanner = new TreePathScanner<Void, Void>() {
+                    ErrorAwareTreePathScanner<Void, Void> scanner = new ErrorAwareTreePathScanner<Void, Void>() {
 
                         public Void visitMethod(MethodTree node, Void p) {
                             Void retValue;
@@ -241,7 +241,7 @@ public class JavaProfilerSourceImpl implements AbstractJavaProfilerSource {
                         return;
                     }
 
-                    TreePathScanner<Void, Void> scanner = new TreePathScanner<Void, Void>() {
+                    ErrorAwareTreePathScanner<Void, Void> scanner = new ErrorAwareTreePathScanner<Void, Void>() {
 
                         @Override
                         public Void visitClass(ClassTree node, Void param) {
@@ -295,7 +295,7 @@ public class JavaProfilerSourceImpl implements AbstractJavaProfilerSource {
                 public void run(final CompilationController controller) throws Exception {
                     controller.toPhase(Phase.ELEMENTS_RESOLVED);
 
-                    TreePathScanner<Void, Void> scanner = new TreePathScanner<Void, Void>() {
+                    ErrorAwareTreePathScanner<Void, Void> scanner = new ErrorAwareTreePathScanner<Void, Void>() {
 
                         @Override
                         public Void visitAnnotation(AnnotationTree annTree, Void p) {
@@ -632,7 +632,7 @@ public class JavaProfilerSourceImpl implements AbstractJavaProfilerSource {
                     public void run(final CompilationController cc) throws Exception {
                         cc.toPhase(Phase.ELEMENTS_RESOLVED);
 
-                        TreePathScanner<Void, Void> scanner = new TreePathScanner<Void, Void>() {
+                        ErrorAwareTreePathScanner<Void, Void> scanner = new ErrorAwareTreePathScanner<Void, Void>() {
                             @Override
                             public Void visitMethod(MethodTree node, Void p) {
                                 Element e = cc.getTrees().getElement(getCurrentPath());

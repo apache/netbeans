@@ -419,13 +419,14 @@ public class DeclarativeHintsParser {
         if (javacApiJar != null) {
             Logger.getLogger(DeclarativeHintsParser.class.getName()).log(Level.FINE, "javacApiJar={0}", javacApiJar);
             File aj = FileUtil.archiveOrDirForURL(javacApiJar);
-            res = ClassPathSupport.createClassPath(FileUtil.urlForArchiveOrDir(aj));
-            javacApiClasspath = new WeakReference<>(res);
-            return res;
-        } else {
-            javacApiClasspath = NONE;
-            return null;
+            if (aj != null) {
+                res = ClassPathSupport.createClassPath(FileUtil.urlForArchiveOrDir(aj));
+                javacApiClasspath = new WeakReference<>(res);
+                return res;
+            }
         }
+        javacApiClasspath = NONE;
+        return null;
     }
     
     /**

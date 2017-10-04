@@ -25,7 +25,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -69,7 +69,7 @@ public class EqualsMethodHint {
                 NbBundle.getMessage(EqualsMethodHint.class, "ERR_EQUALS_NOT_CHECKING_TYPE"));
     }
 
-    private static final class VisitorImpl extends TreePathScanner<Void, Void> {
+    private static final class VisitorImpl extends ErrorAwareTreePathScanner<Void, Void> {
         
         private CompilationInfo info;
         private Element parameter;

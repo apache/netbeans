@@ -44,8 +44,12 @@ import com.sun.tools.javadoc.main.FieldDocImpl;
 import com.sun.tools.javadoc.main.MethodDocImpl;
 import com.sun.tools.javadoc.main.ModifierFilter;
 import com.sun.tools.javadoc.main.PackageDocImpl;
+import com.sun.tools.javadoc.main.ProgramElementDocImpl;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.lang.model.element.Element;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -105,7 +109,7 @@ public class JavadocEnv extends DocEnv {
         }
         ClassDocImpl result = classMap.get(clazz);
         if (result != null) {
-            if (treePath != null) result.setTreePath(treePath);
+            if (treePath != null) setTreePath(result, treePath);
             return;
         }
         if (isAnnotationType((JCClassDecl)treePath.getLeaf())) {	// flags of clazz may not yet be set
@@ -129,7 +133,7 @@ public class JavadocEnv extends DocEnv {
     protected void makeFieldDoc(VarSymbol var, TreePath treePath) {
         FieldDocImpl result = fieldMap.get(var);
         if (result != null) {
-            if (treePath != null) result.setTreePath(treePath);
+            if (treePath != null) setTreePath(result, treePath);
         } else {
             result = new JavadocField(this, var, treePath);
             fieldMap.put(var, result);
@@ -152,7 +156,7 @@ public class JavadocEnv extends DocEnv {
     protected void makeMethodDoc(MethodSymbol meth, TreePath treePath) {
         MethodDocImpl result = (MethodDocImpl)methodMap.get(meth);
         if (result != null) {
-            if (treePath != null) result.setTreePath(treePath);
+            if (treePath != null) setTreePath(result, treePath);
         } else {
             result = new JavadocMethod(this, meth, treePath);
             methodMap.put(meth, result);
@@ -175,7 +179,7 @@ public class JavadocEnv extends DocEnv {
     protected void makeConstructorDoc(MethodSymbol meth, TreePath treePath) {
         ConstructorDocImpl result = (ConstructorDocImpl)methodMap.get(meth);
         if (result != null) {
-            if (treePath != null) result.setTreePath(treePath);
+            if (treePath != null) setTreePath(result, treePath);
         } else {
             result = new JavadocConstructor(this, meth, treePath);
             methodMap.put(meth, result);
@@ -198,10 +202,20 @@ public class JavadocEnv extends DocEnv {
     protected void makeAnnotationTypeElementDoc(MethodSymbol meth, TreePath treePath) {
         AnnotationTypeElementDocImpl result = (AnnotationTypeElementDocImpl)methodMap.get(meth);
         if (result != null) {
-            if (treePath != null) result.setTreePath(treePath);
+            if (treePath != null) setTreePath(result, treePath);
         } else {
             result = new JavadocAnnotationTypeElement(this, meth, treePath);
             methodMap.put(meth, result);
+        }
+    }
+    
+    private void setTreePath(ProgramElementDocImpl pe, TreePath treePath) {
+        try {
+            Method setTreePath = ProgramElementDocImpl.class.getDeclaredMethod("setTreePath", TreePath.class);
+            setTreePath.setAccessible(true);
+            setTreePath.invoke(pe, treePath);
+        } catch (Throwable ex) {
+            Logger.getLogger(JavadocEnv.class.getName()).log(Level.FINE, null, ex);
         }
     }
 

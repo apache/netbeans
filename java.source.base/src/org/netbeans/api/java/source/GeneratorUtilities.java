@@ -53,8 +53,8 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WildcardTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Flags;
@@ -89,6 +89,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -114,6 +115,8 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.swing.text.Document;
 import javax.tools.JavaFileObject;
+
+import com.sun.tools.javac.parser.ParserFactory;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.guards.DocumentGuards;
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -124,6 +127,7 @@ import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.builder.CommentSetImpl;
 import org.netbeans.modules.java.source.parsing.AbstractSourceFileObject;
 import org.netbeans.modules.java.source.parsing.FileObjects;
+import org.netbeans.modules.java.source.parsing.ParsingUtils;
 import org.netbeans.modules.java.source.query.CommentSet.RelativePosition;
 import org.netbeans.modules.java.source.save.DiffContext;
 import org.openide.filesystems.FileObject;
@@ -171,7 +175,7 @@ public final class GeneratorUtilities {
         JavaFileObject sourceFile = FileObjects.templateFileObject(sourceRoot, nameComponent[0], nameComponent[1]);
         FileObject template = FileUtil.getConfigFile(copy.template(kind));
         FileObject targetFile = copy.doCreateFromTemplate(template, sourceFile);
-        CompilationUnitTree templateCUT = copy.impl.getJavacTask().parse(FileObjects.sourceFileObject(targetFile, targetFile.getParent())).iterator().next();
+        CompilationUnitTree templateCUT = ParsingUtils.parseArbitrarySource(copy.impl.getJavacTask(), FileObjects.sourceFileObject(targetFile, targetFile.getParent()));
         CompilationUnitTree importComments = GeneratorUtilities.get(copy).importComments(templateCUT, templateCUT);
         CompilationUnitTree result = copy.getTreeMaker().CompilationUnit(importComments.getPackageAnnotations(),
                 sourceRoot,
@@ -498,7 +502,7 @@ public final class GeneratorUtilities {
      * the revDependencies and dependencies can be used to determine partial order
      * between existing members and the newly inserted one.
      */
-    private class FieldRefVisitor extends TreePathScanner {
+    private class FieldRefVisitor extends ErrorAwareTreePathScanner {
         private final ClassTree clazz;
         // collects field names; serves to identify unqualified indentifiers
         // which might refer to field names.
@@ -1781,7 +1785,7 @@ public final class GeneratorUtilities {
         }
 
         final Map<Tree, Tree> translate = new IdentityHashMap<Tree, Tree>();
-        new TreeScanner<Void, Void>() {
+        new ErrorAwareTreeScanner<Void, Void>() {
             @Override public Void visitWildcard(WildcardTree node, Void p) {
                 Tree bound = node.getBound();
 
@@ -1853,7 +1857,7 @@ public final class GeneratorUtilities {
     private Map<Name, TypeElement> getUsedTypes(final CompilationUnitTree cut) {
         final Trees trees = copy.getTrees();
         final Map<Name, TypeElement> map = new HashMap<Name, TypeElement>();
-        new TreePathScanner<Void, Void>() {
+        new ErrorAwareTreePathScanner<Void, Void>() {
 
             @Override
             public Void visitIdentifier(IdentifierTree node, Void p) {
@@ -2218,7 +2222,7 @@ public final class GeneratorUtilities {
     }
     
     private static boolean containsErrors(Tree tree) {
-        Boolean b = new TreeScanner<Boolean, Boolean>() {
+        Boolean b = new ErrorAwareTreeScanner<Boolean, Boolean>() {
             @Override
             public Boolean visitErroneous(ErroneousTree node, Boolean p) {
                 return true;

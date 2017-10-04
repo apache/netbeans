@@ -45,7 +45,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.util.DocTreeScanner;
 import com.sun.source.util.DocTrees;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -119,7 +119,7 @@ public class DoctreeTest extends GeneratorTestBase {
             public void run(final WorkingCopy wc) throws IOException {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         ParamTree param = make.Param(false, make.DocIdentifier("test"), new LinkedList<DocTree>());
@@ -183,7 +183,7 @@ public class DoctreeTest extends GeneratorTestBase {
             public void run(final WorkingCopy wc) throws IOException {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         if("test".contentEquals(mt.getName())) {
@@ -245,7 +245,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -304,7 +304,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -365,7 +365,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -426,7 +426,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -488,7 +488,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -552,7 +552,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -615,7 +615,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -681,7 +681,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -750,7 +750,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -836,7 +836,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -899,7 +899,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -959,7 +959,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -1022,7 +1022,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -1082,7 +1082,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -1141,7 +1141,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -1200,7 +1200,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -1259,7 +1259,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -1318,7 +1318,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -1381,7 +1381,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -1444,7 +1444,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -1507,7 +1507,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -1584,7 +1584,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -1647,7 +1647,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -1710,7 +1710,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -1772,7 +1772,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -1834,7 +1834,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -1892,7 +1892,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -1950,7 +1950,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -2018,7 +2018,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -2080,7 +2080,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -2139,7 +2139,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
 
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
@@ -2200,7 +2200,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());
@@ -2263,7 +2263,7 @@ public class DoctreeTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker make = wc.getTreeMaker();
                 final DocTrees trees = wc.getDocTrees();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(final MethodTree mt, Void p) {
                         DocCommentTree docTree = trees.getDocCommentTree(getCurrentPath());

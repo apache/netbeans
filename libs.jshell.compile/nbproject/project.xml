@@ -25,7 +25,7 @@
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
             <code-name-base>org.netbeans.libs.jshell.compile</code-name-base>
             <module-dependencies>
-                <dependency>
+<!--                <dependency>
                     <code-name-base>org.netbeans.libs.javacapi</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -41,7 +41,7 @@
                         <release-version>1</release-version>
                         <specification-version>0.47</specification-version>
                     </run-dependency>
-                </dependency>
+                </dependency>-->
                 <dependency>
                     <code-name-base>org.netbeans.lib.nbjshell</code-name-base>
                     <run-dependency>

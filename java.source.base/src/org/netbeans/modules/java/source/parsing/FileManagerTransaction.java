@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.java.source.parsing;
 
-import com.sun.tools.javac.model.LazyTreeLoader;
 import java.io.*;
 import java.net.URL;
 import java.nio.channels.CompletionHandler;
@@ -37,7 +36,6 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.java.preprocessorbridge.spi.JavaFileFilterImplementation;
-import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.modules.java.source.indexing.JavaIndexerWorker;
 import org.netbeans.modules.java.source.indexing.TransactionContext;
 import org.openide.filesystems.FileSystem;
@@ -375,9 +373,7 @@ public abstract class FileManagerTransaction extends TransactionContext.Service 
 
         @NonNull
         private FileManagerTransaction getDelegate() {
-            return TreeLoader.isTreeLoading() ?
-                writeThrough :
-                nullWrite;
+            return nullWrite;
         }
     }
 

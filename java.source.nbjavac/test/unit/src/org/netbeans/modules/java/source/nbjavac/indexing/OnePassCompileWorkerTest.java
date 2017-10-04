@@ -16,27 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.source.indexing;
+package org.netbeans.modules.java.source.nbjavac.indexing;
 
 import java.util.Collection;
 import org.netbeans.modules.java.source.indexing.CompileWorker.ParsingOutput;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
+import org.netbeans.modules.java.source.indexing.JavaParsingContext;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 
 /**
  *
  * @author lahvac
  */
-public class MultiPassCompileWorkerTest extends CompileWorkerTestBase {
+public class OnePassCompileWorkerTest extends NBJavacCompileWorkerTestBase {
     
-    public MultiPassCompileWorkerTest(String name) {
+    public OnePassCompileWorkerTest(String name) {
         super(name);
     }
 
     @Override
-    protected ParsingOutput runCompileWorker(Context context, JavaParsingContext javaContext, Collection<? extends CompileTuple> files) throws Exception {
-        JavaCustomIndexer.NO_ONE_PASS_COMPILE_WORKER = true;
-        ParsingOutput fromOnePass = new OnePassCompileWorker().compile(null, context, javaContext, files);
-        return new MultiPassCompileWorker().compile(fromOnePass, context, javaContext, files);
+    protected ParsingOutput runCompileWorker(Context context, JavaParsingContext javaContext, Collection<? extends CompileTuple> files) {
+        return new OnePassCompileWorker().compile(null, context, javaContext, files);
     }
+    
 }

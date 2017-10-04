@@ -20,7 +20,7 @@ package org.netbeans.api.java.source.gen;
 
 import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import org.junit.Test;
 import org.netbeans.api.java.source.*;
 import org.netbeans.junit.NbTestSuite;
@@ -451,7 +451,7 @@ public class RewriteOccasionalStatements extends GeneratorTestBase {
 */
 
 
-    class SimpleScanner extends TreeScanner<Void, Void> {
+    class SimpleScanner extends ErrorAwareTreeScanner<Void, Void> {
         private final WorkingCopy wc;
         protected GeneratorUtilities gu;
 
@@ -501,7 +501,7 @@ public class RewriteOccasionalStatements extends GeneratorTestBase {
                 workingCopy.toPhase(JavaSource.Phase.RESOLVED);
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
                         if (node.getMethodSelect().getKind() == Kind.IDENTIFIER && ((IdentifierTree) node.getMethodSelect()).getName().contentEquals("a")) {

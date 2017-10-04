@@ -19,7 +19,7 @@
 package org.netbeans.api.java.source.gen;
 
 import com.sun.source.tree.*;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -506,7 +506,7 @@ public class TryTest extends GeneratorTestMDRCompat {
                 workingCopy.toPhase(Phase.RESOLVED); //for RESOLVED, the 1.7 runtime (java.lang.AutoCloseable) would be needed
                 final TreeMaker make = workingCopy.getTreeMaker();
 
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitVariable(VariableTree node, Void p) {
                         if (node.getName().contentEquals("in")) {

@@ -33,7 +33,7 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -233,7 +233,7 @@ public class ConvertAnonymousToInner extends AbstractHint {
         }
     }
 
-    private static final class DetectUsedVars extends TreePathScanner<Void, Set<VariableElement>> {
+    private static final class DetectUsedVars extends ErrorAwareTreePathScanner<Void, Set<VariableElement>> {
         private CompilationInfo info;
         private TreePath newClassToConvert;
         
@@ -258,7 +258,7 @@ public class ConvertAnonymousToInner extends AbstractHint {
 
     }
     
-    private static final class DetectUseOfNonStaticMembers extends TreePathScanner<Boolean, Void> {
+    private static final class DetectUseOfNonStaticMembers extends ErrorAwareTreePathScanner<Boolean, Void> {
         private CompilationInfo info;
         private TreePath newClassToConvert;
         
@@ -546,7 +546,7 @@ public class ConvertAnonymousToInner extends AbstractHint {
     }
 
     private static TreePath findSuperConstructorCall(final CompilationInfo info, TreePath nct) {
-        class FindSuperConstructorCall extends TreePathScanner<TreePath, Void> {
+        class FindSuperConstructorCall extends ErrorAwareTreePathScanner<TreePath, Void> {
 
             private boolean stop;
 

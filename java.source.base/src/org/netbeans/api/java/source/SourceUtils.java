@@ -60,6 +60,7 @@ import com.sun.tools.javac.comp.Check;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
+
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.function.Predicate;
@@ -93,6 +94,7 @@ import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.classfile.Module;
 import org.netbeans.modules.java.preprocessorbridge.spi.ImportProcessor;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
+import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.JavadocHelper;
 import org.netbeans.modules.java.source.indexing.FQN2Files;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
@@ -206,39 +208,6 @@ public class SourceUtils {
      */
     public static List<? extends Completion> getAttributeValueCompletions(CompilationInfo info, Element element, AnnotationMirror annotation, ExecutableElement member, String userText) {
         List<Completion> completions = new LinkedList<>();
-        if (info.getPhase().compareTo(Phase.ELEMENTS_RESOLVED) >= 0) {
-            String fqn = ((TypeElement) annotation.getAnnotationType().asElement()).getQualifiedName().toString();
-            Iterable<? extends Processor> processors = info.impl.getJavacTask().getProcessors();
-            if (processors != null) {
-                for (Processor processor : processors) {
-                    boolean match = false;
-                    for (String sat : processor.getSupportedAnnotationTypes()) {
-                        if ("*".equals(sat)) { //NOI18N
-                            match = true;
-                            break;
-                        } else if (sat.endsWith(".*")) { //NOI18N
-                            sat = sat.substring(0, sat.length() - 1);
-                            if (fqn.startsWith(sat)) {
-                                match = true;
-                                break;
-                            }
-                        } else if (fqn.equals(sat)) {
-                            match = true;
-                            break;
-                        }
-                    }
-                    if (match) {
-                        try {
-                            for (Completion c : processor.getCompletions(element, annotation, member, userText)) {
-                                completions.add(c);
-                            }
-                        } catch (Exception e) {
-                            Logger.getLogger(processor.getClass().getName()).log(Level.INFO, e.getMessage(), e);
-                        }
-                    }
-                }
-            }
-        }
         return completions;
     }
 
@@ -931,7 +900,7 @@ public class SourceUtils {
                     public void run(CompilationController control) throws Exception {
                         control.toPhase(Phase.ELEMENTS_RESOLVED);
                         final JavacElements elms = (JavacElements)control.getElements();
-                        TypeElement type = elms.getTypeElementByBinaryName(qualifiedName);
+                        TypeElement type = ElementUtils.getTypeElementByBinaryName(control, qualifiedName);
                         if (type == null) {
                             return;
                         }
@@ -1358,13 +1327,12 @@ public class SourceUtils {
                 null,
                 null,
                 null,
-                null);
-        try {
-            final CompilationUnitTree cu =  jt.parse(FileObjects.fileObjectFileObject(
+                Collections.singletonList(FileObjects.fileObjectFileObject(
                     moduleInfo,
                     moduleInfo.getParent(),
                     null,
-                    FileEncodingQuery.getEncoding(moduleInfo))).iterator().next();
+                    FileEncodingQuery.getEncoding(moduleInfo))));
+            final CompilationUnitTree cu =  jt.parse().iterator().next();
             final List<? extends Tree> typeDecls = cu.getTypeDecls();
             if (!typeDecls.isEmpty()) {
                 final Tree typeDecl = typeDecls.get(0);
@@ -1372,9 +1340,6 @@ public class SourceUtils {
                     return ((ModuleTree)typeDecl).getName().toString();
                 }
             }
-        } catch (IOException ioe) {
-            Exceptions.printStackTrace(ioe);
-        }
         return null;
     }
 

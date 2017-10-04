@@ -44,6 +44,7 @@ import org.netbeans.api.java.lexer.JavadocTokenId;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.CodeStyle.WrapStyle;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -105,13 +106,12 @@ public class Reformatter implements ReformatTask {
 
     public static String reformat(String text, CodeStyle style, int rightMargin) {
         StringBuilder sb = new StringBuilder(text);
-        try {
             ClassPath empty = ClassPathSupport.createClassPath(new URL[0]);
             ClasspathInfo cpInfo = ClasspathInfo.create(JavaPlatformManager.getDefault().getDefaultPlatform().getBootstrapLibraries(), empty, empty);
-            JavacTaskImpl javacTask = JavacParser.createJavacTask(cpInfo, null, null, null, null, null, null, null, null);
+            JavacTaskImpl javacTask = JavacParser.createJavacTask(cpInfo, null, null, null, null, null, null, null, Arrays.asList(FileObjects.memoryFileObject("","Scratch.java", text)));
             com.sun.tools.javac.util.Context ctx = javacTask.getContext();
             JavaCompiler.instance(ctx).genEndPos = true;
-            CompilationUnitTree tree = javacTask.parse(FileObjects.memoryFileObject("","", text)).iterator().next(); //NOI18N
+            CompilationUnitTree tree = javacTask.parse().iterator().next(); //NOI18N
             SourcePositions sp = JavacTrees.instance(ctx).getSourcePositions();
             TokenSequence<JavaTokenId> tokens = TokenHierarchy.create(text, JavaTokenId.language()).tokenSequence(JavaTokenId.language());
             for (Diff diff : Pretty.reformat(text, tokens, new TreePath(tree), sp, style, rightMargin)) {
@@ -124,8 +124,6 @@ public class Reformatter implements ReformatTask {
                 }
             }
 
-        } catch (IOException ioe) {
-        }
         return sb.toString();
     }
     
@@ -391,7 +389,7 @@ public class Reformatter implements ReformatTask {
         }        
     }
 
-    private static class Pretty extends TreePathScanner<Boolean, Void> {
+    private static class Pretty extends ErrorAwareTreePathScanner<Boolean, Void> {
 
         private static final String OPERATOR = "operator"; //NOI18N
         private static final String EMPTY = ""; //NOI18N

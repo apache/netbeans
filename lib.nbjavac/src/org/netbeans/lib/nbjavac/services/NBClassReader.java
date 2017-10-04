@@ -60,46 +60,6 @@ public class NBClassReader extends ClassReader {
                     bp = newbp;
                 }
             },
-            new NBAttributeReader(nbNames._org_netbeans_TypeSignature, Version.V49, CLASS_OR_MEMBER_ATTRIBUTE) {
-                protected void read(Symbol sym, int attrLen) {
-                    sym.type = readType(nextChar());
-                }
-            },
-            new NBAttributeReader(nbNames._org_netbeans_ParameterNames, Version.V49, CLASS_OR_MEMBER_ATTRIBUTE) {
-                protected void read(Symbol sym, int attrLen) {
-                    int newbp = bp + attrLen;
-                    List<Name> parameterNames = List.nil();
-                    int numParams = 0;
-                    if (sym.type != null) {
-                        List<Type> parameterTypes = sym.type.getParameterTypes();
-                        if (parameterTypes != null)
-                            numParams = parameterTypes.length();
-                    }
-                    for (int i = 0; i < numParams; i++) {
-                        if (bp < newbp - 1)
-                            parameterNames = parameterNames.prepend(readName(nextChar()));
-                    }
-                    parameterNames = parameterNames.reverse();
-                    while(parameterNames.length() < numParams)
-                        parameterNames = parameterNames.prepend(names.empty);
-                    ((MethodSymbol)sym).savedParameterNames = parameterNames;
-                }
-            },
-            new NBAttributeReader(nbNames._org_netbeans_SourceLevelAnnotations, Version.V49, CLASS_OR_MEMBER_ATTRIBUTE) {
-                protected void read(Symbol sym, int attrLen) {
-                    attachAnnotations(sym);
-                }
-            },
-            new NBAttributeReader(nbNames._org_netbeans_SourceLevelParameterAnnotations, Version.V49, CLASS_OR_MEMBER_ATTRIBUTE) {
-                protected void read(Symbol sym, int attrLen) {
-                    attachParameterAnnotations(sym);
-                }
-            },
-            new NBAttributeReader(nbNames._org_netbeans_SourceLevelTypeAnnotations, Version.V52, CLASS_OR_MEMBER_ATTRIBUTE) {
-                protected void read(Symbol sym, int attrLen) {
-                    attachTypeAnnotations(sym);
-                }
-            },
         };
 
         for (NBAttributeReader r: readers)

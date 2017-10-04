@@ -392,7 +392,6 @@ public class JavacParser extends Parser {
                             }
                         }
                     }
-                    System.err.println("needsFullReparse=" + needsFullReparse);
                     if (needsFullReparse) {
                         positions.clear();
                         ciImpl = createCurrentInfo (this, file, root, snapshot, null, null);

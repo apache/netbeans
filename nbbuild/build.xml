@@ -1958,6 +1958,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="**/*.pass2" /> <!--generated test files-->
                 <exclude name="**/.list" /> <!--no degree of creativity-->
                 <exclude name="**/src/META-INF/**" /> <!--no degree of creativity-->
+                <exclude name="form/test/unit/data/goldenfiles/*" /> <!--test data-->
             </fileset>
         </rat:report>
     </target>

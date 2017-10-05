@@ -66,7 +66,9 @@ public class StateChangeTest extends AbstractSyncTestCase {
     }
         
     public static Test suite() {
-        TestSuite suite = new TestSuite(StateChangeTest.class);
+        TestSuite suite = new TestSuite();
+//        Disabled as referenced XSD file were partly not donated by oracle to apache
+//        suite.addTestSuite(StateChangeTest.class);
         return suite;
     }
 

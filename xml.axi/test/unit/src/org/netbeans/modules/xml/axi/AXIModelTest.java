@@ -57,11 +57,12 @@ public class AXIModelTest extends AbstractTestCase {
     
     public static Test suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new AXIModelTest("testAXIModel"));
-        suite.addTest(new AXIModelTest("testAXIModelForMetaSchema"));
-        suite.addTest(new AXIModelTest("testRecursiveResolve1"));
-        suite.addTest(new AXIModelTest("testRecursiveResolve2"));
-        suite.addTest(new AXIModelTest("testSubstitutionGroup"));
+//        Disabled as referenced XSD file were partly not donated by oracle to apache
+//        suite.addTest(new AXIModelTest("testAXIModel"));
+//        suite.addTest(new AXIModelTest("testAXIModelForMetaSchema"));
+//        suite.addTest(new AXIModelTest("testRecursiveResolve1"));
+//        suite.addTest(new AXIModelTest("testRecursiveResolve2"));
+//        suite.addTest(new AXIModelTest("testSubstitutionGroup"));
         return suite;
     }        
     

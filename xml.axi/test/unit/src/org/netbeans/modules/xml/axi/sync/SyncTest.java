@@ -50,9 +50,10 @@ public class SyncTest extends AbstractSyncTestCase {
         
     public static Test suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new SyncTest("testSync"));
-        suite.addTest(new SyncTest("testOTASyncPerformance"));
-        //suite.addTest(new SyncPerfTest("testHealthcareSchemaSyncPerformance"));
+//        Disabled as referenced XSD file were partly not donated by oracle to apache
+//        suite.addTest(new SyncTest("testSync"));
+//        suite.addTest(new SyncTest("testOTASyncPerformance"));
+//        //suite.addTest(new SyncPerfTest("testHealthcareSchemaSyncPerformance"));
         return suite;
     }
 

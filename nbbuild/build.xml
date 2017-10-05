@@ -1952,6 +1952,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="nbbuild/netbeans/**" />
                 <exclude name="**/manifest.mf" /> <!--do not nativelly support comments-->
                 <exclude name="*/nbproject/*.sig" /> <!--generated signatures for past versions-->
+                <exclude name="*/nbproject/build-impl.xml" /> <!--generated, no degree of creativity -->
+                <exclude name="*/nbproject/jfx-impl.xml" /> <!--generated, no degree of creativity -->
+                <exclude name="*/nbproject/genfiles.properties" /> <!--generated, no degree of creativity -->
+                <exclude name="*/nbproject/private/**" /> <!--user-specific files -->
                 <exclude name="*/external/*-license.txt" /> <!--licenses for external dependencies-->
                 <exclude name="*/external/*-notice.txt" /> <!--notices for external dependencies-->
                 <exclude name="**/*.pass" /> <!--generated test files-->

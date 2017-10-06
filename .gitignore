@@ -43,8 +43,3 @@
 /websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl/
 /websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl20061109.xsd
 /websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl200902.xsd
-/xml.catalog/src/org/netbeans/modules/xml/catalog/resources/XMLNamespace.xsd
-/xml.catalog/src/org/netbeans/modules/xml/catalog/resources/XMLSchema-instance.xsd
-/xml.catalog/src/org/netbeans/modules/xml/catalog/resources/XMLSchema.dtd
-/xml.catalog/src/org/netbeans/modules/xml/catalog/resources/XMLSchema.xsd
-/xml.catalog/src/org/netbeans/modules/xml/catalog/resources/datatypes.dtd

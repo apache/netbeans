@@ -1950,7 +1950,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <rat:substringMatcher licenseFamilyCategory="w3c2" licenseFamilyName="W3C Software and Document Notice and License">
                 <pattern substring="W3C Software and Document Notice and License"/>
             </rat:substringMatcher>
+            <rat:substringMatcher licenseFamilyCategory="oasis" licenseFamilyName="OASIS">
+                <pattern substring="[OASIS]"/>
+            </rat:substringMatcher>
             <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
+            <rat:approvedLicense familyName="OASIS"/>
             <fileset dir="${nb_all}">
                 <exclude name="*/build/**" />
                 <exclude name="nbbuild/netbeans/**" />

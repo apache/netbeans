@@ -22,7 +22,5 @@
 <project name="xml.catalog" default="netbeans" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
-    <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/xml-catalog-external-resources.zip" dest="src/org/netbeans/modules/xml/catalog/resources"/>
-    </target>
+
 </project>

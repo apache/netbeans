@@ -1986,6 +1986,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.xml" /> <!-- test data -->
                 <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.xsd" /> <!-- test data -->
                 <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.bpel" /> <!-- test data -->
+                <exclude name="xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.dtd" /> <!-- test data -->
+                <exclude name="xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.xml" /> <!-- test data -->
                 <exclude name="xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample" /> <!-- GUI sample file to demonstrate syntax highlighting -->
                 <exclude name="xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample" /> <!-- GUI sample file to demonstrate syntax highlighting -->
                 <exclude name="xml.text/test/qa-functional/src/org/netbeans/modules/xml/text/**/data/**" /> <!-- test data -->

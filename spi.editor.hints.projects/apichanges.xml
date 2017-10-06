@@ -17,6 +17,7 @@
     KIND, either express or implied.  See the License for the
     specific language governing permissions and limitations
     under the License.
+
 -->
 <?xml-stylesheet type="text/xml" href="../nbbuild/javadoctools/apichanges.xsl"?>
 <!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../nbbuild/javadoctools/apichanges.dtd">

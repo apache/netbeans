@@ -1966,6 +1966,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="diff/test/unit/data/**" /> <!--test data-->
                 <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/provider/*.txt" /> <!--test data-->
                 <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/visualizer/data/**" /> <!--test data-->
+                <exclude name="utilities/test/unit/src/org/netbeans/modules/openfile/resources/recent_files/*" /> <!--test data-->
+                <exclude name="**/*.url" /> <!--no degree of creativity-->
             </fileset>
         </rat:report>
     </target>

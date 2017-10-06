@@ -1978,6 +1978,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
 		<exclude name="spi.navigator/test/unit/src/org/netbeans/modules/navigator/resources/lastsel/file.lastsel_mime1" /> <!--empty file-->    
                 <exclude name="xml.axi/test/unit/src/org/netbeans/modules/xml/axi/resources/**" /> <!-- test data -->
                 <exclude name="xml.schema.completion/test/unit/src/org/netbeans/modules/xml/schema/completion/resources/**" /> <!-- test data -->
+                <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.wsdl" /> <!-- test data -->
+                <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.xml" /> <!-- test data -->
+                <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.xsd" /> <!-- test data -->
+                <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.bpel" /> <!-- test data -->
                 <exclude name="xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample" /> <!-- GUI sample file to demonstrate syntax highlighting -->
                 <exclude name="xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample" /> <!-- GUI sample file to demonstrate syntax highlighting -->
                 <exclude name="xml.text/test/qa-functional/src/org/netbeans/modules/xml/text/**/data/**" /> <!-- test data -->

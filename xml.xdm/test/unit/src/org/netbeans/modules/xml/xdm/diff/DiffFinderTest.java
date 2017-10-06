@@ -52,8 +52,9 @@ public class DiffFinderTest extends TestCase {
         suite.addTest(new DiffFinderTest("testFindDiff1"));
         suite.addTest(new DiffFinderTest("testFindDiff2"));
         suite.addTest(new DiffFinderTest("testFindDiff3"));
-        suite.addTest(new DiffFinderTest("testFindDiffPerf"));
-        suite.addTest(new DiffFinderTest("testFindDiffPerf2"));
+//        Disabled as referenced files were partly not donated by oracle to apache
+//        suite.addTest(new DiffFinderTest("testFindDiffPerf"));
+//        suite.addTest(new DiffFinderTest("testFindDiffPerf2"));
         suite.addTest(new DiffFinderTest("testElementAddedBeforeChildAttributeChange"));
         suite.addTest(new DiffFinderTest("testElementAddedBeforeChildAttributeChange2"));
         return suite;

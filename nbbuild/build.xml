@@ -1947,6 +1947,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             </classpath>
         </taskdef>
         <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="build/rat-report.txt">
+            <rat:substringMatcher licenseFamilyCategory="w3c2" licenseFamilyName="W3C Software and Document Notice and License">
+                <pattern substring="W3C Software and Document Notice and License"/>
+            </rat:substringMatcher>
+            <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
             <fileset dir="${nb_all}">
                 <exclude name="*/build/**" />
                 <exclude name="nbbuild/netbeans/**" />
@@ -1973,6 +1977,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="**/*.url" /> <!--no degree of creativity-->
 		<exclude name="spi.navigator/test/unit/src/org/netbeans/modules/navigator/resources/lastsel/file.lastsel_mime1" /> <!--empty file-->    
                 <exclude name="xml.axi/test/unit/src/org/netbeans/modules/xml/axi/resources/**" /> <!-- test data -->
+                <exclude name="xml.schema.completion/test/unit/src/org/netbeans/modules/xml/schema/completion/resources/**" /> <!-- test data -->
                 <exclude name="xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample" /> <!-- GUI sample file to demonstrate syntax highlighting -->
                 <exclude name="xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample" /> <!-- GUI sample file to demonstrate syntax highlighting -->
                 <exclude name="xml.text/test/qa-functional/src/org/netbeans/modules/xml/text/**/data/**" /> <!-- test data -->

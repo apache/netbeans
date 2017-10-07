@@ -1953,8 +1953,14 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <rat:substringMatcher licenseFamilyCategory="oasis" licenseFamilyName="OASIS">
                 <pattern substring="[OASIS]"/>
             </rat:substringMatcher>
+            <rat:fullTextMatcher licenseFamilyCategory="wsdl" licenseFamilyName="WSDL Schema Files">
+                International Business Machines Corporation and Microsoft Corporation
+                All Rights Reserved
+                License for WSDL Schema Files
+            </rat:fullTextMatcher>
             <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
             <rat:approvedLicense familyName="OASIS"/>
+            <rat:approvedLicense familyName="WSDL Schema Files" />
             <fileset dir="${nb_all}">
                 <exclude name="*/build/**" />
                 <exclude name="nbbuild/netbeans/**" />
@@ -1995,6 +2001,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/resources/*.xml" /> <!-- test data -->
                 <exclude name="xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/resources/*.zip" /> <!-- test data -->
                 <exclude name="xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/resources/dummyProject/nbproject/private/tmpfile" /> <!-- test data -->
+                <exclude name="xml.wsdl.model/test/unit/src/org/netbeans/modules/xml/wsdl/**/*.wsdl" /> <!-- test data -->
+                <exclude name="xml.wsdl.model/test/unit/src/org/netbeans/modules/xml/wsdl/**/*.xsd" /> <!-- test data -->
+                <exclude name="xml.wsdl.model/test/unit/src/org/netbeans/modules/xml/wsdl/**/*.xml" /> <!-- test data -->
                 <exclude name="xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample" /> <!-- GUI sample file to demonstrate syntax highlighting -->
                 <exclude name="xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample" /> <!-- GUI sample file to demonstrate syntax highlighting -->
                 <exclude name="xml.text/test/qa-functional/src/org/netbeans/modules/xml/text/**/data/**" /> <!-- test data -->

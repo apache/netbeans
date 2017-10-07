@@ -1972,6 +1972,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="templates/src/org/netbeans/modules/templates/resources/userprop.txt" /> <!--no degree of creativity-->
                 <exclude name="api.search/test/unit/data/textFiles/utf8file.txt" /> <!--test data-->
                 <exclude name="api.search/test/unit/src/org/netbeans/modules/search/data/**" /> <!--test data-->
+                <exclude name="beans/src/org/netbeans/modules/beans/resources/templates/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
             </fileset>
         </rat:report>
     </target>

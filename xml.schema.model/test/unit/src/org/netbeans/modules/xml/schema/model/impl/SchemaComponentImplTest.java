@@ -133,51 +133,52 @@ public class SchemaComponentImplTest extends TestCase {
         assertNotNull("only one annotation should be present", ann);
     }
     
-    public void testSetGlobalReference() throws Exception {
-        SchemaModel mod = Util.loadSchemaModel("resources/ipo.xsd");
-        Schema schema = mod.getSchema();
-        SchemaComponentFactory fact = mod.getFactory();
-        
-        mod.startTransaction();
-        GlobalAttributeGroup gap = fact.createGlobalAttributeGroup();
-        schema.addAttributeGroup(gap);
-        gap.setName("myAttrGroup2");
-        LocalAttribute ga = fact.createLocalAttribute();
-        gap.addLocalAttribute(ga);
-        ga.setName("ga");
-        GlobalSimpleType gst = FindSchemaComponentFromDOM.find(
-                GlobalSimpleType.class, schema, "/schema/simpleType[@name='Sku']");
-        ga.setType(ga.createReferenceTo(gst, GlobalSimpleType.class));
-
-        mod.endTransaction();
-        
-        String v = ((AbstractDocumentComponent)ga).getPeer().getAttribute("type");
-        assertEquals("ref should have prefix", "ipo:Sku", v);
-        
-        mod.startTransaction();
-        /*
-        <complexType name="myCT">
-            <sequence>
-                <simpleType name="productName" type="xsd:string"/>
-            <attributeGroup ref="ipo:myAttrGroup2"/>
-        </complexType>
-         */
-        GlobalComplexType gct = fact.createGlobalComplexType();
-        schema.addComplexType(gct);
-        gct.setName("myCT");
-        Sequence seq = Util.createSequence(mod, gct);
-        LocalElement le = Util.createLocalElement(mod, seq, "productName", 0);
-        le.setType(le.createReferenceTo(Util.getPrimitiveType("string"), GlobalSimpleType.class));
-        
-        AttributeGroupReference agr = fact.createAttributeGroupReference();
-        gct.addAttributeGroupReference(agr);
-        agr.setGroup(agr.createReferenceTo(gap, GlobalAttributeGroup.class));
-
-        mod.endTransaction();
-        
-        v = ((AbstractDocumentComponent)agr).getPeer().getAttribute("ref");
-        assertEquals("ref should have prefix", "ipo:myAttrGroup2", v);
-    }
+//    Disabled as referenced files were partly not donated by oracle to apache    
+//    public void testSetGlobalReference() throws Exception {
+//        SchemaModel mod = Util.loadSchemaModel("resources/ipo.xsd");
+//        Schema schema = mod.getSchema();
+//        SchemaComponentFactory fact = mod.getFactory();
+//        
+//        mod.startTransaction();
+//        GlobalAttributeGroup gap = fact.createGlobalAttributeGroup();
+//        schema.addAttributeGroup(gap);
+//        gap.setName("myAttrGroup2");
+//        LocalAttribute ga = fact.createLocalAttribute();
+//        gap.addLocalAttribute(ga);
+//        ga.setName("ga");
+//        GlobalSimpleType gst = FindSchemaComponentFromDOM.find(
+//                GlobalSimpleType.class, schema, "/schema/simpleType[@name='Sku']");
+//        ga.setType(ga.createReferenceTo(gst, GlobalSimpleType.class));
+//
+//        mod.endTransaction();
+//        
+//        String v = ((AbstractDocumentComponent)ga).getPeer().getAttribute("type");
+//        assertEquals("ref should have prefix", "ipo:Sku", v);
+//        
+//        mod.startTransaction();
+//        /*
+//        <complexType name="myCT">
+//            <sequence>
+//                <simpleType name="productName" type="xsd:string"/>
+//            <attributeGroup ref="ipo:myAttrGroup2"/>
+//        </complexType>
+//         */
+//        GlobalComplexType gct = fact.createGlobalComplexType();
+//        schema.addComplexType(gct);
+//        gct.setName("myCT");
+//        Sequence seq = Util.createSequence(mod, gct);
+//        LocalElement le = Util.createLocalElement(mod, seq, "productName", 0);
+//        le.setType(le.createReferenceTo(Util.getPrimitiveType("string"), GlobalSimpleType.class));
+//        
+//        AttributeGroupReference agr = fact.createAttributeGroupReference();
+//        gct.addAttributeGroupReference(agr);
+//        agr.setGroup(agr.createReferenceTo(gap, GlobalAttributeGroup.class));
+//
+//        mod.endTransaction();
+//        
+//        v = ((AbstractDocumentComponent)agr).getPeer().getAttribute("ref");
+//        assertEquals("ref should have prefix", "ipo:myAttrGroup2", v);
+//    }
     
     public void testSetAndGetID() throws Exception {
         assertNull("id attribute is optional", schema.getId());

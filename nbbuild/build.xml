@@ -1986,6 +1986,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="utilities/test/unit/src/org/netbeans/modules/openfile/resources/recent_files/*" /> <!--test data-->
                 <exclude name="**/*.url" /> <!--no degree of creativity-->
 		<exclude name="spi.navigator/test/unit/src/org/netbeans/modules/navigator/resources/lastsel/file.lastsel_mime1" /> <!--empty file-->    
+                <exclude name="xml/test/unit/src/org/netbeans/modules/xml/resources/*" /> <!-- test data -->
+                <exclude name="xml/src/org/netbeans/modules/xml/resources/templates/*" /> <!-- template files - tracked by https://issues.apache.org/jira/browse/NETBEANS-85 -->
                 <exclude name="xml.axi/test/unit/src/org/netbeans/modules/xml/axi/resources/**" /> <!-- test data -->
                 <exclude name="xml.schema.completion/test/unit/src/org/netbeans/modules/xml/schema/completion/resources/**" /> <!-- test data -->
                 <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.wsdl" /> <!-- test data -->

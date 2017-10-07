@@ -1950,7 +1950,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <fileset dir="${nb_all}">
                 <exclude name="*/build/**" />
                 <exclude name="nbbuild/netbeans/**" />
-                <exclude name="**/manifest.mf" /> <!--do not nativelly support comments-->
+                <exclude name="**/*.mf" /> <!--do not nativelly support comments-->
                 <exclude name="*/nbproject/*.sig" /> <!--generated signatures for past versions-->
                 <exclude name="*/nbproject/build-impl.xml" /> <!--generated, no degree of creativity -->
                 <exclude name="*/nbproject/jfx-impl.xml" /> <!--generated, no degree of creativity -->
@@ -1970,6 +1970,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="**/*.url" /> <!--no degree of creativity-->
                 <exclude name="spi.navigator/test/unit/src/org/netbeans/modules/navigator/resources/lastsel/file.lastsel_mime1" /> <!--empty file-->    
                 <exclude name="templates/src/org/netbeans/modules/templates/resources/userprop.txt" /> <!--no degree of creativity-->
+                <exclude name="api.search/test/unit/data/textFiles/utf8file.txt" /> <!--test data-->
+                <exclude name="api.search/test/unit/src/org/netbeans/modules/search/data/**" /> <!--test data-->
             </fileset>
         </rat:report>
     </target>

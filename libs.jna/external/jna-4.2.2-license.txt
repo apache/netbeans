@@ -1,7 +1,6 @@
 Name: Java Native Access
-Version: 4.2.1
+Version: 4.2.2
 License: Apache-2.0
-OSR: 7755
 Description: Dynamically access native libraries from Java without JNI.
 
                                  Apache License

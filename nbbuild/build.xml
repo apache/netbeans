@@ -1952,6 +1952,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="nbbuild/netbeans/**" />
                 <exclude name="**/manifest.mf" /> <!--do not nativelly support comments-->
                 <exclude name="*/nbproject/*.sig" /> <!--generated signatures for past versions-->
+                <exclude name="*/nbproject/build-impl.xml" /> <!--generated, no degree of creativity -->
+                <exclude name="*/nbproject/jfx-impl.xml" /> <!--generated, no degree of creativity -->
+                <exclude name="*/nbproject/genfiles.properties" /> <!--generated, no degree of creativity -->
+                <exclude name="*/nbproject/private/**" /> <!--user-specific files -->
                 <exclude name="*/external/*-license.txt" /> <!--licenses for external dependencies-->
                 <exclude name="*/external/*-notice.txt" /> <!--notices for external dependencies-->
                 <exclude name="**/*.pass" /> <!--generated test files-->
@@ -1962,6 +1966,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="diff/test/unit/data/**" /> <!--test data-->
                 <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/provider/*.txt" /> <!--test data-->
                 <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/visualizer/data/**" /> <!--test data-->
+                <exclude name="utilities/test/unit/src/org/netbeans/modules/openfile/resources/recent_files/*" /> <!--test data-->
+                <exclude name="**/*.url" /> <!--no degree of creativity-->
+                <exclude name="spi.navigator/test/unit/src/org/netbeans/modules/navigator/resources/lastsel/file.lastsel_mime1" /> <!--empty file-->    
+                <exclude name="templates/src/org/netbeans/modules/templates/resources/userprop.txt" /> <!--no degree of creativity-->
             </fileset>
         </rat:report>
     </target>

@@ -709,7 +709,7 @@
             <attribute name="test.type"/>
             <attribute name="disable.apple.ui" default="false"/>
             <sequential>
-                <junit showoutput="true" fork="true" failureproperty="tests.failed" errorproperty="tests.failed" filtertrace="${test.filter.trace}" tempdir="${build.test.@{test.type}.results.dir}" timeout="${test.timeout}">
+                <junit showoutput="true" fork="true" failureproperty="tests.failed" errorproperty="tests.failed" filtertrace="${test.filter.trace}" tempdir="${build.test.@{test.type}.results.dir}" timeout="${test.timeout}" jvm="${test.nbjdk.java}">
                     <batchtest todir="${build.test.@{test.type}.results.dir}">
                         <fileset dir="${build.test.@{test.type}.classes.dir}" includes="${test.includes}" excludes="${test.excludes}"/>
                     </batchtest>
@@ -739,7 +739,8 @@
                         outputdir="${build.test.@{test.type}.results.dir}"
                         workingDir="${build.test.@{test.type}.results.dir}"
                         suitename="${code.name.base}"
-			listener="org.testng.reporters.VerboseReporter"
+                        listener="org.testng.reporters.VerboseReporter"
+                        jvm="${test.nbjdk.java}"
                 >
                     <classfileset dir="${build.test.@{test.type}.classes.dir}" excludes="${test.excludes}" includes="${test.includes}"/>
                     <propertyset refid="test.@{test.type}.properties"/>
@@ -808,7 +809,7 @@
         <macrodef name="junit-impl">
             <attribute name="test.type"/>
             <sequential>
-                <junit showoutput="true" fork="true" failureproperty="tests.failed" errorproperty="tests.failed" filtertrace="${test.filter.trace}" tempdir="${build.test.@{test.type}.results.dir}" timeout="${test.timeout}">
+                <junit showoutput="true" fork="true" failureproperty="tests.failed" errorproperty="tests.failed" filtertrace="${test.filter.trace}" tempdir="${build.test.@{test.type}.results.dir}" timeout="${test.timeout}" jvm="${test.nbjdk.java}">
                     <batchtest todir="${build.test.@{test.type}.results.dir}">
                         <fileset dir="${test.@{test.type}.src.dir}" includes="${test.includes}"/>
                     </batchtest>
@@ -839,7 +840,8 @@
                          outputdir="${build.test.@{test.type}.results.dir}"
                          workingDir="${build.test.@{test.type}.results.dir}"
                          suitename="${code.name.base}"
-			 listener="org.testng.reporters.VerboseReporter"
+                         listener="org.testng.reporters.VerboseReporter"
+                         jvm="${test.nbjdk.java}"
                 >
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
@@ -866,7 +868,8 @@
                          outputdir="${build.test.@{test.type}.results.dir}"
                          workingDir="${build.test.@{test.type}.results.dir}"
                          suitename="${code.name.base}"
-			 listener="org.testng.reporters.VerboseReporter"
+                         listener="org.testng.reporters.VerboseReporter"
+                         jvm="${test.nbjdk.java}"
                 >
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
@@ -912,7 +915,7 @@
                 <condition property="test.methods.line" value="methods=${test.methods}" else="">
                     <isset property="test.methods"/>
                 </condition>
-                <java fork="true" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner">
+                <java fork="true" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner" jvm="${test.nbjdk.java}">
                     <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=${jpda.address}"/>
                     <jvmarg line="${test.run.args}"/>
                     <classpath>
@@ -946,7 +949,7 @@
                 <!-- TestNG is running in forkMode="once"                  -->
                 <!-- therefore results while debugging single class/method -->
                 <!-- can be different from running all tests at once       -->
-                <java classname="org.testng.TestNG" fork="true">
+                <java classname="org.testng.TestNG" fork="true" jvm="${test.nbjdk.java}">
                     <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=${jpda.address}"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
@@ -988,7 +991,8 @@
                          outputdir="${build.test.@{test.type}.results.dir}"
                          workingDir="${build.test.@{test.type}.results.dir}"
                          suitename="${code.name.base}"
-			 listener="org.testng.reporters.VerboseReporter"
+                         listener="org.testng.reporters.VerboseReporter"
+                         jvm="${test.nbjdk.java}"
                 >
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
@@ -1050,7 +1054,7 @@
         <macrodef name="junit-impl">
             <attribute name="test.type"/>
             <sequential>
-                <junit showoutput="true" fork="true" failureproperty="tests.failed" errorproperty="tests.failed" filtertrace="${test.filter.trace}" tempdir="${build.test.@{test.type}.results.dir}" timeout="${test.timeout}">
+                <junit showoutput="true" fork="true" failureproperty="tests.failed" errorproperty="tests.failed" filtertrace="${test.filter.trace}" tempdir="${build.test.@{test.type}.results.dir}" timeout="${test.timeout}" jvm="${test.nbjdk.java}">
                     <test name="${test.class}" methods="${test.methods}" todir="${build.test.@{test.type}.results.dir}"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <syspropertyset refid="test.@{test.type}.properties"/>
@@ -1077,7 +1081,8 @@
                         outputdir="${build.test.@{test.type}.results.dir}"
                         workingDir="${build.test.@{test.type}.results.dir}"
                         suitename="${code.name.base}"
-			listener="org.testng.reporters.VerboseReporter"
+                        listener="org.testng.reporters.VerboseReporter"
+                        jvm="${test.nbjdk.java}"
                 >
                     <propertyset refid="test.@{test.type}.properties"/>
                     <classpath refid="test.@{test.type}.run.cp"/>
@@ -1197,7 +1202,7 @@
                 >
                     <classpath refid="test.@{test.type}.run.cp"/>
                 </nbprofiledirect>
-                <junit showoutput="true" fork="true" failureproperty="tests.failed" errorproperty="tests.failed" filtertrace="${test.filter.trace}" tempdir="${build.test.@{test.type}.results.dir}">
+                <junit showoutput="true" fork="true" failureproperty="tests.failed" errorproperty="tests.failed" filtertrace="${test.filter.trace}" tempdir="${build.test.@{test.type}.results.dir}" jvm="${test.nbjdk.java}">
                     <env key="${profiler.info.pathvar}" path="${profiler.info.agentpath}:${profiler.current.path}"/>
                     <jvmarg value="${profiler.info.jvmargs.agent}"/>
                     <jvmarg line="${profiler.info.jvmargs}"/>

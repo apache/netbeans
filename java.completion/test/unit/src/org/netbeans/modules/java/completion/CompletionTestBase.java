@@ -47,6 +47,7 @@ import junit.framework.Assert;
 
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.support.ReferencesCount;
@@ -54,6 +55,7 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.JavaDataLoader;
+import org.netbeans.modules.java.source.TestUtil;
 //import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.modules.java.source.indexing.TransactionContext;
 import org.netbeans.modules.java.source.usages.BinaryAnalyser;
@@ -126,10 +128,10 @@ public class CompletionTestBase extends NbTestCase {
                     if (type.equals(ClassPath.COMPILE)) {
                         return ClassPathSupport.createClassPath(new FileObject[0]);
                     }
-                    if (type.equals(ClassPath.BOOT)) {
+                    if (type.equals(ClassPath.BOOT) || type.equals(JavaClassPathConstants.MODULE_BOOT_PATH)) {
                         ClassPath cp = bootCache;
                         if (cp == null) {
-                            bootCache = cp = createClassPath(System.getProperty("sun.boot.class.path"));
+                            cp = TestUtil.getBootClassPath();
                         }
                         return cp;
                     }
@@ -255,11 +257,27 @@ public class CompletionTestBase extends NbTestCase {
         }
         
         
-        File goldenFile = new File(getDataDir(), "/goldenfiles/org/netbeans/modules/java/completion/JavaCompletionTaskTest/" + version + "/" + goldenFileName);
+        File goldenFile = null;
+        for (String variant : VERSION_VARIANTS.get(version)) {
+            goldenFile = new File(getDataDir(), "/goldenfiles/org/netbeans/modules/java/completion/JavaCompletionTaskTest/" + variant + "/" + goldenFileName);
+            if (goldenFile.exists())
+                break;
+        }
+        assertNotNull(goldenFile);
         File diffFile = new File(getWorkDir(), getName() + ".diff");        
         assertFile(output, goldenFile, diffFile);
         
         LifecycleManager.getDefault().saveAll();
+    }
+
+    private static final Map<String, List<String>> VERSION_VARIANTS = new HashMap<>();
+
+    static {
+        VERSION_VARIANTS.put("1.8", Arrays.asList("1.8"));
+        VERSION_VARIANTS.put("9", Arrays.asList("9", "1.8"));
+        VERSION_VARIANTS.put("1.9", Arrays.asList("9", "1.8"));
+        VERSION_VARIANTS.put("10", Arrays.asList("10", "9", "1.8"));
+        VERSION_VARIANTS.put("1.10", Arrays.asList("10", "9", "1.8"));
     }
 
     private void copyToWorkDir(File resource, File toFile) throws IOException {

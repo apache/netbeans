@@ -23,36 +23,11 @@
 <project name="applemenu" basedir="." default="netbeans">
   <import file="../nbbuild/templates/projectized.xml"/>
 
-<property name="jdk-version" value="${ant.java.version}"/>
-<property name="jdk-9-version" value="1.9"/>
- <property name="applemenu.src.dir" value="./src/"/>
-
-  <target name="compile" depends="projectized-common.compile">
-    <delete dir="${build.classes.dir}/com"/> <!-- just stubs -->
-    <delete dir="${build.classes.dir}/java"/> <!-- just stubs -->
-  </target>
-
-
-  <target name="ext-desktop-classes-unzip-cond">
-    <script language="javascript"><![CDATA[
-
-      var jdkCurrentVersion = parseFloat(project.getProperty('jdk-version'));
-      var jdk9Version = parseFloat(project.getProperty('jdk-9-version'));
-
-      project.setProperty('isJdkVersionLessth9', jdkCurrentVersion  < jdk9Version );
-    ]]></script>
-
-    <condition property="isJdkVersionLessth9">
-      <equals arg1="${isJdkVersionLessth9}" arg2="true"/>
-    </condition>
-  </target>
-
-  <target name="unzip-ext-binaries" depends="ext-desktop-classes-unzip-cond" if="${isJdkVersionLessth9}"> 
-    <echo>Get file based on condition being false</echo>
-  </target>
-
-  <target name="build-init" depends="ext-desktop-classes-unzip-cond,projectized.build-init" if="${isJdkVersionLessth9}">
-        <unzip src="external/applemenu-external-desktop-classes.zip" dest="${applemenu.src.dir}"/>
+  <target name="build-init" depends="projectized.build-init">
+        <mkdir dir="${build.dir}/desktop-classes-src" />
+        <unzip src="external/applemenu-external-desktop-classes.zip" dest="${build.dir}/desktop-classes-src"/>
+        <mkdir dir="${build.dir}/desktop-classes-classes" />
+        <javac srcdir="${build.dir}/desktop-classes-src" destdir="${build.dir}/desktop-classes-classes" />
   </target>
 
 </project>

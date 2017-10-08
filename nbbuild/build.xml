@@ -1977,6 +1977,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="editor.fold/test/unit/data/hierarchy/update-hierarchy.folds" /> <!--test data-->
                 <exclude name="editor.fold/test/unit/src/org/netbeans/modules/editor/fold/FoldContentReader.txt" /> <!--test data-->
                 <exclude name="libs.freemarker/test/unit/data/**" /> <!--test data-->
+                <exclude name="languages.yaml/src/org/netbeans/modules/languages/yaml/*.yml" /> <!--Files used in GUI as sample/starting point-->
+                <exclude name="languages.yaml/src/org/netbeans/modules/languages/yaml/*.yaml" /> <!--Files used in GUI as sample/starting point-->
+                <exclude name="languages.yaml/test/unit/data/testfiles/*" /> <!--test data-->
             </fileset>
         </rat:report>
     </target>

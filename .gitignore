@@ -20,7 +20,6 @@
 .DS_Store
 
 #the following should only be transient, until resolved more appropriately:
-/applemenu/src/java/
 /db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/JavaCharStream.java
 /db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/ParseException.java
 /db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParser.java

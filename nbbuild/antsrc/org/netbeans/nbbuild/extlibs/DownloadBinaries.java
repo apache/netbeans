@@ -150,12 +150,12 @@ public class DownloadBinaries extends Task {
                                 throw new BuildException("Bad line '" + line + "' in " + manifest, getLocation());
                             }
 
-                            if (isMavenFile(hashAndFile)) {
+                            if (MavenCoordinate.isMavenFile(hashAndFile[1])) {
+                                MavenCoordinate mc = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
                                 try {
-                                    mavenFile(hashAndFile, manifest);
+                                    mavenFile(hashAndFile[0], mc, manifest);
                                 } catch (IOException ex) {
-                                    String[] artifactGroupVersion = hashAndFile[1].split(":");
-                                    String shortName = artifactGroupVersion[1] + '-' + artifactGroupVersion[2] + ".jar";
+                                    String shortName = mc.toArtifactFilename();
                                     hashedFile(hashAndFile[0], shortName, manifest);
                                 }
                             } else {
@@ -172,20 +172,11 @@ public class DownloadBinaries extends Task {
         }
     }
     
-    private void mavenFile(String[] hashAndId, File manifest) throws IOException {
-        String id = hashAndId[1];
-        String[] ids = id.split(":");
-        if (ids.length != 3) {
-            throw new BuildException("Expecting groupId:artifactId:version, but was " + id + " in " + manifest);
-        }
-
-        String baseName = mavenFileName(hashAndId);
-        File f = new File(manifest.getParentFile(), baseName);
+    private void mavenFile(String hash, MavenCoordinate mc, File manifest) throws IOException {
+        File f = new File(manifest.getParentFile(), mc.toArtifactFilename());
         if (clean || !f.exists()) {
             log("Creating " + f);
-            String cacheName = ids[0].replace('.', '/') + "/" +
-                    ids[1] + "/" + ids[2] + "/" + ids[1] + "-" + ids[2] + ".jar";
-            
+            String cacheName = mc.toMavenPath();
             File local = new File(new File(new File(new File(System.getProperty("user.home")), ".m2"), "repository"), cacheName.replace('/', File.separatorChar));
             final String url;
             if (local.exists()) {
@@ -195,7 +186,7 @@ public class DownloadBinaries extends Task {
             }
             try {
                 URL u = new URL(url);
-                if (downloadFromServer(u, cacheName, f, hashAndId[0])) {
+                if (downloadFromServer(u, cacheName, f, hash)) {
                     return;
                 }
             } catch (IOException ex) {
@@ -415,16 +406,113 @@ public class DownloadBinaries extends Task {
         return String.format("%040X", new BigInteger(1, digest.digest()));
     }
 
-    static boolean isMavenFile(String... hashAndId) {
-        return hashAndId[1].split(":").length > 2;
-    }
-    static String mavenFileName(String... hashAndId) {
-        assert isMavenFile(hashAndId);
-        String[] artifactGroupVersion = hashAndId[1].split(":");
-        return artifactGroupVersion[1] + "-" + artifactGroupVersion[2] + ".jar";
-    }
+    static class MavenCoordinate {
+        private final String groupId;
+        private final String artifactId;
+        private final String version;
+        private final String extension;
+        private final String classifier;
 
+        private MavenCoordinate(String groupId, String artifactId, String version, String extension, String classifier) {
+            this.groupId = groupId;
+            this.artifactId = artifactId;
+            this.version = version;
+            this.extension = extension;
+            this.classifier = classifier;
+        }
+        
+        public boolean hasClassifier() {
+            return (! classifier.isEmpty());
+        }
 
+        public String getGroupId() {
+            return groupId;
+        }
+
+        public String getArtifactId() {
+            return artifactId;
+        }
+
+        public String getVersion() {
+            return version;
+        }
+
+        public String getExtension() {
+            return extension;
+        }
+
+        public String getClassifier() {
+            return classifier;
+        }
+        
+        /**
+         * @return filename of the artifact by maven convention: 
+         *         {@code artifact-version[-classifier].extension}
+         */
+        public String toArtifactFilename() {
+            return String.format("%s-%s%s.%s",
+                    getArtifactId(),
+                    getVersion(),
+                    hasClassifier() ? ("-" + getClassifier()) : "",
+                    getExtension()
+            );
+        }
+        
+        /**
+         * @return The repository path for an artifact by maven convention: 
+         *         {@code group/artifact/version/artifact-version[-classifier].extension}.
+         *         In the group part all dots are replaced by a slash. 
+         */        
+        public String toMavenPath() {
+            return String.format("%s/%s/%s/%s",
+                    getGroupId().replace(".", "/"),
+                    getArtifactId(),
+                    getVersion(),
+                    toArtifactFilename()
+                    );
+        }
+        
+        public static boolean isMavenFile(String gradleFormat) {
+            return gradleFormat.split(":").length > 2;
+        }
+        
+        /**
+         * The maven coordinate is supplied in the form:
+         * 
+         * <p>{@code group:name:version:classifier@extension}</p>
+         * 
+         * <p>For the DownloadBinaries task the parts group, name and version
+         * are requiered. classifier and extension are optional. The extension
+         * has a default value of "jar".
+         * 
+         * @param gradleFormat artifact coordinated to be parse as a MavenCoordinate
+         * @return 
+         * @throws IllegalArgumentException if provided string fails to parse
+         */
+        public static MavenCoordinate fromGradleFormat(String gradleFormat) {
+            if(! isMavenFile(gradleFormat)) {
+                throw new IllegalArgumentException("Supplied string is not in gradle dependency format: " + gradleFormat);
+            }
+            String[] coordinateExtension = gradleFormat.split("@", 2);
+            String extension;
+            String coordinate = coordinateExtension[0];
+            if (coordinateExtension.length > 1
+                    && (!coordinateExtension[1].trim().isEmpty())) {
+                extension = coordinateExtension[1];
+            } else {
+                extension = "jar";
+            }
+            String[] coordinates = coordinate.split(":");
+            String group = coordinates[0];
+            String artifact = coordinates[1];
+            String version = coordinates[2];
+            String classifier = "";
+            if (coordinates.length > 3) {
+                classifier = coordinates[3].trim();
+            }
+            return new MavenCoordinate(group, artifact, version, extension, classifier);
+        }
+    }
 }
 
 /*

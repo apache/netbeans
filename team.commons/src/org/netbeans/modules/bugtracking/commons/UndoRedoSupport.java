@@ -135,10 +135,13 @@ public class UndoRedoSupport {
                 processDocumentChange(component);
                 return;
             }
-            AbstractDocument.DefaultDocumentEvent event = (AbstractDocument.DefaultDocumentEvent) e.getEdit();
-            if (event.getType().equals(DocumentEvent.EventType.CHANGE)) {
-                edit.addEdit(e.getEdit());
-                return;
+            //AbstractDocument.DefaultDocumentEvent event = (AbstractDocument.DefaultDocumentEvent) e.getEdit();
+            UndoableEdit event = e.getEdit();
+            if (event instanceof DocumentEvent) {
+                if (((DocumentEvent)event).getType().equals(DocumentEvent.EventType.CHANGE)) {
+                    edit.addEdit(e.getEdit());
+                    return;
+                }
             }
             int offsetChange = component.getCaretPosition() - lastOffset;
             int lengthChange = component.getDocument().getLength() - lastLength;

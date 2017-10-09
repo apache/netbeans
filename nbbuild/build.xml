@@ -1984,6 +1984,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="languages.yaml/src/org/netbeans/modules/languages/yaml/*.yml" /> <!--Files used in GUI as sample/starting point-->
                 <exclude name="languages.yaml/src/org/netbeans/modules/languages/yaml/*.yaml" /> <!--Files used in GUI as sample/starting point-->
                 <exclude name="languages.yaml/test/unit/data/testfiles/*" /> <!--test data-->
+                <exclude name="versioning.core/test/unit/data/workdir/root/a.txt" /> <!--test data-->
+                <exclude name="versioning.core/test/unit/data/workdir/root-test-versioned/**" /> <!--test data-->
+                <exclude name="versioning.core/test/unit/data/workdir/root-with-exclusions/**" /> <!--test data-->
             </fileset>
         </rat:report>
     </target>

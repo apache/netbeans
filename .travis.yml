@@ -1,0 +1,7 @@
+language: java
+jdk:
+  - oraclejdk8
+script:
+  - ant -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
+
+

@@ -4910,7 +4910,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             Tree tree = path.getLeaf();
             switch (tree.getKind()) {
                 case VARIABLE:
-                    TypeMirror type = controller.getTrees().getTypeMirror(new TreePath(path, ((VariableTree) tree).getType()));
+                    TypeMirror type = controller.getTrees().getTypeMirror(path);
                     if (type == null) {
                         return null;
                     }

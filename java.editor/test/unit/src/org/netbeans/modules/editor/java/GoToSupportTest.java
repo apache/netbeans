@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.regex.Pattern;
+import javax.lang.model.SourceVersion;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -1006,6 +1007,46 @@ public class GoToSupportTest extends NbTestCase {
         }, true);
 
         assertEquals(golden, tooltip);
+    }
+
+    public void testVar() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_10");
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_10, skip test:
+            return ;
+        }
+        final boolean[] wasCalled = new boolean[1];
+        this.sourceLevel = "1.10";
+        final String code = "package test;\n" +
+                      "public class Test {\n" +
+                      "    private static void method() {\n" +
+                      "        var var = 0;\n" +
+                      "        int i = va|r;\n" +
+                      "    }\n" +
+                      "}\n";
+
+        performTest(code, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                assertTrue(source == fo);
+                assertEquals(code.indexOf("var var = 0;"), pos);
+                wasCalled[0] = true;
+                return true;
+            }
+
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                fail("Should not be called.");
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+                fail("Should not be called.");
+                return true;
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, false, false);
+
+        assertTrue(wasCalled[0]);
     }
 
     private String sourceLevel = "1.5";

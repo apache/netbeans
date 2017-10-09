@@ -10,6 +10,7 @@
 /*/external/*/**
 /nbbuild/netbeans/
 /nbbuild/testuserdir/
+/nbbuild/*.zip
 /nbbuild/user.build.properties
 /nbi/engine/native/*/*/dist/
 /nb-javac/

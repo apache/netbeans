@@ -2030,6 +2030,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="projectuiapi/test/unit/src/org/netbeans/modules/project/uiapi/data/*.txt" /> <!--test data-->
             <exclude name="projectui/src/org/netbeans/modules/project/ui/resources/*-license.txt" /> <!--licenses-->
             <exclude name="projectui/src/org/netbeans/modules/project/ui/resources/license-default.txt" /> <!--licenses-->
+            <exclude name="hudson.subversion/test/unit/src/org/netbeans/modules/hudson/subversion/sample-entries-file" /> <!--test data-->
             <exclude name="java.editor/src/org/netbeans/modules/java/editor/resources/JavaExample" /> <!--no degree of creativity-->
             <exclude name="java.editor/test/qa-functional/data/**" /> <!--test data-->
             <exclude name="java.editor/test/unit/data/**" /> <!--test data-->

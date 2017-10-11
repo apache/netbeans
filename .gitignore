@@ -32,12 +32,6 @@
 /hibernate/src/org/netbeans/modules/hibernate/resources/hibernate-configuration-3.0.dtd
 /hibernate/src/org/netbeans/modules/hibernate/resources/hibernate-mapping-3.0.dtd
 /hibernate/src/org/netbeans/modules/hibernate/resources/hibernate-reverse-engineering-3.0.dtd
-/j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/dd/resources/orm_1_0.xsd
-/j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/dd/resources/orm_2_0.xsd
-/j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/dd/resources/orm_2_1.xsd
-/j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/dd/resources/persistence_1_0.xsd
-/j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/dd/resources/persistence_2_0.xsd
-/j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/dd/resources/persistence_2_1.xsd
 /lib.profiler/release/lib/
 /websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/jaxb/
 /websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/oauth/

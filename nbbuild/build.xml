@@ -1995,6 +1995,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="versioning/test/unit/data/workdir/root-test-versioned/**" /> <!--test data-->
                 <exclude name="versioning/test/unit/data/workdir/root-with-exclusions/**" /> <!--test data-->
                 <exclude name="testng.ui/src/org/netbeans/modules/testng/ui/resources/*.template" /> <!--template files-->
+                <exclude name="languages.diff/src/org/netbeans/modules/languages/diff/DiffExample.diff" /> <!--license would be visible to users in the Fonts/Colors settings-->
                 <exclude name="versioning.util/test/unit/data/historycache/*" /> <!--test data-->
                 <exclude name="java.lexer/test/unit/data/testfiles/*" /> <!--test data-->
                 <exclude name="projectuiapi/test/unit/data/*.txt" /> <!--test data-->

@@ -2048,6 +2048,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="java.editor/src/org/netbeans/modules/java/editor/resources/JavaExample" /> <!--no degree of creativity-->
                 <exclude name="java.editor/test/qa-functional/data/**" /> <!--test data-->
                 <exclude name="java.editor/test/unit/data/**" /> <!--test data-->
+                <exclude name="java.editor.base/test/unit/data/**" /> <!--test data-->
             </fileset>
         </rat:report>
     </target>

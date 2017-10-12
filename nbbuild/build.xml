@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>" />
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -2049,6 +2049,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="java.editor/test/qa-functional/data/**" /> <!--test data-->
                 <exclude name="java.editor/test/unit/data/**" /> <!--test data-->
                 <exclude name="java.editor.base/test/unit/data/**" /> <!--test data-->
+                <exclude name="mercurial/src/org/netbeans/modules/mercurial/util/log*" /> <!-- user templates for mercurial commits, etc. -->
+                <exclude name="mercurial/test/qa-functional/data/files/**"/> <!-- qa test data -->
+                <exclude name="mercurial/test/unit/data/**" /> <!-- unit test data -->
+
             </fileset>
         </rat:report>
     </target>

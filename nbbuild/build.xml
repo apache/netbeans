@@ -1946,6 +1946,95 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <pathelement location="external/apache-rat-0.12.jar"/>
             </classpath>
         </taskdef>
+        <patternset id="non.rat">
+            <exclude name="*/build/**" />
+            <exclude name="nbbuild/netbeans/**" />
+            <exclude name="**/*.mf" /> <!--do not nativelly support comments-->
+            <exclude name="*/nbproject/*.sig" /> <!--generated signatures for past versions-->
+            <exclude name="*/nbproject/build-impl.xml" /> <!--generated, no degree of creativity -->
+            <exclude name="*/nbproject/jfx-impl.xml" /> <!--generated, no degree of creativity -->
+            <exclude name="*/nbproject/genfiles.properties" /> <!--generated, no degree of creativity -->
+            <exclude name="*/nbproject/private/**" /> <!--user-specific files -->
+            <exclude name="*/external/*-license.txt" /> <!--licenses for external dependencies-->
+            <exclude name="*/external/*-notice.txt" /> <!--notices for external dependencies-->
+            <exclude name="**/*.pass" /> <!--generated test files-->
+            <exclude name="**/*.pass2" /> <!--generated test files-->
+            <exclude name="**/*.ref" /> <!--would cause tests to fail-->
+            <exclude name="**/.list" /> <!--no degree of creativity-->
+            <exclude name="**/src/META-INF/**" /> <!--no degree of creativity-->
+            <exclude name="form/test/unit/data/goldenfiles/*" /> <!--test data-->
+            <exclude name="diff/test/unit/data/**" /> <!--test data-->
+            <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/provider/*.txt" /> <!--test data-->
+            <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/visualizer/data/**" /> <!--test data-->
+            <exclude name="javadoc/test/unit/data/docs_jdk14_ja/api/index-files/**" /> <!--test data-->
+            <exclude name="javafx2.project/src/org/netbeans/modules/javafx2/project/templates/**" /> <!--license would be visible when users edit the templates inside their IDE-->
+            <exclude name="utilities/test/unit/src/org/netbeans/modules/openfile/resources/recent_files/*" /> <!--test data-->
+            <exclude name="**/*.url" /> <!--no degree of creativity-->
+            <exclude name="spi.navigator/test/unit/src/org/netbeans/modules/navigator/resources/lastsel/file.lastsel_mime1" /> <!--empty file-->
+            <exclude name="xml/test/unit/src/org/netbeans/modules/xml/resources/*" /> <!-- test data -->
+            <exclude name="xml/src/org/netbeans/modules/xml/resources/templates/*" /> <!-- template files - tracked by https://issues.apache.org/jira/browse/NETBEANS-85 -->
+            <exclude name="xml.axi/test/unit/src/org/netbeans/modules/xml/axi/resources/**" /> <!-- test data -->
+            <exclude name="xml.schema.completion/test/unit/src/org/netbeans/modules/xml/schema/completion/resources/**" /> <!-- test data -->
+            <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.wsdl" /> <!-- test data -->
+            <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.xml" /> <!-- test data -->
+            <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.xsd" /> <!-- test data -->
+            <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.bpel" /> <!-- test data -->
+            <exclude name="xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.dtd" /> <!-- test data -->
+            <exclude name="xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.xml" /> <!-- test data -->
+            <exclude name="xml.tools/test/qa-functional/src/org/netbeans/modules/**/*.xml" /> <!-- test data -->
+            <exclude name="xml.tools/test/qa-functional/src/org/netbeans/modules/**/*.dtd" /> <!-- test data -->
+            <exclude name="xml.tools/test/qa-functional/src/org/netbeans/modules/**/*.txt" /> <!-- test data -->
+            <exclude name="xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/**/*.xsd" /> <!-- test data -->
+            <exclude name="xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/resources/*.xml" /> <!-- test data -->
+            <exclude name="xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/resources/*.zip" /> <!-- test data -->
+            <exclude name="xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/resources/dummyProject/nbproject/private/tmpfile" /> <!-- test data -->
+            <exclude name="xml.wsdl.model/test/unit/src/org/netbeans/modules/xml/wsdl/**/*.wsdl" /> <!-- test data -->
+            <exclude name="xml.wsdl.model/test/unit/src/org/netbeans/modules/xml/wsdl/**/*.xsd" /> <!-- test data -->
+            <exclude name="xml.wsdl.model/test/unit/src/org/netbeans/modules/xml/wsdl/**/*.xml" /> <!-- test data -->
+            <exclude name="xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample" /> <!-- GUI sample file to demonstrate syntax highlighting -->
+            <exclude name="xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample" /> <!-- GUI sample file to demonstrate syntax highlighting -->
+            <exclude name="xml.text/test/qa-functional/src/org/netbeans/modules/xml/text/**/data/**" /> <!-- test data -->
+            <exclude name="xsl/src/org/netbeans/modules/xsl/resources/templates/stylesheet.xsl" /> <!-- Template for user - very limited degree of creativity -->
+            <exclude name="xsl/test/unit/src/org/netbeans/modules/xsl/utils/data/*" /> <!--test data-->
+            <exclude name="spi.navigator/test/unit/src/org/netbeans/modules/navigator/resources/lastsel/file.lastsel_mime1" /> <!--empty file-->
+            <exclude name="templates/src/org/netbeans/modules/templates/resources/userprop.txt" /> <!--no degree of creativity-->
+            <exclude name="api.search/test/unit/data/textFiles/utf8file.txt" /> <!--test data-->
+            <exclude name="api.search/test/unit/src/org/netbeans/modules/search/data/**" /> <!--test data-->
+            <exclude name="beans/src/org/netbeans/modules/beans/resources/templates/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
+            <exclude name="extbrowser/test/unit/src/org/netbeans/modules/extbrowser/data/mac_defaults_*" /> <!--test data-->
+            <exclude name="spring.beans/src/org/netbeans/modules/spring/beans/resources/templates/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
+            <exclude name="debugger.jpda/test/unit/src/org/netbeans/api/debugger/jpda/testapps/JspLineBreakpointApp.txt" /> <!-- test data -->
+            <exclude name="editor.settings.storage/test/unit/src/org/netbeans/modules/editor/settings/storage/compatibility/p1/**" /> <!--test data-->
+            <exclude name="editor.plain/src/org/netbeans/modules/editor/plain/resources/PlainTextExample" /> <!--license would be visible to users in the Fonts/Colors settings-->
+            <exclude name="editor.fold/test/unit/data/goldenfiles/hierarchy/update-hierarchy.folds" /> <!--test data-->
+            <exclude name="editor.fold/test/unit/data/hierarchy/update-hierarchy.folds" /> <!--test data-->
+            <exclude name="editor.fold/test/unit/src/org/netbeans/modules/editor/fold/FoldContentReader.txt" /> <!--test data-->
+            <exclude name="libs.freemarker/test/unit/data/**" /> <!--test data-->
+            <exclude name="languages.yaml/src/org/netbeans/modules/languages/yaml/*.yml" /> <!--Files used in GUI as sample/starting point-->
+            <exclude name="languages.yaml/src/org/netbeans/modules/languages/yaml/*.yaml" /> <!--Files used in GUI as sample/starting point-->
+            <exclude name="languages.yaml/test/unit/data/testfiles/*" /> <!--test data-->
+            <exclude name="versioning.core/test/unit/data/workdir/root/a.txt" /> <!--test data-->
+            <exclude name="versioning.core/test/unit/data/workdir/root-test-versioned/**" /> <!--test data-->
+            <exclude name="versioning.core/test/unit/data/workdir/root-with-exclusions/**" /> <!--test data-->
+            <exclude name="websvc.saas.kit/release/VERSION.txt" /> <!--generated file-->
+            <exclude name="versioning/test/unit/data/workdir/root/a.txt" /> <!--test data-->
+            <exclude name="versioning/test/unit/data/workdir/root-test-versioned/**" /> <!--test data-->
+            <exclude name="versioning/test/unit/data/workdir/root-with-exclusions/**" /> <!--test data-->
+            <exclude name="testng.ui/src/org/netbeans/modules/testng/ui/resources/*.template" /> <!--template files-->
+            <exclude name="languages.diff/src/org/netbeans/modules/languages/diff/DiffExample.diff" /> <!--license would be visible to users in the Fonts/Colors settings-->
+            <exclude name="versioning.util/test/unit/data/historycache/*" /> <!--test data-->
+            <exclude name="java.lexer/test/unit/data/testfiles/*" /> <!--test data-->
+            <exclude name="spellchecker.dictionary_en/release/modules/dict/*.description" /> <!--Description Files-->
+            <exclude name="selenium2.java/src/org/netbeans/modules/selenium2/java/SeleneseIT.java.template" /> <!--template file-->
+            <exclude name="projectuiapi/test/unit/data/*.txt" /> <!--test data-->
+            <exclude name="projectuiapi/test/unit/src/org/netbeans/modules/project/uiapi/data/*.txt" /> <!--test data-->
+            <exclude name="projectui/src/org/netbeans/modules/project/ui/resources/*-license.txt" /> <!--licenses-->
+            <exclude name="projectui/src/org/netbeans/modules/project/ui/resources/license-default.txt" /> <!--licenses-->
+            <exclude name="java.editor/src/org/netbeans/modules/java/editor/resources/JavaExample" /> <!--no degree of creativity-->
+            <exclude name="java.editor/test/qa-functional/data/**" /> <!--test data-->
+            <exclude name="java.editor/test/unit/data/**" /> <!--test data-->
+            <exclude name="java.editor.base/test/unit/data/**" /> <!--test data-->
+        </patternset>
         <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="build/rat-report.txt">
             <rat:substringMatcher licenseFamilyCategory="w3c2" licenseFamilyName="W3C Software and Document Notice and License">
                 <pattern substring="W3C Software and Document Notice and License"/>
@@ -1961,96 +2050,32 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
             <rat:approvedLicense familyName="OASIS"/>
             <rat:approvedLicense familyName="WSDL Schema Files" />
-            <fileset dir="${nb_all}">
-                <exclude name="*/build/**" />
-                <exclude name="nbbuild/netbeans/**" />
-                <exclude name="**/*.mf" /> <!--do not nativelly support comments-->
-                <exclude name="*/nbproject/*.sig" /> <!--generated signatures for past versions-->
-                <exclude name="*/nbproject/build-impl.xml" /> <!--generated, no degree of creativity -->
-                <exclude name="*/nbproject/jfx-impl.xml" /> <!--generated, no degree of creativity -->
-                <exclude name="*/nbproject/genfiles.properties" /> <!--generated, no degree of creativity -->
-                <exclude name="*/nbproject/private/**" /> <!--user-specific files -->
-                <exclude name="*/external/*-license.txt" /> <!--licenses for external dependencies-->
-                <exclude name="*/external/*-notice.txt" /> <!--notices for external dependencies-->
-                <exclude name="**/*.pass" /> <!--generated test files-->
-                <exclude name="**/*.pass2" /> <!--generated test files-->
-                <exclude name="**/*.ref" /> <!--would cause tests to fail-->
-                <exclude name="**/.list" /> <!--no degree of creativity-->
-                <exclude name="**/src/META-INF/**" /> <!--no degree of creativity-->
-                <exclude name="form/test/unit/data/goldenfiles/*" /> <!--test data-->
-                <exclude name="diff/test/unit/data/**" /> <!--test data-->
-                <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/provider/*.txt" /> <!--test data-->
-                <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/visualizer/data/**" /> <!--test data-->
-                <exclude name="javadoc/test/unit/data/docs_jdk14_ja/api/index-files/**" /> <!--test data-->
-                <exclude name="javafx2.project/src/org/netbeans/modules/javafx2/project/templates/**" /> <!--license would be visible when users edit the templates inside their IDE-->
-                <exclude name="utilities/test/unit/src/org/netbeans/modules/openfile/resources/recent_files/*" /> <!--test data-->
-                <exclude name="**/*.url" /> <!--no degree of creativity-->
-		<exclude name="spi.navigator/test/unit/src/org/netbeans/modules/navigator/resources/lastsel/file.lastsel_mime1" /> <!--empty file-->    
-                <exclude name="xml/test/unit/src/org/netbeans/modules/xml/resources/*" /> <!-- test data -->
-                <exclude name="xml/src/org/netbeans/modules/xml/resources/templates/*" /> <!-- template files - tracked by https://issues.apache.org/jira/browse/NETBEANS-85 -->
-                <exclude name="xml.axi/test/unit/src/org/netbeans/modules/xml/axi/resources/**" /> <!-- test data -->
-                <exclude name="xml.schema.completion/test/unit/src/org/netbeans/modules/xml/schema/completion/resources/**" /> <!-- test data -->
-                <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.wsdl" /> <!-- test data -->
-                <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.xml" /> <!-- test data -->
-                <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.xsd" /> <!-- test data -->
-                <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.bpel" /> <!-- test data -->
-                <exclude name="xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.dtd" /> <!-- test data -->
-                <exclude name="xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.xml" /> <!-- test data -->
-                <exclude name="xml.tools/test/qa-functional/src/org/netbeans/modules/**/*.xml" /> <!-- test data -->
-                <exclude name="xml.tools/test/qa-functional/src/org/netbeans/modules/**/*.dtd" /> <!-- test data -->
-                <exclude name="xml.tools/test/qa-functional/src/org/netbeans/modules/**/*.txt" /> <!-- test data -->
-                <exclude name="xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/**/*.xsd" /> <!-- test data -->
-                <exclude name="xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/resources/*.xml" /> <!-- test data -->
-                <exclude name="xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/resources/*.zip" /> <!-- test data -->
-                <exclude name="xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/resources/dummyProject/nbproject/private/tmpfile" /> <!-- test data -->
-                <exclude name="xml.wsdl.model/test/unit/src/org/netbeans/modules/xml/wsdl/**/*.wsdl" /> <!-- test data -->
-                <exclude name="xml.wsdl.model/test/unit/src/org/netbeans/modules/xml/wsdl/**/*.xsd" /> <!-- test data -->
-                <exclude name="xml.wsdl.model/test/unit/src/org/netbeans/modules/xml/wsdl/**/*.xml" /> <!-- test data -->
-                <exclude name="xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample" /> <!-- GUI sample file to demonstrate syntax highlighting -->
-                <exclude name="xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample" /> <!-- GUI sample file to demonstrate syntax highlighting -->
-                <exclude name="xml.text/test/qa-functional/src/org/netbeans/modules/xml/text/**/data/**" /> <!-- test data -->
-                <exclude name="xsl/src/org/netbeans/modules/xsl/resources/templates/stylesheet.xsl" /> <!-- Template for user - very limited degree of creativity -->
-                <exclude name="xsl/test/unit/src/org/netbeans/modules/xsl/utils/data/*" /> <!--test data-->
-                <exclude name="spi.navigator/test/unit/src/org/netbeans/modules/navigator/resources/lastsel/file.lastsel_mime1" /> <!--empty file-->    
-                <exclude name="templates/src/org/netbeans/modules/templates/resources/userprop.txt" /> <!--no degree of creativity-->
-                <exclude name="api.search/test/unit/data/textFiles/utf8file.txt" /> <!--test data-->
-                <exclude name="api.search/test/unit/src/org/netbeans/modules/search/data/**" /> <!--test data-->
-                <exclude name="beans/src/org/netbeans/modules/beans/resources/templates/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
-                <exclude name="extbrowser/test/unit/src/org/netbeans/modules/extbrowser/data/mac_defaults_*" /> <!--test data-->
-                <exclude name="spring.beans/src/org/netbeans/modules/spring/beans/resources/templates/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
-                <exclude name="debugger.jpda/test/unit/src/org/netbeans/api/debugger/jpda/testapps/JspLineBreakpointApp.txt" /> <!-- test data -->
-                <exclude name="editor.settings.storage/test/unit/src/org/netbeans/modules/editor/settings/storage/compatibility/p1/**" /> <!--test data-->
-                <exclude name="editor.plain/src/org/netbeans/modules/editor/plain/resources/PlainTextExample" /> <!--license would be visible to users in the Fonts/Colors settings-->
-                <exclude name="editor.fold/test/unit/data/goldenfiles/hierarchy/update-hierarchy.folds" /> <!--test data-->
-                <exclude name="editor.fold/test/unit/data/hierarchy/update-hierarchy.folds" /> <!--test data-->
-                <exclude name="editor.fold/test/unit/src/org/netbeans/modules/editor/fold/FoldContentReader.txt" /> <!--test data-->
-                <exclude name="libs.freemarker/test/unit/data/**" /> <!--test data-->
-                <exclude name="languages.yaml/src/org/netbeans/modules/languages/yaml/*.yml" /> <!--Files used in GUI as sample/starting point-->
-                <exclude name="languages.yaml/src/org/netbeans/modules/languages/yaml/*.yaml" /> <!--Files used in GUI as sample/starting point-->
-                <exclude name="languages.yaml/test/unit/data/testfiles/*" /> <!--test data-->
-                <exclude name="versioning.core/test/unit/data/workdir/root/a.txt" /> <!--test data-->
-                <exclude name="versioning.core/test/unit/data/workdir/root-test-versioned/**" /> <!--test data-->
-                <exclude name="versioning.core/test/unit/data/workdir/root-with-exclusions/**" /> <!--test data-->
-                <exclude name="websvc.saas.kit/release/VERSION.txt" /> <!--generated file-->
-                <exclude name="versioning/test/unit/data/workdir/root/a.txt" /> <!--test data-->
-                <exclude name="versioning/test/unit/data/workdir/root-test-versioned/**" /> <!--test data-->
-                <exclude name="versioning/test/unit/data/workdir/root-with-exclusions/**" /> <!--test data-->
-                <exclude name="testng.ui/src/org/netbeans/modules/testng/ui/resources/*.template" /> <!--template files-->
-                <exclude name="languages.diff/src/org/netbeans/modules/languages/diff/DiffExample.diff" /> <!--license would be visible to users in the Fonts/Colors settings-->
-                <exclude name="versioning.util/test/unit/data/historycache/*" /> <!--test data-->
-                <exclude name="java.lexer/test/unit/data/testfiles/*" /> <!--test data-->
-                <exclude name="spellchecker.dictionary_en/release/modules/dict/*.description" /> <!--Description Files-->
-                <exclude name="selenium2.java/src/org/netbeans/modules/selenium2/java/SeleneseIT.java.template" /> <!--template file-->
-                <exclude name="projectuiapi/test/unit/data/*.txt" /> <!--test data-->
-                <exclude name="projectuiapi/test/unit/src/org/netbeans/modules/project/uiapi/data/*.txt" /> <!--test data-->
-                <exclude name="projectui/src/org/netbeans/modules/project/ui/resources/*-license.txt" /> <!--licenses-->
-                <exclude name="projectui/src/org/netbeans/modules/project/ui/resources/license-default.txt" /> <!--licenses-->
-                <exclude name="java.editor/src/org/netbeans/modules/java/editor/resources/JavaExample" /> <!--no degree of creativity-->
-                <exclude name="java.editor/test/qa-functional/data/**" /> <!--test data-->
-                <exclude name="java.editor/test/unit/data/**" /> <!--test data-->
-                <exclude name="java.editor.base/test/unit/data/**" /> <!--test data-->
+	    <fileset dir="${nb_all}">
+                <patternset refid="non.rat" />
             </fileset>
         </rat:report>
+        <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" format="xml" reportfile="build/rat-report.xml">
+            <rat:substringMatcher licenseFamilyCategory="w3c2" licenseFamilyName="W3C Software and Document Notice and License">
+                <pattern substring="W3C Software and Document Notice and License"/>
+            </rat:substringMatcher>
+            <rat:substringMatcher licenseFamilyCategory="oasis" licenseFamilyName="OASIS">
+                <pattern substring="[OASIS]"/>
+            </rat:substringMatcher>
+            <rat:fullTextMatcher licenseFamilyCategory="wsdl" licenseFamilyName="WSDL Schema Files">
+                International Business Machines Corporation and Microsoft Corporation
+                All Rights Reserved
+                License for WSDL Schema Files
+            </rat:fullTextMatcher>
+            <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
+            <rat:approvedLicense familyName="OASIS"/>
+            <rat:approvedLicense familyName="WSDL Schema Files" />
+	    <fileset dir="${nb_all}">
+                <patternset refid="non.rat" />
+            </fileset>
+        </rat:report>
+        <taskdef name="rattohtml" classname="org.netbeans.nbbuild.RatReportTask" classpath="${build.ant.classes.dir}"/>
+        <loadproperties srcFile="cluster.properties" />
+        <rattohtml source="build/rat-report.xml" report="${nb.build.dir}/rat/"/>
     </target>
 
 </project>

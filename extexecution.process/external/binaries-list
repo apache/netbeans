@@ -14,6 +14,10 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+#
+# winp-1.14-patcher.jar is a patched version of the maven artifact:
+# 6A56E64B5F9E78D1F30F960425F7758D08B2A390 org.jvnet.winp:winp:1.1
 C9757EFB2CFBA523A7375A78FA9ECFAF0D0AC505 winp-1.14-patched.jar
-2E07375E5CA3A452472F0E87FB33F243F7A5C08C libpam4j-1.1.jar
+2E07375E5CA3A452472F0E87FB33F243F7A5C08C org.jvnet.libpam4j:libpam4j:1.1
+# processtreekiller is not available in Maven, and its web page was hosted in Kenai, now extinct.
 6819C79348FCF4F5125C834E7D3B742582DCA34D processtreekiller-1.0.7.jar

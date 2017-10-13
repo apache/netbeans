@@ -20,9 +20,11 @@ package org.netbeans.nbbuild;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -46,6 +48,7 @@ import org.apache.tools.ant.Task;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -148,7 +151,10 @@ public class RatReportTask extends Task {
         //read XML
         try {
             DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document doc = dBuilder.parse(sourceFile); // open xml source
+            InputStream inputstream = new FileInputStream(sourceFile);
+            InputStreamReader reader = new InputStreamReader(inputstream);
+            InputSource inputSource = new InputSource(reader);
+            Document doc = dBuilder.parse(inputSource); // open xml source
             XPathFactory xpf = XPathFactory.newInstance();
 
             XPath path = xpf.newXPath();

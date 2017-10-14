@@ -152,7 +152,7 @@
             </test-dependencies>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>ext/webserver-3.2.4.jar</runtime-relative-path>
+                <runtime-relative-path>ext/webserver.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/webserver-3.2.4.jar</binary-origin>
             </class-path-extension>
         </data>

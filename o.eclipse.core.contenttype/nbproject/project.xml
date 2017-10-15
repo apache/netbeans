@@ -28,7 +28,7 @@
            <public-packages/>
            <class-path-extension>
                <runtime-relative-path>org-eclipse-core-contenttype.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.core.contenttype_3.4.100.v20110423-0524_nosignature.jar</binary-origin>
+                <binary-origin>external/org.eclipse.core.contenttype-3.4.100.v20110423-0524.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

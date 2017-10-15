@@ -2038,6 +2038,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="mercurial/src/org/netbeans/modules/mercurial/util/log*" /> <!-- user templates for mercurial commits, etc. -->
             <exclude name="mercurial/test/qa-functional/data/files/**"/> <!-- qa test data -->
             <exclude name="mercurial/test/unit/data/**" /> <!-- unit test data -->
+            <exclude name="css.prep/test/qa-functional/data/css_prep/public_html/**" /> <!--simple files for testing-->
+            <exclude name="css.prep/test/unit/data/testFiles/test.less" /> <!--simple file forss testing-->
+            <exclude name="css.prep/test/unit/data/testFiles/testIssue227676.scss" /> <!--simple file for testing-->
+            <exclude name="css.prep/test/unit/data/testProject/public_html/*" /> <!--simple files for testing-->          
         </patternset>
         <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="build/rat-report.txt">
             <rat:substringMatcher licenseFamilyCategory="w3c2" licenseFamilyName="W3C Software and Document Notice and License">

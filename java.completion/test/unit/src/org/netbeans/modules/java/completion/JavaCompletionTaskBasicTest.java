@@ -32,1270 +32,1270 @@ public class JavaCompletionTaskBasicTest extends CompletionTestBase {
     // file beginning tests ----------------------------------------------------
 
     public void testEmptyFile() throws Exception {
-        performTest("Empty", 0, null, "topLevelKeywords.pass");
+        performTest("Empty", 809, null, "topLevelKeywords.pass");
     }
 
     public void testFileBeginning() throws Exception {
-        performTest("Simple", 0, null, "topLevelKeywords.pass");
+        performTest("Simple", 809, null, "topLevelKeywords.pass");
     }
     
     // package declaration tests -----------------------------------------------
     
     public void testEmptyFileTypingPackageKeyword() throws Exception {
-        performTest("Empty", 0, "p", "topLevelKeywordsStartingWithP.pass");
+        performTest("Empty", 809, "p", "topLevelKeywordsStartingWithP.pass");
     }
     
     public void testTypingPackageKeyword() throws Exception {
-        performTest("SimpleNoPackage", 0, "p", "topLevelKeywordsStartingWithP.pass");
+        performTest("SimpleNoPackage", 809, "p", "topLevelKeywordsStartingWithP.pass");
     }
     
     public void testOnPackageKeyword() throws Exception {
-        performTest("Simple", 1, null, "topLevelKeywordsStartingWithP.pass");
+        performTest("Simple", 811, null, "topLevelKeywordsStartingWithP.pass");
     }
     
     public void testEmptyFileAfterTypingPackageKeyword() throws Exception {
-        performTest("Empty", 0, "package", "packageKeyword.pass");
+        performTest("Empty", 809, "package", "packageKeyword.pass");
     }
     
     public void testAfterTypingPackageKeyword() throws Exception {
-        performTest("SimpleNoPackage", 0, "package", "packageKeyword.pass");
+        performTest("SimpleNoPackage", 809, "package", "packageKeyword.pass");
     }
     
     public void testAfterPackageKeyword() throws Exception {
-        performTest("Simple", 7, null, "packageKeyword.pass");
+        performTest("Simple", 817, null, "packageKeyword.pass");
     }
     
     public void testEmptyFileBeforeTypingPackageId() throws Exception {
-        performTest("Empty", 0, "package ", "empty.pass");
+        performTest("Empty", 809, "package ", "empty.pass");
     }
     
     public void testBeforeTypingPackageId() throws Exception {
-        performTest("SimpleNoPackage", 0, "package ", "empty.pass");
+        performTest("SimpleNoPackage", 809, "package ", "empty.pass");
     }
     
     public void testBeforePackageId() throws Exception {
-        performTest("Simple", 8, null, "empty.pass");
+        performTest("Simple", 818, null, "empty.pass");
     }
     
     public void testEmptyFileTypingPackageId() throws Exception {
-        performTest("Empty", 0, "package t", "empty.pass");
+        performTest("Empty", 809, "package t", "empty.pass");
     }
     
     public void testTypingPackageId() throws Exception {
-        performTest("SimpleNoPackage", 0, "package t", "empty.pass");
+        performTest("SimpleNoPackage", 809, "package t", "empty.pass");
     }
     
     public void testOnPackageId() throws Exception {
-        performTest("Simple", 9, null, "empty.pass");
+        performTest("Simple", 819, null, "empty.pass");
     }
     
     public void testEmptyFileAfterTypingPackageId() throws Exception {
-        performTest("Empty", 0, "package test", "empty.pass");
+        performTest("Empty", 809, "package test", "empty.pass");
     }
     
     public void testAfterTypingPackageId() throws Exception {
-        performTest("SimpleNoPackage", 0, "package test", "empty.pass");
+        performTest("SimpleNoPackage", 809, "package test", "empty.pass");
     }
     
     public void testAfterPackageId() throws Exception {
-        performTest("Simple", 12, null, "empty.pass");
+        performTest("Simple", 822, null, "empty.pass");
     }
     
     public void testEmptyFileAfterTypingPackageIdAndSpace() throws Exception {
-        performTest("Empty", 0, "package test ", "empty.pass");
+        performTest("Empty", 809, "package test ", "empty.pass");
     }
     
     public void testAfterTypingPackageIdAndSpace() throws Exception {
-        performTest("SimpleNoPackage", 0, "package test ", "empty.pass");
+        performTest("SimpleNoPackage", 809, "package test ", "empty.pass");
     }
     
     public void testAfterPackageIdAndSpace() throws Exception {
-        performTest("Simple", 12, " ", "empty.pass");
+        performTest("Simple", 822, " ", "empty.pass");
     }
     
     public void testEmptyFileAfterTypingPackageDecl() throws Exception {
-        performTest("Empty", 0, "package test;", "topLevelKeywordsWithoutPackage.pass");
+        performTest("Empty", 809, "package test;", "topLevelKeywordsWithoutPackage.pass");
     }
     
     public void testAfterTypingPackageDecl() throws Exception {
-        performTest("SimpleNoPackage", 0, "package test;", "topLevelKeywordsWithoutPackage.pass");
+        performTest("SimpleNoPackage", 809, "package test;", "topLevelKeywordsWithoutPackage.pass");
     }
     
     public void testAfterPackageDecl() throws Exception {
-        performTest("Simple", 13,  null, "topLevelKeywordsWithoutPackage.pass");
+        performTest("Simple", 823,  null, "topLevelKeywordsWithoutPackage.pass");
     }
     
     // import declaration tests ------------------------------------------------
     
     public void testEmptyFileAfterTypingImportKeyword() throws Exception {
-        performTest("Empty", 0, "import", "importKeyword.pass");
+        performTest("Empty", 809, "import", "importKeyword.pass");
     }
     
     public void testAfterTypingImportKeyword() throws Exception {
-        performTest("Simple", 14, "import", "importKeyword.pass");
+        performTest("Simple", 824, "import", "importKeyword.pass");
     }
     
     public void testAfterImportKeyword() throws Exception {
-        performTest("Import", 21, null, "importKeyword.pass");
+        performTest("Import", 831, null, "importKeyword.pass");
     }
     
     public void testEmptyFileBeforeTypingImportedPackage() throws Exception {
-        performTest("Empty", 0, "import ", "staticKeywordAndAllPackages.pass");
+        performTest("Empty", 809, "import ", "staticKeywordAndAllPackages.pass");
     }
     
     public void testBeforeTypingImportedPackage() throws Exception {
-        performTest("Simple", 14, "import ", "staticKeywordAndAllPackages.pass");
+        performTest("Simple", 824, "import ", "staticKeywordAndAllPackages.pass");
     }
     
     public void testBeforeImportedPackage() throws Exception {
-        performTest("Import", 22, null, "staticKeywordAndAllPackages.pass");
+        performTest("Import", 832, null, "staticKeywordAndAllPackages.pass");
     }
     
     public void testEmptyFileTypingImportedPackage() throws Exception {
-        performTest("Empty", 0, "import j", "packagesStartingWithJ.pass");
+        performTest("Empty", 809, "import j", "packagesStartingWithJ.pass");
     }
     
     public void testTypingImportedPackage() throws Exception {
-        performTest("Simple", 14, "import j", "packagesStartingWithJ.pass");
+        performTest("Simple", 824, "import j", "packagesStartingWithJ.pass");
     }
     
     public void testOnImportedPackage() throws Exception {
-        performTest("Import", 23, null, "packagesStartingWithJ.pass");
+        performTest("Import", 833, null, "packagesStartingWithJ.pass");
     }
     
     public void testEmptyFileTypingImportedPackageBeforeStar() throws Exception {
-        performTest("Empty", 0, "import java.util.", "javaUtilContent.pass");
+        performTest("Empty", 809, "import java.util.", "javaUtilContent.pass");
     }
     
     public void testTypingImportedPackageBeforeStar() throws Exception {
-        performTest("Simple", 14, "import java.util.", "javaUtilContent.pass");
+        performTest("Simple", 824, "import java.util.", "javaUtilContent.pass");
     }
     
     public void testOnImportedPackageBeforeStar() throws Exception {
-        performTest("Import", 54, null, "javaUtilContent.pass");
+        performTest("Import", 864, null, "javaUtilContent.pass");
     }
     
     public void testEmptyFileAfterTypingImportedPackage() throws Exception {
-        performTest("Empty", 0, "import java.util.*", "empty.pass");
+        performTest("Empty", 809, "import java.util.*", "empty.pass");
     }
     
     public void testAfterTypingImportedPackage() throws Exception {
-        performTest("Simple", 14, "import java.util.*", "empty.pass");
+        performTest("Simple", 824, "import java.util.*", "empty.pass");
     }
     
     public void testAfterImportedPackage() throws Exception {
-        performTest("Import", 55, null, "empty.pass");
+        performTest("Import", 865, null, "empty.pass");
     }
     
     public void testEmptyFileAfterTypingImportedClass() throws Exception {
-        performTest("Empty", 0, "import java.awt.List", "list.pass");
+        performTest("Empty", 809, "import java.awt.List", "list.pass");
     }
     
     public void testAfterTypingImportedClass() throws Exception {
-        performTest("Simple", 14, "import java.awt.List", "list.pass");
+        performTest("Simple", 824, "import java.awt.List", "list.pass");
     }
     
     public void testAfterImportedClass() throws Exception {
-        performTest("Import", 35, null, "list.pass");
+        performTest("Import", 845, null, "list.pass");
     }
     
     public void testEmptyFileAfterTypingImportedClassAndSpace() throws Exception {
-        performTest("Empty", 0, "import java.awt.List ", "empty.pass");
+        performTest("Empty", 809, "import java.awt.List ", "empty.pass");
     }
     
     public void testAfterTypingImportedClassAndSpace() throws Exception {
-        performTest("Simple", 14, "import java.awt.List ", "empty.pass");
+        performTest("Simple", 824, "import java.awt.List ", "empty.pass");
     }
     
     public void testAfterImportedClassAndSpace() throws Exception {
-        performTest("Import", 35, " ", "empty.pass");
+        performTest("Import", 845, " ", "empty.pass");
     }
     
     public void testEmptyFileAfterTypingImportStatement() throws Exception {
-        performTest("Empty", 0, "import java.awt.List;", "topLevelKeywordsWithoutPackage.pass");
+        performTest("Empty", 809, "import java.awt.List;", "topLevelKeywordsWithoutPackage.pass");
     }
     
     public void testAfterTypingImportStatement() throws Exception {
-        performTest("Simple", 14, "import java.awt.List;", "topLevelKeywordsWithoutPackage.pass");
+        performTest("Simple", 824, "import java.awt.List;", "topLevelKeywordsWithoutPackage.pass");
     }
     
     public void testAfterImportStatement() throws Exception {
-        performTest("Import", 36,  null, "topLevelKeywordsWithoutPackage.pass");
+        performTest("Import", 846,  null, "topLevelKeywordsWithoutPackage.pass");
     }
     
     public void testEmptyFileTypingStaticImportKeyword() throws Exception {
-        performTest("Empty", 0, "import st", "staticKeyword.pass");
+        performTest("Empty", 809, "import st", "staticKeyword.pass");
     }
     
     public void testTypingStaticImportKeyword() throws Exception {
-        performTest("Simple", 14, "import st", "staticKeyword.pass");
+        performTest("Simple", 824, "import st", "staticKeyword.pass");
     }
     
     public void testOnStaticImportKeyword() throws Exception {
-        performTest("Import", 66, null, "staticKeyword.pass");
+        performTest("Import", 876, null, "staticKeyword.pass");
     }
     
     public void testEmptyFileAfterTypingStaticImportKeyword() throws Exception {
-        performTest("Empty", 0, "import static", "staticKeyword.pass");
+        performTest("Empty", 809, "import static", "staticKeyword.pass");
     }
     
     public void testAfterTypingStaticImportKeyword() throws Exception {
-        performTest("Simple", 14, "import static", "staticKeyword.pass");
+        performTest("Simple", 824, "import static", "staticKeyword.pass");
     }
     
     public void testAfterStaticImportKeyword() throws Exception {
-        performTest("Import", 70, null, "staticKeyword.pass");
+        performTest("Import", 880, null, "staticKeyword.pass");
     }
     
     public void testEmptyFileBeforeTypingStaticallyImportedClass() throws Exception {
-        performTest("Empty", 0, "import static ", "allPackages.pass");
+        performTest("Empty", 809, "import static ", "allPackages.pass");
     }
     
     public void testBeforeTypingStaticallyImportedClass() throws Exception {
-        performTest("Simple", 14, "import static ", "allPackages.pass");
+        performTest("Simple", 824, "import static ", "allPackages.pass");
     }
     
     public void testBeforeStaticallyImportedClass() throws Exception {
-        performTest("Import", 71, null, "allPackages.pass");
+        performTest("Import", 881, null, "allPackages.pass");
     }
     
     public void testEmptyFileTypingImportedPackageAfterErrorInPackageDeclaration() throws Exception {
-        performTest("Empty", 0, "package \nimport j", "packagesStartingWithJ.pass");
+        performTest("Empty", 809, "package \nimport j", "packagesStartingWithJ.pass");
     }
     
     public void testTypingStaticImportAfterErrorInPackageDeclaration() throws Exception {
-        performTest("SimpleNoPackage", 0, "package \nimport ", "staticKeywordAndAllPackages.pass");
+        performTest("SimpleNoPackage", 809, "package \nimport ", "staticKeywordAndAllPackages.pass");
     }
 
     public void testTypingStaticImportAfterErrorInPreviousImportDeclaration() throws Exception {
-        performTest("Simple", 14, "im\nimport ", "staticKeywordAndAllPackages.pass");
+        performTest("Simple", 824, "im\nimport ", "staticKeywordAndAllPackages.pass");
     }
     
     // class declaration tests -------------------------------------------------
     
     public void testEmptyFileAfterTypingPublicKeyword() throws Exception {
-        performTest("Empty", 0, "package test;\npublic", "publicKeyword.pass");
+        performTest("Empty", 809, "package test;\npublic", "publicKeyword.pass");
     }
     
     public void testAfterPublicKeyword() throws Exception {
-        performTest("Simple", 21, null, "publicKeyword.pass");
+        performTest("Simple", 831, null, "publicKeyword.pass");
     }
     
     public void testTypingFinalClass() throws Exception {
-        performTest("Simple", 21, " f", "finalKeyword.pass");
+        performTest("Simple", 831, " f", "finalKeyword.pass");
     }
     
     public void testAfterTypingFinalClass() throws Exception {
-        performTest("Simple", 21, " final", "finalKeyword.pass");
+        performTest("Simple", 831, " final", "finalKeyword.pass");
     }
     
     public void testEmptyFileBeforeTypingClassKeyword() throws Exception {
-        performTest("Empty", 0, "package test;\npublic ", "classModifiersWithoutPublic.pass");
+        performTest("Empty", 809, "package test;\npublic ", "classModifiersWithoutPublic.pass");
     }
     
     public void testBeforeClassKeyword() throws Exception {
-        performTest("Simple", 22, null, "classModifiersWithoutPublic.pass");
+        performTest("Simple", 832, null, "classModifiersWithoutPublic.pass");
     }
     
     public void testEmptyFileTypingClassKeyword() throws Exception {
-        performTest("Empty", 0, "package test;\npublic c", "classKeyword.pass");
+        performTest("Empty", 809, "package test;\npublic c", "classKeyword.pass");
     }
     
     public void testOnClassKeyword() throws Exception {
-        performTest("Simple", 23, null, "classKeyword.pass");
+        performTest("Simple", 833, null, "classKeyword.pass");
     }
     
     public void testEmptyFileAfterTypingClassKeyword() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class", "classKeyword.pass");
+        performTest("Empty", 809, "package test;\npublic class", "classKeyword.pass");
     }
     
     public void testAfterClassKeyword() throws Exception {
-        performTest("Simple", 27, null, "classKeyword.pass");
+        performTest("Simple", 837, null, "classKeyword.pass");
     }
     
     public void testEmptyFileBeforeTypingClassName() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class ", "empty.pass");
+        performTest("Empty", 809, "package test;\npublic class ", "empty.pass");
     }
     
     public void testBeforeClassName() throws Exception {
-        performTest("Simple", 28, null, "empty.pass");
+        performTest("Simple", 838, null, "empty.pass");
     }
     
     public void testEmptyFileTypingClassName() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class T", "empty.pass");
+        performTest("Empty", 809, "package test;\npublic class T", "empty.pass");
     }
     
     public void testOnClassName() throws Exception {
-        performTest("Simple", 29, null, "empty.pass");
+        performTest("Simple", 839, null, "empty.pass");
     }
     
     public void testEmptyAfterFileTypingClassName() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test", "empty.pass");
+        performTest("Empty", 809, "package test;\npublic class Test", "empty.pass");
     }
     
     public void testAfterClassName() throws Exception {
-        performTest("Simple", 32, null, "empty.pass");
+        performTest("Simple", 842, null, "empty.pass");
     }
     
     public void testEmptyFileBeforeTypingExtendsKeyword() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test ", "extendsAndImplementsKeywords.pass");
+        performTest("Empty", 809, "package test;\npublic class Test ", "extendsAndImplementsKeywords.pass");
     }
     
     public void testBeforeTypingExtendsKeyword() throws Exception {
-        performTest("SimpleNoExtendsAndImplements", 33, null, "extendsAndImplementsKeywords.pass");
+        performTest("SimpleNoExtendsAndImplements", 843, null, "extendsAndImplementsKeywords.pass");
     }
     
     public void testBeforeExtendsKeyword() throws Exception {
-        performTest("Simple", 33, null, "extendsAndImplementsKeywords.pass");
+        performTest("Simple", 843, null, "extendsAndImplementsKeywords.pass");
     }
     
     public void testEmptyFileTypingExtendsKeyword() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test e", "extendsKeyword.pass");
+        performTest("Empty", 809, "package test;\npublic class Test e", "extendsKeyword.pass");
     }
     
     public void testTypingExtendsKeyword() throws Exception {
-        performTest("SimpleNoExtendsAndImplements", 33, "e", "extendsKeyword.pass");
+        performTest("SimpleNoExtendsAndImplements", 843, "e", "extendsKeyword.pass");
     }
     
     public void testOnExtendsKeyword() throws Exception {
-        performTest("Simple", 34, null, "extendsKeyword.pass");
+        performTest("Simple", 844, null, "extendsKeyword.pass");
     }
     
     public void testEmptyFileAfterTypingExtendsKeyword() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test extends", "extendsKeyword.pass");
+        performTest("Empty", 809, "package test;\npublic class Test extends", "extendsKeyword.pass");
     }
     
     public void testAfterTypingExtendsKeyword() throws Exception {
-        performTest("SimpleNoExtendsAndImplements", 33, "extends", "extendsKeyword.pass");
+        performTest("SimpleNoExtendsAndImplements", 843, "extends", "extendsKeyword.pass");
     }
     
     public void testAfterExtendsKeyword() throws Exception {
-        performTest("Simple", 40, null, "extendsKeyword.pass");
+        performTest("Simple", 850, null, "extendsKeyword.pass");
     }
     
     public void testEmptyFileBeforeTypingExtendedObject() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test extends ", "javaLangClasses.pass");
+        performTest("Empty", 809, "package test;\npublic class Test extends ", "javaLangClasses.pass");
     }
     
     public void testBeforeTypingExtendedObject() throws Exception {
-        performTest("SimpleNoExtendsAndImplements", 33, "extends ", "javaLangClasses.pass");
+        performTest("SimpleNoExtendsAndImplements", 843, "extends ", "javaLangClasses.pass");
     }
     
     public void testBeforeExtendedObject() throws Exception {
-        performTest("Simple", 41, null, "javaLangClasses.pass");
+        performTest("Simple", 851, null, "javaLangClasses.pass");
     }
     
     public void testEmptyFileTypingExtendedObject() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test extends O", "javaLangClassesStartingWithO.pass");
+        performTest("Empty", 809, "package test;\npublic class Test extends O", "javaLangClassesStartingWithO.pass");
     }
     
     public void testTypingExtendedObject() throws Exception {
-        performTest("SimpleNoExtendsAndImplements", 33, "extends O", "javaLangClassesStartingWithO.pass");
+        performTest("SimpleNoExtendsAndImplements", 843, "extends O", "javaLangClassesStartingWithO.pass");
     }
     
     public void testOnExtendedObject() throws Exception {
-        performTest("Simple", 42, null, "javaLangClassesStartingWithO.pass");
+        performTest("Simple", 852, null, "javaLangClassesStartingWithO.pass");
     }
     
     public void testEmptyFileAfterTypingExtendedObject() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test extends Object", "object.pass");
+        performTest("Empty", 809, "package test;\npublic class Test extends Object", "object.pass");
     }
     
     public void testAfterTypingExtendedObject() throws Exception {
-        performTest("SimpleNoExtendsAndImplements", 33, "extends Object", "object.pass");
+        performTest("SimpleNoExtendsAndImplements", 843, "extends Object", "object.pass");
     }
     
     public void testAfterExtendedObject() throws Exception {
-        performTest("Simple", 47, null, "object.pass");
+        performTest("Simple", 857, null, "object.pass");
     }
     
     public void testEmptyFileBeforeTypingImplementsKeyword() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test extends Object ", "implementsKeyword.pass");
+        performTest("Empty", 809, "package test;\npublic class Test extends Object ", "implementsKeyword.pass");
     }
     
     public void testBeforeTypingImplementsKeyword() throws Exception {
-        performTest("SimpleNoExtendsAndImplements", 33, "extends Object ", "implementsKeyword.pass");
+        performTest("SimpleNoExtendsAndImplements", 843, "extends Object ", "implementsKeyword.pass");
     }
     
     public void testBeforeImplementsKeyword() throws Exception {
-        performTest("Simple", 48, null, "implementsKeyword.pass");
+        performTest("Simple", 858, null, "implementsKeyword.pass");
     }
     
     public void testEmptyFileTypingImplementsKeyword() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test extends Object i", "implementsKeyword.pass");
+        performTest("Empty", 809, "package test;\npublic class Test extends Object i", "implementsKeyword.pass");
     }
     
     public void testTypingImplementsKeyword() throws Exception {
-        performTest("SimpleNoExtendsAndImplements", 33, "i", "implementsKeyword.pass");
+        performTest("SimpleNoExtendsAndImplements", 843, "i", "implementsKeyword.pass");
     }
     
     public void testOnImplementsKeyword() throws Exception {
-        performTest("Simple", 49, null, "implementsKeyword.pass");
+        performTest("Simple", 859, null, "implementsKeyword.pass");
     }
     
     public void testEmptyFileAfteTypingImplementsKeyword() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test extends Object implements", "implementsKeyword.pass");
+        performTest("Empty", 809, "package test;\npublic class Test extends Object implements", "implementsKeyword.pass");
     }
     
     public void testAfterTypingImplementsKeyword() throws Exception {
-        performTest("SimpleNoExtendsAndImplements", 33, "implements", "implementsKeyword.pass");
+        performTest("SimpleNoExtendsAndImplements", 843, "implements", "implementsKeyword.pass");
     }
     
     public void testAfterImplementsKeyword() throws Exception {
-        performTest("Simple", 58, null, "implementsKeyword.pass");
+        performTest("Simple", 868, null, "implementsKeyword.pass");
     }
     
     public void testEmptyFileBeforeTypingImplementedInterface() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test extends Object implements ", "javaLangInterfaces.pass");
+        performTest("Empty", 809, "package test;\npublic class Test extends Object implements ", "javaLangInterfaces.pass");
     }
     
     public void testBeforeTypingImplementedInterface() throws Exception {
-        performTest("SimpleNoExtendsAndImplements", 33, "implements ", "javaLangInterfaces.pass");
+        performTest("SimpleNoExtendsAndImplements", 843, "implements ", "javaLangInterfaces.pass");
     }
     
     public void testBeforeImplementedInterface() throws Exception {
-        performTest("Simple", 59, null, "javaLangInterfaces.pass");
+        performTest("Simple", 869, null, "javaLangInterfaces.pass");
     }
     
     public void testEmptyFileAfterTypingImplementedInterface() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test extends Object implements Cloneable", "cloneable.pass");
+        performTest("Empty", 809, "package test;\npublic class Test extends Object implements Cloneable", "cloneable.pass");
     }
     
     public void testAfterTypingImplementedInterface() throws Exception {
-        performTest("SimpleNoExtendsAndImplements", 33, "implements Cloneable", "cloneable.pass");
+        performTest("SimpleNoExtendsAndImplements", 843, "implements Cloneable", "cloneable.pass");
     }
     
     public void testAfterImplementedInterface() throws Exception {
-        performTest("Simple", 68, null, "cloneable.pass");
+        performTest("Simple", 878, null, "cloneable.pass");
     }
     
     public void testEmptyFileAfterTypingImplementedInterfaceAndSpace() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test extends Object implements Cloneable ", "empty.pass");
+        performTest("Empty", 809, "package test;\npublic class Test extends Object implements Cloneable ", "empty.pass");
     }
     
     public void testAfterTypingImplementedInterfaceAndSpace() throws Exception {
-        performTest("SimpleNoExtendsAndImplements", 33, "implements Cloneable ", "empty.pass");
+        performTest("SimpleNoExtendsAndImplements", 843, "implements Cloneable ", "empty.pass");
     }
     
     public void testAfterImplementedInterfaceAndSpace() throws Exception {
-        performTest("Simple", 68, " ", "empty.pass");
+        performTest("Simple", 878, " ", "empty.pass");
     }
     
     public void testEmptyFileAfterTypingFirstImplementedInterface() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test extends Object implements Cloneable, ", "javaLangInterfaces.pass");
+        performTest("Empty", 809, "package test;\npublic class Test extends Object implements Cloneable, ", "javaLangInterfaces.pass");
     }
     
     public void testAfterTypingFirstImplementedInterface() throws Exception {
-        performTest("SimpleNoExtendsAndImplements", 33, "implements Cloneable, ", "javaLangInterfaces.pass");
+        performTest("SimpleNoExtendsAndImplements", 843, "implements Cloneable, ", "javaLangInterfaces.pass");
     }
     
     public void testAfterFirstImplementedInterface() throws Exception {
-        performTest("Simple", 70, null, "javaLangInterfaces.pass");
+        performTest("Simple", 880, null, "javaLangInterfaces.pass");
     }
     
     public void testEmptyFileTypingSecondImplementedInterface() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test extends Object implements Cloneable, R", "javaLangInterfacesStartingWithR.pass");
+        performTest("Empty", 809, "package test;\npublic class Test extends Object implements Cloneable, R", "javaLangInterfacesStartingWithR.pass");
     }
     
     public void testTypingSecondImplementedInterface() throws Exception {
-        performTest("SimpleNoExtendsAndImplements", 33, "implements Cloneable, R", "javaLangInterfacesStartingWithR.pass");
+        performTest("SimpleNoExtendsAndImplements", 843, "implements Cloneable, R", "javaLangInterfacesStartingWithR.pass");
     }
     
     public void testOnSecondImplementedInterface() throws Exception {
-        performTest("Simple", 71, null, "javaLangInterfacesStartingWithR.pass");
+        performTest("Simple", 881, null, "javaLangInterfacesStartingWithR.pass");
     }
     
     public void testEmptyFileTypingClassBody() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test {", "memberModifiersTypesAndGenElements.pass");
+        performTest("Empty", 809, "package test;\npublic class Test {", "memberModifiersTypesAndGenElements.pass");
     }
     
     public void testInClassBody() throws Exception {
-        performTest("Simple", 80, null, "memberModifiersTypesAndGenElements2.pass");
+        performTest("Simple", 890, null, "memberModifiersTypesAndGenElements2.pass");
     }
 
     public void testEmptyFileAfterTypingClassBody() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test {\n}", "classModifiersWithoutPublic.pass");
+        performTest("Empty", 809, "package test;\npublic class Test {\n}", "classModifiersWithoutPublic.pass");
     }
     
     public void testAfterClassBody() throws Exception {
-        performTest("Simple", 82, null, "classModifiersWithoutPublic.pass");
+        performTest("Simple", 892, null, "classModifiersWithoutPublic.pass");
     }
     
     public void testEmptyFileAfterTypingIncompleteClassBodyAndSecondClassKeyword() throws Exception {
-        performTest("Empty", 0, "package test;\npublic class Test {\nclass", "classKeyword.pass");
+        performTest("Empty", 809, "package test;\npublic class Test {\nclass", "classKeyword.pass");
     }
     
     // interface declaration tests ---------------------------------------------
     
     public void testEmptyFileAfterTypingIntefaceName() throws Exception {
-        performTest("Empty", 0, "package test;\ninterface Test ", "extendsKeyword.pass");
+        performTest("Empty", 809, "package test;\ninterface Test ", "extendsKeyword.pass");
     }
     
     public void testAfterTypingIntefaceName() throws Exception {
-        performTest("SimpleInterfaceNoExtends", 30, null, "extendsKeyword.pass");
+        performTest("SimpleInterfaceNoExtends", 840, null, "extendsKeyword.pass");
     }
     
     public void testAfterIntefaceName() throws Exception {
-        performTest("SimpleInterface", 30, null, "extendsKeyword.pass");
+        performTest("SimpleInterface", 840, null, "extendsKeyword.pass");
     }
     
     public void testEmptyFileAfterTypingExtendsInInteface() throws Exception {
-        performTest("Empty", 0, "package test;\ninterface Test extends ", "javaLangInterfaces.pass");
+        performTest("Empty", 809, "package test;\ninterface Test extends ", "javaLangInterfaces.pass");
     }
     
     public void testAfterTypingExtendsInInterface() throws Exception {
-        performTest("SimpleInterfaceNoExtends", 30, "extends ", "javaLangInterfaces.pass");
+        performTest("SimpleInterfaceNoExtends", 840, "extends ", "javaLangInterfaces.pass");
     }
     
     public void testAfterExtendsInInteface() throws Exception {
-        performTest("SimpleInterface", 38, null, "javaLangInterfaces.pass");
+        performTest("SimpleInterface", 848, null, "javaLangInterfaces.pass");
     }
     
     // enum declaration tests --------------------------------------------------
     
     public void testEmptyFileAfterTypingEnumName() throws Exception {
-        performTest("Empty", 0, "package test;\npublic enum Test ", "implementsKeyword.pass");
+        performTest("Empty", 809, "package test;\npublic enum Test ", "implementsKeyword.pass");
     }
     
     public void testAfterTypingEnumName() throws Exception {
-        performTest("SimpleEnumNoImplements", 32, null, "implementsKeyword.pass");
+        performTest("SimpleEnumNoImplements", 842, null, "implementsKeyword.pass");
     }
     
     public void testAfterEnumName() throws Exception {
-        performTest("SimpleEnum", 32, null, "implementsKeyword.pass");
+        performTest("SimpleEnum", 842, null, "implementsKeyword.pass");
     }
     
     public void testEmptyFileAfterTypingImplementsInEnum() throws Exception {
-        performTest("Empty", 0, "package test;\npublic enum Test implements ", "javaLangInterfaces.pass");
+        performTest("Empty", 809, "package test;\npublic enum Test implements ", "javaLangInterfaces.pass");
     }
     
     public void testAfterTypingImplementsInEnum() throws Exception {
-        performTest("SimpleEnumNoImplements", 43, null, "javaLangInterfaces.pass");
+        performTest("SimpleEnumNoImplements", 853, null, "javaLangInterfaces.pass");
     }
     
     public void testAfterImplementsInEnum() throws Exception {
-        performTest("SimpleEnum", 43, null, "javaLangInterfaces.pass");
+        performTest("SimpleEnum", 853, null, "javaLangInterfaces.pass");
     }
     
     // method declaration tests -------------------------------------------------
     
     public void testEmptyFileTypingPublicKeywordInMethodDecl() throws Exception {
-        performTest("MethodStart", 40, "p", "memberModifiersStartingWithP.pass");
+        performTest("MethodStart", 850, "p", "memberModifiersStartingWithP.pass");
     }
     
     public void testOnPublicKeywordInMethodDecl() throws Exception {
-        performTest("Method", 41, null, "memberModifiersStartingWithP.pass");
+        performTest("Method", 851, null, "memberModifiersStartingWithP.pass");
     }
     
     public void testEmptyFileAfterTypingPublicKeywordInMethodDecl() throws Exception {
-        performTest("MethodStart", 40, "public", "publicKeyword.pass");
+        performTest("MethodStart", 850, "public", "publicKeyword.pass");
     }
     
     public void testAfterPublicKeywordInMethodDecl() throws Exception {
-        performTest("Method", 46, null, "publicKeyword.pass");
+        performTest("Method", 856, null, "publicKeyword.pass");
     }
     
     public void testTypingStaticMethodDecl() throws Exception {
-        performTest("Method", 46, " sta", "staticKeyword.pass");
+        performTest("Method", 856, " sta", "staticKeyword.pass");
     }
     
     public void testAfterTypingStaticMethodDecl() throws Exception {
-        performTest("Method", 46, " static", "staticKeyword.pass");
+        performTest("Method", 856, " static", "staticKeyword.pass");
     }
     
     public void testEmptyFileBeforeTypingReturnValue() throws Exception {
-        performTest("MethodStart", 40, "public ", "memberModifiersAndTypesWithoutPublic.pass");
+        performTest("MethodStart", 850, "public ", "memberModifiersAndTypesWithoutPublic.pass");
     }
     
     public void testBeforeReturnValue() throws Exception {
-        performTest("Method", 47, null, "memberModifiersAndTypesWithoutPublic.pass");
+        performTest("Method", 857, null, "memberModifiersAndTypesWithoutPublic.pass");
     }
     
     public void testEmptyFileTypingReturnValue() throws Exception {
-        performTest("MethodStart", 40, "public voi", "voidKeyword.pass");
+        performTest("MethodStart", 850, "public voi", "voidKeyword.pass");
     }
     
     public void testOnReturnValue() throws Exception {
-        performTest("Method", 50, null, "voidKeyword.pass");
+        performTest("Method", 860, null, "voidKeyword.pass");
     }
     
     public void testEmptyFileAfterTypingReturnValue() throws Exception {
-        performTest("MethodStart", 40, "public void", "voidKeyword.pass");
+        performTest("MethodStart", 850, "public void", "voidKeyword.pass");
     }
     
     public void testAfterReturnValue() throws Exception {
-        performTest("Method", 51, null, "voidKeyword.pass");
+        performTest("Method", 861, null, "voidKeyword.pass");
     }
     
     public void testEmptyFileBeforeTypingMethodName() throws Exception {
-        performTest("MethodStart", 40, "public void ", "empty.pass");
+        performTest("MethodStart", 850, "public void ", "empty.pass");
     }
     
     public void testBeforeMethodName() throws Exception {
-        performTest("Method", 52, null, "empty.pass");
+        performTest("Method", 862, null, "empty.pass");
     }
     
     public void testEmptyFileTypingMethodName() throws Exception {
-        performTest("MethodStart", 40, "public void o", "empty.pass");
+        performTest("MethodStart", 850, "public void o", "empty.pass");
     }
     
     public void testOnMethodName() throws Exception {
-        performTest("Method", 53, null, "empty.pass");
+        performTest("Method", 863, null, "empty.pass");
     }
     
     public void testEmptyFileAfterTypingMethodName() throws Exception {
-        performTest("MethodStart", 40, "public void op", "empty.pass");
+        performTest("MethodStart", 850, "public void op", "empty.pass");
     }
     
     public void testAfterMethodName() throws Exception {
-        performTest("Method", 54, null, "empty.pass");
+        performTest("Method", 864, null, "empty.pass");
     }
     
     public void testEmptyFileBeforeTypingFirstParameter() throws Exception {
-        performTest("MethodStart", 40, "public void op(", "parameterTypes.pass");
+        performTest("MethodStart", 850, "public void op(", "parameterTypes.pass");
     }
     
     public void testBeforeTypingFirstParameter() throws Exception {
-        performTest("MethodNoParamsAndThrows", 55, null, "parameterTypes.pass");
+        performTest("MethodNoParamsAndThrows", 865, null, "parameterTypes.pass");
     }
 
     public void testBeforeFirstParameter() throws Exception {
-        performTest("Method", 55, null, "parameterTypes.pass");
+        performTest("Method", 865, null, "parameterTypes.pass");
     }
     
     public void testEmptyFileTypingFirstParameterType() throws Exception {
-        performTest("MethodStart", 40, "public void op(i", "intKeyword.pass");
+        performTest("MethodStart", 850, "public void op(i", "intKeyword.pass");
     }
     
     public void testTypingFirstParameterType() throws Exception {
-        performTest("MethodNoParamsAndThrows", 55, "i", "intKeyword.pass");
+        performTest("MethodNoParamsAndThrows", 865, "i", "intKeyword.pass");
     }
 
     public void testOnFirstParameterType() throws Exception {
-        performTest("Method", 56, null, "intKeyword.pass");
+        performTest("Method", 866, null, "intKeyword.pass");
     }
     
     public void testEmptyFileAfterTypingFirstParameterType() throws Exception {
-        performTest("MethodStart", 40, "public void op(int", "intKeyword.pass");
+        performTest("MethodStart", 850, "public void op(int", "intKeyword.pass");
     }
     
     public void testAfterTypingFirstParameterType() throws Exception {
-        performTest("MethodNoParamsAndThrows", 55, "int", "intKeyword.pass");
+        performTest("MethodNoParamsAndThrows", 865, "int", "intKeyword.pass");
     }
 
     public void testAfterFirstParameterType() throws Exception {
-        performTest("Method", 58, null, "intKeyword.pass");
+        performTest("Method", 868, null, "intKeyword.pass");
     }
     
     public void testEmptyFileBeforeTypingFirstParameterName() throws Exception {
-        performTest("MethodStart", 40, "public void op(int ", "intVarName.pass");
+        performTest("MethodStart", 850, "public void op(int ", "intVarName.pass");
     }
     
     public void testBeforeTypingFirstParameterName() throws Exception {
-        performTest("MethodNoParamsAndThrows", 55, "int ", "intVarName.pass");
+        performTest("MethodNoParamsAndThrows", 865, "int ", "intVarName.pass");
     }
 
     public void testBeforeFirstParameterName() throws Exception {
-        performTest("Method", 59, null, "intVarName.pass");
+        performTest("Method", 869, null, "intVarName.pass");
     }
     
     public void testEmptyFileTypingFirstParameterName() throws Exception {
-        performTest("MethodStart", 40, "public void op(int a", "empty.pass");
+        performTest("MethodStart", 850, "public void op(int a", "empty.pass");
     }
     
     public void testTypingFirstParameterName() throws Exception {
-        performTest("MethodNoParamsAndThrows", 55, "int a", "empty.pass");
+        performTest("MethodNoParamsAndThrows", 865, "int a", "empty.pass");
     }
 
     public void testOnFirstParameterName() throws Exception {
-        performTest("Method", 60, null, "empty.pass");
+        performTest("Method", 870, null, "empty.pass");
     }
     
     public void testEmptyFileAfterTypingFirstParameterNameAndSpace() throws Exception {
-        performTest("MethodStart", 40, "public void op(int a ", "empty.pass");
+        performTest("MethodStart", 850, "public void op(int a ", "empty.pass");
     }
     
     public void testAfterTypingFirstParameterNameAndSpace() throws Exception {
-        performTest("MethodNoParamsAndThrows", 55, "int a ", "empty.pass");
+        performTest("MethodNoParamsAndThrows", 865, "int a ", "empty.pass");
     }
 
     public void testAfterFirstParameterNameAndSpace() throws Exception {
-        performTest("Method", 60, " ", "empty.pass");
+        performTest("Method", 870, " ", "empty.pass");
     }
     
     public void testEmptyFileBeforeTypingSecondParameter() throws Exception {
-        performTest("MethodStart", 40, "public void op(int a,", "parameterTypes.pass");
+        performTest("MethodStart", 850, "public void op(int a,", "parameterTypes.pass");
     }
     
     public void testBeforeTypingSecondParameter() throws Exception {
-        performTest("MethodNoParamsAndThrows", 55, "int a,", "parameterTypes.pass");
+        performTest("MethodNoParamsAndThrows", 865, "int a,", "parameterTypes.pass");
     }
 
     public void testBeforeSecondParameter() throws Exception {
-        performTest("Method", 61, null, "parameterTypes.pass");
+        performTest("Method", 871, null, "parameterTypes.pass");
     }
     
     public void testEmptyFileTypingSecondParameterType() throws Exception {
-        performTest("MethodStart", 40, "public void op(int a, bo", "booleanKeyword.pass");
+        performTest("MethodStart", 850, "public void op(int a, bo", "booleanKeyword.pass");
     }
     
     public void testTypingSecondParameterType() throws Exception {
-        performTest("MethodNoParamsAndThrows", 55, "int a, bo", "booleanKeyword.pass");
+        performTest("MethodNoParamsAndThrows", 865, "int a, bo", "booleanKeyword.pass");
     }
 
     public void testOnSecondParameterType() throws Exception {
-        performTest("Method", 64, null, "booleanKeyword.pass");
+        performTest("Method", 874, null, "booleanKeyword.pass");
     }
     
     public void testEmptyFileAfterTypingSecondParameterType() throws Exception {
-        performTest("MethodStart", 40, "public void op(int a, boolean", "booleanKeyword.pass");
+        performTest("MethodStart", 850, "public void op(int a, boolean", "booleanKeyword.pass");
     }
     
     public void testAfterTypingSecondParameterType() throws Exception {
-        performTest("MethodNoParamsAndThrows", 55, "int a, boolean", "booleanKeyword.pass");
+        performTest("MethodNoParamsAndThrows", 865, "int a, boolean", "booleanKeyword.pass");
     }
 
     public void testAfterSecondParameterType() throws Exception {
-        performTest("Method", 69, null, "booleanKeyword.pass");
+        performTest("Method", 879, null, "booleanKeyword.pass");
     }
     
     public void testEmptyFileBeforeTypingSecondParameterName() throws Exception {
-        performTest("MethodStart", 40, "public void op(int a, boolean ", "booleanVarName.pass");
+        performTest("MethodStart", 850, "public void op(int a, boolean ", "booleanVarName.pass");
     }
     
     public void testBeforeTypingSecondParameterName() throws Exception {
-        performTest("MethodNoParamsAndThrows", 55, "int a, boolean ", "booleanVarName.pass");
+        performTest("MethodNoParamsAndThrows", 865, "int a, boolean ", "booleanVarName.pass");
     }
 
     public void testBeforeSecondParameterName() throws Exception {
-        performTest("Method", 70, null, "booleanVarName.pass");
+        performTest("Method", 880, null, "booleanVarName.pass");
     }
     
     public void testEmptyFileTypingSecondParameterName() throws Exception {
-        performTest("MethodStart", 40, "public void op(int a, boolean b", "booleanVarName.pass");
+        performTest("MethodStart", 850, "public void op(int a, boolean b", "booleanVarName.pass");
     }
     
     public void testTypingSecondParameterName() throws Exception {
-        performTest("MethodNoParamsAndThrows", 55, "int a, boolean b", "booleanVarName.pass");
+        performTest("MethodNoParamsAndThrows", 865, "int a, boolean b", "booleanVarName.pass");
     }
 
     public void testOnSecondParameterName() throws Exception {
-        performTest("Method", 71, null, "booleanVarName.pass");
+        performTest("Method", 881, null, "booleanVarName.pass");
     }
 
     public void testEmptyFileBeforeTypingThrowsKeyword() throws Exception {
-        performTest("MethodStart", 40, "public void op() ", "throwsKeyword.pass");
+        performTest("MethodStart", 850, "public void op() ", "throwsKeyword.pass");
     }
     
     public void testBeforeTypingThrowsKeyword() throws Exception {
-        performTest("MethodNoParamsAndThrows", 56, " ", "throwsKeyword.pass");
+        performTest("MethodNoParamsAndThrows", 866, " ", "throwsKeyword.pass");
     }
 
     public void testBeforeThrowsKeyword() throws Exception {
-        performTest("Method", 73, null, "throwsKeyword.pass");
+        performTest("Method", 883, null, "throwsKeyword.pass");
     }
     
     public void testEmptyFileTypingThrowsKeyword() throws Exception {
-        performTest("MethodStart", 40, "public void op() t", "throwsKeyword.pass");
+        performTest("MethodStart", 850, "public void op() t", "throwsKeyword.pass");
     }
     
     public void testTypingThrowsKeyword() throws Exception {
-        performTest("MethodNoParamsAndThrows", 56, " t", "throwsKeyword.pass");
+        performTest("MethodNoParamsAndThrows", 866, " t", "throwsKeyword.pass");
     }
 
     public void testOnThrowsKeyword() throws Exception {
-        performTest("Method", 74, null, "throwsKeyword.pass");
+        performTest("Method", 884, null, "throwsKeyword.pass");
     }
     
     public void testEmptyAfterFileTypingThrowsKeyword() throws Exception {
-        performTest("MethodStart", 40, "public void op() throws", "throwsKeyword.pass");
+        performTest("MethodStart", 850, "public void op() throws", "throwsKeyword.pass");
     }
     
     public void testAfterTypingThrowsKeyword() throws Exception {
-        performTest("MethodNoParamsAndThrows", 56, " throws", "throwsKeyword.pass");
+        performTest("MethodNoParamsAndThrows", 866, " throws", "throwsKeyword.pass");
     }
 
     public void testAfterThrowsKeyword() throws Exception {
-        performTest("Method", 79, null, "throwsKeyword.pass");
+        performTest("Method", 889, null, "throwsKeyword.pass");
     }
         
     public void testEmptyFileBeforeTypingThrownException() throws Exception {
-        performTest("MethodStart", 40, "public void op() throws ", "javaLangThrowables.pass");
+        performTest("MethodStart", 850, "public void op() throws ", "javaLangThrowables.pass");
     }
     
     public void testBeforeTypingThrownException() throws Exception {
-        performTest("MethodNoParamsAndThrows", 56, "throws ", "javaLangThrowables.pass");
+        performTest("MethodNoParamsAndThrows", 866, "throws ", "javaLangThrowables.pass");
     }
     
     public void testBeforeThrownException() throws Exception {
-        performTest("Method", 80, null, "javaLangThrowables.pass");
+        performTest("Method", 890, null, "javaLangThrowables.pass");
     }
     
     public void testEmptyFileTypingThrownException() throws Exception {
-        performTest("MethodStart", 40, "public void op() throws N", "javaLangThrowablesStartingWithN.pass");
+        performTest("MethodStart", 850, "public void op() throws N", "javaLangThrowablesStartingWithN.pass");
     }
     
     public void testTypingThrownException() throws Exception {
-        performTest("MethodNoParamsAndThrows", 56, "throws N", "javaLangThrowablesStartingWithN.pass");
+        performTest("MethodNoParamsAndThrows", 866, "throws N", "javaLangThrowablesStartingWithN.pass");
     }
     
     public void testOnThrownException() throws Exception {
-        performTest("Method", 81, null, "javaLangThrowablesStartingWithN.pass");
+        performTest("Method", 891, null, "javaLangThrowablesStartingWithN.pass");
     }
     
     public void testEmptyFileAfterTypingThrownException() throws Exception {
-        performTest("MethodStart", 40, "public void op() throws NullPointerException", "nullPointerException.pass");
+        performTest("MethodStart", 850, "public void op() throws NullPointerException", "nullPointerException.pass");
     }
     
     public void testAfterTypingThrownException() throws Exception {
-        performTest("MethodNoParamsAndThrows", 56, "throws NullPointerException", "nullPointerException.pass");
+        performTest("MethodNoParamsAndThrows", 866, "throws NullPointerException", "nullPointerException.pass");
     }
     
     public void testAfterThrownException() throws Exception {
-        performTest("Method", 100, null, "nullPointerException.pass");
+        performTest("Method", 910, null, "nullPointerException.pass");
     }
     
     public void testEmptyFileAfterTypingThrownExceptionAndSpace() throws Exception {
-        performTest("MethodStart", 40, "public void op() throws NullPointerException ", "empty.pass");
+        performTest("MethodStart", 850, "public void op() throws NullPointerException ", "empty.pass");
     }
     
     public void testAfterTypingThrownExceptionAndSpace() throws Exception {
-        performTest("MethodNoParamsAndThrows", 56, "throws NullPointerException ", "empty.pass");
+        performTest("MethodNoParamsAndThrows", 866, "throws NullPointerException ", "empty.pass");
     }
     
     public void testAfterThrownExceptionAndSpace() throws Exception {
-        performTest("Method", 100, " ", "empty.pass");
+        performTest("Method", 910, " ", "empty.pass");
     }
     
     public void testEmptyFileBeforeTypingSecondThrownException() throws Exception {
-        performTest("MethodStart", 40, "public void op() throws NullPointerException, ", "javaLangThrowables.pass");
+        performTest("MethodStart", 850, "public void op() throws NullPointerException, ", "javaLangThrowables.pass");
     }
     
     public void testBeforeTypingSecondThrownException() throws Exception {
-        performTest("MethodNoParamsAndThrows", 56, "throws NullPointerException, ", "javaLangThrowables.pass");
+        performTest("MethodNoParamsAndThrows", 866, "throws NullPointerException, ", "javaLangThrowables.pass");
     }
     
     public void testBeforeSecondThrownExceptionAndSpace() throws Exception {
-        performTest("Method", 102, null, "javaLangThrowables.pass");
+        performTest("Method", 912, null, "javaLangThrowables.pass");
     }
     
     public void testEmptyFileTypingSecondThrownException() throws Exception {
-        performTest("MethodStart", 40, "public void op() throws NullPointerException, I", "javaLangThrowablesStartingWithI.pass");
+        performTest("MethodStart", 850, "public void op() throws NullPointerException, I", "javaLangThrowablesStartingWithI.pass");
     }
     
     public void testTypingSecondThrownException() throws Exception {
-        performTest("MethodNoParamsAndThrows", 56, "throws NullPointerException, I", "javaLangThrowablesStartingWithI.pass");
+        performTest("MethodNoParamsAndThrows", 866, "throws NullPointerException, I", "javaLangThrowablesStartingWithI.pass");
     }
     
     public void testOnSecondThrownException() throws Exception {
-        performTest("Method", 103, null, "javaLangThrowablesStartingWithI.pass");
+        performTest("Method", 913, null, "javaLangThrowablesStartingWithI.pass");
     }
     
     public void testEmptyFileAfterTypingMethodBody() throws Exception {
-        performTest("MethodStart", 40, "public void op() {\n}", "memberModifiersTypesAndGenElements.pass");
+        performTest("MethodStart", 850, "public void op() {\n}", "memberModifiersTypesAndGenElements.pass");
     }
     
     public void testAfterMethodBody() throws Exception {
-        performTest("Method", 131, null, "memberModifiersTypesAndGenElements.pass");
+        performTest("Method", 941, null, "memberModifiersTypesAndGenElements.pass");
     }
     
     public void testEmptyFileAfterTypingIncompleteMethodBodyAndPublicKeyword() throws Exception {
-        performTest("MethodStart", 40, "public void op() {\npublic", "empty.pass");
+        performTest("MethodStart", 850, "public void op() {\npublic", "empty.pass");
     }    
 
     public void testEmptyFileAfterTypingIncompleteMethodBodyAndPublicKeywordAndSpace() throws Exception {
-        performTest("MethodStart", 40, "public void op() {\npublic ", "memberModifiersAndTypesWithoutPublic.pass");
+        performTest("MethodStart", 850, "public void op() {\npublic ", "memberModifiersAndTypesWithoutPublic.pass");
     }    
 
     // field declaration tests -------------------------------------------------
     
     public void testEmptyFileAfterTypingFieldNameAndSpace() throws Exception {
-        performTest("MethodStart", 40, "public int field ", "empty.pass");
+        performTest("MethodStart", 850, "public int field ", "empty.pass");
     }
     
     public void testAfterTypingFieldNameAndSpace() throws Exception {
-        performTest("FieldNoInit", 56, " ", "empty.pass");
+        performTest("FieldNoInit", 866, " ", "empty.pass");
     }
     
     public void testAfterFieldNameAndSpace() throws Exception {
-        performTest("Field", 57, null, "empty.pass");
+        performTest("Field", 867, null, "empty.pass");
     }
     
     public void testEmptyFileAfterTypingAssignmentInField() throws Exception {
-        performTest("MethodStart", 40, "public static int staticField = 10;\npublic int field =", "typesLocalMembersAndSmartInt.pass");
+        performTest("MethodStart", 850, "public static int staticField = 10;\npublic int field =", "typesLocalMembersAndSmartInt.pass");
     }
     
     public void testAfterTypingAssignmentInField() throws Exception {
-        performTest("FieldNoInit", 56, " =", "typesLocalMembersAndSmartInt.pass");
+        performTest("FieldNoInit", 866, " =", "typesLocalMembersAndSmartInt.pass");
     }
     
     public void testAfterAssignmentInField() throws Exception {
-        performTest("Field", 58, null, "typesLocalMembersAndSmartInt.pass");
+        performTest("Field", 868, null, "typesLocalMembersAndSmartInt.pass");
     }
     
     public void testEmptyFileBeforeTypingInitOfField() throws Exception {
-        performTest("MethodStart", 40, "public static int staticField = 10;\npublic int field = ", "typesLocalMembersAndSmartInt.pass");
+        performTest("MethodStart", 850, "public static int staticField = 10;\npublic int field = ", "typesLocalMembersAndSmartInt.pass");
     }
     
     public void testBeforeTypingInitOfField() throws Exception {
-        performTest("FieldNoInit", 56, " = ", "typesLocalMembersAndSmartInt.pass");
+        performTest("FieldNoInit", 866, " = ", "typesLocalMembersAndSmartInt.pass");
     }
     
     public void testBeforeInitOfField() throws Exception {
-        performTest("Field", 59, null, "typesLocalMembersAndSmartInt.pass");
+        performTest("Field", 869, null, "typesLocalMembersAndSmartInt.pass");
     }
     
     public void testEmptyFileBeforeTypingInitOfStaticField() throws Exception {
-        performTest("MethodStart", 40, "public static int staticField = ", "typesAndStaticLocalMembers.pass");
+        performTest("MethodStart", 850, "public static int staticField = ", "typesAndStaticLocalMembers.pass");
     }
     
     public void testBeforeTypingInitOfStaticField() throws Exception {
-        performTest("FieldNoInit", 91, " = ", "typesAndStaticLocalMembers.pass");
+        performTest("FieldNoInit", 901, " = ", "typesAndStaticLocalMembers.pass");
     }
     
     public void testBeforeInitOfStaticField() throws Exception {
-        performTest("Field", 112, null, "typesAndStaticLocalMembers.pass");
+        performTest("Field", 922, null, "typesAndStaticLocalMembers.pass");
     }
     
     public void testEmptyFileTypingInitOfField() throws Exception {
-        performTest("MethodStart", 40, "public int field = ha", "intHashCode.pass");
+        performTest("MethodStart", 850, "public int field = ha", "intHashCode.pass");
     }
     
     public void testTypingInitOfField() throws Exception {
-        performTest("FieldNoInit", 56, " = ha", "intHashCode.pass");
+        performTest("FieldNoInit", 866, " = ha", "intHashCode.pass");
     }
     
     public void testOnInitOfField() throws Exception {
-        performTest("Field", 61, null, "intHashCode.pass");
+        performTest("Field", 871, null, "intHashCode.pass");
     }
     
     public void testEmptyFileTypingMethodInvocationWithinInitOfField() throws Exception {
-        performTest("MethodStart", 40, "public static int staticField = 10;\npublic int field = hashCode(", "typesAndLocalMembers.pass");
+        performTest("MethodStart", 850, "public static int staticField = 10;\npublic int field = hashCode(", "typesAndLocalMembers.pass");
     }
     
     public void testTypingMethodInvocationWithinInitOfField() throws Exception {
-        performTest("FieldNoInit", 56, " = hashCode(", "typesAndLocalMembers.pass");
+        performTest("FieldNoInit", 866, " = hashCode(", "typesAndLocalMembers.pass");
     }
     
     public void testOnMethodInvocationWithinInitOfField() throws Exception {
-        performTest("Field", 68, null, "typesAndLocalMembers.pass");
+        performTest("Field", 878, null, "typesAndLocalMembers.pass");
     }
     
     public void testEmptyFileAfterTypingMethodInvocationWithinInitOfField() throws Exception {
-        performTest("MethodStart", 40, "public int field = hashCode()", "empty.pass");
+        performTest("MethodStart", 850, "public int field = hashCode()", "empty.pass");
     }
     
     public void testAfterTypingMethodInvocationWithinInitOfField() throws Exception {
-        performTest("FieldNoInit", 56, " = hashCode()", "empty.pass");
+        performTest("FieldNoInit", 866, " = hashCode()", "empty.pass");
     }
     
     public void testAfterMethodInvocationWithinInitOfField() throws Exception {
-        performTest("Field", 69, null, "empty.pass");
+        performTest("Field", 879, null, "empty.pass");
     }
     
     public void testEmptyFileAfterTypingOperatorWithinInitOfField() throws Exception {
-        performTest("MethodStart", 40, "public static int staticField = 10;\npublic int field = hashCode() /", "typesLocalMembersAndSmartPrimitives.pass");
+        performTest("MethodStart", 850, "public static int staticField = 10;\npublic int field = hashCode() /", "typesLocalMembersAndSmartPrimitives.pass");
     }
     
     public void testAfterTypingOperatorWithinInitOfField() throws Exception {
-        performTest("FieldNoInit", 56, " = hashCode() /", "typesLocalMembersAndSmartPrimitives.pass");
+        performTest("FieldNoInit", 866, " = hashCode() /", "typesLocalMembersAndSmartPrimitives.pass");
     }
     
     public void testAfterOperatorWithinInitOfField() throws Exception {
-        performTest("Field", 71, null, "typesLocalMembersAndSmartPrimitives.pass");
+        performTest("Field", 881, null, "typesLocalMembersAndSmartPrimitives.pass");
     }
     
     public void testEmptyFileAfterTypingConstantWithinInitOfField() throws Exception {
-        performTest("MethodStart", 40, "public int field = hashCode() / 10", "empty.pass");
+        performTest("MethodStart", 850, "public int field = hashCode() / 10", "empty.pass");
     }
     
     public void testAfterTypingConstantWithinInitOfField() throws Exception {
-        performTest("FieldNoInit", 56, " = hashCode() / 10", "empty.pass");
+        performTest("FieldNoInit", 866, " = hashCode() / 10", "empty.pass");
     }
     
     public void testAfterConstantWithinInitOfField() throws Exception {
-        performTest("Field", 74, null, "empty.pass");
+        performTest("Field", 884, null, "empty.pass");
     }
     
     public void testEmptyFileAfterTypingFieldDeclaration() throws Exception {
-        performTest("MethodStart", 40, "public int field = hashCode() / 10;", "memberModifiersTypesAndGenElements3.pass");
+        performTest("MethodStart", 850, "public int field = hashCode() / 10;", "memberModifiersTypesAndGenElements3.pass");
     }
     
     public void testAfterFieldDeclaration() throws Exception {
-        performTest("Field", 75, null, "memberModifiersTypesAndGenElements4.pass");
+        performTest("Field", 885, null, "memberModifiersTypesAndGenElements4.pass");
     }
     
     public void testTypingStaticFieldAfterErrorInPreviousFieldDeclaration() throws Exception {
-        performTest("MethodStart", 40, "public int \npublic sta", "staticKeyword.pass");
+        performTest("MethodStart", 850, "public int \npublic sta", "staticKeyword.pass");
     }
 
     public void testTypingStaticFieldAfterErrorInPreviousFieldInitialization() throws Exception {
-        performTest("MethodStart", 40, "public int field = has\npublic sta", "staticKeyword.pass");
+        performTest("MethodStart", 850, "public int field = has\npublic sta", "staticKeyword.pass");
     }
     
     // basic method body tests -------------------------------------------------
    
     public void testEmptyFileTypingMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 89, null, "methodBodyContent.pass");
+        performTest("SimpleMethodBodyStart", 899, null, "methodBodyContent.pass");
     }
     
     public void testTypingMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 89, null, "methodBodyContent.pass");
+        performTest("SimpleEmptyMethodBody", 899, null, "methodBodyContent.pass");
     }
     
     public void testInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 89, null, "methodBodyContent.pass");
+        performTest("SimpleMethodBody", 899, null, "methodBodyContent.pass");
     }
     
     public void testEmptyFileTypingLocalVariableTypeInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "bo", "booleanKeyword.pass");
+        performTest("SimpleMethodBodyStart", 908, "bo", "booleanKeyword.pass");
     }
     
     public void testTypingLocalVariableTypeInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "bo", "booleanKeyword.pass");
+        performTest("SimpleEmptyMethodBody", 908, "bo", "booleanKeyword.pass");
     }
     
     public void testLocalVariableTypeInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 100, null, "booleanKeyword.pass");
+        performTest("SimpleMethodBody", 910, null, "booleanKeyword.pass");
     }
     
     public void testEmptyFileAfterTypingLocalVariableTypeInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "boolean", "booleanKeyword.pass");
+        performTest("SimpleMethodBodyStart", 908, "boolean", "booleanKeyword.pass");
     }
     
     public void testAfterTypingLocalVariableTypeInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "boolean", "booleanKeyword.pass");
+        performTest("SimpleEmptyMethodBody", 908, "boolean", "booleanKeyword.pass");
     }
     
     public void testAfterLocalVariableTypeInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 105, null, "booleanKeyword.pass");
+        performTest("SimpleMethodBody", 915, null, "booleanKeyword.pass");
     }
     
     public void testEmptyFileBeforeTypingLocalVariableNameInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "boolean ", "booleanVarName.pass");
+        performTest("SimpleMethodBodyStart", 908, "boolean ", "booleanVarName.pass");
     }
     
     public void testBeforeTypingLocalVariableNameInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "boolean ", "booleanVarName.pass");
+        performTest("SimpleEmptyMethodBody", 908, "boolean ", "booleanVarName.pass");
     }
     
     public void testBeforeLocalVariableNameInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 106, null, "booleanVarName.pass");
+        performTest("SimpleMethodBody", 916, null, "booleanVarName.pass");
     }
     
     public void testEmptyFileTypingLocalVariableNameInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "boolean b", "booleanVarName.pass");
+        performTest("SimpleMethodBodyStart", 908, "boolean b", "booleanVarName.pass");
     }
     
     public void testTypingLocalVariableNameInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "boolean b", "booleanVarName.pass");
+        performTest("SimpleEmptyMethodBody", 908, "boolean b", "booleanVarName.pass");
     }
     
     public void testOnLocalVariableNameInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 107, null, "booleanVarName.pass");
+        performTest("SimpleMethodBody", 917, null, "booleanVarName.pass");
     }
     
     public void testEmptyFileAfterTypingLocalVariableNameAndSpaceInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "boolean b ", "empty.pass");
+        performTest("SimpleMethodBodyStart", 908, "boolean b ", "empty.pass");
     }
     
     public void testAfterTypingLocalVariableNameAndSpaceInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "boolean b ", "empty.pass");
+        performTest("SimpleEmptyMethodBody", 908, "boolean b ", "empty.pass");
     }
     
     public void testAfterLocalVariableNameAndSpaceInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 107, " ", "empty.pass");
+        performTest("SimpleMethodBody", 917, " ", "empty.pass");
     }
     
     public void testEmptyFileAfterTypingLocalVariableInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "boolean b;", "methodBodyContentAndLocalVar.pass");
+        performTest("SimpleMethodBodyStart", 908, "boolean b;", "methodBodyContentAndLocalVar.pass");
     }
     
     public void testAfterTypingLocalVariableInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "boolean b;", "methodBodyContentAndLocalVar.pass");
+        performTest("SimpleEmptyMethodBody", 908, "boolean b;", "methodBodyContentAndLocalVar.pass");
     }
     
     public void testAfterLocalVariableInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 108, null, "methodBodyContentAndLocalVar.pass");
+        performTest("SimpleMethodBody", 918, null, "methodBodyContentAndLocalVar.pass");
     }
  
     public void testEmptyFileTypingTypeInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "Sy", "system.pass");
+        performTest("SimpleMethodBodyStart", 908, "Sy", "system.pass");
     }
     
     public void testTypingTypeInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "Sy", "system.pass");
+        performTest("SimpleEmptyMethodBody", 908, "Sy", "system.pass");
     }
     
     public void testTypeInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 112, null, "system.pass");
+        performTest("SimpleMethodBody", 922, null, "system.pass");
     }
     
     public void testEmptyFileAfterTypingTypeInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "System", "system.pass");
+        performTest("SimpleMethodBodyStart", 908, "System", "system.pass");
     }
     
     public void testAfterTypingTypeInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "System", "system.pass");
+        performTest("SimpleEmptyMethodBody", 908, "System", "system.pass");
     }
     
     public void testAfterTypeInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 116, null, "system.pass");
+        performTest("SimpleMethodBody", 926, null, "system.pass");
     }
     
     public void testEmptyFileAfterTypingTypeAndDotInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "System.", "systemContent.pass");
+        performTest("SimpleMethodBodyStart", 908, "System.", "systemContent.pass");
     }
     
     public void testAfterTypingTypeAndDotInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "System.", "systemContent.pass");
+        performTest("SimpleEmptyMethodBody", 908, "System.", "systemContent.pass");
     }
     
     public void testAfterTypeAndDotInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 117, null, "systemContent.pass");
+        performTest("SimpleMethodBody", 927, null, "systemContent.pass");
     }
 
     public void testEmptyFileTypingFieldAccessInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "System.o", "systemOut.pass");
+        performTest("SimpleMethodBodyStart", 908, "System.o", "systemOut.pass");
     }
     
     public void testTypingFieldAccessInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "System.o", "systemOut.pass");
+        performTest("SimpleEmptyMethodBody", 908, "System.o", "systemOut.pass");
     }
     
     public void testFieldAccessInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 118, null, "systemOut.pass");
+        performTest("SimpleMethodBody", 928, null, "systemOut.pass");
     }
    
     public void testEmptyFileAfterTypingFieldAccessInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "System.out", "systemOut.pass");
+        performTest("SimpleMethodBodyStart", 908, "System.out", "systemOut.pass");
     }
     
     public void testAfterTypingFieldAccessInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "System.out", "systemOut.pass");
+        performTest("SimpleEmptyMethodBody", 908, "System.out", "systemOut.pass");
     }
     
     public void testAfterFieldAccessInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 120, null, "systemOut.pass");
+        performTest("SimpleMethodBody", 930, null, "systemOut.pass");
     }
     
     public void testEmptyFileAfterTypingFieldAccessAndSpaceInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "System.out ", "instanceOf.pass");
+        performTest("SimpleMethodBodyStart", 908, "System.out ", "instanceOf.pass");
     }
     
     public void testAfterTypingFieldAccessAndSpaceInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "System.out ", "instanceOf.pass");
+        performTest("SimpleEmptyMethodBody", 908, "System.out ", "instanceOf.pass");
     }
     
     public void testAfterFieldAccessAndSpaceInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 120, " ", "instanceOf.pass");
+        performTest("SimpleMethodBody", 930, " ", "instanceOf.pass");
     }
     
     public void testEmptyFileAfterTypingFieldAccessAndDotInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "System.out.", "systemOutContent.pass");
+        performTest("SimpleMethodBodyStart", 908, "System.out.", "systemOutContent.pass");
     }
     
     public void testAfterTypingFieldAccessAndDotInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "System.out.", "systemOutContent.pass");
+        performTest("SimpleEmptyMethodBody", 908, "System.out.", "systemOutContent.pass");
     }
     
     public void testAfterFieldAccessAndDotInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 121, null, "systemOutContent.pass");
+        performTest("SimpleMethodBody", 931, null, "systemOutContent.pass");
     }
 
     public void testEmptyFileTypingMethodInvocationInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "boolean b;\nSystem.out.println(", "typesLocalMembersVarsAndSmarts.pass");
+        performTest("SimpleMethodBodyStart", 908, "boolean b;\nSystem.out.println(", "typesLocalMembersVarsAndSmarts.pass");
     }
     
     public void testTypingMethodInvocationInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "boolean b;\nSystem.out.println(", "typesLocalMembersVarsAndSmarts.pass");
+        performTest("SimpleEmptyMethodBody", 908, "boolean b;\nSystem.out.println(", "typesLocalMembersVarsAndSmarts.pass");
     }
     
     public void testMethodInvocationInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 129, null, "typesLocalMembersVarsAndSmarts.pass");
+        performTest("SimpleMethodBody", 939, null, "typesLocalMembersVarsAndSmarts.pass");
     }
     
     public void testEmptyFileTypingMethodInvocationParameterInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "boolean b;\nSystem.out.println(b", "typesLocalMembersVarsAndSmartsStartingWithB.pass");
+        performTest("SimpleMethodBodyStart", 908, "boolean b;\nSystem.out.println(b", "typesLocalMembersVarsAndSmartsStartingWithB.pass");
     }
     
     public void testTypingMethodInvocationParameterInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "boolean b;\nSystem.out.println(b", "typesLocalMembersVarsAndSmartsStartingWithB.pass");
+        performTest("SimpleEmptyMethodBody", 908, "boolean b;\nSystem.out.println(b", "typesLocalMembersVarsAndSmartsStartingWithB.pass");
     }
     
     public void testOnMethodInvocationParameterInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 130, null, "typesLocalMembersVarsAndSmartsStartingWithB.pass");
+        performTest("SimpleMethodBody", 940, null, "typesLocalMembersVarsAndSmartsStartingWithB.pass");
     }
     
     public void testEmptyFileTypingMethodInvocationParameterAndSpaceInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "System.out.println(b ", "empty.pass");
+        performTest("SimpleMethodBodyStart", 908, "System.out.println(b ", "empty.pass");
     }
     
     public void testTypingMethodInvocationParameterAndSpaceInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "System.out.println(b ", "empty.pass");
+        performTest("SimpleEmptyMethodBody", 908, "System.out.println(b ", "empty.pass");
     }
     
     public void testAfterMethodInvocationParameterAndSpaceInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 130, " ", "empty.pass");
+        performTest("SimpleMethodBody", 940, " ", "empty.pass");
     }
     
     public void testEmptyFileBeforeTypingSecondMethodInvocationParameterInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "boolean b;\nSystem.out.println(b, ", "typesLocalMembersAndVars.pass");
+        performTest("SimpleMethodBodyStart", 908, "boolean b;\nSystem.out.println(b, ", "typesLocalMembersAndVars.pass");
     }
     
     public void testBeforeTypingSecondMethodInvocationParameterInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "boolean b;\nSystem.out.println(b, ", "typesLocalMembersAndVars.pass");
+        performTest("SimpleEmptyMethodBody", 908, "boolean b;\nSystem.out.println(b, ", "typesLocalMembersAndVars.pass");
     }
     
     public void testBeforeSecondMethodInvocationParameterInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 130, ", ", "typesLocalMembersAndVars.pass");
+        performTest("SimpleMethodBody", 940, ", ", "typesLocalMembersAndVars.pass");
     }
     
     public void testEmptyFileTypingSecondMethodInvocationParameterInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "boolean b;\nSystem.out.println(b, b", "typesLocalMembersAndVarsStartingWithB.pass");
+        performTest("SimpleMethodBodyStart", 908, "boolean b;\nSystem.out.println(b, b", "typesLocalMembersAndVarsStartingWithB.pass");
     }
     
     public void testTypingSecondMethodInvocationParameterInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "boolean b;\nSystem.out.println(b, b", "typesLocalMembersAndVarsStartingWithB.pass");
+        performTest("SimpleEmptyMethodBody", 908, "boolean b;\nSystem.out.println(b, b", "typesLocalMembersAndVarsStartingWithB.pass");
     }
     
     public void testOnSecondMethodInvocationParameterInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 130, ", b", "typesLocalMembersAndVarsStartingWithB.pass");
+        performTest("SimpleMethodBody", 940, ", b", "typesLocalMembersAndVarsStartingWithB.pass");
     }
     
     public void testEmptyFileAfterTypingMethodInvocationParametersInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "boolean b;\nSystem.out.println(b)", "empty.pass");
+        performTest("SimpleMethodBodyStart", 908, "boolean b;\nSystem.out.println(b)", "empty.pass");
     }
     
     public void testAfterTypingMethodInvocationParametersInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "boolean b;\nSystem.out.println(b)", "empty.pass");
+        performTest("SimpleEmptyMethodBody", 908, "boolean b;\nSystem.out.println(b)", "empty.pass");
     }
     
     public void testAfteMethodInvocationParametersInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 131, null, "empty.pass");
+        performTest("SimpleMethodBody", 941, null, "empty.pass");
     }
     
     public void testEmptyFileAfterTypingMethodInvocationParametersAndSpaceInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "boolean b;\nSystem.out.println(b) ", "empty.pass");
+        performTest("SimpleMethodBodyStart", 908, "boolean b;\nSystem.out.println(b) ", "empty.pass");
     }
     
     public void testAfterTypingMethodInvocationParametersAndSpaceInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "boolean b;\nSystem.out.println(b) ", "empty.pass");
+        performTest("SimpleEmptyMethodBody", 908, "boolean b;\nSystem.out.println(b) ", "empty.pass");
     }
     
     public void testAfteMethodInvocationParametersAndSpaceInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 131, " ", "empty.pass");
+        performTest("SimpleMethodBody", 941, " ", "empty.pass");
     }
     
     public void testEmptyFileAfterTypingMethodInvocationInMethodBody() throws Exception {
-        performTest("SimpleMethodBodyStart", 98, "boolean b;\nSystem.out.println(b);", "methodBodyContentAndLocalVar.pass");
+        performTest("SimpleMethodBodyStart", 908, "boolean b;\nSystem.out.println(b);", "methodBodyContentAndLocalVar.pass");
     }
     
     public void testAfterTypingMethodInvocationInMethodBody() throws Exception {
-        performTest("SimpleEmptyMethodBody", 98, "boolean b;\nSystem.out.println(b);", "methodBodyContentAndLocalVar.pass");
+        performTest("SimpleEmptyMethodBody", 908, "boolean b;\nSystem.out.println(b);", "methodBodyContentAndLocalVar.pass");
     }
     
     public void testAfteMethodInvocationInMethodBody() throws Exception {
-        performTest("SimpleMethodBody", 132, null, "methodBodyContentAndLocalVar.pass");
+        performTest("SimpleMethodBody", 942, null, "methodBodyContentAndLocalVar.pass");
     }
 }

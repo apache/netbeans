@@ -37,7 +37,9 @@ public class ContentModelTest extends AbstractTestCase {
     }
         
     public static Test suite() {
-        TestSuite suite = new TestSuite(ContentModelTest.class);
+        TestSuite suite = new TestSuite();
+//        Disabled as referenced XSD file were partly not donated by oracle to apache
+//        suite.addTestSuite(ContentModelTest.class);
         return suite;
     }
         

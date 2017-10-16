@@ -76,7 +76,8 @@ public class SchemaRefCacheTest extends TestCase {
         suite.addTest(new SchemaRefCacheTest("testRedefinedTargetNamespaceChanged")); // NOI18N
         suite.addTest(new SchemaRefCacheTest("testImportedTargetNamespaceDeleted")); // NOI18N
         suite.addTest(new SchemaRefCacheTest("testDetachedSchemaGarbageCollected")); // NOI18N
-        suite.addTest(new SchemaRefCacheTest("testCacheContainsRelevantComponents")); // NOI18N
+//        Disabled as referenced files were partly not donated by oracle to apache
+//        suite.addTest(new SchemaRefCacheTest("testCacheContainsRelevantComponents")); // NOI18N
         return suite;
     }
 

@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-916A0FE08D840A08C950F49FB59B961E14D673B8 smack.jar
-BA1365C7E5F3CF7F7641B354677B3F54A6EA5A15 smackx.jar
+916A0FE08D840A08C950F49FB59B961E14D673B8 jivesoftware:smack:3.1.0
+BA1365C7E5F3CF7F7641B354677B3F54A6EA5A15 jivesoftware:smackx:3.1.0

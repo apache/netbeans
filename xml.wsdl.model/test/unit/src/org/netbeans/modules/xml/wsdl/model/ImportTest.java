@@ -126,20 +126,22 @@ public class ImportTest extends TestCase {
         assertEquals("string", gt.getName());
     }
     
-    public void testImportSameNamespaceWsdl() throws Exception {
-        WSDLModel model = Util.loadWSDLModel("resources/GoogleFlow.wsdl");
-        Operation op = model.findComponentByName("initiate", Operation.class);
-        Message referencedMessage = op.getInput().getMessage().get();
-        assertEquals("Imported model has same namespace", model.getDefinitions().getTargetNamespace(),
-            referencedMessage.getModel().getDefinitions().getTargetNamespace());
-    }
+//    Disabled as referenced files were partly not donated by oracle to apache
+//    public void testImportSameNamespaceWsdl() throws Exception {
+//        WSDLModel model = Util.loadWSDLModel("resources/GoogleFlow.wsdl");
+//        Operation op = model.findComponentByName("initiate", Operation.class);
+//        Message referencedMessage = op.getInput().getMessage().get();
+//        assertEquals("Imported model has same namespace", model.getDefinitions().getTargetNamespace(),
+//            referencedMessage.getModel().getDefinitions().getTargetNamespace());
+//    }
     
-    public void testUnqualifiedSchemaReference() throws Exception {
-        WSDLModelImpl model = (WSDLModelImpl)Util.loadWSDLModel("resources/SiebelInterface.wsdl");
-        String xpath = "/definitions/message[@name='SiebelInterfaceRequest']/part[@name='SWEExtData']";
-        Part part = Util.find(Part.class, model, xpath);
-        assertNotNull("part.element should resolve w/o prefix", part.getElement().get());
-    }
+//    Disabled as referenced files were partly not donated by oracle to apache
+//    public void testUnqualifiedSchemaReference() throws Exception {
+//        WSDLModelImpl model = (WSDLModelImpl)Util.loadWSDLModel("resources/SiebelInterface.wsdl");
+//        String xpath = "/definitions/message[@name='SiebelInterfaceRequest']/part[@name='SWEExtData']";
+//        Part part = Util.find(Part.class, model, xpath);
+//        assertNotNull("part.element should resolve w/o prefix", part.getElement().get());
+//    }
 
     public void testReferenceToOtherEmbededSchema() throws Exception {
         WSDLModelImpl model = (WSDLModelImpl)Util.loadWSDLModel("resources/Sumador.wsdl");

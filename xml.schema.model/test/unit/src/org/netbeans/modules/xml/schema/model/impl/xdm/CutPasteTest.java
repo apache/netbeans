@@ -113,65 +113,63 @@ public class CutPasteTest extends TestCase {
 			((NodeImpl)leti.getPeer()).getId()!=((NodeImpl)le2.getPeer()).getId());
     }
 	
-    /**
-     * testMultipleDnDAndUndo
-     */
-    public void testMultipleDnDAndUndo() throws Exception {
-        SchemaModel model = Util.loadSchemaModel("resources/PO_copypasteundoSequence.xsd");
-        UndoManager um = new UndoManager();
-        model.addUndoableEditListener(um);
-        
-        Sequence seq = (Sequence)Util.findComponent(
-                model.getSchema(), 
-				"/schema/complexType[@name='PurchaseOrderType']/sequence");		
-		assert(seq != null);
-        LocalElement shipTo = (LocalElement)Util.findComponent(
-                model.getSchema(), 
-				"/schema/complexType[@name='PurchaseOrderType']/" +
-				"sequence/element[@name='shipTo']");
-		assert(shipTo != null);
-        ElementReference comment = (ElementReference)Util.findComponent(
-                model.getSchema(), 
-				"/schema/complexType[@name='PurchaseOrderType']/" +
-				"sequence/element[@ref='comment']");
-		assert(comment != null);
-        
-		assertEquals(4, seq.getChildren().size());
-        LocalElement copy_shipTo = (LocalElement) shipTo.copy(seq);
-        model.startTransaction();
-		seq.removeContent(shipTo);
-		seq.addContent(copy_shipTo, 3);
-        model.endTransaction();
-        assertEquals(4, seq.getChildren().size());
-        
-        um.undo();
-        assertEquals(4, seq.getChildren().size());
-		
-        seq = (Sequence)Util.findComponent(
-                model.getSchema(), 
-				"/schema/complexType[@name='PurchaseOrderType']/sequence");		
-		assert(seq != null);
-        shipTo = (LocalElement)Util.findComponent(
-                model.getSchema(), 
-				"/schema/complexType[@name='PurchaseOrderType']/" +
-				"sequence/element[@name='shipTo']");
-		assert(shipTo != null);
-        comment = (ElementReference)Util.findComponent(
-                model.getSchema(), 
-				"/schema/complexType[@name='PurchaseOrderType']/" +
-				"sequence/element[@ref='comment']");
-		assert(comment != null);
-		
-        ElementReference copy_comment = (ElementReference) comment.copy(seq);
-        model.startTransaction();
-		seq.removeContent(comment);
-		seq.addContent(copy_comment, 1);
-        model.endTransaction();
-        assertEquals(4, seq.getChildren().size());
-        
-        um.undo();
-        assertEquals(4, seq.getChildren().size());		
-    }
+//    Disabled as referenced files were partly not donated by oracle to apache    
+//    public void testMultipleDnDAndUndo() throws Exception {
+//        SchemaModel model = Util.loadSchemaModel("resources/PO_copypasteundoSequence.xsd");
+//        UndoManager um = new UndoManager();
+//        model.addUndoableEditListener(um);
+//        
+//        Sequence seq = (Sequence)Util.findComponent(
+//                model.getSchema(), 
+//				"/schema/complexType[@name='PurchaseOrderType']/sequence");		
+//		assert(seq != null);
+//        LocalElement shipTo = (LocalElement)Util.findComponent(
+//                model.getSchema(), 
+//				"/schema/complexType[@name='PurchaseOrderType']/" +
+//				"sequence/element[@name='shipTo']");
+//		assert(shipTo != null);
+//        ElementReference comment = (ElementReference)Util.findComponent(
+//                model.getSchema(), 
+//				"/schema/complexType[@name='PurchaseOrderType']/" +
+//				"sequence/element[@ref='comment']");
+//		assert(comment != null);
+//        
+//		assertEquals(4, seq.getChildren().size());
+//        LocalElement copy_shipTo = (LocalElement) shipTo.copy(seq);
+//        model.startTransaction();
+//		seq.removeContent(shipTo);
+//		seq.addContent(copy_shipTo, 3);
+//        model.endTransaction();
+//        assertEquals(4, seq.getChildren().size());
+//        
+//        um.undo();
+//        assertEquals(4, seq.getChildren().size());
+//		
+//        seq = (Sequence)Util.findComponent(
+//                model.getSchema(), 
+//				"/schema/complexType[@name='PurchaseOrderType']/sequence");		
+//		assert(seq != null);
+//        shipTo = (LocalElement)Util.findComponent(
+//                model.getSchema(), 
+//				"/schema/complexType[@name='PurchaseOrderType']/" +
+//				"sequence/element[@name='shipTo']");
+//		assert(shipTo != null);
+//        comment = (ElementReference)Util.findComponent(
+//                model.getSchema(), 
+//				"/schema/complexType[@name='PurchaseOrderType']/" +
+//				"sequence/element[@ref='comment']");
+//		assert(comment != null);
+//		
+//        ElementReference copy_comment = (ElementReference) comment.copy(seq);
+//        model.startTransaction();
+//		seq.removeContent(comment);
+//		seq.addContent(copy_comment, 1);
+//        model.endTransaction();
+//        assertEquals(4, seq.getChildren().size());
+//        
+//        um.undo();
+//        assertEquals(4, seq.getChildren().size());		
+//    }
 		
     private Document sd;
     private SchemaModel model;

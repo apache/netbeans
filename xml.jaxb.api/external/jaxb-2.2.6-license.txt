@@ -1,10 +1,10 @@
 Name: JAXB
-Version: 2.2.5
+Version: 2.2.6
 Description: JAXB Reference Implementation
 License: CDDL-1.1, GPLv2
 OSR: 4116
 Origin: https://jaxb.java.net/
-Files: activation.jar jaxb-api.jar jsr173_api.jar
+Files: activation-1.1.1.jar jaxb-api-2.2.6.jar
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1 
 
@@ -304,7 +304,7 @@ COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 
     The Covered Software is a "commercial item," as that term is defined in 
     48 C.F.R. 2.101 (Oct. 1995), consisting of "commercial computer 
-    software" (as that term is defined at 48 C.F.R. § 252.227-7014(a)(1)) 
+    software" (as that term is defined at 48 C.F.R. ï¿½ 252.227-7014(a)(1)) 
     and "commercial computer software documentation" as such terms are used 
     in 48 C.F.R. 12.212 (Sept. 1995). Consistent with 48 C.F.R. 12.212 and 
     48 C.F.R. 227.7202-1 through 227.7202-4 (June 1995), all U.S. Government 

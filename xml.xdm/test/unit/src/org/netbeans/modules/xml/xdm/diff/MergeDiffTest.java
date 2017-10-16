@@ -77,12 +77,14 @@ public class MergeDiffTest extends TestCase {
         TestSuite suite = new TestSuite();
         suite.addTest(new MergeDiffTest("testMerge1"));
         suite.addTest(new MergeDiffTest("testMerge2"));
-        suite.addTest(new MergeDiffTest("testMerge3"));
+//        Disabled as referenced files were partly not donated by oracle to apache
+//        suite.addTest(new MergeDiffTest("testMerge3"));
         suite.addTest(new MergeDiffTest("testMerge4"));
         suite.addTest(new MergeDiffTest("testMerge5"));
         suite.addTest(new MergeDiffTest("testMerge6"));
         suite.addTest(new MergeDiffTest("testMerge7"));
-        suite.addTest(new MergeDiffTest("testMerge8"));
+//        Disabled as referenced files were partly not donated by oracle to apache
+//        suite.addTest(new MergeDiffTest("testMerge8"));
         suite.addTest(new MergeDiffTest("testMerge9"));
         suite.addTest(new MergeDiffTest("testMerge10"));
         suite.addTest(new MergeDiffTest("testPrettyPrint"));
@@ -94,7 +96,8 @@ public class MergeDiffTest extends TestCase {
         suite.addTest(new MergeDiffTest("testPosChange3"));
         suite.addTest(new MergeDiffTest("testPosChange3_2"));
         suite.addTest(new MergeDiffTest("testPosChange3_3"));
-        suite.addTest(new MergeDiffTest("testMergeVenetianBlindPO"));
+//        Disabled as referenced files were partly not donated by oracle to apache
+//        suite.addTest(new MergeDiffTest("testMergeVenetianBlindPO"));
         suite.addTest(new MergeDiffTest("testForwardReorderNodeWithChangesOnChildren"));
         suite.addTest(new MergeDiffTest("testMergeReformatDiff"));
         return suite;

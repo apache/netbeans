@@ -2007,6 +2007,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <exclude name="o.apache.tools.ant.module/release/VERSION.txt" /> <!--generated file-->
                 <exclude name="o.apache.tools.ant.module/test/unit/data/**/*.xml" /> <!--test data-->
                 <exclude name="o.apache.tools.ant.module/test/unit/data/**/*.properties" /> <!--test data-->
+                <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/CustomTask_java" /> <!-- user visible file template -->
+                <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/Project.xml_" /> <!-- user visible file template -->
             </fileset>
         </rat:report>
     </target>

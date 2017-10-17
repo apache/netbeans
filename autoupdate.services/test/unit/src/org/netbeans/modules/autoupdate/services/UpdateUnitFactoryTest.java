@@ -31,7 +31,7 @@ import org.netbeans.api.autoupdate.UpdateElement;
 import org.netbeans.api.autoupdate.UpdateUnit;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogProvider;
-import org.netbeans.modules.autoupdate.updateprovider.AutoupdateInfoParserTest;
+
 import org.netbeans.modules.autoupdate.updateprovider.LocalNBMsProvider;
 import org.netbeans.spi.autoupdate.UpdateItem;
 import org.netbeans.spi.autoupdate.UpdateProvider;
@@ -63,7 +63,7 @@ public class UpdateUnitFactoryTest extends NbTestCase {
             x.printStackTrace ();
         }
         p.refresh (true);
-        URL urlToFile = AutoupdateInfoParserTest.class.getResource ("data/org-yourorghere-depending.nbm");
+        URL urlToFile = UpdateUnitFactoryTest.class.getResource ("data/org-yourorghere-depending.nbm");
         NBM_FILE = Utilities.toFile(urlToFile.toURI ());
         assertNotNull ("data/org-yourorghere-depending.nbm file must found.", NBM_FILE);
     }

@@ -33,6 +33,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
+import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.tree.TreeScanner;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
@@ -136,7 +137,12 @@ public class NBParserFactory extends ParserFactory {
             assignAnonymousClassIndices(names, toplevel, null, -1);
             return toplevel;
         }
-        
+
+        @Override
+        public int getEndPos(JCTree jctree) {
+            return TreeInfo.getEndPos(jctree, endPosTable);
+        }
+
         public final class EndPosTableImpl extends AbstractEndPosTable {
             
             private final Lexer lexer;

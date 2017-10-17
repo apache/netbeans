@@ -637,6 +637,10 @@ public class ShellSession  {
                 execEnv);
         }
 
+        protected List<String>  historyItems() {
+            return ShellSession.this.historyItems().stream().map((i) -> i.getContents()).collect(Collectors.toList());
+        }
+
         @Override
         protected JShell.Builder makeBuilder() {
             return customizeBuilder(super.makeBuilder());
@@ -716,6 +720,8 @@ public class ShellSession  {
             }
             return super.execControlCreated(ctrl);
         }
+        
+        
     }
     
     private SwitchingJavaFileManger fileman;
@@ -1614,11 +1620,12 @@ public class ShellSession  {
                 public void run(ResultIterator resultIterator) throws Exception {
                     ConsoleContents console = ConsoleContents.get(resultIterator);
                     ConsoleSection input = console.getInputSection();
+                    ConsoleSection exec = console.getSectionModel().getExecutingSection();
                     for (ConsoleSection s : console.getSectionModel().getSections()) {
                         if (!s.getType().input) {
                             continue;
                         }
-                        if (s == input) {
+                        if (s == input || s == exec) {
                             // do not save current input
                             continue;
                         }

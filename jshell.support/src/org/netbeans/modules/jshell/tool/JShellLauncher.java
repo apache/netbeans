@@ -46,6 +46,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.ByteArrayInputStream;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.prefs.Preferences;
@@ -138,6 +139,10 @@ public class JShellLauncher extends JShellTool {
         }
     }
     
+    protected List<String>  historyItems() {
+        return Collections.emptyList();
+    }
+    
     private class IOContextImpl extends IOContext {
         private String  str;
         private String  promptAfter;
@@ -169,7 +174,7 @@ public class JShellLauncher extends JShellTool {
 
         @Override
         public Iterable<String> currentSessionHistory() {
-            return Collections.emptyList();
+            return historyItems();
         }
 
         @Override

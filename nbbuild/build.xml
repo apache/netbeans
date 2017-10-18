@@ -2048,6 +2048,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="javafx2.editor/test/unit/data/org/netbeans/modules/javafx2/editor/**/*.fxml" />
             <exclude name="javafx2.editor/test/unit/data/goldenfiles/org/netbeans/modules/javafx2/editor/completion/impl/**/*.out*" />
             <exclude name="projectimport.eclipse.core/test/unit/data/**" /> <!--test data-->
+            <exclude name="maven.indexer/external/NOTICE-patched-indexer-core-6.0.0" /> <!--no degree of creativity-->
         </patternset>
         <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="build/rat-report.txt">
             <rat:substringMatcher licenseFamilyCategory="w3c2" licenseFamilyName="W3C Software and Document Notice and License">

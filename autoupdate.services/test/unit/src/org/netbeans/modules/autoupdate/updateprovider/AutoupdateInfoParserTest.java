@@ -33,9 +33,9 @@ import org.xml.sax.SAXException;
  *
  * @author Jiri Rechtacek
  */
-public class AutoupdateInfoParserTestDisabled extends DefaultTestCase {
+public class AutoupdateInfoParserTest extends DefaultTestCase {
     
-    public AutoupdateInfoParserTestDisabled (String testName) {
+    public AutoupdateInfoParserTest (String testName) {
         super (testName);
     }
     
@@ -45,7 +45,7 @@ public class AutoupdateInfoParserTestDisabled extends DefaultTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        URL urlToFile = AutoupdateInfoParserTestDisabled.class.getResource ("data/org-yourorghere-depending.nbm");
+        URL urlToFile = AutoupdateInfoParserTest.class.getResource ("data/org-yourorghere-depending.nbm");
         NBM_FILE = Utilities.toFile(urlToFile.toURI ());
         assertNotNull ("data/org-yourorghere-depending.nbm file must found.", NBM_FILE);
     }

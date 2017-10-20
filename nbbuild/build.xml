@@ -1510,6 +1510,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <fileset dir="${nb_all}"
 	       includes="*/notice.txt" />
     </concat>
+    <concat destfile="${nb.build.dir}/LICENSE">
+      <fileset file="${nb_all}/nbbuild/license-stub.txt" />
+    </concat>
     <taskdef name="createdependencies" classname="org.netbeans.nbbuild.extlibs.CreateDependencies" classpath="${nbantext.jar}"/>
     <createdependencies refid="source.dirset" dependencies="${nb.build.dir}/DEPENDENCIES" sourceDependencies="true"/>
     <zip zipfile="${nb.build.dir}/${cluster.config}-src-${buildnum}.zip" duplicate="preserve">
@@ -1522,6 +1525,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       </zipfileset>
       <zipfileset file="${nb.build.dir}/DEPENDENCIES" />
       <zipfileset file="${nb.build.dir}/NOTICE" />
+      <zipfileset file="${nb.build.dir}/LICENSE" />
       <zipfileset file="${nb_all}/DISCLAIMER" />
     </zip>
   </target>

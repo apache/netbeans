@@ -1,3 +1,5 @@
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.
+
 242273 PARTFIX Please support 256 Colors in Terminal
 	xterm-16color
 
@@ -2554,3 +2556,4 @@ tag: term_aug2001_ivan_1
   Per NB folks' request.
   You should be able to get rid of expandTabs() in
   org/netbeans/core/output/OutputTabTerm.java.
+

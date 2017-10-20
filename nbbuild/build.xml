@@ -2055,6 +2055,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="o.apache.tools.ant.module/test/unit/data/**/*.properties" /> <!--test data-->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/CustomTask_java" /> <!-- user visible file template -->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/Project.xml_" /> <!-- user visible file template -->
+            <exclude name="javafx2.kit/release/VERSION.txt" /> <!--generated file-->
         </patternset>
         <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="build/rat-report.txt">
             <rat:substringMatcher licenseFamilyCategory="w3c2" licenseFamilyName="W3C Software and Document Notice and License">

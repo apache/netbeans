@@ -2,6 +2,7 @@ Name: XHTML
 Version: 1.0
 License: W3C
 Comment: not used during build, just here for DTD validation; see nbbuild/javadoctools/apichanges.dtd and nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd
+Type: compile-time
 
 W3C (R) Intellectual Rights Notice and Legal Disclaimers
 

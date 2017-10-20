@@ -2,7 +2,8 @@ Name: nsProxyAutoConfig.js
 Version: mozilla2.0
 Description: Implementation of PAC Utils API used by proxy auto configuration (PAC) files. Required for resolution of proxies defined using these APIs.
 License: LGPL-2.1
-Origin: http://mxr.mozilla.org/mozilla2.0/source/netwerk/base/src/nsProxyAutoConfig.js
+Origin: Mozilla
+URL: http://mxr.mozilla.org/mozilla2.0/source/netwerk/base/src/nsProxyAutoConfig.js
 Files: nsProxyAutoConfig.js
 
 Use of nsProxyAutoConfig.js version mozilla2.0 is governed by the terms of the

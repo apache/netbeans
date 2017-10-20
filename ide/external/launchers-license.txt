@@ -1,3 +1,9 @@
+Name: NetBeans Application Launchers
+Version: 8.2
+License: CDDL-GPL-2-CP
+Origin: NetBeans
+Comment: Windows Launchers for the NetBeans Applications
+
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
 
 1. Definitions.

@@ -442,7 +442,7 @@ public class Reformatter implements ReformatTask {
         private WrapAbort checkWrap;
         private boolean fieldGroup;
         private boolean templateEdit;
-        private LinkedList<Diff> diffs = new LinkedList<Diff>();
+        private final LinkedList<Diff> diffs = new LinkedList<>();
         private DanglingElseChecker danglingElseChecker = new DanglingElseChecker();
         private CompilationUnitTree root;
         private int startOffset;
@@ -4148,12 +4148,13 @@ public class Reformatter implements ReformatTask {
         }
 
         private boolean wrapStatement(CodeStyle.WrapStyle wrapStyle, CodeStyle.BracesGenerationStyle bracesGenerationStyle, int spacesCnt, boolean preserveNewLine, StatementTree tree) {
-            if (tree.getKind() == Tree.Kind.EMPTY_STATEMENT) {
+            Tree.Kind kind = tree.getKind();
+            if (kind == Tree.Kind.EMPTY_STATEMENT) {
                 scan(tree, null);
                 return true;
             }
-            if (tree.getKind() == Tree.Kind.BLOCK) {
-                if (bracesGenerationStyle == CodeStyle.BracesGenerationStyle.ELIMINATE) {
+            if (kind == Tree.Kind.BLOCK || kind == Tree.Kind.TRY || kind == Tree.Kind.SYNCHRONIZED ) {
+                if (kind == Tree.Kind.BLOCK && bracesGenerationStyle == CodeStyle.BracesGenerationStyle.ELIMINATE) {
                     Iterator<? extends StatementTree> stats = ((BlockTree)tree).getStatements().iterator();
                     if (stats.hasNext()) {
                         StatementTree stat = stats.next();

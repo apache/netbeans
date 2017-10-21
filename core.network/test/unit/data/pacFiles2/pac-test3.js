@@ -12,11 +12,28 @@
  * limitations under the License.
  */
 
+
+// 
+// A very simple PAC file
+// Uses one of the time-sensitive functions (weekdayRange(), dateRange() or timeRange())
+// and will therefore imply no use of result caching.
+//
+
 function FindProxyForURL(url, host)
 {
-    // Make everything lower case.
+
+
+
+
     url = url.toLowerCase();
     host = host.toLowerCase();
-    if (isPlainHostName(host)) return "DIRECT";
-    return "PROXY www-proxy.us.oracle.com:80";
-};
+
+    alert("This is pac-test3.js");
+
+    if (weekdayRange("FRI"))
+        return "DIRECT";
+    else
+        return "PROXY localhost:8080";
+
+
+}

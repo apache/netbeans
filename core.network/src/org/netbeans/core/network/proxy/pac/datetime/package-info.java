@@ -1,4 +1,4 @@
-/* 
+/*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,11 +12,11 @@
  * limitations under the License.
  */
 
-function FindProxyForURL(url, host)
-{
-    // Make everything lower case.
-    url = url.toLowerCase();
-    host = host.toLowerCase();
-    if (isPlainHostName(host)) return "DIRECT";
-    return "PROXY www-proxy.us.oracle.com:80";
-};
+
+/**
+ * Proxy Auto-Config (PAC) script related, specifically around
+ * Java support for the JavaScript helper functions {@code dateRange()},
+ * {@code timeRange()} and {@code weekdayRange()}.
+ * 
+ */
+package org.netbeans.core.network.proxy.pac.datetime;

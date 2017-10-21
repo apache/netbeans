@@ -12,11 +12,22 @@
  * limitations under the License.
  */
 
+
+
+
+// 
+// A very simple PAC file
+// Always returns "DIRECT".
+//
+
 function FindProxyForURL(url, host)
 {
-    // Make everything lower case.
+
     url = url.toLowerCase();
     host = host.toLowerCase();
-    if (isPlainHostName(host)) return "DIRECT";
-    return "PROXY www-proxy.us.oracle.com:80";
-};
+
+    alert("This is pac-test1.js");
+
+    
+    return "DIRECT";
+}

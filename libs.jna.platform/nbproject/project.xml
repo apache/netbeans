@@ -35,6 +35,7 @@
             </module-dependencies>
             <friend-packages>
                 <friend>org.netbeans.core.nativeaccess</friend>
+                <friend>org.netbeans.core.network</friend>
                 <friend>org.netbeans.libs.jsch.agentproxy</friend>
                 <package>com.sun.jna.platform</package>
                 <package>com.sun.jna.platform.dnd</package>

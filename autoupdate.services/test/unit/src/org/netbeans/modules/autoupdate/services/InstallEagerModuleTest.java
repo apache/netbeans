@@ -105,7 +105,7 @@ public class InstallEagerModuleTest extends NbmAdvancedTestCase {
         // assertFalse ("Some installed eagers are found.", UpdateManagerImpl.getInstance ().getInstalledEagers ().isEmpty ());
     }
     
-    public void testInstallRegularModule () throws IOException {
+    public void disable_testInstallRegularModule () throws IOException {
         String eagerModule = "com.sun.testmodule.eager";
         String regularModule1 = "org.yourorghere.independent";
         String regularModule2 = "org.yourorghere.engine";

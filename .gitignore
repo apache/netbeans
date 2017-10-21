@@ -20,7 +20,6 @@
 .DS_Store
 
 #the following should only be transient, until resolved more appropriately:
-/applemenu/src/java/
 /db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/JavaCharStream.java
 /db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/ParseException.java
 /db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParser.java
@@ -46,3 +45,4 @@
 /xml/test/qa-functional/data/DTDActionsTestProject/nbproject/private/
 /xml/test/qa-functional/data/ActionsTestProject/nbproject/private/
 /xml/test/qa-functional/data/CoreTemplatesTestProject/nbproject/private/
+/javafx2.samples/FXML-LoginDemo/nbproject/private/

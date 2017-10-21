@@ -34,13 +34,13 @@ import java.util.logging.Logger;
 import org.netbeans.api.autoupdate.TestUtils;
 import org.netbeans.junit.NbTestCase;
 
-public class VerifyFileTest extends NbTestCase {
+public class VerifyFileTestDisabled extends NbTestCase {
 
-    private static final Logger LOG = Logger.getLogger(VerifyFileTest.class.getName());
+    private static final Logger LOG = Logger.getLogger(VerifyFileTestDisabled.class.getName());
 
     private KeyStore ks;
 
-    public VerifyFileTest(String testName) {
+    public VerifyFileTestDisabled(String testName) {
         super(testName);
     }
 

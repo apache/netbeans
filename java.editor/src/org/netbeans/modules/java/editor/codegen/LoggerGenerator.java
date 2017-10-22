@@ -139,7 +139,7 @@ public class LoggerGenerator implements CodeGenerator {
                             ClassTree cls = (ClassTree) path.getLeaf();
                             CodeStyle cs = CodeStyle.getDefault(component.getDocument());
                             Set<Modifier> mods = EnumSet.of(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL);
-                            List<String> names = Utilities.varNamesSuggestions(null, ElementKind.FIELD, mods, "LOG", null, copy.getTypes(), copy.getElements(), e.getEnclosedElements(), cs);
+                            List<String> names = Utilities.varNamesSuggestions(null, ElementKind.FIELD, mods, "LOG", null, copy.getTypes(), copy.getElements(), copy.getTrees(), e.getEnclosedElements(), cs);
                             VariableTree var = createLoggerField(copy.getTreeMaker(), cls, names.size() > 0 ? names.get(0) : "LOG", mods); //NOI18N
                             copy.rewrite(cls, GeneratorUtils.insertClassMembers(copy, cls, Collections.singletonList(var), caretOffset));
                         }

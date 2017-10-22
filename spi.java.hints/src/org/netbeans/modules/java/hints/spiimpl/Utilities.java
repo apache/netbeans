@@ -162,6 +162,7 @@ import org.netbeans.spi.editor.hints.Severity;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbCollections;
 import org.openide.util.WeakListeners;
@@ -1394,7 +1395,7 @@ public class Utilities {
 
         @Override
         protected JCCase switchBlockStatementGroup() {
-            if (token.kind == TokenKind.CASE) {
+            if (token.kind == TokenKind.CASE && /*XXX: patterns*/!hasPatterns()) {
                 Token peeked = S.token(1);
 
                 if (peeked.kind == TokenKind.IDENTIFIER) {
@@ -1420,6 +1421,14 @@ public class Utilities {
             return super.switchBlockStatementGroup();
         }
 
+        private boolean hasPatterns() {
+            try {
+                Class.forName("com.sun.source.tree.ConstantPatternTree");
+                return true;
+            } catch (ClassNotFoundException ex) {
+                return false;
+            }
+        }
 
         @Override
         protected JCTree resource() {

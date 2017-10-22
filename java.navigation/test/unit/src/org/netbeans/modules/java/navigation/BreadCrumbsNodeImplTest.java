@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import static org.junit.Assert.*;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
@@ -34,7 +33,6 @@ import org.netbeans.modules.editor.breadcrumbs.spi.BreadcrumbsElement;
 import org.netbeans.spi.queries.FileEncodingQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.nodes.Node;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -97,6 +95,14 @@ public class BreadCrumbsNodeImplTest extends NbTestCase {
     
     public void test226618() throws Exception {
         performBreadcrumbsSelectionTest("package test; public class Test { t(String str) { if (str.equals(\"čcč|\")) { | } }", "test.Test>>>>t>>>>if <font color=#707070>(str.equals(&quot;čcč&quot;))</font>>>>>");
+    }
+    
+    public void testPatterns1() throws Exception {
+        performBreadcrumbsSelectionTest("package test; public class Test { t(Object o) { if (o __matches String str) { String s = st|r; } }", "test.Test>>>>t>>>>if <font color=#707070>(o matches String str)</font>>>>>s>>>>");
+    }
+    
+    public void testPatterns2() throws Exception {
+        performBreadcrumbsSelectionTest("package test; public class Test { t(Object o) { if (o __matches String s|tr) { String s = str; } }", "test.Test>>>>t>>>>if <font color=#707070>(o matches String str)</font>>>>>");
     }
     
     private void performBreadcrumbsSelectionTest(String code, String golden) throws Exception {

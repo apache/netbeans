@@ -578,6 +578,17 @@ public class Utilities {
         TokenHierarchy<?> th = info.getTokenHierarchy();
         TokenSequence<JavaTokenId> ts = th.tokenSequence(JavaTokenId.language());
         
+        if ("VARIABLE_PATTERN".equals(leaf.getKind().name())) {
+            ts.move(end);
+            if (ts.movePrevious()) {
+                Token<JavaTokenId> token = ts.token();
+                JavaTokenId id = token.id();
+                if (id == JavaTokenId.IDENTIFIER) {
+                    return token;
+                }
+            }
+        }
+        
         if (ts.move(start) == Integer.MAX_VALUE) {
             return null;
         }

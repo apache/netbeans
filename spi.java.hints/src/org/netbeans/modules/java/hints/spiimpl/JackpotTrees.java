@@ -182,6 +182,7 @@ public class JackpotTrees {
         private final JCIdent jcIdent;
 
         public CaseWildcard(Context ctx, Name ident, JCIdent jcIdent) {
+//            super(new JCConstantPattern(jcIdent) {}, List.<JCStatement>nil());
             super(jcIdent, List.<JCStatement>nil());
             this.ident = ident;
             this.jcIdent = jcIdent;

@@ -133,7 +133,7 @@ public class FindLocalUsagesQuery extends CancellableTreePathScanner<Void, Stack
         super.visitVariable(tree, d);
         return null;
     }
-    
+
     @Override
     public Void visitClass(ClassTree tree, Stack<Tree> d) {
         handlePotentialVariable(getCurrentPath());
@@ -191,4 +191,13 @@ public class FindLocalUsagesQuery extends CancellableTreePathScanner<Void, Stack
         }
         return super.visitImport(node, p);
     }
+
+    @Override
+    public Void scan(Tree tree, Stack<Tree> p) {
+        if (tree != null && tree.getKind().name().equals("VARIABLE_PATTERN")) {
+            handlePotentialVariable(new TreePath(getCurrentPath(), tree));
+        }
+        return super.scan(tree, p);
+    }
+
 }

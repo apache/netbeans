@@ -929,6 +929,31 @@ public class GoToSupportTest extends NbTestCase {
         assertTrue(wasCalled[0]);
     }
 
+    public void testPatterns1() throws Exception {
+        final boolean[] wasCalled = new boolean[1];
+
+        performTest("package test; public class Test { t(Object o) { if (o __matches String str) { String s = str; } }", 91, new UiUtilsCaller() {
+            public boolean open(FileObject fo, int pos) {
+                assertTrue(source == fo);
+                assertEquals(64, pos);
+                wasCalled[0] = true;
+                return true;
+            }
+            public void beep(boolean goToSource, boolean goToJavadoc) {
+                fail("Should not be called.");
+            }
+            public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+                fail("Should not be called.");
+                return false;
+            }
+            public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, false);
+
+        assertTrue(wasCalled[0]);
+    }
+
     public void testDeadlock135736() throws Exception {
         final CountDownLatch l1 = new CountDownLatch(1);
         final CountDownLatch l2 = new CountDownLatch(1);

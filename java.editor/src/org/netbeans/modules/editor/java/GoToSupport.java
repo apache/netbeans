@@ -36,6 +36,7 @@ import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeParameterTree;
+//import com.sun.source.tree.VariablePatternTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
@@ -713,12 +714,21 @@ public class GoToSupport {
                 if (found != null) {
                     return null;
                 }
+                if (tree != null && tree.getKind().name().equals("VARIABLE_PATTERN")) {
+                    if (!process(new TreePath(getCurrentPath(), tree))) {
+                        return super.scan(tree, p);
+                    }
+                    return null;
+                }
                 return super.scan(tree, p);
             }
             private boolean process() {
-                Element resolved = info.getTrees().getElement(getCurrentPath());
+                return process(getCurrentPath());
+            }
+            private boolean process(TreePath path) {
+                Element resolved = info.getTrees().getElement(path);
                 if (toFind.equals(resolved)) {
-                    found = getCurrentPath();
+                    found = path;
                     return true;
                 }
                 return false;

@@ -71,6 +71,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 
 import com.sun.source.util.DocTrees;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.comp.ArgumentAttr;
 import com.sun.tools.javac.comp.Attr;
@@ -106,6 +107,8 @@ import org.openide.util.Exceptions;
  *
  * @author Jan Lahoda, Dusan Balek, Tomas Zezula
  */
+
+
 public final class TreeUtilities {
     
     /**{@link Kind}s that are represented by {@link ClassTree}.
@@ -1117,6 +1120,19 @@ public final class TreeUtilities {
         return findNameSpan(cont.getLabel().toString(), cont);
     }
     
+//    /**Find span of the {@link VariablePatternTree#getBinding()} identifier in the source.
+//     * Returns starting and ending offset of the name in the source code that was parsed
+//     * (ie. {@link CompilationInfo.getText()}, which may differ from the positions in the source
+//     * document if it has been already altered.
+//     * 
+//     * @param var variable pattern which name should be searched for
+//     * @return the span of the name, or null if cannot be found
+//     * @since 0.999
+//     */
+//    public int[] findNameSpan(VariablePatternTree var) {
+//        return findNameSpan(var.getBinding().toString(), var);
+//    }
+    
     /**Find span of the {@link MethodTree#getParameters()} parameter list in the source.
      * Returns the position of the opening and closing parentheses of the parameter list
      * in the source code that was parsed (ie. {@link CompilationInfo.getText()}, which
@@ -1842,6 +1858,18 @@ public final class TreeUtilities {
         return ref.paramTypes;
     }
     
+    public List<Tree> getChildren(Tree t) {
+        final List<Tree> result = new ArrayList<>();
+        t.accept(new TreeScanner<Void, Void>() {
+            @Override
+            public Void scan(Tree tree, Void p) {
+                result.add(tree);
+                return null;
+            }
+        }, null);
+        return result;
+    }
+
     private static final class NBScope implements Scope {
 
         private final JavacScope delegate;

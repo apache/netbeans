@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.java.completion;
 
+import com.sun.source.util.Trees;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -284,12 +285,12 @@ public final class Utilities {
         }
     }
 
-    public static List<String> varNamesSuggestions(TypeMirror type, ElementKind kind, Set<Modifier> modifiers, String suggestedName, String prefix, Types types, Elements elements, Iterable<? extends Element> locals, CodeStyle codeStyle) {
+    public static List<String> varNamesSuggestions(TypeMirror type, ElementKind kind, Set<Modifier> modifiers, String suggestedName, String prefix, Types types, Elements elements, Trees trees, Iterable<? extends Element> locals, CodeStyle codeStyle) {
         List<String> result = new ArrayList<>();
         if (type == null && suggestedName == null) {
             return result;
         }
-        List<String> vnct = suggestedName != null ? Collections.singletonList(suggestedName) : varNamesForType(type, types, elements, prefix);
+        List<String> vnct = suggestedName != null ? Collections.singletonList(suggestedName) : varNamesForType(type, types, elements, trees, prefix);
         boolean isConst = false;
         String namePrefix = null;
         String nameSuffix = null;
@@ -379,17 +380,17 @@ public final class Utilities {
         return result;
     }
 
-    private static List<String> varNamesForType(TypeMirror type, Types types, Elements elements, String prefix) {
+    private static List<String> varNamesForType(TypeMirror type, Types types, Elements elements, Trees trees, String prefix) {
         switch (type.getKind()) {
             case ARRAY:
                 TypeElement iterableTE = elements.getTypeElement("java.lang.Iterable"); //NOI18N
                 TypeMirror iterable = iterableTE != null ? types.getDeclaredType(iterableTE) : null;
                 TypeMirror ct = ((ArrayType) type).getComponentType();
                 if (ct.getKind() == TypeKind.ARRAY && iterable != null && types.isSubtype(ct, iterable)) {
-                    return varNamesForType(ct, types, elements, prefix);
+                    return varNamesForType(ct, types, elements, trees, prefix);
                 }
                 List<String> vnct = new ArrayList<>();
-                for (String name : varNamesForType(ct, types, elements, prefix)) {
+                for (String name : varNamesForType(ct, types, elements, trees, prefix)) {
                     vnct.add(name.endsWith("s") ? name + "es" : name + "s"); //NOI18N
                 }
                 return vnct;
@@ -408,6 +409,9 @@ public final class Utilities {
             case TYPEVAR:
                 return Collections.<String>singletonList(type.toString().toLowerCase(Locale.ENGLISH));
             case ERROR:
+                TypeMirror orig = trees.getOriginalType((ErrorType) type);
+                if (orig != null && orig.getKind() != TypeKind.ERROR)
+                    return varNamesForType(orig, types, elements, trees, prefix);
                 String tn = ((ErrorType) type).asElement().getSimpleName().toString();
                 if (tn.toUpperCase(Locale.ENGLISH).contentEquals(tn)) {
                     return Collections.<String>singletonList(tn.toLowerCase(Locale.ENGLISH));
@@ -449,9 +453,9 @@ public final class Utilities {
                     if (tas.size() > 0) {
                         TypeMirror et = tas.get(0);
                         if (et.getKind() == TypeKind.ARRAY || (et.getKind() != TypeKind.WILDCARD && types.isSubtype(et, iterable))) {
-                            al.addAll(varNamesForType(et, types, elements, prefix));
+                            al.addAll(varNamesForType(et, types, elements, trees, prefix));
                         } else {
-                            for (String name : varNamesForType(et, types, elements, prefix)) {
+                            for (String name : varNamesForType(et, types, elements, trees, prefix)) {
                                 al.add(name.endsWith("s") ? name + "es" : name + "s"); //NOI18N
                             }
                         }
@@ -470,7 +474,7 @@ public final class Utilities {
                     bound = ((WildcardType) type).getSuperBound();
                 }
                 if (bound != null) {
-                    return varNamesForType(bound, types, elements, prefix);
+                    return varNamesForType(bound, types, elements, trees, prefix);
                 }
         }
         return Collections.<String>emptyList();

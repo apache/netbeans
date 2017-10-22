@@ -41,6 +41,7 @@ import com.sun.source.tree.IfTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.LambdaExpressionTree;
+//import com.sun.source.tree.MatchesTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -63,12 +64,14 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.UsesTree;
+//import com.sun.source.tree.VariablePatternTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -105,7 +108,6 @@ import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.modules.parsing.spi.TaskIndexingMode;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 
 
 /**
@@ -1537,6 +1539,64 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             tl.moveToEnd(node.getTypeArguments());
             handlePossibleIdentifier(getCurrentPath(), EnumSet.of(UseTypes.EXECUTE));
             firstIdentifier(node.getName().toString());
+            return null;
+        }
+
+        private TreePath currentPath;
+
+        public TreePath getCurrentPath() {
+            return currentPath;
+        }
+
+        @Override
+        public Void scan(Tree tree, EnumSet<UseTypes> p) {
+            if (tree == null) {
+                return null;
+            }
+            TreePath oldPath = currentPath;
+            try {
+                currentPath = new TreePath(currentPath, tree);
+                switch (tree.getKind().name()) {
+                    case "MATCHES": return visitMatches(tree, p);
+                    case "VARIABLE_PATTERN": return visitVariablePattern(tree, p);
+                }
+                return super.scan(tree, p);
+            } finally {
+                currentPath = oldPath;
+            }
+        }
+
+        public Void visitMatches(Tree node, EnumSet<UseTypes> p) {
+            List<Tree> children = info.getTreeUtilities().getChildren(node);
+            scan(children.get(0) /*node.getExpression()*/, p);
+            tl.moveToEnd(children.get(0) /*node.getExpression()*/);
+            Token t = firstIdentifierToken("__matches", "matches");
+            if (t != null) {
+                contextKeywords.add(t);
+            }
+            scan(children.get(1) /*node.getPattern()*/, p);
+            return null;
+        }
+
+        public Void visitVariablePattern(Tree node, EnumSet<UseTypes> p) {
+            List<Tree> children = info.getTreeUtilities().getChildren(node);
+            handlePossibleIdentifier(getCurrentPath(), EnumSet.of(UseTypes.DECLARATION, UseTypes.WRITE));
+            
+            scan(children.get(0) /*tree.getType()*/, null);
+            
+            tl.moveToEnd(children.get(0) /*tree.getType()*/);
+            
+//            int[] span = info.getTreeUtilities().findNameSpan(tree);
+//            if (span != null)
+//                tl.moveToOffset(span[0]);
+
+            try {
+                Method getBinding = node.getClass().getMethod("getBinding");
+                firstIdentifier(String.valueOf(getBinding.invoke(node)));
+            } catch (Exception ex) {
+                ex.printStackTrace(); //XXX
+            }
+            
             return null;
         }
 

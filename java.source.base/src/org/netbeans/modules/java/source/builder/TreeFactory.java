@@ -68,10 +68,13 @@ import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Context;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.lang.model.element.*;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
@@ -1844,5 +1847,18 @@ public class TreeFactory {
             paramTypesList = lbl.toList();
         }
         return docMake.at(NOPOS).newReferenceTree("", (JCExpression) qualExpr, member != null ? (Name) names.fromString(member.toString()) : null, paramTypesList);
+    }
+
+    public <R extends Tree> R createReflective(String factoryName, Class<R> apiType, Object... params) {
+        for (java.lang.reflect.Method m : make.getClass().getMethods()) {
+            if (m.getName().equals(factoryName) && m.isAccessible() && m.getParameterTypes().length == params.length) {
+                try {
+                    return apiType.cast(m.invoke(make.at(NOPOS), params));
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                    Logger.getLogger(TreeFactory.class.getName()).log(Level.FINE, null, ex);
+                }
+            }
+        }
+        throw new UnsupportedOperationException("Cannot find factory: " + factoryName);
     }
 }

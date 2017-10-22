@@ -2018,6 +2018,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="versioning.core/test/unit/data/workdir/root-test-versioned/**" /> <!--test data-->
             <exclude name="versioning.core/test/unit/data/workdir/root-with-exclusions/**" /> <!--test data-->
             <exclude name="websvc.saas.kit/release/VERSION.txt" /> <!--generated file-->
+            <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.template" /> <!--template files-->
+            <exclude name="websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/model/application.wadl" /> <!--test data-->
+            <exclude name="websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/util/rootGroup.xml" /> <!--test data-->
             <exclude name="versioning/test/unit/data/workdir/root/a.txt" /> <!--test data-->
             <exclude name="versioning/test/unit/data/workdir/root-test-versioned/**" /> <!--test data-->
             <exclude name="versioning/test/unit/data/workdir/root-with-exclusions/**" /> <!--test data-->

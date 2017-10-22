@@ -27,6 +27,8 @@
 /db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/SQLParserTokenManager.java
 /db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/Token.java
 /db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/TokenMgrError.java
+/debugger.jpda.ui/test/qa-functional/data/debugTestProject/nbproject/private/
+/debugger.jpda.ui/test/qa-functional/data/debugTestProjectAnt/nbproject/private/
 /hibernate/src/org/netbeans/modules/hibernate/resources/hibernate-configuration-3.0.dtd
 /hibernate/src/org/netbeans/modules/hibernate/resources/hibernate-mapping-3.0.dtd
 /hibernate/src/org/netbeans/modules/hibernate/resources/hibernate-reverse-engineering-3.0.dtd

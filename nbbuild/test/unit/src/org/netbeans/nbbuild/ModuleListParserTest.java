@@ -236,23 +236,24 @@ public class ModuleListParserTest extends TestBase {
         ModuleListParser.Entry e = p.findByCodeNameBase(cnb);
         assertNotNull("found netigso module", e);
     }
-    
-    public void testScanSourcesAndBinariesForExternalStandaloneModule() throws Exception {
-        Hashtable<String,Object> properties = new Hashtable<String,Object>();
-        properties.put("cluster.path.final", filePath(nball, "apisupport.ant/test/unit/data/example-external-projects/suite3/nbplatform/platform5") +
-                File.pathSeparator + filePath(nball, "apisupport.ant/test/unit/data/example-external-projects/suite3/nbplatform/random"));
-        properties.put("basedir", filePath(nball, "apisupport.ant/test/unit/data/example-external-projects/suite3/dummy-project"));
-        properties.put("project", filePath(nball, "apisupport.ant/test/unit/data/example-external-projects/suite3/dummy-project"));
-        ModuleListParser p = new ModuleListParser(properties, ModuleType.STANDALONE, null);
-        ModuleListParser.Entry e = p.findByCodeNameBase("org.netbeans.examples.modules.dummy");
-        assertNotNull("found myself", e);
-        assertEquals("org.netbeans.examples.modules.dummy", e.getCnb());
-        assertEquals(file(nball, "apisupport.ant/test/unit/data/example-external-projects/suite3/dummy-project/build/cluster/modules/org-netbeans-examples-modules-dummy.jar"), e.getJar());
-        assertEquals(Collections.EMPTY_LIST, Arrays.asList(e.getClassPathExtensions()));
-        e = p.findByCodeNameBase("org.netbeans.modules.classfile");
-        assertNotNull("found (fake) netbeans.org module by its binary", e);
-        assertEquals("org.netbeans.modules.classfile", e.getCnb());
-    }
+
+//    Disabled test - referenced project files were not donated to apache
+//    public void testScanSourcesAndBinariesForExternalStandaloneModule() throws Exception {
+//        Hashtable<String,Object> properties = new Hashtable<String,Object>();
+//        properties.put("cluster.path.final", filePath(nball, "apisupport.ant/test/unit/data/example-external-projects/suite3/nbplatform/platform5") +
+//                File.pathSeparator + filePath(nball, "apisupport.ant/test/unit/data/example-external-projects/suite3/nbplatform/random"));
+//        properties.put("basedir", filePath(nball, "apisupport.ant/test/unit/data/example-external-projects/suite3/dummy-project"));
+//        properties.put("project", filePath(nball, "apisupport.ant/test/unit/data/example-external-projects/suite3/dummy-project"));
+//        ModuleListParser p = new ModuleListParser(properties, ModuleType.STANDALONE, null);
+//        ModuleListParser.Entry e = p.findByCodeNameBase("org.netbeans.examples.modules.dummy");
+//        assertNotNull("found myself", e);
+//        assertEquals("org.netbeans.examples.modules.dummy", e.getCnb());
+//        assertEquals(file(nball, "apisupport.ant/test/unit/data/example-external-projects/suite3/dummy-project/build/cluster/modules/org-netbeans-examples-modules-dummy.jar"), e.getJar());
+//        assertEquals(Collections.EMPTY_LIST, Arrays.asList(e.getClassPathExtensions()));
+//        e = p.findByCodeNameBase("org.netbeans.modules.classfile");
+//        assertNotNull("found (fake) netbeans.org module by its binary", e);
+//        assertEquals("org.netbeans.modules.classfile", e.getCnb());
+//    }
 
     private File generateJar (File f, String[] content, Manifest manifest) throws IOException {
         JarOutputStream os = new JarOutputStream (new FileOutputStream (f), manifest);

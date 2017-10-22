@@ -20,5 +20,43 @@
 
 -->
 <project name="o.apache.xml.resolver" default="netbeans" basedir=".">
+
     <import file="../nbbuild/templates/projectized.xml"/>
+
+    <!-- A task to check if the binary 'external/resolver-1.2.jar exists -->
+    <target name="-check-requires-patching-maven-sources">
+        <available file="external/resolver-1.2.jar" property="sources-already-patched" />
+    </target>
+
+    <!-- 
+         '-javac-init' task is invoked after maven sources have been downloaded 
+         to 'external/xml-resolver-1.2-sources.jar'
+         (see external/binaries-list).
+         Then if 'external/resolver-1.2.jar does NOT exist...
+    -->
+    <target name="-prepare-patched-binary" depends="-check-requires-patching-maven-sources" unless="sources-already-patched">
+        <echo message="Patching xml-resolver-1.2-sources.jar for Netbeans..." />
+        <!-- ... 1. Prepares a 'build/external-patch/[sources|classes]' working directories -->
+        <delete dir="build/external-patch" />
+        <mkdir dir="build/external-patch/sources" />
+        <!-- ... 2. Unzips maven sources -->
+        <unzip src="external/xml-resolver-1.2-sources.jar" dest="build/external-patch/sources" />
+        <!-- ... 3. Applies patch 'external/xml-resolver-1.2-netbeans.patch -->
+        <patch dir="build/external-patch/sources"
+            patchfile="external/xml-resolver-1.2-netbeans.patch"
+            strip="0" />
+        <!-- ... 4. Compiles sources to build/external-patch/classes -->
+        <mkdir dir="build/external-patch/classes" />
+        <javac srcdir="build/external-patch/sources"
+            destdir="build/external-patch/classes" >
+            <exclude name="org/apache/xml/resolver/tests/**" />
+        </javac>
+        <!-- ... 5. Creates a jar in 'external/resolver-1.2.jar' -->
+        <jar destfile="external/resolver-1.2.jar">
+            <fileset dir="build/external-patch/classes" />
+        </jar>
+    </target>
+
+    <!-- Hook into harness "basic-init" task -->
+    <target name="-javac-init" depends="-prepare-patched-binary, projectized-common.-javac-init" />
 </project>

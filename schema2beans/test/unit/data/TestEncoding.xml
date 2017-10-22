@@ -1,18 +1,38 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- ex1.xml                                                      -->
-<!-- This is a simple XML source file.  Object class metamethod   -->
-<!-- m3 includes 8-bit ASCII text, with a tilde-n and accent-e    -->
-<!-- characters embedded, to test the UTF8->native codeset        -->
-<!-- conversion feature of the SAX expat driver.  As long as this -->
-<!-- test is run under ISO-8859-1 localization, test output should-->
-<!-- be identical to test input, with one odd byte representing   -->
-<!-- each of these 8-bit characters.                              -->
-<!--                                                              -->
-<!-- The vi editor on Sun Solaris displays the two odd characters -->
-<!-- as \161 and \151.                                            -->
-<!--                                                              -->
+<!--
 
-<!-- <!DOCTYPE FORTEDDL SYSTEM "TestEncoding.dtd" []> -->
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+    ex1.xml                                                      
+    This is a simple XML source file.  Object class metamethod   
+    m3 includes 8-bit ASCII text, with a tilde-n and accent-e    
+    characters embedded, to test the UTF8->native codeset        
+    conversion feature of the SAX expat driver.  As long as this 
+    test is run under ISO-8859-1 localization, test output should
+    be identical to test input, with one odd byte representing   
+    each of these 8-bit characters.                              
+                                                              
+    The vi editor on Sun Solaris displays the two odd characters 
+    as \161 and \151.                                            
+
+    <!DOCTYPE FORTEDDL SYSTEM "TestEncoding.dtd" []> 
+
+-->
 <FORTEDDL>
 	<PHASE OBJECTTYPE="MetaPlan.MetaClass" OBJECTNAME="c1" NUMBER="1">
 		<ATTRIBUTE NAME="Name">c1</ATTRIBUTE>

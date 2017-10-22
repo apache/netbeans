@@ -55,8 +55,6 @@
         <jar destfile="external/resolver-1.2.jar">
             <fileset dir="build/external-patch/classes" />
         </jar>
-        <!-- ... 6. Cleans up working directory -->
-        <delete dir="build/external-patch" />
     </target>
 
     <!-- Hook into harness "basic-init" task -->

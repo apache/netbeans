@@ -19,13 +19,11 @@
 
 package org.netbeans.nbbuild.extlibs;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -38,8 +36,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -70,7 +66,7 @@ public class CreateDependencies extends Task {
 
     public @Override void execute() throws BuildException {
         try {
-            Map<String,Map<String,String>> crc2License = findBinary2LicenseHeaderMapping();
+            Map<String,Map<String,String>> binary2License = findBinary2LicenseHeaderMapping();
             Properties licenseNames = new Properties();
             try (InputStream in = new FileInputStream(new File(getProject().getProperty("nb_all"), "nbbuild/licenses/names.properties"))) {
                 licenseNames.load(in);
@@ -84,7 +80,7 @@ public class CreateDependencies extends Task {
                 Map<String, Set<String>> origin2TextsRuntime = new TreeMap<>();
                 Map<String, Set<String>> origin2TextsCompileTime = new TreeMap<>();
 
-                for (Map.Entry<String,Map<String,String>> entry : crc2License.entrySet()) {
+                for (Map.Entry<String,Map<String,String>> entry : binary2License.entrySet()) {
                     Map<String,String> headers = entry.getValue();
                     String origin = getMaybeMissing(headers, "Origin");
                     Map<String, Set<String>> origin2Texts = "compile-time".equals(headers.get("Type")) ? origin2TextsCompileTime : origin2TextsRuntime;
@@ -162,7 +158,7 @@ public class CreateDependencies extends Task {
     private void processModule(String module, Map<String, Map<String, String>> file2LicenseHeaders) throws IOException {
         File d = new File(new File(getProject().getProperty("nb_all"), module), "external");
         Set<String> hgFiles = VerifyLibsAndLicenses.findHgControlledFiles(d);
-        Map<String,Map<String,String>> binary2License = findBinary2LicenseHeaderMapping(hgFiles, d);
+        Map<String,Map<String,String>> binary2License = CreateLicenseSummary.findBinary2LicenseHeaderMapping(hgFiles, d);
         for (String n : hgFiles) {
             if (!n.endsWith(".jar") && !n.endsWith(".zip") && !n.endsWith(".xml") &&
                     !n.endsWith(".js") && !n.endsWith(".dylib")) {
@@ -174,43 +170,6 @@ public class CreateDependencies extends Task {
             }
             file2LicenseHeaders.put(n, headers); //TODO: check unique!
         }
-    }
-
-    private Map<String,Map<String,String>> findBinary2LicenseHeaderMapping(Set<String> cvsFiles, File d) throws IOException {
-        Map<String,Map<String,String>> binary2LicenseHeaders = new HashMap<String,Map<String,String>>();
-        for (String n : cvsFiles) {
-            if (!n.endsWith("-license.txt")) {
-                continue;
-            }
-            Map<String,String> headers = new HashMap<String,String>();
-            InputStream is = new FileInputStream(new File(d, n));
-            try {
-                BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                String line;
-                while ((line = r.readLine()) != null && line.length() > 0) {
-                    Matcher m = Pattern.compile("([a-zA-Z]+): (.+)").matcher(line);
-                    if (m.matches()) {
-                        headers.put(m.group(1), m.group(2));
-                    }
-                }
-                r.close();
-            } finally {
-                is.close();
-            }
-            String files = headers.remove("Files");
-            if (files != null) {
-                for (String file : files.split("[, ]+")) {
-                    binary2LicenseHeaders.put(file, headers);
-                }
-            } else {
-                binary2LicenseHeaders.put(n.replaceFirst("-license\\.txt$", ".jar"), headers);
-                binary2LicenseHeaders.put(n.replaceFirst("-license\\.txt$", ".zip"), headers);
-                binary2LicenseHeaders.put(n.replaceFirst("-license\\.txt$", ".xml"), headers);
-                binary2LicenseHeaders.put(n.replaceFirst("-license\\.txt$", ".js"), headers);
-                binary2LicenseHeaders.put(n.replaceFirst("-license\\.txt$", ".dylib"), headers);
-            }
-        }
-        return binary2LicenseHeaders;
     }
 
 }

@@ -274,7 +274,7 @@ public class CreateLicenseSummary extends Task {
         return crc32.getValue();
     }
 
-    private Map<String,Map<String,String>> findBinary2LicenseHeaderMapping(Set<String> cvsFiles, File d) throws IOException {
+    static Map<String,Map<String,String>> findBinary2LicenseHeaderMapping(Set<String> cvsFiles, File d) throws IOException {
         Map<String,Map<String,String>> binary2LicenseHeaders = new HashMap<String,Map<String,String>>();
         for (String n : cvsFiles) {
             if (!n.endsWith("-license.txt")) {

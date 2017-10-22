@@ -2050,6 +2050,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="javafx2.editor/test/unit/data/goldenfiles/org/netbeans/modules/javafx2/editor/completion/impl/**/*.out*" />
             <exclude name="javawebstart/AntTasks/build/**" /> <!-- generated build files -->
             <exclude name="projectimport.eclipse.core/test/unit/data/**" /> <!--test data-->
+            <exclude name="html.lexer/test/unit/data/testfiles/*" /> <!--test data-->
             <exclude name="o.apache.tools.ant.module/release/VERSION.txt" /> <!--generated file-->
             <exclude name="o.apache.tools.ant.module/test/unit/data/**/*.xml" /> <!--test data-->
             <exclude name="o.apache.tools.ant.module/test/unit/data/**/*.properties" /> <!--test data-->

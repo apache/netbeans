@@ -1,0 +1,15 @@
+diff -ruN org/jvnet/winp/Native.java patched-org/jvnet/winp/Native.java
+--- org/jvnet/winp/Native.java	2009-11-10 10:30:26.000000000 +0100
++++ patched-org/jvnet/winp/Native.java	2017-10-22 07:11:19.462328071 +0200
+@@ -73,8 +73,9 @@
+                         filePortion = filePortion.substring(2);
+                     filePortion = URLDecoder.decode(filePortion);
+                     String preferred = System.getProperty(DLL_TARGET);
+-                    File jarFile = new File(preferred != null ? preferred : filePortion);
+-                    File dllFile = new File(jarFile.getParentFile(),dllName+".dll");
++                    File jarFile = new File(filePortion);
++                    File dllFile = new File(preferred != null
++                            ? new File(preferred) : jarFile.getParentFile(),dllName+".dll");
+                     if(!dllFile.exists() || jarFile.lastModified()>dllFile.lastModified()) {
+                         // try to extract from within the jar
+                         try {

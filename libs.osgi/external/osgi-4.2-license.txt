@@ -3,8 +3,8 @@ Version: 5.0
 Files: osgi.core-5.0.0.jar osgi.cmpn-4.2.jar
 Description: OSGi specification (core & compendium).
 License: Apache-2.0
-Origin: http://www.osgi.org/Download/Release5
-OSR: Oracle-7596
+Origin: OSGi
+URL: http://www.osgi.org/Download/Release5
 
                                  Apache License
                            Version 2.0, January 2004

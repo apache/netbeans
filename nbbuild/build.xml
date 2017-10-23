@@ -53,7 +53,7 @@
 
     <property name="build.ant.classes.dir" location="${nb.build.dir}/antclasses"/>
     <mkdir dir="${build.ant.classes.dir}"/>
-    <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.7" target="1.7">
+    <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.8" target="1.8">
         <classpath>
             <pathelement location="${ant.core.lib}"/>
         </classpath>
@@ -84,7 +84,7 @@
         <include name="javahelp/external/jhall*.jar"/>
       </fileset>
     </path>
-    <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.7" target="1.7">
+    <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.8" target="1.8">
       <classpath refid="bootstrap-cp"/>
       <compilerarg line="-Xlint -Xlint:-serial"/>
     </javac>
@@ -288,7 +288,7 @@
   <!-- Use of nbmerge target has the effect of automatically depending on all-X for every module. -->
   <!-- It also runs deltree(dir=wherever) and copydir(src=../X/netbeans,dest=wherever) to create the IDE install. -->
 
-  <target name="build-nozip" depends="init,download-selected-extbins,clean-cluster-flags,build-clusters,create-license-summary,create-netbeans-import,finish-build,add-junit" description="Build the IDE but do not create a final ZIP file."/>
+  <target name="build-nozip" depends="init,download-selected-extbins,clean-cluster-flags,build-clusters,create-mandatory-files-for-binary,create-netbeans-import,finish-build,add-junit" description="Build the IDE but do not create a final ZIP file."/>
   <target name="finish-build" depends="init">
     <loadproperties srcFile="${clusters.list.file}" />
 
@@ -299,8 +299,7 @@
     <mkdir dir="${netbeans.dest.dir}/bin" />
     <copy file="../ide/launcher/unix/netbeans" todir="${netbeans.dest.dir}/bin" />
     <chmod file="${netbeans.dest.dir}/bin/netbeans" perm="ugo+rx"/>
-    <copy file="../ide/external/netbeans.exe" todir="${netbeans.dest.dir}/bin" />
-    <copy file="../ide/external/netbeans64.exe" todir="${netbeans.dest.dir}/bin" />
+    <unzip src="../ide/external/launchers.zip" dest="${netbeans.dest.dir}/bin" />
     <!-- if anybody knows better place for icons, let me know: jtulach@netbeans.org -->
 
     <mkdir dir="${netbeans.dest.dir}/etc" />
@@ -497,6 +496,10 @@ Hg ID:    ${hg.id}
             <include name="*.txt"/>
             <include name="*.css"/>
             <include name="*.html"/>
+            <include name="DEPENDENCIES"/>
+            <include name="DISCLAIMER"/>
+            <include name="LICENSE"/>
+            <include name="NOTICE"/>
       </zipfileset>
     </zip>
   </target>
@@ -1465,9 +1468,20 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         <verifylibsandlicenses report="${nb.build.dir}/verifylibsandlicenses.xml" nball=".."/>
     </target>
 
-    <target name="create-license-summary" depends="bootstrap,download-selected-extbins" description="Create a summary of the licenses used by libraries in the build.">
+    <target name="create-mandatory-files-for-binary" depends="bootstrap,download-selected-extbins" description="Create a summary of the licenses used by libraries in the build.">
         <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
-        <createlicensesummary report="${nb.build.dir}/createlicensesummary.xml" nball=".." build="${netbeans.dest.dir}" summary="${netbeans.dest.dir}/THIRDPARTYLICENSE-generated.txt"/>
+        <createlicensesummary licenseStub="license-stub.txt" noticeStub="notice-stub.txt" report="${nb.build.dir}/createlicensesummary.xml" nball=".." build="${netbeans.dest.dir}" license="${netbeans.dest.dir}/LICENSE" notice="${nb.build.dir}/notice-temp"/>
+        <concat destfile="${netbeans.dest.dir}/NOTICE">
+          <fileset file="${nb.build.dir}/notice-temp" />
+          <fileset dir="${nb_all}"
+                   includes="*/notice.txt" />
+        </concat>
+        <dirset id="source.dirset" dir="${nb_all}"
+                includes="${allmodules}"
+        />
+        <taskdef name="createdependencies" classname="org.netbeans.nbbuild.extlibs.CreateDependencies" classpath="${nbantext.jar}"/>
+        <createdependencies refid="source.dirset"  dependencies="${netbeans.dest.dir}/DEPENDENCIES"/>
+        <copy file="${nb_all}/DISCLAIMER" tofile="${netbeans.dest.dir}/DISCLAIMER" />
     </target>
 
   <target name="build-source-config"
@@ -1486,11 +1500,21 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <pathconvert property="source.dirs" pathsep="," refid="source.dirset">
       <regexpmapper from="${nb_all}/(.*)$" to="\1/**/*" handledirsep="yes"/>
     </pathconvert>
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}"> <!--XXX-->
         <manifest dir="${nb_all}">
             <include name="libs.antlr3.devel/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
+    <concat destfile="${nb.build.dir}/NOTICE">
+      <fileset file="${nb_all}/nbbuild/notice-stub.txt" />
+      <fileset dir="${nb_all}"
+	       includes="*/notice.txt" />
+    </concat>
+    <concat destfile="${nb.build.dir}/LICENSE">
+      <fileset file="${nb_all}/nbbuild/license-stub.txt" />
+    </concat>
+    <taskdef name="createdependencies" classname="org.netbeans.nbbuild.extlibs.CreateDependencies" classpath="${nbantext.jar}"/>
+    <createdependencies refid="source.dirset" dependencies="${nb.build.dir}/DEPENDENCIES" sourceDependencies="true"/>
     <zip zipfile="${nb.build.dir}/${cluster.config}-src-${buildnum}.zip" duplicate="preserve">
       <zipfileset dir="${nb_all}" includes="${source.dirs}">
           <exclude name="*/build/**/*"/>
@@ -1499,6 +1523,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <zipfileset dir="${nb_all}">
           <include name="build.xml"/>
       </zipfileset>
+      <zipfileset file="${nb.build.dir}/DEPENDENCIES" />
+      <zipfileset file="${nb.build.dir}/NOTICE" />
+      <zipfileset file="${nb.build.dir}/LICENSE" />
+      <zipfileset file="${nb_all}/DISCLAIMER" />
     </zip>
   </target>
 

@@ -2024,6 +2024,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="java.editor/src/org/netbeans/modules/java/editor/resources/JavaExample" /> <!--no degree of creativity-->
             <exclude name="java.editor/test/qa-functional/data/**" /> <!--test data-->
             <exclude name="java.editor/test/unit/data/**" /> <!--test data-->
+            <exclude name="java.hints/test/unit/data/**" /> <!--test data-->
             <exclude name="java.j2semodule/src/org/netbeans/modules/java/j2semodule/ui/resources/module-info.java.template" /> <!--template file-->
             <exclude name="java.lexer/test/unit/data/testfiles/*" /> <!--test data-->
             <exclude name="javadoc/test/unit/data/docs_jdk14_ja/api/index-files/**" /> <!--test data-->

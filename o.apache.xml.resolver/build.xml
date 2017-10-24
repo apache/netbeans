@@ -42,9 +42,16 @@
         <!-- ... 2. Unzips maven sources -->
         <unzip src="external/xml-resolver-1.2-sources.jar" dest="build/external-patch/sources" />
         <!-- ... 3. Applies patch 'external/xml-resolver-1.2-netbeans.patch -->
+        <!-- DISABLED: 
+             - ant patch task requires external 'patch' tool, not available on all systems.
+             - We may want to reuse some code from the 'diff' module to implement an patch task later on.
         <patch dir="build/external-patch/sources"
             patchfile="external/xml-resolver-1.2-netbeans.patch"
             strip="0" />
+        -->
+        <copy todir="build/externa-patch/sources">
+            <fileset dir="patch-src" />
+        </copy>
         <!-- ... 4. Compiles sources to build/external-patch/classes -->
         <mkdir dir="build/external-patch/classes" />
         <javac srcdir="build/external-patch/sources"

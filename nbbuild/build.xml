@@ -2043,7 +2043,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="languages.yaml/src/org/netbeans/modules/languages/yaml/*.yaml" /> <!--Files used in GUI as sample/starting point-->
             <exclude name="languages.yaml/src/org/netbeans/modules/languages/yaml/*.yml" /> <!--Files used in GUI as sample/starting point-->
             <exclude name="languages.yaml/test/unit/data/testfiles/*" /> <!--test data-->
+            <exclude name="lib.uihandler/test/unit/src/**" /> <!--test data-->
             <exclude name="libs.freemarker/test/unit/data/**" /> <!--test data-->
+            <exclude name="libs.git/test/unit/data/**" /> <!--test data-->
             <exclude name="mercurial/src/org/netbeans/modules/mercurial/util/log*" /> <!-- user templates for mercurial commits, etc. -->
             <exclude name="mercurial/test/qa-functional/data/files/**"/> <!-- qa test data -->
             <exclude name="mercurial/test/unit/data/**" /> <!-- unit test data -->

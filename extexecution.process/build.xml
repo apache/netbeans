@@ -43,7 +43,7 @@
         <unzip src="external/winp-1.14-sources.jar" dest="build/external-patch/sources" />
         <!-- ... 3. Applies patch 'external/winp-1.14-netbeans.patch -->
         <patch dir="build/external-patch/sources"
-            patchfile="external/winp-1.14-netbeans.patch"
+            patchfile="external/winp.patch"
             strip="0" />
         <!-- ... 4. Compiles sources to build/external-patch/classes -->
         <mkdir dir="build/external-patch/classes" />
@@ -61,8 +61,6 @@
         <jar destfile="external/winp-1.14-patched.jar">
             <fileset dir="build/external-patch/classes" />
         </jar>
-        <!-- ... 6. Cleans up working directory -->
-        <delete dir="build/external-patch" />
     </target>
 
     <!-- Hook into harness "-javac-init" task -->

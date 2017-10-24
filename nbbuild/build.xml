@@ -2043,6 +2043,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="mercurial/test/qa-functional/data/files/**"/> <!-- qa test data -->
             <exclude name="mercurial/test/unit/data/**" /> <!-- unit test data -->
             <exclude name="nbbuild/netbeans/**" />
+            <exclude name="nbbuild/testuserdir/**" />
             <exclude name="o.apache.tools.ant.module/release/VERSION.txt" /> <!--generated file-->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/CustomTask_java" /> <!-- user visible file template -->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/Project.xml_" /> <!-- user visible file template -->

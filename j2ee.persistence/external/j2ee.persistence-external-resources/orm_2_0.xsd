@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Java Persistence API object/relational mapping file schema -->
-<xsd:schema targetNamespace="http://java.sun.com/xml/ns/persistence/orm" 
-  xmlns:orm="http://java.sun.com/xml/ns/persistence/orm" 
-  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-  elementFormDefault="qualified" 
-  attributeFormDefault="unqualified" 
+<xsd:schema targetNamespace="http://java.sun.com/xml/ns/persistence/orm"
+  xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
   version="2.0">
 
     <xsd:annotation>
@@ -16,19 +16,23 @@
     <xsd:annotation>
         <xsd:documentation>
 
-          Copyright (c) 2008, 2009 Sun Microsystems. All rights reserved.
+              Licensed to the Apache Software Foundation (ASF) under one
+              or more contributor license agreements.  See the NOTICE file
+              distributed with this work for additional information
+              regarding copyright ownership.  The ASF licenses this file
+              to you under the Apache License, Version 2.0 (the
+              "License"); you may not use this file except in compliance
+              with the License.  You may obtain a copy of the License at
 
-          This program and the accompanying materials are made available under the
-          terms of the Eclipse Public License v1.0 and Eclipse Distribution License v. 1.0
-          which accompanies this distribution.
-          The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
-          and the Eclipse Distribution License is available at
-          http://www.eclipse.org/org/documents/edl-v10.php.
+                http://www.apache.org/licenses/LICENSE-2.0
 
-          Contributors:
-              Linda DeMichiel - Java Persistence 2.0, Version 2.0 (October 1, 2009)
-              Specification available from http://jcp.org/en/jsr/detail?id=317
-  
+              Unless required by applicable law or agreed to in writing,
+              software distributed under the License is distributed on an
+              "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+              KIND, either express or implied.  See the License for the
+              specific language governing permissions and limitations
+              under the License.
+
         </xsd:documentation>
     </xsd:annotation>
 
@@ -127,7 +131,7 @@
                 <xsd:element name="named-native-query" type="orm:named-native-query"
                      minOccurs="0" maxOccurs="unbounded"/>
                 <xsd:element name="sql-result-set-mapping"
-                     type="orm:sql-result-set-mapping" 
+                     type="orm:sql-result-set-mapping"
                      minOccurs="0" maxOccurs="unbounded"/>
                 <xsd:element name="mapped-superclass" type="orm:mapped-superclass"
                      minOccurs="0" maxOccurs="unbounded"/>
@@ -238,14 +242,14 @@
             <xsd:element name="secondary-table" type="orm:secondary-table"
                    minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="primary-key-join-column"
-                   type="orm:primary-key-join-column" 
+                   type="orm:primary-key-join-column"
                    minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="id-class" type="orm:id-class" minOccurs="0"/>
             <xsd:element name="inheritance" type="orm:inheritance" minOccurs="0"/>
             <xsd:element name="discriminator-value" type="orm:discriminator-value"
                    minOccurs="0"/>
             <xsd:element name="discriminator-column"
-                   type="orm:discriminator-column" 
+                   type="orm:discriminator-column"
                    minOccurs="0"/>
             <xsd:element name="sequence-generator" type="orm:sequence-generator"
                    minOccurs="0"/>
@@ -256,7 +260,7 @@
             <xsd:element name="named-native-query" type="orm:named-native-query"
                    minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="sql-result-set-mapping"
-                   type="orm:sql-result-set-mapping" 
+                   type="orm:sql-result-set-mapping"
                    minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="exclude-default-listeners" type="orm:emptyType"
                    minOccurs="0"/>
@@ -1477,7 +1481,7 @@
         <xsd:sequence>
             <xsd:choice>
                 <xsd:element name="primary-key-join-column"
-                     type="orm:primary-key-join-column" 
+                     type="orm:primary-key-join-column"
                      minOccurs="0" maxOccurs="unbounded"/>
                 <xsd:element name="join-column" type="orm:join-column"
                      minOccurs="0" maxOccurs="unbounded"/>
@@ -1718,7 +1722,7 @@
         </xsd:annotation>
         <xsd:sequence>
             <xsd:element name="primary-key-join-column"
-                    type="orm:primary-key-join-column" 
+                    type="orm:primary-key-join-column"
                     minOccurs="0" maxOccurs="unbounded"/>
             <xsd:element name="unique-constraint" type="orm:unique-constraint"
                     minOccurs="0" maxOccurs="unbounded"/>

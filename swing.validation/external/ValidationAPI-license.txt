@@ -3,6 +3,7 @@ Version: 331
 License: CDDL-GPL-2-CP
 OSR: 11316
 Origin: Oracle (https://svn.kenai.com/svn/simplevalidation~src/trunk@331)
+       (same as: https://github.com/timboudreau/simplevalidation/tree/b26b94cc001a41ab9138496b11e2ae256a159ffd)
 Comment:  Provides utilities for adding input validation to Swing forms quickly and easily
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0

@@ -27,6 +27,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.nbbuild.extlibs.DownloadBinaries.MavenCoordinate;
 
 public class DownloadBinariesTest extends NbTestCase {
 
@@ -84,15 +85,15 @@ public class DownloadBinariesTest extends NbTestCase {
     }
 
     public void testIsNormalDownload() {
-        boolean is = DownloadBinaries.isMavenFile("5C372AB96C721258C5C12BB8EAD291BBBA5DACE6", "hello");
+        boolean is = MavenCoordinate.isMavenFile("hello");
         assertFalse("This is hg.netbeans.org hashed file", is);
     }
 
     public void testIsMavenDownload() {
-        final String[] hashAndId = new String[] { "CEC2829EC391CB404AD32EB2D08F879C418B745B", "org.netbeans.html:xhr4j:1.3" };
-        boolean is = DownloadBinaries.isMavenFile(hashAndId);
+        final String id = "org.netbeans.html:xhr4j:1.3";
+        boolean is = MavenCoordinate.isMavenFile(id);
         assertTrue("Contains co-ordinates", is);
-        String targetName = DownloadBinaries.mavenFileName(hashAndId);
+        String targetName = MavenCoordinate.fromGradleFormat(id).toArtifactFilename();
         assertEquals("xhr4j-1.3.jar", targetName);
     }
 

@@ -2,9 +2,9 @@ Name: Equinox
 Version: 3.9.1
 Description: Eclipse OSGi container
 License: OSGi-LICENSE
-OSR: Oracle-7597
 Files: org.eclipse.osgi_3.9.1.v20140110-1610.jar
-Origin: http://www.eclipse.org/equinox/
+Origin: Eclipse
+URL: http://www.eclipse.org/equinox/
 
 ------------------------------------------------------------
 The files are available in source code form under the Eclipse Public License at:

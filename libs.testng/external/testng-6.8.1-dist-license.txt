@@ -2,8 +2,8 @@ Name: TestNG
 Version: 6.8.1
 Description: Java testing framework.
 License: Apache-2.0
-OSR: Oracle-13244
-Origin: http://testng.org/doc/download.html
+Origin: TestNG
+URL: http://testng.org/doc/download.html
 Files: testng-6.8.1-dist.jar, testng-6.8.1-javadoc.zip
 
 Use of TestNG version 6.8.1 is governed by the terms of the license below:

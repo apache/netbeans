@@ -3,6 +3,7 @@ Version: 8.2
 License: CDDL-GPL-2-CP
 Origin: NetBeans
 Comment: Provides java.awt.desktop classes to support compilation on JDK 8.
+Type: compile-time
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
 

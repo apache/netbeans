@@ -2029,6 +2029,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="options.editor/src/org/netbeans/modules/options/indentation/indentationExample" /> <!--no degree of creativitya-->
             <exclude name="projectui/src/org/netbeans/modules/project/ui/resources/*-license.txt" /> <!--licenses-->
             <exclude name="projectui/src/org/netbeans/modules/project/ui/resources/license-default.txt" /> <!--licenses-->
+            <exclude name="properties/src/org/netbeans/modules/properties/sample.properties.template" /> <!-- template file -->
             <exclude name="properties.syntax/src/org/netbeans/modules/properties/syntax/PropertiesExample" /> <!-- user visible example for properties language -->
             <exclude name="selenium2.java/src/org/netbeans/modules/selenium2/java/SeleneseIT.java.template" /> <!--template file-->
             <exclude name="spellchecker.dictionary_en/release/modules/dict/*.description" /> <!--Description Files-->

@@ -151,11 +151,11 @@
 
     <!-- Set up automatic all-* targets: -->
     <taskdef name="insert-module-all-targets" classname="org.netbeans.nbbuild.InsertModuleAllTargets" classpath="${nbantext.jar}"/>
-    <property name="verify.checkout" value="true"/> 
-    <property name="init.use.clusters" value="true"/> 
+    <property name="verify.checkout" value="true"/>
+    <property name="init.use.clusters" value="true"/>
     <insert-module-all-targets checkModules="${verify.checkout}" useclusters="${init.use.clusters}"/>
   </target>
-  
+
   <target name="all-installer" description="Dummy target for build system compatibility"/>
 
   <target name="update" depends="init" description="Downloads binaries from an update center">
@@ -208,10 +208,10 @@
     <property name="jnlp.signjar.alias" value="jnlp" />
     <property name="jnlp.signjar.password" value="netbeans" />
     <property name="jnlp.signjar.vendor" value="CN=NetBeans, OU=NetBeans, O=netbeans.org, C=US" />
-    
+
     <mkdir dir="${jnlp.signjar.keystore}/../" />
     <echo message="Going to create default keystore in ${jnlp.signjar.keystore}" />
-    <genkey 
+    <genkey
         alias="${jnlp.signjar.alias}"
         keystore="${jnlp.signjar.keystore}"
         storepass="${jnlp.signjar.password}"
@@ -246,7 +246,7 @@
           <fileset dir="${jnlp.dest.dir}" includes="*.jnlp"/>
       </verifyjnlp>
   </target>
-  
+
   <target name="build-javadoc">
       <echo message="Deprecated, use nbbuild/javadoctools/build.xml directly"/>
       <ant dir="javadoctools" target="build-javadoc"/>
@@ -255,13 +255,13 @@
   <!-- build source zips for selected modules - useful for populating maven repository only-->
   <target name="build-source-zips" depends="init" description="Builds source zips for maven repository inclusion.">
       <property name="netbeans.zipped.sources.dir" location="${nb.build.dir}/source-zips" />
-      
+
       <subant-junit target="sources-zip" failonerror="true">
           <buildpath path="${modules.sorted}"/>
       </subant-junit>
   </target>
-  
-      
+
+
   <target name="check-javahelpbin" depends="init" description="Validate intermodule links in helpsets.">
       <taskdef name="checkhelpsetsbin" classname="org.netbeans.nbbuild.CheckHelpSetsBin">
         <classpath>
@@ -284,7 +284,7 @@
     <echo message="OS: ${os.name} ${os.version}  Locale: ${user.language}_${user.region}"/>
     <echo message="Java: ${nbjdk.home}"/>
   </target>
-  
+
   <!-- Use of nbmerge target has the effect of automatically depending on all-X for every module. -->
   <!-- It also runs deltree(dir=wherever) and copydir(src=../X/netbeans,dest=wherever) to create the IDE install. -->
 
@@ -311,8 +311,8 @@
     <fixcrlf eol="lf" srcdir="${netbeans.dest.dir}" >
       <include name="etc/netbeans.conf" />
       <include name="etc/netbeans.clusters" />
-      <include name="bin/netbeans" />      
-      <include name="${nb.cluster.platform.dir}/lib/nbexec" />      
+      <include name="bin/netbeans" />
+      <include name="${nb.cluster.platform.dir}/lib/nbexec" />
     </fixcrlf>
     <mkdir dir="${nb.build.dir}"/>
     <hgid property="hg.id" file=".."/>
@@ -369,21 +369,21 @@ Hg ID:    ${hg.id}
     <antcall target="zip-cluster-config" inheritall="true"/>
   </target>
 
-  <target name="delete-and-merge" depends="merge-delete,merge" />   
+  <target name="delete-and-merge" depends="merge-delete,merge" />
 
   <target name="merge-delete" depends="init">
     <delete dir="${netbeans.dest}" />
   </target>
-  
+
   <target name="merge" depends="build-messaging">
     <mkdir dir="${netbeans.dest.dir}"/>
-    <nbmerge failonerror="${stop.when.broken.modules}" 
-             dest="${netbeans.dest}" 
-             topdir=".." 
-             fixedmodules="${fixedmodules}" 
+    <nbmerge failonerror="${stop.when.broken.modules}"
+             dest="${netbeans.dest}"
+             topdir=".."
+             fixedmodules="${fixedmodules}"
              modules="${modules}"
-             builtmodulesproperty="${built.modules.property}" 
-             targetprefix="all-" 
+             builtmodulesproperty="${built.modules.property}"
+             targetprefix="all-"
              mergedependentmodules="${merge.dependent.modules}" >
     </nbmerge>
   </target>
@@ -394,7 +394,7 @@ Hg ID:    ${hg.id}
       <delete file="${netbeans.dest.dir}/nb.cluster.harness.built"/>
       <run-depend-build clusters-to-build="nb.cluster.platform,nb.cluster.harness"/>
   </target>
-  
+
   <target name="build-platform" description="Build the NetBeans Platform (platform and harness clusters).">
       <mkdir dir="${netbeans.dest.dir}"/>
       <ant dir="." target="-build-platform" inheritAll="false">
@@ -410,7 +410,7 @@ Hg ID:    ${hg.id}
           <property name="test-unit-sys-prop.ignore.random.failures" value="true"/>
       </ant>
   </target>
-  
+
   <target name="build-cluster" depends="init">
     <run-depend-build clusters-to-build="${cluster-name}"/>
   </target>
@@ -418,12 +418,12 @@ Hg ID:    ${hg.id}
   <macrodef name="run-depend-build">
     <attribute name="clusters-to-build"/>
     <sequential>
-      <repeat target="build-one-cluster" name="one.cluster.name" values="@{clusters-to-build}" /> 
+      <repeat target="build-one-cluster" name="one.cluster.name" values="@{clusters-to-build}" />
     </sequential>
   </macrodef>
 
   <target name="build-clusters" depends="init">
-     <run-depend-build clusters-to-build="${nb.clusters.list}"/> 
+     <run-depend-build clusters-to-build="${nb.clusters.list}"/>
   </target>
 
   <target name="build-one-cluster-dependencies-check">
@@ -433,10 +433,10 @@ Hg ID:    ${hg.id}
     <resolve name="test.prop" value="${one.cluster.name}-hasNoDependencies"/>
   </target>
 
-  <target name="build-one-cluster-dependencies" 
+  <target name="build-one-cluster-dependencies"
           depends="build-one-cluster-dependencies-check"
           unless="${one.cluster.name}-hasNoDependencies">
-    <run-depend-build clusters-to-build="${one.cluster.dependencies}"/> 
+    <run-depend-build clusters-to-build="${one.cluster.dependencies}"/>
   </target>
 
   <target name="build-one-cluster-check">
@@ -459,12 +459,12 @@ Hg ID:    ${hg.id}
       <param name="ext.binaries.downloaded" value="true"/>
     </antcall>
     <mkdir dir="${netbeans.dest.dir}"/>
-    <nbmerge failonerror="${stop.when.broken.modules}" 
-             dest="${netbeans.dest.dir}" 
-             topdir="${nb_all}" 
+    <nbmerge failonerror="${stop.when.broken.modules}"
+             dest="${netbeans.dest.dir}"
+             topdir="${nb_all}"
              fixedmodules="${one-cluster-modules}"
-             builtmodulesproperty="${built.modules.property}" 
-             targetprefix="all-" 
+             builtmodulesproperty="${built.modules.property}"
+             targetprefix="all-"
              mergedependentmodules="false">
     </nbmerge>
     <touch file="${netbeans.dest.dir}/${one.cluster.name}.built"/>
@@ -506,7 +506,7 @@ Hg ID:    ${hg.id}
         <property name="netbeans.dest.dir" value="${netbeans.dest.dir}"/>
     </subant>
   </target>
-  
+
   <target name="build-zip-ml" depends="bootstrap,set-buildnumber,check-locales-set,build-nozip-ml"
           description="Create a compleate multilanguage build including a ZIP distributions">
       <fail message="Property locales must be set to reasonable value" unless="locales.is.set"/>
@@ -516,7 +516,7 @@ Hg ID:    ${hg.id}
       <property name="buildnum" value="dev-${buildnumber}"/>
       <repeat target="pack-one-cluster-ml" name="one.cluster.name.ml" values="${nb.clusters.list}"/>
   </target>
-  
+
   <target name="pack-one-cluster-ml" if="one.cluster.name.ml">
       <resolve name="one.cluster.dir.ml.pre" value="${one.cluster.name.ml}.dir"/>
       <pathconvert property="one.cluster.dir.ml" setonempty="false">
@@ -544,7 +544,7 @@ Hg ID:    ${hg.id}
           <zipfileset dir="${netbeans.dest.dir}/${one.cluster.dir.ml.pre}" prefix="${netbeans.dest}">
               <include name="**/locale/*_${one.locale}.*"/>
           </zipfileset>
-      </zip>    
+      </zip>
   </target>
 
   <target name="check-locales-set">
@@ -622,13 +622,13 @@ Hg ID:    ${hg.id}
           </and>
       </condition>
   </target>
-  
+
   <target name="-unpack-cluster-ml-zipfile" unless="is.kit">
       <unzip dest="${netbeans.dest.dir.ml}" src="${nb.build.dir}/ml/NetBeans-${cluster.package.dir}-${buildnum}.zip">
           <mapper type="glob" from="netbeans/*" to="${one.cluster.dir.ml}/*"/>
       </unzip>
   </target>
-  
+
   <target name="-create-cluster-ml-nbm-metadata" unless="is.kit">
       <echo file="${nb.build.dir}/ml/nbms/tmp/manifest.mf">OpenIDE-Module: ${code.name}
 OpenIDE-Module-Localizing-Bundle: ${code.name.base.slashes}/Bundle.properties
@@ -641,7 +641,7 @@ OpenIDE-Module-Short-Description=NetBeans 6.0 ${one.cluster.dir.ml} cluster loca
 OpenIDE-Module-Long-Description=Delivers ${locales} localization for all modules in ${one.cluster.dir.ml} cluster of NetBeans 6.0
 </echo>
   </target>
-  
+
     <target name="-create-kit-ml-nbm-metadata" if="is.kit">
       <echo file="${nb.build.dir}/ml/nbms/tmp/manifest.mf">OpenIDE-Module: ${code.name}
 OpenIDE-Module-Localizing-Bundle: ${code.name.base.slashes}/Bundle.properties
@@ -725,8 +725,8 @@ OpenIDE-Module-Long-Description=Delivers ${locales} localization of whole NetBea
       <property name="module.jar" value="modules/${code.name.base.dashes}.jar"/>
       <mkdir dir="${cluster}/modules"/>
       <jarwithmoduleattributes jarfile="${cluster}/${module.jar}"
-          compress="${build.package.compress}" 
-          index="${build.package.index}" 
+          compress="${build.package.compress}"
+          index="${build.package.index}"
           manifest="${nb.build.dir}/ml/nbms/tmp/manifest.mf">
           <fileset dir="${nb.build.dir}/ml/nbms/classes"/>
       </jarwithmoduleattributes>
@@ -797,16 +797,16 @@ OpenIDE-Module-Long-Description=Delivers ${locales} localization of whole NetBea
 
   <target name="create-rpms-proto">
     <mkdir dir="${nb.build.dir}/rpms"/>
-    <repeat target="create-one-rpm-proto" name="one.cluster.name" values="${clusters.list}" /> 
+    <repeat target="create-one-rpm-proto" name="one.cluster.name" values="${clusters.list}" />
   </target>
-    
+
   <target name="create-one-rpm-proto">
     <taskdef name="setcluster" classname="org.netbeans.nbbuild.SetCluster" classpath="${nbantext.jar}"/>
     <loadproperties srcFile="cluster.properties" />
     <loadproperties srcFile="cluster-description.properties" />
     <setcluster cluster="${one.cluster.name}" name="one.cluster.dir" />
     <mkdir dir="${nb.build.dir}/rpms"/>
-    
+
     <resolve name="pkg.name" value="${one.cluster.name}.pkg.name"/>
     <resolve name="pkg.version" value="${one.cluster.name}.pkg.version"/>
     <resolve name="pkg.desc" value="${one.cluster.name}.pkg.desc"/>
@@ -819,7 +819,7 @@ OpenIDE-Module-Long-Description=Delivers ${locales} localization of whole NetBea
     <resolve name="pkg.rpm.copyright" value="${one.cluster.name}.pkg.rpm.copyright"/>
     <resolve name="pkg.rpm.map" value="${one.cluster.name}.pkg.rpm.map"/>
     <resolve name="pkg.rpm.prefix" value="${one.cluster.name}.pkg.rpm.prefix"/>
-    
+
     <echo file="${nb.build.dir}/rpms/${pkg.rpm.name}.spec">
 %define global_product_version ${pkg.version}
 %define global_product_release 00
@@ -834,7 +834,7 @@ Prefix: %_prefix
 AutoReqProv: no
 Name: ${pkg.rpm.name}
 Summary: ${pkg.name}
-%description 
+%description
 ${pkg.desc}
 
 %files
@@ -848,7 +848,7 @@ ${pkg.rpm.map}/${one.cluster.dir}</echo>
 
   <target name="create-svr4s-proto">
     <mkdir dir="${nb.build.dir}/rpms"/>
-    <repeat target="create-one-svr4-proto" name="one.cluster.name" values="${clusters.list}" /> 
+    <repeat target="create-one-svr4-proto" name="one.cluster.name" values="${clusters.list}" />
   </target>
 
   <target name="create-one-svr4-proto">
@@ -857,7 +857,7 @@ ${pkg.rpm.map}/${one.cluster.dir}</echo>
     <loadproperties srcFile="cluster-description.properties" />
     <setcluster cluster="${one.cluster.name}" name="one.cluster.dir" />
     <mkdir dir="${nb.build.dir}/svr4s"/>
-    
+
     <resolve name="pkg.name" value="${one.cluster.name}.pkg.name"/>
     <resolve name="pkg.version" value="${one.cluster.name}.pkg.version"/>
     <resolve name="pkg.desc" value="${one.cluster.name}.pkg.desc"/>
@@ -887,7 +887,7 @@ CLASSES=${pkg.svr4.classes}
 BASEDIR=${pkg.svr4.basedir}
 PKGINST=${pkg.svr4.pkginst}</echo>
   </target>
-    
+
     <target name="-testuserdir-delete-init" depends="-load-build-properties">
       <property name="test.user.dir.lock" location="${test.user.dir}/lock"/>
       <available property="app.running" file="${test.user.dir.lock}"/>
@@ -913,7 +913,7 @@ PKGINST=${pkg.svr4.pkginst}</echo>
     <property name="debug.server" value="y" />
     <property name="tryme.debug.args" value="-J-agentlib:jdwp=transport=dt_socket,suspend=${debug.pause},server=${debug.server},address=${debug.port}" />
   </target>
-          
+
   <target name="tryme-debug" depends="-jdk-presetdef-nbjpdastart" description="Start IDE in debugger. May only be called from within IDE.">
     <echo>Searching for JARs in ${netbeans.dest.dir}, this may take a moment...</echo>
     <nbjpdastart name="NetBeans" addressproperty="debug.port" transport="dt_socket">
@@ -935,15 +935,15 @@ PKGINST=${pkg.svr4.pkginst}</echo>
           </or>
       </condition>
   </target>
-  
+
   <target name="-tryme-profile-pre72" depends="-jdk-presetdef-nbprofiledirect" if="profiler.info.jvmargs.agent" description="Start IDE in profiler (pre72 compatibility mode). May only be called from within IDE.">
     <property name="profiler.roots.path" value="profiler.roots.all" />
     <fileset id="profiler.roots.all" dir="${netbeans.dest.dir}">
         <include name="**/*.jar"/>
     </fileset>
-    <nbprofiledirect 
-        jvmargsprefix="-J" 
-        jvmargsproperty="profiler.jvmargs" 
+    <nbprofiledirect
+        jvmargsprefix="-J"
+        jvmargsproperty="profiler.jvmargs"
         mainclass="org.netbeans.Main"
     >
       <classpath>
@@ -956,16 +956,16 @@ PKGINST=${pkg.svr4.pkginst}</echo>
       </rootspath>
     </nbprofiledirect>
   </target>
-  
+
   <target name="tryme-profile" depends="-profile-check,-tryme-profile-pre72" if="profiler.configured" unless="profiler.info.jvmargs.agent" description="Start IDE in profiler. May only be called from within IDE.">
     <startprofiler/>
     <property name="tryme.debug.args" value="-J-Dorg.osgi.framework.bootdelegation=org.netbeans.lib.profiler,org.netbeans.lib.profiler.*" />
     <antcall target="tryme"/>
   </target>
-  
+
   <target name="tryme" depends="-load-build-properties,tryme-setup-debug-args,-jdk-init"
           description="Try running the IDE interactively.
-It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in debug mode" 
+It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in debug mode"
    >
     <script language="javascript">
         v = ''
@@ -984,12 +984,12 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <condition property="run.env.display" value="${env.NBDISPLAY}" else="${env.DISPLAY}">
 	<isset property="env.NBDISPLAY"/>
     </condition>
-    
+
     <!-- architecture of jvm on which app will run -->
     <condition property="jvm.arch.string" value="64" else="">
       <available file="${nbjdk.home}\jre\lib\amd64" />
-    </condition>        
-    
+    </condition>
+
     <property name="run.args.ide" value=""/>
     <exec osfamily="windows" executable="${netbeans.dest.dir}/bin/netbeans${jvm.arch.string}.exe" failonerror="yes" dir="${java.io.tmpdir}">
       <arg value="--jdkhome"/>
@@ -1035,10 +1035,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       </fileset>
     </move>
   </target>
-  
+
   <target name="all-l10n-kits" depends="l10n-kit">
   </target>
-  
+
   <target name="l10n-kit" depends="bootstrap,set-buildnumber,init-tasks" description="Builds the L10N kit">
     <taskdef name="l10n" classname="org.netbeans.nbbuild.L10nTask"
              classpath="${nbantext.jar}"/>
@@ -1047,7 +1047,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <property name="locales" value=""/>
     <l10n nbmsdir="${nbms.location}" tmpdir="tmp" patternsFile="l10n.patterns" kitFile="${l10n.kit}" locales="${locales}"/>
   </target>
-  
+
   <target name="hg-l10n-kit">
     <property name="l10n.kit" location="${nb.build.dir}/l10n.zip"/>
     <zip destfile="${l10n.kit}">
@@ -1069,8 +1069,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
 
   <target name="-cleanall" depends="init-module-list,init-tasks">
     <taskdef name="cleanall" classname="org.netbeans.nbbuild.CleanAll" classpath="${nbantext.jar}"/>
-    <cleanall topdir=".." 
-              modules="${allmodules}" 
+    <cleanall topdir=".."
+              modules="${allmodules}"
               targetname="clean"
               resolvedependencies="${resolve.clean.dependencies}"
               deptargetprefix="all-"
@@ -1305,7 +1305,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <arg value="-rf"/>
       <arg value="${solpkg-proto-file}"/>
     </exec>
-    <exec executable="${solpkg-pkgproto}" output="${solpkg-proto-file}" 
+    <exec executable="${solpkg-pkgproto}" output="${solpkg-proto-file}"
           failonerror="yes">
       <arg value="${solpkg-actual-dir}=${solpkg-pkg-dir}"/>
     </exec>
@@ -1334,7 +1334,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
   <target name="all-russian" depends="set-russian-locale,all"/>
   <target name="all-french" depends="set-french-locale,all"/>
   <target name="all-ja-zh" depends="set-ja-zh_CN-locales,all"/>
-  
+
   <target name="set-ja-zh_CN-locales">
         <property name="locales" value="ja,zh_CN"/>
         <property name="locjar.locales" value="${locales}"/>
@@ -1342,7 +1342,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         <property name="locjhindexer.locales" value="${locales}"/>
         <property name="localized.build.locales" value="${locales}"/>
   </target>
-  
+
   <target name="set-dutch-locale">
         <property name="locales" value="nl"/>
         <property name="locjar.locales" value="${locales}"/>
@@ -1366,7 +1366,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         <property name="locjhindexer.locales" value="${locales}"/>
         <property name="localized.build.locales" value="${locales}"/>
   </target>
-  
+
 <!-- end of localized builds -->
 
 
@@ -1386,15 +1386,15 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         </and>
     </condition>
   </target>
-  
-  <target 
-    name="commit-validation" 
-    depends="commitValidation,no-commit-validation" 
+
+  <target
+    name="commit-validation"
+    depends="commitValidation,no-commit-validation"
     description="Runs tests to validate IDE before commit."
   />
 
   <target name="all-commitValidation" description="dummy target for build error recognition facility"/>
-  
+
   <!-- keep this target name at least for a while for backward compat -jglick -->
   <target name="commitValidation" depends="all-commitValidation,check-commit-validation" if="run.validation">
     <property name="build.test.results.dir" location="${nb.build.dir}/test/commit-validation/results"/>
@@ -1406,7 +1406,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <resolvelist list="${nb.clusters.list}" name="nb.clusters.validation.list">
        <mapper type="regexp" from="(.*)" to="validation.\1"/>
     </resolvelist>
-    
+
     <subant target="${test.type}" >
         <property name="test.config" value="commit"/>
         <property name="continue.after.failing.tests" value="true"/>
@@ -1416,7 +1416,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         <property name="test-qa-functional-sys-prop.ignore.random.failures" value="true"/>
         <dirset dir=".." includes="${nb.clusters.validation.list}"/>
     </subant>
-    
+
     <pathconvert property="failed.tests" pathsep="${line.separator}">
         <fileset dir="${build.test.results.dir}">
             <include name="TEST-*.xml"/>
@@ -1477,7 +1477,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <echo message="Packaging sources of ${cluster.config} modules"/>
 
     <resolve name="harness-modules" value="nb.cluster.harness"/>
-    
+
     <mkdir dir="${nb.build.dir}"/>
     <dirset id="source.dirset" dir="${nb_all}"
             includes="${allmodules},${harness-modules},nbbuild,ide,nbi,libs.antlr3.devel,libs.junit4"
@@ -1508,9 +1508,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
   </target>
   <target name="generate-golden-files" depends="generate-golden-files-init" description="Generate summaries of module dependencies.">
     <property name="deps.max.friends" value="20"/>
-    
+
     <taskdef name="deps" classname="org.netbeans.nbbuild.ModuleDependencies" classpath="${nbantext.jar}"/>
-    
+
     <deps>
       <inputpattern dir="${netbeans.dest.dir}"/>
       <output type="group-dependencies" file="${generated.files.dir}/cluster-deps.txt" />
@@ -1532,11 +1532,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <taskdef name="test-deps" classname="org.netbeans.nbbuild.ModuleTestDependencies" classpath="${nbantext.jar}"/>
     <test-deps output="${generated.files.dir}/test-deps.txt" reverseOutput="${generated.files.dir}/reverse-test-deps.txt"/>
   </target>
-  
+
   <target name="generate-files-layout" depends="generate-golden-files-init" description="Generate summary of installed files.">
     <taskdef name="generate-files-layout" classname="org.netbeans.nbbuild.GenerateFilesLayout" classpath="${nbantext.jar}"/>
     <property name="check.files.layout.generated" location="${generated.files.dir}/files-layout.txt" />
-  
+
     <property name="check-file-layout-root" location="${netbeans.dest.dir}" />
     <generate-files-layout output="${check.files.layout.generated}">
       <files dir="${check-file-layout-root}" casesensitive="yes" >
@@ -1587,7 +1587,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         <fileset dir="${nbroot}" includesfile="${listfile}"/>
     </apply>
   </target>
-  
+
   <target name="increment-spec-versions" depends="bootstrap,init-module-list" description="Increment all standard module specification versions. Pass -Dbranch=true if not on the trunk.">
     <property name="branch" value="false"/>
     <taskdef name="incrspecvers" classname="org.netbeans.nbbuild.IncrementSpecificationVersions" classpath="${nbantext.jar}"/>
@@ -1615,7 +1615,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
           </fileset>
       </jar>
       <zip basedir="${test.dist.dir}" destfile="${nb.build.dir}/testdist.zip"/>
-  </target>      
+  </target>
 
   <target name="gen-sigtests" depends="init-module-list"
     description="Generates snaphost of API of all modules"
@@ -1623,7 +1623,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <echo message="Generating signature files for ${cluster.config} modules"/>
     <property name="sigtest.basedir" location="${nb.build.dir}/sigtest/snapshot"/>
     <property name="sigtest.output.dir" location="${nb.build.dir}/sigtest/generate"/>
-    
+
     <subant target="gen-sigtest" buildpath="${modules.fullpath}" failonerror="false">
       <property name="sigtest.basedir" value="${sigtest.basedir}"/>
       <property name="sigtest.output.dir" location="${sigtest.output.dir}"/>
@@ -1641,15 +1641,15 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         </path>
         <mapper type="identity" />
     </pathconvert>
-    
+
     <subant target="gen-sigtest" buildpath="${modules.fullpath}"/>
   </target>
-  
+
   <target name="check-sigtests-release" depends="bootstrap"
     description="Checks signature files of stable API modules"
   >
     <echo message="Checking signature files of stable API modules"/>
-    
+
     <property name="sigtest.output.dir" location="${nb.build.dir}/sigtest/check-release"/>
     <property name="fail.on.error" value="true"/>
     <delete dir="${sigtest.output.dir}"/>
@@ -1683,17 +1683,17 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
 
   <target name="check-sigtests-version">
     <echo message="Checking version of signature files for ${cluster.config} modules"/>
-    
+
     <property name="sigtest.previous.url" value="http://deadlock.netbeans.org/job/nbms-and-javadoc/lastStableBuild/artifact/nbbuild/build/sigtest/snapshot/*zip*/snapshot.zip"/>
     <property name="sigtest.prev.dir" location="${nb.build.dir}/sigtest/prev-snapshot"/>
     <property name="sigtest.output.dir" location="${nb.build.dir}/sigtest/versioncheck"/>
 
-    <mkdir dir="${sigtest.prev.dir}"/>    
+    <mkdir dir="${sigtest.prev.dir}"/>
     <get src="${sigtest.previous.url}" dest="${sigtest.prev.dir}/snapshot.zip"/>
     <unzip src="${sigtest.prev.dir}/snapshot.zip" dest="${sigtest.prev.dir}">
         <mapper type="flatten"/>
     </unzip>
-    
+
     <antcall target="-do-check-sigtests">
         <param name="sigtest.check.type" value="versioncheck"/>
         <param name="sigtest.basedir" location="${sigtest.prev.dir}"/>
@@ -1707,14 +1707,14 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     </junitreport>
     <echo message="Report generated to ${sigtest.output.dir}/html/index.html"/>
   </target>
-    
+
   <target name="-do-check-sigtests" depends="init-module-list">
     <fail unless="sigtest.check.type"/>
     <fail unless="sigtest.output.dir"/>
 
     <property name="sigtest.basedir" location="${nb.build.dir}/sigtest/snapshot"/>
     <property name="sigtest.fail.on.error" value="false"/>
-    
+
     <mkdir dir="${sigtest.basedir}"/>
     <delete dir="${sigtest.output.dir}"/>
     <mkdir dir="${sigtest.output.dir}"/>
@@ -1738,7 +1738,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     </subant>
   </target>
 
-  
+
   <target name="generate-uc-catalog" depends="bootstrap">
     <taskdef name="makeupdatedesc"
          classname="org.netbeans.nbbuild.MakeUpdateDesc"
@@ -2063,6 +2063,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="hibernate/src/org/netbeans/modules/hibernate/resources/Hibernate*.xml" /> <!--template files-->
             <exclude name="hibernate/src/org/netbeans/modules/hibernate/resources/HibernateUtil.javax" /> <!--template file-->
             <exclude name="java.j2semodule/src/org/netbeans/modules/java/j2semodule/ui/resources/module-info.java.template" /> <!--template file-->
+            <exclude name="j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/dd/resources/*.xsd" /> <!-- XSDs for usage at runtime and code generation - the XSDs are not modified, so covered by https://www.apache.org/legal/resolved.html#category-b -->
+            <exclude name="j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/ui/resources/*.xml" /> <!-- user visible file template -->
+            <exclude name="j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/wizard/jpacontroller/resources/*.txt" /> <!-- user visible file template -->
         </patternset>
         <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="build/rat-report.txt">
             <rat:substringMatcher licenseFamilyCategory="w3c2" licenseFamilyName="W3C Software and Document Notice and License">

@@ -202,7 +202,7 @@ public class DownloadBinaries extends Task {
     private void hashedFile(String expectedHash, String baseName, File manifest) throws BuildException {
         File f = new File(manifest.getParentFile(), baseName);
         if (!clean) {
-            if (!f.exists() || !hash(f).equals(expectedHash)) {
+            if (!f.exists() || !hash(f).equalsIgnoreCase(expectedHash)) {
                 log("Creating " + f);
                 String cacheName = expectedHash + "-" + baseName;
                 if (cache != null) {
@@ -224,7 +224,7 @@ public class DownloadBinaries extends Task {
                 }
             }
             String actualHash = hash(f);
-            if (!actualHash.equals(expectedHash)) {
+            if (!actualHash.equalsIgnoreCase(expectedHash)) {
                 throw new BuildException("File " + f + " requested by " + manifest + " to have hash " +
                         expectedHash + " actually had hash " + actualHash, getLocation());
             }
@@ -232,7 +232,7 @@ public class DownloadBinaries extends Task {
         } else {
             if (f.exists()) {
                 String actualHash = hash(f);
-                if (!actualHash.equals(expectedHash)) {
+                if (!actualHash.equalsIgnoreCase(expectedHash)) {
                     throw new BuildException("File " + f + " requested by " + manifest + " to have hash " +
                             expectedHash + " actually had hash " + actualHash, getLocation());
                 }
@@ -292,7 +292,7 @@ public class DownloadBinaries extends Task {
             byte[] data = baos.toByteArray();
             if (expectedHash != null) {
                 String actualHash = hash(new ByteArrayInputStream(data));
-                if (!expectedHash.equals(actualHash)) {
+                if (!expectedHash.equalsIgnoreCase(actualHash)) {
                     throw new BuildException("Download of " + url + " produced content with hash "
                             + actualHash + " when " + expectedHash + " was expected", getLocation());
                 }

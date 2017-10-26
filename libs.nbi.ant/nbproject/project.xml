@@ -27,7 +27,7 @@
             <module-dependencies>
                 <dependency>
                     <code-name-base>org.netbeans.libs.nbi.engine</code-name-base>
-                    <build-prerequsite />
+                    <build-prerequisite/>
                 </dependency>
             </module-dependencies>
             <public-packages/>

@@ -45,8 +45,4 @@
     <target name="jar" depends="init,build-nbi-engine,projectized-common.jar">
     </target>
 
-    <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/nbi.engine-external-binaries.zip" dest="${nbi.engine.dir}"/>
-    </target>
-
 </project>

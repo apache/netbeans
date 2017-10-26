@@ -1,3 +1,11 @@
+Name: External Desktop Classes
+Description: Provides java.awt.desktop classes to support compilation on JDK 8.
+Version: 8.2
+License: CDDL-GPL-2-CP
+Source: file://applemenu-external-desktop-classes-8.2.zip
+Origin: NetBeans
+Type: compile-time
+
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
 
 1. Definitions.

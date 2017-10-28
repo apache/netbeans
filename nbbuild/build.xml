@@ -2018,6 +2018,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="java.j2semodule/src/org/netbeans/modules/java/j2semodule/ui/resources/module-info.java.template" /> <!--template file-->
             <exclude name="java.platform.ui/src/org/netbeans/modules/java/platform/resources/templates/javaplatform.xml" /> <!--template file-->
             <exclude name="java.project.ui/src/org/netbeans/modules/java/project/ui/resources/*.template" /> <!-- template files -->
+            <exclude name="java.source/test-excludes.txt" /> <!-- test context -->
+            <exclude name="java.source/src/org/netbeans/modules/**/*.template" /> <!-- template files -->
             <exclude name="javafx2.kit/release/VERSION.txt" /> <!--generated file-->
             <exclude name="javafx2.project/src/org/netbeans/modules/javafx2/project/templates/**" /> <!--license would be visible when users edit the templates inside their IDE-->
             <exclude name="javawebstart/AntTasks/build/**" /> <!-- generated build files -->

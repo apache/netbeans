@@ -68,6 +68,8 @@
   
   <property name="binaries.cache" location="${user.home}/.hgexternalcache"/>
   <property name="binaries.server" value="http://hg.netbeans.org/binaries/"/>
+  <!-- A space separated, sorted list of alternate repositories used to download artifacts when not found in Maven central -->
+  <property name="binaries.repositories" value="https://repo.eclipse.org/service/local/repositories/acceleo-releases/content/" />
 
   <target name="-load-build-properties">
     <property file="${nb_all}/nbbuild/build.properties"/>

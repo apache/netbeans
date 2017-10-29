@@ -24,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -177,7 +178,27 @@ public class DownloadBinaries extends Task {
             url = "http://central.maven.org/maven2/" + cacheName;
         }
         URL u = new URL(url);
-        return downloadFromServer(u);
+        try {
+            return downloadFromServer(u);
+        } catch (FileNotFoundException notInMavenCentral) {
+            /* File was not found in Maven central, let's try alternate repositories from the 'binaries.repositories' property */
+            String alternateRepositoriesProperty = getProject().getProperty("binaries.repositories");
+            if (alternateRepositoriesProperty == null) {
+                throw new FileNotFoundException("Could not find artifact " + mc.toArtifactFilename() 
+                        + " in Maven central, and no other alternate 'binaries.repositories' were found.");
+            }
+            String [] alternateRepositories = alternateRepositoriesProperty.trim().split("\\s+");
+            for (String alternateRepository : alternateRepositories) {
+                try {
+                    u = new URL(alternateRepository + cacheName);
+                    return downloadFromServer(u);
+                } catch (FileNotFoundException notInAlternateRepository) {
+                    // Ignored to keep on trying next alternate repository
+                }
+            }
+            throw new FileNotFoundException("Could not download artifact " + mc.toArtifactFilename() 
+                + " from Maven central nor other " + alternateRepositories.length + " alternate repositories.");
+        }
     }
 
     private void fillInFile(String expectedHash, String baseName, File manifest, Downloader download) throws BuildException {
@@ -273,6 +294,9 @@ public class DownloadBinaries extends Task {
         int code = HttpURLConnection.HTTP_OK;
         if (conn instanceof HttpURLConnection) {
             code = ((HttpURLConnection) conn).getResponseCode();
+        }
+        if (code == HttpURLConnection.HTTP_NOT_FOUND) {
+            throw new FileNotFoundException("Could not find artifact in this URL.");
         }
         if (code != HttpURLConnection.HTTP_OK) {
             throw new IOException("Skipping download from " + url + " due to response code " + code);
@@ -407,7 +431,7 @@ public class DownloadBinaries extends Task {
             this.extension = extension;
             this.classifier = classifier;
         }
-        
+
         public boolean hasClassifier() {
             return (! classifier.isEmpty());
         }

@@ -2,6 +2,8 @@ Name: Java Native Access
 Version: 4.2.2
 License: Apache-2.0
 Description: Dynamically access native libraries from Java without JNI.
+Origin: Java Native Access
+URL: https://github.com/java-native-access/jna
 
                                  Apache License
                            Version 2.0, January 2004

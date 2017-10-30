@@ -40,7 +40,7 @@ public class ServerImpl extends SettingsComponentImpl implements Server {
     }
     
     public ServerImpl(SettingsModel model) {
-        this(model, createElementNS(model, model.getSettingsQNames().MIRROR));
+        this(model, createElementNS(model, model.getSettingsQNames().SERVER));
     }
 
     // attributes

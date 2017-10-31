@@ -723,16 +723,6 @@
  <answer id="dep-nb">
   <defaultanswer generate='none' />
   <ul>
-            <li><api type='import' group='java' category='private' name='org.jdesktop.layout'  >
-            The module is needed for compilation. 
-        
-            The module is used during runtime. 
-            
-                Specification version 
-                1.4
-                is required.
-            </api>
-</li>            
 <li><api type='import' group='java' category='deprecated' name='org.netbeans.modules.editor.lib' url='@org-netbeans-modules-editor-lib@/overview-summary.html' >
             The module is needed for compilation. 
         

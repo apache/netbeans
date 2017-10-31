@@ -2029,6 +2029,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="languages.yaml/src/org/netbeans/modules/languages/yaml/*.yml" /> <!--Files used in GUI as sample/starting point-->
             <exclude name="lib.uihandler/test/unit/src/**" /> <!--test data-->
             <exclude name="maven.htmlui/src/org/netbeans/modules/maven/htmlui/UIDefaults" /> <!-- config file with no place for license header-->
+            <exclude name="maven.indexer/external/NOTICE-patched-indexer-core-6.0.0" /> <!--no degree of creativity-->
             <exclude name="mercurial/src/org/netbeans/modules/mercurial/util/log*" /> <!-- user templates for mercurial commits, etc. -->
             <exclude name="nbbuild/licenses/**" />
             <exclude name="nbbuild/netbeans/**" />

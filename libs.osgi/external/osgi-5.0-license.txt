@@ -1,6 +1,6 @@
 Name: OSGi
 Version: 5.0
-Files: osgi.core-5.0.0.jar osgi.cmpn-4.2.jar org.osgi.compendium-4.2.0.jar
+Files: osgi.core-5.0.0.jar org.osgi.compendium-4.2.0.jar
 Description: OSGi specification (core & compendium).
 License: Apache-2.0
 Origin: OSGi

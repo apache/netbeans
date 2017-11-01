@@ -51,11 +51,11 @@ import org.openide.util.Lookup;
  *
  * @author Jaroslav Tulach
  */
-public class UpdateDisabledModuleTest extends NbTestCase {
+public class UpdateDisabledModuleTestDisabled extends NbTestCase {
     static Manifest man;
     private File ud;
 
-    public UpdateDisabledModuleTest(String testName) {
+    public UpdateDisabledModuleTestDisabled(String testName) {
         super(testName);
     }
 

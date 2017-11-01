@@ -34,10 +34,10 @@ import org.netbeans.junit.NbTestCase;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 
-public class NewClustersRebootTest extends NbTestCase {
+public class NewClustersRebootTestDisabled extends NbTestCase {
     private Logger LOG;
 
-    public NewClustersRebootTest(String testName) {
+    public NewClustersRebootTestDisabled(String testName) {
         super(testName);
     }
 

@@ -166,7 +166,6 @@ public class RatReportTask extends Task {
         } catch (ParserConfigurationException | SAXException | IOException | XPathExpressionException ex) {
             throw new BuildException("Cannot parse Rat report ", ex);
         }
-        doCheckExternal(moduleRATInfo);
 
         for (String clusterName : clusterList) {
             // create a report file by cluster
@@ -234,35 +233,6 @@ public class RatReportTask extends Task {
                 moduleRATInfo.get(moduleName).addApproved(resources);
             }
 
-        }
-    }
-
-    private void doCheckExternal(Map<String, ModuleInfo> moduleRATInfo) {
-        for (Map.Entry<String, ModuleInfo> minfo : moduleRATInfo.entrySet()) {
-            File binaryList = new File(minfo.getValue().getFolder(), File.separator + "external" + File.separator + "binaries-list");
-            if (binaryList.exists()) {
-                try (BufferedReader br = new BufferedReader(new FileReader(binaryList))) {
-                    String line = br.readLine();
-                    while (line != null) {
-                        if (line.trim().startsWith("#") || line.trim().isEmpty()) {
-                            // comment
-                        } else {
-                            String[] splitedExternalInfo = line.split(" ");
-
-                            String[] mavenizedExternal = splitedExternalInfo[1].split(":");
-                            if (mavenizedExternal.length != 3) {
-                                minfo.getValue().addInvalidExternal(splitedExternalInfo[1]);
-                            }
-                        }
-                        line = br.readLine();
-                    }
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(RatReportTask.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(RatReportTask.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-            }
         }
     }
 

@@ -76,7 +76,7 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>org-eclipse-core-runtime.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.core.runtime-3.7.0_nosignature.jar</binary-origin>
+                <binary-origin>external/org.eclipse.core.runtime-3.7.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

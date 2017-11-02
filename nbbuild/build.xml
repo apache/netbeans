@@ -2002,6 +2002,14 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="debugger.jpda/test/unit/src/org/netbeans/api/debugger/jpda/testapps/JspLineBreakpointApp.txt" /> <!-- test data -->
             <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/provider/*.txt" /> <!--test data-->
             <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/visualizer/data/**" /> <!--test data-->
+            <exclude name="editor/test/qa-functional/data/projects/editor_test/src/**.txt" /> <!-- test data -->
+            <exclude name="editor/test/qa-functional/data/**.pass" /> <!-- qa test data -->
+            <exclude name="editor/test/qa-functional/src/org/netbeans/test/editor/suites/keybindings/actions.txt" /> <!-- qa test data -->
+            <exclude name="editor/test/qa-functional/data/projects/editor_test/src/org/netbeans/test/editor/search/IncrementalSearchTest/**.txt" /> <!-- qa test data -->
+            <exclude name="editor/test/unit/src/org/netbeans/modules/editor/resources/**.xml" /> <!-- unit test data -->
+            <exclude name="editor/demosrc/base/org/netbeans/editor/example/res/template.java_" /> <!-- template file -->
+            <exclude name="editor/demosrc/base/org/netbeans/editor/example/res/template.html_" /> <!-- template file -->
+            <exclude name="editor/demosrc/properties-addon/org/netbeans/editor/example/res/template.properties" /> <!-- template file -->
             <exclude name="editor.fold/test/unit/src/org/netbeans/modules/editor/fold/FoldContentReader.txt" /> <!--test data-->
             <exclude name="editor.plain/src/org/netbeans/modules/editor/plain/resources/PlainTextExample" /> <!--license would be visible to users in the Fonts/Colors settings-->
             <exclude name="editor.settings.storage/test/unit/src/org/netbeans/modules/editor/settings/storage/compatibility/p1/**" /> <!--test data-->

@@ -1994,6 +1994,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="*/build/**" />
             <exclude name="*/test/unit/data/**" />
             <exclude name="*/test/qa-functional/data/**" />
+            <exclude name="autoupdate.services/test/unit/src/org/netbeans/modules/autoupdate/updateprovider/data/**" /> <!-- test data -->
             <exclude name="beans/src/org/netbeans/modules/beans/resources/templates/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
             <exclude name="css.editor/src/org/netbeans/modules/css/resources/CascadeStyleSheet.css.template" /> <!-- user visible template -->
             <exclude name="css.editor/src/org/netbeans/modules/css/resources/CssExample" /> <!-- user visible template -->
@@ -2024,6 +2025,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="o.apache.tools.ant.module/release/VERSION.txt" /> <!--generated file-->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/CustomTask_java" /> <!-- user visible file template -->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/Project.xml_" /> <!-- user visible file template -->
+            <exclude name="o.n.core/licenses/**" /> <!-- license files -->
+            <exclude name="o.n.core/test/unit/src/org/netbeans/core/projects/cache/data/**" /> <!-- test data -->
+            <exclude name="openide.nodes/test/unit/src/org/openide/nodes/data/**" /> <!-- test data -->
             <exclude name="options.editor/src/org/netbeans/modules/options/colors/AllLanguagesExample" /> <!--no degree of creativitya-->
             <exclude name="options.editor/src/org/netbeans/modules/options/colors/HighlightingExample" /> <!--no degree of creativitya-->
             <exclude name="options.editor/src/org/netbeans/modules/options/indentation/indentationExample" /> <!--no degree of creativitya-->

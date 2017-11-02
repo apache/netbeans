@@ -844,6 +844,9 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
             for (JComponent c : authPasswordFields) {
                 c.setEnabled(authViaPassword);
             }
+            if (authViaPrivateKey && settingsPanel.txtIdentityFile.getText().trim().isEmpty()) {
+                settingsPanel.txtIdentityFile.setText(getDefaultIdentityFilePath());
+            }
         }
 
         @Override
@@ -853,9 +856,13 @@ public class RemoteRepository implements DocumentListener, ActionListener, ItemL
 
         private String getDefaultIdentityFilePath () {
             String identityFile = ""; //NOI18N
-            if (!Utilities.isWindows()) {
-                identityFile = System.getProperty("user.home") + File.separator //NOI18N
-                        + ".ssh" + File.separator + "id_dsa"; //NOI18N
+            File sshDir = new File(System.getProperty("user.home"), ".ssh"); //NOI18N
+            File rsaKey = new File(sshDir, "id_rsa"); //NOI18N
+            File dsaKey = new File(sshDir, "id_dsa"); //NOI18N
+            if (rsaKey.canRead()) {
+                identityFile = rsaKey.getAbsolutePath();
+            } else if (dsaKey.canRead()) {
+                identityFile = dsaKey.getAbsolutePath();
             }
             return identityFile;
         }

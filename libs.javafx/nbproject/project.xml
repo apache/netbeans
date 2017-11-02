@@ -66,6 +66,7 @@
                 <package>javafx.beans.value</package>
                 <package>javafx.collections</package>
                 <package>javafx.concurrent</package>
+                <package>javafx.css</package>
                 <package>javafx.embed.swing</package>
                 <package>javafx.event</package>
                 <package>javafx.fxml</package>
@@ -93,6 +94,7 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>${java.home}/lib/ext/jfxrt.jar</runtime-relative-path>
+                <binary-origin>build/openjfx.zip</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

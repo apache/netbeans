@@ -114,20 +114,16 @@ public class AbstractTestCase extends NbTestCase {
     /**
      * Converts expected result data into a string. See result*.txt files.
      */
-    protected String getExpectedResultAsString(String resultFile) {
+    protected String getExpectedResultAsString(String resultFile) throws IOException {
         StringBuilder expectedResult = new StringBuilder();
-        InputStream in = AbstractTestCase.class.getResourceAsStream(resultFile);
-        Scanner scanner = new Scanner(in);
-        try {
-            while(scanner.hasNextLine()) {
-                expectedResult.append(scanner.nextLine());
-            }
-        } finally {
-            scanner.close();
-            try {
-                in.close();
-            } catch (IOException ex) {
-                //stupid catch
+        try (InputStream in = AbstractTestCase.class.getResourceAsStream(resultFile);
+                Scanner scanner = new Scanner(in)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (!line.trim().startsWith("#")) {
+                    expectedResult.append(line);
+                    expectedResult.append("\n");
+                }
             }
         }
         return expectedResult.toString();        

@@ -47,8 +47,9 @@ public class DatatypePerfTest extends AbstractTestCase {
     }
     
     public static Test suite() {
-        TestSuite suite = new TestSuite(DatatypePerfTest.class);
-        
+        TestSuite suite = new TestSuite();
+//        Disabled as referenced XSD file were partly not donated by oracle to apache
+//        suite.addTestSuite(DatatypePerfTest.class);
         return suite;
     }
     

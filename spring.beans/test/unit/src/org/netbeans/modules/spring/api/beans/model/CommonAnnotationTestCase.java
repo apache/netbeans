@@ -29,24 +29,17 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import org.netbeans.api.j2ee.core.Profile;
 
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.ProjectGroup;
 import org.netbeans.api.project.ui.ProjectGroupChangeListener;
 import org.netbeans.junit.MockServices;
-import org.netbeans.modules.j2ee.dd.api.web.WebAppMetadata;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelAction;
 import org.netbeans.modules.j2ee.metadata.model.support.JavaSourceTestCase;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
-import org.netbeans.modules.project.ui.OpenProjectList;
 import org.netbeans.modules.project.uiapi.OpenProjectsTrampoline;
-import org.netbeans.modules.web.api.webmodule.WebModule;
-import org.netbeans.modules.web.spi.webmodule.WebModuleFactory;
-import org.netbeans.modules.web.spi.webmodule.WebModuleImplementation2;
-import org.netbeans.modules.web.spi.webmodule.WebModuleProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.util.test.MockLookup;
@@ -57,8 +50,6 @@ import org.openide.util.test.MockLookup;
  */
 public class CommonAnnotationTestCase extends JavaSourceTestCase {
 
-    WebModuleProvider webModuleProvider;
-
     public CommonAnnotationTestCase(String testName) {
         super(testName);
     }
@@ -66,9 +57,7 @@ public class CommonAnnotationTestCase extends JavaSourceTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        webModuleProvider = new FakeWebModuleProvider(srcFO);
         MockLookup.setInstances(
-                webModuleProvider,
                 new ClassPathProviderImpl(),
                 new OpenProject());
         MockServices.setServices(
@@ -118,71 +107,6 @@ public class CommonAnnotationTestCase extends JavaSourceTestCase {
 
     //<editor-fold defaultstate="collapsed">
     
-    protected static class FakeWebModuleProvider implements WebModuleProvider {
-
-        private FileObject webRoot;
-
-        public FakeWebModuleProvider(FileObject webRoot) {
-            this.webRoot = webRoot;
-        }
-
-        @Override
-        public WebModule findWebModule(FileObject file) {
-            return WebModuleFactory.createWebModule(new FakeWebModuleImplementation2(webRoot));
-        }
-    }
-
-    private static class FakeWebModuleImplementation2 implements WebModuleImplementation2 {
-
-        private FileObject webRoot;
-
-        public FakeWebModuleImplementation2(FileObject webRoot) {
-            this.webRoot = webRoot;
-        }
-
-        @Override
-        public FileObject getDocumentBase() {
-            return webRoot;
-        }
-
-        @Override
-        public String getContextPath() {
-            return "/";
-        }
-
-        @Override
-        public Profile getJ2eeProfile() {
-            return Profile.JAVA_EE_6_FULL;
-        }
-
-        @Override
-        public FileObject getWebInf() {
-            return null;
-        }
-
-        @Override
-        public FileObject getDeploymentDescriptor() {
-            return null;
-        }
-
-        @Override
-        public FileObject[] getJavaSources() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public MetadataModel<WebAppMetadata> getMetadataModel() {
-            return null;
-        }
-
-        @Override
-        public void addPropertyChangeListener(PropertyChangeListener listener) {
-        }
-
-        @Override
-        public void removePropertyChangeListener(PropertyChangeListener listener) {
-        }
-    }
     
     public static class OpenProject implements  OpenProjectsTrampoline {
 

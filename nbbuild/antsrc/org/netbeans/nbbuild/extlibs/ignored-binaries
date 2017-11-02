@@ -39,3 +39,9 @@ apisupport.paintapp/PaintApp-suite/ColorChooser/release/modules/ext/ColorChooser
 # Build by NetBeans team
 mobility.databindingme/lib/*
 
+# special prebuilt binaries
+# TODO: should be removed eventually:
+lib.terminalemulator/examples/lib.richexecution/process_start-*.zip
+
+# ide is a special semi-module, does not have nbproject/project.xml, so is not recognized:
+ide/external/launchers.zip

@@ -52,7 +52,9 @@ public class AXIModelExTest extends AXIModelTest {
     }
     
     public static Test suite() {
-        TestSuite suite = new TestSuite(AXIModelExTest.class);
+        TestSuite suite = new TestSuite();
+//         Disabled as referenced XSD file were partly not donated by oracle to apache
+//         suite.addTestSuite(AXIModelExTest.class);
         return suite;
     }
     

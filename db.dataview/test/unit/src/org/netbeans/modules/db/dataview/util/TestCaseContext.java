@@ -53,7 +53,7 @@ public class TestCaseContext {
         setSqlUpdate((File)map.get(TestCaseDataFactory.DB_SQLUPDATE));
         setSqlDel((File)map.get(TestCaseDataFactory.DB_SQLDEL));
         setSqlSelect((File)map.get(TestCaseDataFactory.DB_SQLSELECT));
-        setData((File)map.get(TestCaseDataFactory.DB_TEXT));
+        setData((File)map.get(TestCaseDataFactory.DB_DATA));
     
     }
     

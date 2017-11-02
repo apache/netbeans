@@ -150,16 +150,11 @@ public class DownloadBinaries extends Task {
                                 throw new BuildException("Bad line '" + line + "' in " + manifest, getLocation());
                             }
 
-                            if (isMavenFile(hashAndFile)) {
-                                try {
-                                    mavenFile(hashAndFile, manifest);
-                                } catch (IOException ex) {
-                                    String[] artifactGroupVersion = hashAndFile[1].split(":");
-                                    String shortName = artifactGroupVersion[1] + '-' + artifactGroupVersion[2] + ".jar";
-                                    hashedFile(hashAndFile[0], shortName, manifest);
-                                }
+                            if (MavenCoordinate.isMavenFile(hashAndFile[1])) {
+                                MavenCoordinate mc = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
+                                fillInFile(hashAndFile[0], mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
                             } else {
-                                hashedFile(hashAndFile[0], hashAndFile[1], manifest);
+                                fillInFile(hashAndFile[0], hashAndFile[1], manifest, () -> legacyDownload(hashAndFile[0] + "-" + hashAndFile[1]));
                             }
                         }
                     } finally {
@@ -172,43 +167,20 @@ public class DownloadBinaries extends Task {
         }
     }
     
-    private void mavenFile(String[] hashAndId, File manifest) throws IOException {
-        String id = hashAndId[1];
-        String[] ids = id.split(":");
-        if (ids.length != 3) {
-            throw new BuildException("Expecting groupId:artifactId:version, but was " + id + " in " + manifest);
+    private byte[] mavenFile(MavenCoordinate mc) throws IOException {
+        String cacheName = mc.toMavenPath();
+        File local = new File(new File(new File(new File(System.getProperty("user.home")), ".m2"), "repository"), cacheName.replace('/', File.separatorChar));
+        final String url;
+        if (local.exists()) {
+            url = local.toURI().toString();
+        } else {
+            url = "http://central.maven.org/maven2/" + cacheName;
         }
-
-        String baseName = mavenFileName(hashAndId);
-        File f = new File(manifest.getParentFile(), baseName);
-        if (clean || !f.exists()) {
-            log("Creating " + f);
-            String cacheName = ids[0].replace('.', '/') + "/" +
-                    ids[1] + "/" + ids[2] + "/" + ids[1] + "-" + ids[2] + ".jar";
-            
-            File local = new File(new File(new File(new File(System.getProperty("user.home")), ".m2"), "repository"), cacheName.replace('/', File.separatorChar));
-            final String url;
-            if (local.exists()) {
-                url = local.toURI().toString();
-            } else {
-                url = "http://central.maven.org/maven2/" + cacheName;
-            }
-            try {
-                URL u = new URL(url);
-                if (downloadFromServer(u, cacheName, f, hashAndId[0])) {
-                    return;
-                }
-            } catch (IOException ex) {
-                String msg = "Could not download " + url + " to " + f + ": " + cacheName;
-                log(msg, Project.MSG_WARN);
-                throw new IOException(ex);
-            }
-            String msg = "Could not download " + url + " to " + f + ": " + cacheName;
-            throw new IOException(msg);
-        }
+        URL u = new URL(url);
+        return downloadFromServer(u);
     }
 
-    private void hashedFile(String expectedHash, String baseName, File manifest) throws BuildException {
+    private void fillInFile(String expectedHash, String baseName, File manifest, Downloader download) throws BuildException {
         File f = new File(manifest.getParentFile(), baseName);
         if (!clean) {
             if (!f.exists() || !hash(f).equals(expectedHash)) {
@@ -218,7 +190,7 @@ public class DownloadBinaries extends Task {
                     cache.mkdirs();
                     File cacheFile = new File(cache, cacheName);
                     if (!cacheFile.exists()) {
-                        download(cacheName, cacheFile, expectedHash);
+                        doDownload(cacheName, cacheFile, expectedHash, download);
                     }
                     if (f.isFile() && !f.delete()) {
                         throw new BuildException("Could not delete " + f);
@@ -229,7 +201,7 @@ public class DownloadBinaries extends Task {
                         throw new BuildException("Could not copy " + cacheFile + " to " + f + ": " + x, x, getLocation());
                     }
                 } else {
-                    download(cacheName, f, expectedHash);
+                    doDownload(cacheName, f, expectedHash, download);
                 }
             }
             String actualHash = hash(f);
@@ -251,31 +223,51 @@ public class DownloadBinaries extends Task {
         }
     }
 
-    private void download(String cacheName, File destination, String expectedHash) {
+    private void doDownload(String cacheName, File destination, String expectedHash, Downloader download) {
+        Throwable firstProblem = null;
+        try {
+            byte[] downloaded = download.download();
+
+            if (expectedHash != null) {
+                String actualHash = hash(new ByteArrayInputStream(downloaded));
+                if (!expectedHash.equals(actualHash)) {
+                    throw new BuildException("Download of " + cacheName + " produced content with hash "
+                            + actualHash + " when " + expectedHash + " was expected", getLocation());
+                }
+            }
+            OutputStream os = new FileOutputStream(destination);
+            try {
+                os.write(downloaded);
+            } catch (IOException x) {
+                os.close();
+                destination.delete();
+                throw x;
+            }
+            os.close();
+            return ;
+        } catch (IOException x) {
+            String msg = "Could not download " + cacheName + " to " + destination + ": " + x;
+            log(msg, Project.MSG_WARN);
+            if (firstProblem == null) {
+                firstProblem = new IOException(msg).initCause(x);
+            }
+        }
+        throw new BuildException("Could not download " + cacheName + " from " + server + ": " + firstProblem, firstProblem, getLocation());
+    }
+
+    private byte[] legacyDownload(String cacheName) throws IOException {
         if (server == null) {
             throw new BuildException("Must specify a server to download files from", getLocation());
         }
         Throwable firstProblem = null;
         for (String prefix : server.split(" ")) {
-            URL url = null;
-            try {
-                url = new URL(prefix + cacheName);
-                if (downloadFromServer(url, cacheName, destination, expectedHash)) {
-                    return;
-                }
-            } catch (IOException x) {
-                String msg = "Could not download " + url + " to " + destination + ": " + x;
-                log(msg, Project.MSG_WARN);
-                if (firstProblem == null) {
-                    firstProblem = new IOException(msg).initCause(x);
-                }
-            }
+            URL url = new URL(prefix + cacheName);
+            return downloadFromServer(url);
         }
         throw new BuildException("Could not download " + cacheName + " from " + server + ": " + firstProblem, firstProblem, getLocation());
     }
     
-    private boolean downloadFromServer(URL url, String cacheName, File destination, String expectedHash) 
-    throws IOException {
+    private byte[] downloadFromServer(URL url) throws IOException {
         log("Downloading: " + url);
         URLConnection conn = openConnection(url);
         int code = HttpURLConnection.HTTP_OK;
@@ -283,42 +275,28 @@ public class DownloadBinaries extends Task {
             code = ((HttpURLConnection) conn).getResponseCode();
         }
         if (code != HttpURLConnection.HTTP_OK) {
-            log("Skipping download from " + url + " due to response code " + code, Project.MSG_VERBOSE);
-            return false;
+            throw new IOException("Skipping download from " + url + " due to response code " + code);
         }
-        InputStream is = conn.getInputStream();
         try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            InputStream is = conn.getInputStream();
             try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 byte[] buf = new byte[4096];
                 int read;
                 while ((read = is.read(buf)) != -1) {
                     baos.write(buf, 0, read);
                 }
-            } catch (IOException x) {
-                throw new BuildException(x); // should not happen
+                return baos.toByteArray();
+            } finally {
+                is.close();
             }
-            byte[] data = baos.toByteArray();
-            if (expectedHash != null) {
-                String actualHash = hash(new ByteArrayInputStream(data));
-                if (!expectedHash.equals(actualHash)) {
-                    throw new BuildException("Download of " + url + " produced content with hash "
-                            + actualHash + " when " + expectedHash + " was expected", getLocation());
-                }
-            }
-            OutputStream os = new FileOutputStream(destination);
-            try {
-                os.write(data);
-            } catch (IOException x) {
-                os.close();
-                destination.delete();
-                throw x;
-            }
-            os.close();
-        } finally {
-            is.close();
+        } catch (IOException ex) {
+            throw new IOException("Cannot download: " + url + " due to: " + ex, ex);
         }
-        return true;
+    }
+
+    interface Downloader {
+        public byte[] download() throws IOException;
     }
 
     private URLConnection openConnection(final URL url) throws IOException {
@@ -415,16 +393,113 @@ public class DownloadBinaries extends Task {
         return String.format("%040X", new BigInteger(1, digest.digest()));
     }
 
-    static boolean isMavenFile(String... hashAndId) {
-        return hashAndId[1].split(":").length > 2;
-    }
-    static String mavenFileName(String... hashAndId) {
-        assert isMavenFile(hashAndId);
-        String[] artifactGroupVersion = hashAndId[1].split(":");
-        return artifactGroupVersion[1] + "-" + artifactGroupVersion[2] + ".jar";
-    }
+    static class MavenCoordinate {
+        private final String groupId;
+        private final String artifactId;
+        private final String version;
+        private final String extension;
+        private final String classifier;
 
+        private MavenCoordinate(String groupId, String artifactId, String version, String extension, String classifier) {
+            this.groupId = groupId;
+            this.artifactId = artifactId;
+            this.version = version;
+            this.extension = extension;
+            this.classifier = classifier;
+        }
+        
+        public boolean hasClassifier() {
+            return (! classifier.isEmpty());
+        }
 
+        public String getGroupId() {
+            return groupId;
+        }
+
+        public String getArtifactId() {
+            return artifactId;
+        }
+
+        public String getVersion() {
+            return version;
+        }
+
+        public String getExtension() {
+            return extension;
+        }
+
+        public String getClassifier() {
+            return classifier;
+        }
+        
+        /**
+         * @return filename of the artifact by maven convention: 
+         *         {@code artifact-version[-classifier].extension}
+         */
+        public String toArtifactFilename() {
+            return String.format("%s-%s%s.%s",
+                    getArtifactId(),
+                    getVersion(),
+                    hasClassifier() ? ("-" + getClassifier()) : "",
+                    getExtension()
+            );
+        }
+        
+        /**
+         * @return The repository path for an artifact by maven convention: 
+         *         {@code group/artifact/version/artifact-version[-classifier].extension}.
+         *         In the group part all dots are replaced by a slash. 
+         */        
+        public String toMavenPath() {
+            return String.format("%s/%s/%s/%s",
+                    getGroupId().replace(".", "/"),
+                    getArtifactId(),
+                    getVersion(),
+                    toArtifactFilename()
+                    );
+        }
+        
+        public static boolean isMavenFile(String gradleFormat) {
+            return gradleFormat.split(":").length > 2;
+        }
+        
+        /**
+         * The maven coordinate is supplied in the form:
+         * 
+         * <p>{@code group:name:version:classifier@extension}</p>
+         * 
+         * <p>For the DownloadBinaries task the parts group, name and version
+         * are requiered. classifier and extension are optional. The extension
+         * has a default value of "jar".
+         * 
+         * @param gradleFormat artifact coordinated to be parse as a MavenCoordinate
+         * @return 
+         * @throws IllegalArgumentException if provided string fails to parse
+         */
+        public static MavenCoordinate fromGradleFormat(String gradleFormat) {
+            if(! isMavenFile(gradleFormat)) {
+                throw new IllegalArgumentException("Supplied string is not in gradle dependency format: " + gradleFormat);
+            }
+            String[] coordinateExtension = gradleFormat.split("@", 2);
+            String extension;
+            String coordinate = coordinateExtension[0];
+            if (coordinateExtension.length > 1
+                    && (!coordinateExtension[1].trim().isEmpty())) {
+                extension = coordinateExtension[1];
+            } else {
+                extension = "jar";
+            }
+            String[] coordinates = coordinate.split(":");
+            String group = coordinates[0];
+            String artifact = coordinates[1];
+            String version = coordinates[2];
+            String classifier = "";
+            if (coordinates.length > 3) {
+                classifier = coordinates[3].trim();
+            }
+            return new MavenCoordinate(group, artifact, version, extension, classifier);
+        }
+    }
 }
 
 /*

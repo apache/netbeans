@@ -14,20 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-javac.source=1.7
-javac.compilerargs=-Xlint -Xlint:-serial
-test.unit.cp.extra=\
-        ${basedir}/external/h2-1.4.196.jar
 
-test.config.stableBTD.includes=**/*Test.class
-test.config.stableBTD.excludes=\
-    **/DataViewDBTableTest.class,\
-    **/DataViewTest.class,\
-    **/DataViewTest.class,\
-    **/DBConnectionFactoryTest.class,\
-    **/DBConnectionProviderImplTest.class,\
-    **/DBMetaDataFactoryTest.class,\
-    **/DBPrimaryKeyTest.class,\
-    **/DBTableTest.class,\
-    **/SQLExecutionHelperTest.class,\
-    **/SQLStatementExecutorTest.class
+DD0034398D593AA3588C6773FAAC429BBD9AEA0E com.h2database:h2:1.4.196

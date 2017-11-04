@@ -22,7 +22,7 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
 
-<!--    <folder name="DTDs">
+    <folder name="DTDs">
         <folder name="3_2">
             <file name="catalog" url="DTDs/3_2/catalog"/>
             <file name="html32.dtd" url="DTDs/3_2/html32.dtd"/>
@@ -56,8 +56,7 @@
             <file name="xhtml1-transitional.dtd" url="DTDs/xhtml/xhtml1-transitional.dtd"/>
             <file name="xhtml1-strict.dtd" url="DTDs/xhtml/xhtml1-strict.dtd"/>
         </folder>
-    </folder>-->
-
+    </folder>
 
     <folder name="Editors">
 

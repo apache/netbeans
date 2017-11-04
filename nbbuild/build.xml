@@ -1976,10 +1976,14 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         </taskdef>
         <patternset id="non.rat">
             <!--add new one alphabetically-->
-            <exclude name="**/*.mf" /> <!--do not nativelly support comments-->
+            <exclude name="**/*.exists" /> <!--no degree of creativity-->
+            <exclude name="**/*.mf" /> <!--do not natively support comments-->
+            <exclude name="**/*.MF" /> <!--do not natively support comments-->
+            <exclude name="**/*.nib" /> <!--do not natively support comments-->
             <exclude name="**/*.palette_item" /> <!--no degree of creativity-->
             <exclude name="**/*.pass" /> <!--generated test files-->
             <exclude name="**/*.pass2" /> <!--generated test files-->
+            <exclude name="**/*.pbxproj" /> <!--generated test files-->
             <exclude name="**/*.ref" /> <!--would cause tests to fail-->
             <exclude name="**/*.ser" /> <!--do not natively support comments-->
             <exclude name="**/*.url" /> <!--no degree of creativity-->
@@ -1992,6 +1996,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="**/nbproject/private/**" /> <!--user-specific files -->
             <exclude name="**/src/META-INF/**" /> <!--no degree of creativity-->
             <exclude name="*/build/**" />
+            <exclude name="**/package-list" /> <!--no degree of creativity-->
             <exclude name="*/test/unit/data/**" />
             <exclude name="*/test/qa-functional/data/**" />
             <exclude name="autoupdate.services/test/unit/src/org/netbeans/modules/autoupdate/updateprovider/data/**" /> <!-- test data -->

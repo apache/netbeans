@@ -91,7 +91,7 @@ public class ModuleListParserTest extends TestBase {
         assertEquals("org.netbeans.libs.xerces", e.getCnb());
         assertEquals("unknown module put in extra cluster by default", file(build, "extra/modules/org-netbeans-libs-xerces.jar"), e.getJar());
         assertEquals("correct CP extensions (using <binary-origin> and relative paths)",
-            Collections.singletonList(file(nball, "libs.xerces/external/xerces-2.8.0.jar")),
+            Collections.singletonList(file(nball, "libs.xerces/external/xercesImpl-2.8.0.jar")),
             Arrays.asList(e.getClassPathExtensions()));
         e = p.findByCodeNameBase("org.netbeans.swing.tabcontrol");
         assertNotNull("found module in a subsubdir", e);

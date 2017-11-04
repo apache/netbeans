@@ -26,18 +26,12 @@
     <target name="clean" depends="client-editor-clean,projectized-common.clean"/>
 
     <target name="client-editor-compile">
-        <path id="swing-layout-classpath">
-            <fileset dir="../o.jdesktop.layout/external">
-                <include name="**/*.jar"/>
-            </fileset>
-        </path>
         <path id="beans-binding-classpath">
             <fileset dir="../o.jdesktop.beansbinding/external">
                 <include name="**/*.jar"/>
             </fileset>
         </path>
         <ant dir="ClientEditor" target="compile" inheritAll="false" >
-            <property name="libs.swing-layout.classpath" refid="swing-layout-classpath"/>
             <property name="libs.beans-binding.classpath" refid="beans-binding-classpath"/>
         </ant>
     </target>

@@ -30,7 +30,7 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/xerces-2.8.0.jar</runtime-relative-path>
-                <binary-origin>external/xerces-2.8.0.jar</binary-origin>
+                <binary-origin>external/xercesImpl-2.8.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

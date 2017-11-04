@@ -1,7 +1,7 @@
 Name: Equinox
 Version: 3.9.1
 Description: Eclipse OSGi container
-License: OSGi-LICENSE
+License: OSGi
 Files: org.eclipse.osgi_3.9.1.v20140110-1610.jar
 Origin: Eclipse
 URL: http://www.eclipse.org/equinox/
@@ -14,7 +14,7 @@ All past Contributors to the code disclaim all warranties and conditions,
 express and implied, including warranties or conditions of title and non-infringement,
 and implied warranties or conditions of merchantability and fitness for a particular
 purpose.  In addition, such Contributors are not liable for any damages, including
-direct, indirect, special, incidental and consequential damages, such as lost profits.  
+direct, indirect, special, incidental and consequential damages, such as lost profits.
 
 Any provisions of the Oracle license agreement that differ from the
 Eclipse Public License are offered by Oracle alone and not by any other party.

@@ -4,6 +4,8 @@ Version: 2.3.1.1
 License: CDDL-GPL-2-CP
 Origin: jemmy.java.net
 URL: https://web.archive.org/web/20120822233211/http://java.net:80/projects/jemmy
+Source: file://jemmy-2.3.1.1-src.zip
+Files: jemmy-2.3.1.1-doc.zip jemmy-2.3.1.1.jar jemmy-2.3.1.1-src.zip
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
 

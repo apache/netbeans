@@ -36,15 +36,15 @@
     -->
     <target name="-prepare-patched-binary" depends="-check-requires-patching-maven-sources" unless="sources-already-patched">
         <echo message="Patching xml-resolver-1.2-sources.jar for Netbeans..." />
+        <taskdef name="patchfile" classname="org.netbeans.nbbuild.extlibs.PatchFile" classpath="${nbantext.jar}"/>
         <!-- ... 1. Prepares a 'build/external-patch/[sources|classes]' working directories -->
         <delete dir="build/external-patch" />
         <mkdir dir="build/external-patch/sources" />
         <!-- ... 2. Unzips maven sources -->
         <unzip src="external/xml-resolver-1.2-sources.jar" dest="build/external-patch/sources" />
         <!-- ... 3. Applies patch 'external/xml-resolver-1.2-netbeans.patch -->
-        <patch dir="build/external-patch/sources"
-            patchfile="external/xml-resolver-1.2-netbeans.patch"
-            strip="0" />
+        <patchfile dir="build/external-patch/sources"
+            patchfile="external/xml-resolver-1.2-netbeans.patch" />
         <!-- ... 4. Compiles sources to build/external-patch/classes -->
         <mkdir dir="build/external-patch/classes" />
         <javac srcdir="build/external-patch/sources"

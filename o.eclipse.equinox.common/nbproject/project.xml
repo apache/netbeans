@@ -28,7 +28,7 @@
            <public-packages/>
            <class-path-extension>
                <runtime-relative-path>org-eclipse-equinox-common.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.equinox.common_3.6.0.v20110523_nosignature.jar</binary-origin>
+                <binary-origin>external/org.eclipse.equinox.common-3.6.0.v20110523.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

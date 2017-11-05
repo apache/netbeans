@@ -62,7 +62,7 @@ public class DBConnectionProviderImplTest extends NbTestCase {
             DBConnectionProviderImpl instance = new DBConnectionProviderImpl();
             Connection result = instance.getConnection(dbconn);
             assertNotNull(result);
-            assertEquals("AxionDB", result.getMetaData().getDatabaseProductName());
+            assertEquals("H2", result.getMetaData().getDatabaseProductName());
             result.close();
         } catch (SQLException ex) {
             Exceptions.printStackTrace(ex);

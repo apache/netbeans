@@ -2026,6 +2026,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="extbrowser/test/unit/src/org/netbeans/modules/extbrowser/data/mac_defaults_*" /> <!--test data-->
             <exclude name="hibernate/src/org/netbeans/modules/hibernate/resources/Hibernate*.xml" /> <!--template files-->
             <exclude name="hibernate/src/org/netbeans/modules/hibernate/resources/HibernateUtil.javax" /> <!--template file-->
+            <exclude name="html.editor/src/org/netbeans/modules/html/editor/options/ui/formatSample.html" /> <!--user visible file template-->
+            <exclude name="html.editor/src/org/netbeans/modules/html/editor/resources/HTMLExample" /> <!--user visible file template-->
+            <exclude name="html.editor/src/org/netbeans/modules/html/editor/resources/XHTMLExample" /> <!--user visible file template-->
+            <exclude name="html.editor/src/org/netbeans/modules/html/editor/todo.txt" /> <!--no degree of creativity-->
+            <exclude name="html.editor/src/org/netbeans/modules/html/editor/resources/DTDs/*/catalog" /> <!--no degree of creativity-->
             <exclude name="hudson.subversion/test/unit/src/org/netbeans/modules/hudson/subversion/sample-entries-file" /> <!--test data-->
             <exclude name="ide/launcher/macosx/NetBeansLauncher/ReadMe.rtf" /> <!--does not natively support comments-->
             <exclude name="j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/dd/resources/*.xsd" /> <!-- XSDs for usage at runtime and code generation - the XSDs are not modified, so covered by https://www.apache.org/legal/resolved.html#category-b -->

@@ -2064,9 +2064,17 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="o.apache.tools.ant.module/release/VERSION.txt" /> <!--generated file-->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/CustomTask_java" /> <!-- user visible file template -->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/Project.xml_" /> <!-- user visible file template -->
+            <exclude name="o.n.bootstrap/test/unit/src/org/fakepkg/resource1.txt" /> <!--no degree of creativity-->
+            <exclude name="o.n.bootstrap/test/unit/src/org/fakepkg/resource2.txt" /> <!--no degree of creativity-->
             <exclude name="o.n.core/licenses/**" /> <!-- license files -->
+            <exclude name="o.n.core/test/unit/src/org/netbeans/core/modules/jars/localized-manifest/locmani/something.txt" /> <!--no degree of creativity-->
             <exclude name="o.n.core/test/unit/src/org/netbeans/core/projects/cache/data/**" /> <!-- test data -->
             <exclude name="openide.nodes/test/unit/src/org/openide/nodes/data/**" /> <!-- test data -->
+            <exclude name="openide.util.lookup/test/unit/src/org/openide/util/lookup/MetaInfServicesLookupTestRunnable.txt" /> <!--no degree of creativity-->
+            <exclude name="openide.util.lookup/test/unit/src/org/openide/util/lookup/problem100320.txt" /> <!--no degree of creativity-->
+            <exclude name="openide.util.lookup/test/unit/src/org/openide/util/lookup/problem249414.txt" /> <!--no degree of creativity-->
+            <exclude name="openide.util.lookup/test/unit/src/org/openide/util/lookup/services-jar-1.txt" /> <!--no degree of creativity-->
+            <exclude name="openide.util.lookup/test/unit/src/org/openide/util/lookup/services-jar-2.txt" /> <!--no degree of creativity-->
             <exclude name="openide.util.ui/test/unit/src/org/openide/util/UtilitiesTranslateEmpty.txt" /> <!-- license would cause tests to fail -->
             <exclude name="openide.util/test/unit/src/org/openide/util/LookupUsesRequestProcessorTest.resource" /> <!-- license would cause tests to fail -->
             <exclude name="options.editor/src/org/netbeans/modules/options/colors/AllLanguagesExample" /> <!--no degree of creativitya-->

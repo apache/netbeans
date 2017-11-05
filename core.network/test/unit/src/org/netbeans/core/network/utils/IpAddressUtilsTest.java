@@ -45,11 +45,11 @@ public class IpAddressUtilsTest {
 
     @Before
     public void setUp() throws UnknownHostException {
-        fakeDns = FakeDns.getInstance();
+        fakeDns = new FakeDns();
         fakeDns.install(true);
 
-        ipv4Addr = InetAddress.getByName("172.217.17.36");
-        ipv6Addr = InetAddress.getByName("2a00:1450:400e:804::2004");
+        ipv4Addr = InetAddress.getByName("172.217.17.36"); // just some random address
+        ipv6Addr = InetAddress.getByName("2a00:1450:400e:804::2004"); // just some random address
     }
 
     @After

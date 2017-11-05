@@ -19,6 +19,8 @@
 package org.netbeans.core.network.utils;
 
 import java.util.Comparator;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -73,10 +75,8 @@ public class SimpleObjCache<K,V> {
      * @return the previous value associated with key, or null if there 
      *         was no mapping for the key
      */
-    public V put(K key, V value) {
-        if (map.size() >= maxSize) {
-            map.remove(findEvictionCandidate());
-        }
+     public V put(K key, V value) {
+        evictIfFull();
         ValueWrapper existingValue = map.put(key, new ValueWrapper(value));
         if (existingValue != null) {
             return existingValue.value;
@@ -118,11 +118,28 @@ public class SimpleObjCache<K,V> {
         map.clear();
     }
     
+    synchronized private void evictIfFull() {
+        if (map.size() >= maxSize) {
+            K toBeEvicted = findEvictionCandidate();
+            if (toBeEvicted != null) {
+                map.remove(toBeEvicted);
+            }
+        }
+    }
+    
     private K findEvictionCandidate() {
         // Finds minimum of all timestamps of all elements in the cache.
-        return map.entrySet().stream()
-                .min(Comparator.comparingLong( e -> e.getValue().lastUsed.get()))
-                .get().getKey();
+        
+        Optional<Map.Entry<K, ValueWrapper>> minEntry = map.entrySet().stream()
+                .min(Comparator.comparingLong( e -> e.getValue().lastUsed.get()));
+        
+        // Did we actually find something to delete?  
+        // Theoretically this should always be so, but we are cautious
+        if (minEntry.isPresent()) {  
+            return minEntry.get().getKey();
+        } else {
+            return null;
+        }
     }
     
     private class ValueWrapper {

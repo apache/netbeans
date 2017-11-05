@@ -168,14 +168,14 @@ public interface PacHelperMethodsMicrosoft {
      * 
      * <p> 
      * Microsoft's documentation is vague / contradictory on what the pattern
-     * argument ({@code ipPrefix}) is, meaning is it a <i>list</i> of patterns 
+     * argument, {@code ipPrefix}, is, meaning is it a <i>list</i> of patterns 
      * or is it a singular pattern?. We err on the side of caution and decide that
      * the {@code ipPrefix} is a semi-colon separated list of patterns and that
      * the method must return {@code true} if the supplied {@code ipAddress}
      * matches <i>any</i> of the patterns in the list.
      * 
      * <p> 
-     * Similarly the interpretation of the first argument {@code host} 
+     * Similarly, the interpretation of the first argument, {@code host},
      * is open for discussion. In the sibling function, {@code isInNet}, it
      * is clearly stated that this argument can be either a host name or a 
      * literal IP address. But Microsoft's documentation on {@code isInNetEx}

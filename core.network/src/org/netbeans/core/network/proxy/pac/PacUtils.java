@@ -233,8 +233,7 @@ public class PacUtils {
         int bitField = 0;
         try {
             bitField = Integer.parseInt(parts[1].trim());
-            // bitField < 8 doesn't make much sense in my book
-            if (!(bitField >= 8 && bitField <= 128)) {
+            if (!(bitField >= 0 && bitField <= 128)) {
                 return false;
             }
             if (ipAddress instanceof Inet4Address) {

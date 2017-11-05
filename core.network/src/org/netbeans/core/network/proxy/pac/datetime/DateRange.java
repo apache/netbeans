@@ -29,7 +29,7 @@ import java.util.Calendar;
  * 
  *   - Only month range is defined. monthMin=11 monthMax=02.  The period from 
  *     December 1st to end of February.
- *   - Only day of month range is defined. dateMin=27 dateMin=5. The days from the 
+ *   - Only day of month range is defined. dateMin=27 dateMax=5. The days from the 
  *     27th of each month to the 5th of the next month.
  * 
  * @author lbruun

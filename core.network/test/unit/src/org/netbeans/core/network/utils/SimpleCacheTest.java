@@ -45,22 +45,20 @@ public class SimpleCacheTest {
         cache.put("09", UUID.randomUUID().toString());
         cache.put("10", UUID.randomUUID().toString());
  
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ex) {
-        }
-        
-        assertNotNull(cache.get("01"));
+        shortWait();
+        assertNotNull(cache.get("01"));   // reset last usage timestamp for this element
 
-        // We've reached max capicity. Elements will start
+        // We've reached max capacity. Elements will start
         // to get evicted.
 
+        shortWait();
         cache.put("11", UUID.randomUUID().toString());
         assertTrue(cache.getCacheSize() == 10);
         
         
         assertNull(cache.get("02"));  // "02" will have been evicted by now
 
+        shortWait();
         cache.put("12", UUID.randomUUID().toString());
         assertTrue(cache.getCacheSize() == 10);
         
@@ -69,5 +67,63 @@ public class SimpleCacheTest {
         
     }
 
+    @Test
+    public void testCacheConcurrency() {
+        System.out.println("testCache - concurrency ");
+        
+        // See if we can provoke ConcurrentModificationException.
+        // That should not be the case, because of use of ConcurrentHashMap.
+        
+        // However, the use of ConcurrentHashMap is not immune to
+        // NoSuchElementException being thrown from the Optional#get() in the
+        // findEvictionCandidate() method.
+
+        SimpleObjCache<Integer, String> intCache = new SimpleObjCache<>(3);    // very low capacity cache so that we get a lot of contention
+        
+        int noOfThreads = 15;
+        CacheTesterThread[] threads = new CacheTesterThread[noOfThreads];
+        // Prepare threads
+        for(int i = 0; i<noOfThreads; i++) {
+            threads[i] = new CacheTesterThread(intCache);
+        }
+        // Start threads
+        for(int i = 0; i<noOfThreads; i++) {
+            threads[i].start();
+        }
+
+    }
     
+        
+    
+    private void shortWait() {
+        // The cache only tracks usage of elements down to the millisecond. 
+        // So, potentially, two elements can have exactly the same timestamp. 
+        // For this reason, it is necessary to wait a bit in order to 
+        // accurately predict which element will be evicted, thus only needed
+        // if we need to predict which element will be evicted.
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException ex) {
+        }
+    }
+    
+    
+    private static class CacheTesterThread extends Thread {
+
+        private final SimpleObjCache<Integer, String> cache;
+
+        public CacheTesterThread(SimpleObjCache cache) {
+            this.cache = cache;
+        }
+
+        @Override
+        public void run() {
+            for (int i = 0; i < 100000; i++) {
+                // Do a bit of both writing and reading
+                cache.put(i % 10, "foo");
+                String val = cache.get(i);
+                cache.put((i % 10) + 1, val);
+            }
+        }
+    }
 }

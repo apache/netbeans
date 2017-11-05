@@ -295,9 +295,12 @@ public class NbPacHelperMethods extends PacHelperMethods {
     //  Other functions - not defined in PAC spec, but still 
     //  exposed to the JavaScript engine.
     // *************************************************************
-    
 
-    
+    @Override
+    public void alert(String message) {
+        LOGGER.log(Level.INFO, "PAC script says : {0}", message);
+    }
+
     
     // *************************************************************
     //  

@@ -203,14 +203,10 @@ function FindProxyForURL(url, host) {
         return "PROXY timeRange:1";
     if (!(timeRange(0, 0, 0, 23, 59, 59, "GMT")))
         return "PROXY timeRange:2";
-    if (!(timeRange(0, 23)))
-        return "PROXY timeRange:3";
-    if (!(timeRange(0, 23, "GMT")))
-        return "PROXY timeRange:4";
     if (!(timeRange(0, 0, 23, 59)))
-        return "PROXY timeRange:5";
+        return "PROXY timeRange:3";
     if (!(timeRange(0, 0, 23, 59, "GMT")))
-        return "PROXY timeRange:6";
+        return "PROXY timeRange:4";
 
 
 //

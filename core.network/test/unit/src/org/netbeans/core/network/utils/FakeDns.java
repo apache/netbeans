@@ -43,7 +43,6 @@ import sun.net.spi.nameservice.NameService;
  */
 public class FakeDns {
 
-    private static final FakeDns INSTANCE = new FakeDns();
 
     private final Map<String, InetAddress[]> forwardResolutions = new ConcurrentHashMap<>();
     private final Map<InetAddress, String> reverseResolutions = new ConcurrentHashMap<>();
@@ -51,12 +50,9 @@ public class FakeDns {
     private volatile boolean installed = false;
     private final AtomicLong delayAnsweringByMs = new AtomicLong(0);
 
-    private FakeDns() {
+    public FakeDns() {
     }
 
-    public static FakeDns getInstance() {
-        return INSTANCE;
-    }
 
     /**
      * Adds a hostname-to-address(es) mapping. This will also add the
@@ -119,6 +115,8 @@ public class FakeDns {
 
     /**
      * Puts Java's internal name service chain back to its original state.
+     * Clears any forward or reverse mappings that has been put into the
+     * FakeDns.
      */
     public synchronized void unInstall() {
         if (!installed) {
@@ -140,6 +138,8 @@ public class FakeDns {
                 orgNameServices.clear();
             }
         }
+        forwardResolutions.clear();
+        reverseResolutions.clear();
     }
 
     /**

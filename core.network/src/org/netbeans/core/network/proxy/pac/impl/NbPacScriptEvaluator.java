@@ -18,13 +18,9 @@
  */
 package org.netbeans.core.network.proxy.pac.impl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -245,9 +241,12 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
         } catch (Exception ex) {  // for runtime exceptions
             if (ex.getCause() != null) {
                 if (ex.getCause() instanceof ClassNotFoundException) {
-                    LOGGER.log(Level.WARNING, "The downloaded PAC script is attempting to access Java class ''{0}'' which may be a sign of maliciousness. You should investigate this with your network adminstrator.", ex.getCause().getMessage());
+                    // Is someone trying to break out of the sandbox ?
+                    LOGGER.log(Level.WARNING, "The downloaded PAC script is attempting to access Java class ''{0}'' which may be a sign of maliciousness. You should investigate this with your network administrator.", ex.getCause().getMessage());
+                    return Collections.singletonList(Proxy.NO_PROXY);
                 }
             }
+            // other unforseen errors
             LOGGER.log(Level.WARNING, "Error when executing PAC script function " + scriptEngine.getJsMainFunction().getJsFunctionName() + " : ", ex);
             return Collections.singletonList(Proxy.NO_PROXY);
         }
@@ -390,20 +389,7 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
         return HelperScriptFactory.getPacHelperSource(JS_HELPER_METHODS_INSTANCE_NAME);
     }
 
-//    /**
-//     * Reads an InputStream into a String.
-//     * Currently only used for unit tests. You must still close the InputStream
-//     * yourself once you are done with it.
-//     */
-//    public static String convertInputStreamToString(InputStream in, int initSize, Charset charset) throws IOException {
-//        ByteArrayOutputStream buf = new ByteArrayOutputStream(initSize);
-//        byte[] buffer = new byte[1024];
-//        int length;
-//        while ((length = in.read(buffer)) != -1) {
-//            buf.write(buffer, 0, length);
-//        }
-//        return buf.toString(charset.name());
-//    }
+
 
     /**
      * Does the script source make reference to any of the date/time functions
@@ -480,8 +466,7 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     private static Proxy getProxy(String proxySpec) throws PacValidationException {
          if (proxySpec.equals(PAC_DIRECT)) {
              return Proxy.NO_PROXY;
-         }
-        
+         }      
         
         String[] ele = proxySpec.split(" +"); // NOI18N
         if (ele.length != 2) {
@@ -523,7 +508,7 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     }
     
     
-    class PacScriptEngine  {
+    private static class PacScriptEngine  {
         private final ScriptEngine scriptEngine;
         private final PacJsEntryFunction jsMainFunction;
         private final Invocable invocable;

@@ -299,7 +299,7 @@ public class VerifyLibsAndLicenses extends Task {
                         StringBuffer masterBody = new StringBuffer();
                         is = new FileInputStream(licenseFile);
                         try {
-                            BufferedReader r = new BufferedReader(new InputStreamReader(is));
+                            BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                             int c;
                             while ((c = r.read()) != -1) {
                                 masterBody.append((char) c);

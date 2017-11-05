@@ -1986,7 +1986,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="**/*.pbxproj" /> <!--generated test files-->
             <exclude name="**/*.ref" /> <!--would cause tests to fail-->
             <exclude name="**/*.ser" /> <!--do not natively support comments-->
+            <exclude name="**/*.sln" /> <!--would cause tests to fail-->
             <exclude name="**/*.url" /> <!--no degree of creativity-->
+            <exclude name="**/*.user" /> <!--would cause tests to fail-->
+            <exclude name="**/*.vcproj" /> <!--would cause tests to fail-->
             <exclude name="**/external/*-license.txt" /> <!--licenses for external dependencies-->
             <exclude name="**/external/*-notice.txt" /> <!--notices for external dependencies-->
             <exclude name="**/nbproject/*.sig" /> <!--generated signatures for past versions-->
@@ -1996,9 +1999,12 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="**/nbproject/private/**" /> <!--user-specific files -->
             <exclude name="**/src/META-INF/**" /> <!--no degree of creativity-->
             <exclude name="*/build/**" />
+            <exclude name="**/.dep.inc" /> <!--no degree of creativity-->
+            <exclude name="**/Makefile-vc" /> <!--no degree of creativity-->
+            <exclude name="**/Makefile-vc-wo-crt" /> <!--no degree of creativity-->
             <exclude name="**/package-list" /> <!--no degree of creativity-->
-            <exclude name="*/test/unit/data/**" />
-            <exclude name="*/test/qa-functional/data/**" />
+            <exclude name="*/test/unit/data/**" /> <!--would cause tests to fail-->
+            <exclude name="*/test/qa-functional/data/**" /> <!--would cause tests to fail-->
             <exclude name="autoupdate.services/test/unit/src/org/netbeans/modules/autoupdate/updateprovider/data/**" /> <!-- test data -->
             <exclude name="api.search/test/unit/src/org/netbeans/modules/search/data/**" /> <!--test data-->
             <exclude name="apisupport.ant/src/org/netbeans/modules/apisupport/project/resources/license-*.txt" /> <!--template file-->
@@ -2051,7 +2057,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="nbbuild/licenses/**" />
             <exclude name="nbbuild/netbeans/**" />
             <exclude name="nbbuild/tagref" /> <!--no degree of creativity-->
+            <exclude name="nbbuild/notice-stub.txt" /> <!--Apache notice file-->
+            <exclude name="nbbuild/standard-nbm-license.txt" /> <!--license file-->
             <exclude name="nbbuild/testuserdir/**" />
+            <exclude name="nbi/engine/nbproject/profiler-build-impl.xml" /> <!--generated, no degree of creativity -->
             <exclude name="o.apache.tools.ant.module/release/VERSION.txt" /> <!--generated file-->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/CustomTask_java" /> <!-- user visible file template -->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/Project.xml_" /> <!-- user visible file template -->

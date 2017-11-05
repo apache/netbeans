@@ -52,8 +52,9 @@ public class DatatypeFactoryTest extends AbstractTestCase {
     }
     
     public static Test suite() {
-        TestSuite suite = new TestSuite(DatatypeFactoryTest.class);
-        
+        TestSuite suite = new TestSuite();
+//        Disabled as referenced XSD file were partly not donated by oracle to apache
+//        suite.addTestSuite(DatatypeFactoryTest.class);
         return suite;
     }
     

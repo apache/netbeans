@@ -22,4 +22,47 @@
 <project basedir="." default="netbeans" name="extexecution.process">
     <description>Builds, tests, and runs the project org.netbeans.modules.extexecution.process</description>
     <import file="../nbbuild/templates/projectized.xml"/>
+
+    <!-- A task to check if the binary 'external/winp-1.14-patched.jar exists -->
+    <target name="-check-requires-patching-maven-sources">
+        <available file="external/winp-1.14-patched.jar" property="sources-already-patched" />
+    </target>
+
+    <!-- 
+         '-javac-init' task is invoked after maven sources have been downloaded 
+         to 'external/winp-1.14-sources.jar'
+         (see external/binaries-list).
+         Then if 'external/winp-1.14-patched.jar does NOT exist...
+    -->
+    <target name="-prepare-patched-binary" depends="-check-requires-patching-maven-sources" unless="sources-already-patched">
+        <echo message="Patching winp-1.14-sources.jar for Netbeans..." />
+        <taskdef name="patchfile" classname="org.netbeans.nbbuild.extlibs.PatchFile" classpath="${nbantext.jar}"/>
+        <!-- ... 1. Prepares a 'build/external-patch/[sources|classes]' working directories -->
+        <delete dir="build/external-patch" />
+        <mkdir dir="build/external-patch/sources" />
+        <!-- ... 2. Unzips maven sources -->
+        <unzip src="external/winp-1.14-sources.jar" dest="build/external-patch/sources" />
+        <!-- ... 3. Applies patch 'external/winp-1.14-netbeans.patch -->
+        <patchfile dir="build/external-patch/sources"
+            patchfile="external/winp.patch" />
+        <!-- ... 4. Compiles sources to build/external-patch/classes -->
+        <mkdir dir="build/external-patch/classes" />
+        <javac srcdir="build/external-patch/sources"
+            destdir="build/external-patch/classes" >
+            <exclude name="org/apache/xml/resolver/tests/**" />
+        </javac>
+        <!-- ... 4.1. Copy DLLs in sources to classes -->
+        <copy todir="build/external-patch/classes">
+            <fileset dir="build/external-patch/sources">
+                <include name="**/**.dll" />
+            </fileset>
+        </copy>
+        <!-- ... 5. Creates a jar in 'external/winp-1.14-patched.jar' -->
+        <jar destfile="external/winp-1.14-patched.jar">
+            <fileset dir="build/external-patch/classes" />
+        </jar>
+    </target>
+
+    <!-- Hook into harness "-javac-init" task -->
+    <target name="-javac-init" depends="-prepare-patched-binary, projectized-common.-javac-init" />
 </project>

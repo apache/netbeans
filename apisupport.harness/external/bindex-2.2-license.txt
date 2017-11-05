@@ -2,8 +2,8 @@ Name: BIndex
 Version: 2.2
 License: Apache-2.0
 Description: OSGi bundle repository indexer.
-Origin: http://www.osgi.org/Repository/BIndex
-OSR: Oracle-2409
+Origin: OSGi
+URL: http://www.osgi.org/Repository/BIndex
 
                                  Apache License
                            Version 2.0, January 2004

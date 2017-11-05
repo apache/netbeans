@@ -14,7 +14,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-036FA0032B44AD06A1F13504D97B3685B1C88961 jsch.agentproxy.core-0.0.7.jar
-9F31964104D71855DF6B73F0C761CDEB3FA3C49C jsch.agentproxy.sshagent-0.0.7.jar
-3FA59A536F3DC2197826DC7F224C0823C1534203 jsch.agentproxy.pageant-0.0.7.jar
-F759114E5A9F9AE907EADB59DBF65189AA399B45 jsch.agentproxy.usocket-jna-0.0.7.jar
+9BCF818DC9E5247B01B1B18671A12CAAC293AE40 com.jcraft:jsch.agentproxy.core:0.0.7
+5C09A3D2A0562DE53CF616794F43F51A3C0A496C com.jcraft:jsch.agentproxy.sshagent:0.0.7
+B40C0D9B10D79A0683CA93E3F70360B3D8045B62 com.jcraft:jsch.agentproxy.pageant:0.0.7
+98CF51CA8D7882C203729FFA48E9B7BE4C50B835 com.jcraft:jsch.agentproxy.usocket-jna:0.0.7

@@ -35,11 +35,13 @@ public class XMLTokenIdTest extends AbstractTestCase {
         TestSuite suite = new TestSuite();
         suite.addTest(new XMLTokenIdTest("testTokens"));
         //regression tests on XMLLexer
-        suite.addTest(new XMLTokenIdTest("testParse1"));
+//        Disabled as referenced files were partly not donated by oracle to apache
+//        suite.addTest(new XMLTokenIdTest("testParse1"));
         suite.addTest(new XMLTokenIdTest("testParse2"));
         suite.addTest(new XMLTokenIdTest("testParse3"));
         //measure performace
-        suite.addTest(new XMLTokenIdTest("testParsePerformance"));
+//        Disabled as referenced files were partly not donated by oracle to apache
+//        suite.addTest(new XMLTokenIdTest("testParsePerformance"));
         return suite;
     }
     

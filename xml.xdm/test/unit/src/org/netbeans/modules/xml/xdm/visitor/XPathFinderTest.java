@@ -46,8 +46,9 @@ public class XPathFinderTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(XPathFinderTest.class);
-        
+        TestSuite suite = new TestSuite();
+//        Disabled as referenced files were partly not donated by oracle to apache
+//        suite.addTestSuite(XPathFinderTest.class);
         return suite;
     }
 

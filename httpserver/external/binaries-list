@@ -14,4 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-CD5B5996B46CB8D96C8F0F89A7A734B3C01F3DF7 tomcat-webserver-3.2.jar
+FCE6D146C0B03EF115B9AF05FF2976F15308998C tomcat:webserver:3.2.4

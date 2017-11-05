@@ -14,4 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-5871FB60DC68D67DA54A663C3FD636A10A532948 jsr305.jar
+516C03B21D50A644D538DE0F0369C620989CD8F0 com.google.code.findbugs:jsr305:2.0.0

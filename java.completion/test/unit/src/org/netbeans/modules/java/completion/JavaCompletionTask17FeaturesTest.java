@@ -33,87 +33,87 @@ public class JavaCompletionTask17FeaturesTest extends CompletionTestBase {
     // Java 1.7 try-with-resources tests ---------------------------------------
     
     public void testEmptyFileBeforeTypingVarResouce() throws Exception {
-        performTest("TWRStart", 114, "try (", "finalAndAutoCloseables.pass", "1.7");
+        performTest("TWRStart", 924, "try (", "finalAndAutoCloseables.pass", "1.7");
     }
 
     public void testBeforeTypingVarResouce() throws Exception {
-        performTest("TWRNoRes", 127, null, "finalAndAutoCloseables.pass", "1.7");
+        performTest("TWRNoRes", 937, null, "finalAndAutoCloseables.pass", "1.7");
     }
 
     public void testBeforeVarResouce() throws Exception {
-        performTest("TWR", 127, null, "finalAndAutoCloseables.pass", "1.7");
+        performTest("TWR", 937, null, "finalAndAutoCloseables.pass", "1.7");
     }
 
     public void testEmptyFileTypingVarResouce() throws Exception {
-        performTest("TWRStart", 114, "try (f", "finalKeyword.pass", "1.7");
+        performTest("TWRStart", 924, "try (f", "finalKeyword.pass", "1.7");
     }
 
     public void testTypingVarResouce() throws Exception {
-        performTest("TWRNoRes", 127, "f", "finalKeyword.pass", "1.7");
+        performTest("TWRNoRes", 937, "f", "finalKeyword.pass", "1.7");
     }
 
     public void testOnVarResouce() throws Exception {
-        performTest("TWR", 128, null, "finalKeyword.pass", "1.7");
+        performTest("TWR", 938, null, "finalKeyword.pass", "1.7");
     }
 
     public void testEmptyFileAfterFinalInResource() throws Exception {
-        performTest("TWRStart", 114, "try (final ", "autoCloseables.pass", "1.7");
+        performTest("TWRStart", 924, "try (final ", "autoCloseables.pass", "1.7");
     }
 
     public void testTypingAfterFinalInResouce() throws Exception {
-        performTest("TWRNoRes", 127, "final ", "autoCloseables.pass", "1.7");
+        performTest("TWRNoRes", 937, "final ", "autoCloseables.pass", "1.7");
     }
 
     public void testAfterFinalInResouce() throws Exception {
-        performTest("TWR", 133, null, "autoCloseables.pass", "1.7");
+        performTest("TWR", 943, null, "autoCloseables.pass", "1.7");
     }
 
     public void testEmptyFileTypingTypeInVarResouce() throws Exception {
-        performTest("TWRStart", 114, "try (final F", "autoCloseablesStartingWithF.pass", "1.7");
+        performTest("TWRStart", 924, "try (final F", "autoCloseablesStartingWithF.pass", "1.7");
     }
 
     public void testTypingTypeInVarResouce() throws Exception {
-        performTest("TWRNoRes", 127, "final F", "autoCloseablesStartingWithF.pass", "1.7");
+        performTest("TWRNoRes", 937, "final F", "autoCloseablesStartingWithF.pass", "1.7");
     }
 
     public void testOnTypeInVarResouce() throws Exception {
-        performTest("TWR", 134, null, "autoCloseablesStartingWithF.pass", "1.7");
+        performTest("TWR", 944, null, "autoCloseablesStartingWithF.pass", "1.7");
     }
 
     public void testEmptyFileBeforeTypingNameInVarResouce() throws Exception {
-        performTest("TWRStart", 114, "try (final FileWriter ", "resourceNames.pass", "1.7");
+        performTest("TWRStart", 924, "try (final FileWriter ", "resourceNames.pass", "1.7");
     }
 
     public void testBeforeTypingNameInVarResouce() throws Exception {
-        performTest("TWRNoRes", 127, "final FileWriter ", "resourceNames.pass", "1.7");
+        performTest("TWRNoRes", 937, "final FileWriter ", "resourceNames.pass", "1.7");
     }
 
     public void testBeforeNameInVarResouce() throws Exception {
-        performTest("TWR", 144, null, "resourceNames.pass", "1.7");
+        performTest("TWR", 954, null, "resourceNames.pass", "1.7");
     }
 
     public void testEmptyFileAfterTypingNameInVarResouce() throws Exception {
-        performTest("TWRStart", 114, "try (final FileWriter fw ", "empty.pass", "1.7");
+        performTest("TWRStart", 924, "try (final FileWriter fw ", "empty.pass", "1.7");
     }
 
     public void testAfterTypingNameInVarResouce() throws Exception {
-        performTest("TWRNoRes", 127, "final FileWriter fw ", "empty.pass", "1.7");
+        performTest("TWRNoRes", 937, "final FileWriter fw ", "empty.pass", "1.7");
     }
 
     public void testAfterNameInVarResouce() throws Exception {
-        performTest("TWR", 147, null, "empty.pass", "1.7");
+        performTest("TWR", 957, null, "empty.pass", "1.7");
     }
 
     public void testEmptyFileBeforeVarResouceInit() throws Exception {
-        performTest("TWRStart", 114, "try (final FileWriter fw = ", "resourceInit.pass", "1.7");
+        performTest("TWRStart", 924, "try (final FileWriter fw = ", "resourceInit.pass", "1.7");
     }
 
     public void testBeforeTypingVarResouceInit() throws Exception {
-        performTest("TWRNoRes", 127, "final FileWriter fw = ", "resourceInit.pass", "1.7");
+        performTest("TWRNoRes", 937, "final FileWriter fw = ", "resourceInit.pass", "1.7");
     }
 
     public void testBeforeVarResouceInit() throws Exception {
-        performTest("TWR", 149, null, "resourceInit.pass", "1.7");
+        performTest("TWR", 959, null, "resourceInit.pass", "1.7");
     }
 
     static {

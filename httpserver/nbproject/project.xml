@@ -78,7 +78,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                      <specification-version>7.61</specification-version>
+                        <specification-version>7.61</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -153,7 +153,7 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>ext/webserver.jar</runtime-relative-path>
-                <binary-origin>external/tomcat-webserver-3.2.jar</binary-origin>
+                <binary-origin>external/webserver-3.2.4.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

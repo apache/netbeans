@@ -22,10 +22,5 @@
 <project basedir="." default="netbeans" name="j2ee.persistence">
     <import file="../nbbuild/templates/projectized.xml"/>
 
-    <property name="persistence.resources.dir" value="./src/org/netbeans/modules/j2ee/persistence/dd/resources/"/>
-
-    <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/j2ee.persistence-external-resources.zip" dest="${persistence.resources.dir}"/>
-    </target>
 
 </project>

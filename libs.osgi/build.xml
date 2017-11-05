@@ -22,4 +22,29 @@
 <project basedir="." default="netbeans" name="libs.osgi">
     <description>Builds, tests, and runs the project org.netbeans.libs.osgi</description>
     <import file="../nbbuild/templates/projectized.xml"/>
+    
+    <!-- A task to check if the binary 'external/osgi.cmpn-4.2.jar' exists -->
+    <target name="-check-requires-patching-maven-sources">
+        <available file="external/osgi.cmpn-4.2.jar" property="sources-already-patched" />
+    </target>
+    
+    <!-- 
+         '-javac-init' task is invoked after maven sources have been downloaded 
+         to 'external/org.osgi.compendium-4.2.0.jar'
+         (see external/binaries-list).
+         Netbeans had its own copy of osgi.cmpn-4.2.jar, which is identical to
+         the downloaded binary. The downloaded binary contains the source code
+         in addition to the compiled class files.
+         The sources are now stripped from the binary to create the original file
+         netbeans used to bundle.
+    -->
+    <target name="-prepare-patched-binary" depends="-check-requires-patching-maven-sources" unless="sources-already-patched">
+        <echo message="Patching org.osgi.compendium-4.2.0 for Netbeans..." />
+        <zip destfile="external/osgi.cmpn-4.2.jar">
+            <zipfileset src="external/org.osgi.compendium-4.2.0.jar" excludes="OSGI-OPT/**" />
+        </zip>
+    </target>
+    
+    <!-- Hook into harness "-javac-init" task -->
+    <target name="-javac-init" depends="-prepare-patched-binary, projectized-common.-javac-init" />
 </project>

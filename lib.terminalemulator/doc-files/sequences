@@ -1,3 +1,5 @@
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.
+
 infocmp
 	-C	termcap Compatibility
 	-1	1 entry per line
@@ -340,3 +342,5 @@ ACS_STERLING    '}'									234	'}'	'}'	ansi+protoansix
 ACS_BULLET      '~'									376	'~'	'~'	ansi+protoansix
 ----------------------------------------------------------------------------------------------------------------------------------------
 sequence	mnemonic		termcap op	terminfo	numbers	margin	ansi	dtterm	xterm	Term
+
+

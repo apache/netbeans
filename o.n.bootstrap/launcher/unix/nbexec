@@ -81,6 +81,10 @@ EOF
             nosplash="nosplash";
             args="$args --nosplash"
             ;;
+        --nogui)
+            nogui="nogui";
+            args="$args --nogui"
+            ;;
         --jdkhome) shift; if [ $# -gt 0 ] ; then jdkhome=$1; fi
             ;;
         # this has to be here for purposes of updater.jar, but it should be
@@ -356,7 +360,7 @@ J2D_PIXMAPS=shared
 export J2D_PIXMAPS
 
 # Check DISPLAY variable on non-Mac
-if [ "no$DISPLAY" = "no" -a `uname` != Darwin ]; then
+if [ "no$DISPLAY" = "no" -a `uname` != Darwin -a -z "$nogui" ]; then
     echo "$0: WARNING: environment variable DISPLAY is not set"
 fi
 

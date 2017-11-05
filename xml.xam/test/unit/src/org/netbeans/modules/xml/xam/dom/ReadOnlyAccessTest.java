@@ -49,58 +49,58 @@ public class ReadOnlyAccessTest extends TestCase {
 
     public void testFindPosition() throws Exception {
         TestModel2 model = Util.loadModel("resources/test1.xml");
-        assertEquals(38 + lsl, model.getRootComponent().findPosition());
+        assertEquals(860 + lsl, model.getRootComponent().findPosition());
         assertEquals(4, model.getRootComponent().getChildren().size());
         TestComponent2 component = model.getRootComponent().getChildren().get(0);
         assertEquals("a", component.getPeer().getLocalName());
-        assertEquals(133 + lsl * 4, component.findPosition());
+        assertEquals(955 + lsl * 4, component.findPosition());
     }
 
     public void testFindPositionWithPrefix() throws Exception {
         TestModel2 model = Util.loadModel("resources/test1.xml");
         TestComponent2.B b = model.getRootComponent().getChildren(TestComponent2.B.class).get(0);
         TestComponent2.Aa aa = b.getChildren(TestComponent2.Aa.class).get(0);
-        assertEquals(206 + lsl * 6, aa.findPosition());
+        assertEquals(1028 + lsl * 6, aa.findPosition());
     }
 
     public void testFindPositionWithElementTagInAttr() throws Exception {
         TestModel2 model = Util.loadModel("resources/test1.xml");
         TestComponent2.C c = model.getRootComponent().getChildren(TestComponent2.C.class).get(0);
-        assertEquals(245 + lsl * 8, c.findPosition());
+        assertEquals(1067 + lsl * 8, c.findPosition());
     }
 
     public void testFindElement() throws Exception {
         TestModel2 model = Util.loadModel("resources/test1.xml");
         TestComponent2 component = model.getRootComponent().getChildren().get(0);
-        assertEquals(component, model.findComponent(133 + lsl * 4));
-        assertEquals(component, model.findComponent(147 + lsl * 4));
-        assertEquals(component, model.findComponent(161 + lsl * 5));
+        assertEquals(component, model.findComponent(955 + lsl * 4));
+        assertEquals(component, model.findComponent(969 + lsl * 4));
+        assertEquals(component, model.findComponent(983 + lsl * 5));
     }
     
     public void testFindElementWithPrefix() throws Exception {
         TestModel2 model = Util.loadModel("resources/test1.xml");
         TestComponent2.B b = model.getRootComponent().getChildren(TestComponent2.B.class).get(0);
         TestComponent2.Aa aa = b.getChildren(TestComponent2.Aa.class).get(0);
-        assertEquals(aa, model.findComponent(206 + lsl * 6));
-        assertEquals(aa, model.findComponent(218 + lsl * 6));
-        assertEquals(aa, model.findComponent(232 + lsl * 6));
+        assertEquals(aa, model.findComponent(1028 + lsl * 6));
+        assertEquals(aa, model.findComponent(1040 + lsl * 6));
+        assertEquals(aa, model.findComponent(1054 + lsl * 6));
     }
 
     public void testFindElementWithTagInAttr() throws Exception {
         TestModel2 model = Util.loadModel("resources/test1.xml");
         TestComponent2.C c = model.getRootComponent().getChildren(TestComponent2.C.class).get(0);
-        assertEquals(c, model.findComponent(245 + lsl * 8));
-        assertEquals(c, model.findComponent(249 + lsl * 8));
-        assertEquals(c, model.findComponent(261 + lsl * 8));
+        assertEquals(c, model.findComponent(1067 + lsl * 8));
+        assertEquals(c, model.findComponent(1071 + lsl * 8));
+        assertEquals(c, model.findComponent(1083 + lsl * 8));
     }
     
     public void testFindElementGivenTextPosition() throws Exception {
         TestModel2 model = Util.loadModel("resources/test1.xml");
         TestComponent2 root = model.getRootComponent();
         TestComponent2.B b = root.getChildren(TestComponent2.B.class).get(0);
-        assertEquals(b, model.findComponent(201 + lsl * 5));
-        assertEquals(root, model.findComponent(244 + lsl * 8));
-        assertEquals(root, model.findComponent(265 + lsl * 9));
+        assertEquals(b, model.findComponent(1023 + lsl * 5));
+        assertEquals(root, model.findComponent(1066 + lsl * 8));
+        assertEquals(root, model.findComponent(1087 + lsl * 9));
     }    
     
     public void testGetXmlFragment() throws Exception {

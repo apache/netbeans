@@ -532,27 +532,28 @@ public class SyncTest extends TestCase {
 		assertEquals(3, seqChildren.size());
     }	
 
-    public void testUndoSequenceCopy() throws Exception {
-        SchemaModel model = Util.loadSchemaModel("resources/PO_copypasteundoSequence.xsd");
-        UndoManager um = new UndoManager();
-        model.addUndoableEditListener(um);
-        
-        GlobalComplexType gct = (GlobalComplexType)Util.findComponent(
-                model.getSchema(), "/schema/complexType[@name='Items']");
-        Sequence seq1 = (Sequence) Util.findComponent(
-                model.getSchema(), "/schema/complexType[@name='USAddress']/sequence");
-        assertEquals(1, gct.getDefinition().getChildren().size());
-        assertEquals(5, seq1.getChildren().size());
-        
-        Sequence seq2 = (Sequence) seq1.copy(gct);
-        model.startTransaction();
-        gct.setDefinition(seq2);
-        model.endTransaction();
-        assertEquals(5, gct.getDefinition().getChildren().size());
-        
-        um.undo();
-        assertEquals(1, gct.getDefinition().getChildren().size());
-    }
+//    Disabled as referenced files were partly not donated by oracle to apache    
+//    public void testUndoSequenceCopy() throws Exception {
+//        SchemaModel model = Util.loadSchemaModel("resources/PO_copypasteundoSequence.xsd");
+//        UndoManager um = new UndoManager();
+//        model.addUndoableEditListener(um);
+//        
+//        GlobalComplexType gct = (GlobalComplexType)Util.findComponent(
+//                model.getSchema(), "/schema/complexType[@name='Items']");
+//        Sequence seq1 = (Sequence) Util.findComponent(
+//                model.getSchema(), "/schema/complexType[@name='USAddress']/sequence");
+//        assertEquals(1, gct.getDefinition().getChildren().size());
+//        assertEquals(5, seq1.getChildren().size());
+//        
+//        Sequence seq2 = (Sequence) seq1.copy(gct);
+//        model.startTransaction();
+//        gct.setDefinition(seq2);
+//        model.endTransaction();
+//        assertEquals(5, gct.getDefinition().getChildren().size());
+//        
+//        um.undo();
+//        assertEquals(1, gct.getDefinition().getChildren().size());
+//    }
     
     public void testSyncAnnotationRemoveId() throws Exception {
         SchemaModel model = Util.loadSchemaModel("resources/loanApplication_id.xsd");

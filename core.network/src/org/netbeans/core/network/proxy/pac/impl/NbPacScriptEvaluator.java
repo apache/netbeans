@@ -390,7 +390,6 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     }
 
 
-
     /**
      * Does the script source make reference to any of the date/time functions
      * (timeRange(), dateRange(), weekdayRange()) ?

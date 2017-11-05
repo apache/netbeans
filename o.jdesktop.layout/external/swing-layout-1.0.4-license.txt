@@ -5,7 +5,8 @@ Files: swing-layout-1.0.4.jar swing-layout-1.0.4-doc.zip swing-layout-1.0.4-src.
 License: LGPL-2.1
 OSR: 3446
 Description: Swing Layout Extensions
-Origin: https://swing-layout.dev.java.net/
+Origin: Oracle
+URL: https://swing-layout.dev.java.net/
 
 		  GNU LESSER GENERAL PUBLIC LICENSE
 		       Version 2.1, February 1999

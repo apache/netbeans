@@ -2097,6 +2097,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/model/application.wadl" /> <!--test data-->
             <exclude name="websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/util/rootGroup.xml" /> <!--test data-->
             <exclude name="websvc.saas.kit/release/VERSION.txt" /> <!--generated file-->
+            <exclude name="welcome/src/org/netbeans/modules/welcome/resources/rss-0_91.dtd" /> <!-- specifies a standard -->
             <exclude name="xml.axi/test/unit/src/org/netbeans/modules/xml/axi/resources/**" /> <!-- test data -->
             <exclude name="xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.dtd" /> <!-- test data -->
             <exclude name="xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.xml" /> <!-- test data -->

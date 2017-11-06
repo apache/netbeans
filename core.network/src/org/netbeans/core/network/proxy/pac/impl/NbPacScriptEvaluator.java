@@ -305,9 +305,9 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
             // Do some minimal testing of the validity of the PAC Script.
             final PacJsEntryFunction jsMainFunction;
             if (nashornJava8u40Available) {
-                jsMainFunction = testScriptEngineNashornJava8u40(engine);
+                jsMainFunction = testScriptEngine(engine, true);
             } else {
-                jsMainFunction = testScriptEngineGeneric(pacSource);
+                jsMainFunction = testScriptEngine(engine, false);
             }
             
             return new PacScriptEngine(engine, jsMainFunction);
@@ -340,26 +340,33 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
     /**
      * Test if the main entry point, function FindProxyForURL()/FindProxyForURLEx(), 
      * is available.
-     * 
-     * @param eng
-     * @throws PacParsingException 
      */
-    private PacJsEntryFunction testScriptEngineNashornJava8u40(ScriptEngine eng) throws PacParsingException {
-        if (isJsFunctionAvailable(eng, PacJsEntryFunction.IPV6_AWARE.getJsFunctionName())) {
+    private PacJsEntryFunction testScriptEngine(ScriptEngine eng, boolean doDeepTest) throws PacParsingException {
+        if (isJsFunctionAvailable(eng, PacJsEntryFunction.IPV6_AWARE.getJsFunctionName(), doDeepTest)) {
             return PacJsEntryFunction.IPV6_AWARE;
         }
-        if (isJsFunctionAvailable(eng, PacJsEntryFunction.STANDARD.getJsFunctionName())) {
+        if (isJsFunctionAvailable(eng, PacJsEntryFunction.STANDARD.getJsFunctionName(), doDeepTest)) {
             return PacJsEntryFunction.STANDARD;
         }
         throw new PacParsingException("Function " + PacJsEntryFunction.STANDARD.getJsFunctionName() + " or " + PacJsEntryFunction.IPV6_AWARE.getJsFunctionName() + " not found in PAC Script.");
     }
-    
-    private boolean isJsFunctionAvailable(ScriptEngine eng, String functionName) {
-        // We want to test if the function is there, but without actually invoking
-        // it. Don't know how to do this for Rhino or for Nashorn pre Java 8u40.
-        // In other words: The test below only works on Nashorn, Java 8u40 or later.       
+
+    private boolean isJsFunctionAvailable(ScriptEngine eng, String functionName, boolean doDeepTest) {
+        // We want to test if the function is there, but without actually 
+        // invoking it.        
         Object obj = eng.get(functionName);
-        if ( obj != null) {
+        
+        if (!doDeepTest && obj != null) {  
+            // Shallow test. We've established that there's
+            // "something" in the ENGINE_SCOPE with a name like
+            // functionName, and we *hope* it is a function, but we really don't
+            // know, therefore we call it a shallow test.
+            return true;
+        }
+        
+        // For Nashorn post JDK8u40 we can do even deeper validation
+        // using the ScriptObjectMirror class. This will not work for Rhino.
+        if (doDeepTest && obj != null) {
             if (obj instanceof ScriptObjectMirror) {
                     ScriptObjectMirror  som = (ScriptObjectMirror) obj;
                     if (som.isFunction()) {
@@ -370,22 +377,8 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
         return false;
     }
     
-    private PacJsEntryFunction testScriptEngineGeneric(String pacSource) throws PacParsingException {
-        Pattern pattern1 = Pattern.compile("function\\s+" + PacJsEntryFunction.STANDARD.getJsFunctionName());
-        Pattern pattern2 = Pattern.compile("function\\s+" + PacJsEntryFunction.IPV6_AWARE.getJsFunctionName());
-        if (!pattern2.matcher(pacSource).matches()) {
-            return PacJsEntryFunction.IPV6_AWARE;
-        }
-        if (!pattern1.matcher(pacSource).matches()) {
-            return PacJsEntryFunction.STANDARD;
-        }
-        throw new PacParsingException("Function " + PacJsEntryFunction.STANDARD.getJsFunctionName() + " or " + PacJsEntryFunction.IPV6_AWARE.getJsFunctionName() + " not found in PAC Script.");
-    }
-
-    
 
     private String getHelperJsScriptSource() throws PacParsingException {
-
         return HelperScriptFactory.getPacHelperSource(JS_HELPER_METHODS_INSTANCE_NAME);
     }
 
@@ -449,7 +442,7 @@ public class NbPacScriptEvaluator implements PacScriptEvaluator {
      */
     private List<Proxy> analyzeResult(URI uri, Object proxiesString) throws PacValidationException {
         if (proxiesString == null) {
-            LOGGER.fine("Null result for " + uri);
+            LOGGER.log(Level.FINE, "Null result for {0}", uri);
             return null;
         }
         

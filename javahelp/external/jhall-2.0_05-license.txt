@@ -3,8 +3,8 @@ Version: 2.0_05
 License: GPL-2-CP
 Source: https://javahelp.dev.java.net/files/documents/5985/59373/javahelp2-src-2.0.05.zip
 Description: Standard Java help browser system.
-OSR: 5497
-Origin: Oracle (http://download.java.net/javadesktop/javahelp/javahelp2_0_05.zip)
+Origin: Oracle
+URL: http://download.java.net/javadesktop/javahelp/javahelp2_0_05.zip
 
 The GNU General Public License (GPL)
 Version 2, June 1991

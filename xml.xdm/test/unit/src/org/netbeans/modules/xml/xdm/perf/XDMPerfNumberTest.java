@@ -87,9 +87,10 @@ public class XDMPerfNumberTest extends TestCase {
     
     public static Test suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new XDMPerfNumberTest("testReadUsingDOM"));
-        suite.addTest(new XDMPerfNumberTest("testReadUsingSyntaxParser"));
-        suite.addTest(new XDMPerfNumberTest("testReadUsingXDM"));        
+//        Disabled as referenced files were partly not donated by oracle to apache
+//        suite.addTest(new XDMPerfNumberTest("testReadUsingDOM"));
+//        suite.addTest(new XDMPerfNumberTest("testReadUsingSyntaxParser"));
+//        suite.addTest(new XDMPerfNumberTest("testReadUsingXDM"));        
         return suite;
     }
             

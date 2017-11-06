@@ -41,19 +41,21 @@ public class BasicCompletionTest extends AbstractTestCase {
         suite.addTest(new BasicCompletionTest("testNoNamespaceCompletion"));
         suite.addTest(new BasicCompletionTest("testNoNamespaceCompletion1"));
         suite.addTest(new BasicCompletionTest("testNoNamespaceCompletion2"));
-        suite.addTest(new BasicCompletionTest("testPurchaseOrder"));
-        suite.addTest(new BasicCompletionTest("testPurchaseOrder1"));
-        suite.addTest(new BasicCompletionTest("testPurchaseOrder2"));
-        suite.addTest(new BasicCompletionTest("testCompletionFilter1"));
-        suite.addTest(new BasicCompletionTest("testCompletionFilter2"));
+//        Disabled as referenced XSD file were partly not donated by oracle to apache
+//        suite.addTest(new BasicCompletionTest("testPurchaseOrder"));
+//        suite.addTest(new BasicCompletionTest("testPurchaseOrder1"));
+//        suite.addTest(new BasicCompletionTest("testPurchaseOrder2"));
+//        suite.addTest(new BasicCompletionTest("testCompletionFilter1"));
+//        suite.addTest(new BasicCompletionTest("testCompletionFilter2"));
         suite.addTest(new BasicCompletionTest("testEmptyTag1"));
         suite.addTest(new BasicCompletionTest("testEmptyTag2"));
         suite.addTest(new BasicCompletionTest("testEmptyTag3"));
         suite.addTest(new BasicCompletionTest("testEmptyTag4"));
-        suite.addTest(new BasicCompletionTest("testEndtagCompletion1"));
-        suite.addTest(new BasicCompletionTest("testEndtagCompletion2"));
-        suite.addTest(new BasicCompletionTest("testEndtagCompletion3"));
-        suite.addTest(new BasicCompletionTest("testCompletionWithAmpersand"));
+//        Disabled as referenced XSD file were partly not donated by oracle to apache
+//        suite.addTest(new BasicCompletionTest("testEndtagCompletion1"));
+//        suite.addTest(new BasicCompletionTest("testEndtagCompletion2"));
+//        suite.addTest(new BasicCompletionTest("testEndtagCompletion3"));
+//        suite.addTest(new BasicCompletionTest("testCompletionWithAmpersand"));
   // disabled since it accesses Net:
   //      suite.addTest(new BasicCompletionTest("testSchemaFromRuntimeCatalog"));
         //suite.addTest(new BasicCompletionTest("testCompletionUsingSchemaFromCatalog"));
@@ -66,10 +68,11 @@ public class BasicCompletionTest extends AbstractTestCase {
         suite.addTest(new BasicCompletionTest("testChildren2"));
         suite.addTest(new BasicCompletionTest("testImport1"));
         suite.addTest(new BasicCompletionTest("testInclude1"));
-        suite.addTest(new BasicCompletionTest("testElementValueCompletion1"));
-        suite.addTest(new BasicCompletionTest("testElementValueCompletion2"));
-        suite.addTest(new BasicCompletionTest("testAttributeValueCompletion1"));
-        suite.addTest(new BasicCompletionTest("testAttributeValueCompletion2"));        
+//        Disabled as referenced XSD file were partly not donated by oracle to apache
+//        suite.addTest(new BasicCompletionTest("testElementValueCompletion1"));
+//        suite.addTest(new BasicCompletionTest("testElementValueCompletion2"));
+//        suite.addTest(new BasicCompletionTest("testAttributeValueCompletion1"));
+//        suite.addTest(new BasicCompletionTest("testAttributeValueCompletion2"));        
         return suite;
     }
     

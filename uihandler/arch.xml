@@ -494,10 +494,6 @@
         <defaultanswer generate='none' />
         
         <ul>
-            <li><api type='import' group='java' category='private' name='org.jdesktop.layout'>
-                    jdesktop layout is used to make the dialog provided by this module to look better
-                </api>
-            </li>            
             <li><api type='import' group='java' category='private' name='org.openide.explorer' url='../org-openide-explorer/overview-summary.html' >
                     The module uses explorer view to present the results before they get submitted to
                     the analysis server.

@@ -52,8 +52,9 @@ public class FindNamespaceVisitorTest extends TestCase {
     }
 
     public static Test suite() {
-        TestSuite suite = new TestSuite(FindNamespaceVisitorTest.class);
-        
+        TestSuite suite = new TestSuite();
+//        Disabled as referenced files were partly not donated by oracle to apache
+//        suite.addTestSuite(FindNamespaceVisitorTest.class);
         return suite;
     }
 

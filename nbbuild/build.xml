@@ -53,7 +53,7 @@
 
     <property name="build.ant.classes.dir" location="${nb.build.dir}/antclasses"/>
     <mkdir dir="${build.ant.classes.dir}"/>
-    <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.7" target="1.7">
+    <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.8" target="1.8">
         <classpath>
             <pathelement location="${ant.core.lib}"/>
         </classpath>
@@ -85,7 +85,7 @@
         <include name="javahelp/external/jhall*.jar"/>
       </fileset>
     </path>
-    <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.7" target="1.7">
+    <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.8" target="1.8">
       <classpath refid="bootstrap-cp"/>
       <compilerarg line="-Xlint -Xlint:-serial"/>
     </javac>
@@ -322,7 +322,7 @@
   <!-- Use of nbmerge target has the effect of automatically depending on all-X for every module. -->
   <!-- It also runs deltree(dir=wherever) and copydir(src=../X/netbeans,dest=wherever) to create the IDE install. -->
 
-  <target name="build-nozip" depends="init,download-selected-extbins,clean-cluster-flags,build-clusters,create-license-summary,create-netbeans-import,finish-build,add-junit" description="Build the IDE but do not create a final ZIP file."/>
+  <target name="build-nozip" depends="init,download-selected-extbins,clean-cluster-flags,build-clusters,create-mandatory-files-for-binary,create-netbeans-import,finish-build,add-junit" description="Build the IDE but do not create a final ZIP file."/>
   <target name="finish-build" depends="init">
     <loadproperties srcFile="${clusters.list.file}" />
 
@@ -333,8 +333,7 @@
     <mkdir dir="${netbeans.dest.dir}/bin" />
     <copy file="../ide/launcher/unix/netbeans" todir="${netbeans.dest.dir}/bin" />
     <chmod file="${netbeans.dest.dir}/bin/netbeans" perm="ugo+rx"/>
-    <copy file="../ide/external/netbeans.exe" todir="${netbeans.dest.dir}/bin" />
-    <copy file="../ide/external/netbeans64.exe" todir="${netbeans.dest.dir}/bin" />
+    <unzip src="../ide/external/launchers.zip" dest="${netbeans.dest.dir}/bin" />
     <!-- if anybody knows better place for icons, let me know: jtulach@netbeans.org -->
 
     <mkdir dir="${netbeans.dest.dir}/etc" />
@@ -531,6 +530,10 @@ Hg ID:    ${hg.id}
             <include name="*.txt"/>
             <include name="*.css"/>
             <include name="*.html"/>
+            <include name="DEPENDENCIES"/>
+            <include name="DISCLAIMER"/>
+            <include name="LICENSE"/>
+            <include name="NOTICE"/>
       </zipfileset>
     </zip>
   </target>
@@ -1499,9 +1502,20 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         <verifylibsandlicenses report="${nb.build.dir}/verifylibsandlicenses.xml" nball=".."/>
     </target>
 
-    <target name="create-license-summary" depends="bootstrap,download-selected-extbins" description="Create a summary of the licenses used by libraries in the build.">
+    <target name="create-mandatory-files-for-binary" depends="bootstrap,download-selected-extbins" description="Create a summary of the licenses used by libraries in the build.">
         <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
-        <createlicensesummary report="${nb.build.dir}/createlicensesummary.xml" nball=".." build="${netbeans.dest.dir}" summary="${netbeans.dest.dir}/THIRDPARTYLICENSE-generated.txt"/>
+        <createlicensesummary licenseStub="license-stub.txt" noticeStub="notice-stub.txt" report="${nb.build.dir}/createlicensesummary.xml" nball=".." build="${netbeans.dest.dir}" license="${netbeans.dest.dir}/LICENSE" notice="${nb.build.dir}/notice-temp"/>
+        <concat destfile="${netbeans.dest.dir}/NOTICE">
+          <fileset file="${nb.build.dir}/notice-temp" />
+          <fileset dir="${nb_all}"
+                   includes="*/notice.txt" />
+        </concat>
+        <dirset id="source.dirset" dir="${nb_all}"
+                includes="${allmodules}"
+        />
+        <taskdef name="createdependencies" classname="org.netbeans.nbbuild.extlibs.CreateDependencies" classpath="${nbantext.jar}"/>
+        <createdependencies refid="source.dirset"  dependencies="${netbeans.dest.dir}/DEPENDENCIES"/>
+        <copy file="${nb_all}/DISCLAIMER" tofile="${netbeans.dest.dir}/DISCLAIMER" />
     </target>
 
   <target name="build-source-config"
@@ -1520,11 +1534,21 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <pathconvert property="source.dirs" pathsep="," refid="source.dirset">
       <regexpmapper from="${nb_all}/(.*)$" to="\1/**/*" handledirsep="yes"/>
     </pathconvert>
-    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
+    <downloadbinaries cache="${binaries.cache}" server="${binaries.server}"> <!--XXX-->
         <manifest dir="${nb_all}">
             <include name="libs.antlr3.devel/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
+    <concat destfile="${nb.build.dir}/NOTICE">
+      <fileset file="${nb_all}/nbbuild/notice-stub.txt" />
+      <fileset dir="${nb_all}"
+	       includes="*/notice.txt" />
+    </concat>
+    <concat destfile="${nb.build.dir}/LICENSE">
+      <fileset file="${nb_all}/nbbuild/license-stub.txt" />
+    </concat>
+    <taskdef name="createdependencies" classname="org.netbeans.nbbuild.extlibs.CreateDependencies" classpath="${nbantext.jar}"/>
+    <createdependencies refid="source.dirset" dependencies="${nb.build.dir}/DEPENDENCIES" sourceDependencies="true"/>
     <zip zipfile="${nb.build.dir}/${cluster.config}-src-${buildnum}.zip" duplicate="preserve">
       <zipfileset dir="${nb_all}" includes="${source.dirs}">
           <exclude name="*/build/**/*"/>
@@ -1533,6 +1557,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <zipfileset dir="${nb_all}">
           <include name="build.xml"/>
       </zipfileset>
+      <zipfileset file="${nb.build.dir}/DEPENDENCIES" />
+      <zipfileset file="${nb.build.dir}/NOTICE" />
+      <zipfileset file="${nb.build.dir}/LICENSE" />
+      <zipfileset file="${nb_all}/DISCLAIMER" />
     </zip>
   </target>
 
@@ -1980,35 +2008,209 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <pathelement location="external/apache-rat-0.12.jar"/>
             </classpath>
         </taskdef>
+        <patternset id="non.rat">
+            <!--add new one alphabetically-->
+            <exclude name="**/*.exists" /> <!--no degree of creativity-->
+            <exclude name="**/*.mf" /> <!--do not natively support comments-->
+            <exclude name="**/*.MF" /> <!--do not natively support comments-->
+            <exclude name="**/*.nib" /> <!--do not natively support comments-->
+            <exclude name="**/*.palette_item" /> <!--no degree of creativity-->
+            <exclude name="**/*.pass" /> <!--generated test files-->
+            <exclude name="**/*.pass2" /> <!--generated test files-->
+            <exclude name="**/*.pbxproj" /> <!--generated test files-->
+            <exclude name="**/*.ref" /> <!--would cause tests to fail-->
+            <exclude name="**/*.ser" /> <!--do not natively support comments-->
+            <exclude name="**/*.sln" /> <!--would cause tests to fail-->
+            <exclude name="**/*.url" /> <!--no degree of creativity-->
+            <exclude name="**/*.user" /> <!--would cause tests to fail-->
+            <exclude name="**/*.vcproj" /> <!--would cause tests to fail-->
+            <exclude name="**/external/*-license.txt" /> <!--licenses for external dependencies-->
+            <exclude name="**/external/*-notice.txt" /> <!--notices for external dependencies-->
+            <exclude name="**/nbproject/*.sig" /> <!--generated signatures for past versions-->
+            <exclude name="**/nbproject/build-impl.xml" /> <!--generated, no degree of creativity -->
+            <exclude name="**/nbproject/genfiles.properties" /> <!--generated, no degree of creativity -->
+            <exclude name="**/nbproject/jfx-impl.xml" /> <!--generated, no degree of creativity -->
+            <exclude name="**/nbproject/private/**" /> <!--user-specific files -->
+            <exclude name="**/src/META-INF/**" /> <!--no degree of creativity-->
+            <exclude name="*/build/**" />
+            <exclude name="**/.dep.inc" /> <!--no degree of creativity-->
+            <exclude name="**/Makefile-vc" /> <!--no degree of creativity-->
+            <exclude name="**/Makefile-vc-wo-crt" /> <!--no degree of creativity-->
+            <exclude name="**/package-list" /> <!--no degree of creativity-->
+            <exclude name="*/test/unit/data/**" /> <!--would cause tests to fail-->
+            <exclude name="*/test/qa-functional/data/**" /> <!--would cause tests to fail-->
+            <exclude name="autoupdate.services/test/unit/src/org/netbeans/modules/autoupdate/updateprovider/data/**" /> <!-- test data -->
+            <exclude name="api.search/test/unit/src/org/netbeans/modules/search/data/**" /> <!--test data-->
+            <exclude name="apisupport.ant/src/org/netbeans/modules/apisupport/project/resources/license-*.txt" /> <!--template file-->
+            <exclude name="beans/src/org/netbeans/modules/beans/resources/templates/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
+            <exclude name="css.editor/src/org/netbeans/modules/css/resources/CascadeStyleSheet.css.template" /> <!-- user visible template -->
+            <exclude name="css.editor/src/org/netbeans/modules/css/resources/CssExample" /> <!-- user visible template -->
+            <exclude name="css.editor/todo" /> <!-- no degree of creativity -->
+            <exclude name="debugger.jpda/test/unit/src/org/netbeans/api/debugger/jpda/testapps/JspLineBreakpointApp.txt" /> <!-- test data -->
+            <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/provider/*.txt" /> <!--test data-->
+            <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/visualizer/data/**" /> <!--test data-->
+            <exclude name="editor/demosrc/base/org/netbeans/editor/example/res/template.html_" /> <!-- template file -->
+            <exclude name="editor/demosrc/base/org/netbeans/editor/example/res/template.java_" /> <!-- template file -->
+            <exclude name="editor/demosrc/properties-addon/org/netbeans/editor/example/res/template.properties" /> <!-- template file -->
+            <exclude name="editor/test/qa-functional/src/org/netbeans/test/editor/suites/keybindings/actions.txt" /> <!-- test data -->
+            <exclude name="editor/test/unit/src/org/netbeans/modules/editor/resources/testAnnotation*.xml" /> <!-- test data -->
+            <exclude name="editor.fold/test/unit/src/org/netbeans/modules/editor/fold/FoldContentReader.txt" /> <!--test data-->
+            <exclude name="editor.plain/src/org/netbeans/modules/editor/plain/resources/PlainTextExample" /> <!--license would be visible to users in the Fonts/Colors settings-->
+            <exclude name="editor.settings.storage/test/unit/src/org/netbeans/modules/editor/settings/storage/compatibility/p1/**" /> <!--test data-->
+            <exclude name="extbrowser/test/unit/src/org/netbeans/modules/extbrowser/data/mac_defaults_*" /> <!--test data-->
+            <exclude name="hibernate/src/org/netbeans/modules/hibernate/resources/Hibernate*.xml" /> <!--template files-->
+            <exclude name="hibernate/src/org/netbeans/modules/hibernate/resources/HibernateUtil.javax" /> <!--template file-->
+            <exclude name="html.editor/src/org/netbeans/modules/html/editor/options/ui/formatSample.html" /> <!--user visible file template-->
+            <exclude name="html.editor/src/org/netbeans/modules/html/editor/resources/HTMLExample" /> <!--user visible file template-->
+            <exclude name="html.editor/src/org/netbeans/modules/html/editor/resources/XHTMLExample" /> <!--user visible file template-->
+            <exclude name="html.editor/src/org/netbeans/modules/html/editor/todo.txt" /> <!--no degree of creativity-->
+            <exclude name="html.editor/src/org/netbeans/modules/html/editor/resources/DTDs/*/catalog" /> <!--no degree of creativity-->
+            <exclude name="hudson.subversion/test/unit/src/org/netbeans/modules/hudson/subversion/sample-entries-file" /> <!--test data-->
+            <exclude name="ide/launcher/macosx/NetBeansLauncher/ReadMe.rtf" /> <!--does not natively support comments-->
+            <exclude name="j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/dd/resources/*.xsd" /> <!-- XSDs for usage at runtime and code generation - the XSDs are not modified, so covered by https://www.apache.org/legal/resolved.html#category-b -->
+            <exclude name="j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/ui/resources/*.xml" /> <!-- user visible file template -->
+            <exclude name="j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/wizard/jpacontroller/resources/*.txt" /> <!-- user visible file template -->
+            <exclude name="ide.kit/test/qa-functional/**/*.txt" /> <!-- test data -->
+            <exclude name="java.api.common/src/org/netbeans/modules/java/api/common/project/ui/customizer/vmo/gen/CommandLine.tokens" /> <!--generated by ANTLR-->
+            <exclude name="java.editor/src/org/netbeans/modules/java/editor/resources/JavaExample" /> <!--no degree of creativity-->
+            <exclude name="java.j2semodule/src/org/netbeans/modules/java/j2semodule/ui/resources/module-info.java.template" /> <!--template file-->
+            <exclude name="java.platform.ui/src/org/netbeans/modules/java/platform/resources/templates/javaplatform.xml" /> <!--template file-->
+            <exclude name="java.project.ui/src/org/netbeans/modules/java/project/ui/resources/*.template" /> <!-- template files -->
+            <exclude name="java.source/test-excludes.txt" /> <!-- test context -->
+            <exclude name="java.source/src/org/netbeans/modules/**/*.template" /> <!-- template files -->
+            <exclude name="javafx2.kit/release/VERSION.txt" /> <!--generated file-->
+            <exclude name="javafx2.project/src/org/netbeans/modules/javafx2/project/templates/**" /> <!--license would be visible when users edit the templates inside their IDE-->
+            <exclude name="javawebstart/AntTasks/build/**" /> <!-- generated build files -->
+            <exclude name="jellytools.platform/src/org/netbeans/jellytools/version_info" /> <!--does not natively support comments-->
+            <exclude name="junit.ui/src/org/netbeans/modules/junit/ui/resources/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
+            <exclude name="languages.diff/src/org/netbeans/modules/languages/diff/DiffExample.diff" /> <!--license would be visible to users in the Fonts/Colors settings-->
+            <exclude name="languages.yaml/src/org/netbeans/modules/languages/yaml/*.yaml" /> <!--Files used in GUI as sample/starting point-->
+            <exclude name="languages.yaml/src/org/netbeans/modules/languages/yaml/*.yml" /> <!--Files used in GUI as sample/starting point-->
+            <exclude name="lib.uihandler/src/org/netbeans/lib/uihandler/pubKey" /> <!--no degree of creativity-->
+            <exclude name="lib.uihandler/test/unit/src/**" /> <!--test data-->
+            <exclude name="maven.htmlui/src/org/netbeans/modules/maven/htmlui/UIDefaults" /> <!-- config file with no place for license header-->
+            <exclude name="maven.indexer/external/NOTICE-patched-indexer-core-6.0.0" /> <!--no degree of creativity-->
+            <exclude name="mercurial/src/org/netbeans/modules/mercurial/util/log*" /> <!-- user templates for mercurial commits, etc. -->
+            <exclude name="nbbuild/hudson/.hgmail-profiler" /> <!--no degree of creativity-->
+            <exclude name="nbbuild/l10n.patterns" /> <!--no degree of creativity-->
+            <exclude name="nbbuild/licenses/**" />
+            <exclude name="nbbuild/netbeans/**" />
+            <exclude name="nbbuild/tagref" /> <!--no degree of creativity-->
+            <exclude name="nbbuild/notice-stub.txt" /> <!--Apache notice file-->
+            <exclude name="nbbuild/standard-nbm-license.txt" /> <!--license file-->
+            <exclude name="nbbuild/testuserdir/**" />
+            <exclude name="nbi/engine/nbproject/profiler-build-impl.xml" /> <!--generated, no degree of creativity -->
+            <exclude name="o.apache.tools.ant.module/release/VERSION.txt" /> <!--generated file-->
+            <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/CustomTask_java" /> <!-- user visible file template -->
+            <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/Project.xml_" /> <!-- user visible file template -->
+            <exclude name="o.n.bootstrap/test/unit/src/org/fakepkg/resource1.txt" /> <!--no degree of creativity-->
+            <exclude name="o.n.bootstrap/test/unit/src/org/fakepkg/resource2.txt" /> <!--no degree of creativity-->
+            <exclude name="o.n.core/licenses/**" /> <!-- license files -->
+            <exclude name="o.n.core/test/unit/src/org/netbeans/core/modules/jars/localized-manifest/locmani/something.txt" /> <!--no degree of creativity-->
+            <exclude name="o.n.core/test/unit/src/org/netbeans/core/projects/cache/data/**" /> <!-- test data -->
+            <exclude name="openide.nodes/test/unit/src/org/openide/nodes/data/**" /> <!-- test data -->
+            <exclude name="openide.util.lookup/test/unit/src/org/openide/util/lookup/MetaInfServicesLookupTestRunnable.txt" /> <!--no degree of creativity-->
+            <exclude name="openide.util.lookup/test/unit/src/org/openide/util/lookup/problem100320.txt" /> <!--no degree of creativity-->
+            <exclude name="openide.util.lookup/test/unit/src/org/openide/util/lookup/problem249414.txt" /> <!--no degree of creativity-->
+            <exclude name="openide.util.lookup/test/unit/src/org/openide/util/lookup/services-jar-1.txt" /> <!--no degree of creativity-->
+            <exclude name="openide.util.lookup/test/unit/src/org/openide/util/lookup/services-jar-2.txt" /> <!--no degree of creativity-->
+            <exclude name="openide.util.ui/test/unit/src/org/openide/util/UtilitiesTranslateEmpty.txt" /> <!-- license would cause tests to fail -->
+            <exclude name="openide.util/test/unit/src/org/openide/util/LookupUsesRequestProcessorTest.resource" /> <!-- license would cause tests to fail -->
+            <exclude name="options.editor/src/org/netbeans/modules/options/colors/AllLanguagesExample" /> <!--no degree of creativitya-->
+            <exclude name="options.editor/src/org/netbeans/modules/options/colors/HighlightingExample" /> <!--no degree of creativitya-->
+            <exclude name="options.editor/src/org/netbeans/modules/options/indentation/indentationExample" /> <!--no degree of creativitya-->
+            <exclude name="projectui/src/org/netbeans/modules/project/ui/resources/*-license.txt" /> <!--licenses-->
+            <exclude name="projectui/src/org/netbeans/modules/project/ui/resources/license-default.txt" /> <!--licenses-->
+            <exclude name="projectuiapi/test/unit/src/org/netbeans/modules/project/uiapi/data/*.txt" /> <!--test data-->
+            <exclude name="properties/src/org/netbeans/modules/properties/sample.properties.template" /> <!-- template file -->
+            <exclude name="properties.syntax/src/org/netbeans/modules/properties/syntax/PropertiesExample" /> <!-- user visible example for properties language -->
+            <exclude name="queries/test/unit/src/org/netbeans/api/queries/data/*" /> <!--test data-->
+            <exclude name="selenium2.java/src/org/netbeans/modules/selenium2/java/SeleneseIT.java.template" /> <!--template file-->
+            <exclude name="spellchecker.dictionary_en/release/modules/dict/*.description" /> <!--Description Files-->
+            <exclude name="spi.navigator/test/unit/src/org/netbeans/modules/navigator/resources/lastsel/file.lastsel_mime1" /> <!--empty file-->
+            <exclude name="spring.beans/src/org/netbeans/modules/spring/beans/resources/templates/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
+            <exclude name="templates/src/org/netbeans/modules/templates/resources/userprop.txt" /> <!--no degree of creativity-->
+            <exclude name="testng.ui/src/org/netbeans/modules/testng/ui/resources/*.template" /> <!--template files-->
+            <exclude name="utilities/test/unit/src/org/netbeans/modules/openfile/resources/recent_files/*" /> <!--test data-->
+            <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.template" /> <!--template files-->
+            <exclude name="websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/model/application.wadl" /> <!--test data-->
+            <exclude name="websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/util/rootGroup.xml" /> <!--test data-->
+            <exclude name="websvc.saas.kit/release/VERSION.txt" /> <!--generated file-->
+            <exclude name="welcome/src/org/netbeans/modules/welcome/resources/rss-0_91.dtd" /> <!-- specifies a standard -->
+            <exclude name="xml.axi/test/unit/src/org/netbeans/modules/xml/axi/resources/**" /> <!-- test data -->
+            <exclude name="xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.dtd" /> <!-- test data -->
+            <exclude name="xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.xml" /> <!-- test data -->
+            <exclude name="xml.schema.completion/test/unit/src/org/netbeans/modules/xml/schema/completion/resources/**" /> <!-- test data -->
+            <exclude name="xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/**/*.xsd" /> <!-- test data -->
+            <exclude name="xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/resources/*.xml" /> <!-- test data -->
+            <exclude name="xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/resources/*.zip" /> <!-- test data -->
+            <exclude name="xml.schema.model/test/unit/src/org/netbeans/modules/xml/schema/model/resources/dummyProject/nbproject/private/tmpfile" /> <!-- test data -->
+            <exclude name="xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample" /> <!-- GUI sample file to demonstrate syntax highlighting -->
+            <exclude name="xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample" /> <!-- GUI sample file to demonstrate syntax highlighting -->
+            <exclude name="xml.text/test/qa-functional/src/org/netbeans/modules/xml/text/**/data/**" /> <!-- test data -->
+            <exclude name="xml.tools/test/qa-functional/src/org/netbeans/modules/**/*.dtd" /> <!-- test data -->
+            <exclude name="xml.tools/test/qa-functional/src/org/netbeans/modules/**/*.txt" /> <!-- test data -->
+            <exclude name="xml.tools/test/qa-functional/src/org/netbeans/modules/**/*.xml" /> <!-- test data -->
+            <exclude name="xml.wsdl.model/test/unit/src/org/netbeans/modules/xml/wsdl/**/*.wsdl" /> <!-- test data -->
+            <exclude name="xml.wsdl.model/test/unit/src/org/netbeans/modules/xml/wsdl/**/*.xml" /> <!-- test data -->
+            <exclude name="xml.wsdl.model/test/unit/src/org/netbeans/modules/xml/wsdl/**/*.xsd" /> <!-- test data -->
+            <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.bpel" /> <!-- test data -->
+            <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.wsdl" /> <!-- test data -->
+            <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.xml" /> <!-- test data -->
+            <exclude name="xml.xdm/test/unit/src/org/netbeans/modules/xml/xdm/**/*.xsd" /> <!-- test data -->
+            <exclude name="xml/src/org/netbeans/modules/xml/resources/templates/*" /> <!-- template files - tracked by https://issues.apache.org/jira/browse/NETBEANS-85 -->
+            <exclude name="xml/test/unit/src/org/netbeans/modules/xml/resources/*" /> <!-- test data -->
+            <exclude name="xsl/src/org/netbeans/modules/xsl/resources/templates/stylesheet.xsl" /> <!-- Template for user - very limited degree of creativity -->
+            <exclude name="xsl/test/unit/src/org/netbeans/modules/xsl/utils/data/*" /> <!--test data-->
+        </patternset>
         <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="build/rat-report.txt">
-            <fileset dir="${nb_all}">
-                <exclude name="*/build/**" />
-                <exclude name="nbbuild/netbeans/**" />
-                <exclude name="**/*.mf" /> <!--do not nativelly support comments-->
-                <exclude name="*/nbproject/*.sig" /> <!--generated signatures for past versions-->
-                <exclude name="*/nbproject/build-impl.xml" /> <!--generated, no degree of creativity -->
-                <exclude name="*/nbproject/jfx-impl.xml" /> <!--generated, no degree of creativity -->
-                <exclude name="*/nbproject/genfiles.properties" /> <!--generated, no degree of creativity -->
-                <exclude name="*/nbproject/private/**" /> <!--user-specific files -->
-                <exclude name="*/external/*-license.txt" /> <!--licenses for external dependencies-->
-                <exclude name="*/external/*-notice.txt" /> <!--notices for external dependencies-->
-                <exclude name="**/*.pass" /> <!--generated test files-->
-                <exclude name="**/*.pass2" /> <!--generated test files-->
-                <exclude name="**/.list" /> <!--no degree of creativity-->
-                <exclude name="**/src/META-INF/**" /> <!--no degree of creativity-->
-                <exclude name="form/test/unit/data/goldenfiles/*" /> <!--test data-->
-                <exclude name="diff/test/unit/data/**" /> <!--test data-->
-                <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/provider/*.txt" /> <!--test data-->
-                <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/visualizer/data/**" /> <!--test data-->
-                <exclude name="utilities/test/unit/src/org/netbeans/modules/openfile/resources/recent_files/*" /> <!--test data-->
-                <exclude name="**/*.url" /> <!--no degree of creativity-->
-                <exclude name="spi.navigator/test/unit/src/org/netbeans/modules/navigator/resources/lastsel/file.lastsel_mime1" /> <!--empty file-->    
-                <exclude name="templates/src/org/netbeans/modules/templates/resources/userprop.txt" /> <!--no degree of creativity-->
-                <exclude name="api.search/test/unit/data/textFiles/utf8file.txt" /> <!--test data-->
-                <exclude name="api.search/test/unit/src/org/netbeans/modules/search/data/**" /> <!--test data-->
-                <exclude name="beans/src/org/netbeans/modules/beans/resources/templates/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
+            <rat:substringMatcher licenseFamilyCategory="w3c2" licenseFamilyName="W3C Software and Document Notice and License">
+                <pattern substring="W3C Software and Document Notice and License"/>
+            </rat:substringMatcher>
+            <rat:substringMatcher licenseFamilyCategory="oasis" licenseFamilyName="OASIS">
+                <pattern substring="[OASIS]"/>
+            </rat:substringMatcher>
+            <rat:fullTextMatcher licenseFamilyCategory="wsdl" licenseFamilyName="WSDL Schema Files">
+                International Business Machines Corporation and Microsoft Corporation
+                All Rights Reserved
+                License for WSDL Schema Files
+            </rat:fullTextMatcher>
+            <rat:fullTextMatcher licenseFamilyCategory="ISO-SGML" licenseFamilyName="International Organization for Standardization for SGML">
+                International Organization for Standardization 1986
+                Permission to copy in any form is granted for use with
+                conforming SGML systems and applications as defined in
+                ISO 8879, provided this notice is included in all copies.
+            </rat:fullTextMatcher>
+            <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
+            <rat:approvedLicense familyName="OASIS"/>
+            <rat:approvedLicense familyName="WSDL Schema Files" />
+            <rat:approvedLicense familyName="International Organization for Standardization for SGML"/>
+	    <fileset dir="${nb_all}">
+                <patternset refid="non.rat" />
             </fileset>
         </rat:report>
+        <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" format="xml" reportfile="build/rat-report.xml">
+            <rat:substringMatcher licenseFamilyCategory="w3c2" licenseFamilyName="W3C Software and Document Notice and License">
+                <pattern substring="W3C Software and Document Notice and License"/>
+            </rat:substringMatcher>
+            <rat:substringMatcher licenseFamilyCategory="oasis" licenseFamilyName="OASIS">
+                <pattern substring="[OASIS]"/>
+            </rat:substringMatcher>
+            <rat:fullTextMatcher licenseFamilyCategory="wsdl" licenseFamilyName="WSDL Schema Files">
+                International Business Machines Corporation and Microsoft Corporation
+                All Rights Reserved
+                License for WSDL Schema Files
+            </rat:fullTextMatcher>
+            <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
+            <rat:approvedLicense familyName="OASIS"/>
+            <rat:approvedLicense familyName="WSDL Schema Files" />
+	    <fileset dir="${nb_all}">
+                <patternset refid="non.rat" />
+            </fileset>
+        </rat:report>
+        <taskdef name="rattohtml" classname="org.netbeans.nbbuild.RatReportTask" classpath="${build.ant.classes.dir}"/>
+        <loadproperties srcFile="cluster.properties" />
+        <rattohtml source="build/rat-report.xml" report="${nb.build.dir}/rat/"/>
     </target>
 
 </project>

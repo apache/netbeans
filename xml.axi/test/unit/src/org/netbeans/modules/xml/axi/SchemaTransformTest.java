@@ -78,13 +78,16 @@ public class SchemaTransformTest extends AbstractTestCase {
         suite.addTest(new SchemaTransformTest("testLineSalamiSlice"));
         suite.addTest(new SchemaTransformTest("testLineVenetianBlind"));
         suite.addTest(new SchemaTransformTest("testLineRussianDoll"));
-        suite.addTest(new SchemaTransformTest("testTypes"));
+//        Disabled as referenced XSD file were partly not donated by oracle to apache
+//        suite.addTest(new SchemaTransformTest("testTypes"));
         //FIXME suite.addTest(new SchemaTransformTest("testLoanApp"));
         suite.addTest(new SchemaTransformTest("testAnnotation"));
-        suite.addTest(new SchemaTransformTest("testPurchaseOrder"));
+//        Disabled as referenced XSD file were partly not donated by oracle to apache
+//        suite.addTest(new SchemaTransformTest("testPurchaseOrder"));
 	//FIXME suite.addTest(new SchemaTransformTest("testDiscardTransform"));
         suite.addTest(new SchemaTransformTest("testRenameAfterTransform"));
-        suite.addTest(new SchemaTransformTest("testNewApproach"));
+//        Disabled as referenced XSD file were partly not donated by oracle to apache
+//        suite.addTest(new SchemaTransformTest("testNewApproach"));
         suite.addTest(new SchemaTransformTest("testMultiSchemaInclude"));
         suite.addTest(new SchemaTransformTest("testMultiSchemaImport"));
         suite.addTest(new SchemaTransformTest("testGlobalElementReuse"));
@@ -533,7 +536,7 @@ public class SchemaTransformTest extends AbstractTestCase {
             assertTrue("Should not be here", false);
         }
         validateSchema(axiModel.getSchemaModel());
-        
+    
 //		printDocument();
         assertEquals("global complex types",0,getSchemaModel().getSchema().getComplexTypes().size());
         assertEquals("global simple types",0,getSchemaModel().getSchema().getSimpleTypes().size());
@@ -801,7 +804,7 @@ public class SchemaTransformTest extends AbstractTestCase {
             assertTrue("Should not be here", false);
         }
         validateSchema(axiModel.getSchemaModel());
-        
+    
 //		printDocument();
         assertEquals("global complex types",3,getSchemaModel().getSchema().getComplexTypes().size());
 //        assertEquals("global simple types",2,getSchemaModel().getSchema().getSimpleTypes().size());

@@ -201,31 +201,23 @@ public class CheckLicenseTest extends TestBase {
     
     public void testReplaceJavaLicense() throws Exception {
         java.io.File tmp = extractString(
-"/*\n" +
-" * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.\n" +
+"/**\n" +
+" * Licensed to the Apache Software Foundation (ASF) under one\n" +
+" * or more contributor license agreements.  See the NOTICE file\n" +
+" * distributed with this work for additional information\n" +
+" * regarding copyright ownership.  The ASF licenses this file\n" +
+" * to you under the Apache License, Version 2.0 (the\n" +
+" * \"License\"); you may not use this file except in compliance\n" +
+" * with the License.  You may obtain a copy of the License at\n" +
 " *\n" +
-" * Copyright 2012 Oracle and/or its affiliates. All rights reserved.\n" +
+" *   http://www.apache.org/licenses/LICENSE-2.0\n" +
 " *\n" +
-" * Oracle and Java are registered trademarks of Oracle and/or its affiliates.\n" +
-" * Other names may be trademarks of their respective owners.\n" +
-" *\n" +
-" * The contents of this file are subject to the terms of either the GNU\n" +
-" * General Public License Version 2 only (\"GPL\") or the Common\n" +
-" * Development and Distribution License(\"CDDL\") (collectively, the\n" +
-" * \"License\"). You may not use this file except in compliance with the\n" +
-" * License. You can obtain a copy of the License at\n" +
-" * http://www.netbeans.org/cddl-gplv2.html\n" +
-" * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the\n" +
-" * specific language governing permissions and limitations under the\n" +
-" * License.  When distributing the software, include this License Header\n" +
-" * Notice in each file and include the License file at\n" +
-" * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this\n" +
-" * particular file as subject to the \"Classpath\" exception as provided\n" +
-" * by Oracle in the GPL Version 2 section of the License file that\n" +
-" * accompanied this code. If applicable, add the following below the\n" +
-" * License Header, with the fields enclosed by brackets [] replaced by\n" +
-" * your own identifying information:\n" +
-" * \"Portions Copyrighted [year] [name of copyright owner]\"\n" +
+" * Unless required by applicable law or agreed to in writing,\n" +
+" * software distributed under the License is distributed on an\n" +
+" * \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n" +
+" * KIND, either express or implied.  See the License for the\n" +
+" * specific language governing permissions and limitations\n" +
+" * under the License.\n" +
 " */"
         );
         File java = new File(tmp.getParentFile(), "MyTest.java");
@@ -630,15 +622,6 @@ public class CheckLicenseTest extends TestBase {
                 }
             }
         }
-        
-        {
-            if (content.indexOf("2002") != -1) {
-                fail("No reference to year 2002:\n" + content);
-            }
-            if (content.indexOf("2006") == -1) {
-                fail("There should be a ref to 2006:\n" + content);
-            }
-        }
     }        
 
     private static boolean isWindows() {
@@ -686,15 +669,6 @@ public class CheckLicenseTest extends TestBase {
             Matcher m = Pattern.compile("^ *New. *Warning", Pattern.MULTILINE | Pattern.DOTALL).matcher(content);
             if (!m.find()) {
                 fail("warning shall be there:\n" + content);
-            }
-        }
-        
-        {
-            if (content.indexOf("2002") != -1) {
-                fail("No reference to year 2002:\n" + content);
-            }
-            if (content.indexOf("2006") == -1) {
-                fail("There should be a ref to 2006:\n" + content);
             }
         }
     }        

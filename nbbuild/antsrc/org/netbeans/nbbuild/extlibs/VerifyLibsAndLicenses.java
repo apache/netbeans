@@ -52,6 +52,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.netbeans.nbbuild.JUnitReportWriter;
+import org.netbeans.nbbuild.extlibs.DownloadBinaries.MavenCoordinate;
 
 /**
  * Task to check that external libraries have legitimate licenses, etc.
@@ -202,7 +203,7 @@ public class VerifyLibsAndLicenses extends Task {
                         } else {
                             trailingSpace = c == ' ';
                             column++;
-                            if (pastHeader && column > 80) {
+                            if (pastHeader && column > MAX_LINE_LEN) {
                                 msg.append("\n" + path + " has line #" + line + " longer than 80 characters");
                                 continue FILE;
                             }
@@ -221,10 +222,12 @@ public class VerifyLibsAndLicenses extends Task {
         pseudoTests.put("testLicenseFilesAreProperlyFormattedPhysically", msg.length() > 0 ? "Some license files were badly formatted" + msg : null);
     }
 
+    private static final int MAX_LINE_LEN = 100;//temporary increased from: 80
+
     private void testLicenses() throws IOException {
         File licenses = new File(new File(nball, "nbbuild"), "licenses");
-        Set<String> requiredHeaders = new TreeSet<String>(Arrays.asList("Name", "Version", "Description", "License", "OSR", "Origin"));
-        Set<String> optionalHeaders = new HashSet<String>(Arrays.asList("Files", "Source", "Comment"));
+        Set<String> requiredHeaders = new TreeSet<String>(Arrays.asList("Name", "Version", "Description", "License", "Origin"));
+        Set<String> optionalHeaders = new HashSet<String>(Arrays.asList("Files", "Source", "Comment", "Type", "URL", /*for transition period:*/"OSR"));
         StringBuffer msg = new StringBuffer();
         for (String module : modules) {
             File d = new File(new File(nball, module), "external");
@@ -296,7 +299,7 @@ public class VerifyLibsAndLicenses extends Task {
                         StringBuffer masterBody = new StringBuffer();
                         is = new FileInputStream(licenseFile);
                         try {
-                            BufferedReader r = new BufferedReader(new InputStreamReader(is));
+                            BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                             int c;
                             while ((c = r.read()) != -1) {
                                 masterBody.append((char) c);
@@ -464,8 +467,7 @@ public class VerifyLibsAndLicenses extends Task {
                     }
                 }
                 if (!ignored && dir.getName().equals("external") &&
-                        new File(new File(dir.getParentFile(), "nbproject"), "project.xml").isFile() &&
-                        new File(dir.getParentFile(), "src").isDirectory()) {
+                        new File(new File(dir.getParentFile(), "nbproject"), "project.xml").isFile()) {
                     ignored = true;
                 }
                 if (!ignored) {
@@ -496,13 +498,13 @@ public class VerifyLibsAndLicenses extends Task {
         File root = dir;
         String path = "";
         File hgignore = null;
-        while (root != null && !(hgignore = new File(root, ".hgignore")).isFile()) {
+        while (root != null && !(hgignore = new File(root, ".gitignore")).isFile()) {
             path = root.getName() + "/" + path;
             root = root.getParentFile();
         }
         List<Pattern> ignoredPatterns;
         synchronized (hgignores) {
-            if (root == null) {
+            if (root == null || hgignore == null) {
                 ignoredPatterns = Collections.emptyList();
             } else if (hgignores.containsKey(root)) {
                 ignoredPatterns = hgignores.get(root);
@@ -513,6 +515,14 @@ public class VerifyLibsAndLicenses extends Task {
                     BufferedReader br = new BufferedReader(r);
                     String line;
                     while ((line = br.readLine()) != null) {
+                        line = line.replaceAll("#.*", "");
+                        if (line.trim().isEmpty())
+                            continue;
+                        line = line.replace(".", "\\.");
+                        line = line.replace("*", "[^/]*");
+                        line = line.replace("[^/]**", ".*");
+                        line = line.replace("?", ".");
+                        line += "($|/)";
                         ignoredPatterns.add(Pattern.compile(line));
                     }
                 } finally {
@@ -524,10 +534,10 @@ public class VerifyLibsAndLicenses extends Task {
         Set<String> files = new TreeSet<String>();
         FILES: for (File f : kids) {
             String n = f.getName();
-            if (n.equals(".hg")) {
+            if (n.equals(".git")) {
                 continue;
             }
-            String fullname = path + n;
+            String fullname = "/" + path + n;
             boolean isDir = f.isDirectory();
             if (isDir && new File(f, ".hg").isDirectory()) {
                 continue; // skip contrib, misc repos if present
@@ -556,7 +566,13 @@ public class VerifyLibsAndLicenses extends Task {
                     if (hashAndFile.length < 2) {
                         throw new BuildException("Bad line '" + line + "' in " + list);
                     }
-                    files.add(hashAndFile[1]);
+                    if (MavenCoordinate.isMavenFile(hashAndFile[1])) {
+                        MavenCoordinate coordinate = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
+                        String artifactFile = coordinate.toArtifactFilename();
+                        files.add(artifactFile);
+                    } else {
+                        files.add(hashAndFile[1]);
+                    }
                 }
             } finally {
                 r.close();

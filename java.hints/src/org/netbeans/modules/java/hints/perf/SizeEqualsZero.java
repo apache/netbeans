@@ -30,7 +30,6 @@ import org.netbeans.modules.java.hints.introduce.TreeUtils;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.HintContext;
-import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.BooleanOption;
 import org.netbeans.spi.java.hints.ConstraintVariableType;
 import org.netbeans.spi.java.hints.Hint;
@@ -57,6 +56,10 @@ public class SizeEqualsZero {
             constraints = @ConstraintVariableType(type = "java.util.Collection", variable = "$subj")),
         @TriggerPattern(value="$subj.size() == 0", 
             constraints = @ConstraintVariableType(type = "java.util.Map", variable = "$subj")),
+        @TriggerPattern(value="0 == $subj.size()",
+            constraints = @ConstraintVariableType(type = "java.util.Collection", variable = "$subj")),
+        @TriggerPattern(value="0 == $subj.size()",
+            constraints = @ConstraintVariableType(type = "java.util.Map", variable = "$subj")),
     })
     public static ErrorDescription sizeEqualsZero(HintContext ctx) {
         return sizeEqualsZeroHint(ctx, false);
@@ -66,6 +69,10 @@ public class SizeEqualsZero {
         @TriggerPattern(value="$subj.size() != 0", 
             constraints = @ConstraintVariableType(type = "java.util.Collection", variable = "$subj")),
         @TriggerPattern(value="$subj.size() != 0", 
+            constraints = @ConstraintVariableType(type = "java.util.Map", variable = "$subj")),
+        @TriggerPattern(value="0 != $subj.size()",
+            constraints = @ConstraintVariableType(type = "java.util.Collection", variable = "$subj")),
+        @TriggerPattern(value="0 != $subj.size()",
             constraints = @ConstraintVariableType(type = "java.util.Map", variable = "$subj")),
     })
     public static ErrorDescription sizeNotEqualsZero(HintContext ctx) {

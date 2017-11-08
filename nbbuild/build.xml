@@ -1475,6 +1475,14 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
           <fileset file="${nb.build.dir}/notice-temp" />
           <fileset dir="${nb_all}"
                    includes="*/notice.txt" />
+          <filterchain>
+              <tokenfilter>
+                  <filetokenizer />
+                  <replaceregex pattern="(\r?\n)(\r?\n)+"
+                                replace="\1\1"
+                                flags="g" />
+             </tokenfilter>
+          </filterchain>
         </concat>
         <dirset id="source.dirset" dir="${nb_all}"
                 includes="${allmodules}"
@@ -1508,7 +1516,15 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <concat destfile="${nb.build.dir}/NOTICE">
       <fileset file="${nb_all}/nbbuild/notice-stub.txt" />
       <fileset dir="${nb_all}"
-	       includes="*/notice.txt" />
+               includes="*/notice.txt" />
+      <filterchain>
+          <tokenfilter>
+              <filetokenizer />
+              <replaceregex pattern="(\r?\n)(\r?\n)+"
+                            replace="\1\1"
+                            flags="g" />
+          </tokenfilter>
+      </filterchain>
     </concat>
     <concat destfile="${nb.build.dir}/LICENSE">
       <fileset file="${nb_all}/nbbuild/license-stub.txt" />

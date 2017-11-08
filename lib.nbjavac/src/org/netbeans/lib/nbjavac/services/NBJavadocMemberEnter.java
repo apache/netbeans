@@ -68,7 +68,10 @@ public class NBJavadocMemberEnter extends JavadocMemberEnter {
         cancelService.abortIfCanceled();
         super.visitMethodDef(tree);
         if (trees instanceof NBJavacTrees && !env.enclClass.defs.contains(tree)) {
-            ((NBJavacTrees)trees).addPathForElement(tree.sym, new TreePath(trees.getPath(env.toplevel, env.enclClass), tree));
+            TreePath path = trees.getPath(env.toplevel, env.enclClass);
+            if (path != null) {
+                ((NBJavacTrees)trees).addPathForElement(tree.sym, new TreePath(path, tree));
+            }
         }
     }
 

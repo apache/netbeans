@@ -1,43 +1,20 @@
-/*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Copyright 2012 Oracle and/or its affiliates. All rights reserved.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
- * Other names may be trademarks of their respective owners.
- *
- * The contents of this file are subject to the terms of either the GNU
- * General Public License Version 2 only ("GPL") or the Common
- * Development and Distribution License("CDDL") (collectively, the
- * "License"). You may not use this file except in compliance with the
- * License. You can obtain a copy of the License at
- * http://www.netbeans.org/cddl-gplv2.html
- * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
- * specific language governing permissions and limitations under the
- * License.  When distributing the software, include this License Header
- * Notice in each file and include the License file at
- * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the GPL Version 2 section of the License file that
- * accompanied this code. If applicable, add the following below the
- * License Header, with the fields enclosed by brackets [] replaced by
- * your own identifying information:
- * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * If you wish your version of this file to be governed by only the CDDL
- * or only the GPL Version 2, indicate your decision by adding
- * "[Contributor] elects to include this software in this distribution
- * under the [CDDL or GPL Version 2] license." If you do not indicate a
- * single choice of license, a recipient has the option to distribute
- * your version of this file under either the CDDL, the GPL Version 2 or
- * to extend the choice of license to its licensees as provided above.
- * However, if you add GPL Version 2 code and therefore, elected the GPL
- * Version 2 license, then the option applies only if the new code is
- * made subject to such option by the copyright holder.
- *
- * Contributor(s):
- *
- * Portions Copyrighted 2012 Sun Microsystems, Inc.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.netbeans.modules.db.dataview.table;
 
@@ -54,29 +31,22 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.DefaultRowSorter;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.RowFilter;
-import javax.swing.RowSorter;
 import javax.swing.TransferHandler;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.plaf.UIResource;
 import javax.swing.table.*;
-import org.jdesktop.swingx.JXTableHeader;
-import org.jdesktop.swingx.decorator.ColorHighlighter;
-import org.jdesktop.swingx.decorator.HighlightPredicate;
-import org.jdesktop.swingx.decorator.HighlighterFactory;
-import org.jdesktop.swingx.renderer.CheckBoxProvider;
-import org.jdesktop.swingx.renderer.JRendererCheckBox;
-import org.jdesktop.swingx.renderer.StringValues;
 import org.netbeans.modules.db.dataview.meta.DBColumn;
 import org.netbeans.modules.db.dataview.table.celleditor.*;
 import org.netbeans.modules.db.dataview.util.BinaryToStringConverter;
@@ -102,7 +72,11 @@ public class ResultSetJXTable extends JXTableDecorator {
     private static final DateFormat timestampFormat = new SimpleDateFormat(TimestampType.DEFAULT_FORMAT_PATTERN);
     
     private final int multiplier;
+    
+    private final StringFallbackRowSorter sorter = new StringFallbackRowSorter(null);
 
+    private Set<Integer> visibleColumns = new HashSet<>();
+    
     // If structure changes, enforce relayout
     private final TableModelListener dataExchangedListener = new TableModelListener() {
         @Override
@@ -115,20 +89,15 @@ public class ResultSetJXTable extends JXTableDecorator {
 
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public ResultSetJXTable() {
+        this.setRowSorter(sorter);
         this.setAutoCreateColumnsFromModel(false);
         this.setTransferHandler(new TableTransferHandler());
 
-        setShowGrid(true, true);
+        setShowGrid(true);
         setGridColor(GRID_COLOR);
 
         getTableHeader().setReorderingAllowed(false);
-        setColumnControlVisible(true);
-        getColumnControl().setToolTipText(org.openide.util.NbBundle.getMessage(ResultSetJXTable.class, "ResultSetJXTable.columnControl.tooltip"));
         setFillsViewportHeight(true);
-        setHorizontalScrollEnabled(true);
-
-        setHighlighters(HighlighterFactory.createAlternateStriping(ROW_COLOR, ALTERNATE_ROW_COLOR));
-        addHighlighter(new ColorHighlighter(HighlightPredicate.ROLLOVER_ROW, ROLLOVER_ROW_COLOR, null));
 
         setDefaultCellRenderers();
         setDefaultCellEditors();
@@ -143,6 +112,7 @@ public class ResultSetJXTable extends JXTableDecorator {
         getActionMap().put("selectNextPreviousCell", new EditingAwareAction(getActionMap().get("selectPreviousRowCell")));
 
         setSurrendersFocusOnKeystroke(true);
+        setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     }
 
     @Override
@@ -151,23 +121,8 @@ public class ResultSetJXTable extends JXTableDecorator {
     }
 
     @Override
-    protected RowSorter<? extends TableModel> createDefaultRowSorter() {
-        return new StringFallbackRowSorter(this.getModel());
-    }
-
-    @Override
     protected TableModel createDefaultDataModel() {
         return new ResultSetTableModel(new DBColumn[0]);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <R extends TableModel> void setRowFilter(RowFilter<? super R, ? super Integer> filter) {
-        if(getRowSorter() instanceof DefaultRowSorter) {
-            ((DefaultRowSorter) getRowSorter()).setRowFilter(filter);
-        } else {
-            super.setRowFilter(filter);
-        }
     }
 
     @Override
@@ -181,9 +136,28 @@ public class ResultSetJXTable extends JXTableDecorator {
         if(getModel() != null) {
             getModel().removeTableModelListener(dataExchangedListener);
         }
+        if(sorter != null) {
+            sorter.setModel((ResultSetTableModel) dataModel);
+        }
         super.setModel(dataModel);
+        if(visibleColumns != null) {
+            visibleColumns.clear();
+            for(int i = 0; i < dataModel.getColumnCount(); i++) {
+                visibleColumns.add(i);
+            }
+        }
         updateHeader();
         dataModel.addTableModelListener(dataExchangedListener);
+    }
+
+    public Set<Integer> getVisibleColumns() {
+        return new HashSet<>(visibleColumns);
+    }
+
+    public void setVisibleColumns(Set<Integer> visibleColumns) {
+        this.visibleColumns.addAll(visibleColumns);
+        this.visibleColumns.retainAll(visibleColumns);
+        updateHeader();
     }
 
     @Override
@@ -195,9 +169,9 @@ public class ResultSetJXTable extends JXTableDecorator {
     protected void setDefaultCellRenderers() {
         setDefaultRenderer(Object.class, new ResultSetCellRenderer());
         setDefaultRenderer(String.class, new ResultSetCellRenderer());
-        setDefaultRenderer(Number.class, new ResultSetCellRenderer(StringValues.NUMBER_TO_STRING, JLabel.RIGHT));
-        setDefaultRenderer(Boolean.class, new ResultSetCellRenderer(new CheckBoxProvider()));
-        setDefaultRenderer(java.sql.Date.class, new ResultSetCellRenderer(StringValues.DATE_TO_STRING));
+        setDefaultRenderer(Number.class, new ResultSetCellRenderer());
+        setDefaultRenderer(Boolean.class, new BooleanCellRenderer());
+        setDefaultRenderer(java.sql.Date.class, new ResultSetCellRenderer(ResultSetCellRenderer.Date_TO_STRING));
         setDefaultRenderer(java.sql.Time.class, new ResultSetCellRenderer(ResultSetCellRenderer.TIME_TO_STRING));
         setDefaultRenderer(java.sql.Timestamp.class, new ResultSetCellRenderer(ResultSetCellRenderer.DATETIME_TO_STRING));
         setDefaultRenderer(java.util.Date.class, new ResultSetCellRenderer(ResultSetCellRenderer.DATETIME_TO_STRING));
@@ -219,7 +193,7 @@ public class ResultSetJXTable extends JXTableDecorator {
         txtFld.addKeyListener(kl);
         setDefaultEditor(Number.class, new NumberFieldEditor(numFld));
 
-        JRendererCheckBox b = new JRendererCheckBox();
+        JCheckBox b = new JCheckBox();
         b.addKeyListener(kl);
         setDefaultEditor(Boolean.class, new BooleanTableCellEditor(b));
 
@@ -265,7 +239,11 @@ public class ResultSetJXTable extends JXTableDecorator {
         List<Integer> columnWidthList = getColumnWidthList(columns);
 
         for (int i = 0; i < columns.length; i++) {
-            TableColumn tc = getColumnFactory().createTableColumn(i);
+            if(! (visibleColumns.isEmpty() || visibleColumns.contains(i))) {
+                continue;
+            }
+            
+            TableColumn tc = new TableColumn(i);
             tc.setPreferredWidth(columnWidthList.get(i));
 
             DBColumn col = columns[i];
@@ -449,7 +427,7 @@ public class ResultSetJXTable extends JXTableDecorator {
     }
 
     // This is mainly used for set Tooltip for column headers
-    private class JTableHeaderImpl extends JXTableHeader {
+    private class JTableHeaderImpl extends JTableHeader {
 
         public JTableHeaderImpl(TableColumnModel cm) {
             super(cm);
@@ -460,7 +438,6 @@ public class ResultSetJXTable extends JXTableDecorator {
             return getColumnToolTipText(e);
         }
 
-        @Override
         protected String getColumnToolTipText(MouseEvent e) {
             java.awt.Point p = e.getPoint();
             int index = columnModel.getColumnIndexAtX(p.x);

@@ -1515,14 +1515,24 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     </concat>
     <taskdef name="createdependencies" classname="org.netbeans.nbbuild.extlibs.CreateDependencies" classpath="${nbantext.jar}"/>
     <createdependencies refid="source.dirset" dependencies="${nb.build.dir}/DEPENDENCIES" sourceDependencies="true"/>
+    <concat destfile="${nb.build.dir}/cluster.properties">
+        <fileset file="${nb_all}/nbbuild/cluster.properties" />
+        <filterchain>
+            <tokenfilter>
+                <replaceregex pattern="cluster.config=.*" replace="cluster.config=${cluster.config}" />
+            </tokenfilter>
+        </filterchain>
+    </concat>
     <zip zipfile="${nb.build.dir}/${cluster.config}-src-${buildnum}.zip" duplicate="preserve">
       <zipfileset dir="${nb_all}" includes="${source.dirs}">
           <exclude name="*/build/**/*"/>
           <exclude name="nbbuild/netbeans/**"/>
+          <exclude name="nbbuild/cluster.properties" />
       </zipfileset>
       <zipfileset dir="${nb_all}">
           <include name="build.xml"/>
       </zipfileset>
+      <zipfileset file="${nb.build.dir}/cluster.properties" fullpath="nbbuild/cluster.properties" />
       <zipfileset file="${nb.build.dir}/DEPENDENCIES" />
       <zipfileset file="${nb.build.dir}/NOTICE" />
       <zipfileset file="${nb.build.dir}/LICENSE" />

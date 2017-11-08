@@ -192,8 +192,14 @@ public abstract class CoreBridge {
     }
 
     static boolean isJavaFX(File javaHome) {
-        return 
-            new File(new File(javaHome, "lib"), "jfxrt.jar").exists() || 
-            new File(new File(new File(javaHome, "lib"), "ext"), "jfxrt.jar").exists();
+        try {
+            Class.forName("javafx.application.Platform"); // NOI18N
+            return true;
+        } catch (ClassNotFoundException ex) {
+            return
+                new File(new File(javaHome, "lib"), "jfxrt.jar").exists() ||
+                new File(new File(new File(javaHome, "lib"), "ext"), "jfxrt.jar").exists();
+
+        }
     }
 }

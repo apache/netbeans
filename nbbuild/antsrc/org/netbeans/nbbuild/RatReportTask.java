@@ -21,11 +21,11 @@ package org.netbeans.nbbuild;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -34,8 +34,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -129,7 +127,7 @@ public class RatReportTask extends Task {
                 simplfiedKey = simplfiedKey.replaceAll(".dir", "");
                 simplfiedKey = simplfiedKey.replaceAll(".depends", "");
                 clusterList.add(simplfiedKey);
-                modulebycluster.put(simplfiedKey, new HashSet<String>());
+                modulebycluster.put(simplfiedKey, new HashSet<>());
             }
         }
         for (String clusterName : clusterList) {
@@ -212,7 +210,7 @@ public class RatReportTask extends Task {
     private void doPopulateUnapproved(Map<String, ModuleInfo> moduleRATInfo, Element rootElement, XPath path) throws XPathExpressionException {
         NodeList evaluate = (NodeList) path.evaluate("descendant::resource[license-approval/@name=\"false\"]", rootElement, XPathConstants.NODESET);
         for (int i = 0; i < evaluate.getLength(); i++) {
-            String resources = evaluate.item(i).getAttributes().getNamedItem("name").getTextContent().replaceFirst(root.getPath() + File.separator, "");
+            String resources = relativize(evaluate.item(i).getAttributes().getNamedItem("name").getTextContent());
             String moduleName = getModuleName(resources);
             if (!moduleRATInfo.containsKey(moduleName)) {
                 moduleRATInfo.get(NOT_CLUSTER).addUnapproved(resources);
@@ -225,7 +223,7 @@ public class RatReportTask extends Task {
     private void doPopulateApproved(Map<String, ModuleInfo> moduleRATInfo, Element rootElement, XPath path) throws XPathExpressionException {
         NodeList evaluate = (NodeList) path.evaluate("descendant::resource[license-approval/@name=\"true\"]", rootElement, XPathConstants.NODESET);
         for (int i = 0; i < evaluate.getLength(); i++) {
-            String resources = evaluate.item(i).getAttributes().getNamedItem("name").getTextContent().replaceFirst(root.getPath() + File.separator, "");
+            String resources = relativize(evaluate.item(i).getAttributes().getNamedItem("name").getTextContent());
             String moduleName = getModuleName(resources);
             if (!moduleRATInfo.containsKey(moduleName)) {
                 moduleRATInfo.get(NOT_CLUSTER).addApproved(resources);
@@ -234,6 +232,12 @@ public class RatReportTask extends Task {
             }
 
         }
+    }
+
+    private String relativize(String target) {
+        Path full = Paths.get(target);
+        Path rootPath = root.toPath();
+        return rootPath.relativize(full).toString();
     }
 
     private String getModuleName(String resource) {

@@ -346,7 +346,7 @@ public class IpAddressUtils {
         int dotPos = ipAddressStr.indexOf('.');
         if (dotPos > 0) {
             for(int i = 0; i < dotPos; i++) {
-                if (!(isAsciiDigit(ipAddressStr.charAt(0)))) {
+                if (!(isAsciiDigit(ipAddressStr.charAt(i)))) {
                     return false;
                 }
             }

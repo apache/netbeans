@@ -226,7 +226,8 @@ public class SCFTHandlerTest extends NbTestCase {
         byte[] arr = new byte[(int)fo.getSize()];
         int len = fo.getInputStream().read(arr);
         assertEquals("Fully read", arr.length, len);
-        return new String(arr);
+        String foRead = new String(arr).replace(System.getProperty("line.separator"), "\n");
+        return foRead;
     }
 
     private static String readChars(FileObject fo, Charset set) throws IOException {
@@ -329,9 +330,10 @@ public class SCFTHandlerTest extends NbTestCase {
             fail("no input stream for " + snd);
         }
         String read = new String(cbuf, 0, len);
-        txt = txt.replaceAll("print\\('", "").replaceAll("'\\)", "") +'\n';
+        String normRead = read.replace(System.getProperty("line.separator"), "\n");
+        txt = txt.replaceAll("print\\('", "").replaceAll("'\\)", "") + "\n";
         
-        assertEquals(txt, read);
+        assertEquals(txt, normRead);
     }
      
     public static final class DD extends DialogDisplayer {

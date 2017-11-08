@@ -1385,7 +1385,7 @@ public class Flow {
             List<Tree> instanceInitializers = new ArrayList<Tree>(node.getMembers().size());
             List<MethodTree> constructors = new ArrayList<MethodTree>(node.getMembers().size());
             List<Tree> others = new ArrayList<Tree>(node.getMembers().size());
-            
+
             for (Tree member : node.getMembers()) {
                 if (member.getKind() == Kind.BLOCK) {
                     if (((BlockTree) member).isStatic()) {
@@ -1394,10 +1394,31 @@ public class Flow {
                         instanceInitializers.add(member);
                     }
                 } else if (member.getKind() == Kind.VARIABLE && ((VariableTree) member).getInitializer() != null) {
-                    if (((VariableTree) member).getModifiers().getFlags().contains(Modifier.STATIC)) {
-                        staticInitializers.add((VariableTree) member);
+                    // If the field is either marked static or is implicitly static,
+                    // then add to staticInitializers; otherwise add to instanceInitializers.
+                    //
+                    // §8.9.3 Enum Members
+                    // "For each enum constant c declared in the body of the declaration of E,
+                    // E has an implicitly declared public static final field of type E that has
+                    // the same name as c. The field has a variable initializer which instantiates
+                    // E and passes any arguments of c to the constructor chosen for E."
+                    //
+                    // §9.3 Field (Constant) Declarations
+                    // "Every field declaration in the body of an interface is implicitly public,
+                    // static, and final. It is permitted to redundantly specify any or all of
+                    // these modifiers for such fields."
+                    if (node.getKind() == Kind.INTERFACE || ((VariableTree) member).getModifiers().getFlags().contains(Modifier.STATIC)) {
+                        {
+                            final Element e;
+                            assert (e = info.getTrees().getElement(TreePath.getPath(getCurrentPath(), member))) == null || e.getModifiers().contains(Modifier.STATIC);
+                        }
+                        staticInitializers.add(member);
                     } else {
-                        instanceInitializers.add((VariableTree) member);
+                        {
+                            final Element e;
+                            assert (e = info.getTrees().getElement(TreePath.getPath(getCurrentPath(), member))) == null || !e.getModifiers().contains(Modifier.STATIC);
+                        }
+                        instanceInitializers.add(member);
                     }
                 } else if (isConstructor(new TreePath(getCurrentPath(), member))) {
                     constructors.add((MethodTree) member);
@@ -1405,7 +1426,7 @@ public class Flow {
                     others.add(member);
                 }
             }
-            
+
             Map< Element, State> oldVariable2State = variable2State;
 
             variable2State = new HashMap<>(variable2State);

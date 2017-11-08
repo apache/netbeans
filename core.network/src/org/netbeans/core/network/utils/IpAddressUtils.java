@@ -254,14 +254,17 @@ public class IpAddressUtils {
      * Validates if a string can be parsed as an IPv4 address.
      * 
      * <p>
-     * The standard way to do this in Java is
+     * The standard way to do this type of validation in Java is
      * {@link java.net.InetAddress#getByName(java.lang.String)} but this method
      * will block if the string is <i>not</i> an IP address literal, because it
      * will query the name service. In contrast, this method relies solely on
-     * pattern matching techniques and will never block.
+     * pattern matching techniques and will never block. Return value
+     * {@code true} is a guarantee that the string can be parsed as an IPv4
+     * address.
      *
      * @param ipAddressStr input string to be evaluated
-     * @return true if the string is a valid IPv4 literal.
+     * @return true if the string is a valid IPv4 literal on the 
+     *     form "#.#.#.#"
      */
     public static boolean isValidIpv4Address(String ipAddressStr) {
         if (IPV4_PATTERN.matcher(ipAddressStr).matches()) {
@@ -302,6 +305,11 @@ public class IpAddressUtils {
      * guarantee that the argument is a <i>valid</i> IPv6 literal, but a return
      * value of {@code false} is a guarantee that it is not.
      * 
+     * <p>
+     * The method is not meant as a validity check. It is mainly useful
+     * for predicting if the JDK's {@code InetAddress#get*ByName()} will block 
+     * or not.
+     * 
      * @param ipAddressStr
      * @return true if argument looks like an IPv6 literal.
      */
@@ -309,8 +317,9 @@ public class IpAddressUtils {
         if (ipAddressStr == null) {
             return false;
         }
-        // ::d is the shortest possible form of an IPv6 address.
-        if (ipAddressStr.length() < 3) {
+        // "::d" is the shortest possible form of an IPv6 address.
+        // and the longest form is 39 chars.
+        if (ipAddressStr.length() < 3 || ipAddressStr.length() > 39) {
             return false;
         }
         if (ipAddressStr.startsWith(":") || ipAddressStr.endsWith(":")) {
@@ -326,12 +335,24 @@ public class IpAddressUtils {
     }
     
     /**
-     * Does a shallow check if the argument looks like an IPv4 address (on the
-     * form {@code #.#.#.#}) as opposed to a host name. Note, that a return
-     * value of {@code true} doesn't guarantee that the argument is a
-     * <i>valid</i> IPv4 literal, but a return value of {@code false} is a 
-     * guarantee that it is not.
+     * Does a shallow check if the argument looks like an IPv4 address as
+     * opposed to a host name. Note, that a return value of {@code true} doesn't
+     * guarantee that the argument is a <i>valid</i> IPv4 literal, but a return
+     * value of {@code false} is a guarantee that it is not.
      *
+     * <p>
+     * The method is not meant as a validity check. It is mainly useful
+     * for predicting if the JDK's {@code InetAddress#get*ByName()} will block 
+     * or not.
+     * 
+     * <p>
+     * Note, the method will err on the side of caution meaning return {@code 
+     * false} if in doubt. Java allows "123" as a {@link java.net.Inet4Address 
+     * valid IPv4 address}, but in this case it cannot be determined if the
+     * input is a hostname or an IPv4 literal and therefore {@code false} is 
+     * returned.
+     *
+     * @see #isValidIpv4Address(java.lang.String) 
      * @param ipAddressStr
      * @return true if argument looks like an IPv4 literal
      *     
@@ -344,14 +365,18 @@ public class IpAddressUtils {
             return false;
         }
         int dotPos = ipAddressStr.indexOf('.');
-        if (dotPos > 0) {
+        if (dotPos > 0 && dotPos < ipAddressStr.length()-1 && dotPos <=3) {
             for(int i = 0; i < dotPos; i++) {
                 if (!(isAsciiDigit(ipAddressStr.charAt(i)))) {
                     return false;
                 }
             }
+            if (!(isAsciiDigit(ipAddressStr.charAt(dotPos+1)))) {
+                return false;
+            }
         } else {
-            // No dot found
+            // No dot found or nothing after dot or the part before dot
+            // it too long
             return false;
         }
         return true;
@@ -372,7 +397,7 @@ public class IpAddressUtils {
         if (hostname == null) {
             return hostname;
         }
-        if (isValidIpv4Address(hostname)) {
+        if (looksLikeIpv4Literal(hostname)) {
             return hostname;
         }
 

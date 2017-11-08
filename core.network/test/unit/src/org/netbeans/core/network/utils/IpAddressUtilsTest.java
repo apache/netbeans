@@ -99,6 +99,47 @@ public class IpAddressUtilsTest {
     }
 
     /**
+     * Test of looksLikeIpv4Literal method, of class IpAddressUtils.
+     */
+    @Test
+    public void testLooksLikeIpv4Literal() {
+        System.out.println("looksLikeIpv4Literal");
+        assertTrue(IpAddressUtils.looksLikeIpv4Literal("192.168.1.33"));
+        assertTrue(IpAddressUtils.looksLikeIpv4Literal("192.168"));
+        assertFalse(IpAddressUtils.looksLikeIpv4Literal("1923.43.23.2"));
+        assertFalse(IpAddressUtils.looksLikeIpv4Literal("192"));
+        assertFalse(IpAddressUtils.looksLikeIpv4Literal("192.a68"));
+        assertFalse(IpAddressUtils.looksLikeIpv4Literal("abc."));
+        assertFalse(IpAddressUtils.looksLikeIpv4Literal(".abc"));
+        assertFalse(IpAddressUtils.looksLikeIpv4Literal("abc.x"));
+        
+        // ::8.144.52.38  is a valid IPv6 address, but is not an IPv4 address
+        assertFalse(IpAddressUtils.looksLikeIpv4Literal("::8.144.52.38"));
+    }
+
+    /**
+     * Test of looksLikeIpv6Literal method, of class IpAddressUtils.
+     */
+    @Test
+    public void testLooksLikeIpv6Literal() {
+        System.out.println("looksLikeIpv6Literal");
+        assertFalse(IpAddressUtils.looksLikeIpv6Literal("192.168.1.33"));
+        assertFalse(IpAddressUtils.looksLikeIpv6Literal("3d"));
+        
+        assertTrue(IpAddressUtils.looksLikeIpv6Literal("::1"));
+        assertTrue(IpAddressUtils.looksLikeIpv6Literal("::1:3d"));
+        assertTrue(IpAddressUtils.looksLikeIpv6Literal("1080:46A2:6F3A:9D1C:F2AB:8D12:200C:417A"));
+        assertFalse(IpAddressUtils.looksLikeIpv6Literal("1080:46A2:6F3A:9D1C:F2AB:8D12:200C:417A:"));
+        assertFalse(IpAddressUtils.looksLikeIpv6Literal("1080:46A2:6F3A:9D1C:F2AB:8D12:200C:417A:3A"));
+        
+        // The values below are certainly not valid IPv6 addresses 
+        // but they kinda look like one and they certainly cannot be
+        // hostnames. This is enough for the method to return true.
+        assertTrue(IpAddressUtils.looksLikeIpv6Literal(":foobarfoorbar"));
+        assertTrue(IpAddressUtils.looksLikeIpv6Literal("foobarfoorbar:"));
+    }
+    
+    /**
      * Test of removeDomain method, of class IpAddressUtils.
      */
     @Test
@@ -114,6 +155,12 @@ public class IpAddressUtilsTest {
         assertEquals("chicago", IpAddressUtils.removeDomain(input));
 
         input = "chicago";
+        assertEquals(input, IpAddressUtils.removeDomain(input));
+        
+        input = "123.123";
+        assertEquals(input, IpAddressUtils.removeDomain(input));
+        
+        input = "3D::123.123";
         assertEquals(input, IpAddressUtils.removeDomain(input));
     }
 

@@ -201,14 +201,16 @@ final class LibraryStartVisualPanel extends NewTemplateVisualPanel {
                 jf = new JarFile(fil);
                 if(assignValues) {
                     Manifest manifest = jf.getManifest();
-                    Attributes attributes = manifest.getMainAttributes();
-                    if(attributes.getValue("Specification-Title") != null) {
-                        data.setProjectName(attributes.getValue("Specification-Title").replaceAll("[0-9._-]+$", "").replaceAll(" ", "-"));
-                    } else {
-                        if (manifest.getEntries().size() == 1) {
-                            attributes = manifest.getEntries().values().iterator().next();
-                            if(attributes.getValue("Specification-Title") != null) {
-                                data.setProjectName(attributes.getValue("Specification-Title").replaceAll("[0-9._-]+$", "").replaceAll(" ", "-"));
+                    if (manifest != null) {
+                        Attributes attributes = manifest.getMainAttributes();
+                        if(attributes.getValue("Specification-Title") != null) {
+                            data.setProjectName(attributes.getValue("Specification-Title").replaceAll("[0-9._-]+$", "").replaceAll(" ", "-"));
+                        } else {
+                            if (manifest.getEntries().size() == 1) {
+                                attributes = manifest.getEntries().values().iterator().next();
+                                if(attributes.getValue("Specification-Title") != null) {
+                                    data.setProjectName(attributes.getValue("Specification-Title").replaceAll("[0-9._-]+$", "").replaceAll(" ", "-"));
+                                }
                             }
                         }
                     }

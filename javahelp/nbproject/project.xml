@@ -178,10 +178,9 @@
             </test-dependencies>
             <public-packages>
                 <package>org.netbeans.api.javahelp</package>
-                <subpackages>javax.help</subpackages>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/jhall-2.0_05.jar</runtime-relative-path>
+                <runtime-relative-path/>
                 <binary-origin>external/jhall-2.0_05.jar</binary-origin>
             </class-path-extension>
         </data>

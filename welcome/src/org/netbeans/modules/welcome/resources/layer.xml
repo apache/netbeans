@@ -95,14 +95,14 @@
         public IDs to filesystem constructs (files and folders).
         -->
 
-<!--        <folder name="entities">
+        <folder name="entities">
             <folder name="Netscape_Communications">
                 <file name="DTD_RSS_0_91" url="rss-0_91.dtd">
                     <attr name="hint.originalPublicID" stringvalue="-//Netscape Communications//DTD RSS 0.91//EN"/>
                 </file>
             </folder>
 
-        </folder>-->
+        </folder>
 
 
     </folder>

@@ -26,6 +26,21 @@
 <apidef name="winsys">Window System API</apidef>
 </apidefs>
 <changes>
+    <change id="ModeSelector">
+        <api name="winsys"/>
+        <summary>Allow to select Mode for opening a TopComponent instance</summary>
+        <version major="6" minor="6.77"/>
+        <date day="2" month="5" year="2017"/>
+        <author login="sdedic"/>
+        <compatibility addition="yes" semantic="compatible"/>
+        <description>
+            <p>
+                Plugin implementors can direct to-be-opened TopComponents to appropriate Modes or
+                prevent them to open in inappropriate Modes.
+            </p>
+        </description>
+        <class package="org.openide.windows" name="ModeSelector"/>
+    </change>
 <change id="COS_afterRedirect">
     <api name="winsys"/>
     <summary>Added method afterRedirect(CloneableOpenSupport) to CloneableOpenSupport</summary>

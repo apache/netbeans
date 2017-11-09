@@ -20,3 +20,4 @@ jdk:
 script:
   - ant -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
   - ant -quiet test -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest.includes=NoTestsJustBuild
+  - ant -quiet verify-libs-and-licenses -Dcluster.config=platform

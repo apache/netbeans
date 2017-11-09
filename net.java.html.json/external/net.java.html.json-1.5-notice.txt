@@ -1,8 +1,0 @@
-
-JSON Model in Java
-Copyright 2017 NetBeans
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-
-

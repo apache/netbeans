@@ -14,6 +14,9 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-D4EF66C1CC8A5B3C97E0CC7C210227AAEC1F1086 jsearch-2.0_05.jar
+#
+# Please keep the jsearch-2.0_05.jar commented out until the dependency
+# with JavaHelp is ruled out.
+# D4EF66C1CC8A5B3C97E0CC7C210227AAEC1F1086 jsearch-2.0_05.jar
 A806D99716C5E9441BFD8B401176FDDEFC673022 bindex-2.2.jar
 6FF4C411EE231AB8042C9047373F87FC64D0299D harness-launchers-8.2.zip

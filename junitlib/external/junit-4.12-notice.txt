@@ -1,2 +1,0 @@
-JUnit 4.12 is licensed under EPL-v10.
-See https://www.eclipse.org/legal/epl-v10.html.

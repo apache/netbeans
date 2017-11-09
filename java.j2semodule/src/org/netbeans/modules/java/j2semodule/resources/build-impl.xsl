@@ -2261,7 +2261,7 @@ is divided into following sections:
                 <pathconvert refid="run.test.packages.internal" property="run.test.addexports.internal" pathsep=" ">
                     <chainedmapper>
                         <filtermapper>
-                            <replacestring from="${{build.test.modules.dir.abs.internal}}/" to=""/>
+                            <replacestring from="${{build.test.modules.dir.abs.internal}}${{file.separator}}" to=""/>
                         </filtermapper>
                         <regexpmapper from="^([^${{file.separator.string}}]*)\Q${{file.separator}}\E(.*)\Q${{file.separator}}\E.*\.class$$" to="\1${{path.separator}}\2"/>
                         <filtermapper>

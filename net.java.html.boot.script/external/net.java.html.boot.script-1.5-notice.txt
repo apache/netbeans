@@ -1,8 +1,0 @@
-
-Presenter via javax.script
-Copyright 2017 NetBeans
-
-This product includes software developed at
-The Apache Software Foundation (http://www.apache.org/).
-
-

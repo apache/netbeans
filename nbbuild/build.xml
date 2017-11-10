@@ -295,6 +295,7 @@
        </condition>
   </target>
   <target name="finish-build-platform" depends="init,-check-nb-cluster" unless="has.nb.cluster">
+    <copy file="../o.n.bootstrap/readme/README-bin.txt" tofile="${netbeans.dest.dir}/README.txt" overwrite="true"/>
     <fixcrlf eol="lf" srcdir="${netbeans.dest.dir}" >
       <include name="${nb.cluster.platform.dir}/lib/nbexec" />
     </fixcrlf>
@@ -1505,8 +1506,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         <copy file="${nb_all}/DISCLAIMER" tofile="${netbeans.dest.dir}/DISCLAIMER" />
     </target>
 
+    <target name="-copy-platform-readme" depends="-check-nb-cluster" unless="has.nb.cluster">
+    </target>
+
   <target name="build-source-config"
-    depends="init,set-buildnumber"
+    depends="init,set-buildnumber,-check-nb-cluster"
     description="Packages sources needed to compile one cluster.config">
     <property name="buildnum" value="${buildnumber}"/>
     <echo message="Packaging sources of ${cluster.config} modules"/>
@@ -1552,6 +1556,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             </tokenfilter>
         </filterchain>
     </concat>
+    <condition property="source.zip.readme" else="${nb_all}/o.n.bootstrap/readme/README-src.txt" value="${nb_all}/ide.branding/does-not-exist-yet">
+        <isset property="has.nb.cluster" />
+    </condition>
     <zip zipfile="${nb.build.dir}/${cluster.config}-src-${buildnum}.zip" duplicate="preserve">
       <zipfileset dir="${nb_all}" includes="${source.dirs}">
           <exclude name="*/build/**/*"/>
@@ -1566,6 +1573,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <zipfileset file="${nb.build.dir}/NOTICE" />
       <zipfileset file="${nb.build.dir}/LICENSE" />
       <zipfileset file="${nb_all}/DISCLAIMER" />
+      <zipfileset file="${source.zip.readme}" fullpath="README.txt" erroronmissingarchive="false" />
     </zip>
   </target>
 

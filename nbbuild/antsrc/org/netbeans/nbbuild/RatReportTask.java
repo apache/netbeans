@@ -81,6 +81,12 @@ public class RatReportTask extends Task {
         this.reportFile = report;
     }
 
+    private boolean haltonfailure;
+    /** JUnit-format XML result file to generate, rather than halting the build. */
+    public void setHaltonfailure(boolean haltonfailure) {
+        this.haltonfailure = haltonfailure;
+    }
+
     @Override
     public void execute() throws BuildException {
         root = sourceFile.getParentFile().getParentFile().getParentFile();
@@ -93,6 +99,7 @@ public class RatReportTask extends Task {
         commandAndArgs.add("config");
         commandAndArgs.add("--get");
         commandAndArgs.add("remote.origin.url");
+        boolean failures = false;
         try {
             Process p = new ProcessBuilder(commandAndArgs).directory(root).start();
             try (BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
@@ -192,6 +199,10 @@ public class RatReportTask extends Task {
 
             }
             JUnitReportWriter.writeReport(this, "Cluster: " + clusterName, file, pseudoTests);
+            failures |= pseudoTests.values().stream().anyMatch(err -> err != null);
+        }
+        if (haltonfailure && failures) {
+            throw new BuildException("Failed Rat test(s).", getLocation());
         }
     }
 

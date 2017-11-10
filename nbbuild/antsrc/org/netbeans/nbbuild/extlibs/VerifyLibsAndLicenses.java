@@ -70,6 +70,12 @@ public class VerifyLibsAndLicenses extends Task {
         this.reportFile = report;
     }
 
+    private boolean haltonfailure;
+    /** JUnit-format XML result file to generate, rather than halting the build. */
+    public void setHaltonfailure(boolean haltonfailure) {
+        this.haltonfailure = haltonfailure;
+    }
+
     private Map<String,String> pseudoTests;
     private Set<String> modules;
 
@@ -89,6 +95,9 @@ public class VerifyLibsAndLicenses extends Task {
             throw new BuildException(x, getLocation());
         }
         JUnitReportWriter.writeReport(this, null, reportFile, pseudoTests);
+        if (haltonfailure && pseudoTests.values().stream().anyMatch(err -> err != null)) {
+            throw new BuildException("Failed VerifyLibsAndLicenses test(s).", getLocation());
+        }
         } catch (NullPointerException x) {x.printStackTrace(); throw x;}
     }
 

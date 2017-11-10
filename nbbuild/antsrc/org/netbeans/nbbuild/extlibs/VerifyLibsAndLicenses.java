@@ -45,6 +45,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -96,7 +97,9 @@ public class VerifyLibsAndLicenses extends Task {
         }
         JUnitReportWriter.writeReport(this, null, reportFile, pseudoTests);
         if (haltonfailure && pseudoTests.values().stream().anyMatch(err -> err != null)) {
-            throw new BuildException("Failed VerifyLibsAndLicenses test(s).", getLocation());
+            throw new BuildException("Failed VerifyLibsAndLicenses test(s):\n" +
+                                     pseudoTests.values().stream().filter(err -> err != null).collect(Collectors.joining("\n")),
+                                     getLocation());
         }
         } catch (NullPointerException x) {x.printStackTrace(); throw x;}
     }

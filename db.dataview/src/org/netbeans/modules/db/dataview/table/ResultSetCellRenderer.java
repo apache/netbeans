@@ -1,43 +1,20 @@
-/*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Copyright 2010-2012 Oracle and/or its affiliates. All rights reserved.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
- * Other names may be trademarks of their respective owners.
- *
- * The contents of this file are subject to the terms of either the GNU
- * General Public License Version 2 only ("GPL") or the Common
- * Development and Distribution License("CDDL") (collectively, the
- * "License"). You may not use this file except in compliance with the
- * License. You can obtain a copy of the License at
- * http://www.netbeans.org/cddl-gplv2.html
- * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
- * specific language governing permissions and limitations under the
- * License.  When distributing the software, include this License Header
- * Notice in each file and include the License file at
- * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the GPL Version 2 section of the License file that
- * accompanied this code. If applicable, add the following below the
- * License Header, with the fields enclosed by brackets [] replaced by
- * your own identifying information:
- * "Portions Copyrighted [year] [name of copyright owner]"
- * 
- * If you wish your version of this file to be governed by only the CDDL
- * or only the GPL Version 2, indicate your decision by adding
- * "[Contributor] elects to include this software in this distribution
- * under the [CDDL or GPL Version 2] license." If you do not indicate a
- * single choice of license, a recipient has the option to distribute
- * your version of this file under either the CDDL, the GPL Version 2 or
- * to extend the choice of license to its licensees as provided above.
- * However, if you add GPL Version 2 code and therefore, elected the GPL
- * Version 2 license, then the option applies only if the new code is
- * made subject to such option by the copyright holder.
- * 
- * Contributor(s):
- * 
- * Portions Copyrighted 2008 Sun Microsystems, Inc.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.netbeans.modules.db.dataview.table;
@@ -48,54 +25,43 @@ import java.awt.Font;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.text.SimpleDateFormat;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.UIManager;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
-import org.jdesktop.swingx.renderer.*;
 import org.netbeans.modules.db.dataview.output.SQLConstant;
 import org.netbeans.modules.db.dataview.util.ColorHelper;
 import org.netbeans.modules.db.dataview.util.DataViewUtils;
+import org.netbeans.modules.db.dataview.util.DateType;
+import org.netbeans.modules.db.dataview.util.FormatStringValue;
 import org.netbeans.modules.db.dataview.util.LobHelper;
+import org.netbeans.modules.db.dataview.util.StringValue;
 import org.netbeans.modules.db.dataview.util.TimeType;
 import org.netbeans.modules.db.dataview.util.TimestampType;
 
 /**
  * @author Ahimanikya Satapathy
  */
-public class ResultSetCellRenderer extends DefaultTableRenderer {
+public class ResultSetCellRenderer extends DefaultTableCellRenderer {
 
-    protected final static FormatStringValue DATETIME_TO_STRING = new FormatStringValue() {
-
-        @Override
-        public String getString(Object value) {
-            if (format == null) {
-                format = new SimpleDateFormat (TimestampType.DEFAULT_FORMAT_PATTERN);
-            }
-            return super.getString(value);
-        }
-    };
-    protected final static FormatStringValue TIME_TO_STRING = new FormatStringValue() {
-
-        @Override
-        public String getString(Object value) {
-            if (format == null) {
-                format = new SimpleDateFormat (TimeType.DEFAULT_FOMAT_PATTERN);
-            }
-            return super.getString(value);
-        }
-    };
+    protected final static FormatStringValue DATETIME_TO_STRING = new FormatStringValue(new SimpleDateFormat (TimestampType.DEFAULT_FORMAT_PATTERN));
+    protected final static FormatStringValue TIME_TO_STRING = new FormatStringValue(new SimpleDateFormat (TimeType.DEFAULT_FOMAT_PATTERN));
+    protected final static FormatStringValue Date_TO_STRING = new FormatStringValue(new SimpleDateFormat (DateType.DEFAULT_FOMAT_PATTERN));
+    
     private final TableCellRenderer NULL_RENDERER = new NullObjectCellRenderer();
     private final TableCellRenderer DEFAULT_RENDERER = new SQLConstantsCellRenderer();
-    private final TableCellRenderer NUMNBER_RENDERER = new NumberObjectCellRenderer();
+    private final TableCellRenderer NUMBER_RENDERER = new NumberObjectCellRenderer();
     private final TableCellRenderer BOOLEAN_RENDERER = new BooleanCellRenderer();
     private final TableCellRenderer CELL_FOCUS_RENDERER = new CellFocusCustomRenderer();
     private final TableCellRenderer BLOB_RENDERER = new BlobCellRenderer();
     private final TableCellRenderer CLOB_RENDERER = new ClobCellRenderer();
 
+    private StringValue stringValue = null;
+    
     public ResultSetCellRenderer() {
-        super(new StringValue() {
+        this(new StringValue() {
 
             @Override
             public String getString(Object o) {
@@ -104,16 +70,14 @@ public class ResultSetCellRenderer extends DefaultTableRenderer {
         });
     }
 
-    public ResultSetCellRenderer(ComponentProvider<? extends JComponent> componentProvider) {
-        super(componentProvider);
-    }
-
-    public ResultSetCellRenderer(StringValue converter, int alignment) {
-        super(converter, alignment);
-    }
-
     public ResultSetCellRenderer(StringValue converter) {
-        super(converter, JLabel.LEADING);
+        super();
+        stringValue = converter;
+    }
+    
+    public ResultSetCellRenderer(StringValue converter, float alignment) {
+        this(converter);
+        ((JLabel) this).setAlignmentX(alignment);
     }
 
     @Override
@@ -121,7 +85,7 @@ public class ResultSetCellRenderer extends DefaultTableRenderer {
         if (null == value) {
             return NULL_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         } else if (value instanceof Number) {
-            return NUMNBER_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            return NUMBER_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         } else if (DataViewUtils.isSQLConstantString(value, null)) {
             Component c = DEFAULT_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             setTableCellToolTip(c, value);
@@ -133,7 +97,10 @@ public class ResultSetCellRenderer extends DefaultTableRenderer {
         } else if (value instanceof Clob) {
             return CLOB_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         } else {
-             Component c = CELL_FOCUS_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if(stringValue != null) {
+                value = stringValue.getString(value);
+            }
+            Component c = CELL_FOCUS_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             setTableCellToolTip(c, value);
             return c;
         }
@@ -167,22 +134,18 @@ public class ResultSetCellRenderer extends DefaultTableRenderer {
 
 class BooleanCellRenderer extends CellFocusCustomRenderer {
 
-    private JRendererCheckBox cb;
+    private JCheckBox cb;
 
     public BooleanCellRenderer() {
         super();
-        cb = new JRendererCheckBox();
+        cb = new JCheckBox();
+        cb.setOpaque(true);
         cb.setHorizontalAlignment(0);
     }
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         cb.setSelected((Boolean) value);
-        if (!isSelected) {
-            cb.setBackground(table.getBackground());
-        } else {
-            cb.setBackground(table.getSelectionBackground());
-        }
         return cb;
     }
 }

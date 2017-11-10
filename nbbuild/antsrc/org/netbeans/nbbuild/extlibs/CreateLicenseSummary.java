@@ -1,45 +1,20 @@
-/*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
- * Other names may be trademarks of their respective owners.
- *
- * The contents of this file are subject to the terms of either the GNU
- * General Public License Version 2 only ("GPL") or the Common
- * Development and Distribution License("CDDL") (collectively, the
- * "License"). You may not use this file except in compliance with the
- * License. You can obtain a copy of the License at
- * http://www.netbeans.org/cddl-gplv2.html
- * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
- * specific language governing permissions and limitations under the
- * License.  When distributing the software, include this License Header
- * Notice in each file and include the License file at
- * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the GPL Version 2 section of the License file that
- * accompanied this code. If applicable, add the following below the
- * License Header, with the fields enclosed by brackets [] replaced by
- * your own identifying information:
- * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * Contributor(s):
- *
- * The Original Software is NetBeans. The Initial Developer of the Original
- * Software is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun
- * Microsystems, Inc. All Rights Reserved.
- *
- * If you wish your version of this file to be governed by only the CDDL
- * or only the GPL Version 2, indicate your decision by adding
- * "[Contributor] elects to include this software in this distribution
- * under the [CDDL or GPL Version 2] license." If you do not indicate a
- * single choice of license, a recipient has the option to distribute
- * your version of this file under either the CDDL, the GPL Version 2 or
- * to extend the choice of license to its licensees as provided above.
- * However, if you add GPL Version 2 code and therefore, elected the GPL
- * Version 2 license, then the option applies only if the new code is
- * made subject to such option by the copyright holder.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.netbeans.nbbuild.extlibs;
@@ -54,6 +29,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -89,9 +65,24 @@ public class CreateLicenseSummary extends Task {
         this.build = build;
     }
 
-    private File summary;
-    public void setSummary(File summary) {
-        this.summary = summary;
+    private File licenseStub;
+    public void setLicenseStub(File licenseStub) {
+        this.licenseStub = licenseStub;
+    }
+
+    private File license;
+    public void setLicense(File license) {
+        this.license = license;
+    }
+
+    private File notice;
+    public void setNotice(File notice) {
+        this.notice = notice;
+    }
+
+    private File noticeStub;
+    public void setNoticeStub(File noticeStub) {
+        this.noticeStub = noticeStub;
     }
 
     private File reportFile;
@@ -110,19 +101,28 @@ public class CreateLicenseSummary extends Task {
             List<String> ignoredPatterns = VerifyLibsAndLicenses.loadPatterns("ignored-binary-overlaps");
             findBinaries(build, binaries2LicenseHeaders, crc2License, new HashMap<Long,String>(), "", testBinariesAreUnique, ignoredPatterns);
             pseudoTests.put("testBinariesAreUnique", testBinariesAreUnique.length() > 0 ? "Some binaries are duplicated (edit nbbuild/antsrc/org/netbeans/nbbuild/extlibs/ignored-binary-overlaps as needed)" + testBinariesAreUnique : null);
-            OutputStream os = new FileOutputStream(summary);
-            try {
-                PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
-                pw.println("DO NOT TRANSLATE OR LOCALIZE.");
+            try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(license), "UTF-8"));
+                 PrintWriter nw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(notice), "UTF-8"))) {
+                try (Reader r = new InputStreamReader(new FileInputStream(licenseStub), "UTF-8")) {
+                    int read;
+                    while ((read = r.read()) != (-1)) {
+                        pw.write(read);
+                    }
+                }
                 pw.println();
                 pw.println("********************************************************************************");
-                pw.println("Oracle elects to use only the GNU Lesser General Public License version 2.1");
-                pw.println("(LGPL) for any software where a choice of LGPL/GPL license versions are made");
-                pw.println("available with the language indicating that LGPLv2.1/GPLv2 or any later version");
-                pw.println("may be used, or where a choice of which version of the LGPL/GPL is applied is");
-                pw.println("unspecified.");
+                pw.println("Apache NetBeans includes a number of components and libraries with separate");
+                pw.println("copyright notices and license terms. Your use of those components are");
+                pw.println("subject to the terms and conditions of the following licenses. ");
                 pw.println("********************************************************************************");
                 pw.println();
+
+                try (Reader r = new InputStreamReader(new FileInputStream(noticeStub), "UTF-8")) {
+                    int read;
+                    while ((read = r.read()) != (-1)) {
+                        nw.write(read);
+                    }
+                }
 
                 Set<String> licenseNames = new TreeSet<String>();
                 pw.printf("%-72s %s\n", "THIRD-PARTY COMPONENT FILE", "LICENSE");
@@ -131,15 +131,20 @@ public class CreateLicenseSummary extends Task {
                 for (Map.Entry<String,Map<String,String>> entry : binaries2LicenseHeaders.entrySet()) {
                     String binary = entry.getKey();
                     Map<String,String> headers = entry.getValue();
-                    String origin = getMaybeMissing(headers, "Origin");
-                    // ignore organic components (Origin starts with Oracle)
-                    if (!origin.startsWith("Oracle"))
-                    {
-                        pw.printf("%-69s %s\n", binary, getMaybeMissing(headers, "License"));
-                        String license = headers.get("License");
-                        if (license != null) {
-                            licenseNames.add(license);
-                        }
+                    pw.printf("%-69s %s\n", binary, getMaybeMissing(headers, "License"));
+                    String license = headers.get("License");
+                    if (license != null) {
+                        licenseNames.add(license);
+                    } else {
+                        //TODO: should be error/test failure, or something like that.
+                        System.err.println("No license for: " + binary);
+                    }
+
+                    String notice = headers.get("notice");
+
+                    if (notice != null) {
+                        nw.println(notice);
+                        nw.println();
                     }
                 }
 //                String[] otherHeaders = {"Name", "Version", "Description", "Origin"};
@@ -193,10 +198,8 @@ public class CreateLicenseSummary extends Task {
                 }
                 pw.flush();
                 pw.close();
-            } finally {
-                os.close();
             }
-            log(summary + ": written");
+            log(license + ": written");
         } catch (IOException x) {
             throw new BuildException(x, getLocation());
         }
@@ -271,7 +274,7 @@ public class CreateLicenseSummary extends Task {
         return crc32.getValue();
     }
 
-    private Map<String,Map<String,String>> findBinary2LicenseHeaderMapping(Set<String> cvsFiles, File d) throws IOException {
+    static Map<String,Map<String,String>> findBinary2LicenseHeaderMapping(Set<String> cvsFiles, File d) throws IOException {
         Map<String,Map<String,String>> binary2LicenseHeaders = new HashMap<String,Map<String,String>>();
         for (String n : cvsFiles) {
             if (!n.endsWith("-license.txt")) {
@@ -303,6 +306,17 @@ public class CreateLicenseSummary extends Task {
                 binary2LicenseHeaders.put(n.replaceFirst("-license\\.txt$", ".xml"), headers);
                 binary2LicenseHeaders.put(n.replaceFirst("-license\\.txt$", ".js"), headers);
                 binary2LicenseHeaders.put(n.replaceFirst("-license\\.txt$", ".dylib"), headers);
+            }
+            File notice = new File(d, n.replace("-license.txt", "-notice.txt"));
+            if (notice.canRead()) {
+                StringBuilder noticeText = new StringBuilder();
+                try (Reader r = new InputStreamReader(new FileInputStream(notice), "UTF-8")) {
+                    int read;
+                    while ((read = r.read()) != (-1)) {
+                        noticeText.append((char) read);
+                    }
+                }
+                headers.put("notice", noticeText.toString());
             }
         }
         return binary2LicenseHeaders;

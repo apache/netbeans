@@ -1,43 +1,20 @@
-/*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Copyright 2016 Oracle and/or its affiliates. All rights reserved.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
- * Other names may be trademarks of their respective owners.
- *
- * The contents of this file are subject to the terms of either the GNU
- * General Public License Version 2 only ("GPL") or the Common
- * Development and Distribution License("CDDL") (collectively, the
- * "License"). You may not use this file except in compliance with the
- * License. You can obtain a copy of the License at
- * http://www.netbeans.org/cddl-gplv2.html
- * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
- * specific language governing permissions and limitations under the
- * License.  When distributing the software, include this License Header
- * Notice in each file and include the License file at
- * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the GPL Version 2 section of the License file that
- * accompanied this code. If applicable, add the following below the
- * License Header, with the fields enclosed by brackets [] replaced by
- * your own identifying information:
- * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * If you wish your version of this file to be governed by only the CDDL
- * or only the GPL Version 2, indicate your decision by adding
- * "[Contributor] elects to include this software in this distribution
- * under the [CDDL or GPL Version 2] license." If you do not indicate a
- * single choice of license, a recipient has the option to distribute
- * your version of this file under either the CDDL, the GPL Version 2 or
- * to extend the choice of license to its licensees as provided above.
- * However, if you add GPL Version 2 code and therefore, elected the GPL
- * Version 2 license, then the option applies only if the new code is
- * made subject to such option by the copyright holder.
- *
- * Contributor(s):
- *
- * Portions Copyrighted 2016 Sun Microsystems, Inc.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.netbeans.modules.jshell.env;
 
@@ -139,6 +116,8 @@ public class JShellEnvironment {
     private Lookup            envLookup;
     
     private final ShellL            shellL = new ShellL();
+    
+    private Document document;
     
     protected JShellEnvironment(Project project, String displayName) {
         this.project = project;
@@ -420,6 +399,7 @@ public class JShellEnvironment {
         }
         this.classpathInfo = cpi;
         forceOpenDocument();
+        // createSession will get opened document, shutdown runs under lock
         doStartAndFire(ShellSession.createSession(this));
     }
 
@@ -477,8 +457,10 @@ public class JShellEnvironment {
     }
     
     private void doStartAndFire(ShellSession nss) {
-        this.shellSession = nss;
-        starting = true;
+        synchronized (this) {
+            this.shellSession = nss;
+            starting = true;
+        }
         Pair<ShellSession, Task> res = nss.start();
         nss.getModel().addConsoleListener(new ConsoleListener() {
             @Override
@@ -504,8 +486,15 @@ public class JShellEnvironment {
         fireShellStatus(event);
         
         res.second().addTaskListener(e -> {
-            starting = false;
-            fireShellStarted(event);
+            synchronized (this) {
+                starting = false;
+                if (shellSession != nss) {
+                    return;
+                }
+            }
+            if (nss.isValid() && nss.isActive()) {
+                fireShellStarted(event);
+            }
             fireShellStatus(event);
         });
         
@@ -549,12 +538,18 @@ public class JShellEnvironment {
     
     private Document forceOpenDocument() throws IOException {
         EditorCookie cake = consoleFile.getLookup().lookup(EditorCookie.class);
-        return cake == null ? null : cake.openDocument();
+        if (cake == null) {
+            return null;
+        }
+        Document d =  cake.openDocument();
+        synchronized (this) {
+            this.document = d;
+        }
+        return d;
     }
 
-    public Document getConsoleDocument() {
-        EditorCookie cake = consoleFile.getLookup().lookup(EditorCookie.class);
-        return cake == null ? null : cake.getDocument();
+    public synchronized Document getConsoleDocument() {
+        return document;
     }
     
     public ClassPath getSnippetClassPath() {
@@ -599,8 +594,6 @@ public class JShellEnvironment {
         ShellRegistry.get().closed(this);
     }
     
-    private Document document;
-    
     public void open() throws IOException {
         assert workRoot != null;
         DataObject d = DataObject.find(getConsoleFile());
@@ -609,7 +602,6 @@ public class JShellEnvironment {
         if (shellSession == null) {
             start();
             cake.open();
-            document = cake.openDocument();
         } else {
             cake.open();
             document = cake.openDocument();

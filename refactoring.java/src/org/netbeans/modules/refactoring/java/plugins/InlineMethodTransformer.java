@@ -1,43 +1,20 @@
-/*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Copyright 2011 Oracle and/or its affiliates. All rights reserved.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
- * Other names may be trademarks of their respective owners.
- *
- * The contents of this file are subject to the terms of either the GNU
- * General Public License Version 2 only ("GPL") or the Common
- * Development and Distribution License("CDDL") (collectively, the
- * "License"). You may not use this file except in compliance with the
- * License. You can obtain a copy of the License at
- * http://www.netbeans.org/cddl-gplv2.html
- * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
- * specific language governing permissions and limitations under the
- * License.  When distributing the software, include this License Header
- * Notice in each file and include the License file at
- * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the GPL Version 2 section of the License file that
- * accompanied this code. If applicable, add the following below the
- * License Header, with the fields enclosed by brackets [] replaced by
- * your own identifying information:
- * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * If you wish your version of this file to be governed by only the CDDL
- * or only the GPL Version 2, indicate your decision by adding
- * "[Contributor] elects to include this software in this distribution
- * under the [CDDL or GPL Version 2] license." If you do not indicate a
- * single choice of license, a recipient has the option to distribute
- * your version of this file under either the CDDL, the GPL Version 2 or
- * to extend the choice of license to its licensees as provided above.
- * However, if you add GPL Version 2 code and therefore, elected the GPL
- * Version 2 license, then the option applies only if the new code is
- * made subject to such option by the copyright holder.
- *
- * Contributor(s):
- *
- * Portions Copyrighted 2011 Sun Microsystems, Inc.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.netbeans.modules.refactoring.java.plugins;
 
@@ -49,6 +26,8 @@ import java.util.*;
 import javax.lang.model.element.*;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.GeneratorUtilities;
@@ -216,6 +195,17 @@ public class InlineMethodTransformer extends RefactoringVisitor {
 
             boolean inSameClass = bodyEnclosingTypeElement.equals(invocationEnclosingTypeElement);
             boolean inStatic = !methodElement.getModifiers().contains(Modifier.STATIC) && isInStaticContext(methodInvocationPath);
+            boolean invokeOnInstance = false;
+            MethodInvocationTree invTree = (MethodInvocationTree)methodInvocationPath.getLeaf();
+            if (!methodElement.getModifiers().contains(Modifier.STATIC) && invTree.getMethodSelect().getKind() == Tree.Kind.MEMBER_SELECT) {
+                invokeOnInstance = true;
+                MemberSelectTree mst = (MemberSelectTree)invTree.getMethodSelect();
+                if (mst.getExpression().getKind() == Tree.Kind.IDENTIFIER) {
+                    // check for this.method(). super. qualifier should be omitted if and only if the symbols is not shadowed in subclass.
+                    Name n = ((IdentifierTree)mst.getExpression()).getName();
+                    invokeOnInstance = !(n.contentEquals("this")); // NOI18N
+                }
+            }
 
             TreePath statementPath = findCorrespondingStatement(methodInvocationPath);
             StatementTree statementTree = (StatementTree) statementPath.getLeaf();
@@ -273,7 +263,7 @@ public class InlineMethodTransformer extends RefactoringVisitor {
             // Add statements up to the last statement (return)
             for (int i = 0; i < body.getStatements().size() - 1; i++) {
                 StatementTree statement = body.getStatements().get(i);
-                if (!inSameClass || inStatic) {
+                if ((!inSameClass || invokeOnInstance) || inStatic) {
                     statement = (StatementTree) fixReferences(statement, new TreePath(bodyPath, statement), method, scope, methodSelect);
                     if (!inSameClass) {
                         statement = genUtils.importFQNs(statement);
@@ -309,7 +299,7 @@ public class InlineMethodTransformer extends RefactoringVisitor {
             } else {
                 lastStatement = null;
             }
-            if (lastStatement != null && (!inSameClass || inStatic)) {
+            if (lastStatement != null && ((!inSameClass || invokeOnInstance) || inStatic)) {
                 lastStatement = fixReferences(lastStatement, new TreePath(bodyPath, lastStatement), method, scope, methodSelect);
                 if (!inSameClass) {
                     lastStatement = genUtils.importFQNs(lastStatement);
@@ -428,11 +418,12 @@ public class InlineMethodTransformer extends RefactoringVisitor {
                 }
                 Element el = trees.getElement(currentPath);
                 if (el != null) {
-                    DeclaredType declaredType = workingCopy.getTypes().getDeclaredType(scope.getEnclosingClass());
-                    if (methodSelect != null
+                    TypeMirror targetType = el.getEnclosingElement().asType();
+                    if (methodSelect != null 
+                            && targetType != null && targetType.getKind() == TypeKind.DECLARED 
                             && el.getEnclosingElement() != method
-                            && !workingCopy.getTrees().isAccessible(scope, el, declaredType)) {
-                        problem = JavaPluginUtils.chainProblems(problem, new Problem(false, WRN_InlineNotAccessible(el, declaredType)));
+                            && !workingCopy.getTrees().isAccessible(scope, el, (DeclaredType)targetType)) {
+                        problem = JavaPluginUtils.chainProblems(problem, new Problem(false, WRN_InlineNotAccessible(el, targetType)));
                     }
                     TypeElement invocationEnclosingTypeElement = elementUtilities.enclosingTypeElement(el);
                     if (el.getKind() != ElementKind.LOCAL_VARIABLE && bodyEnclosingTypeElement.equals(invocationEnclosingTypeElement)) {

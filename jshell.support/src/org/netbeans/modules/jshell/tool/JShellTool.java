@@ -1,43 +1,20 @@
-/*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Copyright 2016 Oracle and/or its affiliates. All rights reserved.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
- * Other names may be trademarks of their respective owners.
- *
- * The contents of this file are subject to the terms of either the GNU
- * General Public License Version 2 only ("GPL") or the Common
- * Development and Distribution License("CDDL") (collectively, the
- * "License"). You may not use this file except in compliance with the
- * License. You can obtain a copy of the License at
- * http://www.netbeans.org/cddl-gplv2.html
- * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
- * specific language governing permissions and limitations under the
- * License.  When distributing the software, include this License Header
- * Notice in each file and include the License file at
- * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the GPL Version 2 section of the License file that
- * accompanied this code. If applicable, add the following below the
- * License Header, with the fields enclosed by brackets [] replaced by
- * your own identifying information:
- * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * If you wish your version of this file to be governed by only the CDDL
- * or only the GPL Version 2, indicate your decision by adding
- * "[Contributor] elects to include this software in this distribution
- * under the [CDDL or GPL Version 2] license." If you do not indicate a
- * single choice of license, a recipient has the option to distribute
- * your version of this file under either the CDDL, the GPL Version 2 or
- * to extend the choice of license to its licensees as provided above.
- * However, if you add GPL Version 2 code and therefore, elected the GPL
- * Version 2 license, then the option applies only if the new code is
- * made subject to such option by the copyright holder.
- *
- * Contributor(s):
- *
- * Portions Copyrighted 2016 Sun Microsystems, Inc.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.netbeans.modules.jshell.tool;
@@ -808,13 +785,17 @@ public class JShellTool implements MessageHandler {
     private boolean isRunningInteractive() {
         return currentNameSpace != null && currentNameSpace == mainNamespace;
     }
+    
+    boolean permitSystemSettings = false;
 
     //where -- one-time per run initialization of feedback modes
     private void initFeedback() {
         // No fluff, no prefix, for init failures
         MessageHandler initmh = new InitMessageHandler();
         // Execute the feedback initialization code in the resource file
+        permitSystemSettings = true;
         startUpRun(getResourceString("startup.feedback"));
+        permitSystemSettings = false;
         // These predefined modes are read-only
         feedback.markModesReadOnly();
         // Restore user defined modes retained on previous run with /set mode -retain
@@ -1315,11 +1296,11 @@ public class JShellTool implements MessageHandler {
                         "mode", skipWordThenCompletion(orMostSpecificCompletion(
                                 feedback.modeCompletions(SET_MODE_OPTIONS_COMPLETION_PROVIDER),
                                 SET_MODE_OPTIONS_COMPLETION_PROVIDER)),
-                        "prompt", feedback.modeCompletions(),
-                        "editor", fileCompletions(Files::isExecutable),
+//                        "prompt", feedback.modeCompletions(),
+//                        "editor", fileCompletions(Files::isExecutable),
                         "start", FILE_COMPLETION_PROVIDER),
                         STARTSWITH_MATCHER), 
-                CommandKind.HIDDEN));
+                CommandKind.NORMAL));
 
         registerCommand(new Command("/?",
                 "help.quest",
@@ -1412,15 +1393,17 @@ public class JShellTool implements MessageHandler {
                 return feedback.setMode(this, at,
                         retained -> prefs.put(MODE_KEY, retained));
             case "prompt":
-                return feedback.setPrompt(this, at);
-            case "editor":
-                return new SetEditor(at).set();
+                if (permitSystemSettings) {
+                    return feedback.setPrompt(this, at);
+                } else {
+                    break;
+                }
             case "start":
                 return setStart(at);
             default:
-                errormsg("jshell.err.arg", cmd, at.val());
-                return false;
         }
+        errormsg("jshell.err.arg", cmd, at.val());
+        return false;
     }
 
     boolean setFeedback(MessageHandler messageHandler, ArgTokenizer at) {

@@ -1,45 +1,20 @@
-/*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
- * Other names may be trademarks of their respective owners.
- *
- * The contents of this file are subject to the terms of either the GNU
- * General Public License Version 2 only ("GPL") or the Common
- * Development and Distribution License("CDDL") (collectively, the
- * "License"). You may not use this file except in compliance with the
- * License. You can obtain a copy of the License at
- * http://www.netbeans.org/cddl-gplv2.html
- * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
- * specific language governing permissions and limitations under the
- * License.  When distributing the software, include this License Header
- * Notice in each file and include the License file at
- * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the GPL Version 2 section of the License file that
- * accompanied this code. If applicable, add the following below the
- * License Header, with the fields enclosed by brackets [] replaced by
- * your own identifying information:
- * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * Contributor(s):
- *
- * The Original Software is NetBeans. The Initial Developer of the Original
- * Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
- * Microsystems, Inc. All Rights Reserved.
- *
- * If you wish your version of this file to be governed by only the CDDL
- * or only the GPL Version 2, indicate your decision by adding
- * "[Contributor] elects to include this software in this distribution
- * under the [CDDL or GPL Version 2] license." If you do not indicate a
- * single choice of license, a recipient has the option to distribute
- * your version of this file under either the CDDL, the GPL Version 2 or
- * to extend the choice of license to its licensees as provided above.
- * However, if you add GPL Version 2 code and therefore, elected the GPL
- * Version 2 license, then the option applies only if the new code is
- * made subject to such option by the copyright holder.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.netbeans.modules.java.editor.imports;
 
@@ -59,6 +34,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -93,17 +69,26 @@ import javax.lang.model.util.Types;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ClassIndex.NameKind;
 import org.netbeans.api.java.source.ClassIndex.Symbols;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.ElementUtilities.ElementAcceptor;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 import org.netbeans.modules.java.completion.Utilities;
 import org.netbeans.modules.java.editor.base.javadoc.JavadocImports;
+import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.openide.util.Exceptions;
 import org.openide.util.Union2;
 import org.openide.util.WeakListeners;
 
@@ -123,6 +108,8 @@ public final class ComputeImports {
     }
     
     private final CompilationInfo info;
+    private CompilationInfo allInfo;
+    
     private final PreferenceChangeListener pcl = new PreferenceChangeListener() {
         @Override
         public void preferenceChange(PreferenceChangeEvent evt) {
@@ -183,7 +170,42 @@ public final class ComputeImports {
         if (cache != null) {
             return cache;
         }
-        computeCandidates(Collections.<String>emptySet());
+        boolean modules = false;
+        
+        if (info.getSourceVersion().compareTo(SourceVersion.RELEASE_9) <= 0) {
+            if (info.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE).findResource("module-info.java") != null) {
+                modules = true;
+            }
+        }
+        
+        if (modules) {
+            ClasspathInfo cpInfo = info.getClasspathInfo();
+            ClasspathInfo extraInfo = ClasspathInfo.create(
+                    ClassPathSupport.createProxyClassPath(
+                            cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT),
+                            cpInfo.getClassPath(ClasspathInfo.PathKind.MODULE_BOOT)),
+                    ClassPathSupport.createProxyClassPath(
+                            cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE),
+                            cpInfo.getClassPath(ClasspathInfo.PathKind.MODULE_COMPILE),
+                            cpInfo.getClassPath(ClasspathInfo.PathKind.MODULE_CLASS)),
+                    cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE));
+            JavaSource src = JavaSource.create(extraInfo, info.getSnapshot().getSource().getFileObject());
+            try {
+                src.runUserActionTask(new Task<CompilationController>() {
+                    @Override
+                    public void run(CompilationController parameter) throws Exception {
+                        allInfo = parameter;
+                        parameter.toPhase(JavaSource.Phase.RESOLVED);
+                        computeCandidates(Collections.<String>emptySet());
+                    }
+                }, true);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } else {
+            allInfo = info;
+            computeCandidates(Collections.<String>emptySet());
+        }
         info.putCachedValue(IMPORT_CANDIDATES_KEY, this, CacheClearPolicy.ON_CHANGE);
         return this;
     }
@@ -204,8 +226,7 @@ public final class ComputeImports {
     
     Pair<Map<String, List<Element>>, Map<String, List<Element>>> computeCandidates(Set<String> forcedUnresolved) {
         final CompilationUnitTree cut = info.getCompilationUnit();
-        Element el = info.getTrees().getElement(new TreePath(cut));
-        ModuleElement modle = el != null ? info.getElements().getModuleOf(el) : null;
+        ClasspathInfo cpInfo = allInfo.getClasspathInfo();
         final TreeVisitorImpl v = new TreeVisitorImpl(info);
         setVisitor(v);
         try {
@@ -225,7 +246,7 @@ public final class ComputeImports {
                 return null;
             
             List<Element> classes = new ArrayList<Element>();
-            Set<ElementHandle<TypeElement>> typeNames = info.getClasspathInfo().getClassIndex().getDeclaredTypes(unresolved, NameKind.SIMPLE_NAME,EnumSet.allOf(ClassIndex.SearchScope.class));
+            Set<ElementHandle<TypeElement>> typeNames = cpInfo.getClassIndex().getDeclaredTypes(unresolved, NameKind.SIMPLE_NAME,EnumSet.allOf(ClassIndex.SearchScope.class));
             if (typeNames == null) {
                 //Canceled
                 return null;
@@ -233,8 +254,7 @@ public final class ComputeImports {
             for (ElementHandle<TypeElement> typeName : typeNames) {
                 if (isCancelled())
                     return null;
-
-                TypeElement te = modle != null ? info.getElements().getTypeElement(modle, typeName.getQualifiedName()) : info.getElements().getTypeElement(typeName.getQualifiedName());
+                TypeElement te = typeName.resolve(allInfo);
                 
                 if (te == null) {
                     Logger.getLogger(ComputeImports.class.getName()).log(Level.INFO, "Cannot resolve type element \"" + typeName + "\".");
@@ -248,7 +268,7 @@ public final class ComputeImports {
                 }
             }
             
-            Iterable<Symbols> simpleNames = info.getClasspathInfo().getClassIndex().getDeclaredSymbols(unresolved, NameKind.SIMPLE_NAME,EnumSet.allOf(ClassIndex.SearchScope.class));
+            Iterable<Symbols> simpleNames = cpInfo.getClassIndex().getDeclaredSymbols(unresolved, NameKind.SIMPLE_NAME,EnumSet.allOf(ClassIndex.SearchScope.class));
 
             if (simpleNames == null) {
                 //Canceled:
@@ -259,7 +279,7 @@ public final class ComputeImports {
                 if (isCancelled())
                     return null;
 
-                final TypeElement te = p.getEnclosingType().resolve(info);
+                final TypeElement te = p.getEnclosingType().resolve(allInfo);
                 final Set<String> idents = p.getSymbols();
                 if (te != null) {
                     for (Element ne : te.getEnclosedElements()) {
@@ -288,7 +308,7 @@ public final class ComputeImports {
             fqn2Methods.clear();
             
             for (Hint hint: v.hints) {
-                wasChanged |= hint.filter(info, this);
+                wasChanged |= hint.filter(allInfo, this);
             }
         }
         

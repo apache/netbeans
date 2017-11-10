@@ -1,43 +1,20 @@
-/*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Copyright 2016 Oracle and/or its affiliates. All rights reserved.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
- * Other names may be trademarks of their respective owners.
- *
- * The contents of this file are subject to the terms of either the GNU
- * General Public License Version 2 only ("GPL") or the Common
- * Development and Distribution License("CDDL") (collectively, the
- * "License"). You may not use this file except in compliance with the
- * License. You can obtain a copy of the License at
- * http://www.netbeans.org/cddl-gplv2.html
- * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
- * specific language governing permissions and limitations under the
- * License.  When distributing the software, include this License Header
- * Notice in each file and include the License file at
- * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the GPL Version 2 section of the License file that
- * accompanied this code. If applicable, add the following below the
- * License Header, with the fields enclosed by brackets [] replaced by
- * your own identifying information:
- * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * If you wish your version of this file to be governed by only the CDDL
- * or only the GPL Version 2, indicate your decision by adding
- * "[Contributor] elects to include this software in this distribution
- * under the [CDDL or GPL Version 2] license." If you do not indicate a
- * single choice of license, a recipient has the option to distribute
- * your version of this file under either the CDDL, the GPL Version 2 or
- * to extend the choice of license to its licensees as provided above.
- * However, if you add GPL Version 2 code and therefore, elected the GPL
- * Version 2 license, then the option applies only if the new code is
- * made subject to such option by the copyright holder.
- *
- * Contributor(s):
- *
- * Portions Copyrighted 2016 Sun Microsystems, Inc.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.netbeans.modules.jshell.project;
 
@@ -58,6 +35,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.ModuleElement.DirectiveKind;
@@ -83,15 +61,18 @@ import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.modules.java.api.common.project.ProjectProperties;
 import org.netbeans.modules.java.j2seproject.api.J2SEPropertyEvaluator;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.jshell.launch.PropertyNames;
+import org.netbeans.modules.maven.api.execute.RunUtils;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.project.AuxiliaryProperties;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
@@ -207,6 +188,10 @@ public final class ShellProjectUtils {
         
         for (SourceGroup sg : org.netbeans.api.project.ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
             if (isNormalRoot(sg)) {
+                FileObject fo = sg.getRootFolder().getFileObject("module-info.java");
+                if (fo == null) {
+                    continue;
+                }
                 URL u = URLMapper.findURL(sg.getRootFolder(), URLMapper.INTERNAL);
                 BinaryForSourceQuery.Result r = BinaryForSourceQuery.findBinaryRoots(u);
                 for (URL u2 : r.getRoots()) {
@@ -275,6 +260,10 @@ public final class ShellProjectUtils {
     }
     
     public static boolean isModularProject(Project project) {
+        return isModularProject(project, false);
+    }
+    
+    public static boolean isModularProject(Project project, boolean checkModuleInfo) {
         if (project == null) { 
             return false;
         }
@@ -285,6 +274,9 @@ public final class ShellProjectUtils {
         String s = SourceLevelQuery.getSourceLevel(project.getProjectDirectory());
         if (!(s != null && new SpecificationVersion("9").compareTo(new SpecificationVersion(s)) <= 0)) {
             return false;
+        }
+        if (!checkModuleInfo) {
+            return true;
         }
         // find module-info.java
         for (SourceGroup sg : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
@@ -354,8 +346,7 @@ public final class ShellProjectUtils {
                 ShellProjectUtils.findProjectImportedModules(project, 
                     ShellProjectUtils.findProjectModules(project, null))
         );
-        ShellProjectUtils.findProjectModules(project, null);
-        boolean modular = isModularJDK(findPlatform(project));
+        boolean modular = isModularProject(project, false);
         if (exportMods.isEmpty() || !modular) {
             return null;
         }
@@ -381,16 +372,17 @@ public final class ShellProjectUtils {
                 ShellProjectUtils.findProjectImportedModules(project, 
                     ShellProjectUtils.findProjectModules(project, null))
         );
-        ShellProjectUtils.findProjectModules(project, null);
-        boolean modular = isModularJDK(findPlatform(project));
+        boolean modular = isModularProject(project, false);
         if (exportMods.isEmpty() || !modular) {
             return null;
         }
         List<String> addReads = new ArrayList<>();
-        exportMods.add("jdk.jshell");
+        exportMods.add("jdk.jshell"); // NOI18N
         Collections.sort(exportMods);
-        addReads.add("--add-modules " + String.join(",", exportMods));
-        addReads.add("--add-reads jdk.jshell=ALL-UNNAMED"); // NOI18N
+        addReads.add("--add-modules"); // NOI18N
+        addReads.add(String.join(",", exportMods));
+        addReads.add("--add-reads"); // NOI18N
+        addReads.add("jdk.jshell=ALL-UNNAMED"); // NOI18N
         
         // now export everything from the project:
         Map<String, Collection<String>> packages = ShellProjectUtils.findProjectModulesAndPackages(project);
@@ -399,7 +391,8 @@ public final class ShellProjectUtils {
             Collection<String> vals = en.getValue();
 
             for (String v : vals) {
-                addReads.add(String.format("--add-exports %s/%s=ALL-UNNAMED", 
+                addReads.add("--add-exports"); // NOI18N
+                addReads.add(String.format("%s/%s=ALL-UNNAMED",  // NOI18N
                         p, v));
             }
         }
@@ -418,6 +411,10 @@ public final class ShellProjectUtils {
                     URL u = URLMapper.findURL(sg.getRootFolder(), URLMapper.INTERNAL);
                     BinaryForSourceQuery.Result r = BinaryForSourceQuery.findBinaryRoots(u);
                     for (URL ru : r.getRoots()) {
+                        // ignore JARs, prefer output folder:
+                        if (FileUtil.isArchiveArtifact(ru)) {
+                            continue;
+                        }
                         if (knownURLs.add(ru)) {
                             urls.add(ru);
                         }
@@ -438,5 +435,47 @@ public final class ShellProjectUtils {
         }
         JavaPlatform platform = findPlatform(ClassPath.getClassPath(ref, ClassPath.BOOT));
         return platform != null ? platform : JavaPlatform.getDefault();
+    }
+    
+    /**
+     * Attempts to detect Compile on Save enabled.
+     */
+    public static boolean isCompileOnSave(Project p) {
+        J2SEPropertyEvaluator  prjEval = p.getLookup().lookup(J2SEPropertyEvaluator.class);
+        if (prjEval == null) {
+            // try maven approach
+            return RunUtils.isCompileOnSaveEnabled(p);
+        }
+        String compileOnSaveProperty = prjEval.evaluator().getProperty(ProjectProperties.COMPILE_ON_SAVE);
+        if (compileOnSaveProperty == null || !Boolean.valueOf(compileOnSaveProperty)) {
+            return false;
+        }
+        Map<String, String> props = prjEval.evaluator().getProperties();
+        if (props == null) {
+            return false;
+        }
+        for (Map.Entry<String, String> e : props.entrySet()) {
+            if (e.getKey().startsWith(ProjectProperties.COMPILE_ON_SAVE_UNSUPPORTED_PREFIX)) {
+                if (e.getValue() != null && Boolean.valueOf(e.getValue())) {
+                    return false;
+                }
+            }
+        }                    
+        return true;
+    }
+    
+    public static String quoteCmdArg(String s) {
+        if (s.indexOf(' ') == -1) {
+            return s;
+        }
+        return '"' + s + '"'; // NOI18N
+    }
+    
+    public static List<String> quoteCmdArgs(List<String> args) {
+        List<String> ret = new ArrayList<>();
+        for (String a : args) {
+            ret.add(quoteCmdArg(a));
+        }
+        return ret;
     }
 }

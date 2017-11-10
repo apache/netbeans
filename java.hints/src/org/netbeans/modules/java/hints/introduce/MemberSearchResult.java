@@ -1,50 +1,30 @@
-/*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Copyright 2016 Oracle and/or its affiliates. All rights reserved.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
- * Other names may be trademarks of their respective owners.
- *
- * The contents of this file are subject to the terms of either the GNU
- * General Public License Version 2 only ("GPL") or the Common
- * Development and Distribution License("CDDL") (collectively, the
- * "License"). You may not use this file except in compliance with the
- * License. You can obtain a copy of the License at
- * http://www.netbeans.org/cddl-gplv2.html
- * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
- * specific language governing permissions and limitations under the
- * License.  When distributing the software, include this License Header
- * Notice in each file and include the License file at
- * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the GPL Version 2 section of the License file that
- * accompanied this code. If applicable, add the following below the
- * License Header, with the fields enclosed by brackets [] replaced by
- * your own identifying information:
- * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * If you wish your version of this file to be governed by only the CDDL
- * or only the GPL Version 2, indicate your decision by adding
- * "[Contributor] elects to include this software in this distribution
- * under the [CDDL or GPL Version 2] license." If you do not indicate a
- * single choice of license, a recipient has the option to distribute
- * your version of this file under either the CDDL, the GPL Version 2 or
- * to extend the choice of license to its licensees as provided above.
- * However, if you add GPL Version 2 code and therefore, elected the GPL
- * Version 2 license, then the option applies only if the new code is
- * made subject to such option by the copyright holder.
- *
- * Contributor(s):
- *
- * Portions Copyrighted 2016 Sun Microsystems, Inc.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.netbeans.modules.java.hints.introduce;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.TreePathHandle;
 
 /**
  *
@@ -74,6 +54,10 @@ public class MemberSearchResult {
      * to indicate package-level access.
      */
     private final Modifier requiredModifier;
+    
+    private final TreePathHandle conflictingPath;
+    
+    private final ElementKind kind;
 
     public MemberSearchResult(ElementHandle<? extends Element> conflicting) {
         this.conflicting = conflicting;
@@ -81,6 +65,28 @@ public class MemberSearchResult {
         this.shadowedGate = null;
         this.gateSuper = false;
         this.requiredModifier = null;
+        this.conflictingPath = null;
+        this.kind = conflicting.getKind();
+    }
+    
+    public MemberSearchResult(ElementKind kind) {
+        this.conflicting = null;
+        this.shadowed = null;
+        this.shadowedGate = null;
+        this.gateSuper = false;
+        this.requiredModifier = null;
+        this.conflictingPath = null;
+        this.kind = kind;
+    }
+
+    public MemberSearchResult(TreePathHandle conflicting, ElementKind kind) {
+        this.conflicting = null;
+        this.shadowed = null;
+        this.shadowedGate = null;
+        this.gateSuper = false;
+        this.requiredModifier = null;
+        this.conflictingPath = conflicting;
+        this.kind = kind;
     }
 
     public MemberSearchResult(ElementHandle<? extends Element> shadowed, ElementHandle<? extends TypeElement> shadowedGate) {
@@ -89,6 +95,8 @@ public class MemberSearchResult {
         this.gateSuper = false;
         this.conflicting = null;
         this.requiredModifier = null;
+        this.conflictingPath = null;
+        this.kind = null;
     }
 
     public MemberSearchResult(ElementHandle<? extends Element> shadowed, ElementHandle<? extends TypeElement> shadowedGate, Modifier requiredModifier) {
@@ -97,6 +105,8 @@ public class MemberSearchResult {
         this.requiredModifier = requiredModifier;
         this.gateSuper = true;
         this.conflicting = null;
+        this.conflictingPath = null;
+        this.kind = null;
     }
     
     public ElementHandle<? extends Element> getOverriden() {
@@ -105,6 +115,27 @@ public class MemberSearchResult {
 
     public ElementHandle<? extends Element> getConflicting() {
         return conflicting;
+    }
+
+    public TreePathHandle getConflictingPath() {
+        return conflictingPath;
+    }
+    
+    public ElementKind getConflictingKind() {
+        return kind;
+    }
+    
+    public Element resolveConflict(CompilationInfo info) {
+        if (conflicting != null) {
+            return conflicting.resolve(info);
+        } else if (conflictingPath != null) {
+            return conflictingPath.resolveElement(info);
+        }
+        return null;
+    }
+    
+    public boolean isConflicting() {
+        return conflicting != null || conflictingPath != null;
     }
 
     public ElementHandle<? extends Element> getShadowed() {

@@ -1,43 +1,20 @@
-/*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Copyright 2014 Oracle and/or its affiliates. All rights reserved.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
- * Other names may be trademarks of their respective owners.
- *
- * The contents of this file are subject to the terms of either the GNU
- * General Public License Version 2 only ("GPL") or the Common
- * Development and Distribution License("CDDL") (collectively, the
- * "License"). You may not use this file except in compliance with the
- * License. You can obtain a copy of the License at
- * http://www.netbeans.org/cddl-gplv2.html
- * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
- * specific language governing permissions and limitations under the
- * License.  When distributing the software, include this License Header
- * Notice in each file and include the License file at
- * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the GPL Version 2 section of the License file that
- * accompanied this code. If applicable, add the following below the
- * License Header, with the fields enclosed by brackets [] replaced by
- * your own identifying information:
- * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * If you wish your version of this file to be governed by only the CDDL
- * or only the GPL Version 2, indicate your decision by adding
- * "[Contributor] elects to include this software in this distribution
- * under the [CDDL or GPL Version 2] license." If you do not indicate a
- * single choice of license, a recipient has the option to distribute
- * your version of this file under either the CDDL, the GPL Version 2 or
- * to extend the choice of license to its licensees as provided above.
- * However, if you add GPL Version 2 code and therefore, elected the GPL
- * Version 2 license, then the option applies only if the new code is
- * made subject to such option by the copyright holder.
- *
- * Contributor(s):
- *
- * Portions Copyrighted 2014 Sun Microsystems, Inc.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.netbeans.modules.java.completion;
@@ -79,10 +56,30 @@ abstract class BaseTask extends UserTask {
 
     protected final int caretOffset;
     protected final Callable<Boolean> cancel;
+    private int caretInSnapshot;
 
     protected BaseTask(int caretOffset, Callable<Boolean> cancel) {
         this.caretOffset = caretOffset;
         this.cancel = cancel;
+    }
+
+    
+    final int getCaretInSnapshot() {
+        return caretInSnapshot;
+    }
+    
+    private CompilationController controller;
+    
+    final int snapshotPos(int pos) {
+        if (pos < 0) {
+            return pos;
+        }
+        int r = controller.getSnapshot().getEmbeddedOffset(pos);
+        if (r == -1) {
+            return pos;
+        } else {
+            return r;
+        }
     }
 
     @Override
@@ -90,7 +87,13 @@ abstract class BaseTask extends UserTask {
         Parser.Result result = resultIterator.getParserResult(caretOffset);
         CompilationController controller = result != null ? CompilationController.get(result) : null;
         if (controller != null && (cancel == null || !cancel.call())) {
-            resolve(controller);
+            try {
+                this.controller = controller;
+                caretInSnapshot = snapshotPos(caretOffset);
+                resolve(controller);
+            } finally {
+                this.controller = null;
+            }
         }
     }
 
@@ -365,8 +368,8 @@ abstract class BaseTask extends UserTask {
                     if (blockPath.getParentPath().getLeaf().getKind() == Tree.Kind.METHOD
                             || TreeUtilities.CLASS_TREE_KINDS.contains(blockPath.getParentPath().getLeaf().getKind())) {
                         final int blockPos = (int) sourcePositions.getStartPosition(root, blockPath.getLeaf());
-                        final String blockText = upToOffset && caretOffset > offset
-                                ? controller.getText().substring(blockPos, offset) + whitespaceString(caretOffset - offset) + controller.getText().substring(caretOffset, (int) sourcePositions.getEndPosition(root, blockPath.getLeaf()))
+                        final String blockText = upToOffset && getCaretInSnapshot() > offset
+                                ? controller.getText().substring(blockPos, offset) + whitespaceString(getCaretInSnapshot() - offset) + controller.getText().substring(getCaretInSnapshot(), (int) sourcePositions.getEndPosition(root, blockPath.getLeaf()))
                                 : controller.getText().substring(blockPos, (int) sourcePositions.getEndPosition(root, blockPath.getLeaf()));
                         final SourcePositions[] sp = new SourcePositions[1];
                         final StatementTree block = (((BlockTree) blockPath.getLeaf()).isStatic() ? tu.parseStaticBlock(blockText, sp) : tu.parseStatement(blockText, sp));

@@ -1474,12 +1474,14 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
 
     <target name="verify-all-libs-and-licenses" depends="bootstrap,download-all-extbins" description="Verify the contents of third-party libraries and licenses.">
         <taskdef name="verifylibsandlicenses" classname="org.netbeans.nbbuild.extlibs.VerifyLibsAndLicenses" classpath="${nbantext.jar}"/>
-        <verifylibsandlicenses report="${nb.build.dir}/verifylibsandlicenses.xml" nball=".."/>
+        <property name="verify-libs-and-licenses.haltonfailure" value="false" />
+        <verifylibsandlicenses report="${nb.build.dir}/verifylibsandlicenses.xml" nball=".." haltonfailure="${verify-libs-and-licenses.haltonfailure}" />
     </target>
 
     <target name="verify-libs-and-licenses" depends="bootstrap,download-selected-extbins" description="Verify the contents of third-party libraries and licenses in the selected configuration.">
         <taskdef name="verifylibsandlicenses" classname="org.netbeans.nbbuild.extlibs.VerifyLibsAndLicenses" classpath="${nbantext.jar}"/>
-        <verifylibsandlicenses report="${nb.build.dir}/verifylibsandlicenses.xml" nball=".."/>
+        <property name="verify-libs-and-licenses.haltonfailure" value="false" />
+        <verifylibsandlicenses report="${nb.build.dir}/verifylibsandlicenses.xml" nball=".." haltonfailure="${verify-libs-and-licenses.haltonfailure}" />
     </target>
 
     <target name="create-mandatory-files-for-binary" depends="bootstrap,download-selected-extbins" description="Create a summary of the licenses used by libraries in the build.">
@@ -2117,6 +2119,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="o.apache.tools.ant.module/release/VERSION.txt" /> <!--generated file-->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/CustomTask_java" /> <!-- user visible file template -->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/Project.xml_" /> <!-- user visible file template -->
+            <exclude name="o.n.bootstrap/readme/*.txt" /> <!--READMEs-->
             <exclude name="o.n.bootstrap/test/unit/src/org/fakepkg/resource1.txt" /> <!--no degree of creativity-->
             <exclude name="o.n.bootstrap/test/unit/src/org/fakepkg/resource2.txt" /> <!--no degree of creativity-->
             <exclude name="o.n.core/licenses/**" /> <!-- license files -->
@@ -2222,9 +2225,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <patternset refid="non.rat" />
             </fileset>
         </rat:report>
-        <taskdef name="rattohtml" classname="org.netbeans.nbbuild.RatReportTask" classpath="${build.ant.classes.dir}"/>
+        <taskdef name="rattotest" classname="org.netbeans.nbbuild.RatReportTask" classpath="${build.ant.classes.dir}"/>
         <loadproperties srcFile="cluster.properties" />
-        <rattohtml source="build/rat-report.xml" report="${nb.build.dir}/rat/"/>
+        <property name="rat-report.haltonfailure" value="false" />
+        <rattotest source="build/rat-report.xml" report="${nb.build.dir}/rat/" haltonfailure="${rat-report.haltonfailure}" />
     </target>
 
 </project>

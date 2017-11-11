@@ -1,4 +1,4 @@
-Name: BIndex
+xName: BIndex
 Version: 2.2
 License: Apache-2.0
 Description: OSGi bundle repository indexer.

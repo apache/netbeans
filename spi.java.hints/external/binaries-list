@@ -14,11 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-is.autoload=true
-javac.source=1.7
-javac.compilerargs=-Xlint -Xlint:-serial
-spec.version.base=1.30.0
-requires.nb.javac=true
-javadoc.arch=${basedir}/arch.xml
-javadoc.apichanges=${basedir}/apichanges.xml
-release.external/byte-buddy-1.7.9.jar=modules/ext/byte-buddy-1.7.9.jar
+51218A01A882C04D0ABA8C028179CCE488BBCB58 net.bytebuddy:byte-buddy:1.7.9

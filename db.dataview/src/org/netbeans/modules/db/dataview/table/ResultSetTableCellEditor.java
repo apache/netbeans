@@ -91,7 +91,7 @@ public class ResultSetTableCellEditor extends DefaultCellEditor {
             @Override
             public void setValue(Object value) {
                 val = value;
-                checkBox.setSelected((value != null) ? ((Boolean) value) : false);
+                checkBox.setSelected((value instanceof Boolean) ? ((Boolean) value) : false);
             }
 
             @Override

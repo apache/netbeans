@@ -288,8 +288,19 @@
   <!-- Use of nbmerge target has the effect of automatically depending on all-X for every module. -->
   <!-- It also runs deltree(dir=wherever) and copydir(src=../X/netbeans,dest=wherever) to create the IDE install. -->
 
-  <target name="build-nozip" depends="init,download-selected-extbins,clean-cluster-flags,build-clusters,create-mandatory-files-for-binary,create-netbeans-import,finish-build,add-junit" description="Build the IDE but do not create a final ZIP file."/>
-  <target name="finish-build" depends="init">
+  <target name="build-nozip" depends="init,download-selected-extbins,clean-cluster-flags,build-clusters,create-mandatory-files-for-binary,create-netbeans-import,finish-build-platform,finish-build-nb,add-junit" description="Build the IDE but do not create a final ZIP file."/>
+  <target name="-check-nb-cluster" depends="init">
+       <condition property="has.nb.cluster">
+           <contains string="${nb.clusters.list}" substring="nb.cluster.nb" />
+       </condition>
+  </target>
+  <target name="finish-build-platform" depends="init,-check-nb-cluster" unless="has.nb.cluster">
+    <copy file="../o.n.bootstrap/readme/README-bin.txt" tofile="${netbeans.dest.dir}/README.txt" overwrite="true"/>
+    <fixcrlf eol="lf" srcdir="${netbeans.dest.dir}" >
+      <include name="${nb.cluster.platform.dir}/lib/nbexec" />
+    </fixcrlf>
+  </target>
+  <target name="finish-build-nb" depends="init,-check-nb-cluster" if="has.nb.cluster">
     <loadproperties srcFile="${clusters.list.file}" />
 
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
@@ -310,8 +321,8 @@
     <fixcrlf eol="lf" srcdir="${netbeans.dest.dir}" >
       <include name="etc/netbeans.conf" />
       <include name="etc/netbeans.clusters" />
-      <include name="bin/netbeans" />      
-      <include name="${nb.cluster.platform.dir}/lib/nbexec" />      
+      <include name="bin/netbeans" />
+      <include name="${nb.cluster.platform.dir}/lib/nbexec" />
     </fixcrlf>
     <mkdir dir="${nb.build.dir}"/>
     <hgid property="hg.id" file=".."/>
@@ -991,10 +1002,13 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <!-- architecture of jvm on which app will run -->
     <condition property="jvm.arch.string" value="64" else="">
       <available file="${nbjdk.home}\jre\lib\amd64" />
-    </condition>        
-    
+    </condition>
+
+    <condition property="tryme.launcher.prefix" value="${netbeans.dest.dir}/bin/netbeans" else="${netbeans.dest.dir}/platform/lib/nbexec">
+      <available file="${netbeans.dest.dir}/nb/.lastModified" />
+    </condition>
     <property name="run.args.ide" value=""/>
-    <exec osfamily="windows" executable="${netbeans.dest.dir}/bin/netbeans${jvm.arch.string}.exe" failonerror="yes" dir="${java.io.tmpdir}">
+    <exec osfamily="windows" executable="${tryme.launcher.prefix}${jvm.arch.string}.exe" failonerror="yes" dir="${java.io.tmpdir}">
       <arg value="--jdkhome"/>
       <arg file="${tryme.jdkhome}"/>
       <arg value="--userdir"/>
@@ -1004,7 +1018,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <arg line="${run.args.ide}"/>
     </exec>
     <exec osfamily="unix" executable="sh" failonerror="yes" dir="${java.io.tmpdir}">
-      <arg value="${netbeans.dest.dir}/bin/netbeans"/>
+      <arg value="${tryme.launcher.prefix}"/>
       <arg value="--jdkhome"/>
       <arg file="${tryme.jdkhome}"/>
       <arg value="--userdir"/>
@@ -1492,8 +1506,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         <copy file="${nb_all}/DISCLAIMER" tofile="${netbeans.dest.dir}/DISCLAIMER" />
     </target>
 
+    <target name="-copy-platform-readme" depends="-check-nb-cluster" unless="has.nb.cluster">
+    </target>
+
   <target name="build-source-config"
-    depends="init,set-buildnumber"
+    depends="init,set-buildnumber,-check-nb-cluster"
     description="Packages sources needed to compile one cluster.config">
     <property name="buildnum" value="${buildnumber}"/>
     <echo message="Packaging sources of ${cluster.config} modules"/>
@@ -1539,6 +1556,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             </tokenfilter>
         </filterchain>
     </concat>
+    <condition property="source.zip.readme" else="${nb_all}/o.n.bootstrap/readme/README-src.txt" value="${nb_all}/ide.branding/does-not-exist-yet">
+        <isset property="has.nb.cluster" />
+    </condition>
     <zip zipfile="${nb.build.dir}/${cluster.config}-src-${buildnum}.zip" duplicate="preserve">
       <zipfileset dir="${nb_all}" includes="${source.dirs}">
           <exclude name="*/build/**/*"/>
@@ -1553,6 +1573,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <zipfileset file="${nb.build.dir}/NOTICE" />
       <zipfileset file="${nb.build.dir}/LICENSE" />
       <zipfileset file="${nb_all}/DISCLAIMER" />
+      <zipfileset file="${source.zip.readme}" fullpath="README.txt" erroronmissingarchive="false" />
     </zip>
   </target>
 
@@ -1838,7 +1859,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
 
     <!-- #42157 - Scans all xml layers for OptionsExport folder and creates
     list of include/exclude patterns for import on the first start.  -->
-    <target name="create-netbeans-import">
+    <target name="create-netbeans-import" depends="-check-nb-cluster" if="has.nb.cluster">
         <taskdef name="optionsimport" classname="org.netbeans.nbbuild.LayerOptionsImport" classpath="${nbantext.jar}"/>
         <mkdir dir="${netbeans.dest.dir}/etc"/>
         <optionsimport output="${netbeans.dest.dir}/etc/netbeans.import">
@@ -2031,9 +2052,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="**/package-list" /> <!--no degree of creativity-->
             <exclude name="*/test/unit/data/**" /> <!--would cause tests to fail-->
             <exclude name="*/test/qa-functional/data/**" /> <!--would cause tests to fail-->
-            <exclude name="autoupdate.services/test/unit/src/org/netbeans/modules/autoupdate/updateprovider/data/**" /> <!-- test data -->
             <exclude name="api.search/test/unit/src/org/netbeans/modules/search/data/**" /> <!--test data-->
+            <exclude name="api.templates/test/unit/src/org/netbeans/modules/templates/utf8.xml" /> <!--test data-->
             <exclude name="apisupport.ant/src/org/netbeans/modules/apisupport/project/resources/license-*.txt" /> <!--template file-->
+            <exclude name="autoupdate.services/test/unit/src/org/netbeans/modules/autoupdate/updateprovider/data/**" /> <!-- test data -->
             <exclude name="beans/src/org/netbeans/modules/beans/resources/templates/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
             <exclude name="css.editor/src/org/netbeans/modules/css/resources/CascadeStyleSheet.css.template" /> <!-- user visible template -->
             <exclude name="css.editor/src/org/netbeans/modules/css/resources/CssExample" /> <!-- user visible template -->

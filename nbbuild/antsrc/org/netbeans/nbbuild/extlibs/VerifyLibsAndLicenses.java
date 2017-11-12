@@ -291,8 +291,13 @@ public class VerifyLibsAndLicenses extends Task {
                 }
                 String license = headers.get("License");
                 if (license != null) {
-                    if (license.contains("GPL") && !headers.containsKey("Source")) {
-                        msg.append("\n" + path + " has a GPL-family license but is missing the Source header");
+                    if (license.contains("GPL")) {
+                        if (license.contains("GPL-2-CP") &&
+                            headers.getOrDefault("Type", "").contains("compile-time")) {
+                            //OK to include GPLv2+CPE as a compile-time/runtime optional dependency
+                        } else {
+                            msg.append("\n" + path + " has a GPL-family license but is either not covered by the Classpath Exception, or is not compile-time/optional only.");
+                        }
                     }
                     File licenseFile = new File(licenses, license);
                     if (licenseFile.isFile()) {

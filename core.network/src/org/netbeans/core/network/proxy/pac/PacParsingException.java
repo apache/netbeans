@@ -1,4 +1,4 @@
-/* 
+/*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -11,12 +11,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.netbeans.core.network.proxy.pac;
 
-function FindProxyForURL(url, host)
-{
-    // Make everything lower case.
-    url = url.toLowerCase();
-    host = host.toLowerCase();
-    if (isPlainHostName(host)) return "DIRECT";
-    return "PROXY www-proxy.us.oracle.com:80";
-};
+/**
+ * Thrown when there are syntactical errors in the PAC script.
+ * 
+ * @see PacValidationException
+ * 
+ * @author lbruun
+ */
+public class PacParsingException extends Exception {
+
+   public PacParsingException(Exception ex) {
+        super(ex);
+    }
+     
+   public PacParsingException(String message, Exception ex) {
+        super(message, ex);
+    }
+   
+   public PacParsingException(String message) {
+        super(message);
+    }
+}

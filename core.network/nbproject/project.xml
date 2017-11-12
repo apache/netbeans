@@ -182,7 +182,6 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
-                <friend>org.netbeans.core</friend>
                 <package>org.netbeans.core.network.proxy.pac</package>
                 <package>org.netbeans.core.network.proxy.pac.datetime</package>
                 <package>org.netbeans.core.network.proxy.pac.impl</package>

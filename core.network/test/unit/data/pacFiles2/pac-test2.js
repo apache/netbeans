@@ -12,11 +12,22 @@
  * limitations under the License.
  */
 
+
+// 
+// A very simple PAC file
+// Returns a list of 3 proxies.
+//
+
 function FindProxyForURL(url, host)
 {
-    // Make everything lower case.
+
+
+
+
     url = url.toLowerCase();
     host = host.toLowerCase();
-    if (isPlainHostName(host)) return "DIRECT";
-    return "PROXY www-proxy.us.oracle.com:80";
-};
+    alert("This is pac-test2.js");
+
+
+    return "PROXY localhost:8081; PROXY localhost:8082; DIRECT";
+}

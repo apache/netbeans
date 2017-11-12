@@ -227,3 +227,4 @@
 <property name="javadoc.docs.org-netbeans-modules-xml-text" value="${javadoc.web.root}/org-netbeans-modules-xml-text"/>
 <property name="javadoc.docs.org-netbeans-modules-xml-lexer" value="${javadoc.web.root}/org-netbeans-modules-xml-lexer"/>
 <property name="javadoc.docs.org-netbeans-modules-xml-text" value="${javadoc.web.root}/org-netbeans-modules-xml-text"/>
+<property name="javadoc.docs.org-netbeans-core-network" value="${javadoc.web.root}/org-netbeans-core-network"/>

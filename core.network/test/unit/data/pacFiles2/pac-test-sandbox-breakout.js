@@ -12,11 +12,21 @@
  * limitations under the License.
  */
 
+
+
+
+// 
+// A PAC script which tries to break out of the sandbox and attempts
+// to do something really nasty.
+//
+
 function FindProxyForURL(url, host)
 {
-    // Make everything lower case.
-    url = url.toLowerCase();
-    host = host.toLowerCase();
-    if (isPlainHostName(host)) return "DIRECT";
-    return "PROXY www-proxy.us.oracle.com:80";
-};
+    alert("pac-test-sandbox-breakout.js");
+    var JRuntime = Java.type("java.lang.Runtime");
+    JRuntime.getRuntime().exec("dosomethingnasty.exe");
+
+
+    
+    return "DIRECT";
+}

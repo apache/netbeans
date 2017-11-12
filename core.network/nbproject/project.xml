@@ -26,6 +26,15 @@
             <code-name-base>org.netbeans.core.network</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>org.netbeans.api.annotations.common</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.28</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.core</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -41,6 +50,15 @@
                     <run-dependency>
                         <release-version>1</release-version>
                         <specification-version>1.32</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.libs.jna.platform</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>1</release-version>
+                        <specification-version>1.16</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -163,7 +181,14 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages/>
+            <friend-packages>
+                <friend>org.netbeans.core</friend>
+                <package>org.netbeans.core.network.proxy.pac</package>
+                <package>org.netbeans.core.network.proxy.pac.datetime</package>
+                <package>org.netbeans.core.network.proxy.pac.impl</package>
+                <package>org.netbeans.core.network.utils</package>
+                <package>org.netbeans.core.network.utils.hname</package>
+            </friend-packages>
         </data>
     </configuration>
 </project>

@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-AutoUpdate-Show-In-Client: false
-OpenIDE-Module: org.netbeans.libs.swingx/1
-OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/swingx/Bundle.properties
-AutoUpdate-Essential-Module: true
-OpenIDE-Module-Specification-Version: 1.28

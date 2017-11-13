@@ -1,0 +1,4 @@
+This product includes software developed at
+The OSGi Alliance (http://www.osgi.org/).
+Copyright (c) OSGi Alliance (2000, 2012).
+Licensed under the Apache License 2.0.

@@ -1,43 +1,20 @@
-/*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Copyright 2010 Oracle and/or its affiliates. All rights reserved.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
- * Other names may be trademarks of their respective owners.
- *
- * The contents of this file are subject to the terms of either the GNU
- * General Public License Version 2 only ("GPL") or the Common
- * Development and Distribution License("CDDL") (collectively, the
- * "License"). You may not use this file except in compliance with the
- * License. You can obtain a copy of the License at
- * http://www.netbeans.org/cddl-gplv2.html
- * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
- * specific language governing permissions and limitations under the
- * License.  When distributing the software, include this License Header
- * Notice in each file and include the License file at
- * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the GPL Version 2 section of the License file that
- * accompanied this code. If applicable, add the following below the
- * License Header, with the fields enclosed by brackets [] replaced by
- * your own identifying information:
- * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * If you wish your version of this file to be governed by only the CDDL
- * or only the GPL Version 2, indicate your decision by adding
- * "[Contributor] elects to include this software in this distribution
- * under the [CDDL or GPL Version 2] license." If you do not indicate a
- * single choice of license, a recipient has the option to distribute
- * your version of this file under either the CDDL, the GPL Version 2 or
- * to extend the choice of license to its licensees as provided above.
- * However, if you add GPL Version 2 code and therefore, elected the GPL
- * Version 2 license, then the option applies only if the new code is
- * made subject to such option by the copyright holder.
- *
- * Contributor(s):
- *
- * Portions Copyrighted 2008 Sun Microsystems, Inc.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.netbeans.modules.db.metadata.model.jdbc;
@@ -140,42 +117,49 @@ public class JDBCProcedure extends ProcedureImplementation {
     }
 
     protected void createProcedureInfo() {
-        LOGGER.log(Level.FINE, "Initializing procedure info in " + this);
+        LOGGER.log(Level.FINE, "Initializing procedure info in {0}", this);
         
-        Map<String, Column> newColumns = new LinkedHashMap<String, Column>();
-        Map<String, Parameter> newParams = new LinkedHashMap<String, Parameter>();
+        Map<String, Column> newColumns = new LinkedHashMap<>();
+        Map<String, Parameter> newParams = new LinkedHashMap<>();
         int resultCount = 0;
         int paramCount = 0;
-
-        try {
-            ResultSet rs = jdbcSchema.getJDBCCatalog().getJDBCMetadata().getDmd().getProcedureColumns(jdbcSchema.getJDBCCatalog().getName(), jdbcSchema.getName(), name, "%"); // NOI18N
-            try {
-                while (rs.next()) {
-                    short columnType = rs.getShort("COLUMN_TYPE");
-                    switch (columnType) {
-                        case DatabaseMetaData.procedureColumnResult:
-                            addColumn(++resultCount, rs, newColumns);
-                            break;
-                        case DatabaseMetaData.procedureColumnIn:
-                        case DatabaseMetaData.procedureColumnInOut:
-                        case DatabaseMetaData.procedureColumnOut:
-                        case DatabaseMetaData.procedureColumnUnknown:
-                            addParameter(++paramCount, rs, newParams);
-                            break;
-                        case DatabaseMetaData.procedureColumnReturn:
-                            setReturnValue(rs);
-                            break;
-                        default:
-                            LOGGER.log(Level.INFO, "Encountered unexpected column type " + columnType + " when retrieving metadadta for procedure " + name);
-                    }
-                }
-            } finally {
-                if (rs != null) {
-                    rs.close();
+        
+        DatabaseMetaData dmd = jdbcSchema.getJDBCCatalog().getJDBCMetadata().getDmd();
+        String catalogName = jdbcSchema.getJDBCCatalog().getName();
+        String schemaName = jdbcSchema.getName();
+        
+        try (ResultSet rs = dmd.getProcedureColumns(catalogName, schemaName, name, "%");) {  // NOI18N
+            while (rs.next()) {
+                short columnType = rs.getShort("COLUMN_TYPE");
+                switch (columnType) {
+                    case DatabaseMetaData.procedureColumnResult:
+                        resultCount++;
+                        addColumn(resultCount, rs, newColumns);
+                        break;
+                    case DatabaseMetaData.procedureColumnIn:
+                    case DatabaseMetaData.procedureColumnInOut:
+                    case DatabaseMetaData.procedureColumnOut:
+                    case DatabaseMetaData.procedureColumnUnknown:
+                        paramCount++;
+                        addParameter(paramCount, rs, newParams);
+                        break;
+                    case DatabaseMetaData.procedureColumnReturn:
+                        setReturnValue(rs);
+                        break;
+                    default:
+                        LOGGER.log(Level.INFO, "Encountered unexpected column type {0} when retrieving metadadta for procedure {1}", new Object[]{columnType, name});
                 }
             }
+        } catch (RuntimeException e) {
+            throw new RuntimeException(String.format(
+                    "Failed to retrieve procedure info for catalog: '%s', schema: '%s', procedure: '%s'",
+                    catalogName, schemaName, name
+            ), e);
         } catch (SQLException e) {
-            throw new MetadataException(e);
+            throw new MetadataException(String.format(
+                    "Failed to retrieve procedure info for catalog: '%s', schema: '%s', procedure: '%s'",
+                    catalogName, schemaName, name
+            ), e);
         }
         columns = Collections.unmodifiableMap(newColumns);
         parameters = Collections.unmodifiableMap(newParams);
@@ -198,6 +182,7 @@ public class JDBCProcedure extends ProcedureImplementation {
         LOGGER.log(Level.FINE, "Created return value {0}", returnValue);
     }
 
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     private Map<String, Column> initColumns() {
         if (columns != null) {
             return columns;
@@ -206,6 +191,7 @@ public class JDBCProcedure extends ProcedureImplementation {
         return columns;
     }
 
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     private Map<String, Parameter> initParameters() {
         if (parameters != null) {
             return parameters;

@@ -34,6 +34,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -81,6 +83,12 @@ public class RatReportTask extends Task {
         this.reportFile = report;
     }
 
+    private boolean haltonfailure;
+    /** JUnit-format XML result file to generate, rather than halting the build. */
+    public void setHaltonfailure(boolean haltonfailure) {
+        this.haltonfailure = haltonfailure;
+    }
+
     @Override
     public void execute() throws BuildException {
         root = sourceFile.getParentFile().getParentFile().getParentFile();
@@ -93,6 +101,7 @@ public class RatReportTask extends Task {
         commandAndArgs.add("config");
         commandAndArgs.add("--get");
         commandAndArgs.add("remote.origin.url");
+        Stream<String> allFailures = Stream.empty();
         try {
             Process p = new ProcessBuilder(commandAndArgs).directory(root).start();
             try (BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
@@ -192,6 +201,14 @@ public class RatReportTask extends Task {
 
             }
             JUnitReportWriter.writeReport(this, "Cluster: " + clusterName, file, pseudoTests);
+            allFailures = Stream.concat(allFailures, pseudoTests.values().stream().filter(err -> err != null));
+        }
+        if (haltonfailure) {
+            String failuresString = allFailures.collect(Collectors.joining("\n"));
+            if (!failuresString.isEmpty()) {
+                throw new BuildException("Failed Rat test(s):\n" + failuresString,
+                                         getLocation());
+            }
         }
     }
 

@@ -1108,7 +1108,7 @@ public final class EditorCaret implements Caret {
                         int dot = caretItem.getDot();
                         Rectangle newCaretBounds = lvh.modelToViewBounds(dot, Position.Bias.Forward);
                         Rectangle oldBounds = caretItem.setCaretBoundsWithRepaint(newCaretBounds, c, "EditorCaret.paint()", i);
-                        if (caretItem == lastCaret) {
+                        if (caretItem == lastCaret && oldBounds != null) {
                             maybeSaveCaretOffset(c, oldBounds);
                         }
                     }
@@ -1973,8 +1973,10 @@ public final class EditorCaret implements Caret {
             }
             if (forceUpdate) {
                 Rectangle cbounds = getLastCaretItem().getCaretBounds();
-                // save relative position of the main caret
-                maybeSaveCaretOffset(c, cbounds);
+                if (cbounds != null) {
+                    // save relative position of the main caret
+                    maybeSaveCaretOffset(c, cbounds);
+                }
             }
             if (!calledFromPaint && !c.isValid() /* && maintainVisible == null */) {
                 updateLaterDuringPaint = true;

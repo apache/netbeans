@@ -33,7 +33,7 @@ import java.util.Map;
 
 public interface Win32APISupport extends StdCallLibrary {
 
-    final Map<Object, Object> DEFAULT_OPTIONS = Collections.unmodifiableMap(new HashMap<Object, Object>() {
+    final Map<String, Object> DEFAULT_OPTIONS = Collections.unmodifiableMap(new HashMap<String, Object>() {
 
         {
             put(OPTION_TYPE_MAPPER, W32APITypeMapper.UNICODE);

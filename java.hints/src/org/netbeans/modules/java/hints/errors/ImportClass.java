@@ -285,7 +285,7 @@ public final class ImportClass implements ErrorRule<Void>{
                     fixes.add(new UseFQN(info, file, fqn, eh, "Z#" + fqn, treePath, prefered, false));
                     fixes.add(UseFQN.createShared(info, file, fqn, eh, fqn, treePath, prefered));
                 } else {
-                    fixes.add(new FixImport(file, fqn, ElementHandle.create(element), sort.toString(), 
+                    fixes.add(new FixImport(file, fqn, eh, sort.toString(), 
                             prefered, info, changePath, replaceSuffix, doOrganize));
                 }
             }

@@ -1,45 +1,20 @@
-/*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
- * Other names may be trademarks of their respective owners.
- *
- * The contents of this file are subject to the terms of either the GNU
- * General Public License Version 2 only ("GPL") or the Common
- * Development and Distribution License("CDDL") (collectively, the
- * "License"). You may not use this file except in compliance with the
- * License. You can obtain a copy of the License at
- * http://www.netbeans.org/cddl-gplv2.html
- * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
- * specific language governing permissions and limitations under the
- * License.  When distributing the software, include this License Header
- * Notice in each file and include the License file at
- * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the GPL Version 2 section of the License file that
- * accompanied this code. If applicable, add the following below the
- * License Header, with the fields enclosed by brackets [] replaced by
- * your own identifying information:
- * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * Contributor(s):
- *
- * The Original Software is NetBeans. The Initial Developer of the Original
- * Software is Sun Microsystems, Inc. Portions Copyright 1997-2007 Sun
- * Microsystems, Inc. All Rights Reserved.
- *
- * If you wish your version of this file to be governed by only the CDDL
- * or only the GPL Version 2, indicate your decision by adding
- * "[Contributor] elects to include this software in this distribution
- * under the [CDDL or GPL Version 2] license." If you do not indicate a
- * single choice of license, a recipient has the option to distribute
- * your version of this file under either the CDDL, the GPL Version 2 or
- * to extend the choice of license to its licensees as provided above.
- * However, if you add GPL Version 2 code and therefore, elected the GPL
- * Version 2 license, then the option applies only if the new code is
- * made subject to such option by the copyright holder.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.netbeans.modules.xml.jaxb.util;
@@ -47,6 +22,7 @@ package org.netbeans.modules.xml.jaxb.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,16 +46,14 @@ import org.netbeans.junit.NbTestCase;
  * @author gmpatil
  */
 public class XSLTest extends NbTestCase {
-    private static final String CONFIG_FILE1 = "/data/ConfigFile1.xml"; //NOI18N
-    private static final String CONFIG_FILE2 = "/data/ConfigFile2.xml"; //NOI18N    
-    private static final String CONFIG_FILE3 = "/data/ConfigFile3.xml"; //NOI18N        
-    private static final String CONFIG_EMPTY_CAT = 
-            "/data/ConfigFileEmptyCatalog.xml"; //NOI18N        
-    private static final String BUILD_FILE1 = "/data/BuildFile1.xml";   //NOI18N
-    private static final String BUILD_FILE2 = "/data/BuildFile2.xml"; //NOI18N 
-    private static final String BUILD_FILE3 = "/data/BuildFile3.xml"; //NOI18N     
-    private static final String BUILD_EMPTY_CAT = 
-            "/data/BuildFileEmptyCatalog.xml"; //NOI18N     
+    private static final String CONFIG_FILE1 = "ConfigFile1.xml"; //NOI18N
+    private static final String CONFIG_FILE2 = "ConfigFile2.xml"; //NOI18N    
+    private static final String CONFIG_FILE3 = "ConfigFile3.xml"; //NOI18N        
+    private static final String CONFIG_EMPTY_CAT = "ConfigFileEmptyCatalog.xml"; //NOI18N        
+    private static final String BUILD_FILE1 = "BuildFile1.xml";   //NOI18N
+    private static final String BUILD_FILE2 = "BuildFile2.xml"; //NOI18N 
+    private static final String BUILD_FILE3 = "BuildFile3.xml"; //NOI18N     
+    private static final String BUILD_EMPTY_CAT = "BuildFileEmptyCatalog.xml"; //NOI18N     
     
     private static final String XSL_FILE = 
             "/org/netbeans/modules/xml/jaxb/resources/JAXBBuild.xsl"; //NOI18N
@@ -95,8 +69,13 @@ public class XSLTest extends NbTestCase {
     public void tearDown() throws Exception {
     }
     
-    private InputStream getInputStream(String filePath){
+    private InputStream getFromClasspath(String filePath){
         return this.getClass().getResourceAsStream(filePath);
+    }
+    
+    private InputStream getDatafile(String filename) throws FileNotFoundException{
+        String dataFilename = "/org/netbeans/modules/xml/jaxb/util/" + filename;
+        return new FileInputStream(new File(getDataDir(), dataFilename));
     }
     
     private String getString(InputStream stream) throws IOException{
@@ -125,8 +104,8 @@ public class XSLTest extends NbTestCase {
     
     private void transformConfig2Build(String configFile, String buildFile){
         try {
-            Source xmlSource = new StreamSource(getInputStream(configFile));
-            Source xslSource = new StreamSource(getInputStream(XSL_FILE));
+            Source xmlSource = new StreamSource(getDatafile(configFile));
+            Source xslSource = new StreamSource(getFromClasspath(XSL_FILE));
             File tmpFile = java.io.File.createTempFile(TEMP_BUILD_FILE, ".xml");
             //System.out.println("tmpFile:" + tmpFile.getAbsolutePath());
             tmpFile.deleteOnExit();
@@ -140,7 +119,7 @@ public class XSLTest extends NbTestCase {
             xformer.transform(xmlSource, result);
             // Compare.
             fos.close();
-            compareStream(getInputStream(buildFile), new FileInputStream(tmpFile));
+            compareStream(getDatafile(buildFile), new FileInputStream(tmpFile));
         } catch (TransformerConfigurationException ex) {
             Logger.getLogger("global").log(Level.SEVERE, null, ex);
             fail("TransformerConfigurationException");

@@ -1,49 +1,25 @@
-/*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Copyright 2016 Oracle and/or its affiliates. All rights reserved.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
- * Other names may be trademarks of their respective owners.
- *
- * The contents of this file are subject to the terms of either the GNU
- * General Public License Version 2 only ("GPL") or the Common
- * Development and Distribution License("CDDL") (collectively, the
- * "License"). You may not use this file except in compliance with the
- * License. You can obtain a copy of the License at
- * http://www.netbeans.org/cddl-gplv2.html
- * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
- * specific language governing permissions and limitations under the
- * License.  When distributing the software, include this License Header
- * Notice in each file and include the License file at
- * nbbuild/licenses/CDDL-GPL-2-CP.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the GPL Version 2 section of the License file that
- * accompanied this code. If applicable, add the following below the
- * License Header, with the fields enclosed by brackets [] replaced by
- * your own identifying information:
- * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * If you wish your version of this file to be governed by only the CDDL
- * or only the GPL Version 2, indicate your decision by adding
- * "[Contributor] elects to include this software in this distribution
- * under the [CDDL or GPL Version 2] license." If you do not indicate a
- * single choice of license, a recipient has the option to distribute
- * your version of this file under either the CDDL, the GPL Version 2 or
- * to extend the choice of license to its licensees as provided above.
- * However, if you add GPL Version 2 code and therefore, elected the GPL
- * Version 2 license, then the option applies only if the new code is
- * made subject to such option by the copyright holder.
- *
- * Contributor(s):
- *
- * Portions Copyrighted 2016 Sun Microsystems, Inc.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.netbeans.modules.db.dataview.util;
 
 import java.awt.Color;
 import javax.swing.UIManager;
-import org.jdesktop.swingx.plaf.UIManagerExt;
 
 /**
  * Helper to deal with different color schemes.
@@ -225,7 +201,7 @@ public class ColorHelper {
             if(isDarkTheme()) {
                 UIManager.put("nb.dataview.jxdatetimepicker.background", new RelativeColor(new Color(0, 0, 0), new Color(0, 0, 0), "Table.background")); //NOI18N
             } else {
-                UIManager.put("nb.dataview.jxdatetimepicker.background", UIManagerExt.getColor("JXMonthView.background"));
+                UIManager.put("nb.dataview.jxdatetimepicker.background", UIManager.getColor("JXMonthView.background"));
             }
             return UIManager.getColor("nb.dataview.jxdatetimepicker.background"); //NOI18N
         } else {
@@ -239,7 +215,7 @@ public class ColorHelper {
             if(isDarkTheme()) {
                 UIManager.put("nb.dataview.jxdatetimepicker.foreground", new RelativeColor(new Color(0, 0, 0), new Color(0, 0, 0), "Table.foreground")); //NOI18N
             } else {
-                UIManager.put("nb.dataview.jxdatetimepicker.foreground", UIManagerExt.getColor("JXMonthView.foreground"));
+                UIManager.put("nb.dataview.jxdatetimepicker.foreground", UIManager.getColor("JXMonthView.foreground"));
             }
             return UIManager.getColor("nb.dataview.jxdatetimepicker.foreground"); //NOI18N
         } else {
@@ -257,7 +233,7 @@ public class ColorHelper {
                     UIManager.put("nb.dataview.jxdatetimepicker.selectedBackground", new RelativeColor(new Color(0, 0, 0), new Color(0, 0, 0), "Table.selectionBackground")); //NOI18N
                 }
             } else {
-                UIManager.put("nb.dataview.jxdatetimepicker.selectedBackground", UIManagerExt.getColor("JXMonthView.selectedBackground"));
+                UIManager.put("nb.dataview.jxdatetimepicker.selectedBackground", UIManager.getColor("JXMonthView.selectedBackground"));
             }
 
             return UIManager.getColor("nb.dataview.jxdatetimepicker.selectedBackground"); //NOI18N
@@ -276,7 +252,7 @@ public class ColorHelper {
                     UIManager.put("nb.dataview.jxdatetimepicker.selectedForeground", new RelativeColor(new Color(0, 0, 0), new Color(0, 0, 0), "Table.selectionForeground")); //NOI18N
                 }
             } else {
-                UIManager.put("nb.dataview.jxdatetimepicker.selectedForeground", UIManagerExt.getColor("JXMonthView.selectedForeground"));
+                UIManager.put("nb.dataview.jxdatetimepicker.selectedForeground", UIManager.getColor("JXMonthView.selectedForeground"));
             }
 
             return UIManager.getColor("nb.dataview.jxdatetimepicker.selectedForeground"); //NOI18N
@@ -291,7 +267,7 @@ public class ColorHelper {
             if (isDarkTheme()) {
                 UIManager.put("nb.dataview.jxdatetimepicker.daysOfTheWeekForeground", new RelativeColor(new Color(0, 0, 0), new Color(0, 0, 0), "Table.background")); //NOI18N
             } else {
-                UIManager.put("nb.dataview.jxdatetimepicker.daysOfTheWeekForeground", UIManagerExt.getColor("JXMonthView.daysOfTheWeekForeground"));
+                UIManager.put("nb.dataview.jxdatetimepicker.daysOfTheWeekForeground", UIManager.getColor("JXMonthView.daysOfTheWeekForeground"));
             }
             return UIManager.getColor("nb.dataview.jxdatetimepicker.daysOfTheWeekForeground"); //NOI18N
         } else {
@@ -305,7 +281,7 @@ public class ColorHelper {
             if(isDarkTheme()) {
                 UIManager.put("nb.dataview.jxdatetimepicker.todayBackground", new RelativeColor(new Color(0, 0, 0), new Color(20, 20, 20), "Table.background")); //NOI18N
             } else {
-                UIManager.put("nb.dataview.jxdatetimepicker.todayBackground", UIManagerExt.getColor("JXMonthView.foreground"));
+                UIManager.put("nb.dataview.jxdatetimepicker.todayBackground", UIManager.getColor("JXMonthView.foreground"));
             }
             return UIManager.getColor("nb.dataview.jxdatetimepicker.todayBackground"); //NOI18N
         } else {
@@ -358,7 +334,7 @@ public class ColorHelper {
     public static Color getJxdatetimepickerMonthStringBackground() {
         Color managerColor = UIManager.getColor("nb.dataview.jxdatetimepicker.monthStringBackground");
         if (managerColor == null) {
-            UIManager.put("nb.dataview.jxdatetimepicker.monthStringBackground", UIManagerExt.getColor("JXMonthView.monthStringBackground")); //NOI18N
+            UIManager.put("nb.dataview.jxdatetimepicker.monthStringBackground", UIManager.getColor("JXMonthView.monthStringBackground")); //NOI18N
             return UIManager.getColor("nb.dataview.jxdatetimepicker.monthStringBackground"); //NOI18N
         } else {
             return managerColor;
@@ -368,7 +344,7 @@ public class ColorHelper {
     public static Color getJxdatetimepickerMonthStringForeground() {
         Color managerColor = UIManager.getColor("nb.dataview.jxdatetimepicker.monthStringForeground");
         if (managerColor == null) {
-            UIManager.put("nb.dataview.jxdatetimepicker.monthStringForeground", UIManagerExt.getColor("JXMonthView.monthStringForeground")); //NOI18N
+            UIManager.put("nb.dataview.jxdatetimepicker.monthStringForeground", UIManager.getColor("JXMonthView.monthStringForeground")); //NOI18N
             return UIManager.getColor("nb.dataview.jxdatetimepicker.monthStringForeground"); //NOI18N
         } else {
             return managerColor;

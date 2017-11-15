@@ -5,7 +5,7 @@ OSR: 12659
 Origin: http://www.jcraft.com/jzlib/
 Description: Java implementation of zlib
 
-Copyright (c) 2000,2001,2002,2003,2004 ymnk, JCraft,Inc. All rights reserved.
+Copyright (c) 2000-2011 ymnk, JCraft,Inc. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

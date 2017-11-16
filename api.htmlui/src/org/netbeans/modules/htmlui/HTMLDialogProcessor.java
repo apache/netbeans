@@ -66,7 +66,7 @@ implements Comparator<ExecutableElement> {
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> hash = new HashSet<>();
         hash.add(HTMLDialog.class.getCanonicalName());
-        hash.add(HtmlComponent.class.getCanonicalName());
+        hash.add(HTMLComponent.class.getCanonicalName());
         return hash;
     }
     

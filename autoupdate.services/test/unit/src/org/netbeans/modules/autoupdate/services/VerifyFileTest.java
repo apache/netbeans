@@ -34,13 +34,13 @@ import java.util.logging.Logger;
 import org.netbeans.api.autoupdate.TestUtils;
 import org.netbeans.junit.NbTestCase;
 
-public class VerifyFileTestDisabled extends NbTestCase {
+public class VerifyFileTest extends NbTestCase {
 
-    private static final Logger LOG = Logger.getLogger(VerifyFileTestDisabled.class.getName());
+    private static final Logger LOG = Logger.getLogger(VerifyFileTest.class.getName());
 
     private KeyStore ks;
 
-    public VerifyFileTestDisabled(String testName) {
+    public VerifyFileTest(String testName) {
         super(testName);
     }
 
@@ -52,7 +52,7 @@ public class VerifyFileTestDisabled extends NbTestCase {
         assertTrue(ksFile.exists());
         ks = getKeyStore(ksFile, "password");
     }
-    
+
     private String doVerification(String path) throws URISyntaxException, IOException, KeyStoreException {
         URL urlToFile = TestUtils.class.getResource(path);
         assertNotNull(urlToFile);
@@ -62,7 +62,7 @@ public class VerifyFileTestDisabled extends NbTestCase {
         Collection<Certificate> trustedCertificates = Utilities.getCertificates(ks);
         return Utilities.verifyCertificates(nbmCertificates, trustedCertificates);
     }
-    
+
     @SuppressWarnings("unchecked")
     public void testEmptyJar() throws MalformedURLException, URISyntaxException, IOException, KeyStoreException {
         assertEquals(Utilities.N_A, doVerification("data/empty.jar"));

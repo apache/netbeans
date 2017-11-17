@@ -30,13 +30,13 @@ import org.netbeans.spi.autoupdate.UpdateProvider;
  *
  * @author Dmitry Lipin
  */
-public class ExecutablePermissionsTestDisabled extends NbmAdvancedTestCase {
+public class ExecutablePermissionsTest extends NbmAdvancedTestCase {
 
     private UpdateProvider p = null;
     private String testModuleVersion = "1.0";
     private String testModuleName = "org.yourorghere.executable.permissions";
 
-    public ExecutablePermissionsTestDisabled(String name) {
+    public ExecutablePermissionsTest(String name) {
         super(name);
     }
 
@@ -87,5 +87,5 @@ public class ExecutablePermissionsTestDisabled extends NbmAdvancedTestCase {
         File f = new File(userDir, "bin/start.sh");
         assertTrue("File " + f + " should exist after module installation", f.exists());
         assertTrue("File " + f + " is not executable after module installation", f.canExecute());
-    }    
+    }
 }

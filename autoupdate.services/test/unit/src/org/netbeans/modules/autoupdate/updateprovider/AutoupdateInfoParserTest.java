@@ -33,29 +33,29 @@ import org.xml.sax.SAXException;
  *
  * @author Jiri Rechtacek
  */
-public class AutoupdateInfoParserTestDisabled extends DefaultTestCase {
-    
-    public AutoupdateInfoParserTestDisabled (String testName) {
+public class AutoupdateInfoParserTest extends DefaultTestCase {
+
+    public AutoupdateInfoParserTest (String testName) {
         super (testName);
     }
-    
+
     private static File NBM_FILE = null;
     private static final String LICENSE_NAME = "AD9FBBC9";
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        URL urlToFile = AutoupdateInfoParserTestDisabled.class.getResource ("data/org-yourorghere-depending.nbm");
+        URL urlToFile = AutoupdateInfoParserTest.class.getResource ("data/org-yourorghere-depending.nbm");
         NBM_FILE = Utilities.toFile(urlToFile.toURI ());
         assertNotNull ("data/org-yourorghere-depending.nbm file must found.", NBM_FILE);
     }
 
-    public void testGetItems () throws IOException, SAXException {        
+    public void testGetItems () throws IOException, SAXException {
         Map<String, UpdateItem> updateItems = AutoupdateInfoParser.getUpdateItems (NBM_FILE);
         assertNotNull ("UpdateItems found in " + NBM_FILE, updateItems);
         assertEquals ("Once item found.", 1, updateItems.keySet ().size ());
     }
-    
+
     public void testLicense () throws IOException, SAXException {
         Map<String, UpdateItem> updateItems = AutoupdateInfoParser.getUpdateItems (NBM_FILE);
         assertNotNull ("org.yourorghere.depending_1.0 in map", updateItems.get ("org.yourorghere.depending_1.0"));
@@ -66,5 +66,5 @@ public class AutoupdateInfoParserTestDisabled extends DefaultTestCase {
         assertNotNull (mi + " has license.", mi.getAgreement ());
         assertFalse (mi + " has non-empty license.", mi.getAgreement ().length () == 0);
     }
-    
+
 }

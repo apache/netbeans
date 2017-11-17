@@ -34,10 +34,10 @@ import org.netbeans.junit.NbTestCase;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 
-public class NewClustersRebootTestDisabled extends NbTestCase {
+public class NewClustersRebootTest extends NbTestCase {
     private Logger LOG;
 
-    public NewClustersRebootTestDisabled(String testName) {
+    public NewClustersRebootTest(String testName) {
         super(testName);
     }
 
@@ -75,11 +75,11 @@ public class NewClustersRebootTestDisabled extends NbTestCase {
     private File getNewCluster() throws IOException {
         return new File(getWorkDir(), NewClustersRebootCallback.NAME_OF_NEW_CLUSTER);
     }
-    
+
     private File getTestModule() throws IOException {
         return new File(getNewCluster(),"modules"+File.separatorChar+"com-sun-testmodule-cluster.jar");
     }
-    
+
     private void invokeNbExecAndCreateCluster(File workDir, StringBuffer sb, String... args) throws Exception {
         URL u = Lookup.class.getProtectionDomain().getCodeSource().getLocation();
         File f = Utilities.toFile(u.toURI());
@@ -91,7 +91,7 @@ public class NewClustersRebootTestDisabled extends NbTestCase {
         URL tu = NewClustersRebootCallback.class.getProtectionDomain().getCodeSource().getLocation();
         File testf = Utilities.toFile(tu.toURI());
         assertTrue("file found: " + testf, testf.exists());
-                
+
         LinkedList<String> allArgs = new LinkedList<String>(Arrays.asList(args));
         allArgs.addFirst("-J-Dnetbeans.mainclass=" + NewClustersRebootCallback.class.getName());
         allArgs.addFirst(System.getProperty("java.home"));
@@ -160,7 +160,7 @@ public class NewClustersRebootTestDisabled extends NbTestCase {
 
         out.interrupt();
         err.interrupt();
-        
+
         LOG.info("Interrupting readers");
         out.join();
         err.join();

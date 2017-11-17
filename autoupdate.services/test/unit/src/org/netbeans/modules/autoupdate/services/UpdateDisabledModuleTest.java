@@ -51,11 +51,11 @@ import org.openide.util.Lookup;
  *
  * @author Jaroslav Tulach
  */
-public class UpdateDisabledModuleTestDisabled extends NbTestCase {
+public class UpdateDisabledModuleTest extends NbTestCase {
     static Manifest man;
     private File ud;
 
-    public UpdateDisabledModuleTestDisabled(String testName) {
+    public UpdateDisabledModuleTest(String testName) {
         super(testName);
     }
 
@@ -72,20 +72,20 @@ public class UpdateDisabledModuleTestDisabled extends NbTestCase {
         man.getMainAttributes ().putValue ("Manifest-Version", "1.0");
         man.getMainAttributes ().putValue ("OpenIDE-Module", "com.sun.testmodule.cluster");
         man.getMainAttributes ().putValue ("OpenIDE-Module-Public-Packages", "-");
-        
+
         ud = new File(getWorkDir(), "ud");
         System.setProperty("netbeans.user", ud.getPath());
         new File(ud, "config").mkdirs();
-        
+
         final File install = new File(getWorkDir(), "install");
         File platform = new File(install, "platform");
         System.setProperty("netbeans.home", platform.getPath());
         new File(platform, "config").mkdirs();
-        
+
         File middle = new File(install, "middle");
         File last = new File(install, "last");
         System.setProperty("netbeans.dirs", middle.getPath() + File.pathSeparator + last.getPath());
-        
+
         final String fn = moduleCodeNameBaseForTest().replace('.', '-') + ".xml";
         File conf = new File(new File(new File(middle, "config"), "Modules"), fn);
         conf.getParentFile().mkdirs();
@@ -99,9 +99,9 @@ public class UpdateDisabledModuleTestDisabled extends NbTestCase {
         File real = new File(new File(new File(last, "config"), "Modules"), fn);
         real.getParentFile().mkdirs();
         writeConfXML(real, true);
-        
+
         FileUtil.getConfigRoot().getFileSystem().refresh(true);
-        
+
         File ut = new File(new File(last, "update_tracking"), fn);
         ut.getParentFile().mkdirs();
         OutputStream utos = new FileOutputStream(ut);
@@ -114,7 +114,7 @@ public class UpdateDisabledModuleTestDisabled extends NbTestCase {
 "</module>\n";
         utos.write(utcfg.getBytes("UTF-8"));
         utos.close();
-        
+
         StringBuilder msg = new StringBuilder();
         for (ModuleInfo mi : Lookup.getDefault().lookupAll(ModuleInfo.class)) {
             msg.append(mi.getCodeNameBase()).append("\n");
@@ -150,12 +150,12 @@ public class UpdateDisabledModuleTestDisabled extends NbTestCase {
     public void testSelf() throws Exception {
         File f = new File(new File(new File(ud, "config"), "Modules"), "com-sun-testmodule-cluster.xml");
         f.delete();
-        
+
         assertFalse("No Config file before: " + f, f.exists());
-        
+
         MockServices.setServices(UP.class);
         UpdateUnit update = UpdateManagerImpl.getInstance().getUpdateUnit(moduleCodeNameBaseForTest());
-        
+
         assertNotNull("There is an NBM to update", update);
         OperationContainer<InstallSupport> oc = OperationContainer.createForUpdate();
         oc.add(update, update.getAvailableUpdates().get(0));
@@ -169,7 +169,7 @@ public class UpdateDisabledModuleTestDisabled extends NbTestCase {
 
         assertFalse("No Config file created in for upgrade: " + f, f.exists());
     }
-    
+
     public static final class UP implements UpdateProvider {
 
         @Override
@@ -196,13 +196,13 @@ public class UpdateDisabledModuleTestDisabled extends NbTestCase {
         public Map<String, UpdateItem> getUpdateItems() throws IOException {
             Map<String, UpdateItem> m = new HashMap<String, UpdateItem>();
             m.put("com.sun.testmodule.cluster", UpdateItem.createModule(
-                "com.sun.testmodule.cluster", "1.0", 
-                DefaultTestCase.class.getResource("data/com-sun-testmodule-cluster.nbm"), 
-                "jarda", "4000", "http://netbeans.de", 
-                "2010/10/27", 
-                "OK", 
-                man, Boolean.TRUE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, 
-                "platform", 
+                "com.sun.testmodule.cluster", "1.0",
+                DefaultTestCase.class.getResource("data/com-sun-testmodule-cluster.nbm"),
+                "jarda", "4000", "http://netbeans.de",
+                "2010/10/27",
+                "OK",
+                man, Boolean.TRUE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE,
+                "platform",
                 UpdateLicense.createUpdateLicense("CDDL", "Free to use")
             ));
             return m;
@@ -212,6 +212,6 @@ public class UpdateDisabledModuleTestDisabled extends NbTestCase {
         public boolean refresh(boolean force) throws IOException {
             return true;
         }
-        
+
     }
 }

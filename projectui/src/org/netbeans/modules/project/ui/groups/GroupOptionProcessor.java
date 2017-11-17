@@ -36,7 +36,7 @@ public class GroupOptionProcessor implements ArgsProcessor {
     )
     @Messages({
         "GroupOptionProcessor.open.name=--open-group NAME",
-        "GroupOptionProcessor.open.desc=open a project group by ID or name (or unique substring)"
+        "GroupOptionProcessor.open.desc=open a project group by shortened or full name (or unique substring)"
     })
     public String openOption;
     @Arg(longName="close-group")

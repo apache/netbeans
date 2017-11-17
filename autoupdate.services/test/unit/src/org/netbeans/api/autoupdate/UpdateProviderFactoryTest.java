@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.List;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.autoupdate.services.UpdateUnitFactoryTest;
 import org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogProvider;
 
 /**
@@ -71,13 +72,13 @@ public class UpdateProviderFactoryTest extends NbTestCase {
 
     public static class MyProvider extends AutoupdateCatalogProvider {
         public MyProvider () {
-            super ("test-updates-provider", "test-updates-provider", UpdateProviderFactoryTest.class.getResource ("data/catalog.xml"));
+            super ("test-updates-provider", "test-updates-provider", UpdateUnitFactoryTest.class.getResource ("data/catalog.xml"));
         }
     }
     
     public static class MyProvider2 extends AutoupdateCatalogProvider {
         public MyProvider2 () {
-            super ("test-updates-provider-2", "test-updates-provider-2", UpdateProviderFactoryTest.class.getResource ("data/catalog.xml"));
+            super ("test-updates-provider-2", "test-updates-provider-2", UpdateUnitFactoryTest.class.getResource ("data/catalog.xml"));
         }
     }
 }

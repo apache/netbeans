@@ -1,0 +1,810 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" xmlns="http://maven.apache.org/POM/4.0.0" targetNamespace="http://maven.apache.org/POM/4.0.0">
+  <xs:element name="assembly" type="Assembly">
+    <xs:annotation>
+      <xs:documentation source="version">1.0.0</xs:documentation>
+      <xs:documentation source="description">Describes the assembly layout and packaging.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="Assembly">
+    <xs:annotation>
+      <xs:documentation source="version">1.0.0</xs:documentation>
+      <xs:documentation source="description">Describes the assembly layout and packaging.</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element minOccurs="0" name="id" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            The id of this assembly. This is a symbolic name for a
+            particular assembly of files from this project.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="formats">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            Specify the formats of the assembly.  A format is specified by 
+            supplying one of the following values in a &amp;lt;format&amp;gt; subelement:
+            &lt;ul&gt;
+              &lt;li&gt;&lt;b&gt;&quot;zip&quot;&lt;/b&gt; - Creates a ZIP file format&lt;/li&gt;
+              &lt;li&gt;&lt;b&gt;&quot;gz&quot;&lt;/b&gt; - Creates a GZIP format&lt;/li&gt;
+              &lt;li&gt;&lt;b&gt;&quot;tar&quot;&lt;/b&gt; - Creates a TAR format&lt;/li&gt;
+              &lt;li&gt;&lt;b&gt;&quot;tar.gz&quot;&lt;/b&gt; - Creates a gzip&apos;d TAR format&lt;/li&gt;
+              &lt;li&gt;&lt;b&gt;&quot;tar.bz2&lt;/b&gt; - Creates a bzip&apos;d TAR format&lt;/li&gt;
+            &lt;/ul&gt;
+            
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="format" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="includeBaseDirectory" type="xs:boolean" default="true">
+        <xs:annotation>
+          <xs:documentation source="version">0.0.0+</xs:documentation>
+          <xs:documentation source="description">
+            Includes a base directory in the final archive. For example,
+            if you are creating an assembly named &quot;your-app&quot;, setting
+            includeBaseDirectory to true will create an archive that
+            includes this base directory. If this option is set to false
+            the archive created will unzip its content to the current
+            directory.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="includeSiteDirectory" type="xs:boolean" default="false">
+        <xs:annotation>
+          <xs:documentation source="version">0.0.0+</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="moduleSets">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Specify which modules source files to include in the assembly
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="moduleSet" minOccurs="0" maxOccurs="unbounded" type="ModuleSet"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="fileSets">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Specify assembly parameters for groups of files.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="fileSet" minOccurs="0" maxOccurs="unbounded" type="FileSet"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="files">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Specify assembly parameters for single files.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="file" minOccurs="0" maxOccurs="unbounded" type="FileItem"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="dependencySets">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Specify assembly behavior for sets of dependencies.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="dependencySet" minOccurs="0" maxOccurs="unbounded" type="DependencySet"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="repositories">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Specify assembly behavior for sets of repositories.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="repository" minOccurs="0" maxOccurs="unbounded" type="Repository"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="componentDescriptors">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            File relative to basedir containing Component.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="componentDescriptor" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="Repository">
+    <xs:annotation>
+      <xs:documentation source="version">1.0.0</xs:documentation>
+      <xs:documentation source="description">Defines a Maven repository to be included in the assembly.</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element minOccurs="0" name="includeMetadata" type="xs:boolean" default="false">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            If set to true, this property will trigger the creation of repository
+            metadata which will allow the repository to be used as a functional remote
+            repository.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="groupVersionAlignments">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">Align a group to a version or an individual artifact.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="groupVersionAlignment" minOccurs="0" maxOccurs="unbounded" type="GroupVersionAlignment"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="outputDirectory" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Specifies the output directory relative to the root
+            of the root directory of the assembly. For example,
+            &quot;log&quot; will put the specified files in the log directory.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="includes">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            When &amp;lt;include&amp;gt; subelements are present, they define
+            a set of files and directory to include.
+            
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="include" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="excludes">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            When &amp;lt;exclude&amp;gt; subelements are present, they define
+            a set of files and directory to exclude.
+            
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="exclude" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="fileMode" type="xs:string" default="0644">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            Similar to a UNIX permission.  Format: (User)(Group)(Other) where each
+            component is a sum of Read = 4, Write = 2, and Execute = 1.  For example,
+            the default value of 0644 translates to User read-write, Group and Other
+            read-only.
+            &lt;a href=&quot;http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html&quot;&gt;(more on unix-style permissions)&lt;/a&gt;
+          	
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="directoryMode" type="xs:string" default="0755">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            Similar to a UNIX permission.  Format: (User)(Group)(Other) where each
+            component is a sum of Read = 4, Write = 2, and Execute = 1.  For example,
+            the default value of 0644 translates to User read-write, Group and Other
+            read-only.
+            &lt;a href=&quot;http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html&quot;&gt;(more on unix-style permissions)&lt;/a&gt;
+          	
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="GroupVersionAlignment">
+    <xs:annotation>
+      <xs:documentation source="version">1.0.0</xs:documentation>
+      <xs:documentation source="description">Defines a Maven repository to be included in the assembly.</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element minOccurs="0" name="id" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">The groupId for which you want to align the versions.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="version" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">The version you want to align this group to.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="excludes">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">Artifact Ids of the artifacts you want excluded from version alignment.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="exclude" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="DependencySet">
+    <xs:annotation>
+      <xs:documentation source="version">1.0.0</xs:documentation>
+      <xs:documentation source="description">Defines a dependency set</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element minOccurs="0" name="outputFileNameMapping" type="xs:string" default="${artifactId}-${version}.${extension}">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Specify the mapping pattern for all dependencies included
+            in this assembly.
+            Default is ${artifactId}-${version}.${extension}.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="unpack" type="xs:boolean" default="false">
+        <xs:annotation>
+          <xs:documentation source="version">0.0.0+</xs:documentation>
+          <xs:documentation source="description">
+            If set to true, this property will unpack all dependencies
+            into the specified output directory. When set to false
+            dependencies will be includes as archives (jars).
+            Default value is false.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="scope" type="xs:string" default="runtime">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Specifies the dependency scope for this dependencySet.
+            Default scope value is &quot;runtime&quot;.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="outputDirectory" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Specifies the output directory relative to the root
+            of the root directory of the assembly. For example,
+            &quot;log&quot; will put the specified files in the log directory.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="includes">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            When &amp;lt;include&amp;gt; subelements are present, they define
+            a set of files and directory to include.
+            
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="include" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="excludes">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            When &amp;lt;exclude&amp;gt; subelements are present, they define
+            a set of files and directory to exclude.
+            
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="exclude" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="fileMode" type="xs:string" default="0644">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            Similar to a UNIX permission.  Format: (User)(Group)(Other) where each
+            component is a sum of Read = 4, Write = 2, and Execute = 1.  For example,
+            the default value of 0644 translates to User read-write, Group and Other
+            read-only.
+            &lt;a href=&quot;http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html&quot;&gt;(more on unix-style permissions)&lt;/a&gt;
+          	
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="directoryMode" type="xs:string" default="0755">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            Similar to a UNIX permission.  Format: (User)(Group)(Other) where each
+            component is a sum of Read = 4, Write = 2, and Execute = 1.  For example,
+            the default value of 0644 translates to User read-write, Group and Other
+            read-only.
+            &lt;a href=&quot;http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html&quot;&gt;(more on unix-style permissions)&lt;/a&gt;
+          	
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="ModuleSet">
+    <xs:annotation>
+      <xs:documentation source="version">1.0.0</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element minOccurs="0" name="includes">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+          
+            This is a list of &amp;lt;include&amp;gt; elements, each containing a module reference of the type groupId:artifactId.
+            Modules matching these elements will be included in this set.
+            
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="include" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="excludes">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+          
+            This is a list of &amp;lt;exclude&amp;gt; elements, each containing a module reference of the type groupId:artifactId.
+            Modules matching these elements will be excluded from this set.
+            
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="exclude" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="sources" type="ModuleSources">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            When this is configured, the plugin will include the source files of the included modules from this set in 
+            the resulting assembly, according to the configuration.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="binaries" type="ModuleBinaries">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            When this is configured, the plugin will include the binaries of the included modules from this set in 
+            the resulting assembly, according to the configuration.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="ModuleSources">
+    <xs:annotation>
+      <xs:documentation source="version">1.0.0</xs:documentation>
+      <xs:documentation source="description">Configuration for including the source files for a Module in an assembly.</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element minOccurs="0" name="outputDirectory" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Specifies the output directory relative to the root
+            of the root directory of the assembly. For example,
+            &quot;log&quot; will put the specified files in the log directory.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="includes">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            When &amp;lt;include&amp;gt; subelements are present, they define
+            a set of files and directory to include.
+            
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="include" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="excludes">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            When &amp;lt;exclude&amp;gt; subelements are present, they define
+            a set of files and directory to exclude.
+            
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="exclude" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="fileMode" type="xs:string" default="0644">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            Similar to a UNIX permission.  Format: (User)(Group)(Other) where each
+            component is a sum of Read = 4, Write = 2, and Execute = 1.  For example,
+            the default value of 0644 translates to User read-write, Group and Other
+            read-only.
+            &lt;a href=&quot;http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html&quot;&gt;(more on unix-style permissions)&lt;/a&gt;
+          	
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="directoryMode" type="xs:string" default="0755">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            Similar to a UNIX permission.  Format: (User)(Group)(Other) where each
+            component is a sum of Read = 4, Write = 2, and Execute = 1.  For example,
+            the default value of 0644 translates to User read-write, Group and Other
+            read-only.
+            &lt;a href=&quot;http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html&quot;&gt;(more on unix-style permissions)&lt;/a&gt;
+          	
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="ModuleBinaries">
+    <xs:annotation>
+      <xs:documentation source="version">1.0.0</xs:documentation>
+      <xs:documentation source="description">Configuration for including the binary files for a Module in an assembly.</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element minOccurs="0" name="includeDependencies" type="xs:boolean" default="false">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            If set to true, the plugin will include the direct and transitive dependencies of
+            of the project modules included here.  Otherwise, it will only include the module
+            packages only. Default value is false.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="unpack" type="xs:boolean" default="true">
+        <xs:annotation>
+          <xs:documentation source="version">0.0.0+</xs:documentation>
+          <xs:documentation source="description">
+            If set to true, this property will unpack all module packages
+            into the specified output directory. When set to false
+            module packages will be included as archives (jars).
+            Default value is true.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="outputFileNameMapping" type="xs:string" default="${artifactId}-${version}.${extension}">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Specify the mapping pattern for all dependencies included
+            in this assembly.
+            Default is ${artifactId}-${version}.${extension}.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="outputDirectory" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Specifies the output directory relative to the root
+            of the root directory of the assembly. For example,
+            &quot;log&quot; will put the specified files in the log directory.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="includes">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            When &amp;lt;include&amp;gt; subelements are present, they define
+            a set of files and directory to include.
+            
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="include" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="excludes">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            When &amp;lt;exclude&amp;gt; subelements are present, they define
+            a set of files and directory to exclude.
+            
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="exclude" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="fileMode" type="xs:string" default="0644">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            Similar to a UNIX permission.  Format: (User)(Group)(Other) where each
+            component is a sum of Read = 4, Write = 2, and Execute = 1.  For example,
+            the default value of 0644 translates to User read-write, Group and Other
+            read-only.
+            &lt;a href=&quot;http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html&quot;&gt;(more on unix-style permissions)&lt;/a&gt;
+          	
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="directoryMode" type="xs:string" default="0755">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            Similar to a UNIX permission.  Format: (User)(Group)(Other) where each
+            component is a sum of Read = 4, Write = 2, and Execute = 1.  For example,
+            the default value of 0644 translates to User read-write, Group and Other
+            read-only.
+            &lt;a href=&quot;http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html&quot;&gt;(more on unix-style permissions)&lt;/a&gt;
+          	
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="FileItem">
+    <xs:annotation>
+      <xs:documentation source="version">1.0.0</xs:documentation>
+      <xs:documentation source="description">
+        Allows individual file copy with option to change destination
+        file name not supported by fileSet
+      </xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element minOccurs="0" name="source" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Absolute or relative from the module&apos;s directory.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="outputDirectory" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Specifies the output directory relative to the root
+            of the root directory of the assembly. For example,
+            &quot;log&quot; will put the specified files in the log directory.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="destName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Destination file name in outputDirectory.
+            Default is the same name as the source&apos;s file.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="fileMode" type="xs:string" default="0644">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            Similar to a UNIX permission.  Format: (User)(Group)(Other) where each
+            component is a sum of Read = 4, Write = 2, and Execute = 1.  For example,
+            the default value of 0644 translates to User read-write, Group and Other 
+            read-only. 
+            &lt;a href=&quot;http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html&quot;&gt;(more on unix-style permissions)&lt;/a&gt;
+          	
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="lineEnding" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            Controls the line-endings of files in this fileSet.
+            Valid values are: 
+            &lt;ul&gt;
+              &lt;li&gt;&lt;b&gt;&quot;keep&quot;&lt;/b&gt; - Preserve all line endings&lt;/li&gt;
+              &lt;li&gt;&lt;b&gt;&quot;unix&quot;&lt;/b&gt; - Use Unix-style line endings&lt;/li&gt;
+              &lt;li&gt;&lt;b&gt;&quot;lf&quot;&lt;/b&gt; - Use a single line-feed line endings&lt;/li&gt;
+              &lt;li&gt;&lt;b&gt;&quot;dos&quot;&lt;/b&gt; - Use DOS-style line endings&lt;/li&gt;
+              &lt;li&gt;&lt;b&gt;&quot;crlf&quot;&lt;/b&gt; - Use Carraige-return, line-feed line endings&lt;/li&gt;
+            &lt;/ul&gt;
+            
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="filtered" type="xs:boolean" default="false">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Flag used to determine if the file is filtered.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+  <xs:complexType name="FileSet">
+    <xs:annotation>
+      <xs:documentation source="version">1.0.0</xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element minOccurs="0" name="directory" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Absolute or relative from the module&apos;s directory. For
+            example, &quot;src/main/bin&quot; would select this subdirectory
+            of the project in which this dependency is defined.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="lineEnding" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            Controls the line-endings of files in this fileSet.
+            Valid values:
+            &lt;ul&gt;
+              &lt;li&gt;&lt;b&gt;&quot;keep&quot;&lt;/b&gt; - Preserve all line endings&lt;/li&gt;
+              &lt;li&gt;&lt;b&gt;&quot;unix&quot;&lt;/b&gt; - Use Unix-style line endings&lt;/li&gt;
+              &lt;li&gt;&lt;b&gt;&quot;lf&quot;&lt;/b&gt; - Use a single line-feed line endings&lt;/li&gt;
+              &lt;li&gt;&lt;b&gt;&quot;dos&quot;&lt;/b&gt; - Use DOS-style line endings&lt;/li&gt;
+              &lt;li&gt;&lt;b&gt;&quot;crlf&quot;&lt;/b&gt; - Use Carraige-return, line-feed line endings&lt;/li&gt;
+            &lt;/ul&gt;
+            
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="outputDirectory" type="xs:string">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            Specifies the output directory relative to the root
+            of the root directory of the assembly. For example,
+            &quot;log&quot; will put the specified files in the log directory.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="includes">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            When &amp;lt;include&amp;gt; subelements are present, they define
+            a set of files and directory to include.
+            
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="include" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="excludes">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            When &amp;lt;exclude&amp;gt; subelements are present, they define
+            a set of files and directory to exclude.
+            
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="exclude" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="fileMode" type="xs:string" default="0644">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            Similar to a UNIX permission.  Format: (User)(Group)(Other) where each
+            component is a sum of Read = 4, Write = 2, and Execute = 1.  For example,
+            the default value of 0644 translates to User read-write, Group and Other
+            read-only.
+            &lt;a href=&quot;http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html&quot;&gt;(more on unix-style permissions)&lt;/a&gt;
+          	
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="directoryMode" type="xs:string" default="0755">
+        <xs:annotation>
+          <xs:documentation source="version">1.0.0</xs:documentation>
+          <xs:documentation source="description">
+            
+            Similar to a UNIX permission.  Format: (User)(Group)(Other) where each
+            component is a sum of Read = 4, Write = 2, and Execute = 1.  For example,
+            the default value of 0644 translates to User read-write, Group and Other
+            read-only.
+            &lt;a href=&quot;http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html&quot;&gt;(more on unix-style permissions)&lt;/a&gt;
+          	
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+</xs:schema>

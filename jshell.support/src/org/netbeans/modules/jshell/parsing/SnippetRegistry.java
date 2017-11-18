@@ -453,8 +453,10 @@ public final class SnippetRegistry {
                     ows.flush();
                 }
                 FileObject ret = pkg.getFileObject(fn);
-                synchronized (this) {
-                    snippetTimeStamps.put(snip, ret.lastModified().getTime());
+                if (snip != null) {
+                    synchronized (this) {
+                        snippetTimeStamps.put(snip, ret.lastModified().getTime());
+                    }
                 }
                 ModelAccessor.INSTANCE.setFile(info, ret);
                 return finalize(info, ret);

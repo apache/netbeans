@@ -100,6 +100,9 @@ public class CreateDependencies extends Task {
                     String licName = licenseNames.getProperty(licCode);
                     String licDesc = licName != null ? licName : licCode;
                     text.append("\nLicense: " + licDesc);
+                    if (headers.containsKey("Comment")) {
+                        text.append("\nComment: " + headers.get("Comment"));
+                    }
                     origin2Texts.computeIfAbsent(origin, o -> new TreeSet<>()).add(text.toString());
                 }
 

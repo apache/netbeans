@@ -22,7 +22,6 @@ package org.netbeans.modules.db.dataview.table;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JTable;
-import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.netbeans.modules.db.dataview.util.ColorHelper;
 

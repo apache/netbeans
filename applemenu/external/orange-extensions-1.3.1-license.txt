@@ -4,6 +4,7 @@ License: BSD-Masory
 Description: com.apple classes for cross-compilation.
 Origin: Yuvi Masory
 Type: compile-time
+Comment: Allows to build code leveraging Apple-specficic classes on other platforms.
 
 This jar was created by decompiling AppleJavaExtensions.jar (completely consistent
 with its BSD-like license), and adding the new Java 5 methods.

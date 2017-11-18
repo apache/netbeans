@@ -1520,8 +1520,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <resolve name="harness-modules" value="nb.cluster.harness"/>
     
     <mkdir dir="${nb.build.dir}"/>
+    <condition property="build.source.config.add.ide" else="" value=",ide">
+        <isset property="has.nb.cluster" />
+    </condition>
     <dirset id="source.dirset" dir="${nb_all}"
-            includes="${allmodules},${harness-modules},nbbuild,ide,nbi,libs.antlr3.devel,libs.junit4"
+            includes="${allmodules},${harness-modules},nbbuild${build.source.config.add.ide},nbi,libs.antlr3.devel,libs.junit4"
             excludes="nbi/engine/lib,nbi/infra/build/jvm,nbi/infra/sandbox,nbi/infra/server,nbi/infra/utils"
     />
     <pathconvert property="source.dirs" pathsep="," refid="source.dirset">

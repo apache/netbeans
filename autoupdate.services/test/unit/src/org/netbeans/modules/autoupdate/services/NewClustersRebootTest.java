@@ -58,7 +58,7 @@ public class NewClustersRebootTest extends NbTestCase {
         super.setUp();
         System.setProperty("netbeans.dirs", getWorkDirPath());
         OutputStream os2 = new FileOutputStream(new File(getWorkDir(),"nbmfortest"));
-        NewClustersRebootCallback.copy(DefaultTestCase.class.getResourceAsStream("data/com-sun-testmodule-cluster.nbm"), os2);
+        NewClustersRebootCallback.copy(DefaultTestCase.class.getResourceAsStream("data/com-example-testmodule-cluster.nbm"), os2);
         os2.close();
     }
 
@@ -77,7 +77,7 @@ public class NewClustersRebootTest extends NbTestCase {
     }
 
     private File getTestModule() throws IOException {
-        return new File(getNewCluster(),"modules"+File.separatorChar+"com-sun-testmodule-cluster.jar");
+        return new File(getNewCluster(),"modules"+File.separatorChar+"com-example-testmodule-cluster.jar");
     }
 
     private void invokeNbExecAndCreateCluster(File workDir, StringBuffer sb, String... args) throws Exception {

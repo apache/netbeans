@@ -46,7 +46,7 @@ public class VerifyFileTest extends NbTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        URL urlToKS = TestUtils.class.getResource("data/foo.jks");
+        URL urlToKS = TestUtils.class.getResource("data/test-keystore.jks");
         assertNotNull(urlToKS);
         File ksFile = org.openide.util.Utilities.toFile(urlToKS.toURI());
         assertTrue(ksFile.exists());

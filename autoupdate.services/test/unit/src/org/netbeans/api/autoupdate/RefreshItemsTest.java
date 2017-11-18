@@ -37,10 +37,10 @@ public class RefreshItemsTest extends DefaultTestCase {
         assertEquals(result.toString(), 2, result.size());
         int updateUnitsCount = UpdateManager.getDefault().getUpdateUnits(UpdateManager.TYPE.MODULE).size();
         
-        UpdateUnit toTest = UpdateManagerImpl.getInstance ().getUpdateUnit ("org.yourorghere.refresh-providers-test");
-        assertNotNull ("UpdateUnit for org.yourorghere.refresh-providers-test found.", toTest);
+        UpdateUnit toTest = UpdateManagerImpl.getInstance ().getUpdateUnit ("org.yourorghere.refresh_providers_test");
+        assertNotNull ("UpdateUnit for org.yourorghere.refresh_providers_test found.", toTest);
         UpdateElement toTestElement = toTest.getAvailableUpdates().get (0);
-        assertNotNull ("UpdateElement for org.yourorghere.refresh-providers-test found.", toTestElement);
+        assertNotNull ("UpdateElement for org.yourorghere.refresh_providers_test found.", toTestElement);
         assertTrue (toTestElement + " needs restart.", toTestElement.impl.getInstallInfo().needsRestart ());
         
         populateCatalog(TestUtils.class.getResourceAsStream("data/updates-subset.xml"));
@@ -48,11 +48,11 @@ public class RefreshItemsTest extends DefaultTestCase {
         assertEquals(UpdateManager.getDefault().getUpdateUnits(UpdateManager.TYPE.MODULE).toString(), 
                 updateUnitsCount - 2, UpdateManager.getDefault().getUpdateUnits(UpdateManager.TYPE.MODULE).size());
         
-        UpdateUnit toTestAgain = UpdateManagerImpl.getInstance ().getUpdateUnit ("org.yourorghere.refresh-providers-test");
-        assertNotNull ("Unit for org.yourorghere.refresh-providers-test found.", toTestAgain);
+        UpdateUnit toTestAgain = UpdateManagerImpl.getInstance ().getUpdateUnit ("org.yourorghere.refresh_providers_test");
+        assertNotNull ("Unit for org.yourorghere.refresh_providers_test found.", toTestAgain);
         
         UpdateElement toTestAgainElement = toTestAgain.getAvailableUpdates().get (0);
-        assertNotNull ("UpdateElement for org.yourorghere.refresh-providers-test found.", toTestAgainElement);
+        assertNotNull ("UpdateElement for org.yourorghere.refresh_providers_test found.", toTestAgainElement);
         
         assertFalse ("First unit is not as same as second unit.", 
                 System.identityHashCode(toTest) == System.identityHashCode(toTestAgain));

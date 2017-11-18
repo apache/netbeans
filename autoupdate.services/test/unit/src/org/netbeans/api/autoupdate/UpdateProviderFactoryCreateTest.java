@@ -25,6 +25,7 @@ import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.autoupdate.services.UpdateUnitFactoryTest;
 import org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogProvider;
+import org.netbeans.modules.autoupdate.updateprovider.AutoupdateInfoParserTest;
 
 /**
  *
@@ -50,7 +51,7 @@ public class UpdateProviderFactoryCreateTest extends NbTestCase {
     public void testCreate () throws Exception {
         String name = "new-one";
         String displayName = "Newone";
-        URL url = UpdateUnitFactoryTest.class.getResource ("data/catalog.xml");
+        URL url = AutoupdateInfoParserTest.class.getResource ("data/catalog.xml");
         
         UpdateUnitProvider newone = UpdateUnitProviderFactory.getDefault ().create(name, displayName, url);
         assertNotNull ("New provider was created.", newone);

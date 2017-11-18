@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.netbeans.api.autoupdate.TestUtils;
 import org.netbeans.api.autoupdate.UpdateElement;
 import org.netbeans.api.autoupdate.UpdateUnit;
 import org.netbeans.junit.NbTestCase;
@@ -63,7 +64,7 @@ public class UpdateUnitFactoryTest extends NbTestCase {
             x.printStackTrace ();
         }
         p.refresh (true);
-        URL urlToFile = AutoupdateInfoParserTest.class.getResource ("data/org-yourorghere-depending.nbm");
+        URL urlToFile = TestUtils.class.getResource ("data/org-yourorghere-depending.nbm");
         NBM_FILE = Utilities.toFile(urlToFile.toURI ());
         assertNotNull ("data/org-yourorghere-depending.nbm file must found.", NBM_FILE);
     }
@@ -181,7 +182,7 @@ public class UpdateUnitFactoryTest extends NbTestCase {
 
     public static class MyProvider extends AutoupdateCatalogProvider {
         public MyProvider () {
-            super ("test-updates-provider", "test-updates-provider", UpdateUnitFactoryTest.class.getResource ("data/catalog.xml"));
+            super ("test-updates-provider", "test-updates-provider", AutoupdateInfoParserTest.class.getResource ("data/catalog.xml"));
         }
     }
 

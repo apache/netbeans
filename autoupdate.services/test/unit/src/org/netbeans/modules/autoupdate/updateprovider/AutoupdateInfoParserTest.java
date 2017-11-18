@@ -45,7 +45,7 @@ public class AutoupdateInfoParserTest extends DefaultTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        URL urlToFile = AutoupdateInfoParserTest.class.getResource ("data/org-yourorghere-depending.nbm");
+        URL urlToFile = DefaultTestCase.class.getResource ("data/org-yourorghere-depending.nbm");
         NBM_FILE = Utilities.toFile(urlToFile.toURI ());
         assertNotNull ("data/org-yourorghere-depending.nbm file must found.", NBM_FILE);
     }

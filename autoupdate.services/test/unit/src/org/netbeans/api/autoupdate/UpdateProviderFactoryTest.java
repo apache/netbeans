@@ -19,7 +19,6 @@
 
 package org.netbeans.api.autoupdate;
 
-import java.net.URL;
 import java.util.List;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;

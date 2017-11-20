@@ -158,6 +158,8 @@ public class DefaultClassPathProvider implements ClassPathProvider, PropertyChan
                 }
             } else if (JavaClassPathConstants.MODULE_COMPILE_PATH.equals(type) && hasJava9(file, true) != null) {
                 return getModulePath();
+            } else if (JavaClassPathConstants.MODULE_CLASS_PATH.equals(type) && hasJava9(file, true) != null) {
+                return getCompiledClassPath();
             }
         } else if (CLASS_EXT.equals(file.getExt())) {
             if (ClassPath.BOOT.equals (type)) {

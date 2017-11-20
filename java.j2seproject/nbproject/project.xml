@@ -31,7 +31,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>3</release-version>
-                        <specification-version>3.73</specification-version>
+                        <specification-version>3.85</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -118,7 +118,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>0-1</release-version>
-                        <specification-version>1.120</specification-version>
+                        <specification-version>1.123</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

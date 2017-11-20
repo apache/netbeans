@@ -6,6 +6,7 @@ Source: file://openjfx-master-rt-8.zip
 Origin: OpenJDK
 URL: http://hg.openjdk.java.net/openjfx/8/master/rt/
 Type: compile-time
+Comment: Allows to build code leveraging OpenJavaFX on JDKs that don't contain OpenJavaFX.
 
 The GNU General Public License (GPL)
 Version 2, June 1991

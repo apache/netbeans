@@ -1,9 +1,9 @@
 Name: Apache XMLRPC
+Description: Java implementation of XML-RPC
+Origin: Apache Software Foundation
 Version: 3.0
 License: Apache-2.0
-OSR: 5899
-Description: Java implementation of XML-RPC
-Origin: http://ws.apache.org/xmlrpc/
+URL: http://ws.apache.org/xmlrpc/
 
                                  Apache License
                            Version 2.0, January 2004

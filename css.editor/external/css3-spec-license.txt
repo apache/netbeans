@@ -1,9 +1,9 @@
 Name: CSS 3 Specification
-License: W3C (the original at http://www.w3.org/Style/CSS/current-work)
-OSR: 
-Version: 
+License: W3C
+Version: 3
 Description: Documentation for the CSS 3 standard
-Origin: http://www.w3.org/TR/css3-*
+Origin: W3C
+URL: http://www.w3.org/TR/css3-*
 
 W3C (R) Intellectual Rights Notice and Legal Disclaimers
 

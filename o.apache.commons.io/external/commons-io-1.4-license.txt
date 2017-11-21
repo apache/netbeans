@@ -1,9 +1,9 @@
 Name: Apache Commons IO
+Description: Assist with developing IO functionality
+Origin: Apache Software Foundation
 Version: 1.4
 License: Apache-2.0
-OSR: 11129
-Origin: http://commons.apache.org/io/
-Description: Assist with developing IO functionality
+URL: http://commons.apache.org/io/
 
 
 

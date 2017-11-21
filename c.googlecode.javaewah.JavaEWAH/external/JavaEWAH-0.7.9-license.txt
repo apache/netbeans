@@ -1,7 +1,8 @@
 Name: JavaEWAH
 Version: 0.7.9
-License: Apache License 2.0
-Origin: https://code.google.com/p/javaewah/
+License: Apache-2.0
+Origin: JavaEWAH Project
+URL: https://github.com/lemire/javaewah
 Description: Compressed variant of Java BitSet
 
                                  Apache License

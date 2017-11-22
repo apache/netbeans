@@ -32,7 +32,6 @@ import org.netbeans.api.autoupdate.UpdateElement;
 import org.netbeans.api.autoupdate.UpdateUnit;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogProvider;
-import org.netbeans.modules.autoupdate.updateprovider.AutoupdateInfoParserTest;
 import org.netbeans.modules.autoupdate.updateprovider.LocalNBMsProvider;
 import org.netbeans.spi.autoupdate.UpdateItem;
 import org.netbeans.spi.autoupdate.UpdateProvider;
@@ -182,7 +181,7 @@ public class UpdateUnitFactoryTest extends NbTestCase {
 
     public static class MyProvider extends AutoupdateCatalogProvider {
         public MyProvider () {
-            super ("test-updates-provider", "test-updates-provider", AutoupdateInfoParserTest.class.getResource ("data/catalog.xml"));
+            super ("test-updates-provider", "test-updates-provider", TestUtils.class.getResource ("data/catalog.xml"));
         }
     }
 

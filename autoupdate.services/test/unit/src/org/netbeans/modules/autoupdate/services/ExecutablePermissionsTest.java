@@ -52,11 +52,11 @@ public class ExecutablePermissionsTest extends NbmAdvancedTestCase {
 
     private String generateExecutablePermissionsModuleElement() {
         String res = "\n<module codenamebase=\"" + testModuleName + "\" " +
-                "homepage=\"http://www.netbeans.org/\" distribution=\"nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-executable-permissions.nbm\" " +
-                "license=\"standard-nbm-license.txt\" downloadsize=\"5122\" " +
-                "needsrestart=\"false\" moduleauthor=\"\" " +
+                "homepage=\"\" distribution=\"nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-executable-permissions.nbm\" " +
+                "license=\"AD9FBBC9\" downloadsize=\"4001\" " +
+                "needsrestart=\"false\" moduleauthor=\"Steffen Dietz\" " +
                 "eager=\"false\" " +
-                "releasedate=\"2006/02/23\">\n";
+                "releasedate=\"2017/11/22\">\n";
         res += "<manifest OpenIDE-Module=\"" + testModuleName + "\" " +
                 "OpenIDE-Module-Name=\"" + testModuleName + "\" " +
                 "AutoUpdate-Show-In-Client=\"true\" " +
@@ -66,7 +66,6 @@ public class ExecutablePermissionsTest extends NbmAdvancedTestCase {
     }
 
     public void testExecutablePermissionsModule() throws IOException {
-        String os = !org.openide.util.Utilities.isUnix() ? "Windows" : "Unix";
         String catalog = generateCatalog(generateExecutablePermissionsModuleElement());
 
         p = createUpdateProvider(catalog);

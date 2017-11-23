@@ -428,19 +428,26 @@ public class NPECheck {
 
         if (returnState == null) return null;
 
-        TreePath method = ctx.getPath();
+        TreePath method = Utilities.findOwningExecutable(ctx, ctx.getPath(), true);
+        if (method == null) return null;
 
-        while (method != null && method.getLeaf().getKind() != Kind.METHOD && method.getLeaf().getKind() != Kind.CLASS) {
-            method = method.getParentPath();
+        CompilationInfo info = ctx.getInfo();
+
+        Element el = null;
+        switch (method.getLeaf().getKind()) {
+            case LAMBDA_EXPRESSION:
+                TypeMirror functionalType = info.getTrees().getTypeMirror(method);
+                if (!Utilities.isValidType(functionalType) || functionalType.getKind() != TypeKind.DECLARED) return null;
+                el = info.getElementUtilities().getDescriptorElement((TypeElement) ((DeclaredType) functionalType).asElement());
+                break;
+            case METHOD:
+                el = info.getTrees().getElement(method);
+                break;
         }
-
-        if (method == null || method.getLeaf().getKind() != Kind.METHOD) return null;
-
-        Element el = ctx.getInfo().getTrees().getElement(method);
 
         if (el == null || el.getKind() != ElementKind.METHOD) return null;
 
-        State expected = getStateFromAnnotations(ctx.getInfo(), el);
+        State expected = getStateFromAnnotations(info, el);
         String key = null;
 
         switch (returnState) {

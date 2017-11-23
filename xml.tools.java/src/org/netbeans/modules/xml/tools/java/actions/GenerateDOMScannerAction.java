@@ -18,8 +18,6 @@
  */
 package org.netbeans.modules.xml.tools.java.actions;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;

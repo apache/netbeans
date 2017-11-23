@@ -20,8 +20,6 @@
 package org.netbeans.core.netigso.spi;
 
 import java.io.IOException;
-import java.lang.instrument.IllegalClassFormatException;
-import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
 import org.netbeans.ArchiveResources;
 import org.netbeans.core.netigso.Netigso;
@@ -95,7 +93,7 @@ public final class NetigsoArchive {
     
     /** Gives OSGi containers that support bytecode patching a chance to
      * call into NetBeans internal patching system based on 
-     * {@link Instrumentation}. 
+     * {@link java.lang.instrument.Instrumentation}.
      * 
      * @param l class loader loading the class
      * @param className the name of the class to define

@@ -26,6 +26,38 @@
             <code-name-base>org.netbeans.modules.bugtracking.commons</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>java.base</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>java.desktop</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>java.logging</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>java.prefs</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.bugtracking</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -155,7 +187,7 @@
                 <!-- https://github.com/junichi11/netbeans-github-issues-plugin -->
                 <friend>com.junichi11.netbeans.github.issues</friend>
                 <!-- https://github.com/junichi11/netbeans-backlog-plugin -->
-                <friend>com.junichi11.netbeans.backlog.plugin</friend>                
+                <friend>com.junichi11.netbeans.backlog.plugin</friend>
                 <package>org.netbeans.modules.bugtracking.issuetable</package>
             </friend-packages>
         </data>

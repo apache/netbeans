@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -14,12 +16,14 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-language: java
-jdk:
-  - oraclejdk8
-script:
-  - (ant -quiet -Dcluster.config=platform build-source-config && mkdir scratch && cd scratch && unzip -qq ../nbbuild/build/platform-src* && ant -quiet rat -Dcluster.config=platform -Drat-report.haltonfailure=true && cd .. && rm -rf scratch)
-  - ant -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
-  - ant -quiet test -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest.includes=NoTestsJustBuild
-  - ant -quiet verify-libs-and-licenses -Dcluster.config=platform -Dverify-libs-and-licenses.haltonfailure=true
-  - ./travis-check-line-endings.sh
+
+result=$(git grep --cached -I -n --no-color $'\r')
+if [ -z "$result" ]
+then
+    echo "[OK] Checked whether line endings are LF(\\n)."
+    exit 0
+else
+    echo -e "$result"
+    echo "[Error] Found CRLF(\\r\\n). Please use LF(\\n) instead of it."
+    exit 1
+fi

@@ -40,11 +40,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
+import java.util.zip.ZipException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPathExpression;
@@ -241,9 +244,49 @@ final class ModuleListParser {
                     os.close();
                 }
             }
+            File jreDir = new File(System.getProperty("java.home"));
+            File jdkDir = jreDir.getParentFile();
+            Properties modules2Packages = new Properties();
+            Properties modules2Jars = new Properties();
+            try (InputStream packagesIn = new FileInputStream(new File(root, "o.n.bootstrap/src/org/netbeans/jdk/jdk8-modules-packages"));
+                 InputStream jarsIn = new FileInputStream(new File(root, "o.n.bootstrap/src/org/netbeans/jdk/jdk8-modules-files"))) {
+                modules2Packages.load(packagesIn);
+                modules2Jars.load(jarsIn);
+            } catch (IOException ex) {
+                throw new IllegalStateException(ex);
+            }
+            for (String key : modules2Packages.stringPropertyNames()) {
+                Attributes attr = new Attributes();
+                attr.put(new Attributes.Name("OpenIDE-Module"), key);
+                attr.put(new Attributes.Name("OpenIDE-Module-Specification-Version"), "8");
+                attr.put(new Attributes.Name("OpenIDE-Module-Public-Packages"), Arrays.stream(modules2Packages.getProperty(key).split(",")).map(pack -> pack + ".*").collect(Collectors.joining(", ")));
+                List<File> jars = new ArrayList<>();
+                for (String loc : modules2Jars.getProperty(key).split(",")) {
+                    jars.add(new File(jdkDir, loc));
+                }
+                entries.put(key, new Entry(key, jars.get(0), jars.subList(1, jars.size()).toArray(new File[0]), null, null, new String[0], null, new String[0], Collections.<String, String[]>emptyMap(), null, attr));
+            }
+            Attributes attr = new Attributes();
+            attr.put(new Attributes.Name("OpenIDE-Module"), "legacy.java.base");
+            attr.put(new Attributes.Name("OpenIDE-Module-Specification-Version"), "8");
+            List<File> jars = new ArrayList<>();
+            findJars(jreDir, jars);
+            entries.put("legacy.java.base", new Entry("legacy.java.base", jars.get(0), jars.subList(1, jars.size()).toArray(new File[0]), null, null, new String[0], null, new String[0], Collections.<String, String[]>emptyMap(), null, attr));
             SOURCE_SCAN_CACHE.put(root, entries);
         }
         return entries;
+    }
+    
+    private static void findJars(File f, List<File> jars) {
+        File[] children = f.listFiles();
+        
+        if (children != null) {
+            for (File c : children) {
+                findJars(c, jars);
+            }
+        } else if (f.isFile() && f.getName().toLowerCase().endsWith(".jar")) {
+            jars.add(f);
+        }
     }
 
     private static void registerTimestampAndSize(File f, Map<File,Long[]> timestampsAndSizes) {
@@ -923,9 +966,16 @@ final class ModuleListParser {
         // dependencies on other tests
         private final Map<String,String[]> testDependencies;
         private final File moduleAutoDeps;
+        private final Attributes syntheticAttributes;
         
         Entry(String cnb, File jar, File[] classPathExtensions, File sourceLocation, String netbeansOrgPath,
                 String[] buildPrerequisites, String clusterName,String[] runtimeDependencies, Map<String,String[]> testDependencies, File moduleAutoDeps) {
+            this(cnb, jar, classPathExtensions, sourceLocation, netbeansOrgPath, buildPrerequisites, clusterName, runtimeDependencies, testDependencies, moduleAutoDeps, null);
+        }
+
+        Entry(String cnb, File jar, File[] classPathExtensions, File sourceLocation, String netbeansOrgPath,
+                String[] buildPrerequisites, String clusterName,String[] runtimeDependencies, Map<String,String[]> testDependencies, File moduleAutoDeps,
+                Attributes syntheticAttributes) {
             this.cnb = cnb;
             this.jar = jar;
             this.classPathExtensions = classPathExtensions;
@@ -937,6 +987,7 @@ final class ModuleListParser {
             assert testDependencies != null;
             this.testDependencies = testDependencies;
             this.moduleAutoDeps = moduleAutoDeps;
+            this.syntheticAttributes = syntheticAttributes;
         }
         
         /**
@@ -1014,6 +1065,23 @@ final class ModuleListParser {
 
         public @Override String toString() {
             return (sourceLocation != null ? sourceLocation : jar).getAbsolutePath();
+        }
+
+        public Attributes getAttributes() throws IOException {
+            if (syntheticAttributes != null)
+                return syntheticAttributes;
+
+            if (jar.isFile()) {
+                try {
+                    try (JarFile jarFile = new JarFile(getJar(), false)) {
+                        return jarFile.getManifest().getMainAttributes();
+                    }
+                } catch (ZipException x) {
+                    throw new IOException("Could not open " + jar + ": " + x);
+                }
+            }
+
+            return null;
         }
 
         @Override

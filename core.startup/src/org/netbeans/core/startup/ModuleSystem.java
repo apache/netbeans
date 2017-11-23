@@ -22,6 +22,7 @@ package org.netbeans.core.startup;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -31,6 +32,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -40,6 +42,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.DuplicateException;
 import org.netbeans.Events;
+import org.netbeans.JDKModule;
+import org.netbeans.JDKModules;
 import org.netbeans.JaveleonModule;
 import org.netbeans.Module;
 import org.netbeans.ModuleManager;
@@ -177,6 +181,9 @@ public final class ModuleSystem {
         try {
             bootModules = new HashSet<Module>(10);
             ClassLoader loader = ModuleSystem.class.getClassLoader();
+
+            bootModules.addAll(JDKModules.loadJDKModules(mgr, ev, loader));
+
             Enumeration<URL> e = loader.getResources("META-INF/MANIFEST.MF"); // NOI18N
             ev.log(Events.PERF_TICK, "got all manifests"); // NOI18N
             

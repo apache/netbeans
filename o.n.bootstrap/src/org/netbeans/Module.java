@@ -450,6 +450,10 @@ public abstract class Module extends ModuleInfo {
      */
     public abstract boolean isFixed();
     
+    public boolean isJDK() {
+        return false;
+    }
+
     /** Get the JAR this module is packaged in.
      * May be null for modules installed specially, e.g.
      * automatically from the classpath.

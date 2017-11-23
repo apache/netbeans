@@ -23,7 +23,27 @@
 
     <import file="../nbbuild/templates/projectized.xml"/>
 
-    <target name="compile" depends="check-main-status,projectized-common.compile,rebuild-main"/>
+    <target name="build-init" depends="projectized.build-init">
+        <property name="src9.cp" value="${module.classpath}:build/classes"/>
+    </target>
+
+    <target name="compile" depends="check-main-status,projectized-common.compile,rebuild-main">
+        <mkdir dir="build/classes/META-INF/versions/9"/>
+        <depend srcdir="src9" destdir="build/classes/META-INF/versions/9" cache="build/depcache9">
+            <classpath>
+                <path path="${src9.cp}"/>
+            </classpath>
+        </depend>
+        <javac srcdir="src9" destdir="build/classes/META-INF/versions/9" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="1.8" target="1.8" includeantruntime="false">
+            <classpath>
+                <path path="${src9.cp}"/>
+            </classpath>
+            <compilerarg line="${javac.compilerargs}"/>
+        </javac>
+        <copy todir="build/classes/META-INF/versions/9">
+            <fileset dir="src9" excludes="${jar-excludes}"/>
+        </copy>
+    </target>
 
     <target name="check-main-status">
         <uptodate property="main.up.to.date" srcfile="${src.dir}/org/netbeans/Main.java" targetfile="${build.classes.dir}/org/netbeans/Main.class"/>

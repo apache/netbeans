@@ -20,7 +20,13 @@
 package org.netbeans.nbbuild;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInput;
+import java.io.DataInputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -43,6 +49,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.jar.Attributes;
@@ -693,14 +700,9 @@ public final class ParseProjectXml extends Task {
         }
         
         private String implementationVersionOf(ModuleListParser modules, String cnb) throws BuildException {
-            File jar = computeClasspathModuleLocation(modules, cnb, null, null, false);
+            ModuleListParser.Entry module = computeClasspathModuleLocation(modules, cnb, null, null, false);
             try {
-                JarFile jarFile = new JarFile(jar, false);
-                try {
-                    return jarFile.getManifest().getMainAttributes().getValue("OpenIDE-Module-Implementation-Version");
-                } finally {
-                    jarFile.close();
-                }
+                return module.getAttributes().getValue("OpenIDE-Module-Implementation-Version");
             } catch (IOException e) {
                 throw new BuildException(e, getLocation());
             }
@@ -799,7 +801,7 @@ public final class ParseProjectXml extends Task {
             ModuleListParser.Entry other = modules.findByCodeNameBase(t);
             if (other != null) {
                 File autodeps = other.getModuleAutoDeps();
-                if (autodeps.exists()) {
+                if (autodeps != null && autodeps.exists()) {
                     moduleAutoDeps.add(autodeps.toURI().toURL());
                 }
             }
@@ -834,6 +836,14 @@ public final class ParseProjectXml extends Task {
         }
         Dep[] rawDeps = deps.toArray(new Dep[deps.size()]);
         translateModuleAutoDeps(myCNB, deps, moduleAutoDeps, modules);
+        if (deps.stream().noneMatch(dep -> dep.codenamebase.equals("java.base"))) {
+            Dep d = new Dep(modules);
+            d.codenamebase = "legacy.java.base";
+            d.spec = "8";
+            d.compile = true;
+            d.run = false;
+            deps.add(d);
+        }
         Dep[] translatedDeps = deps.toArray(new Dep[deps.size()]);
         return new Dep[][] {rawDeps, translatedDeps};
     }
@@ -959,10 +969,10 @@ public final class ParseProjectXml extends Task {
                 continue;
             }
             String cnb = dep.codenamebase;
-            File depJar = computeClasspathModuleLocation(modules, cnb, clusterPath, excludedModules, runtime);
+            ModuleListParser.Entry module = computeClasspathModuleLocation(modules, cnb, clusterPath, excludedModules, runtime);
 
             List<File> additions = new ArrayList<File>();
-            additions.add(depJar);
+            additions.add(module.getJar());
             if (recursive) {
                 addRecursiveDeps(additions, modules, cnb, clusterPath, excludedModules, new HashSet<String>(), runtime);
             }
@@ -973,22 +983,12 @@ public final class ParseProjectXml extends Task {
                 additions.addAll(Arrays.asList(entry.getClassPathExtensions()));
             }
             
-            if (depJar.isFile()) { // might be false for m.run.cp if DO_NOT_RECURSE and have a runtime-only dep
-                Attributes attr;
-                try {
-                    JarFile jarFile = new JarFile(depJar, false);
-                    try {
-                        attr = jarFile.getManifest().getMainAttributes();
-                    } finally {
-                        jarFile.close();
-                    }
-                } catch (ZipException x) {
-                    throw new BuildException("Could not open " + depJar + ": " + x, x, getLocation());
-                }
+            Attributes attr = module.getAttributes();
 
+            if (attr != null) { // might be false for m.run.cp if DO_NOT_RECURSE and have a runtime-only dep
                 String[] version = { "" };
                 if (!dep.matches(attr, version)) { // #68631
-                    throw new BuildException("Cannot compile against a module: " + depJar + " because of dependency: " + dep
+                    throw new BuildException("Cannot compile against a module: " + module + " because of dependency: " + dep
                         + version[0], getLocation()
                     );
                 }
@@ -1000,13 +1000,13 @@ public final class ParseProjectXml extends Task {
                 if (!dep.impl && /* #71807 */ dep.run && !recursive && !runtime) {
                     String friends = attr.getValue("OpenIDE-Module-Friends");
                     if (friends != null && !Arrays.asList(friends.split(" *, *")).contains(myCNB)) {
-                        throw new BuildException("The module " + myCNB + " is not a friend of " + depJar, getLocation());
+                        throw new BuildException("The module " + myCNB + " is not a friend of " + module, getLocation());
                     }
                     String pubpkgs = attr.getValue("OpenIDE-Module-Public-Packages");
                     if ("-".equals(pubpkgs)) {
-                        throw new BuildException("The module " + depJar + " has no public packages and so cannot be compiled against", getLocation());
+                        throw new BuildException("The module " + module + " has no public packages and so cannot be compiled against", getLocation());
                     } else if (pubpkgs != null && publicPackageJarDir != null) {
-                        File splitJar = createPublicPackageJar(additions, pubpkgs, publicPackageJarDir, cnb);
+                        File splitJar = createPublicPackageJar(additions, pubpkgs + ("java.base".equals(cnb) ? ",jdk.Exporte" : ""), publicPackageJarDir, cnb);
                         additions.clear();
                         additions.add(splitJar);
                     }
@@ -1061,7 +1061,8 @@ public final class ParseProjectXml extends Task {
         }
         for (String nextModule : deps) {
             log("  Added dep " + nextModule + " due to " + cnb, Project.MSG_DEBUG);
-            File depJar = computeClasspathModuleLocation(modules, nextModule, clusterPath, excludedModules, true);
+            ModuleListParser.Entry dep = computeClasspathModuleLocation(modules, nextModule, clusterPath, excludedModules, true);
+            File depJar = dep != null ? dep.getJar() : null;
             if (!additions.contains(depJar)) {
                 additions.add(depJar);
             }
@@ -1070,7 +1071,7 @@ public final class ParseProjectXml extends Task {
     }
 
     static final String DO_NOT_RECURSE = "do.not.recurse";
-    private File computeClasspathModuleLocation(ModuleListParser modules, String cnb,
+    private ModuleListParser.Entry computeClasspathModuleLocation(ModuleListParser modules, String cnb,
             Set<File> clusterPath, Set<String> excludedModules, boolean runtime) throws BuildException {
         ModuleListParser.Entry module = modules.findByCodeNameBase(cnb);
         if (module == null && cnb.contains("-")) {
@@ -1107,7 +1108,7 @@ public final class ParseProjectXml extends Task {
             File srcdir = module.getSourceLocation();
             if (Project.toBoolean(getProject().getProperty(DO_NOT_RECURSE))) {
                 log(jar + " missing for " + moduleProject + " but will not first try to build " + srcdir, Project.MSG_VERBOSE);
-                return jar;
+                return module;
             }
             if (srcdir != null && srcdir.isDirectory()) {
                 log(jar + " missing for " + moduleProject + "; will first try to build " + srcdir, Project.MSG_WARN);
@@ -1123,7 +1124,7 @@ public final class ParseProjectXml extends Task {
         if (!jar.isFile()) {
             throw new BuildException("No such classpath entry: " + jar, getLocation());
         }
-        return jar;
+        return module;
     }
  
   final class TestDeps {
@@ -1505,8 +1506,10 @@ public final class ParseProjectXml extends Task {
                             baos.write(buf, 0, read);
                         }
                         byte[] data = baos.toByteArray();
-                        boolean isEnum = isEnum(path, data);
-                        if (!isEnum && !p.matcher(path).matches()) {
+                        if ((cnb.startsWith("java.") || cnb.startsWith("jdk.")) && path.endsWith(".class")) {
+                            data = stripPrivateAndPackagePrivate(data);
+                        }
+                        if (!p.matcher(path).matches()) {
                             continue;
                         }
                         foundAtLeastOneEntry = true;
@@ -1533,22 +1536,117 @@ public final class ParseProjectXml extends Task {
         }
         return ppjar;
     }
-    private boolean isEnum(String path, byte[] data) throws UnsupportedEncodingException { // #152562: workaround for javac bug
-        if (!path.endsWith(".class")) {
-            return false;
+    private static void skip(DataInput input, int bytes, OutputStream sink) throws IOException {
+        byte[] buf = new byte[bytes];
+        try {
+            input.readFully(buf, 0, bytes);
+            if (sink != null) {
+                sink.write(buf, 0, bytes);
+            }
+        } catch (EOFException ex) {
+            throw new IOException("Truncated class file", ex);
         }
-        String jvmName = path.substring(0, path.length() - ".class".length());
-        String bytecode = new String(data, "ISO-8859-1");
-        if (!bytecode.contains("$VALUES")) {
-            return false;
-        }
-        if (!bytecode.contains("java/lang/Enum<L" + new String(jvmName.getBytes("UTF-8"), "ISO-8859-1") + ";>;")) {
-            return false;
-        }
-        // XXX crude heuristic but unlikely to result in false positives
-        return true;
     }
+    private static void skipAttributes(DataInput input, DataOutputStream sink) throws IOException {
+        int attrs = input.readUnsignedShort();
+        if (sink != null) sink.writeShort(attrs);
+        for (int i = 0; i < attrs; i++) {
+            skip(input, 2, sink);
+            int len = input.readInt();
+            if (sink != null) sink.writeInt(len);
+            skip(input, len, sink);
+        }
+    }
+    static byte[] stripPrivateAndPackagePrivate(byte[] data) throws IOException {
+        DataInput input = new DataInputStream(new ByteArrayInputStream(data));
+        ByteArrayOutputStream bout = new ByteArrayOutputStream(data.length);
+        DataOutputStream out = new DataOutputStream(bout);
+        skip(input, 8, out); // magic, minor_version, major_version
+        int size = input.readUnsignedShort() - 1; // constantPoolCount
+        out.writeShort(size + 1);
+        for (int i = 0; i < size; i++) {
+            byte tag = input.readByte();
+            out.write(tag);
+            switch (tag) {
+                case 1: // CONSTANT_Utf8
+                    int len = input.readUnsignedShort();
+                    out.writeShort(len);
+                    skip(input, len, out);
+                    break;
+                case 3: // CONSTANT_Integer
+                case 4: // CONSTANT_Float
+                case 9: // CONSTANT_Fieldref
+                case 10: // CONSTANT_Methodref
+                case 11: // CONSTANT_InterfaceMethodref
+                case 12: // CONSTANT_NameAndType
+                case 18:    //CONSTANT_InvokeDynamic
+                    skip(input, 4, out);
+                    break;
+                case 7: // CONSTANT_Class
+                case 8: // CONSTANT_String
+                case 16:    //CONSTANT_MethodType
+                case 19:    //CONSTANT_Module
+                case 20:    //CONSTANT_Package
+                    skip(input, 2, out);
+                    break;
+                case 5: // CONSTANT_Long
+                case 6: // CONSTANT_Double
+                    skip(input, 8, out);
+                    i++; // weirdness in spec
+                    break;
+                case 15:    //CONSTANT_MethodHandle
+                    skip(input, 3, out);
+                    break;
+                default:
+                    throw new IOException("Unrecognized constant pool tag " + tag + " at index " + i);
+            }
+        }
+        skip(input, 2 + 2 + 2, out); //
+        int interfaces = input.readUnsignedShort();
+        out.writeShort(interfaces);
+        skip(input, 2 * interfaces, out);
 
+        int fields = input.readUnsignedShort();
+        int actualFields = 0;
+        ByteArrayOutputStream fbout = new ByteArrayOutputStream();
+        DataOutputStream fout = new DataOutputStream(fbout);
+        for (int i = 0; i < fields; i++) {
+            int access = input.readUnsignedShort();
+            boolean preserve = (access & 0x05) != 0;
+            if (preserve) {
+                actualFields++;
+                fout.writeShort(access);
+            }
+            skip(input, 4, preserve ? fout : null);
+            skipAttributes(input, preserve ? fout : null);
+        }
+        fout.close();
+        out.writeShort(actualFields);
+        out.write(fbout.toByteArray());
+
+        int methods = input.readUnsignedShort();
+        int actualMethods = 0;
+        ByteArrayOutputStream mbout = new ByteArrayOutputStream();
+        DataOutputStream mout = new DataOutputStream(mbout);
+        for (int i = 0; i < methods; i++) {
+            int access = input.readUnsignedShort();
+            boolean preserve = (access & 0x05) != 0;
+            if (preserve) {
+                actualMethods++;
+                mout.writeShort(access);
+            }
+            skip(input, 4, preserve ? mout : null);
+            skipAttributes(input, preserve ? mout : null);
+        }
+        mout.close();
+        out.writeShort(actualMethods);
+        out.write(mbout.toByteArray());
+
+        skipAttributes(input, out);
+
+        out.close();
+        return bout.toByteArray();
+    }
     private TestDeps[] getTestDeps(Document pDoc,ModuleListParser modules,String testCnb) {
         assert modules != null;
         Element cfg = getConfig(pDoc);

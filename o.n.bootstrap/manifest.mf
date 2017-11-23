@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Multi-Release: true
 OpenIDE-Module: org.netbeans.bootstrap/1
 OpenIDE-Module-Specification-Version: 2.77
 OpenIDE-Module-Localizing-Bundle: org/netbeans/Bundle.properties

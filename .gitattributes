@@ -13,6 +13,7 @@
 
 *.css             text eol=lf
 *.dtd             text eol=lf
+*.form            text eol=lf
 *.htm             text eol=lf
 *.html            text eol=lf
 *.java            text eol=lf

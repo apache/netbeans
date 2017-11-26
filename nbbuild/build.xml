@@ -2155,6 +2155,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="testng.ui/src/org/netbeans/modules/testng/ui/resources/*.template" /> <!--template files-->
             <exclude name="utilities/test/unit/src/org/netbeans/modules/openfile/resources/recent_files/*" /> <!--test data-->
             <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.template" /> <!--template files-->
+            <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/*.xsd" /> <!-- XSDs for usage at runtime and code generation - the XSDs are not modified, so covered by https://www.apache.org/legal/resolved.html#category-b -->
+            <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/jaxb/*" /> <!-- generated code -->
+            <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/oauth/*" /> <!-- generated code -->
+            <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl/*" /> <!-- generated code -->
             <exclude name="websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/model/application.wadl" /> <!--test data-->
             <exclude name="websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/util/rootGroup.xml" /> <!--test data-->
             <exclude name="welcome/src/org/netbeans/modules/welcome/resources/rss-0_91.dtd" /> <!-- specifies a standard -->

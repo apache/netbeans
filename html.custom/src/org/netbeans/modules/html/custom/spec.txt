@@ -1,3 +1,6 @@
+Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+license agreements; and to You under the Apache License, Version 2.0.
+
 -element in any context
 -element in a specified context (html element/s or any other custom element/s)
 -attribute of any element (html or custom)

@@ -2062,6 +2062,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="api.templates/test/unit/src/org/netbeans/modules/templates/utf8.xml" /> <!--test data-->
             <exclude name="apisupport.ant/src/org/netbeans/modules/apisupport/project/resources/license-*.txt" /> <!--template file-->
             <exclude name="apisupport.installer/src/org/netbeans/modules/apisupport/installer/resources/licenses/**" /> <!--three license files-->
+            <exclude name="apisupport.project/src/org/netbeans/modules/apisupport/project/ui/resources/layer_template.xml" /> <!--template file-->
             <exclude name="autoupdate.services/test/unit/src/org/netbeans/modules/autoupdate/updateprovider/data/**" /> <!-- test data -->
             <exclude name="beans/src/org/netbeans/modules/beans/resources/templates/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
             <exclude name="css.editor/src/org/netbeans/modules/css/resources/CascadeStyleSheet.css.template" /> <!-- user visible template -->
@@ -2070,6 +2071,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="debugger.jpda/test/unit/src/org/netbeans/api/debugger/jpda/testapps/JspLineBreakpointApp.txt" /> <!-- test data -->
             <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/provider/*.txt" /> <!--test data-->
             <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/visualizer/data/**" /> <!--test data-->
+            <exclude name="db.sql.editor/src/org/netbeans/modules/db/sql/editor/resources/SQLExample" /> <!-- file is used as sample for syntax highlighting in GUI -->
+            <exclude name="dbschema/src/org/netbeans/modules/dbschema/jdbcimpl/resources/templates/*" /> <!-- template files -->
             <exclude name="editor/demosrc/base/org/netbeans/editor/example/res/template.html_" /> <!-- template file -->
             <exclude name="editor/demosrc/base/org/netbeans/editor/example/res/template.java_" /> <!-- template file -->
             <exclude name="editor/demosrc/properties-addon/org/netbeans/editor/example/res/template.properties" /> <!-- template file -->
@@ -2120,7 +2123,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="nbbuild/tagref" /> <!--no degree of creativity-->
             <exclude name="nbbuild/notice-stub.txt" /> <!--Apache notice file-->
             <exclude name="nbbuild/standard-nbm-license.txt" /> <!--license file-->
-            <exclude name="nbbuild/testuserdir/**" />
+            <exclude name="nbbuild/testuserdir/**" /> <!-- directory for netbeans testruns, not part of distribution and repository -->
+            <exclude name="nbbuild/user.build.properties" /> <!-- user configuration file, not part of distribution and repository -->
             <exclude name="nbi/engine/nbproject/profiler-build-impl.xml" /> <!--generated, no degree of creativity -->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/CustomTask_java" /> <!-- user visible file template -->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/Project.xml_" /> <!-- user visible file template -->

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,11 +22,11 @@ import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JCheckBox;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.text.DefaultCaret;
-import org.jdesktop.swingx.renderer.JRendererCheckBox;
 import org.netbeans.modules.db.dataview.util.DataViewUtils;
 
 public class ResultSetTableCellEditor extends DefaultCellEditor {
@@ -84,14 +84,14 @@ public class ResultSetTableCellEditor extends DefaultCellEditor {
         return super.getTableCellEditorComponent(table, value, isSelected, row, column);
     }
 
-    public ResultSetTableCellEditor(final JRendererCheckBox checkBox) {
+    public ResultSetTableCellEditor(final JCheckBox checkBox) {
         super(checkBox);
         delegate = new EditorDelegate() {
 
             @Override
             public void setValue(Object value) {
                 val = value;
-                checkBox.setSelected((value != null) ? checkBox.isSelected() : false);
+                checkBox.setSelected((value instanceof Boolean) ? ((Boolean) value) : false);
             }
 
             @Override

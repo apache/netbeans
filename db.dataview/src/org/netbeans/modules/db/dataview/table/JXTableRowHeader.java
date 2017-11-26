@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,18 +19,19 @@
 package org.netbeans.modules.db.dataview.table;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashSet;
 import java.util.Set;
+import javax.swing.DefaultRowSorter;
 import javax.swing.Icon;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import javax.swing.event.RowSorterEvent;
 import javax.swing.event.RowSorterListener;
 import javax.swing.event.TableModelEvent;
@@ -40,11 +41,6 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
-import org.jdesktop.swingx.JXTable;
-import org.jdesktop.swingx.border.IconBorder;
-import org.jdesktop.swingx.decorator.HighlighterFactory;
-import org.jdesktop.swingx.renderer.DefaultTableRenderer;
-import org.jdesktop.swingx.table.TableColumnExt;
 import org.netbeans.modules.db.dataview.output.DataViewTableUIModel;
 
 /**
@@ -60,11 +56,8 @@ public final class JXTableRowHeader extends JComponent {
     private static class InternalTableColumnModel extends DefaultTableColumnModel {
 
         public InternalTableColumnModel() {
-            TableColumnExt col = new TableColumnExt(0, 75);
-            col.setEditable(false);
+            TableColumn col = new TableColumn(0, 75);
             col.setHeaderValue("#");
-            col.setToolTipText("Row number");
-            col.setSortable(false);
             addColumn(col);
         }
     }
@@ -77,7 +70,7 @@ public final class JXTableRowHeader extends JComponent {
         private TableModel backingTableModel;
         private RowSorter<?> backingSorter;
         private final Set<TableModelListener> listeners = new HashSet<>();
-        private final JXTable backingTable;
+        private final JTable backingTable;
 
         @Override
         public void propertyChange(PropertyChangeEvent pce) {
@@ -87,6 +80,7 @@ public final class JXTableRowHeader extends JComponent {
                 if (backingSorter != null) {
                     backingSorter.removeRowSorterListener(this);
                 }
+                backingSorter = null;
                 if (pce.getNewValue() != null) {
                     backingSorter = (RowSorter) pce.getNewValue();
                     backingSorter.addRowSorterListener(this);
@@ -105,8 +99,12 @@ public final class JXTableRowHeader extends JComponent {
             }
         }
 
-        public CountingTableModel(JXTable table) {
+        public CountingTableModel(JTable table) {
             this.backingTable = table;
+            this.backingSorter = this.backingTable.getRowSorter();
+            if(this.backingSorter != null) {
+                this.backingSorter.addRowSorterListener(this);
+            }
             backingTable.addPropertyChangeListener(this);
             this.backingTableModel = table.getModel();
             this.backingTableModel.addTableModelListener(this);
@@ -220,11 +218,11 @@ public final class JXTableRowHeader extends JComponent {
         return header;
     }
 
-    private static final Icon rightArrow = new Icon() {
+    private static final Icon ICON_RIGHT_ARROW = new Icon() {
 
         @Override
         public int getIconWidth() {
-            return 8;
+            return 10;
         }
 
         @Override
@@ -239,33 +237,72 @@ public final class JXTableRowHeader extends JComponent {
             g.fillPolygon(new Polygon(new int[]{0, 5, 0}, new int[]{-5, 0, 5}, 3));
         }
     };
-    private final IconBorder iconBorder = new IconBorder();
+    
+    private static final Icon ICON_CLEAR = new Icon() {
 
-    private class RowHeaderColumnRenderer extends DefaultTableRenderer {
+        @Override
+        public int getIconWidth() {
+            return 10;
+        }
 
+        @Override
+        public int getIconHeight() {
+            return 8;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+        }
+    };
+
+    private class RowHeaderColumnRenderer extends JPanel implements TableCellRenderer {
+
+        private final JLabel iconLabel = new JLabel(ICON_CLEAR);
+        private final JLabel textLabel = new JLabel("");
+        
+        @SuppressWarnings("OverridableMethodCallInConstructor")
+        public RowHeaderColumnRenderer() {
+            super();
+
+            GridBagConstraints iconConstraints = new GridBagConstraints();
+            iconConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
+            iconConstraints.fill = GridBagConstraints.NONE;
+            iconConstraints.weightx = 0;
+            iconConstraints.weighty = 0;
+
+            GridBagConstraints labelConstraints = new GridBagConstraints();
+            labelConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
+            labelConstraints.fill = GridBagConstraints.HORIZONTAL;
+            labelConstraints.weightx = 1;
+            labelConstraints.weighty = 0;
+            
+            this.setLayout(new GridBagLayout());
+            this.add(iconLabel, iconConstraints);
+            this.add(textLabel, labelConstraints);
+        }
+        
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int rowIndex, int columnIndex) {
-            Component comp = super.getTableCellRendererComponent(table, value, isSelected,
-                    hasFocus, rowIndex, columnIndex);
-
-            if (isSelected) {
-                iconBorder.setIcon(rightArrow);
-                Border origBorder = ((JComponent) comp).getBorder();
-                Border border = new CompoundBorder(origBorder, iconBorder);
-                ((JComponent) comp).setBorder(border);
-                comp.setBackground(table.getSelectionBackground());
-                comp.setForeground(table.getSelectionForeground());
+            textLabel.setText(value == null ? "" : value.toString());
+            if(isSelected) {
+                iconLabel.setIcon(ICON_RIGHT_ARROW);
+                this.setBackground(table.getSelectionBackground());
+                this.setForeground(table.getSelectionForeground());
+            } else {
+                iconLabel.setIcon(ICON_CLEAR);
+                this.setBackground(table.getBackground());
+                this.setForeground(table.getForeground());
             }
-            return comp;
+            return this;
         }
     }
     /**
      * The headerTable used to create the row header column.
      */
     private final CountingTableModel ctm;
-    private final JXTable headerTable;
-    private final JXTable backingTable;
+    private final JTable headerTable;
+    private final JTable backingTable;
 
     /**
      * Create a row header from the given {@code JTable}. This row header will
@@ -274,7 +311,7 @@ public final class JXTableRowHeader extends JComponent {
      *
      * @param table the table for which to produce a row header.
      */
-    public JXTableRowHeader(JXTable table) {
+    public JXTableRowHeader(JTable table) {
         assert table != null : "JXTableRowHeader needs to be instanciated with a JXTable";
 
         this.backingTable = table;
@@ -293,12 +330,22 @@ public final class JXTableRowHeader extends JComponent {
         this.headerTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         this.headerTable.getTableHeader().setReorderingAllowed(false);
         this.headerTable.getTableHeader().setResizingAllowed(false);
+        this.headerTable.getTableHeader().setToolTipText("Row number");
+        this.headerTable.getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                RowSorter sorter = backingTable.getRowSorter();
+                if(sorter instanceof DefaultRowSorter) {
+                    ((DefaultRowSorter) sorter).setSortKeys(null);
+                }
+            }
+        });
 
         add(this.headerTable);
         TableColumn column = this.headerTable.getColumnModel().getColumn(0);
 
         // pack before setting preferred width.
-        this.headerTable.packAll();
+        this.headerTable.doLayout();
 
         TableCellRenderer defaultRenderer = createDefaultRenderer();
 
@@ -311,11 +358,8 @@ public final class JXTableRowHeader extends JComponent {
                 column.getPreferredWidth(), 0));
 
         this.headerTable.setInheritsPopupMenu(true);
-        this.headerTable.setShowGrid(true, true);
+        this.headerTable.setShowGrid(true);
         this.headerTable.setGridColor(ResultSetJXTable.GRID_COLOR);
-        this.headerTable.setHighlighters(
-                HighlighterFactory.createAlternateStriping(
-                        ResultSetJXTable.ROW_COLOR, ResultSetJXTable.ALTERNATE_ROW_COLOR));
     }
 
     /**

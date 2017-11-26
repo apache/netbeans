@@ -227,3 +227,4 @@
 <replacefilter token="@org-netbeans-modules-xml-text@" value="${javadoc.docs.org-netbeans-modules-xml-text}"/>
 <replacefilter token="@org-netbeans-modules-xml-lexer@" value="${javadoc.docs.org-netbeans-modules-xml-lexer}"/>
 <replacefilter token="@org-netbeans-modules-xml-text@" value="${javadoc.docs.org-netbeans-modules-xml-text}"/>
+<replacefilter token="@org-netbeans-core-network@" value="${javadoc.docs.org-netbeans-core-network}"/>

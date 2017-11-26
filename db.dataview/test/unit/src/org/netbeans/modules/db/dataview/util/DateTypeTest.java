@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -33,7 +33,7 @@ import org.netbeans.junit.NbTestCase;
  * @author navaneeth
  */
 public class DateTypeTest extends NbTestCase {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", TimestampType.LOCALE);
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private long now = System.currentTimeMillis();
     private long expectedMillis = 0l;
     private DateType type = null;
@@ -111,11 +111,11 @@ public class DateTypeTest extends NbTestCase {
                 // savings)
                 );
         DateFormat fmt = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG,
-                TimestampType.LOCALE);
+                Locale.UK);
         fmt.setTimeZone(TimeZone.getDefault());
         assertEquals("Make sure 'expected' is as expected",
                 "01 August 2002 12:00:00 "
-                + TimeZone.getDefault().getDisplayName(true, TimeZone.SHORT, TimestampType.LOCALE),
+                + TimeZone.getDefault().getDisplayName(true, TimeZone.SHORT, Locale.UK),
                 fmt.format(expectedDate));
 
         String toConvert = DATE_FORMAT.format(expectedDate);

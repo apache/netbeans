@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,15 +21,16 @@ package org.netbeans.modules.db.dataview.table.celleditor;
 import org.netbeans.modules.db.dataview.table.ResultSetTableCellEditor;
 import java.awt.Component;
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
-import org.jdesktop.swingx.renderer.JRendererCheckBox;
 
 public class BooleanTableCellEditor extends ResultSetTableCellEditor implements TableCellEditor {
 
-    public BooleanTableCellEditor(JRendererCheckBox cb) {
+    public BooleanTableCellEditor(JCheckBox cb) {
         super(cb);
+        cb.setOpaque(true);
         cb.setHorizontalAlignment(0);
     }
 

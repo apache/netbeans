@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -33,7 +33,7 @@ import org.openide.util.NbBundle;
 @ActionRegistration(displayName = "#LBL_InvertBooleanAction")
 @ActionReferences({
     @ActionReference(path = "Editors/text/x-java/RefactoringActions", name = "InvertBooleanAction", position = 1830),
-    @ActionReference(path = "Shortcuts", name = "OCS-I")
+    @ActionReference(path = "Shortcuts", name = "CS-Y I")
 })
 public final class InvertBooleanAction extends JavaRefactoringGlobalAction {
 

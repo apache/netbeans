@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -55,6 +55,7 @@ public class FixDependenciesTest extends TestBase {
 
         );
 
+        String input = readFile (xml);
         execute (f, new String[] { });
         String result = readFile (xml);
 
@@ -77,8 +78,20 @@ public class FixDependenciesTest extends TestBase {
             cnt++;
         }
 
+        // Skip common prefix for input + result, assumption: inputfile is 
+        // correctly formatted. A license header can contain empty lines this
+        // way.
+        int common = 0;
+        for(int i = 0; i < input.length() && i < result.length(); i++) {
+            if(input.charAt(i) == result.charAt(i)) {
+                common = i;
+            } else {
+                break;
+            }
+        }
+
         assertEquals("There are three dependencies\n" + result, 3, cnt);
-        for (String line : result.split("\n")) {
+        for (String line : result.substring(common).split("\n")) {
             if (line.trim().length() == 0) {
                 fail("No empty lines:\n" + result);
             }

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -25,54 +25,43 @@ import java.awt.Font;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.text.SimpleDateFormat;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.UIManager;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
-import org.jdesktop.swingx.renderer.*;
 import org.netbeans.modules.db.dataview.output.SQLConstant;
 import org.netbeans.modules.db.dataview.util.ColorHelper;
 import org.netbeans.modules.db.dataview.util.DataViewUtils;
+import org.netbeans.modules.db.dataview.util.DateType;
+import org.netbeans.modules.db.dataview.util.FormatStringValue;
 import org.netbeans.modules.db.dataview.util.LobHelper;
+import org.netbeans.modules.db.dataview.util.StringValue;
 import org.netbeans.modules.db.dataview.util.TimeType;
 import org.netbeans.modules.db.dataview.util.TimestampType;
 
 /**
  * @author Ahimanikya Satapathy
  */
-public class ResultSetCellRenderer extends DefaultTableRenderer {
+public class ResultSetCellRenderer extends DefaultTableCellRenderer {
 
-    protected final static FormatStringValue DATETIME_TO_STRING = new FormatStringValue() {
-
-        @Override
-        public String getString(Object value) {
-            if (format == null) {
-                format = new SimpleDateFormat (TimestampType.DEFAULT_FORMAT_PATTERN);
-            }
-            return super.getString(value);
-        }
-    };
-    protected final static FormatStringValue TIME_TO_STRING = new FormatStringValue() {
-
-        @Override
-        public String getString(Object value) {
-            if (format == null) {
-                format = new SimpleDateFormat (TimeType.DEFAULT_FOMAT_PATTERN);
-            }
-            return super.getString(value);
-        }
-    };
+    protected final static FormatStringValue DATETIME_TO_STRING = new FormatStringValue(new SimpleDateFormat (TimestampType.DEFAULT_FORMAT_PATTERN));
+    protected final static FormatStringValue TIME_TO_STRING = new FormatStringValue(new SimpleDateFormat (TimeType.DEFAULT_FOMAT_PATTERN));
+    protected final static FormatStringValue Date_TO_STRING = new FormatStringValue(new SimpleDateFormat (DateType.DEFAULT_FOMAT_PATTERN));
+    
     private final TableCellRenderer NULL_RENDERER = new NullObjectCellRenderer();
     private final TableCellRenderer DEFAULT_RENDERER = new SQLConstantsCellRenderer();
-    private final TableCellRenderer NUMNBER_RENDERER = new NumberObjectCellRenderer();
+    private final TableCellRenderer NUMBER_RENDERER = new NumberObjectCellRenderer();
     private final TableCellRenderer BOOLEAN_RENDERER = new BooleanCellRenderer();
     private final TableCellRenderer CELL_FOCUS_RENDERER = new CellFocusCustomRenderer();
     private final TableCellRenderer BLOB_RENDERER = new BlobCellRenderer();
     private final TableCellRenderer CLOB_RENDERER = new ClobCellRenderer();
 
+    private StringValue stringValue = null;
+    
     public ResultSetCellRenderer() {
-        super(new StringValue() {
+        this(new StringValue() {
 
             @Override
             public String getString(Object o) {
@@ -81,16 +70,14 @@ public class ResultSetCellRenderer extends DefaultTableRenderer {
         });
     }
 
-    public ResultSetCellRenderer(ComponentProvider<? extends JComponent> componentProvider) {
-        super(componentProvider);
-    }
-
-    public ResultSetCellRenderer(StringValue converter, int alignment) {
-        super(converter, alignment);
-    }
-
     public ResultSetCellRenderer(StringValue converter) {
-        super(converter, JLabel.LEADING);
+        super();
+        stringValue = converter;
+    }
+    
+    public ResultSetCellRenderer(StringValue converter, float alignment) {
+        this(converter);
+        ((JLabel) this).setAlignmentX(alignment);
     }
 
     @Override
@@ -98,7 +85,7 @@ public class ResultSetCellRenderer extends DefaultTableRenderer {
         if (null == value) {
             return NULL_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         } else if (value instanceof Number) {
-            return NUMNBER_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            return NUMBER_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         } else if (DataViewUtils.isSQLConstantString(value, null)) {
             Component c = DEFAULT_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             setTableCellToolTip(c, value);
@@ -110,7 +97,10 @@ public class ResultSetCellRenderer extends DefaultTableRenderer {
         } else if (value instanceof Clob) {
             return CLOB_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         } else {
-             Component c = CELL_FOCUS_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if(stringValue != null) {
+                value = stringValue.getString(value);
+            }
+            Component c = CELL_FOCUS_RENDERER.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             setTableCellToolTip(c, value);
             return c;
         }
@@ -144,22 +134,18 @@ public class ResultSetCellRenderer extends DefaultTableRenderer {
 
 class BooleanCellRenderer extends CellFocusCustomRenderer {
 
-    private JRendererCheckBox cb;
+    private JCheckBox cb;
 
     public BooleanCellRenderer() {
         super();
-        cb = new JRendererCheckBox();
+        cb = new JCheckBox();
+        cb.setOpaque(true);
         cb.setHorizontalAlignment(0);
     }
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         cb.setSelected((Boolean) value);
-        if (!isSelected) {
-            cb.setBackground(table.getBackground());
-        } else {
-            cb.setBackground(table.getSelectionBackground());
-        }
         return cb;
     }
 }

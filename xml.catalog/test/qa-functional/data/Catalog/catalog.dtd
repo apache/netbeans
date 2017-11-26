@@ -1,4 +1,34 @@
-<!--  -->
+<!--
+
+Copyright � 2000, 2001 The Organization for the Advancement of Structured 
+Information Standards [OASIS]. All Rights Reserved.
+
+This document and translations of it may be copied and furnished to others, and
+derivative works that comment on or otherwise explain it or assist in its 
+implementation may be prepared, copied, published and distributed, in whole or 
+in part, without restriction of any kind, provided that the above copyright 
+notice and this paragraph are included on all such copies and derivative works.
+However, this document itself may not be modified in any way, such as by 
+removing the copyright notice or references to OASIS, except as needed for the 
+purpose of developing OASIS specifications, in which case the procedures for
+copyrights defined in the OASIS Intellectual Property Rights document must be 
+followed, or as required to translate it into languages other than English.
+
+The limited permissions granted above are perpetual and will not be revoked by
+OASIS or its successors or assigns.
+
+This document and the information contained herein is provided on an "AS IS" 
+basis and OASIS DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT 
+LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE
+ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A 
+PARTICULAR PURPOSE.
+
+Original XSD can be found here:
+https://www.oasis-open.org/committees/entity/spec-2001-08-06.html
+
+-->
+
+<!-- $Id: catalog.dtd,v 1.9 2001/06/12 14:26:00 ndw Exp $ -->
 
 <!ENTITY % pubIdChars "CDATA">
 <!ENTITY % publicIdentifier "%pubIdChars;">
@@ -23,127 +53,95 @@
 <!ENTITY % nextCatalog "%p;nextCatalog">
 <!ENTITY % group "%p;group">
 
-<!ENTITY % local.catalog.mix "">
 <!ENTITY % local.catalog.attribs "">
 
 <!ELEMENT %catalog; (%public;|%system;|%uri;
                      |%rewriteSystem;|%rewriteURI;
                      |%delegatePublic;|%delegateSystem;|%delegateURI;
-                     |%nextCatalog;|%group; %local.catalog.mix;)+>
+                     |%nextCatalog;|%group;)+>
 <!ATTLIST %catalog;
-	%nsdecl;	%uriReference;		#FIXED
-		'urn:oasis:names:tc:entity:xmlns:xml:catalog'
-	prefer		%systemOrPublic;	#IMPLIED
-	xml:base	%uriReference;		#IMPLIED
-	%local.catalog.attribs;
+    %nsdecl;    %uriReference;      #FIXED
+        'urn:oasis:names:tc:entity:xmlns:xml:catalog'
+    prefer      %systemOrPublic;    #IMPLIED
+    xml:base    %uriReference;      #IMPLIED
+    %local.catalog.attribs;
 >
-
-<!ENTITY % local.public.attribs "">
 
 <!ELEMENT %public; EMPTY>
 <!ATTLIST %public;
-	id		ID			#IMPLIED
-	publicId	%publicIdentifier;	#REQUIRED
-	uri		%uriReference;		#REQUIRED
-	xml:base	%uriReference;		#IMPLIED
-        %local.public.attribs;
+    id      ID          #IMPLIED
+    publicId    %publicIdentifier;  #REQUIRED
+    uri     %uriReference;      #REQUIRED
+    xml:base    %uriReference;      #IMPLIED
 >
-
-<!ENTITY % local.system.attribs "">
 
 <!ELEMENT %system; EMPTY>
 <!ATTLIST %system;
-	id		ID			#IMPLIED
-	systemId	%string;		#REQUIRED
-	uri		%uriReference;		#REQUIRED
-	xml:base	%uriReference;		#IMPLIED
-        %local.system.attribs;
+    id      ID          #IMPLIED
+    systemId    %string;        #REQUIRED
+    uri     %uriReference;      #REQUIRED
+    xml:base    %uriReference;      #IMPLIED
 >
-
-<!ENTITY % local.uri.attribs "">
 
 <!ELEMENT %uri; EMPTY>
 <!ATTLIST %uri;
-	id		ID			#IMPLIED
-	name		%string;		#REQUIRED
-	uri		%uriReference;		#REQUIRED
-	xml:base	%uriReference;		#IMPLIED
-        %local.uri.attribs;
+    id      ID          #IMPLIED
+    name        %string;        #REQUIRED
+    uri     %uriReference;      #REQUIRED
+    xml:base    %uriReference;      #IMPLIED
 >
-
-<!ENTITY % local.rewriteSystem.attribs "">
 
 <!ELEMENT %rewriteSystem; EMPTY>
 <!ATTLIST %rewriteSystem;
-	id		ID			#IMPLIED
-	systemIdStartString	%string;	#REQUIRED
-	rewritePrefix		%string;		#REQUIRED
-        %local.rewriteSystem.attribs;
+    id      ID          #IMPLIED
+    systemIdStartString %string;    #REQUIRED
+    rewritePrefix       %string;        #REQUIRED
 >
-
-<!ENTITY % local.rewriteURI.attribs "">
 
 <!ELEMENT %rewriteURI; EMPTY>
 <!ATTLIST %rewriteURI;
-	id		ID			#IMPLIED
-	uriStartString	%string;		#REQUIRED
-	rewritePrefix	%string;		#REQUIRED
-        %local.rewriteURI.attribs;
+    id      ID          #IMPLIED
+    uriStartString  %string;        #REQUIRED
+    rewritePrefix   %string;        #REQUIRED
 >
-
-<!ENTITY % local.delegatePublic.attribs "">
 
 <!ELEMENT %delegatePublic; EMPTY>
 <!ATTLIST %delegatePublic;
-	id		ID			#IMPLIED
-	publicIdStartString	%partialPublicIdentifier;	#REQUIRED
-	catalog		%uriReference;		#REQUIRED
-	xml:base	%uriReference;		#IMPLIED
-        %local.delegatePublic.attribs;
+    id      ID          #IMPLIED
+    publicIdStartString %partialPublicIdentifier;   #REQUIRED
+    catalog     %uriReference;      #REQUIRED
+    xml:base    %uriReference;      #IMPLIED
 >
-
-<!ENTITY % local.delegateSystem.attribs "">
 
 <!ELEMENT %delegateSystem; EMPTY>
 <!ATTLIST %delegateSystem;
-	id		ID			#IMPLIED
-	systemIdStartString	%string;	#REQUIRED
-	catalog		%uriReference;		#REQUIRED
-	xml:base	%uriReference;		#IMPLIED
-        %local.delegateSystem.attribs;
+    id      ID          #IMPLIED
+    systemIdStartString %string;    #REQUIRED
+    catalog     %uriReference;      #REQUIRED
+    xml:base    %uriReference;      #IMPLIED
 >
-
-<!ENTITY % local.delegateURI.attribs "">
 
 <!ELEMENT %delegateURI; EMPTY>
 <!ATTLIST %delegateURI;
-	id		ID			#IMPLIED
-	uriStartString	%string;		#REQUIRED
-	catalog		%uriReference;		#REQUIRED
-	xml:base	%uriReference;		#IMPLIED
-        %local.delegateURI.attribs;
+    id      ID          #IMPLIED
+    uriStartString  %string;        #REQUIRED
+    catalog     %uriReference;      #REQUIRED
+    xml:base    %uriReference;      #IMPLIED
 >
-
-<!ENTITY % local.nextCatalog.attribs "">
 
 <!ELEMENT %nextCatalog; EMPTY>
 <!ATTLIST %nextCatalog;
-	id		ID			#IMPLIED
-	catalog		%uriReference;		#REQUIRED
-	xml:base	%uriReference;		#IMPLIED
-        %local.nextCatalog.attribs;
+    id      ID          #IMPLIED
+    catalog     %uriReference;      #REQUIRED
+    xml:base    %uriReference;      #IMPLIED
 >
-
-<!ENTITY % local.group.mix "">
-<!ENTITY % local.group.attribs "">
 
 <!ELEMENT %group; (%public;|%system;|%uri;
                    |%rewriteSystem;|%rewriteURI;
                    |%delegatePublic;|%delegateSystem;|%delegateURI;
-                   |%nextCatalog; %local.group.mix;)+>
+                   |%nextCatalog;)+>
 <!ATTLIST %group;
-	id		ID			#IMPLIED
-	prefer		%systemOrPublic;	#IMPLIED
-	xml:base	%uriReference;		#IMPLIED
-        %local.group.attribs;
+    id      ID          #IMPLIED
+    prefer      %systemOrPublic;    #IMPLIED
+    xml:base    %uriReference;      #IMPLIED
 >

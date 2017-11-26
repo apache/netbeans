@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,8 +21,8 @@ package org.netbeans.modules.db.dataview.output;
 import org.netbeans.modules.db.dataview.table.ResultSetJXTable;
 import java.sql.Types;
 import java.util.Arrays;
+import javax.swing.JTable;
 import javax.swing.table.TableModel;
-import org.jdesktop.swingx.JXTable;
 import org.netbeans.modules.db.dataview.meta.DBColumn;
 
 /**
@@ -36,9 +36,9 @@ class InsertRecordTableUI extends ResultSetJXTable {
     public void setModel(TableModel dataModel) {
         super.setModel(dataModel);
         if (dataModel.getColumnCount() < 7) {
-            setAutoResizeMode(JXTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+            setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         } else {
-            setHorizontalScrollEnabled(true);
+            setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         }
     }   
 

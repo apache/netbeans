@@ -30,7 +30,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <implementation-version/>
+                        <specification-version>8.22</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>

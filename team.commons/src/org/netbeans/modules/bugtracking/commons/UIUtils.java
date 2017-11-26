@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -38,17 +38,20 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -56,8 +59,6 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.text.DateFormatter;
-import javax.swing.text.DefaultFormatterFactory;
 import org.netbeans.modules.team.ide.spi.IDEServices;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Lookup;
@@ -388,23 +389,33 @@ public class UIUtils {
         return picker;
     }
 
-    private static class DummyDatePickerComponent extends JFormattedTextField implements IDEServices.DatePickerComponent {
+    private static class DummyDatePickerComponent extends JTextField implements IDEServices.DatePickerComponent {
 
-        private static final DateFormatter formatter = new javax.swing.text.DateFormatter() {
-            
-            @Override
-            public Object stringToValue (String text) throws java.text.ParseException {
-                if (text == null || text.trim().isEmpty()) {
-                    return null;
-                }
-                return super.stringToValue(text);
-            }
+        public static final DateFormat DEFAULT_FOMAT = DateFormat.getDateInstance(); // NOI18N
+        private static final DateFormat[] DATE_PARSING_FORMATS = new DateFormat[]{
+            DEFAULT_FOMAT,
+            DateFormat.getDateInstance(DateFormat.MEDIUM),
+            DateFormat.getDateInstance(DateFormat.SHORT),
+            new SimpleDateFormat("yyyy-MM-dd"), // NOI18N
+            new SimpleDateFormat("MM-dd-yyyy"), // NOI18N
         };
-        private final ChangeSupport support;
 
+        private Date oldValue;
+        private ChangeSupport support = new ChangeSupport(this);
+        
+        @SuppressWarnings("OverridableMethodCallInConstructor")
         DummyDatePickerComponent () {
-            super(new DefaultFormatterFactory(formatter));
-            support = new ChangeSupport(this);
+            super(13);
+            addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusLost(FocusEvent e) {
+                    Date newValue = getDate();
+                    if(! Objects.equals(oldValue, newValue)) {
+                        support.fireChange();
+                    }
+                    setDate(newValue);
+                }
+            });
         }
 
         @Override
@@ -414,33 +425,40 @@ public class UIUtils {
 
         @Override
         public void setDate (Date date) {
-            try {
-                setText(formatter.valueToString(date));
-            } catch (ParseException ex) {
-                Support.LOG.log(Level.INFO, null, ex);
+            oldValue = date;
+            if(date == null) {
+                setText("");
+            } else {
+                setText(DEFAULT_FOMAT.format(date));
             }
         }
 
         @Override
-        public Date getDate () {
-            try {
-                return (Date) formatter.stringToValue(getText());
-            } catch (ParseException ex) {
-                Support.LOG.log(Level.INFO, null, ex);
+        public Date getDate() {
+            String value = getText().trim();
+            if(value.isEmpty()) {
                 return null;
             }
+            for (DateFormat df : DATE_PARSING_FORMATS) {
+                try {
+                    return df.parse(value);
+                } catch (ParseException ex) {
+                    Support.LOG.log(Level.FINE, null, ex);
+                }
+            }
+            return null;
         }
 
         @Override
-        public void addChangeListener (ChangeListener listener) {
+        public void addChangeListener(ChangeListener listener) {
             support.addChangeListener(listener);
         }
 
         @Override
-        public void removeChangeListener (ChangeListener listener) {
+        public void removeChangeListener(ChangeListener listener) {
             support.removeChangeListener(listener);
         }
-
+        
         @Override
         public boolean allowsOpeningDaySelector () {
             return false;

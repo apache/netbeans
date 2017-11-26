@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,21 +19,22 @@
 package org.netbeans.modules.db.dataview.table;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
-import org.jdesktop.swingx.JXTable;
 import org.netbeans.modules.db.dataview.util.ColorHelper;
 
 /**
  *
  * @author Ahimanikya Satapathy
  */
-public class JXTableDecorator extends JXTable {
+public class JXTableDecorator extends JTable {
 
     public static final Color ROW_COLOR = ColorHelper.getTableBackground();
     public static final Color ALTERNATE_ROW_COLOR = ColorHelper.getTableAltbackground();
@@ -105,4 +106,23 @@ public class JXTableDecorator extends JXTable {
     protected Color backgroundColorForRow(int row) {
         return (row % 2 == 0) ? ResultSetJXTable.ROW_COLOR : ResultSetJXTable.ALTERNATE_ROW_COLOR;
     }
+
+    @Override
+    public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+        boolean selected = false;
+        for(int i: getSelectedRows()) {
+            if(row == i) {
+                selected = true;
+                break;
+            }
+        }
+        Component c = super.prepareRenderer(renderer, row, column);
+        if(selected) {
+            c.setBackground(getSelectionBackground());
+        } else {
+            c.setBackground(backgroundColorForRow(row));
+        }
+        return c;
+    }
+    
 }

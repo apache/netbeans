@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -29,8 +29,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -39,14 +41,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
-import org.jdesktop.swingx.JXButton;
-import org.jdesktop.swingx.JXPanel;
 import org.netbeans.modules.db.dataview.table.ResultSetTableCellEditor;
 import org.openide.windows.WindowManager;
 
 public class StringTableCellEditor extends ResultSetTableCellEditor implements TableCellEditor, ActionListener {
 
-    private final JXButton customEditorButton = new JXButton("...");
+    private final JButton customEditorButton = new JButton("...");
     private JTextComponent tc;
     private TableModel tableModel;
     private String columnName;
@@ -73,7 +73,7 @@ public class StringTableCellEditor extends ResultSetTableCellEditor implements T
         this.modelColumn = table.convertColumnIndexToModel(column);  
         this.tc = c instanceof JTextComponent ? (JTextComponent) c : null;
 
-        JXPanel panel = new JXPanel(new BorderLayout()) {
+        JPanel panel = new JPanel(new BorderLayout()) {
             @Override
             public void addNotify() {
                 super.addNotify();

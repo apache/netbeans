@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -117,42 +117,49 @@ public class JDBCProcedure extends ProcedureImplementation {
     }
 
     protected void createProcedureInfo() {
-        LOGGER.log(Level.FINE, "Initializing procedure info in " + this);
+        LOGGER.log(Level.FINE, "Initializing procedure info in {0}", this);
         
-        Map<String, Column> newColumns = new LinkedHashMap<String, Column>();
-        Map<String, Parameter> newParams = new LinkedHashMap<String, Parameter>();
+        Map<String, Column> newColumns = new LinkedHashMap<>();
+        Map<String, Parameter> newParams = new LinkedHashMap<>();
         int resultCount = 0;
         int paramCount = 0;
-
-        try {
-            ResultSet rs = jdbcSchema.getJDBCCatalog().getJDBCMetadata().getDmd().getProcedureColumns(jdbcSchema.getJDBCCatalog().getName(), jdbcSchema.getName(), name, "%"); // NOI18N
-            try {
-                while (rs.next()) {
-                    short columnType = rs.getShort("COLUMN_TYPE");
-                    switch (columnType) {
-                        case DatabaseMetaData.procedureColumnResult:
-                            addColumn(++resultCount, rs, newColumns);
-                            break;
-                        case DatabaseMetaData.procedureColumnIn:
-                        case DatabaseMetaData.procedureColumnInOut:
-                        case DatabaseMetaData.procedureColumnOut:
-                        case DatabaseMetaData.procedureColumnUnknown:
-                            addParameter(++paramCount, rs, newParams);
-                            break;
-                        case DatabaseMetaData.procedureColumnReturn:
-                            setReturnValue(rs);
-                            break;
-                        default:
-                            LOGGER.log(Level.INFO, "Encountered unexpected column type " + columnType + " when retrieving metadadta for procedure " + name);
-                    }
-                }
-            } finally {
-                if (rs != null) {
-                    rs.close();
+        
+        DatabaseMetaData dmd = jdbcSchema.getJDBCCatalog().getJDBCMetadata().getDmd();
+        String catalogName = jdbcSchema.getJDBCCatalog().getName();
+        String schemaName = jdbcSchema.getName();
+        
+        try (ResultSet rs = dmd.getProcedureColumns(catalogName, schemaName, name, "%");) {  // NOI18N
+            while (rs.next()) {
+                short columnType = rs.getShort("COLUMN_TYPE");
+                switch (columnType) {
+                    case DatabaseMetaData.procedureColumnResult:
+                        resultCount++;
+                        addColumn(resultCount, rs, newColumns);
+                        break;
+                    case DatabaseMetaData.procedureColumnIn:
+                    case DatabaseMetaData.procedureColumnInOut:
+                    case DatabaseMetaData.procedureColumnOut:
+                    case DatabaseMetaData.procedureColumnUnknown:
+                        paramCount++;
+                        addParameter(paramCount, rs, newParams);
+                        break;
+                    case DatabaseMetaData.procedureColumnReturn:
+                        setReturnValue(rs);
+                        break;
+                    default:
+                        LOGGER.log(Level.INFO, "Encountered unexpected column type {0} when retrieving metadadta for procedure {1}", new Object[]{columnType, name});
                 }
             }
+        } catch (RuntimeException e) {
+            throw new RuntimeException(String.format(
+                    "Failed to retrieve procedure info for catalog: '%s', schema: '%s', procedure: '%s'",
+                    catalogName, schemaName, name
+            ), e);
         } catch (SQLException e) {
-            throw new MetadataException(e);
+            throw new MetadataException(String.format(
+                    "Failed to retrieve procedure info for catalog: '%s', schema: '%s', procedure: '%s'",
+                    catalogName, schemaName, name
+            ), e);
         }
         columns = Collections.unmodifiableMap(newColumns);
         parameters = Collections.unmodifiableMap(newParams);
@@ -175,6 +182,7 @@ public class JDBCProcedure extends ProcedureImplementation {
         LOGGER.log(Level.FINE, "Created return value {0}", returnValue);
     }
 
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     private Map<String, Column> initColumns() {
         if (columns != null) {
             return columns;
@@ -183,6 +191,7 @@ public class JDBCProcedure extends ProcedureImplementation {
         return columns;
     }
 
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     private Map<String, Parameter> initParameters() {
         if (parameters != null) {
             return parameters;

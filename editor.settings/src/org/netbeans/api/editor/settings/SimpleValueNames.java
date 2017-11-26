@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -36,6 +36,13 @@ public final class SimpleValueNames {
      * Values: java.lang.Integer instances
      */
     public static final String TAB_SIZE = "tab-size"; // NOI18N
+
+    /**
+     * Whether indentation is enabled.
+     * Values: java.lang.Boolean instances
+     * @since 1.58
+     */
+    public static final String ENABLE_INDENTATION = "enable-indent"; // NOI18N
 
     /**
      * Whether expand typed tabs to spaces. The number of spaces to substitute

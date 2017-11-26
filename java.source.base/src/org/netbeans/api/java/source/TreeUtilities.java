@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -754,6 +754,14 @@ public final class TreeUtilities {
     public Scope toScopeWithDisabledAccessibilityChecks(Scope scope) {
         return new NBScope((JavacScope)scope);
     }
+
+    private static Env<AttrContext> getEnv(Scope scope) {
+        if (scope instanceof NBScope) {
+            scope = ((NBScope) scope).delegate;
+        }
+        
+        return ((JavacScope) scope).getEnv();
+    }
     
     /**Attribute the given tree in the given context.
      */
@@ -783,7 +791,7 @@ public final class TreeUtilities {
     }
     
     public TypeMirror reattributeTree(Tree tree, Scope scope) {
-        Env<AttrContext> env = ((JavacScope)scope).getEnv();
+        Env<AttrContext> env = getEnv(scope);
         copyInnerClassIndexes(env.tree, tree);
         if (scope instanceof NBScope && ((NBScope)scope).areAccessibilityChecksDisabled()) {
             NBResolve.instance(info.impl.getJavacTask().getContext()).disableAccessibilityChecks();
@@ -796,7 +804,7 @@ public final class TreeUtilities {
     }
     
     public Scope reattributeTreeTo(Tree tree, Scope scope, Tree to) {
-        Env<AttrContext> env = ((JavacScope)scope).getEnv();
+        Env<AttrContext> env = getEnv(scope);
         copyInnerClassIndexes(env.tree, tree);
         if (scope instanceof NBScope && ((NBScope)scope).areAccessibilityChecksDisabled()) {
             NBResolve.instance(info.impl.getJavacTask().getContext()).disableAccessibilityChecks();
@@ -826,7 +834,7 @@ public final class TreeUtilities {
 //        ArgumentAttr.LocalCacheContext cacheContext = argumentAttr.withLocalCacheContext();
         try {
             Attr attr = Attr.instance(jti.getContext());
-            Env<AttrContext> env = ((JavacScope) scope).getEnv();
+            Env<AttrContext> env = getEnv(scope);
             if (tree instanceof JCExpression)
                 return attr.attribExpr((JCTree) tree,env, Type.noType);
             return attr.attribStat((JCTree) tree,env);
@@ -856,7 +864,7 @@ public final class TreeUtilities {
 //        ArgumentAttr.LocalCacheContext cacheContext = argumentAttr.withLocalCacheContext();
         try {
             Attr attr = Attr.instance(jti.getContext());
-            Env<AttrContext> env = ((JavacScope) scope).getEnv();
+            Env<AttrContext> env = getEnv(scope);
             Env<AttrContext> result = tree instanceof JCExpression ?
                 attr.attribExprToTree((JCExpression) tree, env, (JCTree) to) :
                 attr.attribStatToTree((JCTree) tree, env, (JCTree) to);
@@ -907,7 +915,7 @@ public final class TreeUtilities {
     /**Checks whether the given scope is in "static" context.
      */
     public boolean isStaticContext(Scope scope) {
-        return NBResolve.isStatic(((JavacScope)scope).getEnv());
+        return NBResolve.isStatic(getEnv(scope));
     }
     
     /**Returns uncaught exceptions inside the given tree path.

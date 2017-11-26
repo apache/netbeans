@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,33 +19,23 @@
 package org.netbeans.modules.db.dataview.table.celleditor;
 
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.EventObject;
-import javax.swing.AbstractCellEditor;
+import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.JTable;
-import javax.swing.UIManager;
-import javax.swing.table.TableCellEditor;
-import org.jdesktop.swingx.JXDatePicker;
+import javax.swing.JTextField;
+import org.netbeans.modules.db.dataview.table.ResultSetTableCellEditor;
 import org.netbeans.modules.db.dataview.util.DataViewUtils;
-import org.netbeans.modules.db.dataview.util.JXDateTimePicker;
 import org.netbeans.modules.db.dataview.util.TimestampType;
 
-public class DateTimePickerCellEditor extends AbstractCellEditor implements TableCellEditor {
+public class DateTimePickerCellEditor extends ResultSetTableCellEditor {
 
-    private boolean editable = true;
-    private JXDateTimePicker datePicker;
+    private Timestamp initialValue;
     private DateFormat dateFormat;
-    private ActionListener pickerActionListener;
-    private boolean ignoreAction;
-    private JTable table;
 
     public DateTimePickerCellEditor() {
         this(new SimpleDateFormat (TimestampType.DEFAULT_FORMAT_PATTERN));
@@ -58,56 +48,30 @@ public class DateTimePickerCellEditor extends AbstractCellEditor implements Tabl
      * @param dateFormat
      */
     public DateTimePickerCellEditor(DateFormat dateFormat) {
-
-        // JW: the copy is used to synchronize .. can 
-        // we use something else?
+        super(new JTextField());
         this.dateFormat = dateFormat != null ? dateFormat : new SimpleDateFormat (TimestampType.DEFAULT_FORMAT_PATTERN);
-        datePicker = new JXDateTimePicker();
-        // default border crushes the editor/combo
-        datePicker.getEditor().setBorder(
-                BorderFactory.createEmptyBorder(0, 1, 0, 1));
-        // should be fixed by j2se 6.0
-        datePicker.setFont(UIManager.getDefaults().getFont("TextField.font"));
-        if (dateFormat != null) {
-            datePicker.setFormats(dateFormat);
-        }
-        datePicker.addActionListener(getPickerActionListener());
     }
 
     @Override
     public Timestamp getCellEditorValue() {
-        return datePicker.getDateTime();
-    }
-
-    @Override
-    public boolean isCellEditable(EventObject anEvent) {
-        if (anEvent instanceof MouseEvent) {
-            return ((MouseEvent) anEvent).getClickCount() >= 2;
+        Date parsedTimestamp = TimestampType.doParse((String) super.getCellEditorValue());
+        if(parsedTimestamp != null) {
+            return new Timestamp(parsedTimestamp.getTime());
+        } else {
+            return initialValue;
         }
-        return super.isCellEditable(anEvent);
     }
-
+    
     @Override
-    public boolean stopCellEditing() {
-        ignoreAction = true;
-        boolean canCommit = commitChange();
-        ignoreAction = false;
-        if (canCommit) {
-            datePicker.setDateTime(null);
-            return super.stopCellEditing();
+    public Component getTableCellEditorComponent(final JTable table, Object value, boolean isSelected, int row, int column) {
+        Component c = super.getTableCellEditorComponent(table, "", isSelected, row, column);
+        JTextField jtf = (JTextField) c;
+        initialValue = getValueAsTimestamp(value);
+        jtf.setText(dateFormat.format(initialValue));
+        if (suppressEditorBorder) {
+            jtf.setBorder(BorderFactory.createEmptyBorder());
         }
-        return false;
-    }
-
-    @Override
-    public Component getTableCellEditorComponent(final JTable table, Object value,
-            boolean isSelected, int row, int column) {
-        this.table = table;
-        ignoreAction = true;
-        datePicker.setDateTime(getValueAsTimestamp(value));
-
-        ignoreAction = false;
-        return datePicker;
+        return c;
     }
 
     protected Timestamp getValueAsTimestamp(Object value) {
@@ -135,56 +99,8 @@ public class DateTimePickerCellEditor extends AbstractCellEditor implements Tabl
     protected boolean isEmpty(Object value) {
         return value == null || value instanceof String && ((String) value).length() == 0;
     }
-
-    protected boolean commitChange() {
-        try {
-            datePicker.commitEdit();
-            return true;
-        } catch (ParseException e) {
-        }
-        return false;
-    }
-
-    public DateFormat[] getFormats() {
-        return datePicker.getFormats();
-    }
-
-    public void setFormats(DateFormat... formats) {
-        datePicker.setFormats(formats);
-    }
-
-    private ActionListener getPickerActionListener() {
-        if (pickerActionListener == null) {
-            pickerActionListener = createPickerActionListener();
-        }
-        return pickerActionListener;
-    }
-
-    protected ActionListener createPickerActionListener() {
-        ActionListener l = new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                // avoid duplicate trigger from
-                // commit in stopCellEditing
-                if (ignoreAction) {
-                    return;
-                }
-                terminateEdit(e);
-            }
-
-            private void terminateEdit(final ActionEvent e) {
-                if ((e != null) && (JXDatePicker.COMMIT_KEY.equals(e.getActionCommand()))) {
-                    stopCellEditing();
-                } else {
-                    cancelCellEditing();
-                }
-            }
-        };
-        return l;
-    }
-
+    
     public void addKeyListener(KeyListener kl) {
-        datePicker.addKeyListener(kl);
+        ((JTextField) getComponent()).addKeyListener(kl);
     }
 }

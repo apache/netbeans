@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -1067,5 +1067,8 @@ public final class ProxyFileManager implements JavaFileManager {
                 return res;
             }
         }
+    }
+    public boolean contains(Location l, FileObject f) {
+        return true;
     }
 }

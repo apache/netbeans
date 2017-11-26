@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -39,6 +39,7 @@ import org.openide.util.NbBundle;
 public class SQLStatementExecutorTest extends NbTestCase {
     private TestCaseContext context;
     private DatabaseConnection dbconn;
+    private Connection conn;
     
     public SQLStatementExecutorTest(String testName) {
         super(testName);
@@ -55,6 +56,7 @@ public class SQLStatementExecutorTest extends NbTestCase {
         MockServices.setServices(new DBConnectionProviderImpl().getClass());
         context = DbUtil.getContext();
         dbconn = DbUtil.getDBConnection();
+        conn = DbUtil.getjdbcConnection();
         DbUtil.createTable();
     }
 
@@ -66,10 +68,12 @@ public class SQLStatementExecutorTest extends NbTestCase {
     }
 
     public void testSQLExecutionHelper(){
+        final String sqlStr = context.getSqlUpdate();
+        DataView dv = null;
         try {
             int pageSize = 5;
-            final String sqlStr = context.getSqlUpdate();
-            DataView dv = DataView.create(dbconn, sqlStr, pageSize);
+            
+            dv = DataView.create(dbconn, sqlStr, pageSize);
             SQLStatementExecutor executor = new SQLStatementExecutor(dv, NbBundle.getMessage(SQLExecutionHelper.class, "LBL_sql_insert"), "", true) {
 
                 @Override
@@ -85,12 +89,10 @@ public class SQLStatementExecutorTest extends NbTestCase {
                 }
             };
             executor.execute();
-            assertEquals(1, dv.getUpdateCount());
-            assertEquals(sqlStr, dv.getSQLString());
-        } catch (SQLException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (DBException ex) {
+        } catch (SQLException | DBException ex) {
             Exceptions.printStackTrace(ex);
         }
+        assertEquals(1, dv.getUpdateCount());
+        assertEquals(sqlStr, dv.getSQLString());
     }
 }

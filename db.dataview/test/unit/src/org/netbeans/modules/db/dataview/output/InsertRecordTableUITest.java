@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,6 +20,8 @@ package org.netbeans.modules.db.dataview.output;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.util.Collections;
+import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.junit.MockServices;
@@ -93,7 +95,7 @@ public class InsertRecordTableUITest extends NbTestCase {
                 ird.insertRecordTableUI.setValueAt(
                         new Date(new java.util.Date().getTime()), 1, 5);
                 try {
-                    ird.insertRecordTableUI.setSortOrder(5, SortOrder.ASCENDING);
+                    ird.insertRecordTableUI.getRowSorter().setSortKeys(Collections.singletonList(new RowSorter.SortKey(5, SortOrder.ASCENDING)));
                 } catch (ClassCastException ex) {
                     assert false : "Bug 219011 - should not be reached!";
                 }

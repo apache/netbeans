@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -30,7 +30,7 @@ import org.openide.util.NbBundle;
 @ActionRegistration(displayName = "#LBL_EncapsulateFieldsAction", lazy = false)
 @ActionReferences({
     @ActionReference(path = "Editors/text/x-java/RefactoringActions", name = "EncapsulateFieldAction", position = 1800),
-    @ActionReference(path = "Shortcuts", name = "OCS-E")
+    @ActionReference(path = "Shortcuts", name = "CS-Y E")
 })
 public final class EncapsulateFieldAction extends JavaRefactoringGlobalAction {
 

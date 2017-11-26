@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -62,7 +62,8 @@ public class XMLSyntaxParserTest extends TestCase {
         suite.addTest(new XMLSyntaxParserTest("testParseTestXML"));
         suite.addTest(new XMLSyntaxParserTest("testMultiRootXML"));
         suite.addTest(new XMLSyntaxParserTest("testParseWSDL"));
-        suite.addTest(new XMLSyntaxParserTest("testParsePerformace"));
+//        Disabled as referenced files were partly not donated by oracle to apache
+//        suite.addTest(new XMLSyntaxParserTest("testParsePerformace"));
         return suite;
     }
     

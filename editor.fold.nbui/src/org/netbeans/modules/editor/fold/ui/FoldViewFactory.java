@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -26,6 +26,7 @@ import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
 import javax.swing.text.View;
 import org.netbeans.api.editor.fold.Fold;
 import org.netbeans.api.editor.fold.FoldHierarchy;
@@ -40,6 +41,7 @@ import org.netbeans.modules.editor.lib2.view.EditorView;
 import org.netbeans.modules.editor.lib2.view.EditorViewFactory;
 import org.netbeans.modules.editor.lib2.view.EditorViewFactoryChange;
 import org.netbeans.modules.editor.lib2.view.ViewUtils;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
@@ -276,8 +278,8 @@ public final class FoldViewFactory extends EditorViewFactory implements FoldHier
                 }
             }
         }
-
-        if (collapsedFoldEncountered) {
+        JTextComponent comp = textComponent();
+        if (collapsedFoldEncountered && comp != null) {
             // [TODO] there could be more detailed inspection done among folds
             // of what really changed and what are in fact the same folds as before the change
             // possibly performed even on the Fold API level.
@@ -287,6 +289,7 @@ public final class FoldViewFactory extends EditorViewFactory implements FoldHier
                 ViewUtils.log(CHANGE_LOG, "CHANGE in FoldViewFactory: <" + // NOI18N
                         startOffset + "," + endOffset + ">\n"); // NOI18N
             }
+            comp.putClientProperty("editorcaret.updateRetainsVisibleOnce", Boolean.TRUE);
             fireEvent(EditorViewFactoryChange.createList(startOffset, endOffset,
                     EditorViewFactoryChange.Type.PARAGRAPH_CHANGE));
         }

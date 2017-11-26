@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -50,8 +50,9 @@ public class DatatypeTest extends AbstractTestCase {
     
     public static Test suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new DatatypeTest("testDatatypeEnumerations"));
-        suite.addTest(new DatatypeTest("testCreateDatatype"));        
+//        Disabled as referenced XSD file were partly not donated by oracle to apache
+//        suite.addTest(new DatatypeTest("testDatatypeEnumerations"));
+//        suite.addTest(new DatatypeTest("testCreateDatatype"));        
         return suite;
     }
     

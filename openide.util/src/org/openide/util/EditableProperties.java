@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -83,7 +83,9 @@ public final class EditableProperties extends AbstractMap<String,String> impleme
             for (Item _i : original.items) {
                 Item i = (Item) _i.clone();
                 items.add(i);
-                itemIndex.put(i.getKey(), i);
+                if(i.getKey() != null) {
+                    itemIndex.put(i.getKey(), i);
+                }
             }
         }
     }
@@ -832,7 +834,7 @@ public final class EditableProperties extends AbstractMap<String,String> impleme
         }
         
         public int size() {
-            return state.items.size();
+            return state.itemIndex.size();
         }
         
     }

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -397,9 +397,14 @@ public class CompletionContextImpl extends CompletionContext {
             //this may happen when there's a lexical error inside the tag itself,
             //for example in this valid case: <tag att|> or in something errorneous
             //like: <tag att|#$#$#>
+            isJustBeforeTagErrorToken = false;
+        if (tokID.equals(XMLTokenId.ERROR)) {
             isJustBeforeTagErrorToken 
-                                = tokID.equals(XMLTokenId.ERROR) && diff == 0;
-        
+                                = tokID.equals(XMLTokenId.ERROR);
+            String tokenText = tok.text().toString();
+            isJustBeforeTagErrorToken = tokenText.subSequence(0, diff).toString().trim().isEmpty() ||
+                    diff == 0;
+        }
         while (true) {
             if (tokID.equals(XMLTokenId.TAG) || tokID.equals(XMLTokenId.TEXT)) {
                 if (CompletionUtil.isEndTagPrefix(tok)) break;
@@ -451,7 +456,10 @@ public class CompletionContextImpl extends CompletionContext {
                     String str = token.text().toString();
                     int e = str.length();
                     int l = Math.min(completionAtOffset - tokenOffset /* initial quote */, e);
-                    typedChars = str.substring(0, l);
+                    typedChars = str.substring(0, l).trim();
+                    if (typedChars.isEmpty()) {
+                        typedChars = null;
+                    }
                 }
                 createPathFromRoot(element);
                 return true;
@@ -713,8 +721,11 @@ public class CompletionContextImpl extends CompletionContext {
         if(se == null)
             return;
         Stack<SyntaxElement> stack = new Stack<>();
-        if(support.isEmptyTag(se))
+        boolean insideEmpty = false;
+        if(support.isEmptyTag(se)) {
             stack.push(se);
+            insideEmpty = true;
+        }
         
         while( se != null) {
             if (
@@ -724,9 +735,13 @@ public class CompletionContextImpl extends CompletionContext {
                 se = se.getPrevious();
                 continue;
             }
-            if (support.isStartTag(se)) {
-                if (support.isEndTag(stack.peek())) {
-                    SyntaxElement end = stack.peek();
+            if (support.isEmptyTag(se)) {
+                if (insideEmpty) {
+                    stack.pop();
+                }
+            } else if (support.isStartTag(se)) {
+                SyntaxElement end = stack.isEmpty() ? null : stack.peek();
+                if (support.isEndTag(end)) {
                     if(end.getNode().getNodeName().equals(se.getNode().getNodeName())) {
                         stack.pop();
                     }
@@ -734,6 +749,7 @@ public class CompletionContextImpl extends CompletionContext {
                     stack.push(se);
                 }
             }
+            insideEmpty = false;
             se = se.getPrevious();
         }
         

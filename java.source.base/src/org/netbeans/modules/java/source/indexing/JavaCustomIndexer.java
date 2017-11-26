@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -70,14 +70,15 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery;
+import org.netbeans.api.java.queries.BinaryForSourceQuery;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.JavaSourceTaskFactoryManager;
+import org.netbeans.modules.java.source.ModuleNames;
 import org.netbeans.modules.java.source.base.Module;
 import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
 import org.netbeans.modules.java.source.parsing.FileObjects;
@@ -202,7 +203,16 @@ public class JavaCustomIndexer extends CustomIndexer {
                 final JavaParsingContext javaContext;
                 try {
                     //todo: Ugly hack, the ClassIndexManager.createUsagesQuery has to be called before the root is set to dirty mode.
-                    javaContext = new JavaParsingContext(context, bootPath, moduleBootPath != null ? moduleBootPath : ClassPath.EMPTY, compilePath, moduleCompilePath != null ? moduleCompilePath : ClassPath.EMPTY, moduleClassPath != null ? moduleClassPath : ClassPath.EMPTY, sourcePath, moduleSourcePath, virtualSourceTuples);
+                    javaContext = new JavaParsingContext(
+                            context,
+                            bootPath,
+                            moduleBootPath != null ? moduleBootPath : ClassPath.EMPTY,
+                            compilePath,
+                            moduleCompilePath != null ? moduleCompilePath : ClassPath.EMPTY,
+                            moduleClassPath != null ? moduleClassPath : ClassPath.EMPTY,
+                            sourcePath,
+                            moduleSourcePath,
+                            virtualSourceTuples);
                 } finally {
                     JavaIndex.setAttribute(context.getRootURI(), ClassIndexManager.PROP_DIRTY_ROOT, Boolean.TRUE.toString());
                 }
@@ -222,6 +232,7 @@ public class JavaCustomIndexer extends CustomIndexer {
                     javaContext.getClassIndexImpl().setDirty(null);
                     final SourceFileManager.ModifiedFilesTransaction mftx = txCtx.get(SourceFileManager.ModifiedFilesTransaction.class);
                     final boolean[] isModuleInfo = new boolean[1];
+                    URL[] binaries = null;
                     for (Indexable i : javaSources) {
                         final CompileTuple tuple = createTuple(context, javaContext, i);
                         if (tuple != null) {
@@ -241,6 +252,10 @@ public class JavaCustomIndexer extends CustomIndexer {
                                     null :
                                     ElementHandleAccessor.getInstance().create(ElementKind.MODULE, moduleName);
                             JavaIndex.setAttribute(context.getRootURI(), JavaIndex.ATTR_MODULE_NAME, null);
+                            binaries = findBinaries(context.getRootURI());
+                            for (URL binary : binaries) {
+                                ModuleNames.getInstance().reset(binary);
+                            }
                         }
                     }
                     for (CompileTuple tuple : virtualSourceTuples) {
@@ -282,6 +297,12 @@ public class JavaCustomIndexer extends CustomIndexer {
                     }
                     if (moduleName != null) {
                         JavaIndex.setAttribute(context.getRootURI(), JavaIndex.ATTR_MODULE_NAME, moduleName);
+                        if (binaries == null) {
+                            binaries = findBinaries(context.getRootURI());
+                        }
+                        for (URL binary : binaries) {
+                            ModuleNames.getInstance().reset(binary);
+                        }
                     }
                     finished = compileResult.success;
 
@@ -372,6 +393,15 @@ public class JavaCustomIndexer extends CustomIndexer {
         } catch (IOException ioe) {
             Exceptions.printStackTrace(ioe);
         }
+    }
+
+    @NonNull
+    private static URL[] findBinaries(@NonNull final URL sourceRoot) throws IOException {
+        final URL[] artefacts = BinaryForSourceQuery.findBinaryRoots(sourceRoot).getRoots();
+        final List<URL> bin = new ArrayList<>(artefacts.length+1);
+        Collections.addAll(bin, artefacts);
+        bin.add(BaseUtilities.toURI(JavaIndex.getClassFolder(sourceRoot, false, false)).toURL());
+        return bin.toArray(new URL[bin.size()]);
     }
 
     private static List<? extends Indexable> splitSources(final Iterable<? extends Indexable> indexables, final List<? super Indexable> javaSources) {
@@ -553,35 +583,35 @@ public class JavaCustomIndexer extends CustomIndexer {
             if (cont) {
                 file = new File(classFolder, withoutExt + '.' + FileObjects.SIG);
                 if (file.exists()) {
-                    if (!javaContext.getFQNs().check(FileObjects.getBinaryName(file, classFolder), relURLPair.second())) {
-                        String fileName = file.getName();
-                        fileName = fileName.substring(0, fileName.lastIndexOf('.'));
-                        final String[][] patterns = new String[][]{
-                            new String[]{fileName + '.', "", FileObjects.SIG, FileObjects.RS, FileObjects.RAPT, FileObjects.RX},    //NOI18N
-                            new String[]{fileName + '$', null, FileObjects.SIG}                                                       //NOI18N
-                        };
-                        File parent = file.getParentFile();
-                        FilenameFilter filter = new FilenameFilter() {
+                    String fileName = file.getName();
+                    fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+                    final String[][] patterns = new String[][]{
+                        new String[]{fileName + '.', "", FileObjects.SIG, FileObjects.RS, FileObjects.RAPT, FileObjects.RX},    //NOI18N
+                        new String[]{fileName + '$', null, FileObjects.SIG}                                                       //NOI18N
+                    };
+                    File parent = file.getParentFile();
+                    FilenameFilter filter = new FilenameFilter() {
 
-                            @Override
-                            public boolean accept(File dir, String name) {
-                                for (final String[] pattern : patterns) {
-                                    if (name.startsWith(pattern[0])) {
-                                        final String ext = FileObjects.getExtension(name);
-                                        for (int i = 2; i< pattern.length; i++) {
-                                            if (pattern[i].equals(ext) && (pattern[1] == null || name.length() == pattern[0].length() + pattern[i].length())) {
-                                                return true;
-                                            }
+                        @Override
+                        public boolean accept(File dir, String name) {
+                            for (final String[] pattern : patterns) {
+                                if (name.startsWith(pattern[0])) {
+                                    final String ext = FileObjects.getExtension(name);
+                                    for (int i = 2; i< pattern.length; i++) {
+                                        if (pattern[i].equals(ext) && (pattern[1] == null || name.length() == pattern[0].length() + pattern[i].length())) {
+                                            return true;
                                         }
                                     }
                                 }
-                                return false;
                             }
-                        };
-                        final File[] children = parent.listFiles(filter);
-                        if (children != null) {
-                            for (File f : children) {
-                                String className = FileObjects.getBinaryName(f, classFolder);
+                            return false;
+                        }
+                    };
+                    final File[] children = parent.listFiles(filter);
+                    if (children != null) {
+                        for (File f : children) {
+                            String className = FileObjects.getBinaryName(f, classFolder);
+                            if (!javaContext.getFQNs().check(className, relURLPair.second())) {
                                 javaContext.getFQNs().remove(className, relURLPair.second());
                                 toDelete.add(
                                         FileObjects.MODULE_INFO.equals(className) ?

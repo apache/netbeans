@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,7 +20,6 @@ package org.netbeans.modules.db.dataview.util;
 
 import java.awt.Color;
 import javax.swing.UIManager;
-import org.jdesktop.swingx.plaf.UIManagerExt;
 
 /**
  * Helper to deal with different color schemes.
@@ -202,7 +201,7 @@ public class ColorHelper {
             if(isDarkTheme()) {
                 UIManager.put("nb.dataview.jxdatetimepicker.background", new RelativeColor(new Color(0, 0, 0), new Color(0, 0, 0), "Table.background")); //NOI18N
             } else {
-                UIManager.put("nb.dataview.jxdatetimepicker.background", UIManagerExt.getColor("JXMonthView.background"));
+                UIManager.put("nb.dataview.jxdatetimepicker.background", UIManager.getColor("JXMonthView.background"));
             }
             return UIManager.getColor("nb.dataview.jxdatetimepicker.background"); //NOI18N
         } else {
@@ -216,7 +215,7 @@ public class ColorHelper {
             if(isDarkTheme()) {
                 UIManager.put("nb.dataview.jxdatetimepicker.foreground", new RelativeColor(new Color(0, 0, 0), new Color(0, 0, 0), "Table.foreground")); //NOI18N
             } else {
-                UIManager.put("nb.dataview.jxdatetimepicker.foreground", UIManagerExt.getColor("JXMonthView.foreground"));
+                UIManager.put("nb.dataview.jxdatetimepicker.foreground", UIManager.getColor("JXMonthView.foreground"));
             }
             return UIManager.getColor("nb.dataview.jxdatetimepicker.foreground"); //NOI18N
         } else {
@@ -234,7 +233,7 @@ public class ColorHelper {
                     UIManager.put("nb.dataview.jxdatetimepicker.selectedBackground", new RelativeColor(new Color(0, 0, 0), new Color(0, 0, 0), "Table.selectionBackground")); //NOI18N
                 }
             } else {
-                UIManager.put("nb.dataview.jxdatetimepicker.selectedBackground", UIManagerExt.getColor("JXMonthView.selectedBackground"));
+                UIManager.put("nb.dataview.jxdatetimepicker.selectedBackground", UIManager.getColor("JXMonthView.selectedBackground"));
             }
 
             return UIManager.getColor("nb.dataview.jxdatetimepicker.selectedBackground"); //NOI18N
@@ -253,7 +252,7 @@ public class ColorHelper {
                     UIManager.put("nb.dataview.jxdatetimepicker.selectedForeground", new RelativeColor(new Color(0, 0, 0), new Color(0, 0, 0), "Table.selectionForeground")); //NOI18N
                 }
             } else {
-                UIManager.put("nb.dataview.jxdatetimepicker.selectedForeground", UIManagerExt.getColor("JXMonthView.selectedForeground"));
+                UIManager.put("nb.dataview.jxdatetimepicker.selectedForeground", UIManager.getColor("JXMonthView.selectedForeground"));
             }
 
             return UIManager.getColor("nb.dataview.jxdatetimepicker.selectedForeground"); //NOI18N
@@ -268,7 +267,7 @@ public class ColorHelper {
             if (isDarkTheme()) {
                 UIManager.put("nb.dataview.jxdatetimepicker.daysOfTheWeekForeground", new RelativeColor(new Color(0, 0, 0), new Color(0, 0, 0), "Table.background")); //NOI18N
             } else {
-                UIManager.put("nb.dataview.jxdatetimepicker.daysOfTheWeekForeground", UIManagerExt.getColor("JXMonthView.daysOfTheWeekForeground"));
+                UIManager.put("nb.dataview.jxdatetimepicker.daysOfTheWeekForeground", UIManager.getColor("JXMonthView.daysOfTheWeekForeground"));
             }
             return UIManager.getColor("nb.dataview.jxdatetimepicker.daysOfTheWeekForeground"); //NOI18N
         } else {
@@ -282,7 +281,7 @@ public class ColorHelper {
             if(isDarkTheme()) {
                 UIManager.put("nb.dataview.jxdatetimepicker.todayBackground", new RelativeColor(new Color(0, 0, 0), new Color(20, 20, 20), "Table.background")); //NOI18N
             } else {
-                UIManager.put("nb.dataview.jxdatetimepicker.todayBackground", UIManagerExt.getColor("JXMonthView.foreground"));
+                UIManager.put("nb.dataview.jxdatetimepicker.todayBackground", UIManager.getColor("JXMonthView.foreground"));
             }
             return UIManager.getColor("nb.dataview.jxdatetimepicker.todayBackground"); //NOI18N
         } else {
@@ -335,7 +334,7 @@ public class ColorHelper {
     public static Color getJxdatetimepickerMonthStringBackground() {
         Color managerColor = UIManager.getColor("nb.dataview.jxdatetimepicker.monthStringBackground");
         if (managerColor == null) {
-            UIManager.put("nb.dataview.jxdatetimepicker.monthStringBackground", UIManagerExt.getColor("JXMonthView.monthStringBackground")); //NOI18N
+            UIManager.put("nb.dataview.jxdatetimepicker.monthStringBackground", UIManager.getColor("JXMonthView.monthStringBackground")); //NOI18N
             return UIManager.getColor("nb.dataview.jxdatetimepicker.monthStringBackground"); //NOI18N
         } else {
             return managerColor;
@@ -345,7 +344,7 @@ public class ColorHelper {
     public static Color getJxdatetimepickerMonthStringForeground() {
         Color managerColor = UIManager.getColor("nb.dataview.jxdatetimepicker.monthStringForeground");
         if (managerColor == null) {
-            UIManager.put("nb.dataview.jxdatetimepicker.monthStringForeground", UIManagerExt.getColor("JXMonthView.monthStringForeground")); //NOI18N
+            UIManager.put("nb.dataview.jxdatetimepicker.monthStringForeground", UIManager.getColor("JXMonthView.monthStringForeground")); //NOI18N
             return UIManager.getColor("nb.dataview.jxdatetimepicker.monthStringForeground"); //NOI18N
         } else {
             return managerColor;

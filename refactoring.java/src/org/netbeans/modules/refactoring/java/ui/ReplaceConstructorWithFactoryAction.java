@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -32,7 +32,7 @@ import org.openide.util.NbBundle;
 @ActionRegistration(displayName = "#LBL_ReplaceConstructorAction")
 @ActionReferences({
     @ActionReference(path = "Editors/text/x-java/RefactoringActions", name = "ReplaceConstructorWithFactoryAction", position = 1820),
-    @ActionReference(path = "Shortcuts", name = "OCS-F")
+    @ActionReference(path = "Shortcuts", name = "CS-Y F")
 })
 public final class ReplaceConstructorWithFactoryAction extends JavaRefactoringGlobalAction {
 

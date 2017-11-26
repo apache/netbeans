@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -36,7 +36,7 @@ import org.netbeans.modules.db.dataview.util.TestCaseContext;
  */
 public class DataViewDBTableTest extends NbTestCase {
     
-    Collection<DBTable> tables;
+    private Collection<DBTable> tables;
     private TestCaseContext context;
     private DatabaseConnection dbconn;
     private Connection conn;
@@ -116,7 +116,7 @@ public class DataViewDBTableTest extends NbTestCase {
         String sqlStr = context.getSqlSelect();
         DataView dv = DataView.create(dbconn, sqlStr, index);
         DataViewDBTable instance = dv.getPageContext(0).getTableMetaData();
-        String expResult = "SIMPLETABLE";
+        String expResult = "TESTDB.\"PUBLIC\".SIMPLETABLE";
         String result = instance.getFullyQualifiedName(0, false);
         assertEquals(expResult, result);
     }

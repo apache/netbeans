@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -24,6 +24,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import org.netbeans.api.db.explorer.DatabaseConnection;
+import org.netbeans.api.db.sql.support.SQLIdentifiers;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.db.dataview.util.DbUtil;
 import org.netbeans.modules.db.dataview.util.TestCaseContext;
@@ -35,7 +36,7 @@ import org.openide.util.Exceptions;
  */
 public class DBTableTest extends NbTestCase {
     
-    DBTable table;
+    private DBTable table;
     private TestCaseContext context;
     private DatabaseConnection dbconn;
     private Connection conn;
@@ -76,6 +77,7 @@ public class DBTableTest extends NbTestCase {
             String aSchema = rsMeta.getSchemaName(1);
             String aCatalog = rsMeta.getCatalogName(1);
             table = new DBTable(aName, aSchema, aCatalog);
+            table.setQuoter(SQLIdentifiers.createQuoter(conn.getMetaData()));
             //table.setQuoter(quoter);
         } catch (SQLException ex) {
             Exceptions.printStackTrace(ex);
@@ -97,7 +99,7 @@ public class DBTableTest extends NbTestCase {
      * Test of getCatalog method, of class DBTable.
      */
     public void testGetCatalog() {
-        String expResult = "";
+        String expResult = "TESTDB";
         String result = table.getCatalog();
         assertEquals(expResult, result);
     }
@@ -106,7 +108,7 @@ public class DBTableTest extends NbTestCase {
      * Test of getDisplayName method, of class DBTable.
      */
     public void testGetDisplayName() {
-        String expResult = "SIMPLETABLE";
+        String expResult = "TESTDB.\"PUBLIC\".SIMPLETABLE";
         String result = table.getDisplayName();
         assertEquals(expResult, result);
     }

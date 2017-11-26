@@ -3,6 +3,9 @@ Version: 70
 License: GPL-2-CP
 Source: http://hg.netbeans.org/apitest/
 Description: Signature test modified for NetBeans
+Origin: OpenJDK (modified by NetBeans)
+Type: compile-time
+Comment: Used to generate and check API signatures.
 
 The GNU General Public License (GPL)
 Version 2, June 1991

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -54,10 +54,10 @@ public final class ModuleNodeFactory implements NodeFactory {
 
     @NonNull
     private NodeFactory getDelegate(@NonNull final J2SEModularProject mp) {
-        final NodeFactory res = MultiModuleNodeFactory.Builder.create()
+        final NodeFactory res = MultiModuleNodeFactory.Builder.create(mp.getUpdateHelper(), mp.evaluator(), mp.getReferenceHelper())
                 .setSources(mp.getModuleRoots(),mp.getSourceRoots())
                 .setTests(mp.getTestModuleRoots(), mp.getTestSourceRoots())
-                .addLibrariesNodes(mp.getUpdateHelper(), mp.evaluator(), mp.getReferenceHelper())
+                .addLibrariesNodes()
                 .addLibrariesNodeActions(
                     LibrariesNode.createAddProjectAction(mp, mp.getSourceRoots()),
                     LibrariesNode.createAddLibraryAction(mp.getReferenceHelper(), mp.getSourceRoots(), null),

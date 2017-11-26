@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -63,7 +63,7 @@ public class TemplateAttributesProvider implements CreateFromTemplateAttributesP
         String licensePath = props.getProperty("project.licensePath"); // NOI18N
 
         if (license == null && netbeansOrg) {
-            license = "cddl-netbeans-sun"; // NOI18N
+            license = "apache20-netbeans"; // NOI18N
         }
         if (license == null && licensePath == null && project != null) {
             SuiteProject sp;

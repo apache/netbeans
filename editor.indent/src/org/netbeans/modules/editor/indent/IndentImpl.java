@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,10 +21,13 @@ package org.netbeans.modules.editor.indent;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.modules.editor.indent.api.Indent;
 import org.netbeans.modules.editor.indent.api.Reformat;
 
@@ -51,6 +54,8 @@ public final class IndentImpl {
     
     private final Document doc;
     
+    private final Preferences prefs;
+    
     private Indent indent;
     
     private Reformat reformat;
@@ -71,6 +76,8 @@ public final class IndentImpl {
     
     public IndentImpl(Document doc) {
         this.doc = doc;
+        String mimeType = (String)doc.getProperty("mimeType"); //NOI18N
+        this.prefs = mimeType != null ? MimeLookup.getLookup(mimeType).lookup(Preferences.class) : null;
     }
     
     public Document document() {
@@ -251,27 +258,29 @@ public final class IndentImpl {
                     }
                 }
 
-                int startLineIndex = lineRootElem.getElementIndex(startOffset);
-                Element lineElem = lineRootElem.getElement(startLineIndex);
-                int startLineOffset = lineElem.getStartOffset();
-                // Find ending line element - by default use the same as for start offset
-                if (endOffset > lineElem.getEndOffset()) { // need to get a different line element
-                    int endLineIndex = lineRootElem.getElementIndex(endOffset);
-                    lineElem = lineRootElem.getElement(endLineIndex);
-                    // Check if the given endOffset ends right after line's newline (in fact at the begining of the next line)
-                    if (endLineIndex > 0 && lineElem.getStartOffset() == endOffset) {
-                        endLineIndex--;
+                if (prefs == null || prefs.getBoolean(SimpleValueNames.ENABLE_INDENTATION, true)) {
+                    int startLineIndex = lineRootElem.getElementIndex(startOffset);
+                    Element lineElem = lineRootElem.getElement(startLineIndex);
+                    int startLineOffset = lineElem.getStartOffset();
+                    // Find ending line element - by default use the same as for start offset
+                    if (endOffset > lineElem.getEndOffset()) { // need to get a different line element
+                        int endLineIndex = lineRootElem.getElementIndex(endOffset);
                         lineElem = lineRootElem.getElement(endLineIndex);
+                        // Check if the given endOffset ends right after line's newline (in fact at the begining of the next line)
+                        if (endLineIndex > 0 && lineElem.getStartOffset() == endOffset) {
+                            endLineIndex--;
+                            lineElem = lineRootElem.getElement(endLineIndex);
+                        }
                     }
+
+                    // Create context from begining of the start line till the end of the end line.
+                    indentHandler.setGlobalBounds(
+                            doc.createPosition(startLineOffset),
+                            doc.createPosition(lineElem.getEndOffset() - 1));
+
+                    // Perform whole reindent on top and possibly embedded levels
+                    indentHandler.runTasks();
                 }
-
-                // Create context from begining of the start line till the end of the end line.
-                indentHandler.setGlobalBounds(
-                        doc.createPosition(startLineOffset),
-                        doc.createPosition(lineElem.getEndOffset() - 1));
-
-                // Perform whole reindent on top and possibly embedded levels
-                indentHandler.runTasks();
 // XXX: formatting infra cleanup
 //                done = true;
             }

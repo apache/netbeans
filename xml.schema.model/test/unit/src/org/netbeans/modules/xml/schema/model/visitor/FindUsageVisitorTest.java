@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -100,12 +100,13 @@ public class FindUsageVisitorTest extends TestCase {
         return suite;
     }
     
-    public void testFindPath() throws Exception {
-        setUp1();
-        this.assertEquals(49, findUsageCountForItem(global_element));
-        this.assertEquals(3, findUsageCountForItem(global_type));
-        this.assertEquals(4, findUsageCountForItem(global_attribute_group));        
-    }
+//    Disabled as referenced files were partly not donated by oracle to apache    
+//    public void testFindPath() throws Exception {
+//        setUp1();
+//        this.assertEquals(49, findUsageCountForItem(global_element));
+//        this.assertEquals(3, findUsageCountForItem(global_type));
+//        this.assertEquals(4, findUsageCountForItem(global_attribute_group));        
+//    }
 
     public int findUsageCountForItem(NamedReferenceable<SchemaComponent> ref) {
         long startTime = System.currentTimeMillis();

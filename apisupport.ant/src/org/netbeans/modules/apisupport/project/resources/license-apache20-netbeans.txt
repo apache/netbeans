@@ -1,0 +1,31 @@
+<#if licenseFirst??>
+    <#if licenseFirst == "<!--">
+        <#assign licensePrefix="    ">
+    </#if>
+${licenseFirst}
+</#if>
+<#if licenseFirst?? && licenseFirst == "<!--">
+${licensePrefix?replace(" +$", "", "r")}
+</#if>
+${licensePrefix}Licensed to the Apache Software Foundation (ASF) under one
+${licensePrefix}or more contributor license agreements.  See the NOTICE file
+${licensePrefix}distributed with this work for additional information
+${licensePrefix}regarding copyright ownership.  The ASF licenses this file
+${licensePrefix}to you under the Apache License, Version 2.0 (the
+${licensePrefix}"License"); you may not use this file except in compliance
+${licensePrefix}with the License.  You may obtain a copy of the License at
+${licensePrefix?replace(" +$", "", "r")}
+${licensePrefix}  http://www.apache.org/licenses/LICENSE-2.0
+${licensePrefix?replace(" +$", "", "r")}
+${licensePrefix}Unless required by applicable law or agreed to in writing,
+${licensePrefix}software distributed under the License is distributed on an
+${licensePrefix}"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+${licensePrefix}KIND, either express or implied.  See the License for the
+${licensePrefix}specific language governing permissions and limitations
+${licensePrefix}under the License.
+<#if licenseFirst?? && licenseFirst == "<!--">
+${licensePrefix?replace(" +$", "", "r")}
+</#if>
+<#if licenseLast??>
+${licenseLast}
+</#if>

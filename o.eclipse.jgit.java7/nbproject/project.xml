@@ -28,7 +28,7 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>org-eclipse-jgit-java7.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.jgit.java7-3.6.2.201501210735-r_nosignature.jar</binary-origin>
+                <binary-origin>external/org.eclipse.jgit.java7-3.6.2.201501210735-r.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

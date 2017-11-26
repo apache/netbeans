@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import org.netbeans.junit.NbTestCase;
 
@@ -357,6 +358,30 @@ public class EditablePropertiesTest extends NbTestCase {
         assertEquals("Reading and re-writing non-Latin chars in comments works", expected, getAsString(p));
     }
 
+    // Test consistency of size of the property list for different view of it
+    public void testConsistentSize() throws Exception {
+        EditableProperties testProperties = loadTestProperties();
+        // Enumerate entries manually
+        int count = 0;
+        for(Entry<String,String> entry: testProperties.entrySet()) {
+            count++;
+        }
+        assertEquals(testProperties.size(), count);
+        assertEquals(testProperties.size(), testProperties.entrySet().size());
+        assertEquals(testProperties.size(), testProperties.keySet().size());
+    }
+    
+    // This test ensures, that the copy constructor or EditableProperties.State
+    // does not introduce NULL keys. These NULL keys are observable from the
+    // outside by an increased number of elements.
+    public void testCopyWithIndependentComments() throws Exception {
+        EditableProperties testProperties = loadTestProperties();
+        EditableProperties test2Properties = testProperties.cloneProperties();
+        int originalSize = testProperties.size();
+        assertTrue(testProperties.containsKey("key1"));
+        testProperties.setProperty("key1", "XXX");
+        assertEquals(originalSize, testProperties.size());
+    }
     
     // helper methods:
     

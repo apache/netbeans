@@ -534,6 +534,16 @@ is divided into following sections:
                     <attribute>
                         <xsl:attribute name="name">sourcepath</xsl:attribute>
                         <xsl:attribute name="default">${empty.dir}</xsl:attribute>
+                        <xsl:attribute name="unless:set">named.module.internal</xsl:attribute>
+                    </attribute>
+                    <attribute>
+                        <xsl:attribute name="name">sourcepath</xsl:attribute>
+                        <xsl:attribute name="default">
+                            <xsl:call-template name="createPath">
+                                <xsl:with-param name="roots" select="/p:project/p:configuration/j2seproject3:data/j2seproject3:source-roots"/>
+                            </xsl:call-template>
+                        </xsl:attribute>
+                        <xsl:attribute name="if:set">named.module.internal</xsl:attribute>
                     </attribute>
                     <attribute>
                         <xsl:attribute name="name">gensrcdir</xsl:attribute>
@@ -544,11 +554,22 @@ is divided into following sections:
                         <xsl:attribute name="optional">true</xsl:attribute>
                     </element>
                     <sequential>
+                        <condition property="warn.excludes.internal">
+                            <and>
+                                <isset property="named.module.internal"/>
+                                <length string="@{{excludes}}" when="greater" length="0" trim="true"/>
+                            </and>
+                        </condition>
+                        <echo level="warning" message="The javac excludes are not supported in the JDK 9 Named Module." if:set="warn.excludes.internal"/>
                         <property name="empty.dir" location="${{build.dir}}/empty"/><!-- #157692 -->
                         <mkdir dir="${{empty.dir}}"/>
                         <mkdir dir="@{{apgeneratedsrcdir}}"/>
                         <condition property="processormodulepath.set">
-                            <length string="@{{toString:processormodulepath}}" when="greater" length="0"/>
+                            <resourcecount when="greater" count="0">
+                                <path>
+                                    <pathelement path="@{{processormodulepath}}"/>
+                                </path>
+                            </resourcecount>
                         </condition>
                         <javac>
                             <xsl:attribute name="srcdir">@{srcdir}</xsl:attribute>
@@ -2120,10 +2141,15 @@ is divided into following sections:
             </target>
 
             <target name ="-check-module-main-class" depends="init,compile">
+                <pathconvert property="main.class.file">
+                    <string value="${{main.class}}"/>
+                    <unpackagemapper from="*" to="*.class"/>
+                </pathconvert>
                 <condition property="do.module.main.class">
                     <and>
                         <isset property="main.class.available"/>
                         <available file="${{build.classes.dir}}/module-info.class"/>
+                        <available file="${{build.classes.dir}}/${{main.class.file}}"/>
                         <isset property="libs.CopyLibs.classpath"/>
                         <available classpath="${{libs.CopyLibs.classpath}}" classname="org.netbeans.modules.java.j2seproject.moduletask.ModuleMainClass"/>
                     </and>
@@ -2705,7 +2731,25 @@ is divided into following sections:
                             </xsl:call-template>
                     </xsl:attribute>
                 </j2seproject3:modulename>
-                <condition property="javac.test.compilerargs" value="--add-reads ${{test.module.name}}=ALL-UNNAMED" else="-Xmodule:${{module.name}} --add-reads ${{module.name}}=ALL-UNNAMED">
+                <condition>
+                    <xsl:attribute name="property">javac.test.sourcepath</xsl:attribute>
+                    <xsl:attribute name="value">
+                        <xsl:call-template name="createPath">
+                                <xsl:with-param name="roots" select="/p:project/p:configuration/j2seproject3:data/j2seproject3:test-roots"/>
+                        </xsl:call-template>
+                    </xsl:attribute>
+                    <xsl:attribute name="else">${empty.dir}</xsl:attribute>
+                    <and>
+                        <isset property="test.module.name"/>
+                        <length length="0" string="${{test.module.name}}" when="greater"/>
+                    </and>
+                </condition>
+                <condition>
+                    <xsl:attribute name="property">javac.test.compilerargs</xsl:attribute>
+                    <xsl:attribute name="value">--add-reads ${test.module.name}=ALL-UNNAMED</xsl:attribute>
+                    <xsl:attribute name="else">--patch-module ${module.name}=<xsl:call-template name="createPath">
+                                <xsl:with-param name="roots" select="/p:project/p:configuration/j2seproject3:data/j2seproject3:test-roots"/>
+                        </xsl:call-template> --add-reads ${module.name}=ALL-UNNAMED</xsl:attribute>
                     <and>
                         <isset property="test.module.name"/>
                         <length length="0" string="${{test.module.name}}" when="greater"/>
@@ -2740,6 +2784,7 @@ is divided into following sections:
                 </condition>
             </target>
             <target name="-init-test-module-properties-without-module" depends="-init-source-module-properties" unless="named.module.internal">
+                <property name="javac.test.sourcepath" value="${{empty.dir}}"/>
                 <property name="javac.test.compilerargs" value=""/>
                 <property name="run.test.jvmargs" value=""/>
             </target>
@@ -2771,6 +2816,7 @@ is divided into following sections:
                     <xsl:attribute name="processorpath">${javac.test.processorpath}</xsl:attribute>
                     <xsl:attribute name="modulepath">${javac.test.modulepath}</xsl:attribute>
                     <xsl:attribute name="apgeneratedsrcdir">${build.test.classes.dir}</xsl:attribute>
+                    <xsl:attribute name="sourcepath">${javac.test.sourcepath}</xsl:attribute>
                     <customize>
                         <compilerarg line="${{javac.test.compilerargs}}"/>
                     </customize>

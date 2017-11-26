@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -100,7 +100,9 @@ public class PartialReparserService {
         CancelService cancelService = CancelService.instance(context);
         Scanner lexer = scannerFactory.newScanner(input, true);
         lexer.seek(startPos);
-        ((NBParserFactory.NBJavacParser.EndPosTableImpl)endPos).resetErrorEndPos();
+        if (endPos instanceof NBParserFactory.NBJavacParser.EndPosTableImpl) {
+            ((NBParserFactory.NBJavacParser.EndPosTableImpl)endPos).resetErrorEndPos();
+        }
         return new NBParserFactory.NBJavacParser(parserFactory, lexer, true, false, true, false, cancelService) {
             @Override protected JavacParser.AbstractEndPosTable newEndPosTable(boolean keepEndPositions) {
                 return new JavacParser.AbstractEndPosTable(this) {

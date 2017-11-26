@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -693,29 +693,45 @@ public class BinaryAnalyser {
             return 0;
         }
         final ClassName me = cf.getName();
-        final String simpleName = me.getSimpleName();
+        final String simpleName = getInternalSimpleName(me);
         int len = simpleName.length();
         for (InnerClass ic : cf.getInnerClasses()) {
             if (me.equals(ic.getName())) {
                 final String innerName = ic.getSimpleName();
+                boolean found = false;
                 if (innerName != null && !innerName.isEmpty()) {
-                    len = innerName.length();
+                    if (simpleName.endsWith(innerName)) {
+                        len = innerName.length();
+                        found = true;
+                    }
                 } else {
                     final EnclosingMethod enclosingMethod = cf.getEnclosingMethod();
                     if (enclosingMethod != null) {
-                        final String encSimpleName = enclosingMethod.getClassName().getSimpleName();
-                        len -= encSimpleName.length() + 1;
-                    } else {
-                        final int sepIndex = simpleName.lastIndexOf('.');   //NOI18N
-                        if (sepIndex > 0) {
-                            len -= sepIndex+1;
+                        final String encSimpleName = getInternalSimpleName(enclosingMethod.getClassName());
+                        if (simpleName.startsWith(encSimpleName)) {
+                            len -= encSimpleName.length() + 1;
+                            found = true;
                         }
+                    }
+                }
+                if (!found) {
+                    final int sepIndex = simpleName.lastIndexOf('$');   //NOI18N
+                    if (sepIndex > 0) {
+                        len -= sepIndex+1;
                     }
                 }
                 break;
             }
         }
         return me.getInternalName().length() - len;
+    }
+
+    private static String getInternalSimpleName(@NonNull final ClassName name) {
+        final String pkg = name.getPackage();
+        final String internalName = name.getInternalName();
+        return pkg.isEmpty() ?
+                internalName :
+                internalName.substring(pkg.length()+1);
     }
     //</editor-fold>
 

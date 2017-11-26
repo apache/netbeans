@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -37,19 +37,17 @@ import org.openide.util.NbBundle;
  */
 public class TimestampType {
     // Irrespective of the JVM's Locale lets pick a Locale for use on any JVM
-    public static final Locale LOCALE = Locale.UK;
     public static final String DEFAULT_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS"; // NOI18N
     private static final DateFormat[] TIMESTAMP_PARSING_FORMATS = new DateFormat[]{
         new SimpleDateFormat (DEFAULT_FORMAT_PATTERN),
-        DateFormat.getDateTimeInstance(),
-        DateFormat.getTimeInstance(DateFormat.SHORT),
-        DateFormat.getTimeInstance(DateFormat.LONG, LOCALE),
-        DateFormat.getTimeInstance(DateFormat.SHORT, LOCALE),
-        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"), // NOI18N
-        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"), // NOI18N
+        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault()),
+        new SimpleDateFormat("yyyy-MM-dd HH:mm"), // NOI18N
         new SimpleDateFormat("yyyy-MM-dd"), // NOI18N
+        DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault()),
         new SimpleDateFormat("MM-dd-yyyy"), // NOI18N
         new SimpleDateFormat("HH:mm:ss"), // NOI18N
+        new SimpleDateFormat("HH:mm"), // NOI18N
+        DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault())
     };
 
     {
@@ -78,7 +76,7 @@ public class TimestampType {
         }
     }
 
-    private synchronized static Date doParse (String sVal) {
+    public synchronized static Date doParse (String sVal) {
         Date dVal = null;
         for (DateFormat format : TIMESTAMP_PARSING_FORMATS) {
             try {

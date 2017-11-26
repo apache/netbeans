@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -35,7 +35,7 @@ import org.openide.util.NbBundle;
 @ActionRegistration(displayName = "#LBL_InnerToOuter_Action", lazy = false)
 @ActionReferences({
     @ActionReference(path = "Editors/text/x-java/RefactoringActions" , name = "InnerToOuterAction", position = 1000),
-    @ActionReference(path = "Shortcuts", name = "OCS-L"),
+    @ActionReference(path = "Shortcuts", name = "CS-Y L"),
 })
 public class InnerToOuterAction extends JavaRefactoringGlobalAction {
     

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,7 +20,9 @@
 package org.netbeans.modules.parsing.spi;
 
 import java.util.EventObject;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.parsing.api.Source;
+import org.openide.util.Parameters;
 
 /**
  *
@@ -90,5 +92,31 @@ public class SourceModificationEvent extends EventObject {
     @Override
     public String toString () {
         return "SourceModificationEvent " + hashCode () + "(source: " + source + ")";
+    }
+
+    /**
+     * @since 9.8.0
+     */
+    public static class Composite extends SourceModificationEvent {
+        private final SourceModificationEvent read;
+        private final SourceModificationEvent write;
+
+        public Composite(
+                @NonNull final SourceModificationEvent read,
+                @NonNull SourceModificationEvent write) {
+            super(read.getSource(), true);
+            Parameters.notNull("read", read);   //NOI18N
+            Parameters.notNull("write", write);   //NOI18N
+            this.read = read;
+            this.write = write;
+        }
+
+        public SourceModificationEvent getWriteEvent() {
+            return write;
+        }
+
+        public SourceModificationEvent getReadEvent() {
+            return read;
+        }
     }
 }

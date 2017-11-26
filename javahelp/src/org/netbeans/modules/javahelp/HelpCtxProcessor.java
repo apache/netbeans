@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -64,6 +64,12 @@ public final class HelpCtxProcessor implements Environment.Provider {
     }
     
     public @Override Lookup getEnvironment(final DataObject obj) {
+        try {
+            Class.forName("javax.help.HelpSet");
+        } catch (ClassNotFoundException ex) {
+            //JavaHelp not available, ignore:
+            return Lookup.EMPTY;
+        }
         Installer.log.log(Level.FINE, "creating help context presenter from {0}", obj.getPrimaryFile());
         return Lookups.singleton(new InstanceCookie() {
             private Action instance = null;

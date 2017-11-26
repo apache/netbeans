@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -63,6 +63,7 @@ public class ReplaceConstructorWithFactoryPlugin extends JavaRefactoringPlugin {
 
     @Override
     protected Problem preCheck(CompilationController javac) throws IOException {
+        javac.toPhase(JavaSource.Phase.RESOLVED);
         Element constr = treePathHandle.resolveElement(javac);
         if(constr.getKind() != ElementKind.CONSTRUCTOR) {
             return new Problem(true, ERR_ReplaceWrongType());

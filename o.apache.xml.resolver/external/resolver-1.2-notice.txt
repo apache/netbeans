@@ -1,0 +1,9 @@
+Apache XML Commons Resolver
+Copyright 2006 The Apache Software Foundation.
+
+This product includes software developed at
+The Apache Software Foundation http://www.apache.org/
+
+Portions of this code are derived from classes placed in the
+public domain by Arbortext on 10 Apr 2000. See:
+http://www.arbortext.com/customer_support/updates_and_technical_notes/catalogs/docs/README.htm

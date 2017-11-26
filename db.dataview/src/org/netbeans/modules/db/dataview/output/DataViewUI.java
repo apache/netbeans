@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,7 +20,12 @@ package org.netbeans.modules.db.dataview.output;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -32,21 +37,26 @@ import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
+import java.util.Set;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultRowSorter;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
-import org.jdesktop.swingx.JXButton;
-import org.jdesktop.swingx.JXLabel;
-import org.jdesktop.swingx.JXPanel;
 import org.netbeans.modules.db.dataview.table.JXTableRowHeader;
 import org.netbeans.modules.db.dataview.table.MultiColPatternFilter;
 import org.netbeans.modules.db.dataview.table.ResultSetJXTable;
@@ -61,25 +71,25 @@ import org.openide.util.NbBundle;
 @NbBundle.Messages({
     "LBL_fetched_rows=Fetched Rows:"
 })
-class DataViewUI extends JXPanel {
-
-    private JXButton commit;
-    private JXButton refreshButton;
-    private JXButton truncateButton;
-
-    private JXButton deleteRow;
-    private JXButton insert;
+class DataViewUI extends JPanel {
+    private static final String IMG_PREFIX = "/org/netbeans/modules/db/dataview/images/"; // NOI18N
+    
+    private final JButton[] editButtons = new JButton[5];
+    private final DataViewTableUI dataPanel;
+    private final JScrollPane dataPanelScrollPane;
+    private final DataViewPageContext pageContext;
+    private final DataViewActionHandler actionHandler;
+    
+    private JButton commit;
+    private JButton refreshButton;
+    private JButton truncateButton;
+    private JButton deleteRow;
+    private JButton insert;
     private JTextField refreshField;
     private JTextField matchBoxField;
-    private JXLabel fetchedRowsLabel;
-    private JXLabel limitRow;
-    private JXButton[] editButtons = new JXButton[5];
-    private DataViewTableUI dataPanel;
-    private JScrollPane dataPanelScrollPane;
-    private final DataViewPageContext pageContext;
-    private JXButton cancel;
-    private DataViewActionHandler actionHandler;
-    private String imgPrefix = "/org/netbeans/modules/db/dataview/images/"; // NOI18N
+    private JLabel fetchedRowsLabel;
+    private JLabel limitRow;
+    private JButton cancel;
 
     private final PropertyChangeListener pageContextListener =
             new PropertyChangeListener() {
@@ -121,7 +131,85 @@ class DataViewUI extends JXPanel {
         protected void showPopup(MouseEvent evt) {
         }
     };
+    
+    private final ActionListener columnVisibilityToggler = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JCheckBox source = (JCheckBox) e.getSource();
+            int index = Integer.parseInt(e.getActionCommand());
+            Set<Integer> currentVisibleColumns = dataPanel.getVisibleColumns();
+            if (source.isSelected()) {
+                currentVisibleColumns.add(index);
+            } else {
+                currentVisibleColumns.remove(index);
+            }
+            dataPanel.setVisibleColumns(currentVisibleColumns);
+        }
+    };
+    
+    private final ActionListener fitColumnWidthToggler = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (((JCheckBox) e.getSource()).isSelected()) {
+                dataPanel.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            } else {
+                dataPanel.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            }
+        }
+    };
+    
+    private final ActionListener popupActionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JButton button = (JButton) e.getSource();
+                JCheckBox firstEntry = null;
+                JPopupMenu popupMenu = new JPopupMenu();
 
+                JPanel menuPanel = new JPanel();
+                menuPanel.setFocusCycleRoot(true);
+                popupMenu.add(menuPanel);
+                menuPanel.setLayout(new GridBagLayout());
+                GridBagConstraints constraints = new GridBagConstraints();
+                constraints.fill = GridBagConstraints.HORIZONTAL;
+                constraints.anchor = GridBagConstraints.BASELINE_LEADING;
+                constraints.weightx = 1;
+                constraints.gridx = 0;
+                
+                Set<Integer> visibleColumns = dataPanel.getVisibleColumns();
+                DataViewTableUIModel dvtm = dataPanel.getModel();
+                
+                for(int i = 0; i < dvtm.getColumnCount(); i++) {
+                    JCheckBox columnEntry = new JCheckBox(dvtm.getColumnName(i));
+                    columnEntry.setActionCommand(Integer.toString(i));
+                    columnEntry.setSelected(visibleColumns.contains(i));
+                    columnEntry.addActionListener(columnVisibilityToggler);
+                    constraints.gridy += 1;
+                    menuPanel.add(columnEntry, constraints);
+                    if(firstEntry == null) {
+                        firstEntry = columnEntry;
+                    }
+                }
+                
+                constraints.gridy += 1;
+                menuPanel.add(new JSeparator(), constraints);
+                
+                JCheckBox checkboxItem = new JCheckBox("Fit column width");
+                checkboxItem.setSelected(dataPanel.getAutoResizeMode() != JTable.AUTO_RESIZE_OFF);
+                checkboxItem.addActionListener(fitColumnWidthToggler);
+                
+                constraints.gridy += 1;
+                menuPanel.add(checkboxItem, constraints);
+                
+                popupMenu.show(button, 0, button.getHeight());
+                if(firstEntry == null) {
+                    checkboxItem.requestFocus();
+                } else {
+                    firstEntry.requestFocus();
+                }
+            }
+        };
+
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     DataViewUI(DataView dataView, DataViewPageContext pageContext, boolean nbOutputComponent) {
         assert SwingUtilities.isEventDispatchThread() : "Must be called from AWT thread";  //NOI18N
 
@@ -143,9 +231,28 @@ class DataViewUI extends JXPanel {
         //add resultset data panel
         dataPanel = new DataViewTableUI(this, actionHandler, dataView, pageContext);
         dataPanelScrollPane = new JScrollPane(dataPanel);
+        dataPanelScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        dataPanelScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JXTableRowHeader rowHeader = new JXTableRowHeader(dataPanel);
         dataPanelScrollPane.setRowHeaderView(rowHeader);
         dataPanelScrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, rowHeader.getTableHeader());
+        
+        URL url = getClass().getResource(IMG_PREFIX + "preferences-desktop.png"); // NOI18N
+        ImageIcon icon = new ImageIcon(url);
+        JButton cornerButton = new JButton() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                int iconSize = Math.min(getWidth(), getHeight());
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setColor(getBackground());
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.drawImage(icon.getImage(), (getWidth() - iconSize) / 2, (getHeight() - iconSize) / 2, iconSize, iconSize, null);
+            }
+        };
+        cornerButton.addActionListener(popupActionListener);
+        dataPanelScrollPane.setCorner(JScrollPane.UPPER_RIGHT_CORNER, cornerButton);
 
         this.add(dataPanelScrollPane, BorderLayout.CENTER);
         dataPanel.revalidate();
@@ -280,14 +387,6 @@ class DataViewUI extends JXPanel {
                 Object src = e.getSource();
                 if (src.equals(refreshButton)) {
                     actionHandler.refreshActionPerformed();
-//                } else if (src.equals(first)) {
-//                    actionHandler.firstActionPerformed();
-//                } else if (src.equals(last)) {
-//                    actionHandler.lastActionPerformed();
-//                } else if (src.equals(next)) {
-//                    actionHandler.nextActionPerformed();
-//                } else if (src.equals(previous)) {
-//                    actionHandler.previousActionPerformed();
                 } else if (src.equals(refreshField)) {
                     actionHandler.updateActionPerformed();
                 } else if (src.equals(commit)) {
@@ -333,8 +432,8 @@ class DataViewUI extends JXPanel {
         toolbar.addSeparator(new Dimension(10, 10));
 
         //add refresh button
-        URL url = getClass().getResource(imgPrefix + "refresh.png"); // NOI18N
-        refreshButton = new JXButton(new ImageIcon(url));
+        URL url = getClass().getResource(IMG_PREFIX + "refresh.png"); // NOI18N
+        refreshButton = new JButton(new ImageIcon(url));
         refreshButton.setToolTipText(NbBundle.getMessage(DataViewUI.class, "TOOLTIP_refresh"));
         refreshButton.addActionListener(outputListener);
         processButton(refreshButton);
@@ -342,7 +441,7 @@ class DataViewUI extends JXPanel {
         toolbar.add(refreshButton);
 
         //add limit row label
-        limitRow = new JXLabel(NbBundle.getMessage(DataViewUI.class, "LBL_max_rows"));
+        limitRow = new JLabel(NbBundle.getMessage(DataViewUI.class, "LBL_max_rows"));
         limitRow.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 8));
         toolbar.add(limitRow);
 
@@ -360,11 +459,11 @@ class DataViewUI extends JXPanel {
         toolbar.add(refreshField);
         toolbar.addSeparator(new Dimension(10, 10));
 
-        JXLabel fetchedRowsNameLabel = new JXLabel(NbBundle.getMessage(DataViewUI.class, "LBL_fetched_rows"));
+        JLabel fetchedRowsNameLabel = new JLabel(NbBundle.getMessage(DataViewUI.class, "LBL_fetched_rows"));
         fetchedRowsNameLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(DataViewUI.class, "LBL_fetched_rows"));
         fetchedRowsNameLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
         toolbar.add(fetchedRowsNameLabel);
-        fetchedRowsLabel = new JXLabel();
+        fetchedRowsLabel = new JLabel();
         toolbar.add(fetchedRowsLabel);
 
         toolbar.addSeparator(new Dimension(10, 10));
@@ -372,7 +471,7 @@ class DataViewUI extends JXPanel {
 
     private void initToolbarEast(JToolBar toolbar) {
         // match box labble
-        JXLabel matchBoxRow = new JXLabel(NbBundle.getMessage(DataViewUI.class, "LBL_matchbox"));
+        JLabel matchBoxRow = new JLabel(NbBundle.getMessage(DataViewUI.class, "LBL_matchbox"));
         matchBoxRow.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 8));
         toolbar.add(matchBoxRow);
 
@@ -411,14 +510,14 @@ class DataViewUI extends JXPanel {
         {
             MultiColPatternFilter filterP = new MultiColPatternFilter(rows);
             filterP.setFilterStr(matchBoxField.getText(), LITERAL_FIND);
-            table.setRowFilter(filterP);
+            ((DefaultRowSorter) table.getRowSorter()).setRowFilter(filterP);
         }
     }
 
     private void initVerticalToolbar(ActionListener outputListener) {
 
-        URL url = getClass().getResource(imgPrefix + "row_add.png"); // NOI18N
-        insert = new JXButton(new ImageIcon(url));
+        URL url = getClass().getResource(IMG_PREFIX + "row_add.png"); // NOI18N
+        insert = new JButton(new ImageIcon(url));
         insert.setToolTipText(NbBundle.getMessage(DataViewUI.class, "TOOLTIP_insert")+" (Alt+I)");
         insert.setMnemonic('I');
         insert.addActionListener(outputListener);
@@ -426,24 +525,24 @@ class DataViewUI extends JXPanel {
         processButton(insert);
         editButtons[0] = insert;
 
-        url = getClass().getResource(imgPrefix + "row_delete.png"); // NOI18N
-        deleteRow = new JXButton(new ImageIcon(url));
+        url = getClass().getResource(IMG_PREFIX + "row_delete.png"); // NOI18N
+        deleteRow = new JButton(new ImageIcon(url));
         deleteRow.setToolTipText(NbBundle.getMessage(DataViewUI.class, "TOOLTIP_deleterow"));
         deleteRow.addActionListener(outputListener);
         deleteRow.setEnabled(false);
         processButton(deleteRow);
         editButtons[1] = deleteRow;
 
-        url = getClass().getResource(imgPrefix + "row_commit.png"); // NOI18N
-        commit = new JXButton(new ImageIcon(url));
+        url = getClass().getResource(IMG_PREFIX + "row_commit.png"); // NOI18N
+        commit = new JButton(new ImageIcon(url));
         commit.setToolTipText(NbBundle.getMessage(DataViewUI.class, "TOOLTIP_commit_all"));
         commit.addActionListener(outputListener);
         commit.setEnabled(false);
         processButton(commit);
         editButtons[2] = commit;
 
-        url = getClass().getResource(imgPrefix + "cancel_edits.png"); // NOI18N
-        cancel = new JXButton(new ImageIcon(url));
+        url = getClass().getResource(IMG_PREFIX + "cancel_edits.png"); // NOI18N
+        cancel = new JButton(new ImageIcon(url));
         cancel.setToolTipText(NbBundle.getMessage(DataViewUI.class, "TOOLTIP_cancel_edits_all"));
         cancel.addActionListener(outputListener);
         cancel.setEnabled(false);
@@ -451,8 +550,8 @@ class DataViewUI extends JXPanel {
         editButtons[3] = cancel;
 
         //add truncate button
-        url = getClass().getResource(imgPrefix + "table_truncate.png"); // NOI18N
-        truncateButton = new JXButton(new ImageIcon(url));
+        url = getClass().getResource(IMG_PREFIX + "table_truncate.png"); // NOI18N
+        truncateButton = new JButton(new ImageIcon(url));
         truncateButton.setToolTipText(NbBundle.getMessage(DataViewUI.class, "TOOLTIP_truncate_table")+" (Alt+T)");
         truncateButton.setMnemonic('T');
         truncateButton.addActionListener(outputListener);
@@ -463,7 +562,7 @@ class DataViewUI extends JXPanel {
 
     private JPanel initializeMainPanel(boolean nbOutputComponent) {
 
-        JXPanel panel = new JXPanel();
+        JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createEtchedBorder());
         panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
 

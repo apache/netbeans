@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -26,6 +26,8 @@ import java.util.*;
 import javax.lang.model.element.*;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.Comment;
 import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.GeneratorUtilities;
@@ -195,6 +197,17 @@ public class InlineMethodTransformer extends RefactoringVisitor {
 
             boolean inSameClass = bodyEnclosingTypeElement.equals(invocationEnclosingTypeElement);
             boolean inStatic = !methodElement.getModifiers().contains(Modifier.STATIC) && isInStaticContext(methodInvocationPath);
+            boolean invokeOnInstance = false;
+            MethodInvocationTree invTree = (MethodInvocationTree)methodInvocationPath.getLeaf();
+            if (!methodElement.getModifiers().contains(Modifier.STATIC) && invTree.getMethodSelect().getKind() == Tree.Kind.MEMBER_SELECT) {
+                invokeOnInstance = true;
+                MemberSelectTree mst = (MemberSelectTree)invTree.getMethodSelect();
+                if (mst.getExpression().getKind() == Tree.Kind.IDENTIFIER) {
+                    // check for this.method(). super. qualifier should be omitted if and only if the symbols is not shadowed in subclass.
+                    Name n = ((IdentifierTree)mst.getExpression()).getName();
+                    invokeOnInstance = !(n.contentEquals("this")); // NOI18N
+                }
+            }
 
             TreePath statementPath = findCorrespondingStatement(methodInvocationPath);
             StatementTree statementTree = (StatementTree) statementPath.getLeaf();
@@ -252,7 +265,7 @@ public class InlineMethodTransformer extends RefactoringVisitor {
             // Add statements up to the last statement (return)
             for (int i = 0; i < body.getStatements().size() - 1; i++) {
                 StatementTree statement = body.getStatements().get(i);
-                if (!inSameClass || inStatic) {
+                if ((!inSameClass || invokeOnInstance) || inStatic) {
                     statement = (StatementTree) fixReferences(statement, new TreePath(bodyPath, statement), method, scope, methodSelect);
                     if (!inSameClass) {
                         statement = genUtils.importFQNs(statement);
@@ -288,7 +301,7 @@ public class InlineMethodTransformer extends RefactoringVisitor {
             } else {
                 lastStatement = null;
             }
-            if (lastStatement != null && (!inSameClass || inStatic)) {
+            if (lastStatement != null && ((!inSameClass || invokeOnInstance) || inStatic)) {
                 lastStatement = fixReferences(lastStatement, new TreePath(bodyPath, lastStatement), method, scope, methodSelect);
                 if (!inSameClass) {
                     lastStatement = genUtils.importFQNs(lastStatement);
@@ -407,11 +420,12 @@ public class InlineMethodTransformer extends RefactoringVisitor {
                 }
                 Element el = trees.getElement(currentPath);
                 if (el != null) {
-                    DeclaredType declaredType = workingCopy.getTypes().getDeclaredType(scope.getEnclosingClass());
-                    if (methodSelect != null
+                    TypeMirror targetType = el.getEnclosingElement().asType();
+                    if (methodSelect != null 
+                            && targetType != null && targetType.getKind() == TypeKind.DECLARED 
                             && el.getEnclosingElement() != method
-                            && !workingCopy.getTrees().isAccessible(scope, el, declaredType)) {
-                        problem = JavaPluginUtils.chainProblems(problem, new Problem(false, WRN_InlineNotAccessible(el, declaredType)));
+                            && !workingCopy.getTrees().isAccessible(scope, el, (DeclaredType)targetType)) {
+                        problem = JavaPluginUtils.chainProblems(problem, new Problem(false, WRN_InlineNotAccessible(el, targetType)));
                     }
                     TypeElement invocationEnclosingTypeElement = elementUtilities.enclosingTypeElement(el);
                     if (el.getKind() != ElementKind.LOCAL_VARIABLE && bodyEnclosingTypeElement.equals(invocationEnclosingTypeElement)) {

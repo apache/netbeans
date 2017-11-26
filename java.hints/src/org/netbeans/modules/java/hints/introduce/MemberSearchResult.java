@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,9 +19,12 @@
 package org.netbeans.modules.java.hints.introduce;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.TreePathHandle;
 
 /**
  *
@@ -51,6 +54,10 @@ public class MemberSearchResult {
      * to indicate package-level access.
      */
     private final Modifier requiredModifier;
+    
+    private final TreePathHandle conflictingPath;
+    
+    private final ElementKind kind;
 
     public MemberSearchResult(ElementHandle<? extends Element> conflicting) {
         this.conflicting = conflicting;
@@ -58,6 +65,28 @@ public class MemberSearchResult {
         this.shadowedGate = null;
         this.gateSuper = false;
         this.requiredModifier = null;
+        this.conflictingPath = null;
+        this.kind = conflicting.getKind();
+    }
+    
+    public MemberSearchResult(ElementKind kind) {
+        this.conflicting = null;
+        this.shadowed = null;
+        this.shadowedGate = null;
+        this.gateSuper = false;
+        this.requiredModifier = null;
+        this.conflictingPath = null;
+        this.kind = kind;
+    }
+
+    public MemberSearchResult(TreePathHandle conflicting, ElementKind kind) {
+        this.conflicting = null;
+        this.shadowed = null;
+        this.shadowedGate = null;
+        this.gateSuper = false;
+        this.requiredModifier = null;
+        this.conflictingPath = conflicting;
+        this.kind = kind;
     }
 
     public MemberSearchResult(ElementHandle<? extends Element> shadowed, ElementHandle<? extends TypeElement> shadowedGate) {
@@ -66,6 +95,8 @@ public class MemberSearchResult {
         this.gateSuper = false;
         this.conflicting = null;
         this.requiredModifier = null;
+        this.conflictingPath = null;
+        this.kind = null;
     }
 
     public MemberSearchResult(ElementHandle<? extends Element> shadowed, ElementHandle<? extends TypeElement> shadowedGate, Modifier requiredModifier) {
@@ -74,6 +105,8 @@ public class MemberSearchResult {
         this.requiredModifier = requiredModifier;
         this.gateSuper = true;
         this.conflicting = null;
+        this.conflictingPath = null;
+        this.kind = null;
     }
     
     public ElementHandle<? extends Element> getOverriden() {
@@ -82,6 +115,27 @@ public class MemberSearchResult {
 
     public ElementHandle<? extends Element> getConflicting() {
         return conflicting;
+    }
+
+    public TreePathHandle getConflictingPath() {
+        return conflictingPath;
+    }
+    
+    public ElementKind getConflictingKind() {
+        return kind;
+    }
+    
+    public Element resolveConflict(CompilationInfo info) {
+        if (conflicting != null) {
+            return conflicting.resolve(info);
+        } else if (conflictingPath != null) {
+            return conflictingPath.resolveElement(info);
+        }
+        return null;
+    }
+    
+    public boolean isConflicting() {
+        return conflicting != null || conflictingPath != null;
     }
 
     public ElementHandle<? extends Element> getShadowed() {

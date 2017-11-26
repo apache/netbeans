@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,8 +21,7 @@ package org.netbeans.modules.db.dataview.table;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.util.Comparator;
-import javax.swing.table.TableModel;
-import org.jdesktop.swingx.sort.TableSortController;
+import javax.swing.table.TableRowSorter;
 import org.netbeans.modules.db.dataview.util.LobHelper;
 
 /**
@@ -33,8 +32,8 @@ import org.netbeans.modules.db.dataview.util.LobHelper;
  * ResultSetJXTable are sorted and different types are present (for example
  * string and date)
  */
-public class StringFallbackRowSorter extends TableSortController<TableModel> {
-    public StringFallbackRowSorter(TableModel model) {
+public class StringFallbackRowSorter extends TableRowSorter<ResultSetTableModel> {
+    public StringFallbackRowSorter(ResultSetTableModel model) {
         super(model);
     }
 

@@ -85,6 +85,39 @@ is the proper place.
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        
+        <change id="userExecution">
+            <api name="general"/>
+            <summary>Added a method to mark an execution as user / non-user into the <code>AntTargetExecutor.Env</code></summary>
+            <version major="3" minor="85"/>
+            <date year="2017" month="5" day="2"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>Added a method <code>AntTargetExecutor.Env.setUserAction</code>to mark an execution as user / non-user.
+                The executions marked as user actions are registered in the UI support
+                <code>org.netbeans.spi.project.ui.support.BuildExecutionSupport</code>. By default the execution is an user action.
+                </p>
+            </description>
+            <class package="org.apache.tools.ant.module.api" name="AntTargetExecutor"/>
+        </change>
+
+        <change id="tabReplacePolicy">
+            <api name="general"/>
+            <summary>Added methods to override the default tab replacement policy into the <code>AntTargetExecutor.Env</code></summary>
+            <version major="3" minor="84"/>
+            <date year="2017" month="4" day="27"/>
+            <author login="tzezula"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    When the IDE is set to the automatic close tabs mode the tabs created by the previous
+                    run of the <code>AntTargetExecutor</code> are closed by successive run.
+                    Added a support to override this behavior.
+                </p>
+            </description>
+            <class package="org.apache.tools.ant.module.api" name="AntTargetExecutor"/>
+        </change>
 
         <change id="setConcealedProperties">
             <api name="general"/>

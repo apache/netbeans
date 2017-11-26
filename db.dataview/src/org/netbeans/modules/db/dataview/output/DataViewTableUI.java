@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -29,18 +29,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Blob;
-import java.sql.Clob;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JComponent;
+import javax.swing.JCheckBox;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
-import javax.swing.RowFilter;
-import javax.swing.SortOrder;
-import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -49,11 +45,9 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
-import org.jdesktop.swingx.renderer.JRendererCheckBox;
 import org.netbeans.modules.db.dataview.meta.DBColumn;
 import org.netbeans.modules.db.dataview.meta.DBException;
 import org.netbeans.modules.db.dataview.meta.DBTable;
-import org.netbeans.modules.db.dataview.table.ResultSetCellRenderer;
 import org.netbeans.modules.db.dataview.table.ResultSetJXTable;
 import org.netbeans.modules.db.dataview.util.ColorHelper;
 import org.openide.DialogDisplayer;
@@ -86,9 +80,6 @@ final class DataViewTableUI extends ResultSetJXTable {
         this.dataviewUI = dataviewUI;
         this.handler = handler;
 
-        // Make sure sorting can be disabled by taking unsorted into the sort order cycle
-        this.setSortOrderCycle(SortOrder.ASCENDING, SortOrder.DESCENDING, SortOrder.UNSORTED);
-
         TableSelectionListener listener = new TableSelectionListener(this);
         this.getSelectionModel().addListSelectionListener(listener);
         this.getColumnModel().getSelectionModel().addListSelectionListener(listener);
@@ -104,13 +95,11 @@ final class DataViewTableUI extends ResultSetJXTable {
             throw new IllegalArgumentException("DataViewTableUI only supports"
                     + " instances of DataViewTableUIModel");
         }
-        RowFilter<?, ?> oldFilter = getRowFilter();
         if (getModel() != null) {
             getModel().removeTableModelListener(dataChangedListener); // Remove ChangeListener on replace
         }
         super.setModel(dataModel);
         dataModel.addTableModelListener(dataChangedListener); // Add new change listener
-        setRowFilter((RowFilter) oldFilter);
         if (dataviewUI != null) {
             dataviewUI.handleColumnUpdated();
         }
@@ -126,59 +115,36 @@ final class DataViewTableUI extends ResultSetJXTable {
         return new DataViewTableUIModel(new DBColumn[0]);
     }
 
+    private static int borderThickness = 2;
+    private static Color selectedForeground = ColorHelper.getTablecellEditedSelectedForeground();
+    private static Color unselectedForeground = ColorHelper.getTablecellEditedUnselectedForeground();
+    private static final JPanel checkboxReplacement = new JPanel(new BorderLayout());
+    
     @Override
-    public TableCellRenderer getCellRenderer(int row, int column) {
-        try {
-            if (getModel().hasUpdates(
-                    convertRowIndexToModel(row),
-                    convertColumnIndexToModel(column))) {
-                return new UpdatedResultSetCellRenderer();
+    public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+        Component c = super.prepareRenderer(renderer, row, column);
+        if (getModel().hasUpdates(
+                convertRowIndexToModel(row),
+                convertColumnIndexToModel(column))) {
+            
+            Color color = isCellSelected(row, column) ? selectedForeground : unselectedForeground;
+            
+            if (c instanceof JCheckBox) {
+                checkboxReplacement.removeAll();
+                checkboxReplacement.setBorder(new LineBorder(color, borderThickness));
+                checkboxReplacement.add(c);
+                return checkboxReplacement;
+            } else {
+                c.setForeground(color);
+                return c;
             }
-        } catch (IndexOutOfBoundsException ex) {
-            // Swallow it, caused by pack from JXTable - Bug #228753
         }
-        return super.getCellRenderer(row, column);
+        return c;
     }
 
     @Override
     protected KeyListener createControKeyListener() {
         return new Control0KeyListener();
-    }
-
-    private static class UpdatedResultSetCellRenderer extends ResultSetCellRenderer {
-
-        static int borderThickness = 1;
-        static Color selectedForeground;
-        static Color unselectedForeground;
-        private final JComponent holder = new JComponent() {};
-
-        static {
-            selectedForeground = ColorHelper.getTablecellEditedSelectedForeground();
-            unselectedForeground = ColorHelper.getTablecellEditedUnselectedForeground();
-        }
-
-        public UpdatedResultSetCellRenderer() {
-            holder.setLayout(new BorderLayout());
-        }
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-            assert (table.getModel() instanceof DataViewTableUIModel) : "Assuming usage with DataViewTableUIModel";
-
-            Color color = isSelected ? selectedForeground : unselectedForeground;
-
-            if (c instanceof JRendererCheckBox) {
-                holder.removeAll();
-                holder.setBorder(new LineBorder(color, borderThickness));
-                holder.add(c);
-                return holder;
-            } else {
-                c.setForeground(color);
-            }
-            return c;
-        }
     }
 
     private class Control0KeyListener implements KeyListener {

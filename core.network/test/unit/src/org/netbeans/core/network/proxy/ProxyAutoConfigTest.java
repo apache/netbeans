@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -88,13 +88,17 @@ public class ProxyAutoConfigTest extends NbTestCase {
             URI uri = pac.getPacURI();
             assertNotNull(uri);
             assertNull(uri.getHost());
-            List<Proxy> proxies = pac.findProxyForURL(new URI("http://netbeans.org"));
+            List<Proxy> proxies = pac.findProxyForURL(new URI("http://apache.org"));
             assertEquals(1, proxies.size());
-            assertTrue(pacFileLoc + ": " + proxies.get(0).toString(), proxies.get(0).toString().startsWith("HTTP @ www-proxy.us.oracle.com/"));
+            Proxy proxy = proxies.get(0);
+            assertEquals(pacFileLoc, Proxy.Type.HTTP, proxy.type());
+            assertEquals(pacFileLoc, "www-proxy.us.oracle.com:80", proxy.address().toString());
             
-            proxies = pac.findProxyForURL(new URI("https://netbeans.org"));
+            proxies = pac.findProxyForURL(new URI("https://apache.org"));
             assertEquals(1, proxies.size());
-            assertTrue(pacFileLoc + ": " + proxies.get(0).toString(), proxies.get(0).toString().startsWith("HTTP @ www-proxy.us.oracle.com/"));
+            proxy = proxies.get(0);
+            assertEquals(pacFileLoc, Proxy.Type.HTTP, proxy.type());
+            assertEquals(pacFileLoc, "www-proxy.us.oracle.com:80", proxy.address().toString());
         }
     }
     

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,6 +21,7 @@ package org.netbeans.spi.jumpto.type;
 
 import javax.swing.Icon;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.spi.jumpto.support.Descriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Parameters;
@@ -32,7 +33,7 @@ import org.openide.util.Parameters;
  * @author Tor Norbye
  * @author Tomas Zezula
  */
-public abstract class TypeDescriptor {
+public abstract class TypeDescriptor extends Descriptor {
 
     private String highlightText;
 

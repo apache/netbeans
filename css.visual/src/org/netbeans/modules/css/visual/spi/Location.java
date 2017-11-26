@@ -1,9 +1,4 @@
-package org.netbeans.modules.css.visual.spi;
-
-
-import org.openide.filesystems.FileObject;
-
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -21,6 +16,10 @@ import org.openide.filesystems.FileObject;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+package org.netbeans.modules.css.visual.spi;
+
+import org.openide.filesystems.FileObject;
 
 /**
  *

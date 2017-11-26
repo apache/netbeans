@@ -31,9 +31,6 @@
     </folder>
     <folder name="org-netbeans-api-project-libraries">
         <folder name="Libraries">
-            <file name="MySQLDriver.xml" url="MySQLDriver.xml">
-                <attr name="displayName" bundlevalue="org.netbeans.modules.db.drivers.Bundle#MySQLDriver"/>
-            </file>
             <file name="PostgreSQLDriver.xml" url="PostgreSQLDriver.xml">
                 <attr name="displayName" bundlevalue="org.netbeans.modules.db.drivers.Bundle#PostgreSQLDriver"/>
             </file>

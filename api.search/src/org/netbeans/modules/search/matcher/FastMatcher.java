@@ -31,6 +31,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -268,16 +269,9 @@ public class FastMatcher extends AbstractMatcher {
     /**
      * Check file content using Java NIO API.
      */
-    private Def checkSmall(FileObject fo, File file,
-            SearchListener listener) {
-
+    private Def checkSmall(FileObject fo, File file, SearchListener listener) {
         MappedByteBuffer bb = null;
-        FileChannel fc = null;
-        try {
-            // Open the file and then get a channel from the stream
-            FileInputStream fis = new FileInputStream(file);
-            fc = fis.getChannel();
-
+        try (FileChannel fc = FileChannel.open(file.toPath(), StandardOpenOption.READ)) {
             // Get the file's size and then map it into memory
             int sz = (int) fc.size();
             bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, sz);
@@ -304,13 +298,6 @@ public class FastMatcher extends AbstractMatcher {
             listener.generalError(e);
             return null;
         } finally {
-            if (fc != null) {
-                try {
-                    fc.close();
-                } catch (IOException ex) {
-                    listener.generalError(ex);
-                }
-            }
             unmap(bb);
         }
     }

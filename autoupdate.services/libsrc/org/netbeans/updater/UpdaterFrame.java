@@ -22,6 +22,7 @@ package org.netbeans.updater;
 import java.awt.*;
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -412,8 +413,8 @@ implements UpdatingContext {
     }
 
     @Override
-    public OutputStream createOS(File bckFile) throws FileNotFoundException {
-        return new FileOutputStream(bckFile);
+    public OutputStream createOS(File bckFile) throws IOException {
+        return Files.newOutputStream(bckFile.toPath());
     }
         
     static class SplashFrame extends JFrame {

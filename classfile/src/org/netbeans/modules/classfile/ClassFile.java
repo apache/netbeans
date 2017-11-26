@@ -23,6 +23,8 @@
 package org.netbeans.modules.classfile;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -143,7 +145,7 @@ public class ClassFile {
         try {
             if (classFileName == null)
                 throw new IOException("input stream not specified");
-            in = new BufferedInputStream(new FileInputStream(classFileName), BUFFER_SIZE);
+            in = new BufferedInputStream(Files.newInputStream(Paths.get(classFileName)), BUFFER_SIZE);
             load(in);
         } catch (InvalidClassFormatException e) {
             throw new InvalidClassFormatException(classFileName + '(' +

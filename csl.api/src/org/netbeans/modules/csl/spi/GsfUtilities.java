@@ -21,10 +21,10 @@ package org.netbeans.modules.csl.spi;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.EventObject;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -299,7 +299,7 @@ public final class GsfUtilities {
 
     public static void extractZip(final FileObject extract, final FileObject dest) throws IOException {
         File extractFile = FileUtil.toFile(extract);
-        extractZip(dest, new BufferedInputStream(new FileInputStream(extractFile)));
+        extractZip(dest, new BufferedInputStream(Files.newInputStream(extractFile.toPath())));
     }
 
     // Based on openide/fs' FileUtil.extractJar

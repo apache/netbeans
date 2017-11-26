@@ -22,7 +22,6 @@ package org.netbeans.modules.apisupport.project.universe;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
@@ -34,6 +33,7 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -175,21 +175,21 @@ public class PlatformLayersCacheManager {
         // XXX last access timestamp and cleaning of long unused cache files? If cache gets too big...
         if (cacheIndex == null) {
             cacheIndex = new LinkedHashMap<File, Integer>();
-            ObjectInputStream ois = null;
             try {
                 File indexF = new File(cacheLocation, "index.ser");
                 if (indexF.exists()) {
-                    ois = new ObjectInputStream(new FileInputStream(indexF));
-                    int version = ois.readInt();
-                    assert version == 1;
-                    int count = ois.readInt();
-                    for (int c = 0; c < count; c++) {
-                        String clusterPath = (String) ois.readObject();
-                        Date lastAccess = (Date) ois.readObject(); // last access timestamp, unused so far
-                        File cd = new File(clusterPath);
-                        if (cd.isDirectory()) {
-                            cacheIndex.put(cd, c);
+                    try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(indexF.toPath()))) {
+                        int version = ois.readInt();
+                        assert version == 1;
+                        int count = ois.readInt();
+                        for (int c = 0; c < count; c++) {
+                            String clusterPath = (String) ois.readObject();
+                            Date lastAccess = (Date) ois.readObject(); // last access timestamp, unused so far
+                            File cd = new File(clusterPath);
+                            if (cd.isDirectory()) {
+                                cacheIndex.put(cd, c);
 
+                            }
                         }
                     }
                 }
@@ -199,9 +199,6 @@ public class PlatformLayersCacheManager {
                 // corrupted index file, keep what we've read and skip the rest
                 LOGGER.log(Level.WARNING, "Exception during loading project layers cache index file (for cluster "
                         + clusterDir + "): " + ex2.toString());
-            } finally {
-                if (ois != null)
-                    ois.close();
             }
         }
         Integer index = cacheIndex.get(clusterDir);
@@ -378,7 +375,7 @@ public class PlatformLayersCacheManager {
             try {
                 try {
                     indexF = new File(cacheLocation, "index.ser");
-                    oos = new ObjectOutputStream(new FileOutputStream(indexF));
+                    oos = new ObjectOutputStream(Files.newOutputStream(indexF.toPath()));
                     oos.writeInt(1);    // index version
                     oos.writeInt(cacheIndex.size());
                     Date now = Calendar.getInstance().getTime();
@@ -411,7 +408,7 @@ public class PlatformLayersCacheManager {
         ObjectOutputStream oos = null;
         try {
             try {
-                oos = new ObjectOutputStream(new FileOutputStream(cf));
+                oos = new ObjectOutputStream(Files.newOutputStream(cf.toPath()));
 
                 // cache file starts with version number (int), number of entries (int) and continues with a sequence of entries in format:
                 // <JAR name (no path)><JAR size><JAR timestamp><ignore JAR>[<has masked entries><binary layerFS size><serialized binary layerFS>];
@@ -530,55 +527,48 @@ public class PlatformLayersCacheManager {
             if (cacheFile == null) {
                 return null;
             }
-            FileInputStream fis = null;
             try {
                 File[] moduleDirs = new File[MODULE_DIRS.length];
                 for (int i = 0; i < moduleDirs.length; i++) {
                     moduleDirs[i] = new File(clusterDir, MODULE_DIRS[i]);
                 }
-                fis = new FileInputStream(cacheFile);
-                ObjectInputStream ois = new ObjectInputStream(fis);
-                // cache file starts with version number (int), number of entries (int) and continues with a sequence of entries in format:
-                // <JAR name (no path)><JAR size><JAR timestamp><ignore JAR>[<has masked entries><binary layerFS size><serialized binary layerFS>];
-                // when <ignore JAR> is true, the rest of the entry is missing
-                int version = ois.readInt();
-                assert version == 1;
-                int count = ois.readInt();
-                for (int c = 0; c < count; c++) {
-                    String jarName = (String) ois.readObject();
-                    File jarFile = null;
-                    for (File dir : moduleDirs) {
-                        jarFile = new File(dir, jarName);
-                        if (jarFile.exists())
-                            break;
+                try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(cacheFile.toPath()))) {
+                    // cache file starts with version number (int), number of entries (int) and continues with a sequence of entries in format:
+                    // <JAR name (no path)><JAR size><JAR timestamp><ignore JAR>[<has masked entries><binary layerFS size><serialized binary layerFS>];
+                    // when <ignore JAR> is true, the rest of the entry is missing
+                    int version = ois.readInt();
+                    assert version == 1;
+                    int count = ois.readInt();
+                    for (int c = 0; c < count; c++) {
+                        String jarName = (String) ois.readObject();
+                        File jarFile = null;
+                        for (File dir : moduleDirs) {
+                            jarFile = new File(dir, jarName);
+                            if (jarFile.exists()) {
+                                break;
+                            }
+                        }
+                        long jarSize = ois.readLong();
+                        long jarTS = ois.readLong();
+                        boolean isIgnored = ois.readBoolean();
+                        boolean isMasked = false;
+                        FileSystem fs = null;
+                        byte[] bytes = null;
+                        if (!isIgnored) {
+                            isMasked = ois.readBoolean();
+                            int binFSSize = ois.readInt();
+                            bytes = new byte[binFSSize];
+                            ois.readFully(bytes, 0, binFSSize);
+                            fs = man.load(null, ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN));
+                        }
+                        cache.add(new PLFSCacheEntry(jarFile, jarSize, jarTS, isIgnored, isMasked, fs, bytes));
                     }
-                    long jarSize = ois.readLong();
-                    long jarTS = ois.readLong();
-                    boolean isIgnored = ois.readBoolean();
-                    boolean isMasked = false;
-                    FileSystem fs = null;
-                    byte[] bytes = null;
-                    if (! isIgnored) {
-                        isMasked = ois.readBoolean();
-                        int binFSSize = ois.readInt();
-                        bytes = new byte[binFSSize];
-                        ois.readFully(bytes, 0, binFSSize);
-                        fs = man.load(null, ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN));
-                    }
-                    cache.add(new PLFSCacheEntry(jarFile, jarSize, jarTS, isIgnored, isMasked, fs, bytes));
                 }
-            } catch (FileNotFoundException ex) {
-                // cache not found
+            } catch (FileNotFoundException | ClassNotFoundException ex) {
+                // cache not found or corrupted cache file, throw the cache away
                 LOGGER.log(Level.WARNING, "Exception while loading project layers cache (from file " + cacheFile.getAbsolutePath()
                         + " for cluster " + clusterDir + "): " + ex.toString());
                 return null;
-            } catch (ClassNotFoundException ex2) {
-                // corrupted cache file, throw the cache away
-                LOGGER.log(Level.WARNING, "Exception while loading project layers cache (from file " + cacheFile.getAbsolutePath()
-                        + " for cluster " + clusterDir + "): " + ex2.toString());
-                return null;
-            } finally {
-                fis.close();
             }
             LOGGER.fine("Cache for cluster " + clusterDir + " successfully loaded from cache file " + cacheFile);
         } catch (IOException ex) {

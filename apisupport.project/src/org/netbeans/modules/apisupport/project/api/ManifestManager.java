@@ -143,14 +143,9 @@ public final class ManifestManager {
     
     public static ManifestManager getInstance(File manifest, boolean loadPublicPackages) {
         if (manifest.exists()) {
-            try {
-                InputStream mis = new FileInputStream(manifest); // NOI18N
-                try {
-                    Manifest mf = new Manifest(mis);
-                    return ManifestManager.getInstance(mf, loadPublicPackages);
-                } finally {
-                    mis.close();
-                }
+            try (InputStream mis = new FileInputStream(manifest)) {
+                Manifest mf = new Manifest(mis);
+                return ManifestManager.getInstance(mf, loadPublicPackages);
             } catch (IOException x) {
                 LOG.log(Level.INFO, "While opening: " + manifest, x);
             }

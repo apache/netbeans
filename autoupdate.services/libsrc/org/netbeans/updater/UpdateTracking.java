@@ -20,6 +20,7 @@
 package org.netbeans.updater;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.zip.CRC32;
@@ -277,23 +278,17 @@ public final class UpdateTracking {
         /** org.w3c.dom.Document document */
         org.w3c.dom.Document document;
 
-        File file;
-        InputStream is;
         int avail = 0;
         try {
-            file = trackingFile;
-            
-            if ( ! file.isFile () ) {
+            File file = trackingFile;
+            if (!file.isFile()) {
                 return;
             }
-            
-            is = new FileInputStream( file );
-            avail = is.available();
 
-            InputSource xmlInputSource = new InputSource( is );
-            document = XMLUtil.parse(xmlInputSource, false, false, DUMMY_ERROR_HANDLER, XMLUtil.createAUResolver());
-            if (is != null) {
-                is.close();
+            try (InputStream is = Files.newInputStream(file.toPath())) {
+                avail = is.available();
+                InputSource xmlInputSource = new InputSource(is);
+                document = XMLUtil.parse(xmlInputSource, false, false, DUMMY_ERROR_HANDLER, XMLUtil.createAUResolver());
             }
         }
         catch ( org.xml.sax.SAXException e ) {
@@ -444,25 +439,17 @@ public final class UpdateTracking {
     }
     
     private Module readModuleFromFile( File file, String codename, boolean create ) {
-        
         /** org.w3c.dom.Document document */
         org.w3c.dom.Document document;
-        InputStream is;
-        try {
-            is = new FileInputStream( file );
-
-            InputSource xmlInputSource = new InputSource( is );
+        try (InputStream is = Files.newInputStream(file.toPath())) {
+            InputSource xmlInputSource = new InputSource(is);
             document = XMLUtil.parse(xmlInputSource, false, false, DUMMY_ERROR_HANDLER, XMLUtil.createAUResolver());
-            if (is != null) {
-                is.close();
-            }
-        } catch ( org.xml.sax.SAXException e ) {
+        } catch (org.xml.sax.SAXException e) {
             XMLUtil.LOG.log(Level.SEVERE, "Bad update_tracking", e); // NOI18N
             return null;
-        }
-        catch ( java.io.IOException e ) {
-            if ( create ) {
-                return new Module (codename, file);
+        } catch (java.io.IOException e) {
+            if (create) {
+                return new Module(codename, file);
             } else {
                 return null;
             }
@@ -501,19 +488,12 @@ public final class UpdateTracking {
     }
     
     public static long getFileCRC(File file) throws IOException {
-        BufferedInputStream bsrc = null;
         CRC32 crc = new CRC32();
-        try {
-            bsrc = new BufferedInputStream( new FileInputStream( file ) );
+        try (BufferedInputStream bsrc = new BufferedInputStream(Files.newInputStream(file.toPath()))) {
             byte[] bytes = new byte[1024];
             int i;
-            while( (i = bsrc.read(bytes)) != -1 ) {
-                crc.update(bytes, 0, i );
-            }
-        }
-        finally {
-            if ( bsrc != null ) {
-                bsrc.close();
+            while ((i = bsrc.read(bytes)) != -1) {
+                crc.update(bytes, 0, i);
             }
         }
         return crc.getValue();
@@ -1208,7 +1188,7 @@ public final class UpdateTracking {
 
             InputStream is = null;
             try {
-                is = new FileInputStream (f);
+                is = Files.newInputStream(f.toPath());
                 document = XMLUtil.parse (new InputSource (is), false, false, null, null);
             } catch (org.xml.sax.SAXException e) {
                 XMLUtil.LOG.log (Level.WARNING,"Bad " + UpdateTracking.ADDITIONAL_INFO_FILE_NAME + f, e); // NOI18N

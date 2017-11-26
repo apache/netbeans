@@ -22,10 +22,10 @@ package org.netbeans.modules.apisupport.project.universe;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -329,17 +329,12 @@ public final class ModuleList {
     private static final Map<File,File> netbeansOrgDestDirs = new HashMap<File,File>();
     private static File checkForNetBeansOrgDestDir(File properties) {
         if (properties.isFile()) {
-            try {
-                InputStream is = new FileInputStream(properties);
-                try {
-                    Properties p = new Properties();
-                    p.load(is);
-                    String d = p.getProperty(NETBEANS_DEST_DIR);
-                    if (d != null) {
-                        return new File(d);
-                    }
-                } finally {
-                    is.close();
+            try (InputStream is = Files.newInputStream(properties.toPath())) {
+                Properties p = new Properties();
+                p.load(is);
+                String d = p.getProperty(NETBEANS_DEST_DIR);
+                if (d != null) {
+                    return new File(d);
                 }
             } catch (IOException x) {
                 LOG.log(Level.INFO, "Could not read " + properties, x);
@@ -1118,11 +1113,8 @@ public final class ModuleList {
             return PropertyUtils.fixedPropertyProvider(Collections.<String,String>emptyMap());
         }
         Properties p = new Properties();
-        InputStream is = new FileInputStream(f);
-        try {
+        try (InputStream is = Files.newInputStream(f.toPath())) {
             p.load(is);
-        } finally {
-            is.close();
         }
         return PropertyUtils.fixedPropertyProvider(NbCollections.checkedMapByFilter(p, String.class, String.class, true));
     }

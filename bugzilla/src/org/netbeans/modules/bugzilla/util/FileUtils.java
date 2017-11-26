@@ -20,6 +20,7 @@
 package org.netbeans.modules.bugzilla.util;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import org.netbeans.modules.bugzilla.Bugzilla;
 import org.openide.filesystems.FileUtil;
@@ -227,7 +228,7 @@ public class FileUtils {
         int retry = 0;
         while (true) {   
             try {
-                return new BufferedInputStream(new FileInputStream(file));                
+                return new BufferedInputStream(Files.newInputStream(file.toPath()));
             } catch (IOException ex) {
                 retry++;
                 if (retry > 7) {
@@ -246,7 +247,7 @@ public class FileUtils {
         int retry = 0;
         while (true) {            
             try {
-                return new BufferedOutputStream(new FileOutputStream(file));                
+                return new BufferedOutputStream(Files.newOutputStream(file.toPath()));
             } catch (IOException ex) {
                 retry++;
                 if (retry > 7) {

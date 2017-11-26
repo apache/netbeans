@@ -21,10 +21,10 @@ package org.netbeans.modules.autoupdate.pluginimporter;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -320,7 +320,7 @@ public class PluginImporter {
         Document document = null;
         InputStream is;
         try {
-            is = new BufferedInputStream (new FileInputStream (moduleUpdateTracking));
+            is = new BufferedInputStream(Files.newInputStream(moduleUpdateTracking.toPath()));
             InputSource xmlInputSource = new InputSource (is);
             document = XMLUtil.parse (xmlInputSource, false, false, null, org.openide.xml.EntityCatalog.getDefault ());
             if (is != null) {

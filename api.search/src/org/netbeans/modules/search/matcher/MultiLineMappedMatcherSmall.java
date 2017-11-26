@@ -19,14 +19,13 @@
 package org.netbeans.modules.search.matcher;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
+import java.nio.file.StandardOpenOption;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -61,19 +60,13 @@ public class MultiLineMappedMatcherSmall extends AbstractMatcher {
     }
 
     @Override
-    protected Def checkMeasuredInternal(FileObject fo,
-            SearchListener listener) {
-
+    protected Def checkMeasuredInternal(FileObject fo, SearchListener listener) {
         MappedByteBuffer bb = null;
-        FileChannel fc = null;
         try {
-
             listener.fileContentMatchingStarted(fo.getPath());
             File file = FileUtil.toFile(fo);
 
-            // Open the file and then get a channel from the stream
-            FileInputStream fis = new FileInputStream(file);
-            fc = fis.getChannel();
+            try (FileChannel fc = FileChannel.open(file.toPath(), StandardOpenOption.READ)) {
 
             // Get the file's size and then map it into memory
             int sz = (int) fc.size();
@@ -97,17 +90,11 @@ public class MultiLineMappedMatcherSmall extends AbstractMatcher {
                 Def def = new Def(fo, decoder.charset(), textDetails);
                 return def;
             }
+            }
         } catch (Exception e) {
             listener.generalError(e);
             return null;
         } finally {
-            if (fc != null) {
-                try {
-                    fc.close();
-                } catch (IOException ex) {
-                    listener.generalError(ex);
-                }
-            }
             MatcherUtils.unmap(bb);
         }
     }

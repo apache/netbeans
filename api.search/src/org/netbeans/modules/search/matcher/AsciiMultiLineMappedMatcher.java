@@ -19,12 +19,11 @@
 package org.netbeans.modules.search.matcher;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.nio.file.StandardOpenOption;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -59,43 +58,30 @@ public class AsciiMultiLineMappedMatcher extends AbstractMatcher {
     }
 
     @Override
-    protected Def checkMeasuredInternal(FileObject fo,
-            SearchListener listener) {
-
+    protected Def checkMeasuredInternal(FileObject fo, SearchListener listener) {
         MappedByteBuffer bb = null;
-        FileChannel fc = null;
         try {
-
             listener.fileContentMatchingStarted(fo.getPath());
             File file = FileUtil.toFile(fo);
 
-            // Open the file and then get a channel from the stream
-            FileInputStream fis = new FileInputStream(file);
-            fc = fis.getChannel();
+            try (FileChannel fc = FileChannel.open(file.toPath(), StandardOpenOption.READ)) {
+                // Get the file's size and then map it into memory
+                int sz = (int) fc.size();
+                bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, sz);
 
-            // Get the file's size and then map it into memory
-            int sz = (int) fc.size();
-            bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, sz);
+                List<TextDetail> list = matchWholeFile(new FastCharSequence(bb, 0),
+                        fo);
 
-            List<TextDetail> list = matchWholeFile(new FastCharSequence(bb, 0),
-                    fo);
-
-            if (list != null && !list.isEmpty()) {
-                return new Def(fo, Charset.forName("ASCII"), list);
-            } else {
-                return null;
+                if (list != null && !list.isEmpty()) {
+                    return new Def(fo, Charset.forName("ASCII"), list);
+                } else {
+                    return null;
+                }
             }
         } catch (Exception e) {
             listener.generalError(e);
             return null;
         } finally {
-            if (fc != null) {
-                try {
-                    fc.close();
-                } catch (IOException ex) {
-                    listener.generalError(ex);
-                }
-            }
             MatcherUtils.unmap(bb);
         }
     }

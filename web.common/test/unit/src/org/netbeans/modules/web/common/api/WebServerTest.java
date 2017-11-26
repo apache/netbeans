@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import static org.junit.Assert.*;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
@@ -126,6 +127,7 @@ public class WebServerTest extends NbTestCase {
 
         ws.start(testProject1, siteRoot1, "/app1");
         assertURLContent("http://localhost:8383/app1/foo.html", "I'm foo_l");
+        assertMimetype("http://localhost:8383/app1/foo.html", "text/html");
 
         ws.start(testProject2, siteRoot2, "/app2");
         assertURLContent("http://localhost:8383/app2/foo.html", "I'm fool number Dva");
@@ -158,6 +160,13 @@ public class WebServerTest extends NbTestCase {
         is.read(b);
         is.close();
         assertEquals(content, new String(b).trim());
+    }
+    
+    private void assertMimetype(String url, String mimetype) throws Exception {
+        URLConnection is = new URL(url).openConnection();
+        is.getInputStream().close();
+        String resultMimeType = is.getHeaderField("Content-Type");
+        assertEquals(mimetype, resultMimeType);
     }
 
     private void assertURLDoesNotExist(String url) throws Exception {

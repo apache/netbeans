@@ -1,8 +1,8 @@
 Name: Eclipse Equinox Preferences library
+Origin: Eclipse
 Version: 3.4.2
-License: EPL-v10-equinox-preferences
-OSR: 5854
-Origin: http://www.eclipse.org/
+License: EPL-v10-with-osgi
+URL: http://www.eclipse.org/
 Description: Eclipse Equinox Preferences library
 
 The Eclipse Foundation makes available all content in this plug-in ("Content").

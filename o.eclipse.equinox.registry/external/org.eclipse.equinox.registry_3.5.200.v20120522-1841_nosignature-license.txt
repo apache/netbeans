@@ -1,9 +1,8 @@
-Name: %pluginName
+Name: Equinox Registry
+Origin: Eclipse
 Version: 3.5.200.v20120522-1841
-License: EPL-v10-equinox-registry
-OSR: 
-Origin: 
-Description: 
+License: EPL-v10-with-commons
+Description: TBD
 
 The Eclipse Foundation makes available all content in this plug-in ("Content").
 Unless otherwise indicated below, the Content is provided to you under the

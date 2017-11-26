@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,7 +19,8 @@
 
 package org.netbeans.modules.team.ide;
 
-import java.awt.Dimension;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -29,10 +30,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
-import org.jdesktop.swingx.icon.PainterIcon;
-import org.jdesktop.swingx.painter.BusyPainter;
 import org.netbeans.api.autoupdate.InstallSupport;
 import org.netbeans.api.autoupdate.OperationContainer;
 import org.netbeans.api.autoupdate.UpdateElement;
@@ -286,7 +286,7 @@ public class IDEServicesImpl implements IDEServices {
 
     @Override
     public DatePickerComponent createDatePicker () {
-        return new JXDatePickerImpl();
+        return null;
     }
 
     @Override
@@ -356,24 +356,51 @@ public class IDEServicesImpl implements IDEServices {
         }
     }
 
-    private static class SwingXBusyIcon extends PainterIcon implements BusyIcon {
-        private static final int SIZE = 16;
-        private static final int POINTS = 8;
+    private static class SwingXBusyIcon implements BusyIcon {
+        //@StaticResource(searchClasspath=true)
+        private static final String ICON_PROGRESS_0 = "org/openide/awt/resources/quicksearch/progress_0.png"; // NOI18N
+        //@StaticResource(searchClasspath=true)
+        private static final String ICON_PROGRESS_1 = "org/openide/awt/resources/quicksearch/progress_1.png"; // NOI18N
+        //@StaticResource(searchClasspath=true)
+        private static final String ICON_PROGRESS_2 = "org/openide/awt/resources/quicksearch/progress_2.png"; // NOI18N
+        //@StaticResource(searchClasspath=true)
+        private static final String ICON_PROGRESS_3 = "org/openide/awt/resources/quicksearch/progress_3.png"; // NOI18N
+        //@StaticResource(searchClasspath=true)
+        private static final String ICON_PROGRESS_4 = "org/openide/awt/resources/quicksearch/progress_4.png"; // NOI18N
+        //@StaticResource(searchClasspath=true)
+        private static final String ICON_PROGRESS_5 = "org/openide/awt/resources/quicksearch/progress_5.png"; // NOI18N
+        //@StaticResource(searchClasspath=true)
+        private static final String ICON_PROGRESS_6 = "org/openide/awt/resources/quicksearch/progress_6.png"; // NOI18N
+        //@StaticResource(searchClasspath=true)
+        private static final String ICON_PROGRESS_7 = "org/openide/awt/resources/quicksearch/progress_7.png"; // NOI18N
+        private static final ImageIcon[] ICON_PROGRESS = new ImageIcon[]{
+            new ImageIcon(ICON_PROGRESS_0), new ImageIcon(ICON_PROGRESS_1), new ImageIcon(ICON_PROGRESS_2), new ImageIcon(ICON_PROGRESS_3),
+            new ImageIcon(ICON_PROGRESS_4), new ImageIcon(ICON_PROGRESS_5), new ImageIcon(ICON_PROGRESS_6), new ImageIcon(ICON_PROGRESS_7)
+        };
 
-        private int currentFrame;
-        private BusyPainter busyPainter;
+        private int currentFrame = 0;
 
         SwingXBusyIcon() {
-            super(new Dimension(SIZE, SIZE));
-            busyPainter = new BusyPainter(SIZE);            
-            busyPainter.setPoints(POINTS);
-            setPainter(busyPainter);
         }
 
         @Override
         public void tick() {
-            currentFrame = (currentFrame + 1) % POINTS;
-            busyPainter.setFrame(currentFrame);
+            currentFrame = (currentFrame + 1) % ICON_PROGRESS.length;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            ICON_PROGRESS[currentFrame].paintIcon(c, g, x, y);
+        }
+
+        @Override
+        public int getIconWidth() {
+            return ICON_PROGRESS[currentFrame].getIconWidth();
+        }
+
+        @Override
+        public int getIconHeight() {
+            return ICON_PROGRESS[currentFrame].getIconHeight();
         }
     }
 }

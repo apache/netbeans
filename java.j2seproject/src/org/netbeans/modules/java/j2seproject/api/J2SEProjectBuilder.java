@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -376,7 +376,7 @@ public class J2SEProjectBuilder {
             ep.setProperty(ProjectProperties.JAVAC_MODULEPATH, new String[0]);
         }
         if (ep.getProperty(ProjectProperties.JAVAC_PROCESSORMODULEPATH) == null) {
-            ep.setProperty(ProjectProperties.JAVAC_PROCESSORPATH, new String[0]);
+            ep.setProperty(ProjectProperties.JAVAC_PROCESSORMODULEPATH, new String[0]);
         }
         if (ep.getProperty(ProjectProperties.RUN_MODULEPATH) == null) {
             ep.setProperty(ProjectProperties.RUN_MODULEPATH, new String[] {

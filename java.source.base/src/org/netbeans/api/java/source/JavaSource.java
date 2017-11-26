@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -286,7 +286,7 @@ public final class JavaSource {
                     srcPath,
                     moduleSrcPath,
                     null,
-                    false, false, false, true, null);
+                    false, false, false, true, false, null);
                 FileObject root = ClassPathSupport.createProxyClassPath(
                     ClassPathSupport.createClassPath(CachingArchiveProvider.getDefault().ctSymRootsFor(bootPath)),
                     bootPath,

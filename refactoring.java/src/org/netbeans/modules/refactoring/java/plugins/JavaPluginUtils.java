@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -359,7 +359,7 @@ public final class JavaPluginUtils {
         
         return false;
     }
-
+    
     //<editor-fold defaultstate="collapsed" desc="TODO: Copied from java.source.base TreeUtilities">
     static boolean isSynthetic(CompilationInfo info, CompilationUnitTree cut, Tree leaf) throws NullPointerException {
         JCTree tree = (JCTree) leaf;

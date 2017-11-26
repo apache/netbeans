@@ -208,7 +208,6 @@ is pluggable. There is no public API for extensions by 3rd parties.
 <answer id="dep-non-nb">
     <api name="org.jdesktop.layout" group="java" type="import" category="third">
     Layout extensions library from Swing Labs project (<a href="https://swing-layout.dev.java.net/">https://swing-layout.dev.java.net</a>).
-    Integrated via <code>org.jdesktop.layout/1</code> module (living in <code>libs/swing-layout</code>).
     </api>
 </answer>
 

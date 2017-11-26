@@ -6,5 +6,4 @@ OpenIDE-Module-Provides: org.netbeans.api.javahelp.Help
 OpenIDE-Module-Requires: org.openide.modules.InstalledFileLocator, org.openide.modules.ModuleFormat2
 OpenIDE-Module-Layer: org/netbeans/modules/javahelp/resources/layer.xml
 OpenIDE-Module-Install: org/netbeans/modules/javahelp/Installer.class
-OpenIDE-Module-Hide-Classpath-Packages: javax.help.**, com.sun.java.help.**
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -194,18 +194,25 @@ class HprofHeap implements Heap {
     
     private class InstancesIterator implements Iterator {
         private long[] offset;
+        private Instance nextInstance;
         
         private InstancesIterator() {
             offset = new long[] { allInstanceDumpBounds.startOffset };
         }
 
         public boolean hasNext() {
-            return offset[0] < allInstanceDumpBounds.endOffset;
+            while (offset[0] < allInstanceDumpBounds.endOffset && nextInstance == null) {
+                nextInstance = getInstanceByOffset(offset);
+            }
+            return nextInstance != null;
         }
 
         public Object next() {
             if (hasNext()) {
-                return getInstanceByOffset(offset);
+                Instance ni = nextInstance;
+
+                nextInstance = null;
+                return ni;
             }
             throw new NoSuchElementException();
         }
@@ -304,10 +311,10 @@ class HprofHeap implements Heap {
     }
 
     Instance getInstanceByOffset(long[] offset) {
-        return getInstanceByOffset(offset, -1);
+        return getInstanceByOffset(offset, null, -1);
     }
 
-    Instance getInstanceByOffset(long[] offset, long instanceClassId) {
+    Instance getInstanceByOffset(long[] offset, ClassDump instanceClassDump, long instanceClassId) {
         long start = offset[0];
         assert start != 0L;
         ClassDump classDump;
@@ -337,7 +344,11 @@ class HprofHeap implements Heap {
             if (instanceClassId != -1 && classId != instanceClassId) {
                 return null;
             }
-            classDump = classDumpBounds.getClassDumpByID(classId);
+            if (instanceClassDump == null) {
+                classDump = classDumpBounds.getClassDumpByID(classId);
+            } else {
+                classDump = instanceClassDump;        
+            }
         }
 
         if (classDump == null) {

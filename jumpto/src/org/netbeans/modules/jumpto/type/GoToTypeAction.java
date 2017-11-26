@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -62,10 +62,12 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.jumpto.type.TypeBrowser;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.editor.JumpList;
+import org.netbeans.modules.jumpto.EntityComparator;
 import org.netbeans.modules.jumpto.common.AbstractModelFilter;
 import org.netbeans.modules.jumpto.common.CurrentSearch;
 import org.netbeans.modules.jumpto.common.ItemRenderer;
 import org.netbeans.modules.jumpto.common.Utils;
+import org.netbeans.modules.jumpto.settings.GoToSettings;
 import org.netbeans.modules.sampler.Sampler;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -107,6 +109,7 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
     private final String title;
     private final boolean multiSelection;
     private final CurrentSearch<TypeDescriptor> currentSearch;
+    private volatile TypeComparator itemsComparator;
 
     /** Creates a new instance of OpenTypeAction */
     public GoToTypeAction() {
@@ -277,11 +280,12 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
 
         // Compute in other thread
         if (currentSearch.isNarrowing(nameKind, name, scope, true)) {
+            itemsComparator.setText(name);
             currentSearch.filter(nameKind, name, null);
             enableOK(panel.revalidateModel());
             return false;
         } else {
-            running = new Worker(text, panel.isCaseSensitive());
+            running = new Worker(text, name, panel.isCaseSensitive());
             task = rp.post( running, 500);
             if ( panel.time != -1 ) {
                 LOGGER.log( Level.FINE, "Worker posted after {0} ms.", System.currentTimeMillis() - panel.time ); //NOI18N
@@ -454,11 +458,16 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
         private volatile boolean isCanceled = false;
         private volatile TypeProvider current;
         private final String text;
+        private final String name;
         private final boolean caseSensitive;
         private final long createTime;
 
-        public Worker( String text, final boolean caseSensitive) {
+        public Worker(
+                String text,
+                String name,
+                final boolean caseSensitive) {
             this.text = text;
+            this.name = name;
             this.caseSensitive = caseSensitive;
             this.createTime = System.currentTimeMillis();
             LOGGER.log( Level.FINE, "Worker for {0} - created after {1} ms.",   //NOI18N
@@ -486,6 +495,19 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
                 }
             }
             int lastSize = -1;
+            final TypeComparator ic = TypeComparator.create(
+                    GoToSettings.getDefault().getSortingType(),
+                    name,
+                    caseSensitive,
+                    GoToSettings.getDefault().isSortingPreferOpenProjects());
+            itemsComparator = ic;
+            final Models.MutableListModel baseModel = Models.mutable(
+                ic,
+                currentSearch.resetFilter(),
+                null);
+            final ListModel model = typeFilter != null ?
+                    FilteredListModel.create(baseModel, new FilterAdaptor(typeFilter), NbBundle.getMessage(GoToTypeAction.class, "LBL_Computing")) :
+                    baseModel;
             for (;;) {
                 final int[] retry = new int[1];
 
@@ -513,15 +535,9 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
                     //Unfortunatelly no TypeDescriptor impl provides equals.
                     if (resultChanged || done) {
                         lastSize = newSize;
-                        final ListModel fmodel;
                         if (resultChanged) {
-                            ListModel model = Models.fromList(types, currentSearch.resetFilter(), null);
-                            if (typeFilter != null) {
-                                model = FilteredListModel.create(model, new FilterAdaptor(typeFilter), NbBundle.getMessage(GoToTypeAction.class, "LBL_Computing"));
-                            }
-                            fmodel = model;
-                        } else {
-                            fmodel = null;
+                            baseModel.clear();
+                            baseModel.add(types);
                         }
                         if (isCanceled) {
                             return;
@@ -531,8 +547,8 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
                                 final Pair<String, String> nameAndScope = Utils.splitNameAndScope(text);
                                 currentSearch.searchCompleted(nameKind, nameAndScope.first(), nameAndScope.second());
                             }
-                            if (fmodel != null && !isCanceled) {
-                                enableOK(panel.setModel(fmodel));
+                            if (resultChanged && !isCanceled) {
+                                enableOK(panel.setModel(model));
                             }
                         });
                     }
@@ -577,7 +593,7 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
         }
 
         @SuppressWarnings("unchecked")
-        private List<? extends TypeDescriptor> getTypeNames(String text, int[] retry) {
+        private List<? extends TypeDescriptor> getTypeNames(final String text, int[] retry) {
             // TODO: Search twice, first for current project, then for all projects
             final Set<TypeDescriptor> items = new HashSet<>();
             final String[] message = new String[1];
@@ -609,11 +625,9 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
             }
             if ( !isCanceled ) {
                 final ArrayList<TypeDescriptor> result = new ArrayList<>(items);
-                Collections.sort(result, new TypeComparator(caseSensitive));
                 panel.setWarning(message[0]);
                 return result;
-            }
-            else {
+            } else {
                 return null;
             }
         }

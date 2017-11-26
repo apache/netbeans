@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -146,7 +146,9 @@ public class XMLCompletionProvider implements CompletionProvider {
             return support.<Boolean>runWithSequence(offset, (TokenSequence ts) -> {
                 Token<XMLTokenId> token = ts.token();
                 if (token == null) {
-                    ts.moveNext();
+                    if (!ts.moveNext()) {
+                        return false;
+                    }
                     token = ts.token();
                     if (token == null) {
                         return false;

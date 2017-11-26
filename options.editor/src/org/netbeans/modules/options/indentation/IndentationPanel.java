@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -160,6 +160,7 @@ public class IndentationPanel extends JPanel implements ChangeListener, ActionLi
         loc (cbOverrideGlobalOptions, "Override_Global_Options"); //NOI18N
         loc (lNumberOfSpacesPerIndent, "Indent"); //NOI18N
         loc (lTabSize, "TabSize"); //NOI18N
+        loc (cbEnableIndentation, "Enable_Indent"); //NOI18N
         loc (cbExpandTabsToSpaces, "Expand_Tabs"); //NOI18N
         loc (lRightMargin, "Right_Margin"); //NOI18N
         loc (lLineWrap, "Line_Wrap"); //NOI18N
@@ -187,6 +188,7 @@ public class IndentationPanel extends JPanel implements ChangeListener, ActionLi
 
         //listeners
         cbOverrideGlobalOptions.addActionListener(this);
+        cbEnableIndentation.addActionListener(this);
         cbExpandTabsToSpaces.addActionListener(this);
         sNumberOfSpacesPerIndent.addChangeListener(this);
         sTabSize.addChangeListener(this);
@@ -220,6 +222,8 @@ public class IndentationPanel extends JPanel implements ChangeListener, ActionLi
     public @Override void actionPerformed (ActionEvent e) {
         if (cbOverrideGlobalOptions == e.getSource()) {
             prefs.putBoolean(FormattingPanelController.OVERRIDE_GLOBAL_FORMATTING_OPTIONS, !cbOverrideGlobalOptions.isSelected());
+        } else if (cbEnableIndentation == e.getSource()) {
+            prefs.putBoolean(SimpleValueNames.ENABLE_INDENTATION, cbEnableIndentation.isSelected());
         } else if (cbExpandTabsToSpaces == e.getSource()) {
             prefs.putBoolean(SimpleValueNames.EXPAND_TABS, cbExpandTabsToSpaces.isSelected());
         } else if (cboLineWrap == e.getSource()) {
@@ -254,6 +258,14 @@ public class IndentationPanel extends JPanel implements ChangeListener, ActionLi
 //                + (allLangPrefs == null ? "" : ", allLangPrefs(" + key + ")=" + allLangPrefs.get(key, null)))
 //                + "; override=" + prefs.getBoolean(FormattingPanelController.OVERRIDE_GLOBAL_FORMATTING_OPTIONS, areGlobalOptionsOverriden()));
 
+        if (key == null || SimpleValueNames.ENABLE_INDENTATION.equals(key)) {
+            boolean value = prefs.getBoolean(SimpleValueNames.ENABLE_INDENTATION, getDefBoolean(SimpleValueNames.ENABLE_INDENTATION, true));
+            if (value != cbEnableIndentation.isSelected()) {
+                cbEnableIndentation.setSelected(value);
+            }
+            needsRefresh = true;
+        }
+        
         if (key == null || SimpleValueNames.EXPAND_TABS.equals(key)) {
             boolean value = prefs.getBoolean(SimpleValueNames.EXPAND_TABS, getDefBoolean(SimpleValueNames.EXPAND_TABS, true));
             if (value != cbExpandTabsToSpaces.isSelected()) {
@@ -312,6 +324,7 @@ public class IndentationPanel extends JPanel implements ChangeListener, ActionLi
                 }
                 
                 if (!nue) {
+                    prefs.putBoolean(SimpleValueNames.ENABLE_INDENTATION, allLangPrefs.getBoolean(SimpleValueNames.ENABLE_INDENTATION, true));
                     prefs.putBoolean(SimpleValueNames.EXPAND_TABS, allLangPrefs.getBoolean(SimpleValueNames.EXPAND_TABS, true));
                     prefs.putInt(SimpleValueNames.INDENT_SHIFT_WIDTH, allLangPrefs.getInt(SimpleValueNames.INDENT_SHIFT_WIDTH, 4));
                     prefs.putInt(SimpleValueNames.SPACES_PER_TAB, allLangPrefs.getInt(SimpleValueNames.SPACES_PER_TAB, 4));
@@ -321,6 +334,7 @@ public class IndentationPanel extends JPanel implements ChangeListener, ActionLi
                 }
                 
                 needsRefresh = true;
+                ((ControlledCheckBox) cbEnableIndentation).setEnabledInternal(nue);
                 ((ControlledCheckBox) cbExpandTabsToSpaces).setEnabledInternal(nue);
                 ((ControlledLabel) lNumberOfSpacesPerIndent).setEnabledInternal(nue);
                 ((ControlledSpinner) sNumberOfSpacesPerIndent).setEnabledInternal(nue);
@@ -356,6 +370,10 @@ public class IndentationPanel extends JPanel implements ChangeListener, ActionLi
             return;
         }
 
+        if (key == null || SimpleValueNames.ENABLE_INDENTATION.equals(key)) {
+            prefs.putBoolean(SimpleValueNames.ENABLE_INDENTATION, allLangPrefs.getBoolean(SimpleValueNames.ENABLE_INDENTATION, true));
+        }
+        
         if (key == null || SimpleValueNames.EXPAND_TABS.equals(key)) {
             prefs.putBoolean(SimpleValueNames.EXPAND_TABS, allLangPrefs.getBoolean(SimpleValueNames.EXPAND_TABS, true));
         }
@@ -391,6 +409,7 @@ public class IndentationPanel extends JPanel implements ChangeListener, ActionLi
 
         cbOverrideGlobalOptions = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
+        cbEnableIndentation = new ControlledCheckBox();
         cbExpandTabsToSpaces = new ControlledCheckBox();
         lNumberOfSpacesPerIndent = new ControlledLabel();
         sNumberOfSpacesPerIndent = new ControlledSpinner();
@@ -404,6 +423,8 @@ public class IndentationPanel extends JPanel implements ChangeListener, ActionLi
         setOpaque(false);
 
         org.openide.awt.Mnemonics.setLocalizedText(cbOverrideGlobalOptions, org.openide.util.NbBundle.getMessage(IndentationPanel.class, "CTL_Override_Global_Options")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(cbEnableIndentation, org.openide.util.NbBundle.getMessage(IndentationPanel.class, "CTL_Enable_Indent")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbExpandTabsToSpaces, org.openide.util.NbBundle.getMessage(IndentationPanel.class, "CTL_Expand_Tabs")); // NOI18N
 
@@ -428,34 +449,39 @@ public class IndentationPanel extends JPanel implements ChangeListener, ActionLi
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(lNumberOfSpacesPerIndent, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sNumberOfSpacesPerIndent, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(lTabSize, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sTabSize, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(lRightMargin, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sRightMargin, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(lLineWrap, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cboLineWrap, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(cbEnableIndentation)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(lNumberOfSpacesPerIndent, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(sNumberOfSpacesPerIndent, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(lTabSize, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(sTabSize, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(lRightMargin, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(sRightMargin, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(lLineWrap, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cboLineWrap, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(8, 8, 8))
+                    .addComponent(cbExpandTabsToSpaces, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(cbExpandTabsToSpaces, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(54, 54, 54))
         );
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {sNumberOfSpacesPerIndent, sRightMargin, sTabSize});
 
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(cbEnableIndentation)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cbExpandTabsToSpaces, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -506,7 +532,7 @@ public class IndentationPanel extends JPanel implements ChangeListener, ActionLi
             .addGroup(layout.createSequentialGroup()
                 .addComponent(cbOverrideGlobalOptions)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         cbOverrideGlobalOptions.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(IndentationPanel.class, "AN_Override_Global_Options")); // NOI18N
@@ -515,6 +541,7 @@ public class IndentationPanel extends JPanel implements ChangeListener, ActionLi
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cbEnableIndentation;
     private javax.swing.JCheckBox cbExpandTabsToSpaces;
     private javax.swing.JCheckBox cbOverrideGlobalOptions;
     private javax.swing.JComboBox cboLineWrap;

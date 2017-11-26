@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,6 +22,7 @@ package org.netbeans.spi.jumpto.symbol;
 import javax.swing.Icon;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.spi.jumpto.support.Descriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Parameters;
@@ -31,7 +32,7 @@ import org.openide.util.Parameters;
  * @since 1.7
  * @author Tomas Zezula
  */
-public abstract class SymbolDescriptor {
+public abstract class SymbolDescriptor extends Descriptor {
 
     private String matchedSymbolName;
     private SymbolProvider provider;

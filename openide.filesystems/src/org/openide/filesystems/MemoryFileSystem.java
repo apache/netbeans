@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -466,6 +467,29 @@ final class MemoryFileSystem extends AbstractFileSystem implements AbstractFileS
         protected @Override URLConnection openConnection(URL u) throws IOException {
             return new MemoryConnection(u);
         }
+
+
+        @Override
+        protected int hashCode(URL u) {
+            int h = 0;
+            String host = u.getHost();
+            if (host != null)
+                h += host.toLowerCase().hashCode();
+            // Generate the file part.
+            String file = u.getFile();
+            if (file != null)
+                h += file.hashCode();
+            // Generate the port part.
+            return h;
+        }
+
+        @Override
+        protected boolean equals(URL u1, URL u2) {
+            return
+                    Objects.equals(u1.getHost(), u2.getHost()) &&
+                    Objects.equals(u1.getFile(), u2.getFile());
+        }
+        
         private static class MemoryConnection extends FileURL {
             MemoryConnection(URL u) {
                 super(u);

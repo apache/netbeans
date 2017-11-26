@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -54,6 +54,12 @@ public final class HelpSetProcessor implements Environment.Provider {
     private static final String HELPSET_MERGE_ATTR = "mergeIntoMaster"; // NOI18N
     
     public @Override Lookup getEnvironment(final DataObject obj) {
+        try {
+            Class.forName("javax.help.HelpSet");
+        } catch (ClassNotFoundException ex) {
+            //JavaHelp not available, ignore:
+            return Lookup.EMPTY;
+        }
         Installer.log.log(Level.FINE, "creating help set from ref: {0}", obj.getPrimaryFile());
         return Lookups.singleton(new InstanceCookie() {
             public @Override String instanceName() {

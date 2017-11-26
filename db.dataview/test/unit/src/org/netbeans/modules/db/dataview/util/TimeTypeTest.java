@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,6 +22,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.TimeZone;
 import org.netbeans.junit.NbTestCase;
 
@@ -94,7 +95,7 @@ public class TimeTypeTest extends NbTestCase {
         // 12:00 PM
         expectedTime = TimeType.convert (new Time (new Long (expectedTime.getTime () + 12 * 60 * 60 * 1000L)));
         DateFormat fmt = DateFormat.getTimeInstance(DateFormat.LONG,
-                TimestampType.LOCALE);
+                Locale.UK);
         fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
         assertEquals("Make sure 'expected' is as expected", "12:00:00 GMT", fmt.format(expectedTime));
 

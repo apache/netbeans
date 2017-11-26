@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -83,12 +83,13 @@ final class StandardModuleData extends ModuleData {
                 if (ext.equals("${java.home}/lib/ext/jfxrt.jar")) { // NOI18N
                     // special handling on JDK7
                     File jre = new File(System.getProperty("java.home")); // NOI18N
-                    File jdk8 = new File(new File(new File(jre, "lib"), "ext"), "jfxrt.jar"); // NOI18N
-                    if (jdk8.exists()) {
-                        // jdk8 has the classes on bootclasspath
+                    File jdk7 = new File(new File(jre, "lib"), "jfxrt.jar"); // NOI18N
+                    if (jdk7.exists()) {
+                        extfile = jdk7; // NOI18N
+                    } else {
+                        // jdk8 and 9 have the classes on bootclasspath
                         continue;
                     }
-                    extfile = new File(new File(jre, "lib"), "jfxrt.jar"); // NOI18N
                 } else {
                     if (new File(ext).isAbsolute()) { // NOI18N
                         Util.err.log(Level.WARNING, "Class-Path value {0} from {1} is illegal according to the Java Extension Mechanism: must be relative", new Object[]{ext, jar});

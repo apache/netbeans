@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -39,10 +39,8 @@ public class DateType {
     public static final String DEFAULT_FOMAT_PATTERN = "yyyy-MM-dd"; // NOI18N
     private static final DateFormat[] DATE_PARSING_FORMATS = new DateFormat[]{
         new SimpleDateFormat (DEFAULT_FOMAT_PATTERN),
-        DateFormat.getDateInstance(),
-        DateFormat.getTimeInstance(DateFormat.SHORT),
-        DateFormat.getTimeInstance(DateFormat.SHORT, TimestampType.LOCALE),
-        new SimpleDateFormat("yyyy-MM-dd"), // NOI18N
+        DateFormat.getDateInstance(DateFormat.MEDIUM),
+        DateFormat.getDateInstance(DateFormat.SHORT),
         new SimpleDateFormat("MM-dd-yyyy"), // NOI18N
     };
 

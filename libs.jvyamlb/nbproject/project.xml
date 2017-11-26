@@ -58,8 +58,8 @@
                 <subpackages>org.jvyamlb</subpackages>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/jvyamlb-0.2.7.jar</runtime-relative-path>
-                <binary-origin>external/jvyamlb-0.2.7.jar</binary-origin>
+                <runtime-relative-path>ext/jvyamlb-0.2.6.jar</runtime-relative-path>
+                <binary-origin>external/jvyamlb-0.2.6.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

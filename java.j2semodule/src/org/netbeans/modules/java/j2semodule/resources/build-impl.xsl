@@ -489,7 +489,11 @@ is divided into following sections:
                         <mkdir dir="${{empty.dir}}"/>
                         <mkdir dir="@{{apgeneratedsrcdir}}"/>
                         <condition property="processormodulepath.set">
-                            <length string="@{{toString:processormodulepath}}" when="greater" length="0"/>
+                            <resourcecount when="greater" count="0">
+                                <path>
+                                    <pathelement path="@{{processormodulepath}}"/>
+                                </path>
+                            </resourcecount>
                         </condition>
                         <javac>
                             <xsl:attribute name="destdir">@{destdir}</xsl:attribute>
@@ -2261,7 +2265,7 @@ is divided into following sections:
                 <pathconvert refid="run.test.packages.internal" property="run.test.addexports.internal" pathsep=" ">
                     <chainedmapper>
                         <filtermapper>
-                            <replacestring from="${{build.test.modules.dir.abs.internal}}/" to=""/>
+                            <replacestring from="${{build.test.modules.dir.abs.internal}}${{file.separator}}" to=""/>
                         </filtermapper>
                         <regexpmapper from="^([^${{file.separator.string}}]*)\Q${{file.separator}}\E(.*)\Q${{file.separator}}\E.*\.class$$" to="\1${{path.separator}}\2"/>
                         <filtermapper>

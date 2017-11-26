@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -23,10 +23,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -129,11 +126,12 @@ public class TestCaseContext {
         String s;
         while((s=br.readLine())!=null){
           sb.append(s);
+          sb.append("\n");
         }
         if(sb.length()==0) {
             throw new RuntimeException(name+": File called "+f.getName()+" doesn't contain the data.");
         }
-        return sb.toString();
+        return sb.toString().trim();
     }
     
     @Override

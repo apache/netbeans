@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -78,7 +78,9 @@ public class JShellStartupExtender implements StartupExtenderImplementation {
         
         J2SEPropertyEvaluator  prjEval = p.getLookup().lookup(J2SEPropertyEvaluator.class);
         JavaPlatform platform = ShellProjectUtils.findPlatform(p);
-        List<String> args = ShellLaunchManager.buildLocalJVMAgentArgs(platform, agent, prjEval.evaluator()::getProperty);
+        List<String> args = ShellProjectUtils.quoteCmdArgs(
+                ShellLaunchManager.buildLocalJVMAgentArgs(platform, agent, prjEval.evaluator()::getProperty)
+        );
         LOG.log(Level.FINE, "Final args: {0}", args);
         
         List<String> shellArgs = ShellProjectUtils.launchVMOptions(p);

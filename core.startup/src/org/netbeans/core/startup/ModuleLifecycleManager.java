@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -97,7 +97,8 @@ public class ModuleLifecycleManager extends LifecycleManager {
      *   do not support restart and may throw an exception to indicate that
      */
     static void markReadyForRestart() throws UnsupportedOperationException {
-        if (!TopSecurityManager.class.getClassLoader().getClass().getName().endsWith(".Launcher$AppClassLoader")) {
+        String classLoaderName = TopSecurityManager.class.getClassLoader().getClass().getName();
+        if (!classLoaderName.endsWith(".Launcher$AppClassLoader") && !classLoaderName.endsWith(".ClassLoaders$AppClassLoader")) {   // NOI18N
             throw new UnsupportedOperationException("not running in regular module system, cannot restart"); // NOI18N
         }
         File userdir = Places.getUserDirectory();

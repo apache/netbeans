@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -186,11 +186,6 @@ public class LibrariesTest extends JellyTestCase {
         set.add("jar:nbinst://org.netbeans.modules.junit/modules/ext/junit-3.8.2.jar!/");
         set.add("jar:nbinst://org.netbeans.modules.junit/modules/ext/junit-4.1.jar!/");
         librariesUrls.put("junit", set);
-        set = new TreeSet<String>();
-        set.add("jar:nbinst://org.jdesktop.layout/docs/swing-layout-1.0.2-doc.zip!/");
-        set.add("jar:nbinst://org.jdesktop.layout/docs/swing-layout-1.0.2-src.zip!/");
-        set.add("jar:nbinst://org.jdesktop.layout/modules/ext/swing-layout-1.0.2.jar!/");
-        librariesUrls.put("swing-layout", set);
         set = new TreeSet<String>();
         set.add("jar:nbinst://org.netbeans.modules.java.j2seproject/ant/extra/org-netbeans-modules-java-j2seproject-copylibstask.jar!/");
         librariesUrls.put("CopyLibs", set);

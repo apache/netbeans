@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,9 +18,12 @@
  */
 package org.netbeans.modules.jumpto.settings;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.spi.options.OptionsPanelController;
 
@@ -34,8 +37,14 @@ final class JumpToPanel extends javax.swing.JPanel implements ActionListener {
     JumpToPanel(JumpToOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
+        for (GoToSettings.SortingType t : GoToSettings.SortingType.values()) {
+            orderBy.addItem(t);
+        }
+        orderBy.setRenderer(new SortingTypeRenderer());
         highlight.addActionListener(this);
         by.addActionListener(this);
+        orderBy.addActionListener(this);
+        preferOpenPrj.addActionListener(this);
     }
 
     /**
@@ -52,13 +61,17 @@ final class JumpToPanel extends javax.swing.JPanel implements ActionListener {
         jLabel3 = new javax.swing.JLabel();
         by = new javax.swing.JComboBox();
         jSeparator1 = new javax.swing.JSeparator();
+        orderByLabel = new javax.swing.JLabel();
+        orderBy = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        preferOpenPrj = new javax.swing.JCheckBox();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         jLabel1.setLabelFor(highlight);
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(JumpToPanel.class, "LBL_Highlight")); // NOI18N
 
-        highlight.setModel(new DefaultComboBoxModel(HighlightingSettings.Mode.values()));
+        highlight.setModel(new DefaultComboBoxModel(org.netbeans.modules.jumpto.settings.GoToSettings.HighlightingMode.values()));
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(JumpToPanel.class, "LBL_Highlighting")); // NOI18N
 
@@ -66,25 +79,49 @@ final class JumpToPanel extends javax.swing.JPanel implements ActionListener {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(JumpToPanel.class, "LBL_Highlight_By")); // NOI18N
         jLabel3.setToolTipText(org.openide.util.NbBundle.getMessage(JumpToPanel.class, "JumpToPanel.jLabel3.toolTipText")); // NOI18N
 
-        by.setModel(new DefaultComboBoxModel(HighlightingSettings.Type.values()));
+        by.setModel(new DefaultComboBoxModel(org.netbeans.modules.jumpto.settings.GoToSettings.HighlightingType.values()));
+
+        orderByLabel.setLabelFor(orderBy);
+        org.openide.awt.Mnemonics.setLocalizedText(orderByLabel, org.openide.util.NbBundle.getMessage(JumpToPanel.class, "JumpToPanel.orderByLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(JumpToPanel.class, "JumpToPanel.jLabel4.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(preferOpenPrj, org.openide.util.NbBundle.getMessage(JumpToPanel.class, "JumpToPanel.preferOpenPrj.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(highlight, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(by, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(orderByLabel)
+                            .addGap(51, 51, 51)
+                            .addComponent(orderBy, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(6, 6, 6)
+                                    .addComponent(jLabel3))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addComponent(jLabel1)))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(highlight, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(by, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jLabel4))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(preferOpenPrj)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -100,7 +137,15 @@ final class JumpToPanel extends javax.swing.JPanel implements ActionListener {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(by, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(orderBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(orderByLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(preferOpenPrj)
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         highlight.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(JumpToPanel.class, "AD_Highlight")); // NOI18N
@@ -108,15 +153,19 @@ final class JumpToPanel extends javax.swing.JPanel implements ActionListener {
     }// </editor-fold>//GEN-END:initComponents
 
     void load() {
-        final HighlightingSettings settings = HighlightingSettings.getDefault();
-        highlight.setSelectedItem(settings.getMode());
-        by.setSelectedItem(settings.getType());
+        final GoToSettings settings = GoToSettings.getDefault();
+        highlight.setSelectedItem(settings.getHighlightingMode());
+        by.setSelectedItem(settings.getHighlightingType());
+        orderBy.setSelectedItem(settings.getSortingType());
+        preferOpenPrj.setSelected(settings.isSortingPreferOpenProjects());
     }
 
     void store() {
-        final HighlightingSettings settings = HighlightingSettings.getDefault();
-        settings.setMode((HighlightingSettings.Mode)highlight.getSelectedItem());
-        settings.setType((HighlightingSettings.Type)by.getSelectedItem());
+        final GoToSettings settings = GoToSettings.getDefault();
+        settings.setHighlightingMode((GoToSettings.HighlightingMode)highlight.getSelectedItem());
+        settings.setHighlightingType((GoToSettings.HighlightingType)by.getSelectedItem());
+        settings.setSortingType((GoToSettings.SortingType)orderBy.getSelectedItem());
+        settings.setSortingPreferOpenProjects(preferOpenPrj.isSelected());
     }
 
     boolean valid() {
@@ -129,17 +178,34 @@ final class JumpToPanel extends javax.swing.JPanel implements ActionListener {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JComboBox<GoToSettings.SortingType> orderBy;
+    private javax.swing.JLabel orderByLabel;
+    private javax.swing.JCheckBox preferOpenPrj;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void actionPerformed(ActionEvent e) {
         boolean isChanged = false;
-        HighlightingSettings settings = HighlightingSettings.getDefault();
-        if ((HighlightingSettings.Mode)highlight.getSelectedItem() != settings.getMode()
-                || (HighlightingSettings.Type)by.getSelectedItem() != settings.getType()) {
+        GoToSettings settings = GoToSettings.getDefault();
+        if (highlight.getSelectedItem() != settings.getHighlightingMode()
+                || by.getSelectedItem() != settings.getHighlightingType()
+                || orderBy.getSelectedItem() != settings.getSortingType()
+                || preferOpenPrj.isSelected() ^ settings.isSortingPreferOpenProjects()) {
             isChanged = true;
         }
         controller.changed(isChanged);
+    }
+
+    private static final class SortingTypeRenderer extends DefaultListCellRenderer {
+
+        @Override
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            if (value instanceof GoToSettings.SortingType) {
+                value = ((GoToSettings.SortingType)value).getDisplayName();
+            }
+            return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        }
     }
 }

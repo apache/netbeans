@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -41,6 +41,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -350,10 +351,13 @@ public class JavacParser extends Parser {
         }
         if (newSource.equals(oldSource)) {
             return false;
-        } else {
-            currentSource = new WeakReference<>(newSource);
-            return true;
         }
+        if (newSource.getClasspathInfo() == oldSource.getClasspathInfo()) {
+            currentSource = new WeakReference<>(newSource);
+            return false;
+        }
+        currentSource = new WeakReference<>(newSource);
+        return true;
     }
 
     private void parseImpl(
@@ -685,7 +689,7 @@ public class JavacParser extends Parser {
         }
         if (Optional.ofNullable(mayBeParser.map(p->(p.file))
                 .orElse(file))
-                .filter((f)->FileObjects.MODULE_INFO.equals(f.getName())).isPresent()) {
+                .filter((f)->FileObjects.MODULE_INFO.equals(f.getName())&&FileObjects.CLASS.equals(f.getExt())).isPresent()) {
             flags.add(ConfigFlags.MODULE_INFO);
         }
         try(final ModuleOraculum mo = ModuleOraculum.getInstance()) {
@@ -703,9 +707,6 @@ public class JavacParser extends Parser {
                             })
                             .filter((modName) -> modName != null)
                             .forEach(additionalModules::add);
-                }
-                if (additionalModules.isEmpty()) {
-                    additionalModules.add("ALL-MODULE-PATH");
                 }
             }
             final FileObject artefact = root != null ?
@@ -825,7 +826,7 @@ public class JavacParser extends Parser {
         boolean aptEnabled = aptUtils != null &&
                 aptUtils.aptEnabledOnScan() &&
                 (backgroundCompilation || (aptUtils.aptEnabledInEditor() && !multiSource)) &&
-                !ClasspathInfoAccessor.getINSTANCE().getCachedClassPath(cpInfo, PathKind.SOURCE).entries().isEmpty();
+                hasSourceCache(cpInfo, aptUtils);
         Collection<? extends Processor> processors = null;
         if (aptEnabled) {
             processors = aptUtils.resolveProcessors(backgroundCompilation);
@@ -1014,19 +1015,32 @@ public class JavacParser extends Parser {
         for (int i = 0; i < options.size(); i++) {
             String option = options.get(i);
             if (option.startsWith("-Xmodule:") && !xmoduleSeen) {   //NOI18N
+                LOGGER.log(
+                        Level.WARNING,
+                        "Removed javac option -Xmodule: {0}",   //NOI18N
+                        option);
+                //Compatibility handle -Xmodule
+                res.add("-XD"+option);  //NOI18N
+                xmoduleSeen = true;
+            } else if (option.startsWith("-XD-Xmodule:") && !xmoduleSeen) { //NOI18N
                 res.add(option);
                 xmoduleSeen = true;
             } else if (option.equals("-parameters") || option.startsWith("-Xlint")) {     //NOI18N
                 res.add(option);
-            } else if (i+1 < options.size() && (
-                    option.equals("--add-modules") ||   //NOI18N
-                    option.equals("--limit-modules") || //NOI18N
-                    option.equals("--add-exports") ||   //NOI18N
-                    option.equals("--add-reads")  ||
-                    option.equals(OPTION_PATCH_MODULE))) {
-                res.add(option);
-                option = options.get(++i);
-                res.add(option);
+            } else if (
+                    option.startsWith("--add-modules") ||   //NOI18N
+                    option.startsWith("--limit-modules") || //NOI18N
+                    option.startsWith("--add-exports") ||   //NOI18N
+                    option.startsWith("--add-reads")  ||
+                    option.startsWith(OPTION_PATCH_MODULE)) {
+                int idx = option.indexOf('=');
+                if (idx > 0) {
+                   res.add(option);
+                } else if (i+1 < options.size()) {
+                    res.add(option);
+                    option = options.get(++i);
+                    res.add(option);
+                }
             }
         }
         return res;
@@ -1047,6 +1061,22 @@ public class JavacParser extends Parser {
             }
         }
         return true;
+    }
+
+    private static boolean hasSourceCache(
+            @NonNull final ClasspathInfo cpInfo,
+            @NonNull final APTUtils aptUtils) {
+        final List<? extends ClassPath.Entry> entries = ClasspathInfoAccessor.getINSTANCE().getCachedClassPath(cpInfo, PathKind.SOURCE).entries();
+        if (entries.isEmpty()) {
+            return false;
+        }
+        final URL sourceRoot = aptUtils.getRoot().toURL();
+        for (ClassPath.Entry entry : entries) {
+            if (sourceRoot.equals(entry.getURL())) {
+                return true;
+            }
+        }
+        return false;
     }
 
      private static boolean hasResource(
@@ -1164,7 +1194,10 @@ public class JavacParser extends Parser {
         }
     }
 
-    private void checkSourceModification(final SourceModificationEvent evt) {
+    private void checkSourceModification(SourceModificationEvent evt) {
+        if (evt instanceof SourceModificationEvent.Composite) {
+            evt = ((SourceModificationEvent.Composite)evt).getWriteEvent();
+        }
         if (evt != null && evt.sourceChanged()) {
             Pair<DocPositionRegion,MethodTree> changedMethod = null;
             if (supportsReparse) {

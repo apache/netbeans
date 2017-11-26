@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -36,6 +36,7 @@ import org.netbeans.modules.profiler.oql.engine.api.OQLEngine;
 import org.netbeans.modules.profiler.oql.engine.api.ReferenceChain;
 
 import static org.netbeans.lib.profiler.utils.VMUtils.*;
+import org.openide.util.Enumerations;
 
 /**
  *
@@ -141,6 +142,23 @@ public class Snapshot {
         return null;
     }
 
+    public int distanceToGCRoot(Instance object) {
+        Instance gcInstance = object;
+        int distance = 0;
+        do {
+            gcInstance = gcInstance.getNearestGCRootPointer();
+            if (gcInstance == null) {
+                return 0;
+            }
+            distance++;
+        } while (!gcInstance.isGCRoot());
+        return distance;
+    }
+
+    public Enumeration concat(Enumeration en1, Enumeration en2) {
+        return Enumerations.concat(en1, en2);
+    }
+
     /**
      * Return an Iterator of all of the classes in this snapshot.
      **/
@@ -168,6 +186,10 @@ public class Snapshot {
     }
 
     public Iterator getInstances(final JavaClass clazz, final boolean includeSubclasses) {
+        // special case for all subclasses of java.lang.Object
+        if (includeSubclasses && clazz.getSuperClass() == null) {
+            return delegate.getAllInstancesIterator();
+        }
         return new TreeIterator<Instance, JavaClass>(clazz) {
 
             @Override

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -23,6 +23,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditorSupport;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.explorer.propertysheet.ExPropertyEditor;
 import org.openide.explorer.propertysheet.PropertyEnv;
 import org.openide.nodes.Node;
@@ -35,16 +37,28 @@ import org.openide.util.NbBundle;
  */
 public class PropertiesEditor extends PropertyEditorSupport implements ExPropertyEditor {
 
+    private static final Logger LOG = Logger.getLogger(PropertiesEditor.class.getName());
+    
     private boolean canWrite = true;
 
     @Override
     public String getAsText() {
         Properties value = (Properties) getValue();
-        if (value == null || value.size() == 0) {
+        if (value == null || value.isEmpty()) {
             return NbBundle.getMessage(PropertiesEditor.class,
                     "NoPropertiesSet");                                 //NOI18N
         } else {
             return value.toString();
+        }
+    }
+
+    @Override
+    public void setValue(Object value) {
+        if(value == null || value instanceof Properties) {
+            super.setValue(value);
+        } else {
+            super.setValue(null);
+            LOG.log(Level.INFO, "Illegal value supplied to PropertiesEditor#setValue: {0}", value.getClass().getName());
         }
     }
 

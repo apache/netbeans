@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -24,25 +24,26 @@ package org.netbeans.lib.profiler.heap;
  *
  * @author Tomas Hurka
  */
-class HprofArrayValue implements ArrayItemValue {
+class HprofArrayValue extends HprofObject implements ArrayItemValue {
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
     final ClassDump dumpClass;
     final int index;
-    final long instanceArrayOffset;
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
     HprofArrayValue(ClassDump cls, long offset, int number) {
+        // compute HprofArrayValue unique (file) offset.
+        // (+1) added to differ this instance with number == 0 from defining instance
+        super(offset + number + 1);
         dumpClass = cls;
-        instanceArrayOffset = offset;
         index = number;
     }
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
 
     public Instance getDefiningInstance() {
-        return new ObjectArrayDump(dumpClass, instanceArrayOffset);
+        return new ObjectArrayDump(dumpClass, getInstanceArrayOffset());
     }
 
     public int getIndex() {
@@ -54,8 +55,13 @@ class HprofArrayValue implements ArrayItemValue {
         HprofByteBuffer dumpBuffer = heap.dumpBuffer;
         int idSize = dumpBuffer.getIDSize();
 
-        long instanceId = dumpBuffer.getID(instanceArrayOffset + 1 + idSize + 4 + 4 + idSize + ((long)index * (long)idSize));
+        long instanceId = dumpBuffer.getID(getInstanceArrayOffset() + 1 + idSize + 4 + 4 + idSize + ((long)index * (long)idSize));
 
         return heap.getInstanceByID(instanceId);
+    }
+
+    private long getInstanceArrayOffset() {
+        // see computation in super() above
+        return fileOffset - index - 1;
     }
 }

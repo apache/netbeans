@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -35,6 +35,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.ModuleElement.DirectiveKind;
@@ -60,15 +61,18 @@ import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.modules.java.api.common.project.ProjectProperties;
 import org.netbeans.modules.java.j2seproject.api.J2SEPropertyEvaluator;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.jshell.launch.PropertyNames;
+import org.netbeans.modules.maven.api.execute.RunUtils;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.project.AuxiliaryProperties;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
@@ -184,6 +188,10 @@ public final class ShellProjectUtils {
         
         for (SourceGroup sg : org.netbeans.api.project.ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
             if (isNormalRoot(sg)) {
+                FileObject fo = sg.getRootFolder().getFileObject("module-info.java");
+                if (fo == null) {
+                    continue;
+                }
                 URL u = URLMapper.findURL(sg.getRootFolder(), URLMapper.INTERNAL);
                 BinaryForSourceQuery.Result r = BinaryForSourceQuery.findBinaryRoots(u);
                 for (URL u2 : r.getRoots()) {
@@ -252,6 +260,10 @@ public final class ShellProjectUtils {
     }
     
     public static boolean isModularProject(Project project) {
+        return isModularProject(project, false);
+    }
+    
+    public static boolean isModularProject(Project project, boolean checkModuleInfo) {
         if (project == null) { 
             return false;
         }
@@ -262,6 +274,9 @@ public final class ShellProjectUtils {
         String s = SourceLevelQuery.getSourceLevel(project.getProjectDirectory());
         if (!(s != null && new SpecificationVersion("9").compareTo(new SpecificationVersion(s)) <= 0)) {
             return false;
+        }
+        if (!checkModuleInfo) {
+            return true;
         }
         // find module-info.java
         for (SourceGroup sg : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
@@ -331,8 +346,7 @@ public final class ShellProjectUtils {
                 ShellProjectUtils.findProjectImportedModules(project, 
                     ShellProjectUtils.findProjectModules(project, null))
         );
-        ShellProjectUtils.findProjectModules(project, null);
-        boolean modular = isModularJDK(findPlatform(project));
+        boolean modular = isModularProject(project, false);
         if (exportMods.isEmpty() || !modular) {
             return null;
         }
@@ -358,16 +372,17 @@ public final class ShellProjectUtils {
                 ShellProjectUtils.findProjectImportedModules(project, 
                     ShellProjectUtils.findProjectModules(project, null))
         );
-        ShellProjectUtils.findProjectModules(project, null);
-        boolean modular = isModularJDK(findPlatform(project));
+        boolean modular = isModularProject(project, false);
         if (exportMods.isEmpty() || !modular) {
             return null;
         }
         List<String> addReads = new ArrayList<>();
-        exportMods.add("jdk.jshell");
+        exportMods.add("jdk.jshell"); // NOI18N
         Collections.sort(exportMods);
-        addReads.add("--add-modules " + String.join(",", exportMods));
-        addReads.add("--add-reads jdk.jshell=ALL-UNNAMED"); // NOI18N
+        addReads.add("--add-modules"); // NOI18N
+        addReads.add(String.join(",", exportMods));
+        addReads.add("--add-reads"); // NOI18N
+        addReads.add("jdk.jshell=ALL-UNNAMED"); // NOI18N
         
         // now export everything from the project:
         Map<String, Collection<String>> packages = ShellProjectUtils.findProjectModulesAndPackages(project);
@@ -376,7 +391,8 @@ public final class ShellProjectUtils {
             Collection<String> vals = en.getValue();
 
             for (String v : vals) {
-                addReads.add(String.format("--add-exports %s/%s=ALL-UNNAMED", 
+                addReads.add("--add-exports"); // NOI18N
+                addReads.add(String.format("%s/%s=ALL-UNNAMED",  // NOI18N
                         p, v));
             }
         }
@@ -395,6 +411,10 @@ public final class ShellProjectUtils {
                     URL u = URLMapper.findURL(sg.getRootFolder(), URLMapper.INTERNAL);
                     BinaryForSourceQuery.Result r = BinaryForSourceQuery.findBinaryRoots(u);
                     for (URL ru : r.getRoots()) {
+                        // ignore JARs, prefer output folder:
+                        if (FileUtil.isArchiveArtifact(ru)) {
+                            continue;
+                        }
                         if (knownURLs.add(ru)) {
                             urls.add(ru);
                         }
@@ -415,5 +435,47 @@ public final class ShellProjectUtils {
         }
         JavaPlatform platform = findPlatform(ClassPath.getClassPath(ref, ClassPath.BOOT));
         return platform != null ? platform : JavaPlatform.getDefault();
+    }
+    
+    /**
+     * Attempts to detect Compile on Save enabled.
+     */
+    public static boolean isCompileOnSave(Project p) {
+        J2SEPropertyEvaluator  prjEval = p.getLookup().lookup(J2SEPropertyEvaluator.class);
+        if (prjEval == null) {
+            // try maven approach
+            return RunUtils.isCompileOnSaveEnabled(p);
+        }
+        String compileOnSaveProperty = prjEval.evaluator().getProperty(ProjectProperties.COMPILE_ON_SAVE);
+        if (compileOnSaveProperty == null || !Boolean.valueOf(compileOnSaveProperty)) {
+            return false;
+        }
+        Map<String, String> props = prjEval.evaluator().getProperties();
+        if (props == null) {
+            return false;
+        }
+        for (Map.Entry<String, String> e : props.entrySet()) {
+            if (e.getKey().startsWith(ProjectProperties.COMPILE_ON_SAVE_UNSUPPORTED_PREFIX)) {
+                if (e.getValue() != null && Boolean.valueOf(e.getValue())) {
+                    return false;
+                }
+            }
+        }                    
+        return true;
+    }
+    
+    public static String quoteCmdArg(String s) {
+        if (s.indexOf(' ') == -1) {
+            return s;
+        }
+        return '"' + s + '"'; // NOI18N
+    }
+    
+    public static List<String> quoteCmdArgs(List<String> args) {
+        List<String> ret = new ArrayList<>();
+        for (String a : args) {
+            ret.add(quoteCmdArg(a));
+        }
+        return ret;
     }
 }

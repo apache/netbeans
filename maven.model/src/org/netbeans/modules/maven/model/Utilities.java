@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -155,6 +155,8 @@ public class Utilities {
      * This method could be overridden by the Unit testcase to return a special
      * ModelSource object for a FileObject with custom impl of classes added to the lookup.
      * This is optional if both getDocument(FO) and createCatalogModel(FO) are overridden.
+     * @param thisFileObj 
+     * @return 
      */
     public static ModelSource createModelSource(final FileObject thisFileObj) {
         return createModelSource(thisFileObj, null, null);
@@ -356,7 +358,7 @@ public class Utilities {
     /**
      * performs model modifying operations on top of the settings.xml model. After modifications,
      * the model is persisted to file.
-     * @param profilesFileObject
+     * @param settingsFileObject
      * @param operations
      */
     public static void performSettingsModelOperations(FileObject settingsFileObject, List<? extends ModelOperation<SettingsModel>> operations) {

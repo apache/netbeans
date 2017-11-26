@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -346,7 +346,7 @@ public final class UnitTestsCompilerOptionsQueryImpl implements CompilerOptionsQ
                         return Collections.emptyList();
                     }
                     final List<String> result = Arrays.asList(
-                        String.format("-Xmodule:%s", moduleName),       //NOI18N
+                        String.format("-XD-Xmodule:%s", moduleName),       //NOI18N
                         "--add-reads",                                  //NOI18N
                         String.format("%s=ALL-UNNAMED", moduleName));   //NOI18N
                     return Collections.unmodifiableList(result);

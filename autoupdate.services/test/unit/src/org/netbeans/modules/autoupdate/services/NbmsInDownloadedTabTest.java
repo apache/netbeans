@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -45,7 +45,7 @@ public class NbmsInDownloadedTabTest extends NbmAdvancedTestCase {
         super(testName);
     }
     
-    public void testNbmDependsOnLowerVersion () throws IOException {
+    public void disabledtestNbmDependsOnLowerVersion () throws IOException {
         URL higherEngineURL = TestUtils.class.getResource ("data/org-yourorghere-engine-1-2.nbm");
         assertNotNull ("URL data/org-yourorghere-engine-1-2.nbm exits", higherEngineURL);
         File higherEngineNbm = TestUtils.getFile(this, higherEngineURL);

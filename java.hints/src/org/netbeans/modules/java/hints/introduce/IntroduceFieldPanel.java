@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -161,6 +161,7 @@ public class IntroduceFieldPanel extends javax.swing.JPanel implements ChangeLis
         }
         
         changeSupport = new FieldNameSupport();
+        changeSupport.setChangeListener(this);
         resetAccess();
         resetInit();
         adjustInitializeIn();
@@ -200,12 +201,13 @@ public class IntroduceFieldPanel extends javax.swing.JPanel implements ChangeLis
             boolean refactor = false;
             if (result == null) {
                 ok = true;
-            } else if (result.getConflicting() != null) {
-                if (result.getConflicting().getKind() != ElementKind.FIELD) {
+            } else if (result.getConflictingKind() != null) {
+                if (result.getConflictingKind() != ElementKind.FIELD) {
                     notifier.setErrorMessage(Bundle.ERR_LocalVarOrParameterHidden());
                 } else {
                     notifier.setErrorMessage(Bundle.ERR_ConflictingField());
                 }
+                ok = false;
             } else if (result.getOverriden() != null) {
                 // fields are not really overriden, but introducing a field which shadows
                 // a superclass may affect outside code.
@@ -226,7 +228,7 @@ public class IntroduceFieldPanel extends javax.swing.JPanel implements ChangeLis
                 checkRefactorExisting.setEnabled(false);
                 checkRefactorExisting.setSelected(false);
             }
-            return true;
+            return result == null || !result.isConflicting();
         }
 
         @Override

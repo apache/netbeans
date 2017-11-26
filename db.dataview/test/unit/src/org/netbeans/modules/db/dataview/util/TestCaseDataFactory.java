@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -35,26 +35,23 @@ import org.openide.util.Utilities;
  */
 public class TestCaseDataFactory {
    
-    public static  String DB_SQLCREATE="dbcreate.sql";
-    public static  String DB_SQLINSERT="dbinsert.sql";
-    public static String DB_SQLSELECT="dbselect.sql";
-    public static String DB_SQLUPDATE="dbupdate.sql";
-    public static  String DB_DATA= "dbdata.properties";
-    public static  String DB_PROP= "dbprop.properties";
-    public static String DB_SQLDEL="dbdel.sql";
-    public static String DB_JARS="jar";
-    public static String[] FILES={DB_SQLCREATE,DB_SQLINSERT,DB_SQLUPDATE,DB_PROP,DB_SQLDEL,DB_SQLSELECT,DB_DATA};
-    private List<TestCaseContext> list=new ArrayList<TestCaseContext>();
+    public static final String DB_SQLCREATE="dbcreate.sql";
+    public static final String DB_SQLINSERT="dbinsert.sql";
+    public static final String DB_SQLSELECT="dbselect.sql";
+    public static final String DB_SQLUPDATE="dbupdate.sql";
+    public static final String DB_DATA= "dbdata.properties";
+    public static final String DB_PROP= "dbprop.properties";
+    public static final String DB_SQLDEL="dbdel.sql";
+    public static final String DB_JARS="jar";
+    public static final String[] FILES={DB_SQLCREATE,DB_SQLINSERT,DB_SQLUPDATE,DB_PROP,DB_SQLDEL,DB_SQLSELECT,DB_DATA};
+    private final List<TestCaseContext> list=new ArrayList<>();
     private static  TestCaseDataFactory factory;
     
-    public static TestCaseDataFactory  getTestCaseFactory() throws Exception{
-        
-        if(factory==null){
-          
-          factory=new TestCaseDataFactory();
-          factory.process();
-
-        }  
+    public static TestCaseDataFactory getTestCaseFactory() throws Exception {
+        if (factory == null) {
+            factory = new TestCaseDataFactory();
+            factory.process();
+        }
         return factory;
     }
     
@@ -78,7 +75,7 @@ public class TestCaseDataFactory {
     
     private void process() throws Exception{
         File data_dir = getDataDir();
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         File etcDir = new File(data_dir, "etc");
         for (int index = 0; index < FILES.length; index++) {
             File f = new File(etcDir, FILES[index]);
@@ -87,22 +84,16 @@ public class TestCaseDataFactory {
             }
             map.put(FILES[index], f);
         }
-        String[] s = etcDir.list(new FilenameFilter() {
+        File[] drivers = new File(data_dir, "../../../../external").listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                return name.endsWith(".jar") || name.endsWith(".zip") ? true : false;
+                return name.endsWith(".jar") || name.endsWith(".zip");
             }
         });
-        if (s.length == 0) {
+        if (drivers == null || drivers.length == 0) {
             throw new RuntimeException("the driver doesn't exist in folder: " + etcDir);
         }
-        ArrayList<File> drivers = new ArrayList<File>();
-        for (int myint = 0; myint < s.length; myint++) {
-            File file = new File(etcDir, s[myint]);
-            drivers.add(file);
-
-        }
-        map.put(DB_JARS, drivers.toArray(new File[0]));
+        map.put(DB_JARS, drivers);
 
         TestCaseContext context = new TestCaseContext(map, etcDir.getName());
         list.add(context);

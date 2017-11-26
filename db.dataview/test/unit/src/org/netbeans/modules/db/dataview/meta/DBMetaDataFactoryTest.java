@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -68,7 +68,7 @@ public class DBMetaDataFactoryTest extends NbTestCase {
         try {
             DatabaseMetaData meta = conn.getMetaData();
             assertNotNull(dbMeta);
-            assertEquals("jdbc:axiondb:db:build/testDB", meta.getURL());
+            assertEquals("jdbc:h2:mem:testDB", meta.getURL());
         } catch (SQLException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -86,7 +86,7 @@ public class DBMetaDataFactoryTest extends NbTestCase {
      * Test of getDBType method, of class DBMetaDataFactory.
      */
     public void testGetDBType() throws Exception {
-        int expResult = 8;
+        int expResult = 3;
         int result = dbMeta.getDBType();
         assertEquals(expResult, result);
     }

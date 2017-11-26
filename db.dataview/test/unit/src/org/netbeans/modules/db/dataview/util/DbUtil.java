@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -40,11 +40,12 @@ import org.openide.util.Utilities;
  */
 public class DbUtil {
 
-    public static String URL = "url";
-    public static String USER = "user";
-    public static String PASSWORD = "password";
-    public static final String AXION_DRIVER = "org.axiondb.jdbc.AxionDriver";
-    private static List<Connection> localConnectionList = new ArrayList<Connection>();
+    public static final String URL = "url";
+    public static final String USER = "user";
+    public static final String PASSWORD = "password";
+    public static final String DRIVER_CLASS_NAME = "driver_class_name";
+    private static final String TEST_DB_DRIVER_CLASS = getContext().getProperties().getProperty(DRIVER_CLASS_NAME);
+    private static final List<Connection> localConnectionList = new ArrayList<Connection>();
 
     public static DatabaseConnection getDBConnection() {
         try {
@@ -56,10 +57,15 @@ public class DbUtil {
                 list.add(Utilities.toURI(jars[i]).toURL());
             }
             URL[] urls = list.toArray(new URL[0]);
-            Class.forName(AXION_DRIVER);
-            JDBCDriver driver = JDBCDriver.create(AXION_DRIVER, "MashupDB", AXION_DRIVER, urls);
-            DatabaseConnection dbconn = DatabaseConnection.create(driver, prop.getProperty("url"), prop.getProperty("user"),
-                    "", prop.getProperty("password"), true);
+            Class.forName(TEST_DB_DRIVER_CLASS);
+            JDBCDriver driver = JDBCDriver.create(TEST_DB_DRIVER_CLASS, "MashupDB", TEST_DB_DRIVER_CLASS, urls);
+            DatabaseConnection dbconn = DatabaseConnection.create(
+                    driver, 
+                    prop.getProperty("url"), 
+                    prop.getProperty("user"),
+                    "", 
+                    prop.getProperty("password"), 
+                    true);
             return dbconn;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -81,8 +87,8 @@ public class DbUtil {
     private static JDBCDriver registerDriver(String driverName) throws Exception {
         JDBCDriver drv;
 
-        if (driverName.equals(AXION_DRIVER)) {
-            drv = registerAxionDriverInstance();
+        if (driverName.equals(TEST_DB_DRIVER_CLASS)) {
+            drv = registerTestDBDriverInstance();
         } else {
             drv = registerDriverInstance(driverName);
         }
@@ -235,8 +241,8 @@ public class DbUtil {
         } catch (Exception ex) {
             throw new Exception("Invalid driver name specified.");
         }
-        if (driverName.equals(AXION_DRIVER)) {
-            driver = registerAxionDriverInstance();
+        if (driverName.equals(TEST_DB_DRIVER_CLASS)) {
+            driver = registerTestDBDriverInstance();
         } else {
             if (drivers.length == 0) {
                 throw new Exception("Specified JDBC Driver not found in DB Explorer: " + driverName);
@@ -247,11 +253,10 @@ public class DbUtil {
         return driver;
     }
 
-    private static JDBCDriver registerAxionDriverInstance() throws Exception {
+    private static JDBCDriver registerTestDBDriverInstance() throws Exception {
         JDBCDriver driver = null;
-        String driverName = AXION_DRIVER;
         TestCaseContext cxt = getContext();
-        JDBCDriver[] drivers = JDBCDriverManager.getDefault().getDrivers(driverName);
+        JDBCDriver[] drivers = JDBCDriverManager.getDefault().getDrivers(TEST_DB_DRIVER_CLASS);
         if (drivers.length == 0) {
             // if axion db driver not available in db explorer, add it.
             //URL[] url = new URL[1];
@@ -261,12 +266,12 @@ public class DbUtil {
                 list.add(Utilities.toURI(jars[i]).toURL());
             }
             URL[] url = list.toArray(new URL[0]);
-            driver = JDBCDriver.create(driverName, "Mashup DB", driverName, url);
+            driver = JDBCDriver.create(DRIVER_CLASS_NAME, "Mashup DB", DRIVER_CLASS_NAME, url);
             JDBCDriverManager.getDefault().addDriver(driver);
         }
         if (driver == null) {
             for (int i = 0; i < drivers.length; i++) {
-                if (drivers[i].getClassName().equals(driverName)) {
+                if (drivers[i].getClassName().equals(DRIVER_CLASS_NAME)) {
                     driver = drivers[i];
                     break;
                 }
@@ -314,7 +319,7 @@ public class DbUtil {
         return workDir;
     }
     
-        public static TestCaseContext getContext() {
+    public static TestCaseContext getContext() {
         try {
             TestCaseDataFactory tfactory = TestCaseDataFactory.getTestCaseFactory();
             TestCaseContext context = (TestCaseContext) tfactory.getTestCaseContext()[0];

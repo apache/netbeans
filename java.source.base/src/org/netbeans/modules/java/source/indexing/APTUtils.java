@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -231,6 +231,15 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns the root the APTUtils was created for.
+     * @return the {@link FileObject}
+     */
+    @NonNull
+    public FileObject getRoot() {
+        return root;
     }
 
     public boolean aptEnabledOnScan() {

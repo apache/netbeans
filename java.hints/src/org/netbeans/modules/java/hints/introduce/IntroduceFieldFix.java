@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -141,7 +141,7 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
         JButton btnCancel = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Cancel"));
         btnCancel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(IntroduceHint.class, "AD_IntrHint_Cancel"));
         IntroduceFieldPanel panel = createPanel(btnOk);
-        FieldValidator fv = new FieldValidator(js, null);
+        FieldValidator fv = new FieldValidator(js, null, this.handle);
         if (targetIsInterface) {
             panel.setAllowAccess(false);
         }

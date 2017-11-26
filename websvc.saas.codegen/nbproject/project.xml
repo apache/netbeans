@@ -260,12 +260,6 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.websvc.saas.services.delicious</code-name-base>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.websvc.saas.services.zillow</code-name-base>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.netbeans.modules.xml.retriever</code-name-base>
                     </test-dependency>
                     <test-dependency>

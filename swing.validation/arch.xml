@@ -50,7 +50,7 @@
  <answer id="arch-overall">
   <p>
    Provides a framework for adding user input validation to existing Swing
-   panels very simply.  See <a href="http://kenai.com/projects/simplevalidation/pages/Home">the
+   panels very simply.  See <a href="https://github.com/timboudreau/simplevalidation/">the
    Simple Validation</a> project for details.
    </p>
    <p>
@@ -160,7 +160,7 @@
 -->
  <answer id="arch-where">
   The source code for the Simple Validation project is at
-  <a href="http://kenai.com/projects/simplevalidation/pages/Home">http://kenai.com/projects/simplevalidation/pages/Home</a>.
+  <a href="https://github.com/timboudreau/simplevalidation/">https://github.com/timboudreau/simplevalidation/</a>.
   The adapters for dialog descriptors and wizards are in the module.
  </answer>
 
@@ -317,7 +317,7 @@
 -->
  <answer id="dep-non-nb">
   <p>
-   http://kenai.com/projects/simplevalidation/pages/Home
+   https://github.com/timboudreau/simplevalidation/
   </p>
  </answer>
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -42,9 +42,7 @@ public class TimeType {
         new SimpleDateFormat (DEFAULT_FOMAT_PATTERN),
         DateFormat.getTimeInstance(),
         DateFormat.getTimeInstance(DateFormat.SHORT),
-        DateFormat.getTimeInstance(DateFormat.LONG, TimestampType.LOCALE),
-        DateFormat.getTimeInstance(DateFormat.SHORT, TimestampType.LOCALE),
-        new SimpleDateFormat("HH:mm:ss", TimestampType.LOCALE), // NOI18N
+        new SimpleDateFormat("HH:mm"), // NOI18N
     };
 
     {

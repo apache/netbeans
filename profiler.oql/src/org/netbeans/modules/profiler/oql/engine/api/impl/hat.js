@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -228,7 +228,7 @@ function JavaClassProto() {
     }
 
     this.instances = function() {
-        return jclass(this).instances.iterator;
+        return wrapIterator(jclass(this).instances.iterator(), true)
     }
 
     this.toString = function() { 
@@ -1116,6 +1116,21 @@ function root(jobject) {
 }
 
 /**
+ * If given jobject has a path to GC root, return distance
+ * to nearest GC root.
+ *
+ * @param jobject object whose distance to the nearest GC root is returned
+ */
+function rootDistance(jobject) {
+    try {
+        jobject = unwrapJavaObject(jobject);
+        return snapshot.distanceToGCRoot(jobject);
+    } catch (e) {
+        return 0;
+    }
+}
+
+/**
  * Returns size of the given Java object
  *
  * @param jobject object whose size is returned
@@ -1387,7 +1402,7 @@ function concat(array1, array2) {
         return array1.concat(array2);
     } else if (array1 instanceof java.util.Enumeration &&
         array2 instanceof java.util.Enumeration) {
-        return new Packages.com.sun.tools.hat.internal.util.CompositeEnumeration(array1, array2);
+        return this.snapshot.concat(array1, array2);
     } else {
         return undefined;
     }

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -124,7 +124,7 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
             return null;
         }
         TreePath block = h.resolve(info);
-        TreePath method = TreeUtils.findMethod(block);
+        TreePath method = TreeUtils.findMethod(block, true);
         if (method == null) {
             errorMessage.put(IntroduceKind.CREATE_METHOD, "ERR_Invalid_Selection");
             return null;

@@ -35,6 +35,7 @@
             </module-dependencies>
             <friend-packages>
                 <friend>org.netbeans.core.nativeaccess</friend>
+                <friend>org.netbeans.core.network</friend>
                 <friend>org.netbeans.libs.jsch.agentproxy</friend>
                 <package>com.sun.jna.platform</package>
                 <package>com.sun.jna.platform.dnd</package>
@@ -44,8 +45,8 @@
                 <package>com.sun.jna.platform.wince</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/jna-platform-4.2.2.jar</runtime-relative-path>
-                <binary-origin>external/jna-platform-4.2.2.jar</binary-origin>
+                <runtime-relative-path>ext/jna-platform-4.4.0.jar</runtime-relative-path>
+                <binary-origin>external/jna-platform-4.4.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

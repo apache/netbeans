@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -493,7 +493,7 @@ public final class Source implements Lookup.Provider {
     
     private int taskCount;
     private volatile Parser cachedParser;
-    private final AtomicReference<ASourceModificationEvent> sourceModificationEvent = new AtomicReference<ASourceModificationEvent>();
+    private final AtomicReference<ExtendableSourceModificationEvent> sourceModificationEvent = new AtomicReference<>();
     private final ASourceModificationEvent unspecifiedSourceModificationEvent = new ASourceModificationEvent (this, true, -1, -1);
     private Map<Class<? extends Scheduler>, SchedulerEvent> schedulerEvents;
     //GuardedBy(this)
@@ -570,12 +570,15 @@ public final class Source implements Lookup.Provider {
     }
 
     private void setSourceModification (boolean sourceChanged, int startOffset, int endOffset) {
-        ASourceModificationEvent oldSourceModificationEvent;
-        ASourceModificationEvent newSourceModificationEvent;
+        ExtendableSourceModificationEvent oldSourceModificationEvent;
+        ExtendableSourceModificationEvent newSourceModificationEvent;
         do {
             oldSourceModificationEvent = sourceModificationEvent.get();
-            boolean mergedChange = sourceChanged | (oldSourceModificationEvent == null ? false : oldSourceModificationEvent.sourceChanged());
-            newSourceModificationEvent = new ASourceModificationEvent (this, mergedChange, startOffset, endOffset);                
+            if (oldSourceModificationEvent == null) {
+                newSourceModificationEvent = new ASourceModificationEvent (this, sourceChanged, startOffset, endOffset);
+            } else {
+                newSourceModificationEvent = oldSourceModificationEvent.add(sourceChanged, startOffset, endOffset);
+            }
         } while (!sourceModificationEvent.compareAndSet(oldSourceModificationEvent, newSourceModificationEvent));
     }
 
@@ -733,7 +736,7 @@ public final class Source implements Lookup.Provider {
         @Override
         public SourceModificationEvent getSourceModificationEvent (Source source) {
             assert source != null;
-            SourceModificationEvent event = source.sourceModificationEvent.get();
+            SourceModificationEvent event = (SourceModificationEvent) source.sourceModificationEvent.get();
             if (event == null) {
                 event = source.unspecifiedSourceModificationEvent;
             }
@@ -865,11 +868,13 @@ public final class Source implements Lookup.Provider {
             return new Source(mimeType, null, file, context);
         }
     } // End of MySourceAccessor class
-        
-    private static class ASourceModificationEvent extends SourceModificationEvent {
+    private static interface ExtendableSourceModificationEvent {
+         ExtendableSourceModificationEvent add(final boolean changed, int start, int end);
+    }
+    private static class ASourceModificationEvent extends SourceModificationEvent implements ExtendableSourceModificationEvent {
 
-        private int         startOffset;
-        private int         endOffset;
+        private final int         startOffset;
+        private final int         endOffset;
 
         ASourceModificationEvent (
             Object          source,
@@ -880,14 +885,6 @@ public final class Source implements Lookup.Provider {
             super (source, sourceChanged);
             startOffset = _startOffset;
             endOffset = _endOffset;
-        }
-        
-        void add (
-            int             _startOffset,
-            int             _endOffset
-        ) {
-            startOffset = Math.min (startOffset, _startOffset);
-            endOffset = Math.max (endOffset, _endOffset);
         }
 
         @Override
@@ -904,6 +901,71 @@ public final class Source implements Lookup.Provider {
         public String toString () {
             //XXX: Never change the toString value, some tests depends on it!
             return "SourceModificationEvent " + startOffset + ":" + endOffset;
+        }
+
+        @NonNull
+        @Override
+        public ExtendableSourceModificationEvent add(final boolean changed, int start, int end) {
+            final boolean oldChanged = sourceChanged();
+            if (oldChanged == changed) {
+                start = Math.min(start, startOffset);
+                end = Math.min(end, endOffset);
+                return new ASourceModificationEvent (getSource(), oldChanged, start, end);
+            } else {
+                final ASourceModificationEvent other = new ASourceModificationEvent(getSource(), changed, start, end);
+                return oldChanged ?
+                        new AComposite(other, this) :
+                        new AComposite(this, other);
+            }
+        }
+    }
+
+    private static class AComposite extends SourceModificationEvent.Composite implements ExtendableSourceModificationEvent {
+        private final int startOffset;
+        private final int endOffset;
+
+        AComposite(
+                @NonNull final ASourceModificationEvent read,
+                @NonNull final ASourceModificationEvent write) {
+            super(read, write);
+            this.startOffset = Math.min(read.getAffectedStartOffset(), write.getAffectedStartOffset());
+            this.endOffset = Math.max(read.getAffectedEndOffset(), write.getAffectedEndOffset());
+        }
+
+        @Override
+        public int getAffectedStartOffset() {
+            return startOffset;
+        }
+
+        @Override
+        public int getAffectedEndOffset() {
+            return endOffset;
+        }
+
+        @Override
+        public String toString () {
+            //XXX: Never change the toString value, some tests depends on it!
+            return "SourceModificationEvent " + startOffset + ":" + endOffset;
+        }
+
+        @Override
+        public ASourceModificationEvent getWriteEvent() {
+            return (ASourceModificationEvent) super.getWriteEvent();
+        }
+
+        @Override
+        public ASourceModificationEvent getReadEvent() {
+            return (ASourceModificationEvent) super.getReadEvent();
+        }
+
+        @NonNull
+        @Override
+        public ExtendableSourceModificationEvent add(boolean changed, int start, int end) {
+            if (changed) {
+                return new AComposite(getReadEvent(), (ASourceModificationEvent)getWriteEvent().add(changed, start, end));
+            } else {
+                return new AComposite((ASourceModificationEvent)getReadEvent().add(changed, start, end), getWriteEvent());
+            }
         }
     }
 

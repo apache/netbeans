@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -58,9 +57,7 @@ import org.netbeans.spi.java.classpath.FilteringPathResourceImplementation;
 import org.netbeans.spi.java.classpath.FlaggedClassPathImplementation;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeAdapter;
-import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
@@ -68,6 +65,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.Pair;
 import org.openide.util.Parameters;
 import org.openide.util.WeakListeners;
 
@@ -92,6 +90,7 @@ import org.openide.util.WeakListeners;
  * (compiler, debugger, executor). Names are not limited to the listed ones; an extension
  * module might add its own private classpath type.
  */
+
 public final class ClassPath {
 
     static  {
@@ -246,33 +245,73 @@ public final class ClassPath {
             }
             current = this.invalidRoots;
         }
-        List<ClassPath.Entry> entries = this.entries();
-        FileObject[] ret;
+        final List<ClassPath.Entry> entries = this.entries();
+        final List<Pair<ClassPath.Entry,Pair<FileObject,File>>> rootPairs = createRoots(entries);
+        FileObject[] roots = rootPairs.stream()
+                            .map((p) -> p.second().first())
+                            .filter((fo) -> fo != null)
+                            .toArray((size) -> new FileObject[size]);
         synchronized (this) {
             if (this.invalidRoots == current) {
                 if (rootsCache == null || rootsListener == null) {
                     attachRootsListener();
-                    this.rootsCache = createRoots (entries);
+                    listenOnRoots(rootPairs);
+                    this.rootsCache = roots;
+                } else {
+                    roots = this.rootsCache;
                 }
-                ret = this.rootsCache;
-            }
-            else {
-                ret = createRoots (entries);
             }
         }
-        assert ret != null;
-        return ret;
+        return roots;
     }
 
-    private FileObject[] createRoots (final List<ClassPath.Entry> entries) {
-        final List<FileObject> l = new ArrayList<FileObject> ();
-        final Set<File> listenOn = new HashSet<File>();
+    private File getFile(final ClassPath.Entry entry) {
+        URL url = entry.getURL();
+        if ("jar".equals(url.getProtocol())) { //NOI18N
+            url = FileUtil.getArchiveFile(url);
+            if (url == null) {
+                LOG.log(
+                    Level.WARNING,
+                    "Invalid classpath root: {0} provided by: {1}", //NOI18N
+                    new Object[]{
+                        entry.getURL(),
+                        impl
+                    });
+                return null;
+            }
+        }
+        if (!"file".equals(url.getProtocol())) { // NOI18N
+            // Try to convert nbinst to file
+            FileObject fileFo = URLMapper.findFileObject(url);
+            if (fileFo != null) {
+                URL external = URLMapper.findURL(fileFo, URLMapper.EXTERNAL);
+                if (external != null) {
+                    url = external;
+                }
+            }
+        }
+        try {
+            //todo: Ignore non file urls, we can try to url->fileobject->url
+            //if it becomes a file.
+            if ("file".equals(url.getProtocol())) { //NOI18N
+                return FileUtil.normalizeFile(BaseUtilities.toFile(url.toURI()));
+            }
+        } catch (IllegalArgumentException e) {
+            LOG.log(Level.WARNING, "Unexpected URL <{0}>: {1}", new Object[] {url, e});
+            //pass
+        } catch (URISyntaxException e) {
+            LOG.log(Level.WARNING, "Invalid URL: {0}", url);
+            //pass
+        }
+        return null;
+    }
+
+    private List<Pair<ClassPath.Entry,Pair<FileObject,File>>> createRoots (final List<ClassPath.Entry> entries) {
+        final List<Pair<ClassPath.Entry,Pair<FileObject,File>>> l = new ArrayList<> ();
         for (Entry entry : entries) {
-            FileObject fo = entry.getRoot();
             File file = null;
+            FileObject fo = entry.getRoot();
             if (fo != null) {
-                l.add(fo);
-                root2Filter.put(fo, entry.filter);
                 FileObject fileFo = FileUtil.getArchiveFile(fo);
                 if (fileFo  == null) {
                     fileFo = fo;
@@ -280,44 +319,22 @@ public final class ClassPath {
                 file = FileUtil.toFile(fileFo);
             }
             if (file == null) {
-                URL url = entry.getURL();
-                if ("jar".equals(url.getProtocol())) { //NOI18N
-                    url = FileUtil.getArchiveFile(url);
-                    if (url == null) {
-                        LOG.log(
-                            Level.WARNING,
-                            "Invalid classpath root: {0} provided by: {1}", //NOI18N
-                            new Object[]{
-                                entry.getURL(),
-                                impl
-                            });
-                        continue;
-                    }
-                }
-                if (!"file".equals(url.getProtocol())) { // NOI18N
-                    // Try to convert nbinst to file
-                    FileObject fileFo = URLMapper.findFileObject(url);
-                    if (fileFo != null) {
-                        URL external = URLMapper.findURL(fileFo, URLMapper.EXTERNAL);
-                        if (external != null) {
-                            url = external;
-                        }
-                    }
-                }
-                try {
-                    //todo: Ignore non file urls, we can try to url->fileobject->url
-                    //if it becomes a file.
-                    if ("file".equals(url.getProtocol())) { //NOI18N
-                        file = FileUtil.normalizeFile(BaseUtilities.toFile(url.toURI()));
-                    }
-                } catch (IllegalArgumentException e) {
-                    LOG.log(Level.WARNING, "Unexpected URL <{0}>: {1}", new Object[] {url, e});
-                    //pass
-                } catch (URISyntaxException e) {
-                    LOG.log(Level.WARNING, "Invalid URL: {0}", url);
-                    //pass
-                }
+                file = getFile(entry);
             }
+            l.add(Pair.of(entry,Pair.of(fo,file)));
+        }
+        return l;
+    }
+
+    private void listenOnRoots (final List<Pair<ClassPath.Entry,Pair<FileObject,File>>> roots) {
+        final Set<File> listenOn = new HashSet<>();
+        for (Pair<ClassPath.Entry,Pair<FileObject,File>> p : roots) {
+            final ClassPath.Entry entry = p.first();
+            final FileObject fo = p.second().first();
+            if (fo != null) {
+                root2Filter.put(fo, entry.filter);
+            }
+            final File file = p.second().second();
             if (file != null) {
                 listenOn.add(file);
             }
@@ -326,7 +343,6 @@ public final class ClassPath {
         if (rL != null) {
             rL.addRoots (listenOn);
         }
-        return l.toArray (new FileObject[l.size()]);
     }
 
     /**

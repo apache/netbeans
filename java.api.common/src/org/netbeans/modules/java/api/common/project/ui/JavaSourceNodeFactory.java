@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -198,7 +198,7 @@ public final class JavaSourceNodeFactory implements NodeFactory {
         
         @Override
         public Node node(SourceGroupKey key) {
-            return new PackageViewFilterNode(key, project);
+            return new PackageViewFilterNode(key.group, project, !key.trueSource);
         }
         
         @Override
@@ -319,90 +319,4 @@ public final class JavaSourceNodeFactory implements NodeFactory {
         public void removePropertyChangeListener(PropertyChangeListener listener) {}
 
     }
-
-    /**
-     * Adjusts some display characteristics of source group root node.
-     */
-    private static class PackageViewFilterNode extends FilterNode {
-        
-        private final String nodeName;
-        private final Project project;
-        private final boolean trueSource;
-        
-        public PackageViewFilterNode(SourceGroupKey sourceGroupKey, Project project) {
-            super(PackageView.createPackageView(sourceGroupKey.group));
-            this.project = project;
-            this.nodeName = "Sources";
-            trueSource = sourceGroupKey.trueSource;
-        }
-        
-        public @Override Action[] getActions(boolean context) {
-            List<Action> actions = new ArrayList<Action>(Arrays.asList(super.getActions(context)));
-            if (trueSource) {
-                actions.add(null);
-                actions.add(new PreselectPropertiesAction(project, nodeName));
-            } else {
-                // Just take out "New File..." as this would be misleading.
-                Iterator<Action> scan = actions.iterator();
-                while (scan.hasNext()) {
-                    Action a = scan.next();
-                    if (a != null && a.getClass().getName().equals("org.netbeans.modules.project.ui.actions.NewFile$WithSubMenu")) { // NOI18N
-                        scan.remove();
-                    }
-                }
-            }
-            return actions.toArray(new Action[actions.size()]);
-        }
-
-        public @Override String getHtmlDisplayName() {
-            if (trueSource) {
-                return super.getHtmlDisplayName();
-            }
-            String htmlName = getOriginal().getHtmlDisplayName();
-            if (htmlName == null) {
-                try {
-                    htmlName = XMLUtil.toElementContent(super.getDisplayName());
-                } catch (CharConversionException x) {
-                    return null; // never mind
-                }
-            }
-            return "<font color='!controlShadow'>" + htmlName + "</font>"; // NOI18N
-        }
-        
-    }
-    
-    
-    /** The special properties action
-     */
-    static class PreselectPropertiesAction extends AbstractAction {
-        
-        private final Project project;
-        private final String nodeName;
-        private final String panelName;
-        
-        public PreselectPropertiesAction(Project project, String nodeName) {
-            this(project, nodeName, null);
-        }
-        
-        public PreselectPropertiesAction(Project project, String nodeName, String panelName) {
-            super(NbBundle.getMessage(JavaSourceNodeFactory.class, "LBL_Properties_Action")); //NOI18N
-            this.project = project;
-            this.nodeName = nodeName;
-            this.panelName = panelName;
-        }
-        
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            CustomizerProvider2 cp2 = project.getLookup().lookup(CustomizerProvider2.class);
-            if (cp2 != null) {
-                cp2.showCustomizer(nodeName, panelName);
-            } else {
-                CustomizerProvider cp = project.getLookup().lookup(CustomizerProvider.class);
-                if (cp != null) {
-                    cp.showCustomizer();
-                }
-            }            
-        }
-    }
-    
 }

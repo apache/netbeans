@@ -103,6 +103,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.autoupdate.services</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.53</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.editor.util</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -478,6 +486,7 @@
                 <package>org.netbeans.modules.java.api.common.ant</package>
                 <package>org.netbeans.modules.java.api.common.applet</package>
                 <package>org.netbeans.modules.java.api.common.classpath</package>
+                <package>org.netbeans.modules.java.api.common.problems</package>
                 <package>org.netbeans.modules.java.api.common.project</package>
                 <package>org.netbeans.modules.java.api.common.project.ui</package>
                 <package>org.netbeans.modules.java.api.common.project.ui.customizer</package>

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -61,7 +61,7 @@ public class OutputFileManager extends CachingFileManager {
     /**
      * Exception used to signal that the sourcepath is broken (project is deleted)
      */
-    public class InvalidSourcePath extends IllegalStateException {
+    public static class InvalidSourcePath extends IllegalStateException {
     }
 
     private final ClassPath scp;

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -123,7 +123,7 @@ public class UnitTestsCompilerOptionsQueryImplTest extends NbTestCase {
         final List<? extends String> args = r.getArguments();
         assertEquals(
             Arrays.asList(
-                String.format("-Xmodule:%s", srcModuleName),    //NOI18N
+                String.format("-XD-Xmodule:%s", srcModuleName),    //NOI18N
                 "--add-reads",                                  //NOI18N
                 String.format("%s=ALL-UNNAMED", srcModuleName)  //NOI18N
             ),
@@ -183,7 +183,7 @@ public class UnitTestsCompilerOptionsQueryImplTest extends NbTestCase {
         args = r.getArguments();
         assertEquals(
             Arrays.asList(
-                String.format("-Xmodule:%s", srcModuleName),    //NOI18N
+                String.format("-XD-Xmodule:%s", srcModuleName),    //NOI18N
                 "--add-reads",                                  //NOI18N
                 String.format("%s=ALL-UNNAMED", srcModuleName)  //NOI18N
             ),
@@ -214,7 +214,7 @@ public class UnitTestsCompilerOptionsQueryImplTest extends NbTestCase {
         args = r.getArguments();
         assertEquals(
             Arrays.asList(
-                String.format("-Xmodule:%s", srcModuleName),    //NOI18N
+                String.format("-XD-Xmodule:%s", srcModuleName),    //NOI18N
                 "--add-reads",  //NOI18N
                 String.format("%s=ALL-UNNAMED", srcModuleName) //NOI18N
             ),
@@ -238,7 +238,7 @@ public class UnitTestsCompilerOptionsQueryImplTest extends NbTestCase {
         args = r.getArguments();
         assertEquals(
             Arrays.asList(
-                String.format("-Xmodule:%s", srcModuleName),    //NOI18N
+                String.format("-XD-Xmodule:%s", srcModuleName),    //NOI18N
                 "--add-reads",                                  //NOI18N
                 String.format("%s=ALL-UNNAMED", srcModuleName)  //NOI18N
             ),
@@ -257,7 +257,7 @@ public class UnitTestsCompilerOptionsQueryImplTest extends NbTestCase {
         List<? extends String> args = r.getArguments();
         assertEquals(
             Arrays.asList(
-                String.format("-Xmodule:%s", srcModuleName),    //NOI18N
+                String.format("-XD-Xmodule:%s", srcModuleName),    //NOI18N
                 "--add-reads",                                  //NOI18N
                 String.format("%s=ALL-UNNAMED", srcModuleName)  //NOI18N
             ),
@@ -270,7 +270,7 @@ public class UnitTestsCompilerOptionsQueryImplTest extends NbTestCase {
         args = r.getArguments();
         assertEquals(
             Arrays.asList(
-                String.format("-Xmodule:%s", newSrcModuleName),     //NOI18N
+                String.format("-XD-Xmodule:%s", newSrcModuleName),     //NOI18N
                 "--add-reads",                                      //NOI18N
                 String.format("%s=ALL-UNNAMED", newSrcModuleName)   //NOI18N
             ),

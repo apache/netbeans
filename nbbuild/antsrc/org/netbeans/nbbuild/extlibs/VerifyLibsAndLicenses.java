@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -308,6 +308,9 @@ public class VerifyLibsAndLicenses extends Task {
                         if (license.contains("GPL-2-CP") &&
                             headers.getOrDefault("Type", "").contains("compile-time")) {
                             //OK to include GPLv2+CPE as a compile-time/runtime optional dependency
+                            if (!headers.containsKey("Comment")) {
+                                msg.append("\n" + path + " has a GPL-family license but does not have a Comment.");
+                            }
                         } else {
                             msg.append("\n" + path + " has a GPL-family license but is either not covered by the Classpath Exception, or is not compile-time/optional only.");
                         }

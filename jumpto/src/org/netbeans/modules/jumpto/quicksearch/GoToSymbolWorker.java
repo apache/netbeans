@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -27,9 +27,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.ListModel;
+import org.netbeans.modules.jumpto.EntityComparator;
 import org.netbeans.modules.jumpto.symbol.SymbolComparator;
 import org.netbeans.modules.jumpto.symbol.SymbolProviderAccessor;
 import org.netbeans.modules.jumpto.common.Models;
+import org.netbeans.modules.jumpto.settings.GoToSettings;
 import org.netbeans.spi.jumpto.symbol.SymbolDescriptor;
 import org.netbeans.spi.jumpto.symbol.SymbolProvider;
 import org.netbeans.spi.jumpto.type.SearchType;
@@ -126,7 +128,7 @@ public class GoToSymbolWorker implements Runnable {
         }
         if (!isCanceled) {
             //time = System.currentTimeMillis();
-            Collections.sort(items, new SymbolComparator());
+            Collections.sort(items, SymbolComparator.create(GoToSettings.SortingType.LEXICOGRAPHIC, text, false, true));
             //panel.setWarning(message[0]);
             //sort += System.currentTimeMillis() - time;
             //LOGGER.fine("PERF - " + " GSS:  " + gss + " GSB " + gsb + " CP: " + cp + " SFB: " + sfb + " GTN: " + gtn + "  ADD: " + add + "  SORT: " + sort );

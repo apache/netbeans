@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -23,10 +23,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
 import org.apache.tools.ant.module.AntModule;
 import org.apache.tools.ant.module.api.AntProjectCookie;
 import org.apache.tools.ant.module.api.support.AntScriptUtils;
 import org.apache.tools.ant.module.bridge.AntBridge;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileObject;
@@ -40,32 +44,57 @@ import org.openide.util.RequestProcessor;
  */
 public class LastTargetExecuted implements BuildExecutionSupport.ActionItem {
     
-    private LastTargetExecuted() {}
+    private LastTargetExecuted() {
+    }
     
     private File buildScript;
     //private static int verbosity;
     private String[] targets;
     private Map<String,String> properties;
+    private Set<String> concealedProperties;
     private String displayName;
     private Thread thread;
-    
+    private Boolean shouldSaveAllDocs;
+    private Predicate<String> canReplace;
+    private Predicate<String> canBeReplaced;
+    private boolean wasRegistered;
+
     /** Called from {@link TargetExecutor}. */
-    static LastTargetExecuted record(File buildScript, String[] targets, Map<String,String> properties, String displayName, Thread thread) {
+    static LastTargetExecuted record(
+            File buildScript,
+            String[] targets,
+            Map<String,String> properties,
+            @NonNull final Set<String> concealedProperties,
+            String displayName,
+            @NullAllowed final Boolean shouldSaveAllDocs,
+            @NonNull final Predicate<String> canReplace,
+            @NonNull final Predicate<String> canBeReplaced,
+            Thread thread,
+            final boolean shouldRegister) {
         LastTargetExecuted rec = new LastTargetExecuted();
         rec.buildScript = buildScript;
         //LastTargetExecuted.verbosity = verbosity;
         rec.targets = targets;
         rec.properties = properties;
+        rec.concealedProperties = concealedProperties;
         rec.displayName = displayName;
         rec.thread = thread;
-        BuildExecutionSupport.registerRunningItem(rec);
+        rec.shouldSaveAllDocs = shouldSaveAllDocs;
+        rec.canReplace = canReplace;
+        rec.canBeReplaced = canBeReplaced;
+        if (shouldRegister) {
+            BuildExecutionSupport.registerRunningItem(rec);
+        }
+        rec.wasRegistered = shouldRegister;
         return rec;
     }
 
     static void finish(LastTargetExecuted exc) {
-        BuildExecutionSupport.registerFinishedItem(exc);
+        if (exc.wasRegistered) {
+            BuildExecutionSupport.registerFinishedItem(exc);
+        }
     }
-    
+
     /**
      * Get the last build script to be run.
      * @return the last-run build script, or null if nothing has been run yet (or the build script disappeared etc.)
@@ -94,7 +123,12 @@ public class LastTargetExecuted implements BuildExecutionSupport.ActionItem {
         TargetExecutor t = new TargetExecutor(apc, exec.targets);
         //t.setVerbosity(verbosity);
         t.setProperties(exec.properties);
+        t.setConcealedProperties(exec.concealedProperties);
         t.setDisplayName(exec.displayName); // #140999: do not recalculate
+        if (exec.shouldSaveAllDocs != null) {
+            t.setSaveAllDocuments(exec.shouldSaveAllDocs);
+        }
+        t.setTabReplaceStrategy(exec.canReplace, exec.canBeReplaced);
         return t.execute();
     }
     

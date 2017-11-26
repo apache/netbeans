@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -79,6 +79,7 @@ public abstract class ClasspathInfoAccessor {
             boolean ignoreExcludes,
             boolean hasMemoryFileManager,
             boolean useModifiedFiles,
+            boolean requiresSourceRoots,
             @NullAllowed Function<JavaFileManager.Location, JavaFileManager> jfmProvider);
 
     public abstract ClasspathInfo create (FileObject fo,

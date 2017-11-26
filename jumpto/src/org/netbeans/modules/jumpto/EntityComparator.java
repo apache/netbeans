@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,6 +22,7 @@ package org.netbeans.modules.jumpto;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -109,6 +110,49 @@ public abstract class EntityComparator<E> implements Comparator<E> {
         return 0;
     }
 
+    public String levenshteinPrefix (
+            @NonNull String name,
+            @NonNull String text,
+            final boolean caseSensitive) {
+        if (!caseSensitive) {
+            name = name.toLowerCase();
+            text = text.toLowerCase();
+        }
+        int index = 0;
+        int i = 0;
+        for (;i < name.length() && index < text.length(); i++) {
+            if (name.charAt(i) == text.charAt(index)) {
+                index++;
+            }
+        }
+        return name.substring(0,i);
+    }
+
+    public final int levenshteinDistance(
+            @NonNull String str1,
+            @NonNull String str2,
+            final boolean caseSensitive) {
+        if (!caseSensitive) {
+            str1 = str1.toLowerCase();
+            str2 = str2.toLowerCase();
+        }
+        int[][] distance = new int[str1.length() + 1][str2.length() + 1];
+
+        for (int i = 0; i <= str1.length(); i++)
+            distance[i][0] = i;
+        for (int j = 1; j <= str2.length(); j++)
+            distance[0][j] = j;
+
+        for (int i = 1; i <= str1.length(); i++)
+            for (int j = 1; j <= str2.length(); j++)
+                distance[i][j] = minimum(
+                        distance[i - 1][j] + 1,
+                        distance[i][j - 1] + 1,
+                        distance[i - 1][j - 1] + ((str1.charAt(i - 1) == str2.charAt(j - 1)) ? 0 : 1));
+
+        return distance[str1.length()][str2.length()];
+    }
+
     /**
      * Returns a name of the main project (if any).
      * @return a name if main project exists, otherwise {@code null}.
@@ -132,4 +176,7 @@ public abstract class EntityComparator<E> implements Comparator<E> {
         return names;
     }
 
+    private static int minimum(int a, int b, int c) {
+        return Math.min(Math.min(a, b), c);
+    }
 }

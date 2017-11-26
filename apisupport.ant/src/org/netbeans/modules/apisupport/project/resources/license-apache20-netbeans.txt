@@ -1,7 +1,5 @@
 <#if licenseFirst??>
-    <#if licenseFirst == "/*">
-        <#assign licenseFirst="/**">
-    <#elseif licenseFirst == "<!--">
+    <#if licenseFirst == "<!--">
         <#assign licensePrefix="    ">
     </#if>
 ${licenseFirst}

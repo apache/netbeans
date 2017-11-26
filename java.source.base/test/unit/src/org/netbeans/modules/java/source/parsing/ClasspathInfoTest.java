@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -194,7 +194,7 @@ public class ClasspathInfoTest extends NbTestCase {
         createJavaFile(scp.getRoots()[0], "org/me/Lib.java", "package org.me;\n class Lib {}\n");
         TransactionContext tx = TransactionContext.beginStandardTransaction(scp.getRoots()[0].toURL(), true, true, false);
         try {
-            final ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create( bootPath, ClassPath.EMPTY, classPath, ClassPath.EMPTY, ClassPath.EMPTY, scp, ClassPath.EMPTY, null, true, true, true, false, null);
+            final ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create( bootPath, ClassPath.EMPTY, classPath, ClassPath.EMPTY, ClassPath.EMPTY, scp, ClassPath.EMPTY, null, true, true, true, false, false, null);
             final JavaFileManager fm = ClasspathInfoAccessor.getINSTANCE().createFileManager(cpInfo, null);
             Iterable<JavaFileObject> jfos = fm.list(StandardLocation.SOURCE_PATH, "org.me", EnumSet.of(JavaFileObject.Kind.SOURCE), false);
             assertEquals (new String[] {"org.me.Lib"}, jfos, fm);

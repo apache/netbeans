@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,13 +20,18 @@
 package org.netbeans.modules.java.hints.errors;
 
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.DirectiveTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.ModuleTree;
+import com.sun.source.tree.RequiresTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreeScanner;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,19 +43,27 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeElement;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
+import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CodeStyle;
+import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
+import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.support.ReferencesCount;
@@ -69,9 +82,12 @@ import org.netbeans.modules.java.preprocessorbridge.spi.ImportProcessor;
 import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.EnhancedFix;
 import org.netbeans.spi.editor.hints.Fix;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditorCookie;
+import org.openide.cookies.SaveCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
@@ -269,7 +285,7 @@ public final class ImportClass implements ErrorRule<Void>{
                     fixes.add(new UseFQN(info, file, fqn, eh, "Z#" + fqn, treePath, prefered, false));
                     fixes.add(UseFQN.createShared(info, file, fqn, eh, fqn, treePath, prefered));
                 } else {
-                    fixes.add(new FixImport(file, fqn, ElementHandle.create(element), sort.toString(), 
+                    fixes.add(new FixImport(file, fqn, eh, sort.toString(), 
                             prefered, info, changePath, replaceSuffix, doOrganize));
                 }
             }
@@ -359,9 +375,11 @@ public final class ImportClass implements ErrorRule<Void>{
             this.sortText = sortText;
         }
         
-        protected abstract void perform();
+        protected abstract boolean perform();
         protected abstract void performDoc(Document doc);
-    
+        
+        private boolean needsChange;
+        
         public ChangeInfo implement() throws IOException {
             JavaSource js = JavaSource.forFileObject(file);            
             
@@ -372,14 +390,17 @@ public final class ImportClass implements ErrorRule<Void>{
                     }
                     FixBase.this.copy = copy;
                     try {
-                        perform();
+                        needsChange = false; // for case of an error
+                        needsChange = perform();
                     } finally {
                         FixBase.this.copy = null;
                     }
                 }
             };
             if (js != null) {
-                js.runModificationTask(task).commit();
+                do {
+                    js.runModificationTask(task).commit();
+                } while (needsChange);
             } else {
                 DataObject od;
                 
@@ -458,16 +479,16 @@ public final class ImportClass implements ErrorRule<Void>{
         }
 
         @Override
-        protected void perform() {
+        protected boolean perform() {
             TreePath replacePath = replacePathHandle.resolve(copy);
 
             if (replacePath == null) {
                 Logger.getAnonymousLogger().warning(String.format("Attempt to change import for FQN: %s, but the import cannot be resolved in the current context", fqn));
-                return;
+                return false;
             }
             Element el = toImport.resolve(copy);
             if (el == null) {
-                return;
+                return false;
             }
             CharSequence elFQN = copy.getElementUtilities().getElementName(el, true);
             IdentifierTree id = copy.getTreeMaker().Identifier(elFQN);
@@ -480,6 +501,7 @@ public final class ImportClass implements ErrorRule<Void>{
                 }
                 copy.rewrite(replacePath.getLeaf(), id);
             }
+            return false;
         }
 
         @Override
@@ -515,6 +537,9 @@ public final class ImportClass implements ErrorRule<Void>{
         private final @NullAllowed String suffix;
         private final boolean statik;
         private final boolean doOrganize;
+        String requiresModName;
+        boolean moduleAdded;
+        int round;
         
         public FixImport(FileObject file, String fqn, ElementHandle<Element> toImport, String sortText, boolean isValid, CompilationInfo info, @NullAllowed TreePath replacePath, @NullAllowed String replaceSuffix, 
                 boolean doOrganize) {
@@ -559,25 +584,95 @@ public final class ImportClass implements ErrorRule<Void>{
         }
 
         @Override
-        protected void perform() {
+        protected boolean perform() {
+            round++;
             if (replacePathHandle != null) {
                 TreePath replacePath = replacePathHandle.resolve(copy);
 
                 if (replacePath == null) {
                     Logger.getAnonymousLogger().warning(String.format("Attempt to change import for FQN: %s, but the import cannot be resolved in the current context", fqn));
-                    return;
+                    return false;
                 }
 
                 copy.rewrite(replacePath.getLeaf(), copy.getTreeMaker().Identifier(fqn));
-
-                return;
+                return false;
             }
 
             Element te = toImport.resolve(copy);
-
+            JavaSource modInfoSrc = null;
+            if (te == null && round < 2) {
+                // check if the project is Source Level 9 and the sources indeed contain module-info.java
+                FileObject modInfo = org.netbeans.modules.java.hints.errors.Utilities.getModuleInfo(copy);
+                if (modInfo != null) {
+                    // attempt to resolve/find the elememt in the dependencies, then add the correct module.
+                    ClasspathInfo cpInfo = copy.getClasspathInfo();
+                    ClasspathInfo extraInfo = ClasspathInfo.create(
+                            ClassPathSupport.createProxyClassPath(
+                                    cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT),
+                                    cpInfo.getClassPath(ClasspathInfo.PathKind.MODULE_BOOT)),
+                            ClassPathSupport.createProxyClassPath(
+                                    cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE),
+                                    cpInfo.getClassPath(ClasspathInfo.PathKind.MODULE_COMPILE),
+                                    cpInfo.getClassPath(ClasspathInfo.PathKind.MODULE_CLASS)),
+                            cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE));
+                    modInfoSrc = JavaSource.create(extraInfo, modInfo);
+                    try {
+                        modInfoSrc.runUserActionTask(new Task<CompilationController>() {
+                            @Override
+                            public void run(CompilationController parameter) throws Exception {
+                                parameter.toPhase(Phase.RESOLVED);
+                                Element x = toImport.resolve(parameter);
+                                if (x == null) {
+                                    return;
+                                }
+                                // find the toplevel class:
+                                
+                                while (x.getEnclosingElement() != null && x.getEnclosingElement().getKind() != ElementKind.PACKAGE) {
+                                    x = x.getEnclosingElement();
+                                }
+                                if (x == null || !(x.getKind().isClass() || x.getKind().isInterface())) {
+                                    return;
+                                }
+                                TypeElement tel = (TypeElement)x;
+                                String res = tel.getQualifiedName().toString().replace('.', '/');
+                                ClassPath compPath = ClassPathSupport.createProxyClassPath(
+                                        extraInfo.getClassPath(ClasspathInfo.PathKind.BOOT),
+                                        extraInfo.getClassPath(ClasspathInfo.PathKind.COMPILE));
+                                FileObject f = compPath.findResource(res + ".class");
+                                if (f == null) {
+                                    return;
+                                }
+                                FileObject rf = compPath.findOwnerRoot(f);
+                                URL u = URLMapper.findURL(rf, URLMapper.INTERNAL);
+                                if (u == null) {
+                                    return;
+                                }
+                                requiresModName = SourceUtils.getModuleName(u);
+                            }
+                        }, true);
+                        if (requiresModName == null) {
+                            Logger.getAnonymousLogger().warning(String.format("Attempt to fix import for FQN: %s, which does not have a TypeElement in currect context", fqn));
+                            return false;
+                        }
+                        Set<String> modules = new HashSet<>();
+                        modules.add(requiresModName);
+                        addRequiredModules(modInfo, modInfoSrc, modules);
+                        if (moduleAdded) {
+                            te = toImport.resolve(copy);
+                            // make the actual import in the next round
+                            return true;
+                        } else {
+                            Logger.getAnonymousLogger().warning(String.format("Could not add module %s for fqn %s", requiresModName, fqn));
+                            return false;
+                        }
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            }
             if (te == null) {
                 Logger.getAnonymousLogger().warning(String.format("Attempt to fix import for FQN: %s, which does not have a TypeElement in currect context", fqn));
-                return ;
+                return false;
             }
 
             if (doOrganize) {
@@ -588,6 +683,62 @@ public final class ImportClass implements ErrorRule<Void>{
                     Collections.singleton(te)
                 );                        
                 copy.rewrite(copy.getCompilationUnit(), cut);
+            }
+            return false;
+        }
+        
+        private void addRequiredModules(FileObject fo, JavaSource js, Set<String> moduleNames) throws IOException {
+            js.runModificationTask((wc) -> {
+                wc.toPhase(JavaSource.Phase.RESOLVED);
+                final CompilationUnitTree cu = wc.getCompilationUnit();
+                final Set<String> knownModules = new HashSet<>();
+                final ModuleTree[] module = new ModuleTree[1];
+                final RequiresTree[] lastRequires = new RequiresTree[1];
+                cu.accept(new TreeScanner<Void, Void>() {
+                            @Override
+                            public Void visitModule(ModuleTree m, Void p) {
+                                module[0] = m;
+                                return super.visitModule(m, p);
+                            }
+                            @Override
+                            public Void visitRequires(RequiresTree r, Void p) {
+                                lastRequires[0] = r;
+                                knownModules.add(r.getModuleName().toString());
+                                return super.visitRequires(r, p);
+                            }
+                        },
+                        null);
+                if (module[0] != null) {
+                    moduleNames.removeAll(knownModules);
+                    moduleAdded = !moduleNames.isEmpty();
+                    final TreeMaker tm = wc.getTreeMaker();
+                    final List<RequiresTree> newRequires = moduleNames.stream()
+                            .map((name) -> tm.Requires(false, false, tm.QualIdent(name)))
+                            .collect(Collectors.toList());
+
+                    final List<DirectiveTree> newDirectives = new ArrayList<>(
+                            module[0].getDirectives().size() + newRequires.size());
+                    if (lastRequires[0] == null) {
+                        newDirectives.addAll(newRequires);
+                    }
+                    for (DirectiveTree dt : module[0].getDirectives()) {
+                        newDirectives.add(dt);
+                        if (dt == lastRequires[0]) {
+                            newDirectives.addAll(newRequires);
+                        }
+                    }
+                    final ModuleTree newModule = tm.Module(
+                            tm.Modifiers(0, module[0].getAnnotations()),
+                            module[0].getModuleType(),
+                            module[0].getName(),
+                            newDirectives);
+                    wc.rewrite(module[0], newModule);
+                }                    
+            }).commit();
+            // needs to be saved so that resolution will consider the added module
+            SaveCookie s = fo.getLookup().lookup(SaveCookie.class);
+            if (s != null) {
+                s.save();
             }
         }
     }

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,6 +22,7 @@ import java.awt.Image;
 import java.awt.datatransfer.Transferable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,14 +33,17 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
@@ -68,6 +72,7 @@ import org.openide.actions.FindAction;
 import org.openide.actions.PasteAction;
 import org.openide.actions.ToolsAction;
 import org.openide.filesystems.FileAttributeEvent;
+import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
@@ -105,28 +110,33 @@ import org.openide.util.lookup.ProxyLookup;
 /**
  * Multi Module logical view content.
  * @author Tomas Zezula
- * @since 1.115
+ * @since 1.121
  */
 public final class MultiModuleNodeFactory implements NodeFactory {
     private static final Logger LOG = Logger.getLogger(MultiModuleNodeFactory.class.getName());
     private static final RequestProcessor RP = new RequestProcessor(MultiModuleNodeFactory.class);
     private final MultiModule sourceModules;
     private final MultiModule testModules;
+    private final ProcessorGeneratedSources procGenSrc;
     private final LibrariesSupport libsSupport;
 
     private MultiModuleNodeFactory(
             @NullAllowed final MultiModule sourceModules,
             @NullAllowed final MultiModule testModules,
+            @NonNull final ProcessorGeneratedSources procGenSrc,
             @NullAllowed final LibrariesSupport libsSupport) {
+        Parameters.notNull("procGenSrc", procGenSrc);   //NOI18
         this.sourceModules = sourceModules;
         this.testModules = testModules;
         this.libsSupport = libsSupport;
+        this.procGenSrc = procGenSrc;
     }
 
     @Override
     public NodeList<?> createNodes(@NonNull final Project project) {
         return new Nodes(
                 project,
+                procGenSrc,
                 sourceModules,
                 testModules,
                 libsSupport);
@@ -136,11 +146,25 @@ public final class MultiModuleNodeFactory implements NodeFactory {
      * A builder of the {@link MultiModuleNodeFactory}.
      */
     public static final class Builder {
-        private LibrariesSupport libSupport;
+        private final UpdateHelper helper;
+        private final PropertyEvaluator eval;
+        private final ReferenceHelper refHelper;
+        private LibrariesSupport.Builder libSupport;
         private MultiModule mods;
         private MultiModule testMods;
+        private String procGenSourcesProp;
 
-        private Builder() {
+        private Builder(
+                @NonNull final UpdateHelper helper,
+                @NonNull final PropertyEvaluator eval,
+                @NonNull final ReferenceHelper refHelper) {
+            Parameters.notNull("helper", helper);   //NOI18N
+            Parameters.notNull("eval", eval); //NOI18N
+            Parameters.notNull("refHelper", refHelper); //NOI18N
+            this.helper = helper;
+            this.eval = eval;
+            this.refHelper = refHelper;
+            this.procGenSourcesProp = ProjectProperties.ANNOTATION_PROCESSING_SOURCE_OUTPUT;
         }
 
         /**
@@ -159,8 +183,8 @@ public final class MultiModuleNodeFactory implements NodeFactory {
 
         /**
          * Adds project's test modules into the logical view.
-         * @param sourceModules the module roots
-         * @param srcRoots the source roots
+         * @param testModules  the module roots
+         * @param testRoots the source roots
          * @return the {@link Builder}
          */
         @NonNull
@@ -173,17 +197,11 @@ public final class MultiModuleNodeFactory implements NodeFactory {
 
         /**
          * Adds libraries nodes into the logical view.
-         * @param helper the {@link UpdateHelper} to resolve paths
-         * @param evaluator the {@link PropertyEvaluator} to access project properties
-         * @param refHelper the {@link ReferenceHelper} to resolve project references
          * @return the {@link Builder}
          */
         @NonNull
-        public Builder addLibrariesNodes(
-                @NonNull final UpdateHelper helper,
-                @NonNull final PropertyEvaluator evaluator,
-                @NonNull final ReferenceHelper refHelper) {
-            libSupport = new LibrariesSupport(helper, evaluator, refHelper);
+        public Builder addLibrariesNodes() {
+            libSupport = new LibrariesSupport.Builder();
             return this;
         }
 
@@ -222,6 +240,19 @@ public final class MultiModuleNodeFactory implements NodeFactory {
         }
 
         /**
+         * Sets the property holding the location of the annotation processors source output.
+         * Default value is {@link ProjectProperties#ANNOTATION_PROCESSING_SOURCE_OUTPUT}
+         * @param propName the name of the property.
+         * @return the {@link Builder}
+         */
+        @NonNull
+        public Builder setAnnotationProcessorsGeneratedSourcesProperty(@NonNull final String propName) {
+            Parameters.notNull("propName", propName);   //NOI18N
+            this.procGenSourcesProp = propName;
+            return this;
+        }
+
+        /**
          * Builds the {@link MultiModuleNodeFactory}.
          * @return the new {@link MultiModuleNodeFactory} instance
          */
@@ -230,21 +261,29 @@ public final class MultiModuleNodeFactory implements NodeFactory {
             return new MultiModuleNodeFactory(
                     mods,
                     testMods,
-                    libSupport);
+                    new ProcessorGeneratedSources(helper, eval, procGenSourcesProp),
+                    libSupport == null ? null : libSupport.build(helper, eval, refHelper));
         }
 
         /**
          * Creates a new {@link Builder}.
+         * @param helper the {@link UpdateHelper}
+         * @param eval the {@link PropertyEvaluator}
+         * @param refHelper the {@link ReferenceHelper}
          * @return the {@link Builder}
          */
         @NonNull
-        public static Builder create() {
-            return new Builder();
+        public static Builder create(
+                @NonNull final UpdateHelper helper,
+                @NonNull final PropertyEvaluator eval,
+                @NonNull final ReferenceHelper refHelper) {
+            return new Builder(helper, eval, refHelper);
         }
     }
 
     private static final class Nodes implements NodeList<ModuleKey>, PropertyChangeListener {
         private final Project project;
+        private final ProcessorGeneratedSources procGenSrc;
         private final MultiModule sourceModules;
         private final MultiModule testModules;
         private final LibrariesSupport libsSupport;
@@ -252,11 +291,14 @@ public final class MultiModuleNodeFactory implements NodeFactory {
 
         Nodes(
                 @NonNull final Project project,
+                @NonNull final ProcessorGeneratedSources procGenSrc,
                 @NullAllowed final MultiModule sourceModules,
                 @NullAllowed final MultiModule testModules,
                 @NullAllowed final LibrariesSupport libsSupport) {
             Parameters.notNull("project", project);     //NOI18N
+            Parameters.notNull("procGenSrc", procGenSrc);
             this.project = project;
+            this.procGenSrc = procGenSrc;
             this.sourceModules = sourceModules;
             this.testModules = testModules;
             this.libsSupport = libsSupport;
@@ -270,7 +312,7 @@ public final class MultiModuleNodeFactory implements NodeFactory {
                     this.testModules == null ? Stream.empty() : this.testModules.getModuleNames().stream())
                 .sorted()
                 .distinct()
-                .map((name) -> new ModuleKey(project, name, sourceModules, testModules, libsSupport))
+                .map((name) -> new ModuleKey(project, name, sourceModules, testModules, procGenSrc, libsSupport))
                 .collect(Collectors.toList());
         }
 
@@ -322,6 +364,7 @@ public final class MultiModuleNodeFactory implements NodeFactory {
         private final MultiModule sourceModules;
         private final MultiModule testModules;
         private final String moduleName;
+        private final ProcessorGeneratedSources procGenSrc;
         private final LibrariesSupport libsSupport;
 
         ModuleKey(
@@ -329,13 +372,16 @@ public final class MultiModuleNodeFactory implements NodeFactory {
                 @NonNull final String moduleName,
                 @NullAllowed final MultiModule sourceModules,
                 @NullAllowed final MultiModule testModules,
+                @NonNull final ProcessorGeneratedSources procGenSrc,
                 @NullAllowed final LibrariesSupport libsSupport) {
             Parameters.notNull("project", project);             //NOI18N
             Parameters.notNull("moduleName", moduleName);       //NOI18N
+            Parameters.notNull("procGenSrc", procGenSrc);       //NOI18N
             this.project = project;
             this.moduleName = moduleName;
             this.sourceModules = sourceModules;
             this.testModules = testModules;
+            this.procGenSrc = procGenSrc;
             this.libsSupport = libsSupport;
         }
 
@@ -357,6 +403,11 @@ public final class MultiModuleNodeFactory implements NodeFactory {
         @NonNull
         Project getProject() {
             return project;
+        }
+
+        @NonNull
+        ProcessorGeneratedSources getProcessorGeneratedSources() {
+            return procGenSrc;
         }
 
         @CheckForNull
@@ -842,6 +893,7 @@ public final class MultiModuleNodeFactory implements NodeFactory {
         private final MultiModuleGroupQuery groupQuery;
         private final MultiModule srcModule;
         private final MultiModule testModule;
+        private final ProcessorGeneratedSources procGenSrc;
         private final LibrariesSupport libsSupport;
         private final RequestProcessor.Task refresh;
         private final AtomicReference<ClassPath> srcPath;
@@ -855,6 +907,7 @@ public final class MultiModuleNodeFactory implements NodeFactory {
             this.groupQuery = project.getLookup().lookup(MultiModuleGroupQuery.class);
             this.srcModule = key.getSourceModules();
             this.testModule = key.getTestModules();
+            this.procGenSrc = key.getProcessorGeneratedSources();
             this.libsSupport = key.getLibrariesSupport();
             this.srcPath = new AtomicReference<>();
             this.testPath = new AtomicReference<>();
@@ -876,6 +929,7 @@ public final class MultiModuleNodeFactory implements NodeFactory {
             if (testPath.compareAndSet(null, cp)) {
                 cp.addPropertyChangeListener(this);
             }
+            this.procGenSrc.addPropertyChangeListener(this);
             setKeys(createKeys());
         }
 
@@ -890,6 +944,7 @@ public final class MultiModuleNodeFactory implements NodeFactory {
             if (cp != null && testPath.compareAndSet(cp, null)) {
                 cp.removePropertyChangeListener(this);
             }
+            this.procGenSrc.removePropertyChangeListener(this);
             setKeys(Collections.emptySet());
         }
 
@@ -897,7 +952,7 @@ public final class MultiModuleNodeFactory implements NodeFactory {
         @NonNull
         protected Node[] createNodes(@NonNull final Key key) {
             if (key.isSource()) {
-                Node n = PackageView.createPackageView(key.getSourceGroup());
+                Node n = new PackageViewFilterNode(key.getSourceGroup(), this.project, key.isGenerated());
                 MultiModuleGroupQuery.Result r = groupQuery.findModuleInfo(key.getSourceGroup());
                 if (r == null) {
                     if (key.isTests()) {
@@ -983,19 +1038,26 @@ public final class MultiModuleNodeFactory implements NodeFactory {
                 grpsByRoot.put(g.getRootFolder(), g);
             }
             final Comparator<FileObject> foc = (a,b) -> a.getNameExt().compareTo(b.getNameExt());
-            return Stream.concat(Stream.concat(
-                    Arrays.stream(sourceP.getRoots())
-                        .sorted(foc)
-                        .map((fo) -> Pair.of(fo,false)),
-                    Arrays.stream(testPath.get().getRoots())
-                        .sorted(foc)
-                        .map((fo) -> Pair.of(fo,true)))
-                    .map((p) -> {
-                        final SourceGroup g = grpsByRoot.get(p.first());
-                        return g == null ?
-                                null :
-                                new Key(g,p.second());
-                     })
+            return Stream.concat(
+                    Stream.concat(
+                        Stream.concat(
+                            Arrays.stream(sourceP.getRoots())
+                                .sorted(foc)
+                                .map((fo) -> Pair.of(fo,false)),
+                            Arrays.stream(testPath.get().getRoots())
+                                .sorted(foc)
+                                .map((fo) -> Pair.of(fo,true))
+                        )
+                        .map((p) -> {
+                            final SourceGroup g = grpsByRoot.get(p.first());
+                            return g == null ?
+                                    null :
+                                    new Key(g, p.second(), false);
+                         }),
+                        Stream.of(Optional.ofNullable(procGenSrc.getGeneratedGroups(moduleName))
+                                .map((sg) -> new Key(sg, false, true))
+                                .orElse(null))
+                    )
                     .filter((p) -> p != null),
                     Stream.of(
                         new Key(sourceP, false),
@@ -1006,7 +1068,8 @@ public final class MultiModuleNodeFactory implements NodeFactory {
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            if (ClassPath.PROP_ROOTS.equals(evt.getPropertyName())) {
+            final String propName = evt.getPropertyName();
+            if (ClassPath.PROP_ROOTS.equals(propName) || ProcessorGeneratedSources.PROP_GEN_GROUPS.equals(propName)) {
                 refresh.schedule(100);
             }
         }
@@ -1014,19 +1077,22 @@ public final class MultiModuleNodeFactory implements NodeFactory {
         private final static class Key {
             private final boolean sources;
             private final boolean tests;
+            private final boolean generated;
             private final SourceGroup sg;
             private final ClassPath sourcePath;
             private final FileObject[] sourceRoots;
 
             Key(
                     @NonNull final SourceGroup sg,
-                    final boolean tests) {
+                    final boolean tests,
+                    final boolean generated) {
                 assert sg != null;
                 this.sources = true;
                 this.sg = sg;
                 this.sourcePath = null;
                 this.sourceRoots = new FileObject[0];
                 this.tests = tests;
+                this.generated = generated;
             }
 
             Key(
@@ -1038,6 +1104,7 @@ public final class MultiModuleNodeFactory implements NodeFactory {
                 this.sourcePath = sourcePath;
                 this.sourceRoots = this.sourcePath.getRoots();
                 this.tests = tests;
+                this.generated = false;
             }
 
             boolean isSource() {
@@ -1046,6 +1113,13 @@ public final class MultiModuleNodeFactory implements NodeFactory {
 
             boolean isTests() {
                 return tests;
+            }
+
+            boolean isGenerated() {
+                if (!sources) {
+                    throw new IllegalStateException("Not a source key.");   //NOI18N
+                }
+                return generated;
             }
 
             @NonNull
@@ -1075,8 +1149,9 @@ public final class MultiModuleNodeFactory implements NodeFactory {
             @Override
             public int hashCode() {
                 int res = 17;
-                res = res * 31 + (sources ? 0 : 1);
-                res = res * 31 + (tests ? 0 : 1);
+                res = res * 31 + (sources ? 1 : 0);
+                res = res * 31 + (tests ? 1 : 0);
+                res = res * 31 + (generated ? 1 : 0);
                 res = res * 31 + Optional.ofNullable(sg).map(SourceGroup::getRootFolder).map(Object::hashCode).orElse(0);
                 res = res * 31 + (sourceRoots.length == 0 ? 0 : 1);
                 return res;
@@ -1093,6 +1168,7 @@ public final class MultiModuleNodeFactory implements NodeFactory {
                 final Key other = (Key) obj;
                 return  (sources == other.sources) &&
                         (tests == other.tests) &&
+                        (generated == other.generated) &&
                         sgEq(sg, other.sg) &&
                         (sourceRoots.length == 0 ? other.sourceRoots.length == 0 : other.sourceRoots.length != 0);
             }
@@ -1119,22 +1195,26 @@ public final class MultiModuleNodeFactory implements NodeFactory {
         private final PropertyEvaluator evaluator;
         private final ReferenceHelper refHelper;
         private final ClassPathSupport cs;
-        private final List<Action> actions;
-        private final List<Action> testActions;
+        private final List<? extends Action> actions;
+        private final List<? extends Action> testActions;
 
         LibrariesSupport(
                 @NonNull final UpdateHelper helper,
                 @NonNull final PropertyEvaluator evaluator,
-                @NonNull final ReferenceHelper refHelper) {
+                @NonNull final ReferenceHelper refHelper,
+                @NonNull final List<? extends Action> actions,
+                @NonNull final List<? extends Action> testActions) {
             Parameters.notNull("helper", helper);   //NOI18N
             Parameters.notNull("evaluator", evaluator); //NOI18N
             Parameters.notNull("refHelper", refHelper); //NOI18N
+            Parameters.notNull("actions", actions);     //NOI18N
+            Parameters.notNull("testActions", testActions); //NOI18N
             this.helper = helper;
             this.evaluator = evaluator;
             this.refHelper = refHelper;
             this.cs = new ClassPathSupport(evaluator, refHelper, helper.getAntProjectHelper(), helper, null);
-            this.actions = new ArrayList<>();
-            this.testActions = new ArrayList<>();
+            this.actions = actions;
+            this.testActions = testActions;
         }
 
         @NonNull
@@ -1158,14 +1238,36 @@ public final class MultiModuleNodeFactory implements NodeFactory {
         }
 
         @NonNull
-        Collection<? extends Action>getActions(final boolean tests) {
+        Collection<? extends Action> getActions(final boolean tests) {
             return tests ? testActions : actions;
         }
 
-        void addActions(
-                final boolean tests,
-                @NonNull final Action... actions) {
-            Collections.addAll(tests ? this.testActions : this.actions, actions);
+        private static final class Builder {
+            private final List<Action> actions;
+            private final List<Action> testActions;
+
+            Builder () {
+                this.actions = new ArrayList<>();
+                this.testActions = new ArrayList<>();
+            }
+
+            void addActions(
+                    final boolean tests,
+                    @NonNull final Action... actions) {
+                Collections.addAll(tests ? this.testActions : this.actions, actions);
+            }
+
+            LibrariesSupport build(
+                    @NonNull final UpdateHelper helper,
+                    @NonNull final PropertyEvaluator eval,
+                    @NonNull final ReferenceHelper refHelper) {
+                return new LibrariesSupport(
+                        helper,
+                        eval,
+                        refHelper,
+                        actions,
+                        testActions);
+            }
         }
     }
 
@@ -1221,6 +1323,156 @@ public final class MultiModuleNodeFactory implements NodeFactory {
                 }
             }
             return new AbstractNode(Children.LEAF);
+        }
+    }
+
+    private static final class ProcessorGeneratedSources extends FileChangeAdapter implements PropertyChangeListener {
+        private static final String PROP_GEN_GROUPS = "generatedGroups";    //NOI18N
+        private final UpdateHelper helper;
+        private final PropertyEvaluator eval;
+        private final String sourceOutputProp;
+        private final AtomicBoolean listensOnFs;
+        private final PropertyChangeSupport listeners;
+        //@GuardedBy("this")
+        private Map<String,SourceGroup> cache;
+
+        ProcessorGeneratedSources(
+                @NonNull final UpdateHelper helper,
+                @NonNull final PropertyEvaluator eval,
+                @NonNull final String processorsSourceOutputProp) {
+            Parameters.notNull("helper", helper);   //NOI18N
+            Parameters.notNull("eval", eval);       //NOI18N
+            Parameters.notNull("processorsSourceOutputProp", processorsSourceOutputProp); //NOI18N
+            this.helper = helper;
+            this.eval = eval;
+            this.sourceOutputProp = processorsSourceOutputProp;
+            this.listensOnFs = new AtomicBoolean();
+            this.listeners = new PropertyChangeSupport(this);
+            this.eval.addPropertyChangeListener(WeakListeners.propertyChange(this, this.eval));
+        }
+
+        @CheckForNull
+        SourceGroup getGeneratedGroups(@NonNull final String moduleName) {
+            final Map<String,SourceGroup> cache = getCache();
+            return cache.get(moduleName);
+        }
+
+        void addPropertyChangeListener(@NonNull final PropertyChangeListener l) {
+            this.listeners.addPropertyChangeListener(l);
+        }
+
+        void removePropertyChangeListener(@NonNull final PropertyChangeListener l) {
+            this.listeners.removePropertyChangeListener(l);
+        }
+
+        private Map<String,SourceGroup> getCache() {
+            synchronized (this) {
+                if (cache != null) {
+                    return cache;
+                }
+            }
+            final File genSrc = Optional.ofNullable(eval.getProperty(sourceOutputProp))
+                    .map(helper.getAntProjectHelper()::resolveFile)
+                    .orElse(null);
+            final Map<String,SourceGroup> m = new HashMap<>();
+            if (genSrc != null) {
+                if (listensOnFs.compareAndSet(false, true)) {
+                    FileUtil.addFileChangeListener(this, genSrc);
+                }
+                final FileObject genSrcFo = FileUtil.toFileObject(genSrc);
+                if (genSrcFo != null) {
+                    Arrays.stream(genSrcFo.getChildren())
+                            .filter(FileObject::isFolder)
+                            .forEach((fo) -> m.put(fo.getNameExt(), new APSourceGroup(genSrcFo, fo)));
+                }
+            }
+            synchronized (this) {
+                if (cache == null) {
+                    cache = m;
+                    return m;
+                } else {
+                    return cache;
+                }
+            }
+        }
+
+        @Override
+        public void fileFolderCreated(FileEvent fe) {
+            reset();
+        }
+
+        @Override
+        public void fileDeleted(FileEvent fe) {
+            reset();
+        }
+
+        @Override
+        public void fileRenamed(FileRenameEvent fe) {
+            reset();
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            final String propName = evt.getPropertyName();
+            if (propName == null || this.sourceOutputProp.equals(propName)) {
+                reset();
+            }
+        }
+
+        private void reset() {
+            synchronized (this) {
+                this.cache = null;
+            }
+            listeners.firePropertyChange(PROP_GEN_GROUPS, null, null);
+        }
+
+        private static final class APSourceGroup implements SourceGroup {
+
+            private final FileObject modSrcPathRoot;
+            private final FileObject srcPathRoot;
+
+            APSourceGroup(
+                    @NonNull final FileObject modSrcPathRoot,
+                    @NonNull final FileObject srcPathRoot) {
+                Parameters.notNull("modSrcPathRoot", modSrcPathRoot);   //NOI18N
+                Parameters.notNull("srcPathRoot", srcPathRoot);   //NOI18N
+                this.modSrcPathRoot = modSrcPathRoot;
+                this.srcPathRoot = srcPathRoot;
+            }
+
+            @Override
+            public FileObject getRootFolder() {
+                return srcPathRoot;
+            }
+
+            @Override
+            public String getName() {
+                return modSrcPathRoot.getNameExt();
+            }
+
+            @Override
+            public String getDisplayName() {
+                return NbBundle.getMessage(
+                        MultiModuleNodeFactory.class,
+                        "MultiModuleNodeFactory.gensrc",
+                        getName());
+            }
+
+            @Override
+            public Icon getIcon(boolean opened) {
+                return null;
+            }
+
+            @Override
+            public boolean contains(FileObject file) {
+                return true;
+            }
+
+            @Override
+            public void addPropertyChangeListener(PropertyChangeListener listener) {}
+
+            @Override
+            public void removePropertyChangeListener(PropertyChangeListener listener) {}
         }
     }
 }

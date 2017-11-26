@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -50,16 +50,17 @@ public class JShellLexer implements Lexer<JShellToken>, TokenPropertyProvider<JS
         "exit", "reset", "reload",
         
         "classpath", "history",
-            
+        "debug",
+        
         "help",
+        "set",
         "?", "!"
     };
     
     private static final String[] COMMAND_STRINGS = {
         "l", "list", // NOI18N
-        "", "seteditor", // NOI18N
-        "d", "drop", // NOI18N
-        "s", "save", // NOI18N
+        "dr", "drop", // NOI18N
+        "sa", "save", // NOI18N
         "o", "open", // NOI18N
         "v", "vars", // NOI18N
         "m", "methods",  // NOI18N
@@ -70,7 +71,9 @@ public class JShellLexer implements Lexer<JShellToken>, TokenPropertyProvider<JS
         "rel", "reload",  // NOI18N
         "c", "classpath",  // NOI18N
         "hi", "history",  // NOI18N
+        "de", "debug",    // NOI18N
         "he", "?", "help",  // NOI18N
+        "se", "set",        // NOI18N
         "!", "" // NOI18N
     };
     
@@ -522,9 +525,6 @@ public class JShellLexer implements Lexer<JShellToken>, TokenPropertyProvider<JS
             }
             verbatim = false;
             c = input.read();
-        }
-        if (c == '\n') { // NOI18N
-            state = S.INITIAL;
         }
         return tokenFactory.createToken(tokenId, input.readLength());
     }

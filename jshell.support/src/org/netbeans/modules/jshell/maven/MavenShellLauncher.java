@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -101,6 +101,11 @@ public class MavenShellLauncher implements PrerequisitesChecker, LateBoundPrereq
                 agent, 
                 config.getProperties()::get
         );
+        String agentString = args.get(args.size() -1);
+        List<String> vmArgs = ShellProjectUtils.launchVMOptions(project);
+        if (vmArgs != null) {
+            args.addAll(vmArgs);
+        }
         String execArgs = config.getProperties().get(PROPERTY_EXEC_ARGS);
         if (execArgs != null) {
             StringBuilder sb = new StringBuilder();
@@ -108,7 +113,7 @@ public class MavenShellLauncher implements PrerequisitesChecker, LateBoundPrereq
                 if (sb.length() > 0) {
                     sb.append(" "); // NOI18N
                 }
-                sb.append(a);
+                sb.append(ShellProjectUtils.quoteCmdArg(a));
             }
             String newArgs;
 
@@ -119,7 +124,7 @@ public class MavenShellLauncher implements PrerequisitesChecker, LateBoundPrereq
             }
             config.setProperty(PROPERTY_EXEC_ARGS, newArgs);
         }        
-        config.setProperty(PROPERTY_JSHELL_AGENT, args.get(args.size() -1));
+        config.setProperty(PROPERTY_JSHELL_AGENT, agentString);
         config.setProperty(PROPERTY_JSHELL_KEY, agent.getAuthorizationKey());
         return true;
     }

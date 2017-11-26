@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -58,10 +58,12 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.editor.JumpList;
+import org.netbeans.modules.jumpto.EntityComparator;
 import org.netbeans.modules.jumpto.common.AbstractModelFilter;
 import org.netbeans.modules.jumpto.common.ItemRenderer;
 import org.netbeans.modules.jumpto.common.Models;
 import org.netbeans.modules.jumpto.common.Utils;
+import org.netbeans.modules.jumpto.settings.GoToSettings;
 import org.netbeans.modules.parsing.lucene.support.Queries;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.netbeans.spi.jumpto.file.FileDescriptor;
@@ -216,6 +218,7 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
             final SearchType searchType = Utils.toSearchType(nameKind);
             if (currentSearch.isNarrowing(searchType, text, null, true)) {
                 itemsComparator.setUsePreferred(panel.isPreferedProject());
+                itemsComparator.setText(text);
                 filterFactory.setLineNumber(lineNr);
                 currentSearch.filter(
                         searchType,
@@ -250,9 +253,12 @@ public class FileSearchAction extends AbstractAction implements FileSearchPanel.
         }
         final String searchText = slidingTaskData.text;
         LOGGER.log(Level.FINE, "Calling providers for text: {0}", searchText);
-        itemsComparator = new FileComarator(
+        itemsComparator = FileComarator.create(
+                GoToSettings.getDefault().getSortingType(),
+                searchText,
                 panel.isPreferedProject(),
-                panel.isCaseSensitive());
+                panel.isCaseSensitive(),
+                GoToSettings.getDefault().isSortingPreferOpenProjects());
         final Models.MutableListModel baseListModel = Models.mutable(
                 itemsComparator,
                 currentSearch.resetFilter(),

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -232,9 +232,12 @@ public class SnippetNodes extends Children.Keys implements ShellListener, Consum
             state = null;
         }
         if (shell != null) {
+            NR subscription = new NR(this, shell);
+            subscription.subscribe();
+            // may fail in JShell, record in member variables only after successful
+            // registration
             state = shell;
-            sub = new NR(this, shell);
-            sub.subscribe();
+            sub = subscription;
         }
     }
 
@@ -247,7 +250,11 @@ public class SnippetNodes extends Children.Keys implements ShellListener, Consum
             }
         }
         update();
-        attachTo(ev.getEngine());
+        try {
+            attachTo(ev.getEngine());
+        } catch (IllegalStateException ex) {
+            // the shell may have terminated in between the event was generated and now. Ignore.
+        }
         refreshNodeNames();
     }
 

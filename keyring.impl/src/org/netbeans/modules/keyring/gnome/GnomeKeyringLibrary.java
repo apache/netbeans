@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -46,7 +46,7 @@ public interface GnomeKeyringLibrary extends Library {
         // http://packages.ubuntu.com/search?suite=precise&arch=any&mode=exactfilename&searchon=contents&keywords=libgnome-keyring.so.0
         private static final String EXPLICIT_ONEIRIC = "/usr/lib/libgnome-keyring.so.0";
         @SuppressWarnings("DMI_HARDCODED_ABSOLUTE_FILENAME")
-        private static Object load(Map<?,?> options) {
+        private static Object load(Map<String,?> options) {
             try {
                 return Native.loadLibrary(GENERIC, GnomeKeyringLibrary.class, options);
             } catch (UnsatisfiedLinkError x) {

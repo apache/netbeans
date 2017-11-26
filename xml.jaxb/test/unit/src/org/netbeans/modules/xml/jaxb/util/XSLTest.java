@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,6 +22,7 @@ package org.netbeans.modules.xml.jaxb.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,16 +46,14 @@ import org.netbeans.junit.NbTestCase;
  * @author gmpatil
  */
 public class XSLTest extends NbTestCase {
-    private static final String CONFIG_FILE1 = "/data/ConfigFile1.xml"; //NOI18N
-    private static final String CONFIG_FILE2 = "/data/ConfigFile2.xml"; //NOI18N    
-    private static final String CONFIG_FILE3 = "/data/ConfigFile3.xml"; //NOI18N        
-    private static final String CONFIG_EMPTY_CAT = 
-            "/data/ConfigFileEmptyCatalog.xml"; //NOI18N        
-    private static final String BUILD_FILE1 = "/data/BuildFile1.xml";   //NOI18N
-    private static final String BUILD_FILE2 = "/data/BuildFile2.xml"; //NOI18N 
-    private static final String BUILD_FILE3 = "/data/BuildFile3.xml"; //NOI18N     
-    private static final String BUILD_EMPTY_CAT = 
-            "/data/BuildFileEmptyCatalog.xml"; //NOI18N     
+    private static final String CONFIG_FILE1 = "ConfigFile1.xml"; //NOI18N
+    private static final String CONFIG_FILE2 = "ConfigFile2.xml"; //NOI18N    
+    private static final String CONFIG_FILE3 = "ConfigFile3.xml"; //NOI18N        
+    private static final String CONFIG_EMPTY_CAT = "ConfigFileEmptyCatalog.xml"; //NOI18N        
+    private static final String BUILD_FILE1 = "BuildFile1.xml";   //NOI18N
+    private static final String BUILD_FILE2 = "BuildFile2.xml"; //NOI18N 
+    private static final String BUILD_FILE3 = "BuildFile3.xml"; //NOI18N     
+    private static final String BUILD_EMPTY_CAT = "BuildFileEmptyCatalog.xml"; //NOI18N     
     
     private static final String XSL_FILE = 
             "/org/netbeans/modules/xml/jaxb/resources/JAXBBuild.xsl"; //NOI18N
@@ -70,8 +69,13 @@ public class XSLTest extends NbTestCase {
     public void tearDown() throws Exception {
     }
     
-    private InputStream getInputStream(String filePath){
+    private InputStream getFromClasspath(String filePath){
         return this.getClass().getResourceAsStream(filePath);
+    }
+    
+    private InputStream getDatafile(String filename) throws FileNotFoundException{
+        String dataFilename = "/org/netbeans/modules/xml/jaxb/util/" + filename;
+        return new FileInputStream(new File(getDataDir(), dataFilename));
     }
     
     private String getString(InputStream stream) throws IOException{
@@ -100,8 +104,8 @@ public class XSLTest extends NbTestCase {
     
     private void transformConfig2Build(String configFile, String buildFile){
         try {
-            Source xmlSource = new StreamSource(getInputStream(configFile));
-            Source xslSource = new StreamSource(getInputStream(XSL_FILE));
+            Source xmlSource = new StreamSource(getDatafile(configFile));
+            Source xslSource = new StreamSource(getFromClasspath(XSL_FILE));
             File tmpFile = java.io.File.createTempFile(TEMP_BUILD_FILE, ".xml");
             //System.out.println("tmpFile:" + tmpFile.getAbsolutePath());
             tmpFile.deleteOnExit();
@@ -115,7 +119,7 @@ public class XSLTest extends NbTestCase {
             xformer.transform(xmlSource, result);
             // Compare.
             fos.close();
-            compareStream(getInputStream(buildFile), new FileInputStream(tmpFile));
+            compareStream(getDatafile(buildFile), new FileInputStream(tmpFile));
         } catch (TransformerConfigurationException ex) {
             Logger.getLogger("global").log(Level.SEVERE, null, ex);
             fail("TransformerConfigurationException");

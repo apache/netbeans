@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -145,6 +145,8 @@ public class MoveClassTransformer extends RefactoringVisitor {
         if (!importToRemove.isEmpty()) {
             cut = make.CompilationUnit(cut.getPackageName(), imports, cut.getTypeDecls(), cut.getSourceFile());
         }
+        
+        cut = GeneratorUtilities.get(workingCopy).importFQNs(cut);
 
         rewrite(node, cut);
         
@@ -244,7 +246,6 @@ public class MoveClassTransformer extends RefactoringVisitor {
                     get.copyComments(origTree, newClass, true);
                     get.copyComments(origTree, newClass, false);
                     newClass = get.insertClassMember(node, newClass);
-                    newClass = get.importFQNs(newClass);
                     original2Translated.put(node, newClass);
                 }
             }

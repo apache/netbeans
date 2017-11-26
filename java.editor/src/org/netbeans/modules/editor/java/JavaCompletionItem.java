@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -2011,6 +2011,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                         if (toAddText.length() > idx + 1) {
                             sb.append(toAddText.substring(idx + 1));
                         }
+                        showTooltip = true;
                     }
                 }
             }
@@ -2055,7 +2056,6 @@ public abstract class JavaCompletionItem implements CompletionItem {
                     }
                 }, NbBundle.getMessage(JavaCompletionItem.class, "JCI-import_resolve"), cancel, false); //NOI18N
             }
-            showTooltip = true;
             return sb;
         }
 

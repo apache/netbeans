@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -785,13 +785,17 @@ public class JShellTool implements MessageHandler {
     private boolean isRunningInteractive() {
         return currentNameSpace != null && currentNameSpace == mainNamespace;
     }
+    
+    boolean permitSystemSettings = false;
 
     //where -- one-time per run initialization of feedback modes
     private void initFeedback() {
         // No fluff, no prefix, for init failures
         MessageHandler initmh = new InitMessageHandler();
         // Execute the feedback initialization code in the resource file
+        permitSystemSettings = true;
         startUpRun(getResourceString("startup.feedback"));
+        permitSystemSettings = false;
         // These predefined modes are read-only
         feedback.markModesReadOnly();
         // Restore user defined modes retained on previous run with /set mode -retain
@@ -1292,11 +1296,11 @@ public class JShellTool implements MessageHandler {
                         "mode", skipWordThenCompletion(orMostSpecificCompletion(
                                 feedback.modeCompletions(SET_MODE_OPTIONS_COMPLETION_PROVIDER),
                                 SET_MODE_OPTIONS_COMPLETION_PROVIDER)),
-                        "prompt", feedback.modeCompletions(),
-                        "editor", fileCompletions(Files::isExecutable),
+//                        "prompt", feedback.modeCompletions(),
+//                        "editor", fileCompletions(Files::isExecutable),
                         "start", FILE_COMPLETION_PROVIDER),
                         STARTSWITH_MATCHER), 
-                CommandKind.HIDDEN));
+                CommandKind.NORMAL));
 
         registerCommand(new Command("/?",
                 "help.quest",
@@ -1389,15 +1393,17 @@ public class JShellTool implements MessageHandler {
                 return feedback.setMode(this, at,
                         retained -> prefs.put(MODE_KEY, retained));
             case "prompt":
-                return feedback.setPrompt(this, at);
-            case "editor":
-                return new SetEditor(at).set();
+                if (permitSystemSettings) {
+                    return feedback.setPrompt(this, at);
+                } else {
+                    break;
+                }
             case "start":
                 return setStart(at);
             default:
-                errormsg("jshell.err.arg", cmd, at.val());
-                return false;
         }
+        errormsg("jshell.err.arg", cmd, at.val());
+        return false;
     }
 
     boolean setFeedback(MessageHandler messageHandler, ArgTokenizer at) {

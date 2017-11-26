@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -133,7 +133,7 @@ final class IntroduceVariableFix extends IntroduceFixBase implements Fix {
                 "introduceVariable", btnOk);
         String caption = NbBundle.getMessage(IntroduceHint.class, "CAP_" + getKeyExt()); //NOI18N
         DialogDescriptor dd = new DialogDescriptor(panel, caption, true, new Object[]{btnOk, btnCancel}, btnOk, DialogDescriptor.DEFAULT_ALIGN, null, null);
-        FieldValidator val = new FieldValidator(js, null);
+        FieldValidator val = new FieldValidator(js, null, this.handle);
         panel.setNotifier(dd.createNotificationLineSupport());
         panel.setValidator(val);
         panel.setTarget(targetHandle);

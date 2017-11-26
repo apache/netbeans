@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -33,7 +33,7 @@ import org.openide.util.NbBundle;
 @ActionRegistration(displayName = "#LBL_ExtractSC_Action", lazy = false)
 @ActionReferences({
     @ActionReference(path = "Editors/text/x-java/RefactoringActions", name = "ExtractSuperclassAction", position = 800),
-    @ActionReference(path = "Shortcuts", name = "OCS-S")
+    @ActionReference(path = "Shortcuts", name = "CS-Y S")
 })
 public final class ExtractSuperclassAction extends JavaRefactoringGlobalAction {
 

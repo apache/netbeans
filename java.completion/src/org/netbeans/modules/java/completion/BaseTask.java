@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -56,10 +56,30 @@ abstract class BaseTask extends UserTask {
 
     protected final int caretOffset;
     protected final Callable<Boolean> cancel;
+    private int caretInSnapshot;
 
     protected BaseTask(int caretOffset, Callable<Boolean> cancel) {
         this.caretOffset = caretOffset;
         this.cancel = cancel;
+    }
+
+    
+    final int getCaretInSnapshot() {
+        return caretInSnapshot;
+    }
+    
+    private CompilationController controller;
+    
+    final int snapshotPos(int pos) {
+        if (pos < 0) {
+            return pos;
+        }
+        int r = controller.getSnapshot().getEmbeddedOffset(pos);
+        if (r == -1) {
+            return pos;
+        } else {
+            return r;
+        }
     }
 
     @Override
@@ -67,7 +87,13 @@ abstract class BaseTask extends UserTask {
         Parser.Result result = resultIterator.getParserResult(caretOffset);
         CompilationController controller = result != null ? CompilationController.get(result) : null;
         if (controller != null && (cancel == null || !cancel.call())) {
-            resolve(controller);
+            try {
+                this.controller = controller;
+                caretInSnapshot = snapshotPos(caretOffset);
+                resolve(controller);
+            } finally {
+                this.controller = null;
+            }
         }
     }
 
@@ -342,8 +368,8 @@ abstract class BaseTask extends UserTask {
                     if (blockPath.getParentPath().getLeaf().getKind() == Tree.Kind.METHOD
                             || TreeUtilities.CLASS_TREE_KINDS.contains(blockPath.getParentPath().getLeaf().getKind())) {
                         final int blockPos = (int) sourcePositions.getStartPosition(root, blockPath.getLeaf());
-                        final String blockText = upToOffset && caretOffset > offset
-                                ? controller.getText().substring(blockPos, offset) + whitespaceString(caretOffset - offset) + controller.getText().substring(caretOffset, (int) sourcePositions.getEndPosition(root, blockPath.getLeaf()))
+                        final String blockText = upToOffset && getCaretInSnapshot() > offset
+                                ? controller.getText().substring(blockPos, offset) + whitespaceString(getCaretInSnapshot() - offset) + controller.getText().substring(getCaretInSnapshot(), (int) sourcePositions.getEndPosition(root, blockPath.getLeaf()))
                                 : controller.getText().substring(blockPos, (int) sourcePositions.getEndPosition(root, blockPath.getLeaf()));
                         final SourcePositions[] sp = new SourcePositions[1];
                         final StatementTree block = (((BlockTree) blockPath.getLeaf()).isStatic() ? tu.parseStaticBlock(blockText, sp) : tu.parseStatement(blockText, sp));

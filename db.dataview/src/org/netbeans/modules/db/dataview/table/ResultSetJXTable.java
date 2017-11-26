@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -170,7 +170,7 @@ public class ResultSetJXTable extends JXTableDecorator {
         setDefaultRenderer(Object.class, new ResultSetCellRenderer());
         setDefaultRenderer(String.class, new ResultSetCellRenderer());
         setDefaultRenderer(Number.class, new ResultSetCellRenderer());
-        setDefaultRenderer(Boolean.class, new BooleanCellRenderer());
+        setDefaultRenderer(Boolean.class, new ResultSetCellRenderer());
         setDefaultRenderer(java.sql.Date.class, new ResultSetCellRenderer(ResultSetCellRenderer.Date_TO_STRING));
         setDefaultRenderer(java.sql.Time.class, new ResultSetCellRenderer(ResultSetCellRenderer.TIME_TO_STRING));
         setDefaultRenderer(java.sql.Timestamp.class, new ResultSetCellRenderer(ResultSetCellRenderer.DATETIME_TO_STRING));

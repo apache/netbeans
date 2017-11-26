@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -178,6 +178,10 @@ public final class TreeUtils {
      * @return path to the nearest enclosing executable or {@code null} in case of error.
      */
     static TreePath findMethod(TreePath path) {
+        return findMethod(path, false);
+    }
+    
+    static TreePath findMethod(TreePath path, boolean methodOnly) {
         while (path != null) {
             Tree leaf = path.getLeaf();
             switch (leaf.getKind()) {
@@ -186,8 +190,11 @@ public final class TreeUtils {
                         return path;
                     }
                     break;
-                case METHOD:
                 case LAMBDA_EXPRESSION:
+                    if (methodOnly) {
+                        break;
+                    }
+                case METHOD:
                     return path;
                 default:
                     break;

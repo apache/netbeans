@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -906,11 +906,6 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	if (!members.isEmpty()) {
 	    blankLines(enclClass.name.isEmpty() ? cs.getBlankLinesAfterAnonymousClassHeader() : (flags & ENUM) != 0 ? cs.getBlankLinesAfterEnumHeader() : cs.getBlankLinesAfterClassHeader());
             boolean firstMember = true;
-            if ((tree.mods.flags & ENUM) != 0 && members.get(0) instanceof FieldGroupTree && ((FieldGroupTree) members.get(0)).isEnum()) {
-                printEnumConstants(((FieldGroupTree) members.get(0)).getVariables(), false, false);
-                firstMember = false;
-                members.remove(0);
-            }
             for (JCTree t : members) {
                 printStat(t, true, firstMember, true, true, false);
                 firstMember = false;
@@ -955,8 +950,9 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                     }
                 }
                 printStat(c, true, false, col, false, printComments);
-            } else if (!isSynthetic(c))
+            } else if (!isSynthetic(c)) {
                 hasNonEnumerator = true;
+            }
         }
         if (hasNonEnumerator || forceSemicolon) {
             print(";");

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -37,7 +37,7 @@ import org.openide.util.NbBundle;
 @ActionRegistration(displayName = "#LBL_ChangeMethodSignatureAction", lazy = false)
 @ActionReferences({
     @ActionReference(path = "Editors/text/x-java/RefactoringActions", name = "CallHierarchyAction", position = 430),
-    @ActionReference(path = "Shortcuts", name = "OCS-C")
+    @ActionReference(path = "Shortcuts", name = "CS-Y C")
 })
 public class ChangeParametersAction extends JavaRefactoringGlobalAction {
     

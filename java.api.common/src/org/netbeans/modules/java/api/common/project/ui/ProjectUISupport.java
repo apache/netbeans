@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -108,7 +108,7 @@ public final class ProjectUISupport{
      * Create action which opens project properties on the given panel.
      */
     public static AbstractAction createPreselectPropertiesAction(Project project, String nodeName, String panelName) {
-        return new JavaSourceNodeFactory.PreselectPropertiesAction(project, nodeName, panelName);
+        return new PreselectPropertiesAction(project, nodeName, panelName);
     }
 
     /**

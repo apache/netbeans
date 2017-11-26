@@ -5,6 +5,8 @@ Source: https://javahelp.dev.java.net/files/documents/5985/59373/javahelp2-src-2
 Description: Standard Java help browser system.
 Origin: Oracle
 URL: http://download.java.net/javadesktop/javahelp/javahelp2_0_05.zip
+Type: compile-time
+Comment: Allows to index JavaHelp data.
 
 The GNU General Public License (GPL)
 Version 2, June 1991

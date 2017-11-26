@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -49,7 +49,7 @@ import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.FontColorSettings;
 import org.netbeans.modules.jumpto.EntityComparator;
-import org.netbeans.modules.jumpto.settings.HighlightingSettings;
+import org.netbeans.modules.jumpto.settings.GoToSettings;
 import org.openide.awt.HtmlRenderer;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Parameters;
@@ -122,7 +122,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
     private static final String SAMPLE_ITEM_ICON = "org/netbeans/modules/jumpto/type/sample.png";
     private static final int DARKER_COLOR_COMPONENT = 15;
     private static final int LIGHTER_COLOR_COMPONENT = 80;
-    private final HighlightingSettings.Mode highlightMode;
+    private final GoToSettings.HighlightingMode highlightMode;
     private final HighlightingNameFormatter nameFormater;
     private final String mainProjectName = EntityComparator.getMainProjectName();
     private final Convertor<T> convertor;
@@ -157,9 +157,9 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
         this.caseSensitive = caseSensitive;
         this.colorPrefered = colorPrefered;
         this.convertor = convertor;
-        final HighlightingSettings hs = HighlightingSettings.getDefault();
-        highlightMode = hs.getMode();
-        nameFormater = createNameFormatter(hs.getType(), separatorPattern);
+        final GoToSettings hs = GoToSettings.getDefault();
+        highlightMode = hs.getHighlightingMode();
+        nameFormater = createNameFormatter(hs.getHighlightingType(), separatorPattern);
         this.jlName = new JLabel();
         resetNameLabel();
         Container container = list.getParent();
@@ -414,7 +414,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
     }
     
     private static HighlightingNameFormatter createNameFormatter(
-            @NonNull final HighlightingSettings.Type type,
+            @NonNull final GoToSettings.HighlightingType type,
             @NonNull final String separatorPattern) {
         switch (type) {
             case BACKGROUND:

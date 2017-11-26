@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -42,6 +42,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -159,6 +160,14 @@ public class AssignResultToVariable extends AbstractHint {
             TypeMirror type = Utilities.resolveTypeForDeclaration(
                     info, base
             );
+            if (!error && !Utilities.isValidType(base) && type.getKind() != TypeKind.EXECUTABLE) {
+                if (treePath.getLeaf().getKind() == Tree.Kind.METHOD_INVOCATION) {
+                    TypeMirror retType = ((ExecutableElement)elem).getReturnType();
+                    if (!info.getTypes().isAssignable(info.getTypes().erasure(retType), info.getTypes().erasure(type))) {
+                        return null;
+                    }
+                }
+            }
             
             // could use Utilities.isValidType, but NOT_ACCEPTABLE_TYPE_KINDS does the check as well
             if (type == null || NOT_ACCEPTABLE_TYPE_KINDS.contains(type.getKind())) {

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -493,7 +493,7 @@ class ClassDump extends HprofObject implements JavaClass {
 
         public Object next() {
             while (hasNext()) {
-                Instance i = heap.getInstanceByOffset(offset, classId);
+                Instance i = heap.getInstanceByOffset(offset, ClassDump.this, classId);
                 if (i != null) {
                     instancesCount--;
                     return i;

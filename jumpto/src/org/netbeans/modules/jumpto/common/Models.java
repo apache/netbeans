@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -91,6 +91,7 @@ public final class Models {
     public interface MutableListModel<T> extends ListModel<T> {
         public void add(@NonNull Collection<? extends T> values);
         public void remove (@NonNull Collection<? extends T> values);
+        public void clear();
     }
 
     public interface Filter<T> {
@@ -410,6 +411,16 @@ public final class Models {
             do {
                 final Pair<List<T>,List<T>> data = getData();
                 data.second().removeAll(values);
+                success = casData(data.first(), data.second());
+            } while (!success);
+        }
+
+        @Override
+        public void clear() {
+            boolean success;
+            do {
+                final Pair<List<T>,List<T>> data = getData();
+                data.second().clear();
                 success = casData(data.first(), data.second());
             } while (!success);
         }

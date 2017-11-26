@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -389,4 +389,7 @@ public final class ProjectProperties {
 
     //NB 6.1 tracking of files modifications
     public static final String TRACK_FILE_CHANGES="track.file.changes"; //NOI18N
+
+    /** @since 1.122*/
+    public static final String MANIFEST_FILE="manifest.file";   //NOI18N
 }

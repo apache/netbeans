@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -45,6 +45,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -70,6 +71,12 @@ public class VerifyLibsAndLicenses extends Task {
         this.reportFile = report;
     }
 
+    private boolean haltonfailure;
+    /** JUnit-format XML result file to generate, rather than halting the build. */
+    public void setHaltonfailure(boolean haltonfailure) {
+        this.haltonfailure = haltonfailure;
+    }
+
     private Map<String,String> pseudoTests;
     private Set<String> modules;
 
@@ -89,6 +96,11 @@ public class VerifyLibsAndLicenses extends Task {
             throw new BuildException(x, getLocation());
         }
         JUnitReportWriter.writeReport(this, null, reportFile, pseudoTests);
+        if (haltonfailure && pseudoTests.values().stream().anyMatch(err -> err != null)) {
+            throw new BuildException("Failed VerifyLibsAndLicenses test(s):\n" +
+                                     pseudoTests.values().stream().filter(err -> err != null).collect(Collectors.joining("\n")),
+                                     getLocation());
+        }
         } catch (NullPointerException x) {x.printStackTrace(); throw x;}
     }
 
@@ -291,8 +303,16 @@ public class VerifyLibsAndLicenses extends Task {
                 }
                 String license = headers.get("License");
                 if (license != null) {
-                    if (license.contains("GPL") && !headers.containsKey("Source")) {
-                        msg.append("\n" + path + " has a GPL-family license but is missing the Source header");
+                    if (license.contains("GPL")) {
+                        if (license.contains("GPL-2-CP") &&
+                            headers.getOrDefault("Type", "").contains("compile-time")) {
+                            //OK to include GPLv2+CPE as a compile-time/runtime optional dependency
+                            if (!headers.containsKey("Comment")) {
+                                msg.append("\n" + path + " has a GPL-family license but does not have a Comment.");
+                            }
+                        } else {
+                            msg.append("\n" + path + " has a GPL-family license but is either not covered by the Classpath Exception, or is not compile-time/optional only.");
+                        }
                     }
                     File licenseFile = new File(licenses, license);
                     if (licenseFile.isFile()) {

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -142,7 +142,7 @@ public class IntroduceMethodPanel extends CommonMembersPanel implements ChangeLi
                 notifier.clearMessages();
                 return true;
             }
-            if (result.getConflicting() != null) {
+            if (result.isConflicting()) {
                 notifier.setErrorMessage(Bundle.ERR_MethodExistsOrConflict());
             } else if (result.getRequiredModifier() != null) {
                 notifier.setWarningMessage(Bundle.WARN_OverridesRestrictedAccess());
@@ -151,7 +151,7 @@ public class IntroduceMethodPanel extends CommonMembersPanel implements ChangeLi
             } else {
                 notifier.clearMessages();
             }
-            return result.getConflicting() == null;
+            return !result.isConflicting();
         }
     }
     

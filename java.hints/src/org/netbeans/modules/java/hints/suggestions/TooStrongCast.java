@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -124,7 +124,7 @@ public class TooStrongCast {
             return null;
         }
         
-        if (!Utilities.isValidType(casteeType)) {
+        if (!Utilities.isValidValueType(casteeType)) {
             return null;
         }
 
@@ -144,14 +144,14 @@ public class TooStrongCast {
         String lst = null;
         List<TypeMirror> filteredTypes = new ArrayList<TypeMirror>(types.size());
         TypeMirror castType = info.getTrees().getTypeMirror(new TreePath(ctx.getPath(), tct.getType()));
-        if (!Utilities.isValidType(castType)) {
+        if (!Utilities.isValidValueType(castType)) {
             return null;
         }
         TypeMirror castErasure = info.getTypes().erasure(castType);
         CharSequence currentTypeName = info.getTypeUtilities().getTypeName(castType);
         for (Iterator<? extends TypeMirror> it = types.iterator(); it.hasNext(); ) {
             TypeMirror tm = it.next();
-            if (!Utilities.isValidType(tm)) {
+            if (!Utilities.isValidValueType(tm)) {
                 continue;
             }
             if (tm.getKind() == TypeKind.TYPEVAR) {

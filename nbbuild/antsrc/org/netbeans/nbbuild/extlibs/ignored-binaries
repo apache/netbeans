@@ -49,9 +49,6 @@ derby/release/modules/ext/derbysampledb.zip
 # Not distributed with product, only used during build:
 nbbuild/external/apitest*.jar
 
-# Developed under CDDL inside nb.org (later snapshot moved to dev.java.net):
-apisupport.paintapp/PaintApp-suite/ColorChooser/release/modules/ext/ColorChooser.jar
-
 # Build by NetBeans team
 mobility.databindingme/lib/*
 

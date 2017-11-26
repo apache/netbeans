@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -965,9 +965,12 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     if (xmlTransient) {
                         AnnotationTree xmlTransientAn = genUtils.createAnnotation(
                                 "javax.xml.bind.annotation.XmlTransient"); //NOI18N
-                        TypeElement jsonIgnore = copy.getElements().getTypeElement(
-                                moduleElement,
-                                "org.codehaus.jackson.annotate.JsonIgnore");    // NOI18N
+                        TypeElement jsonIgnore = moduleElement != null
+                                ? copy.getElements().getTypeElement(
+                                        moduleElement,
+                                        "org.codehaus.jackson.annotate.JsonIgnore") // NOI18N
+                                : copy.getElements().getTypeElement(
+                                        "org.codehaus.jackson.annotate.JsonIgnore"); // NOI18N
                         List<AnnotationTree> annotationTrees;
                         if ( jsonIgnore == null ){
                             annotationTrees = Collections.singletonList(xmlTransientAn);
@@ -1431,7 +1434,9 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                 if(replacedTypeNames.containsKey(typeName)) {
                     typeName = replacedTypeNames.get(typeName);
                 }
-                TypeElement typeEl = copy.getElements().getTypeElement(moduleElement, typeName);
+                TypeElement typeEl = moduleElement != null
+                        ? copy.getElements().getTypeElement(moduleElement, typeName)
+                        : copy.getElements().getTypeElement(typeName);
                 //need some extended logging if null, see issue # 217461
                 if(typeEl == null) {
                      Logger.getLogger(JavaPersistenceGenerator.class.getName()).log(Level.WARNING, "Null typeelement for {0}", typeName); //NOI18N
@@ -1449,7 +1454,9 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                 TypeMirror fieldType = typeEl.asType();
                 if (role.isToMany()) {
                     // Use the collection type the user wants
-                    TypeElement collectionTypeElem = copy.getElements().getTypeElement(moduleElement, collectionType.className());
+                    TypeElement collectionTypeElem = moduleElement != null
+                            ? copy.getElements().getTypeElement(moduleElement, collectionType.className())
+                            : copy.getElements().getTypeElement(collectionType.className());
                     fieldType = copy.getTypes().getDeclaredType(collectionTypeElem, fieldType);
                 }
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -1021,6 +1021,41 @@ public final class EditorCaret implements Caret {
         
         modelChanged(activeDoc, null);
     }
+    
+    /**
+     * Saves relative position of the 'main' caret for the case that fold view
+     * update is underway - this update should maintain caret visual position on screen.
+     * For that, the nearest update must reposition scroller's viewrect so that the 
+     * recomputed caretBounds is at the same
+     */
+    private synchronized void maybeSaveCaretOffset(JTextComponent c, Rectangle cbounds) {
+        if (c.getClientProperty("editorcaret.updateRetainsVisibleOnce")  == null || // NOI18N
+            lastCaretVisualOffset != -1) {
+           return; 
+        }
+        Component parent = c.getParent();
+        Rectangle editorRect;
+        if (parent instanceof JLayeredPane) {
+            parent = parent.getParent();
+        }
+        if (parent instanceof JViewport) {
+            final JViewport viewport = (JViewport) parent;
+            editorRect = viewport.getViewRect();
+        } else {
+            Dimension size = c.getSize();
+            editorRect = new Rectangle(0, 0, size.width, size.height);
+        }
+        if (cbounds.y >= editorRect.y && cbounds.y < (editorRect.y + editorRect.height)) {
+            lastCaretVisualOffset = (cbounds.y - editorRect.y);
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.fine("EditorCaret: saving caret offset. Bounds = " + cbounds + ", editor = " + editorRect + ", offset = " + lastCaretVisualOffset);
+            }
+        } else {
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.fine("EditorCaret: caret is off screen. Bounds = " + cbounds + ", editor = " + editorRect);
+            }
+        }
+    }
 
     @Override
     public void paint(Graphics g) {
@@ -1042,6 +1077,7 @@ public final class EditorCaret implements Caret {
                 // Find the first caret to be painted
                 // Only paint carets that are part of the clip - use sorted carets
                 List<CaretInfo> sortedCarets = getSortedCarets();
+                CaretItem lastCaret = getLastCaretItem();
                 int low = 0;
                 int caretsSize = sortedCarets.size();
                 if (caretsSize > 1) {
@@ -1071,7 +1107,10 @@ public final class EditorCaret implements Caret {
                     if (caretItem.getAndClearUpdateCaretBounds()) {
                         int dot = caretItem.getDot();
                         Rectangle newCaretBounds = lvh.modelToViewBounds(dot, Position.Bias.Forward);
-                        caretItem.setCaretBoundsWithRepaint(newCaretBounds, c, "EditorCaret.paint()", i);
+                        Rectangle oldBounds = caretItem.setCaretBoundsWithRepaint(newCaretBounds, c, "EditorCaret.paint()", i);
+                        if (caretItem == lastCaret && oldBounds != null) {
+                            maybeSaveCaretOffset(c, oldBounds);
+                        }
                     }
                     Rectangle caretBounds = caretItem.getCaretBounds();
                     if (caretBounds != null) {
@@ -1895,6 +1934,13 @@ public final class EditorCaret implements Caret {
             }
         }
     }
+    
+    /**
+     * Pixel distance of the caret, from the top of the editor view. Saved on the before caret position changes
+     * when editorcaret.updateRetainsVisibleOnce (set by folding on the text component) is present. During update,
+     * the distance is used to maintain caret position on screen, assuming view hierarchy changed (folds have collapsed).
+     */
+    private int lastCaretVisualOffset = -1;
 
     /**
      * Update the caret's visual position.
@@ -1911,10 +1957,7 @@ public final class EditorCaret implements Caret {
         }
         final JTextComponent c = component;
         if (c != null) {
-            if (!calledFromPaint && !c.isValid()) {
-                updateLaterDuringPaint = true;
-                return;
-            }
+            boolean forceUpdate = c.getClientProperty("editorcaret.updateRetainsVisibleOnce") != null;
             boolean log = LOG.isLoggable(Level.FINE);
             Component parent = c.getParent();
             Rectangle editorRect;
@@ -1922,12 +1965,24 @@ public final class EditorCaret implements Caret {
                 parent = parent.getParent();
             }
             if (parent instanceof JViewport) {
-                JViewport viewport = (JViewport) parent;
+                final JViewport viewport = (JViewport) parent;
                 editorRect = viewport.getViewRect();
             } else {
                 Dimension size = c.getSize();
                 editorRect = new Rectangle(0, 0, size.width, size.height);
             }
+            if (forceUpdate) {
+                Rectangle cbounds = getLastCaretItem().getCaretBounds();
+                if (cbounds != null) {
+                    // save relative position of the main caret
+                    maybeSaveCaretOffset(c, cbounds);
+                }
+            }
+            if (!calledFromPaint && !c.isValid() /* && maintainVisible == null */) {
+                updateLaterDuringPaint = true;
+                return;
+            }
+
             Document doc = c.getDocument();
             if (doc != null) {
                 if (log) {
@@ -1947,7 +2002,7 @@ public final class EditorCaret implements Caret {
                         scroll = scrollToLastCaret;
                         scrollToLastCaret = false;
                     }
-                    if (scroll) {
+                    if (scroll || forceUpdate) {
                         Rectangle caretBounds;
                         Rectangle oldCaretBounds;
                         if (lastCaretItem.getAndClearUpdateCaretBounds()) {
@@ -1984,14 +2039,24 @@ public final class EditorCaret implements Caret {
                                     }
                                 }
                             }
+                            if (forceUpdate && oldCaretBounds != null) {
+                                c.putClientProperty("editorcaret.updateRetainsVisibleOnce", null);
+                                if (lastCaretVisualOffset >= 0) {
+                                    // change scroll to so that caret will maintain its relative position saved before the caret was changed.
+                                    scrollBounds = new Rectangle(caretBounds.x, caretBounds.y - lastCaretVisualOffset, scrollBounds.width, editorRect.height);
+                                }
+                                lastCaretVisualOffset = -1;
+                            }
                             if (editorRect == null || !editorRect.contains(scrollBounds)) {
                                 Rectangle visibleBounds = c.getVisibleRect();
-                                if (// #219580: if the preceding if-block computed new scrollBounds, it cannot be offset yet more
-                                        /* # 70915 !updateAfterFoldHierarchyChange && */ (caretBounds.y > visibleBounds.y + visibleBounds.height + caretBounds.height
-                                        || caretBounds.y + caretBounds.height < visibleBounds.y - caretBounds.height)) {
-                                    // Scroll into the middle
-                                    scrollBounds.y -= (visibleBounds.height - caretBounds.height) / 2;
-                                    scrollBounds.height = visibleBounds.height;
+                                if (!forceUpdate) {
+                                    if (// #219580: if the preceding if-block computed new scrollBounds, it cannot be offset yet more
+                                            /* # 70915 !updateAfterFoldHierarchyChange && */ (caretBounds.y > visibleBounds.y + visibleBounds.height + caretBounds.height
+                                            || caretBounds.y + caretBounds.height < visibleBounds.y - caretBounds.height)) {
+                                        // Scroll into the middle
+                                        scrollBounds.y -= (visibleBounds.height - caretBounds.height) / 2;
+                                        scrollBounds.height = visibleBounds.height;
+                                    }
                                 }
                                 // When typing on a longest line the size of the component may still not incorporate just performed insert
                                 // at this point so schedule the scrolling for later.

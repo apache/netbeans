@@ -322,8 +322,19 @@
   <!-- Use of nbmerge target has the effect of automatically depending on all-X for every module. -->
   <!-- It also runs deltree(dir=wherever) and copydir(src=../X/netbeans,dest=wherever) to create the IDE install. -->
 
-  <target name="build-nozip" depends="init,download-selected-extbins,clean-cluster-flags,build-clusters,create-mandatory-files-for-binary,create-netbeans-import,finish-build,add-junit" description="Build the IDE but do not create a final ZIP file."/>
-  <target name="finish-build" depends="init">
+  <target name="build-nozip" depends="init,download-selected-extbins,clean-cluster-flags,build-clusters,create-mandatory-files-for-binary,create-netbeans-import,finish-build-platform,finish-build-nb,add-junit" description="Build the IDE but do not create a final ZIP file."/>
+  <target name="-check-nb-cluster" depends="init">
+       <condition property="has.nb.cluster">
+           <contains string="${nb.clusters.list}" substring="nb.cluster.nb" />
+       </condition>
+  </target>
+  <target name="finish-build-platform" depends="init,-check-nb-cluster" unless="has.nb.cluster">
+    <copy file="../o.n.bootstrap/readme/README-bin.txt" tofile="${netbeans.dest.dir}/README.txt" overwrite="true"/>
+    <fixcrlf eol="lf" srcdir="${netbeans.dest.dir}" >
+      <include name="${nb.cluster.platform.dir}/lib/nbexec" />
+    </fixcrlf>
+  </target>
+  <target name="finish-build-nb" depends="init,-check-nb-cluster" if="has.nb.cluster">
     <loadproperties srcFile="${clusters.list.file}" />
 
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
@@ -344,8 +355,8 @@
     <fixcrlf eol="lf" srcdir="${netbeans.dest.dir}" >
       <include name="etc/netbeans.conf" />
       <include name="etc/netbeans.clusters" />
-      <include name="bin/netbeans" />      
-      <include name="${nb.cluster.platform.dir}/lib/nbexec" />      
+      <include name="bin/netbeans" />
+      <include name="${nb.cluster.platform.dir}/lib/nbexec" />
     </fixcrlf>
     <mkdir dir="${nb.build.dir}"/>
     <hgid property="hg.id" file=".."/>
@@ -1025,10 +1036,13 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <!-- architecture of jvm on which app will run -->
     <condition property="jvm.arch.string" value="64" else="">
       <available file="${nbjdk.home}\jre\lib\amd64" />
-    </condition>        
-    
+    </condition>
+
+    <condition property="tryme.launcher.prefix" value="${netbeans.dest.dir}/bin/netbeans" else="${netbeans.dest.dir}/platform/lib/nbexec">
+      <available file="${netbeans.dest.dir}/nb/.lastModified" />
+    </condition>
     <property name="run.args.ide" value=""/>
-    <exec osfamily="windows" executable="${netbeans.dest.dir}/bin/netbeans${jvm.arch.string}.exe" failonerror="yes" dir="${java.io.tmpdir}">
+    <exec osfamily="windows" executable="${tryme.launcher.prefix}${jvm.arch.string}.exe" failonerror="yes" dir="${java.io.tmpdir}">
       <arg value="--jdkhome"/>
       <arg file="${tryme.jdkhome}"/>
       <arg value="--userdir"/>
@@ -1038,7 +1052,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <arg line="${run.args.ide}"/>
     </exec>
     <exec osfamily="unix" executable="sh" failonerror="yes" dir="${java.io.tmpdir}">
-      <arg value="${netbeans.dest.dir}/bin/netbeans"/>
+      <arg value="${tryme.launcher.prefix}"/>
       <arg value="--jdkhome"/>
       <arg file="${tryme.jdkhome}"/>
       <arg value="--userdir"/>
@@ -1494,12 +1508,14 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
 
     <target name="verify-all-libs-and-licenses" depends="bootstrap,download-all-extbins" description="Verify the contents of third-party libraries and licenses.">
         <taskdef name="verifylibsandlicenses" classname="org.netbeans.nbbuild.extlibs.VerifyLibsAndLicenses" classpath="${nbantext.jar}"/>
-        <verifylibsandlicenses report="${nb.build.dir}/verifylibsandlicenses.xml" nball=".."/>
+        <property name="verify-libs-and-licenses.haltonfailure" value="false" />
+        <verifylibsandlicenses report="${nb.build.dir}/verifylibsandlicenses.xml" nball=".." haltonfailure="${verify-libs-and-licenses.haltonfailure}" />
     </target>
 
     <target name="verify-libs-and-licenses" depends="bootstrap,download-selected-extbins" description="Verify the contents of third-party libraries and licenses in the selected configuration.">
         <taskdef name="verifylibsandlicenses" classname="org.netbeans.nbbuild.extlibs.VerifyLibsAndLicenses" classpath="${nbantext.jar}"/>
-        <verifylibsandlicenses report="${nb.build.dir}/verifylibsandlicenses.xml" nball=".."/>
+        <property name="verify-libs-and-licenses.haltonfailure" value="false" />
+        <verifylibsandlicenses report="${nb.build.dir}/verifylibsandlicenses.xml" nball=".." haltonfailure="${verify-libs-and-licenses.haltonfailure}" />
     </target>
 
     <target name="create-mandatory-files-for-binary" depends="bootstrap,download-selected-extbins" description="Create a summary of the licenses used by libraries in the build.">
@@ -1509,6 +1525,14 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
           <fileset file="${nb.build.dir}/notice-temp" />
           <fileset dir="${nb_all}"
                    includes="*/notice.txt" />
+          <filterchain>
+              <tokenfilter>
+                  <filetokenizer />
+                  <replaceregex pattern="(\r?\n)(\r?\n)+"
+                                replace="\1\1"
+                                flags="g" />
+             </tokenfilter>
+          </filterchain>
         </concat>
         <dirset id="source.dirset" dir="${nb_all}"
                 includes="${allmodules}"
@@ -1518,8 +1542,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         <copy file="${nb_all}/DISCLAIMER" tofile="${netbeans.dest.dir}/DISCLAIMER" />
     </target>
 
+    <target name="-copy-platform-readme" depends="-check-nb-cluster" unless="has.nb.cluster">
+    </target>
+
   <target name="build-source-config"
-    depends="init,set-buildnumber"
+    depends="init,set-buildnumber,-check-nb-cluster"
     description="Packages sources needed to compile one cluster.config">
     <property name="buildnum" value="${buildnumber}"/>
     <echo message="Packaging sources of ${cluster.config} modules"/>
@@ -1527,8 +1554,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <resolve name="harness-modules" value="nb.cluster.harness"/>
     
     <mkdir dir="${nb.build.dir}"/>
+    <condition property="build.source.config.add.ide" else="" value=",ide">
+        <isset property="has.nb.cluster" />
+    </condition>
     <dirset id="source.dirset" dir="${nb_all}"
-            includes="${allmodules},${harness-modules},nbbuild,ide,nbi,libs.antlr3.devel,libs.junit4"
+            includes="${allmodules},${harness-modules},nbbuild${build.source.config.add.ide},nbi,libs.antlr3.devel,libs.junit4"
             excludes="nbi/engine/lib,nbi/infra/build/jvm,nbi/infra/sandbox,nbi/infra/server,nbi/infra/utils"
     />
     <pathconvert property="source.dirs" pathsep="," refid="source.dirset">
@@ -1542,25 +1572,47 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <concat destfile="${nb.build.dir}/NOTICE">
       <fileset file="${nb_all}/nbbuild/notice-stub.txt" />
       <fileset dir="${nb_all}"
-	       includes="*/notice.txt" />
+               includes="*/notice.txt" />
+      <filterchain>
+          <tokenfilter>
+              <filetokenizer />
+              <replaceregex pattern="(\r?\n)(\r?\n)+"
+                            replace="\1\1"
+                            flags="g" />
+          </tokenfilter>
+      </filterchain>
     </concat>
     <concat destfile="${nb.build.dir}/LICENSE">
       <fileset file="${nb_all}/nbbuild/license-stub.txt" />
     </concat>
     <taskdef name="createdependencies" classname="org.netbeans.nbbuild.extlibs.CreateDependencies" classpath="${nbantext.jar}"/>
     <createdependencies refid="source.dirset" dependencies="${nb.build.dir}/DEPENDENCIES" sourceDependencies="true"/>
+    <concat destfile="${nb.build.dir}/cluster.properties">
+        <fileset file="${nb_all}/nbbuild/cluster.properties" />
+        <filterchain>
+            <tokenfilter>
+                <replaceregex pattern="cluster.config=.*" replace="cluster.config=${cluster.config}" />
+            </tokenfilter>
+        </filterchain>
+    </concat>
+    <condition property="source.zip.readme" else="${nb_all}/o.n.bootstrap/readme/README-src.txt" value="${nb_all}/ide.branding/does-not-exist-yet">
+        <isset property="has.nb.cluster" />
+    </condition>
     <zip zipfile="${nb.build.dir}/${cluster.config}-src-${buildnum}.zip" duplicate="preserve">
       <zipfileset dir="${nb_all}" includes="${source.dirs}">
           <exclude name="*/build/**/*"/>
           <exclude name="nbbuild/netbeans/**"/>
+          <exclude name="nbbuild/cluster.properties" />
       </zipfileset>
       <zipfileset dir="${nb_all}">
           <include name="build.xml"/>
       </zipfileset>
+      <zipfileset file="${nb.build.dir}/cluster.properties" fullpath="nbbuild/cluster.properties" />
       <zipfileset file="${nb.build.dir}/DEPENDENCIES" />
       <zipfileset file="${nb.build.dir}/NOTICE" />
       <zipfileset file="${nb.build.dir}/LICENSE" />
       <zipfileset file="${nb_all}/DISCLAIMER" />
+      <zipfileset file="${source.zip.readme}" fullpath="README.txt" erroronmissingarchive="false" />
     </zip>
   </target>
 
@@ -1846,7 +1898,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
 
     <!-- #42157 - Scans all xml layers for OptionsExport folder and creates
     list of include/exclude patterns for import on the first start.  -->
-    <target name="create-netbeans-import">
+    <target name="create-netbeans-import" depends="-check-nb-cluster" if="has.nb.cluster">
         <taskdef name="optionsimport" classname="org.netbeans.nbbuild.LayerOptionsImport" classpath="${nbantext.jar}"/>
         <mkdir dir="${netbeans.dest.dir}/etc"/>
         <optionsimport output="${netbeans.dest.dir}/etc/netbeans.import">
@@ -2014,6 +2066,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="**/*.mf" /> <!--do not natively support comments-->
             <exclude name="**/*.MF" /> <!--do not natively support comments-->
             <exclude name="**/*.nib" /> <!--do not natively support comments-->
+            <exclude name="**/*.oql" /> <!--do not natively support comments-->
             <exclude name="**/*.palette_item" /> <!--no degree of creativity-->
             <exclude name="**/*.pass" /> <!--generated test files-->
             <exclude name="**/*.pass2" /> <!--generated test files-->
@@ -2039,9 +2092,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="**/package-list" /> <!--no degree of creativity-->
             <exclude name="*/test/unit/data/**" /> <!--would cause tests to fail-->
             <exclude name="*/test/qa-functional/data/**" /> <!--would cause tests to fail-->
-            <exclude name="autoupdate.services/test/unit/src/org/netbeans/modules/autoupdate/updateprovider/data/**" /> <!-- test data -->
             <exclude name="api.search/test/unit/src/org/netbeans/modules/search/data/**" /> <!--test data-->
+            <exclude name="api.templates/test/unit/src/org/netbeans/modules/templates/utf8.xml" /> <!--test data-->
             <exclude name="apisupport.ant/src/org/netbeans/modules/apisupport/project/resources/license-*.txt" /> <!--template file-->
+            <exclude name="apisupport.installer/src/org/netbeans/modules/apisupport/installer/resources/licenses/**" /> <!--three license files-->
+            <exclude name="autoupdate.services/test/unit/src/org/netbeans/modules/autoupdate/updateprovider/data/**" /> <!-- test data -->
             <exclude name="beans/src/org/netbeans/modules/beans/resources/templates/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
             <exclude name="css.editor/src/org/netbeans/modules/css/resources/CascadeStyleSheet.css.template" /> <!-- user visible template -->
             <exclude name="css.editor/src/org/netbeans/modules/css/resources/CssExample" /> <!-- user visible template -->
@@ -2058,8 +2113,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="editor.plain/src/org/netbeans/modules/editor/plain/resources/PlainTextExample" /> <!--license would be visible to users in the Fonts/Colors settings-->
             <exclude name="editor.settings.storage/test/unit/src/org/netbeans/modules/editor/settings/storage/compatibility/p1/**" /> <!--test data-->
             <exclude name="extbrowser/test/unit/src/org/netbeans/modules/extbrowser/data/mac_defaults_*" /> <!--test data-->
+            <exclude name="form/src/org/netbeans/modules/form/resources/templates/**" /> <!--template files-->
             <exclude name="hibernate/src/org/netbeans/modules/hibernate/resources/Hibernate*.xml" /> <!--template files-->
             <exclude name="hibernate/src/org/netbeans/modules/hibernate/resources/HibernateUtil.javax" /> <!--template file-->
+            <exclude name="html/test/unit/src/org/netbeans/modules/html/data/**" /> <!--test data-->
             <exclude name="html.editor/src/org/netbeans/modules/html/editor/options/ui/formatSample.html" /> <!--user visible file template-->
             <exclude name="html.editor/src/org/netbeans/modules/html/editor/resources/HTMLExample" /> <!--user visible file template-->
             <exclude name="html.editor/src/org/netbeans/modules/html/editor/resources/XHTMLExample" /> <!--user visible file template-->
@@ -2078,7 +2135,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="java.project.ui/src/org/netbeans/modules/java/project/ui/resources/*.template" /> <!-- template files -->
             <exclude name="java.source/test-excludes.txt" /> <!-- test context -->
             <exclude name="java.source/src/org/netbeans/modules/**/*.template" /> <!-- template files -->
-            <exclude name="javafx2.kit/release/VERSION.txt" /> <!--generated file-->
             <exclude name="javafx2.project/src/org/netbeans/modules/javafx2/project/templates/**" /> <!--license would be visible when users edit the templates inside their IDE-->
             <exclude name="javawebstart/AntTasks/build/**" /> <!-- generated build files -->
             <exclude name="jellytools.platform/src/org/netbeans/jellytools/version_info" /> <!--does not natively support comments-->
@@ -2100,9 +2156,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="nbbuild/standard-nbm-license.txt" /> <!--license file-->
             <exclude name="nbbuild/testuserdir/**" />
             <exclude name="nbi/engine/nbproject/profiler-build-impl.xml" /> <!--generated, no degree of creativity -->
-            <exclude name="o.apache.tools.ant.module/release/VERSION.txt" /> <!--generated file-->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/CustomTask_java" /> <!-- user visible file template -->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/Project.xml_" /> <!-- user visible file template -->
+            <exclude name="o.n.bootstrap/readme/*.txt" /> <!--READMEs-->
             <exclude name="o.n.bootstrap/test/unit/src/org/fakepkg/resource1.txt" /> <!--no degree of creativity-->
             <exclude name="o.n.bootstrap/test/unit/src/org/fakepkg/resource2.txt" /> <!--no degree of creativity-->
             <exclude name="o.n.core/licenses/**" /> <!-- license files -->
@@ -2135,7 +2191,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.template" /> <!--template files-->
             <exclude name="websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/model/application.wadl" /> <!--test data-->
             <exclude name="websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/util/rootGroup.xml" /> <!--test data-->
-            <exclude name="websvc.saas.kit/release/VERSION.txt" /> <!--generated file-->
             <exclude name="welcome/src/org/netbeans/modules/welcome/resources/rss-0_91.dtd" /> <!-- specifies a standard -->
             <exclude name="xml.axi/test/unit/src/org/netbeans/modules/xml/axi/resources/**" /> <!-- test data -->
             <exclude name="xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.dtd" /> <!-- test data -->
@@ -2208,9 +2263,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <patternset refid="non.rat" />
             </fileset>
         </rat:report>
-        <taskdef name="rattohtml" classname="org.netbeans.nbbuild.RatReportTask" classpath="${build.ant.classes.dir}"/>
+        <taskdef name="rattotest" classname="org.netbeans.nbbuild.RatReportTask" classpath="${build.ant.classes.dir}"/>
         <loadproperties srcFile="cluster.properties" />
-        <rattohtml source="build/rat-report.xml" report="${nb.build.dir}/rat/"/>
+        <property name="rat-report.haltonfailure" value="false" />
+        <rattotest source="build/rat-report.xml" report="${nb.build.dir}/rat/" haltonfailure="${rat-report.haltonfailure}" />
     </target>
 
 </project>

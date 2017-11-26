@@ -1,0 +1,32 @@
+#
+#  Defines Git attributes per file path / file pattern
+#
+
+
+
+# Define some file types explicitly as being text.
+# This makes sure that we can never inadvertently get
+# a file of this type into the repo with a line ending
+# other than the Unix-style line ending. 
+# This will also override the user's own global git settings
+# for these file types.
+
+*.css             text eol=lf
+*.dtd             text eol=lf
+*.form            text eol=lf
+*.htm             text eol=lf
+*.html            text eol=lf
+*.java            text eol=lf
+*.js              text eol=lf
+*.md              text eol=lf
+*.properties      text eol=lf
+*.scss            text eol=lf
+*.svg             text eol=lf
+*.txt             text eol=lf
+*.xml             text eol=lf
+*.xsd             test eol=lf
+
+.gitattributes    text eol=lf
+.gitignore        text eol=lf
+.travis.yml       text eol=lf
+

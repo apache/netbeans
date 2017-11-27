@@ -110,10 +110,11 @@ public class DerbyDatabasesTest extends TestBase {
                     File newDBDir = new File(systemHome, "newdb");
                     Set sampleDBFiles = new HashSet(Arrays.asList(newDBDir.list()));
 
-                    assertEquals(3, sampleDBFiles.size());
+                    assertEquals(4, sampleDBFiles.size());
                     assertTrue(sampleDBFiles.contains("log"));
                     assertTrue(sampleDBFiles.contains("seg0"));
                     assertTrue(sampleDBFiles.contains("service.properties"));
+                    assertTrue(sampleDBFiles.contains("README_DO_NOT_TOUCH_FILES.txt"));
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }

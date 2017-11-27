@@ -14,4 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-C9A6304FAA121C97CB2458B93D30B1FD6F0F7691 derbysampledb.zip
+B4066214637F88A3778314AECADF0539C43855F4 org.apache.derby:derbytools:10.14.1.0
+3BCD8B1AF3F8CD022D54D331E00064776BE04F9C org.apache.derby:derby:10.14.1.0

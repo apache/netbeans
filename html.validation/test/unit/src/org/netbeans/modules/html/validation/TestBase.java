@@ -1,6 +1,4 @@
-package org.netbeans.modules.html.validation;
-
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,6 +17,7 @@ package org.netbeans.modules.html.validation;
  * under the License.
  */
 
+package org.netbeans.modules.html.validation;
 
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;

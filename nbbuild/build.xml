@@ -2032,6 +2032,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="**/*.mf" /> <!--do not natively support comments-->
             <exclude name="**/*.MF" /> <!--do not natively support comments-->
             <exclude name="**/*.nib" /> <!--do not natively support comments-->
+            <exclude name="**/*.oql" /> <!--do not natively support comments-->
             <exclude name="**/*.palette_item" /> <!--no degree of creativity-->
             <exclude name="**/*.pass" /> <!--generated test files-->
             <exclude name="**/*.pass2" /> <!--generated test files-->
@@ -2060,6 +2061,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="api.search/test/unit/src/org/netbeans/modules/search/data/**" /> <!--test data-->
             <exclude name="api.templates/test/unit/src/org/netbeans/modules/templates/utf8.xml" /> <!--test data-->
             <exclude name="apisupport.ant/src/org/netbeans/modules/apisupport/project/resources/license-*.txt" /> <!--template file-->
+            <exclude name="apisupport.installer/src/org/netbeans/modules/apisupport/installer/resources/licenses/**" /> <!--three license files-->
             <exclude name="autoupdate.services/test/unit/src/org/netbeans/modules/autoupdate/updateprovider/data/**" /> <!-- test data -->
             <exclude name="beans/src/org/netbeans/modules/beans/resources/templates/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
             <exclude name="css.editor/src/org/netbeans/modules/css/resources/CascadeStyleSheet.css.template" /> <!-- user visible template -->
@@ -2077,8 +2079,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="editor.plain/src/org/netbeans/modules/editor/plain/resources/PlainTextExample" /> <!--license would be visible to users in the Fonts/Colors settings-->
             <exclude name="editor.settings.storage/test/unit/src/org/netbeans/modules/editor/settings/storage/compatibility/p1/**" /> <!--test data-->
             <exclude name="extbrowser/test/unit/src/org/netbeans/modules/extbrowser/data/mac_defaults_*" /> <!--test data-->
+            <exclude name="form/src/org/netbeans/modules/form/resources/templates/**" /> <!--template files-->
             <exclude name="hibernate/src/org/netbeans/modules/hibernate/resources/Hibernate*.xml" /> <!--template files-->
             <exclude name="hibernate/src/org/netbeans/modules/hibernate/resources/HibernateUtil.javax" /> <!--template file-->
+            <exclude name="html/test/unit/src/org/netbeans/modules/html/data/**" /> <!--test data-->
             <exclude name="html.editor/src/org/netbeans/modules/html/editor/options/ui/formatSample.html" /> <!--user visible file template-->
             <exclude name="html.editor/src/org/netbeans/modules/html/editor/resources/HTMLExample" /> <!--user visible file template-->
             <exclude name="html.editor/src/org/netbeans/modules/html/editor/resources/XHTMLExample" /> <!--user visible file template-->
@@ -2097,7 +2101,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="java.project.ui/src/org/netbeans/modules/java/project/ui/resources/*.template" /> <!-- template files -->
             <exclude name="java.source/test-excludes.txt" /> <!-- test context -->
             <exclude name="java.source/src/org/netbeans/modules/**/*.template" /> <!-- template files -->
-            <exclude name="javafx2.kit/release/VERSION.txt" /> <!--generated file-->
             <exclude name="javafx2.project/src/org/netbeans/modules/javafx2/project/templates/**" /> <!--license would be visible when users edit the templates inside their IDE-->
             <exclude name="javawebstart/AntTasks/build/**" /> <!-- generated build files -->
             <exclude name="jellytools.platform/src/org/netbeans/jellytools/version_info" /> <!--does not natively support comments-->
@@ -2119,7 +2122,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="nbbuild/standard-nbm-license.txt" /> <!--license file-->
             <exclude name="nbbuild/testuserdir/**" />
             <exclude name="nbi/engine/nbproject/profiler-build-impl.xml" /> <!--generated, no degree of creativity -->
-            <exclude name="o.apache.tools.ant.module/release/VERSION.txt" /> <!--generated file-->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/CustomTask_java" /> <!-- user visible file template -->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/Project.xml_" /> <!-- user visible file template -->
             <exclude name="o.n.bootstrap/readme/*.txt" /> <!--READMEs-->
@@ -2155,7 +2157,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.template" /> <!--template files-->
             <exclude name="websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/model/application.wadl" /> <!--test data-->
             <exclude name="websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/util/rootGroup.xml" /> <!--test data-->
-            <exclude name="websvc.saas.kit/release/VERSION.txt" /> <!--generated file-->
             <exclude name="welcome/src/org/netbeans/modules/welcome/resources/rss-0_91.dtd" /> <!-- specifies a standard -->
             <exclude name="xml.axi/test/unit/src/org/netbeans/modules/xml/axi/resources/**" /> <!-- test data -->
             <exclude name="xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.dtd" /> <!-- test data -->

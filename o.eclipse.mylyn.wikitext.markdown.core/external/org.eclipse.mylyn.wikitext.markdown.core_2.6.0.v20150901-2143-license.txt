@@ -1,8 +1,8 @@
 Name: org.eclipse.mylyn.wikitext.markdown.core
+Origin: Eclipse
 Version: 2.6.0
 License: EPL-v10
-OSR: 
-Origin: http://www.eclipse.org/mylyn/
+URL: http://www.eclipse.org/mylyn/
 Description: Support for the Markdown wiki style
 
 Eclipse Public License - v 1.0

@@ -1,8 +1,4 @@
-package org.netbeans.modules.nativeexecution.spi;
-
-import org.netbeans.modules.nativeexecution.api.*;
-
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,6 +16,11 @@ import org.netbeans.modules.nativeexecution.api.*;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+package org.netbeans.modules.nativeexecution.spi;
+
+import org.netbeans.modules.nativeexecution.api.*;
+
 public interface ExecutionEnvironmentFactoryService {
 
     public ExecutionEnvironment getLocal();

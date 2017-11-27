@@ -1,7 +1,8 @@
 Name: EclipseLink
+Origin: Eclipse
 Version: 2.5.2
 Description: The Eclipse Persistence Services Project ( EclipseLink) project.
-License: Eclipse Public License - v 1.0 and Eclipse Distribution License v 1.0
+License: EPL-1.0
 Origin: http://www.eclipse.org/eclipselink/
 Files: org.eclipse.persistence.jpa.modelgen_2.5.2.jar
 
@@ -51,7 +52,7 @@ derivative works of the Program.
 
 "Contributor" means any person or entity that distributes the Program.
 
-"Licensed Patents " mean patent claims licensable by a Contributor which are
+"Licensed Patents" mean patent claims licensable by a Contributor which are
 necessarily infringed by the use or sale of its Contribution alone or when
 combined with the Program.
 

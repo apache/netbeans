@@ -30,9 +30,6 @@ java*/modules/ext/maven/jdom-1.0.jar mobility*/modules/ext/jdom-1.0.jar
 # for well maintained and assure the compatibility issue. 
 enterprise*/modules/ext/struts/oro-2.0.8.jar ide*/modules/ext/jakarta-oro-2.0.8.jar
 
-# Hibernate needs cglib internally
-java*/modules/ext/cglib-2.2.jar java*/modules/ext/hibernate4/cglib-2.2.jar
-
 # More maintainable to have Cobertura libs separately than to modify its Ant scripts
 harness/testcoverage/cobertura/lib/* **
 

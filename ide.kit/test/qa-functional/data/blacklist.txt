@@ -418,12 +418,6 @@ org.netbeans.core.windows.actions.ResetWindowsAction
 org.netbeans.core.actions.GlobalPropertiesAction
 org.netbeans.modules.favorites.Actions$View
 
-
-# issue 140389
-org.netbeans.modules.hibernate.loaders.cfg.HibernateCfgDataLoader
-org.netbeans.modules.hibernate.loaders.mapping.HibernateMappingDataLoader
-org.netbeans.modules.hibernate.loaders.reveng.HibernateRevengDataLoader
-
 # IZ 152984
 org.netbeans.modules.profiler.categories.Categorization
 org.netbeans.modules.profiler.categories.CategoryBuilder

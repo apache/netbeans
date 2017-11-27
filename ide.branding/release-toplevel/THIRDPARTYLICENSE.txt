@@ -175,7 +175,6 @@ java/modules/ext/eclipselink/eclipselink.jar                          EPL-v10 (s
 java/modules/ext/eclipselink/javax.persistence_2.1.0.v201304241213.jar  EPL-v10 (see also about.html inside this JAR file)
 java/modules/ext/eclipselink/org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar  EPL-v10 (see also about.html inside this JAR file)
 java/modules/ext/eclipselink/org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar  EPL-v10 (see also about.html inside this JAR file)
-java/modules/ext/hibernate4                                           LGPL-2.1 (see also Hibernate 4.3.1 at http://hibernate.org)
 java/modules/ext/jaxws22/stax2-api.jar                                BSD-woodstox
 java/modules/ext/jaxws22/woodstox-core-asl.jar                        Apache-2.0
 java/modules/ext/maven/indexer-artifact-5.1.1.jar                     Apache-2.0

@@ -390,7 +390,7 @@ public class ClassPathUtils {
                 String line = r.readLine();
                 while (line != null) {
                     line = line.trim();
-                    if (!line.equals("")) { // NOI18N
+                    if (!(line.equals("") || line.startsWith("#"))) { // NOI18N
                         ClassPattern cp;
                         if (line.endsWith("**")) { // NOI18N
                             cp = new ClassPattern(line.substring(0, line.length()-2),

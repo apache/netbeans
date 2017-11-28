@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.templatesui;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -83,16 +84,21 @@ final class RunTCK extends AbstractWizard {
         }
         
         executeScript(
-              "function assertEquals(exp, real, msg) {\n"
+              "window.assertEquals = function(exp, real, msg) {\n"
             + "  if (exp != real) {\n"
             + "    throw msg + ' expected: ' + exp + ' real: ' + real;\n"
             + "  }\n"
-            + "}\n"
+            + "};\n"
         );
         
         Object regFn = executeScript("(function(def) { window.tck = def; })");
         evaluateCall(regFn, tck);
         
+        String str = readUrl();
+        executeScript(str);
+    }
+
+    private String readUrl() throws IOException {
         InputStreamReader r = new InputStreamReader(test.openStream());
         StringBuilder sb = new StringBuilder();
         for (;;) {
@@ -102,7 +108,7 @@ final class RunTCK extends AbstractWizard {
             }
             sb.append((char)ch);
         }
-        executeScript(sb.toString());
+        return sb.toString();
     }
     
     public final class TCK {

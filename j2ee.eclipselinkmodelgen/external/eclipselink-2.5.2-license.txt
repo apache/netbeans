@@ -1,9 +1,10 @@
 Name: EclipseLink
+Origin: Eclipse
 Version: 2.5.2
 Description: The Eclipse Persistence Services Project ( EclipseLink) project.
-License: Eclipse Public License - v 1.0 and Eclipse Distribution License v 1.0
+License: EPL-1.0
 Origin: http://www.eclipse.org/eclipselink/
-Files: eclipselink.jar, javax.persistence_2.1.0.v201304241213.jar, org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar
+Files: org.eclipse.persistence.jpa.modelgen.processor-2.5.2.jar
 
 Use of EclipseLink version 2.5.2 is governed by the terms of the license below:
 

@@ -1,10 +1,9 @@
-Name: JAX-WS
-Description: JAX-WS Reference Implementation
-Version: 2.2.6
+Name: JAXB
+Description: JAXB Reference Implementation
 Origin: Oracle
-URL: http://jax-ws.java.net/
+Version: 1.1.1
+URL: https://jaxb.java.net/
 License: CDDL-1.1
-Files: jaxws-2.2.6-api.zip
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1 
 
@@ -353,4 +352,3 @@ litigation relating to this License shall be subject to the jurisdiction
 of the Federal Courts of the Northern District of California and the 
 state courts of the State of California, with venue lying in Santa Clara 
 County, California. 
-

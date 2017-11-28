@@ -20,6 +20,7 @@ package org.netbeans.modules.htmlui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -40,7 +41,10 @@ import net.java.html.boot.fx.FXBrowsers;
 import org.openide.util.NbBundle;
 
 final class NbBrowsers {
-    public static void load(WebView view, URL page, Runnable onPageLoad, ClassLoader loader, Object... args) {
+    static {
+        Platform.setImplicitExit(false);
+    }
+    public static void load(WebView view, URL page, final Runnable onPageLoad, ClassLoader loader, Object... args) {
         final Stage stage = null;
         view.setContextMenuEnabled(false);
         view.getEngine().setOnAlert(new EventHandler<WebEvent<String>>() {

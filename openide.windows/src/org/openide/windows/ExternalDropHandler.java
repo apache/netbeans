@@ -19,7 +19,6 @@
 
 package org.openide.windows;
 
-import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 

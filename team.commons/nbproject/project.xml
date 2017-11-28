@@ -26,6 +26,38 @@
             <code-name-base>org.netbeans.modules.team.commons</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>java.base</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>java.desktop</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>java.logging</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>java.prefs</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.api.java.classpath</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -171,7 +203,7 @@
                     <run-dependency>
                         <specification-version>9.3</specification-version>
                     </run-dependency>
-                </dependency>                
+                </dependency>
                 <dependency>
                     <code-name-base>org.openide.windows</code-name-base>
                     <build-prerequisite/>
@@ -218,7 +250,7 @@
                 <friend>org.netbeans.modules.odcs.tasks</friend>
                 <friend>org.netbeans.modules.odcs</friend>
                 <friend>org.netbeans.modules.team.ide</friend>
-                <friend>org.netbeans.modules.team.server</friend>                
+                <friend>org.netbeans.modules.team.server</friend>
                 <friend>org.netbeans.modules.mylyn.util</friend>
                 <!-- https://github.com/matthiasblaesing/netbeans-mantis-integration -->
                 <friend>eu.doppel_helix.netbeans.MantisIntegration</friend>
@@ -226,7 +258,7 @@
                 <friend>com.junichi11.netbeans.github.issues</friend>
                 <!-- https://github.com/junichi11/netbeans-backlog-plugin -->
                 <friend>com.junichi11.netbeans.backlog.plugin</friend>
-                <friend>org.netbeans.modules.versioning.ui</friend> 
+                <friend>org.netbeans.modules.versioning.ui</friend>
                 <package>org.netbeans.modules.team.commons</package>
                 <package>org.netbeans.modules.team.commons.treelist</package>
                 <package>org.netbeans.modules.team.ide.spi</package>

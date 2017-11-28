@@ -87,6 +87,12 @@ public class JavaKit extends NbEditorKit {
 //    private static final Object sourceLevelKey = new Object();
 
     public JavaKit(){
+        try {
+        Class.forName("javax.management.JMX");
+            throw new IllegalStateException("!!!");
+        } catch (Exception ex) {
+ex.printStackTrace();
+        }
     }
     
     public String getContentType() {

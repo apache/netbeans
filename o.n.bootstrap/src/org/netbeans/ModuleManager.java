@@ -850,6 +850,14 @@ public final class ModuleManager extends Modules {
         subCreate(m);
         return m;
     }
+    public Module createJDK(Events ev, Object history, String cnb, String packages, ClassLoader loader) throws InvalidException, DuplicateException {
+        assertWritable();
+//        ev.log(Events.START_CREATE_BOOT_MODULE, history);
+        Module m = new JDKModule(this, ev, history, cnb, packages, loader); //XXX: factory
+//        ev.log(Events.FINISH_CREATE_BOOT_MODULE, history);
+        subCreate(m);
+        return m;
+    }
 
     /** Used by Module to communicate with the ModuleInstaller re. dependencies. */
     void refineDependencies(Module m, Set<Dependency> dependencies) {
@@ -909,8 +917,31 @@ public final class ModuleManager extends Modules {
     
     /** Use by OneModuleClassLoader to communicate with the ModuleInstaller re. masking. */
     public boolean shouldDelegateResource(Module m, Module parent, String pkg) {
+        if (parent != null && !checkParentModuleAccess(m, parent, pkg))
+            return false;
+
+        if (parent == null && m.getDependencies().stream().anyMatch(dep -> "java.base".equals(dep.getName()))) {
+            if (m.getDependencies().stream()
+                                   .filter(dep -> dep.getType() == Dependency.TYPE_MODULE)
+                                   .map(dep -> get((String) Util.parseCodeName(dep.getName())[0]))
+                                   .filter(dep -> dep != null)
+                                   .filter(dep -> dep.isFixed() || dep instanceof JDKModule)
+                                   .noneMatch(dep -> checkParentModuleAccess(m, dep, pkg))) {
+                return false;
+            }
+        }
+        if (pkg.startsWith("META-INF/")) { // NOI18N
+            // Modules should not make direct reference to metainfo dirs of
+            // other modules. Don't bother logging it, however.
+            return false;
+        }
+        // The installer can perform additional checks:
+        return installer.shouldDelegateResource(m, parent, pkg);
+    }
+    
+    private boolean checkParentModuleAccess(Module m, Module parent, String pkg) {
         // Cf. #19621:
-        Module.PackageExport[] exports = (parent == null) ? null : parent.getPublicPackages();
+        Module.PackageExport[] exports = parent.getPublicPackages();
         if (exports != null) {
             //Util.err.fine("exports=" + Arrays.asList(exports));
             // Packages from parent are restricted: #19621.
@@ -954,19 +985,15 @@ public final class ModuleManager extends Modules {
             }
             //Util.err.fine("exported");
         }
-        if (pkg.startsWith("META-INF/")) { // NOI18N
-            // Modules should not make direct reference to metainfo dirs of
-            // other modules. Don't bother logging it, however.
-            return false;
-        }
-        // The installer can perform additional checks:
-        return installer.shouldDelegateResource(m, parent, pkg);
+        
+        return true;
     }
+
     // Again, access from Module to ModuleInstaller:
     Manifest loadManifest(File jar) throws IOException {
         return installer.loadManifest(jar);
     }
-
+    
     private void subCreate(Module m) throws DuplicateException {
         Module old = get(m.getCodeNameBase());
         if (old != null) {
@@ -2280,7 +2307,7 @@ public final class ModuleManager extends Modules {
             for (Module m : store) {
                 final File path = m.getJarFile();
                 if (path == null) {
-                    assert m instanceof FixedModule : "Only fixed modules are excluded from caches " + m;
+                    assert m instanceof FixedModule || m instanceof JDKModule : "Only fixed modules are excluded from caches " + m;
                     continue;
                 }
                 Stamps.writeRelativePath(path.getPath(), os);

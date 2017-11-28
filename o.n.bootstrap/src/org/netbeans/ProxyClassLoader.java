@@ -62,7 +62,7 @@ public class ProxyClassLoader extends ClassLoader {
      * @GuardedBy("packages")
      */
     private final Map<String, Package> packages = new HashMap<String, Package>();
-
+    
     /** keeps information about parent classloaders, system classloader, etc.*/
     volatile ProxyClassParents parents;
 

@@ -199,6 +199,7 @@
                   deprecation="${build.compiler.deprecation}" optimize="${build.compiler.optimize}" source="${javac.source}" target="${javac.target}" includeantruntime="false"
                   fork="${javac.fork}"
         >
+            <bootclasspath path="/tmp/empty" />
             <classpath refid="cp"/>
             <compilerarg line="${javac.compilerargs}"/>
             <processorpath refid="processor.cp"/>

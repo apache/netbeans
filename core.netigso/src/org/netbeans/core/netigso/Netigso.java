@@ -476,7 +476,7 @@ implements Cloneable, Stamps.Updater {
                         setBundleStartLevel(bc, b, startLevel);
                     }
                 }
-            } else {
+            } else if (!m.isJDK()) {
                 InputStream is = fakeBundle(m);
                 if (is != null) {
                     if (original != null) {

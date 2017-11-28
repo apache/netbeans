@@ -35,7 +35,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
-import java.beans.Expression;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;

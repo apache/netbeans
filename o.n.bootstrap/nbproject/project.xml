@@ -26,6 +26,46 @@
             <code-name-base>org.netbeans.bootstrap</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>java.base</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>java.datatransfer</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>java.desktop</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>java.instrument</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>java.logging</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.openide.modules</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -105,6 +145,11 @@
                 <friend>com.oracle.jdeveloper.extcache</friend>
                 <package>org.netbeans</package>
             </friend-packages>
+            <extra-compilation-unit>
+                <package-root>src9</package-root>
+                <classpath>${module.classpath}:build/classes</classpath>
+                <built-to>build/classes/META-INF/versions/9</built-to>
+            </extra-compilation-unit>
         </data>
     </configuration>
 </project>

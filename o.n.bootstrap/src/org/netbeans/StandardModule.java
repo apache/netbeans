@@ -498,7 +498,7 @@ class StandardModule extends Module {
                 }
             }
             ClassLoader l = getParentLoader(parent);
-            if (parent.isFixed() && loaders.contains(l)) {
+            if ((parent.isFixed() || parent.isJDK()) && loaders.contains(l)) {
                 Util.err.log(Level.FINE, "#24996: skipping duplicate classloader from {0}", parent);
                 continue;
             }

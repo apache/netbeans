@@ -1,0 +1,58 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+java.activation=jre/lib/rt.jar
+java.base=jre/lib/rt.jar,jre/lib/jce.jar
+java.compiler=jre/lib/rt.jar
+java.corba=jre/lib/rt.jar
+java.datatransfer=jre/lib/rt.jar
+java.desktop=jre/lib/rt.jar,lib/dt.jar
+java.instrument=jre/lib/rt.jar
+java.logging=jre/lib/rt.jar
+java.management=jre/lib/rt.jar
+java.management.rmi=jre/lib/rt.jar
+java.naming=jre/lib/rt.jar
+java.prefs=jre/lib/rt.jar
+java.rmi=jre/lib/rt.jar
+java.scripting=jre/lib/rt.jar
+java.security.jgss=jre/lib/rt.jar
+java.security.sasl=jre/lib/rt.jar
+java.smartcardio=jre/lib/rt.jar
+java.sql=jre/lib/rt.jar
+java.sql.rowset=jre/lib/rt.jar
+java.transaction=jre/lib/rt.jar
+java.xml=jre/lib/rt.jar
+java.xml.bind=jre/lib/rt.jar
+java.xml.crypto=jre/lib/rt.jar
+java.xml.ws=jre/lib/rt.jar
+java.xml.ws.annotation=jre/lib/rt.jar
+jdk.accessibility=jre/lib/ext/jaccess.jar
+jdk.attach=lib/tools.jar
+jdk.compiler=lib/tools.jar
+jdk.httpserver=jre/lib/rt.jar
+jdk.jartool=lib/tools.jar
+jdk.javadoc=lib/tools.jar
+jdk.jconsole=lib/jconsole.jar
+jdk.jdi=lib/tools.jar
+jdk.jsobject=jre/lib/plugin.jar
+jdk.management=jre/lib/rt.jar
+jdk.net=jre/lib/rt.jar
+jdk.scripting.nashorn=jre/lib/ext/nashorn.jar
+jdk.sctp=jre/lib/rt.jar
+jdk.security.auth=jre/lib/rt.jar
+jdk.security.jgss=jre/lib/rt.jar
+jdk.unsupported=jre/lib/rt.jar
+jdk.xml.dom=jre/lib/rt.jar

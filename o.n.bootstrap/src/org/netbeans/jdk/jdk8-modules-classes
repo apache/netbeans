@@ -1,0 +1,58 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+java.activation=javax.activation.DataSource
+java.base=java.lang.Object
+java.compiler=javax.tools.ToolProvider
+java.corba=javax.rmi.PortableRemoteObject
+java.datatransfer=java.awt.datatransfer.Clipboard
+java.desktop=java.applet.Applet
+java.instrument=java.lang.instrument.Instrumentation
+java.logging=java.util.logging.Logger
+java.management=java.lang.management.ManagementFactory
+java.management.rmi=javax.management.remote.rmi.RMIConnection
+java.naming=javax.naming.Context
+java.prefs=java.util.prefs.Preferences
+java.rmi=java.rmi.Remote
+java.scripting=javax.script.ScriptEngine
+java.security.jgss=org.ietf.jgss.GSSContext
+java.security.sasl=javax.security.sasl.Sasl
+java.smartcardio=javax.smartcardio.Card
+java.sql=java.sql.Date
+java.sql.rowset=javax.sql.rowset.Predicate
+java.transaction=javax.transaction.InvalidTransactionException
+java.xml=javax.xml.XMLConstants
+java.xml.bind=javax.xml.bind.JAXB
+java.xml.crypto=javax.xml.crypto.XMLStructure
+java.xml.ws=javax.jws.WebService
+java.xml.ws.annotation=javax.annotation.Generated
+jdk.accessibility=com.sun.java.accessibility.util.AWTEventMonitor
+jdk.attach=com.sun.tools.attach.VirtualMachine
+jdk.compiler=com.sun.source.util.Trees
+jdk.httpserver=com.sun.net.httpserver.HttpServer
+jdk.jartool=com.sun.jarsigner.JarSigner
+jdk.javadoc=com.sun.javadoc.Doclet
+jdk.jconsole=com.sun.tools.jconsole.JConsoleContext
+jdk.jdi=com.sun.jdi.VirtualMachine
+jdk.jsobject=netscape.javascript.JSObject
+jdk.management=com.sun.management.VMOption
+jdk.net=jdk.net.Sockets
+jdk.scripting.nashorn=jdk.nashorn.api.scripting.JSObject
+jdk.sctp=com.sun.nio.sctp.SctpServerChannel
+jdk.security.auth=com.sun.security.auth.PrincipalComparator
+jdk.security.jgss=com.sun.security.jgss.ExtendedGSSContext
+jdk.unsupported=sun.misc.Unsafe
+jdk.xml.dom=org.w3c.dom.css.CSSRule

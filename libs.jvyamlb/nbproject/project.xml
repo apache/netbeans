@@ -26,6 +26,14 @@
             <code-name-base>org.netbeans.libs.jvyamlb</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>java.base</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.libs.bytelist</code-name-base>
                     <build-prerequisite/>
                     <run-dependency>

@@ -271,7 +271,7 @@ public class NbBundleProcessor extends AbstractProcessor {
                     PrintWriter pw = new PrintWriter(w);
                     pw.println("package " + pkg + ";");
                     pw.println("/** Localizable strings for {@link " + pkg + "}. */");
-                    pw.println("@javax.annotation.Generated(value=\"" + NbBundleProcessor.class.getName() + "\")");
+//XXX:                    pw.println("@javax.annotation.Generated(value=\"" + NbBundleProcessor.class.getName() + "\")");
                     pw.println("class Bundle {");
                     for (String method : methods.values()) {
                         pw.print(method);

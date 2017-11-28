@@ -33,7 +33,7 @@
                 <package>javax.xml.bind.attachment</package>
                 <package>javax.xml.bind.helpers</package>
                 <package>javax.xml.bind.util</package>
-              </public-packages>
+            </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/jaxb/activation.jar</runtime-relative-path>
             </class-path-extension>

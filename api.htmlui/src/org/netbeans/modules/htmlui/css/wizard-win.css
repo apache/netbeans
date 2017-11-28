@@ -15,6 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 body#body{
     font-family: Dialog;
     font-weight: 100;
@@ -120,5 +121,5 @@ button:hover{
     border-color: #000000;
     outline-offset: 1px;
     outline-style: solid;
-    box-shadow: 0 0 1px 1px #aad2f2;        
+    box-shadow: 0 0 1px 1px #aad2f2;
 }

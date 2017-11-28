@@ -22,9 +22,6 @@ import java.awt.EventQueue;
 import java.io.File;
 import java.util.List;
 import javax.swing.JFileChooser;
-import javax.swing.LookAndFeel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import org.netbeans.api.templates.TemplateRegistration;
 import org.openide.util.NbBundle.Messages;
 import net.java.html.json.Model;
@@ -50,7 +47,6 @@ import org.openide.filesystems.FileChooserBuilder;
     @Property(name = "androidSdkPath", type = String.class),
     @Property(name = "nbhome", type = String.class),
     @Property(name = "nbInstallationDefined", type = boolean.class),
-    @Property(name = "laf", type = String.class)
 })
 public class DukeScriptWizard {
 
@@ -70,29 +66,6 @@ public class DukeScriptWizard {
         return data;
     }
 
-    private static void setUIDefaults(final WizardData data) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
-                    String name = lookAndFeel.getName();
-                    if (name.equals("Mac OS X")) name="mac";
-                    else if (name.equals("Metal"))name="metal";
-                    else if (name.equals("GTK look and feel"))name="gtk";
-                    else if (name.equals("Nimbus"))name="nimbus";
-                    else if (name.startsWith("Windows"))name="win";
-                    final String laf = name;
-                    data.setLaf("wizard-"+laf+".css");
-                }
-            });
-       
-
-    }
-    
-//    private static String toHex(Color c){  
-//        return String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue()); 
-//    }
-
     @Model(className = "ArchetypeData", properties = {
         @Property(name = "artifactId", type = String.class),
         @Property(name = "groupId", type = String.class),
@@ -109,7 +82,6 @@ public class DukeScriptWizard {
     static void init(WizardData data,
             Boolean android, Boolean ios, Boolean web, Boolean netbeans
     ) {
-        setUIDefaults(data);
         File nbHome = new File(System.getProperty("netbeans.home"));
         data.setNbhome(nbHome.getParent());
 

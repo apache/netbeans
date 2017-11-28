@@ -15,10 +15,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 body{
-    font-family:  sans-serif;
     font-size: 12px;
-    background: rgb(238,238,238);
+    background: #3c3f41;
+    color: #bbbbbb;
 }
 
 input[type=checkbox],
@@ -29,36 +30,61 @@ input[type=radio]
 }
 
 input[type=radio],input[type=checkbox], button{
-    background:  -webkit-linear-gradient(top, rgb(122, 138, 153) 0%, rgb(225, 234, 244) 1%, rgb(239, 244, 249) 45%, rgb(191, 211, 231) 100%);
-    border: solid 1px #7A8A99;
+    background: -webkit-linear-gradient(top, #54595b 0%, #44494b 78%);
+    border: solid 1px #646464;
 }
+
+a {
+    color: #589df6;
+}
+
+.error {
+    color: #ff6666;
+}
+
 
 button{
     border-style: solid;
-    border-color: #7A8A99;
+    border-color: #646464;
     border-top-width: 0.6px;
     border-left-width: 0.6px;
     border-right-width: 1px;
     border-bottom-width: 1px;
+    border-radius: 4px;
     font-size: 11px;
-    color: #333333;
+    color: #bbbbbb;
     padding-left: 20px;
-    padding-right: 20px; 
+    padding-right: 20px;
 }
 
-button:active, input[type=radio]:active{
-    background: #B8CFE5;
+input[type=radio]:checked,input[type=checkbox]:checked{
+    background: -webkit-linear-gradient(top, rgb(236, 239, 243) 0%, rgb(172, 192, 210) 59%, rgb(180, 201, 220) 100%);
 }
 
-button:hover{
-    outline-width: 1px;
-    outline-style: solid;
-    outline-color: #B7CDE3;
+input[type=radio]:checked:hover,input[type=checkbox]:checked:hover{
+    background: -webkit-linear-gradient(top, rgb(237, 241, 244) 0%, rgb(182, 203, 222) 65%, rgb(196, 217, 236) 100%);}
+
+input[type=radio]:hover,input[type=checkbox]:hover, button:hover{
+    background: -webkit-linear-gradient(top, #54595b 0%, #44494b 78%);
+}
+
+input[type=radio]:active, input[type=radio]:focus,
+input[type=checkbox]:active, input[type=checkbox]:focus,
+
+button:active, button:focus{
+    background: -webkit-linear-gradient(top, #54595b 0%, #44494b 78%);
+    box-shadow: 0 0 0 2pt #466e9a;
+}
+
+input[type=text]:focus{
+    box-shadow: 0 0 0 2pt #466e9a;
 }
 
 input[type=text]{
     border-radius: 0;
     border-width: 1px;
+    background: #45494a;
+    color: #bbbbbb;
 }
 
 input[type=radio]{
@@ -81,16 +107,10 @@ input[type=radio]:checked:after{
     border-width: 1px;
 }
 
-input[type=radio]:hover {
-    border: solid 1px #0078D7;
-}
 
-input[type=radio]:hover:checked:after{
-    box-shadow: 0 0 1px 1px #aad2f2; 
-}
 
 input[type=checkbox]{
-    border-radius: 0;  
+    border-radius: 2px;;
     width: 14px;
     height: 14px;
 }
@@ -99,21 +119,11 @@ input[type=checkbox]:checked:after {
     display: inline-block;
     content: " ";
     margin: 2px;
-    width: 8px;
+    margin-top: 0;
+    width: 10px;
     height: 10px;
-    background: url('cb-metal.png') no-repeat;
+    background: url('cb-nimbus.png') no-repeat;
     background-size: 100%;
     z-index: 10;
-    /*    margin: 3px;
-        width: 8px;
-        height: 8px;
-        display: inline-block;
-        border-radius: 10px;
-        border-width: 1px;*/
 }
 
-
-
-input[type=checkbox]:hover {
-    box-shadow: 0 0 1px 1px #aad2f2; 
-}

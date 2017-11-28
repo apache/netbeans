@@ -15,6 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 body{
     font-size: 12px;
     background: rgb(214,217,223);
@@ -42,7 +43,7 @@ button{
     font-size: 11px;
     color: #333333;
     padding-left: 20px;
-    padding-right: 20px; 
+    padding-right: 20px;
 }
 
 input[type=radio]:checked,input[type=checkbox]:checked{
@@ -65,7 +66,7 @@ button:active, button:focus{
 }
 
 input[type=text]:focus{
-    box-shadow: 0 0 0 2pt #73A4D1;    
+    box-shadow: 0 0 0 2pt #73A4D1;
 }
 
 input[type=text]{
@@ -96,7 +97,7 @@ input[type=radio]:checked:after{
 
 
 input[type=checkbox]{
-    border-radius: 2px;;  
+    border-radius: 2px;;
     width: 14px;
     height: 14px;
 }

@@ -57,7 +57,9 @@ button:hover{
     outline-color: #B7CDE3;
 }
 
-input[type=text]{
+input[type=text],
+input[type=number]
+{
     border-radius: 0;
     border-width: 1px;
 }

@@ -1,11 +1,9 @@
-Name: Apache Lucene
-Version: 5.5.3
-Description: Java-based indexing and search technology
+Name: Apache Maven Distribution
+Description: Apache Maven Distribution
+Version: 3.3.9
 License: Apache-2.0
-Origin: http://lucene.apache.org/
-Files: lucene-highlighter-5.5.3.jar
-Source: http://svn.apache.org/repos/asf/lucene/java/trunk
-OSR: 6381
+Origin: Apache Software Foundation
+URL: http://maven.apache.org/
 
                                  Apache License
                            Version 2.0, January 2004

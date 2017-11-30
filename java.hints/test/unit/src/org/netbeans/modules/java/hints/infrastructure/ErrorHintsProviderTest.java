@@ -60,12 +60,6 @@ public class ErrorHintsProviderTest extends NbTestCase {
         super(testName);
     }
 
-//    public static Test suite() {
-//        TestSuite suite = new TestSuite(JavaHintsProviderTest.class);
-//        
-//        return suite;
-//    }
-    
     private FileObject testSource;
     private JavaSource js;
     private CompilationInfo info;

@@ -15,12 +15,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 body#body{
     font-family:  sans-serif;
     font-weight: 100;
 }
 
-input[type=text]{
+input[type=text],
+input[type=number]
+{
     border-radius: 0;
     border-width: 1px;
     border-color: #b2b2b2;
@@ -28,7 +31,9 @@ input[type=text]{
     border-style: solid;
 }
 
-input[type=text]:focus{
+input[type=text]:focus,
+input[type=number]:focus
+{
     outline-style: none;
     border-color: #78A7D8;
     box-shadow: 0 0 4px 0px #97C5F5;

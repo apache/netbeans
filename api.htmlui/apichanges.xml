@@ -25,6 +25,29 @@
     <apidef name="htmlui">HTML UI API</apidef>
 </apidefs>
 <changes>
+    <change id="defaultcss">
+        <api name="htmlui"/>
+        <summary>CSS for Look and Feel</summary>
+        <version major="1" minor="7"/>
+        <date year="2017" month="11" day="28"/>
+        <author login="jtulach"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+            <p>
+                Each <code>WebView</code> created by one of the
+                annotations (
+                <a href="@TOP@org/netbeans/api/htmlui/HTMLComponent.html">@HTMLComponent</a>,
+                <a href="@TOP@org/netbeans/api/htmlui/HTMLDialog.html">@HTMLDialog</a>,
+                <a href="@TOP@org/netbeans/api/htmlui/OpenHTMLRegistration.html">@OpenHTMLRegistration</a>
+                ) is by default skinned with a CSS that makes it
+                look like the the other Swing components.
+                Read <a href="@TOP@architecture-summary.html#property-data-netbeans-css">more</a>...
+            </p>
+        </description>
+        <class package="org.netbeans.api.htmlui" name="HTMLComponent"/>
+        <class package="org.netbeans.api.htmlui" name="HTMLDialog"/>
+        <class package="org.netbeans.api.htmlui" name="OpenHTMLRegistration"/>
+    </change>
     <change id="techids">
         <api name="htmlui"/>
         <summary>Support for Technology Ids</summary>

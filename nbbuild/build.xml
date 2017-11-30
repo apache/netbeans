@@ -2062,6 +2062,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="api.templates/test/unit/src/org/netbeans/modules/templates/utf8.xml" /> <!--test data-->
             <exclude name="apisupport.ant/src/org/netbeans/modules/apisupport/project/resources/license-*.txt" /> <!--template file-->
             <exclude name="apisupport.installer/src/org/netbeans/modules/apisupport/installer/resources/licenses/**" /> <!--three license files-->
+            <exclude name="apisupport.project/src/org/netbeans/modules/apisupport/project/ui/resources/layer_template.xml" /> <!--template file-->
             <exclude name="autoupdate.services/test/unit/src/org/netbeans/modules/autoupdate/updateprovider/data/**" /> <!-- test data -->
             <exclude name="beans/src/org/netbeans/modules/beans/resources/templates/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
             <exclude name="css.editor/src/org/netbeans/modules/css/resources/CascadeStyleSheet.css.template" /> <!-- user visible template -->
@@ -2070,6 +2071,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="debugger.jpda/test/unit/src/org/netbeans/api/debugger/jpda/testapps/JspLineBreakpointApp.txt" /> <!-- test data -->
             <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/provider/*.txt" /> <!--test data-->
             <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/visualizer/data/**" /> <!--test data-->
+            <exclude name="db.sql.editor/src/org/netbeans/modules/db/sql/editor/resources/SQLExample" /> <!-- file is used as sample for syntax highlighting in GUI -->
+            <exclude name="dbschema/src/org/netbeans/modules/dbschema/jdbcimpl/resources/templates/*" /> <!-- template files -->
             <exclude name="editor/demosrc/base/org/netbeans/editor/example/res/template.html_" /> <!-- template file -->
             <exclude name="editor/demosrc/base/org/netbeans/editor/example/res/template.java_" /> <!-- template file -->
             <exclude name="editor/demosrc/properties-addon/org/netbeans/editor/example/res/template.properties" /> <!-- template file -->
@@ -2120,7 +2123,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="nbbuild/tagref" /> <!--no degree of creativity-->
             <exclude name="nbbuild/notice-stub.txt" /> <!--Apache notice file-->
             <exclude name="nbbuild/standard-nbm-license.txt" /> <!--license file-->
-            <exclude name="nbbuild/testuserdir/**" />
+            <exclude name="nbbuild/testuserdir/**" /> <!-- directory for netbeans testruns, not part of distribution and repository -->
+            <exclude name="nbbuild/user.build.properties" /> <!-- user configuration file, not part of distribution and repository -->
             <exclude name="nbi/engine/nbproject/profiler-build-impl.xml" /> <!--generated, no degree of creativity -->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/CustomTask_java" /> <!-- user visible file template -->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/Project.xml_" /> <!-- user visible file template -->
@@ -2155,6 +2159,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="testng.ui/src/org/netbeans/modules/testng/ui/resources/*.template" /> <!--template files-->
             <exclude name="utilities/test/unit/src/org/netbeans/modules/openfile/resources/recent_files/*" /> <!--test data-->
             <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.template" /> <!--template files-->
+            <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/*.xsd" /> <!-- XSDs for usage at runtime and code generation - the XSDs are not modified, so covered by https://www.apache.org/legal/resolved.html#category-b -->
+            <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/jaxb/*" /> <!-- generated code -->
+            <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/oauth/*" /> <!-- generated code -->
+            <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl/*" /> <!-- generated code -->
             <exclude name="websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/model/application.wadl" /> <!--test data-->
             <exclude name="websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/util/rootGroup.xml" /> <!--test data-->
             <exclude name="welcome/src/org/netbeans/modules/welcome/resources/rss-0_91.dtd" /> <!-- specifies a standard -->
@@ -2202,10 +2210,15 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 conforming SGML systems and applications as defined in
                 ISO 8879, provided this notice is included in all copies.
             </rat:fullTextMatcher>
+            <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
+                Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+                license agreements; and to You under the Apache License, Version 2.0.
+            </rat:fullTextMatcher>
             <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
             <rat:approvedLicense familyName="OASIS"/>
             <rat:approvedLicense familyName="WSDL Schema Files" />
             <rat:approvedLicense familyName="International Organization for Standardization for SGML"/>
+            <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
 	    <fileset dir="${nb_all}">
                 <patternset refid="non.rat" />
             </fileset>
@@ -2222,9 +2235,21 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 All Rights Reserved
                 License for WSDL Schema Files
             </rat:fullTextMatcher>
+            <rat:fullTextMatcher licenseFamilyCategory="ISO-SGML" licenseFamilyName="International Organization for Standardization for SGML">
+                International Organization for Standardization 1986
+                Permission to copy in any form is granted for use with
+                conforming SGML systems and applications as defined in
+                ISO 8879, provided this notice is included in all copies.
+            </rat:fullTextMatcher>
+            <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
+                Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+                license agreements; and to You under the Apache License, Version 2.0.
+            </rat:fullTextMatcher>
             <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
             <rat:approvedLicense familyName="OASIS"/>
             <rat:approvedLicense familyName="WSDL Schema Files" />
+            <rat:approvedLicense familyName="International Organization for Standardization for SGML"/>
+            <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
 	    <fileset dir="${nb_all}">
                 <patternset refid="non.rat" />
             </fileset>

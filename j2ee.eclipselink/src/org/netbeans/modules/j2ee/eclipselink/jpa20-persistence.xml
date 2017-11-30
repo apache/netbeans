@@ -25,7 +25,7 @@
     <localizing-bundle>org.netbeans.modules.j2ee.eclipselink.Bundle</localizing-bundle>
     <volume>
         <type>classpath</type>
-        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/javax.persistence_2.1.0.201304241213.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.j2ee.eclipselink/modules/ext/eclipselink/javax.persistence-2.1.0.jar!/</resource>
     </volume>
     <volume>
         <type>javadoc</type>

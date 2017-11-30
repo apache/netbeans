@@ -22,7 +22,4 @@
 <project basedir="." default="netbeans" name="openide.util.lookup">
     <description>Builds, tests, and runs the project org.openide.util.lookup</description>
     <import file="../nbbuild/templates/projectized.xml"/>
-    <target name="build-init" depends="projectized.build-init">
-        <unzip src="../nbbuild/external/nbbuild-xhtml1-dtds-resources.zip" dest="../nbbuild/external/xhtml1-dtds"/>
-    </target>
 </project>

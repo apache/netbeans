@@ -55,7 +55,7 @@ public class InstallHiddenModuleTest extends OperationsTestImpl {
     }
 
     protected String moduleCodeNameBaseForTest() {
-        return "com.sun.testmodule.cluster"; //NOI18N
+        return "com.example.testmodule.cluster"; //NOI18N
     }
 
     @RandomlyFails // NB-Core-Build #2967

@@ -51,11 +51,11 @@ import org.openide.util.Lookup;
  *
  * @author Jaroslav Tulach
  */
-public class UpdateDisabledModuleTestDisabled extends NbTestCase {
+public class UpdateDisabledModuleTest extends NbTestCase {
     static Manifest man;
     private File ud;
 
-    public UpdateDisabledModuleTestDisabled(String testName) {
+    public UpdateDisabledModuleTest(String testName) {
         super(testName);
     }
 
@@ -70,28 +70,28 @@ public class UpdateDisabledModuleTestDisabled extends NbTestCase {
 
         man = new Manifest ();
         man.getMainAttributes ().putValue ("Manifest-Version", "1.0");
-        man.getMainAttributes ().putValue ("OpenIDE-Module", "com.sun.testmodule.cluster");
+        man.getMainAttributes ().putValue ("OpenIDE-Module", "com.example.testmodule.cluster");
         man.getMainAttributes ().putValue ("OpenIDE-Module-Public-Packages", "-");
-        
+
         ud = new File(getWorkDir(), "ud");
         System.setProperty("netbeans.user", ud.getPath());
         new File(ud, "config").mkdirs();
-        
+
         final File install = new File(getWorkDir(), "install");
         File platform = new File(install, "platform");
         System.setProperty("netbeans.home", platform.getPath());
         new File(platform, "config").mkdirs();
-        
+
         File middle = new File(install, "middle");
         File last = new File(install, "last");
         System.setProperty("netbeans.dirs", middle.getPath() + File.pathSeparator + last.getPath());
-        
+
         final String fn = moduleCodeNameBaseForTest().replace('.', '-') + ".xml";
         File conf = new File(new File(new File(middle, "config"), "Modules"), fn);
         conf.getParentFile().mkdirs();
         writeConfXML(conf, false);
 
-        final File jar = new File(new File(last, "modules"), "com-sun-testmodule-cluster.jar");
+        final File jar = new File(new File(last, "modules"), "com-example-testmodule-cluster.jar");
         jar.getParentFile().mkdirs();
         JarOutputStream os = new JarOutputStream(new FileOutputStream(jar), man);
         os.close();
@@ -99,42 +99,42 @@ public class UpdateDisabledModuleTestDisabled extends NbTestCase {
         File real = new File(new File(new File(last, "config"), "Modules"), fn);
         real.getParentFile().mkdirs();
         writeConfXML(real, true);
-        
+
         FileUtil.getConfigRoot().getFileSystem().refresh(true);
-        
+
         File ut = new File(new File(last, "update_tracking"), fn);
         ut.getParentFile().mkdirs();
         OutputStream utos = new FileOutputStream(ut);
         String utcfg = "<?xml version='1.0' encoding='UTF-8'?>\n" +
-"<module codename=\"com.sun.testmodule.cluster\">\n" +
+"<module codename=\"com.example.testmodule.cluster\">\n" +
 "    <module_version install_time=\"1280356738644\" last=\"true\" origin=\"installer\" specification_version=\"0.99\">\n" +
-"        <file crc=\"3486416273\" name=\"config/Modules/com-sun-testmodule-cluster.xml\"/>\n" +
-"        <file crc=\"3486416273\" name=\"modules/com-sun-testmodule-cluster.jar\"/>\n" +
+"        <file crc=\"3486416273\" name=\"config/Modules/com-example-testmodule-cluster.xml\"/>\n" +
+"        <file crc=\"3486416273\" name=\"modules/com-example-testmodule-cluster.jar\"/>\n" +
 "    </module_version>\n" +
 "</module>\n";
         utos.write(utcfg.getBytes("UTF-8"));
         utos.close();
-        
+
         StringBuilder msg = new StringBuilder();
         for (ModuleInfo mi : Lookup.getDefault().lookupAll(ModuleInfo.class)) {
             msg.append(mi.getCodeNameBase()).append("\n");
-            if (mi.getCodeNameBase().equals("com.sun.testmodule.cluster")) {
+            if (mi.getCodeNameBase().equals("com.example.testmodule.cluster")) {
                 assertFalse("Disabled", mi.isEnabled());
                 return;
             }
         }
-        fail("No com.sun.testmodule.cluster module found:\n" + msg);
+        fail("No com.example.testmodule.cluster module found:\n" + msg);
     }
 
     private void writeConfXML(File conf, boolean enabled) throws FileNotFoundException, IOException {
         OutputStream os = new FileOutputStream(conf);
         String cfg = "<?xml version='1.0' encoding='UTF-8'?>\n" +
                 "<!DOCTYPE module PUBLIC '-//NetBeans//DTD Module Status 1.0//EN' 'http://www.netbeans.org/dtds/module-status-1_0.dtd'>\n" +
-                "<module name='com.sun.testmodule.cluster'>\n" +
+                "<module name='com.example.testmodule.cluster'>\n" +
                 "   <param name='autoload'>false</param>\n" +
                 "   <param name='eager'>false</param>\n" +
                 "   <param name='enabled'>" + enabled + "</param>\n" +
-                "   <param name='jar'>modules/com-sun-testmodule-cluster.jar</param>\n" +
+                "   <param name='jar'>modules/com-example-testmodule-cluster.jar</param>\n" +
                 "   <param name='reloadable'>false</param>\n" +
                 "   <param name='specversion'>1.0</param>\n" +
                 "</module>\n" +
@@ -144,18 +144,18 @@ public class UpdateDisabledModuleTestDisabled extends NbTestCase {
     }
 
     String moduleCodeNameBaseForTest() {
-        return "com.sun.testmodule.cluster"; //NOI18N
+        return "com.example.testmodule.cluster"; //NOI18N
     }
 
     public void testSelf() throws Exception {
-        File f = new File(new File(new File(ud, "config"), "Modules"), "com-sun-testmodule-cluster.xml");
+        File f = new File(new File(new File(ud, "config"), "Modules"), "com-example-testmodule-cluster.xml");
         f.delete();
-        
+
         assertFalse("No Config file before: " + f, f.exists());
-        
+
         MockServices.setServices(UP.class);
         UpdateUnit update = UpdateManagerImpl.getInstance().getUpdateUnit(moduleCodeNameBaseForTest());
-        
+
         assertNotNull("There is an NBM to update", update);
         OperationContainer<InstallSupport> oc = OperationContainer.createForUpdate();
         oc.add(update, update.getAvailableUpdates().get(0));
@@ -169,7 +169,7 @@ public class UpdateDisabledModuleTestDisabled extends NbTestCase {
 
         assertFalse("No Config file created in for upgrade: " + f, f.exists());
     }
-    
+
     public static final class UP implements UpdateProvider {
 
         @Override
@@ -195,14 +195,14 @@ public class UpdateDisabledModuleTestDisabled extends NbTestCase {
         @Override
         public Map<String, UpdateItem> getUpdateItems() throws IOException {
             Map<String, UpdateItem> m = new HashMap<String, UpdateItem>();
-            m.put("com.sun.testmodule.cluster", UpdateItem.createModule(
-                "com.sun.testmodule.cluster", "1.0", 
-                DefaultTestCase.class.getResource("data/com-sun-testmodule-cluster.nbm"), 
-                "jarda", "4000", "http://netbeans.de", 
-                "2010/10/27", 
-                "OK", 
-                man, Boolean.TRUE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE, 
-                "platform", 
+            m.put("com.example.testmodule.cluster", UpdateItem.createModule(
+                "com.example.testmodule.cluster", "1.0",
+                DefaultTestCase.class.getResource("data/com-example-testmodule-cluster.nbm"),
+                "jarda", "4000", "http://netbeans.de",
+                "2010/10/27",
+                "OK",
+                man, Boolean.TRUE, Boolean.FALSE, Boolean.TRUE, Boolean.TRUE,
+                "platform",
                 UpdateLicense.createUpdateLicense("CDDL", "Free to use")
             ));
             return m;
@@ -212,6 +212,6 @@ public class UpdateDisabledModuleTestDisabled extends NbTestCase {
         public boolean refresh(boolean force) throws IOException {
             return true;
         }
-        
+
     }
 }

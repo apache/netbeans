@@ -41,7 +41,7 @@ public class AutoupdateCatalogProviderTest extends NbTestCase {
     }
 
     public void testParseWrongXML() throws IOException {
-        URL u = getClass().getResource("malformed.xml");
+        URL u = AutoupdateCatalogProviderTest.class.getResource("data/malformed.xml");
         AutoupdateCatalogProvider acp = new AutoupdateCatalogProvider("broken", "really broken", u);
         acp.refresh(true);
         

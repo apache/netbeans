@@ -30,13 +30,13 @@ import org.netbeans.spi.autoupdate.UpdateProvider;
  *
  * @author Dmitry Lipin
  */
-public class ExecutablePermissionsTestDisabled extends NbmAdvancedTestCase {
+public class ExecutablePermissionsTest extends NbmAdvancedTestCase {
 
     private UpdateProvider p = null;
     private String testModuleVersion = "1.0";
     private String testModuleName = "org.yourorghere.executable.permissions";
 
-    public ExecutablePermissionsTestDisabled(String name) {
+    public ExecutablePermissionsTest(String name) {
         super(name);
     }
 
@@ -52,11 +52,11 @@ public class ExecutablePermissionsTestDisabled extends NbmAdvancedTestCase {
 
     private String generateExecutablePermissionsModuleElement() {
         String res = "\n<module codenamebase=\"" + testModuleName + "\" " +
-                "homepage=\"http://www.netbeans.org/\" distribution=\"nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-executable-permissions.nbm\" " +
-                "license=\"standard-nbm-license.txt\" downloadsize=\"5122\" " +
-                "needsrestart=\"false\" moduleauthor=\"\" " +
+                "homepage=\"\" distribution=\"nbresloc:/org/netbeans/api/autoupdate/data/org-yourorghere-executable-permissions.nbm\" " +
+                "license=\"AD9FBBC9\" downloadsize=\"3661\" " +
+                "needsrestart=\"false\" moduleauthor=\"Steffen Dietz\" " +
                 "eager=\"false\" " +
-                "releasedate=\"2006/02/23\">\n";
+                "releasedate=\"2017/11/24\">\n";
         res += "<manifest OpenIDE-Module=\"" + testModuleName + "\" " +
                 "OpenIDE-Module-Name=\"" + testModuleName + "\" " +
                 "AutoUpdate-Show-In-Client=\"true\" " +
@@ -66,7 +66,6 @@ public class ExecutablePermissionsTestDisabled extends NbmAdvancedTestCase {
     }
 
     public void testExecutablePermissionsModule() throws IOException {
-        String os = !org.openide.util.Utilities.isUnix() ? "Windows" : "Unix";
         String catalog = generateCatalog(generateExecutablePermissionsModuleElement());
 
         p = createUpdateProvider(catalog);
@@ -87,5 +86,5 @@ public class ExecutablePermissionsTestDisabled extends NbmAdvancedTestCase {
         File f = new File(userDir, "bin/start.sh");
         assertTrue("File " + f + " should exist after module installation", f.exists());
         assertTrue("File " + f + " is not executable after module installation", f.canExecute());
-    }    
+    }
 }

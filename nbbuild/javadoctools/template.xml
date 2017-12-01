@@ -84,7 +84,7 @@ cause it to fail.
         
         <!-- Docs to link to: -->
         <property name="javadoc.web.root" value="http://root/"/>
-        <property name="javadoc.docs.jdk" value="http://download.oracle.com/javase/7/docs/api"/>
+        <property name="javadoc.docs.jdk" value="http://download.oracle.com/javase/8/docs/api"/>
         &properties;
         <!-- add more here as needed... -->
         <property name="javadoc.css.dir" location="."/>

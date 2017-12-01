@@ -1,11 +1,9 @@
-Name: Apache Lucene
-Version: 5.5.3
-Description: Java-based indexing and search technology
+Name: Apache Xerces
+Description: Xerces XML parser.
+Version: 2.8.0
+Origin: Apache Software Foundation
 License: Apache-2.0
-Origin: http://lucene.apache.org/
-Files: lucene-core-5.5.3.jar
-Source: http://svn.apache.org/repos/asf/lucene/java/trunk
-OSR: 6381
+URL: http://xerces.apache.org/xerces-j/
 
                                  Apache License
                            Version 2.0, January 2004

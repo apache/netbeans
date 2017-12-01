@@ -1,10 +1,9 @@
-Name: Maven Indexer
-Version: 6.0.0-SNAPSHOT
-Description: Maven remote repository indexing engine.
+Name: Jar Jar Links
+Description: Jar Jar Links is a utility that makes it easy to repackage Java libraries and embed them into your own distribution.
+Origin: pantsbuild
+Version: 1.5
 License: Apache-2.0
-Origin: http://repo1.maven.org/maven2/org/apache/maven/indexer/
-Files: indexer-core-6.0.0-SNAPSHOT.jar
-OSR: 9451
+URL: https://github.com/pantsbuild/jarjar
 
                                  Apache License
                            Version 2.0, January 2004

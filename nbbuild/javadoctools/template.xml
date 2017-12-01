@@ -271,8 +271,8 @@ cause it to fail.
         <tstamp>
             <format property="YEAR" pattern="yyyy"/>
         </tstamp>
-        <property name="javadoc.footer" value='&lt;span class="footnote"&gt;Built on ${TODAY}.&amp;nbsp;&amp;nbsp;|&amp;nbsp;&amp;nbsp;Portions
-        Copyright 1997-${YEAR} Oracle. All rights reserved.&lt;/span&gt;'/>
+        <property name="javadoc.footer" value='&lt;span class="footnote"&gt;Built on ${TODAY}.&amp;nbsp;&amp;nbsp;|&amp;nbsp;&amp;nbsp;
+        Copyright &amp;#169; 2017-${YEAR} Apache Software Foundation. All Rights Reserved.&lt;/span&gt;'/>
     </target>
     
     <target name="javadoc-exec-packages" depends="javadoc-init,javadoc-generate-references,javadoc-generate-overview,javadoc-exec-condition,javadoc-check-timestamps,javadoc-make-plain-title,javadoc-make-hyperlinked-title,javadoc-exec-condition,-javadoc-set-footer" unless="javadoc.exec.packages">

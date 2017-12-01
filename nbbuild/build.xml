@@ -2104,6 +2104,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="javafx2.project/src/org/netbeans/modules/javafx2/project/templates/**" /> <!--license would be visible when users edit the templates inside their IDE-->
             <exclude name="javawebstart/AntTasks/build/**" /> <!-- generated build files -->
             <exclude name="jellytools.platform/src/org/netbeans/jellytools/version_info" /> <!--does not natively support comments-->
+            <exclude name="jshell.support/src/org/netbeans/modules/jshell/resources/consoleExample.jsh" /> <!--license would be visible to users in the Fonts/Colors settings-->
             <exclude name="junit.ui/src/org/netbeans/modules/junit/ui/resources/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
             <exclude name="languages.diff/src/org/netbeans/modules/languages/diff/DiffExample.diff" /> <!--license would be visible to users in the Fonts/Colors settings-->
             <exclude name="languages.yaml/src/org/netbeans/modules/languages/yaml/*.yaml" /> <!--Files used in GUI as sample/starting point-->

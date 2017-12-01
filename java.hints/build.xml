@@ -20,13 +20,5 @@
 
 -->
 <project name="java.hints" default="netbeans" basedir=".">
-    <import file="../nbbuild/templates/projectized.xml"/>
-
-    <target name="test" depends="pre-test,projectized-common.test">
-    </target>
-	
-    <target name="pre-test">
-        <property name="test.unit.excludes.files" location="test-excludes.txt"/>
-    </target>
-			
+    <import file="../nbbuild/templates/projectized.xml"/>	
 </project>

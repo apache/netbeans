@@ -23,7 +23,9 @@ import java.net.URL;
 import java.util.List;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.autoupdate.services.UpdateUnitFactoryTest;
 import org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogProvider;
+import org.netbeans.modules.autoupdate.updateprovider.AutoupdateInfoParserTest;
 
 /**
  *
@@ -49,7 +51,7 @@ public class UpdateProviderFactoryCreateTest extends NbTestCase {
     public void testCreate () throws Exception {
         String name = "new-one";
         String displayName = "Newone";
-        URL url = getClass().getResource ("/org/netbeans/modules/autoupdate/updateprovider/data/catalog.xml");
+        URL url = AutoupdateInfoParserTest.class.getResource ("data/catalog.xml");
         
         UpdateUnitProvider newone = UpdateUnitProviderFactory.getDefault ().create(name, displayName, url);
         assertNotNull ("New provider was created.", newone);
@@ -70,13 +72,13 @@ public class UpdateProviderFactoryCreateTest extends NbTestCase {
 
     public static class MyProvider extends AutoupdateCatalogProvider {
         public MyProvider () {
-            super ("test-updates-provider", "test-updates-provider", UpdateProviderFactoryCreateTest.class.getResource ("/org/netbeans/modules/autoupdate/updateprovider/data/catalog.xml"));
+            super ("test-updates-provider", "test-updates-provider", UpdateUnitFactoryTest.class.getResource ("data/catalog.xml"));
         }
     }
     
     public static class MyProvider2 extends AutoupdateCatalogProvider {
         public MyProvider2 () {
-            super ("test-updates-provider-2", "test-updates-provider-2", UpdateProviderFactoryCreateTest.class.getResource ("/org/netbeans/modules/autoupdate/updateprovider/data/catalog.xml"));
+            super ("test-updates-provider-2", "test-updates-provider-2", UpdateUnitFactoryTest.class.getResource ("data/catalog.xml"));
         }
     }
 }

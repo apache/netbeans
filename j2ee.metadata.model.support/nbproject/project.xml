@@ -105,7 +105,7 @@
                         <recursive/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.parsing.indexing</code-name-base>
+                        <code-name-base>org.netbeans.modules.j2ee.eclipselink</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
@@ -122,6 +122,10 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
+                        <code-name-base>org.netbeans.modules.parsing.indexing</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.netbeans.modules.parsing.nb</code-name-base>
                     </test-dependency>
                     <test-dependency>
@@ -131,12 +135,12 @@
                         <code-name-base>org.netbeans.modules.projectui</code-name-base>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.openide.util.ui</code-name-base>
+                        <code-name-base>org.openide.util.lookup</code-name-base>
                         <compile-dependency/>
                         <test/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.openide.util.lookup</code-name-base>
+                        <code-name-base>org.openide.util.ui</code-name-base>
                         <compile-dependency/>
                         <test/>
                     </test-dependency>

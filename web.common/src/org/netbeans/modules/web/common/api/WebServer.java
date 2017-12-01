@@ -365,7 +365,11 @@ public final class WebServer {
             assert is != null;
             Scanner line = new Scanner(is).useDelimiter("\n");
             while (line.hasNext()) {
-                Scanner elements = new Scanner(line.next()).useDelimiter(p);
+                String lineString = line.next();
+                if(lineString.trim().startsWith("#") || lineString.trim().isEmpty()) {
+                    continue;
+                }
+                Scanner elements = new Scanner(lineString).useDelimiter(p);
                 String mimeType = null;
                 while (elements.hasNext()) {
                     String s = elements.next();

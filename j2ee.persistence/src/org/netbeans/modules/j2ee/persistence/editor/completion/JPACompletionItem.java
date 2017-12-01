@@ -1100,7 +1100,7 @@ public abstract class JPACompletionItem implements CompletionItem {
 
     private static class MappingFileItem extends PersistenceXmlCompletionItem {
 
-        private static final String HB_MAPPING_ICON = "org/netbeans/modules/hibernate/resources/hibernate-mapping.png"; //NOI18N
+        private static final String HB_MAPPING_ICON = "org/netbeans/modules/j2ee/persistence/resources/hibernate-mapping.png"; //NOI18N
         private String displayText;
 
         public MappingFileItem(int substitutionOffset, String displayText) {

@@ -22,13 +22,5 @@
 <project basedir="." default="netbeans" name="java.source">
     <import file="../nbbuild/templates/projectized.xml"/>
     <property name="nb.modules.dir" value="modules"/>
-    
-    <target name="test" depends="pre-test,projectized-common.test">
-    </target>
-    
-    <target name="pre-test">
-        <property name="test.unit.excludes.files" location="test-excludes.txt"/>
-    </target>
-    
 </project>
    

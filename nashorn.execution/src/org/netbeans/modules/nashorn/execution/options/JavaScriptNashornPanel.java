@@ -57,7 +57,6 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         infoLabel = new javax.swing.JLabel();
         platformsLabel = new javax.swing.JLabel();
@@ -82,11 +81,8 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
         gridBagConstraints.weightx = 1.0;
         add(infoLabel, gridBagConstraints);
 
+        platformsLabel.setLabelFor(platformsComboBox);
         org.openide.awt.Mnemonics.setLocalizedText(platformsLabel, org.openide.util.NbBundle.getMessage(JavaScriptNashornPanel.class, "JavaScriptNashornPanel.platformsLabel.text")); // NOI18N
-
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, platformsComboBox, org.jdesktop.beansbinding.ObjectProperty.create(), platformsLabel, org.jdesktop.beansbinding.BeanProperty.create("labelFor"));
-        bindingGroup.addBinding(binding);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -112,11 +108,8 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(12, 24, 0, 0);
         add(platformsComboBox, gridBagConstraints);
 
+        engineOptionsLabel.setLabelFor(engineOptionsTextField);
         org.openide.awt.Mnemonics.setLocalizedText(engineOptionsLabel, org.openide.util.NbBundle.getMessage(JavaScriptNashornPanel.class, "JavaScriptNashornPanel.engineOptionsLabel.text")); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, engineOptionsTextField, org.jdesktop.beansbinding.ObjectProperty.create(), engineOptionsLabel, org.jdesktop.beansbinding.BeanProperty.create("labelFor"));
-        bindingGroup.addBinding(binding);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
@@ -152,11 +145,8 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(6, 24, 0, 0);
         add(platformHintLabel, gridBagConstraints);
 
+        argumentsLabel.setLabelFor(argumentsTextField);
         org.openide.awt.Mnemonics.setLocalizedText(argumentsLabel, org.openide.util.NbBundle.getMessage(JavaScriptNashornPanel.class, "JavaScriptNashornPanel.argumentsLabel.text")); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, argumentsTextField, org.jdesktop.beansbinding.ObjectProperty.create(), argumentsLabel, org.jdesktop.beansbinding.BeanProperty.create("labelFor"));
-        bindingGroup.addBinding(binding);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 7;
@@ -201,8 +191,6 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
         add(fillPanel, gridBagConstraints);
-
-        bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
 
     private void platformManageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_platformManageButtonActionPerformed
@@ -225,7 +213,6 @@ public class JavaScriptNashornPanel extends javax.swing.JPanel {
     private javax.swing.JButton platformManageButton;
     private javax.swing.JComboBox platformsComboBox;
     private javax.swing.JLabel platformsLabel;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
     private JavaPlatform getSelectedPlatform() {

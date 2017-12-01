@@ -31,6 +31,7 @@ import java.util.logging.Level;
 import static junit.framework.Assert.assertNotNull;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import org.junit.Ignore;
 import org.netbeans.modules.html.editor.lib.api.SyntaxAnalyzer;
 import org.netbeans.modules.html.editor.lib.api.elements.Attribute;
 import org.netbeans.modules.html.editor.lib.api.elements.CloseTag;
@@ -575,47 +576,52 @@ public class Html5ParserTest extends NbTestCase {
 //        NodeUtils.dumpTree(root);
     }
 
-    public void testParseFileTest1() throws ParseException {
-        parse(getTestFile("testfiles/test1.html"));
-    }
+// Depends on file not donated by oracle to the apache foundation
+//    public void testParseFileTest1() throws ParseException {
+//        parse(getTestFile("testfiles/test1.html"));
+//    }
 
     public void testParseFileTest2() throws ParseException {
         parse(getTestFile("testfiles/test2.html"));
     }
 
-    public void testParseFileTest3() throws ParseException {
-        parse(getTestFile("testfiles/test3.html"));
-    }
+// Depends on file not donated by oracle to the apache foundation
+//    public void testParseFileTest3() throws ParseException {
+//        parse(getTestFile("testfiles/test3.html"));
+//    }
 
-    public void testParseFileTest4() throws ParseException {
-        parse(getTestFile("testfiles/test4.html"));
-    }
+// Depends on file not donated by oracle to the apache foundation
+//    public void testParseFileTest4() throws ParseException {
+//        parse(getTestFile("testfiles/test4.html"));
+//    }
 
-    public void testParseFileTest5() throws ParseException {
-        parse(getTestFile("testfiles/test5.html"));
-    }
+// Depends on file not donated by oracle to the apache foundation
+//    public void testParseFileTest5() throws ParseException {
+//        parse(getTestFile("testfiles/test5.html"));
+//    }
 
-    //Bug 211776 - Self-closing element breaks code folding
-    public void testIssue211776() throws ParseException {
-//        ParseTreeBuilder.setLoggerLevel(Level.ALL);
-
-        HtmlParseResult result = parse(getTestFile("testfiles/test6.html"));
-        Node root = result.root();
-//        ElementUtils.dumpTree(root);
-
-        OpenTag body = ElementUtils.query(root, "html/body");
-        assertNotNull(body);
-        assertFalse(body.isEmpty());
-
-        OpenTag link = ElementUtils.query(root, "html/head/link");
-        assertNotNull(link);
-        assertTrue(link.isEmpty());
-
-        OpenTag div = ElementUtils.query(root, "html/body/div");
-        assertNotNull(div);
-        assertFalse(div.isEmpty());
-
-    }
+// Depends on file not donated by oracle to the apache foundation
+//    //Bug 211776 - Self-closing element breaks code folding
+//    public void testIssue211776() throws ParseException {
+////        ParseTreeBuilder.setLoggerLevel(Level.ALL);
+//
+//        HtmlParseResult result = parse(getTestFile("testfiles/test6.html"));
+//        Node root = result.root();
+////        ElementUtils.dumpTree(root);
+//
+//        OpenTag body = ElementUtils.query(root, "html/body");
+//        assertNotNull(body);
+//        assertFalse(body.isEmpty());
+//
+//        OpenTag link = ElementUtils.query(root, "html/head/link");
+//        assertNotNull(link);
+//        assertTrue(link.isEmpty());
+//
+//        OpenTag div = ElementUtils.query(root, "html/body/div");
+//        assertNotNull(div);
+//        assertFalse(div.isEmpty());
+//
+//    }
 
     public void testAddChildToEmptyTag() throws ParseException {
 //        ParseTreeBuilder.setLoggerLevel(Level.ALL);
@@ -1021,13 +1027,15 @@ public class Html5ParserTest extends NbTestCase {
         parse(getTestFile("testfiles/netbeans_org.html"));
     }
 
-    public void testParseW3c_org() throws ParseException {
-        parse(getTestFile("testfiles/w3c_org.html"));
-    }
+// Depends on file not donated by oracle to the apache foundation
+//    public void testParseW3c_org() throws ParseException {
+//        parse(getTestFile("testfiles/w3c_org.html"));
+//    }
 
-    public void testParseWikipedia_org() throws ParseException {
-        parse(getTestFile("testfiles/wikipedia_org.html"));
-    }
+// Depends on file not donated by oracle to the apache foundation
+//    public void testParseWikipedia_org() throws ParseException {
+//        parse(getTestFile("testfiles/wikipedia_org.html"));
+//    }
 
     //Bug 213332 - IllegalStateException: A bug #212445 just happended for source text " scrollbar-arrow-color:"black"; } </STYLE> <TITLE>Cyprus :: Larnaca</TITLE></HEAD> <BOD". Please report a new bug or r 
     //http://netbeans.org/bugzilla/show_bug.cgi?id=213332

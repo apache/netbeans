@@ -45,7 +45,7 @@ public class NbmsInDownloadedTabTest extends NbmAdvancedTestCase {
         super(testName);
     }
     
-    public void disabledtestNbmDependsOnLowerVersion () throws IOException {
+    public void testNbmDependsOnLowerVersion () throws IOException {
         URL higherEngineURL = TestUtils.class.getResource ("data/org-yourorghere-engine-1-2.nbm");
         assertNotNull ("URL data/org-yourorghere-engine-1-2.nbm exits", higherEngineURL);
         File higherEngineNbm = TestUtils.getFile(this, higherEngineURL);

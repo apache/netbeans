@@ -33,10 +33,10 @@ import org.netbeans.modules.htmlui.HTMLDialogImpl;
 
 /** Generates method that opens an HTML based modal dialog. Sample of a typical 
  * usage follows.
- * <h4>HTML Page <small>dialog.html</small></h4>
+ * <b>HTML Page <small>dialog.html</small></b>
  * <pre>
 &lt;html&gt;
-    &lt;head&gt;
+    &lt;head&gt; &lt;!-- btw. use <a href="@TOP@architecture-summary.html#property-data-netbeans-css">data-netbeans-css</a> attribute to control the CSS --&gt;
         &lt;title&gt;Base question&lt;/title&gt;
         &lt;meta charset="UTF-8"&gt;
     &lt;/head&gt;
@@ -50,10 +50,10 @@ import org.netbeans.modules.htmlui.HTMLDialogImpl;
     &lt;/body&gt;
 &lt;/html&gt;
  * </pre>
- * <h4>Java Source <small>AskQuestion.java</small></h4>
+ * <b>Java Source <small>AskQuestion.java</small></b>
  * <pre>
 {@link Model @Model}(className = "AskCtrl", properties = {
-    {@link Property @Property}(name = <em <em style="color: red">"ok"</em>, type = <b>boolean</b>.<b>class</b>)
+    {@link Property @Property}(name = <em style="color: red">"ok"</em>, type = <b>boolean</b>.<b>class</b>)
 })
 <b>public final class</b> AskQuestion <b>implements</b> ActionListener {
     {@link HTMLDialog @HTMLDialog}(url = "dialog.html") <b>static void</b> showHelloWorld(boolean checked) {
@@ -88,7 +88,7 @@ import org.netbeans.modules.htmlui.HTMLDialogImpl;
  * <p>
  * By default, if the HTML defines no hidden
  * <code>&lt;button&gt;</code> elements, two buttons are added. One representing
- * the <quote>OK</quote> choice (with <code>id="OK"</code>) and one representing 
+ * the <em>OK</em> choice (with <code>id="OK"</code>) and one representing
  * the cancel choice (with <code>null</code> id). Both buttons are always
  * enabled. One can check the 
  * return value from the dialog showing method

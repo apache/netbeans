@@ -594,11 +594,12 @@ public class Scene extends Widget {
     }
 
     /**
-     * Converts a rectangle in the view coordination system into the scene one. It is just the opposite to 
-     * {@link #convertSceneToView(java.awt.Rectangle)}.
+     * Converts a rectangle in the view coordination system into the scene one. It is just the inverse
+     * fiunction to {@link #convertSceneToView(java.awt.Rectangle)}.
+     * 
      * @param viewRect the rectangle, in view coordinates
      * @return the same rectangle, in scene coordinates
-     * @since 2.48
+     * @since 2.49
      */
     public Rectangle convertViewToScene(Rectangle viewRect) {
         Point pt1 = new Point(viewRect.x, viewRect.y);

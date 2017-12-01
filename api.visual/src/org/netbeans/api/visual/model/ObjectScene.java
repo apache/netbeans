@@ -97,9 +97,12 @@ public class ObjectScene extends Scene {
     }
     
     /**
-     * Removes mapping for an object, including the object state. The caller is responsible for removing
-     * widgets from the scene before this call. If the is already removed or did not exist, the method
-     * does nothing. The method <b>will not</b> clear object's state.
+     * Removes mapping for an object. The caller is responsible for removing
+     * widgets from the scene before this call. If the object is already removed or did not exist, the method
+     * does nothing. The method <b>will not</b> clear object's state. 
+     * <p/>
+     * As {@link #addObject} allows to add object-widget mapping as the user works with the scene,
+     * this method allows to remove such mapping. Selection, highlight and other flags remain unchanged.
      * 
      * @param object object, whose mapping should be removed
      * @since 2.49
@@ -590,13 +593,15 @@ public class ObjectScene extends Scene {
 
     /**
      * Finds the state for the given object. The object must be a valid part of the model, although
-     * it may not be registered yet and no widgets are created for it. The method may throw {@link IllegalArgumentException}
+     * it may not be registered yet and no widgets are created for it. The method may return {@code null}
      * for instances that are not proper models for the scene. The default method returns {@link ObjectState#createNormal}
-     * for all inputs
+     * for all inputs. 
+     * <p/>
+     * Note that even objects, which have currently no widgets can have ObjectState associated.
+     * For example objects, for which the widgets were not created yet, or whose widgets were removed.
      * 
      * @param o the object
-     * @return the ObjectState
-     * @throws IllegalArgumentException if the object is not valid for the scene.
+     * @return the ObjectState or {@code null} for objects that cannot be part of the model.
      * @since 2.49
      */
     protected ObjectState findObjectState(Object o) throws IllegalArgumentException {

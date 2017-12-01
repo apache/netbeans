@@ -37,8 +37,13 @@
             <author login="sdedic"/>
             <compatibility addition="yes"/>
             <description>
-                When the scene is incrementally rendered, it may be possible that a model object becomes selected before some widgets are registered with the scene.
-                Hover, select, focus flags can be attached even to unregistered objects.
+                <p>
+                    When the scene is incrementally rendered, it may be possible that a model object becomes selected before some widgets are registered with the scene.
+                    Hover, select, focus flags can be attached even to unregistered objects.
+                </p>
+                <p>
+                    Implemented in <a href="https://github.com/apache/incubator-netbeans/pull/308">PR #308</a>
+                </p>
             </description>
             <class name="ObjectScene" package="org.netbeans.api.visual.model" link="yes"/>
         </change>

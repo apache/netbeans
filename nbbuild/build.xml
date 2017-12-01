@@ -2063,7 +2063,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="apisupport.ant/src/org/netbeans/modules/apisupport/project/resources/license-*.txt" /> <!--template file-->
             <exclude name="apisupport.installer/src/org/netbeans/modules/apisupport/installer/resources/licenses/**" /> <!--three license files-->
             <exclude name="apisupport.project/src/org/netbeans/modules/apisupport/project/ui/resources/layer_template.xml" /> <!--template file-->
-            <exclude name="autoupdate.services/test/unit/src/org/netbeans/modules/autoupdate/updateprovider/data/**" /> <!-- test data -->
+            <exclude name="autoupdate.services/test/unit/**/data/**" /> <!-- test data not captured by general data exclude -->
             <exclude name="beans/src/org/netbeans/modules/beans/resources/templates/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
             <exclude name="css.editor/src/org/netbeans/modules/css/resources/CascadeStyleSheet.css.template" /> <!-- user visible template -->
             <exclude name="css.editor/src/org/netbeans/modules/css/resources/CssExample" /> <!-- user visible template -->

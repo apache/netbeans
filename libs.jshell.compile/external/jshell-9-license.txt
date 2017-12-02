@@ -1,5 +1,6 @@
-Version: nb-7.2
-Name: Javac Compiler API
+Version: 9
+Type: compile-time
+Name: Javac Shell API
 License: GPL-2-CP
 Description: Javac Compiler API
 OSR: 6273

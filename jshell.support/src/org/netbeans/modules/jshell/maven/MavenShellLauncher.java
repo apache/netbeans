@@ -102,10 +102,7 @@ public class MavenShellLauncher implements PrerequisitesChecker, LateBoundPrereq
                 config.getProperties()::get
         );
         String agentString = args.get(args.size() -1);
-        List<String> vmArgs = ShellProjectUtils.launchVMOptions(project);
-        if (vmArgs != null) {
-            args.addAll(vmArgs);
-        }
+        args.addAll(ShellProjectUtils.launchVMOptions(project));
         String execArgs = config.getProperties().get(PROPERTY_EXEC_ARGS);
         if (execArgs != null) {
             StringBuilder sb = new StringBuilder();

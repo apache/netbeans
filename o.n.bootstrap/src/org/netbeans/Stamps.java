@@ -26,9 +26,6 @@ import java.io.DataInputStream;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -36,6 +33,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -185,8 +186,7 @@ public final class Stamps {
             return null;
         }
         
-        try {
-            FileChannel fc = new FileInputStream(cacheFile).getChannel();
+        try (FileChannel fc = FileChannel.open(cacheFile.toPath(), StandardOpenOption.READ)){
             ByteBuffer master;
             if (mmap) {
                 master = fc.map(FileChannel.MapMode.READ_ONLY, 0, len[0]);
@@ -201,10 +201,8 @@ public final class Stamps {
                 master.flip();
             }
 
-            fc.close();
-            
             return master;
-        } catch (IOException ex) {
+        } catch (IOException | InvalidPathException ex) {
             LOG.log(Level.WARNING, "Cannot read cache " + cacheFile, ex); // NOI18N
             return null;
         }
@@ -429,31 +427,25 @@ public final class Stamps {
         try {
             byte[] expected = content.getBytes("UTF-8"); // NOI18N
             byte[] read = new byte[expected.length];
-            FileInputStream is = null;
             boolean areCachesOK;
             boolean writeFile;
             long lastMod;
-            try {
-                is = new FileInputStream(file);
+            try (InputStream is = Files.newInputStream(file.toPath())) {
                 int len = is.read(read);
                 areCachesOK = len == read.length && is.available() == 0 && Arrays.equals(expected, read);
                 writeFile = !areCachesOK;
                 lastMod = file.lastModified();
-            } catch (FileNotFoundException notFoundEx) {
+            } catch (NoSuchFileException notFoundEx) {
                 // ok, running for the first time, no need to invalidate the cache
                 areCachesOK = true;
                 writeFile = true;
                 lastMod = result.get();
-            } finally {
-                if (is != null) {
-                    is.close();
-                }
             }
             if (writeFile) {
                 file.getParentFile().mkdirs();
-                FileOutputStream os = new FileOutputStream(file);
-                os.write(expected);
-                os.close();
+                try (OutputStream os = Files.newOutputStream(file.toPath())) {
+                    os.write(expected);
+                }
                 if (areCachesOK) {
                     file.setLastModified(lastMod);
                 }
@@ -463,7 +455,7 @@ public final class Stamps {
                 }
             }
             return areCachesOK;
-        } catch (IOException ex) {
+        } catch (IOException | InvalidPathException ex) {
             ex.printStackTrace();
             return false;
         }
@@ -552,7 +544,6 @@ public final class Stamps {
             return;
         }
         ZipInputStream zip = null;
-        FileOutputStream os = null;
         try {
             byte[] arr = new byte[4096];
             LOG.log(Level.FINE, "Found populate.zip about to extract it into {0}", cache);
@@ -567,18 +558,18 @@ public final class Stamps {
                 }
                 File f = new File(cache, en.getName().replace('/', File.separatorChar));
                 f.getParentFile().mkdirs();
-                os = new FileOutputStream(f);
-                for (;;) {
-                    int len = zip.read(arr);
-                    if (len == -1) {
-                        break;
+                try (OutputStream os = Files.newOutputStream(f.toPath())) {
+                    for (;;) {
+                        int len = zip.read(arr);
+                        if (len == -1) {
+                            break;
+                        }
+                        os.write(arr, 0, len);
                     }
-                    os.write(arr, 0, len);
                 }
-                os.close();
             }
             zip.close();
-        } catch (IOException ex) {
+        } catch (IOException | InvalidPathException ex) {
             LOG.log(Level.INFO, "Failed to populate {0}", cache);
         }
     }
@@ -591,22 +582,12 @@ public final class Stamps {
         final String clustersCache = "all-clusters.dat"; // NOI18N
         File f = fileImpl(clustersCache, null, -1); // no timestamp check
         if (f != null) {
-            DataInputStream dis = null;
-            try {
-                dis = new DataInputStream(new FileInputStream(f));
+            try (DataInputStream dis = new DataInputStream(Files.newInputStream(f.toPath()))) {
                 if (Clusters.compareDirs(dis)) {
                     return false;
                 }
-            } catch (IOException ex) {
+            } catch (IOException | InvalidPathException ex) {
                 return clustersChanged = true;
-            } finally {
-                if (dis != null) {
-                    try {
-                        dis.close();
-                    } catch (IOException ex) {
-                        LOG.log(Level.INFO, null, ex);
-                    }
-                }
             }
         } else {
             // missing cluster file signals caches are OK, for 
@@ -700,7 +681,8 @@ public final class Stamps {
                 cacheFile.getParentFile().mkdirs();
 
                 LOG.log(Level.FINE, "Storing cache {0}", cacheFile);
-                os = new FileOutputStream(cacheFile, append); //append new entries only
+                //append new entries only
+                os = Files.newOutputStream(cacheFile.toPath(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
                 DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(this, 1024 * 1024));
                 
                 this.delay = delay;
@@ -708,7 +690,7 @@ public final class Stamps {
                 updater.flushCaches(dos);
                 dos.close();
                 LOG.log(Level.FINE, "Done Storing cache {0}", cacheFile);
-            } catch (IOException ex) {
+            } catch (IOException | InvalidPathException ex) {
                 LOG.log(Level.WARNING, "Error saving cache {0}", cacheFile);
                 LOG.log(Level.INFO, ex.getMessage(), ex); // NOI18N
                 delete = true;

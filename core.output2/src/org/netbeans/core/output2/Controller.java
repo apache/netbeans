@@ -23,10 +23,10 @@ import java.awt.Container;
 import java.awt.Font;
 import java.io.CharConversionException;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -525,7 +525,7 @@ public class Controller {
                         f.delete();
                     }
                     f.createNewFile();
-                    logStream = new FileOutputStream(f);
+                    logStream = Files.newOutputStream(f.toPath());
                 } catch (Exception e) {
                     e.printStackTrace();
                     logStream = System.err;

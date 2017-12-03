@@ -2026,6 +2026,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 <pathelement location="external/apache-rat-0.12.jar"/>
             </classpath>
         </taskdef>
+        <taskdef name="ratgitignore" classname="org.netbeans.nbbuild.RatGitIgnorePatternSetTask" classpath="${build.ant.classes.dir}"/>
+        <ratgitignore name="git.non.rat" rootFolder="../" />
         <patternset id="non.rat">
             <!--add new one alphabetically-->
             <exclude name="**/*.exists" /> <!--no degree of creativity-->
@@ -2220,6 +2222,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
 	    <fileset dir="${nb_all}">
                 <patternset refid="non.rat" />
+                <patternset refid="git.non.rat" />
             </fileset>
         </rat:report>
         <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" format="xml" reportfile="build/rat-report.xml">
@@ -2251,6 +2254,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
 	    <fileset dir="${nb_all}">
                 <patternset refid="non.rat" />
+                <patternset refid="git.non.rat" />
             </fileset>
         </rat:report>
         <taskdef name="rattotest" classname="org.netbeans.nbbuild.RatReportTask" classpath="${build.ant.classes.dir}"/>

@@ -1,10 +1,10 @@
 Name: Smack API
-Version: 3.1.0
-License: Apache-2.0
 Description: Open Source XMPP (Jabber) client library
-OSR: 11270
-Files: smack.jar, smackx.jar
-Origin: http://apache.org
+Version: 3.1.0
+Origin: Jive Software/Ignite Realtime
+License: Apache-2.0
+Files: smack-3.1.0.jar, smackx-3.1.0.jar
+URL: http://www.igniterealtime.org/
 
                                  Apache License
                            Version 2.0, January 2004

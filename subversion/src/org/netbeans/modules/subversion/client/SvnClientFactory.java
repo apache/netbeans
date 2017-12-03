@@ -128,6 +128,10 @@ public class SvnClientFactory {
         return factory.connectionType() == ConnectionType.svnkit;
     }
 
+    public static boolean hasSvnKit() {
+        return SvnClientAdapterFactory.getInstance(SvnClientAdapterFactory.Client.SVNKIT) != null;
+    }
+
     /**
      * Returns a SvnClient, which isn't configured in any way.
      * Knows no username, password, has no SvnProgressSupport<br/>

@@ -196,13 +196,7 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
                 return false;
             }
             ExpressionStatementTree assignment = make.ExpressionStatement(make.Assignment(make.Identifier(name), expression));
-            BlockTree statements = (BlockTree) statementPath.getParentPath().getLeaf();
             StatementTree statement = (StatementTree) statementPath.getLeaf();
-            int index = statements.getStatements().indexOf(statement);
-            if (index == (-1)) {
-                //really strange...
-                return false;
-            }
             insertStatement(parameter, statementPath.getParentPath(), statement, assignment, true);
             return true;
         }

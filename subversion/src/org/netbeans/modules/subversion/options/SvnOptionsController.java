@@ -98,12 +98,13 @@ public final class SvnOptionsController extends OptionsPanelController implement
                 return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             }
         });
-        List<JPanel> clients = new ArrayList<>();
-        clients.addAll(Arrays.asList(panel.panelCLI, panel.panelJavahl));
+        List<JPanel> clients = new ArrayList<>(3);
+        clients.add(panel.panelCLI);
+        clients.add(panel.panelJavahl);
         if (SvnClientFactory.hasSvnKit()) {
             clients.add(panel.panelSvnkit);
         }
-        panel.cmbPreferredClient.setModel(new DefaultComboBoxModel(clients.toArray(new Object[0])));
+        panel.cmbPreferredClient.setModel(new DefaultComboBoxModel(clients.toArray()));
         panel.textPaneClient.addHyperlinkListener(new HyperlinkListener() {
             @Override
             public void hyperlinkUpdate (HyperlinkEvent e) {

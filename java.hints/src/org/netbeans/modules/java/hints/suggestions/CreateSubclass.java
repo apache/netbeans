@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -33,9 +34,11 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.swing.text.JTextComponent;
+import javax.tools.Diagnostic;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -44,8 +47,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import java.util.concurrent.Callable;
-import javax.lang.model.element.TypeParameterElement;
 
 import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -97,17 +98,36 @@ public class CreateSubclass {
         ClassTree cls = (ClassTree) tp.getLeaf();
         CompilationInfo info = context.getInfo();
         SourcePositions sourcePositions = info.getTrees().getSourcePositions();
-        int startPos = (int) sourcePositions.getStartPosition(tp.getCompilationUnit(), cls);
+        long startPos = sourcePositions.getStartPosition(tp.getCompilationUnit(), cls);
+        if (startPos > Integer.MAX_VALUE) {
+            return null;
+        }
+        int[] bodySpan = info.getTreeUtilities().findBodySpan(cls);
+        if (bodySpan == null || bodySpan[0] <= startPos) {
+            return null;
+        }
         int caret = context.getCaretLocation();
-        String code = context.getInfo().getText();
-        if (startPos < 0 || caret < 0 || caret < startPos || caret >= code.length()) {
+        if (startPos < 0 || caret < 0 || caret < startPos || caret >= bodySpan[0]) {
             return null;
         }
 
-        String headerText = code.substring(startPos, caret);
-        int idx = headerText.indexOf('{'); //NOI18N
-        if (idx >= 0) {
-            return null;
+        // #222487
+        // If there is a compile-time error on the class, then don't offer to
+        // create a subclass.
+        List<Diagnostic> errors = info.getDiagnostics();
+        if (!errors.isEmpty()) {
+            for (Diagnostic d : errors) {
+                if (d.getKind() != Diagnostic.Kind.ERROR) {
+                    continue;
+                }
+                // Check that the error's start position is within the class header
+                // Note: d.getEndPosition() is not used because, for example,
+                // a "compiler.err.does.not.override.abstract" error ends at
+                // the end of the class tree.
+                if (startPos <= d.getStartPosition() && d.getStartPosition() <= bodySpan[0]) {
+                    return null;
+                }
+            }
         }
 
         TypeElement typeElement = (TypeElement) info.getTrees().getElement(tp);

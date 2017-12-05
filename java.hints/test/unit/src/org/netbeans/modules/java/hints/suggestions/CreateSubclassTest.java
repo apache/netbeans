@@ -73,5 +73,73 @@ public class CreateSubclassTest {
                           "package test;\n" +
                           "public class NewTest<F, S extends CharSequence> extends Test<F, S> {}\n");
     }
-    
+
+    @Test
+    public void testNotConfusedByCommentedLBRACE() throws Exception {
+        CreateSubclass.overrideNameAndPackage = new String[] {
+            "NewTest",
+            "test"
+        };
+        HintTest test = HintTest.create();
+        try (OutputStream out = FileUtil.createData(FileUtil.getConfigRoot(), "Templates/Classes/Class.java").getOutputStream()) {
+            out.write("public class New {}\n".getBytes("UTF-8"));
+        }
+        test.setCaretMarker('^')
+            .input("package test;\n" +
+                   "public/*{*/ class Te^st {}\n")
+            .run(CreateSubclass.class)
+            .findWarning("1:20-1:20:hint:ERR_CreateSubclass")
+            .applyFix()
+            .assertCompilable("test/NewTest.java")
+            .assertOutput("test/NewTest.java",
+                          "package test;\n" +
+                          "public class NewTest extends Test {}\n");
+    }
+
+    @Test
+    public void testDontSuggestIfNonCompilable222487() throws Exception {
+        HintTest.create()
+            .setCaretMarker('^')
+            .input("package test;\n" +
+                   "import base.Base;\n" +
+                   "public class Te^st extends Base {}\n",
+                   false)
+            .input("base/Base.java",
+                   "package base;\n" +
+                   "public class Base {\n" +
+                   "    private Base() {\n" +
+                   "    }\n" +
+                   "}\n")
+            .run(CreateSubclass.class)
+            .assertWarnings();
+    }
+
+    @Test
+    public void testDontSuggestIfNonCompilable222487b() throws Exception {
+        HintTest.create()
+            .setCaretMarker('^')
+            .input("package test;\n" +
+                   "import base.Base;\n" +
+                   "public class Te^st extends Base {}\n",
+                   false)
+            .input("base/Base.java",
+                   "package base;\n" +
+                   "public class Base {\n" +
+                   "    protected Base(String value) {\n" +
+                   "    }\n" +
+                   "}\n")
+            .run(CreateSubclass.class)
+            .assertWarnings();
+    }
+
+    @Test
+    public void testDontSuggestIfNonCompilable222487c() throws Exception {
+        HintTest.create()
+            .setCaretMarker('^')
+            .input("package test;\n" +
+                   "public class Te^st implements Runnable {}\n",
+                   false)
+            .run(CreateSubclass.class)
+            .assertWarnings();
+    }
 }

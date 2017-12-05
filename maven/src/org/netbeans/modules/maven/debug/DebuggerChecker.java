@@ -215,7 +215,7 @@ public class DebuggerChecker implements LateBoundPrerequisitesChecker, Execution
             //cannot act on execution without a project instance..
             return true;
         }
-
+        
         boolean debug = "true".equalsIgnoreCase(config.getProperties().get(Constants.ACTION_PROPERTY_JPDALISTEN));//NOI18N
         boolean mavenDebug = "maven".equalsIgnoreCase(config.getProperties().get(Constants.ACTION_PROPERTY_JPDALISTEN)); //NOI18N
         if (debug || mavenDebug) {
@@ -288,33 +288,40 @@ public class DebuggerChecker implements LateBoundPrerequisitesChecker, Execution
                 res.getInputOutput().getErr().println("Missing jpda.stopclass property in action mapping definition. Cannot reload class.");
             }
         }
-        String attachToAddress = config.getProperties().get(Constants.ACTION_PROPERTY_JPDAATTACH);
-        if (attachToAddress != null && resultCode == 0) {
-            String transport = config.getProperties().get(Constants.ACTION_PROPERTY_JPDAATTACH_TRANSPORT);
+        if (resultCode == 0 && config.getProperties().get(Constants.ACTION_PROPERTY_JPDAATTACH_TRIGGER) == null) {
             try {
-                if (transport == null || "dt_socket".equals(transport)) {
-                    int colon = attachToAddress.indexOf(':');
-                    int port;
-                    try {
-                        port = Integer.parseInt(attachToAddress.substring(colon + 1));
-                    } catch (NumberFormatException ex) {
-                        LOGGER.log(Level.INFO, "Cannot parse " + attachToAddress.substring(colon + 1) + " as number", ex);
-                        return ;
-                    }
-                    String host;
-                    if (colon > 0) {
-                        host = attachToAddress.substring(0, colon);
-                    } else {
-                        host = "localhost";
-                    }
-                    JPDADebugger.attach(host, port, new Object[0]);
-                } else if ("dt_shmem".equals(transport)) {
-                    JPDADebugger.attach(attachToAddress, new Object[0]);
-                } else {
-                    LOGGER.log(Level.INFO, "Ignoring unknown transport '"+transport+"'");
-                }
+                connect(config);
             } catch (DebuggerStartException ex) {
                 ex.printStackTrace(res.getInputOutput().getErr());
+            }
+        }
+    }
+
+    static void connect(RunConfig config) throws DebuggerStartException {
+        String attachToAddress = config.getProperties().get(Constants.ACTION_PROPERTY_JPDAATTACH);
+        if (attachToAddress != null) {
+            String transport = config.getProperties().get(Constants.ACTION_PROPERTY_JPDAATTACH_TRANSPORT);
+            if (transport == null || "dt_socket".equals(transport)) {
+                int colon = attachToAddress.indexOf(':');
+                int port;
+                try {
+                    port = Integer.parseInt(attachToAddress.substring(colon + 1));
+                } catch (NumberFormatException ex) {
+                    final DebuggerStartException debugEx = new DebuggerStartException("Cannot parse " + attachToAddress.substring(colon + 1) + " as number");
+                    debugEx.initCause(ex);
+                    throw debugEx;
+                }
+                String host;
+                if (colon > 0) {
+                    host = attachToAddress.substring(0, colon);
+                } else {
+                    host = "localhost";
+                }
+                JPDADebugger.attach(host, port, new Object[0]);
+            } else if ("dt_shmem".equals(transport)) {
+                JPDADebugger.attach(attachToAddress, new Object[0]);
+            } else {
+                LOGGER.log(Level.INFO, "Ignoring unknown transport '"+transport+"'");
             }
         }
     }

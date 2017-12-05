@@ -39,6 +39,7 @@ import java.util.List;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.visual.laf.DefaultLookFeel;
+import javax.swing.SwingUtilities;
 
 /**
  * A scene is a tree of small building blocks called widgets and represented by this class.
@@ -214,6 +215,7 @@ public class Widget implements Accessible, Lookup.Provider {
      */
     public final void addChild (Widget child, Object constraint) {
         assert child.parentWidget == null;
+        assert SwingUtilities.isEventDispatchThread();
         Widget widget = this;
         while (widget != null) {
             assert widget != child;
@@ -245,6 +247,7 @@ public class Widget implements Accessible, Lookup.Provider {
      */
     public final void addChild (int index, Widget child, Object constraint) {
         assert child.parentWidget == null;
+        assert SwingUtilities.isEventDispatchThread();
         children.add (index, child);
         child.parentWidget = this;
         setChildConstraint (child, constraint);
@@ -262,6 +265,7 @@ public class Widget implements Accessible, Lookup.Provider {
      */
     public final void removeChild (Widget child) {
         assert child.parentWidget == this;
+        assert SwingUtilities.isEventDispatchThread();
         setChildConstraint (child, null);
         child.parentWidget = null;
         children.remove (child);

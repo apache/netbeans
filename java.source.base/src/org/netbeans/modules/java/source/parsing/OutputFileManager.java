@@ -21,13 +21,14 @@ package org.netbeans.modules.java.source.parsing;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +36,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import javax.tools.JavaFileManager;
 import javax.tools.JavaFileManager.Location;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
@@ -57,6 +57,8 @@ import org.openide.util.BaseUtilities;
  */
 public class OutputFileManager extends CachingFileManager {
 
+    public static final String OPTION_SET_CURRENT_ROOT = "set-current-root";
+
     private static final Logger LOG = Logger.getLogger(OutputFileManager.class.getName());
     /**
      * Exception used to signal that the sourcepath is broken (project is deleted)
@@ -71,6 +73,7 @@ public class OutputFileManager extends CachingFileManager {
     private final ModuleSourceFileManager moduleSourceFileManager;
     private Pair<URI,File> cachedClassFolder;
     private Iterable<Set<Location>> cachedModuleLocations;
+    private URL   root;
 
     /** Creates a new instance of CachingFileManager */
     public OutputFileManager(
@@ -154,16 +157,21 @@ public class OutputFileManager extends CachingFileManager {
         throws IOException, UnsupportedOperationException, IllegalArgumentException {
         assert pkgName != null;
         assert relativeName != null;
-        URL siblingURL = siblings.hasSibling() ? siblings.getSibling() : sibling == null ? null : sibling.toUri().toURL();
-        if (siblingURL == null) {
-            throw new IllegalArgumentException ("sibling == null");
-        }
-        File activeRoot = getClassFolderForSourceImpl (siblingURL);
-        if (activeRoot == null) {
-            activeRoot = getClassFolderForApt(siblingURL);
+        File activeRoot;
+        if (root != null) {
+            activeRoot = getClassFolder(root);
+        } else {
+            URL siblingURL = siblings.hasSibling() ? siblings.getSibling() : sibling == null ? null : sibling.toUri().toURL();
+            if (siblingURL == null) {
+                throw new IllegalArgumentException ("sibling == null");
+            }
+            activeRoot = getClassFolderForSourceImpl (siblingURL);
             if (activeRoot == null) {
-                //Deleted project
-                throw new InvalidSourcePath ();
+                activeRoot = getClassFolderForApt(siblingURL);
+                if (activeRoot == null) {
+                    //Deleted project
+                    throw new InvalidSourcePath ();
+                }
             }
         }
         assertValidRoot(activeRoot, l);
@@ -172,6 +180,23 @@ public class OutputFileManager extends CachingFileManager {
         return tx.createFileObject(l, file, activeRoot,null,null);
     }
 
+    @Override
+    public boolean handleOption(String head, Iterator<String> tail) {
+        if (OPTION_SET_CURRENT_ROOT.equals(head)) {
+            if (tail.hasNext()) {
+                try {
+                    root = new URL(tail.next());
+                } catch (MalformedURLException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            } else {
+                root = null;
+            }
+            return true;
+        } else {
+            return super.handleOption(head, tail);
+        }
+    }
 
     @Override
     public javax.tools.FileObject getFileForInput(Location l, String pkgName, String relativeName) {

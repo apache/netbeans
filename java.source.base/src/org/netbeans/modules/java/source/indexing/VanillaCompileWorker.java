@@ -48,11 +48,12 @@ import java.util.Map.Entry;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-import javax.annotation.processing.Processor;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
+import javax.tools.Diagnostic.Kind;
+import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
@@ -151,14 +152,14 @@ final class VanillaCompileWorker extends CompileWorker {
             Log.instance(jt.getContext()).nerrors = 0;
         } catch (CancelAbort ca) {
             if (context.isCancelled() && JavaIndex.LOG.isLoggable(Level.FINEST)) {
-                JavaIndex.LOG.log(Level.FINEST, "SuperOnePassCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
+                JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
             }
         } catch (Throwable t) {
             if (JavaIndex.LOG.isLoggable(Level.WARNING)) {
                 final ClassPath bootPath   = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.BOOT);
                 final ClassPath classPath  = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
                 final ClassPath sourcePath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
-                final String message = String.format("SuperOnePassCompileWorker caused an exception\nFile: %s\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
+                final String message = String.format("VanillaCompileWorker caused an exception\nFile: %s\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
                             fileObjects.values().iterator().next().indexable.getURL().toString(),
                             FileUtil.getFileDisplayName(context.getRoot()),
                             bootPath == null   ? null : bootPath.toString(),
@@ -189,6 +190,8 @@ final class VanillaCompileWorker extends CompileWorker {
         Log log = Log.instance(jt.getContext());
         JavaCompiler compiler = JavaCompiler.instance(jt.getContext());
         Set<JavaFileObject> haveErrors = new HashSet<>();
+        JavaFileManager fm = jt.getContext().get(JavaFileManager.class);
+        fm.handleOption(OutputFileManager.OPTION_SET_CURRENT_ROOT, Collections.singleton(context.getRootURI().toString()).iterator());
         try {
             final Iterable<? extends Element> types = jt.enter(trees);
             if (context.isCancelled()) {
@@ -262,8 +265,9 @@ final class VanillaCompileWorker extends CompileWorker {
                     modifiedTypes.addAll(aTypes);
                 }
                 ExecutableFilesIndex.DEFAULT.setMainClass(context.getRoot().toURL(), active.indexable.getURL(), main[0]);
-                if (!dc.getDiagnostics(active.jfo).isEmpty())
+                if (dc.peekDiagnostics(active.jfo).stream().anyMatch(d -> d.getKind() == Kind.ERROR)) {
                     haveErrors.add(active.jfo);
+                }
                 JavaCustomIndexer.setErrors(context, active, dc);
             }
             if (context.isCancelled()) {
@@ -319,7 +323,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 final ClassPath bootPath   = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.BOOT);
                 final ClassPath classPath  = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
                 final ClassPath sourcePath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
-                final String message = String.format("SuperOnePassCompileWorker caused an exception\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
+                final String message = String.format("VanillaCompileWorker caused an exception\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
                             FileUtil.getFileDisplayName(context.getRoot()),
                             bootPath == null   ? null : bootPath.toString(),
                             classPath == null  ? null : classPath.toString(),
@@ -331,7 +335,7 @@ final class VanillaCompileWorker extends CompileWorker {
             if (isLowMemory(null)) {
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             } else if (JavaIndex.LOG.isLoggable(Level.FINEST)) {
-                JavaIndex.LOG.log(Level.FINEST, "SuperOnePassCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
+                JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
             }
         } catch (Throwable t) {
             if (t instanceof ThreadDeath) {
@@ -342,7 +346,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     final ClassPath bootPath   = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.BOOT);
                     final ClassPath classPath  = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
                     final ClassPath sourcePath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
-                    final String message = String.format("SuperOnePassCompileWorker caused an exception\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
+                    final String message = String.format("VanillaCompileWorker caused an exception\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
                                 FileUtil.getFileDisplayName(context.getRoot()),
                                 bootPath == null   ? null : bootPath.toString(),
                                 classPath == null  ? null : classPath.toString(),
@@ -351,6 +355,8 @@ final class VanillaCompileWorker extends CompileWorker {
                     JavaIndex.LOG.log(level, message, t);  //NOI18N
                 }
             }
+        } finally {
+            fm.handleOption(OutputFileManager.OPTION_SET_CURRENT_ROOT, Collections.<String>emptySet().iterator());
         }
         return ParsingOutput.failure(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
     }

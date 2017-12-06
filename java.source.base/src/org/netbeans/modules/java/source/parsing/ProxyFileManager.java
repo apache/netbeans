@@ -750,6 +750,9 @@ public final class ProxyFileManager implements JavaFileManager {
                     createPatchFileManager();
                     createModuleSrcFileManager();
                 }
+                if (OutputFileManager.OPTION_SET_CURRENT_ROOT.equals(hint)) {
+                    createOutputFileManager();
+                }
                 final List<JavaFileManager> res = new ArrayList<>(emitted.length);
                 for (JavaFileManager jfm : emitted) {
                     if (jfm != null) {

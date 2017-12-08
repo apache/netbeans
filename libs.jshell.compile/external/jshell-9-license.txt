@@ -3,9 +3,9 @@ Type: compile-time
 Name: Javac Shell API
 License: GPL-2-CP
 Description: Javac Compiler API
-OSR: 6273
 Origin: Oracle (http://hg.openjdk.java.net/)
 Source: http://hg.netbeans.org/main/nb-javac/
+Comment: Needed to compile JShell support, classes from JDK used at runtime or support disabled.
 
 The GNU General Public License (GPL)
 Version 2, June 1991

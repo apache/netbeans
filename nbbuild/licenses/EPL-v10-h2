@@ -1,9 +1,3 @@
-Name: H2 Database Engine
-Version: 1.4.196
-License: EPL-v10-h2
-Description: The H2 Database Enginge is a pure java database, that can be used in embedded and server mode.
-Origin: http://h2database.com
-
 Eclipse Public License - Version 1.0
 
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.

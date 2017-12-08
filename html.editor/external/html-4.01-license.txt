@@ -1,9 +1,9 @@
 Name: HTML 4.01 Specification
-License: W3C (the original at http://www.w3.org/TR/1999/REC-html401-19991224/)
-OSR: 2664
-Version: 4.01
 Description: Documentation for the HTML 4.01 standard
-Origin: http://www.w3.org/TR/1999/REC-html401-19991224/
+License: W3C
+Version: 4.01
+Origin: W3C
+URL: http://www.w3.org/TR/1999/REC-html401-19991224/
 
 W3C (R) Intellectual Rights Notice and Legal Disclaimers
 

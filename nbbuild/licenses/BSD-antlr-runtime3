@@ -1,10 +1,3 @@
-Name: Antlr
-Description: ANother Tool for Language Recognition, is a language tool that provides a framework for constructing recognizers, interpreters, compilers, and translators from grammatical descriptions.
-Version: 3.4
-License: BSD-antlr-runtime3
-Origin: Antlr
-URL: http://www.antlr.org
-
 Use of Antlr version 3.4 is governed by the terms of the license below:
 
  [The "BSD license"]

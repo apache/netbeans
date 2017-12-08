@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -25,9 +25,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Predicate;
 import org.apache.tools.ant.module.AntSettings;
 import org.apache.tools.ant.module.run.TargetExecutor;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.openide.execution.ExecutorTask;
 import org.openide.util.NbCollections;
 import org.openide.util.Parameters;
@@ -83,6 +85,15 @@ final public class AntTargetExecutor {
         te.setVerbosity(env.getVerbosity());
         te.setProperties(NbCollections.checkedMapByCopy(env.getProperties(), String.class, String.class, true));
         te.setConcealedProperties(env.getConcealedProperties());
+        if (env.shouldSaveAllDocs != null) {
+            te.setSaveAllDocuments(env.shouldSaveAllDocs);
+        }
+        te.setDisplayName(env.preferredName);
+        if (env.canReplace != null) {
+            assert env.canBeReplaced != null;
+            te.setTabReplaceStrategy(env.canReplace,env.canBeReplaced);
+        }
+        te.setUserAction(env.userAction);
         if (env.getLogger() == null) {
             return te.execute();
         } else {
@@ -100,6 +111,11 @@ final public class AntTargetExecutor {
         private Properties properties;
         private OutputStream outputStream;
         private volatile Set<String> concealedProperties;
+        private Boolean shouldSaveAllDocs;
+        private String preferredName;
+        private Predicate<String> canReplace;
+        private Predicate<String> canBeReplaced;
+        private boolean userAction;
 
         /** Create instance of Env class describing environment for Ant target execution.
          */
@@ -108,6 +124,7 @@ final public class AntTargetExecutor {
             properties = new Properties();
             properties.putAll(AntSettings.getProperties());
             concealedProperties = Collections.emptySet();
+            userAction = true;
         }
 
         /**
@@ -182,6 +199,56 @@ final public class AntTargetExecutor {
         public Set<String> getConcealedProperties() {
             return concealedProperties;
         }
+
+        /**
+         * Overrides the default save all behavior.
+         * @param shouldSave if true all modified documents are saved before running Ant.
+         * @since 3.84
+         */
+        public void setSaveAllDocuments(final boolean shouldSave) {
+            this.shouldSaveAllDocs = shouldSave;
+        }
+
+        /**
+         * Sets the preferred name for output windows.
+         * @param name the preferred name in case of null the name is assigned automatically
+         * @since 3.84
+         */
+        public void setPreferredName(@NullAllowed final String name) {
+            this.preferredName = name;
+        }
+
+        /**
+         * Sets the output tab replacement strategy.
+         * When the IDE is set to the automatic close tabs mode the tabs created by the previous
+         * run of the {@link AntTargetExecutor} are closed by successive run. This behavior can be overridden
+         * by this method.
+         * @param canReplace the {@link Predicate} used to decide if this execution
+         * can replace existing tab. The predicate parameter is a name of tab being replaced.
+         * @param canBeReplaced the {@link Predicate} used to decide if tab can be
+         * replaced by a new execution. The predicate parameter is a name of a tab being created.
+         * @since 3.84
+         */
+        public void setTabReplaceStrategy(
+                @NonNull final Predicate<String> canReplace,
+            @NonNull final Predicate<String> canBeReplaced) {
+            Parameters.notNull("canReplace", canReplace);   //NOI18N
+            Parameters.notNull("canBeReplaced", canBeReplaced); //NOI18N
+            this.canReplace = canReplace;
+            this.canBeReplaced = canBeReplaced;
+        }
+
+        /**
+         * Marks the execution as an user action.
+         * The executions marked as user actions are registered in the
+         * UI support {@link org.netbeans.spi.project.ui.support.BuildExecutionSupport}.
+         * By default the execution is an user action.
+         * @param userAction if true the execution is registered into
+         * the {@link org.netbeans.spi.project.ui.support.BuildExecutionSupport}
+         * @since 3.85
+         */
+        public void setUserAction(final boolean userAction) {
+            this.userAction = userAction;
+        }
     }
-    
 }

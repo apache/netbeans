@@ -78,7 +78,7 @@
             </friend-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/ValidationAPI.jar</runtime-relative-path>
-                <binary-origin>external/ValidationAPI.jar</binary-origin>
+                <binary-origin>external/ValidationAPI-b26b94cc001a41ab9138496b11e2ae256a159ffd.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

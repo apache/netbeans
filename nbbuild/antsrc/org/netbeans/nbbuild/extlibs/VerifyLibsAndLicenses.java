@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -215,7 +215,7 @@ public class VerifyLibsAndLicenses extends Task {
                         } else {
                             trailingSpace = c == ' ';
                             column++;
-                            if (pastHeader && column > MAX_LINE_LEN) {
+                            if (pastHeader && column > MAX_LINE_LEN && CHECK_MAX_LINE_LEN) {
                                 msg.append("\n" + path + " has line #" + line + " longer than 80 characters");
                                 continue FILE;
                             }
@@ -234,6 +234,7 @@ public class VerifyLibsAndLicenses extends Task {
         pseudoTests.put("testLicenseFilesAreProperlyFormattedPhysically", msg.length() > 0 ? "Some license files were badly formatted" + msg : null);
     }
 
+    private static final boolean CHECK_MAX_LINE_LEN = false;
     private static final int MAX_LINE_LEN = 100;//temporary increased from: 80
 
     private void testLicenses() throws IOException {
@@ -307,6 +308,9 @@ public class VerifyLibsAndLicenses extends Task {
                         if (license.contains("GPL-2-CP") &&
                             headers.getOrDefault("Type", "").contains("compile-time")) {
                             //OK to include GPLv2+CPE as a compile-time/runtime optional dependency
+                            if (!headers.containsKey("Comment")) {
+                                msg.append("\n" + path + " has a GPL-family license but does not have a Comment.");
+                            }
                         } else {
                             msg.append("\n" + path + " has a GPL-family license but is either not covered by the Classpath Exception, or is not compile-time/optional only.");
                         }

@@ -1520,8 +1520,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     <resolve name="harness-modules" value="nb.cluster.harness"/>
     
     <mkdir dir="${nb.build.dir}"/>
+    <condition property="build.source.config.add.ide" else="" value=",ide">
+        <isset property="has.nb.cluster" />
+    </condition>
     <dirset id="source.dirset" dir="${nb_all}"
-            includes="${allmodules},${harness-modules},nbbuild,ide,nbi,libs.antlr3.devel,libs.junit4"
+            includes="${allmodules},${harness-modules},nbbuild${build.source.config.add.ide},nbi,libs.antlr3.devel,libs.junit4"
             excludes="nbi/engine/lib,nbi/infra/build/jvm,nbi/infra/sandbox,nbi/infra/server,nbi/infra/utils"
     />
     <pathconvert property="source.dirs" pathsep="," refid="source.dirset">
@@ -2029,6 +2032,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="**/*.mf" /> <!--do not natively support comments-->
             <exclude name="**/*.MF" /> <!--do not natively support comments-->
             <exclude name="**/*.nib" /> <!--do not natively support comments-->
+            <exclude name="**/*.oql" /> <!--do not natively support comments-->
             <exclude name="**/*.palette_item" /> <!--no degree of creativity-->
             <exclude name="**/*.pass" /> <!--generated test files-->
             <exclude name="**/*.pass2" /> <!--generated test files-->
@@ -2047,7 +2051,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="**/nbproject/jfx-impl.xml" /> <!--generated, no degree of creativity -->
             <exclude name="**/nbproject/private/**" /> <!--user-specific files -->
             <exclude name="**/src/META-INF/**" /> <!--no degree of creativity-->
-            <exclude name="*/build/**" />
+            <exclude name="**/build/**" /> <!-- build artifacts -->
             <exclude name="**/.dep.inc" /> <!--no degree of creativity-->
             <exclude name="**/Makefile-vc" /> <!--no degree of creativity-->
             <exclude name="**/Makefile-vc-wo-crt" /> <!--no degree of creativity-->
@@ -2057,14 +2061,17 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="api.search/test/unit/src/org/netbeans/modules/search/data/**" /> <!--test data-->
             <exclude name="api.templates/test/unit/src/org/netbeans/modules/templates/utf8.xml" /> <!--test data-->
             <exclude name="apisupport.ant/src/org/netbeans/modules/apisupport/project/resources/license-*.txt" /> <!--template file-->
-            <exclude name="autoupdate.services/test/unit/src/org/netbeans/modules/autoupdate/updateprovider/data/**" /> <!-- test data -->
+            <exclude name="apisupport.installer/src/org/netbeans/modules/apisupport/installer/resources/licenses/**" /> <!--three license files-->
+            <exclude name="apisupport.project/src/org/netbeans/modules/apisupport/project/ui/resources/layer_template.xml" /> <!--template file-->
+            <exclude name="autoupdate.services/test/unit/**/data/**" /> <!-- test data not captured by general data exclude -->
             <exclude name="beans/src/org/netbeans/modules/beans/resources/templates/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
             <exclude name="css.editor/src/org/netbeans/modules/css/resources/CascadeStyleSheet.css.template" /> <!-- user visible template -->
             <exclude name="css.editor/src/org/netbeans/modules/css/resources/CssExample" /> <!-- user visible template -->
-            <exclude name="css.editor/todo" /> <!-- no degree of creativity -->
             <exclude name="debugger.jpda/test/unit/src/org/netbeans/api/debugger/jpda/testapps/JspLineBreakpointApp.txt" /> <!-- test data -->
             <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/provider/*.txt" /> <!--test data-->
             <exclude name="diff/test/unit/src/org/netbeans/modules/diff/builtin/visualizer/data/**" /> <!--test data-->
+            <exclude name="db.sql.editor/src/org/netbeans/modules/db/sql/editor/resources/SQLExample" /> <!-- file is used as sample for syntax highlighting in GUI -->
+            <exclude name="dbschema/src/org/netbeans/modules/dbschema/jdbcimpl/resources/templates/*" /> <!-- template files -->
             <exclude name="editor/demosrc/base/org/netbeans/editor/example/res/template.html_" /> <!-- template file -->
             <exclude name="editor/demosrc/base/org/netbeans/editor/example/res/template.java_" /> <!-- template file -->
             <exclude name="editor/demosrc/properties-addon/org/netbeans/editor/example/res/template.properties" /> <!-- template file -->
@@ -2074,8 +2081,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="editor.plain/src/org/netbeans/modules/editor/plain/resources/PlainTextExample" /> <!--license would be visible to users in the Fonts/Colors settings-->
             <exclude name="editor.settings.storage/test/unit/src/org/netbeans/modules/editor/settings/storage/compatibility/p1/**" /> <!--test data-->
             <exclude name="extbrowser/test/unit/src/org/netbeans/modules/extbrowser/data/mac_defaults_*" /> <!--test data-->
+            <exclude name="form/src/org/netbeans/modules/form/resources/templates/**" /> <!--template files-->
             <exclude name="hibernate/src/org/netbeans/modules/hibernate/resources/Hibernate*.xml" /> <!--template files-->
             <exclude name="hibernate/src/org/netbeans/modules/hibernate/resources/HibernateUtil.javax" /> <!--template file-->
+            <exclude name="html/test/unit/src/org/netbeans/modules/html/data/**" /> <!--test data-->
             <exclude name="html.editor/src/org/netbeans/modules/html/editor/options/ui/formatSample.html" /> <!--user visible file template-->
             <exclude name="html.editor/src/org/netbeans/modules/html/editor/resources/HTMLExample" /> <!--user visible file template-->
             <exclude name="html.editor/src/org/netbeans/modules/html/editor/resources/XHTMLExample" /> <!--user visible file template-->
@@ -2092,16 +2101,17 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="java.j2semodule/src/org/netbeans/modules/java/j2semodule/ui/resources/module-info.java.template" /> <!--template file-->
             <exclude name="java.platform.ui/src/org/netbeans/modules/java/platform/resources/templates/javaplatform.xml" /> <!--template file-->
             <exclude name="java.project.ui/src/org/netbeans/modules/java/project/ui/resources/*.template" /> <!-- template files -->
-            <exclude name="java.source/test-excludes.txt" /> <!-- test context -->
             <exclude name="java.source/src/org/netbeans/modules/**/*.template" /> <!-- template files -->
-            <exclude name="javafx2.kit/release/VERSION.txt" /> <!--generated file-->
             <exclude name="javafx2.project/src/org/netbeans/modules/javafx2/project/templates/**" /> <!--license would be visible when users edit the templates inside their IDE-->
-            <exclude name="javawebstart/AntTasks/build/**" /> <!-- generated build files -->
             <exclude name="jellytools.platform/src/org/netbeans/jellytools/version_info" /> <!--does not natively support comments-->
+            <exclude name="jshell.support/src/org/netbeans/modules/jshell/resources/consoleExample.jsh" /> <!-- file is used as sample for syntax highlighting in GUI -->
             <exclude name="junit.ui/src/org/netbeans/modules/junit/ui/resources/*.template" /> <!--license would be visible when users edit the templates inside their IDE-->
             <exclude name="languages.diff/src/org/netbeans/modules/languages/diff/DiffExample.diff" /> <!--license would be visible to users in the Fonts/Colors settings-->
             <exclude name="languages.yaml/src/org/netbeans/modules/languages/yaml/*.yaml" /> <!--Files used in GUI as sample/starting point-->
             <exclude name="languages.yaml/src/org/netbeans/modules/languages/yaml/*.yml" /> <!--Files used in GUI as sample/starting point-->
+            <exclude name="lexer/demo/src/org/netbeans/modules/lexer/demo/**/*.txt" /> <!-- test data -->
+            <exclude name="lib.profiler/test/unit/src/org/netbeans/lib/profiler/heap/testHeapDumpLog.txt" /> <!--test data-->
+            <exclude name="lib.profiler/release/lib/deployed/**/*.map" /> <!-- companion files for CDDL licensed binaries -->
             <exclude name="lib.uihandler/src/org/netbeans/lib/uihandler/pubKey" /> <!--no degree of creativity-->
             <exclude name="lib.uihandler/test/unit/src/**" /> <!--test data-->
             <exclude name="maven.htmlui/src/org/netbeans/modules/maven/htmlui/UIDefaults" /> <!-- config file with no place for license header-->
@@ -2114,14 +2124,12 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="nbbuild/tagref" /> <!--no degree of creativity-->
             <exclude name="nbbuild/notice-stub.txt" /> <!--Apache notice file-->
             <exclude name="nbbuild/standard-nbm-license.txt" /> <!--license file-->
-            <exclude name="nbbuild/testuserdir/**" />
+            <exclude name="nbbuild/testuserdir/**" /> <!-- directory for netbeans testruns, not part of distribution and repository -->
+            <exclude name="nbbuild/user.build.properties" /> <!-- user configuration file, not part of distribution and repository -->
             <exclude name="nbi/engine/nbproject/profiler-build-impl.xml" /> <!--generated, no degree of creativity -->
-            <exclude name="o.apache.tools.ant.module/release/VERSION.txt" /> <!--generated file-->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/CustomTask_java" /> <!-- user visible file template -->
             <exclude name="o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/Project.xml_" /> <!-- user visible file template -->
             <exclude name="o.n.bootstrap/readme/*.txt" /> <!--READMEs-->
-            <exclude name="o.n.bootstrap/test/unit/src/org/fakepkg/resource1.txt" /> <!--no degree of creativity-->
-            <exclude name="o.n.bootstrap/test/unit/src/org/fakepkg/resource2.txt" /> <!--no degree of creativity-->
             <exclude name="o.n.core/licenses/**" /> <!-- license files -->
             <exclude name="o.n.core/test/unit/src/org/netbeans/core/modules/jars/localized-manifest/locmani/something.txt" /> <!--no degree of creativity-->
             <exclude name="o.n.core/test/unit/src/org/netbeans/core/projects/cache/data/**" /> <!-- test data -->
@@ -2133,9 +2141,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="openide.util.lookup/test/unit/src/org/openide/util/lookup/services-jar-2.txt" /> <!--no degree of creativity-->
             <exclude name="openide.util.ui/test/unit/src/org/openide/util/UtilitiesTranslateEmpty.txt" /> <!-- license would cause tests to fail -->
             <exclude name="openide.util/test/unit/src/org/openide/util/LookupUsesRequestProcessorTest.resource" /> <!-- license would cause tests to fail -->
-            <exclude name="options.editor/src/org/netbeans/modules/options/colors/AllLanguagesExample" /> <!--no degree of creativitya-->
-            <exclude name="options.editor/src/org/netbeans/modules/options/colors/HighlightingExample" /> <!--no degree of creativitya-->
-            <exclude name="options.editor/src/org/netbeans/modules/options/indentation/indentationExample" /> <!--no degree of creativitya-->
+            <exclude name="options.editor/src/org/netbeans/modules/options/colors/AllLanguagesExample" /> <!--no degree of creativity-->
+            <exclude name="options.editor/src/org/netbeans/modules/options/colors/HighlightingExample" /> <!--no degree of creativity-->
+            <exclude name="options.editor/src/org/netbeans/modules/options/indentation/indentationExample" /> <!--no degree of creativity-->
             <exclude name="projectui/src/org/netbeans/modules/project/ui/resources/*-license.txt" /> <!--licenses-->
             <exclude name="projectui/src/org/netbeans/modules/project/ui/resources/license-default.txt" /> <!--licenses-->
             <exclude name="projectuiapi/test/unit/src/org/netbeans/modules/project/uiapi/data/*.txt" /> <!--test data-->
@@ -2150,9 +2158,12 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="testng.ui/src/org/netbeans/modules/testng/ui/resources/*.template" /> <!--template files-->
             <exclude name="utilities/test/unit/src/org/netbeans/modules/openfile/resources/recent_files/*" /> <!--test data-->
             <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.template" /> <!--template files-->
+            <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/*.xsd" /> <!-- XSDs for usage at runtime and code generation - the XSDs are not modified, so covered by https://www.apache.org/legal/resolved.html#category-b -->
+            <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/jaxb/*" /> <!-- generated code -->
+            <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/oauth/*" /> <!-- generated code -->
+            <exclude name="websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl/*" /> <!-- generated code -->
             <exclude name="websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/model/application.wadl" /> <!--test data-->
             <exclude name="websvc.saas.api/test/unit/src/org/netbeans/modules/websvc/saas/util/rootGroup.xml" /> <!--test data-->
-            <exclude name="websvc.saas.kit/release/VERSION.txt" /> <!--generated file-->
             <exclude name="welcome/src/org/netbeans/modules/welcome/resources/rss-0_91.dtd" /> <!-- specifies a standard -->
             <exclude name="xml.axi/test/unit/src/org/netbeans/modules/xml/axi/resources/**" /> <!-- test data -->
             <exclude name="xml.lexer/test/unit/src/org/netbeans/api/xml/lexer/resources/*.dtd" /> <!-- test data -->
@@ -2198,10 +2209,15 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 conforming SGML systems and applications as defined in
                 ISO 8879, provided this notice is included in all copies.
             </rat:fullTextMatcher>
+            <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
+                Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+                license agreements; and to You under the Apache License, Version 2.0.
+            </rat:fullTextMatcher>
             <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
             <rat:approvedLicense familyName="OASIS"/>
             <rat:approvedLicense familyName="WSDL Schema Files" />
             <rat:approvedLicense familyName="International Organization for Standardization for SGML"/>
+            <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
 	    <fileset dir="${nb_all}">
                 <patternset refid="non.rat" />
             </fileset>
@@ -2218,9 +2234,21 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 All Rights Reserved
                 License for WSDL Schema Files
             </rat:fullTextMatcher>
+            <rat:fullTextMatcher licenseFamilyCategory="ISO-SGML" licenseFamilyName="International Organization for Standardization for SGML">
+                International Organization for Standardization 1986
+                Permission to copy in any form is granted for use with
+                conforming SGML systems and applications as defined in
+                ISO 8879, provided this notice is included in all copies.
+            </rat:fullTextMatcher>
+            <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
+                Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+                license agreements; and to You under the Apache License, Version 2.0.
+            </rat:fullTextMatcher>
             <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
             <rat:approvedLicense familyName="OASIS"/>
             <rat:approvedLicense familyName="WSDL Schema Files" />
+            <rat:approvedLicense familyName="International Organization for Standardization for SGML"/>
+            <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
 	    <fileset dir="${nb_all}">
                 <patternset refid="non.rat" />
             </fileset>

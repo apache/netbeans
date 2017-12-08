@@ -1,8 +1,8 @@
 Name: Eclipse Core Runtime library
+Origin: Eclipse
 Version: 3.7.0
 License: EPL-v10
-OSR: 5856
-Origin: http://www.eclipse.org/
+URL: http://www.eclipse.org/
 Description: Eclipse Core Runtime library
 
 Eclipse Public License - v 1.0
@@ -21,7 +21,7 @@ ii) additions to the Program;
 
 where such changes and/or additions to the Program originate from and are distributed by that particular Contributor. A Contribution 'originates' from a Contributor if it was added to the Program by such Contributor itself or anyone acting on such Contributor's behalf. Contributions do not include additions to the Program which: (i) are separate modules of software distributed in conjunction with the Program under their own license agreement, and (ii) are not derivative works of the Program.
 "Contributor" means any person or entity that distributes the Program.
-"Licensed Patents " mean patent claims licensable by a Contributor which are necessarily infringed by the use or sale of its Contribution alone or when combined with the Program.
+"Licensed Patents" mean patent claims licensable by a Contributor which are necessarily infringed by the use or sale of its Contribution alone or when combined with the Program.
 "Program" means the Contributions distributed in accordance with this Agreement.
 "Recipient" means anyone who receives the Program under this Agreement, including all Contributors.
 

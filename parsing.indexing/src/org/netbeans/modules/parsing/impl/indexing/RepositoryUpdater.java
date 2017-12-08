@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -3256,44 +3256,55 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                         @Override
                         public Boolean call() throws Exception {
                             final ClassPath.Entry entry = sourceForBinaryRoot ? null : getClassPathEntry(rootFo);
-                            final Set<Crawler.TimeStampAction> checkTimeStamps = EnumSet.noneOf(Crawler.TimeStampAction.class);
                             final boolean permanentUpdate = isSteady();
                             assert !TransientUpdateSupport.isTransientUpdate() || !permanentUpdate;
                             assert permanentUpdate || (forceRefresh && !files.isEmpty());
-                            if (!forceRefresh) {
-                                checkTimeStamps.add(Crawler.TimeStampAction.CHECK);
-                            }
-                            if (permanentUpdate) {
-                                checkTimeStamps.add(Crawler.TimeStampAction.UPDATE);
-                            }
-                            final Crawler crawler = files.isEmpty() ?
-                                new FileObjectCrawler(rootFo, checkTimeStamps, entry, getCancelRequest(), getSuspendStatus()) : // rescan the whole root (no timestamp check)
-                                new FileObjectCrawler(rootFo, files.toArray(new FileObject[files.size()]), checkTimeStamps, entry, getCancelRequest(), getSuspendStatus()); // rescan selected files (no timestamp check)
-                            if (lctx != null) {
-                                lctx.noteRootScanning(root, true);
-                            }
-                            long t = System.currentTimeMillis();
-                            final List<Indexable> resources = crawler.getResources();
-                            if (crawler.isFinished()) {
 
-                                logCrawlerTime(crawler, t);
-                                final Map<SourceIndexerFactory,Boolean> invalidatedMap = new IdentityHashMap<>();
-                                final Map<Pair<String,Integer>,Pair<SourceIndexerFactory,Context>> ctxToFinish = new HashMap<>();
-                                final UsedIndexables usedIterables = new UsedIndexables();
-                                final SourceIndexers indexers = getSourceIndexers(false);
-                                invalidateSources(resources);
-                                boolean indexResult=false;
-                                try {
-                                    scanStarted (root, sourceForBinaryRoot, indexers, invalidatedMap, ctxToFinish);
+                            final SourceIndexers indexers = getSourceIndexers(false);
+                            final Map<Pair<String,Integer>,Pair<SourceIndexerFactory,Context>> ctxToFinish = new HashMap<>();
+                            final Map<SourceIndexerFactory,Boolean> invalidatedMap = new IdentityHashMap<>();
+                            final UsedIndexables usedIterables = new UsedIndexables();
+                            boolean indexResult = false;
+                            if (lctx != null) {
+                                lctx.noteRootScanning(root, false);
+                            }
+                            try {
+                                scanStarted (root, sourceForBinaryRoot, indexers, invalidatedMap, ctxToFinish);
+                                boolean indexerVeto = false;
+                                for (Boolean b : invalidatedMap.values()) {
+                                    if (!b) {
+                                        indexerVeto = true;
+                                        break;
+                                    }
+                                }
+                                //Find files to index
+                                final Set<Crawler.TimeStampAction> checkTimeStamps = EnumSet.noneOf(Crawler.TimeStampAction.class);
+                                if (!forceRefresh) {
+                                    checkTimeStamps.add(Crawler.TimeStampAction.CHECK);
+                                }
+                                if (permanentUpdate) {
+                                    checkTimeStamps.add(Crawler.TimeStampAction.UPDATE);
+                                }
+                                final Crawler crawler = files.isEmpty() || indexerVeto ?
+                                    new FileObjectCrawler(rootFo, checkTimeStamps, entry, getCancelRequest(), getSuspendStatus()) : // rescan the whole root (no timestamp check)
+                                    new FileObjectCrawler(rootFo, files.toArray(new FileObject[files.size()]), checkTimeStamps, entry, getCancelRequest(), getSuspendStatus()); // rescan selected files (no timestamp check)
+                                if (lctx != null) {
+                                    lctx.startCrawler();
+                                }
+                                long t = System.currentTimeMillis();
+                                final List<Indexable> resources = crawler.getResources();
+                                if (crawler.isFinished()) {
+                                    logCrawlerTime(crawler, t);
+                                    invalidateSources(resources);
                                     delete(crawler.getDeletedResources(), ctxToFinish, usedIterables);
-                                    indexResult=index(resources, crawler.getAllResources(), root, sourceForBinaryRoot, indexers, invalidatedMap, ctxToFinish, usedIterables);
+                                    indexResult = index(resources, crawler.getAllResources(), root, sourceForBinaryRoot, indexers, invalidatedMap, ctxToFinish, usedIterables);
                                     if (indexResult) {
                                         crawler.storeTimestamps();
                                         return true;
                                     }
-                                } finally {
-                                    scanFinished(ctxToFinish.values(), usedIterables, indexResult);
                                 }
+                            } finally {
+                                 scanFinished(ctxToFinish.values(), usedIterables, indexResult);
                             }
                             return false;
                         }

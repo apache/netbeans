@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -20,13 +20,11 @@
 package org.netbeans.modules.templates;
 
 import java.awt.Dialog;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -223,24 +221,22 @@ public class SCFTHandlerTest extends NbTestCase {
     }
     
     private static String readFile(FileObject fo) throws IOException {
-        byte[] arr = new byte[(int)fo.getSize()];
-        int len = fo.getInputStream().read(arr);
-        assertEquals("Fully read", arr.length, len);
-        return new String(arr);
+        return readChars(fo, Charset.defaultCharset());
     }
 
     private static String readChars(FileObject fo, Charset set) throws IOException {
-        CharBuffer arr = CharBuffer.allocate((int)fo.getSize() * 2);
-        BufferedReader r = new BufferedReader(new InputStreamReader(fo.getInputStream(), set));
-        while (r.read(arr) != -1) {
-            // again
+        try (InputStream is = fo.getInputStream()) {
+            StringBuilder sb = new StringBuilder();
+            int read = 0;
+            char[] buffer = new char[1024];
+            InputStreamReader r = new InputStreamReader(is, set);
+            while ((read = r.read(buffer)) > 0) {
+                sb.append(buffer, 0, read);
+            }
+            return sb.toString().replace(System.getProperty("line.separator"), "\n");
         }
-        r.close();
-        
-        arr.flip();
-        return arr.toString();
     }
-
+    
      public void testUTF8() throws Exception {
          FileObject root = FileUtil.getConfigRoot();
          FileObject xmldir = FileUtil.createFolder(root, "xml");
@@ -321,17 +317,12 @@ public class SCFTHandlerTest extends NbTestCase {
         if (length <= 0) {
             fail("Too small file: " + length + " for " + snd);
         }
-        InputStream is = snd.getInputStream();
-        InputStreamReader r = new InputStreamReader(is, "UTF-8");
-        char[] cbuf = new char[1024];
-        int len = r.read(cbuf);
-        if (len == -1) {
-            fail("no input stream for " + snd);
-        }
-        String read = new String(cbuf, 0, len);
-        txt = txt.replaceAll("print\\('", "").replaceAll("'\\)", "") +'\n';
         
-        assertEquals(txt, read);
+        String normRead = readChars(snd, Charset.forName("UTF-8"));
+
+        txt = txt.replaceAll("print\\('", "").replaceAll("'\\)", "") + "\n";
+        
+        assertEquals(txt, normRead);
     }
      
     public static final class DD extends DialogDisplayer {

@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-D87F53C99E4CD88F5416EDD5ABB77F2A1CCFB050 jarjar-1.4.jar
-E48292EAE5E14EC44978AA53DEBB1AF7DDD6DF93 aether-api-1.13.1.jar
+E7A996E498FCE8543B5635E83C4EF803CE5C9FEF org.pantsbuild.jarjar:jarjar:1.5
+E48292EAE5E14EC44978AA53DEBB1AF7DDD6DF93 org.sonatype.aether:aether-api:1.13.1

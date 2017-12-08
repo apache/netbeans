@@ -14,5 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-C264E2114579474D13DD808A510FC74E762DDA8C mysql:mysql-connector-java:5.1.23
 7F25826357976ED495184938B6A464ACDF0EA3F8 org.postgresql:postgresql:9.4.1209

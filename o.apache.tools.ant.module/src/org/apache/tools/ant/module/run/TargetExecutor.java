@@ -1,4 +1,4 @@
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -36,6 +36,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -66,6 +67,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Cancellable;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
+import org.openide.util.Pair;
 import org.openide.util.Parameters;
 import org.openide.util.RequestProcessor;
 import org.openide.util.io.ReaderInputStream;
@@ -87,7 +89,7 @@ public final class TargetExecutor implements Runnable {
      * Map from tab to tab display name.
      * @see "#43001"
      */
-    private static final Map<InputOutput,String> freeTabs = new WeakHashMap<InputOutput,String>();
+    private static final Map<InputOutput,Pair<String,Predicate<String>>> freeTabs = new WeakHashMap<>();
     
     /**
      * Display names of currently active processes.
@@ -104,6 +106,10 @@ public final class TargetExecutor implements Runnable {
     /** used for the tab etc. */
     private String displayName;
     private String suggestedDisplayName;
+    private Boolean shouldSaveAllDocs;
+    private Predicate<String> canReplace = (s) -> true;
+    private Predicate<String> canBeReplaced = (s) -> true;
+    private boolean userAction = true;
     private volatile Set<String> concealedProperties;
 
     /** targets may be null to indicate default target */
@@ -126,8 +132,25 @@ public final class TargetExecutor implements Runnable {
         this.concealedProperties = Collections.unmodifiableSet(new HashSet<String>(concealedProperties));
     }
 
-    void setDisplayName(String n) {
-        suggestedDisplayName = n;
+    public void setSaveAllDocuments(boolean shouldSaveAllDocs) {
+        this.shouldSaveAllDocs = shouldSaveAllDocs;
+    }
+
+    public void setDisplayName(String n) {
+        this.suggestedDisplayName = n;
+    }
+
+    public void setTabReplaceStrategy(
+            @NonNull final Predicate<String> canReplace,
+            @NonNull final Predicate<String> canBeReplaced) {
+        Parameters.notNull("canReplace", canReplace);   //NOI18N
+        Parameters.notNull("canBeReplaced", canBeReplaced); //NOI18N
+        this.canReplace = canReplace;
+        this.canBeReplaced = canBeReplaced;
+    }
+    
+    public void setUserAction(final boolean userAction) {
+        this.userAction = userAction;
     }
     
     private static String getProcessDisplayName(AntProjectCookie pcookie, List<String> targetNames) {
@@ -207,6 +230,9 @@ public final class TargetExecutor implements Runnable {
         private Map<String,String> properties;
         private Set<String> concealedProperties;
         private String displayName;
+        private Boolean shouldSaveAllDocs;
+        private Predicate<String> canReplace;
+        private Predicate<String> canBeReplaced;
 
         public RerunAction(TargetExecutor prototype, boolean withModifications) {
             this.withModifications = withModifications;
@@ -225,6 +251,9 @@ public final class TargetExecutor implements Runnable {
             properties = prototype.properties;
             concealedProperties = prototype.concealedProperties;
             displayName = prototype.suggestedDisplayName;
+            shouldSaveAllDocs = prototype.shouldSaveAllDocs;
+            canReplace = prototype.canReplace;
+            canBeReplaced = prototype.canBeReplaced;
         }
 
         @Override
@@ -267,6 +296,10 @@ public final class TargetExecutor implements Runnable {
                     if (displayName != null) {
                         exec.setDisplayName(displayName);
                     }
+                    if (shouldSaveAllDocs != null) {
+                        exec.setSaveAllDocuments(shouldSaveAllDocs);
+                    }
+                    exec.setTabReplaceStrategy(canReplace, canBeReplaced);
                     exec.execute();
                 }
             } catch (IOException x) {
@@ -339,23 +372,27 @@ public final class TargetExecutor implements Runnable {
             // OutputWindow
             if (AntSettings.getAutoCloseTabs()) { // #47753
             synchronized (freeTabs) {
-                for (Map.Entry<InputOutput,String> entry : freeTabs.entrySet()) {
+                final Set<InputOutput> retained = new HashSet<>();
+                for (Map.Entry<InputOutput,Pair<String,Predicate<String>>> entry : freeTabs.entrySet()) {
                     InputOutput free = entry.getKey();
-                    String freeName = entry.getValue();
+                    String freeName = entry.getValue().first();
+                    Predicate<String> freePredicate = entry.getValue().second();
                     if (io == null && freeName.equals(displayName)) {
                         // Reuse it.
                         io = free;
                         io.getOut().reset();
                         // Apparently useless and just prints warning: io.getErr().reset();
                         // useless: io.flushReader();
-                    } else {
+                    } else if (canReplace.test(freeName) && freePredicate.test(displayName)) {
                         // Discard it.
                         free.closeInputOutput();
                         stopActions.remove(free);
                         rerunActions.remove(free);
+                    } else {
+                        retained.add(free);
                     }
                 }
-                freeTabs.clear();
+                freeTabs.keySet().retainAll(retained);
             }
             }
             if (io == null) {
@@ -441,7 +478,7 @@ public final class TargetExecutor implements Runnable {
             }
         }
         
-        if (AntSettings.getSaveAll()) {
+        if (shouldSaveAllDocs != null ? shouldSaveAllDocs : AntSettings.getSaveAll()) {
             LifecycleManager.getDefault ().saveAll ();
         }
         
@@ -461,10 +498,17 @@ public final class TargetExecutor implements Runnable {
         }
 
         // #139185: do not record verbosity level; always pick it up from Ant Settings.
-        thisExec[0] = LastTargetExecuted.record(buildFile, /*verbosity,*/
+        thisExec[0] = LastTargetExecuted.record(
+                buildFile, /*verbosity,*/
                 targetNames != null ? targetNames.toArray(new String[targetNames.size()]) : null,
                 properties,
-                suggestedDisplayName != null ? suggestedDisplayName : getProcessDisplayName(pcookie, targetNames), Thread.currentThread());
+                concealedProperties,
+                suggestedDisplayName != null ? suggestedDisplayName : getProcessDisplayName(pcookie, targetNames),
+                shouldSaveAllDocs,
+                canReplace,
+                canBeReplaced,
+                Thread.currentThread(),
+                userAction);
         sa.t = thisExec[0];
         
         // Don't hog the CPU, the build might take a while:
@@ -532,7 +576,7 @@ public final class TargetExecutor implements Runnable {
         } finally {
             if (io != null) {
                 synchronized (freeTabs) {
-                    freeTabs.put(io, displayName);
+                    freeTabs.put(io, Pair.of(displayName,canBeReplaced));
                 }
             }
             if (thisExec[0] != null) {

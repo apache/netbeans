@@ -32,10 +32,6 @@
     <property name="oauth.xsd" value="src/org/netbeans/modules/websvc/saas/model/oauth-metadata.xsd"/>
     <property name="oauth.model" value="src/org/netbeans/modules/websvc/saas/model/oauth"/>
 
-    <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/websvc-saas-api-external-resources.zip" dest="src/org/netbeans/modules/websvc/saas/model"/>
-    </target>
-
     <target name="xjc-init" depends="build-init">
         <taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
             <classpath>

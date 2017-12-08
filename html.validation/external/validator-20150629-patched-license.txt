@@ -1,13 +1,11 @@
-Name: validator.nu schemas
-Version: 20130529
-License: MIT-non-schema
-OSR: -
-Files: non-schema.jar
-Description: Non relax-ng schema checks for the validator
+Name: Validator.nu
+Description: Html/Generic RelaxNG schema validator service
+Version: 20150629-patched
+License: MIT-validator
 Origin: validator.nu
-Content: org.whattf.checker
 
-Copyright (c) 2006 Henri Sivonen
+Copyright (c) 2005, 2006 Henri Sivonen
+Copyright (c) 2007-2010 Mozilla Foundation
 
 Permission is hereby granted, free of charge, to any person obtaining a 
 copy of this software and associated documentation files (the "Software"), 

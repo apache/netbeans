@@ -1,10 +1,9 @@
 Name: ISO-RELAX
-Version: 20041111
-License: MIT-isorelax
-OSR: -
-Files: isorelax.jar
 Description: Relax validation APIs
-Origin: http://sourceforge.net/projects/iso-relax/
+Version: 20041111
+Origin: SourceForce
+License: MIT-isorelax
+URL: http://sourceforge.net/projects/iso-relax/
 
 Copyright (c) 2001-2002, SourceForge ISO-RELAX Project (ASAMI Tomoharu, Daisuke
 Okajima, Kohsuke Kawaguchi, and MURATA Makoto)

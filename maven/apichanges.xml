@@ -86,14 +86,17 @@ is the proper place.
         <change id="jpda-attach-trigger">
            <api name="general"/>
            <summary>Attach to Debugger on triggers</summary>
-           <version major="2" minor="114"/>
-           <date day="16" month="11" year="2017"/>
+           <version major="2" minor="127"/>
+           <date day="8" month="12" year="2017"/>
            <author login="monacotoni"/>
            <compatibility modification="yes" semantic="compatible"/>
            <description>
                <p>
-                   New property to allow  to attach debugger at a certain time: 
-                   <code>ACTION_PROPERTY_JPDAATTACH_TRIGGER</code>
+                   New property to allow  to attach debugger while goal execution is in progress:
+                   <code>ACTION_PROPERTY_JPDAATTACH_TRIGGER</code>. Read more about 
+    usage of this property in 
+    the <a href="@TOP@architecture-summary.html#property-jpda.attach.trigger">nbactions.xml file</a>.
+               </p>
                </p>
            </description>
            <class package="org.netbeans.modules.maven.api" name="Constants"/>

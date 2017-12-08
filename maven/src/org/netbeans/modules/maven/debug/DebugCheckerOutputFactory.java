@@ -90,7 +90,6 @@ public class DebugCheckerOutputFactory implements ContextOutputProcessorFactory 
 
         @Override
         public void processLine(String line, OutputVisitor visitor) {
-            System.err.println("processLine " + line);
             if (trigger != null && line.contains(trigger)) {
                 trigger = null;
                 try {

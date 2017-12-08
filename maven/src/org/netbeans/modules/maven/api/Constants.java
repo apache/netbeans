@@ -156,7 +156,7 @@ public interface Constants {
      * {@link #ACTION_PROPERTY_JPDAATTACH_ADDRESS} address.
      * This property is meaningful only when {@link #ACTION_PROPERTY_JPDAATTACH_ADDRESS}
      * is defined.
-     * @since 2.114
+     * @since 2.127
      */
     public static final String ACTION_PROPERTY_JPDAATTACH_TRIGGER = "jpda.attach.trigger";
 

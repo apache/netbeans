@@ -97,7 +97,6 @@ is the proper place.
     usage of this property in 
     the <a href="@TOP@architecture-summary.html#property-jpda.attach.trigger">nbactions.xml file</a>.
                </p>
-               </p>
            </description>
            <class package="org.netbeans.modules.maven.api" name="Constants"/>
         </change>

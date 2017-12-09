@@ -22,10 +22,10 @@ package org.netbeans.modules.apisupport.project.spi;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
@@ -296,11 +296,8 @@ public abstract class BrandingModel {
                     if( !iconLocation.exists() )
                         iconLocation.createNewFile();
                     FileObject fo = FileUtil.toFileObject(iconLocation);
-                    OutputStream os = fo == null ? new FileOutputStream(iconLocation) : fo.getOutputStream();
-                    try {
+                    try (OutputStream os = fo == null ? Files.newOutputStream(iconLocation.toPath()) : fo.getOutputStream()) {
                         ImageIO.write(bi, "png", os);
-                    } finally {
-                        os.close();
                     }
                 } catch (IOException ex) {
                     ErrorManager.getDefault().notify(ex);

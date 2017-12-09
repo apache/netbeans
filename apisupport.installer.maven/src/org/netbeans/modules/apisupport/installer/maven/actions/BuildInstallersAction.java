@@ -20,12 +20,12 @@ package org.netbeans.modules.apisupport.installer.maven.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -176,14 +176,13 @@ public final class BuildInstallersAction extends AbstractAction implements Conte
                                 licenseFile.getParentFile().mkdirs();
                                 licenseFile.deleteOnExit();
 
-                                OutputStream os = new FileOutputStream(licenseFile);
-                                byte[] bytes = new byte[4096];
-                                int read = 0;
-                                while ((read = is.read(bytes)) > 0) {
-                                    os.write(bytes, 0, read);
+                                try (OutputStream os = Files.newOutputStream(licenseFile.toPath())) {
+                                    byte[] bytes = new byte[4096];
+                                    int read = 0;
+                                    while ((read = is.read(bytes)) > 0) {
+                                        os.write(bytes, 0, read);
+                                    }
                                 }
-                                os.flush();
-                                os.close();
                             } else {
                                 Logger.getLogger(BuildInstallersAction.class.getName()).log(
                                         Level.WARNING, "License resource {0} not found", licenseResource);

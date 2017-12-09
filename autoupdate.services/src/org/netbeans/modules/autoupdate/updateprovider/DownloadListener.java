@@ -21,11 +21,11 @@ package org.netbeans.modules.autoupdate.updateprovider;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -98,7 +98,7 @@ public class DownloadListener implements NetworkAccess.NetworkListener {
         int totalRead = 0;
 
         try {
-            os = new BufferedOutputStream(new FileOutputStream(temp));
+            os = new BufferedOutputStream(Files.newOutputStream(temp.toPath()));
             byte[] bytes = new byte[1024];
             while ((read = is.read(bytes)) != -1) {
                 os.write(bytes, 0, read);

@@ -20,6 +20,8 @@
 package org.netbeans.updater;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -358,7 +360,7 @@ public final class ModuleUpdater extends Thread {
                         if (destFile.exists()) {
                             File bckFile = new File(getBackupDirectory(cluster), osgiJar.getName());
                             bckFile.getParentFile().mkdirs();
-                            copyStreams(new FileInputStream(destFile), context.createOS(bckFile), -1);
+                            copyStreams(Files.newInputStream(destFile.toPath()), context.createOS(bckFile), -1);
                             XMLUtil.LOG.info("Backup file " + destFile + " to " + bckFile);
                             if (!destFile.delete() && isWindows()) {
                                 trickyDeleteOnWindows(destFile);
@@ -369,7 +371,7 @@ public final class ModuleUpdater extends Thread {
                             destFile.getParentFile().mkdirs();
                         }
 
-                        bytesRead = copyStreams(new FileInputStream(osgiJar), context.createOS(destFile), bytesRead);
+                        bytesRead = copyStreams(Files.newInputStream(osgiJar.toPath()), context.createOS(destFile), bytesRead);
                         XMLUtil.LOG.info("Copied file " + osgiJar + " to " + destFile);
                         long crc = UpdateTracking.getFileCRC(destFile);
                         version.addFileWithCrc("modules/" + osgiJar.getName(), Long.toString(crc));
@@ -410,7 +412,7 @@ public final class ModuleUpdater extends Thread {
                                     if ( destFile.exists() ) {
                                         File bckFile = new File( getBackupDirectory (cluster), entry.getName() );
                                         bckFile.getParentFile ().mkdirs ();
-                                        copyStreams( new FileInputStream( destFile ), context.createOS( bckFile ), -1 );
+                                        copyStreams(Files.newInputStream(destFile.toPath()), context.createOS( bckFile ), -1 );
                                         XMLUtil.LOG.info("Backup file " + destFile + " to " + bckFile);
                                         if (!destFile.delete() && isWindows()) {
                                             trickyDeleteOnWindows(destFile);
@@ -428,7 +430,7 @@ public final class ModuleUpdater extends Thread {
                                         pathTo = pathTo.substring(0, pathTo.length() - ".external".length());
                                         long expectedCRC = externalDownload(spec, nbm);
                                         File external = new File(nbm + "." + Long.toHexString(expectedCRC));
-                                        InputStream is = new FileInputStream(external);
+                                        InputStream is = Files.newInputStream(external.toPath());
                                         try {
                                             spec.close();
                                             OutputStream os = context.createOS(downloaded);
@@ -998,15 +1000,10 @@ public final class ModuleUpdater extends Thread {
         @SuppressWarnings("empty-statement")
         private boolean readParms(String spath) {
             Properties details = new Properties();
-            FileInputStream fis = null;
-            try {
-                details.load(fis = new FileInputStream(spath)); // NOI18N
-            } catch (IOException e) {            
+            try (InputStream fis = Files.newInputStream(Paths.get(spath))) {
+                details.load(fis);
+            } catch (IOException e) {
                 return false;
-            } finally {
-                if (fis != null) {
-                    try { fis.close(); } catch (IOException e) { /* ignore */ }
-                };
             }
             
             String mainclass;

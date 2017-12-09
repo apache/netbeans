@@ -19,6 +19,8 @@
 package org.netbeans.modules.bugtracking.tasks.cache;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -322,7 +324,7 @@ public class DashboardStorage {
     }
 
     private DataOutputStream getCategoryOutputStream(File categoryFile) throws IOException {
-        ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(categoryFile, false)));
+        ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(Files.newOutputStream(categoryFile.toPath())));
         ZipEntry entry = new ZipEntry(categoryFile.getName());
         zos.putNextEntry(entry);
         return new DataOutputStream(zos);
@@ -332,13 +334,13 @@ public class DashboardStorage {
         if (!file.exists()) {
             return null;
         }
-        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(file)));
+        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(Files.newInputStream(file.toPath())));
         zis.getNextEntry();
         return new DataInputStream(zis);
     }
 
     private DataOutputStream getClosedOutputStream(File closedFile) throws IOException {
-        ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(closedFile, false)));
+        ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(Files.newOutputStream(closedFile.toPath())));
         ZipEntry entry = new ZipEntry(closedFile.getName());
         zos.putNextEntry(entry);
         return new DataOutputStream(zos);
@@ -348,7 +350,7 @@ public class DashboardStorage {
         if (!closedFile.exists()) {
             return null;
         }
-        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(closedFile)));
+        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(Files.newInputStream(closedFile.toPath())));
         zis.getNextEntry();
         return new DataInputStream(zis);
     }
@@ -365,7 +367,8 @@ public class DashboardStorage {
     private void writeStorage() {
         DataOutputStream dos = null;
         try {
-            dos = new DataOutputStream(new FileOutputStream(new File(getStorageFolder(storageFolder), STORAGE_FILE), false));
+            Path path = new File(getStorageFolder(storageFolder), STORAGE_FILE).toPath();
+            dos = new DataOutputStream(Files.newOutputStream(path));
             writeString(dos, STORAGE_VERSION);
             dos.flush();
         } catch (IOException e) {

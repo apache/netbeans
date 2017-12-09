@@ -19,8 +19,6 @@
 package org.netbeans.modules.search.matcher;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.CharBuffer;
 import java.nio.MappedByteBuffer;
@@ -29,6 +27,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
+import java.nio.file.StandardOpenOption;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -140,7 +139,6 @@ public class MultiLineMappedMatcherBig extends AbstractMatcher {
     private class LongCharSequence implements CharSequence {
 
         private long fileSize;
-        private FileInputStream fileInputStream;
         private FileChannel fileChannel;
         /**
          * At which character in the file the current buffer starts (counting
@@ -191,15 +189,11 @@ public class MultiLineMappedMatcherBig extends AbstractMatcher {
          */
         private State state = State.STANDARD;
 
-        public LongCharSequence(File file, Charset charset)
-                throws FileNotFoundException {
-
+        public LongCharSequence(File file, Charset charset) throws IOException {
             decoder = prepareDecoder(charset);
-            fileInputStream = new FileInputStream(file);
-            fileChannel = fileInputStream.getChannel();
+            fileChannel = FileChannel.open(file.toPath(), StandardOpenOption.READ);
             fileSize = file.length();
-            charBuffer = CharBuffer.allocate((int) Math.min(fileSize,
-                    SIZE_LIMIT));
+            charBuffer = CharBuffer.allocate((int) Math.min(fileSize, SIZE_LIMIT));
         }
 
         /**
@@ -443,13 +437,6 @@ public class MultiLineMappedMatcherBig extends AbstractMatcher {
             if (fileChannel != null) {
                 try {
                     fileChannel.close();
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-            if (fileInputStream != null) {
-                try {
-                    fileInputStream.close();
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }

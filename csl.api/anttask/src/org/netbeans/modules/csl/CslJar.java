@@ -21,7 +21,6 @@ package org.netbeans.modules.csl;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -37,6 +36,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -97,9 +97,8 @@ public class CslJar extends JarWithModuleAttributes {
     protected void zipFile(File file, ZipOutputStream zOut, String vPath, int mode) throws IOException {
         if (vPath.equals(layer)) {
             System.setProperty("CslJar", Boolean.TRUE.toString());
-            try {
                 // Create a tempfile and trick it!
-                InputStream is = new FileInputStream(file);
+            try (InputStream is = Files.newInputStream(file.toPath())) {
                 String modifiedLayer = getModifiedLayer(is);
                 if (modifiedLayer != null) {
                     File tmpFile = File.createTempFile("csl", "tmp"); // NOI18N

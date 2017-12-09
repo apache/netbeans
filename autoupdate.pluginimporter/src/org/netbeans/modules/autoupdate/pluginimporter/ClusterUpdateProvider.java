@@ -21,9 +21,9 @@ package org.netbeans.modules.autoupdate.pluginimporter;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -167,7 +167,7 @@ public class ClusterUpdateProvider implements UpdateProvider {
         Document document = null;
         InputStream is = null;
         try {
-            is = new BufferedInputStream (new FileInputStream (cf));
+            is = new BufferedInputStream(Files.newInputStream(cf.toPath()));
             InputSource xmlInputSource = new InputSource (is);
             document = XMLUtil.parse (xmlInputSource, false, false, null, EntityCatalog.getDefault ());
         } catch (SAXException saxe) {

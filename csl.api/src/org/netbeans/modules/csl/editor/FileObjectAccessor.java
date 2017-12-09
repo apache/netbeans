@@ -21,9 +21,11 @@
 package org.netbeans.modules.csl.editor;
 
 import java.io.EOFException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
 import org.netbeans.editor.ext.DataAccessor;
 import org.openide.filesystems.FileObject;
@@ -44,7 +46,7 @@ public class FileObjectAccessor implements DataAccessor {
 
     FileObject fo;
     InputStream inputStream;
-    FileOutputStream fos;
+    OutputStream fos;
     int actOff;
 
     public FileObjectAccessor(FileObject fo) {
@@ -58,11 +60,9 @@ public class FileObjectAccessor implements DataAccessor {
      * @param  len    the number of bytes to append.
      */
     public void append(byte[] buffer, int off, int len) throws IOException {
-        fos = new FileOutputStream(FileUtil.toFile(fo).getPath(), true);
-        fos.write(buffer, off, len);
-        fos.flush();
-        fos.close();
-        fos = null;
+        try (OutputStream fos = Files.newOutputStream(FileUtil.toFile(fo).toPath(), StandardOpenOption.APPEND)) {
+            fos.write(buffer, off, len);
+        }
     }
     
     /**

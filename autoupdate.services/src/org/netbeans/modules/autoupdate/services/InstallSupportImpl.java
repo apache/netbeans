@@ -28,6 +28,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.Certificate;
@@ -723,8 +724,7 @@ public class InstallSupportImpl {
                             byte[] arr = new byte[4096];
                             CRC32 check = new CRC32();
                             File external = new File(dest.getPath() + "." + Long.toHexString(crc.get()));
-                            FileOutputStream fos = new FileOutputStream(external);
-                            try {
+                            try (OutputStream fos = Files.newOutputStream(external.toPath())) {
                                 for (;;) {
                                     int len = real.read(arr);
                                     if (len == -1) {
@@ -738,8 +738,6 @@ public class InstallSupportImpl {
                                         }
                                     }
                                 }
-                            } finally {
-                                fos.close();
                             }
                             real.close();
                             if (check.getValue() != crc.get()) {
@@ -980,7 +978,7 @@ public class InstallSupportImpl {
             int c = 0;
             while (!(canceled = cancelled()) && (size = bsrc.read (bytes)) != -1) {
                 if(bdest == null) {
-                    bdest = new BufferedOutputStream (new FileOutputStream (dest));
+                    bdest = new BufferedOutputStream(Files.newOutputStream(dest.toPath()));
                 }
                 bdest.write (bytes, 0, size);
                 increment += size;

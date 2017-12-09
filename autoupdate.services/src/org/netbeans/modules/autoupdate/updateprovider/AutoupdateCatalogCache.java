@@ -20,12 +20,13 @@
 package org.netbeans.modules.autoupdate.updateprovider;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.autoupdate.services.AutoupdateSettings;
@@ -155,14 +156,12 @@ public final class AutoupdateCatalogCache {
     
     private String readLicenseFile(String name) {
         File file = getLicenseFile(name);
-        FileInputStream fr = null;
         synchronized (name.intern()) {
-            try {
-                fr = new FileInputStream(file);
+            try (InputStream is = Files.newInputStream(file.toPath())){
                 byte[] buffer = new byte[8192];
                 int n;
                 StringBuilder sb = new StringBuilder();
-                while ((n = fr.read(buffer)) != -1) {
+                while ((n = is.read(buffer)) != -1) {
                     sb.append(new String(buffer, 0, n, "utf-8"));//NOI18N
                 }
                 return sb.toString();
@@ -170,20 +169,14 @@ public final class AutoupdateCatalogCache {
                 err.log(Level.INFO, "Can`t read license from file " + file, e);
                 return null;
             } finally {
-                if (fr != null) {
-                    try {
-                        fr.close();
-                    } catch (IOException e) {
-                        err.log(Level.INFO, "Can`t read close input stream for " + file, e);
-                    }
-                }
             }
         }
     }
+
     private void writeToFile(String content, File file) {
-        FileOutputStream fw = null;
+        OutputStream fw = null;
         try {
-            fw = new FileOutputStream(file);
+            fw = Files.newOutputStream(file.toPath());
             fw.write(content.getBytes("utf-8")); //NOI18N
         } catch (IOException e) {
             err.log(Level.INFO, "Can`t write to " + file, e);
@@ -257,13 +250,10 @@ public final class AutoupdateCatalogCache {
 
         if (!temp.renameTo(cache)) {
             err.log(Level.INFO, "Cannot rename temp {0} to cache {1}", new Object[]{temp, cache});
-            err.log(Level.INFO, "Trying to copy {0} to cache {1}", new Object[] {temp, cache});
-            try {
-                FileOutputStream os = new FileOutputStream(cache);
-                FileInputStream is = new FileInputStream(temp);
+            err.log(Level.INFO, "Trying to copy {0} to cache {1}", new Object[]{temp, cache});
+            try (OutputStream os = Files.newOutputStream(cache.toPath());
+                    InputStream is = Files.newInputStream(temp.toPath())) {
                 FileUtil.copy(is, os);
-                os.close();
-                is.close();
                 temp.delete();
             } catch (IOException ex) {
                 err.log(Level.INFO, "Cannot even copy: {0}", ex.getMessage());

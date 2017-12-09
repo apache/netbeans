@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -365,7 +366,7 @@ public final class ModuleDeleterImpl  {
         Document document = null;
         InputStream is;
         try {
-            is = new BufferedInputStream (new FileInputStream (moduleUpdateTracking));
+            is = new BufferedInputStream (Files.newInputStream(moduleUpdateTracking.toPath()));
             InputSource xmlInputSource = new InputSource (is);
             document = XMLUtil.parse (xmlInputSource, false, false, null, org.openide.xml.EntityCatalog.getDefault ());
             if (is != null) {

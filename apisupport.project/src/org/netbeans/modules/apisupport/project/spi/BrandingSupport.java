@@ -20,14 +20,13 @@
 package org.netbeans.modules.apisupport.project.spi;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.SoftReference;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -483,22 +482,16 @@ public abstract class BrandingSupport {
     
     private static EditableProperties getEditableProperties(final File bundle) throws IOException {
         EditableProperties p = new EditableProperties(true);
-        InputStream is = new FileInputStream(bundle);
-        try {
+        try (InputStream is = Files.newInputStream(bundle.toPath())) {
             p.load(is);
-        } finally {
-            is.close();
         }
         return p;
     }
     
     private static void storeEditableProperties(final EditableProperties p, final File bundle) throws IOException {
         FileObject fo = FileUtil.toFileObject(bundle);
-        OutputStream os = null == fo ? new FileOutputStream(bundle) : fo.getOutputStream();
-        try {
+        try (OutputStream os = null == fo ? Files.newOutputStream(bundle.toPath()) : fo.getOutputStream()) {
             p.store(os);
-        } finally {
-            os.close();
         }
     }
 

@@ -20,12 +20,12 @@
 package org.netbeans.modules.apisupport.jnlplauncher;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Iterator;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.util.Exceptions;
@@ -87,27 +87,19 @@ public class InstalledFileLocatorImpl extends InstalledFileLocator {
                     }
                 }
             }
-            try {
-                InputStream is = loader.getResourceAsStream("META-INF/files/" + relativePath);
+            try (InputStream is = loader.getResourceAsStream("META-INF/files/" + relativePath)) {
                 if (is != null) {
-                    try {
-                        // XXX could try to cache previously created files
-                        File temp = File.createTempFile("nbjnlp-", relativePath.replaceFirst("^.+/", ""));
-                        temp.deleteOnExit();
-                        OutputStream os = new FileOutputStream(temp);
-                        try {
-                            byte[] buf = new byte[4096];
-                            int read;
-                            while ((read = is.read(buf)) != -1) {
-                                os.write(buf, 0, read);
-                            }
-                        } finally {
-                            os.close();
+                    // XXX could try to cache previously created files
+                    File temp = File.createTempFile("nbjnlp-", relativePath.replaceFirst("^.+/", ""));
+                    temp.deleteOnExit();
+                    try (OutputStream os = Files.newOutputStream(temp.toPath())) {
+                        byte[] buf = new byte[4096];
+                        int read;
+                        while ((read = is.read(buf)) != -1) {
+                            os.write(buf, 0, read);
                         }
-                        return temp;
-                    } finally {
-                        is.close();
                     }
+                    return temp;
                 }
             } catch (IOException x) {
                 Exceptions.printStackTrace(x);

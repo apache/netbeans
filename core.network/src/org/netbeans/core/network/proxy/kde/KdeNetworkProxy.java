@@ -19,12 +19,10 @@
 package org.netbeans.core.network.proxy.kde;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -133,10 +131,7 @@ public class KdeNetworkProxy implements NetworkProxyResolver {
         Map<String, String> map = new HashMap<String, String>();
 
         if (kioslavercFile.exists()) {
-            try {
-                FileInputStream fis = new FileInputStream(kioslavercFile);
-                DataInputStream dis = new DataInputStream(fis);
-                BufferedReader br = new BufferedReader(new InputStreamReader(dis));
+            try (BufferedReader br = Files.newBufferedReader(kioslavercFile.toPath())) {
                 String line;
                 boolean inGroup = false;
                 while ((line = br.readLine()) != null) {
@@ -153,7 +148,6 @@ public class KdeNetworkProxy implements NetworkProxyResolver {
                         inGroup = true;
                     }
                 }
-                dis.close();
             } catch (FileNotFoundException fnfe) {
                 LOGGER.log(Level.SEVERE, "Cannot read file: ", fnfe);
             } catch (IOException ioe) {

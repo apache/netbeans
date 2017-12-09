@@ -22,6 +22,7 @@ package org.netbeans.modules.autoupdate.services;
 import java.io.*;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.nio.file.Files;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -373,11 +374,11 @@ public class Utilities {
         OutputStream fos = null;
         try {
             try {
-                XMLUtil.write (doc, bos, "UTF-8"); // NOI18N
-                bos.close ();
-                fos = new FileOutputStream (dest);
-                is = new ByteArrayInputStream (bos.toByteArray ());
-                FileUtil.copy (is, fos);
+                XMLUtil.write(doc, bos, "UTF-8"); // NOI18N
+                bos.close();
+                fos = Files.newOutputStream(dest.toPath());
+                is = new ByteArrayInputStream(bos.toByteArray());
+                FileUtil.copy(is, fos);
             } finally {
                 if (is != null) {
                     is.close ();
@@ -437,7 +438,7 @@ public class Utilities {
         
         try {
             try {
-                fos = new FileOutputStream (dest);
+                fos = Files.newOutputStream(dest.toPath());
                 is = new ByteArrayInputStream (content.toString().getBytes());
                 FileUtil.copy (is, fos);
             } finally {
@@ -523,7 +524,7 @@ public class Utilities {
         
         try {
             try {
-                fos = new FileOutputStream (dest);
+                fos = Files.newOutputStream(dest.toPath());
                 is = jf.getInputStream (updaterJarEntry);
                 FileUtil.copy (is, fos);
             } finally {
@@ -1090,12 +1091,9 @@ public class Utilities {
     
     private static Node getModuleConfiguration (File moduleUpdateTracking) {
         Document document;
-        InputStream is;
-        try {
-            is = new BufferedInputStream (new FileInputStream (moduleUpdateTracking));
+        try (InputStream is = new BufferedInputStream (Files.newInputStream(moduleUpdateTracking.toPath()))){
             InputSource xmlInputSource = new InputSource (is);
             document = XMLUtil.parse (xmlInputSource, false, false, null, org.openide.xml.EntityCatalog.getDefault ());
-            is.close ();
         } catch (SAXException saxe) {
             getLogger ().log (Level.INFO, "SAXException when reading " + moduleUpdateTracking, saxe);
             return null;
@@ -1380,7 +1378,7 @@ public class Utilities {
                 if (! f.exists ()) {
                     return null;
                 }
-                is = new BufferedInputStream (new FileInputStream (f));
+                is = new BufferedInputStream(Files.newInputStream(f.toPath()));
                 ks = KeyStore.getInstance (KeyStore.getDefaultType ());
                 ks.load (is, KS_USER_PASSWORD.toCharArray ());
             } catch (IOException ex) {
@@ -1408,7 +1406,7 @@ public class Utilities {
         OutputStream os = null;
         try {
             File f = new File (getCacheDirectory (), USER_KS_FILE_NAME);
-            os = new BufferedOutputStream (new FileOutputStream (f));
+            os = new BufferedOutputStream (Files.newOutputStream(f.toPath()));
             ks.store (os, KS_USER_PASSWORD.toCharArray ());
             getPreferences ().put (USER_KS_KEY, USER_KS_FILE_NAME);
         } catch (KeyStoreException ex) {

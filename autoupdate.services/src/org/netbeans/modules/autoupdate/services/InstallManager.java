@@ -21,9 +21,9 @@ package org.netbeans.modules.autoupdate.services;
 
 import java.beans.PropertyVetoException;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -191,11 +191,8 @@ public class InstallManager extends InstalledFileLocator{
                         f.getParentFile().mkdirs();
                         f.createNewFile();
                     }
-                    OutputStream os = new FileOutputStream(f);
-                    try {
+                    try (OutputStream os = Files.newOutputStream(f.toPath())) {
                         os.write(sb.toString().getBytes());
-                    } finally {
-                        os.close();
                     }
                     ERR.log (Level.FINE, "Was written new netbeans.dirs " + sb);
 

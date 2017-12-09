@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -378,7 +379,7 @@ public class AutoupdateSettings {
         // read existing super Id
         InputStream is = null;
         try {
-            is = new FileInputStream (superFile);
+            is = Files.newInputStream(superFile.toPath());
             BufferedReader r = new BufferedReader (new InputStreamReader (is));
             res = r.readLine ().trim ();
             err.log (Level.FINE, "Read Super Id: " + res + " from " + superFile);

@@ -100,6 +100,7 @@ import org.netbeans.lib.nbjavac.services.NBJavacTrees;
 import org.netbeans.lib.nbjavac.services.NBMessager;
 import org.netbeans.lib.nbjavac.services.NBResolve;
 import org.netbeans.lib.nbjavac.services.NBTreeMaker;
+import org.netbeans.modules.java.source.base.SourceLevelUtils;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.tasklist.CompilerSettings;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
@@ -938,7 +939,7 @@ public class JavacParser extends Parser {
         } else {
             if (isModuleInfo) {
                 //Module info requires at least 9 otherwise module.compete fails with ISE.
-                final com.sun.tools.javac.code.Source java9 = com.sun.tools.javac.code.Source.JDK1_9;
+                final com.sun.tools.javac.code.Source java9 = SourceLevelUtils.JDK1_9;
                 final com.sun.tools.javac.code.Source required = com.sun.tools.javac.code.Source.lookup(sourceLevel);
                 if (required == null || required.compareTo(java9) < 0) {
                     sourceLevel = java9.name;
@@ -963,7 +964,7 @@ public class JavacParser extends Parser {
                         }
                     }
                 }
-                if (source.compareTo(com.sun.tools.javac.code.Source.JDK1_5) >= 0 &&
+                if (source.compareTo(SourceLevelUtils.JDK1_5) >= 0 &&
                     !hasResource("java/lang/StringBuilder", new ClassPath[] {bootClassPath}, new ClassPath[] {classPath}, new ClassPath[] {srcClassPath})) { //NOI18N
                     LOGGER.log(warnLevel,
                                "Even though the source level of {0} is set to: {1}, java.lang.StringBuilder cannot be found on the bootclasspath: {2}\n" +
@@ -971,28 +972,28 @@ public class JavacParser extends Parser {
                                new Object[]{srcClassPath, sourceLevel, bootClassPath}); //NOI18N
                     return com.sun.tools.javac.code.Source.JDK1_4;
                 }
-                if (source.compareTo(com.sun.tools.javac.code.Source.JDK1_7) >= 0 &&
+                if (source.compareTo(SourceLevelUtils.JDK1_7) >= 0 &&
                     !hasResource("java/lang/AutoCloseable", new ClassPath[] {bootClassPath}, new ClassPath[] {classPath}, new ClassPath[] {srcClassPath})) { //NOI18N
                     LOGGER.log(warnLevel,
                                "Even though the source level of {0} is set to: {1}, java.lang.AutoCloseable cannot be found on the bootclasspath: {2}\n" +   //NOI18N
                                "Try with resources is unsupported.",  //NOI18N
                                new Object[]{srcClassPath, sourceLevel, bootClassPath}); //NOI18N
                 }
-                if (source.compareTo(com.sun.tools.javac.code.Source.JDK1_8) >= 0 &&
+                if (source.compareTo(SourceLevelUtils.JDK1_8) >= 0 &&
                     !hasResource("java/util/stream/Streams", new ClassPath[] {bootClassPath}, new ClassPath[] {classPath}, new ClassPath[] {srcClassPath})) { //NOI18N
                     LOGGER.log(warnLevel,
                                "Even though the source level of {0} is set to: {1}, java.util.stream.Streams cannot be found on the bootclasspath: {2}\n" +   //NOI18N
                                "Changing source level to 1.7",  //NOI18N
                                new Object[]{srcClassPath, sourceLevel, bootClassPath}); //NOI18N
-                    return com.sun.tools.javac.code.Source.JDK1_7;
+                    return SourceLevelUtils.JDK1_7;
                 }
-                if (source.compareTo(com.sun.tools.javac.code.Source.JDK1_9) >= 0 &&
+                if (source.compareTo(SourceLevelUtils.JDK1_9) >= 0 &&
                     !hasResource("java/util/zip/CRC32C", new ClassPath[] {moduleBoot}, new ClassPath[] {moduleCompile, moduleAllUnnamed}, new ClassPath[] {srcClassPath})) { //NOI18N
                     LOGGER.log(warnLevel,
                                "Even though the source level of {0} is set to: {1}, java.util.zip.CRC32C cannot be found on the system module path: {2}\n" +   //NOI18N
                                "Changing source level to 1.8",  //NOI18N
                                new Object[]{srcClassPath, sourceLevel, bootClassPath}); //NOI18N
-                    return com.sun.tools.javac.code.Source.JDK1_8;
+                    return SourceLevelUtils.JDK1_8;
                 }
                 return source;
             }

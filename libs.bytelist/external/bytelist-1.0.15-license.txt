@@ -1,9 +1,9 @@
 Name: Bytelist
-Version: 1.0.2
+Version: 1.0.15
 Description: The ByteList library from JRuby.
 License: EPL-v10
 Origin: https://github.com/jruby/bytelist
-Comment: This library was wrongly reported in Maven as released under the MIT license. It's licensed under the GPL 3, LGPL 3 or EPL 1.0 see: https://github.com/jruby/bytelist/commit/9a0d9de4d21f6fc4342f946166d43cf3bf8b798a for the upgrade.
+Comment: This library was wrongly reported in Maven as released under the MIT license. Version 1.0.15 is licensed under the GPL 3, LGPL 3 or EPL 1.0 see: https://github.com/jruby/bytelist/commit/9a0d9de4d21f6fc4342f946166d43cf3bf8b798a or https://github.com/jruby/bytelist/blob/bytelist-1.0.15/src/org/jruby/util/ByteList.java
 
 
 Eclipse Public License - v 1.0

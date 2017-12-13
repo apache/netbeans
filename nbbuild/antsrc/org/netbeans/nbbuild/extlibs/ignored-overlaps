@@ -22,3 +22,11 @@
 # These are used quite independently (sharing in platform makes little sense).
 # apisupport does not even technically use it - it is only part of a sample app.
 apisupport.feedreader/external/jdom-1.0.jar mobility.deployment.webdav/external/jdom-1.0.jar
+
+# db.sql.visualeditor/external/javacc-3.2.jar is used at compile-time only
+db.sql.visualeditor/external/javacc-3.2.jar performance/external/javacc-3.2.jar
+
+# It happens that maven 3.3.9 uses commons-lang-2.6.jar, same as o.apache.commons.lang
+# These are used independently, different functional goals
+maven.embedder/external/apache-maven-3.3.9-bin.zip o.apache.commons.lang/external/commons-lang-2.6.jar
+

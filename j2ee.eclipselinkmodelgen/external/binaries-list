@@ -14,4 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-3CE04BDB48FE315736B1DCE407362C57DFAE286D org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar
+85A0C541AFE89159B3DD6BC213D8CB95E6FE911B org.eclipse.persistence:org.eclipse.persistence.jpa.modelgen.processor:2.5.2

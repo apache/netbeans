@@ -1,14 +1,13 @@
 Name: nb-processtree-killer
 Version: 1.0.7
 License: MIT
-OSR: 12294
 Origin: http://kenai.com/projects/nb-process-killler
 Source: http://kenai.com/projects/nb-process-killler
 Description: Library allowing to kill external process trees.
 
 The MIT License
 
-Copyright (c) <year> <copyright holders>
+Copyright (c) __YEARS__, __NAMES__
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

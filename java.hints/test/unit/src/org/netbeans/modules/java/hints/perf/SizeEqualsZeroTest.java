@@ -21,6 +21,7 @@ package org.netbeans.modules.java.hints.perf;
 
 import org.junit.Test;
 import org.netbeans.modules.java.hints.test.api.HintTest;
+import org.netbeans.modules.java.hints.test.api.HintTest.HintOutput;
 
 /**
  *
@@ -30,17 +31,18 @@ public class SizeEqualsZeroTest {
 
     @Test
     public void testSimple1() throws Exception {
-        HintTest.create()
+        final HintOutput output = HintTest.create()
                 .input("test/Test.java",
                        "package test;\n" +
                        "import java.util.List;" +
                        "public class Test {\n" +
                        "     private void test(List l) {\n" +
                        "         boolean b = l.size() == 0;\n" +
+                       "         boolean b2 = 0 == l.size();\n" +
                        "     }\n" +
                        "}\n")
-                .run(SizeEqualsZero.class)
-                .findWarning("3:21-3:34:verifier:.size() == 0")
+                .run(SizeEqualsZero.class);
+        output.findWarning("3:21-3:34:verifier:.size() == 0")
                 .applyFix()
                 .assertCompilable()
                 .assertOutput("package test;\n" +
@@ -48,23 +50,36 @@ public class SizeEqualsZeroTest {
                        "public class Test {\n" +
                        "     private void test(List l) {\n" +
                        "         boolean b = l.isEmpty();\n" +
+                       "         boolean b2 = 0 == l.size();\n" +
                        "     }\n" +
-                        "}\n");
+                       "}\n");
+        output.findWarning("4:22-4:35:verifier:.size() == 0")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;\n" +
+                       "import java.util.List;" +
+                       "public class Test {\n" +
+                       "     private void test(List l) {\n" +
+                       "         boolean b = l.isEmpty();\n" +
+                       "         boolean b2 = l.isEmpty();\n" +
+                       "     }\n" +
+                       "}\n");
     }
 
     @Test
     public void testSimple2() throws Exception {
-        HintTest.create()
+        final HintOutput output = HintTest.create()
                 .input("package test;\n" +
                        "import java.util.List;" +
                        "public class Test {\n" +
                        "     private void test(List l) {\n" +
                        "         boolean b = l.size() != 0;\n" +
+                       "         boolean b2 = 0 != l.size();\n" +
                        "     }\n" +
                        "}\n")
                 .preference(SizeEqualsZero.CHECK_NOT_EQUALS, true)
-                .run(SizeEqualsZero.class)
-                .findWarning("3:21-3:34:verifier:.size() != 0")
+                .run(SizeEqualsZero.class);
+        output.findWarning("3:21-3:34:verifier:.size() != 0")
                 .applyFix()
                 .assertCompilable()
                 .assertOutput("package test;\n" +
@@ -72,23 +87,36 @@ public class SizeEqualsZeroTest {
                         "public class Test {\n" +
                         "     private void test(List l) {\n" +
                         "         boolean b = !l.isEmpty();\n" +
+                        "         boolean b2 = 0 != l.size();\n" +
+                        "     }\n" +
+                        "}\n");
+        output.findWarning("4:22-4:35:verifier:.size() != 0")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;\n" +
+                        "import java.util.List;" +
+                        "public class Test {\n" +
+                        "     private void test(List l) {\n" +
+                        "         boolean b = !l.isEmpty();\n" +
+                        "         boolean b2 = !l.isEmpty();\n" +
                         "     }\n" +
                         "}\n");
     }
-    
+
     @Test
     public void testCollection() throws Exception {
-        HintTest.create()
+        final HintOutput output = HintTest.create()
                 .input("test/Test.java",
                        "package test;\n" +
                        "import java.util.ArrayList;" +
                        "public class Test extends ArrayList {\n" +
                        "     private void test() {\n" +
                        "         boolean b = size() == 0;\n" +
+                       "         boolean b2 = 0 != size();\n" +
                        "     }\n" +
                        "}\n")
-                .run(SizeEqualsZero.class)
-                .findWarning("3:21-3:32:verifier:.size() == 0")
+                .run(SizeEqualsZero.class);
+        output.findWarning("3:21-3:32:verifier:.size() == 0")
                 .applyFix()
                 .assertCompilable()
                 .assertOutput("package test;\n" +
@@ -96,19 +124,74 @@ public class SizeEqualsZeroTest {
                        "public class Test extends ArrayList {\n" +
                        "     private void test() {\n" +
                        "         boolean b = isEmpty();\n" +
+                       "         boolean b2 = 0 != size();\n" +
                        "     }\n" +
-                        "}\n");
+                       "}\n");
+        output.findWarning("4:22-4:33:verifier:.size() != 0")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;\n" +
+                       "import java.util.ArrayList;" +
+                       "public class Test extends ArrayList {\n" +
+                       "     private void test() {\n" +
+                       "         boolean b = isEmpty();\n" +
+                       "         boolean b2 = !isEmpty();\n" +
+                       "     }\n" +
+                       "}\n");
     }
-    
+
+    @Test
+    public void testMap() throws Exception {
+        final HintOutput output = HintTest.create()
+                .input("test/Test.java",
+                       "package test;\n" +
+                       "import java.util.HashMap;" +
+                       "public class Test extends HashMap {\n" +
+                       "     private void test() {\n" +
+                       "         boolean b = size() == 0;\n" +
+                       "         boolean b2 = 0 != size();\n" +
+                       "     }\n" +
+                       "}\n")
+                .run(SizeEqualsZero.class);
+        output.findWarning("3:21-3:32:verifier:.size() == 0")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;\n" +
+                       "import java.util.HashMap;" +
+                       "public class Test extends HashMap {\n" +
+                       "     private void test() {\n" +
+                       "         boolean b = isEmpty();\n" +
+                       "         boolean b2 = 0 != size();\n" +
+                       "     }\n" +
+                       "}\n");
+        output.findWarning("4:22-4:33:verifier:.size() != 0")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput("package test;\n" +
+                       "import java.util.HashMap;" +
+                       "public class Test extends HashMap {\n" +
+                       "     private void test() {\n" +
+                       "         boolean b = isEmpty();\n" +
+                       "         boolean b2 = !isEmpty();\n" +
+                       "     }\n" +
+                       "}\n");
+    }
+
     @Test
     public void testDoNotChangeIsEmptyItself() throws Exception {
         HintTest.create()
                 .input("test/Test.java",
                        "package test;\n" +
                        "import java.util.ArrayList;" +
+                       "import java.util.HashMap;" +
                        "public class Test extends ArrayList {\n" +
                        "     public boolean isEmpty() {\n" +
                        "         return this.size() == 0;\n" +
+                       "     }\n" +
+                       "}\n" +
+                       "class OtherTest extends HashMap {\n" +
+                       "     public boolean isEmpty() {\n" +
+                       "         return !(0 != size());\n" +
                        "     }\n" +
                        "}\n")
                 .run(SizeEqualsZero.class)
@@ -123,6 +206,7 @@ public class SizeEqualsZeroTest {
                        "public class Test {\n" +
                        "     private void test(List l) {\n" +
                        "         boolean b = l.size() != 0;\n" +
+                       "         boolean b2 = 0 != l.size();\n" +
                        "     }\n" +
                        "}\n")
                 .preference(SizeEqualsZero.CHECK_NOT_EQUALS, false)

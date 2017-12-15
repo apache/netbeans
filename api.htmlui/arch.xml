@@ -483,7 +483,25 @@
 -->
  <answer id="exec-component">
   <p>
-   XXX no answer for exec-component
+      <api name="data-netbeans-css" category="official" group="property" type="export">
+          Each browser component created by one of the
+          annotations (
+          <a href="@TOP@org/netbeans/api/htmlui/HTMLComponent.html">@HTMLComponent</a>,
+          <a href="@TOP@org/netbeans/api/htmlui/HTMLDialog.html">@HTMLDialog</a>,
+          <a href="@TOP@org/netbeans/api/htmlui/OpenHTMLRegistration.html">@OpenHTMLRegistration</a>
+          )
+          is by default skinned with a CSS that makes it
+          look like the the other Swing components. This can be disabled
+          when defining your HTML page:
+<pre>
+&lt;html&gt;
+&lt;head data-netbeans-html="false"&gt;
+&lt;/head&gt;
+&lt;/html&gt;
+</pre>
+          If there is the <code>data-netbeans-html</code> attribute equal to <code>"false"</code>,
+          then no special NetBeans CSS tricks are applied.
+      </api>
   </p>
  </answer>
 

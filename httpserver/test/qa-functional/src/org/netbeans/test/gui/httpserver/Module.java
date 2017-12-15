@@ -315,7 +315,7 @@ public class Module extends JellyTestCase {
         pw.close();
         
         startHTTPServer();
-        checkResult("/repository/org/netbeans/test/gui/httpserver/test.txt",1,"This is test file",false);
+        checkResult("/repository/org/netbeans/test/gui/httpserver/test.txt",1,"Licensed to the Apache Software Foundation (ASF) under one or more contributor",false);
     }
 
 // Internal HTTP Server Test Specification:  Test suite: 2. Accessing Items on IDE Classpath

@@ -34,7 +34,9 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -678,13 +680,15 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
         return null;
     }
     
-    private static Map<String,String> publicIds;
+    private static Set<String> localDTDs;
     static {
-        publicIds = new HashMap<String,String>();
-        publicIds.put("xhtml1-strict.dtd", "Arch-fake-xhtml.dtd");
-        publicIds.put("Arch.dtd", "Arch.dtd");
-        publicIds.put("Arch-api-questions.xml", "Arch-api-questions.xml");
-        
+        localDTDs = new HashSet<String>();
+        localDTDs.add("Arch.dtd");
+        localDTDs.add("Arch-api-questions.xml");
+        localDTDs.add("xhtml1-strict.dtd");
+        localDTDs.add("xhtml-lat1.ent");
+        localDTDs.add("xhtml-special.ent");
+        localDTDs.add("xhtml-symbol.ent");
     }
 
     public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
@@ -693,46 +697,15 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
         int idx = systemId.lastIndexOf('/');
         String last = systemId.substring(idx + 1);
         
-        if (last.equals("xhtml1-strict.dtd")) {
-            // try to find relative libraries
-            String dtd = "nbbuild/external/xhtml1-dtds/xhtml1-strict.dtd".replace('/', File.separatorChar);
-            File f = questionsFile.getParentFile();
-            while (f != null) {
-                File check = new File(f, dtd);
-                if (check.isFile()) {
-                    String r = check.toURI().toString();
-                    log("Replacing entity " + publicId + " at " + systemId + " with " + r);
-                    return new InputSource(r);
-                }
-                f = f.getParentFile();
-            }
-        }
-        
-        String replace = publicIds.get(last);
-        if (replace == null) {
-            log("Not replacing id", Project.MSG_VERBOSE);
-            return null;
-        }
-        
-        try {
-            URL u = new URL(systemId);
-            u.openStream();
-            log("systemId " + systemId + " exists, leaving", Project.MSG_VERBOSE);
-            return null;
-        } catch (IOException ex) {
-            // ok
-        }
-        
-        InputSource is;
-        log("Replacing entity " + publicId + " at " + systemId + " with " + replace);
-        if (replace.startsWith("http://")) {
-            is = new InputSource(new URL(replace).openStream());
-            is.setSystemId(replace);
+        if (localDTDs.contains(last)) {
+            log("Resolved to embedded DTD");
+            InputSource is = new InputSource(Arch.class.getResourceAsStream(last));
+            is.setSystemId(systemId);
+            return is;
         } else {
-            is = new InputSource(Arch.class.getResourceAsStream(replace));
-            is.setSystemId(replace);
+            log("Not resolved");
+            return null;
         }
-        return is;
     }
 
     public Source resolve(String href, String base) throws TransformerException {

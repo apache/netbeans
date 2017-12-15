@@ -1,10 +1,10 @@
 Name: Apache Ant
+Origin: Apache Software Foundation
 Version: 1.10.1
 Files: ant-libs-1.10.1.zip ant-misc-1.10.1.zip
 Description: Ant build tool.
 License: Apache-2.0
-Origin: https://builds.apache.org/view/All/job/Ant_Nightly/lastBuild/
-OSR: 7102
+URL: https://builds.apache.org/view/All/job/Ant_Nightly/lastBuild/
 
                                  Apache License
                            Version 2.0, January 2004

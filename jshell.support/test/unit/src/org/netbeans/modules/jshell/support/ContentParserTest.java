@@ -78,6 +78,9 @@ public class ContentParserTest extends NbTestCase {
             String s;
             
             while ((s = br.readLine()) != null) {
+                if (s.startsWith("#")) {
+                    continue;
+                }
                 sb.append(s).append("\n");
             }
         }
@@ -105,6 +108,9 @@ public class ContentParserTest extends NbTestCase {
             org.netbeans.modules.jshell.model.ConsoleSection.Type lastType = null;
             
             while ((s = br.readLine()) != null) {
+                if (s.startsWith("#")) {
+                    continue;
+                }
                 pos = next;
                 next = pos + s.length() + 1;
                 if (s.trim().isEmpty()) {
@@ -161,6 +167,9 @@ public class ContentParserTest extends NbTestCase {
             int next = 0;
             org.netbeans.modules.jshell.model.ConsoleSection.Type lastType = null;
             while ((s = br.readLine()) != null) {
+                if (s.startsWith("#")) {
+                    continue;
+                }
                 pos = next;
                 int start = s.indexOf(':') + 1;
                 int len = s.length() - start + 1; // count the newline

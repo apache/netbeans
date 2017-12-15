@@ -179,4 +179,36 @@ public class UnusedAssignmentOrBranchTest extends NbTestCase {
                 .run(UnusedAssignmentOrBranch.class)
                 .assertWarnings();
     }
+
+    // #271736 - Wrong "not used" hint
+    public void testImplicitlyStaticFieldWithInitializer() throws Exception {
+        HintTest
+                .create()
+                .input("package test;\n" +
+                       "\n" +
+                       "import java.util.function.Consumer;\n" +
+                       "\n" +
+                       "public interface Test {\n" +
+                       "    Consumer<CharSequence> CONSUMER = new Consumer<CharSequence>() {\n" +
+                       "        @Override\n" +
+                       "        public void accept(CharSequence cs) {\n" +
+                       "            final String str = (String) cs;\n" +
+                       "            System.out.println(str.length());\n" +
+                       "        }\n" +
+                       "    };\n" +
+                       "}" +
+                       "\n" +
+                       "enum SomeEnum {\n" +
+                       "    ALT() {\n" +
+                       "        public void doSomething(CharSequence cs) {\n" +
+                       "            final String str = (String) cs;\n" +
+                       "            System.out.println(str.length());\n" +
+                       "        }\n" +
+                       "    };\n" +
+                       "\n" +
+                       "    private SomeEnum() { }\n" +
+                       "}")
+                .run(UnusedAssignmentOrBranch.class)
+                .assertWarnings();
+    }
 }

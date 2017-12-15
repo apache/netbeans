@@ -1,9 +1,9 @@
 Name: Apache WS Common Utilities
+Description: High performance XML processing based on SAX
+Origin: Apache Software Foundation
 Version: 1.0.1
 License: Apache-2.0
-OSR: 951
-Description: High performance XML processing based on SAX
-Origin: http://ws.apache.org/commons/util/
+URL: http://ws.apache.org/commons/util/
 
                                  Apache License
                            Version 2.0, January 2004

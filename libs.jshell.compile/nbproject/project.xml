@@ -62,7 +62,7 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path></runtime-relative-path>
-                <binary-origin>external/jshell.jar</binary-origin>
+                <binary-origin>external/jshell-9.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

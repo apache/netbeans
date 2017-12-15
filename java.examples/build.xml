@@ -23,26 +23,11 @@
 
     <import file="../nbbuild/templates/projectized.xml"/>
 
-    <target name="clean" depends="client-editor-clean,projectized-common.clean"/>
-
-    <target name="client-editor-compile">
-        <path id="beans-binding-classpath">
-            <fileset dir="../o.jdesktop.beansbinding/external">
-                <include name="**/*.jar"/>
-            </fileset>
-        </path>
-        <ant dir="ClientEditor" target="compile" inheritAll="false" >
-            <property name="libs.beans-binding.classpath" refid="beans-binding-classpath"/>
-        </ant>
-    </target>
-
-    <target name="client-editor-clean">
-        <ant dir="ClientEditor" target="clean" inheritAll="false"/>
-    </target>
+    <target name="clean" depends="projectized-common.clean"/>
 
     <target name="jar" depends="zip-examples,projectized-common.jar"/>
 
-    <target name="zip-examples" depends="init,client-editor-compile">
+    <target name="zip-examples" depends="init">
         <property name="examples" location="${build.classes.dir}/org/netbeans/modules/java/examples/resources"/>
         <mkdir dir="${examples}"/>
         <zip basedir="anagrams" destfile="${examples}/anagrams.zip">
@@ -52,10 +37,6 @@
         </zip>
         <zip basedir="GUIFormExamples" destfile="${examples}/GUIFormExamples.zip">
             <exclude name="build/"/>
-            <exclude name="dist/"/>
-            <exclude name="nbproject/private/"/>
-        </zip>
-        <zip basedir="ClientEditor" destfile="${examples}/ClientEditor.zip">
             <exclude name="dist/"/>
             <exclude name="nbproject/private/"/>
         </zip>

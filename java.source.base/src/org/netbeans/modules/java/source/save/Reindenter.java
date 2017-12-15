@@ -75,6 +75,7 @@ import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.editor.indent.spi.Context.Region;
 import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.IndentTask;
+import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.ParsingUtils;
@@ -1203,6 +1204,8 @@ public class Reindenter implements IndentTask {
 
         @Override
         public IndentTask createTask(Context context) {
+            if (!NoJavacHelper.hasWorkingJavac())
+                return null;
             return new Reindenter(context);
         }
     }

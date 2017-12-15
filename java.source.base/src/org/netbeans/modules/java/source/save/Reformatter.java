@@ -52,6 +52,7 @@ import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.ReformatTask;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
+import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.parsing.api.Embedding;
@@ -384,6 +385,8 @@ public class Reformatter implements ReformatTask {
     public static class Factory implements ReformatTask.Factory {
 
         public ReformatTask createTask(Context context) {
+            if (!NoJavacHelper.hasWorkingJavac())
+                return null;
             Source source = Source.create(context.document());
             return source != null ? new Reformatter(source, context) : null;
         }        

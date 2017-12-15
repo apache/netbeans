@@ -66,6 +66,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 //import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
@@ -79,6 +80,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.JavaSourceTaskFactoryManager;
 import org.netbeans.modules.java.source.ModuleNames;
+import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.base.Module;
 import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
 import org.netbeans.modules.java.source.parsing.FileObjects;
@@ -1175,7 +1177,12 @@ public class JavaCustomIndexer extends CustomIndexer {
         @Override
         public int hashCode() {
             return getIndexerName().hashCode();
-        }        
+        }
+
+        @MimeRegistration(mimeType="text/x-java", service=CustomIndexerFactory.class)
+        public static Factory register() {
+            return NoJavacHelper.hasWorkingJavac() ? new Factory() : null;
+        }
     }
 
     public static final class CompileTuple {

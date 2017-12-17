@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.nbbuild.extlibs;
 
 import java.io.BufferedReader;
@@ -26,13 +25,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,53 +55,61 @@ import org.netbeans.nbbuild.JUnitReportWriter;
 public class CreateLicenseSummary extends Task {
 
     private File nball;
+
     public void setNball(File nball) {
         this.nball = nball;
     }
 
     private File build;
+
     public void setBuild(File build) {
         this.build = build;
     }
 
     private File licenseStub;
+
     public void setLicenseStub(File licenseStub) {
         this.licenseStub = licenseStub;
     }
 
     private File license;
+
     public void setLicense(File license) {
         this.license = license;
     }
 
     private File notice;
+
     public void setNotice(File notice) {
         this.notice = notice;
     }
 
     private File noticeStub;
+
     public void setNoticeStub(File noticeStub) {
         this.noticeStub = noticeStub;
     }
 
     private File reportFile;
+
     public void setReport(File report) {
         this.reportFile = report;
     }
 
-    private Map<String,String> pseudoTests;
+    private Map<String, String> pseudoTests;
 
-    public @Override void execute() throws BuildException {
-        pseudoTests = new LinkedHashMap<String,String>();
+    public @Override
+    void execute() throws BuildException {
+        pseudoTests = new LinkedHashMap<String, String>();
         try {
-            Map<Long,Map<String,String>> crc2License = findCrc2LicenseHeaderMapping();
-            Map<String,Map<String,String>> binaries2LicenseHeaders = new TreeMap<String,Map<String,String>>();
+            Map<Long, Map<String, String>> crc2License = findCrc2LicenseHeaderMapping();
+            Map<String, Map<String, String>> binaries2LicenseHeaders = new TreeMap<String, Map<String, String>>();
             StringBuilder testBinariesAreUnique = new StringBuilder();
             List<String> ignoredPatterns = VerifyLibsAndLicenses.loadPatterns("ignored-binary-overlaps");
-            findBinaries(build, binaries2LicenseHeaders, crc2License, new HashMap<Long,String>(), "", testBinariesAreUnique, ignoredPatterns);
+            findBinaries(build, binaries2LicenseHeaders, crc2License, new HashMap<Long, String>(), "", testBinariesAreUnique, ignoredPatterns);
             pseudoTests.put("testBinariesAreUnique", testBinariesAreUnique.length() > 0 ? "Some binaries are duplicated (edit nbbuild/antsrc/org/netbeans/nbbuild/extlibs/ignored-binary-overlaps as needed)" + testBinariesAreUnique : null);
             try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(license), "UTF-8"));
-                 PrintWriter nw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(notice), "UTF-8"))) {
+                    PrintWriter nw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(notice), "UTF-8"))) {
                 try (Reader r = new InputStreamReader(new FileInputStream(licenseStub), "UTF-8")) {
                     int read;
                     while ((read = r.read()) != (-1)) {
@@ -128,9 +135,10 @@ public class CreateLicenseSummary extends Task {
                 pw.printf("%-72s %s\n", "THIRD-PARTY COMPONENT FILE", "LICENSE");
                 pw.printf("%-44s %s\n", "(path in the installation)", "(see license text reproduced below)");
                 pw.println("--------------------------------------------------------------------------------");
-                for (Map.Entry<String,Map<String,String>> entry : binaries2LicenseHeaders.entrySet()) {
+                Set<Integer> notices = new HashSet<>();
+                for (Map.Entry<String, Map<String, String>> entry : binaries2LicenseHeaders.entrySet()) {
                     String binary = entry.getKey();
-                    Map<String,String> headers = entry.getValue();
+                    Map<String, String> headers = entry.getValue();
                     pw.printf("%-69s %s\n", binary, getMaybeMissing(headers, "License"));
                     String license = headers.get("License");
                     if (license != null) {
@@ -141,11 +149,11 @@ public class CreateLicenseSummary extends Task {
                     }
 
                     String notice = headers.get("notice");
-
-                    if (notice != null) {
-                        nw.println(notice);
-                        nw.println();
+                    if (notice != null && !notices.contains(notice.hashCode())) {
+                        notices.add(notice.hashCode());
+                        addNotice(nw, notice);
                     }
+
                 }
 //                String[] otherHeaders = {"Name", "Version", "Description", "Origin"};
 //                Map<Map<String,String>,Set<String>> licenseHeaders2Binaries = new LinkedHashMap<Map<String,String>,Set<String>>();
@@ -205,7 +213,8 @@ public class CreateLicenseSummary extends Task {
         }
         JUnitReportWriter.writeReport(this, null, reportFile, pseudoTests);
     }
-    private String getMaybeMissing(Map<String,String> headers, String headerName) {
+
+    private String getMaybeMissing(Map<String, String> headers, String headerName) {
         if (headers.containsKey(headerName)) {
             return headers.get(headerName);
         } else {
@@ -213,19 +222,19 @@ public class CreateLicenseSummary extends Task {
         }
     }
 
-    private Map<Long,Map<String,String>> findCrc2LicenseHeaderMapping() throws IOException {
-        Map<Long,Map<String,String>> crc2LicenseHeaders = new HashMap<Long,Map<String,String>>();
+    private Map<Long, Map<String, String>> findCrc2LicenseHeaderMapping() throws IOException {
+        Map<Long, Map<String, String>> crc2LicenseHeaders = new HashMap<Long, Map<String, String>>();
         for (String cluster : getProject().getProperty("nb.clusters.list").split("[, ]+")) {
             for (String module : getProject().getProperty(cluster).split("[, ]+")) {
                 File d = new File(new File(nball, module), "external");
                 Set<String> hgFiles = VerifyLibsAndLicenses.findHgControlledFiles(d);
-                Map<String,Map<String,String>> binary2License = findBinary2LicenseHeaderMapping(hgFiles, d);
+                Map<String, Map<String, String>> binary2License = findBinary2LicenseHeaderMapping(hgFiles, d);
                 for (String n : hgFiles) {
-                    if (!n.endsWith(".jar") && !n.endsWith(".zip") && !n.endsWith(".xml") &&
-                            !n.endsWith(".js") && !n.endsWith(".dylib")) {
+                    if (!n.endsWith(".jar") && !n.endsWith(".zip") && !n.endsWith(".xml")
+                            && !n.endsWith(".js") && !n.endsWith(".dylib")) {
                         continue;
                     }
-                    Map<String,String> headers = binary2License.get(n);
+                    Map<String, String> headers = binary2License.get(n);
                     if (headers == null) {
                         continue;
                     }
@@ -264,6 +273,29 @@ public class CreateLicenseSummary extends Task {
         return crc2LicenseHeaders;
     }
 
+    private void addNotice(PrintWriter output, String notice) throws IOException {
+        String[] lines = notice.split("\n");
+        boolean previousLineEmpty = true;
+        int n = lines.length;
+        for (int i = 0; i < n; i++) {
+            String line = lines[i];
+            line = line.trim();
+            boolean empty = line.length() == 0;
+            if (empty && previousLineEmpty) {
+                // Skip line
+            } else {
+                previousLineEmpty = empty;
+                if (!empty && i < n - 1 && line.startsWith("This product includes software") && lines[i + 1].startsWith("The Apache Software Foundation")) {
+                    i += 2;
+                    previousLineEmpty = false;
+                    // Skip
+                } else {
+                    output.println(line);
+                }
+            }
+        }
+    }
+
     private long computeCRC32(InputStream is) throws IOException {
         byte[] buf = new byte[4096];
         CRC32 crc32 = new CRC32();
@@ -274,13 +306,13 @@ public class CreateLicenseSummary extends Task {
         return crc32.getValue();
     }
 
-    static Map<String,Map<String,String>> findBinary2LicenseHeaderMapping(Set<String> cvsFiles, File d) throws IOException {
-        Map<String,Map<String,String>> binary2LicenseHeaders = new HashMap<String,Map<String,String>>();
+    static Map<String, Map<String, String>> findBinary2LicenseHeaderMapping(Set<String> cvsFiles, File d) throws IOException {
+        Map<String, Map<String, String>> binary2LicenseHeaders = new HashMap<String, Map<String, String>>();
         for (String n : cvsFiles) {
             if (!n.endsWith("-license.txt")) {
                 continue;
             }
-            Map<String,String> headers = new HashMap<String,String>();
+            Map<String, String> headers = new HashMap<String, String>();
             InputStream is = new FileInputStream(new File(d, n));
             try {
                 BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
@@ -322,8 +354,8 @@ public class CreateLicenseSummary extends Task {
         return binary2LicenseHeaders;
     }
 
-    private void findBinaries(File d, Map<String,Map<String,String>> binaries2LicenseHeaders, Map<Long,Map<String,String>> crc2LicenseHeaders,
-            Map<Long,String> crc2Binary, String prefix, StringBuilder testBinariesAreUnique, List<String> ignoredPatterns) throws IOException {
+    private void findBinaries(File d, Map<String, Map<String, String>> binaries2LicenseHeaders, Map<Long, Map<String, String>> crc2LicenseHeaders,
+            Map<Long, String> crc2Binary, String prefix, StringBuilder testBinariesAreUnique, List<String> ignoredPatterns) throws IOException {
         if (prefix.length() > 1000) {
             log("#170823: possible loop in " + prefix, Project.MSG_WARN);
         }
@@ -340,7 +372,7 @@ public class CreateLicenseSummary extends Task {
                 InputStream is = new FileInputStream(f);
                 try {
                     long crc = computeCRC32(is);
-                    Map<String,String> headers = crc2LicenseHeaders.get(crc);
+                    Map<String, String> headers = crc2LicenseHeaders.get(crc);
                     if (headers != null) {
                         String path = prefix + n;
                         binaries2LicenseHeaders.put(path, headers);

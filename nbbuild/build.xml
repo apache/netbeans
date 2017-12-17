@@ -137,8 +137,7 @@
   <target name="prepare-vanilla-javac" depends="-check-vanilla-javac" unless="vanilla.javac.exists">
     <delete dir="${nb_all}/nbbuild/build/langtools" />
     <mkdir dir="${nb_all}/nbbuild/build/langtools" />
-    <get src="http://hg.openjdk.java.net/jdk9/jdk9/langtools/archive/tip.zip" dest="${nb_all}/nbbuild/build/langtools.zip" skipexisting="true"/>
-    <unzip src="${nb_all}/nbbuild/build/langtools.zip" dest="${nb_all}/nbbuild/build/langtools">
+    <unzip src="${nb_all}/nbbuild/external/langtools-9.zip" dest="${nb_all}/nbbuild/build/langtools">
         <cutdirsmapper dirs="1"/>
     </unzip>
     <ant antfile="${nb_all}/nbbuild/build/langtools/make/build.xml" dir="${nb_all}/nbbuild/build/langtools/" target="generate-sources">

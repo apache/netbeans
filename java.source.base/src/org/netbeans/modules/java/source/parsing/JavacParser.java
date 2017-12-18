@@ -406,8 +406,8 @@ public class JavacParser extends Parser {
                 default:
                     init (snapshot, task, false);
                     ciImpl = createCurrentInfo(this, file, root, snapshot,
-                        sequentialParsing != null && ciImpl == null ? null : ciImpl.getJavacTask(),
-                        sequentialParsing != null && ciImpl == null ? null : ciImpl.getDiagnosticListener());
+                        sequentialParsing == null || ciImpl == null ? null : ciImpl.getJavacTask(),
+                        sequentialParsing == null || ciImpl == null ? null : ciImpl.getDiagnosticListener());
             }
             success = true;
         } finally {

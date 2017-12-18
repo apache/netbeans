@@ -44,11 +44,13 @@ import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.modules.java.source.ElementUtils;
+import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.base.Module;
 import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
 import org.netbeans.modules.java.source.parsing.FileObjects;
@@ -288,6 +290,11 @@ public class JavaBinaryIndexer extends BinaryIndexer {
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
+        }
+
+        @MimeRegistration(mimeType="", service=BinaryIndexerFactory.class)
+        public static Factory register() {
+            return NoJavacHelper.hasWorkingJavac() ? new Factory() : null;
         }
     }
 }

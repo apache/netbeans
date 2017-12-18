@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.lang.model.element.TypeElement;
@@ -51,11 +52,14 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.tasklist.CompilerSettings;
+import org.netbeans.modules.openide.util.GlobalLookup;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -75,7 +79,7 @@ public class JavacParserTest extends NbTestCase {
         prepareTest();
     }
 
-    public void Dtest1() throws Exception {
+    public void testMultiSource() throws Exception {
         FileObject f1 = createFile("test/Test1.java", "package test; class Test1");
         FileObject f2 = createFile("test/Test2.java", "package test; class Test2{}");
         FileObject f3 = createFile("test/Test3.java", "package test; class Test3{}");
@@ -86,7 +90,7 @@ public class JavacParserTest extends NbTestCase {
         SourceUtilsTestUtil.compileRecursively(sourceRoot);
 
         js.runUserActionTask(new Task<CompilationController>() {
-
+            TypeElement storedJLObject;
             public void run(CompilationController parameter) throws Exception {
                 if ("Test3".equals(parameter.getFileObject().getName())) {
                     TypeElement te = parameter.getElements().getTypeElement("test.Test1");
@@ -95,8 +99,48 @@ public class JavacParserTest extends NbTestCase {
                 }
                 assertEquals(Phase.PARSED, parameter.toPhase(Phase.PARSED));
                 assertNotNull(parameter.getCompilationUnit());
+                TypeElement jlObject = parameter.getElements().getTypeElement("java.lang.Object");
+
+                if (storedJLObject == null) {
+                    storedJLObject = jlObject;
+                } else {
+                    assertEquals(storedJLObject, jlObject);
+                }
             }
         }, true);
+    }
+
+    public void testMultiSourceVanilla() throws Exception {
+        Lookup noSP = Lookups.exclude(Lookup.getDefault(), JavacParser.SequentialParsing.class);
+        GlobalLookup.execute(noSP, () -> {
+            try {
+                FileObject f1 = createFile("test/Test1.java", "package test; class Test1");
+                FileObject f2 = createFile("test/Test2.java", "package test; class Test2{}");
+                FileObject f3 = createFile("test/Test3.java", "package test; class Test3{}");
+
+                ClasspathInfo cpInfo = ClasspathInfo.create(f2);
+                JavaSource js = JavaSource.create(cpInfo, f2, f3);
+
+                SourceUtilsTestUtil.compileRecursively(sourceRoot);
+
+                js.runUserActionTask(new Task<CompilationController>() {
+                    TypeElement storedJLObject;
+                    public void run(CompilationController parameter) throws Exception {
+                        assertEquals(Phase.PARSED, parameter.toPhase(Phase.PARSED));
+                        assertNotNull(parameter.getCompilationUnit());
+                        TypeElement jlObject = parameter.getElements().getTypeElement("java.lang.Object");
+
+                        if (storedJLObject == null) {
+                            storedJLObject = jlObject;
+                        } else {
+                            assertFalse(Objects.equals(storedJLObject, jlObject));
+                        }
+                    }
+                }, true);
+            } catch (Exception ex) {
+                throw new AssertionError(ex);
+            }
+        });
     }
 
     public void test199332() throws Exception {

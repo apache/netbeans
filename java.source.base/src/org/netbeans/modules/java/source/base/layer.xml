@@ -23,9 +23,6 @@
 <filesystem>
 
     <folder name="Editors">
-        <file name="JavaBinaryIndexer.instance">
-            <attr name="instanceClass" stringvalue="org.netbeans.modules.java.source.indexing.JavaBinaryIndexer$Factory"/>
-        </file>
         <file name="COSSynchronizingIndexer.instance">
             <attr name="instanceClass" stringvalue="org.netbeans.modules.java.source.indexing.COSSynchronizingIndexer$Factory"/>
         </file>

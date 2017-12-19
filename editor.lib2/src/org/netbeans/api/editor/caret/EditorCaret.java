@@ -1889,9 +1889,18 @@ public final class EditorCaret implements Caret {
                 newAtomicDoc.addAtomicLockListener(listenerImpl);
             }
 
+            // #269262 when IME is used, deinstall and install method is invoked
+            // so in such case, the existing position shoud be used
+            // because newDoc.StartPosition() may be an incorrect position
+            CaretInfo lastCaret = getLastCaret();
+            Position dotPos = lastCaret.getDotPosition();
+            if (dotPos == null) {
+                dotPos = newDoc.getStartPosition();
+            }
+
             // Set caret to zero position upon document change (DefaultCaret impl does this too)
             runTransaction(CaretTransaction.RemoveType.REMOVE_ALL_CARETS, 0,
-                    new CaretItem[] { new CaretItem(this, newDoc.getStartPosition(), Position.Bias.Forward,
+                    new CaretItem[] { new CaretItem(this, dotPos, Position.Bias.Forward,
                             null, Position.Bias.Forward ) }, null);
             
             // Leave caretPos and markPos null => offset==0
@@ -1922,6 +1931,11 @@ public final class EditorCaret implements Caret {
                             update(false);
                         } finally {
                             doc.readUnlock();
+                        }
+                    } else {
+                        // #269262 avoid that update() is not invoked
+                        synchronized (listenerList) {
+                            caretUpdatePending = false;
                         }
                     }
                 }

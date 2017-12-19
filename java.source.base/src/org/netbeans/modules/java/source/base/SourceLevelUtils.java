@@ -15,7 +15,9 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */package org.netbeans.modules.java.source.base;
+ */
+
+package org.netbeans.modules.java.source.base;
 
 import com.sun.tools.javac.code.Source;
 

@@ -27,11 +27,9 @@
     <target name="-release.files-build-javac" if="nb-javac.exists">
         <ant dir="../nb-javac/make/netbeans/nb-javac" target="jar" inheritAll="false"/>
         <copy file="../nb-javac/make/netbeans/nb-javac/dist/javac-impl.jar" tofile="external/nb-javac-impl.jar" overwrite="true"/>
-<!--        <property name="release.files.extra" value="modules/ext/nb-javac-impl.jar"/>-->
     </target>
     <target name="-release.files-delegate" unless="nb-javac.exists">
         <antcall target="projectized.-release.files" />
-<!--        <property name="release.files.extra" value="modules/ext/nb-javac-impl.jar"/>-->
     </target>
     <target name="-release.files" depends="-check-nb-javac-exists,-release.files-build-javac,-release.files-delegate" />
 </project>

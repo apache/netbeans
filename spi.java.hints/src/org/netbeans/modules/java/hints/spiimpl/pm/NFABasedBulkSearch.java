@@ -32,7 +32,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;

@@ -21,11 +21,8 @@ package org.netbeans.lib.nbjavac.services;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.comp.Modules;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Name;
 import java.io.IOException;
 import javax.lang.model.element.Element;
@@ -64,14 +61,7 @@ public class AnonymousNumberingTest extends TestCase {
         Iterable<? extends CompilationUnitTree> cuts = ct.parse();
         Iterable<? extends Element> analyze = ct.analyze();
         
-        System.err.println("repair: " + Class.forName("com.sun.tools.javac.comp.Repair"));
         Symtab symTab = Symtab.instance(ct.getContext());
-        
-        for (Symbol.ClassSymbol cs : symTab.getAllClasses()) {
-            if (cs.flatname.toString().contains("test.Test")) {
-                System.err.println("XXX");
-            }
-        }
         Modules modules = Modules.instance(ct.getContext());
         TypeElement first = symTab.getClass(modules.getDefaultModule(), (Name)ct.getElements().getName("test.Test$1"));
         TypeElement second = symTab.getClass(modules.getDefaultModule(), (Name)ct.getElements().getName("test.Test$2"));

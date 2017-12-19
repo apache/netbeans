@@ -122,7 +122,7 @@ import org.netbeans.modules.java.hints.errors.Utilities;
  * it is not possible to determine a type which the expression must be <i>assignable to</i>. But it is known that the
  * expression must be <i>castable</i> to the typecast's target type so that compiler error does not occur.
  * <p/>
- * As the class iterates "upwards", it was derived from TreeVisitor rather than from ErrorAwareTreeScanner to prevent accidental 
+ * As the class iterates "upwards", it was derived from TreeVisitor rather than from TreeScanner to prevent accidental 
  * StackOverflows if execution accidentally fall to the default implementation with top-down traversal.
  * 
  * @author sdedic

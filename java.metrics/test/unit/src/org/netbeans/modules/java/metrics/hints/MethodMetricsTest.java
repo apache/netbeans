@@ -74,7 +74,7 @@ public class MethodMetricsTest extends NbTestCase {
     }
     
     /**
-     * Runs the hints through code, which triggers all branches of ErrorAwareTreeScanner.
+     * Runs the hints through code, which triggers all branches of TreeScanner.
      * This is just a sanity check that a hint does not throw exceptions on some
      * construction; but will not catch all errors, obviously.
      */

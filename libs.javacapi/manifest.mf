@@ -4,4 +4,3 @@ OpenIDE-Module-Implementation-Version: 3
 OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/javacapi/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/libs/javacapi/layer.xml
 OpenIDE-Module-Requires: org.openide.modules.ModuleFormat2
-XOpenIDE-Module-Hide-Classpath-Packages: com.sun.javadoc.**, com.sun.source.**, javax.annotation.processing.**, javax.lang.model.**, javax.tools.**, com.sun.tools.javac.** com.sun.tools.javac.**, com.sun.tools.javadoc.**, com.sun.tools.javap.**, com.sun.tools.classfile.**, com.sun.tools.doclint.**

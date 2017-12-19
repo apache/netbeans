@@ -18,15 +18,11 @@
  */
 package org.netbeans.modules.java.hints.introduce;
 
-import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.util.TreePath;
-import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.lang.model.element.ExecutableElement;

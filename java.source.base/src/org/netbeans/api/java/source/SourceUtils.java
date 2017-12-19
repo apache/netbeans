@@ -60,7 +60,6 @@ import com.sun.tools.javac.comp.Check;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
-
 import java.util.function.Predicate;
 
 import javax.swing.SwingUtilities;

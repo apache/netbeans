@@ -55,7 +55,6 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
-//import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.modules.java.source.indexing.APTUtils;
 import org.netbeans.modules.java.source.indexing.CompileWorker;
 import org.netbeans.modules.java.source.indexing.DiagnosticListenerImpl;
@@ -64,6 +63,7 @@ import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.indexing.JavaParsingContext;
 import org.netbeans.modules.java.source.indexing.SourcePrefetcher;
+import org.netbeans.modules.java.source.nbjavac.parsing.TreeLoader;
 import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
@@ -321,7 +321,7 @@ final class SuperOnePassCompileWorker extends CompileWorker {
             return ParsingOutput.success(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
         } catch (CouplingAbort ca) {
             //Coupling error
-//            TreeLoader.dumpCouplingAbort(ca, null);
+            TreeLoader.dumpCouplingAbort(ca, null);
         } catch (OutputFileManager.InvalidSourcePath isp) {
             //Deleted project - log & ignore
             if (JavaIndex.LOG.isLoggable(Level.FINEST)) {

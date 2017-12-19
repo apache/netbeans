@@ -30,7 +30,7 @@ import org.netbeans.modules.java.source.indexing.CompileWorker.ParsingOutput;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 
-/**TODO: this test needs to run with vanilla javac
+/**
  *
  * @author lahvac
  */
@@ -60,7 +60,6 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        //TODO:
         assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test3.sig",
                                                        "cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
         result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; public class Test4 { void t() { Undef undef; } }")),
@@ -83,7 +82,6 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        //TODO:
         assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
     }
 
@@ -100,7 +98,6 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        //TODO:
         assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
         //TODO: check file content!!!
     }
@@ -118,7 +115,6 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        //TODO:
         assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
         //TODO: check file content!!!
     }
@@ -136,7 +132,6 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        //TODO:
         assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
         //TODO: check file content!!!
     }
@@ -154,7 +149,6 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        //TODO:
         assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig",
                                                        "cache/s1/java/15/classes/test/Test4$1.sig")),
                      createdFiles);
@@ -174,7 +168,6 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        //TODO:
         assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
                      createdFiles);
         //TODO: check file content!!!

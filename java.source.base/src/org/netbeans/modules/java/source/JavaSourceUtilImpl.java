@@ -24,7 +24,6 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.code.ClassFinder;
@@ -32,7 +31,6 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.api.JavacTaskImpl;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -52,7 +50,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
@@ -60,7 +57,6 @@ import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
-
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;

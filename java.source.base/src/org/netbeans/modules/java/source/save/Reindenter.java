@@ -76,6 +76,7 @@ import org.netbeans.modules.editor.indent.spi.Context.Region;
 import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.IndentTask;
 import org.netbeans.modules.java.source.NoJavacHelper;
+import org.netbeans.modules.java.source.TreeUtilitiesAccessor;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.ParsingUtils;
@@ -232,21 +233,20 @@ public class Reindenter implements IndentTask {
                     parsedTree = cut;
                     sp = JavacTrees.instance(ctx).getSourcePositions();
                 } else {
-//                    final SourcePositions[] psp = new SourcePositions[1];
-//                    cut = null;
-//                    parsedTree = javacTask.parseStatement("{" + text + "}", psp);
-//                    sp = new SourcePositions() {
-//                        @Override
-//                        public long getStartPosition(CompilationUnitTree file, Tree tree) {
-//                            return currentEmbeddingStartOffset + psp[0].getStartPosition(file, tree) - 1;
-//                        }
-//
-//                        @Override
-//                        public long getEndPosition(CompilationUnitTree file, Tree tree) {
-//                            return currentEmbeddingStartOffset + psp[0].getEndPosition(file, tree) - 1;
-//                        }
-//                    };
-                    throw new UnsupportedOperationException("TODO");
+                    final SourcePositions[] psp = new SourcePositions[1];
+                    cut = null;
+                    parsedTree = TreeUtilitiesAccessor.getInstance().parseStatement(javacTask, "{" + text + "}", psp);
+                    sp = new SourcePositions() {
+                        @Override
+                        public long getStartPosition(CompilationUnitTree file, Tree tree) {
+                            return currentEmbeddingStartOffset + psp[0].getStartPosition(file, tree) - 1;
+                        }
+
+                        @Override
+                        public long getEndPosition(CompilationUnitTree file, Tree tree) {
+                            return currentEmbeddingStartOffset + psp[0].getEndPosition(file, tree) - 1;
+                        }
+                    };
                 }
             } catch (Exception ex) {
                 return false;

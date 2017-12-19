@@ -873,6 +873,7 @@ public class JavacParser extends Parser {
                 context);
         if (aptEnabled) {
             task.setProcessors(processors);
+            ProcessorHolder.instance(context).setProcessors(processors);
         }
         NBClassReader.preRegister(context);
         if (!backgroundCompilation)
@@ -1269,6 +1270,28 @@ public class JavacParser extends Parser {
         
     }
     
+    public static class ProcessorHolder {
+        public static ProcessorHolder instance(Context ctx) {
+            ProcessorHolder instance = ctx.get(ProcessorHolder.class);
+
+            if (instance == null) {
+                ctx.put(ProcessorHolder.class, instance = new ProcessorHolder());
+            }
+
+            return instance;
+        }
+
+        private Collection<? extends Processor> processors;
+
+        public void setProcessors(Collection<? extends Processor> processors) {
+            this.processors = processors;
+        }
+
+        public Collection<? extends Processor> getProcessors() {
+            return processors;
+        }
+    }
+
     public static interface TreeLoaderRegistry {
         public void enhance(Context context, ClasspathInfo cpInfo, boolean detached);
     }

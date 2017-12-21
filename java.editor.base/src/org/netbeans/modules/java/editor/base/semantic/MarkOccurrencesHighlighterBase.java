@@ -140,7 +140,8 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
         //detect caret inside the return type or throws clause:
         if (typePath != null && typePath.getParentPath().getLeaf().getKind() == Kind.METHOD) {
             //hopefully found something, check:
-            MethodTree decl = (MethodTree) typePath.getParentPath().getLeaf();
+            TreePath declPath = typePath.getParentPath();
+            MethodTree decl = (MethodTree) declPath.getLeaf();
             Tree type = decl.getReturnType();
 
             if (   node.getBoolean(MarkOccurencesSettingsNames.EXIT, true)
@@ -150,7 +151,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
                 setExitDetector(med);
 
                 try {
-                    return med.process(info, doc, decl, null);
+                    return med.process(info, doc, declPath, null);
                 } finally {
                     setExitDetector(null);
                 }
@@ -164,7 +165,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
                     setExitDetector(med);
 
                     try {
-                        return med.process(info, doc, decl, Collections.singletonList(exc));
+                        return med.process(info, doc, declPath, Collections.singletonList(exc));
                     } finally {
                         setExitDetector(null);
                     }
@@ -189,7 +190,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
                     try {
                         TreePath tryPath = tu.getPathElementOfKind(Kind.TRY, typePath);
                         if (tryPath != null) {
-                            return med.process(info, doc, ((TryTree)tryPath.getLeaf()).getBlock(), Collections.singletonList(typePath.getLeaf()));
+                            return med.process(info, doc, new TreePath(tryPath, ((TryTree)tryPath.getLeaf()).getBlock()), Collections.singletonList(typePath.getLeaf()));
                         }
                     } finally {
                         setExitDetector(null);

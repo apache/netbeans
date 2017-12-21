@@ -56,6 +56,7 @@ import org.netbeans.lib.nbjavac.services.CancelService;
 import com.sun.tools.javac.util.FatalError;
 import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Log;
+import com.sun.tools.javac.util.Names;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -373,6 +374,7 @@ final class VanillaCompileWorker extends CompileWorker {
 
     private void dropMethodsAndErrors(com.sun.tools.javac.util.Context ctx, CompilationUnitTree cut) {
         Symtab syms = Symtab.instance(ctx);
+        Names names = Names.instance(ctx);
         TreeMaker make = TreeMaker.instance(ctx);
         //TODO: should preserve error types!!!
         new TreePathScanner<Void, Void>() {
@@ -423,14 +425,21 @@ final class VanillaCompileWorker extends CompileWorker {
 
             @Override
             public Void visitClass(ClassTree node, Void p) {
-                Symbol.ClassSymbol csym = ((JCTree.JCClassDecl) node).sym;
+                JCClassDecl clazz = (JCTree.JCClassDecl) node;
+                Symbol.ClassSymbol csym = clazz.sym;
                 Type.ClassType ct = (Type.ClassType) csym.type;
                 ct.all_interfaces_field = error2Object(ct.all_interfaces_field);
                 ct.allparams_field = error2Object(ct.allparams_field);
                 ct.interfaces_field = error2Object(ct.interfaces_field);
                 ct.typarams_field = error2Object(ct.typarams_field);
                 ct.supertype_field = error2Object(ct.supertype_field);
-                return super.visitClass(node, p);
+                super.visitClass(node, p);
+                for (JCTree def : clazz.defs) {
+                    if (def.hasTag(JCTree.Tag.ERRONEOUS)) {
+                        clazz.defs = com.sun.tools.javac.util.List.filter(clazz.defs, def);
+                    }
+                }
+                return null;
             }
 
             private void clearAnnotations(SymbolMetadata metadata) {

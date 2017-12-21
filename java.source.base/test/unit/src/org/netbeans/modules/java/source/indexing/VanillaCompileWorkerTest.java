@@ -172,4 +172,24 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                      createdFiles);
         //TODO: check file content!!!
     }
+
+    public void testModuleInfoAndSourceLevel8() throws Exception {
+        setSourceLevel("8");
+
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("module-info.java", "module m {}"),
+                                                         compileTuple("test/Test.java", "package test; public class Test { }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+                     createdFiles);
+    }
 }

@@ -26,7 +26,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
@@ -45,6 +47,7 @@ import org.netbeans.modules.parsing.impl.indexing.lucene.LuceneIndexFactory;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.ErrorsCache;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -115,7 +118,7 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
     
     @Override
     protected void setUp() throws Exception {
-        SourceUtilsTestUtil.prepareTest(new String[0], new Object[0]);
+        SourceUtilsTestUtil.prepareTest(new String[0], new Object[] {new SourceLevelQueryImpl()});
         
         clearWorkDir();
         File wdFile = getWorkDir();
@@ -131,6 +134,7 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
     }
     
     private FileObject src;
+    private String sourceLevel;
     
     private FileObject createSrcFile(String pathAndName, String content) throws Exception {
         FileObject testFile = FileUtil.createData(src, pathAndName);
@@ -151,5 +155,29 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
     
     protected FileObject getRoot() {
         return src;
+    }
+
+    protected void setSourceLevel(String sourceLevel) {
+        this.sourceLevel = sourceLevel;
+    }
+
+    private final class SourceLevelQueryImpl implements SourceLevelQueryImplementation2 {
+
+        @Override
+        public Result getSourceLevel(FileObject file) {
+            return new Result() {
+                @Override
+                public String getSourceLevel() {
+                    return sourceLevel;
+                }
+
+                @Override
+                public void addChangeListener(ChangeListener l) {}
+
+                @Override
+                public void removeChangeListener(ChangeListener l) {}
+            };
+        }
+
     }
 }

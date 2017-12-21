@@ -31,7 +31,6 @@ import org.netbeans.lib.nbjavac.services.CancelAbort;
 import org.netbeans.lib.nbjavac.services.CancelService;
 
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javadoc.main.JavadocClassFinder;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -89,14 +88,17 @@ import org.netbeans.modules.java.source.PostFlowAnalysis;
 import org.netbeans.modules.java.source.indexing.APTUtils;
 import org.netbeans.modules.java.source.indexing.FQN2Files;
 import org.netbeans.lib.nbjavac.services.NBAttr;
+import org.netbeans.lib.nbjavac.services.NBClassFinder;
 import org.netbeans.lib.nbjavac.services.NBClassReader;
 import org.netbeans.lib.nbjavac.services.NBEnter;
+import org.netbeans.lib.nbjavac.services.NBJavaCompiler;
 import org.netbeans.lib.nbjavac.services.NBJavadocEnter;
 import org.netbeans.lib.nbjavac.services.NBJavadocMemberEnter;
 import org.netbeans.lib.nbjavac.services.NBMemberEnter;
 import org.netbeans.lib.nbjavac.services.NBParserFactory;
 import org.netbeans.lib.nbjavac.services.NBClassWriter;
 import org.netbeans.lib.nbjavac.services.NBJavacTrees;
+import org.netbeans.lib.nbjavac.services.NBJavadocClassFinder;
 import org.netbeans.lib.nbjavac.services.NBMessager;
 import org.netbeans.lib.nbjavac.services.NBResolve;
 import org.netbeans.lib.nbjavac.services.NBTreeMaker;
@@ -876,8 +878,10 @@ public class JavacParser extends Parser {
             ProcessorHolder.instance(context).setProcessors(processors);
         }
         NBClassReader.preRegister(context);
-        if (!backgroundCompilation)
-            JavadocClassFinder.preRegister(context);
+        Lookup.getDefault()
+              .lookupAll(ContextEnhancer.class)
+              .stream()
+              .forEach(r -> r.enhance(context, backgroundCompilation));
         Lookup.getDefault()
               .lookupAll(DuplicateClassRegistry.class)
               .stream()
@@ -1300,6 +1304,22 @@ public class JavacParser extends Parser {
         public void enhance(Context context, FQN2Files fqn2Files);
     }
     
+    public static interface ContextEnhancer {
+        public void enhance(Context context, boolean backgroundCompilation);
+    }
+
+    @ServiceProvider(service=ContextEnhancer.class)
+    public static class VanillaJavacContextEnhancer implements ContextEnhancer {
+        @Override
+        public void enhance(Context context, boolean backgroundCompilation) {
+            if (!backgroundCompilation)
+                NBJavadocClassFinder.preRegister(context);
+            else
+                NBClassFinder.preRegister(context);
+            NBJavaCompiler.preRegister(context);
+        }
+    }
+
     public static interface SequentialParsing {
         public Iterable<? extends CompilationUnitTree> parse(JavacTask task, JavaFileObject file) throws IOException;
     }

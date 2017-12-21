@@ -18,54 +18,49 @@
  */
 package org.netbeans.lib.nbjavac.services;
 
-import com.sun.tools.javac.code.Symtab;
-import com.sun.tools.javac.comp.Enter;
+import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
-import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Context;
-import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
+import com.sun.tools.javac.util.List;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  *
  * @author lahvac
  */
-public class NBEnter extends Enter {
+public class NBJavaCompiler extends JavaCompiler {
 
     public static void preRegister(Context context) {
-        context.put(enterKey, new Context.Factory<Enter>() {
-            public Enter make(Context c) {
-                return new NBEnter(c);
+        context.put(compilerKey, new Context.Factory<JavaCompiler>() {
+            public JavaCompiler make(Context c) {
+                return new NBJavaCompiler(c);
             }
         });
     }
 
     private final CancelService cancelService;
-    private final Symtab syms;
 
-    public NBEnter(Context context) {
+    public NBJavaCompiler(Context context) {
         super(context);
         cancelService = CancelService.instance(context);
-        syms = Symtab.instance(context);
     }
 
     @Override
-    public void visitClassDef(JCClassDecl tree) {
-        cancelService.abortIfCanceled();
-        super.visitClassDef(tree);
-    }
-
-    @Override
-    public void visitTopLevel(JCTree.JCCompilationUnit tree) {
-        if (TreeInfo.isModuleInfo(tree) && tree.modle == syms.noModule) {
-            //workaround: when source level == 8, then visitTopLevel crashes for module-info.java
-            return ;
+    public void processAnnotations(List<JCTree.JCCompilationUnit> roots, Collection<String> classnames) {
+        if (roots.isEmpty()) {
+            super.processAnnotations(roots, classnames);
+        } else {
+            setOrigin(roots.head.sourcefile.toUri().toString());
+            try {
+                super.processAnnotations(roots, classnames);
+            } finally {
+                setOrigin("");
+            }
         }
-        super.visitTopLevel(tree);
     }
 
-    //no @Override to ensure compatibility with ordinary javac:
-    protected int getIndex(JCClassDecl clazz) {
-        return clazz instanceof IndexedClassDecl ? ((IndexedClassDecl) clazz).index : -1;
+    private void setOrigin(String origin) {
+        fileManager.handleOption("apt-origin", Collections.singletonList(origin).iterator());
     }
 }

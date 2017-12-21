@@ -57,8 +57,6 @@ import org.openide.util.BaseUtilities;
  */
 public class OutputFileManager extends CachingFileManager {
 
-    public static final String OPTION_SET_CURRENT_ROOT = "set-current-root";
-
     private static final Logger LOG = Logger.getLogger(OutputFileManager.class.getName());
     /**
      * Exception used to signal that the sourcepath is broken (project is deleted)
@@ -73,7 +71,6 @@ public class OutputFileManager extends CachingFileManager {
     private final ModuleSourceFileManager moduleSourceFileManager;
     private Pair<URI,File> cachedClassFolder;
     private Iterable<Set<Location>> cachedModuleLocations;
-    private URL   root;
 
     /** Creates a new instance of CachingFileManager */
     public OutputFileManager(
@@ -157,45 +154,22 @@ public class OutputFileManager extends CachingFileManager {
         throws IOException, UnsupportedOperationException, IllegalArgumentException {
         assert pkgName != null;
         assert relativeName != null;
-        File activeRoot;
-        if (root != null) {
-            activeRoot = getClassFolder(root);
-        } else {
-            URL siblingURL = siblings.hasSibling() ? siblings.getSibling() : sibling == null ? null : sibling.toUri().toURL();
-            if (siblingURL == null) {
-                throw new IllegalArgumentException ("sibling == null");
-            }
-            activeRoot = getClassFolderForSourceImpl (siblingURL);
+        URL siblingURL = siblings.hasSibling() ? siblings.getSibling() : sibling == null ? null : sibling.toUri().toURL();
+        if (siblingURL == null) {
+            throw new IllegalArgumentException ("sibling == null");
+        }
+        File activeRoot = getClassFolderForSourceImpl (siblingURL);
+        if (activeRoot == null) {
+            activeRoot = getClassFolderForApt(siblingURL);
             if (activeRoot == null) {
-                activeRoot = getClassFolderForApt(siblingURL);
-                if (activeRoot == null) {
-                    //Deleted project
-                    throw new InvalidSourcePath ();
-                }
+                //Deleted project
+                throw new InvalidSourcePath ();
             }
         }
         assertValidRoot(activeRoot, l);
         final String path = FileObjects.resolveRelativePath(pkgName, relativeName);
         final File file = FileUtil.normalizeFile(new File (activeRoot,path.replace(FileObjects.NBFS_SEPARATOR_CHAR, File.separatorChar)));
         return tx.createFileObject(l, file, activeRoot,null,null);
-    }
-
-    @Override
-    public boolean handleOption(String head, Iterator<String> tail) {
-        if (OPTION_SET_CURRENT_ROOT.equals(head)) {
-            if (tail.hasNext()) {
-                try {
-                    root = new URL(tail.next());
-                } catch (MalformedURLException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            } else {
-                root = null;
-            }
-            return true;
-        } else {
-            return super.handleOption(head, tail);
-        }
     }
 
     @Override

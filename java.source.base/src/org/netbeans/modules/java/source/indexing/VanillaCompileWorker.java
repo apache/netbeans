@@ -206,8 +206,6 @@ final class VanillaCompileWorker extends CompileWorker {
         boolean aptEnabled = true;
         Log log = Log.instance(jt.getContext());
         JavaCompiler compiler = JavaCompiler.instance(jt.getContext());
-        JavaFileManager fm = jt.getContext().get(JavaFileManager.class);
-        fm.handleOption(OutputFileManager.OPTION_SET_CURRENT_ROOT, Collections.singleton(context.getRootURI().toString()).iterator());
         try {
             final Iterable<? extends Element> types = jt.enter(trees);
             if (context.isCancelled()) {
@@ -369,8 +367,6 @@ final class VanillaCompileWorker extends CompileWorker {
                     JavaIndex.LOG.log(level, message, t);  //NOI18N
                 }
             }
-        } finally {
-            fm.handleOption(OutputFileManager.OPTION_SET_CURRENT_ROOT, Collections.<String>emptySet().iterator());
         }
         return ParsingOutput.failure(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
     }

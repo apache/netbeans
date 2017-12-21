@@ -29,7 +29,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -198,7 +198,7 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
             //(missing '()' for constructor)
             //do not propose the hint in this case:
             final boolean[] parentError = new boolean[] {false};
-            new TreePathScanner() {
+            new ErrorAwareTreePathScanner() {
                 @Override
                 public Object visitNewClass(NewClassTree nct, Object o) {
                     if (leaf == nct) {

@@ -71,5 +71,8 @@ public class NBResolve extends Resolve {
         if (accessibleOverride) return true;
         return super.isAccessible(env, c, checkInner);
     }
-    
+
+    public static boolean isStatic(Env<AttrContext> env) {
+        return Resolve.isStatic(env);
+    }
 }

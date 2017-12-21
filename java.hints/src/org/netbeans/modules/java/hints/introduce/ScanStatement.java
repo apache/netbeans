@@ -32,7 +32,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -53,7 +53,7 @@ import org.netbeans.api.java.source.TreePathHandle;
  *
  * @author sdedic
  */
-final class ScanStatement extends TreePathScanner<Void, Void> {
+final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
     private static final int PHASE_BEFORE_SELECTION = 1;
     private static final int PHASE_INSIDE_SELECTION = 2;
     private static final int PHASE_AFTER_SELECTION = 3;

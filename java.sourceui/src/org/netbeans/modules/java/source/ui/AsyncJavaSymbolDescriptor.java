@@ -25,6 +25,7 @@ import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.jvm.ClassReader;
 import com.sun.tools.javac.model.JavacElements;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.Reference;
@@ -42,6 +43,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -58,6 +60,7 @@ import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
+import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.parsing.CachingArchiveProvider;
 import org.netbeans.modules.java.source.parsing.CachingFileManager;
@@ -211,8 +214,7 @@ final class AsyncJavaSymbolDescriptor extends JavaSymbolDescriptorBase implement
             final Symtab syms = Symtab.instance(jt.getContext());
             final Set<?> pkgs = new HashSet<>(getPackages(syms).keySet());
             final Set<?> clzs = new HashSet<>(getClasses(syms).keySet());
-            final JavacElements elements = (JavacElements)jt.getElements();
-            final TypeElement te = (TypeElement) elements.getTypeElementByBinaryName(
+            final TypeElement te = (TypeElement) ElementUtils.getTypeElementByBinaryName(jt,
                     ElementHandleAccessor.getInstance().getJVMSignature(getOwner())[0]);
             if (te != null) {
                 if (ident.equals(getSimpleName(te, null, caseSensitive))) {

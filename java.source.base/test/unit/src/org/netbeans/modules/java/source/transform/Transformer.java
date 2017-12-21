@@ -22,7 +22,7 @@ package org.netbeans.modules.java.source.transform;
 import org.netbeans.modules.java.source.query.CommentHandler;
 import org.openide.util.NbBundle;
 import com.sun.source.tree.*;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.model.JavacTypes;
 import com.sun.tools.javac.util.Context;
 import java.util.List;
@@ -39,7 +39,7 @@ import org.netbeans.modules.java.source.builder.TreeFactory;
  * is done by a supplied ImmutableTreeTranslator implementation.  A new context
  * is set upon successful completion of this Transformer.
  */
-public abstract class Transformer<R, P> extends TreeScanner<R,P> {
+public abstract class Transformer<R, P> extends ErrorAwareTreeScanner<R,P> {
 
     CommentHandler commentHandler;
     public TreeMaker make;

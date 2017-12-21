@@ -57,7 +57,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
 import javax.lang.model.element.Element;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -73,7 +73,7 @@ import org.openide.ErrorManager;
  *
  * @author Jan Becicka
  */
-public class RefactoringVisitor extends TreePathScanner<Tree, Element> implements DocTreeVisitor<DocTree, Element> {
+public class RefactoringVisitor extends ErrorAwareTreePathScanner<Tree, Element> implements DocTreeVisitor<DocTree, Element> {
     /**
      * 
      */

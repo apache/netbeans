@@ -30,7 +30,7 @@ import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import java.util.List;
 import javax.lang.model.element.Element;
@@ -142,7 +142,7 @@ public class JDIWrappersTest extends NbTestCase {
         return successPtr[0];
     }
 
-    private static class JDICallsScanner extends TreeScanner<Void, Object> {
+    private static class JDICallsScanner extends ErrorAwareTreeScanner<Void, Object> {
 
         private Trees trees;
         private Types types;

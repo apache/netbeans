@@ -25,7 +25,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -170,7 +170,7 @@ public class SwitchTest extends GeneratorTestBase {
                     return;
                 }
                 final TreeMaker make = copy.getTreeMaker();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override public Void visitIf(IfTree node, Void p) {
                         List<StatementTree> statements = new ArrayList<StatementTree>(((BlockTree) node.getThenStatement()).getStatements());
                         statements.add(make.Break(null));
@@ -218,7 +218,7 @@ public class SwitchTest extends GeneratorTestBase {
                     return;
                 }
                 final TreeMaker make = copy.getTreeMaker();
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override public Void visitCase(CaseTree node, Void p) {
                         IfTree nue = make.If(make.Binary(Kind.EQUAL_TO, make.Identifier("p"), make.Literal(0)), make.Block(node.getStatements().subList(0, node.getStatements().size() - 1), false), null);
                         copy.rewrite(getCurrentPath().getParentPath().getLeaf(), nue);

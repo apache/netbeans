@@ -20,7 +20,7 @@ package org.netbeans.api.java.source.gen;
 
 import com.sun.source.tree.*;
 import com.sun.source.util.SourcePositions;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.File;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -320,7 +320,7 @@ public class MethodBodyTest extends GeneratorTestBase {
                 MethodTree method = (MethodTree) clazz.getMembers().get(1);
                 final NewClassTree[] nctFin = new NewClassTree[1];
                 
-                new TreeScanner() {
+                new ErrorAwareTreeScanner() {
                     @Override
                     public Object visitNewClass(NewClassTree node, Object p) {
                         nctFin[0] = node;
@@ -378,7 +378,7 @@ public class MethodBodyTest extends GeneratorTestBase {
                 MethodTree method = (MethodTree) clazz.getMembers().get(1);
                 final NewClassTree[] nctFin = new NewClassTree[1];
                 
-                new TreeScanner() {
+                new ErrorAwareTreeScanner() {
                     @Override
                     public Object visitNewClass(NewClassTree node, Object p) {
                         nctFin[0] = node;
@@ -652,7 +652,7 @@ public class MethodBodyTest extends GeneratorTestBase {
                 public void run(final WorkingCopy workingCopy) throws java.io.IOException {
                     workingCopy.toPhase(Phase.RESOLVED);
                     TreeMaker treeMaker = workingCopy.getTreeMaker();
-                    new TreeScanner<Void, Void>() {
+                    new ErrorAwareTreeScanner<Void, Void>() {
                         @Override public Void visitReturn(ReturnTree node, Void p) {
                             ExpressionTree parsed = workingCopy.getTreeUtilities().parseExpression("str.toString().length()", new SourcePositions[1]);
                             workingCopy.rewrite(node.getExpression(), parsed);

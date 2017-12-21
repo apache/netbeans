@@ -36,7 +36,7 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.awt.Dialog;
 import java.beans.PropertyChangeEvent;
@@ -182,7 +182,7 @@ public class EqualsHashCodeGenerator implements CodeGenerator {
     /** Checks whether a field is used inside given methods.
      */
     private static boolean isUsed(CompilationInfo cc, VariableElement field, ExecutableElement... methods) {
-        class Used extends TreePathScanner<Void, VariableElement> {
+        class Used extends ErrorAwareTreePathScanner<Void, VariableElement> {
             boolean found;
             
             @Override

@@ -281,13 +281,12 @@ public final class ModuleNames {
                 null,
                 null,
                 null,
-                null);
-        try {
-            final CompilationUnitTree cu =  jt.parse(FileObjects.fileObjectFileObject(
+                Collections.singletonList(FileObjects.fileObjectFileObject(
                     moduleInfo,
                     moduleInfo.getParent(),
                     null,
-                    FileEncodingQuery.getEncoding(moduleInfo))).iterator().next();
+                    FileEncodingQuery.getEncoding(moduleInfo))));
+            final CompilationUnitTree cu =  jt.parse().iterator().next();
             final List<? extends Tree> typeDecls = cu.getTypeDecls();
             if (!typeDecls.isEmpty()) {
                 final Tree typeDecl = typeDecls.get(0);
@@ -295,9 +294,6 @@ public final class ModuleNames {
                     return ((ModuleTree)typeDecl).getName().toString();
                 }
             }
-        } catch (IOException ioe) {
-            Exceptions.printStackTrace(ioe);
-        }
         return null;
     }
 

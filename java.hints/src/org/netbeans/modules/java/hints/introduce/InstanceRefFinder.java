@@ -25,7 +25,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,7 +47,7 @@ import org.netbeans.api.java.source.CompilationInfo;
  *
  * @author sdedic
  */
-public class InstanceRefFinder extends TreePathScanner {
+public class InstanceRefFinder extends ErrorAwareTreePathScanner {
     /**
      * The initial path for analysis
      */

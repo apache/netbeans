@@ -34,6 +34,7 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
 import org.netbeans.api.java.source.*;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.ui.ElementHeaders;
 import org.netbeans.api.progress.ProgressUtils;
 import org.netbeans.lib.editor.codetemplates.spi.*;
@@ -245,7 +246,7 @@ public class JavaCodeTemplateProcessor implements CodeTemplateProcessor {
                                 final SourcePositions sp = trees.getSourcePositions();
                                 final Map<VariableElement, VariableTree> vars = new HashMap<>();
                                 final LinkedList<VariableTree> varList = new LinkedList<>();
-                                TreePathScanner scanner = new TreePathScanner() {
+                                ErrorAwareTreePathScanner scanner = new ErrorAwareTreePathScanner() {
                                     private int cnt = 0;
                                     @Override
                                     public Object visitIdentifier(IdentifierTree node, Object p) {

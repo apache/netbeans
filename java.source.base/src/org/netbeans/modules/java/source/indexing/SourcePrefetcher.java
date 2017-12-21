@@ -31,7 +31,7 @@ import org.netbeans.modules.parsing.spi.indexing.SuspendStatus;
  *
  * @author Tomas Zezula
  */
-class SourcePrefetcher implements Iterator<CompileTuple>, /*Auto*/Closeable {
+public class SourcePrefetcher implements Iterator<CompileTuple>, /*Auto*/Closeable {
        
     private final Iterator<? extends CompileTuple> iterator;
     //@NotThreadSafe
@@ -79,7 +79,7 @@ class SourcePrefetcher implements Iterator<CompileTuple>, /*Auto*/Closeable {
     }
     
     
-    static SourcePrefetcher create(
+    public static SourcePrefetcher create(
             @NonNull final Collection<? extends CompileTuple> files,
             @NonNull final SuspendStatus suspendStatus) {
         return new SourcePrefetcher(JavaIndexerWorker.getCompileTupleIterator(files, suspendStatus));

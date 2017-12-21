@@ -26,7 +26,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.DocSourcePositions;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.*;
 import static com.sun.tools.javac.code.Flags.*;
@@ -487,6 +487,16 @@ public class CasualDiff {
         // TODO: the package name actually ends at the end of the name, so the semicolon could be treated as part
         // of the diffed list
         int start = td.oldTopLevel.getPackage() != null ? td.endPos(td.oldTopLevel.getPackage()) : 0;
+        
+        //XXX: no-javac-patch:
+        td.tokenSequence.move(start);
+        
+        while (td.tokenSequence.movePrevious()) {
+            if (td.isNoop(td.tokenSequence.token().id())) {
+                start = td.tokenSequence.offset();
+            }
+        }
+        //XXX: no-javac-patch end
 
         List<JCImport> originalJC = new LinkedList<JCImport>();
         List<JCImport> nueJC = new LinkedList<JCImport>();
@@ -1591,6 +1601,18 @@ public class CasualDiff {
             case LINE_COMMENT:
             case BLOCK_COMMENT:
             case JAVADOC_COMMENT:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private boolean isNoop(JavaTokenId tid) {
+        switch (tid) {
+            case LINE_COMMENT:
+            case BLOCK_COMMENT:
+            case JAVADOC_COMMENT:
+            case WHITESPACE:
                 return true;
             default:
                 return false;
@@ -5055,7 +5077,7 @@ public class CasualDiff {
     }
     
     private int getPosAfterTreeComments(JCTree t, int end) {
-        class Scn extends TreeScanner<Void, Void> {
+        class Scn extends ErrorAwareTreeScanner<Void, Void> {
             int max = -1;
             
             @Override
@@ -5675,7 +5697,7 @@ public class CasualDiff {
 
     private int getCommentCorrectedEndPos(JCTree tree) {
         final int[] res = new int[] {endPos(tree)};
-        new TreeScanner<Void, Void>() {
+        new ErrorAwareTreeScanner<Void, Void>() {
             @Override public Void scan(Tree node, Void p) {
                 if (node != null) {
                     CommentSet ch = comments.getComments(node);

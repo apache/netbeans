@@ -24,7 +24,7 @@ import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.awt.Dialog;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -172,7 +172,7 @@ public class JavaFixAllImports {
         return v.getImports();
     }
 
-    private static class ImportVisitor extends TreePathScanner {
+    private static class ImportVisitor extends ErrorAwareTreePathScanner {
         private CompilationInfo info;
         private String currentPackage;
         private List<TreePathHandle> imports;

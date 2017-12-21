@@ -33,7 +33,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -119,7 +119,7 @@ public class ReplaceBufferByString {
     /**
      * The scanner determines, if the expression is just a series of new SB().append().append()...
      */
-    private static class NewAppendScanner extends TreePathScanner<Boolean, Void> {
+    private static class NewAppendScanner extends ErrorAwareTreePathScanner<Boolean, Void> {
         private final CompilationInfo ci;
         private boolean hasContents;
         
@@ -386,7 +386,7 @@ public class ReplaceBufferByString {
      * Translates rest of references in the method so that .toString() is stripped, as the variable is going
      * to change type to String.
      */
-    private static class ToStringTranslator extends TreePathScanner {
+    private static class ToStringTranslator extends ErrorAwareTreePathScanner {
         private final WorkingCopy wc;
         private final Element varElement;
         private final GeneratorUtilities gu;
@@ -442,7 +442,7 @@ public class ReplaceBufferByString {
      * its value must NOT be assigned to another variable, field, passed to another method call or returned from the method.
      * Only String-compatible methods may be called on the variable.
      */
-    private static class StringBufferUsageScanner extends TreePathScanner<Boolean, Void> {
+    private static class StringBufferUsageScanner extends ErrorAwareTreePathScanner<Boolean, Void> {
         private final CompilationInfo ci;
         private final VariableElement var;
         

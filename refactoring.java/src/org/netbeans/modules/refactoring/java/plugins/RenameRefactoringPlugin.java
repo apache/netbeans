@@ -23,7 +23,7 @@ import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.DocTrees;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.*;
@@ -187,7 +187,7 @@ public class RenameRefactoringPlugin extends JavaRefactoringPlugin {
                 parent = parent.getParentPath();
             }
             final String[] result = new String[1];
-            new TreeScanner<Void, Void>() {
+            new ErrorAwareTreeScanner<Void, Void>() {
                 
                 @Override
                 public Void visitLabeledStatement(LabeledStatementTree tree, Void p) {

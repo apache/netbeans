@@ -21,7 +21,7 @@ package org.netbeans.modules.refactoring.java.plugins;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.*;
@@ -506,7 +506,7 @@ public class ChangeParametersPlugin extends JavaRefactoringPlugin {
             String name = paramTable[index].getName();
             int originalIndex = paramTable[index].getOriginalIndex();
             final VariableElement parameterElement = originalIndex == -1 ? null : method.getParameters().get(originalIndex);
-            TreeScanner<Boolean, String> scanner = new TreeScanner<Boolean, String>() {
+            ErrorAwareTreeScanner<Boolean, String> scanner = new ErrorAwareTreeScanner<Boolean, String>() {
 
                 @Override
                 public Boolean visitVariable(VariableTree vt, String p) {

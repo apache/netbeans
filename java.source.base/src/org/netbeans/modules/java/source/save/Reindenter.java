@@ -43,7 +43,7 @@ import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SourcePositions;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.api.JavacTrees;
@@ -65,6 +65,8 @@ import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
+import com.sun.tools.javac.parser.ParserFactory;
+import com.sun.tools.javac.util.Log;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -73,8 +75,12 @@ import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.editor.indent.spi.Context.Region;
 import org.netbeans.modules.editor.indent.spi.ExtraLock;
 import org.netbeans.modules.editor.indent.spi.IndentTask;
+import org.netbeans.modules.java.source.NoJavacHelper;
+import org.netbeans.modules.java.source.TreeUtilitiesAccessor;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
+import org.netbeans.modules.java.source.parsing.ParsingUtils;
+import org.netbeans.modules.java.source.parsing.PrefetchableJavaFileObject;
 import org.netbeans.modules.parsing.impl.Utilities;
 import org.openide.filesystems.FileObject;
 
@@ -223,13 +229,13 @@ public class Reindenter implements IndentTask {
                 text = context.document().getText(currentEmbeddingStartOffset, currentEmbeddingLength);
                 if (JavacParser.MIME_TYPE.equals(context.mimePath())) {
                     FileObject fo = Utilities.getFileObject(context.document());
-                    cut = javacTask.parse(FileObjects.memoryFileObject("", fo != null ? fo.getNameExt() : "", text)).iterator().next(); //NOI18N
+                    cut = ParsingUtils.parseArbitrarySource(javacTask, FileObjects.memoryFileObject("", fo != null ? fo.getNameExt() : "", text));
                     parsedTree = cut;
                     sp = JavacTrees.instance(ctx).getSourcePositions();
                 } else {
                     final SourcePositions[] psp = new SourcePositions[1];
                     cut = null;
-                    parsedTree = javacTask.parseStatement("{" + text + "}", psp);
+                    parsedTree = TreeUtilitiesAccessor.getInstance().parseStatement(javacTask, "{" + text + "}", psp);
                     sp = new SourcePositions() {
                         @Override
                         public long getStartPosition(CompilationUnitTree file, Tree tree) {
@@ -834,7 +840,7 @@ public class Reindenter implements IndentTask {
                 ts.token().id().primaryCategory().equals("literal")) //NOI18N
                 ? ts.offset() : startOffset;
 
-        new TreeScanner<Void, Void>() {
+        new ErrorAwareTreeScanner<Void, Void>() {
 
             @Override
             public Void scan(Tree node, Void p) {
@@ -1198,6 +1204,8 @@ public class Reindenter implements IndentTask {
 
         @Override
         public IndentTask createTask(Context context) {
+            if (!NoJavacHelper.hasWorkingJavac())
+                return null;
             return new Reindenter(context);
         }
     }

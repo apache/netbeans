@@ -882,7 +882,7 @@ public final class ModuleManager extends Modules {
         return theHost.getClassLoader();
     }
     
-    private Collection<Module> getAttachedFragments(Module m) {
+    public Collection<Module> getAttachedFragments(Module m) {
         String cdn = m.getCodeNameBase();
         Collection<Module> frags = fragmentModules.get(cdn);
         return frags == null ? Collections.<Module>emptySet() : frags;

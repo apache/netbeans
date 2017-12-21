@@ -22,7 +22,7 @@ package org.netbeans.modules.editor.java;
 import java.util.ArrayList;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -226,7 +226,7 @@ public class UtilitiesTest extends NbTestCase {
             public void run(final CompilationController cc) throws Exception {
                 cc.toPhase(Phase.RESOLVED);
                 
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
                         if (!cc.getTreeUtilities().isSynthetic(getCurrentPath())) {

@@ -321,7 +321,7 @@ public class RefactoringTestBase extends NbTestCase {
         Main.initializeURLFactory();
         org.netbeans.api.project.ui.OpenProjects.getDefault().getOpenProjects();
         
-        org.netbeans.modules.java.source.TreeLoader.DISABLE_CONFINEMENT_TEST = true;
+//        org.netbeans.modules.java.source.TreeLoader.DISABLE_CONFINEMENT_TEST = true;
         
         prepareTest();
         org.netbeans.api.project.ui.OpenProjects.getDefault().open(new Project[] {prj = ProjectManager.getDefault().findProject(src.getParent())}, false);

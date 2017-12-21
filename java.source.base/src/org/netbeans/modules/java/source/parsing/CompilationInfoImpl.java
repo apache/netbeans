@@ -163,7 +163,7 @@ public final class CompilationInfoImpl {
         this.isDetached = false;
     }
 
-    void update (final Snapshot snapshot) throws IOException {
+    public void update (final Snapshot snapshot) throws IOException {
         assert snapshot != null;
         this.jfo.update(snapshot.getText());
         this.snapshot = snapshot;
@@ -354,7 +354,7 @@ public final class CompilationInfoImpl {
             if (currentPhase.compareTo(phase)<0) {
                 setPhase(phase);
                 if (currentPhase == JavaSource.Phase.MODIFIED)
-                    getJavacTask().analyze(); // Ensure proper javac initialization
+                    getJavacTask().getElements().getTypeElement("java.lang.Object"); // Ensure proper javac initialization
             }
             return phase;
         } else {
@@ -372,7 +372,7 @@ public final class CompilationInfoImpl {
         if (javacTask == null) {
             diagnosticListener = new DiagnosticListenerImpl(this.root, this.jfo, this.cpInfo);
             javacTask = JavacParser.createJavacTask(this.file, this.root, this.cpInfo,
-                    this.parser, diagnosticListener, null, isDetached);
+                    this.parser, diagnosticListener, isDetached);
         }
 	return javacTask;
     }
@@ -413,7 +413,7 @@ public final class CompilationInfoImpl {
      * Returns current {@link DiagnosticListener}
      * @return listener
      */
-    DiagnosticListener<JavaFileObject> getDiagnosticListener() {
+    public DiagnosticListener<JavaFileObject> getDiagnosticListener() {
         return diagnosticListener;
     }
     
@@ -452,7 +452,7 @@ public final class CompilationInfoImpl {
     
     // Innerclasses ------------------------------------------------------------
     @Trusted
-    static class DiagnosticListenerImpl implements DiagnosticListener<JavaFileObject> {
+    public static class DiagnosticListenerImpl implements DiagnosticListener<JavaFileObject> {
         
         private final Map<JavaFileObject, Diagnostics> source2Errors;
         private final FileObject root;
@@ -517,12 +517,12 @@ public final class CompilationInfoImpl {
             return errors;
         }
 
-        final boolean hasPartialReparseErrors () {
+        public final boolean hasPartialReparseErrors () {
             // #236654: warnings should not stop processing of the reparsed method
             return this.partialReparseErrors != null && partialReparseRealErrors;
         }
         
-        final void startPartialReparse (int from, int to) {
+        public final void startPartialReparse (int from, int to) {
             if (partialReparseErrors == null) {
                 partialReparseErrors = new ArrayList<>();
                 Diagnostics errors = getErrors(jfo);
@@ -562,7 +562,7 @@ public final class CompilationInfoImpl {
             partialReparseRealErrors = false;
         }
         
-        final void endPartialReparse (final int delta) {
+        public final void endPartialReparse (final int delta) {
             this.currentDelta+=delta;
         }
         
@@ -602,27 +602,18 @@ public final class CompilationInfoImpl {
             @Override
             public long getPosition() {
                 long ret = this.delegate.getPosition();
-                if (delegate.hasFixedPositions()) {
-                    ret+=currentDelta;
-                }
                 return ret;
             }
 
             @Override
             public long getStartPosition() {
                 long ret = this.delegate.getStartPosition();
-                if (delegate.hasFixedPositions()) {
-                    ret+=currentDelta;
-                }
                 return ret;
             }
 
             @Override
             public long getEndPosition() {
                 long ret = this.delegate.getEndPosition();
-                if (delegate.hasFixedPositions()) {
-                    ret+=currentDelta;
-                }
                 return ret;
             }
 

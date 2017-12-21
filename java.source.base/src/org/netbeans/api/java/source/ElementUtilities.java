@@ -89,6 +89,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.java.source.builder.ElementsService;
 import org.netbeans.modules.java.source.JavadocEnv;
+import org.netbeans.modules.java.source.base.SourceLevelUtils;
 import org.openide.util.Parameters;
 
 /**
@@ -273,7 +274,7 @@ public final class ElementUtilities {
                                 members.add(member);
                         }
                     }
-                    if (te.getKind().isClass() || te.getKind().isInterface() && Source.instance(ctx).allowDefaultMethods()) {
+                    if (te.getKind().isClass() || te.getKind().isInterface() && SourceLevelUtils.allowDefaultMethods(Source.instance(ctx))) {
                         VarSymbol thisPseudoMember = new VarSymbol(Flags.FINAL | Flags.HASINIT, Names.instance(ctx)._this, (ClassType)te.asType(), (ClassSymbol)te);
                         if (acceptor == null || acceptor.accept(thisPseudoMember, type))
                             members.add(thisPseudoMember);

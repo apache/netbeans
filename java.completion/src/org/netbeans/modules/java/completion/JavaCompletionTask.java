@@ -45,6 +45,7 @@ import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClassIndex.Symbols;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.parsing.api.Source;
@@ -5626,7 +5627,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                             if (element == trees.getElement(new TreePath(path, instTree.getExpression()))) {
                                 TypeMirror tm = trees.getTypeMirror(new TreePath(path, instTree.getType()));
                                 if (tm != null && tu.isCastable(original, tm)) {
-                                    Boolean used = new TreePathScanner<Boolean, Element>() {
+                                    Boolean used = new ErrorAwareTreePathScanner<Boolean, Element>() {
                                         @Override
                                         public Boolean reduce(Boolean r1, Boolean r2) {
                                             return r1 == Boolean.TRUE ? r1 : r2;

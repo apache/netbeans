@@ -26,7 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import com.sun.source.tree.*;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -562,7 +562,7 @@ public class RefactoringRegressionsTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitMemberSelect(MemberSelectTree node, Void p) {
                         if ("E".equals(node.getIdentifier().toString())) {

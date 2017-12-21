@@ -24,7 +24,7 @@ import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -48,7 +48,7 @@ import org.netbeans.api.java.source.CompilationInfo;
  * 
  * @author sdedic
  */
-class ExpressionVisitor extends TreePathScanner<Object, Object> {
+class ExpressionVisitor extends ErrorAwareTreePathScanner<Object, Object> {
     private static final EnumSet<Tree.Kind> NUMERIC_OPERATORS = EnumSet.of(
             Tree.Kind.BITWISE_COMPLEMENT, Tree.Kind.LEFT_SHIFT, Tree.Kind.RIGHT_SHIFT, Tree.Kind.UNSIGNED_RIGHT_SHIFT, 
             Tree.Kind.DIVIDE, Tree.Kind.MINUS, Tree.Kind.MULTIPLY, Tree.Kind.PLUS, Tree.Kind.REMAINDER, 

@@ -182,7 +182,6 @@ public final class ModuleOraculum implements CompilerOptionsQueryImplementation,
     @NonNull
     private static String parsePackage(FileObject file) {
         String pkg = "";    //NOI18N
-        try {
             final JavacTaskImpl jt = JavacParser.createJavacTask(
                     new ClasspathInfo.Builder(ClassPath.EMPTY).build(),
                     null,
@@ -192,22 +191,16 @@ public final class ModuleOraculum implements CompilerOptionsQueryImplementation,
                     null,
                     null,
                     null,
-                    null);
-            final CompilationUnitTree cu =  jt.parse(FileObjects.fileObjectFileObject(
+                    Collections.singletonList(FileObjects.fileObjectFileObject(
                     file,
                     file.getParent(),
                     null,
-                    FileEncodingQuery.getEncoding(file))).iterator().next();
+                    FileEncodingQuery.getEncoding(file))));
+            final CompilationUnitTree cu =  jt.parse().iterator().next();
             pkg = Optional.ofNullable(cu.getPackage())
                     .map((pt) -> pt.getPackageName())
                     .map((xt) -> xt.toString())
                     .orElse(pkg);
-        } catch (IOException ioe) {
-            LOG.log(
-                    Level.INFO,
-                    "Cannot parse: {0}",
-                    FileUtil.getFileDisplayName(file));
-        }
         return pkg;
     }
 

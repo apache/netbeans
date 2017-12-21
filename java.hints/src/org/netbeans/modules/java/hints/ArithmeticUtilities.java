@@ -34,7 +34,7 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -194,7 +194,7 @@ public class ArithmeticUtilities {
         
     }
 
-    private static final class VisitorImpl extends TreePathScanner<Object, Void> {
+    private static final class VisitorImpl extends ErrorAwareTreePathScanner<Object, Void> {
         // PENDING: instanceof String could be handled
 	private static final Set<Kind> ACCEPTED_KINDS = EnumSet.of(
 		MULTIPLY, DIVIDE, REMAINDER, PLUS, MINUS,

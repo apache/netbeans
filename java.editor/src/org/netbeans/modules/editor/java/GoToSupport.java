@@ -38,7 +38,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
@@ -706,7 +706,7 @@ public class GoToSupport {
     private static TreePath getPath(final CompilationInfo info, Element el) {
         final Element toFind = info.getElementUtilities().isSynthetic(el) ? el.getEnclosingElement() : el;
 
-        class S extends TreePathScanner<Void, Void> {
+        class S extends ErrorAwareTreePathScanner<Void, Void> {
             private TreePath found;
             @Override
             public Void scan(Tree tree, Void p) {
@@ -760,7 +760,7 @@ public class GoToSupport {
         return search.found;
     }
 
-    private static final class FindSuperConstructorCall extends TreePathScanner<TreePath, Void> {
+    private static final class FindSuperConstructorCall extends ErrorAwareTreePathScanner<TreePath, Void> {
         
         @Override
         public TreePath visitMethodInvocation(MethodInvocationTree tree, Void v) {

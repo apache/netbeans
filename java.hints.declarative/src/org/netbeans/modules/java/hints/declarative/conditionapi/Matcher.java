@@ -21,7 +21,7 @@ package org.netbeans.modules.java.hints.declarative.conditionapi;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.Collection;
 import java.util.LinkedList;
 import javax.lang.model.element.Element;
@@ -69,7 +69,7 @@ public final class Matcher {
 
         for (TreePath toSearch : paths) {
             //XXX:
-            new TreePathScanner<Void, Void>() {
+            new ErrorAwareTreePathScanner<Void, Void>() {
                 @Override
                 public Void scan(Tree tree, Void p) {
                     if (tree == null) return null;
@@ -98,7 +98,7 @@ public final class Matcher {
         }
 
         for (TreePath tp : ctx.getVariable(in)) {
-            boolean occurs = new TreePathScanner<Boolean, Void>() {
+            boolean occurs = new ErrorAwareTreePathScanner<Boolean, Void>() {
                 @Override
                 public Boolean scan(Tree tree, Void p) {
                     if (tree == null) {

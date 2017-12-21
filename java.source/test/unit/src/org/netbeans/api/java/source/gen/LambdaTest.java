@@ -34,8 +34,8 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -93,7 +93,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
                 workingCopy.toPhase(Phase.RESOLVED);
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitLiteral(LiteralTree node, Void p) {
                         workingCopy.rewrite(node, make.MemberReference(ReferenceMode.INVOKE, make.Identifier("Test"), "taragui", Collections.<ExpressionTree>emptyList()));
                         return super.visitLiteral(node, p);
@@ -133,7 +133,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
                 workingCopy.toPhase(Phase.RESOLVED);
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitVariable(VariableTree node, Void p) {
                         if (node.getName().contentEquals("e")) {
                             workingCopy.rewrite(node, make.setLabel(node, "f"));
@@ -174,7 +174,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
                         workingCopy.rewrite(node, make.addLambdaParameter(node, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "e", null, null)));
                         return super.visitLambdaExpression(node, p);
@@ -213,7 +213,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
                         workingCopy.rewrite(node, make.addLambdaParameter(node, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "f", null, null)));
                         return super.visitLambdaExpression(node, p);
@@ -252,7 +252,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
                         workingCopy.rewrite(node, make.addLambdaParameter(node, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "f", null, null)));
                         return super.visitLambdaExpression(node, p);
@@ -291,7 +291,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
                         workingCopy.rewrite(node, make.insertLambdaParameter(node, 0, make.Variable(make.Modifiers(EnumSet.noneOf(Modifier.class)), "f", null, null)));
                         return super.visitLambdaExpression(node, p);
@@ -330,7 +330,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
                         workingCopy.rewrite(node, make.removeLambdaParameter(node, 0));
                         return super.visitLambdaExpression(node, p);
@@ -369,7 +369,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
                         workingCopy.rewrite(node, make.removeLambdaParameter(node, 1));
                         return super.visitLambdaExpression(node, p);
@@ -408,7 +408,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
                         workingCopy.rewrite(node, make.removeLambdaParameter(node, 0));
                         return super.visitLambdaExpression(node, p);
@@ -447,7 +447,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
                         ReturnTree t = (ReturnTree) ((BlockTree) node.getBody()).getStatements().get(0);
                         workingCopy.rewrite(node, make.setLambdaBody(node, t.getExpression()));
@@ -489,7 +489,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
                         workingCopy.rewrite(node, make.setLambdaBody(node, make.Block(Collections.singletonList(make.Return((ExpressionTree) node.getBody())), false)));
                         return super.visitLambdaExpression(node, p);
@@ -532,7 +532,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
                         workingCopy.rewrite(node, make.setLambdaBody(node, make.Block(Collections.singletonList(make.Return((ExpressionTree) node.getBody())), false)));
                         return super.visitLambdaExpression(node, p);
@@ -571,7 +571,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitMemberReference(MemberReferenceTree node, Void p) {
                         workingCopy.rewrite(node, make.MemberReference(node.getMode(), make.Identifier("Test"), node.getName(), node.getTypeArguments()));
                         return super.visitMemberReference(node, p);
@@ -610,7 +610,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitMemberReference(MemberReferenceTree node, Void p) {
                         workingCopy.rewrite(node, make.setLabel(node, "taragui2"));
                         return super.visitMemberReference(node, p);
@@ -649,7 +649,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitMemberReference(MemberReferenceTree node, Void p) {
                         workingCopy.rewrite(node, make.MemberReference(node.getMode(), node.getQualifierExpression(), node.getName(), Collections.singletonList(make.Identifier("String"))));
                         return super.visitMemberReference(node, p);
@@ -688,7 +688,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitMemberReference(MemberReferenceTree node, Void p) {
                         workingCopy.rewrite(node, make.MemberReference(node.getMode(), node.getQualifierExpression(), node.getName(), null));
                         return super.visitMemberReference(node, p);
@@ -729,7 +729,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
                         for (VariableTree par : node.getParameters()) {
                             workingCopy.rewrite(par.getType(), make.Identifier("String"));
@@ -772,7 +772,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
                         for (VariableTree par : node.getParameters()) {
                             workingCopy.rewrite(par, make.Variable(par.getModifiers(), par.getName(), null, par.getInitializer()));
@@ -895,7 +895,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
                         VariableTree vt = node.getParameters().get(0);
                         workingCopy.rewrite(node, make.addLambdaParameter(node, make.Variable(vt.getModifiers(), "f", vt.getType(), vt.getInitializer())));
@@ -935,7 +935,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void scan(Tree node, Void p) {
                         return super.scan(node, p);
@@ -986,7 +986,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
 
                     @Override
                     public Void scan(Tree node, Void p) {

@@ -23,9 +23,6 @@
 <filesystem>
 
     <folder name="Editors">
-        <file name="JavaBinaryIndexer.instance">
-            <attr name="instanceClass" stringvalue="org.netbeans.modules.java.source.indexing.JavaBinaryIndexer$Factory"/>
-        </file>
         <file name="COSSynchronizingIndexer.instance">
             <attr name="instanceClass" stringvalue="org.netbeans.modules.java.source.indexing.COSSynchronizingIndexer$Factory"/>
         </file>
@@ -36,10 +33,6 @@
                 </file>
                 <file name="Reindenter.instance">
                     <attr name="instanceClass" stringvalue="org.netbeans.modules.java.source.save.Reindenter$Factory"/>
-                </file>
-                <file name="JavaIndexer.instance">
-                    <attr name="instanceClass" stringvalue="org.netbeans.modules.java.source.indexing.JavaCustomIndexer$Factory"/>
-                    <!--attr name="position" intvalue="1000"/-->
                 </file>
                 <file name="SourcePathCheck.instance">
                     <attr name="instanceClass" stringvalue="org.netbeans.modules.java.source.classpath.SourcePathCheck$Factory"/>

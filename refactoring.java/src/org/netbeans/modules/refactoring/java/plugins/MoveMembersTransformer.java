@@ -23,7 +23,7 @@ import com.sun.javadoc.Tag;
 import com.sun.source.tree.*;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import java.util.*;
 import java.util.logging.Level;
@@ -377,7 +377,7 @@ public class MoveMembersTransformer extends RefactoringVisitor {
                 arguments.remove(removedIndex);
             }
             TypeMirror sourceType = workingCopy.getTrees().getTypeMirror(enclosingClassPath);
-            TreeScanner<Boolean, TypeMirror> needsArgumentScanner = new TreeScanner<Boolean, TypeMirror>() {
+            ErrorAwareTreeScanner<Boolean, TypeMirror> needsArgumentScanner = new ErrorAwareTreeScanner<Boolean, TypeMirror>() {
                 // Logic is a copy from #insertIfMatch
 
                 @Override
@@ -549,7 +549,7 @@ public class MoveMembersTransformer extends RefactoringVisitor {
                     final TreePath bodyPath = new TreePath(resolvedPath, body);
                     final Trees trees = workingCopy.getTrees();
                     final Map<ExpressionTree, ExpressionTree> fqns = new HashMap<ExpressionTree, ExpressionTree>();
-                    TreeScanner<Void, Void> fqnScan = new TreeScanner<Void, Void>() {
+                    ErrorAwareTreeScanner<Void, Void> fqnScan = new ErrorAwareTreeScanner<Void, Void>() {
 
                         @Override
                         public Void visitIdentifier(IdentifierTree node, Void p) {
@@ -573,7 +573,7 @@ public class MoveMembersTransformer extends RefactoringVisitor {
                     TreePath sourceClass = JavaRefactoringUtils.findEnclosingClass(workingCopy, resolvedPath, true, true, true, true, true);
                     TypeMirror sourceType = workingCopy.getTrees().getTypeMirror(sourceClass);
                     final String parameterName = getParameterName(sourceType, workingCopy.getTrees().getScope(bodyPath), workingCopy);
-                    TreeScanner<Boolean, TypeMirror> idScan = new TreeScanner<Boolean, TypeMirror>() {
+                    ErrorAwareTreeScanner<Boolean, TypeMirror> idScan = new ErrorAwareTreeScanner<Boolean, TypeMirror>() {
 
                         @Override
                         public Boolean visitMemberSelect(MemberSelectTree node, TypeMirror source) {
@@ -646,7 +646,7 @@ public class MoveMembersTransformer extends RefactoringVisitor {
                     boolean addParameter = idScan.scan(body, sourceType) == Boolean.TRUE;
 
                     if (removedParameter != null) {
-                        TreeScanner<Void, Pair<Element, ExpressionTree>> idScan2 = new TreeScanner<Void, Pair<Element, ExpressionTree>>() {
+                        ErrorAwareTreeScanner<Void, Pair<Element, ExpressionTree>> idScan2 = new ErrorAwareTreeScanner<Void, Pair<Element, ExpressionTree>>() {
 
                             @Override
                             public Void visitIdentifier(IdentifierTree node, Pair<Element, ExpressionTree> p) {
@@ -950,7 +950,7 @@ public class MoveMembersTransformer extends RefactoringVisitor {
         final Map<Tree, Tree> original2Translated = new HashMap<Tree, Tree>();
         
         // TODO Change this to something like that is used for method body; importFqns
-        TreeScanner<Void, Void> idScan = new TreeScanner<Void, Void>() {
+        ErrorAwareTreeScanner<Void, Void> idScan = new ErrorAwareTreeScanner<Void, Void>() {
             @Override
             public Void visitIdentifier(IdentifierTree node, Void p) {
                 TreePath currentPath = new TreePath(resolvedPath, node);

@@ -33,7 +33,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.Collection;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -484,7 +484,7 @@ public class MethodMetrics {
      * The visitor will ignore returns, which are the *sole* statement in a if-branch.
      * Such branches are considered to be guards, which abort further processing.
      */
-    private static class ReturnCountVisitor extends TreePathScanner {
+    private static class ReturnCountVisitor extends ErrorAwareTreePathScanner {
         /**
          * Suppressed in local classes
          */
@@ -585,7 +585,7 @@ public class MethodMetrics {
      * Counts number of 'negations' in a Tree. A negation is either unary ! or binary != inequality
      * operator.
      */
-    private static class NegationsVisitor extends TreePathScanner {
+    private static class NegationsVisitor extends ErrorAwareTreePathScanner {
         private int negationsCount;
         private final boolean ignoreAsserts;
 
@@ -627,7 +627,7 @@ public class MethodMetrics {
     /**
      * Utility scanner class, which counts all kinds of loops in the scanned subtree 
      */
-    private static class LoopFinder extends TreePathScanner {
+    private static class LoopFinder extends ErrorAwareTreePathScanner {
         private int loopCount;
 
         public int getLoopCount() {

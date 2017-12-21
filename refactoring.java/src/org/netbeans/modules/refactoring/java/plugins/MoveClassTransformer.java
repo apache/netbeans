@@ -20,7 +20,7 @@ package org.netbeans.modules.refactoring.java.plugins;
 
 import com.sun.source.tree.*;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -172,7 +172,7 @@ public class MoveClassTransformer extends RefactoringVisitor {
                     ClassTree classTree = (ClassTree) workingCopy.getTrees().getTree(resolved);
                     ClassTree origTree = get.importComments(classTree, workingCopy.getTrees().getPath(resolved).getCompilationUnit());
                     final Map<Tree, Tree> org2trans = new HashMap<Tree, Tree>();
-                    TreeScanner<Object, Element> scanner= new TreeScanner<Object, Element>() {
+                    ErrorAwareTreeScanner<Object, Element> scanner= new ErrorAwareTreeScanner<Object, Element>() {
 
                         @Override
                         public Object visitIdentifier(IdentifierTree node, Element p) {

@@ -41,7 +41,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.*;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.*;
@@ -788,7 +788,7 @@ public class ChangeParamsTransformer extends RefactoringVisitor {
         do {
             original2Translated.clear();
             if(renameParams) {
-                TreeScanner<Void, Void> idScan = new TreeScanner<Void, Void>() {
+                ErrorAwareTreeScanner<Void, Void> idScan = new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitIdentifier(IdentifierTree node, Void p) {
                         String name = node.getName().toString();
@@ -808,7 +808,7 @@ public class ChangeParamsTransformer extends RefactoringVisitor {
                 blockTree = (BlockTree) workingCopy.getTreeUtilities().translate(blockTree, original2Translated);
             }
             original2Translated.clear();
-            TreeScanner<Boolean, ExecutableElement> methodScanner = new TreeScanner<Boolean, ExecutableElement>() {
+            ErrorAwareTreeScanner<Boolean, ExecutableElement> methodScanner = new ErrorAwareTreeScanner<Boolean, ExecutableElement>() {
                 @Override
                 public Boolean visitMethodInvocation(MethodInvocationTree node, ExecutableElement p) {
                     boolean changed = false;
@@ -847,7 +847,7 @@ public class ChangeParamsTransformer extends RefactoringVisitor {
         boolean changed = false;
         do {
             original2Translated.clear();
-            TreeScanner<Void, Void> idScan = new TreeScanner<Void, Void>() {
+            ErrorAwareTreeScanner<Void, Void> idScan = new ErrorAwareTreeScanner<Void, Void>() {
                 @Override
                 public Void visitIdentifier(IdentifierTree node, Void p) {
                     String name = node.getName().toString();
@@ -866,7 +866,7 @@ public class ChangeParamsTransformer extends RefactoringVisitor {
             expressionTree = (ExpressionTree) workingCopy.getTreeUtilities().translate(expressionTree, original2Translated);
             
             original2Translated.clear();
-            TreeScanner<Boolean, ExecutableElement> methodScanner = new TreeScanner<Boolean, ExecutableElement>() {
+            ErrorAwareTreeScanner<Boolean, ExecutableElement> methodScanner = new ErrorAwareTreeScanner<Boolean, ExecutableElement>() {
                 @Override
                 public Boolean visitMethodInvocation(MethodInvocationTree node, ExecutableElement p) {
                     boolean changed = false;

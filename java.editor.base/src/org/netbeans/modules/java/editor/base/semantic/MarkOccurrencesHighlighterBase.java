@@ -37,7 +37,7 @@ import com.sun.source.tree.TryTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -555,7 +555,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
         final List<int[]> result = new ArrayList<int[]>();
         if (labeledStatement.getLeaf().getKind() == Kind.LABELED_STATEMENT) {
             final Name label = ((LabeledStatementTree)labeledStatement.getLeaf()).getLabel();
-            new TreePathScanner <Void, Void>() {
+            new ErrorAwareTreePathScanner <Void, Void>() {
                 @Override
                 public Void visitBreak(BreakTree node, Void p) {
                     if (node.getLabel() != null && label.contentEquals(node.getLabel())) {

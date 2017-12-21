@@ -45,6 +45,7 @@ import com.sun.tools.javap.CodeWriter;
 import com.sun.tools.javap.ConstantWriter;
 import com.sun.tools.javap.Context;
 import com.sun.tools.javap.Messages;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -67,6 +68,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.AnnotationValueVisitor;
@@ -85,6 +87,8 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.AbstractElementVisitor9;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
+
+import com.sun.tools.classfile.ConstantPool.CPInfo;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ClasspathInfo.PathKind;
@@ -739,19 +743,7 @@ public class CodeGenerator {
         
         @Override
         public void writeInstr(Instruction instr) {
-            if (INSTRUCTION_WITH_REFERENCE.contains(instr.getOpcode())) {
-                print(String.format("%4d: %-13s ", instr.getPC(), instr.getMnemonic()));
-                int constantPoolEntry;
-                if (instr.getOpcode() == Opcode.LDC) {
-                    constantPoolEntry = instr.getUnsignedByte(1);
-                } else {
-                    constantPoolEntry = instr.getUnsignedShort(1);
-                }
-                print(constantWriter.stringValue(constantPoolEntry));
-                println();
-            } else {
-                super.writeInstr(instr);
-            }
+            super.writeInstr(instr);
         }
     }
     

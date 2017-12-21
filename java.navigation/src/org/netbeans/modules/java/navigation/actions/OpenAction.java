@@ -31,7 +31,7 @@ import com.sun.source.tree.RequiresTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.UsesTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.awt.Toolkit;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.ui.ElementOpen;
@@ -237,7 +237,7 @@ public final class OpenAction extends AbstractAction {
                 @Override
                 public void run(final CompilationController cc) throws Exception {
                     cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                    new TreePathScanner<Void, Void>() {
+                    new ErrorAwareTreePathScanner<Void, Void>() {
                         @Override
                         public Void visitExports(ExportsTree node, Void p) {
                             if (matches(handle, ModuleElement.DirectiveKind.EXPORTS, node.getPackageName())) {

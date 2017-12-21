@@ -30,7 +30,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -51,7 +51,7 @@ import org.netbeans.api.java.source.CompilationInfo;
  *
  * @author sdedic, Martin Entlicher
  */
-final class ScanLocalVars extends TreePathScanner<Void, Void> {
+final class ScanLocalVars extends ErrorAwareTreePathScanner<Void, Void> {
     
     private static final Set<ElementKind> LOCAL_VARIABLES = EnumSet.of(ElementKind.EXCEPTION_PARAMETER,
                                                                        ElementKind.LOCAL_VARIABLE,

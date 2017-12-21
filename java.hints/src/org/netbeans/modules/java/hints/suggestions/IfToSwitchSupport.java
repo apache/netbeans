@@ -32,8 +32,8 @@ import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -585,7 +585,7 @@ public class IfToSwitchSupport {
             TreePath topLevelMethod = Utilities.findTopLevelBlock(it);
             final Set<String> seenLabels = new HashSet<String>();
 
-            new TreeScanner<Void, Void>() {
+            new ErrorAwareTreeScanner<Void, Void>() {
                 @Override public Void visitLabeledStatement(LabeledStatementTree node, Void p) {
                     seenLabels.add(node.getLabel().toString());
                     return super.visitLabeledStatement(node, p);
@@ -764,7 +764,7 @@ public class IfToSwitchSupport {
                 above.add(t);
             }
 
-            new TreePathScanner<Void, Void>() {
+            new ErrorAwareTreePathScanner<Void, Void>() {
                 @Override public Void visitIdentifier(IdentifierTree node, Void p) {
                     if (declared.contains(info.getTrees().getElement(getCurrentPath())))
                         return null;

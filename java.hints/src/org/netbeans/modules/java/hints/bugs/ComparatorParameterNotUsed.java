@@ -23,7 +23,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,7 +58,7 @@ import static org.netbeans.modules.java.hints.bugs.Bundle.*;
     "# {0} - parameter name",
     "TEXT_ComparatorParameterNotUsed=Comparator.comparable does not use parameter ''{0}''"
 })
-public class ComparatorParameterNotUsed extends TreePathScanner {
+public class ComparatorParameterNotUsed extends ErrorAwareTreePathScanner {
     private final CompilationInfo   ci;
     private final Set<VariableElement>    unusedVars;
 

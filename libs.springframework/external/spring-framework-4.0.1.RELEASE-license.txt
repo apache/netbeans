@@ -1,8 +1,9 @@
 Name: Spring Framework
-Version: 4.0.1.RELEASE
-License: Apache-2.0
 Description: Java/J2EE application framework
-Origin: http://www.springsource.org/download (http://repo.spring.io/release/org/springframework/spring/)
+Version: 4.0.1.RELEASE
+Origin: SpringSource
+License: Apache-2.0-spring4.0.1
+URL: http://www.springsource.org/download (http://repo.spring.io/release/org/springframework/spring/)
 
                                  Apache License
                            Version 2.0, January 2004

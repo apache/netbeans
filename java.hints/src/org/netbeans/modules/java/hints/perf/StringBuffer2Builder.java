@@ -23,7 +23,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -53,7 +53,7 @@ public class StringBuffer2Builder {
             return null;
         }
 
-        class EscapeFinder extends TreePathScanner<Boolean, Boolean> {
+        class EscapeFinder extends ErrorAwareTreePathScanner<Boolean, Boolean> {
             @Override
             public Boolean reduce(Boolean r1, Boolean r2) {
                 return r1 == Boolean.TRUE || r2 == Boolean.TRUE;

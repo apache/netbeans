@@ -19,7 +19,7 @@
 package org.netbeans.modules.profiler.nbimpl.javac;
 
 import com.sun.source.tree.ClassTree;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -348,7 +348,7 @@ public class JavacClassInfo extends SourceClassInfo {
 
         cc.toPhase(JavaSource.Phase.RESOLVED);
 
-        TreePathScanner<Void, Void> scanner = new TreePathScanner<Void, Void>() {
+        ErrorAwareTreePathScanner<Void, Void> scanner = new ErrorAwareTreePathScanner<Void, Void>() {
 
             @Override
             public Void visitClass(ClassTree node, Void v) {

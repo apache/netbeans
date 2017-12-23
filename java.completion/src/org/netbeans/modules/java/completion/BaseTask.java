@@ -37,7 +37,7 @@ import javax.tools.Diagnostic;
 import com.sun.source.tree.*;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import javax.lang.model.element.Name;
 
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -572,7 +572,7 @@ abstract class BaseTask extends UserTask {
         return sb.toString();
     }
 
-    private static class SourcePositionsImpl extends TreeScanner<Void, Tree> implements SourcePositions {
+    private static class SourcePositionsImpl extends ErrorAwareTreeScanner<Void, Tree> implements SourcePositions {
 
         private final Tree root;
         private final SourcePositions original;
@@ -619,6 +619,7 @@ abstract class BaseTask extends UserTask {
             }
             return null;
         }
+
     }
 
     private static boolean isCamelCasePrefix(String prefix) {

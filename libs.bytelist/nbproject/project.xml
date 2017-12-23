@@ -25,7 +25,7 @@
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
             <code-name-base>org.netbeans.libs.bytelist</code-name-base>
             <module-dependencies/>
-<!--            
+            <!--            
             <friend-packages>
                 <friend>org.jruby</friend>
                 <friend>org.netbeans.modules.libs.jvyamlb</friend>
@@ -36,11 +36,15 @@
             </friend-packages>
 -->
             <public-packages>
-                <subpackages>org.jruby.util</subpackages>
+                <package>org.jruby.util</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/bytelist-0.1.jar</runtime-relative-path>
-                <binary-origin>external/bytelist-0.1.jar</binary-origin>
+                <runtime-relative-path>ext/jcodings-1.0.18.jar</runtime-relative-path>
+                <binary-origin>external/jcodings-1.0.18.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/bytelist-1.0.15.jar</runtime-relative-path>
+                <binary-origin>external/bytelist-1.0.15.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -24,7 +24,7 @@ import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -413,7 +413,7 @@ public class InstantRenamePerformer implements DocumentListener, KeyListener {
         if (labeledStatement.getLeaf().getKind() == Kind.LABELED_STATEMENT) {
             result.add(org.netbeans.modules.java.editor.base.semantic.Utilities.findIdentifierSpan(info, document, labeledStatement));
             final Name label = ((LabeledStatementTree)labeledStatement.getLeaf()).getLabel();
-            new TreePathScanner <Void, Void>() {
+            new ErrorAwareTreePathScanner <Void, Void>() {
                 @Override
                 public Void visitBreak(BreakTree node, Void p) {
                     if (node.getLabel() != null && label.contentEquals(node.getLabel())) {

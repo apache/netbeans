@@ -1,7 +1,8 @@
 Name: exechlp
-Version: 1.0
 Description: binaries that used by dlight.nativeexecution module (process_start, pty, pty_open - used for dealing with pseude terminals; sigqueue, killall - sending signals to processes; stat - getting detailed file information; unbuffer.so - used when unbuffering is required)
+Version: 1.0
 License: CDDL-1.0
+Origin: NetBeans
 Comment: needed for dlight.nativeexecution module to provide system-dependent services
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0

@@ -36,7 +36,7 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -63,7 +63,7 @@ import static org.netbeans.modules.java.source.save.PositionEstimator.NOPOS;
  *
  * @author Pavel Flaska, Rastislav Komara, Jan Lahoda
  */
-class AssignComments extends TreeScanner<Void, Void> {
+class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
     
     private static final EnumSet<Tree.Kind> JAVADOC_KINDS = EnumSet.of(
             Tree.Kind.CLASS,

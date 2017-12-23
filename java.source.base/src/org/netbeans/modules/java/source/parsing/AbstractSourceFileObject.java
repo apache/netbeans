@@ -76,12 +76,13 @@ public abstract class AbstractSourceFileObject implements PrefetchableJavaFileOb
 
     protected AbstractSourceFileObject (
             @NonNull final Handle handle,
-            @NullAllowed final JavaFileFilterImplementation filter) {
+            @NullAllowed final JavaFileFilterImplementation filter,
+            boolean hasContent) { //TODO: if has a content, then Kind.SOURCE, right??
         Parameters.notNull("handle", handle);   //NOI18N
         this.handle = handle;
         this.filter = filter;
         final String ext = this.handle.getExt();
-        this.kind = filter == null ?
+        this.kind = filter == null && !hasContent ?
             FileObjects.getKind(ext) :
             Kind.SOURCE; //#141411
     }

@@ -24,8 +24,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.code.ClassFinder;
 import com.sun.tools.javac.code.Symbol;
@@ -39,6 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -223,11 +223,11 @@ public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preproce
                     r.getProfile(),
                     null,
                     null,
-                    null,
                     aptUtils,
-                    null);
+                    null,
+                    Arrays.asList(toCompile));
             final Iterable<? extends JavaFileObject> generated = jt.generate(
-                    StreamSupport.stream(jt.analyze(jt.enter(jt.parse(toCompile))).spliterator(), false)
+                    StreamSupport.stream(jt.analyze(jt.enter(jt.parse())).spliterator(), false)
                             .filter((e) -> e.getKind().isClass() || e.getKind().isInterface())
                             .map((e) -> (TypeElement)e)
                             .collect(Collectors.toList()));
@@ -286,7 +286,7 @@ public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preproce
                     @CheckForNull
                     public ModuleTree parseModule() throws IOException {
                         cc.toPhase(JavaSource.Phase.PARSED);
-                        final TreeScanner<ModuleTree, Void> scanner = new TreeScanner<ModuleTree, Void>() {
+                        final ErrorAwareTreeScanner<ModuleTree, Void> scanner = new ErrorAwareTreeScanner<ModuleTree, Void>() {
                             @Override
                             public ModuleTree visitModule(ModuleTree node, Void p) {
                                 return node;

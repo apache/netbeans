@@ -42,6 +42,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.java.preprocessorbridge.spi.JavaFileFilterImplementation;
+import org.netbeans.modules.java.source.base.SourceLevelUtils;
 import org.netbeans.modules.java.source.classpath.CacheClassPath;
 import org.netbeans.modules.java.source.util.Iterators;
 import org.openide.util.Exceptions;
@@ -240,7 +241,7 @@ public class CachingFileManager implements JavaFileManager, PropertyChangeListen
         String folderName = FileObjects.convertPackage2Folder( packageName );
         List<Iterable<JavaFileObject>> idxs = new LinkedList<>();
         List<? extends String> prefixes = null;
-        final boolean supportsMultiRelease = sourceLevel != null && sourceLevel.compareTo(Source.JDK1_9)>= 0;
+        final boolean supportsMultiRelease = sourceLevel != null && sourceLevel.compareTo(SourceLevelUtils.JDK1_9) >= 0;
         for(ClassPath.Entry entry : roots) {
             try {
                 Archive archive = provider.getArchive( entry.getURL(), cacheFile );
@@ -297,7 +298,7 @@ public class CachingFileManager implements JavaFileManager, PropertyChangeListen
             final String className,
             final JavaFileObject.Kind kind) {
         final String[] namePair = FileObjects.getParentRelativePathAndName(className);
-        final boolean supportsMultiRelease = sourceLevel != null && sourceLevel.compareTo(Source.JDK1_9)>= 0;
+        final boolean supportsMultiRelease = sourceLevel != null && sourceLevel.compareTo(SourceLevelUtils.JDK1_9)>= 0;
         List<? extends String> reloc = null;
         for( ClassPath.Entry root : roots) {
             try {
@@ -345,7 +346,7 @@ public class CachingFileManager implements JavaFileManager, PropertyChangeListen
         assert pkgName != null;
         assert relativeName != null;
         final String resourceName = FileObjects.resolveRelativePath(pkgName,relativeName);
-        final boolean supportsMultiRelease = sourceLevel != null && sourceLevel.compareTo(Source.JDK1_9)>= 0;
+        final boolean supportsMultiRelease = sourceLevel != null && sourceLevel.compareTo(SourceLevelUtils.JDK1_9) >= 0;
         List<? extends String> reloc = null;
         for( ClassPath.Entry root : roots) {
             try {
@@ -383,7 +384,7 @@ public class CachingFileManager implements JavaFileManager, PropertyChangeListen
         prefixes.add("");   //NOI18N
         final Source[] sources = Source.values();
         for (int i=0; i< sources.length; i++) {
-            if (sources[i].compareTo(Source.JDK1_9) >=0 && sources[i].compareTo(sourceLevel) <=0) {
+            if (sources[i].compareTo(SourceLevelUtils.JDK1_9) >=0 && sources[i].compareTo(sourceLevel) <=0) {
                 prefixes.add(String.format(
                         "META-INF/versions/%s",    //NOI18N
                         normalizeSourceLevel(sources[i].name)));

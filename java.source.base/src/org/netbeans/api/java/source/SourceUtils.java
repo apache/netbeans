@@ -86,6 +86,7 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.preprocessorbridge.spi.ImportProcessor;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
+import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.JavadocHelper;
 import org.netbeans.modules.java.source.ModuleNames;
 import org.netbeans.modules.java.source.indexing.FQN2Files;
@@ -200,7 +201,8 @@ public class SourceUtils {
         List<Completion> completions = new LinkedList<>();
         if (info.getPhase().compareTo(Phase.ELEMENTS_RESOLVED) >= 0) {
             String fqn = ((TypeElement) annotation.getAnnotationType().asElement()).getQualifiedName().toString();
-            Iterable<? extends Processor> processors = info.impl.getJavacTask().getProcessors();
+            Iterable<? extends Processor> processors =
+                    JavacParser.ProcessorHolder.instance(info.impl.getJavacTask().getContext()).getProcessors();
             if (processors != null) {
                 for (Processor processor : processors) {
                     boolean match = false;
@@ -923,7 +925,7 @@ public class SourceUtils {
                     public void run(CompilationController control) throws Exception {
                         control.toPhase(Phase.ELEMENTS_RESOLVED);
                         final JavacElements elms = (JavacElements)control.getElements();
-                        TypeElement type = elms.getTypeElementByBinaryName(qualifiedName);
+                        TypeElement type = ElementUtils.getTypeElementByBinaryName(control, qualifiedName);
                         if (type == null) {
                             return;
                         }

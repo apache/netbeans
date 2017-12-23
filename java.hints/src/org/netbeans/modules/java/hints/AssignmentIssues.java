@@ -26,7 +26,7 @@ import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -169,7 +169,7 @@ public class AssignmentIssues {
                 new ReplaceAssignmentFix(NbBundle.getMessage(AssignmentIssues.class, "FIX_ReplaceAssignmentWithOperatorAssignment", path.getLeaf()), TreePathHandle.create(path, context.getInfo())).toEditorFix()); //NOI18N
     }
 
-    private static final class AssignmentFinder extends TreePathScanner<Void, List<TreePath>> {
+    private static final class AssignmentFinder extends ErrorAwareTreePathScanner<Void, List<TreePath>> {
 
         private final Trees trees;
         private final Element param;

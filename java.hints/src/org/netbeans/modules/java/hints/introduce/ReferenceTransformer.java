@@ -22,7 +22,7 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -35,7 +35,7 @@ import org.netbeans.api.java.source.WorkingCopy;
  *
  * @author sdedic
  */
-final class ReferenceTransformer extends TreePathScanner {
+final class ReferenceTransformer extends ErrorAwareTreePathScanner {
     private final ElementKind kind;
     private final String name;
     private final WorkingCopy copy;

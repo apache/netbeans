@@ -26,7 +26,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.util.ArrayDeque;
 import java.util.HashMap;
@@ -92,7 +92,7 @@ public final class WhiteListSupport {
     }
 
     //<editor-fold defaultstate="collapsed" desc="Private implementation">
-    private static class WhiteListScanner extends TreePathScanner<Void, Map<Tree,WhiteListQuery.Result>> {
+    private static class WhiteListScanner extends ErrorAwareTreePathScanner<Void, Map<Tree,WhiteListQuery.Result>> {
 
         private final Trees trees;
         private final Callable<Boolean> cancel;

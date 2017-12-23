@@ -19,8 +19,8 @@
 package org.netbeans.modules.java.source.usages;
 
 import com.sun.source.tree.*;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Kinds;
@@ -271,7 +271,7 @@ public final class SourceAnalyzerFactory {
         }
     }
         
-    private static class UsagesVisitor extends TreePathScanner<Void,Map<Pair<BinaryName,String>,UsagesData<String>>> {
+    private static class UsagesVisitor extends ErrorAwareTreePathScanner<Void,Map<Pair<BinaryName,String>,UsagesData<String>>> {
 
         enum State {EXTENDS, IMPLEMENTS, GT, OTHER, IMPORT, PACKAGE_ANN};
 
@@ -827,7 +827,7 @@ public final class SourceAnalyzerFactory {
                 activeClass.push(name);
                 try {
                     addAndClearImports(name, p);
-                    node.accept(new TreeScanner<Void, Set<Symbol>>() {
+                    node.accept(new ErrorAwareTreeScanner<Void, Set<Symbol>>() {
                                 @Override
                                 public Void visitExports(ExportsTree node, Set<Symbol> p) {
                                     final Symbol sym = ((JCTree.JCExports)node).directive.packge;

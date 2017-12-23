@@ -20,7 +20,7 @@
 package org.netbeans.modules.debugger.jpda.projects;
 
 import com.sun.source.tree.ClassTree;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
@@ -30,7 +30,7 @@ import javax.lang.model.util.Elements;
  * 
  * @author martin
  */
-class ClassScanner extends TreePathScanner<TypeElement, Void> {
+class ClassScanner extends ErrorAwareTreePathScanner<TypeElement, Void> {
     
     private Trees trees;
     private Elements elements;

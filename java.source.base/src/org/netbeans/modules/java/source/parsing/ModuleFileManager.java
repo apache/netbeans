@@ -42,6 +42,7 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.annotations.common.NullUnknown;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.modules.java.source.base.SourceLevelUtils;
 import org.netbeans.modules.java.source.util.Iterators;
 import org.openide.util.Exceptions;
 
@@ -94,7 +95,7 @@ final class ModuleFileManager implements JavaFileManager {
         try {
             final List<Iterable<JavaFileObject>> res = new ArrayList<>();
             List<? extends String> prefixes = null;
-            final boolean supportsMultiRelease = sourceLevel != null && sourceLevel.compareTo(Source.JDK1_9) >= 0;
+            final boolean supportsMultiRelease = sourceLevel != null && sourceLevel.compareTo(SourceLevelUtils.JDK1_9) >= 0;
             for (URL root : ml.getModuleRoots()) {
                 final Archive archive = cap.getArchive(root, cacheFile);
                 if (archive != null) {
@@ -164,7 +165,7 @@ final class ModuleFileManager implements JavaFileManager {
             @NonNull final JavaFileObject.Kind kind) {
         final ModuleLocation ml = ModuleLocation.cast(l);
         final String[] namePair = FileObjects.getParentRelativePathAndName(className);
-        final boolean supportsMultiRelease = sourceLevel != null && sourceLevel.compareTo(Source.JDK1_9)>= 0;
+        final boolean supportsMultiRelease = sourceLevel != null && sourceLevel.compareTo(SourceLevelUtils.JDK1_9) >= 0;
         List<? extends String> reloc = null;
         for (URL root : ml.getModuleRoots()) {
             try {
@@ -329,7 +330,7 @@ final class ModuleFileManager implements JavaFileManager {
         assert pkgName != null;
         assert relativeName != null;
         final String resourceName = FileObjects.resolveRelativePath(pkgName,relativeName);
-        final boolean supportsMultiRelease = sourceLevel != null && sourceLevel.compareTo(Source.JDK1_9) >= 0;
+        final boolean supportsMultiRelease = sourceLevel != null && sourceLevel.compareTo(SourceLevelUtils.JDK1_9) >= 0;
         List<? extends String> reloc = null;
         for (URL root : ml.getModuleRoots()) {
             try {
@@ -388,7 +389,7 @@ final class ModuleFileManager implements JavaFileManager {
         prefixes.add("");   //NOI18N
         final Source[] sources = Source.values();
         for (int i=0; i< sources.length; i++) {
-            if (sources[i].compareTo(Source.JDK1_9) >=0 && sources[i].compareTo(sourceLevel) <=0) {
+            if (sources[i].compareTo(SourceLevelUtils.JDK1_9) >=0 && sources[i].compareTo(sourceLevel) <=0) {
                 prefixes.add(String.format(
                         "META-INF/versions/%s",    //NOI18N
                         normalizeSourceLevel(sources[i].name)));

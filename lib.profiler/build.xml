@@ -26,7 +26,7 @@
   <property name="profiler.cluster" value="./release"/>
 
     <target name="build-init" depends="projectized.build-init">
-        <unzip src="external/profiler-external-binaries.zip" dest="${profiler.cluster}"/>
+        <unzip src="external/profiler-external-binaries-8.2.zip" dest="${profiler.cluster}"/>
     </target>
 
   <!-- Compile the JFluid engine system library, that depends on JDK version - so there are two libraries -->

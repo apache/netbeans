@@ -35,7 +35,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -374,7 +374,7 @@ public class Tiny {
                 Scope s = ctx.getWorkingCopy().getTrees().getScope(tp);
                 ctx.getWorkingCopy().getTreeUtilities().attributeTree(stmt, s);
                 st = GeneratorUtilities.get(ctx.getWorkingCopy()).importFQNs(make.addSwitchCase(st, make.Case(null, Collections.singletonList(stmt))));
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override public Void visitIdentifier(IdentifierTree node, Void p) {
                         if (node.getName().contentEquals("$expression")) {
                             ExpressionTree expression = ((SwitchTree) tp.getLeaf()).getExpression();

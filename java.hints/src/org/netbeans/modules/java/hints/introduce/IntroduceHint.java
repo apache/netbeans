@@ -35,8 +35,8 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -441,7 +441,7 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
             }
 
         }
-        class ReferencesLocalVariable extends TreePathScanner<Void, Void> {
+        class ReferencesLocalVariable extends ErrorAwareTreePathScanner<Void, Void> {
             @Override
             public Void visitIdentifier(IdentifierTree node, Void p) {
                 Element e = info.getTrees().getElement(getCurrentPath());
@@ -550,7 +550,7 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
         return formalArguments;
     }
     
-    static class VariableRenamer extends TreePathScanner {
+    static class VariableRenamer extends ErrorAwareTreePathScanner {
         private final Map<VariableElement, CharSequence> renamedVars;
         private final Set<Name> changedNames;
         private final WorkingCopy info;
@@ -750,7 +750,7 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
     static ClassTree insertField(final WorkingCopy parameter, ClassTree clazz, VariableTree fieldToAdd, Set<Tree> allNewUses, int offset) {
         ClassTree nueClass = INSERT_CLASS_MEMBER.insertClassMember(parameter, clazz, fieldToAdd, offset);
 
-        class Contains extends TreeScanner<Boolean, Set<Tree>> {
+        class Contains extends ErrorAwareTreeScanner<Boolean, Set<Tree>> {
             @Override public Boolean reduce(Boolean r1, Boolean r2) {
                 return r1 == Boolean.TRUE || r2 == Boolean.TRUE;
             }
@@ -809,7 +809,7 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
         final Set<Element> used = Collections.newSetFromMap(new IdentityHashMap<Element, Boolean>());
         final boolean statik = fieldToAdd.getModifiers().getFlags().contains(Modifier.STATIC);
         
-        new TreePathScanner<Void, Void>() {
+        new ErrorAwareTreePathScanner<Void, Void>() {
             @Override public Void visitIdentifier(IdentifierTree node, Void p) {
                 handleCurrentPath();
                 return super.visitIdentifier(node, p); //To change body of generated methods, choose Tools | Templates.

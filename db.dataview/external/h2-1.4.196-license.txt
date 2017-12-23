@@ -1,6 +1,6 @@
 Name: H2 Database Engine
 Version: 1.4.196
-License: EPL-v10
+License: EPL-v10-h2
 Description: The H2 Database Enginge is a pure java database, that can be used in embedded and server mode.
 Origin: http://h2database.com
 
@@ -86,4 +86,4 @@ Everyone is permitted to copy and distribute copies of this Agreement, but in or
 This Agreement is governed by the laws of the State of New York and the intellectual property laws of the United States of America. No party to this Agreement will bring a legal action under this Agreement more than one year after the cause of action arose. Each party waives its rights to a jury trial in any resulting litigation.
 Export Control Classification Number (ECCN)
 
-As far as we know, the U.S. Export Control Classification Number (ECCN) for this software is 5D002. However, for legal reasons, we can make no warranty that this information is correct. For details, see also the Apache Software Foundation Export Classifications page. 
+As far as we know, the U.S. Export Control Classification Number (ECCN) for this software is 5D002. However, for legal reasons, we can make no warranty that this information is correct. For details, see also the Apache Software Foundation Export Classifications page.

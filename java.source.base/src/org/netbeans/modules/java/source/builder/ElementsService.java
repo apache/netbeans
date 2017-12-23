@@ -38,6 +38,7 @@ import javax.lang.model.element.*;
 import static javax.lang.model.element.ElementKind.*;
 import javax.lang.model.type.*;
 import javax.lang.model.util.Types;
+import org.netbeans.modules.java.source.base.SourceLevelUtils;
 
 /**
  * Utility methods for working with Element instances.
@@ -63,7 +64,7 @@ public class ElementsService {
         jctypes = com.sun.tools.javac.code.Types.instance(context);
         names = Names.instance(context);
         types = JavacTypes.instance(context);
-        allowDefaultMethods = Source.instance(context).allowDefaultMethods();
+        allowDefaultMethods = SourceLevelUtils.allowDefaultMethods(Source.instance(context));
     }
 
     /** 

@@ -41,9 +41,11 @@ import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
+
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
+import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.usages.ClassFileUtil;
 import org.openide.util.Parameters;
 import org.openide.util.WeakSet;
@@ -633,10 +635,9 @@ public final class ElementHandle<T extends Element> {
             return Symtab.instance(jt.getContext()).arrayClass;
         }
         else {
-            final JavacElements elements = (JavacElements) jt.getElements();                    
             return (TypeElement) (module != null
-                    ? elements.getTypeElementByBinaryName(module, signature)
-                    : elements.getTypeElementByBinaryName(signature));
+                    ? ElementUtils.getTypeElementByBinaryName(jt, module, signature)
+                    : ElementUtils.getTypeElementByBinaryName(jt, signature));
         }
     }
     

@@ -32,7 +32,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -77,7 +77,7 @@ public class FinalizeDoesNotCallSuper {
                 new FixImpl(TreePathHandle.create(ctx.getPath(), ctx.getInfo())).toEditorFix());
     }
 
-    static final class FindSuper extends TreeScanner<Void, Void> {
+    static final class FindSuper extends ErrorAwareTreeScanner<Void, Void> {
 
         boolean found;
 

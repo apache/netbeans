@@ -41,7 +41,7 @@ import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.EnumSet;
@@ -224,7 +224,7 @@ public class InfiniteRecursion {
      * only in the speculative for loop evaluation, otherwise for/while bodies incl any continue statements do not count.
      * 
      */
-    private static class RecursionVisitor extends TreePathScanner<State, Void> {
+    private static class RecursionVisitor extends ErrorAwareTreePathScanner<State, Void> {
         private final CompilationInfo ci;
         private final ExecutableElement checkMethod;
 

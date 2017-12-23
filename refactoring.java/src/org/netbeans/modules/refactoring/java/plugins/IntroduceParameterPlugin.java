@@ -21,7 +21,7 @@ package org.netbeans.modules.refactoring.java.plugins;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.*;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -92,7 +92,7 @@ public class IntroduceParameterPlugin extends JavaRefactoringPlugin {
                 String name = paramTable[index].getName();
                 int originalIndex = paramTable[index].getOriginalIndex();
                 final VariableElement parameterElement = originalIndex == -1 ? null : method.getParameters().get(originalIndex);
-                TreeScanner<Boolean, String> scanner = new TreeScanner<Boolean, String>() {
+                ErrorAwareTreeScanner<Boolean, String> scanner = new ErrorAwareTreeScanner<Boolean, String>() {
                
                     @Override
                     public Boolean visitVariable(VariableTree vt, String p) {
@@ -330,7 +330,7 @@ public class IntroduceParameterPlugin extends JavaRefactoringPlugin {
     private Set<TreePath> computeDuplicates(final WorkingCopy workingCopy, TreePath resolved, TreePath meth) {
         Set<TreePath> ret = SourceUtils.computeDuplicates(workingCopy, resolved, meth, new AtomicBoolean());
 //        final Set<TreePath> ret = new HashSet<TreePath>();
-//        TreePathScanner<Void, Element> scanner = new TreePathScanner<Void, Element>() {
+//        ErrorAwareTreePathScanner<Void, Element> scanner = new ErrorAwareTreePathScanner<Void, Element>() {
 //
 //            @Override
 //            public Void visitIdentifier(IdentifierTree node, Element p) {

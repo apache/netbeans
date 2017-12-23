@@ -29,7 +29,25 @@
     </apidefs>
 
     <changes>
-
+        <change>
+            <api name="general"/>
+            <summary>States for non-registered objects</summary>
+            <version major="2" minor="49"/>
+            <date day="27" month="9" year="2017"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    When the scene is incrementally rendered, it may be possible that a model object becomes selected before some widgets are registered with the scene.
+                    Hover, select, focus flags can be attached even to unregistered objects.
+                </p>
+                <p>
+                    Implemented in <a href="https://github.com/apache/incubator-netbeans/pull/308">PR #308</a>
+                </p>
+            </description>
+            <class name="ObjectScene" package="org.netbeans.api.visual.model" link="yes"/>
+        </change>
+        
         <change>
             <api name="general"/>
             <summary>The library API becomes stable</summary>

@@ -73,7 +73,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -243,7 +243,7 @@ public class Flow {
 
     }
     
-    private static class PathFinder extends TreePathScanner {
+    private static class PathFinder extends ErrorAwareTreePathScanner {
         final Map<Tree, TreePath> node2Path;
         final Set<Tree> interestingNodes;
 

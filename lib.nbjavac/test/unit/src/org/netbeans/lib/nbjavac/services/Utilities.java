@@ -29,6 +29,8 @@ import java.io.Writer;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
@@ -51,13 +53,11 @@ public class Utilities {
         Messager.preRegister(context, null, DEV_NULL, DEV_NULL, DEV_NULL);
         JavacTaskImpl task = (JavacTaskImpl)JavacTool.create().getTask(null, 
                 fm,
-                null, Arrays.asList("-bootclasspath",  bootPath, "-source", version, "-Xjcov", "-XDshouldStopPolicy=GENERATE"), null, Arrays.asList(sources),
+                null, Arrays.asList("-bootclasspath",  bootPath, "-source", version, "-target", version, "-Xjcov", "-XDshouldStopPolicy=GENERATE"), null, Arrays.asList(sources),
                 context);
         NBParserFactory.preRegister(context);
         NBTreeMaker.preRegister(context);
-        NBJavadocEnter.preRegister(context);
-        PrintWriter w = new PrintWriter(System.out);
-        JavadocClassFinder.preRegister(context, true);
+        NBEnter.preRegister(context);
         return task;
     }
     

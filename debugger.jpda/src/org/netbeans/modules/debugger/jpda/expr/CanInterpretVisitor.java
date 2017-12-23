@@ -32,14 +32,14 @@ import com.sun.source.tree.RequiresTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.UsesTree;
 import com.sun.source.tree.WhileLoopTree;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 
 /**
  * Test of ability and suitability of an interpreter or compiler when evaluating.
  * 
  * @author Martin
  */
-class CanInterpretVisitor extends TreePathScanner<Boolean, EvaluationContext> {
+class CanInterpretVisitor extends ErrorAwareTreePathScanner<Boolean, EvaluationContext> {
 
     @Override
     public Boolean reduce(Boolean r1, Boolean r2) {

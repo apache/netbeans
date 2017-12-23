@@ -1,9 +1,9 @@
 Name: Subversion Java-HL bindings
-Version: 1.9.3
 Description: Java bindings library for subversion client
+Version: 1.9.3
+Origin: Apache Software Foundation
 License: Apache-2.0
-OSR: 9185
-Origin: http://subversion.apache.org/
+URL: http://subversion.apache.org/
 
 
                                  Apache License
@@ -207,3 +207,4 @@ Origin: http://subversion.apache.org/
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+

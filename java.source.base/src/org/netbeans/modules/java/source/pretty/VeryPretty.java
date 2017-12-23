@@ -32,7 +32,7 @@ import static com.sun.source.tree.Tree.*;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 
 import com.sun.source.doctree.AttributeTree;
 import com.sun.source.doctree.AttributeTree.ValueKind;
@@ -496,7 +496,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         final int newStart = out.length() + initialOffset;
 
         final int[] realEnd = {endPos(lastTree)};
-        new TreeScanner<Void, Void>() {
+        new ErrorAwareTreeScanner<Void, Void>() {
             @Override
             public Void scan(Tree node, Void p) {
                 if (node != null) {
@@ -2560,7 +2560,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         return null;
     }
 
-    private final class Linearize extends TreeScanner<Boolean, java.util.List<Tree>> {
+    private final class Linearize extends ErrorAwareTreeScanner<Boolean, java.util.List<Tree>> {
         @Override
         public Boolean scan(Tree node, java.util.List<Tree> p) {
             p.add(node);
@@ -2573,7 +2573,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         }
     }
 
-    private final class CopyTags extends TreeScanner<Void, java.util.List<Tree>> {
+    private final class CopyTags extends ErrorAwareTreeScanner<Void, java.util.List<Tree>> {
         private final CompilationUnitTree fake;
         private final SourcePositions sp;
         public CopyTags(CompilationUnitTree fake, SourcePositions sp) {
@@ -2603,20 +2603,16 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             return; //nothing to  copy
         }
         
-        try {
             ClassPath empty = ClassPathSupport.createClassPath(new URL[0]);
             ClasspathInfo cpInfo = ClasspathInfo.create(JavaPlatformManager.getDefault().getDefaultPlatform().getBootstrapLibraries(), empty, empty);
-            JavacTaskImpl javacTask = JavacParser.createJavacTask(cpInfo, null, null, null, null, null, null, null, null);
+            JavacTaskImpl javacTask = JavacParser.createJavacTask(cpInfo, null, null, null, null, null, null, null, Arrays.asList(FileObjects.memoryFileObject("", "Scratch.java", code)));
             com.sun.tools.javac.util.Context ctx = javacTask.getContext();
             JavaCompiler.instance(ctx).genEndPos = true;
-            CompilationUnitTree tree = javacTask.parse(FileObjects.memoryFileObject("", "", code)).iterator().next(); //NOI18N
+            CompilationUnitTree tree = javacTask.parse().iterator().next(); //NOI18N
             SourcePositions sp = JavacTrees.instance(ctx).getSourcePositions();
             ClassTree clazz = (ClassTree) tree.getTypeDecls().get(0);
 
             new CopyTags(tree, sp).scan(clazz.getModifiers().getAnnotations(), linearized);
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
     }
 
     private boolean reallyPrintAnnotations;

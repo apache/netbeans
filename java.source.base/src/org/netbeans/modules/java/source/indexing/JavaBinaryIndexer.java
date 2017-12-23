@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -43,11 +44,13 @@ import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.modules.java.source.TreeLoader;
+import org.netbeans.modules.java.source.ElementUtils;
+import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.base.Module;
 import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
 import org.netbeans.modules.java.source.parsing.FileObjects;
@@ -192,11 +195,10 @@ public class JavaBinaryIndexer extends BinaryIndexer {
             false,
             false,
             null);
-        final JavacTaskImpl jt = JavacParser.createJavacTask(cpInfo, new DevNullDiagnosticListener(), null, null, null, null, null, null, null);
-        TreeLoader.preRegister(jt.getContext(), cpInfo, true);
+        final JavacTaskImpl jt = JavacParser.createJavacTask(cpInfo, new DevNullDiagnosticListener(), null, null, null, null, null, null, Collections.emptyList());
         //Force JTImpl.prepareCompiler to get JTImpl into Context
         jt.enter();
-        TypeElement jc = (TypeElement) ((JavacElements)jt.getElements()).getTypeElementByBinaryName(fqn);
+        TypeElement jc = ElementUtils.getTypeElementByBinaryName(jt, fqn);
         if (jc != null) {
             List<ExecutableElement> methods = ElementFilter.methodsIn(jt.getElements().getAllMembers(jc));
             for (ExecutableElement method : methods) {
@@ -288,6 +290,11 @@ public class JavaBinaryIndexer extends BinaryIndexer {
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
+        }
+
+        @MimeRegistration(mimeType="", service=BinaryIndexerFactory.class)
+        public static Factory register() {
+            return NoJavacHelper.hasWorkingJavac() ? new Factory() : null;
         }
     }
 }

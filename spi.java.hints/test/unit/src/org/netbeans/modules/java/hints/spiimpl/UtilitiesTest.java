@@ -30,7 +30,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -623,7 +623,7 @@ public class UtilitiesTest extends TestBase {
     private void assertPositions(Tree t, final SourcePositions sp, final String code, String... golden) {
         final List<String> actual = new ArrayList<String>(golden.length);
 
-        new TreeScanner<Void, Void>() {
+        new ErrorAwareTreeScanner<Void, Void>() {
             @Override
             public Void scan(Tree node, Void p) {
                 if (node != null) {

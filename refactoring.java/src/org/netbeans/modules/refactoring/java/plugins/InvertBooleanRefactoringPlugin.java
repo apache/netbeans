@@ -22,7 +22,7 @@ package org.netbeans.modules.refactoring.java.plugins;
 import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -259,7 +259,7 @@ public class InvertBooleanRefactoringPlugin implements RefactoringPlugin { //ext
                         format.setRightBrace("}$");
                         final String mthFormat = format.format(MTH_INIT);
 
-                        new TreePathScanner<Void, Void>() {
+                        new ErrorAwareTreePathScanner<Void, Void>() {
                             @Override public Void visitReturn(ReturnTree node, Void p) {
                                 TransformationSupport.create(mthFormat).setCancel(cancel).transformTreePath(parameter, getCurrentPath());
                                 return super.visitReturn(node, p);

@@ -192,4 +192,26 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
                      createdFiles);
     }
+
+    public void testErroneousMethodClassNETBEANS_224() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test1.java", "package test; public class Test1 { public abstract void }"),
+                                                         compileTuple("test/Test2.java", "package test; public class Test2 { public abstract Object }"),
+                                                         compileTuple("test/Test3.java", "package test; public class Test3 { public abstract class }"),
+                                                         compileTuple("test/Test4.java", "package test; public class ")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test1.sig",
+                                                       "cache/s1/java/15/classes/test/Test2.sig",
+                                                       "cache/s1/java/15/classes/test/Test3.sig")),
+                     createdFiles);
+    }
 }

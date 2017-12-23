@@ -2149,6 +2149,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="lib.profiler/release/lib/deployed/**/*.map" /> <!-- companion files for CDDL licensed binaries -->
             <exclude name="lib.uihandler/src/org/netbeans/lib/uihandler/pubKey" /> <!--no degree of creativity-->
             <exclude name="lib.uihandler/test/unit/src/**" /> <!--test data-->
+            <exclude name="maven.checkstyle/src/org/netbeans/modules/maven/format/checkstyle/config/configuration*.dtd" /> <!-- the files do not reach a level of creativity -->
             <exclude name="maven.htmlui/src/org/netbeans/modules/maven/htmlui/UIDefaults" /> <!-- config file with no place for license header-->
             <exclude name="maven.indexer/external/NOTICE-patched-indexer-core-6.0.0" /> <!--no degree of creativity-->
             <exclude name="mercurial/src/org/netbeans/modules/mercurial/util/log*" /> <!-- user templates for mercurial commits, etc. -->
@@ -2249,11 +2250,23 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 Licensed to the Apache Software Foundation (ASF) under one or more contributor 
                 license agreements; and to You under the Apache License, Version 2.0.
             </rat:fullTextMatcher>
+            <rat:fullTextMatcher licenseFamilyCategory="EPL/EDL" licenseFamilyName="Eclipse Public License and Eclipse Distribution License">
+                This program and the accompanying materials are made available under the
+                terms of the Eclipse Public License v1.0 and Eclipse Distribution License v. 1.0
+                which accompanies this distribution.
+            </rat:fullTextMatcher>
+            <rat:fullTextMatcher licenseFamilyCategory="EPL" licenseFamilyName="Eclipse Public License">
+                This program and the accompanying materials
+                are made available under the terms of the Eclipse Public License v1.0
+                which accompanies this distribution
+            </rat:fullTextMatcher>
             <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
             <rat:approvedLicense familyName="OASIS"/>
             <rat:approvedLicense familyName="WSDL Schema Files" />
             <rat:approvedLicense familyName="International Organization for Standardization for SGML"/>
             <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
+            <rat:approvedLicense familyName="Eclipse Public License and Eclipse Distribution License" />
+            <rat:approvedLicense familyName="Eclipse Public License" />
 	    <fileset dir="${nb_all}">
                 <patternset refid="non.rat" />
             </fileset>
@@ -2277,14 +2290,26 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 ISO 8879, provided this notice is included in all copies.
             </rat:fullTextMatcher>
             <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
-                Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+                Licensed to the Apache Software Foundation (ASF) under one or more contributor
                 license agreements; and to You under the Apache License, Version 2.0.
+            </rat:fullTextMatcher>
+            <rat:fullTextMatcher licenseFamilyCategory="EPL/EDL" licenseFamilyName="Eclipse Public License and Eclipse Distribution License">
+                This program and the accompanying materials are made available under the
+                terms of the Eclipse Public License v1.0 and Eclipse Distribution License v. 1.0
+                which accompanies this distribution.
+            </rat:fullTextMatcher>
+            <rat:fullTextMatcher licenseFamilyCategory="EPL" licenseFamilyName="Eclipse Public License">
+                This program and the accompanying materials
+                are made available under the terms of the Eclipse Public License v1.0
+                which accompanies this distribution
             </rat:fullTextMatcher>
             <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
             <rat:approvedLicense familyName="OASIS"/>
             <rat:approvedLicense familyName="WSDL Schema Files" />
             <rat:approvedLicense familyName="International Organization for Standardization for SGML"/>
             <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
+            <rat:approvedLicense familyName="Eclipse Public License and Eclipse Distribution License" />
+            <rat:approvedLicense familyName="Eclipse Public License" />
 	    <fileset dir="${nb_all}">
                 <patternset refid="non.rat" />
             </fileset>

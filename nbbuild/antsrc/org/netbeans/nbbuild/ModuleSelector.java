@@ -196,11 +196,7 @@ public final class ModuleSelector extends BaseExtendSelector {
                 fileToOwningModule = new HashMap<>();
                 try {
                     readUpdateTracking(getProject(), p.getValue(), fileToOwningModule);
-                } catch (IOException ex) {
-                    throw new BuildException(ex);
-                } catch (ParserConfigurationException ex) {
-                    throw new BuildException(ex);
-                } catch (SAXException ex) {
+                } catch (IOException | ParserConfigurationException | SAXException ex) {
                     throw new BuildException(ex);
                 }
                 log("Will accept these files: " + fileToOwningModule.keySet(), Project.MSG_VERBOSE);

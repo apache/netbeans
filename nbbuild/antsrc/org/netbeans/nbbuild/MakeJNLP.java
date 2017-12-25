@@ -253,17 +253,7 @@ public class MakeJNLP extends Task {
                 Class sjClass = Class.forName("org.apache.tools.ant.taskdefs.SignJar");
                 Method sdaMethod = sjClass.getDeclaredMethod("setDigestAlg", String.class);
                 sdaMethod.invoke(getSignTask(), "SHA1");
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NoSuchMethodException ex) {
-                Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SecurityException ex) {
-                Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalArgumentException ex) {
-                Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvocationTargetException ex) {
+            } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
             }
             // end of getSignTask().setDigestAlg("SHA1");
@@ -430,11 +420,7 @@ public class MakeJNLP extends Task {
                             if (n.exists() && isSigned(n) == null) {
                                 try {
                                     localeTmpFile = extendLibraryManifest(getProject(), n, t, manifestCodebase, manifestPermissions, appName, jnlp);
-                                } catch (IOException ex) {
-                                    getProject().log(
-                                            "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
-                                            Project.MSG_WARN);
-                                } catch (ManifestException ex) {
+                                } catch (IOException | ManifestException ex) {
                                     getProject().log(
                                             "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
                                             Project.MSG_WARN);
@@ -468,11 +454,7 @@ public class MakeJNLP extends Task {
                 if (jar.exists() && isSigned(jar) == null) {
                     try {
                         tmpFile = extendLibraryManifest(getProject(), jar, signed, manifestCodebase, manifestPermissions, appName, jnlp);
-                    } catch (IOException ex) {
-                        getProject().log(
-                                "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
-                                Project.MSG_WARN);
-                    } catch (ManifestException ex) {
+                    } catch (IOException | ManifestException ex) {
                         getProject().log(
                                 "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
                                 Project.MSG_WARN);
@@ -663,11 +645,7 @@ public class MakeJNLP extends Task {
         Map<String,String> fileToOwningModule = new HashMap<>();
         try {
             ModuleSelector.readUpdateTracking(getProject(), ut.toString(), fileToOwningModule);
-        } catch (IOException ex) {
-            throw new BuildException(ex);
-        } catch (ParserConfigurationException ex) {
-            throw new BuildException(ex);
-        } catch (SAXException ex) {
+        } catch (IOException | ParserConfigurationException | SAXException ex) {
             throw new BuildException(ex);
         }
         
@@ -819,11 +797,7 @@ public class MakeJNLP extends Task {
                 File tmpFile = null;
                 try {
                     tmpFile = extendLibraryManifest(getProject(), e, ext, manifestCodebase, manifestPermissions, appName, null);
-                } catch (IOException ex) {
-                    getProject().log(
-                    "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
-                    Project.MSG_WARN);
-                } catch (ManifestException ex) {
+                } catch (IOException | ManifestException ex) {
                     getProject().log(
                     "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
                     Project.MSG_WARN);

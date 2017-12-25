@@ -431,9 +431,7 @@ public class AutoUpdate extends Task {
             //https://netbeans.org/bugzilla/show_bug.cgi?id=119861
             result = process.waitFor();
             process.destroy();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return result == 0;

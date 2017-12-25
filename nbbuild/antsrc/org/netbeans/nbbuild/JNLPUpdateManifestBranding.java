@@ -132,11 +132,7 @@ public class JNLPUpdateManifestBranding extends Task {
                 }
 
             }
-        } catch (IOException ex) {
-            getProject().log(
-                    "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
-                    Project.MSG_WARN);
-        } catch (ManifestException ex) {
+        } catch (IOException | ManifestException ex) {
             getProject().log(
                     "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
                     Project.MSG_WARN);
@@ -305,17 +301,7 @@ public class JNLPUpdateManifestBranding extends Task {
             Class sjClass = Class.forName("org.apache.tools.ant.taskdefs.SignJar");
             Method sdaMethod = sjClass.getDeclaredMethod("setDigestAlg", String.class);
             sdaMethod.invoke(getSignTask(), "SHA1");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchMethodException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
+        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
         }
         // end of getSignTask().setDigestAlg("SHA1");

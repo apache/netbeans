@@ -99,9 +99,7 @@ public class SortSuiteModules extends Task {
             Document doc;
             try {
                 doc = XMLUtil.parse(new InputSource(projectXml.toURI().toString()), false, true, null, null);
-            } catch (IOException e) {
-                throw new BuildException("Error parsing " + projectXml + ": " + e, e, getLocation());
-            } catch (SAXException e) {
+            } catch (IOException | SAXException e) {
                 throw new BuildException("Error parsing " + projectXml + ": " + e, e, getLocation());
             }
             Element config = XMLUtil.findElement(doc.getDocumentElement(), "configuration", ParseProjectXml.PROJECT_NS);

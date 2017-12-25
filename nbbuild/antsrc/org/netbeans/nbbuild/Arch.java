@@ -261,9 +261,7 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
                     qSource = new StreamSource (questionsFile);
                     try {
                         q = builder.parse(questionsFile);
-                    } catch (IOException ex) {
-                        throw new BuildException(ex);
-                    } catch (SAXException ex) {
+                    } catch (IOException | SAXException ex) {
                         throw new BuildException(ex);
                     }
                 } else {
@@ -405,9 +403,7 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
                         TransformerFactory fack = TransformerFactory.newInstance();
                         Transformer t = fack.newTransformer(defXSL);
                         t.transform(prjSrc, res);
-                    } catch (IOException ex) {
-                        throw new BuildException (ex);
-                    } catch (TransformerException ex) {
+                    } catch (IOException | TransformerException ex) {
                         throw new BuildException (ex);
                     }
                     
@@ -503,11 +499,7 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
                 }
                 t.transform(qSource, r);
             }
-        } catch (IOException ex) {
-            throw new BuildException (ex);
-        } catch (TransformerConfigurationException ex) {
-            throw new BuildException (ex);
-        } catch (TransformerException ex) {
+        } catch (IOException | TransformerException ex) {
             throw new BuildException (ex);
         }
     }

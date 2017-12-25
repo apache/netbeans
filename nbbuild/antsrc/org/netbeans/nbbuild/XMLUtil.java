@@ -166,9 +166,7 @@ public final class XMLUtil extends Object {
             Source source = new DOMSource(doc);
             Result result = new StreamResult(out);
             t.transform(source, result);
-        } catch (Exception e) {
-            throw new IOException(e);
-        } catch (TransformerFactoryConfigurationError e) {
+        } catch (Exception | TransformerFactoryConfigurationError e) {
             throw new IOException(e);
         }
     }
@@ -182,9 +180,7 @@ public final class XMLUtil extends Object {
             Source source = new DOMSource(el);
             Result result = new StreamResult(out);
             t.transform(source, result);
-        } catch (Exception e) {
-            throw new IOException(e);
-        } catch (TransformerFactoryConfigurationError e) {
+        } catch (Exception | TransformerFactoryConfigurationError e) {
             throw new IOException(e);
         }
     }

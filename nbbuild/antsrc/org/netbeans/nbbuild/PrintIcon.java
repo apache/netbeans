@@ -205,12 +205,9 @@ public class PrintIcon extends Task {
                         _hash += (rgb >> 2);
                     }
                 }
-            } catch (IOException e) {
+            } catch (IOException | IndexOutOfBoundsException e) {
                 p.log("Broken icon at " + from, Project.MSG_WARN);
                 _hash = hash(e);
-            } catch (IndexOutOfBoundsException ex) {
-                p.log("Broken icon at " + from, Project.MSG_WARN);
-                _hash = hash(ex);
             }
             
             this.hash = _hash;

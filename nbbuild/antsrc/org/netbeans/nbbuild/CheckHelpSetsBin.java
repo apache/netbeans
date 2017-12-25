@@ -272,9 +272,7 @@ public class CheckHelpSetsBin extends Task {
                     log(error, Project.MSG_WARN);
                 }
                 //System.out.println("RETURN OF CheckLinks.scan");
-            } catch (URISyntaxException ex) {
-                ex.printStackTrace();
-            } catch (IOException ex) {
+            } catch (URISyntaxException | IOException ex) {
                 ex.printStackTrace();
             }
         }

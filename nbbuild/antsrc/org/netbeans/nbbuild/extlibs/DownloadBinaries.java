@@ -309,9 +309,7 @@ public class DownloadBinaries extends Task {
                         test.connect();
                         conn[0] = test;
                         connected.countDown();
-                    } catch (IOException ex) {
-                        log(ex, Project.MSG_ERR);
-                    } catch (URISyntaxException ex) {
+                    } catch (IOException | URISyntaxException ex) {
                         log(ex, Project.MSG_ERR);
                     }
                 }
@@ -329,9 +327,7 @@ public class DownloadBinaries extends Task {
                         test.connect();
                         conn[0] = test;
                         connected.countDown();
-                    } catch (IOException ex) {
-                        log(ex, Project.MSG_ERR);
-                    } catch (URISyntaxException ex) {
+                    } catch (IOException | URISyntaxException ex) {
                         log(ex, Project.MSG_ERR);
                     }
                 }

@@ -655,10 +655,8 @@ public class MakeLNBM extends MatchingTask {
                             }
                         }
                     }
-                } catch (IllegalAccessException ex4) {
+                } catch (IllegalAccessException | java.lang.reflect.InvocationTargetException ex4) {
                     throw new BuildException(ex4);
-                } catch (java.lang.reflect.InvocationTargetException ex5) {
-                    throw new BuildException(ex5);
                 }
                 signjar.setStorepass (signature.storepass);
                 signjar.setAlias (signature.alias);

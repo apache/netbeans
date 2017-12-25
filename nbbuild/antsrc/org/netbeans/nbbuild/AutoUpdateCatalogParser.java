@@ -508,9 +508,7 @@ class AutoUpdateCatalogParser extends DefaultHandler {
                     }
                 }
                 retval = distributionURI.toURL ();
-            } catch (MalformedURLException ex) {
-                ERR.log (Level.INFO, null, ex);
-            } catch (URISyntaxException ex) {
+            } catch (MalformedURLException | URISyntaxException ex) {
                 ERR.log (Level.INFO, null, ex);
             }
         }

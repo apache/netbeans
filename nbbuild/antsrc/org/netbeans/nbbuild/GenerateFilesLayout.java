@@ -105,9 +105,7 @@ public class GenerateFilesLayout extends Task {
                 pw.flush();
                 pw.close();
             }
-        } catch (IOException x) {
-            throw new BuildException(x, getLocation());
-        } catch (SAXException x) {
+        } catch (IOException | SAXException x) {
             throw new BuildException(x, getLocation());
         }
         log(output + ": generated");

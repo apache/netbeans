@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+Copyright 2007 the original author or authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<xsd:schema
+	xmlns="http://www.springframework.org/schema/webflow-config"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	targetNamespace="http://www.springframework.org/schema/webflow-config"
+	elementFormDefault="qualified" attributeFormDefault="unqualified"
+	version="1.0.1">
+	
+	<xsd:annotation>
+		<xsd:documentation>
+			<![CDATA[
+Spring Web Flow Configuration Schema
+Authors: Keith Donald, Ben Hale
+<br>
+Provides an easy way to configure a flow executor and an XML flow definition registry.
+]]>
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:import namespace="http://www.springframework.org/schema/beans"
+		schemaLocation="http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" />
+
+	<xsd:element name="registry">
+		<xsd:annotation>
+			<xsd:documentation>
+				<![CDATA[
+Deploys a flow definition registy.  A flow definition registry contains a set of flow definitions.
+A flow definition is typically built from externalized resource location such as a .xml file.
+<br>
+Each flow definition registered in this registry is assigned a unique identifier. By default,
+this identifier is the name of the externalized resource minus its file extension.  For example,
+a registry containing flow definitions built from the files "orderitem-flow.xml" and "shipping-flow.xml"
+would index those definitions by "orderitem-flow" and "shipping-flow" by default.
+<br>
+A flow registry is used by a flow executor at runtime to launch new executions of flow definitions.
+]]>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+					<xsd:sequence>
+						<xsd:element name="location" type="locationType" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Specifies a path to a externalized flow definition resource.  The flow definition built from this
+resource will be registered in this registry.
+<br>
+Individual paths such as:
+<pre>
+	/WEB-INF/flows/orderitem-flow.xml
+</pre>
+... are supported as well as wildcard paths such as:
+<pre>
+	/WEB-INF/flows/**/*-flow.xml
+</pre>
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:complexType name="locationType">
+		<xsd:attribute name="path" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The path to the externalized flow definition resource.  May be a path to a single resource or 
+a ANT-style path expression that matches multiple resources.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:element name="executor">
+		<xsd:annotation>
+			<xsd:documentation>
+				<![CDATA[
+Deploys a flow executor.  A flow executor executes flow definitions.  More specifically, an executor
+is responsible for launching new flow executions as well as resuming paused flow executions.
+A flow execution that spans more than one request is said to have 'paused' and is stored in
+an execution repository.
+]]>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="beans:identifiedType">
+					<xsd:sequence>
+						<xsd:element name="repository" type="repositoryType" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Explicit repository configuration for this executor.  This element is used if configuration needs
+to be more fine grained than the repositoryType attribute on executor.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="execution-attributes" type="execution-attributesType" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+Execution attributes to associate with new flow executions launched by this executor.
+These attributes may influence execution behavior.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="execution-listeners" type="execution-listenersType" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>
+									<![CDATA[
+The listeners eligible for observing the lifecycle of executions launched by this executor.
+]]>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+					<xsd:attribute name="repository-type" type="repositoryTypeAttribute">
+						<xsd:annotation>
+							<xsd:documentation>
+						<![CDATA[
+The type of execution repository to use.  The repository is responsible for managing flow execution 
+persistence between requests.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>			
+					</xsd:attribute>
+					<xsd:attribute name="registry-ref" type="xsd:string" use="required">
+						<xsd:annotation>
+							<xsd:documentation>
+								<![CDATA[
+The idref to the registry this executor will use to locate flow definitions for execution.
+]]>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:simpleType name="repositoryTypeAttribute">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="continuation">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The continuation repository type.  Use this to snapshot flow execution state server-side to support use 
+of the browser back button.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="simple">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The simple repository type.  Use of this strategy incurs minimal storage overhead but explicitly prevents 
+resubmits using the browser back button.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="client">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The client continuation repository type.  Use this to snapshot flow execution state client-side to support use of the browser 
+back button in a stateless server environment.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="singlekey">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+The "single key" repository type.  Use of this strategy assigns a single key per flow execution that remains 
+constant throughout the life of the execution.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:complexType name="repositoryType">
+		<xsd:attribute name="type" type="repositoryTypeAttribute" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The type of flow execution repository to use.  The repository is responsible for managing flow execution 
+persistence between requests.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>			
+		</xsd:attribute>
+		<xsd:attribute name="max-conversations" type="xsd:integer">
+			<xsd:annotation>
+				<xsd:documentation>
+				<![CDATA[
+The maximum number of concurrent conversations allowed by this repository.  It is illegal to set this
+attribute if you are also setting the 'conversation-manager-ref' attribute.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="max-continuations" type="xsd:integer">
+			<xsd:annotation>
+				<xsd:documentation>
+				<![CDATA[
+The maximum number of flow execution continuations (snapshots) allowed by this repository per conversation.
+This attribute is only relevant when the repository type is 'continuation'.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="conversation-manager-ref" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+				<![CDATA[
+The idref of the conversation manager this repository should use.  Setting this attribute 
+allows full control over the conversation manager implementation and configuration.
+When used, any value for the 'max-conversations' attribute is ignored.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="execution-listenersType">
+		<xsd:sequence>
+			<xsd:element name="listener" type="listenerType" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Deploys a single flow execution listener that will observe the execution lifecycle of one or more
+flow definitions.  The flow definitions this listener applies to may be restricted by specifying criteria.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="listenerType">
+		<xsd:attribute name="ref" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The idref to your flow execution listener.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="criteria" type="xsd:string" default="*">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The flow definitions your listener should apply to, delimited by commas or '*' for "all".
+Example: 'flow1,flow2,flow3'.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="execution-attributesType">
+		<xsd:sequence>
+			<xsd:element name="alwaysRedirectOnPause" type="alwaysRedirectOnPauseType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+Sets the 'alwaysRedirectOnPause' execution attribute value.  'alwaysRedirectOnPause' allows 
+control over whether each time a flow execution pauses a browser redirect is performed.  If
+not specified the default value is 'true' unless explicitly set otherwise.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="attribute" type="attributeType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>
+						<![CDATA[
+A single attribute describing an element.  Attributes have string keys and object values.
+An attribute's type may be specified using the 'type' attribute.
+]]>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="alwaysRedirectOnPauseType">
+		<xsd:attribute name="value" type="xsd:boolean" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+true = always redirect on pause; false = do not, only redirect when explicitly instructed by the flow definition.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="attributeType">
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The name of the attribute.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="type" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The attribute's type, used to perform a from-string type conversion if specified.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="value" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					<![CDATA[
+The attribute value, subject to type conversion if the 'type' attribute is defined.
+]]>
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+
+</xsd:schema>

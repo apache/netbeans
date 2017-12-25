@@ -350,9 +350,9 @@ public class SortSuiteModules extends Task {
         @Override
     public String getMessage() {
             StringWriter w = new StringWriter();
-            PrintWriter pw = new PrintWriter(w);
-            printDebug(pw);
-            pw.close();
+            try (PrintWriter pw = new PrintWriter(w)) {
+                printDebug(pw);
+            }
             return w.toString();
         }
 

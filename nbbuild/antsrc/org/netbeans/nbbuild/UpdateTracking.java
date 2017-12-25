@@ -353,16 +353,16 @@ class UpdateTracking {
     }
 
     static CRC32 crcForFile(File inFile) throws FileNotFoundException, IOException {
-        FileInputStream inFileStream = new FileInputStream(inFile);
-        byte[] array = new byte[(int) inFile.length()];
-        CRC32 crc = new CRC32();
-        int len = inFileStream.read(array);
-        if (len != array.length) {
-            throw new BuildException("Cannot fully read " + inFile);
+        try (FileInputStream inFileStream = new FileInputStream(inFile)) {
+            byte[] array = new byte[(int) inFile.length()];
+            CRC32 crc = new CRC32();
+            int len = inFileStream.read(array);
+            if (len != array.length) {
+                throw new BuildException("Cannot fully read " + inFile);
+            }
+            crc.update(array);
+            return crc;
         }
-        inFileStream.close();
-        crc.update(array);
-        return crc;
     }
     
     class Module extends Object {        

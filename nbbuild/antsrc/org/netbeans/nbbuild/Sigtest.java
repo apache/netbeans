@@ -195,11 +195,11 @@ public class Sigtest extends Task {
             String email = getProject().getProperty("sigtest.mail");
             if (email != null) {
                 try {
-                    FileWriter w = new FileWriter(outputFile);
-                    w.write("email: ");
-                    w.write(email);
-                    w.write("\n");
-                    w.close();
+                    try (FileWriter w = new FileWriter(outputFile)) {
+                        w.write("email: ");
+                        w.write(email);
+                        w.write("\n");
+                    }
                 } catch (IOException ex) {
                     throw new BuildException(ex);
                 }

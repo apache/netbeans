@@ -272,8 +272,7 @@ public class JNLPUpdateManifestBranding extends Task {
      * return alias if signed, or null if not
      */
     private static String isSigned(File f) throws IOException {
-        JarFile jar = new JarFile(f);
-        try {
+        try (JarFile jar = new JarFile(f)) {
             Enumeration<JarEntry> en = jar.entries();
             while (en.hasMoreElements()) {
                 Matcher m = SF.matcher(en.nextElement().getName());
@@ -282,8 +281,6 @@ public class JNLPUpdateManifestBranding extends Task {
                 }
             }
             return null;
-        } finally {
-            jar.close();
         }
     }
     private static final Pattern SF = Pattern.compile("META-INF/(.+)\\.SF");

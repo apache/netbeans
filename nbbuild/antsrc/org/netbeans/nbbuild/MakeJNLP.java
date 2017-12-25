@@ -328,185 +328,168 @@ public class MakeJNLP extends Task {
                 throw new BuildException("Cannot read file: " + jar);
             }
             
-            JarFile theJar = new JarFile(jar);
-            String codenamebase = JarWithModuleAttributes.extractCodeName(theJar.getManifest().getMainAttributes());
-            if (codenamebase == null) {
-                throw new BuildException("Not a NetBeans Module: " + jar);
-            }
-            if (
-                codenamebase.equals("org.objectweb.asm.all") && 
-                jar.getParentFile().getName().equals("core") &&
-                jar.getParentFile().getParentFile().getName().startsWith("platform")
-            ) {
-                continue;
-            }
-            {
-                int slash = codenamebase.indexOf('/');
-                if (slash >= 0) {
-                    codenamebase = codenamebase.substring(0, slash);
+            try (JarFile theJar = new JarFile(jar)) {
+                String codenamebase = JarWithModuleAttributes.extractCodeName(theJar.getManifest().getMainAttributes());
+                if (codenamebase == null) {
+                    throw new BuildException("Not a NetBeans Module: " + jar);
                 }
-            }
-            String dashcnb = codenamebase.replace('.', '-');
-            
-            String title;
-            String oneline;
-            String shrt;
-            String osDep = null;
-            
-            {
-                String bundle = theJar.getManifest().getMainAttributes().getValue("OpenIDE-Module-Localizing-Bundle");
-                Properties prop = new Properties();
-                if (bundle != null) {
-                    ZipEntry en = theJar.getEntry(bundle);
-                    if (en == null) {
-                        throw new BuildException("Cannot find entry: " + bundle + " in file: " + jar);
-                    }
-                    InputStream is = theJar.getInputStream(en);
-                    prop.load(is);
-                    is.close();
+                if (
+                        codenamebase.equals("org.objectweb.asm.all") &&
+                        jar.getParentFile().getName().equals("core") &&
+                        jar.getParentFile().getParentFile().getName().startsWith("platform")
+                ) {
+                    continue;
                 }
-                title = prop.getProperty("OpenIDE-Module-Name", codenamebase);
-                oneline = prop.getProperty("OpenIDE-Module-Short-Description", title);
-                shrt = prop.getProperty("OpenIDE-Module-Long-Description", oneline);
-            }
-            
-            {
-                String osMan = theJar.getManifest().getMainAttributes().getValue("OpenIDE-Module-Requires");
-                if (osMan != null) {
-                    if (osMan.indexOf("org.openide.modules.os.MacOSX") >= 0) { // NOI18N
-                        osDep = "Mac OS X"; // NOI18N
-                    } else if (osMan.indexOf("org.openide.modules.os.Linux") >= 0) { // NOI18N
-                        osDep = "Linux"; // NOI18N
-                    } else if (osMan.indexOf("org.openide.modules.os.Solaris") >= 0) { // NOI18N
-                        osDep = "Solaris"; // NOI18N
-                    } else if (osMan.indexOf("org.openide.modules.os.Windows") >= 0) { // NOI18N
-                        osDep = "Windows"; // NOI18N
+                {
+                    int slash = codenamebase.indexOf('/');
+                    if (slash >= 0) {
+                        codenamebase = codenamebase.substring(0, slash);
                     }
                 }
-            }
-            
-            Map<String,List<File>> localizedFiles = verifyExtensions(jar, theJar.getManifest(), dashcnb, codenamebase, verify, indirectFilePaths);
-            
-            new File(targetFile, dashcnb).mkdir();
 
-            File signed = new File(new File(targetFile, dashcnb), jar.getName());
-            File jnlp = new File(targetFile, dashcnb + ".jnlp");
-            
-            StringWriter writeJNLP = new StringWriter();
-            writeJNLP.write("<?xml version='1.0' encoding='UTF-8'?>\n");
-            writeJNLP.write("<!DOCTYPE jnlp PUBLIC \"-//Sun Microsystems, Inc//DTD JNLP Descriptor 6.0//EN\" \"http://java.sun.com/dtd/JNLP-6.0.dtd\">\n");
-            writeJNLP.write("<jnlp spec='1.0+' codebase='" + codebase + "'>\n");
-            writeJNLP.write("  <information>\n");
-            writeJNLP.write("   <title>" + XMLUtil.toElementContent(title) + "</title>\n");
-            writeJNLP.write("   <vendor>NetBeans</vendor>\n");
-            writeJNLP.write("   <description kind='one-line'>" + XMLUtil.toElementContent(oneline) + "</description>\n");
-            writeJNLP.write("   <description kind='short'>" + XMLUtil.toElementContent(shrt) + "</description>\n");
-            writeJNLP.write("  </information>\n");
-            writeJNLP.write(permissions +"\n");
-            if (osDep == null) {
-                writeJNLP.write("  <resources>\n");
-            } else {
-                writeJNLP.write("  <resources os='" + osDep + "'>\n");
-            }
-            writeJNLP.write(constructJarHref(jar, dashcnb));
-            
-            processExtensions(jar, theJar.getManifest(), writeJNLP, dashcnb, codebase);
-            processIndirectJars(writeJNLP, dashcnb);
-            processIndirectFiles(writeJNLP, dashcnb);
-            
-            writeJNLP.write("  </resources>\n");
-            
-            if (useAllLocales || !declaredLocales.isEmpty()){
-                // write down locales
-                for (Map.Entry<String,List<File>> e : localizedFiles.entrySet()) {
-                    String locale = e.getKey();
-                    if (!declaredLocales.isEmpty() && !declaredLocales.contains(locale)) {
-                        continue;
-                    }
-                    List<File> allFiles = e.getValue();
-                    
-                    writeJNLP.write("  <resources locale='" + locale + "'>\n");
+                String dashcnb = codenamebase.replace('.', '-');
+                String title;
+                String oneline;
+                String shrt;
+                String osDep = null;
 
-                    for (File n : allFiles) {
-                        log("generating locale " + locale + " for " + n, Project.MSG_VERBOSE);
-                        String name = n.getName();
-                        String clusterRootPrefix = jar.getParent() + File.separatorChar;
-                        String absname = n.getAbsolutePath();
-                        if (absname.startsWith(clusterRootPrefix)) {
-                            name = absname.substring(clusterRootPrefix.length()).replace(File.separatorChar, '-');
+                {
+                    String bundle = theJar.getManifest().getMainAttributes().getValue("OpenIDE-Module-Localizing-Bundle");
+                    Properties prop = new Properties();
+                    if (bundle != null) {
+                        ZipEntry en = theJar.getEntry(bundle);
+                        if (en == null) {
+                            throw new BuildException("Cannot find entry: " + bundle + " in file: " + jar);
+                        }   try (InputStream is = theJar.getInputStream(en)) {
+                            prop.load(is);
                         }
-                        File t = new File(new File(targetFile, dashcnb), name);
-
-                        File localeTmpFile = null;
-                        if (n.exists() && isSigned(n) == null) {
-                            try {
-                                localeTmpFile = extendLibraryManifest(getProject(), n, t, manifestCodebase, manifestPermissions, appName, jnlp);
-                            } catch (IOException ex) {
-                                getProject().log(
-                                "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
-                                Project.MSG_WARN);
-                            } catch (ManifestException ex) {
-                                getProject().log(
-                                "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
-                                Project.MSG_WARN);
+                    }
+                    title = prop.getProperty("OpenIDE-Module-Name", codenamebase);
+                    oneline = prop.getProperty("OpenIDE-Module-Short-Description", title);
+                    shrt = prop.getProperty("OpenIDE-Module-Long-Description", oneline);
+                }
+                {
+                    String osMan = theJar.getManifest().getMainAttributes().getValue("OpenIDE-Module-Requires");
+                    if (osMan != null) {
+                        if (osMan.indexOf("org.openide.modules.os.MacOSX") >= 0) { // NOI18N
+                            osDep = "Mac OS X"; // NOI18N
+                        } else if (osMan.indexOf("org.openide.modules.os.Linux") >= 0) { // NOI18N
+                            osDep = "Linux"; // NOI18N
+                        } else if (osMan.indexOf("org.openide.modules.os.Solaris") >= 0) { // NOI18N
+                            osDep = "Solaris"; // NOI18N
+                        } else if (osMan.indexOf("org.openide.modules.os.Windows") >= 0) { // NOI18N
+                            osDep = "Windows"; // NOI18N
+                        }
+                    }
+                }   Map<String,List<File>> localizedFiles = verifyExtensions(jar, theJar.getManifest(), dashcnb, codenamebase, verify, indirectFilePaths);
+                new File(targetFile, dashcnb).mkdir();
+                File signed = new File(new File(targetFile, dashcnb), jar.getName());
+                File jnlp = new File(targetFile, dashcnb + ".jnlp");
+                StringWriter writeJNLP = new StringWriter();
+                writeJNLP.write("<?xml version='1.0' encoding='UTF-8'?>\n");
+                writeJNLP.write("<!DOCTYPE jnlp PUBLIC \"-//Sun Microsystems, Inc//DTD JNLP Descriptor 6.0//EN\" \"http://java.sun.com/dtd/JNLP-6.0.dtd\">\n");
+                writeJNLP.write("<jnlp spec='1.0+' codebase='" + codebase + "'>\n");
+                writeJNLP.write("  <information>\n");
+                writeJNLP.write("   <title>" + XMLUtil.toElementContent(title) + "</title>\n");
+                writeJNLP.write("   <vendor>NetBeans</vendor>\n");
+                writeJNLP.write("   <description kind='one-line'>" + XMLUtil.toElementContent(oneline) + "</description>\n");
+                writeJNLP.write("   <description kind='short'>" + XMLUtil.toElementContent(shrt) + "</description>\n");
+                writeJNLP.write("  </information>\n");
+                writeJNLP.write(permissions +"\n");
+                if (osDep == null) {
+                    writeJNLP.write("  <resources>\n");
+                } else {
+                    writeJNLP.write("  <resources os='" + osDep + "'>\n");
+                }   writeJNLP.write(constructJarHref(jar, dashcnb));
+                processExtensions(jar, theJar.getManifest(), writeJNLP, dashcnb, codebase);
+                processIndirectJars(writeJNLP, dashcnb);
+                processIndirectFiles(writeJNLP, dashcnb);
+                writeJNLP.write("  </resources>\n");
+                if (useAllLocales || !declaredLocales.isEmpty()){
+                    // write down locales
+                    for (Map.Entry<String,List<File>> e : localizedFiles.entrySet()) {
+                        String locale = e.getKey();
+                        if (!declaredLocales.isEmpty() && !declaredLocales.contains(locale)) {
+                            continue;
+                        }
+                        List<File> allFiles = e.getValue();
+                        
+                        writeJNLP.write("  <resources locale='" + locale + "'>\n");
+                        
+                        for (File n : allFiles) {
+                            log("generating locale " + locale + " for " + n, Project.MSG_VERBOSE);
+                            String name = n.getName();
+                            String clusterRootPrefix = jar.getParent() + File.separatorChar;
+                            String absname = n.getAbsolutePath();
+                            if (absname.startsWith(clusterRootPrefix)) {
+                                name = absname.substring(clusterRootPrefix.length()).replace(File.separatorChar, '-');
                             }
-                        } else {
-                            getProject().log(
-                                String.format(
-                                    "Not adding security attributes into locale library: %s the library is already signed.",
-                                    safeRelativePath(getProject().getBaseDir(),t)),
-                                Project.MSG_WARN);
+                            File t = new File(new File(targetFile, dashcnb), name);
+                            
+                            File localeTmpFile = null;
+                            if (n.exists() && isSigned(n) == null) {
+                                try {
+                                    localeTmpFile = extendLibraryManifest(getProject(), n, t, manifestCodebase, manifestPermissions, appName, jnlp);
+                                } catch (IOException ex) {
+                                    getProject().log(
+                                            "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
+                                            Project.MSG_WARN);
+                                } catch (ManifestException ex) {
+                                    getProject().log(
+                                            "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
+                                            Project.MSG_WARN);
+                                }
+                            } else {
+                                getProject().log(
+                                        String.format(
+                                                "Not adding security attributes into locale library: %s the library is already signed.",
+                                                safeRelativePath(getProject().getBaseDir(),t)),
+                                        Project.MSG_WARN);
+                            }
+                            if (localeTmpFile != null) {
+                                signOrCopy(localeTmpFile, t);
+                                deleteTmpFile(localeTmpFile);
+                            }
+                            else {
+                                signOrCopy(n, t);
+                            }
+                            writeJNLP.write(constructJarHref(n, dashcnb, name));
                         }
-                        if (localeTmpFile != null) {
-                            signOrCopy(localeTmpFile, t);
-                            deleteTmpFile(localeTmpFile);
-                        }
-                        else {
-                            signOrCopy(n, t);
-                        }
-                        writeJNLP.write(constructJarHref(n, dashcnb, name));
+                        
+                        writeJNLP.write("  </resources>\n");
+                        
                     }
-
-                    writeJNLP.write("  </resources>\n");
-                    
-                }
-            }        
-            
-            writeJNLP.write("  <component-desc/>\n");
-            writeJNLP.write("</jnlp>\n");
-            writeJNLP.close();
-            
-            FileWriter w = new FileWriter(jnlp);
-            w.write(writeJNLP.toString());
-            w.close();
-
-            if (jar.exists() && isSigned(jar) == null) {
-                try {
-                    tmpFile = extendLibraryManifest(getProject(), jar, signed, manifestCodebase, manifestPermissions, appName, jnlp);
-                } catch (IOException ex) {
+                }   writeJNLP.write("  <component-desc/>\n");
+                writeJNLP.write("</jnlp>\n");
+                writeJNLP.close();
+                FileWriter w = new FileWriter(jnlp);
+                w.write(writeJNLP.toString());
+                w.close();
+                if (jar.exists() && isSigned(jar) == null) {
+                    try {
+                        tmpFile = extendLibraryManifest(getProject(), jar, signed, manifestCodebase, manifestPermissions, appName, jnlp);
+                    } catch (IOException ex) {
+                        getProject().log(
+                                "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
+                                Project.MSG_WARN);
+                    } catch (ManifestException ex) {
+                        getProject().log(
+                                "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
+                                Project.MSG_WARN);
+                    }
+                } else {
                     getProject().log(
-                    "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
-                    Project.MSG_WARN);
-                } catch (ManifestException ex) {
-                    getProject().log(
-                    "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
-                    Project.MSG_WARN);
+                            String.format(
+                                    "Not adding security attributes into library: %s the library is already signed.",
+                                    safeRelativePath(getProject().getBaseDir(),signed)),
+                            Project.MSG_WARN);
+                }   if (tmpFile != null) {
+                    signOrCopy(tmpFile, signed);
+                    deleteTmpFile(tmpFile);
+                } else {
+                    signOrCopy(jar, signed);
                 }
-            } else {
-                getProject().log(
-                    String.format(
-                        "Not adding security attributes into library: %s the library is already signed.",
-                        safeRelativePath(getProject().getBaseDir(),signed)),
-                    Project.MSG_WARN);
             }
-
-            if (tmpFile != null) {
-                signOrCopy(tmpFile, signed);
-                deleteTmpFile(tmpFile);
-            } else {
-                signOrCopy(jar, signed);
-            }
-            theJar.close();
         }
         
     }
@@ -529,7 +512,7 @@ public class MakeJNLP extends Task {
         try {
             final Map<String,String> extendedAttrs = new HashMap<>();
             final org.apache.tools.zip.ZipFile zf = new org.apache.tools.zip.ZipFile(sourceJar);
-            try {                
+            try {
                 final org.apache.tools.zip.ZipEntry manifestEntry = zf.getEntry(MANIFEST);
                 if (manifestEntry != null) {
                     final Reader in = new InputStreamReader(zf.getInputStream(manifestEntry), Charset.forName(UTF_8));    //NOI18N
@@ -541,7 +524,7 @@ public class MakeJNLP extends Task {
                 } else {
                     manifest = new org.apache.tools.ant.taskdefs.Manifest();
                 }
-                final org.apache.tools.ant.taskdefs.Manifest.Section mainSection = manifest.getMainSection();                
+                final org.apache.tools.ant.taskdefs.Manifest.Section mainSection = manifest.getMainSection();
                 String attr = mainSection.getAttributeValue(ATTR_CODEBASE);
                 if (attr == null) {
                     mainSection.addAttributeAndCheck(new org.apache.tools.ant.taskdefs.Manifest.Attribute(
@@ -815,21 +798,21 @@ public class MakeJNLP extends Task {
                 String extJnlpName = dashcnb + '-' + ext.getName().replaceFirst("\\.jar$", "") + ".jnlp";
                 File jnlp = new File(targetFile, extJnlpName);
 
-                FileWriter writeJNLP = new FileWriter(jnlp);
-                writeJNLP.write("<?xml version='1.0' encoding='UTF-8'?>\n");
-                writeJNLP.write("<!DOCTYPE jnlp PUBLIC \"-//Sun Microsystems, Inc//DTD JNLP Descriptor 6.0//EN\" \"http://java.sun.com/dtd/JNLP-6.0.dtd\">\n");
-                writeJNLP.write("<jnlp spec='1.0+' codebase='" + codebase + "'>\n");
-                writeJNLP.write("  <information>\n");
-                writeJNLP.write("    <title>" + n + "</title>\n");
-                writeJNLP.write("    <vendor>NetBeans</vendor>\n");
-                writeJNLP.write("  </information>\n");
-                writeJNLP.write(permissions +"\n");
-                writeJNLP.write("  <resources>\n");
-                writeJNLP.write(constructJarHref(ext, dashcnb));
-                writeJNLP.write("  </resources>\n");
-                writeJNLP.write("  <component-desc/>\n");
-                writeJNLP.write("</jnlp>\n");
-                writeJNLP.close();
+                try (FileWriter writeJNLP = new FileWriter(jnlp)) {
+                    writeJNLP.write("<?xml version='1.0' encoding='UTF-8'?>\n");
+                    writeJNLP.write("<!DOCTYPE jnlp PUBLIC \"-//Sun Microsystems, Inc//DTD JNLP Descriptor 6.0//EN\" \"http://java.sun.com/dtd/JNLP-6.0.dtd\">\n");
+                    writeJNLP.write("<jnlp spec='1.0+' codebase='" + codebase + "'>\n");
+                    writeJNLP.write("  <information>\n");
+                    writeJNLP.write("    <title>" + n + "</title>\n");
+                    writeJNLP.write("    <vendor>NetBeans</vendor>\n");
+                    writeJNLP.write("  </information>\n");
+                    writeJNLP.write(permissions +"\n");
+                    writeJNLP.write("  <resources>\n");
+                    writeJNLP.write(constructJarHref(ext, dashcnb));
+                    writeJNLP.write("  </resources>\n");
+                    writeJNLP.write("  <component-desc/>\n");
+                    writeJNLP.write("</jnlp>\n");
+                }
                 
                 fileWriter.write("    <extension name='" + e.getName().replaceFirst("\\.jar$", "") + "' href='" + extJnlpName + "'/>\n");
             } else {
@@ -939,8 +922,7 @@ public class MakeJNLP extends Task {
     
     /** return alias if signed, or null if not */
     private static String isSigned(File f) throws IOException {
-        JarFile jar = new JarFile(f);
-        try {
+        try (JarFile jar = new JarFile(f)) {
             Enumeration<JarEntry> en = jar.entries();
             while (en.hasMoreElements()) {
                 Matcher m = SF.matcher(en.nextElement().getName());
@@ -949,8 +931,6 @@ public class MakeJNLP extends Task {
                 }
             }
             return null;
-        } finally {
-            jar.close();
         }
     }
     private static final Pattern SF = Pattern.compile("META-INF/(.+)\\.SF");

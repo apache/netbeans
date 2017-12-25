@@ -140,8 +140,7 @@ final class ModuleListParser {
                     project.log("Loading module list from " + scanCache);
                 }
                 try {
-                    InputStream is = new FileInputStream(scanCache);
-                    try {
+                    try (InputStream is = new FileInputStream(scanCache)) {
                         ObjectInput oi = new ObjectInputStream(new BufferedInputStream(is));
                         @SuppressWarnings("unchecked") Map<File,Long[]> timestampsAndSizes = (Map) oi.readObject();
                         boolean matches = true;
@@ -178,8 +177,6 @@ final class ModuleListParser {
                                 project.log("Loaded modules: " + entries.keySet(), Project.MSG_DEBUG);
                             }
                         }
-                    } finally {
-                        is.close();
                     }
                 } catch (Exception x) {
                     if (project != null) {
@@ -228,8 +225,7 @@ final class ModuleListParser {
                     project.log("Cache depends on files: " + timestampsAndSizes.keySet(), Project.MSG_DEBUG);
                 }
                 scanCache.getParentFile().mkdirs();
-                OutputStream os = new FileOutputStream(scanCache);
-                try {
+                try (OutputStream os = new FileOutputStream(scanCache)) {
                     ObjectOutput oo = new ObjectOutputStream(os);
                     oo.writeObject(timestampsAndSizes);
                     if (doFastScan) {
@@ -237,8 +233,6 @@ final class ModuleListParser {
                     }
                     oo.writeObject(entries);
                     oo.flush();
-                } finally {
-                    os.close();
                 }
             }
             SOURCE_SCAN_CACHE.put(root, entries);

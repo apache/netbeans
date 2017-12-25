@@ -188,11 +188,8 @@ public class ModuleDependencies extends Task {
                 String lb = file.getManifest().getMainAttributes().getValue("OpenIDE-Module-Localizing-Bundle");
                 if (lb != null) {
                     Properties props = new Properties();
-                    InputStream is = file.getInputStream(file.getEntry(lb));
-                    try {
+                    try (InputStream is = file.getInputStream(file.getEntry(lb))) {
                         props.load(is);
-                    } finally {
-                        is.close();
                     }
                     m.displayName = props.getProperty("OpenIDE-Module-Name");
                     m.displayCategory = props.getProperty("OpenIDE-Module-Display-Category");
@@ -268,8 +265,7 @@ public class ModuleDependencies extends Task {
         if (!configFile.exists())
             return true; // probably a classpath module, treat like autoload
         final String fragment = "<param name=\"" + parameter + "\">true</param>";
-        BufferedReader br = new BufferedReader (new FileReader (configFile));
-        try {
+        try (BufferedReader br = new BufferedReader (new FileReader (configFile))) {
             String line;
             while ((line = br.readLine ()) != null) {
                 if (line.indexOf (fragment) != -1) {
@@ -277,8 +273,6 @@ public class ModuleDependencies extends Task {
                     return true;
                 }
             }
-        } finally {
-            br.close ();
         }
         return false;
     }
@@ -336,134 +330,133 @@ public class ModuleDependencies extends Task {
             }
         }
         
-        PrintWriter w = new PrintWriter(new FileWriter(output));
-        if (justPublic) {
-            for (String out : packages) {
-                w.println(out.replace('/', '.'));
-            }
-        } else {
-            int maxFriends = Integer.MAX_VALUE;
-            if (justInterCluster) {
-                String maxFriendsString = this.getProject().getProperty("deps.max.friends");
-                if (maxFriendsString != null) {
-                    maxFriends = Integer.parseInt(maxFriendsString);
+        try (PrintWriter w = new PrintWriter(new FileWriter(output))) {
+            if (justPublic) {
+                for (String out : packages) {
+                    w.println(out.replace('/', '.'));
                 }
-            }
-            
-            for (Map.Entry<ModuleInfo,TreeSet<String>> entry : friendExports.entrySet()) {
-                ModuleInfo info = entry.getKey();
-                if (info.friends == null) {
-                    continue;
+            } else {
+                int maxFriends = Integer.MAX_VALUE;
+                if (justInterCluster) {
+                    String maxFriendsString = this.getProject().getProperty("deps.max.friends");
+                    if (maxFriendsString != null) {
+                        maxFriends = Integer.parseInt(maxFriendsString);
+                    }
                 }
-                log("Friends for " + info.getName(false), Project.MSG_DEBUG);
-                int cntFriends = 0;
-                boolean printed = false;
-                for (String n : info.friends) {
-                    ModuleInfo friend = findModuleInfo(n);
-                    if (justInterCluster && friend != null && friend.group.equals(info.group)) {
+
+                for (Map.Entry<ModuleInfo,TreeSet<String>> entry : friendExports.entrySet()) {
+                    ModuleInfo info = entry.getKey();
+                    if (info.friends == null) {
                         continue;
                     }
-                    
-                    if (!printed) {
-                        w.print("MODULE ");
-                        w.println(info.getName(false));
-                        printed = true;
+                    log("Friends for " + info.getName(false), Project.MSG_DEBUG);
+                    int cntFriends = 0;
+                    boolean printed = false;
+                    for (String n : info.friends) {
+                        ModuleInfo friend = findModuleInfo(n);
+                        if (justInterCluster && friend != null && friend.group.equals(info.group)) {
+                            continue;
+                        }
+
+                        if (!printed) {
+                            w.print("MODULE ");
+                            w.println(info.getName(false));
+                            printed = true;
+                        }
+
+                        if (friend != null) {
+                            w.print("  FRIEND ");
+                            w.println(friend.getName(false));
+                        } else {
+                            w.print("  EXTERNAL ");
+                            w.println(n);
+                        }
+                        cntFriends++;
                     }
-                    
-                    if (friend != null) {
-                        w.print("  FRIEND ");
-                        w.println(friend.getName(false));
-                    } else {
-                        w.print("  EXTERNAL ");
-                        w.println(n);
+                    if (cntFriends > maxFriends) {
+                        w.println("  WARNING: excessive number of intercluster friends (" + cntFriends + ")");
                     }
-                    cntFriends++;
-                }
-                if (cntFriends > maxFriends) {
-                    w.println("  WARNING: excessive number of intercluster friends (" + cntFriends + ")");
-                }
-                
-                if (cntFriends > 0) {
-                    for (String out : entry.getValue()) {
-                        w.print("  PACKAGE ");
-                        w.println(out.replace('/', '.'));
+
+                    if (cntFriends > 0) {
+                        for (String out : entry.getValue()) {
+                            w.print("  PACKAGE ");
+                            w.println(out.replace('/', '.'));
+                        }
                     }
                 }
             }
         }
-        w.close();
     }
     
     private void iterateThruPackages(File f, Map<String,Boolean> pkgs, TreeSet<String> packages) throws IOException {
-        JarFile file = new JarFile (f);
-        Enumeration en = file.entries ();
-        LOOP: while (en.hasMoreElements ()) {
-            JarEntry e = (JarEntry)en.nextElement ();
-            if (e.getName ().endsWith (".class")) {
-                int last = e.getName ().lastIndexOf ('/');
-                if (last == -1) {
-                    // skip default pkg
-                    continue;
-                }
-                String p = e.getName ().substring (0, last);
-
-                if (pkgs == null) {
-                   packages.add (p);
-                   continue;
-                }
-
-                Boolean b = pkgs.get(p);
-                if (b != null) {
-                    packages.add (p);
-                    continue;
-                }
-
-                String parent = p;
-                while (parent.length () > 0) {
-                    int prev = parent.lastIndexOf ('/');
-                    if (prev == -1) {
-                        parent = "";
-                    } else {
-                        parent = parent.substring (0, prev);
+        try (JarFile file = new JarFile(f)) {
+            Enumeration<JarEntry> en = file.entries ();
+            LOOP: while (en.hasMoreElements ()) {
+                JarEntry e = en.nextElement ();
+                if (e.getName().endsWith(".class")) {
+                    int last = e.getName().lastIndexOf ('/');
+                    if (last == -1) {
+                        // skip default pkg
+                        continue;
                     }
+                    String p = e.getName().substring (0, last);
 
-                    b = pkgs.get(parent);
-                    if (Boolean.TRUE.equals (b)) {
+                    if (pkgs == null) {
                         packages.add (p);
-                        continue LOOP;
+                        continue;
+                    }
+
+                    Boolean b = pkgs.get(p);
+                    if (b != null) {
+                        packages.add (p);
+                        continue;
+                    }
+
+                    String parent = p;
+                    while (parent.length() > 0) {
+                        int prev = parent.lastIndexOf ('/');
+                        if (prev == -1) {
+                            parent = "";
+                        } else {
+                            parent = parent.substring (0, prev);
+                        }
+
+                        b = pkgs.get(parent);
+                        if (Boolean.TRUE.equals (b)) {
+                            packages.add (p);
+                            continue LOOP;
+                        }
+                    }
+                }
+            }
+
+            java.util.jar.Manifest m = file.getManifest ();
+            if (m != null) {
+                String value = m.getMainAttributes ().getValue ("Class-Path");
+                if (value != null) {
+                    StringTokenizer tok = new StringTokenizer (value, " ");
+                    while (tok.hasMoreElements ()) {
+                        File sub = new File (f.getParentFile (), tok.nextToken ());
+                        if (sub.isFile ()) {
+                            iterateThruPackages (sub, pkgs, packages);
+                        }
                     }
                 }
             }
         }
-        
-        java.util.jar.Manifest m = file.getManifest ();
-        if (m != null) {
-            String value = m.getMainAttributes ().getValue ("Class-Path");
-            if (value != null) {
-                StringTokenizer tok = new StringTokenizer (value, " ");
-                while (tok.hasMoreElements ()) {
-                    File sub = new File (f.getParentFile (), tok.nextToken ());
-                    if (sub.isFile ()) {
-                        iterateThruPackages (sub, pkgs, packages);
-                    }
-                }
-            }
-        }
-        
-        file.close ();
     }
 
     private void generateListOfModules (File output) throws BuildException, IOException {
-        PrintWriter w = new PrintWriter (new FileWriter (output));
-        for (ModuleInfo m : modules) {
-            if (regexp != null && !regexp.matcher(m.group).matches()) {
-                continue;
+        try (PrintWriter w = new PrintWriter(new FileWriter(output))) {
+            for (ModuleInfo m : modules) {
+                if (regexp != null && !regexp.matcher(m.group).matches()) {
+                    continue;
+                }
+                w.print("MODULE ");
+                w.print(m.getName(true));
+                w.println();
             }
-            w.print ("MODULE ");
-            w.print(m.getName(true));
-            w.println ();
         }
-        w.close ();
     }
 
     private void generateListOfDisabledAutoloads(File output) throws BuildException, IOException {
@@ -505,121 +498,121 @@ public class ModuleDependencies extends Task {
             }
             group.add(m);
         }
-        PrintWriter w = new PrintWriter(new FileWriter(output));
-        for (Set<ModuleInfo> group : disabled.values()) {
-            for (ModuleInfo m : group) {
-                w.print("MODULE ");
-                w.print(m.getName(false));
-                w.println();
+        try (PrintWriter w = new PrintWriter(new FileWriter(output))) {
+            for (Set<ModuleInfo> group : disabled.values()) {
+                for (ModuleInfo m : group) {
+                    w.print("MODULE ");
+                    w.print(m.getName(false));
+                    w.println();
+                }
             }
         }
-        w.close();
     }
 
     private void generateKits(File output) throws BuildException, IOException {
-        PrintWriter w = new PrintWriter(new FileWriter(output));
         // calculate transitive closure of kits
-        TreeMap<String, TreeSet<String>> allKitDeps = transitiveClosureOfKits();
-        // calculate transitive closure of modules
-        TreeMap<String, TreeSet<String>> allModuleDeps = transitiveClosureOfModules();
-        // create a map of <module, kits that depend on it>
-        TreeMap<ModuleInfo, Set<String>> dependingKits = new TreeMap<>();
-        for (ModuleInfo m : modules) {
-            if (regexp != null && !regexp.matcher(m.group).matches()) {
-                continue;
-            }
-            if (m.showInAutoupdate) {
-                // this is a kit
-                Set<String> dep = allModuleDeps.get(m.codebasename);
-                for (String ds : dep) {
-                    if (regexp != null && !regexp.matcher(m.group).matches()) {
-                        continue;
-                    }
-                    //log ("ds " + dep);
-                    ModuleInfo theModuleOneIsDependingOn = findModuleInfo(ds);
-                    if (!theModuleOneIsDependingOn.showInAutoupdate && 
-                        !theModuleOneIsDependingOn.isAutoload &&
-                        !theModuleOneIsDependingOn.isEager &&
-                        !theModuleOneIsDependingOn.isEssential) {
-                        // regular module, not a kit
-                        Set<String> kits = dependingKits.get(theModuleOneIsDependingOn);
-                        if (kits == null) {
-                            kits = new TreeSet<>();
-                            dependingKits.put(theModuleOneIsDependingOn, kits);
+        try (PrintWriter w = new PrintWriter(new FileWriter(output))) {
+            // calculate transitive closure of kits
+            TreeMap<String, TreeSet<String>> allKitDeps = transitiveClosureOfKits();
+            // calculate transitive closure of modules
+            TreeMap<String, TreeSet<String>> allModuleDeps = transitiveClosureOfModules();
+            // create a map of <module, kits that depend on it>
+            TreeMap<ModuleInfo, Set<String>> dependingKits = new TreeMap<>();
+            for (ModuleInfo m : modules) {
+                if (regexp != null && !regexp.matcher(m.group).matches()) {
+                    continue;
+                }
+                if (m.showInAutoupdate) {
+                    // this is a kit
+                    Set<String> dep = allModuleDeps.get(m.codebasename);
+                    for (String ds : dep) {
+                        if (regexp != null && !regexp.matcher(m.group).matches()) {
+                            continue;
                         }
-                        kits.add(m.getName(false));
+                        //log ("ds " + dep);
+                        ModuleInfo theModuleOneIsDependingOn = findModuleInfo(ds);
+                        if (!theModuleOneIsDependingOn.showInAutoupdate &&
+                                !theModuleOneIsDependingOn.isAutoload &&
+                                !theModuleOneIsDependingOn.isEager &&
+                                !theModuleOneIsDependingOn.isEssential) {
+                            // regular module, not a kit
+                            Set<String> kits = dependingKits.get(theModuleOneIsDependingOn);
+                            if (kits == null) {
+                                kits = new TreeSet<>();
+                                dependingKits.put(theModuleOneIsDependingOn, kits);
+                            }
+                            kits.add(m.getName(false));
 //                            w.print("  REQUIRES " + theModuleOneIsDependingOn.getName());
 //                            w.println();
+                        }
                     }
                 }
             }
-        }
-        // now check that there is one canonical kit that "contains" the module
-        // at the same time create a map of <kit, set of <module>>
-        TreeMap<String, TreeSet<String>> allKits = new TreeMap<>();
-        for (ModuleInfo module : dependingKits.keySet()) {
-            Set<String> kits = dependingKits.get(module);
-            // candidate for the lowest kit
-            String lowestKitCandidate = null;
-            for (String kit : kits) {
-                if (lowestKitCandidate == null) {
-                    lowestKitCandidate = kit;
-                    log ("  initial lowest kit candidate for " + module.getName(false) + " : " +
-                            lowestKitCandidate, Project.MSG_DEBUG);
-                }
-                else {
-                    if (dependsOnTransitively(lowestKitCandidate, kit, allKitDeps)) {
-                        lowestKitCandidate = kit;
-                        log ("  new lowest kit candidate for " + module.getName(false) + " : " +
-                            lowestKitCandidate, Project.MSG_DEBUG);
-                    }
-                }
-            }
-            // check that all kits depend on the lowest kit candidate
-            boolean passed = true;
-            for (String kit : kits) {
-                if (!kit.equals(lowestKitCandidate) && 
-                    !dependsOnTransitively(kit, lowestKitCandidate, allKitDeps)) {
-                    log ("lowest kit not found for " + module.getName(false) + " : " +
-                            lowestKitCandidate + ", " + kit + " do not have a dependency", Project.MSG_VERBOSE);
-                    passed = false;
-                    break;
-                }
-            }
-            if (passed) {
-                dependingKits.put(module, Collections.singleton(lowestKitCandidate));
-                registerModuleInKit(module, lowestKitCandidate, allKits);
-            } else {
-                w.print("Warning: ambiguous module ownership - module ");
-                w.print(module.getName(false));
-                w.print(" is contained in kits ");
-                w.println();
+            // now check that there is one canonical kit that "contains" the module
+            // at the same time create a map of <kit, set of <module>>
+            TreeMap<String, TreeSet<String>> allKits = new TreeMap<>();
+            for (ModuleInfo module : dependingKits.keySet()) {
+                Set<String> kits = dependingKits.get(module);
+                // candidate for the lowest kit
+                String lowestKitCandidate = null;
                 for (String kit : kits) {
-                    registerModuleInKit(module, kit, allKits);
-                    w.print("  " + kit);
+                    if (lowestKitCandidate == null) {
+                        lowestKitCandidate = kit;
+                        log ("  initial lowest kit candidate for " + module.getName(false) + " : " +
+                                lowestKitCandidate, Project.MSG_DEBUG);
+                    }
+                    else {
+                        if (dependsOnTransitively(lowestKitCandidate, kit, allKitDeps)) {
+                            lowestKitCandidate = kit;
+                            log ("  new lowest kit candidate for " + module.getName(false) + " : " +
+                                    lowestKitCandidate, Project.MSG_DEBUG);
+                        }
+                    }
+                }
+                // check that all kits depend on the lowest kit candidate
+                boolean passed = true;
+                for (String kit : kits) {
+                    if (!kit.equals(lowestKitCandidate) &&
+                            !dependsOnTransitively(kit, lowestKitCandidate, allKitDeps)) {
+                        log ("lowest kit not found for " + module.getName(false) + " : " +
+                                lowestKitCandidate + ", " + kit + " do not have a dependency", Project.MSG_VERBOSE);
+                        passed = false;
+                        break;
+                    }
+                }
+                if (passed) {
+                    dependingKits.put(module, Collections.singleton(lowestKitCandidate));
+                    registerModuleInKit(module, lowestKitCandidate, allKits);
+                } else {
+                    w.print("Warning: ambiguous module ownership - module ");
+                    w.print(module.getName(false));
+                    w.print(" is contained in kits ");
+                    w.println();
+                    for (String kit : kits) {
+                        registerModuleInKit(module, kit, allKits);
+                        w.print("  " + kit);
+                        w.println();
+                    }
+                    w.println("No dependency between ");
+                    for (String kit : kits) {
+                        if (!kit.equals(lowestKitCandidate) &&
+                                !dependsOnTransitively(kit, lowestKitCandidate, allKitDeps)) {
+                            w.println ("  " + lowestKitCandidate + ", " + kit);
+                        }
+                    }
+                }
+            }
+            // now actually print out the kit contents
+            for (String kit : allKits.keySet()) {
+                w.print("KIT ");
+                w.print(kit);
+                w.println();
+                for (String m : allKits.get(kit)) {
+                    w.print("  CONTAINS " + m);
                     w.println();
                 }
-                w.println("No dependency between ");
-                for (String kit : kits) {
-                    if (!kit.equals(lowestKitCandidate) && 
-                        !dependsOnTransitively(kit, lowestKitCandidate, allKitDeps)) {
-                        w.println ("  " + lowestKitCandidate + ", " + kit);
-                    }
-                }
             }
         }
-        // now actually print out the kit contents
-        for (String kit : allKits.keySet()) {
-            w.print("KIT ");
-            w.print(kit);
-            w.println();
-            for (String m : allKits.get(kit)) {
-                w.print("  CONTAINS " + m);
-                w.println();
-            }
-        }
-        
-        w.close();
     }
 
     private boolean dependsOnTransitively(String kit1, String kit2, 
@@ -700,29 +693,29 @@ public class ModuleDependencies extends Task {
     }
 
     private void generateKitDependencies(File output) throws BuildException, IOException {
-        PrintWriter w = new PrintWriter(new FileWriter(output));
-        for (ModuleInfo m : modules) {
-            if (regexp != null && !regexp.matcher(m.group).matches()) {
-                continue;
-            }
-            if (m.showInAutoupdate) {
-                w.print("KIT ");
-                w.print(m.getName(false));
-                w.println();
-                for (Dependency d : m.depends) {
-                    if (regexp != null && !regexp.matcher(m.group).matches()) {
-                        continue;
-                    }
-                    for (ModuleInfo theModuleOneIsDependingOn : findModuleInfo(d, m)) {
-                        if (theModuleOneIsDependingOn.showInAutoupdate) {
-                            w.print("  REQUIRES " + theModuleOneIsDependingOn.getName(false));
-                            w.println();
+        try (PrintWriter w = new PrintWriter(new FileWriter(output))) {
+            for (ModuleInfo m : modules) {
+                if (regexp != null && !regexp.matcher(m.group).matches()) {
+                    continue;
+                }
+                if (m.showInAutoupdate) {
+                    w.print("KIT ");
+                    w.print(m.getName(false));
+                    w.println();
+                    for (Dependency d : m.depends) {
+                        if (regexp != null && !regexp.matcher(m.group).matches()) {
+                            continue;
+                        }
+                        for (ModuleInfo theModuleOneIsDependingOn : findModuleInfo(d, m)) {
+                            if (theModuleOneIsDependingOn.showInAutoupdate) {
+                                w.print("  REQUIRES " + theModuleOneIsDependingOn.getName(false));
+                                w.println();
+                            }
                         }
                     }
                 }
             }
         }
-        w.close();
     }
 
     private void generatePlugins(File output) throws BuildException, IOException {
@@ -736,8 +729,7 @@ public class ModuleDependencies extends Task {
                 }
             }
         }
-        FileWriter fw = new FileWriter(output);
-        try {
+        try (FileWriter fw = new FileWriter(output)) {
             PrintWriter w = new PrintWriter(fw);
             SortedMap<String,String> lines = new TreeMap<>(Collator.getInstance());
             lines.put("A", "||Code Name Base||Display Name||Display Category||Standard Cluster");
@@ -756,14 +748,11 @@ public class ModuleDependencies extends Task {
                 w.println(line);
             }
             w.flush();
-        } finally {
-            fw.close();
         }
     }
 
     private void generateReverseDependencies(File output) throws BuildException, IOException {
-        FileWriter fw = new FileWriter(output);
-        try {
+        try (FileWriter fw = new FileWriter(output)) {
             PrintWriter w = new PrintWriter(fw);
             for (ModuleInfo m : modules) {
                 if (m.group.equals("extra")) {
@@ -793,14 +782,12 @@ public class ModuleDependencies extends Task {
                 }
             }
             w.flush();
-        } finally {
-            fw.close();
         }
     }
 
     private void generateSharedPackages (File output) throws BuildException, IOException {
         TreeMap<String,List<ModuleInfo>> packages = new TreeMap<>();
-        
+
         for (ModuleInfo m : modules) {
             HashSet<String> pkgs = new HashSet<>();
             iterateSharedPackages(m.file, pkgs);
@@ -813,172 +800,170 @@ public class ModuleDependencies extends Task {
                 l.add(m);
             }
         }
-        
-        PrintWriter w = new PrintWriter (new FileWriter (output));
-        for (Map.Entry<String,List<ModuleInfo>> entry : packages.entrySet()) {
-            String pkg = entry.getKey().replace('/', '.');
-            if (pkg.equals("")) {
-                continue; // ignore default package
-            }
-            List<ModuleInfo> cnt = entry.getValue();
-            if (cnt.size() > 1) {
-                SortedSet<String> cnbs = new TreeSet<>();
-                for (ModuleInfo m : cnt) {
-                    if (regexp == null || regexp.matcher(m.group).matches()) {
-                        cnbs.add(m.codebasename);
+
+        try (PrintWriter w = new PrintWriter (new FileWriter (output))) {
+            for (Map.Entry<String,List<ModuleInfo>> entry : packages.entrySet()) {
+                String pkg = entry.getKey().replace('/', '.');
+                if (pkg.equals("")) {
+                    continue; // ignore default package
+                }
+                List<ModuleInfo> cnt = entry.getValue();
+                if (cnt.size() > 1) {
+                    SortedSet<String> cnbs = new TreeSet<>();
+                    for (ModuleInfo m : cnt) {
+                        if (regexp == null || regexp.matcher(m.group).matches()) {
+                            cnbs.add(m.codebasename);
+                        }
                     }
-                }
-                if (cnbs.size() > 1) {
-                    w.println("PACKAGE " + pkg);
-                    for (String cnb : cnbs) {
-                        w.println("  MODULE " + cnb);
-                    }
-                }
-            }
-        }
-        w.close ();
-    }
-    
-    private void iterateSharedPackages (File f, Set<String> myPkgs) throws IOException {
-        JarFile file = new JarFile (f);
-        Enumeration<JarEntry> en = file.entries ();
-        LOOP: while (en.hasMoreElements ()) {
-            JarEntry e = en.nextElement ();
-            if (e.getName ().endsWith ("/")) {
-                continue;
-            }
-            if (e.getName ().startsWith ("META-INF/")) {
-                continue;
-            }
-            
-            int last = e.getName ().lastIndexOf ('/');
-            String pkg = last == -1 ? "" : e.getName ().substring (0, last);
-            myPkgs.add (pkg);
-            log("Found package " + pkg + " in " + f, Project.MSG_DEBUG);
-        }
-        
-        Manifest m = file.getManifest();
-        if (m != null) {
-            String value = m.getMainAttributes ().getValue ("Class-Path");
-            if (value != null) {
-                StringTokenizer tok = new StringTokenizer (value, " ");
-                while (tok.hasMoreElements ()) {
-                    File sub = new File (f.getParentFile (), tok.nextToken ());
-                    if (sub.isFile ()) {
-                        iterateSharedPackages (sub, myPkgs);
-                    }
-                }
-            }
-        }
-        
-        file.close ();
-    }
-    
-    private void generateDependencies (File output, boolean implementationOnly) throws BuildException, IOException {
-        PrintWriter w = new PrintWriter (new FileWriter (output));
-        for (ModuleInfo m : modules) {
-            boolean first = true;
-            Set<ModuleInfo> written = new HashSet<>(); // XXX needed for other uses of findModuleInfo too
-            for (Dependency d : m.depends) {
-                if (d.getName().startsWith("org.openide.modules.ModuleFormat")) {
-                    continue; // just clutter
-                }
-                String print = d.type == Dependency.Type.RECOMMENDS ? "  RECOMMENDS " : "  REQUIRES ";
-                if (d.exact && d.compare != null) {
-                    // ok, impl deps
-                } else {
-                    if (implementationOnly) {
-                        continue;
-                    }
-                }
-                if (regexp != null && !regexp.matcher(m.group).matches()) {
-                    continue;
-                }
-                
-                if (first) {
-                    w.print ("MODULE ");
-                    w.println(m.getName (false));
-                    first = false;
-                }
-                if (d.isSpecial ()) {
-                    w.print(print);
-                    w.println(d.getName ());
-                } else {
-                    for (ModuleInfo theModuleOneIsDependingOn : findModuleInfo(d, m)) {
-                        if (written.add(theModuleOneIsDependingOn)) {
-                            w.print(print);
-                            w.println(theModuleOneIsDependingOn.getName(false));
+                    if (cnbs.size() > 1) {
+                        w.println("PACKAGE " + pkg);
+                        for (String cnb : cnbs) {
+                            w.println("  MODULE " + cnb);
                         }
                     }
                 }
             }
         }
-        w.close ();
+    }
+
+    private void iterateSharedPackages (File f, Set<String> myPkgs) throws IOException {
+        try (JarFile file = new JarFile (f)) {
+            Enumeration<JarEntry> en = file.entries ();
+            LOOP: while(en.hasMoreElements()) {
+                JarEntry e = en.nextElement();
+                if (e.getName().endsWith ("/")) {
+                    continue;
+                }
+                if (e.getName().startsWith ("META-INF/")) {
+                    continue;
+                }
+
+                int last = e.getName().lastIndexOf('/');
+                String pkg = last == -1 ? "" : e.getName().substring (0, last);
+                myPkgs.add (pkg);
+                log("Found package " + pkg + " in " + f, Project.MSG_DEBUG);
+            }
+
+            Manifest m = file.getManifest();
+            if (m != null) {
+                String value = m.getMainAttributes().getValue("Class-Path");
+                if (value != null) {
+                    StringTokenizer tok = new StringTokenizer (value, " ");
+                    while (tok.hasMoreElements ()) {
+                        File sub = new File(f.getParentFile(), tok.nextToken());
+                        if (sub.isFile()) {
+                            iterateSharedPackages (sub, myPkgs);
+                        }
+                    }
+                }
+            }
+        }
     }
     
-    private void generateGroupDependencies (File output, boolean implementationOnly) throws BuildException, IOException {
-        PrintWriter w = new PrintWriter (new FileWriter (output));
-
-        Map<Dependency,Set<ModuleInfo>> referrers = new HashMap<>();
-        
-        TreeMap<String, Set<Dependency>> groups = new TreeMap<>();
-        for (ModuleInfo m : modules) {
-            if (regexp != null && !regexp.matcher(m.group).matches()) {
-                continue;
-            }
-            Set<Dependency> l = groups.get(m.group);
-            if (l == null) {
-                l = new TreeSet<>();
-                groups.put(m.group, l);
-            }
-            Set<Dependency> deps = new HashSet<>();
-            for (Dependency d : m.depends) {
-                if (implementationOnly && (!d.exact || d.compare == null)) {
-                    continue;
-                }
-                // special dependencies are ignored
-                if (d.isSpecial ()) {
-                    continue;
-                }
-                deps.add(d);
-            }
-            l.addAll(deps);
-            for (Dependency d : deps) {
-                Set<ModuleInfo> r = referrers.get(d);
-                if (r == null) {
-                    r = new HashSet<>();
-                    referrers.put(d, r);
-                }
-                r.add(m);
-            }
-        }
-
-        for (Map.Entry<String,Set<Dependency>> e : groups.entrySet()) {
-            String groupName = e.getKey();
-            Set<Dependency> depends = e.getValue();
-            
-            boolean first = true;
-            for (Dependency d : depends) {
-                String print = d.type == Dependency.Type.RECOMMENDS ? "  RECOMMENDS ": "  REQUIRES ";
-                // dependencies within one group are not important
-                Set<ModuleInfo> r = referrers.get(d);
-                for (ModuleInfo ref : findModuleInfo(d, r.size() == 1 ? r.iterator().next() : null)) {
-                    if (groupName.equals (ref.group)) {
+    private void generateDependencies (File output, boolean implementationOnly) throws BuildException, IOException {
+        try (PrintWriter w = new PrintWriter(new FileWriter(output))) {
+            for (ModuleInfo m : modules) {
+                boolean first = true;
+                Set<ModuleInfo> written = new HashSet<>(); // XXX needed for other uses of findModuleInfo too
+                for (Dependency d : m.depends) {
+                    if (d.getName().startsWith("org.openide.modules.ModuleFormat")) {
+                        continue; // just clutter
+                    }
+                    String print = d.type == Dependency.Type.RECOMMENDS ? "  RECOMMENDS " : "  REQUIRES ";
+                    if (d.exact && d.compare != null) {
+                        // ok, impl deps
+                    } else {
+                        if (implementationOnly) {
+                            continue;
+                        }
+                    }
+                    if (regexp != null && !regexp.matcher(m.group).matches()) {
                         continue;
                     }
+
                     if (first) {
-                        w.print ("GROUP ");
-                        w.print (groupName);
-                        w.println ();
+                        w.print ("MODULE ");
+                        w.println(m.getName (false));
                         first = false;
                     }
-                    w.print (print);
-                    w.print (ref.getName (false));
-                    w.println ();
+                    if (d.isSpecial ()) {
+                        w.print(print);
+                        w.println(d.getName ());
+                    } else {
+                        for (ModuleInfo theModuleOneIsDependingOn : findModuleInfo(d, m)) {
+                            if (written.add(theModuleOneIsDependingOn)) {
+                                w.print(print);
+                                w.println(theModuleOneIsDependingOn.getName(false));
+                            }
+                        }
+                    }
                 }
             }
         }
-        w.close ();
+    }
+
+    private void generateGroupDependencies (File output, boolean implementationOnly) throws BuildException, IOException {
+        try (PrintWriter w = new PrintWriter (new FileWriter (output))) {
+            Map<Dependency,Set<ModuleInfo>> referrers = new HashMap<>();
+
+            TreeMap<String, Set<Dependency>> groups = new TreeMap<>();
+            for (ModuleInfo m : modules) {
+                if (regexp != null && !regexp.matcher(m.group).matches()) {
+                    continue;
+                }
+                Set<Dependency> l = groups.get(m.group);
+                if (l == null) {
+                    l = new TreeSet<>();
+                    groups.put(m.group, l);
+                }
+                Set<Dependency> deps = new HashSet<>();
+                for (Dependency d : m.depends) {
+                    if (implementationOnly && (!d.exact || d.compare == null)) {
+                        continue;
+                    }
+                    // special dependencies are ignored
+                    if (d.isSpecial ()) {
+                        continue;
+                    }
+                    deps.add(d);
+                }
+                l.addAll(deps);
+                for (Dependency d : deps) {
+                    Set<ModuleInfo> r = referrers.get(d);
+                    if (r == null) {
+                        r = new HashSet<>();
+                        referrers.put(d, r);
+                    }
+                    r.add(m);
+                }
+            }
+
+            for (Map.Entry<String,Set<Dependency>> e : groups.entrySet()) {
+                String groupName = e.getKey();
+                Set<Dependency> depends = e.getValue();
+
+                boolean first = true;
+                for (Dependency d : depends) {
+                    String print = d.type == Dependency.Type.RECOMMENDS ? "  RECOMMENDS ": "  REQUIRES ";
+                    // dependencies within one group are not important
+                    Set<ModuleInfo> r = referrers.get(d);
+                    for (ModuleInfo ref : findModuleInfo(d, r.size() == 1 ? r.iterator().next() : null)) {
+                        if (groupName.equals (ref.group)) {
+                            continue;
+                        }
+                        if (first) {
+                            w.print ("GROUP ");
+                            w.print (groupName);
+                            w.println ();
+                            first = false;
+                        }
+                        w.print (print);
+                        w.print (ref.getName (false));
+                        w.println ();
+                    }
+                }
+            }
+        }
     }
     
     /** For a given dependency finds the module(s) that this dependency refers to.
@@ -1023,8 +1008,8 @@ public class ModuleDependencies extends Task {
             if (dep.countTokens () == 1) {
                 addTo.add (new Dependency (dep.nextToken ().trim (), dependencyType, false, null));
                 continue;
-            } 
-                
+            }
+
             if (dep.countTokens () == 3) {
                 String name = dep.nextToken ().trim ();
                 String equal = dep.nextToken ().trim ();

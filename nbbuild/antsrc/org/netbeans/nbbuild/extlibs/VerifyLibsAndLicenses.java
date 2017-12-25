@@ -443,8 +443,7 @@ public class VerifyLibsAndLicenses extends Task {
 
     static List<String> loadPatterns(String resource) throws IOException {
         List<String> patterns = new ArrayList<>();
-        InputStream is = VerifyLibsAndLicenses.class.getResourceAsStream(resource);
-        try {
+        try (InputStream is = VerifyLibsAndLicenses.class.getResourceAsStream(resource)) {
             BufferedReader r = new BufferedReader(new InputStreamReader(is));
             String line;
             while ((line = r.readLine()) != null) {
@@ -453,8 +452,6 @@ public class VerifyLibsAndLicenses extends Task {
                     patterns.add(line.replaceAll("/(?=( |$))", "/**"));
                 }
             }
-        } finally {
-            is.close();
         }
         return patterns;
     }
@@ -531,8 +528,7 @@ public class VerifyLibsAndLicenses extends Task {
                 ignoredPatterns = hgignores.get(root);
             } else {
                 ignoredPatterns = new ArrayList<>();
-                Reader r = new FileReader(hgignore);
-                try {
+                try (Reader r = new FileReader(hgignore)) {
                     BufferedReader br = new BufferedReader(r);
                     String line;
                     while ((line = br.readLine()) != null) {
@@ -546,8 +542,6 @@ public class VerifyLibsAndLicenses extends Task {
                         line += "($|/)";
                         ignoredPatterns.add(Pattern.compile(line));
                     }
-                } finally {
-                    r.close();
                 }
                 hgignores.put(root, ignoredPatterns);
             }
@@ -572,8 +566,7 @@ public class VerifyLibsAndLicenses extends Task {
         }
         File list = new File(dir, "binaries-list");
         if (list.isFile()) {
-            Reader r = new FileReader(list);
-            try {
+            try (Reader r = new FileReader(list)) {
                 BufferedReader br = new BufferedReader(r);
                 String line;
                 while ((line = br.readLine()) != null) {
@@ -595,8 +588,6 @@ public class VerifyLibsAndLicenses extends Task {
                         files.add(hashAndFile[1]);
                     }
                 }
-            } finally {
-                r.close();
             }
         }
         return files;

@@ -133,17 +133,16 @@ public class FixTestDependenciesTest extends TestBase {
     }
 
     private File copyFile(String resourceName) throws IOException {
-       InputStream is = getClass().getResourceAsStream(resourceName);
-       byte buf[] = new byte[10000];
-       File retFile = new File(getWorkDir(),resourceName);
-       FileOutputStream fos = new FileOutputStream(retFile);
-       int size;
-       while ((size = is.read(buf)) > 0 ) {
-           fos.write(buf,0,size);
-       }
-       is.close();
-       fos.close();
-       return retFile;
+        File retFile = new File(getWorkDir(), resourceName);
+        try (InputStream is = getClass().getResourceAsStream(resourceName);
+                FileOutputStream fos = new FileOutputStream(retFile);) {
+            byte buf[] = new byte[10000];
+            int size;
+            while ((size = is.read(buf)) > 0) {
+                fos.write(buf, 0, size);
+            }
+        }
+        return retFile;
     }
 
     private Set<ModuleListParser.Entry> getEntries() {

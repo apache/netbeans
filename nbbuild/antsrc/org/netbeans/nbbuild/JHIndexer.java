@@ -329,8 +329,7 @@ public class JHIndexer extends MatchingTask {
         try {
             File config = File.createTempFile ("jhindexer-config", ".txt");
             try {
-                OutputStream os = new FileOutputStream (config);
-                try {
+                try (OutputStream os = new FileOutputStream (config)) {
                     PrintWriter pw = new PrintWriter (os);
                     pw.println ("IndexRemove " + basedir + File.separator);
                     String message = "Files to be indexed:";
@@ -343,8 +342,6 @@ public class JHIndexer extends MatchingTask {
                     }
                     log (message, Project.MSG_VERBOSE);
                     pw.flush ();
-                } finally {
-                    os.close ();
                 }
                 AntClassLoader loader = new AntClassLoader(getProject(), classpath);
                 loader.addLoaderPackageRoot("com.sun.java.help.search");

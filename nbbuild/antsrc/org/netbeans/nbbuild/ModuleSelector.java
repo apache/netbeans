@@ -79,8 +79,7 @@ public final class ModuleSelector extends BaseExtendSelector {
         
         String module = null;
         if (file.getName().endsWith(".jar")) {
-            try {
-                JarFile jar = new JarFile(file);
+            try (JarFile jar = new JarFile(file)) {
                 Manifest m = jar.getManifest();
                 if (m != null) {
                     module = m.getMainAttributes().getValue("OpenIDE-Module"); // NOI18N
@@ -92,7 +91,6 @@ public final class ModuleSelector extends BaseExtendSelector {
                         }
                     }
                 }
-                jar.close();
             } catch (IOException ex) {
                 throw new BuildException("Problem with " + file + ": " + ex, ex, getLocation());
             }

@@ -480,8 +480,7 @@ public final class ParseProjectXml extends Task {
                 StringBuilder aliases = null;
                 File hgmail = new File(getProject().getProperty("nb_all"), ".hgmail");
                 if (hgmail.canRead()) {
-                    Reader r = new FileReader(hgmail);
-                    try {
+                    try (Reader r = new FileReader(hgmail)) {
                         BufferedReader br = new BufferedReader(r);
                         String line;
                         while ((line = br.readLine()) != null) {
@@ -500,8 +499,6 @@ public final class ParseProjectXml extends Task {
                                 }
                             }
                         }
-                    } finally {
-                        r.close();
                     }
                 } else {
                     log("Cannot find " + hgmail + " to read addresses from", Project.MSG_VERBOSE);
@@ -695,11 +692,8 @@ public final class ParseProjectXml extends Task {
         private String implementationVersionOf(ModuleListParser modules, String cnb) throws BuildException {
             File jar = computeClasspathModuleLocation(modules, cnb, null, null, false);
             try {
-                JarFile jarFile = new JarFile(jar, false);
-                try {
+                try (JarFile jarFile = new JarFile(jar, false)) {
                     return jarFile.getManifest().getMainAttributes().getValue("OpenIDE-Module-Implementation-Version");
-                } finally {
-                    jarFile.close();
                 }
             } catch (IOException e) {
                 throw new BuildException(e, getLocation());
@@ -976,11 +970,8 @@ public final class ParseProjectXml extends Task {
             if (depJar.isFile()) { // might be false for m.run.cp if DO_NOT_RECURSE and have a runtime-only dep
                 Attributes attr;
                 try {
-                    JarFile jarFile = new JarFile(depJar, false);
-                    try {
+                    try (JarFile jarFile = new JarFile(depJar, false)) {
                         attr = jarFile.getManifest().getMainAttributes();
-                    } finally {
-                        jarFile.close();
                     }
                 } catch (ZipException x) {
                     throw new BuildException("Could not open " + depJar + ": " + x, x, getLocation());
@@ -1479,8 +1470,7 @@ public final class ParseProjectXml extends Task {
         Pattern p = Pattern.compile("(" + corePattern + ")[^/]+[.].+");
         boolean foundAtLeastOneEntry = false;
         // E.g.: (org/netbeans/api/foo/|org/netbeans/spi/foo/)[^/]+[.].+
-        OutputStream os = new FileOutputStream(ppjar);
-        try {
+        try (OutputStream os = new FileOutputStream(ppjar)) {
             ZipOutputStream zos = new ZipOutputStream(os);
             Set<String> addedPaths = new HashSet<>();
             for (File jar : jars) {
@@ -1488,8 +1478,7 @@ public final class ParseProjectXml extends Task {
                     log("Classpath entry " + jar + " does not exist; skipping", Project.MSG_WARN);
                     continue;
                 }
-                InputStream is = new FileInputStream(jar);
-                try {
+                try (InputStream is = new FileInputStream(jar)) {
                     ZipInputStream zis = new ZipInputStream(is);
                     ZipEntry inEntry;
                     while ((inEntry = zis.getNextEntry()) != null) {
@@ -1518,13 +1507,9 @@ public final class ParseProjectXml extends Task {
                         zos.putNextEntry(outEntry);
                         zos.write(data);
                     }
-                } finally {
-                    is.close();
                 }
             }
             zos.close();
-        } finally {
-            os.close();
         }
         if (!foundAtLeastOneEntry) {
             ppjar.delete();

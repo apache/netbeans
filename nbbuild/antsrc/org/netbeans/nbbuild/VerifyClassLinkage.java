@@ -139,11 +139,8 @@ public class VerifyClassLinkage extends Task {
             // Map from class name (foo/Bar format) to true (found), false (not found), null (as yet unknown):
             Map<String,Boolean> loadable = new HashMap<>();
             Map<String,byte[]> classfiles = new TreeMap<>();
-            JarFile jf = new JarFile(jar);
-            try {
+            try (JarFile jf = new JarFile(jar)) {
                 read(jf, classfiles, new HashSet<>(Collections.singleton(jar)), this, ignores);
-            } finally {
-                jf.close();
             }
             for (String clazz: classfiles.keySet()) {
                 // All classes we define are obviously loadable:
@@ -185,15 +182,12 @@ public class VerifyClassLinkage extends Task {
                     continue;
                 }
                 ByteArrayOutputStream baos = new ByteArrayOutputStream(Math.max((int) entry.getSize(), 0));
-                InputStream is = jf.getInputStream(entry);
-                try {
+                try (InputStream is = jf.getInputStream(entry)) {
                     byte[] buf = new byte[4096];
                     int read;
                     while ((read = is.read(buf)) != -1) {
                         baos.write(buf, 0, read);
                     }
-                } finally {
-                    is.close();
                 }
                 classfiles.put(clazz, baos.toByteArray());
             }
@@ -225,11 +219,8 @@ public class VerifyClassLinkage extends Task {
                         }
                         if (alreadyRead.add(otherJar)) {
                             if (otherJar.isFile()) {
-                                JarFile otherJF = new JarFile(otherJar);
-                                try {
+                                try (JarFile otherJF = new JarFile(otherJar)) {
                                     read(otherJF, classfiles, alreadyRead, task, ignores);
-                                } finally {
-                                    otherJF.close();
                                 }
                             }
                         } else {

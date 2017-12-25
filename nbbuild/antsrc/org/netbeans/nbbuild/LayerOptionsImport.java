@@ -77,8 +77,7 @@ public class LayerOptionsImport extends Task {
             for (String path : ds.getIncludedFiles()) {
                 File jar = new File(basedir, path);
                 try {
-                    JarFile jf = new JarFile(jar);
-                    try {
+                    try (JarFile jf = new JarFile(jar)) {
                         Manifest mf = jf.getManifest();
                         if (mf == null) {
                             continue;
@@ -96,8 +95,6 @@ public class LayerOptionsImport extends Task {
                         if (generatedLayer != null) {
                             parse(jf.getInputStream(generatedLayer), files, cnb, attributesMap);
                         }
-                    } finally {
-                        jf.close();
                     }
                 } catch (Exception x) {
                     throw new BuildException("Reading " + jar + ": " + x, x, getLocation());

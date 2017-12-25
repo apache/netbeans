@@ -166,12 +166,9 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
             builder.setEntityResolver(this);
 
             if (generateTemplate) {
-                InputStream resource = Arch.class.getResourceAsStream("Arch-api-questions.xml");
-                try {
+                try (InputStream resource = Arch.class.getResourceAsStream("Arch-api-questions.xml")) {
                     q = builder.parse(resource);
                     qSource = new DOMSource (q);
-                } finally {
-                    resource.close();
                 }
             } else {
                 q = builder.parse (questionsFile);
@@ -473,39 +470,39 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
             trans = TransformerFactory.newInstance();
             trans.setURIResolver(this);
             Transformer t = trans.newTransformer(ss);
-            OutputStream os = new BufferedOutputStream (new FileOutputStream (output));
-            StreamResult r = new StreamResult (os);
-            if (stylesheet == null) {
-                stylesheet = this.getProject ().getProperty ("arch.stylesheet");
+            try (OutputStream os = new BufferedOutputStream (new FileOutputStream (output))) {
+                StreamResult r = new StreamResult (os);
+                if (stylesheet == null) {
+                    stylesheet = this.getProject ().getProperty ("arch.stylesheet");
+                }
+                if (stylesheet != null) {
+                    t.setParameter("arch.stylesheet", stylesheet);
+                }
+                if (overviewlink != null) {
+                    t.setParameter("arch.overviewlink", overviewlink);
+                }
+                if (footer != null) {
+                    t.setParameter("arch.footer", footer);
+                }
+                t.setParameter("arch.answers.date", DateFormat.getDateInstance().format(new Date(questionsFile.lastModified())));
+                
+                String archTarget = output.toString();
+                int slash = archTarget.lastIndexOf(File.separatorChar);
+                if (slash > 0) {
+                    archTarget = archTarget.substring (slash + 1);
+                }
+                String archPref = getProject ().getProperty ("arch.target");
+                if (archPref != null) {
+                    archTarget = archPref + "/" + archTarget;
+                }
+                
+                t.setParameter("arch.target", archTarget);
+                String when = getProject().getProperty("arch.when");
+                if (when != null) {
+                    t.setParameter("arch.when", when);
+                }
+                t.transform(qSource, r);
             }
-            if (stylesheet != null) {
-                t.setParameter("arch.stylesheet", stylesheet);
-            }
-            if (overviewlink != null) {
-                t.setParameter("arch.overviewlink", overviewlink);
-            }
-            if (footer != null) {
-                t.setParameter("arch.footer", footer);
-            }
-            t.setParameter("arch.answers.date", DateFormat.getDateInstance().format(new Date(questionsFile.lastModified())));
-            
-            String archTarget = output.toString();
-            int slash = archTarget.lastIndexOf(File.separatorChar);
-            if (slash > 0) {
-                archTarget = archTarget.substring (slash + 1);
-            }
-            String archPref = getProject ().getProperty ("arch.target");
-            if (archPref != null) {
-                archTarget = archPref + "/" + archTarget;
-            }
-            
-            t.setParameter("arch.target", archTarget);
-            String when = getProject().getProperty("arch.when");
-            if (when != null) {
-                t.setParameter("arch.when", when);
-            }
-            t.transform(qSource, r);
-            os.close ();
         } catch (IOException ex) {
             throw new BuildException (ex);
         } catch (TransformerConfigurationException ex) {
@@ -539,11 +536,11 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
             sb.insert(m.start(1), version);
         }
         
-        Writer w = new OutputStreamWriter (new FileOutputStream (questionsFile.toString ()));
-        w.write(sb.toString());
-        writeQuestions (w, missing);
-        w.write("</api-answers>\n");
-        w.close();
+        try (Writer w = new OutputStreamWriter (new FileOutputStream (questionsFile.toString ()))) {
+            w.write(sb.toString());
+            writeQuestions (w, missing);
+            w.write("</api-answers>\n");
+        }
     }
 
     private void writeQuestions(Writer w, SortedSet<String> missing) throws IOException {
@@ -594,24 +591,22 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
             nbRoot = "http://hg.netbeans.org/main/raw-file/tip/";
         }
         
-        Writer w = new FileWriter (questionsFile);
-        
-        w.write ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        w.write ("<!DOCTYPE api-answers PUBLIC \"-//NetBeans//DTD Arch Answers//EN\" \""); w.write (nbRoot); w.write ("nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd\" [\n");
-        w.write ("  <!ENTITY api-questions SYSTEM \""); w.write (nbRoot); w.write ("nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml\">\n");
-        w.write ("]>\n");
-        w.write ("\n");
-        w.write ("<api-answers\n");
-        w.write ("  question-version=\""); w.write (versionOfQuestions); w.write ("\"\n");
-        w.write ("  author=\"yourname@netbeans.org\"\n");
-        w.write (">\n\n");
-        w.write ("  &api-questions;\n");        
-        
-        writeQuestions (w, missing);
-        
-        w.write ("</api-answers>\n");
-        
-        w.close ();
+        try (Writer w = new FileWriter (questionsFile)) {
+            w.write ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+            w.write ("<!DOCTYPE api-answers PUBLIC \"-//NetBeans//DTD Arch Answers//EN\" \""); w.write (nbRoot); w.write ("nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd\" [\n");
+            w.write ("  <!ENTITY api-questions SYSTEM \""); w.write (nbRoot); w.write ("nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml\">\n");
+            w.write ("]>\n");
+            w.write ("\n");
+            w.write ("<api-answers\n");
+            w.write ("  question-version=\""); w.write (versionOfQuestions); w.write ("\"\n");
+            w.write ("  author=\"yourname@netbeans.org\"\n");
+            w.write (">\n\n");
+            w.write ("  &api-questions;\n");
+            
+            writeQuestions (w, missing);
+            
+            w.write ("</api-answers>\n");
+        }
     }
 
     private static Map<String,Element> readElements (Document q, String name) {

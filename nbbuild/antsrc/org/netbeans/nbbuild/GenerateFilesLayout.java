@@ -82,8 +82,7 @@ public class GenerateFilesLayout extends Task {
                 }
                 ownersByCluster.put(cluster, owners);
             }
-            Writer w = new FileWriter(output);
-            try {
+            try (Writer w = new FileWriter(output)) {
                 PrintWriter pw = new PrintWriter(w);
                 for (String incl : ds.getIncludedFiles()) {
                     String inclSlash = incl.replace(File.separatorChar, '/');
@@ -105,8 +104,6 @@ public class GenerateFilesLayout extends Task {
                 }
                 pw.flush();
                 pw.close();
-            } finally {
-                w.close();
             }
         } catch (IOException x) {
             throw new BuildException(x, getLocation());

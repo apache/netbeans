@@ -189,8 +189,7 @@ public class TestDistFilter extends Task {
        if (pfile.exists()) {
            Properties props = new Properties();
             try {
-                FileInputStream fis = new FileInputStream(pfile);
-                try { 
+                try (FileInputStream fis = new FileInputStream(pfile)) { 
                   props.load(fis);
                   
                   String runCp = props.getProperty("test.unit.run.cp");
@@ -211,8 +210,6 @@ public class TestDistFilter extends Task {
                           }
                       }
                   }
-                } finally {
-                  fis.close();  
                 }
             } catch(IOException ioe){
                 throw new BuildException(ioe);

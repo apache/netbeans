@@ -405,9 +405,9 @@ public class MakeUpdateDesc extends MatchingTask {
                                 license.setAttribute("url", path);
                                 String licenseText = license.getTextContent();
                                 license.setTextContent("");
-                                FileOutputStream fos = new FileOutputStream(new File(desc.getParentFile(), relativePath));
-                                fos.write(licenseText.getBytes("UTF-8"));
-                                fos.close();
+                                try (FileOutputStream fos = new FileOutputStream(new File(desc.getParentFile(), relativePath))) {
+                                    fos.write(licenseText.getBytes("UTF-8"));
+                                }
                             }
                             // XXX ideally would compare the license texts to make sure they actually match up
                             licenses.put(license.getAttribute("name"), license);
@@ -556,8 +556,7 @@ public class MakeUpdateDesc extends MatchingTask {
                 for (String file : ds.getIncludedFiles()) {
                     File n_file = new File(fs.getDir(getProject()), file);
                     try {
-                        JarFile jar = new JarFile(n_file);
-                        try {
+                        try (JarFile jar = new JarFile(n_file)) {
                             Module m = new Module();
                             m.nbm = n_file;
                             m.relativePath = file.replace(File.separatorChar, '/');
@@ -627,17 +626,12 @@ public class MakeUpdateDesc extends MatchingTask {
                             while (en.hasMoreElements()) {
                                 JarEntry e = en.nextElement();
                                 if (e.getName().endsWith(".external")) {
-                                    InputStream eStream = jar.getInputStream(e);
-                                    try {
+                                    try (InputStream eStream = jar.getInputStream(e)) {
                                         m.externalDownloadSize += externalSize(eStream);
-                                    } finally {
-                                        eStream.close();
                                     }
                                 }
                             }
                             moduleCollection.add(m);
-                        } finally {
-                            jar.close();
                         }
                     } catch (BuildException x) {
                         throw x;
@@ -675,11 +669,8 @@ public class MakeUpdateDesc extends MatchingTask {
         Properties localized = new Properties();
         String bundleLocalization = attr.getValue("Bundle-Localization");
         if (bundleLocalization != null) {
-            InputStream is = jar.getInputStream(jar.getEntry(bundleLocalization + ".properties"));
-            try {
+            try (InputStream is = jar.getInputStream(jar.getEntry(bundleLocalization + ".properties"))) {
                 localized.load(is);
-            } finally {
-                is.close();
             }
         }
         return fakeOSGiInfoXml(attr, localized, whereFrom);

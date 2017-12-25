@@ -73,15 +73,15 @@ public class JavadocIndex extends Task {
 
         try {
             log ("Generating list of all classes to " + target);
-            PrintStream ps = new PrintStream (new BufferedOutputStream (
-                new FileOutputStream (target)
-            ));
-            if (target.getName ().endsWith (".xml")) {
-                printClassesAsXML (ps);
-            } else {
-                printClassesAsHtml (ps);
+            try (PrintStream ps = new PrintStream (new BufferedOutputStream (
+                    new FileOutputStream (target)
+            ))) {
+                if (target.getName ().endsWith (".xml")) {
+                    printClassesAsXML (ps);
+                } else {
+                    printClassesAsHtml (ps);
+                }
             }
-            ps.close ();
         } catch (IOException ex) {
             throw new BuildException (ex);
         }

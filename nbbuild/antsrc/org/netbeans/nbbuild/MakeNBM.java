@@ -103,8 +103,7 @@ public class MakeNBM extends Task {
 		if (lmod > mostRecentInput) mostRecentInput = lmod;
 		addSeparator ();
 		try {
-		    InputStream is = new FileInputStream (file);
-		    try {
+		    try (InputStream is = new FileInputStream (file)) {
 			BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                         String line;
                         while ((line = r.readLine()) != null) {
@@ -128,8 +127,6 @@ public class MakeNBM extends Task {
                             text.append(line);
                             text.append('\n');
                         }
-		    } finally {
-			is.close ();
 		    }
 		} catch (IOException ioe) {
                     throw new BuildException ("Exception reading blurb from " + file, ioe, getLocation ());
@@ -497,8 +494,7 @@ public class MakeNBM extends Task {
             }
         }
         try {
-            JarFile mjar = new JarFile(mfile);
-            try {
+            try (JarFile mjar = new JarFile(mfile)) {
                 if (mjar.getManifest().getMainAttributes().getValue("Bundle-SymbolicName") != null) {
                     // #181025: treat bundles specially.
                     return null;
@@ -523,11 +519,8 @@ public class MakeNBM extends Task {
                     Properties p = new Properties();
                     ZipEntry bundleentry = mjar.getEntry(bundlename);
                     if (bundleentry != null) {
-                        InputStream is = mjar.getInputStream(bundleentry);
-                        try {
+                        try (InputStream is = mjar.getInputStream(bundleentry)) {
                             p.load(is);
-                        } finally {
-                            is.close();
                         }
                         // Now pick up attributes from the bundle.
                         Iterator it = p.entrySet().iterator();
@@ -539,8 +532,6 @@ public class MakeNBM extends Task {
                         }
                     }
                 }
-            } finally {
-                mjar.close();
             }
         } catch (IOException ioe) {
             throw new BuildException("exception while reading " + mfile.getName(), ioe, getLocation());
@@ -635,11 +626,8 @@ public class MakeNBM extends Task {
                 throw new BuildException("Found attributes without assigned locale code", getLocation());
             try {
                 infofile = File.createTempFile("info_"+loc,".xml");
-                OutputStream infoStream = new FileOutputStream (infofile);
-                try {
+                try (OutputStream infoStream = new FileOutputStream (infofile)) {
                     XMLUtil.write(infoXmlContents, infoStream);
-                } finally {
-                    infoStream.close ();
                 }
             } catch (IOException e) {
                 throw new BuildException("exception when creating Info/info.xml for locale '"+loc+"'", e, getLocation());
@@ -776,11 +764,8 @@ public class MakeNBM extends Task {
                     }
                 try {
                     executablesFile = File.createTempFile("executables",".list");
-                    OutputStream infoStream = new FileOutputStream (executablesFile);
-                    try {
+                    try (OutputStream infoStream = new FileOutputStream (executablesFile)) {
                         infoStream.write(sb.toString().getBytes("UTF-8"));
-                    } finally {
-                        infoStream.close ();
                     }
                 } catch (IOException e) {
                     throw new BuildException("exception when creating Info/executables.list", e, getLocation());
@@ -879,8 +864,7 @@ public class MakeNBM extends Task {
     }
 
     private boolean pack200(final File sourceFile, final File targetFile) throws IOException {
-        JarFile jarFile = new JarFile(sourceFile);
-        try {
+        try (JarFile jarFile = new JarFile(sourceFile)) {
             if (isSigned(jarFile)) {
                 return false;
             }
@@ -902,8 +886,6 @@ public class MakeNBM extends Task {
                     targetFile.setLastModified(sourceFile.lastModified());
                 }
             }
-        } finally {
-            jarFile.close();
         }
     }
 

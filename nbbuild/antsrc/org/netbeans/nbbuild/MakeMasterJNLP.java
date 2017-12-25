@@ -81,31 +81,29 @@ public class MakeMasterJNLP extends Task {
                 throw new BuildException("Cannot read file: " + jar);
             }
             
-            JarFile theJar = new JarFile(jar);
-            String codenamebase = JarWithModuleAttributes.extractCodeName(theJar.getManifest().getMainAttributes());
-            if (codenamebase == null) {
-                throw new BuildException("Not a NetBeans Module: " + jar);
-            }
-            if (codenamebase.equals("org.objectweb.asm.all")
-                    && jar.getParentFile().getName().equals("core")
-                    && jar.getParentFile().getParentFile().getName().startsWith("platform")) {
-                continue;
-            }
-            {
-                int slash = codenamebase.indexOf('/');
-                if (slash >= 0) {
-                    codenamebase = codenamebase.substring(0, slash);
+            try (JarFile theJar = new JarFile(jar)) {
+                String codenamebase = JarWithModuleAttributes.extractCodeName(theJar.getManifest().getMainAttributes());
+                if (codenamebase == null) {
+                    throw new BuildException("Not a NetBeans Module: " + jar);
+                }
+                if (codenamebase.equals("org.objectweb.asm.all")
+                        && jar.getParentFile().getName().equals("core")
+                        && jar.getParentFile().getParentFile().getName().startsWith("platform")) {
+                    continue;
+                }
+                {
+                    int slash = codenamebase.indexOf('/');
+                    if (slash >= 0) {
+                        codenamebase = codenamebase.substring(0, slash);
+                    }
+                }
+                String dashcnb = codenamebase.replace('.', '-');
+                
+                File n = new File(target, dashcnb + ".ref");
+                try (FileWriter w = new FileWriter(n)) {
+                    w.write("    <extension name='" + codenamebase + "' href='" + this.masterPrefix + dashcnb + ".jnlp' />\n");
                 }
             }
-            String dashcnb = codenamebase.replace('.', '-');
-
-            File n = new File(target, dashcnb + ".ref");
-            FileWriter w = new FileWriter(n);
-            w.write("    <extension name='" + codenamebase + "' href='" + this.masterPrefix + dashcnb + ".jnlp' />\n");
-            w.close();
-                
-                
-            theJar.close();
         }
         
     }

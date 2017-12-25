@@ -246,8 +246,7 @@ public final class IncrementSpecificationVersions extends Task {
     }
 
     private static String[] gulp(File file, String enc) throws IOException {
-        InputStream is = new FileInputStream(file);
-        try {
+        try (InputStream is = new FileInputStream(file)) {
             BufferedReader r = new BufferedReader(new InputStreamReader(is, enc));
             List<String> l = new ArrayList<>();
             String line;
@@ -255,21 +254,16 @@ public final class IncrementSpecificationVersions extends Task {
                 l.add(line);
             }
             return l.toArray(new String[l.size()]);
-        } finally {
-            is.close();
         }
     }
     
     private static void spit(File file, String enc, String[] lines) throws IOException {
-        OutputStream os = new FileOutputStream(file);
-        try {
+        try (OutputStream os = new FileOutputStream(file)) {
             PrintWriter w = new PrintWriter(new OutputStreamWriter(os, enc));
             for (String line : lines) {
                 w.println(line);
             }
             w.flush();
-        } finally {
-            os.close();
         }
     }
 

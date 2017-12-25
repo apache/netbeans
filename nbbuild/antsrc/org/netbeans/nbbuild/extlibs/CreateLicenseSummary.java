@@ -192,20 +192,16 @@ public class CreateLicenseSummary extends Task {
                     pw.println("======");
                     pw.println("========================= " + licenseName + " =========================");
                     pw.println();
-                    InputStream is = new FileInputStream(license);
-                    try {
+                    try (InputStream is = new FileInputStream(license)) {
                         BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                         String line;
                         while ((line = r.readLine()) != null) {
                             pw.println(line);
                         }
                         r.close();
-                    } finally {
-                        is.close();
                     }
                 }
                 pw.flush();
-                pw.close();
             }
             log(license + ": written");
         } catch (IOException x) {
@@ -313,8 +309,7 @@ public class CreateLicenseSummary extends Task {
                 continue;
             }
             Map<String, String> headers = new HashMap<>();
-            InputStream is = new FileInputStream(new File(d, n));
-            try {
+            try (InputStream is = new FileInputStream(new File(d, n))) {
                 BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                 String line;
                 while ((line = r.readLine()) != null && line.length() > 0) {
@@ -324,8 +319,6 @@ public class CreateLicenseSummary extends Task {
                     }
                 }
                 r.close();
-            } finally {
-                is.close();
             }
             String files = headers.remove("Files");
             if (files != null) {
@@ -369,8 +362,7 @@ public class CreateLicenseSummary extends Task {
             if (f.isDirectory()) {
                 findBinaries(f, binaries2LicenseHeaders, crc2LicenseHeaders, crc2Binary, prefix + n + "/", testBinariesAreUnique, ignoredPatterns);
             } else if (n.endsWith(".jar") || n.endsWith(".zip") || n.endsWith(".xml") || n.endsWith(".js") || n.endsWith(".dylib")) {
-                InputStream is = new FileInputStream(f);
-                try {
+                try (InputStream is = new FileInputStream(f)) {
                     long crc = computeCRC32(is);
                     Map<String, String> headers = crc2LicenseHeaders.get(crc);
                     if (headers != null) {
@@ -396,8 +388,6 @@ public class CreateLicenseSummary extends Task {
                             }
                         }
                     }
-                } finally {
-                    is.close();
                 }
             }
         }

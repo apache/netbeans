@@ -67,8 +67,7 @@ public class ReleaseFilesLicense extends Task {
 
     public @Override void execute() throws BuildException {
         try {
-            OutputStream os = new FileOutputStream(license);
-            try {
+            try (OutputStream os = new FileOutputStream(license)) {
                 PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
                 pw.println("License for NetBeans module:");
                 pw.println();
@@ -84,16 +83,13 @@ public class ReleaseFilesLicense extends Task {
                     pw.println("==================================================");
                     pw.println("Additional license (" + f.getName() + "):");
                     pw.println();
-                    InputStream is = new FileInputStream(f);
-                    try {
+                    try (InputStream is = new FileInputStream(f)) {
                         BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                         String line;
                         while ((line = r.readLine()) != null && line.length() > 0) {}
                         while ((line = r.readLine()) != null) {
                             pw.println(line);
                         }
-                    } finally {
-                        is.close();
                     }
                 }
                 Map<File,Set<String>> inferredLicenses = new TreeMap<>();
@@ -107,8 +103,7 @@ public class ReleaseFilesLicense extends Task {
                             if (!possibleLicense.getName().endsWith("-license.txt")) {
                                 continue;
                             }
-                            InputStream is = new FileInputStream(possibleLicense);
-                            try {
+                            try (InputStream is = new FileInputStream(possibleLicense)) {
                                 BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                                 String files = possibleLicense.getName().replaceFirst("-license\\.txt$", ".jar") +
                                         " " + possibleLicense.getName().replaceFirst("-license\\.txt$", ".zip");
@@ -129,8 +124,6 @@ public class ReleaseFilesLicense extends Task {
                                     binaries.add((String) entry.getValue());
                                     continue RELEASE_FILE;
                                 }
-                            } finally {
-                                is.close();
                             }
                         }
                     }
@@ -144,21 +137,16 @@ public class ReleaseFilesLicense extends Task {
                         pw.println(binary);
                     }
                     pw.println();
-                    InputStream is = new FileInputStream(entry.getKey());
-                    try {
+                    try (InputStream is = new FileInputStream(entry.getKey())) {
                         BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                         String line;
                         while ((line = r.readLine()) != null && line.length() > 0) {}
                         while ((line = r.readLine()) != null) {
                             pw.println(line);
                         }
-                    } finally {
-                        is.close();
                     }
                 }
                 pw.flush();
-            } finally {
-                os.close();
             }
         } catch (IOException x) {
             throw new BuildException(x, getLocation());
@@ -166,15 +154,12 @@ public class ReleaseFilesLicense extends Task {
     }
 
     private void append(PrintWriter pw, File f) throws IOException {
-        InputStream is = new FileInputStream(f);
-        try {
+        try (InputStream is = new FileInputStream(f)) {
             BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             String line;
             while ((line = r.readLine()) != null) {
                 pw.println(line);
             }
-        } finally {
-            is.close();
         }
     }
 

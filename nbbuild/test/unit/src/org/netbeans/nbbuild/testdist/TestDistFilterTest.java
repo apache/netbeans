@@ -162,11 +162,8 @@ public class TestDistFilterTest extends NbTestCase {
     private void createModule(String path, String runcp) throws IOException {
         File dir = createModule(path);
         File props = new File(dir,"test.properties");
-        PrintStream ps = new PrintStream(props);
-        try { 
+        try (PrintStream ps = new PrintStream(props)) { 
             ps.println("test.unit.run.cp=" + runcp);
-        } finally {
-            ps.close();
         }
     }
 }

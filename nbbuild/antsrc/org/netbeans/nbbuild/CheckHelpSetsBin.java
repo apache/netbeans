@@ -97,11 +97,8 @@ public class CheckHelpSetsBin extends Task {
         for (int i = 0; i < files.length; i++) {
             File moduleJar = new File(dir, files[i]);
             Manifest manifest;
-            JarFile jar = new JarFile(moduleJar);
-            try {
+            try (JarFile jar = new JarFile(moduleJar)) {
                 manifest = jar.getManifest();
-            } finally {
-                jar.close();
             }
             if (manifest == null) {
                 log(moduleJar + " has no manifest", Project.MSG_WARN);

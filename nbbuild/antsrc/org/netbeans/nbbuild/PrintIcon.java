@@ -109,48 +109,48 @@ public class PrintIcon extends Task {
                 Set<IconInfo> both = new TreeSet<>(firstSet);
                 both.addAll(sndSet);
                 
-                BufferedWriter os = new BufferedWriter(new FileWriter(duplicates));
-                IconInfo prev = null;
-                boolean prevPrinted = false;
-                for (IconInfo info : both) {
-                    IconInfo p = prev;
-                    prev = info;
-                    if (p == null || p.hash != info.hash) {
-                        prevPrinted = false;
-                        continue;
-                    }
-                    
-                    if (!prevPrinted) {
-                        os.write(p.toString());
+                try (BufferedWriter os = new BufferedWriter(new FileWriter(duplicates))) {
+                    IconInfo prev = null;
+                    boolean prevPrinted = false;
+                    for (IconInfo info : both) {
+                        IconInfo p = prev;
+                        prev = info;
+                        if (p == null || p.hash != info.hash) {
+                            prevPrinted = false;
+                            continue;
+                        }
+                        
+                        if (!prevPrinted) {
+                            os.write(p.toString());
+                            os.newLine();
+                            prevPrinted = true;
+                        }
+                        
+                        os.write(info.toString());
                         os.newLine();
-                        prevPrinted = true;
                     }
-                    
-                    os.write(info.toString());
-                    os.newLine();
                 }
-                os.close();
             }
             if (difference != null) {
                 SortedSet<IconInfo> union = new TreeSet<>(firstSet);
                 union.addAll(sndSet);
                 
-                BufferedWriter os = new BufferedWriter(new FileWriter(difference));
-                for (IconInfo info : union) {
-                    if (!contains(firstSet, info.hash)) {
-                        os.write('+');
-                        os.write(info.toString());
-                        os.newLine();
-                        continue;
-                    }
-                    if (!contains(sndSet, info.hash)) {
-                        os.write('-');
-                        os.write(info.toString());
-                        os.newLine();
-                        continue;
+                try (BufferedWriter os = new BufferedWriter(new FileWriter(difference))) {
+                    for (IconInfo info : union) {
+                        if (!contains(firstSet, info.hash)) {
+                            os.write('+');
+                            os.write(info.toString());
+                            os.newLine();
+                            continue;
+                        }
+                        if (!contains(sndSet, info.hash)) {
+                            os.write('-');
+                            os.write(info.toString());
+                            os.newLine();
+                            continue;
+                        }
                     }
                 }
-                os.close();
             }
             
         } catch (IOException ex) {
@@ -192,9 +192,9 @@ public class PrintIcon extends Task {
             BufferedImage image;
             int _hash;
             try {
-                InputStream is = from.openStream();
-                image = ImageIO.read(is);
-                is.close();
+                try (InputStream is = from.openStream()) {
+                    image = ImageIO.read(is);
+                }
                 int w = image.getWidth();
                 int h = image.getHeight();
                 _hash = w * 3 + h * 7;

@@ -433,9 +433,9 @@ public class AutoUpdateTest extends TestBase {
 "</module>\n";
 
 
-        FileOutputStream osx = new FileOutputStream(x);
-        osx.write(txtx.getBytes());
-        osx.close();
+        try (FileOutputStream osx = new FileOutputStream(x)) {
+            osx.write(txtx.getBytes());
+        }
 
 
         execute(
@@ -500,9 +500,9 @@ public class AutoUpdateTest extends TestBase {
 "</module>\n";
 
 
-        FileOutputStream osx = new FileOutputStream(x);
-        osx.write(txtx.getBytes());
-        osx.close();
+        try (FileOutputStream osx = new FileOutputStream(x)) {
+            osx.write(txtx.getBytes());
+        }
 
 
         execute(
@@ -569,9 +569,9 @@ public class AutoUpdateTest extends TestBase {
 "</module>\n";
 
 
-        FileOutputStream osx = new FileOutputStream(x);
-        osx.write(txtx.getBytes());
-        osx.close();
+        try (FileOutputStream osx = new FileOutputStream(x)) {
+            osx.write(txtx.getBytes());
+        }
 
         File lastM = new File(new File(target, "platform"), ".lastModified");
         lastM.createNewFile();
@@ -653,9 +653,9 @@ public class AutoUpdateTest extends TestBase {
 "</module>\n";
 
 
-        FileOutputStream osx = new FileOutputStream(x);
-        osx.write(txtx.getBytes());
-        osx.close();
+        try (FileOutputStream osx = new FileOutputStream(x)) {
+            osx.write(txtx.getBytes());
+        }
 
         File lastM = new File(new File(target, "platform"), ".lastModified");
         lastM.createNewFile();
@@ -709,29 +709,29 @@ public class AutoUpdateTest extends TestBase {
     public File generateNBMContent (String name, String... filesAndContent) throws IOException {
         File f = new File (getWorkDir (), name);
 
-        ZipOutputStream os = new ZipOutputStream (new FileOutputStream (f));
-        for (int i = 0; i < filesAndContent.length; i += 2) {
-            os.putNextEntry(new ZipEntry(filesAndContent[i]));
-            os.write(filesAndContent[i + 1].getBytes());
+        try (ZipOutputStream os = new ZipOutputStream (new FileOutputStream (f))) {
+            for (int i = 0; i < filesAndContent.length; i += 2) {
+                os.putNextEntry(new ZipEntry(filesAndContent[i]));
+                os.write(filesAndContent[i + 1].getBytes());
+                os.closeEntry();
+            }
+            os.putNextEntry(new ZipEntry("Info/info.xml"));
+            String codeName = name.replaceAll("\\.nbm$", "").replace('-', '.');
+            os.write(("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                    "<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Info 2.5//EN\" \"http://www.netbeans.org/dtds/autoupdate-info-2_5.dtd\">\n").getBytes());
+            String res = "<module codenamebase=\"" + codeName + "\" " +
+                    "homepage=\"http://au.netbeans.org/\" distribution=\"wrong-path.hbm\" " +
+                    "license=\"standard-nbm-license.txt\" downloadsize=\"98765\" " +
+                    "needsrestart=\"false\" moduleauthor=\"\" " +
+                    "eager=\"false\" " +
+                    "releasedate=\"2006/02/23\">";
+            res +=  "<manifest OpenIDE-Module=\"" + codeName + "\" " +
+                    "OpenIDE-Module-Name=\"" + codeName + "\" " +
+                    "OpenIDE-Module-Specification-Version=\"333.3\"/>";
+            res += "</module>";
+            os.write(res.getBytes());
             os.closeEntry();
         }
-        os.putNextEntry(new ZipEntry("Info/info.xml"));
-        String codeName = name.replaceAll("\\.nbm$", "").replace('-', '.');
-        os.write(("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                "<!DOCTYPE module_updates PUBLIC \"-//NetBeans//DTD Autoupdate Info 2.5//EN\" \"http://www.netbeans.org/dtds/autoupdate-info-2_5.dtd\">\n").getBytes());
-        String res = "<module codenamebase=\"" + codeName + "\" " +
-                "homepage=\"http://au.netbeans.org/\" distribution=\"wrong-path.hbm\" " +
-                "license=\"standard-nbm-license.txt\" downloadsize=\"98765\" " +
-                "needsrestart=\"false\" moduleauthor=\"\" " +
-                "eager=\"false\" " +
-                "releasedate=\"2006/02/23\">";
-        res +=  "<manifest OpenIDE-Module=\"" + codeName + "\" " +
-                "OpenIDE-Module-Name=\"" + codeName + "\" " +
-                "OpenIDE-Module-Specification-Version=\"333.3\"/>";
-        res += "</module>";
-        os.write(res.getBytes());
-        os.closeEntry();
-        os.close();
 
         return f;
     }

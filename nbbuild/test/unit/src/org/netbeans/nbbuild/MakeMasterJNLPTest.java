@@ -191,14 +191,13 @@ public class MakeMasterJNLPTest extends TestBase {
     protected final File generateJar (String[] content, Manifest manifest) throws IOException {
         File f = createNewJarFile ();
         
-        JarOutputStream os = new JarOutputStream (new FileOutputStream (f), manifest);
-        
-        for (int i = 0; i < content.length; i++) {
-            os.putNextEntry(new JarEntry (content[i]));
-            os.closeEntry();
+        try (JarOutputStream os = new JarOutputStream (new FileOutputStream (f), manifest)) {
+            for (int i = 0; i < content.length; i++) {
+                os.putNextEntry(new JarEntry (content[i]));
+                os.closeEntry();
+            }
+            os.closeEntry ();
         }
-        os.closeEntry ();
-        os.close();
         
         return f;
     }

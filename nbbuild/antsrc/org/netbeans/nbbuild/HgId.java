@@ -68,15 +68,12 @@ public class HgId extends Task {
         String id = "unknown-revn";
         if (dirstate != null && dirstate.length() >= 6) {
             try {
-                InputStream is = new FileInputStream(dirstate);
-                try {
+                try (InputStream is = new FileInputStream(dirstate)) {
                     byte[] data = new byte[6];
                     if (is.read(data) < 6) {
                         throw new IOException("truncated read");
                     }
                     id = String.format("%012x", new BigInteger(1, data));
-                } finally {
-                    is.close();
                 }
             } catch (IOException x) {
                 log("Could not read " + dirstate + ": " + x, Project.MSG_WARN);

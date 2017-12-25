@@ -49,11 +49,8 @@ public class ConvertImport extends Task {
         }
         byte bytes[] = new byte[(int)file.length()];
         try {
-            FileInputStream fis = new FileInputStream(file);
-            try {
+            try (FileInputStream fis = new FileInputStream(file)) {
                 fis.read(bytes);
-            } finally {
-                fis.close();
             }
             String xml = new String(bytes);
             String oldXml = xml;
@@ -95,11 +92,8 @@ public class ConvertImport extends Task {
             } // while 
             if (oldXml != xml) {
                 // changed file
-                PrintStream ps = new PrintStream(file);
-                try {
+                try ( PrintStream ps = new PrintStream(file)) {
                     ps.print(xml);
-                } finally {
-                    ps.close();
                 }
             }
         } catch (IOException ex) {

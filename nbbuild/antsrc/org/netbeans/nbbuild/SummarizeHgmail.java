@@ -60,8 +60,7 @@ public class SummarizeHgmail extends Task {
 
     public @Override void execute() throws BuildException {
         try {
-            PrintWriter w = new PrintWriter(output);
-            try {
+            try (PrintWriter w = new PrintWriter(output)) {
                 DirectoryScanner scanner = hgmails.getDirectoryScanner(getProject());
                 scanner.scan();
                 for (String hgmailS : new TreeSet<String>(Arrays.asList(scanner.getIncludedFiles()))) {
@@ -78,8 +77,7 @@ public class SummarizeHgmail extends Task {
                     }
                     // module dir such as java.source or contrib/autosave or file such as .hgtags, to list of addressees such as core-commits@platform.netbeans.org
                     Map<String,List<String>> notifications = new TreeMap<>();
-                    Reader r = new FileReader(hgmail);
-                    try {
+                    try (Reader r = new FileReader(hgmail)) {
                         BufferedReader br = new BufferedReader(r);
                         String line;
                         while ((line = br.readLine()) != null) {
@@ -128,8 +126,6 @@ public class SummarizeHgmail extends Task {
                                 }
                             }
                         }
-                    } finally {
-                        r.close();
                     }
                     // Now find unmentioned modules:
                     for (File kid : kids) {
@@ -161,8 +157,6 @@ public class SummarizeHgmail extends Task {
                     w.println();
                 }
                 w.flush();
-            } finally {
-                w.close();
             }
             log(output + ": hgmail summary written");
         } catch (IOException x) {

@@ -523,12 +523,9 @@ public class MakeNBM extends Task {
                             p.load(is);
                         }
                         // Now pick up attributes from the bundle.
-                        Iterator it = p.entrySet().iterator();
-                        while (it.hasNext()) {
-                            Map.Entry entry = (Map.Entry)it.next();
-                            String name = (String)entry.getKey();
+                        for(String name: p.stringPropertyNames()) {
                             if (! name.startsWith("OpenIDE-Module-")) continue;
-                            attr.putValue(name, (String)entry.getValue());
+                            attr.putValue(name, p.getProperty(name));
                         }
                     }
                 }
@@ -922,7 +919,7 @@ public class MakeNBM extends Task {
         Document doc = domimpl.createDocument(null, "module", domimpl.createDocumentType("module", pub, sys));
         String codenamebase = attr.getValue("OpenIDE-Module");
         if (codenamebase == null) {
-            Iterator it = attr.keySet().iterator();
+            Iterator<Object> it = attr.keySet().iterator();
             Name key; String val;
             while (it.hasNext()) {
                 key = (Name) it.next();
@@ -1000,14 +997,11 @@ public class MakeNBM extends Task {
         // Write manifest attributes.
         Element el = doc.createElement("manifest");
         List<String> attrNames = new ArrayList<>(attr.size());
-        Iterator it = attr.keySet().iterator();
-        while (it.hasNext()) {
-            attrNames.add(((Attributes.Name)it.next()).toString());
+        for(Object key: attr.keySet()) {
+            attrNames.add(((Attributes.Name)key).toString());
         }
         Collections.sort(attrNames);
-        it = attrNames.iterator();
-        while (it.hasNext()) {
-            String name = (String) it.next();
+        for(String name: attrNames) {
             if (name.matches("OpenIDE-Module(|-(Name|(Specification|Implementation)-Version|(Module|Package|Java|IDE)-Dependencies|" +
                     "(Short|Long)-Description|Display-Category|Provides|Requires|Recommends|Needs|Fragment-Host))|AutoUpdate-(Show-In-Client|Essential-Module)")) {
                 el.setAttribute(name, attr.getValue(name));

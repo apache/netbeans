@@ -261,7 +261,7 @@ public class Sigtest extends Task {
     private void apitest() throws Exception {
         URLClassLoader url = new URLClassLoader(new URL[] { sigtestJar.toURI().toURL() }, Sigtest.class.getClassLoader());
         Class<?> clazz = url.loadClass("org.netbeans.apitest.Sigtest");
-        Task task = (Task)clazz.newInstance();
+        Task task = (Task) clazz.getConstructor().newInstance();
         
         task.setProject(getProject());
         task.setTaskName(getTaskName());

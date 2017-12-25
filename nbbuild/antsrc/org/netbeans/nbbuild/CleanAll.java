@@ -45,7 +45,7 @@ public class CleanAll extends Task {
     private File [] topdirs = null;
     private boolean resolvedependencies = false; // resolve compile-time dependencies for clean
     private String deptargetprefix = "";  // target prefix for resolving dependencies
-    private Hashtable targets;
+    private Hashtable<String,Target> targets;
     private boolean failonerror = true; // fail if particular module build failed?
     
     /** Comma-separated list of modules to include. */

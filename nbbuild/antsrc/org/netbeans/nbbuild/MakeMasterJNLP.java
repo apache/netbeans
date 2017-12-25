@@ -27,6 +27,7 @@ import java.util.jar.JarFile;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileResource;
 
@@ -73,7 +74,7 @@ public class MakeMasterJNLP extends Task {
     }
     
     private void generateFiles() throws IOException, BuildException {
-        for (Iterator fileIt = files.iterator(); fileIt.hasNext();) {
+        for (Iterator<Resource> fileIt = files.iterator(); fileIt.hasNext();) {
             FileResource fr = (FileResource) fileIt.next();
             File jar = fr.getFile();
 

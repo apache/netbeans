@@ -27,16 +27,12 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.tools.ant.BuildException;
@@ -299,15 +295,7 @@ public class JNLPUpdateManifestStartup extends Task {
             to.getParentFile().mkdirs();
         }
         getSignTask().setSignedjar(to);
-        // use reflection for calling getSignTask().setDigestAlg("SHA1");
-        try {
-            Class sjClass = Class.forName("org.apache.tools.ant.taskdefs.SignJar");
-            Method sdaMethod = sjClass.getDeclaredMethod("setDigestAlg", String.class);
-            sdaMethod.invoke(getSignTask(), "SHA1");
-        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        // end of getSignTask().setDigestAlg("SHA1");
+        getSignTask().setDigestAlg("SHA1");
         getSignTask().execute();
 
     }

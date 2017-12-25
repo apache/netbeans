@@ -180,7 +180,7 @@ public class NbMerge extends Task {
         @SuppressWarnings("unchecked")
         Vector<Target> fullList = getProject().topoSort(dummyName, targets);
         // Now remove earlier ones: already done.
-        Vector doneList = getProject().topoSort(getOwningTarget().getName(), targets);
+        Vector<Target> doneList = getProject().topoSort(getOwningTarget().getName(), targets);
         List<Target> todo = new ArrayList<>(fullList.subList(0, fullList.indexOf(dummy)));
         todo.removeAll(doneList.subList(0, doneList.indexOf(getOwningTarget())));
         log("Going to execute targets " + todo);
@@ -316,9 +316,7 @@ public class NbMerge extends Task {
     /** Do final data merge */
     private void dataMerge() throws BuildException {
         List<String> suppressedlocales = new LinkedList<> ();
-        Iterator it = suppress.iterator ();
-        while (it.hasNext ()) {
-            Suppress s = (Suppress) it.next ();
+        for (Suppress s: suppress) {
             if (s.iftest != null && getProject().getProperty(s.iftest) == null) {
                 continue;
             } else if (s.unlesstest != null && getProject().getProperty(s.unlesstest) != null) {
@@ -326,12 +324,11 @@ public class NbMerge extends Task {
             }
             log ("Suppressing locale: " + s.locale);
             suppressedlocales.add (s.locale);
-        }        
+        }
 
         UpdateTracking tr = new UpdateTracking( dest.getAbsolutePath() );
         log ( dest.getAbsolutePath() );
-        while (it.hasNext ()) {
-          String locale = (String) it.next ();
+        for(String locale: suppressedlocales) {
           tr.removeLocalized(locale);
         }
     }

@@ -290,9 +290,8 @@ final class ModuleListParser {
         Project fakeproj = new Project();
         if (project != null) {
             // Try to debug any problems in the following definitions (cf. #59849).
-            Iterator it = project.getBuildListeners().iterator();
-            while (it.hasNext()) {
-                fakeproj.addBuildListener((BuildListener) it.next());
+            for(BuildListener bl: project.getBuildListeners()) {
+                fakeproj.addBuildListener(bl);
             }
         }
         fakeproj.setBaseDir(dir); // in case ${basedir} is used somewhere

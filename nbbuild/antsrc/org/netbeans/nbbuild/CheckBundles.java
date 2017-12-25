@@ -54,8 +54,6 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class CheckBundles extends Task {
     
-    private static HashSet knownKeys;    
-    
     private static String [] moduleKeys = new String [] {
         "OpenIDE-Module-Name",
         "OpenIDE-Module-Display-Category",

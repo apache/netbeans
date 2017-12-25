@@ -306,9 +306,7 @@ log( "==> Examining file: " + path, Project.MSG_DEBUG) ;
                 idx = testpath.lastIndexOf ('.');
                 if (idx != -1) testpath = testpath.substring (0, idx);
                 String thisLocale = null;
-                Iterator it2 = locales2.iterator ();
-                while (it2.hasNext ()) {
-                    String tryLocale = (String) it2.next ();
+                for(String tryLocale: locales2) {
                     if (testpath.endsWith ("_" + tryLocale)) {
                         thisLocale = tryLocale;
                         testpath = testpath.substring (0, testpath.length () - 1 - tryLocale.length ());
@@ -316,9 +314,7 @@ log( "==> Examining file: " + path, Project.MSG_DEBUG) ;
                     }
                 }
                 String thisBranding = null;
-                it2 = brandings2.iterator ();
-                while (it2.hasNext ()) {
-                    String tryBranding = (String) it2.next ();
+                for(String tryBranding: brandings2) {
                     if (testpath.endsWith ("_" + tryBranding)) {
                         thisBranding = tryBranding;
                         break;
@@ -408,9 +404,7 @@ log( "==> Examining file: " + path, Project.MSG_DEBUG) ;
                     long time = jar.lastModified ();
                     if (manifest == null || manifest.lastModified () <= time) {
                         boolean upToDate = true;
-                        Iterator it2 = files.values ().iterator ();
-                        while (it2.hasNext ()) {
-                            File f = (File) it2.next ();
+                        for(File f: files.values()) {
                             if (f.lastModified () > time) {
                                 upToDate = false;
                                 break;
@@ -614,9 +608,7 @@ log( "==> Examining file: " + path, Project.MSG_DEBUG) ;
 
       // If the path contains a dir with the same name as the //
       // locale.					      //
-      locale_dir = new String( file.separator) ;
-      locale_dir += loc ;
-      locale_dir += file.separator ;
+      locale_dir = File.separator + loc + File.separator;
       idx = path.indexOf( locale_dir) ;
       if( idx != -1) {
 
@@ -694,7 +686,7 @@ log( "==> Examining file: " + path, Project.MSG_DEBUG) ;
     else {
       s = getProject().getProperty("locjar.warnMissingDir");
       if( s != null && !s.trim().equals( "")) {
-	ret = getProject().toBoolean(s);
+	ret = Project.toBoolean(s);
       }
     }
 
@@ -732,7 +724,7 @@ log( "==> Examining file: " + path, Project.MSG_DEBUG) ;
   protected boolean shouldWriteSrcDir() {
     boolean ret = false ;
     String s = getProject().getProperty("locjar.writeSrcDir");
-    if( s != null && getProject().toBoolean(s)) {
+    if( s != null && Project.toBoolean(s)) {
       ret = true ;
     }
     return( ret) ;

@@ -617,7 +617,7 @@ public class ModuleDependencies extends Task {
 
     private boolean dependsOnTransitively(String kit1, String kit2, 
         TreeMap<String, TreeSet<String>> dependingKits) {
-        TreeSet kits = dependingKits.get(kit1);
+        TreeSet<String> kits = dependingKits.get(kit1);
         if (kits == null) {
             return false;
         }

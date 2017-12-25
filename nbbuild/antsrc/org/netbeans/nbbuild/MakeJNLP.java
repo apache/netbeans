@@ -66,6 +66,7 @@ import org.apache.tools.ant.taskdefs.ManifestException;
 import org.apache.tools.ant.taskdefs.SignJar;
 import org.apache.tools.ant.taskdefs.Zip;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.resources.FileResource;
@@ -248,15 +249,7 @@ public class MakeJNLP extends Task {
                 to.getParentFile().mkdirs();
             }
             getSignTask().setSignedjar(to);
-            // use reflection for calling getSignTask().setDigestAlg("SHA1");
-            try {
-                Class sjClass = Class.forName("org.apache.tools.ant.taskdefs.SignJar");
-                Method sdaMethod = sjClass.getDeclaredMethod("setDigestAlg", String.class);
-                sdaMethod.invoke(getSignTask(), "SHA1");
-            } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            // end of getSignTask().setDigestAlg("SHA1");
+            getSignTask().setDigestAlg("SHA1");
             getSignTask().execute();
         } else if (to != null) {
             Copy copy = (Copy)getProject().createTask("copy");
@@ -310,7 +303,7 @@ public class MakeJNLP extends Task {
             }
         }
 
-        for (Iterator fileIt = files.iterator(); fileIt.hasNext();) {
+        for (Iterator<Resource> fileIt = files.iterator(); fileIt.hasNext();) {
             FileResource fr = (FileResource) fileIt.next();
             File jar = fr.getFile();
 
@@ -711,9 +704,9 @@ public class MakeJNLP extends Task {
             String name = removeWhat.substring(basedir + 1, removeWhat.length() - 4);
             Pattern p = Pattern.compile(base + "/locale/" + name + "(|_[a-zA-Z0-9_]+)\\.jar");
             
-            Iterator it = removeFrom.keySet().iterator();
+            Iterator<String> it = removeFrom.keySet().iterator();
             while (it.hasNext()) {
-                String s = (String)it.next();
+                String s = it.next();
                 Matcher m = p.matcher(s);
                 if (m.matches()) {
                     String locale = m.group(1).substring(1);

@@ -97,9 +97,8 @@ public class TestDistFilter extends Task {
     /** get path with test dirs separated by :
      */
     private String getTestList() {
-        StringBuffer path = new StringBuffer();
-        for (Iterator it = possibleTests.iterator() ; it.hasNext() ; ) {
-            TestConf tc = (TestConf)it.next();
+        StringBuilder path = new StringBuilder();
+        for (TestConf tc: possibleTests) {
             if (!matchRequiredModule(tc.getModuleDir())) {
                 continue;
             }
@@ -195,8 +194,8 @@ public class TestDistFilter extends Task {
                   String runCp = props.getProperty("test.unit.run.cp");
                   if (runCp != null) {
                       String paths[] = runCp.split(":");
-                      Set reqModules = getRequiredModulesSet();
-                      if (reqModules.size() == 0) {
+                      Set<String> reqModules = getRequiredModulesSet();
+                      if (reqModules.isEmpty()) {
                           return true;
                       }
                       for (int i = 0 ; i < paths.length ; i++) {

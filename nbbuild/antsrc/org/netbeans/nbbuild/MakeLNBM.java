@@ -422,12 +422,10 @@ public class MakeLNBM extends MatchingTask {
                             }
                         }
                         // Now pick up attributes from the bundle.
-                        Iterator it = p.entrySet().iterator();
-                        while (it.hasNext()) {
-                            Map.Entry entry = (Map.Entry)it.next();
-                            String name = (String)entry.getKey();
-                            if (! name.startsWith("OpenIDE-Module-")) continue; //NOI18N
-                            attr.putValue(name, (String)entry.getValue());
+                        for(String key: p.stringPropertyNames()) {
+                            if(key.startsWith("OpenIDE-Module-")) {
+                                attr.putValue(key, p.getProperty(key));
+                            }
                         }
                     } // else all loc attrs in main manifest, OK
                 }
@@ -628,7 +626,7 @@ public class MakeLNBM extends MatchingTask {
                 //I have to use Reflection API, because there was changed API in ANT1.5
                 try {
                     try {
-                        Class[] paramsT = {String.class};
+                        Class<?>[] paramsT = {String.class};
                         Object[] paramsV1 = {signature.keystore.getAbsolutePath()};
                         Object[] paramsV2 = {file.getAbsolutePath()};
                         signjar.getClass().getDeclaredMethod( "setKeystore", paramsT ).invoke( signjar, paramsV1 ); //NOI18N
@@ -636,7 +634,7 @@ public class MakeLNBM extends MatchingTask {
                     } catch (NoSuchMethodException ex1) {
                         //Probably ANT 1.5
                         try {
-                            Class[] paramsT = {File.class};
+                            Class<?>[] paramsT = {File.class};
                             Object[] paramsV1 = {signature.keystore};
                             Object[] paramsV2 = {file};
                             signjar.getClass().getDeclaredMethod( "setKeystore", paramsT ).invoke( signjar, paramsV1 ); //NOI18N
@@ -644,8 +642,8 @@ public class MakeLNBM extends MatchingTask {
                         } catch (NoSuchMethodException ex2) {
 			    //Probably ANT1.5.3
 			    try {
-				Class[] paramsT1 = {File.class};
-				Class[] paramsT2 = {String.class};
+				Class<?>[] paramsT1 = {File.class};
+				Class<?>[] paramsT2 = {String.class};
 				Object[] paramsV1 = {signature.keystore.getAbsolutePath()};
 				Object[] paramsV2 = {file};
 				signjar.getClass().getDeclaredMethod( "setKeystore", paramsT2 ).invoke( signjar, paramsV1 ); //NOI18N
@@ -791,16 +789,15 @@ public class MakeLNBM extends MatchingTask {
    * global property.
    */
   public boolean reqManOrMod() {
-    String s = null ;
     boolean req = true ;
 
     if( manOrModReqSet) {
       req = manOrModReq ;
     }
     else {
-      s = getProject().getProperty("makenbm.manOrModReq"); //NOI18N
+      String s = getProject().getProperty("makenbm.manOrModReq"); //NOI18N
       if( s != null && !s.equals( "")) { //NOI18N
-	req = getProject().toBoolean(s);
+	req = Project.toBoolean(s);
       }
     }
 

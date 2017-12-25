@@ -423,9 +423,7 @@ class UpdateTracking {
         }
         
         void removeLocalized( String locale ) {
-            Iterator it = versions.iterator();
-            while (it.hasNext()) {
-                Version ver = (Version) it.next();
+            for(Version ver: versions) {
                 ver.removeLocalized( locale );
             }
         }

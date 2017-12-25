@@ -88,8 +88,8 @@ public class SortSuiteModules extends Task {
         if (sortedModulesProperty == null) {
             throw new BuildException("Must set sortedModulesProperty");
         }
-        Map<String,File> basedirsByCNB = new TreeMap<String,File>();
-        Map<String,List<String>> buildDeps = new HashMap<String,List<String>>();
+        Map<String,File> basedirsByCNB = new TreeMap<>();
+        Map<String,List<String>> buildDeps = new HashMap<>();
         for (String piece : unsortedModules.list()) {
             File d = new File(piece);
             File projectXml = new File(d, "nbproject" + File.separatorChar + "project.xml");
@@ -119,7 +119,7 @@ public class SortSuiteModules extends Task {
             }
             String cnb = XMLUtil.findText(cnbEl);
             basedirsByCNB.put(cnb, d);
-            List<String> deps = new LinkedList<String>();
+            List<String> deps = new LinkedList<>();
             Element depsEl = ParseProjectXml.findNBMElement(data, "module-dependencies");
             if (depsEl == null) {
                 throw new BuildException("Malformed project file " + projectXml, getLocation());
@@ -167,13 +167,13 @@ public class SortSuiteModules extends Task {
         for (List<String> deps: buildDeps.values()) {
             deps.retainAll(basedirsByCNB.keySet());
         }
-        Map<String,List<String>> reversedDeps = new HashMap<String,List<String>>();
+        Map<String,List<String>> reversedDeps = new HashMap<>();
         for (Map.Entry<String,List<String>> entry : buildDeps.entrySet()) {
             for (String from : entry.getValue()) {
                 String to = entry.getKey();
                 List<String> tos = reversedDeps.get(from);
                 if (tos == null) {
-                    reversedDeps.put(from, tos = new ArrayList<String>());
+                    reversedDeps.put(from, tos = new ArrayList<>());
                 }
                 tos.add(to);
             }
@@ -197,9 +197,9 @@ public class SortSuiteModules extends Task {
     // Stolen from org.openide.util.Utilities:
     private static <T> List<T> topologicalSort(Collection<T> c, Map<? super T, ? extends Collection<? extends T>> edges)
     throws TopologicalSortException {
-        Map<T,Boolean> finished = new HashMap<T,Boolean>();
-        List<T> r = new ArrayList<T>(Math.max(c.size(), 1));
-        List<T> cRev = new ArrayList<T>(c);
+        Map<T,Boolean> finished = new HashMap<>();
+        List<T> r = new ArrayList<>(Math.max(c.size(), 1));
+        List<T> cRev = new ArrayList<>(c);
         Collections.reverse(cRev);
 
         Iterator<T> it = cRev.iterator();
@@ -233,7 +233,7 @@ public class SortSuiteModules extends Task {
                 return null;
             }
 
-            ArrayList<T> cycle = new ArrayList<T>();
+            ArrayList<T> cycle = new ArrayList<>();
             cycle.add(node);
             finished.put(node, null);
 
@@ -296,7 +296,7 @@ public class SortSuiteModules extends Task {
         private int counter;
 
         /** vertexes sorted by increasing value of y */
-        private Stack<Vertex> dualGraph = new Stack<Vertex>();
+        private Stack<Vertex> dualGraph = new Stack<>();
 
         TopologicalSortException(Collection vertexes, Map<?,? extends Collection<?>> edges) {
             this.vertexes = vertexes;
@@ -311,7 +311,7 @@ public class SortSuiteModules extends Task {
         public final List partialSort() {
             Set[] all = topologicalSets();
 
-            ArrayList<Object> res = new ArrayList<Object>(vertexes.size());
+            ArrayList<Object> res = new ArrayList<>(vertexes.size());
 
             for (int i = 0; i < all.length; i++) {
                 for (Object e : all[i]) {
@@ -336,7 +336,7 @@ public class SortSuiteModules extends Task {
         public final Set[] unsortableSets() {
             Set[] all = topologicalSets();
 
-            ArrayList<Set> unsort = new ArrayList<Set>();
+            ArrayList<Set> unsort = new ArrayList<>();
 
             for (int i = 0; i < all.length; i++) {
                 if ((all[i].size() > 1) || !(all[i] instanceof HashSet)) {
@@ -363,14 +363,14 @@ public class SortSuiteModules extends Task {
         }
 
         private void printDebug(java.io.PrintWriter w) {
-            Set<Object> relevantVertices = new HashSet<Object>();
+            Set<Object> relevantVertices = new HashSet<>();
             Set<?>[] bad = unsortableSets();
             for (Set<?> s : bad) {
                 relevantVertices.addAll(s);
             }
-            Map<Object,Collection<?>> relevantEdges = new HashMap<Object,Collection<?>>();
+            Map<Object,Collection<?>> relevantEdges = new HashMap<>();
             for (Map.Entry<?,? extends Collection<?>> entry : edges.entrySet()) {
-                Set<Object> relevant = new HashSet<Object>(entry.getValue());
+                Set<Object> relevant = new HashSet<>(entry.getValue());
                 relevant.add(entry.getKey());
                 relevant.retainAll(relevantVertices);
                 if (!relevant.isEmpty()) {
@@ -426,7 +426,7 @@ public class SortSuiteModules extends Task {
                 return result;
             }
 
-            HashMap<Object, Vertex> vertexInfo = new HashMap<Object, Vertex>();
+            HashMap<Object, Vertex> vertexInfo = new HashMap<>();
 
             // computes value X and Y for each vertex
             counter = 0;
@@ -440,15 +440,15 @@ public class SortSuiteModules extends Task {
             // now connect vertexes that cannot be sorted into own
         // sets
         // map from the original objects to 
-            Map<Object, Set> objectsToSets = new HashMap<Object, Set>();
+            Map<Object, Set> objectsToSets = new HashMap<>();
 
-            ArrayList<Set> sets = new ArrayList<Set>();
+            ArrayList<Set> sets = new ArrayList<>();
 
             while (!dualGraph.isEmpty()) {
                 Vertex v = dualGraph.pop();
 
                 if (!v.visited) {
-                    Set<Object> set = new HashSet<Object>();
+                    Set<Object> set = new HashSet<>();
                     visitDualGraph(v, set);
 
                     if ((set.size() == 1) && v.edgesFrom.contains(v)) {
@@ -474,7 +474,7 @@ public class SortSuiteModules extends Task {
 
             // now topologically sort the sets
         // 1. prepare the map
-            HashMap<Set, Collection<Set>> edgesBetweenSets = new HashMap<Set, Collection<Set>>();
+            HashMap<Set, Collection<Set>> edgesBetweenSets = new HashMap<>();
             it = edges.entrySet().iterator();
 
             while (it.hasNext()) {
@@ -490,7 +490,7 @@ public class SortSuiteModules extends Task {
                 Collection<Set> setsTo = edgesBetweenSets.get(from);
 
                 if (setsTo == null) {
-                    setsTo = new ArrayList<Set>();
+                    setsTo = new ArrayList<>();
                     edgesBetweenSets.put(from, setsTo);
                 }
 
@@ -585,7 +585,7 @@ public class SortSuiteModules extends Task {
             public Object object;
 
             /** list of vertexes that point to this one */
-            public List<Vertex> edgesFrom = new ArrayList<Vertex>();
+            public List<Vertex> edgesFrom = new ArrayList<>();
 
             /** the counter state when we entered the vertex */
             public final int x;

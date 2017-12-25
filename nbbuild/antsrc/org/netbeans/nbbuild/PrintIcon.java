@@ -89,14 +89,14 @@ public class PrintIcon extends Task {
         
         try {
             
-            SortedSet<IconInfo> firstSet = new TreeSet<IconInfo>();
+            SortedSet<IconInfo> firstSet = new TreeSet<>();
             for (String f : first.getDirectoryScanner(getProject()).getIncludedFiles()) {
                 File baseDir = first.getDir(getProject());
                 File file = new File(baseDir, f);
                 firstSet.add(new IconInfo(file.toURI().toURL(), getProject()));
             }
 
-            SortedSet<IconInfo> sndSet = new TreeSet<IconInfo>();
+            SortedSet<IconInfo> sndSet = new TreeSet<>();
             if (second != null) {
                 for (String f : second.getDirectoryScanner(getProject()).getIncludedFiles()) {
                     File baseDir = second.getDir(getProject());
@@ -106,7 +106,7 @@ public class PrintIcon extends Task {
             }
             
             if (duplicates != null) {
-                Set<IconInfo> both = new TreeSet<IconInfo>(firstSet);
+                Set<IconInfo> both = new TreeSet<>(firstSet);
                 both.addAll(sndSet);
                 
                 BufferedWriter os = new BufferedWriter(new FileWriter(duplicates));
@@ -132,7 +132,7 @@ public class PrintIcon extends Task {
                 os.close();
             }
             if (difference != null) {
-                SortedSet<IconInfo> union = new TreeSet<IconInfo>(firstSet);
+                SortedSet<IconInfo> union = new TreeSet<>(firstSet);
                 union.addAll(sndSet);
                 
                 BufferedWriter os = new BufferedWriter(new FileWriter(difference));

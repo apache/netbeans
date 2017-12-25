@@ -67,7 +67,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author Jaroslav Tulach <jtulach@netbeans.org>
  */
 public class AutoUpdate extends Task {
-    private List<Modules> modules = new ArrayList<Modules>();
+    private List<Modules> modules = new ArrayList<>();
     private FileSet nbmSet;
     private File download;
     private File dir;
@@ -134,7 +134,7 @@ public class AutoUpdate extends Task {
             }
             DirectoryScanner s = nbmSet.getDirectoryScanner(getProject());
             File basedir = s.getBasedir();
-            units = new HashMap<String, ModuleItem>();
+            units = new HashMap<>();
             for (String incl : s.getIncludedFiles()) {
                 File nbm = new File(basedir, incl);
                 try {
@@ -487,7 +487,7 @@ public class AutoUpdate extends Task {
     }
 
     private Map<String,List<String>> findExistingModules(File... clusters) {
-        Map<String,List<String>> all = new HashMap<String, List<String>>();
+        Map<String,List<String>> all = new HashMap<>();
         for (File c : clusters) {
             File mc = new File(c, "update_tracking");
             final File[] arr = mc.listFiles();
@@ -541,7 +541,7 @@ public class AutoUpdate extends Task {
                     if (name == null || version == null) {
                         throw new BuildException("Cannot find version in " + config);
                     }
-                    arr = new ArrayList<String>();
+                    arr = new ArrayList<>();
                     arr.add(version);
                     toAdd.put(name, arr);
                     return;

@@ -75,7 +75,7 @@ public class MakeUpdateDesc extends MatchingTask {
 
     /** Set of NBMs presented as a folder in the Update Center. */
     public /*static*/ class Group {
-        public List<FileSet> filesets = new ArrayList<FileSet>();
+        public List<FileSet> filesets = new ArrayList<>();
 	public String name;
 
         /** Displayed name of the group. */
@@ -100,9 +100,9 @@ public class MakeUpdateDesc extends MatchingTask {
 	}
     }
 
-    private List<Entityinclude> entityincludes = new ArrayList<Entityinclude>();
-    private List<Group> groups = new ArrayList<Group>();
-    private List<FileSet> filesets = new ArrayList<FileSet>();
+    private List<Entityinclude> entityincludes = new ArrayList<>();
+    private List<Group> groups = new ArrayList<>();
+    private List<FileSet> filesets = new ArrayList<>();
 
     private File desc;
 
@@ -346,7 +346,7 @@ public class MakeUpdateDesc extends MatchingTask {
                 pw.println ();
                 writeContentDescription(pw);
                 pw.println ();
-		Map<String,Element> licenses = new HashMap<String,Element>();
+		Map<String,Element> licenses = new HashMap<>();
                 String prefix = null;
                 if (dist_base != null) {
                     // fix/enforce distribution URL base
@@ -526,9 +526,9 @@ public class MakeUpdateDesc extends MatchingTask {
         };
         Map<String,Collection<Module>> r = automaticGrouping ?
             // generally will be creating groups on the fly, so sort them:
-            new TreeMap<String,Collection<Module>>(groupNameComparator) :
+            new TreeMap<>(groupNameComparator) :
             // preserve explicit order of <group>s:
-            new LinkedHashMap<String,Collection<Module>>();
+            new LinkedHashMap<>();
         // sort modules by display name (where available):
         Comparator<Module> moduleDisplayNameComparator = new Comparator<Module>() {
             public int compare(Module m1, Module m2) {
@@ -548,7 +548,7 @@ public class MakeUpdateDesc extends MatchingTask {
         for (Group g : groups) {
             Collection<Module> modules = r.get(g.name);
             if (modules == null) {
-                modules = new TreeSet<Module>(moduleDisplayNameComparator);
+                modules = new TreeSet<>(moduleDisplayNameComparator);
                 r.put(g.name, modules);
             }
             for (FileSet fs : g.filesets) {
@@ -586,7 +586,7 @@ public class MakeUpdateDesc extends MatchingTask {
                                 if (categ.length() > 0) {
                                     moduleCollection = r.get(categ);
                                     if (moduleCollection == null) {
-                                        moduleCollection = new TreeSet<Module>(moduleDisplayNameComparator);
+                                        moduleCollection = new TreeSet<>(moduleDisplayNameComparator);
                                         r.put(categ, moduleCollection);
                                     }
                                 }

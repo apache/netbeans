@@ -67,8 +67,8 @@ public class ModuleTestDependencies extends Task {
         try {
             Hashtable<String,Object> props = getProject().getProperties();
             ModuleListParser mlp = new ModuleListParser(props, ModuleType.NB_ORG, getProject());
-            SortedMap<String,SortedSet<String>> deps = new TreeMap<String,SortedSet<String>>();
-            SortedMap<String,SortedSet<String>> reverseDeps = reverseOutput != null ? new TreeMap<String,SortedSet<String>>() : null;
+            SortedMap<String,SortedSet<String>> deps = new TreeMap<>();
+            SortedMap<String,SortedSet<String>> reverseDeps = reverseOutput != null ? new TreeMap<>() : null;
             File nball = new File((String) props.get("nb_all"));
             for (ModuleListParser.Entry entry : mlp.findAll()) {
                 String myCnb = entry.getCnb();
@@ -86,7 +86,7 @@ public class ModuleTestDependencies extends Task {
                     if (clusterDeps == null) {
                         throw new BuildException("no property ${nb.cluster." + myCluster + ".depends} defined");
                     }
-                    Set<String> allowed = new HashSet<String>();
+                    Set<String> allowed = new HashSet<>();
                     allowed.add(myCluster);
                     allowed.add("harness");
                     for (String piece : clusterDeps.split(",")) {
@@ -105,7 +105,7 @@ public class ModuleTestDependencies extends Task {
                             if (ParseProjectXml.TestDeps.UNIT.equals(testType) && ParseProjectXml.findNBMElement(dep, "test") != null && ParseProjectXml.findNBMElement(dep, "compile-dependency") != null) {
                                 SortedSet<String> depsForMe = deps.get(myCnbAndCluster);
                                 if (depsForMe == null) {
-                                    depsForMe = new TreeSet<String>();
+                                    depsForMe = new TreeSet<>();
                                     deps.put(myCnbAndCluster, depsForMe);
                                 }
                                 depsForMe.add(targetCnbAndCluster);
@@ -113,7 +113,7 @@ public class ModuleTestDependencies extends Task {
                             if (reverseDeps != null && !targetCnb.equals("org.netbeans.libs.junit4") && !allowed.contains(targetCluster)) {
                                 SortedSet<String> depsForMe = reverseDeps.get(myCnbAndCluster);
                                 if (depsForMe == null) {
-                                    depsForMe = new TreeSet<String>();
+                                    depsForMe = new TreeSet<>();
                                     reverseDeps.put(myCnbAndCluster, depsForMe);
                                 }
                                 depsForMe.add(targetCnbAndCluster);

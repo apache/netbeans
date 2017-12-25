@@ -210,7 +210,7 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
         if (generateTemplate) {
             log ("Input file " + questionsFile + " does not exist. Generating it with skeleton answers.");
             try {
-                SortedSet<String> s = new TreeSet<String>(questions.keySet());
+                SortedSet<String> s = new TreeSet<>(questions.keySet());
                 generateTemplateFile(questionsVersion, s);
             } catch (IOException ex) {
                 throw new BuildException (ex);
@@ -250,7 +250,7 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
         
         {
             // check all answers have their questions
-            SortedSet<String> s = new TreeSet<String>(questions.keySet());
+            SortedSet<String> s = new TreeSet<>(questions.keySet());
             s.removeAll (answers.keySet ());
             if (!s.isEmpty()) {
                 if ("true".equals (this.getProject().getProperty ("arch.generate"))) {
@@ -615,7 +615,7 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
     }
 
     private static Map<String,Element> readElements (Document q, String name) {
-        Map<String,Element> map = new HashMap<String,Element>();
+        Map<String,Element> map = new HashMap<>();
        
         NodeList list = q.getElementsByTagName(name);
         for (int i = 0; i < list.getLength(); i++) {
@@ -682,7 +682,7 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
     
     private static Set<String> localDTDs;
     static {
-        localDTDs = new HashSet<String>();
+        localDTDs = new HashSet<>();
         localDTDs.add("Arch.dtd");
         localDTDs.add("Arch-api-questions.xml");
         localDTDs.add("xhtml1-strict.dtd");

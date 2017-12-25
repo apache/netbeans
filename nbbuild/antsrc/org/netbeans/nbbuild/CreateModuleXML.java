@@ -32,11 +32,11 @@ import java.util.zip.ZipEntry;
  */
 public class CreateModuleXML extends Task {
 
-    private final List<FileSet> enabled = new ArrayList<FileSet>(1);
-    private final List<FileSet> disabled = new ArrayList<FileSet>(1);
-    private final List<FileSet> autoload = new ArrayList<FileSet>(1);
-    private final List<FileSet> eager = new ArrayList<FileSet>(1);
-    private final List<FileSet> hidden = new ArrayList<FileSet>(1);
+    private final List<FileSet> enabled = new ArrayList<>(1);
+    private final List<FileSet> disabled = new ArrayList<>(1);
+    private final List<FileSet> autoload = new ArrayList<>(1);
+    private final List<FileSet> eager = new ArrayList<>(1);
+    private final List<FileSet> hidden = new ArrayList<>(1);
     private Integer level;
     private boolean checkBundle = true;
 
@@ -106,11 +106,11 @@ public class CreateModuleXML extends Task {
         this.checkBundle = check;
     }
     
-    private List<String> enabledNames = new ArrayList<String>(50);
-    private List<String> disabledNames = new ArrayList<String>(10);
-    private List<String> autoloadNames = new ArrayList<String>(10);
-    private List<String> eagerNames = new ArrayList<String>(10);
-    private List<String> hiddenNames = new ArrayList<String>(10);
+    private List<String> enabledNames = new ArrayList<>(50);
+    private List<String> disabledNames = new ArrayList<>(10);
+    private List<String> autoloadNames = new ArrayList<>(10);
+    private List<String> eagerNames = new ArrayList<>(10);
+    private List<String> hiddenNames = new ArrayList<>(10);
     private String hiddenList;
 
     /**

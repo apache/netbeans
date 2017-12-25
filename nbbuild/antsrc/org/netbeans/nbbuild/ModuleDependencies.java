@@ -59,8 +59,8 @@ import org.apache.tools.ant.types.FileSet;
  * http://openide.netbeans.org/proposals/arch/clusters.html#verify-solution
  */
 public class ModuleDependencies extends Task {
-    private List<Input> inputs = new ArrayList<Input>();
-    private List<Output> outputs = new ArrayList<Output>();
+    private List<Input> inputs = new ArrayList<>();
+    private List<Output> outputs = new ArrayList<>();
     private Set<ModuleInfo> modules;
     private Pattern regexp;
     
@@ -137,7 +137,7 @@ public class ModuleDependencies extends Task {
     }
     
     private void readModuleInfo () throws IOException {
-        modules = new TreeSet<ModuleInfo>();
+        modules = new TreeSet<>();
         
         if (inputs.isEmpty()) {
             throw new BuildException ("At least one <input> tag is needed");
@@ -208,8 +208,8 @@ public class ModuleDependencies extends Task {
 
                 m.implementationVersion = file.getManifest ().getMainAttributes ().getValue ("OpenIDE-Module-Implementation-Version");
 
-                TreeSet<Dependency> depends = new TreeSet<Dependency>();
-                TreeSet<Dependency> provides = new TreeSet<Dependency>();
+                TreeSet<Dependency> depends = new TreeSet<>();
+                TreeSet<Dependency> provides = new TreeSet<>();
                 addDependencies (depends, file.getManifest (), Dependency.Type.REQUIRES, "OpenIDE-Module-Requires");
                 addDependencies (depends, file.getManifest (), Dependency.Type.REQUIRES, "OpenIDE-Module-Needs");
                 addDependencies (depends, file.getManifest (), Dependency.Type.RECOMMENDS, "OpenIDE-Module-Recommends");
@@ -228,14 +228,14 @@ public class ModuleDependencies extends Task {
                  org.openide.loaders,org.openide.src > 1.0
                  */
                 m.depends = depends;
-                m.provides = new HashSet<String>();
+                m.provides = new HashSet<>();
                 for (Dependency d : provides) {
                     m.provides.add(d.getName());
                 }
                 {
                     String friends = file.getManifest ().getMainAttributes ().getValue ("OpenIDE-Module-Friends"); 
                     if (friends != null) {
-			TreeSet<String> set = new TreeSet<String>();
+			TreeSet<String> set = new TreeSet<>();
                         StringTokenizer tok = new StringTokenizer(friends, ", ");
 			while (tok.hasMoreElements()) {
 			    set.add(tok.nextToken());
@@ -285,8 +285,8 @@ public class ModuleDependencies extends Task {
     
 
     private void generatePublicPackages(File output, boolean justPublic, boolean justInterCluster) throws BuildException, IOException {
-        TreeSet<String> packages = new TreeSet<String>();
-        TreeMap<ModuleInfo,TreeSet<String>> friendExports = new TreeMap<ModuleInfo,TreeSet<String>>();
+        TreeSet<String> packages = new TreeSet<>();
+        TreeMap<ModuleInfo,TreeSet<String>> friendExports = new TreeMap<>();
         
         {
             for (ModuleInfo m : modules) {
@@ -302,7 +302,7 @@ public class ModuleDependencies extends Task {
                 String s = m.publicPackages;
                 Map<String,Boolean> pkgs = null;
                 if (s != null) {
-                    pkgs = new HashMap<String,Boolean>();
+                    pkgs = new HashMap<>();
                     StringTokenizer tok = new StringTokenizer(s, ",");
                     while (tok.hasMoreElements()) {
                         String p = tok.nextToken().trim();
@@ -328,7 +328,7 @@ public class ModuleDependencies extends Task {
                         throw new BuildException("Not enough packages found. The declared packages are: " + s + " but only " + packages + " were found in " + m.file);
                     }
                 } else {
-                    TreeSet<String> modulePkgs = new TreeSet<String>();
+                    TreeSet<String> modulePkgs = new TreeSet<>();
                     iterateThruPackages(m.file, pkgs, modulePkgs);
                     friendExports.put(m, modulePkgs);
                 }
@@ -467,9 +467,9 @@ public class ModuleDependencies extends Task {
     }
 
     private void generateListOfDisabledAutoloads(File output) throws BuildException, IOException {
-        Map<String,Set<String>> depsAll = new TreeMap<String,Set<String>>();
-        Map<String,ModuleInfo> considered = new TreeMap<String,ModuleInfo>();
-        Set<String> regular = new HashSet<String>();
+        Map<String,Set<String>> depsAll = new TreeMap<>();
+        Map<String,ModuleInfo> considered = new TreeMap<>();
+        Set<String> regular = new HashSet<>();
         for (ModuleInfo m : modules) {
             if (regexp != null && !regexp.matcher(m.group).matches()) {
                 continue;
@@ -479,7 +479,7 @@ public class ModuleDependencies extends Task {
             } else if (!m.isEager) {
                 regular.add(m.codebasename);
             }
-            Set<String> deps = new TreeSet<String>();
+            Set<String> deps = new TreeSet<>();
             depsAll.put(m.codebasename, deps);
             for (Dependency d : m.depends) {
                 for (ModuleInfo m2 : findModuleInfo(d, m)) {
@@ -488,7 +488,7 @@ public class ModuleDependencies extends Task {
             }
         }
         transitiveClosure(depsAll);
-        Map<String,Set<ModuleInfo>> disabled = new TreeMap<String,Set<ModuleInfo>>();
+        Map<String,Set<ModuleInfo>> disabled = new TreeMap<>();
         for (Map.Entry<String, Set<String>> entry : depsAll.entrySet()) {
             if (!regular.contains(entry.getKey())) {
                 continue;
@@ -500,7 +500,7 @@ public class ModuleDependencies extends Task {
         for (ModuleInfo m : considered.values()) {
             Set<ModuleInfo> group = disabled.get(m.group);
             if (group == null) {
-                group = new TreeSet<ModuleInfo>();
+                group = new TreeSet<>();
                 disabled.put(m.group, group);
             }
             group.add(m);
@@ -523,7 +523,7 @@ public class ModuleDependencies extends Task {
         // calculate transitive closure of modules
         TreeMap<String, TreeSet<String>> allModuleDeps = transitiveClosureOfModules();
         // create a map of <module, kits that depend on it>
-        TreeMap<ModuleInfo, Set<String>> dependingKits = new TreeMap<ModuleInfo, Set<String>>();
+        TreeMap<ModuleInfo, Set<String>> dependingKits = new TreeMap<>();
         for (ModuleInfo m : modules) {
             if (regexp != null && !regexp.matcher(m.group).matches()) {
                 continue;
@@ -544,7 +544,7 @@ public class ModuleDependencies extends Task {
                         // regular module, not a kit
                         Set<String> kits = dependingKits.get(theModuleOneIsDependingOn);
                         if (kits == null) {
-                            kits = new TreeSet<String>();
+                            kits = new TreeSet<>();
                             dependingKits.put(theModuleOneIsDependingOn, kits);
                         }
                         kits.add(m.getName(false));
@@ -556,7 +556,7 @@ public class ModuleDependencies extends Task {
         }
         // now check that there is one canonical kit that "contains" the module
         // at the same time create a map of <kit, set of <module>>
-        TreeMap<String, TreeSet<String>> allKits = new TreeMap<String, TreeSet<String>>();
+        TreeMap<String, TreeSet<String>> allKits = new TreeMap<>();
         for (ModuleInfo module : dependingKits.keySet()) {
             Set<String> kits = dependingKits.get(module);
             // candidate for the lowest kit
@@ -634,17 +634,17 @@ public class ModuleDependencies extends Task {
     private static void registerModuleInKit(ModuleInfo module, String kit, TreeMap<String, TreeSet<String>> allKits) {
         TreeSet<String> modules = allKits.get(kit);
         if (modules == null) {
-            modules = new TreeSet<String>();
+            modules = new TreeSet<>();
             allKits.put(kit, modules);
         }
         modules.add(module.getName(false));
     }
 
     private TreeMap<String, TreeSet<String>> transitiveClosureOfModules() {
-        TreeMap<String, TreeSet<String>> moduleDepsAll = new TreeMap<String, TreeSet<String>>();
+        TreeMap<String, TreeSet<String>> moduleDepsAll = new TreeMap<>();
         // populate with modules first
         for (ModuleInfo m : modules) {
-            TreeSet<String> deps = new TreeSet<String>();
+            TreeSet<String> deps = new TreeSet<>();
             moduleDepsAll.put(m.codebasename, deps);
             for (Dependency d : m.depends) {
                 for (ModuleInfo theModuleOneIsDependingOn : findModuleInfo(d, m)) {
@@ -658,11 +658,11 @@ public class ModuleDependencies extends Task {
     
     
     private TreeMap<String, TreeSet<String>> transitiveClosureOfKits() {
-        TreeMap<String, TreeSet<String>> kitDepsAll = new TreeMap<String, TreeSet<String>>();
+        TreeMap<String, TreeSet<String>> kitDepsAll = new TreeMap<>();
         // populate with kits first
         for (ModuleInfo m : modules) {
             if (m.showInAutoupdate) {
-                TreeSet<String> deps = new TreeSet<String>();
+                TreeSet<String> deps = new TreeSet<>();
                 kitDepsAll.put(m.getName(false), deps);
                 for (Dependency d : m.depends) {
                     for (ModuleInfo theModuleOneIsDependingOn : findModuleInfo(d, m)) {
@@ -687,7 +687,7 @@ public class ModuleDependencies extends Task {
             needAnotherIteration = false;
             for (Map.Entry<T,? extends Set<T>> entry : allDeps.entrySet()) {
                 Set<T> deps = entry.getValue();
-                for (T d : new TreeSet<T>(deps)) {
+                for (T d : new TreeSet<>(deps)) {
                     for (T d2: allDeps.get(d)) {
                         if (deps.add(d2)) {
                             log("transitive closure: need to add " + d2 + " to " + entry.getKey(), Project.MSG_DEBUG);
@@ -726,7 +726,7 @@ public class ModuleDependencies extends Task {
     }
 
     private void generatePlugins(File output) throws BuildException, IOException {
-        Set<String> standardClusters = new HashSet<String>();
+        Set<String> standardClusters = new HashSet<>();
         String standardClustersS = getProject().getProperty("clusters.config.full.list");
         if (standardClustersS != null) {
             for (String clusterProp : standardClustersS.split(",")) {
@@ -739,7 +739,7 @@ public class ModuleDependencies extends Task {
         FileWriter fw = new FileWriter(output);
         try {
             PrintWriter w = new PrintWriter(fw);
-            SortedMap<String,String> lines = new TreeMap<String,String>(Collator.getInstance());
+            SortedMap<String,String> lines = new TreeMap<>(Collator.getInstance());
             lines.put("A", "||Code Name Base||Display Name||Display Category||Standard Cluster");
             lines.put("C", "");
             lines.put("D", "||Code Name Base||Display Name||Display Category||Extra Cluster");
@@ -773,7 +773,7 @@ public class ModuleDependencies extends Task {
                 if (clusterDeps == null) {
                     throw new BuildException("no property ${nb.cluster." + m.group + ".depends} defined");
                 }
-                Set<String> allowed = new HashSet<String>();
+                Set<String> allowed = new HashSet<>();
                 allowed.add(m.group);
                 for (String piece : clusterDeps.split(",")) {
                     allowed.add(piece.replaceFirst("^nb[.]cluster[.]", ""));
@@ -799,15 +799,15 @@ public class ModuleDependencies extends Task {
     }
 
     private void generateSharedPackages (File output) throws BuildException, IOException {
-        TreeMap<String,List<ModuleInfo>> packages = new TreeMap<String,List<ModuleInfo>>();
+        TreeMap<String,List<ModuleInfo>> packages = new TreeMap<>();
         
         for (ModuleInfo m : modules) {
-            HashSet<String> pkgs = new HashSet<String>();
+            HashSet<String> pkgs = new HashSet<>();
             iterateSharedPackages(m.file, pkgs);
             for (String s : pkgs) {
                 List<ModuleInfo> l = packages.get(s);
                 if (l == null) {
-                    l = new ArrayList<ModuleInfo>();
+                    l = new ArrayList<>();
                     packages.put(s, l);
                 }
                 l.add(m);
@@ -822,7 +822,7 @@ public class ModuleDependencies extends Task {
             }
             List<ModuleInfo> cnt = entry.getValue();
             if (cnt.size() > 1) {
-                SortedSet<String> cnbs = new TreeSet<String>();
+                SortedSet<String> cnbs = new TreeSet<>();
                 for (ModuleInfo m : cnt) {
                     if (regexp == null || regexp.matcher(m.group).matches()) {
                         cnbs.add(m.codebasename);
@@ -878,7 +878,7 @@ public class ModuleDependencies extends Task {
         PrintWriter w = new PrintWriter (new FileWriter (output));
         for (ModuleInfo m : modules) {
             boolean first = true;
-            Set<ModuleInfo> written = new HashSet<ModuleInfo>(); // XXX needed for other uses of findModuleInfo too
+            Set<ModuleInfo> written = new HashSet<>(); // XXX needed for other uses of findModuleInfo too
             for (Dependency d : m.depends) {
                 if (d.getName().startsWith("org.openide.modules.ModuleFormat")) {
                     continue; // just clutter
@@ -919,19 +919,19 @@ public class ModuleDependencies extends Task {
     private void generateGroupDependencies (File output, boolean implementationOnly) throws BuildException, IOException {
         PrintWriter w = new PrintWriter (new FileWriter (output));
 
-        Map<Dependency,Set<ModuleInfo>> referrers = new HashMap<Dependency,Set<ModuleInfo>>();
+        Map<Dependency,Set<ModuleInfo>> referrers = new HashMap<>();
         
-        TreeMap<String, Set<Dependency>> groups = new TreeMap<String, Set<Dependency>>();
+        TreeMap<String, Set<Dependency>> groups = new TreeMap<>();
         for (ModuleInfo m : modules) {
             if (regexp != null && !regexp.matcher(m.group).matches()) {
                 continue;
             }
             Set<Dependency> l = groups.get(m.group);
             if (l == null) {
-                l = new TreeSet<Dependency>();
+                l = new TreeSet<>();
                 groups.put(m.group, l);
             }
-            Set<Dependency> deps = new HashSet<Dependency>();
+            Set<Dependency> deps = new HashSet<>();
             for (Dependency d : m.depends) {
                 if (implementationOnly && (!d.exact || d.compare == null)) {
                     continue;
@@ -946,7 +946,7 @@ public class ModuleDependencies extends Task {
             for (Dependency d : deps) {
                 Set<ModuleInfo> r = referrers.get(d);
                 if (r == null) {
-                    r = new HashSet<ModuleInfo>();
+                    r = new HashSet<>();
                     referrers.put(d, r);
                 }
                 r.add(m);
@@ -987,7 +987,7 @@ public class ModuleDependencies extends Task {
         if (dep.isSpecial()) {
             return Collections.emptySet();
         }
-        Set<ModuleInfo> result = new LinkedHashSet<ModuleInfo>();
+        Set<ModuleInfo> result = new LinkedHashSet<>();
         for (ModuleInfo info : modules) {
             if (dep.isDependingOn (info)) {
                 result.add(info);
@@ -1058,7 +1058,7 @@ public class ModuleDependencies extends Task {
             this.dir = dir;
         }
         Collection<Input> inputs() {
-            List<Input> inputs = new ArrayList<Input>();
+            List<Input> inputs = new ArrayList<>();
             for (File cluster : dir.listFiles()) {
                 if (!new File(cluster, "update_tracking").isDirectory()) {
                     continue;

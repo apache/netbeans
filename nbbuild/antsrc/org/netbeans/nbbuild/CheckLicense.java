@@ -41,7 +41,7 @@ import org.apache.tools.ant.types.FileSet;
  */
 public class CheckLicense extends Task {
 
-    private final List<FileSet> filesets = new ArrayList<FileSet>(1);
+    private final List<FileSet> filesets = new ArrayList<>(1);
     private String fragment;
     private List<Convert> fragments;
     private FailType fail;
@@ -68,7 +68,7 @@ public class CheckLicense extends Task {
     public Convert createConvert() {
         Convert f = new Convert();
         if (fragments == null) {
-            fragments = new ArrayList<Convert>();
+            fragments = new ArrayList<>();
         }
         
         fragments.add(f);

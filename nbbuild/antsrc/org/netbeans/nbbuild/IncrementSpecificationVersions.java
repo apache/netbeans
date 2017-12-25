@@ -57,7 +57,7 @@ public final class IncrementSpecificationVersions extends Task {
     }
     
     public void setModules(String m) {
-        modules = new ArrayList<String>();
+        modules = new ArrayList<>();
         for (Object o : Collections.list(new StringTokenizer(m, ", "))) {
             modules.add((String) o);
         }
@@ -249,7 +249,7 @@ public final class IncrementSpecificationVersions extends Task {
         InputStream is = new FileInputStream(file);
         try {
             BufferedReader r = new BufferedReader(new InputStreamReader(is, enc));
-            List<String> l = new ArrayList<String>();
+            List<String> l = new ArrayList<>();
             String line;
             while ((line = r.readLine()) != null) {
                 l.add(line);

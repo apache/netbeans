@@ -276,7 +276,7 @@ public class MakeJNLP extends Task {
         }        
         if (processJarVersions) {
           if (jarDirectories == null) {
-            jarDirectories = new HashSet<File>();
+            jarDirectories = new HashSet<>();
           }
           jarDirectories.add(new File(to.getParent()));
         }
@@ -297,7 +297,7 @@ public class MakeJNLP extends Task {
     }
     
     private void generateFiles() throws IOException, BuildException {
-        Set<String> declaredLocales = new HashSet<String>();
+        Set<String> declaredLocales = new HashSet<>();
         boolean useAllLocales = false;
         if(includelocales == null || "*".equals(includelocales)) {
             useAllLocales = true;
@@ -309,7 +309,7 @@ public class MakeJNLP extends Task {
                 declaredLocales.add(tokenizer.nextToken());
             }
         }
-        Set<String> indirectFilePaths = new HashSet<String>();
+        Set<String> indirectFilePaths = new HashSet<>();
         File tmpFile = null;
         for (FileSet fs : new FileSet[] {indirectJars, indirectFiles}) {
             if (fs != null) {
@@ -527,7 +527,7 @@ public class MakeJNLP extends Task {
         cp.execute();
         boolean success = false;
         try {
-            final Map<String,String> extendedAttrs = new HashMap<String,String>();
+            final Map<String,String> extendedAttrs = new HashMap<>();
             final org.apache.tools.zip.ZipFile zf = new org.apache.tools.zip.ZipFile(sourceJar);
             try {                
                 final org.apache.tools.zip.ZipEntry manifestEntry = zf.getEntry(MANIFEST);
@@ -649,7 +649,7 @@ public class MakeJNLP extends Task {
 
     
     private Map<String,List<File>> verifyExtensions(File f, Manifest mf, String dashcnb, String codebasename, boolean verify, Set<String> indirectFilePaths) throws IOException, BuildException {
-        Map<String,List<File>> localizedFiles = new HashMap<String,List<File>>();
+        Map<String,List<File>> localizedFiles = new HashMap<>();
         
         
         File clusterRoot = f.getParentFile();
@@ -677,7 +677,7 @@ public class MakeJNLP extends Task {
             throw new BuildException("The file " + ut + " for module " + codebasename + " cannot be found");
         }
 
-        Map<String,String> fileToOwningModule = new HashMap<String,String>();
+        Map<String,String> fileToOwningModule = new HashMap<>();
         try {
             ModuleSelector.readUpdateTracking(getProject(), ut.toString(), fileToOwningModule);
         } catch (IOException ex) {
@@ -759,7 +759,7 @@ public class MakeJNLP extends Task {
                     
                     List<File> l = recordLocales.get(locale);
                     if (l == null) {
-                        l = new ArrayList<File>();
+                        l = new ArrayList<>();
                         recordLocales.put(locale, l);
                     }
                     l.add(new File(clusterRoot, s.replace('/', File.separatorChar)));
@@ -902,7 +902,7 @@ public class MakeJNLP extends Task {
             return;
         }
         DirectoryScanner scan = indirectFiles.getDirectoryScanner(getProject());
-        Map<String,File> entries = new LinkedHashMap<String,File>();
+        Map<String,File> entries = new LinkedHashMap<>();
         for (String f : scan.getIncludedFiles()) {
             entries.put(f.replace(File.separatorChar, '/'), new File(scan.getBasedir(), f));
         }

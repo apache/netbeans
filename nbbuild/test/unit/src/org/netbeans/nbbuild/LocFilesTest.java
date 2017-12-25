@@ -160,7 +160,7 @@ public class LocFilesTest extends NbTestCase {
         File f = new File(dist, jar.replace('/', File.separatorChar));
         assertTrue("File " + f + " is created", f.exists());
         JarFile jf = new JarFile(f);
-        Set<String> expected = new HashSet<String>(Arrays.asList(files));
+        Set<String> expected = new HashSet<>(Arrays.asList(files));
         Enumeration<JarEntry> en = jf.entries();
         while (en.hasMoreElements()) {
             JarEntry e = en.nextElement();

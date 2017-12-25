@@ -69,7 +69,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class CheckHelpSets extends Task {
     
-    private List<FileSet> filesets = new ArrayList<FileSet>();
+    private List<FileSet> filesets = new ArrayList<>();
     
     /** Add a fileset with one or more helpsets in it.
      * <strong>Only</strong> the <samp>*.hs</samp> should match!
@@ -123,9 +123,9 @@ public class CheckHelpSets extends Task {
         HelpSet.parse(hsfile.toURI().toURL(), null, new VerifyHSFactory());
         log("Checking links from help map and between HTML files...");
         Enumeration e = map.getAllIDs();
-        Set<URI> okurls = new HashSet<URI>(1000);
-        Set<URI> badurls = new HashSet<URI>(1000);
-        Set<URI> cleanurls = new HashSet<URI>(1000);
+        Set<URI> okurls = new HashSet<>(1000);
+        Set<URI> badurls = new HashSet<>(1000);
+        Set<URI> cleanurls = new HashSet<>(1000);
         while (e.hasMoreElements()) {
             javax.help.Map.ID id = (javax.help.Map.ID)e.nextElement();
             URL u = map.getURLFromID(id);
@@ -133,7 +133,7 @@ public class CheckHelpSets extends Task {
                 throw new BuildException("Bogus map ID: " + id.id, new Location(hsfile.getAbsolutePath()));
             }
             log("Checking ID " + id.id, Project.MSG_VERBOSE);
-            List<String> errors = new ArrayList<String>();
+            List<String> errors = new ArrayList<>();
             CheckLinks.scan(this, null, null, id.id, "", 
             u.toURI(), okurls, badurls, cleanurls, false, false, false, 2, 
             Collections.<Mapper>emptyList(), errors);
@@ -205,7 +205,7 @@ public class CheckHelpSets extends Task {
     
     private final class VerifyHSFactory extends HelpSet.DefaultHelpSetFactory {
         
-        private Set<String> ids = new HashSet<String>(1000);
+        private Set<String> ids = new HashSet<>(1000);
         
         public void processMapRef(HelpSet hs, Hashtable attrs) {
             try {

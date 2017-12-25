@@ -46,8 +46,8 @@ public class CheckLinks extends MatchingTask {
     private boolean checkexternal = true;
     private boolean checkspaces = true;
     private boolean checkforbidden = true;
-    private List<Mapper> mappers = new LinkedList<Mapper>();
-    private List<Filter> filters = new ArrayList<Filter>();
+    private List<Mapper> mappers = new LinkedList<>();
+    private List<Filter> filters = new ArrayList<>();
     private File report;
 
     /** Set whether to check external links (absolute URLs).
@@ -106,10 +106,10 @@ public class CheckLinks extends MatchingTask {
         if (! checkexternal) message += " (external URLs will be skipped)";
         log (message);
         String[] files = scanner.getIncludedFiles ();
-        Set<URI> okurls = new HashSet<URI>(1000);
-        Set<URI> badurls = new HashSet<URI>(100);
-        Set<URI> cleanurls = new HashSet<URI>(100);
-        List<String> errors = new ArrayList<String>();
+        Set<URI> okurls = new HashSet<>(1000);
+        Set<URI> badurls = new HashSet<>(100);
+        Set<URI> cleanurls = new HashSet<>(100);
+        List<String> errors = new ArrayList<>();
         for (int i = 0; i < files.length; i++) {
             File file = new File (basedir, files[i]);
             URI fileurl = file.toURI();
@@ -449,7 +449,7 @@ public class CheckLinks extends MatchingTask {
         // map from other URIs (hrefs) to line/col info where they occur in this file (format: ":1:2")
         Map<URI,String> others = null;
         if (recurse > 0 && cleanurls.add(base)) {
-            others = new HashMap<URI,String>(100);
+            others = new HashMap<>(100);
         }
         if (recurse == 0 && frag == null) {
             // That is all we wanted to check.
@@ -458,7 +458,7 @@ public class CheckLinks extends MatchingTask {
         if ("text/html".equals(mimeType)) {
             task.log("Parsing " + base, Project.MSG_VERBOSE);
             Matcher m = hrefOrAnchor.matcher(content);
-            Set<String> names = new HashSet<String>(100); // Set<String>
+            Set<String> names = new HashSet<>(100); // Set<String>
             while (m.find()) {
                 // Get the stuff involved:
                 String type = m.group(3);

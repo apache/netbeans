@@ -55,14 +55,14 @@ import org.apache.tools.ant.types.*;
  */
 public class LocalizedJar extends MatchingTask {
 
-    private List<FileSet> localeKits = new LinkedList<FileSet> ();
-    private List<LocaleOrB> locales = new LinkedList<LocaleOrB> ();
-    private List<LocaleOrB> brandings = new LinkedList<LocaleOrB> ();
+    private List<FileSet> localeKits = new LinkedList<> ();
+    private List<LocaleOrB> locales = new LinkedList<> ();
+    private List<LocaleOrB> brandings = new LinkedList<> ();
     private File jarFile;
     private File baseDir;
     private boolean doCompress = false;
     private static long emptyCrc = new CRC32 ().getValue ();
-    private List<FileSet> filesets = new LinkedList<FileSet> ();
+    private List<FileSet> filesets = new LinkedList<> ();
     private File manifest;
     private boolean checkPathLocale = true ;
     private boolean warnMissingDir = false ;
@@ -224,10 +224,10 @@ public class LocalizedJar extends MatchingTask {
 
         //System.err.println ("Stage #1");
         // First find out which files need to be archived.
-        Map<String, File> allFiles = new HashMap<String, File> (); // all files to do something with; Map<String,File> from JAR path to actual file
+        Map<String, File> allFiles = new HashMap<> (); // all files to do something with; Map<String,File> from JAR path to actual file
         // Populate it.
         {
-            List<FileScanner> scanners = new ArrayList<FileScanner> (filesets.size () + 1);
+            List<FileScanner> scanners = new ArrayList<> (filesets.size () + 1);
             if (baseDir != null) {
                 scanners.add (getDirectoryScanner (baseDir));
             }
@@ -252,7 +252,7 @@ public class LocalizedJar extends MatchingTask {
         // Now find all files which should always be put into a locale
         // kit (e.g. dir/locale/name.jar, no special locale or
         // branding, but distinguished as localizable/brandable).
-        Set<File> localeKitFiles = new HashSet<File> (); // all locale-kit files
+        Set<File> localeKitFiles = new HashSet<> (); // all locale-kit files
         // Populate this one.
         {
             for (FileSet fs: localeKits) {
@@ -267,8 +267,8 @@ public class LocalizedJar extends MatchingTask {
 
         //System.err.println ("Stage #3");
         // Compute list of supported locales and brandings.
-        List<String> locales2 = new LinkedList<String> ();
-        List<String> brandings2 = new LinkedList<String> (); // all brandings
+        List<String> locales2 = new LinkedList<> ();
+        List<String> brandings2 = new LinkedList<> (); // all brandings
         // Initialize above two.
         
         for (LocaleOrB lob: locales) {
@@ -287,10 +287,10 @@ public class LocalizedJar extends MatchingTask {
 
         //System.err.println ("Stage #4");
         // Analyze where everything goes.
-        Set<File> jars = new HashSet<File> (); //JAR files to build
-        Map<File,String> localeMarks = new HashMap<File,String> (); // JAR files to locale (or null for basic JAR, "-" for blank)
-        Map<File,String> brandingMarks = new HashMap<File,String> (); // JAR files to branding (or null for basic JAR, "-" for blank)
-        Map<File,Map<String,File>> router = new HashMap<File,Map<String,File>> (); // JAR files to map of JAR path to actual file (file may be null for dirs)
+        Set<File> jars = new HashSet<> (); //JAR files to build
+        Map<File,String> localeMarks = new HashMap<> (); // JAR files to locale (or null for basic JAR, "-" for blank)
+        Map<File,String> brandingMarks = new HashMap<> (); // JAR files to branding (or null for basic JAR, "-" for blank)
+        Map<File,Map<String,File>> router = new HashMap<> (); // JAR files to map of JAR path to actual file (file may be null for dirs)
         {
 	    String localeDir ;
             for (Map.Entry<String, File> entry: allFiles.entrySet()) {
@@ -383,7 +383,7 @@ log( "==> Examining file: " + path, Project.MSG_DEBUG) ;
                     jars.add (thisjar);
                     Map<String, File> files = router.get (thisjar);
                     if (files == null) {
-                        files = new TreeMap<String, File> ();
+                        files = new TreeMap<> ();
                         router.put (thisjar, files);
                     }
                     files.put (path, file);
@@ -394,7 +394,7 @@ log( "==> Examining file: " + path, Project.MSG_DEBUG) ;
         //System.err.println ("Stage #5");
         // Go through JARs one by one, and build them (if necessary).
         {
-            List<File> jars2 = new ArrayList<File> (jars);
+            List<File> jars2 = new ArrayList<> (jars);
             class FileNameComparator implements Comparator<File> {
                 public int compare (File f1, File f2) {
                     return f1.toString ().compareTo (f2.toString ());
@@ -431,7 +431,7 @@ log( "==> Examining file: " + path, Project.MSG_DEBUG) ;
                         out.setMethod (doCompress ? ZipOutputStream.DEFLATED : ZipOutputStream.STORED);
                         String localeMark = localeMarks.get (jar);
                         String brandingMark = brandingMarks.get (jar);
-                        Set<String> addedDirs = new HashSet<String> ();
+                        Set<String> addedDirs = new HashSet<> ();
                         // Add the manifest.
                         InputStream is;
                         long time;

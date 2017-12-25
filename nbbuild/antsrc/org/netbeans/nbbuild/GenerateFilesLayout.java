@@ -58,13 +58,13 @@ public class GenerateFilesLayout extends Task {
         }
         DirectoryScanner ds = fs.getDirectoryScanner();
         try {
-            Map</*cluster*/String,Map</*path*/String,/*cnb*/String>> ownersByCluster = new HashMap<String,Map<String,String>>();
+            Map</*cluster*/String,Map</*path*/String,/*cnb*/String>> ownersByCluster = new HashMap<>();
             int maxlength = 0;
             for (String cluster : ds.getIncludedDirectories()) {
                 if (cluster.isEmpty() || cluster.indexOf(File.separatorChar) != -1) {
                     continue;
                 }
-                Map<String,String> owners = new HashMap<String,String>();
+                Map<String,String> owners = new HashMap<>();
                 File updateTracking = new File(ds.getBasedir(), cluster + "/update_tracking");
                 if (!updateTracking.isDirectory()) {
                     log("No such dir: " + updateTracking, Project.MSG_WARN);

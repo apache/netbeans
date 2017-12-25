@@ -146,7 +146,7 @@ abstract class TestBase extends NbTestCase {
         // for me now, I leave it for the time when somebody really
         // needs that...
 
-        List<String> arr = new ArrayList<String>();
+        List<String> arr = new ArrayList<>();
         arr.add("-f");
         arr.add(f.toString());
         arr.addAll(Arrays.asList(args));

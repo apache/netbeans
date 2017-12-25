@@ -38,8 +38,8 @@ import org.apache.tools.ant.taskdefs.Ant;
  */
 public class CleanAll extends Task {
 
-    private List<String> modules = new ArrayList<String>();
-    private List<String> failedmodules = new ArrayList<String>();
+    private List<String> modules = new ArrayList<>();
+    private List<String> failedmodules = new ArrayList<>();
     private String targetname = "clean";
     private File topdir = null;
     private File [] topdirs = null;
@@ -51,7 +51,7 @@ public class CleanAll extends Task {
     /** Comma-separated list of modules to include. */
     public void setModules (String s) {
         StringTokenizer tok = new StringTokenizer (s, ", ");
-        modules = new ArrayList<String>();
+        modules = new ArrayList<>();
         while (tok.hasMoreTokens ())
             modules.add(tok.nextToken());
     }
@@ -111,7 +111,7 @@ public class CleanAll extends Task {
         // Now remove earlier ones: already done.
         @SuppressWarnings("unchecked")
         Vector<Target> doneList = getProject().topoSort(getOwningTarget().getName(), targets);
-        List<Target> todo = new ArrayList<Target>(fullList.subList(0, fullList.indexOf(dummy)));
+        List<Target> todo = new ArrayList<>(fullList.subList(0, fullList.indexOf(dummy)));
         todo.removeAll(doneList.subList(0, doneList.indexOf(getOwningTarget())));
 
         for (Target t : todo) {

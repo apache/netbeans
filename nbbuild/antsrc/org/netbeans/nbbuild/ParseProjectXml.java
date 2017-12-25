@@ -278,7 +278,7 @@ public final class ParseProjectXml extends Task {
             this.compileDep = compileDep;
         }
      }
-      List<TestType> testTypes = new LinkedList<TestType>();
+      List<TestType> testTypes = new LinkedList<>();
       
       public void addTestType(TestType testType) {
           testTypes.add(testType);
@@ -320,7 +320,7 @@ public final class ParseProjectXml extends Task {
                 // Ensure project.xml is valid according to schema.
                 File nball = new File(getProject().getProperty("nb_all"));
                 SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-                List<Source> sources = new ArrayList<Source>();
+                List<Source> sources = new ArrayList<>();
                 String[] xsds = {
                     "project.ant/src/org/netbeans/modules/project/ant/project.xsd",
                     "apisupport.project/src/org/netbeans/modules/apisupport/project/resources/nb-module-project2.xsd",
@@ -591,7 +591,7 @@ public final class ParseProjectXml extends Task {
         if (pp == null) {
             throw new BuildException("No <public-packages>", getLocation());
         }
-        List<PublicPackage> pkgs = new ArrayList<PublicPackage>();
+        List<PublicPackage> pkgs = new ArrayList<>();
         for (Element p : XMLUtil.findSubElements(pp)) {
             boolean sub = false;
             if ("friend".equals(p.getNodeName())) {
@@ -619,7 +619,7 @@ public final class ParseProjectXml extends Task {
         if (pp == null) {
             return null;
         }
-        List<String> friends = new ArrayList<String>();
+        List<String> friends = new ArrayList<>();
         boolean other = false;
         for (Element p : XMLUtil.findSubElements(pp)) {
             if ("friend".equals(p.getNodeName())) {
@@ -785,8 +785,8 @@ public final class ParseProjectXml extends Task {
         if (md == null) {
             throw new BuildException("No <module-dependencies>", getLocation());
         }
-        List<Dep> deps = new ArrayList<Dep>();
-        List<URL> moduleAutoDeps = new ArrayList<URL>();
+        List<Dep> deps = new ArrayList<>();
+        List<URL> moduleAutoDeps = new ArrayList<>();
         for (Element dep : XMLUtil.findSubElements(md)) {
             Element cnb = findNBMElement(dep, "code-name-base");
             if (cnb == null) {
@@ -842,7 +842,7 @@ public final class ParseProjectXml extends Task {
         if (moduleAutoDeps.isEmpty()) {
             return;
         }
-        Set<String> depsS = new HashSet<String>();
+        Set<String> depsS = new HashSet<>();
         String result;
         AntClassLoader loader = new AntClassLoader();
         try {
@@ -894,7 +894,7 @@ public final class ParseProjectXml extends Task {
             return;
         }
         log("warning: " + result, Project.MSG_WARN);
-        Set<String> noCompileDeps = new HashSet<String>();
+        Set<String> noCompileDeps = new HashSet<>();
         Iterator<Dep> it = deps.iterator();
         while (it.hasNext()) {
             Dep d = it.next();
@@ -944,7 +944,7 @@ public final class ParseProjectXml extends Task {
         Path clusterPathS = (Path) getProject().getReference("cluster.path.id");
         Set<File> clusterPath = null;
         if (clusterPathS != null) {
-            clusterPath = new HashSet<File>();
+            clusterPath = new HashSet<>();
             for (Iterator<?> it = clusterPathS.iterator(); it.hasNext();) {
                 File oneCluster = ((FileResource) it.next()).getFile();
                 clusterPath.add(oneCluster);
@@ -952,7 +952,7 @@ public final class ParseProjectXml extends Task {
         }
         String excludedModulesProp = getProject().getProperty("disabled.modules");
         Set<String> excludedModules = excludedModulesProp != null ?
-            new HashSet<String>(Arrays.asList(excludedModulesProp.split(" *, *"))) :
+            new HashSet<>(Arrays.asList(excludedModulesProp.split(" *, *"))) :
             null;
         for (Dep dep : deps) {
             if (!runtime && !dep.compile) {
@@ -961,10 +961,10 @@ public final class ParseProjectXml extends Task {
             String cnb = dep.codenamebase;
             File depJar = computeClasspathModuleLocation(modules, cnb, clusterPath, excludedModules, runtime);
 
-            List<File> additions = new ArrayList<File>();
+            List<File> additions = new ArrayList<>();
             additions.add(depJar);
             if (recursive) {
-                addRecursiveDeps(additions, modules, cnb, clusterPath, excludedModules, new HashSet<String>(), runtime);
+                addRecursiveDeps(additions, modules, cnb, clusterPath, excludedModules, new HashSet<>(), runtime);
             }
             
             // #52354: look for <class-path-extension>s in dependent modules.
@@ -1132,7 +1132,7 @@ public final class ParseProjectXml extends Task {
       // unit, qa-functional, performance
       final String testtype;
       // all dependecies for the testtype
-      final  List<TestDep> dependencies = new ArrayList<TestDep>();
+      final  List<TestDep> dependencies = new ArrayList<>();
       // code name base of tested module
       final String cnb;
       final ModuleListParser modulesParser;
@@ -1154,7 +1154,7 @@ public final class ParseProjectXml extends Task {
        }
       
       public List<String> getFiles(boolean compile) {
-          List<String> files = new ArrayList<String>();
+          List<String> files = new ArrayList<>();
           for (TestDep d : dependencies) {
               files.addAll(d.getFiles(compile));
           }
@@ -1189,7 +1189,7 @@ public final class ParseProjectXml extends Task {
         }
         private String getPath(List<String> files) {
             StringBuffer path = new StringBuffer();
-            Set<String> filesSet = new HashSet<String>();
+            Set<String> filesSet = new HashSet<>();
             for (String filePath : files) {
                 if (!filesSet.contains(filePath)) {
                     if (path.length() > 0) {
@@ -1211,7 +1211,7 @@ public final class ParseProjectXml extends Task {
      * @return relative project folder paths separated by comma
      */
     public  String getTestCompileDep() {
-        Set<String> cnbs = new HashSet<String>();
+        Set<String> cnbs = new HashSet<>();
         StringBuilder builder = new StringBuilder();
         computeCompileDep(cnb,cnbs,builder);
         return (builder.length() > 0) ? builder.toString() : null;
@@ -1254,7 +1254,7 @@ public final class ParseProjectXml extends Task {
     
    private void addMissingEntry(String cnb) {
         if (missingEntries == null) {
-            missingEntries = new HashSet<String>();
+            missingEntries = new HashSet<>();
         }
         missingEntries.add(cnb);
     }
@@ -1313,9 +1313,9 @@ public final class ParseProjectXml extends Task {
        /* get modules dependecies
         */
        List<ModuleListParser.Entry> getModules() {
-           List<ModuleListParser.Entry> entries = new ArrayList<ModuleListParser.Entry>();
+           List<ModuleListParser.Entry> entries = new ArrayList<>();
            if (recursive ) {
-               Map<String,ModuleListParser.Entry> entriesMap = new HashMap<String,ModuleListParser.Entry>();
+               Map<String,ModuleListParser.Entry> entriesMap = new HashMap<>();
                addRecursiveModules(cnb,entriesMap);
                entries.addAll(entriesMap.values());
            } else {
@@ -1351,7 +1351,7 @@ public final class ParseProjectXml extends Task {
            }
        }
        List<String> getFiles(boolean compile) {
-           List<String> files = new ArrayList<String>();
+           List<String> files = new ArrayList<>();
            if (!compile ||  ( compile && this.compile)) {
                List<ModuleListParser.Entry> modules = getModules();
                for (ModuleListParser.Entry entry : getModules()) {
@@ -1482,7 +1482,7 @@ public final class ParseProjectXml extends Task {
         OutputStream os = new FileOutputStream(ppjar);
         try {
             ZipOutputStream zos = new ZipOutputStream(os);
-            Set<String> addedPaths = new HashSet<String>();
+            Set<String> addedPaths = new HashSet<>();
             for (File jar : jars) {
                 if (!jar.isFile()) {
                     log("Classpath entry " + jar + " does not exist; skipping", Project.MSG_WARN);
@@ -1552,7 +1552,7 @@ public final class ParseProjectXml extends Task {
     private TestDeps[] getTestDeps(Document pDoc,ModuleListParser modules,String testCnb) {
         assert modules != null;
         Element cfg = getConfig(pDoc);
-        List<TestDeps> testDepsList = new ArrayList<TestDeps>();
+        List<TestDeps> testDepsList = new ArrayList<>();
         Element pp = findNBMElement(cfg, "test-dependencies");
         boolean existsUnitTests = false;
         boolean existsQaFunctionalTests = false;

@@ -75,7 +75,7 @@ public final class ProcessJsAnnotationsTask extends Task {
             return;
         }
         
-        LinkedList<URL> arr = new LinkedList<URL>();
+        LinkedList<URL> arr = new LinkedList<>();
         boolean foundAsm = false;
         for (String s : cp.list()) {
             final File f = FileUtils.getFileUtils().resolveFile(getProject().getBaseDir(), s);
@@ -187,7 +187,7 @@ public final class ProcessJsAnnotationsTask extends Task {
         }
         
         BufferedReader r = new BufferedReader(new FileReader(f));
-        List<String> arr = new ArrayList<String>();
+        List<String> arr = new ArrayList<>();
         boolean modified = false;
         for (;;) {
             String line = r.readLine();

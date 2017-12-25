@@ -313,7 +313,7 @@ public class MakeNBM extends Task {
 
     /** Try to find and create localized info.xml files */
     public void setLocales(String s) {
-        locales = new ArrayList<String>();
+        locales = new ArrayList<>();
         for (String st : s.split("[, ]+")) {
             if (! st.trim().isEmpty()) {
                 locales.add(st);
@@ -434,7 +434,7 @@ public class MakeNBM extends Task {
     public ExternalPackage createExternalPackage(){
 	ExternalPackage externalPackage = new ExternalPackage ();
 	if (externalPackages == null)
-	    externalPackages = new ArrayList<ExternalPackage>();
+	    externalPackages = new ArrayList<>();
 	externalPackages.add( externalPackage );
 	return externalPackage;
     }
@@ -577,7 +577,7 @@ public class MakeNBM extends Task {
             throw new BuildException("cannot set both manifest and module for makenbm", getLocation());
         }
         if (locales == null) {
-            locales = new ArrayList<String>();
+            locales = new ArrayList<>();
         }
 
     File nbm;
@@ -593,7 +593,7 @@ public class MakeNBM extends Task {
 	overrideLicenseIfNeeded() ;
         
         
-        moduleAttributes = new ArrayList<Attributes> ();
+        moduleAttributes = new ArrayList<> ();
         File module = new File( productDir, moduleName );
         Attributes attr = getModuleAttributesForLocale("");
         if (attr == null) {
@@ -626,7 +626,7 @@ public class MakeNBM extends Task {
             log("Most recent input: " + mostRecentInput + " file: " + nbm.lastModified(), Project.MSG_DEBUG);
         }
         
-        ArrayList<ZipFileSet> infoXMLFileSets = new ArrayList<ZipFileSet>();
+        ArrayList<ZipFileSet> infoXMLFileSets = new ArrayList<>();
         for (Attributes modAttr : moduleAttributes) {
             Document infoXmlContents = createInfoXml(modAttr);
             File infofile;
@@ -660,8 +660,8 @@ public class MakeNBM extends Task {
  	    new BuildException( "Can't get codenamebase" );
  	
  	UpdateTracking tracking = new UpdateTracking(productDir.getAbsolutePath());
- 	Set<String> _files = new LinkedHashSet<String>(Arrays.asList(tracking.getListOfNBM(codename)));
-    List<String> __files = new ArrayList<String>(_files);
+ 	Set<String> _files = new LinkedHashSet<>(Arrays.asList(tracking.getListOfNBM(codename)));
+    List<String> __files = new ArrayList<>(_files);
     for (String f : _files) {
         if (f.endsWith(".external")) { // #195041
             __files.remove(f.substring(0, f.length() - 9));
@@ -669,7 +669,7 @@ public class MakeNBM extends Task {
     }
     String[] files = __files.toArray(new String[__files.size()]);
  	ZipFileSet fs = new ZipFileSet();
-        List <String> moduleFiles = new ArrayList <String>();
+        List <String> moduleFiles = new ArrayList <>();
  	fs.setDir( productDir );
         String [] filesForPackaging = null;
         if(usePack200 && pack200excludes!=null && !pack200excludes.equals("")) {
@@ -685,7 +685,7 @@ public class MakeNBM extends Task {
             filesForPackaging = ds.getIncludedFiles();            
         }
 
-        List<File> packedFiles = new ArrayList<File>();
+        List<File> packedFiles = new ArrayList<>();
         for (int i = 0; i < files.length; i++) {
             if (usePack200) {
                 File sourceFile = new File(productDir, files[i]);
@@ -1017,7 +1017,7 @@ public class MakeNBM extends Task {
         }
         // Write manifest attributes.
         Element el = doc.createElement("manifest");
-        List<String> attrNames = new ArrayList<String>(attr.size());
+        List<String> attrNames = new ArrayList<>(attr.size());
         Iterator it = attr.keySet().iterator();
         while (it.hasNext()) {
             attrNames.add(((Attributes.Name)it.next()).toString());

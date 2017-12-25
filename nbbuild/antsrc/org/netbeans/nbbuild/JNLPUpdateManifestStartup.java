@@ -153,7 +153,7 @@ public class JNLPUpdateManifestStartup extends Task {
         cp.execute();
         boolean success = false;
         try {
-            final Map<String, String> extendedAttrs = new HashMap<String, String>();
+            final Map<String, String> extendedAttrs = new HashMap<>();
             final org.apache.tools.zip.ZipFile zf = new org.apache.tools.zip.ZipFile(sourceJar);
             try {
                 final org.apache.tools.zip.ZipEntry manifestEntry = zf.getEntry(MANIFEST);

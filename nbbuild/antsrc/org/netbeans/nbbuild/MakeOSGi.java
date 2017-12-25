@@ -90,7 +90,7 @@ import org.xml.sax.InputSource;
 public class MakeOSGi extends Task {
 
     private File destdir;
-    private List<ResourceCollection> modules = new ArrayList<ResourceCollection>();
+    private List<ResourceCollection> modules = new ArrayList<>();
     
     /**
      * Mandatory destination directory. Bundles will be created here.
@@ -111,19 +111,19 @@ public class MakeOSGi extends Task {
     }
 
     static class Info {
-        final Set<String> importedPackages = new TreeSet<String>();
-        final Set<String> exportedPackages = new TreeSet<String>();
-        final Set<String> hiddenPackages = new TreeSet<String>();
-        final Set<String> hiddenSubpackages = new TreeSet<String>();
+        final Set<String> importedPackages = new TreeSet<>();
+        final Set<String> exportedPackages = new TreeSet<>();
+        final Set<String> hiddenPackages = new TreeSet<>();
+        final Set<String> hiddenSubpackages = new TreeSet<>();
     }
 
     public @Override void execute() throws BuildException {
         if (destdir == null) {
             throw new BuildException("missing destdir");
         }
-        List<File> jars = new ArrayList<File>();
-        List<File> fragments = new ArrayList<File>();
-        Map<String,Info> infos = new HashMap<String,Info>();
+        List<File> jars = new ArrayList<>();
+        List<File> fragments = new ArrayList<>();
+        Map<String,Info> infos = new HashMap<>();
         log("Prescanning JARs...");
         for (ResourceCollection rc : modules) {
             Iterator<?> it = rc.iterator();
@@ -184,7 +184,7 @@ public class MakeOSGi extends Task {
             // Otherwise get e.g. CCE: org.netbeans.core.osgi.Activator cannot be cast to org.osgi.framework.BundleActivator
             return cnb;
         }
-        Set<String> availablePackages = new TreeSet<String>();
+        Set<String> availablePackages = new TreeSet<>();
         scanClasses(module, info.importedPackages, availablePackages, task);
         File antlib = new File(module.getName().replaceFirst("([/\\\\])modules([/\\\\][^/\\\\]+)", "$1ant$1nblib$2"));
         if (antlib.isFile()) {
@@ -192,10 +192,10 @@ public class MakeOSGi extends Task {
             // AntBridge.MainClassLoader.findClass will refuse to load these,
             // since it is expected that the module loader, thus also AuxClassLoader, can load them.
             // So we need to DynamicImport-Package these packages so that will be true.
-            Set<String> antlibPackages = new HashSet<String>();
+            Set<String> antlibPackages = new HashSet<>();
             JarFile antlibJF = new JarFile(antlib);
             try {
-                scanClasses(antlibJF, antlibPackages, new HashSet<String>(), task);
+                scanClasses(antlibJF, antlibPackages, new HashSet<>(), task);
             } finally {
                 antlibJF.close();
             }
@@ -370,7 +370,7 @@ public class MakeOSGi extends Task {
             OutputStream bundle = new FileOutputStream(bundleFile);
             try {
                 ZipOutputStream zos = new JarOutputStream(bundle, osgi);
-                Set<String> parents = new HashSet<String>();
+                Set<String> parents = new HashSet<>();
                 Enumeration<? extends ZipEntry> entries = jar.entries();
                 while (entries.hasMoreElements()) {
                     ZipEntry entry = entries.nextElement();
@@ -460,7 +460,7 @@ public class MakeOSGi extends Task {
             // do not need to import any API, just need it to be started:
             requireBundles.append("org.netbeans.core.osgi");
         }
-        Set<String> imports = new TreeSet<String>(myInfo.importedPackages);
+        Set<String> imports = new TreeSet<>(myInfo.importedPackages);
         hideImports(imports, myInfo);
         String dependencies = netbeans.getValue("OpenIDE-Module-Module-Dependencies");
         if (dependencies != null) {
@@ -641,7 +641,7 @@ public class MakeOSGi extends Task {
     }
 
     private Map<String,File> findBundledFiles(File module, String cnb) throws Exception {
-        Map<String,File> result = new HashMap<String,File>();
+        Map<String,File> result = new HashMap<>();
         if (module.getParentFile().getName().matches("modules|core|lib")) {
             File cluster = module.getParentFile().getParentFile();
             File updateTracking = new File(new File(cluster, "update_tracking"), cnb.replace('.', '-') + ".xml");
@@ -673,8 +673,8 @@ public class MakeOSGi extends Task {
     }
 
     private static void scanClasses(JarFile module, Set<String> importedPackages, Set<String> availablePackages, Task task) throws Exception {
-        Map<String, byte[]> classfiles = new TreeMap<String, byte[]>();
-        VerifyClassLinkage.read(module, classfiles, new HashSet<File>(Collections.singleton(new File(module.getName()))), task, null);
+        Map<String, byte[]> classfiles = new TreeMap<>();
+        VerifyClassLinkage.read(module, classfiles, new HashSet<>(Collections.singleton(new File(module.getName()))), task, null);
         for (Map.Entry<String,byte[]> entry : classfiles.entrySet()) {
             String available = entry.getKey();
             int idx = available.lastIndexOf('.');
@@ -717,7 +717,7 @@ public class MakeOSGi extends Task {
             OutputStream bundle = new FileOutputStream(bundleFile);
             try {
                 ZipOutputStream zos = new JarOutputStream(bundle, mf);
-                Set<String> parents = new HashSet<String>();
+                Set<String> parents = new HashSet<>();
                 Enumeration<? extends ZipEntry> entries = jar.entries();
                 while (entries.hasMoreElements()) {
                     ZipEntry entry = entries.nextElement();

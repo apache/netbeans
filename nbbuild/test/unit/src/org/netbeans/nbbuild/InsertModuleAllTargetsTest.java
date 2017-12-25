@@ -127,7 +127,7 @@ public class InsertModuleAllTargetsTest extends NbTestCase {
     }
 
     private Set<String> depsToNames(Enumeration en) {
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
         while (en.hasMoreElements()) {
             String dep = en.nextElement().toString();
             set.add(dep);

@@ -60,7 +60,7 @@ public class JHIndexer extends MatchingTask {
     private File db;
     private File basedir;
     private String locale;
-    private List<BrandedFileSet> brandings = new LinkedList<BrandedFileSet>();
+    private List<BrandedFileSet> brandings = new LinkedList<>();
 
     /** Set the location of <samp>jhall.jar</samp> or <samp>jsearch.jar</samp> (JavaHelp tools library). */
     public Path createClasspath() {
@@ -356,7 +356,7 @@ public class JHIndexer extends MatchingTask {
                         "-db", db.getAbsolutePath()
                     );
                     if (locale != null) {
-                        args = new ArrayList<String>(args); // #35244
+                        args = new ArrayList<>(args); // #35244
                         args.add("-locale");
                         args.add(locale);
                     }

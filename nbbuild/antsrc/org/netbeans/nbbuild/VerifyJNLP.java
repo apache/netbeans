@@ -60,7 +60,7 @@ import org.xml.sax.SAXParseException;
  */
 public class VerifyJNLP extends Task {
 
-    private List<FileSet> filesets = new ArrayList<FileSet>();
+    private List<FileSet> filesets = new ArrayList<>();
     /**
      * Add one or more JNLP files to validate.
      * Use &lt;fileset file="..."/> if you have just one.
@@ -87,7 +87,7 @@ public class VerifyJNLP extends Task {
     }
 
     public @Override void execute() throws BuildException {
-        Map<String,String> results = new LinkedHashMap<String,String>();
+        Map<String,String> results = new LinkedHashMap<>();
         for (FileSet fs : filesets) {
             DirectoryScanner s = fs.getDirectoryScanner(getProject());
             File basedir = s.getBasedir();

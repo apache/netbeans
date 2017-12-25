@@ -65,7 +65,7 @@ public class JNLPUpdateManifestBranding extends Task {
     private static final String ATTR_PERMISSIONS = "Permissions";   //NOI18N
     private static final String ATTR_APPLICATION_NAME = "Application-Name"; //NOI18N
 
-    private final Vector<FileSet> filesets = new Vector<FileSet>();
+    private final Vector<FileSet> filesets = new Vector<>();
 
     public void addFileset(FileSet fileset) {
         filesets.add(fileset);
@@ -108,7 +108,7 @@ public class JNLPUpdateManifestBranding extends Task {
 
     @Override
     public void execute() throws BuildException {
-        Set<String> filePaths = new HashSet<String>();
+        Set<String> filePaths = new HashSet<>();
         File tmpFile = null;
         for (FileSet fs : filesets) {
             if (fs != null) {
@@ -158,7 +158,7 @@ public class JNLPUpdateManifestBranding extends Task {
         cp.execute();
         boolean success = false;
         try {
-            final Map<String, String> extendedAttrs = new HashMap<String, String>();
+            final Map<String, String> extendedAttrs = new HashMap<>();
             final org.apache.tools.zip.ZipFile zf = new org.apache.tools.zip.ZipFile(sourceJar);
             try {
                 final org.apache.tools.zip.ZipEntry manifestEntry = zf.getEntry(MANIFEST);

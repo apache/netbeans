@@ -41,7 +41,7 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class FixDependencies extends Task {
     /** Replace*/
-    private List<Replace> replaces = new ArrayList<Replace>();
+    private List<Replace> replaces = new ArrayList<>();
     /** files to fix */
     private FileSet set;
     /** verify target */
@@ -537,7 +537,7 @@ public class FixDependencies extends Task {
 
     public static final class Replace extends Object {
         String codeNameBase;
-        List<Module> modules = new ArrayList<Module>();
+        List<Module> modules = new ArrayList<>();
         boolean addCompileTime;
 
         public void setCodeNameBase (String s) {

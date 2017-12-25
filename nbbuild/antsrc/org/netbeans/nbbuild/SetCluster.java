@@ -78,7 +78,7 @@ public class SetCluster extends Task {
             throw new BuildException("The name of current module have to be set", getLocation());
         }
 
-        Map<String,String> clusterByModule = new HashMap<String,String>(); // e.g. "serverplugins/jboss4" => "j2ee"
+        Map<String,String> clusterByModule = new HashMap<>(); // e.g. "serverplugins/jboss4" => "j2ee"
         for (Object key : getProject().getProperties().keySet()) {
             String property = (String) key;
             String clusterDir = getProject().getProperty(property + ".dir");
@@ -87,7 +87,7 @@ public class SetCluster extends Task {
             }
             String list = this.getProject().getProperty( property );
             assert list != null : property;
-            Set<String> modules = new HashSet<String>();
+            Set<String> modules = new HashSet<>();
             StringTokenizer modTokens = new StringTokenizer(list," \t\n\f\r,");
             while (modTokens.hasMoreTokens()) {
                 String module = modTokens.nextToken();

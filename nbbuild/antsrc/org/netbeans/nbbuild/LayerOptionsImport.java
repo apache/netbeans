@@ -53,7 +53,7 @@ public class LayerOptionsImport extends Task {
 
     public LayerOptionsImport() {
     }
-    List<FileSet> filesets = new ArrayList<FileSet>();
+    List<FileSet> filesets = new ArrayList<>();
 
     public void addConfiguredModules(FileSet fs) {
         filesets.add(fs);
@@ -69,8 +69,8 @@ public class LayerOptionsImport extends Task {
         if (filesets.isEmpty()) {
             throw new BuildException();
         }
-        SortedMap<String, String> files = new TreeMap<String, String>(); // layer path -> cnb
-        final SortedMap<String, Map<String, String>> attributesMap = new TreeMap<String, Map<String, String>>(); // layer path -> attribute name -> value
+        SortedMap<String, String> files = new TreeMap<>(); // layer path -> cnb
+        final SortedMap<String, Map<String, String>> attributesMap = new TreeMap<>(); // layer path -> attribute name -> value
         for (FileSet fs : filesets) {
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             File basedir = ds.getBasedir();
@@ -183,7 +183,7 @@ public class LayerOptionsImport extends Task {
 		    }
                     Map<String, String> name2value = attributesMap.get(prefix);
                     if (name2value == null) {
-                        name2value = new HashMap<String, String>();
+                        name2value = new HashMap<>();
                         attributesMap.put(prefix, name2value);
                     }
                     name2value.put(attrName, attrValue);

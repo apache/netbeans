@@ -96,14 +96,14 @@ public class MakeOSGiTest extends NbTestCase {
         // boilerplate:
         assertEquals("1.0", osgi.remove(new Attributes.Name("Manifest-Version")));
         assertEquals("2", osgi.remove(new Attributes.Name("Bundle-ManifestVersion")));
-        SortedMap<String,String> osgiMap = new TreeMap<String,String>();
+        SortedMap<String,String> osgiMap = new TreeMap<>();
         for (Map.Entry<Object,Object> entry : osgi.entrySet()) {
             osgiMap.put(((Attributes.Name) entry.getKey()).toString(), (String) entry.getValue());
         }
         assertEquals(expectedOsgi, osgiMap.toString().replace('"', '\''));
     }
     private static Set<String> set(String... items) {
-        return new TreeSet<String>(Arrays.asList(items));
+        return new TreeSet<>(Arrays.asList(items));
     }
 
     public void testTranslateDependency() throws Exception {

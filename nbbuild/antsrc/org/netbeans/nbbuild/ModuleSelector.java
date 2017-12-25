@@ -164,9 +164,9 @@ public final class ModuleSelector extends BaseExtendSelector {
             return;
         }
         
-        includeClusters = new HashSet<String>();
-        excludeClusters = new HashSet<String>();
-        excludeModules = new HashSet<String>();
+        includeClusters = new HashSet<>();
+        excludeClusters = new HashSet<>();
+        excludeModules = new HashSet<>();
         
         Parameter[] arr = getParameters();
         if (arr == null) {
@@ -195,7 +195,7 @@ public final class ModuleSelector extends BaseExtendSelector {
                 continue;
             }
             if ("updateTrackingFiles".equals(p.getName())) {
-                fileToOwningModule = new HashMap<String,String>();
+                fileToOwningModule = new HashMap<>();
                 try {
                     readUpdateTracking(getProject(), p.getValue(), fileToOwningModule);
                 } catch (IOException ex) {

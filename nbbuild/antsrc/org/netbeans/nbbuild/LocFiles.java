@@ -77,7 +77,7 @@ public final class LocFiles extends Task {
     
     @Override
     public void execute() throws BuildException {
-        List<String> includes = new ArrayList<String>();
+        List<String> includes = new ArrayList<>();
         if (locales != null && !locales.isEmpty()) {
             if (!srcDir.exists()) {
                 log("No l10n files present. Do hg clone http://hg.netbeans.org/main/l10n!", Project.MSG_VERBOSE);

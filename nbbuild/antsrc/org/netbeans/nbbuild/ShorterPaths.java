@@ -67,7 +67,7 @@ public class ShorterPaths extends Task {
             return dir + (excluded != null ? " - " + excluded : "") + " => ${" + name + "}";
         }
     }
-    private List<Replacement> replacements = new LinkedList<Replacement>(); // List<Nestme>
+    private List<Replacement> replacements = new LinkedList<>(); // List<Nestme>
 
     public Replacement createReplacement() {
         Replacement r = new Replacement();
@@ -334,7 +334,7 @@ public class ShorterPaths extends Task {
      * @return a tokenization of that path into components
      */
     public static String[] tokenizePath(String path) {
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         StringTokenizer tok = new StringTokenizer(path, ":;", true); // NOI18N
         char dosHack = '\0';
         char lastDelim = '\0';

@@ -127,10 +127,10 @@ public class FixTestDependencies extends Task {
 
                 // unittest
                 //
-                Set<String> compileCNB = new TreeSet<String>();
-                Set<String> compileTestCNB = new TreeSet<String>();
-                Set<String> runtimeCNB = new TreeSet<String>();
-                Set<String> runtimeTestCNB = new TreeSet<String>();
+                Set<String> compileCNB = new TreeSet<>();
+                Set<String> compileTestCNB = new TreeSet<>();
+                Set<String> runtimeCNB = new TreeSet<>();
+                Set<String> runtimeTestCNB = new TreeSet<>();
 
                 Properties projectProperties = getTestProperties();
                 boolean found;
@@ -235,7 +235,7 @@ public class FixTestDependencies extends Task {
     }
     
     private Set<String> getCNBsFromEntries(Set<ModuleListParser.Entry> entries) {
-        Set<String> cnbs = new HashSet<String>();
+        Set<String> cnbs = new HashSet<>();
         for (ModuleListParser.Entry e : entries) {
             cnbs.add(e.getCnb());
         }
@@ -388,7 +388,7 @@ public class FixTestDependencies extends Task {
             return;
         }
         try {
-            List<String> lines = new ArrayList<String>();
+            List<String> lines = new ArrayList<>();
             if (propertiesFile.isFile()) {
                 // read properties
                 BufferedReader reader = new BufferedReader (new FileReader(propertiesFile));
@@ -422,7 +422,7 @@ public class FixTestDependencies extends Task {
     }
 
     private List<String> replaceProperty(String name, String value, List<String> lines) {
-        List<String> retLines = new ArrayList<String>();
+        List<String> retLines = new ArrayList<>();
         for (int i = 0 ; i < lines.size() ; i++) {
             String line = lines.get(i);
             String trimmedLine = line.trim();

@@ -82,8 +82,8 @@ public class VerifyLibsAndLicenses extends Task {
 
     public @Override void execute() throws BuildException {
         try { // XXX workaround for http://issues.apache.org/bugzilla/show_bug.cgi?id=43398
-        pseudoTests = new LinkedHashMap<String,String>();
-        modules = new TreeSet<String>();
+        pseudoTests = new LinkedHashMap<>();
+        modules = new TreeSet<>();
         for (String cluster : getProject().getProperty("nb.clusters.list").split("[, ]+")) {
             modules.addAll(Arrays.asList(getProject().getProperty(cluster).split("[, ]+")));
         }
@@ -107,7 +107,7 @@ public class VerifyLibsAndLicenses extends Task {
     private void testBinaryUniqueness() throws IOException {
         List<String> ignoredPatterns = loadPatterns("ignored-overlaps");
         StringBuffer msg = new StringBuffer();
-        Map<Long,String> binaries = new HashMap<Long,String>();
+        Map<Long,String> binaries = new HashMap<>();
         for (String module : modules) {
             File d = new File(new File(nball, module), "external");
             Set<String> hgFiles = findHgControlledFiles(d);
@@ -239,20 +239,20 @@ public class VerifyLibsAndLicenses extends Task {
 
     private void testLicenses() throws IOException {
         File licenses = new File(new File(nball, "nbbuild"), "licenses");
-        Set<String> requiredHeaders = new TreeSet<String>(Arrays.asList("Name", "Version", "Description", "License", "Origin"));
-        Set<String> optionalHeaders = new HashSet<String>(Arrays.asList("Files", "Source", "Comment", "Type", "URL", /*for transition period:*/"OSR"));
+        Set<String> requiredHeaders = new TreeSet<>(Arrays.asList("Name", "Version", "Description", "License", "Origin"));
+        Set<String> optionalHeaders = new HashSet<>(Arrays.asList("Files", "Source", "Comment", "Type", "URL", /*for transition period:*/"OSR"));
         StringBuffer msg = new StringBuffer();
         for (String module : modules) {
             File d = new File(new File(nball, module), "external");
             Set<String> hgFiles = findHgControlledFiles(d);
-            Set<String> referencedBinaries = new HashSet<String>();
+            Set<String> referencedBinaries = new HashSet<>();
             for (String n : hgFiles) {
                 if (!n.endsWith("-license.txt")) {
                     continue;
                 }
                 File f = new File(d, n);
                 String path = module + "/external/" + n;
-                Map<String,String> headers = new HashMap<String,String>();
+                Map<String,String> headers = new HashMap<>();
                 InputStream is = new FileInputStream(f);
                 StringBuffer body = new StringBuffer();
                 try {
@@ -442,7 +442,7 @@ public class VerifyLibsAndLicenses extends Task {
     }
 
     static List<String> loadPatterns(String resource) throws IOException {
-        List<String> patterns = new ArrayList<String>();
+        List<String> patterns = new ArrayList<>();
         InputStream is = VerifyLibsAndLicenses.class.getResourceAsStream(resource);
         try {
             BufferedReader r = new BufferedReader(new InputStreamReader(is));
@@ -461,7 +461,7 @@ public class VerifyLibsAndLicenses extends Task {
 
     private void testNoStrayThirdPartyBinaries() throws IOException {
         List<String> ignoredPatterns = loadPatterns("ignored-binaries");
-        Set<String> violations = new TreeSet<String>();
+        Set<String> violations = new TreeSet<>();
         findStrayThirdPartyBinaries(nball, "", violations, ignoredPatterns);
         if (violations.isEmpty()) {
             pseudoTests.put("testNoStrayThirdPartyBinaries", null);
@@ -530,7 +530,7 @@ public class VerifyLibsAndLicenses extends Task {
             } else if (hgignores.containsKey(root)) {
                 ignoredPatterns = hgignores.get(root);
             } else {
-                ignoredPatterns = new ArrayList<Pattern>();
+                ignoredPatterns = new ArrayList<>();
                 Reader r = new FileReader(hgignore);
                 try {
                     BufferedReader br = new BufferedReader(r);
@@ -552,7 +552,7 @@ public class VerifyLibsAndLicenses extends Task {
                 hgignores.put(root, ignoredPatterns);
             }
         }
-        Set<String> files = new TreeSet<String>();
+        Set<String> files = new TreeSet<>();
         FILES: for (File f : kids) {
             String n = f.getName();
             if (n.equals(".git")) {

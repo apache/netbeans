@@ -52,7 +52,7 @@ import org.apache.tools.ant.Task;
  */
 public class TestDistFilter extends Task {
     private File testDistDir;
-    Set<TestConf> possibleTests = new HashSet<TestConf>();
+    Set<TestConf> possibleTests = new HashSet<>();
     private String testtype;
     private String testListProperty;
     private String requiredModules;
@@ -144,7 +144,7 @@ public class TestDistFilter extends Task {
 
     private List<TestConf> getTestList(String testtype) {
         File root = new File (getTestDistDir(),testtype);
-        List <TestConf> testList = new ArrayList<TestConf>();
+        List <TestConf> testList = new ArrayList<>();
         if (!root.exists()) {
             return Collections.emptyList();
         }
@@ -223,6 +223,6 @@ public class TestDistFilter extends Task {
 
     private Set<String> getRequiredModulesSet() {
         String names[] = getRequiredModules().split(",");
-        return new HashSet<String>(Arrays.asList(names));
+        return new HashSet<>(Arrays.asList(names));
     }
 }

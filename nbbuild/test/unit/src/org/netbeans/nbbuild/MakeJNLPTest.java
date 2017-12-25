@@ -50,8 +50,8 @@ public class MakeJNLPTest extends TestBase {
     
     private static void assertFilenames(File dir, String... contents) {
         assertTrue(dir + " is a directory", dir.isDirectory());
-        SortedSet<String> expected = new TreeSet<String>(Arrays.asList(contents));
-        SortedSet<String> actual = new TreeSet<String>();
+        SortedSet<String> expected = new TreeSet<>(Arrays.asList(contents));
+        SortedSet<String> actual = new TreeSet<>();
         findFilenames(dir, "", actual);
         assertEquals("correct contents of " + dir, expected/*.toString()*/, actual/*.toString()*/);
     }

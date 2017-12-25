@@ -100,13 +100,13 @@ public class CreateLicenseSummary extends Task {
 
     public @Override
     void execute() throws BuildException {
-        pseudoTests = new LinkedHashMap<String, String>();
+        pseudoTests = new LinkedHashMap<>();
         try {
             Map<Long, Map<String, String>> crc2License = findCrc2LicenseHeaderMapping();
-            Map<String, Map<String, String>> binaries2LicenseHeaders = new TreeMap<String, Map<String, String>>();
+            Map<String, Map<String, String>> binaries2LicenseHeaders = new TreeMap<>();
             StringBuilder testBinariesAreUnique = new StringBuilder();
             List<String> ignoredPatterns = VerifyLibsAndLicenses.loadPatterns("ignored-binary-overlaps");
-            findBinaries(build, binaries2LicenseHeaders, crc2License, new HashMap<Long, String>(), "", testBinariesAreUnique, ignoredPatterns);
+            findBinaries(build, binaries2LicenseHeaders, crc2License, new HashMap<>(), "", testBinariesAreUnique, ignoredPatterns);
             pseudoTests.put("testBinariesAreUnique", testBinariesAreUnique.length() > 0 ? "Some binaries are duplicated (edit nbbuild/antsrc/org/netbeans/nbbuild/extlibs/ignored-binary-overlaps as needed)" + testBinariesAreUnique : null);
             try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(license), "UTF-8"));
                     PrintWriter nw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(notice), "UTF-8"))) {
@@ -131,7 +131,7 @@ public class CreateLicenseSummary extends Task {
                     }
                 }
 
-                Set<String> licenseNames = new TreeSet<String>();
+                Set<String> licenseNames = new TreeSet<>();
                 pw.printf("%-72s %s\n", "THIRD-PARTY COMPONENT FILE", "LICENSE");
                 pw.printf("%-44s %s\n", "(path in the installation)", "(see license text reproduced below)");
                 pw.println("--------------------------------------------------------------------------------");
@@ -223,7 +223,7 @@ public class CreateLicenseSummary extends Task {
     }
 
     private Map<Long, Map<String, String>> findCrc2LicenseHeaderMapping() throws IOException {
-        Map<Long, Map<String, String>> crc2LicenseHeaders = new HashMap<Long, Map<String, String>>();
+        Map<Long, Map<String, String>> crc2LicenseHeaders = new HashMap<>();
         for (String cluster : getProject().getProperty("nb.clusters.list").split("[, ]+")) {
             for (String module : getProject().getProperty(cluster).split("[, ]+")) {
                 File d = new File(new File(nball, module), "external");
@@ -307,12 +307,12 @@ public class CreateLicenseSummary extends Task {
     }
 
     static Map<String, Map<String, String>> findBinary2LicenseHeaderMapping(Set<String> cvsFiles, File d) throws IOException {
-        Map<String, Map<String, String>> binary2LicenseHeaders = new HashMap<String, Map<String, String>>();
+        Map<String, Map<String, String>> binary2LicenseHeaders = new HashMap<>();
         for (String n : cvsFiles) {
             if (!n.endsWith("-license.txt")) {
                 continue;
             }
-            Map<String, String> headers = new HashMap<String, String>();
+            Map<String, String> headers = new HashMap<>();
             InputStream is = new FileInputStream(new File(d, n));
             try {
                 BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));

@@ -77,7 +77,7 @@ public class SummarizeHgmail extends Task {
                         throw new BuildException(dir.getPath(), getLocation());
                     }
                     // module dir such as java.source or contrib/autosave or file such as .hgtags, to list of addressees such as core-commits@platform.netbeans.org
-                    Map<String,List<String>> notifications = new TreeMap<String,List<String>>();
+                    Map<String,List<String>> notifications = new TreeMap<>();
                     Reader r = new FileReader(hgmail);
                     try {
                         BufferedReader br = new BufferedReader(r);
@@ -99,7 +99,7 @@ public class SummarizeHgmail extends Task {
                                 if (patt.contains("/")) {
                                     throw new BuildException("Notifications of subdirs not yet supported: " + line, getLocation());
                                 }
-                                List<String> modules = new ArrayList<String>();
+                                List<String> modules = new ArrayList<>();
                                 if (patt.contains("*")) {
                                     // Pattern, have to search for matches.
                                     Pattern wild = Pattern.compile("\\Q" + patt.replace("*", "\\E.*\\Q") + "\\E");
@@ -121,7 +121,7 @@ public class SummarizeHgmail extends Task {
                                 for (String module : modules) {
                                     List<String> addressees = notifications.get(module);
                                     if (addressees == null) {
-                                        addressees = new ArrayList<String>();
+                                        addressees = new ArrayList<>();
                                         notifications.put(module, addressees);
                                     }
                                     addressees.add(addr);
@@ -135,7 +135,7 @@ public class SummarizeHgmail extends Task {
                     for (File kid : kids) {
                         String name = kid.getName();
                         if (!notifications.containsKey(name)) {
-                            notifications.put(name, new ArrayList<String>());
+                            notifications.put(name, new ArrayList<>());
                         }
                     }
                     // Report:
@@ -149,7 +149,7 @@ public class SummarizeHgmail extends Task {
                         if (addressees.isEmpty()) {
                             w.println("  UNNOTIFIED");
                         } else {
-                            if (new HashSet<String>(addressees).size() < addressees.size()) {
+                            if (new HashSet<>(addressees).size() < addressees.size()) {
                                 w.println("  DUPLICATES");
                             }
                             Collections.sort(addressees);

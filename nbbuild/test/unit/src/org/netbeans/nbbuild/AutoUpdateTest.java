@@ -183,7 +183,7 @@ public class AutoUpdateTest extends TestBase {
         File tracking = new File(install, "ide/update_tracking/org-apache-commons-io.xml");
         assertTrue(tracking.isFile());
         Document doc = XMLUtil.parse(new InputSource(tracking.toURI().toString()), false, false, null, null);
-        Set<String> files = new TreeSet<String>();
+        Set<String> files = new TreeSet<>();
         NodeList nl = doc.getElementsByTagName("file");
         for (int i = 0; i < nl.getLength(); i++) {
             files.add(((Element) nl.item(i)).getAttribute("name"));
@@ -699,7 +699,7 @@ public class AutoUpdateTest extends TestBase {
     }
 
     public File generateNBM (String name, String... files) throws IOException {
-        List<String> filesAndContent = new ArrayList<String>();
+        List<String> filesAndContent = new ArrayList<>();
         for (String s : files) {
             filesAndContent.add(s);
             filesAndContent.add("empty");

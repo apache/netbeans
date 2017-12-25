@@ -92,7 +92,7 @@ public class SubAntJUnitReport extends Task {
     }
 
     public @Override void execute() throws BuildException {
-        Map<String,String> pseudoTests = new HashMap<String,String>();
+        Map<String,String> pseudoTests = new HashMap<>();
         for (String path : buildPath.list()) {
             log("Entering: " + path);
             File dir = new File(path);
@@ -159,7 +159,7 @@ public class SubAntJUnitReport extends Task {
                 prefix = prefix.substring(0, prefix.length() - 1);
             }
         }
-        Map<String,T> m2 = new HashMap<String,T>();
+        Map<String,T> m2 = new HashMap<>();
         for (Map.Entry<String,T> entry : m.entrySet()) {
             m2.put(entry.getKey().substring(prefix.length()), entry.getValue());
         }

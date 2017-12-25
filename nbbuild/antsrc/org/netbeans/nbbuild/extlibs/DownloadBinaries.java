@@ -88,7 +88,7 @@ public class DownloadBinaries extends Task {
         this.server = server;
     }
 
-    private final List<FileSet> manifests = new ArrayList<FileSet>();
+    private final List<FileSet> manifests = new ArrayList<>();
     /**
      * Add one or more manifests of files to download.
      * Each manifest is a text file; lines beginning with # are ignored.

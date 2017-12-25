@@ -64,8 +64,8 @@ import org.apache.tools.ant.types.FileSet;
 public class CopyIcons extends MatchingTask {
     
     private int depth = 0;
-    private List<File> projectDirList = new ArrayList<File>();
-    private List<ProjectIconInfo> prjIconInfoList = new ArrayList<ProjectIconInfo>();
+    private List<File> projectDirList = new ArrayList<>();
+    private List<ProjectIconInfo> prjIconInfoList = new ArrayList<>();
     
     File baseDir = null;
     public void setNbsrcroot(File f) {
@@ -475,8 +475,8 @@ public class CopyIcons extends MatchingTask {
         ds.scan();
         String[] files = ds.getIncludedFiles();
         log("    Found " + files.length + " files in " + f);
-        List<ImageInfo> goodIcons = new ArrayList<ImageInfo>();
-        List<ImageInfo> badIcons = new ArrayList<ImageInfo>();
+        List<ImageInfo> goodIcons = new ArrayList<>();
+        List<ImageInfo> badIcons = new ArrayList<>();
         for (String file : files) {
             String ext = file.substring(file.lastIndexOf('.') + 1);
             if (ext.equalsIgnoreCase("gif") || ext.equalsIgnoreCase("png")) {
@@ -506,7 +506,7 @@ public class CopyIcons extends MatchingTask {
     }
     
     private String[] getAsArray(String s) {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         for (StringTokenizer stok = new StringTokenizer(s, ","); stok.hasMoreTokens(); ) {
           String token = stok.nextToken().trim();
           list.add(token);

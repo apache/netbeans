@@ -96,7 +96,7 @@ public class ReleaseFilesLicense extends Task {
                         is.close();
                     }
                 }
-                Map<File,Set<String>> inferredLicenses = new TreeMap<File,Set<String>>();
+                Map<File,Set<String>> inferredLicenses = new TreeMap<>();
                 RELEASE_FILE: for (Map.Entry<String,Object> entry : ((Map<String,Object>) getProject().getProperties()).entrySet()) {
                     String k = entry.getKey();
                     // XXX this does not work for release.../external/*; need to maybe match ^release\.(.+/)?external/
@@ -123,7 +123,7 @@ public class ReleaseFilesLicense extends Task {
                                 if (Arrays.asList(files.split("[, ]+")).contains(binary)) {
                                     Set<String> binaries = inferredLicenses.get(possibleLicense);
                                     if (binaries == null) {
-                                        binaries = new TreeSet<String>();
+                                        binaries = new TreeSet<>();
                                         inferredLicenses.put(possibleLicense, binaries);
                                     }
                                     binaries.add((String) entry.getValue());

@@ -56,7 +56,7 @@ public final class RefreshDependencyVersions extends Task {
     private String specification;
     
     private boolean dryRun = false;
-    private final Set<Dep> injectDeps = new HashSet<Dep>();
+    private final Set<Dep> injectDeps = new HashSet<>();
     
     public RefreshDependencyVersions() {}
     
@@ -430,7 +430,7 @@ public final class RefreshDependencyVersions extends Task {
         InputStream is = new FileInputStream(file);
         try {
             BufferedReader r = new BufferedReader(new InputStreamReader(is, enc));
-            List<String> l = new ArrayList<String>();
+            List<String> l = new ArrayList<>();
             String line;
             while ((line = r.readLine()) != null) {
                 l.add(line);

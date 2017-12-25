@@ -369,7 +369,7 @@ public class MakeLNBM extends MatchingTask {
     public ExternalPackage createExternalPackage(){
 	ExternalPackage externalPackage = new ExternalPackage ();
 	if (externalPackages == null)
-	    externalPackages = new Vector<ExternalPackage>();
+	    externalPackages = new Vector<>();
 	externalPackages.add( externalPackage );
 	return externalPackage;
     }
@@ -522,7 +522,7 @@ public class MakeLNBM extends MatchingTask {
 		    if( attr != null) {
 		        ps.print ("  <manifest "); //NOI18N
 			boolean firstline = true;
-		        List<String> attrNames = new ArrayList<String>(attr.size());
+		        List<String> attrNames = new ArrayList<>(attr.size());
 			Iterator<Object> it = attr.keySet().iterator();
 			while (it.hasNext()) {
 			    attrNames.add(((Attributes.Name)it.next()).toString());

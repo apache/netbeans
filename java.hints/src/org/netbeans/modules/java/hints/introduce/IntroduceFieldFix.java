@@ -24,7 +24,6 @@ import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
-import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.Scope;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
@@ -45,12 +44,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeMirror;
 import javax.swing.JButton;
 import javax.swing.text.BadLocationException;
-import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
@@ -105,6 +101,7 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
         this.targetHandle = target;
     }
     
+    @Override
     public String getText() {
         return NbBundle.getMessage(IntroduceHint.class, "FIX_IntroduceField");
     }
@@ -135,6 +132,7 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
         return pathToClass;
     }
 
+    @Override
     public ChangeInfo implement() throws IOException, BadLocationException {
         JButton btnOk = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Ok"));
         btnOk.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(IntroduceHint.class, "AD_IntrHint_OK"));
@@ -164,7 +162,7 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
      * The actual modification. Some javac related data are recorded in fields, inner class prevents
      * unintentional leak if someone keeps a reference to the Fix
      */
-    final class Worker implements Task<WorkingCopy> {
+    private final class Worker implements Task<WorkingCopy> {
         final String name;
         final boolean replaceAll;
         final boolean declareFinal;
@@ -198,13 +196,7 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
                 return false;
             }
             ExpressionStatementTree assignment = make.ExpressionStatement(make.Assignment(make.Identifier(name), expression));
-            BlockTree statements = (BlockTree) statementPath.getParentPath().getLeaf();
             StatementTree statement = (StatementTree) statementPath.getLeaf();
-            int index = statements.getStatements().indexOf(statement);
-            if (index == (-1)) {
-                //really strange...
-                return false;
-            }
             insertStatement(parameter, statementPath.getParentPath(), statement, assignment, true);
             return true;
         }
@@ -215,7 +207,7 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
             for (TreePath constructor : TreeUtils.findConstructors(parameter, method)) {
                 //check for syntetic constructor:
                 if (parameter.getTreeUtilities().isSynthetic(constructor)) {
-                    List<StatementTree> nueStatements = new LinkedList<StatementTree>();
+                    List<StatementTree> nueStatements = new LinkedList<>();
                     ExpressionTree reference = make.Identifier(name);
                     Element clazz = parameter.getTrees().getElement(pathToClass);
                     ModifiersTree constrMods = (clazz == null || clazz.getKind() != ElementKind.ENUM) ? make.Modifiers(EnumSet.of(Modifier.PUBLIC)) : make.Modifiers(Collections.EMPTY_SET);
@@ -264,6 +256,7 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
             }
         }
 
+        @Override
         public void run(WorkingCopy parameter) throws Exception {
             parameter.toPhase(JavaSource.Phase.RESOLVED);
             TreePath resolved = handle.resolve(parameter);
@@ -297,9 +290,9 @@ class IntroduceFieldFix extends IntroduceFixBase implements Fix {
             mods.addAll(access);
             final TreeMaker make = parameter.getTreeMaker();
             boolean isAnyOccurenceStatic = false;
-            Set<Tree> allNewUses = Collections.newSetFromMap(new IdentityHashMap<Tree, Boolean>());
+            Set<Tree> allNewUses = Collections.newSetFromMap(new IdentityHashMap<>());
             allNewUses.add(resolved.getLeaf());
-            Collection<TreePath> duplicates = new ArrayList<TreePath>();
+            Collection<TreePath> duplicates = new ArrayList<>();
             if (replaceAll) {
                 for (TreePath p : SourceUtils.computeDuplicates(parameter, resolved, new TreePath(parameter.getCompilationUnit()), new AtomicBoolean())) {
                     if (variableRewrite) {

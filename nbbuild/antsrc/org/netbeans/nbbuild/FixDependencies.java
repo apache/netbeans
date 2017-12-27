@@ -41,7 +41,7 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class FixDependencies extends Task {
     /** Replace*/
-    private List<Replace> replaces = new ArrayList<Replace>();
+    private List<Replace> replaces = new ArrayList<>();
     /** files to fix */
     private FileSet set;
     /** verify target */
@@ -195,12 +195,11 @@ public class FixDependencies extends Task {
     private boolean fix (File file, File script, org.apache.tools.ant.taskdefs.Ant task, org.apache.tools.ant.taskdefs.Ant cleanTask, boolean compiled) throws IOException, BuildException {
         int s = (int)file.length ();
         byte[] data = new byte[s];
-        InputStream is = new FileInputStream(file);
-        if (s != is.read (data)) {
-            is.close ();
-            throw new BuildException ("Cannot read " + file);
+        try (InputStream is = new FileInputStream(file)) {
+            if (s != is.read (data)) {
+                throw new BuildException ("Cannot read " + file);
+            }
         }
-        is.close ();
         
         String stream = new String (data);
         String old = stream;
@@ -381,9 +380,9 @@ public class FixDependencies extends Task {
             }
 
             if (!old.equals (stream)) {
-                FileWriter fw = new FileWriter (file);
-                fw.write (stream);
-                fw.close ();
+                try (FileWriter fw = new FileWriter (file)) {
+                    fw.write (stream);
+                }
                 return true;
             } else {
                 return false;
@@ -406,12 +405,11 @@ public class FixDependencies extends Task {
         
         int s = (int)file.length ();
         byte[] data = new byte[s];
-        InputStream is = new FileInputStream(file);
-        if (s != is.read (data)) {
-            is.close ();
-            throw new BuildException ("Cannot read " + file);
+        try (InputStream is = new FileInputStream(file)) {
+            if (s != is.read (data)) {
+                throw new BuildException ("Cannot read " + file);
+            }
         }
-        is.close ();
         
         String stream = new String (data);
         String old = stream;
@@ -443,10 +441,10 @@ public class FixDependencies extends Task {
             last = after;
             begin = last;
 
-            // write the file without the 
-            FileWriter fw = new FileWriter (file);
-            fw.write (stream.substring (0, from) + stream.substring (after));
-            fw.close ();
+            // write the file without the
+            try (FileWriter fw = new FileWriter (file)) {
+                fw.write (stream.substring (0, from) + stream.substring (after));
+            }
             
             String dep = stream.substring (from, after);
             if (dep.indexOf ("compile-dependency") == -1) {
@@ -485,10 +483,10 @@ public class FixDependencies extends Task {
         }
 
         if (first != -1) {
-            // write the file without the 
-            FileWriter fw = new FileWriter (file);
-            fw.write (stream.substring (0, first) + sb.toString () + stream.substring (last));
-            fw.close ();
+            // write the file without the
+            try (FileWriter fw = new FileWriter (file)) {
+                fw.write (stream.substring (0, first) + sb.toString () + stream.substring (last));
+            }
         }
         
         log ("Final verification runs " + tgt + " in " + script, Project.MSG_INFO);
@@ -537,7 +535,7 @@ public class FixDependencies extends Task {
 
     public static final class Replace extends Object {
         String codeNameBase;
-        List<Module> modules = new ArrayList<Module>();
+        List<Module> modules = new ArrayList<>();
         boolean addCompileTime;
 
         public void setCodeNameBase (String s) {

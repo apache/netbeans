@@ -64,8 +64,8 @@ import org.apache.tools.ant.types.FileSet;
 public class CopyIcons extends MatchingTask {
     
     private int depth = 0;
-    private List<File> projectDirList = new ArrayList<File>();
-    private List<ProjectIconInfo> prjIconInfoList = new ArrayList<ProjectIconInfo>();
+    private List<File> projectDirList = new ArrayList<>();
+    private List<ProjectIconInfo> prjIconInfoList = new ArrayList<>();
     
     File baseDir = null;
     public void setNbsrcroot(File f) {
@@ -124,9 +124,7 @@ public class CopyIcons extends MatchingTask {
     private ImageInfo readImageInfo(File fl) throws IOException {
         Dimension dim = null;
         ImageInfo imageInfo = null;
-        ByteArrayInputStream bais = null;
-        try {
-            bais = readSomeBytes(fl);
+        try (ByteArrayInputStream bais = readSomeBytes(fl)) {
             if (isGIF(bais)) {
                 imageInfo = new ImageInfo(readGIFDimension(bais), ImageInfo.GIF);
             } else if (isPNG(bais)) {
@@ -134,8 +132,6 @@ public class CopyIcons extends MatchingTask {
             }
         } catch (IOException ex) {
             ex.printStackTrace();
-        } finally {
-            bais.close();
         }
         return imageInfo;
     }
@@ -307,69 +303,69 @@ public class CopyIcons extends MatchingTask {
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }
-        PrintWriter pw = new PrintWriter(new BufferedOutputStream(fos));
-        pw.println("<html>");
-        pw.println("<head>");
-        pw.println("<style type=\"text/css\">\nbody { font-family: Tahoma, Verdana, sans-serif }\n</style>");
-        pw.println("</head>");
-        pw.println("<body>");
-        pw.println("<h2>List of icons in NetBeans projects</h2>");
-        pw.println("<h3>NetBeans Source Root: " + baseDir + "<br/>");
-        pw.println("Destination Directory: " + destDir + "</h3>");
-        pw.println("<p style=\"width: 70%\"><b>Description:</b><br/> New Image is image in the Destination Directory, Orig. Image is image in NetBeans Source Root. " +
-                "By replacing the image in Destination Directory under coresponding module and path you can prepare rebranded " +
-                "icons in paralel directory structure and then copy them over to NetBeans Source Root. Orig. Image is " +
-                "in the table just for comparison and reference what image was already changed.</p>");
-        for (Iterator<ProjectIconInfo> iter = prjIconInfoList.iterator(); iter.hasNext(); ) {
-            ProjectIconInfo info = iter.next();
-            if (!showEmpty && info.matchingIcons.size() == 0) {
-                continue;
-            }
-            pw.println("<p>Module name: <b>" + info.prjPath + "</b></p>");
-            pw.println("<p style=\"margin-left: 20px\">");
-            if (info.matchingIcons.size() == 0) {
-                pw.println("<i>--- No icons ---</i>");
-                pw.println("</p>");
-                continue;
-            }
-            pw.println("<table width=\"80%\"border=\"1\" cellpadding=\"3\" cellspacing=\"0\">");
-            pw.println("<tr><td><b>Resource Path</b></td>" +
-                    "<td align=\"center\"><b>&nbsp;New Image&nbsp;</b></td>" +
-                    "<td align=\"center\"><b>&nbsp;Orig. image&nbsp;</b></td>" +
-                    "<td align=\"center\"><b>&nbsp;W x H&nbsp;</b></td>" +
-                    "<td align=\"center\"><b>&nbsp;Extension&nbsp;</b></td>" +
-                    "<td align=\"center\"><b>&nbsp;Real Type&nbsp;</b></td></tr>");
-            for (Iterator<ImageInfo> goodIter = info.matchingIcons.iterator(); goodIter.hasNext(); ) {
-                ImageInfo goodInfo = goodIter.next();
-                String iconPath = goodInfo.getPath();
-                String copiedIconPath = info.prjPath + File.separator + iconPath;
-                String originalIconPath = baseDir.getAbsolutePath() + File.separator + info.prjPath + File.separator + iconPath;
-                pw.println("<tr>");
-                pw.println("<td>");
-                pw.println("<a href=\"" + copiedIconPath + "\">" + iconPath + "</a>");
-                pw.println("</td>");
-                pw.println("<td align=\"center\">");
-                pw.println("<img src=\"" + copiedIconPath + "\"/>"); // copied image
-                pw.println("</td>");
-                pw.println("<td align=\"center\">");
-                pw.println("<img src=\"file://" + originalIconPath + "\"/>"); // original image
-                pw.println("</td>");
-                pw.println("<td align=\"center\">" + goodInfo.getWidth() + " x " + goodInfo.getHeight() + "</td>");
-                pw.println("<td align=\"center\">" + goodInfo.getExt().toUpperCase() + "</td>");
-                if (!goodInfo.getExt().equalsIgnoreCase(goodInfo.getType())) {
-                    pw.println("<td align=\"center\"><font color=\"Orange\">" + goodInfo.getType() + "</font></td>");
-                } else {
-                    pw.println("<td align=\"center\">" + goodInfo.getType() + "</td>");
+        try (PrintWriter pw = new PrintWriter(new BufferedOutputStream(fos))) {
+            pw.println("<html>");
+            pw.println("<head>");
+            pw.println("<style type=\"text/css\">\nbody { font-family: Tahoma, Verdana, sans-serif }\n</style>");
+            pw.println("</head>");
+            pw.println("<body>");
+            pw.println("<h2>List of icons in NetBeans projects</h2>");
+            pw.println("<h3>NetBeans Source Root: " + baseDir + "<br/>");
+            pw.println("Destination Directory: " + destDir + "</h3>");
+            pw.println("<p style=\"width: 70%\"><b>Description:</b><br/> New Image is image in the Destination Directory, Orig. Image is image in NetBeans Source Root. " +
+                    "By replacing the image in Destination Directory under coresponding module and path you can prepare rebranded " +
+                    "icons in paralel directory structure and then copy them over to NetBeans Source Root. Orig. Image is " +
+                    "in the table just for comparison and reference what image was already changed.</p>");
+            for (Iterator<ProjectIconInfo> iter = prjIconInfoList.iterator(); iter.hasNext(); ) {
+                ProjectIconInfo info = iter.next();
+                if (!showEmpty && info.matchingIcons.size() == 0) {
+                    continue;
                 }
-                pw.println("</tr>");
+                pw.println("<p>Module name: <b>" + info.prjPath + "</b></p>");
+                pw.println("<p style=\"margin-left: 20px\">");
+                if (info.matchingIcons.size() == 0) {
+                    pw.println("<i>--- No icons ---</i>");
+                    pw.println("</p>");
+                    continue;
+                }
+                pw.println("<table width=\"80%\"border=\"1\" cellpadding=\"3\" cellspacing=\"0\">");
+                pw.println("<tr><td><b>Resource Path</b></td>" +
+                        "<td align=\"center\"><b>&nbsp;New Image&nbsp;</b></td>" +
+                        "<td align=\"center\"><b>&nbsp;Orig. image&nbsp;</b></td>" +
+                        "<td align=\"center\"><b>&nbsp;W x H&nbsp;</b></td>" +
+                        "<td align=\"center\"><b>&nbsp;Extension&nbsp;</b></td>" +
+                        "<td align=\"center\"><b>&nbsp;Real Type&nbsp;</b></td></tr>");
+                for (Iterator<ImageInfo> goodIter = info.matchingIcons.iterator(); goodIter.hasNext(); ) {
+                    ImageInfo goodInfo = goodIter.next();
+                    String iconPath = goodInfo.getPath();
+                    String copiedIconPath = info.prjPath + File.separator + iconPath;
+                    String originalIconPath = baseDir.getAbsolutePath() + File.separator + info.prjPath + File.separator + iconPath;
+                    pw.println("<tr>");
+                    pw.println("<td>");
+                    pw.println("<a href=\"" + copiedIconPath + "\">" + iconPath + "</a>");
+                    pw.println("</td>");
+                    pw.println("<td align=\"center\">");
+                    pw.println("<img src=\"" + copiedIconPath + "\"/>"); // copied image
+                    pw.println("</td>");
+                    pw.println("<td align=\"center\">");
+                    pw.println("<img src=\"file://" + originalIconPath + "\"/>"); // original image
+                    pw.println("</td>");
+                    pw.println("<td align=\"center\">" + goodInfo.getWidth() + " x " + goodInfo.getHeight() + "</td>");
+                    pw.println("<td align=\"center\">" + goodInfo.getExt().toUpperCase() + "</td>");
+                    if (!goodInfo.getExt().equalsIgnoreCase(goodInfo.getType())) {
+                        pw.println("<td align=\"center\"><font color=\"Orange\">" + goodInfo.getType() + "</font></td>");
+                    } else {
+                        pw.println("<td align=\"center\">" + goodInfo.getType() + "</td>");
+                    }
+                    pw.println("</tr>");
+                }
+                pw.println("</table>");
+                pw.println("</p>");
             }
-            pw.println("</table>");
-            pw.println("</p>");
+            pw.println("</body>");
+            pw.println("</html>");
+            pw.flush();
         }
-        pw.println("</body>");
-        pw.println("</html>");
-        pw.flush();
-        pw.close();
         log("---> Report was written to file: " + reportFile.getAbsolutePath());
     }
         
@@ -475,8 +471,8 @@ public class CopyIcons extends MatchingTask {
         ds.scan();
         String[] files = ds.getIncludedFiles();
         log("    Found " + files.length + " files in " + f);
-        List<ImageInfo> goodIcons = new ArrayList<ImageInfo>();
-        List<ImageInfo> badIcons = new ArrayList<ImageInfo>();
+        List<ImageInfo> goodIcons = new ArrayList<>();
+        List<ImageInfo> badIcons = new ArrayList<>();
         for (String file : files) {
             String ext = file.substring(file.lastIndexOf('.') + 1);
             if (ext.equalsIgnoreCase("gif") || ext.equalsIgnoreCase("png")) {
@@ -506,7 +502,7 @@ public class CopyIcons extends MatchingTask {
     }
     
     private String[] getAsArray(String s) {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         for (StringTokenizer stok = new StringTokenizer(s, ","); stok.hasMoreTokens(); ) {
           String token = stok.nextToken().trim();
           list.add(token);

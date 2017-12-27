@@ -82,7 +82,7 @@ public class PathFileSet extends DataType implements ResourceCollection, Selecto
         this.include = include;
     }
 
-    private List<Path> paths = new ArrayList<Path>();
+    private List<Path> paths = new ArrayList<>();
 
     /**
      * Adds path in classpath notation. Searched in addition
@@ -218,7 +218,7 @@ public class PathFileSet extends DataType implements ResourceCollection, Selecto
     private void initFiles() throws BuildException {
         if (files != null) return;
         try {
-            files = new ArrayList<Resource>();
+            files = new ArrayList<>();
             log("ClusterPathSet: scanning " + paths.size() + " paths.", Project.MSG_VERBOSE);
             DirectoryScanner scanner = new DirectoryScanner();
             if (paths.size() == 0) {

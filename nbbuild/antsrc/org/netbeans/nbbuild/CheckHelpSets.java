@@ -69,7 +69,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class CheckHelpSets extends Task {
     
-    private List<FileSet> filesets = new ArrayList<FileSet>();
+    private List<FileSet> filesets = new ArrayList<>();
     
     /** Add a fileset with one or more helpsets in it.
      * <strong>Only</strong> the <samp>*.hs</samp> should match!
@@ -80,9 +80,7 @@ public class CheckHelpSets extends Task {
     }
     
     public void execute() throws BuildException {
-        Iterator it = filesets.iterator();
-        while (it.hasNext()) {
-            FileSet fs = (FileSet)it.next();
+        for(FileSet fs: filesets) {
             FileScanner scanner = fs.getDirectoryScanner(getProject());
             File dir = scanner.getBasedir();
             String[] files = scanner.getIncludedFiles();
@@ -122,18 +120,19 @@ public class CheckHelpSets extends Task {
         log("Checking for duplicate map IDs...");
         HelpSet.parse(hsfile.toURI().toURL(), null, new VerifyHSFactory());
         log("Checking links from help map and between HTML files...");
-        Enumeration e = map.getAllIDs();
-        Set<URI> okurls = new HashSet<URI>(1000);
-        Set<URI> badurls = new HashSet<URI>(1000);
-        Set<URI> cleanurls = new HashSet<URI>(1000);
+        @SuppressWarnings("unchecked")
+        Enumeration<javax.help.Map.ID> e = map.getAllIDs();
+        Set<URI> okurls = new HashSet<>(1000);
+        Set<URI> badurls = new HashSet<>(1000);
+        Set<URI> cleanurls = new HashSet<>(1000);
         while (e.hasMoreElements()) {
-            javax.help.Map.ID id = (javax.help.Map.ID)e.nextElement();
+            javax.help.Map.ID id = e.nextElement();
             URL u = map.getURLFromID(id);
             if (u == null) {
                 throw new BuildException("Bogus map ID: " + id.id, new Location(hsfile.getAbsolutePath()));
             }
             log("Checking ID " + id.id, Project.MSG_VERBOSE);
-            List<String> errors = new ArrayList<String>();
+            List<String> errors = new ArrayList<>();
             CheckLinks.scan(this, null, null, id.id, "", 
             u.toURI(), okurls, badurls, cleanurls, false, false, false, 2, 
             Collections.<Mapper>emptyList(), errors);
@@ -158,7 +157,8 @@ public class CheckHelpSets extends Task {
         
         // The useful method:
         
-        public TreeItem createItem(String str, Hashtable hashtable, HelpSet helpSet, Locale locale) {
+        @Override
+        public TreeItem createItem(String str, @SuppressWarnings("rawtypes") Hashtable hashtable, HelpSet helpSet, Locale locale) {
             String target = (String)hashtable.get("target");
             if (target != null) {
                 if (! map.isValidID(target, hs)) {
@@ -172,20 +172,25 @@ public class CheckHelpSets extends Task {
         
         // Filler methods:
         
-        public Enumeration listMessages() {
+        @Override
+        public @SuppressWarnings("rawtypes") Enumeration listMessages() {
             return Collections.enumeration(Collections.<String>emptyList());
         }
         
+        @Override
         public void processPI(HelpSet helpSet, String str, String str2) {
         }
         
+        @Override
         public void reportMessage(String str, boolean param) {
             log(str, param ? Project.MSG_VERBOSE : Project.MSG_WARN);
         }
         
+        @Override
         public void processDOCTYPE(String str, String str1, String str2) {
         }
         
+        @Override
         public void parsingStarted(URL uRL) {
         }
         
@@ -193,6 +198,7 @@ public class CheckHelpSets extends Task {
             return defaultMutableTreeNode;
         }
         
+        @Override
         public TreeItem createItem() {
             if (toc) {
                 return new TOCItem();
@@ -205,9 +211,10 @@ public class CheckHelpSets extends Task {
     
     private final class VerifyHSFactory extends HelpSet.DefaultHelpSetFactory {
         
-        private Set<String> ids = new HashSet<String>(1000);
+        private final Set<String> ids = new HashSet<>(1000);
         
-        public void processMapRef(HelpSet hs, Hashtable attrs) {
+        @Override
+        public void processMapRef(HelpSet hs, @SuppressWarnings("rawtypes") Hashtable attrs) {
             try {
                 URL map = new URL(hs.getHelpSetURL(), (String)attrs.get("location"));
                 SAXParserFactory factory = SAXParserFactory.newInstance();

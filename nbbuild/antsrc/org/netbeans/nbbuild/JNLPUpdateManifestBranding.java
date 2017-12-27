@@ -26,8 +26,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -37,8 +35,6 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.tools.ant.BuildException;
@@ -65,7 +61,7 @@ public class JNLPUpdateManifestBranding extends Task {
     private static final String ATTR_PERMISSIONS = "Permissions";   //NOI18N
     private static final String ATTR_APPLICATION_NAME = "Application-Name"; //NOI18N
 
-    private final Vector<FileSet> filesets = new Vector<FileSet>();
+    private final Vector<FileSet> filesets = new Vector<>();
 
     public void addFileset(FileSet fileset) {
         filesets.add(fileset);
@@ -108,7 +104,7 @@ public class JNLPUpdateManifestBranding extends Task {
 
     @Override
     public void execute() throws BuildException {
-        Set<String> filePaths = new HashSet<String>();
+        Set<String> filePaths = new HashSet<>();
         File tmpFile = null;
         for (FileSet fs : filesets) {
             if (fs != null) {
@@ -132,11 +128,7 @@ public class JNLPUpdateManifestBranding extends Task {
                 }
 
             }
-        } catch (IOException ex) {
-            getProject().log(
-                    "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
-                    Project.MSG_WARN);
-        } catch (ManifestException ex) {
+        } catch (IOException | ManifestException ex) {
             getProject().log(
                     "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
                     Project.MSG_WARN);
@@ -158,7 +150,7 @@ public class JNLPUpdateManifestBranding extends Task {
         cp.execute();
         boolean success = false;
         try {
-            final Map<String, String> extendedAttrs = new HashMap<String, String>();
+            final Map<String, String> extendedAttrs = new HashMap<>();
             final org.apache.tools.zip.ZipFile zf = new org.apache.tools.zip.ZipFile(sourceJar);
             try {
                 final org.apache.tools.zip.ZipEntry manifestEntry = zf.getEntry(MANIFEST);
@@ -272,8 +264,7 @@ public class JNLPUpdateManifestBranding extends Task {
      * return alias if signed, or null if not
      */
     private static String isSigned(File f) throws IOException {
-        JarFile jar = new JarFile(f);
-        try {
+        try (JarFile jar = new JarFile(f)) {
             Enumeration<JarEntry> en = jar.entries();
             while (en.hasMoreElements()) {
                 Matcher m = SF.matcher(en.nextElement().getName());
@@ -282,8 +273,6 @@ public class JNLPUpdateManifestBranding extends Task {
                 }
             }
             return null;
-        } finally {
-            jar.close();
         }
     }
     private static final Pattern SF = Pattern.compile("META-INF/(.+)\\.SF");
@@ -304,24 +293,7 @@ public class JNLPUpdateManifestBranding extends Task {
         }
         getSignTask().setSignedjar(to);
         // use reflection for calling getSignTask().setDigestAlg("SHA1");
-        try {
-            Class sjClass = Class.forName("org.apache.tools.ant.taskdefs.SignJar");
-            Method sdaMethod = sjClass.getDeclaredMethod("setDigestAlg", String.class);
-            sdaMethod.invoke(getSignTask(), "SHA1");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchMethodException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        // end of getSignTask().setDigestAlg("SHA1");
+        getSignTask().setDigestAlg("SHA1");
         getSignTask().execute();
 
     }

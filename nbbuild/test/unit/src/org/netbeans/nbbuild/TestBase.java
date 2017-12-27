@@ -68,16 +68,16 @@ abstract class TestBase extends NbTestCase {
     protected final File extractString(String res) throws Exception {
         File f = File.createTempFile("res", ".xml", getWorkDir());
 
-        FileOutputStream os = new FileOutputStream(f);
-        InputStream is = new ByteArrayInputStream(res.getBytes("UTF-8"));
-        for (;;) {
-            int ch = is.read();
-            if (ch == -1) {
-                break;
+        try (FileOutputStream os = new FileOutputStream(f)) {
+            InputStream is = new ByteArrayInputStream(res.getBytes("UTF-8"));
+            for (;;) {
+                int ch = is.read();
+                if (ch == -1) {
+                    break;
+                }
+                os.write(ch);
             }
-            os.write(ch);
         }
-        os.close();
 
         return f;
     }
@@ -93,16 +93,16 @@ abstract class TestBase extends NbTestCase {
         assertNotNull("Resource should be found " + res, u);
 
 
-        FileOutputStream os = new FileOutputStream(f);
-        InputStream is = u.openStream();
-        for (;;) {
-            int ch = is.read();
-            if (ch == -1) {
-                break;
+        try (FileOutputStream os = new FileOutputStream(f)) {
+            InputStream is = u.openStream();
+            for (;;) {
+                int ch = is.read();
+                if (ch == -1) {
+                    break;
+                }
+                os.write(ch);
             }
-            os.write(ch);
         }
-        os.close();
     }
 
     protected final void execute(String res, String... args) throws Exception {
@@ -146,7 +146,7 @@ abstract class TestBase extends NbTestCase {
         // for me now, I leave it for the time when somebody really
         // needs that...
 
-        List<String> arr = new ArrayList<String>();
+        List<String> arr = new ArrayList<>();
         arr.add("-f");
         arr.add(f.toString());
         arr.addAll(Arrays.asList(args));

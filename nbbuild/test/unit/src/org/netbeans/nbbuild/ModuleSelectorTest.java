@@ -151,36 +151,36 @@ public class ModuleSelectorTest extends TestBase {
         File aModule = generateJar(new String[0], m);
         
         File trackingFile = new File(updateTracking, "org-my-module.xml");
-        FileWriter w = new FileWriter(trackingFile);
-        w.write(
-"<?xml version='1.0' encoding='UTF-8'?>\n" +
-"<module codename='org.apache.tools.ant.module/3'>\n" +
-    "<module_version specification_version='3.22' origin='installer' last='true' install_time='1124194231878'>\n" +
-        "<file name='ant/bin/ant' crc='1536373800'/>\n" +
-        "<file name='ant/bin/ant.bat' crc='3245456472'/>\n" +
-        "<file name='ant/bin/ant.cmd' crc='3819623376'/>\n" +
-        "<file name='ant/bin/antRun' crc='2103827286'/>\n" +
-        "<file name='ant/bin/antRun.bat' crc='2739687679'/>\n" +
-        "<file name='ant/bin/antRun.pl' crc='3955456526'/>\n" +
-"    </module_version>\n" +
-"</module>\n"
-        );
-        w.close();
+        try (FileWriter w = new FileWriter(trackingFile)) {
+            w.write(
+                    "<?xml version='1.0' encoding='UTF-8'?>\n" +
+                            "<module codename='org.apache.tools.ant.module/3'>\n" +
+                            "<module_version specification_version='3.22' origin='installer' last='true' install_time='1124194231878'>\n" +
+                            "<file name='ant/bin/ant' crc='1536373800'/>\n" +
+                            "<file name='ant/bin/ant.bat' crc='3245456472'/>\n" +
+                            "<file name='ant/bin/ant.cmd' crc='3819623376'/>\n" +
+                            "<file name='ant/bin/antRun' crc='2103827286'/>\n" +
+                            "<file name='ant/bin/antRun.bat' crc='2739687679'/>\n" +
+                            "<file name='ant/bin/antRun.pl' crc='3955456526'/>\n" +
+                            "    </module_version>\n" +
+                            "</module>\n"
+            );
+        }
 
         StringBuilder sb = new StringBuilder();
         sb.append(trackingFile.getPath());
         
         while (--parents > 0) {
             File x = new File(getWorkDir(), parents + ".xml");
-            FileWriter xw = new FileWriter(x);
-            xw.write(
-    "<?xml version='1.0' encoding='UTF-8'?>\n" +
-    "<module codename='" + x + "/3'>\n" +
-        "<module_version specification_version='3.22' origin='installer' last='true' install_time='1124194231878'>\n" +
-    "    </module_version>\n" +
-    "</module>\n"
-            );
-            xw.close();
+            try (FileWriter xw = new FileWriter(x)) {
+                xw.write(
+                        "<?xml version='1.0' encoding='UTF-8'?>\n" +
+                                "<module codename='" + x + "/3'>\n" +
+                                        "<module_version specification_version='3.22' origin='installer' last='true' install_time='1124194231878'>\n" +
+                                        "    </module_version>\n" +
+                                        "</module>\n"
+                );
+            }
             
             sb.insert(0, File.pathSeparator);
             sb.insert(0, x.getPath());

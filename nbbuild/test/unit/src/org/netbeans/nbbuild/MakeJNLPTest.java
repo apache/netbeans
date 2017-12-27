@@ -50,8 +50,8 @@ public class MakeJNLPTest extends TestBase {
     
     private static void assertFilenames(File dir, String... contents) {
         assertTrue(dir + " is a directory", dir.isDirectory());
-        SortedSet<String> expected = new TreeSet<String>(Arrays.asList(contents));
-        SortedSet<String> actual = new TreeSet<String>();
+        SortedSet<String> expected = new TreeSet<>(Arrays.asList(contents));
+        SortedSet<String> actual = new TreeSet<>();
         findFilenames(dir, "", actual);
         assertEquals("correct contents of " + dir, expected/*.toString()*/, actual/*.toString()*/);
     }
@@ -337,9 +337,9 @@ public class MakeJNLPTest extends TestBase {
         assertTrue("Created", updateTracking.isDirectory());
         
         File trackingFile = new File(updateTracking, "org-netbeans-modules-autoupdate.xml");
-        FileWriter w = new FileWriter(trackingFile);
-        w.write(UTfile);
-        w.close();
+        try (FileWriter w = new FileWriter(trackingFile)) {
+            w.write(UTfile);
+        }
 
         File output = new File(getWorkDir(), "output");
         File ks = generateKeystore("jnlp", "netbeans-test");
@@ -422,20 +422,20 @@ public class MakeJNLPTest extends TestBase {
         assertTrue("Created", updateTracking.isDirectory());
         
         File trackingFile = new File(updateTracking, "org-netbeans-core-startup.xml");
-        FileWriter w = new FileWriter(trackingFile);
-        w.write(
-"<?xml version='1.0' encoding='UTF-8'?>\n" +
-"<module codename='org.my.module/3'>\n" +
-    "<module_version specification_version='3.22' origin='installer' last='true' install_time='1124194231878'>\n" +
-        "<file name='modules/" + simpleJar.getName() + "' crc='3245456472'/>\n" +
-        "<file name='config/Modules/org-netbeans-core-startup.xml' crc='43434' />\n" +
-        "<file name='modules/locale/core_cs.jar' crc='454244' />\n" +
-        "<file name='modules/locale/core_ja.jar' crc='779831' />\n" +
-        "<file name='modules/locale/core_zh_CN.jar' crc='475345' />\n" +
-"    </module_version>\n" +
-"</module>\n"
-        );
-        w.close();
+        try (FileWriter w = new FileWriter(trackingFile)) {
+            w.write(
+                    "<?xml version='1.0' encoding='UTF-8'?>\n" +
+                            "<module codename='org.my.module/3'>\n" +
+                            "<module_version specification_version='3.22' origin='installer' last='true' install_time='1124194231878'>\n" +
+                            "<file name='modules/" + simpleJar.getName() + "' crc='3245456472'/>\n" +
+                                    "<file name='config/Modules/org-netbeans-core-startup.xml' crc='43434' />\n" +
+                                    "<file name='modules/locale/core_cs.jar' crc='454244' />\n" +
+                                    "<file name='modules/locale/core_ja.jar' crc='779831' />\n" +
+                                    "<file name='modules/locale/core_zh_CN.jar' crc='475345' />\n" +
+                                    "    </module_version>\n" +
+                                    "</module>\n"
+            );
+        }
         
         
         File output = new File(parent, "output");
@@ -487,20 +487,20 @@ public class MakeJNLPTest extends TestBase {
         assertTrue("Created", updateTracking.isDirectory());
         
         File trackingFile = new File(updateTracking, "org-my-module.xml");
-        FileWriter w = new FileWriter(trackingFile);
-        w.write(
-"<?xml version='1.0' encoding='UTF-8'?>\n" +
-"<module codename='org.my.module/3'>\n" +
-    "<module_version specification_version='3.22' origin='installer' last='true' install_time='1124194231878'>\n" +
-        "<file name='modules/" + simpleJar.getName() + "' crc='3245456472'/>\n" +
-        "<file name='config/Modules/org-my-module.xml' crc='43434' />\n" +
-        "<file name='modules/locale/0_cs.jar' crc='454244' />\n" +
-        "<file name='modules/locale/0_ja.jar' crc='779831' />\n" +
-        "<file name='modules/locale/0_zh_CN.jar' crc='475345' />\n" +
-"    </module_version>\n" +
-"</module>\n"
-        );
-        w.close();
+        try (FileWriter w = new FileWriter(trackingFile)) {
+            w.write(
+                    "<?xml version='1.0' encoding='UTF-8'?>\n" +
+                            "<module codename='org.my.module/3'>\n" +
+                            "<module_version specification_version='3.22' origin='installer' last='true' install_time='1124194231878'>\n" +
+                            "<file name='modules/" + simpleJar.getName() + "' crc='3245456472'/>\n" +
+                                    "<file name='config/Modules/org-my-module.xml' crc='43434' />\n" +
+                                    "<file name='modules/locale/0_cs.jar' crc='454244' />\n" +
+                                    "<file name='modules/locale/0_ja.jar' crc='779831' />\n" +
+                                    "<file name='modules/locale/0_zh_CN.jar' crc='475345' />\n" +
+                                    "    </module_version>\n" +
+                                    "</module>\n"
+            );
+        }
         
         
         File output = new File(parent, "output");
@@ -580,20 +580,20 @@ public class MakeJNLPTest extends TestBase {
         assertTrue("Created", updateTracking.isDirectory());
         
         File trackingFile = new File(updateTracking, "org-netbeans-core-startup.xml");
-        FileWriter w = new FileWriter(trackingFile);
-        w.write(
-"<?xml version='1.0' encoding='UTF-8'?>\n" +
-"<module codename='org.my.module/3'>\n" +
-    "<module_version specification_version='3.22' origin='installer' last='true' install_time='1124194231878'>\n" +
-        "<file name='core/" + simpleJar.getName() + "' crc='3245456472'/>\n" +
-        "<file name='config/Modules/org-netbeans-core-startup.xml' crc='43434' />\n" +
-        "<file name='core/locale/core_cs.jar' crc='454244' />\n" +
-        "<file name='core/locale/core_ja.jar' crc='779831' />\n" +
-        "<file name='core/locale/core_zh_CN.jar' crc='475345' />\n" +
-"    </module_version>\n" +
-"</module>\n"
-        );
-        w.close();
+        try (FileWriter w = new FileWriter(trackingFile)) {
+            w.write(
+                    "<?xml version='1.0' encoding='UTF-8'?>\n" +
+                            "<module codename='org.my.module/3'>\n" +
+                            "<module_version specification_version='3.22' origin='installer' last='true' install_time='1124194231878'>\n" +
+                            "<file name='core/" + simpleJar.getName() + "' crc='3245456472'/>\n" +
+                                    "<file name='config/Modules/org-netbeans-core-startup.xml' crc='43434' />\n" +
+                                    "<file name='core/locale/core_cs.jar' crc='454244' />\n" +
+                                    "<file name='core/locale/core_ja.jar' crc='779831' />\n" +
+                                    "<file name='core/locale/core_zh_CN.jar' crc='475345' />\n" +
+                                    "    </module_version>\n" +
+                                    "</module>\n"
+            );
+        }
         
         
         File output = new File(parent, "output");
@@ -645,20 +645,20 @@ public class MakeJNLPTest extends TestBase {
         assertTrue("Created", updateTracking.isDirectory());
         
         File trackingFile = new File(updateTracking, "org-my-module.xml");
-        FileWriter w = new FileWriter(trackingFile);
-        w.write(
-"<?xml version='1.0' encoding='UTF-8'?>\n" +
-"<module codename='org.my.module/3'>\n" +
-    "<module_version specification_version='3.22' origin='installer' last='true' install_time='1124194231878'>\n" +
-        "<file name='modules/" + simpleJar.getName() + "' crc='3245456472'/>\n" +
-        "<file name='config/Modules/org-my-module.xml' crc='43434' />\n" +
-        "<file name='modules/locale/0_cs.jar' crc='454244' />\n" +
-        "<file name='modules/locale/0_ja.jar' crc='779831' />\n" +
-        "<file name='modules/locale/0_zh_CN.jar' crc='475345' />\n" +
-"    </module_version>\n" +
-"</module>\n"
-        );
-        w.close();
+        try (FileWriter w = new FileWriter(trackingFile)) {
+            w.write(
+                    "<?xml version='1.0' encoding='UTF-8'?>\n" +
+                            "<module codename='org.my.module/3'>\n" +
+                            "<module_version specification_version='3.22' origin='installer' last='true' install_time='1124194231878'>\n" +
+                            "<file name='modules/" + simpleJar.getName() + "' crc='3245456472'/>\n" +
+                                    "<file name='config/Modules/org-my-module.xml' crc='43434' />\n" +
+                                    "<file name='modules/locale/0_cs.jar' crc='454244' />\n" +
+                                    "<file name='modules/locale/0_ja.jar' crc='779831' />\n" +
+                                    "<file name='modules/locale/0_zh_CN.jar' crc='475345' />\n" +
+                                    "    </module_version>\n" +
+                                    "</module>\n"
+            );
+        }
         
         
         File output = new File(parent, "output");
@@ -948,19 +948,19 @@ public class MakeJNLPTest extends TestBase {
         enableXML.createNewFile();
         
         File trackingFile = new File(updateTracking, "aaa-my-module.xml");
-        FileWriter w = new FileWriter(trackingFile);
-        w.write(
-"<?xml version='1.0' encoding='UTF-8'?>\n" +
-"<module codename='org.apache.tools.ant.module/3'>\n" +
-    "<module_version specification_version='3.22' origin='installer' last='true' install_time='1124194231878'>\n" +
-        (useNonModule ? ("<file name='modules/" + nonModule.getName() + "' crc='1536373800'/>\n") : "") +
-        "<file name='modules/" + module.getName() + "' crc='3245456472'/>\n" +
-        "<file name='config/Modules/aaa-my-module.xml' crc='43434' />\n" +
-        (fakeEntry != null ? "<file name='" + fakeEntry + "' crc='43222' />\n" : "") +
-"    </module_version>\n" +
-"</module>\n"
-        );
-        w.close();
+        try (FileWriter w = new FileWriter(trackingFile)) {
+            w.write(
+                    "<?xml version='1.0' encoding='UTF-8'?>\n" +
+                            "<module codename='org.apache.tools.ant.module/3'>\n" +
+                            "<module_version specification_version='3.22' origin='installer' last='true' install_time='1124194231878'>\n" +
+                            (useNonModule ? ("<file name='modules/" + nonModule.getName() + "' crc='1536373800'/>\n") : "") +
+                            "<file name='modules/" + module.getName() + "' crc='3245456472'/>\n" +
+                                    "<file name='config/Modules/aaa-my-module.xml' crc='43434' />\n" +
+                            (fakeEntry != null ? "<file name='" + fakeEntry + "' crc='43222' />\n" : "") +
+                            "    </module_version>\n" +
+                                    "</module>\n"
+            );
+        }
         
         
         
@@ -1078,21 +1078,20 @@ public class MakeJNLPTest extends TestBase {
             manifest.getMainAttributes().putValue("OpenIDE-Module-Localizing-Bundle", "some/fake/prop/name/Bundle.properties");
         }
         
-        JarOutputStream os = new JarOutputStream (new FileOutputStream (f), manifest);
-        
-        if (props != null) {
-            os.putNextEntry(new JarEntry("some/fake/prop/name/Bundle.properties"));
-            props.store(os, "# properties for the module");
-            os.closeEntry();
+        try (JarOutputStream os = new JarOutputStream (new FileOutputStream (f), manifest)) {
+            if (props != null) {
+                os.putNextEntry(new JarEntry("some/fake/prop/name/Bundle.properties"));
+                props.store(os, "# properties for the module");
+                os.closeEntry();
+            }
+            
+            
+            for (int i = 0; i < content.length; i++) {
+                os.putNextEntry(new JarEntry (content[i]));
+                os.closeEntry();
+            }
+            os.closeEntry ();
         }
-        
-        
-        for (int i = 0; i < content.length; i++) {
-            os.putNextEntry(new JarEntry (content[i]));
-            os.closeEntry();
-        }
-        os.closeEntry ();
-        os.close();
         
         return f;
     }

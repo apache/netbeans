@@ -57,7 +57,7 @@ public final class CheckModuleConfigs extends Task {
         File clusterPropertiesFile = new File(nbroot, "nbbuild" + File.separatorChar + "cluster.properties");
         Map<String,Object> properties = getProject().getProperties();
         Map<String,Set<String>> clusters = loadModuleClusters(properties, clusterPropertiesFile);
-        Set<String> allClusterModules = new TreeSet<String>();
+        Set<String> allClusterModules = new TreeSet<>();
         for (Set<String> s : clusters.values()) {
             allClusterModules.addAll(s);
         }
@@ -72,7 +72,7 @@ public final class CheckModuleConfigs extends Task {
         }
         // Verify sorting and overlaps:
         Pattern clusterNamePat = Pattern.compile("nb\\.cluster\\.([^.]+)");
-        Map<String,List<String>> allClusters = new HashMap<String,List<String>>();
+        Map<String,List<String>> allClusters = new HashMap<>();
         for (Map.Entry<String,Object> clusterDef : properties.entrySet()) {
             Matcher m = clusterNamePat.matcher(clusterDef.getKey());
             if (!m.matches()) {
@@ -85,7 +85,7 @@ public final class CheckModuleConfigs extends Task {
         for (Map.Entry<String,List<String>> entry : allClusters.entrySet()) {
             String name = entry.getKey();
             List<String> modules = entry.getValue();
-            Set<String> modulesS = new HashSet<String>(modules);
+            Set<String> modulesS = new HashSet<>(modules);
             if (modulesS.size() < modules.size()) {
                 throw new BuildException("duplicates found in " + name + ": " + modules);
             }
@@ -98,7 +98,7 @@ public final class CheckModuleConfigs extends Task {
                     throw new BuildException("some entries in " + name + " also found in " + other);
                 }
             }
-            List<String> sorted = new ArrayList<String>(modules);
+            List<String> sorted = new ArrayList<>(modules);
             Collections.sort(sorted);
             if (!sorted.equals(modules)) {
                 throw new BuildException("unsorted list for " + name + ": " + modules);
@@ -114,14 +114,14 @@ public final class CheckModuleConfigs extends Task {
         if (list.matches(".*\\s.*|^,.*|.*,$|.*,,.*")) {
             throw new BuildException("remove whitespaces or fix leading/trailing commas in " + what + ": " + list);
         }
-        List<String> r = new ArrayList<String>(Arrays.asList(list.split(",")));
+        List<String> r = new ArrayList<>(Arrays.asList(list.split(",")));
         assert !r.contains(null) : r;
         assert !r.contains("") : r;
         return r;
     }
     private Set<String> splitToSet(String list, String what) {
         List<String> elements = splitToList(list, what);
-        Set<String> set = new HashSet<String>(elements);
+        Set<String> set = new HashSet<>(elements);
         for (String s : set) {
             elements.remove(s);
         }
@@ -137,13 +137,13 @@ public final class CheckModuleConfigs extends Task {
         if (l == null) {
             throw new BuildException(clusterPropertiesFile + ": no definition for clusters.config.full.list");
         }
-        Map<String,Set<String>> clusters = new TreeMap<String,Set<String>>();
+        Map<String,Set<String>> clusters = new TreeMap<>();
         for (String cluster : splitToSet(l, fullConfig)) {
             l = (String) clusterProperties.get(cluster);
             if (l == null) {
                 throw new BuildException(clusterPropertiesFile + ": no definition for " + cluster);
             }
-            clusters.put(cluster, new TreeSet<String>(splitToSet(l, fullConfig)));
+            clusters.put(cluster, new TreeSet<>(splitToSet(l, fullConfig)));
         }
         return clusters;
     }

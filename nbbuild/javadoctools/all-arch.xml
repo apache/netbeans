@@ -26,8 +26,11 @@
         Tools for working with all available architecture description documents.
     </description>
 
+    <import file="../default.xml"/>
+
     <target name="validate">
         <xmlvalidate warn="true" failonerror="false">
+            <xmlcatalog refid="nbantextcatalog" />
             <fileset dir="../..">
                 <include name="*/arch/arch-*.xml"/>
                 <include name="*/arch.xml"/>
@@ -36,5 +39,4 @@
             </fileset>
         </xmlvalidate>
     </target>
-
 </project>

@@ -73,7 +73,7 @@ public class DeleteUnreferencedClusterFiles extends Task {
             if (!updateTracking.isDirectory()) {
                 continue;
             }
-            Map</*path*/String,/*CNB*/String> files = new HashMap<String,String>();
+            Map</*path*/String,/*CNB*/String> files = new HashMap<>();
             for (File module : updateTracking.listFiles()) {
                 if (!module.getName().endsWith(".xml")) {
                     continue;
@@ -99,7 +99,7 @@ public class DeleteUnreferencedClusterFiles extends Task {
             }
             scanForExtraFiles(cluster, "", files.keySet(), cluster.getName(), extraFiles);
         }
-        Map<String,String> pseudoTests = new LinkedHashMap<String,String>();
+        Map<String,String> pseudoTests = new LinkedHashMap<>();
         pseudoTests.put("testMissingFiles", missingFiles.length() > 0 ? "Some files were missing" + missingFiles : null);
         pseudoTests.put("testExtraFiles", extraFiles.length() > 0 ? "Some extra files were present" + extraFiles : null);
         pseudoTests.put("testDuplicatedFiles", duplicatedFiles.length() > 0 ? "Some files were registered in two or more NBMs" + duplicatedFiles : null);

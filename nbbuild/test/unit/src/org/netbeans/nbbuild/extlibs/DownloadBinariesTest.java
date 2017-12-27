@@ -41,9 +41,9 @@ public class DownloadBinariesTest extends NbTestCase {
     private File list;
 
     private static void write(File f, String contents) throws IOException {
-        OutputStream os = new FileOutputStream(f);
-        os.write(contents.getBytes("UTF-8"));
-        os.close();
+        try (OutputStream os = new FileOutputStream(f)) {
+            os.write(contents.getBytes("UTF-8"));
+        }
     }
 
     @Override

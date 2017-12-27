@@ -45,7 +45,7 @@ public class Repeat extends Task {
     //
     
     public Repeat() {
-        values = new ArrayList<String>();
+        values = new ArrayList<>();
         target    = null;
     }
 
@@ -65,7 +65,7 @@ public class Repeat extends Task {
         log ("SET values = " + s, Project.MSG_DEBUG);
 
         StringTokenizer tok = new StringTokenizer (s, ", ");
-        values = new ArrayList<String>();
+        values = new ArrayList<>();
         while ( tok.hasMoreTokens() ) {
             values.add (tok.nextToken().trim());
         }

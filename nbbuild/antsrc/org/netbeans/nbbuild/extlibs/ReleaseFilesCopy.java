@@ -70,8 +70,7 @@ public class ReleaseFilesCopy extends Task {
                     File zip = getProject().resolveFile(fromString.substring(0, bangSlash));
                     if (zip.isFile()) {
                         try {
-                            ZipFile zf = new ZipFile(zip);
-                            try {
+                            try (ZipFile zf = new ZipFile(zip)) {
                                 String path = fromString.substring(bangSlash + 2);
                                 log("Copying " + path + " in " + zip + " to " + to);
                                 ZipEntry ze = zf.getEntry(path);
@@ -90,8 +89,6 @@ public class ReleaseFilesCopy extends Task {
                                 } finally {
                                     os.close();
                                 }
-                            } finally {
-                                zf.close();
                             }
                         } catch (IOException x) {
                             throw new BuildException("Could not extract " + zip + ": " + x, x, getLocation());

@@ -71,7 +71,7 @@ public class LayerIndex extends Task {
 
     public LayerIndex() {}
 
-    List<FileSet> filesets = new ArrayList<FileSet>();
+    List<FileSet> filesets = new ArrayList<>();
     public void addConfiguredModules(FileSet fs) {
         filesets.add(fs);
     }
@@ -102,19 +102,18 @@ public class LayerIndex extends Task {
         if (filesets.isEmpty()) {
             throw new BuildException();
         }
-        SortedMap<String,String> files = new TreeMap<String,String>(); // layer path -> cnb
-        SortedMap<String,SortedMap<String,String>> labels = new TreeMap<String,SortedMap<String,String>>(); // layer path -> cnb -> label
-        final Map<String,Integer> positions = new TreeMap<String,Integer>(); // layer path -> position
-        SortedMap<String,SortedMap<String,Set<String>>> serviceImpls = new TreeMap<String,SortedMap<String,Set<String>>>(); // path -> interface -> [impl]
-        Map<String,Integer> servicePositions = new HashMap<String,Integer>(); // impl -> position
+        SortedMap<String,String> files = new TreeMap<>(); // layer path -> cnb
+        SortedMap<String,SortedMap<String,String>> labels = new TreeMap<>(); // layer path -> cnb -> label
+        final Map<String,Integer> positions = new TreeMap<>(); // layer path -> position
+        SortedMap<String,SortedMap<String,Set<String>>> serviceImpls = new TreeMap<>(); // path -> interface -> [impl]
+        Map<String,Integer> servicePositions = new HashMap<>(); // impl -> position
         for (FileSet fs : filesets) {
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             File basedir = ds.getBasedir();
             for (String path : ds.getIncludedFiles()) {
                 File jar = new File(basedir, path);
                 try {
-                    JarFile jf = new JarFile(jar);
-                    try {
+                    try (JarFile jf = new JarFile(jar)) {
                         Manifest mf = jf.getManifest();
                         if (mf == null) {
                             continue;
@@ -149,8 +148,6 @@ public class LayerIndex extends Task {
                             // Could remember CNBs too.
                             parseServices(jf, serviceImpls, servicePositions);
                         }
-                    } finally {
-                        jf.close();
                     }
                 } catch (Exception x) {
                     throw new BuildException("Reading " + jar + ": " + x, x, getLocation());
@@ -277,7 +274,7 @@ public class LayerIndex extends Task {
             private void loadDisplayName(String label) {
                 SortedMap<String,String> cnb2label = labels.get(prefix);
                 if (cnb2label == null) {
-                    cnb2label = new TreeMap<String,String>();
+                    cnb2label = new TreeMap<>();
                     labels.put(prefix, cnb2label);
                 }
                 cnb2label.put(cnb, label);
@@ -318,8 +315,7 @@ public class LayerIndex extends Task {
             } else {
                 continue;
             }
-            InputStream is = jf.getInputStream(entry);
-            try {
+            try (InputStream is = jf.getInputStream(entry)) {
                 BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                 String lastImpl = null;
                 String line;
@@ -330,19 +326,17 @@ public class LayerIndex extends Task {
                         lastImpl = line;
                         SortedMap<String,Set<String>> serviceImpls = serviceImplsByPath.get(path);
                         if (serviceImpls == null) {
-                            serviceImpls = new TreeMap<String,Set<String>>();
+                            serviceImpls = new TreeMap<>();
                             serviceImplsByPath.put(path, serviceImpls);
                         }
                         Set<String> impls = serviceImpls.get(xface);
                         if (impls == null) {
-                            impls = new HashSet<String>();
+                            impls = new HashSet<>();
                             serviceImpls.put(xface, impls);
                         }
                         impls.add(lastImpl);
                     }
                 }
-            } finally {
-                is.close();
             }
         }
     }
@@ -393,9 +387,9 @@ public class LayerIndex extends Task {
         updateMap(files, virtualEntries);
         updateMap(positions, virtualEntries);
         updateMap(labels, virtualEntries);
-        SortedSet<String> layerPaths = new TreeSet<String>(new LayerPathComparator(positions));
+        SortedSet<String> layerPaths = new TreeSet<>(new LayerPathComparator(positions));
         layerPaths.addAll(files.keySet());
-        SortedSet<String> remaining = new TreeSet<String>(files.keySet());
+        SortedSet<String> remaining = new TreeSet<>(files.keySet());
         remaining.removeAll(layerPaths);
         assert remaining.isEmpty() : remaining;
         for (String path : layerPaths) {
@@ -439,14 +433,14 @@ public class LayerIndex extends Task {
      */
     private Map<String,String> computeMIMELookupEntries(Set<String> files) {
         Pattern editorFolderPattern = Pattern.compile("Editors/(application|text)/([^/]+)(.*/)");
-        Map<String,String> result = new HashMap<String,String>();
+        Map<String,String> result = new HashMap<>();
         for (String editorFolder : files) {
             Matcher m = editorFolderPattern.matcher(editorFolder);
             if (!m.matches()) {
                 continue;
             }
             // $0="Editors/text/html/Popup/" $1="text" $2="html" $3="/Popup/"
-            List<String> prefixen = new ArrayList<String>(2);
+            List<String> prefixen = new ArrayList<>(2);
             prefixen.add("Editors" + m.group(3)); // "Editors/Popup/"
             if (m.group(2).endsWith("+xml")) { // Editors/text/x-ant+xml/Popup/
                 prefixen.add("Editors/" + m.group(1) + "/xml" + m.group(3)); // Editors/text/xml/Popup/
@@ -533,35 +527,35 @@ public class LayerIndex extends Task {
 
     private void writeServiceIndex(SortedMap<String,SortedMap<String,Set<String>>> serviceImpls,
             final Map<String,Integer> servicePositions) throws IOException {
-        PrintWriter pw = new PrintWriter(serviceOutput, "UTF-8");
-        for (Map.Entry<String,SortedMap<String,Set<String>>> mainEntry : serviceImpls.entrySet()) {
-            String path = mainEntry.getKey();
-            for (Map.Entry<String,Set<String>> entry : mainEntry.getValue().entrySet()) {
-                pw.print("SERVICE " + entry.getKey());
-                if (path.length() > 0) {
-                    pw.println(" under " + path);
-                } else {
-                    pw.println();
-                }
-                SortedSet<String> impls = new TreeSet<String>(new ServiceComparator(servicePositions));
-                impls.addAll(entry.getValue());
-                Set<String> masked = new HashSet<String>();
-                for (String impl : impls) {
-                    if (impl.startsWith("#-")) {
-                        masked.add(impl);
-                        masked.add(impl.substring(2));
+        try (PrintWriter pw = new PrintWriter(serviceOutput, "UTF-8")) {
+            for (Map.Entry<String,SortedMap<String,Set<String>>> mainEntry : serviceImpls.entrySet()) {
+                String path = mainEntry.getKey();
+                for (Map.Entry<String,Set<String>> entry : mainEntry.getValue().entrySet()) {
+                    pw.print("SERVICE " + entry.getKey());
+                    if (path.length() > 0) {
+                        pw.println(" under " + path);
+                    } else {
+                        pw.println();
                     }
-                }
-                impls.removeAll(masked);
-                for (String impl : impls) {
-                    if (servicePositions.containsKey(impl)) {
-                        impl += " @" + servicePositions.get(impl);
+                    SortedSet<String> impls = new TreeSet<>(new ServiceComparator(servicePositions));
+                    impls.addAll(entry.getValue());
+                    Set<String> masked = new HashSet<>();
+                    for (String impl : impls) {
+                        if (impl.startsWith("#-")) {
+                            masked.add(impl);
+                            masked.add(impl.substring(2));
+                        }
                     }
-                    pw.println("  PROVIDER " + impl);
+                    impls.removeAll(masked);
+                    for (String impl : impls) {
+                        if (servicePositions.containsKey(impl)) {
+                            impl += " @" + servicePositions.get(impl);
+                        }
+                        pw.println("  PROVIDER " + impl);
+                    }
                 }
             }
         }
-        pw.close();
         log(serviceOutput + ": service index written");
     }
 

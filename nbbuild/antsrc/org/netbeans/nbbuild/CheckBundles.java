@@ -54,8 +54,6 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class CheckBundles extends Task {
     
-    private static HashSet knownKeys;    
-    
     private static String [] moduleKeys = new String [] {
         "OpenIDE-Module-Name",
         "OpenIDE-Module-Display-Category",
@@ -79,8 +77,8 @@ public class CheckBundles extends Task {
 
         Map<String,File> knownNames = parseManifest(srcdir);
 
-        Collection<File> bundles = new ArrayList<File>();
-        Map<File,String[]> sources = new TreeMap<File,String[]>();
+        Collection<File> bundles = new ArrayList<>();
+        Map<File,String[]> sources = new TreeMap<>();
 
 
         try {        
@@ -217,7 +215,7 @@ public class CheckBundles extends Task {
      * Get a list of keys in a bundle file, with accompanying line numbers.
      */
     private Map<String,Integer> entries(File bundle) throws IOException {
-        Map<String,Integer> entries = new LinkedHashMap<String,Integer>();
+        Map<String,Integer> entries = new LinkedHashMap<>();
         BufferedReader r = new BufferedReader (new FileReader (bundle));
         String l;
         boolean multi = false;
@@ -241,7 +239,7 @@ public class CheckBundles extends Task {
     }
 
     private Map<String,File> parseManifest(File dir) {
-        Map<String,File> files = new HashMap<String,File>(10);
+        Map<String,File> files = new HashMap<>(10);
         try {
             File mf = new File(srcdir, "manifest.mf");
             if (!mf.exists()) {

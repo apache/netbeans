@@ -63,9 +63,9 @@ public class InsertModuleAllTargetsTest extends NbTestCase {
         assertTrue("cluster.properties file exists", clusters.exists());
         
         Properties clusterProps = new Properties();
-        final FileInputStream is = new FileInputStream(clusters);
-        clusterProps.load(is);
-        is.close();
+        try (FileInputStream is = new FileInputStream(clusters)) {
+            clusterProps.load(is);
+        }
         
         for (Entry<Object, Object> en : clusterProps.entrySet()) {
             p.setProperty(en.getKey().toString(), en.getValue().toString());
@@ -127,7 +127,7 @@ public class InsertModuleAllTargetsTest extends NbTestCase {
     }
 
     private Set<String> depsToNames(Enumeration en) {
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new HashSet<>();
         while (en.hasMoreElements()) {
             String dep = en.nextElement().toString();
             set.add(dep);

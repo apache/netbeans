@@ -89,14 +89,14 @@ public class PrintIcon extends Task {
         
         try {
             
-            SortedSet<IconInfo> firstSet = new TreeSet<IconInfo>();
+            SortedSet<IconInfo> firstSet = new TreeSet<>();
             for (String f : first.getDirectoryScanner(getProject()).getIncludedFiles()) {
                 File baseDir = first.getDir(getProject());
                 File file = new File(baseDir, f);
                 firstSet.add(new IconInfo(file.toURI().toURL(), getProject()));
             }
 
-            SortedSet<IconInfo> sndSet = new TreeSet<IconInfo>();
+            SortedSet<IconInfo> sndSet = new TreeSet<>();
             if (second != null) {
                 for (String f : second.getDirectoryScanner(getProject()).getIncludedFiles()) {
                     File baseDir = second.getDir(getProject());
@@ -106,51 +106,51 @@ public class PrintIcon extends Task {
             }
             
             if (duplicates != null) {
-                Set<IconInfo> both = new TreeSet<IconInfo>(firstSet);
+                Set<IconInfo> both = new TreeSet<>(firstSet);
                 both.addAll(sndSet);
                 
-                BufferedWriter os = new BufferedWriter(new FileWriter(duplicates));
-                IconInfo prev = null;
-                boolean prevPrinted = false;
-                for (IconInfo info : both) {
-                    IconInfo p = prev;
-                    prev = info;
-                    if (p == null || p.hash != info.hash) {
-                        prevPrinted = false;
-                        continue;
-                    }
-                    
-                    if (!prevPrinted) {
-                        os.write(p.toString());
+                try (BufferedWriter os = new BufferedWriter(new FileWriter(duplicates))) {
+                    IconInfo prev = null;
+                    boolean prevPrinted = false;
+                    for (IconInfo info : both) {
+                        IconInfo p = prev;
+                        prev = info;
+                        if (p == null || p.hash != info.hash) {
+                            prevPrinted = false;
+                            continue;
+                        }
+                        
+                        if (!prevPrinted) {
+                            os.write(p.toString());
+                            os.newLine();
+                            prevPrinted = true;
+                        }
+                        
+                        os.write(info.toString());
                         os.newLine();
-                        prevPrinted = true;
                     }
-                    
-                    os.write(info.toString());
-                    os.newLine();
                 }
-                os.close();
             }
             if (difference != null) {
-                SortedSet<IconInfo> union = new TreeSet<IconInfo>(firstSet);
+                SortedSet<IconInfo> union = new TreeSet<>(firstSet);
                 union.addAll(sndSet);
                 
-                BufferedWriter os = new BufferedWriter(new FileWriter(difference));
-                for (IconInfo info : union) {
-                    if (!contains(firstSet, info.hash)) {
-                        os.write('+');
-                        os.write(info.toString());
-                        os.newLine();
-                        continue;
-                    }
-                    if (!contains(sndSet, info.hash)) {
-                        os.write('-');
-                        os.write(info.toString());
-                        os.newLine();
-                        continue;
+                try (BufferedWriter os = new BufferedWriter(new FileWriter(difference))) {
+                    for (IconInfo info : union) {
+                        if (!contains(firstSet, info.hash)) {
+                            os.write('+');
+                            os.write(info.toString());
+                            os.newLine();
+                            continue;
+                        }
+                        if (!contains(sndSet, info.hash)) {
+                            os.write('-');
+                            os.write(info.toString());
+                            os.newLine();
+                            continue;
+                        }
                     }
                 }
-                os.close();
             }
             
         } catch (IOException ex) {
@@ -192,9 +192,9 @@ public class PrintIcon extends Task {
             BufferedImage image;
             int _hash;
             try {
-                InputStream is = from.openStream();
-                image = ImageIO.read(is);
-                is.close();
+                try (InputStream is = from.openStream()) {
+                    image = ImageIO.read(is);
+                }
                 int w = image.getWidth();
                 int h = image.getHeight();
                 _hash = w * 3 + h * 7;
@@ -205,12 +205,9 @@ public class PrintIcon extends Task {
                         _hash += (rgb >> 2);
                     }
                 }
-            } catch (IOException e) {
+            } catch (IOException | IndexOutOfBoundsException e) {
                 p.log("Broken icon at " + from, Project.MSG_WARN);
                 _hash = hash(e);
-            } catch (IndexOutOfBoundsException ex) {
-                p.log("Broken icon at " + from, Project.MSG_WARN);
-                _hash = hash(ex);
             }
             
             this.hash = _hash;

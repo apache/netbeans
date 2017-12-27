@@ -40,7 +40,7 @@ public class ResolveList extends Task {
     /** Comma-separated list of properties to expand */
     public void setList (String s) {
         StringTokenizer tok = new StringTokenizer (s, ", ");
-        properties = new ArrayList<String>();
+        properties = new ArrayList<>();
         while (tok.hasMoreTokens ())
             properties.add(tok.nextToken ());
     }

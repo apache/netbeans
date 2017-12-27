@@ -56,20 +56,20 @@ public class ModuleStateSelectorTest extends TestBase {
         File aModule = generateJar("org.my.module", new String[0], m);
         
         File trackingFile = new File(cfg, "org-my-module.xml");
-        FileWriter w = new FileWriter(trackingFile);
-        w.write(
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-"<!DOCTYPE module PUBLIC \"-//NetBeans//DTD Module Status 1.0//EN\"\n" +
-"                        \"http://www.netbeans.org/dtds/module-status-1_0.dtd\">\n" +
-"<module name=\"org.my.module\">\n" +
-"    <param name=\"autoload\">true</param>\n" +
-"    <param name=\"eager\">false</param>\n" +
-"    <param name=\"jar\">modules/org-openide-awt.jar</param>\n" +
-"    <param name=\"reloadable\">false</param>\n" +
-"    <param name=\"specversion\">7.4.0.1</param>\n" +
-"</module>\n"
-        );
-        w.close();
+        try (FileWriter w = new FileWriter(trackingFile)) {
+            w.write(
+                    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                            "<!DOCTYPE module PUBLIC \"-//NetBeans//DTD Module Status 1.0//EN\"\n" +
+                            "                        \"http://www.netbeans.org/dtds/module-status-1_0.dtd\">\n" +
+                            "<module name=\"org.my.module\">\n" +
+                            "    <param name=\"autoload\">true</param>\n" +
+                            "    <param name=\"eager\">false</param>\n" +
+                            "    <param name=\"jar\">modules/org-openide-awt.jar</param>\n" +
+                            "    <param name=\"reloadable\">false</param>\n" +
+                            "    <param name=\"specversion\">7.4.0.1</param>\n" +
+                            "</module>\n"
+            );
+        }
 
         Parameter p = new Parameter();
         p.setName("acceptEager");
@@ -92,20 +92,20 @@ public class ModuleStateSelectorTest extends TestBase {
         File aModule = generateJar("org.my.module", new String[0], m);
 
         File trackingFile = new File(cfg, "org-my-module.xml");
-        FileWriter w = new FileWriter(trackingFile);
-        w.write(
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-"<!DOCTYPE module PUBLIC \"-//NetBeans//DTD Module Status 1.0//EN\"\n" +
-"                        \"http://www.netbeans.org/dtds/module-status-1_0.dtd\">\n" +
-"<module name=\"org.my.module\">\n" +
-"    <param name=\"autoload\">false</param>\n" +
-"    <param name=\"eager\">true</param>\n" +
-"    <param name=\"jar\">modules/org-openide-awt.jar</param>\n" +
-"    <param name=\"reloadable\">false</param>\n" +
-"    <param name=\"specversion\">7.4.0.1</param>\n" +
-"</module>\n"
-        );
-        w.close();
+        try (FileWriter w = new FileWriter(trackingFile)) {
+            w.write(
+                    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                            "<!DOCTYPE module PUBLIC \"-//NetBeans//DTD Module Status 1.0//EN\"\n" +
+                            "                        \"http://www.netbeans.org/dtds/module-status-1_0.dtd\">\n" +
+                            "<module name=\"org.my.module\">\n" +
+                            "    <param name=\"autoload\">false</param>\n" +
+                            "    <param name=\"eager\">true</param>\n" +
+                            "    <param name=\"jar\">modules/org-openide-awt.jar</param>\n" +
+                            "    <param name=\"reloadable\">false</param>\n" +
+                            "    <param name=\"specversion\">7.4.0.1</param>\n" +
+                            "</module>\n"
+            );
+        }
 
         Parameter p = new Parameter();
         p.setName("acceptEager");

@@ -19,10 +19,16 @@
 package org.netbeans.lib.nbjavac.services;
 
 import com.sun.tools.javac.comp.Attr;
+import com.sun.tools.javac.comp.AttrContext;
+import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
+import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.util.Context;
+import java.lang.reflect.Field;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -61,6 +67,22 @@ public class NBAttr extends Attr {
     public void visitBlock(JCBlock tree) {
         cancelService.abortIfCanceled();
         super.visitBlock(tree);
+    }
+
+    @Override
+    public void visitNewClass(JCNewClass tree) {
+        super.visitNewClass(tree);
+        if (tree.def != null && tree.def.sym == null) {
+            try {
+                Field envField = Attr.class.getDeclaredField("env");
+                envField.setAccessible(true);
+                Env<AttrContext> env = (Env<AttrContext>) envField.get(this);
+                env = env.dup(tree);
+                attribStat(tree.def, env);
+            } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+                Logger.getLogger(NBAttr.class.getName()).log(Level.FINE, null, ex);
+            }
+        }
     }
 
 }

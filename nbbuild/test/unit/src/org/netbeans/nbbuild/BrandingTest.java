@@ -72,8 +72,7 @@ public class BrandingTest extends NbTestCase {
         b.execute();
         File jar = new File(cluster, "core/locale/core_myapp.jar");
         assertTrue(jar.isFile());
-        JarFile jf = new JarFile(jar);
-        try {
+        try (JarFile jf = new JarFile(jar)) {
             Enumeration<JarEntry> entries = jf.entries();
             while (entries.hasMoreElements()) {
                 JarEntry entry = entries.nextElement();
@@ -89,8 +88,6 @@ public class BrandingTest extends NbTestCase {
                     assertEquals("org/netbeans/core/startup/Bundle_myapp.properties", entry.getName());
                 }
             }
-        } finally {
-            jf.close();
         }
     }
 

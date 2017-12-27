@@ -32,11 +32,11 @@ import java.util.zip.ZipEntry;
  */
 public class CreateModuleXML extends Task {
 
-    private final List<FileSet> enabled = new ArrayList<FileSet>(1);
-    private final List<FileSet> disabled = new ArrayList<FileSet>(1);
-    private final List<FileSet> autoload = new ArrayList<FileSet>(1);
-    private final List<FileSet> eager = new ArrayList<FileSet>(1);
-    private final List<FileSet> hidden = new ArrayList<FileSet>(1);
+    private final List<FileSet> enabled = new ArrayList<>(1);
+    private final List<FileSet> disabled = new ArrayList<>(1);
+    private final List<FileSet> autoload = new ArrayList<>(1);
+    private final List<FileSet> eager = new ArrayList<>(1);
+    private final List<FileSet> hidden = new ArrayList<>(1);
     private Integer level;
     private boolean checkBundle = true;
 
@@ -106,11 +106,11 @@ public class CreateModuleXML extends Task {
         this.checkBundle = check;
     }
     
-    private List<String> enabledNames = new ArrayList<String>(50);
-    private List<String> disabledNames = new ArrayList<String>(10);
-    private List<String> autoloadNames = new ArrayList<String>(10);
-    private List<String> eagerNames = new ArrayList<String>(10);
-    private List<String> hiddenNames = new ArrayList<String>(10);
+    private List<String> enabledNames = new ArrayList<>(50);
+    private List<String> disabledNames = new ArrayList<>(10);
+    private List<String> autoloadNames = new ArrayList<>(10);
+    private List<String> eagerNames = new ArrayList<>(10);
+    private List<String> hiddenNames = new ArrayList<>(10);
     private String hiddenList;
 
     /**
@@ -215,8 +215,7 @@ public class CreateModuleXML extends Task {
             throw new BuildException("Only *.jar may be listed, check the fileset: " + module, getLocation());
         }
         try {
-            JarFile jar = new JarFile(module);
-            try {
+            try (JarFile jar = new JarFile(module)) {
                 Manifest m = jar.getManifest();
                 Attributes attr = null;
                 String codename = null;
@@ -263,15 +262,12 @@ public class CreateModuleXML extends Task {
                             if (!moduleloc.isFile()) {
                                 throw new BuildException("Expecting localizing bundle: " + bundle + " in: " + module);
                             }
-                            JarFile jarloc = new JarFile(moduleloc);
-                            try {
+                            try (JarFile jarloc = new JarFile(moduleloc)) {
                                 ZipEntry entry2 = jarloc.getEntry(bundle);
                                 if (entry2 == null) {
                                     throw new BuildException("Expecting localizing bundle: " + bundle + " in: " + module);
                                 }
                                 is = jarloc.getInputStream(entry2);
-                            } finally {
-                                jarloc.close();
                             }
                         }
                         try {
@@ -297,8 +293,7 @@ public class CreateModuleXML extends Task {
                     File h = new File(xml.getParentFile(), xml.getName() + "_hidden");
                     h.createNewFile();
                 } else {
-                    OutputStream os = new FileOutputStream(xml);
-                    try {
+                    try (OutputStream os = new FileOutputStream(xml)) {
                         PrintWriter pw = new PrintWriter(new OutputStreamWriter(os, "UTF-8"));
                         // Please make sure formatting matches what the IDE actually spits
                         // out; it could matter.
@@ -325,15 +320,11 @@ public class CreateModuleXML extends Task {
                         pw.println("</module>");
                         pw.flush();
                         pw.close();
-                    } finally {
-                        os.close();
                     }
                     if (v != null) {
                         v.addFileForRoot(xml);
                     }
                 }
-            } finally {
-                jar.close();
             }
             if (ut != null) {
                 ut.write();

@@ -52,9 +52,9 @@ public class ShorterPathsTest extends TestBase {
         File testProperties = new File(wd, "outtest.properties");
         extraLibsDir.mkdirs();
 
-        PrintStream ps = new PrintStream(extlib);
-        ps.println("content");
-        ps.close();
+        try (PrintStream ps = new PrintStream(extlib)) {
+            ps.println("content");
+        }
 
 
         execute("ShorterPathsTest.xml", new String[]{
@@ -126,20 +126,20 @@ public class ShorterPathsTest extends TestBase {
         assertTrue("Class-Path extension not copied.", classPathExtensionCopy.exists());
 
         Properties props = new Properties();
-        FileInputStream propsIs = new FileInputStream(testProperties);
-        props.load(propsIs);
-        propsIs.close();
+        try (FileInputStream propsIs = new FileInputStream(testProperties)) {
+            props.load(propsIs);
+        }
         assertEquals("extra.test.libs.dir", "${extra.test.libs.dir}/extlib.jar", props.getProperty("extra.test.libs"));
         assertEquals("test.run.cp", "${nb.root.test.dir}/module.jar", props.getProperty("test.run.cp"));
     }
 
     private void generateJar(File jarFile, String[] content, Manifest manifest) throws IOException {
-        JarOutputStream os = new JarOutputStream(new FileOutputStream(jarFile), manifest);
-        for (int i = 0; i < content.length; i++) {
-            os.putNextEntry(new JarEntry(content[i]));
+        try (JarOutputStream os = new JarOutputStream(new FileOutputStream(jarFile), manifest)) {
+            for (int i = 0; i < content.length; i++) {
+                os.putNextEntry(new JarEntry(content[i]));
+                os.closeEntry();
+            }
             os.closeEntry();
         }
-        os.closeEntry();
-        os.close();
     }
 }

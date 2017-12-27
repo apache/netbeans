@@ -106,7 +106,7 @@ public class LocMakeNBM extends Task {
   public void really_execute() throws BuildException {
     String locs, loc ;
     StringTokenizer stok ;
-    LinkedList<String> build_locales = new LinkedList<String>() ;
+    LinkedList<String> build_locales = new LinkedList<>() ;
 
     // Set default values. //
     if( mainDir == null) {
@@ -185,7 +185,7 @@ public class LocMakeNBM extends Task {
   /** Build the NBM for this locale. */
   protected void buildNbm( String locale) throws BuildException {
     MakeLNBM makenbm ;
-    LinkedList<String> list = new LinkedList<String>() ;
+    LinkedList<String> list = new LinkedList<>() ;
     String includes = new String() ;
     File licenseFile ;
     boolean first_time ;
@@ -339,7 +339,7 @@ public class LocMakeNBM extends Task {
   /** Add the patterns to include the localized files for the given locale. */
   protected void addLocalePatterns( FileSet fs,
 				    String loc) {
-    LinkedList<String> list = new LinkedList<String>() ;
+    LinkedList<String> list = new LinkedList<>() ;
 
     // Get the list of patterns for this locale. //
     addLocalePatterns( list, loc) ;

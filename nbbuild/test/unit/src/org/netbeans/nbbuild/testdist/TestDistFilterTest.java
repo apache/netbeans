@@ -141,7 +141,7 @@ public class TestDistFilterTest extends NbTestCase {
         assertNotNull("prop " + propName + " was not defined",listModules);
         log(" listModules " + listModules);
         String arrayModules[] = (listModules.length() == 0) ? new String[0] :listModules.split(":");
-        Set<File> set1 = new HashSet<File>();
+        Set<File> set1 = new HashSet<>();
         for (int i = 0 ; i < arrayModules.length ; i++) {
             String module = arrayModules[i];
             if (module.length() == 1 && i < arrayModules.length + 1) { 
@@ -151,7 +151,7 @@ public class TestDistFilterTest extends NbTestCase {
             log(i + " = " + module );
             set1.add(new File(module)); 
         }
-        Set<File> set2 = new HashSet<File>();
+        Set<File> set2 = new HashSet<>();
         for (int i = 0 ; i < modules.length ; i++) {
             set2.add(new File(getWorkDir(),modules[i]));
         }
@@ -162,11 +162,8 @@ public class TestDistFilterTest extends NbTestCase {
     private void createModule(String path, String runcp) throws IOException {
         File dir = createModule(path);
         File props = new File(dir,"test.properties");
-        PrintStream ps = new PrintStream(props);
-        try { 
+        try (PrintStream ps = new PrintStream(props)) { 
             ps.println("test.unit.run.cp=" + runcp);
-        } finally {
-            ps.close();
         }
     }
 }

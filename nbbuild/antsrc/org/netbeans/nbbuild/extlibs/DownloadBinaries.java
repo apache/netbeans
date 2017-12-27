@@ -88,7 +88,7 @@ public class DownloadBinaries extends Task {
         this.server = server;
     }
 
-    private final List<FileSet> manifests = new ArrayList<FileSet>();
+    private final List<FileSet> manifests = new ArrayList<>();
     /**
      * Add one or more manifests of files to download.
      * Each manifest is a text file; lines beginning with # are ignored.
@@ -134,8 +134,7 @@ public class DownloadBinaries extends Task {
                 File manifest = new File(basedir, include);
                 log("Scanning: " + manifest, Project.MSG_VERBOSE);
                 try {
-                    InputStream is = new FileInputStream(manifest);
-                    try {
+                    try (InputStream is = new FileInputStream(manifest)) {
                         BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                         String line;
                         while ((line = r.readLine()) != null) {
@@ -157,8 +156,6 @@ public class DownloadBinaries extends Task {
                                 fillInFile(hashAndFile[0], hashAndFile[1], manifest, () -> legacyDownload(hashAndFile[0] + "-" + hashAndFile[1]));
                             }
                         }
-                    } finally {
-                        is.close();
                     }
                 } catch (IOException x) {
                     throw new BuildException("Could not open " + manifest + ": " + x, x, getLocation());
@@ -278,8 +275,7 @@ public class DownloadBinaries extends Task {
             throw new IOException("Skipping download from " + url + " due to response code " + code);
         }
         try {
-            InputStream is = conn.getInputStream();
-            try {
+            try (InputStream is = conn.getInputStream()) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 byte[] buf = new byte[4096];
                 int read;
@@ -287,8 +283,6 @@ public class DownloadBinaries extends Task {
                     baos.write(buf, 0, read);
                 }
                 return baos.toByteArray();
-            } finally {
-                is.close();
             }
         } catch (IOException ex) {
             throw new IOException("Cannot download: " + url + " due to: " + ex, ex);
@@ -315,9 +309,7 @@ public class DownloadBinaries extends Task {
                         test.connect();
                         conn[0] = test;
                         connected.countDown();
-                    } catch (IOException ex) {
-                        log(ex, Project.MSG_ERR);
-                    } catch (URISyntaxException ex) {
+                    } catch (IOException | URISyntaxException ex) {
                         log(ex, Project.MSG_ERR);
                     }
                 }
@@ -335,9 +327,7 @@ public class DownloadBinaries extends Task {
                         test.connect();
                         conn[0] = test;
                         connected.countDown();
-                    } catch (IOException ex) {
-                        log(ex, Project.MSG_ERR);
-                    } catch (URISyntaxException ex) {
+                    } catch (IOException | URISyntaxException ex) {
                         log(ex, Project.MSG_ERR);
                     }
                 }
@@ -367,11 +357,8 @@ public class DownloadBinaries extends Task {
 
     private String hash(File f) {
         try {
-            FileInputStream is = new FileInputStream(f);
-            try {
+            try (FileInputStream is = new FileInputStream(f)) {
                 return hash(is);
-            } finally {
-                is.close();
             }
         } catch (IOException x) {
             throw new BuildException("Could not get hash for " + f + ": " + x, x, getLocation());

@@ -100,24 +100,24 @@ public final class VerifyUpdateCenter extends Task {
         if (updates == null) {
             throw new BuildException("you must specify updates");
         }
-        Map<String,String> pseudoTests = new LinkedHashMap<String,String>();
+        Map<String,String> pseudoTests = new LinkedHashMap<>();
         ClassLoader loader = new AntClassLoader(getProject(), classpath);
         Set<Manifest> manifests = loadManifests(updates);
         checkForProblems(findInconsistencies(manifests, loader), "Inconsistency(ies) in " + updates, "synchronicConsistency", pseudoTests);
         if (pseudoTests.get("synchronicConsistency") == null) {
             log(updates + " is internally consistent", Project.MSG_INFO);
             if (oldUpdates != null) {
-                Map<String,Manifest> updated = new HashMap<String,Manifest>();
+                Map<String,Manifest> updated = new HashMap<>();
                 for (Manifest m : loadManifests(oldUpdates)) {
                     updated.put(findCNB(m), m);
                 }
-                if (!findInconsistencies(new HashSet<Manifest>(updated.values()), loader).isEmpty()) {
+                if (!findInconsistencies(new HashSet<>(updated.values()), loader).isEmpty()) {
                     log(oldUpdates + " is already inconsistent, skipping update check", Project.MSG_WARN);
                     JUnitReportWriter.writeReport(this, null, reportFile, pseudoTests);
                     return;
                 }
-                SortedSet<String> updatedCNBs = new TreeSet<String>();
-                Set<String> newCNBs = new HashSet<String>();
+                SortedSet<String> updatedCNBs = new TreeSet<>();
+                Set<String> newCNBs = new HashSet<>();
                 for (Manifest m : manifests) {
                     String cnb = findCNB(m);
                     newCNBs.add(cnb);
@@ -133,7 +133,7 @@ public final class VerifyUpdateCenter extends Task {
                         updatedCNBs.add(cnb);
                     }
                 }
-                SortedMap<String,SortedSet<String>> updateProblems = findInconsistencies(new HashSet<Manifest>(updated.values()), loader);
+                SortedMap<String,SortedSet<String>> updateProblems = findInconsistencies(new HashSet<>(updated.values()), loader);
                 updateProblems.keySet().retainAll(newCNBs); // ignore problems in now-deleted modules
                 checkForProblems(updateProblems, "Inconsistency(ies) in " + updates + " relative to " + oldUpdates, "diachronicConsistency", pseudoTests);
                 if (pseudoTests.get("diachronicConsistency") == null) {
@@ -157,7 +157,7 @@ public final class VerifyUpdateCenter extends Task {
     private Set<Manifest> loadManifests(URI u) throws BuildException {
         try {
             Document doc = XMLUtil.parse(new InputSource(u.toString()), false, false, XMLUtil.rethrowHandler(), XMLUtil.nullResolver());
-            Set<Manifest> manifests = new HashSet<Manifest>();
+            Set<Manifest> manifests = new HashSet<>();
             boolean foundJUnit = false;
             NodeList nl = doc.getElementsByTagName("manifest");
             for (int i = 0; i < nl.getLength(); i++) {

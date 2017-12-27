@@ -96,7 +96,7 @@ final class ModuleListParser {
         Map<String,Entry> entries = SOURCE_SCAN_CACHE.get(root);
         if (entries == null) {
             // Similar to #62221: if just invoked from a module in standard clusters, only scan those clusters (faster):
-            Set<String> standardModules = new HashSet<String>();
+            Set<String> standardModules = new HashSet<>();
             boolean doFastScan = false;
             String basedir = (String) properties.get("basedir");
             if (basedir != null) {
@@ -140,8 +140,7 @@ final class ModuleListParser {
                     project.log("Loading module list from " + scanCache);
                 }
                 try {
-                    InputStream is = new FileInputStream(scanCache);
-                    try {
+                    try (InputStream is = new FileInputStream(scanCache)) {
                         ObjectInput oi = new ObjectInputStream(new BufferedInputStream(is));
                         @SuppressWarnings("unchecked") Map<File,Long[]> timestampsAndSizes = (Map) oi.readObject();
                         boolean matches = true;
@@ -158,9 +157,9 @@ final class ModuleListParser {
                         if (doFastScan) {
                             @SuppressWarnings("unchecked") Set<String> storedStandardModules = (Set) oi.readObject();
                             if (!standardModules.equals(storedStandardModules)) {
-                                Set<String> added = new TreeSet<String>(standardModules);
+                                Set<String> added = new TreeSet<>(standardModules);
                                 added.removeAll(storedStandardModules);
-                                Set<String> removed = new TreeSet<String>(storedStandardModules);
+                                Set<String> removed = new TreeSet<>(storedStandardModules);
                                 removed.removeAll(standardModules);
                                 project.log("Cache ignored due to changes in modules among standard clusters: + " + added + " - " + removed);
                                 matches = false;
@@ -178,8 +177,6 @@ final class ModuleListParser {
                                 project.log("Loaded modules: " + entries.keySet(), Project.MSG_DEBUG);
                             }
                         }
-                    } finally {
-                        is.close();
                     }
                 } catch (Exception x) {
                     if (project != null) {
@@ -188,8 +185,8 @@ final class ModuleListParser {
                 }
             }
             if (entries == null) {
-                entries = new HashMap<String,Entry>();
-                Map<File,Long[]> timestampsAndSizes = new HashMap<File,Long[]>();
+                entries = new HashMap<>();
+                Map<File,Long[]> timestampsAndSizes = new HashMap<>();
                 registerTimestampAndSize(new File(root, "nbbuild" + File.separatorChar + "cluster.properties"), timestampsAndSizes);
                 registerTimestampAndSize(new File(root, "nbbuild" + File.separatorChar + "build.properties"), timestampsAndSizes);
                 registerTimestampAndSize(new File(root, "nbbuild" + File.separatorChar + "user.build.properties"), timestampsAndSizes);
@@ -228,8 +225,7 @@ final class ModuleListParser {
                     project.log("Cache depends on files: " + timestampsAndSizes.keySet(), Project.MSG_DEBUG);
                 }
                 scanCache.getParentFile().mkdirs();
-                OutputStream os = new FileOutputStream(scanCache);
-                try {
+                try (OutputStream os = new FileOutputStream(scanCache)) {
                     ObjectOutput oo = new ObjectOutputStream(os);
                     oo.writeObject(timestampsAndSizes);
                     if (doFastScan) {
@@ -237,8 +233,6 @@ final class ModuleListParser {
                     }
                     oo.writeObject(entries);
                     oo.flush();
-                } finally {
-                    os.close();
                 }
             }
             SOURCE_SCAN_CACHE.put(root, entries);
@@ -296,9 +290,8 @@ final class ModuleListParser {
         Project fakeproj = new Project();
         if (project != null) {
             // Try to debug any problems in the following definitions (cf. #59849).
-            Iterator it = project.getBuildListeners().iterator();
-            while (it.hasNext()) {
-                fakeproj.addBuildListener((BuildListener) it.next());
+            for(BuildListener bl: project.getBuildListeners()) {
+                fakeproj.addBuildListener(bl);
             }
         }
         fakeproj.setBaseDir(dir); // in case ${basedir} is used somewhere
@@ -408,7 +401,7 @@ final class ModuleListParser {
             assert false : moduleType;
         }
         File jar = fakeproj.resolveFile(fakeproj.replaceProperties("${cluster}/${module.jar}"));
-        List<File> exts = new ArrayList<File>();
+        List<File> exts = new ArrayList<>();
         for (Element ext : XMLUtil.findSubElements(dataEl)) {
             if (!ext.getLocalName().equals("class-path-extension")) {
                 continue;
@@ -450,22 +443,22 @@ final class ModuleListParser {
                 exts.add(resultBin);
             }
         }
-        List<String> prereqs = new ArrayList<String>();
-        List<String> rundeps = new ArrayList<String>();
+        List<String> prereqs = new ArrayList<>();
+        List<String> rundeps = new ArrayList<>();
         Element depsEl = ParseProjectXml.findNBMElement(dataEl, "module-dependencies");
         if (depsEl == null) {
             throw new IOException("Malformed project file " + projectxml);
         }
         Element testDepsEl = ParseProjectXml.findNBMElement(dataEl,"test-dependencies");
          //compileDeps = Collections.emptyList();
-        Map<String,String[]> compileTestDeps = new HashMap<String,String[]>();
+        Map<String,String[]> compileTestDeps = new HashMap<>();
         if (testDepsEl != null) {
             for (Element depssEl : XMLUtil.findSubElements(testDepsEl)) {
                 String testtype = ParseProjectXml.findTextOrNull(depssEl,"name") ;
                 if (testtype == null) {
                     throw new IOException("Must declare <name>unit</name> (e.g.) in <test-type> in " + projectxml);
                 }
-                List<String> compileDepsList = new ArrayList<String>();
+                List<String> compileDepsList = new ArrayList<>();
                 for (Element dep : XMLUtil.findSubElements(depssEl)) {
                     if (dep.getTagName().equals("test-dependency")) {
                         if (ParseProjectXml.findNBMElement(dep,"test") != null)  {
@@ -537,7 +530,7 @@ final class ModuleListParser {
      * Find all modules in a binary build, possibly from cache.
      */
     private static Map<String,Entry> scanBinaries(Project project, File[] clusters) throws IOException {
-        Map<String,Entry> allEntries = new HashMap<String,Entry>();
+        Map<String,Entry> allEntries = new HashMap<>();
 
         for (File cluster : clusters) {
             Map<String, Entry> entries = BINARY_SCAN_CACHE.get(cluster);
@@ -545,7 +538,7 @@ final class ModuleListParser {
                 if (project != null) {
                     project.log("Scanning for modules in " + cluster);
                 }
-                entries = new HashMap<String, Entry>();
+                entries = new HashMap<>();
                 doScanBinaries(cluster, entries);
                 if (project != null) {
                     project.log("Found modules: " + entries.keySet(), Project.MSG_VERBOSE);
@@ -646,7 +639,7 @@ final class ModuleListParser {
             if (project != null) {
                 project.log("Scanning for modules in suite " + suite);
             }
-            entries = new HashMap<String,Entry>();
+            entries = new HashMap<>();
             doScanSuite(entries, suite, properties, project);
             if (project != null) {
                 project.log("Found modules: " + entries.keySet(), Project.MSG_VERBOSE);
@@ -686,7 +679,7 @@ final class ModuleListParser {
         File basedir = new File((String) properties.get("project"));
         Entry entry = STANDALONE_SCAN_CACHE.get(basedir);
         if (entry == null) {
-            Map<String,Entry> entries = new HashMap<String,Entry>();
+            Map<String,Entry> entries = new HashMap<>();
             if (!scanPossibleProject(basedir, entries, properties, null, ModuleType.STANDALONE, project, null)) {
                 throw new IOException("No valid module found in " + basedir);
             }
@@ -807,7 +800,7 @@ final class ModuleListParser {
      * @return a set of all known entries
      */
     public Set<Entry> findAll() {
-        return new HashSet<Entry>(entries.values());
+        return new HashSet<>(entries.values());
     }
     
     /**
@@ -827,7 +820,7 @@ final class ModuleListParser {
         if (moduleDependencies == null) {
             return new String[0];
         }
-        List<String> cnds = new ArrayList<String>();
+        List<String> cnds = new ArrayList<>();
         StringTokenizer toks = new StringTokenizer(moduleDependencies,",");
         while (toks.hasMoreTokens()) {
             String token = toks.nextToken().trim();

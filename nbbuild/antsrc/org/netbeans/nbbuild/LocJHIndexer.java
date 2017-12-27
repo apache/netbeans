@@ -197,8 +197,8 @@ public class LocJHIndexer extends MatchingTask {
     Path path ;
 
     // For each regular expression. //
-    dirs = new LinkedList<String>() ;
-    regexps = new LinkedList<String>() ;
+    dirs = new LinkedList<>() ;
+    regexps = new LinkedList<>() ;
     jhlib = getJhall() ;
     st = new StringTokenizer( jhlib, " 	\n,") ;
     while( st.hasMoreTokens()) {

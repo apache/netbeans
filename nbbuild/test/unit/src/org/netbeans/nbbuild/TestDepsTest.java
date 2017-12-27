@@ -59,10 +59,10 @@ public class TestDepsTest extends TestBase {
     private File extractFile(InputStream is, String fileName) throws IOException {
         File f = new File(getWorkDir(),fileName);
         byte bytes[] = new byte[50000];
-        FileOutputStream fos = new FileOutputStream(f);
-        int len = is.read(bytes);
-        fos.write(bytes,0,len);
-        fos.close();
+        try (FileOutputStream fos = new FileOutputStream(f)) {
+            int len = is.read(bytes);
+            fos.write(bytes,0,len);
+        }
         return f;
     }
     

@@ -52,7 +52,7 @@ import org.apache.tools.ant.Task;
  */
 public class TestDistFilter extends Task {
     private File testDistDir;
-    Set<TestConf> possibleTests = new HashSet<TestConf>();
+    Set<TestConf> possibleTests = new HashSet<>();
     private String testtype;
     private String testListProperty;
     private String requiredModules;
@@ -97,9 +97,8 @@ public class TestDistFilter extends Task {
     /** get path with test dirs separated by :
      */
     private String getTestList() {
-        StringBuffer path = new StringBuffer();
-        for (Iterator it = possibleTests.iterator() ; it.hasNext() ; ) {
-            TestConf tc = (TestConf)it.next();
+        StringBuilder path = new StringBuilder();
+        for (TestConf tc: possibleTests) {
             if (!matchRequiredModule(tc.getModuleDir())) {
                 continue;
             }
@@ -144,7 +143,7 @@ public class TestDistFilter extends Task {
 
     private List<TestConf> getTestList(String testtype) {
         File root = new File (getTestDistDir(),testtype);
-        List <TestConf> testList = new ArrayList<TestConf>();
+        List <TestConf> testList = new ArrayList<>();
         if (!root.exists()) {
             return Collections.emptyList();
         }
@@ -189,15 +188,14 @@ public class TestDistFilter extends Task {
        if (pfile.exists()) {
            Properties props = new Properties();
             try {
-                FileInputStream fis = new FileInputStream(pfile);
-                try { 
+                try (FileInputStream fis = new FileInputStream(pfile)) { 
                   props.load(fis);
                   
                   String runCp = props.getProperty("test.unit.run.cp");
                   if (runCp != null) {
                       String paths[] = runCp.split(":");
-                      Set reqModules = getRequiredModulesSet();
-                      if (reqModules.size() == 0) {
+                      Set<String> reqModules = getRequiredModulesSet();
+                      if (reqModules.isEmpty()) {
                           return true;
                       }
                       for (int i = 0 ; i < paths.length ; i++) {
@@ -211,8 +209,6 @@ public class TestDistFilter extends Task {
                           }
                       }
                   }
-                } finally {
-                  fis.close();  
                 }
             } catch(IOException ioe){
                 throw new BuildException(ioe);
@@ -223,6 +219,6 @@ public class TestDistFilter extends Task {
 
     private Set<String> getRequiredModulesSet() {
         String names[] = getRequiredModules().split(",");
-        return new HashSet<String>(Arrays.asList(names));
+        return new HashSet<>(Arrays.asList(names));
     }
 }

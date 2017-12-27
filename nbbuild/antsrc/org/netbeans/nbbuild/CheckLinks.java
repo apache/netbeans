@@ -22,6 +22,7 @@ package org.netbeans.nbbuild;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.regex.*;
 
 import org.apache.tools.ant.BuildException;
@@ -46,8 +47,8 @@ public class CheckLinks extends MatchingTask {
     private boolean checkexternal = true;
     private boolean checkspaces = true;
     private boolean checkforbidden = true;
-    private List<Mapper> mappers = new LinkedList<Mapper>();
-    private List<Filter> filters = new ArrayList<Filter>();
+    private List<Mapper> mappers = new LinkedList<>();
+    private List<Filter> filters = new ArrayList<>();
     private File report;
 
     /** Set whether to check external links (absolute URLs).
@@ -106,10 +107,10 @@ public class CheckLinks extends MatchingTask {
         if (! checkexternal) message += " (external URLs will be skipped)";
         log (message);
         String[] files = scanner.getIncludedFiles ();
-        Set<URI> okurls = new HashSet<URI>(1000);
-        Set<URI> badurls = new HashSet<URI>(100);
-        Set<URI> cleanurls = new HashSet<URI>(100);
-        List<String> errors = new ArrayList<String>();
+        Set<URI> okurls = new HashSet<>(1000);
+        Set<URI> badurls = new HashSet<>(100);
+        Set<URI> cleanurls = new HashSet<>(100);
+        List<String> errors = new ArrayList<>();
         for (int i = 0; i < files.length; i++) {
             File file = new File (basedir, files[i]);
             URI fileurl = file.toURI();
@@ -151,7 +152,7 @@ public class CheckLinks extends MatchingTask {
      * @param mappers a list of Mappers to apply to get source files from HTML files
      */
     public static void scan
-    (Task task, ClassLoader globalClassLoader, java.util.Map classLoaderMap,
+    (Task task, ClassLoader globalClassLoader, java.util.Map<String,URLClassLoader> classLoaderMap,
      String referrer, String referrerLocation, 
      URI u, Set<URI> okurls, Set<URI> badurls, Set<URI> cleanurls, 
      boolean checkexternal, boolean checkspaces, boolean checkforbidden, int recurse, 
@@ -161,7 +162,7 @@ public class CheckLinks extends MatchingTask {
     }
     
     private static void scan
-    (Task task, ClassLoader globalClassLoader, java.util.Map classLoaderMap,
+    (Task task, ClassLoader globalClassLoader, java.util.Map<String,URLClassLoader> classLoaderMap,
      String referrer, String referrerLocation, 
      URI u, Set<URI> okurls, Set<URI> badurls, Set<URI> cleanurls,
      boolean checkexternal, boolean checkspaces, boolean checkforbidden, int recurse,
@@ -310,14 +311,12 @@ public class CheckLinks extends MatchingTask {
                         ex.printStackTrace();
                     }
                     //Try to find out module for link
-                    Set keySet = classLoaderMap.keySet();
-                    for (Iterator it1 = keySet.iterator(); it1.hasNext(); ) {
-                        Object key = it1.next();
-                        URLClassLoader cl = (URLClassLoader) classLoaderMap.get(key);
+                    for (Entry<String,URLClassLoader> e: classLoaderMap.entrySet()) {
+                        URLClassLoader cl = e.getValue();
                         if (cl != null) {
                             URL moduleRes = cl.findResource(name);
                             if (moduleRes != null) {
-                                task.log("INFO: Link found in module:" + key + ". URI: " + u, Project.MSG_INFO);
+                                task.log("INFO: Link found in module:" + e.getKey() + ". URI: " + u, Project.MSG_INFO);
                                 task.log("INFO: Referrer: " + referrer, Project.MSG_INFO);
                                 break;
                             }
@@ -337,7 +336,7 @@ public class CheckLinks extends MatchingTask {
                     //System.out.println("name:" + name);
                 }
                 URL res = null;
-                URLClassLoader moduleClassLoader = (URLClassLoader) classLoaderMap.get(toURL(u).getHost());
+                URLClassLoader moduleClassLoader = classLoaderMap.get(toURL(u).getHost());
                 //Log warning
                 if (moduleClassLoader == null) {
                     errors.add("Module " + toURL(u).getHost() + " not found among modules containing helpsets. URI: " + u);
@@ -374,14 +373,12 @@ public class CheckLinks extends MatchingTask {
                             ex.printStackTrace();
                         }
                         //Try to find out module for link
-                        Set keySet = classLoaderMap.keySet();
-                        for (Iterator it1 = keySet.iterator(); it1.hasNext(); ) {
-                            Object key = it1.next();
-                            URLClassLoader cl = (URLClassLoader) classLoaderMap.get(key);
+                        for (Entry<String,URLClassLoader> e: classLoaderMap.entrySet()) {
+                            URLClassLoader cl = e.getValue();
                             if (cl != null) {
                                 URL moduleRes = cl.findResource(name);
                                 if (moduleRes != null) {
-                                    task.log("INFO: Link found in module:" + key + ". URI: " + u, Project.MSG_INFO);
+                                    task.log("INFO: Link found in module:" + e.getKey() + ". URI: " + u, Project.MSG_INFO);
                                     task.log("INFO: Referrer: " + referrer, Project.MSG_INFO);
                                     break;
                                 }
@@ -449,7 +446,7 @@ public class CheckLinks extends MatchingTask {
         // map from other URIs (hrefs) to line/col info where they occur in this file (format: ":1:2")
         Map<URI,String> others = null;
         if (recurse > 0 && cleanurls.add(base)) {
-            others = new HashMap<URI,String>(100);
+            others = new HashMap<>(100);
         }
         if (recurse == 0 && frag == null) {
             // That is all we wanted to check.
@@ -458,7 +455,7 @@ public class CheckLinks extends MatchingTask {
         if ("text/html".equals(mimeType)) {
             task.log("Parsing " + base, Project.MSG_VERBOSE);
             Matcher m = hrefOrAnchor.matcher(content);
-            Set<String> names = new HashSet<String>(100); // Set<String>
+            Set<String> names = new HashSet<>(100); // Set<String>
             while (m.find()) {
                 // Get the stuff involved:
                 String type = m.group(3);
@@ -527,11 +524,9 @@ public class CheckLinks extends MatchingTask {
             badurls.add(u); // #97784
         }
         if (others != null) {
-            Iterator it = others.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry entry = (Map.Entry)it.next();
-                URI other = (URI)entry.getKey();
-                String location = (String)entry.getValue();
+            for(Entry<URI,String> entry: others.entrySet()) {
+                URI other = entry.getKey();
+                String location = entry.getValue();
                 //System.out.println("CALL OF scan basepath:" + basepath + " location:" + location + " other:" + other);
                 scan(task, globalClassLoader, classLoaderMap,
                 basepath, location, other, okurls, badurls, cleanurls, checkexternal, checkspaces, checkforbidden, recurse == 1 ? 0 : 2, mappers, filters, errors);

@@ -56,7 +56,7 @@ public final class RefreshDependencyVersions extends Task {
     private String specification;
     
     private boolean dryRun = false;
-    private final Set<Dep> injectDeps = new HashSet<Dep>();
+    private final Set<Dep> injectDeps = new HashSet<>();
     
     public RefreshDependencyVersions() {}
     
@@ -160,11 +160,8 @@ public final class RefreshDependencyVersions extends Task {
 
             Document nbprj = null;
             try {
-                InputStream is = new FileInputStream(projectFile);
-                try {
+                try (InputStream is = new FileInputStream(projectFile)) {
                     nbprj = XMLUtil.parse(new InputSource(is), false, true, null, null);
-                } finally {
-                    is.close();
                 }
             } catch (Exception ioe) {
                 throw new BuildException("Can't parse " + projectFile, ioe, getLocation());
@@ -242,11 +239,8 @@ public final class RefreshDependencyVersions extends Task {
             if (updated) {
                 try {
                     if (!dryRun) {
-                        OutputStream os = new FileOutputStream(projectFile);
-                        try {
+                        try (OutputStream os = new FileOutputStream(projectFile)) {
                             XMLUtil.write(nbprj, os);
-                        } finally {
-                            os.close();
                         }
                     } else {
                         if (!projectFile.canWrite()) {
@@ -427,17 +421,14 @@ public final class RefreshDependencyVersions extends Task {
     }
     
     private static String[] gulp(File file, String enc) throws IOException {
-        InputStream is = new FileInputStream(file);
-        try {
+        try (InputStream is = new FileInputStream(file)) {
             BufferedReader r = new BufferedReader(new InputStreamReader(is, enc));
-            List<String> l = new ArrayList<String>();
+            List<String> l = new ArrayList<>();
             String line;
             while ((line = r.readLine()) != null) {
                 l.add(line);
             }
             return l.toArray(new String[l.size()]);
-        } finally {
-            is.close();
         }
     }
     

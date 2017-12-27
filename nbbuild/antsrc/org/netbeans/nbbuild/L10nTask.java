@@ -86,9 +86,9 @@ public class L10nTask extends Task {
 
             lnr = new LineNumberReader(new FileReader(patternsFile));
             String line;
-            Map<String, Set<String>> includes = new HashMap<String, Set<String>>();
-            Map<String, Set<String>> excludes = new HashMap<String, Set<String>>();
-            Set<String> excludeFiles = new HashSet<String>();
+            Map<String, Set<String>> includes = new HashMap<>();
+            Map<String, Set<String>> excludes = new HashMap<>();
+            Set<String> excludeFiles = new HashSet<>();
 
             //Read all the patterns from patternsFile
             while ((line = lnr.readLine()) != null) {
@@ -111,13 +111,13 @@ public class L10nTask extends Task {
                     }
                     Set<String> files = includes.get(p[0]);
                     if (files == null) {
-                        files = new HashSet<String>();
+                        files = new HashSet<>();
                         includes.put(p[0], files);
                     }
                     files.add(p[1]);
                 } else {        //Exlude pattern
 
-                    List<String> lines = new ArrayList<String> ();
+                    List<String> lines = new ArrayList<> ();
                     String lineRaw = line.substring("exclude ".length());
                     if (lineRaw.contains(LOCALES_TOKEN)) {
                         for (String locale : getLocales(locales)) {
@@ -144,7 +144,7 @@ public class L10nTask extends Task {
                         }
                         Set<String> files = excludes.get(p[0]);
                         if (files == null) {
-                            files = new HashSet<String>();
+                            files = new HashSet<>();
                             excludes.put(p[0], files);
                         }
                         files.add(p[1]);

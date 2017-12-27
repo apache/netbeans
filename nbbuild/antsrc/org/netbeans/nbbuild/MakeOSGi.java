@@ -90,7 +90,7 @@ import org.xml.sax.InputSource;
 public class MakeOSGi extends Task {
 
     private File destdir;
-    private List<ResourceCollection> modules = new ArrayList<ResourceCollection>();
+    private List<ResourceCollection> modules = new ArrayList<>();
     
     /**
      * Mandatory destination directory. Bundles will be created here.
@@ -111,19 +111,19 @@ public class MakeOSGi extends Task {
     }
 
     static class Info {
-        final Set<String> importedPackages = new TreeSet<String>();
-        final Set<String> exportedPackages = new TreeSet<String>();
-        final Set<String> hiddenPackages = new TreeSet<String>();
-        final Set<String> hiddenSubpackages = new TreeSet<String>();
+        final Set<String> importedPackages = new TreeSet<>();
+        final Set<String> exportedPackages = new TreeSet<>();
+        final Set<String> hiddenPackages = new TreeSet<>();
+        final Set<String> hiddenSubpackages = new TreeSet<>();
     }
 
     public @Override void execute() throws BuildException {
         if (destdir == null) {
             throw new BuildException("missing destdir");
         }
-        List<File> jars = new ArrayList<File>();
-        List<File> fragments = new ArrayList<File>();
-        Map<String,Info> infos = new HashMap<String,Info>();
+        List<File> jars = new ArrayList<>();
+        List<File> fragments = new ArrayList<>();
+        Map<String,Info> infos = new HashMap<>();
         log("Prescanning JARs...");
         for (ResourceCollection rc : modules) {
             Iterator<?> it = rc.iterator();
@@ -135,8 +135,7 @@ public class MakeOSGi extends Task {
                     continue;
                 }
                 try {
-                    JarFile jf = new JarFile(jar);
-                    try {
+                    try (JarFile jf = new JarFile(jar)) {
                         Info info = new Info();
                         String cnb = prescan(jf, info, this);
                         if (cnb == null) {
@@ -149,8 +148,6 @@ public class MakeOSGi extends Task {
                             infos.put(cnb, info);
                             jars.add(jar);
                         }
-                    } finally {
-                        jf.close();
                     }
                 } catch (Exception x) {
                     throw new BuildException("Could not prescan " + jar + ": " + x, x, getLocation());
@@ -184,7 +181,7 @@ public class MakeOSGi extends Task {
             // Otherwise get e.g. CCE: org.netbeans.core.osgi.Activator cannot be cast to org.osgi.framework.BundleActivator
             return cnb;
         }
-        Set<String> availablePackages = new TreeSet<String>();
+        Set<String> availablePackages = new TreeSet<>();
         scanClasses(module, info.importedPackages, availablePackages, task);
         File antlib = new File(module.getName().replaceFirst("([/\\\\])modules([/\\\\][^/\\\\]+)", "$1ant$1nblib$2"));
         if (antlib.isFile()) {
@@ -192,12 +189,9 @@ public class MakeOSGi extends Task {
             // AntBridge.MainClassLoader.findClass will refuse to load these,
             // since it is expected that the module loader, thus also AuxClassLoader, can load them.
             // So we need to DynamicImport-Package these packages so that will be true.
-            Set<String> antlibPackages = new HashSet<String>();
-            JarFile antlibJF = new JarFile(antlib);
-            try {
-                scanClasses(antlibJF, antlibPackages, new HashSet<String>(), task);
-            } finally {
-                antlibJF.close();
+            Set<String> antlibPackages = new HashSet<>();
+            try (JarFile antlibJF = new JarFile(antlib)) {
+                scanClasses(antlibJF, antlibPackages, new HashSet<>(), task);
             }
             for (String antlibImport : antlibPackages) {
                 if (!antlibImport.startsWith("org.apache.tools.") && !availablePackages.contains(antlibImport)) {
@@ -280,8 +274,7 @@ public class MakeOSGi extends Task {
     }
 
     private void process(File module, Map<String,Info> infos) throws Exception {
-        JarFile jar = new JarFile(module);
-        try {
+        try (JarFile jar = new JarFile(module)) {
             Manifest netbeans = jar.getManifest();
             Attributes netbeansAttr = netbeans.getMainAttributes();
             if (netbeansAttr.getValue("Bundle-SymbolicName") != null) { // #180201
@@ -317,11 +310,8 @@ public class MakeOSGi extends Task {
             Properties localizedStrings = new Properties();
             String locbundle = netbeansAttr.getValue("OpenIDE-Module-Localizing-Bundle");
             if (locbundle != null) {
-                InputStream is = jar.getInputStream(jar.getEntry(locbundle));
-                try {
+                try (InputStream is = jar.getInputStream(jar.getEntry(locbundle))) {
                     localizedStrings.load(is);
-                } finally {
-                    is.close();
                 }
                 osgiAttr.putValue("Bundle-Localization", locbundle.replaceFirst("[.]properties$", ""));
             }
@@ -367,10 +357,9 @@ public class MakeOSGi extends Task {
                 osgiAttr.putValue("NetBeans-Executable-Files", execFiles.toString());
             }
             // XXX modules/lib/*.dll/so => Bundle-NativeCode (but syntax is rather complex)
-            OutputStream bundle = new FileOutputStream(bundleFile);
-            try {
-                ZipOutputStream zos = new JarOutputStream(bundle, osgi);
-                Set<String> parents = new HashSet<String>();
+            try (OutputStream bundle = new FileOutputStream(bundleFile);
+                    ZipOutputStream zos = new JarOutputStream(bundle, osgi)) {
+                Set<String> parents = new HashSet<>();
                 Enumeration<? extends ZipEntry> entries = jar.entries();
                 while (entries.hasMoreElements()) {
                     ZipEntry entry = entries.nextElement();
@@ -378,28 +367,17 @@ public class MakeOSGi extends Task {
                     if (path.endsWith("/") || path.equals("META-INF/MANIFEST.MF")) {
                         continue;
                     }
-                    InputStream is = jar.getInputStream(entry);
-                    try {
+                    try (InputStream is = jar.getInputStream(entry)) {
                         writeEntry(zos, path, is, parents);
-                    } finally {
-                        is.close();
                     }
                 }
                 for (Map.Entry<String,File> bundledFile : bundledFiles.entrySet()) {
-                    InputStream is = new FileInputStream(bundledFile.getValue());
-                    try {
+                    try (InputStream is = new FileInputStream(bundledFile.getValue())) {
                         writeEntry(zos, "OSGI-INF/files/" + bundledFile.getKey(), is, parents);
-                    } finally {
-                        is.close();
                     }
                 }
                 zos.finish();
-                zos.close();
-            } finally {
-                bundle.close();
             }
-        } finally {
-            jar.close();
         }
     }
 
@@ -460,7 +438,7 @@ public class MakeOSGi extends Task {
             // do not need to import any API, just need it to be started:
             requireBundles.append("org.netbeans.core.osgi");
         }
-        Set<String> imports = new TreeSet<String>(myInfo.importedPackages);
+        Set<String> imports = new TreeSet<>(myInfo.importedPackages);
         hideImports(imports, myInfo);
         String dependencies = netbeans.getValue("OpenIDE-Module-Module-Dependencies");
         if (dependencies != null) {
@@ -641,7 +619,7 @@ public class MakeOSGi extends Task {
     }
 
     private Map<String,File> findBundledFiles(File module, String cnb) throws Exception {
-        Map<String,File> result = new HashMap<String,File>();
+        Map<String,File> result = new HashMap<>();
         if (module.getParentFile().getName().matches("modules|core|lib")) {
             File cluster = module.getParentFile().getParentFile();
             File updateTracking = new File(new File(cluster, "update_tracking"), cnb.replace('.', '-') + ".xml");
@@ -673,8 +651,8 @@ public class MakeOSGi extends Task {
     }
 
     private static void scanClasses(JarFile module, Set<String> importedPackages, Set<String> availablePackages, Task task) throws Exception {
-        Map<String, byte[]> classfiles = new TreeMap<String, byte[]>();
-        VerifyClassLinkage.read(module, classfiles, new HashSet<File>(Collections.singleton(new File(module.getName()))), task, null);
+        Map<String, byte[]> classfiles = new TreeMap<>();
+        VerifyClassLinkage.read(module, classfiles, new HashSet<>(Collections.singleton(new File(module.getName()))), task, null);
         for (Map.Entry<String,byte[]> entry : classfiles.entrySet()) {
             String available = entry.getKey();
             int idx = available.lastIndexOf('.');
@@ -712,33 +690,21 @@ public class MakeOSGi extends Task {
         attr.putValue("Bundle-ManifestVersion", "2");
         attr.putValue("Bundle-SymbolicName", cnb + "-branding");
         attr.putValue("Fragment-Host", cnb);
-        JarFile jar = new JarFile(fragment);
-        try {
-            OutputStream bundle = new FileOutputStream(bundleFile);
-            try {
-                ZipOutputStream zos = new JarOutputStream(bundle, mf);
-                Set<String> parents = new HashSet<String>();
-                Enumeration<? extends ZipEntry> entries = jar.entries();
-                while (entries.hasMoreElements()) {
-                    ZipEntry entry = entries.nextElement();
-                    String path = entry.getName();
-                    if (path.endsWith("/") || path.equals("META-INF/MANIFEST.MF")) {
-                        continue;
-                    }
-                    InputStream is = jar.getInputStream(entry);
-                    try {
-                        writeEntry(zos, path, is, parents);
-                    } finally {
-                        is.close();
-                    }
+        try (JarFile jar = new JarFile(fragment);
+                OutputStream bundle = new FileOutputStream(bundleFile);
+                ZipOutputStream zos = new JarOutputStream(bundle, mf)) {
+            Set<String> parents = new HashSet<>();
+            Enumeration<? extends ZipEntry> entries = jar.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+                String path = entry.getName();
+                if (path.endsWith("/") || path.equals("META-INF/MANIFEST.MF")) {
+                    continue;
+                }   try (InputStream is = jar.getInputStream(entry)) {
+                    writeEntry(zos, path, is, parents);
                 }
-                zos.finish();
-                zos.close();
-            } finally {
-                bundle.close();
             }
-        } finally {
-            jar.close();
+            zos.finish();
         }
     }
 

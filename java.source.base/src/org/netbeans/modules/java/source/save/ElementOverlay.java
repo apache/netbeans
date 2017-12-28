@@ -771,7 +771,17 @@ public class ElementOverlay {
 
         @Override
         public List<? extends Element> getEnclosedElements() {
-            return wrap(ast, elements, delegateTo.getEnclosedElements());
+            //NETBEANS-230: workaround for javac bug JDK-8024687. See also test:
+            //refactoring.java/test/unit/src/org/netbeans/modules/refactoring/java/test/CopyClassTest.java#testCopyClassToSamePackage
+            //Should be just:
+//            return wrap(ast, elements, delegateTo.getEnclosedElements());
+            while (true) {
+                try {
+                    return wrap(ast, elements, delegateTo.getEnclosedElements());
+                } catch (Symbol.CompletionFailure cf) {
+                    //ignore
+                }
+            }
         }
 
         @Override

@@ -695,14 +695,15 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
             throw new IOException( "Repository directory " + repositoryDirectory + " does not exist" );
         }
  
-        // always use temporary context when reindexing
-        //TODO select a location within netbeans cache directory not File.createTempFile
-        final File tmpFile = File.createTempFile( context.getId() + "-tmp", "" );
-        final File tmpDir = new File( tmpFile.getParentFile(), tmpFile.getName() + ".dir" );
+        // always use cache directory when reindexing
+        final File tmpDir = new File(Places.getCacheDirectory(), "tmp-" + context.getRepositoryId());
         if ( !tmpDir.mkdirs() )
         {
             throw new IOException( "Cannot create temporary directory: " + tmpDir );
         }
+        final File tmpFile = new File(tmpDir, context.getId() + "-tmp");
+        LOGGER.log(Level.INFO, "NexusRepositoryIndexer using temporary directory ''{0} for repository directory ''{1}''", 
+                new Object[]{tmpDir.getAbsolutePath(), repositoryDirectory.getAbsolutePath()});
  
         IndexingContext tmpContext = null;
         try

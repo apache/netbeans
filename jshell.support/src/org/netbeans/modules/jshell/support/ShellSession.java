@@ -37,8 +37,6 @@ import java.io.PrintStream;
 import java.io.Writer;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -68,7 +66,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
-import javax.tools.JavaFileManager;
 import javax.tools.StandardJavaFileManager;
 import org.netbeans.lib.nbjshell.RemoteJShellService;
 import jdk.jshell.JShell;
@@ -87,8 +84,6 @@ import org.netbeans.api.editor.guards.GuardedSectionManager;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.platform.JavaPlatform;
-import org.netbeans.api.java.queries.SourceLevelQuery;
-import org.netbeans.api.java.queries.SourceLevelQuery.Result;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ClasspathInfo.PathKind;
 import org.netbeans.api.project.Project;
@@ -146,7 +141,7 @@ import org.openide.util.Task;
  * @author sdedic
  */
 public class ShellSession  {
-    private static Logger LOG = Logger.getLogger(ShellSession.class.getName());
+    private static final Logger LOG = Logger.getLogger(ShellSession.class.getName());
     
     public static final String PROP_ACTIVE = "active";
     public static final String PROP_ENGINE = "active";
@@ -614,6 +609,7 @@ public class ShellSession  {
                 execEnv);
         }
 
+        @Override
         protected List<String>  historyItems() {
             return ShellSession.this.historyItems().stream().map((i) -> i.getContents()).collect(Collectors.toList());
         }
@@ -720,7 +716,8 @@ public class ShellSession  {
                 if (kind == PathKind.OUTPUT) {
                     continue;
                 }
-                sb.append(kind + ": ");
+                sb.append(kind);
+                sb.append(": ");
                 ClassPath cp;
                 try {
                     cp = cpI.getClassPath(kind);
@@ -734,7 +731,9 @@ public class ShellSession  {
                 }
                 sb.append("\n");
                 for (ClassPath.Entry e : cp.entries()) {
-                    sb.append("\t" + e.getURL() + "\n");
+                    sb.append("\t");
+                    sb.append(e.getURL());
+                    sb.append("\n");
                 }
                 sb.append("---------------\n");
                 LOG.log(Level.FINEST, sb.toString());
@@ -812,7 +811,7 @@ public class ShellSession  {
         try {
             launcher = new Launcher(env.createExecutionEnv());
         } catch (IOException | RuntimeException | Error e) {
-            e.printStackTrace();
+            LOG.log(Level.INFO, null, e);
         }
         return launcher;
     }
@@ -848,7 +847,7 @@ public class ShellSession  {
         }
     }
     
-    private ShellAccessBridge bridgeImpl = new ShellAccessBridge() {
+    private final ShellAccessBridge bridgeImpl = new ShellAccessBridge() {
         @Override
         public <T> T execute(Callable<T> xcode) throws Exception {
             if (fileman == null || evaluator.isRequestProcessorThread()) {
@@ -988,7 +987,7 @@ public class ShellSession  {
         model.writeToShellDocument(text);
     }
     
-    private Set<Snippet>    excludedSnippets = new HashSet<>();
+    private final Set<Snippet> excludedSnippets = new HashSet<>();
     
     private String getClasspathAsString(PathKind pk) {
         return addRoots("", getClasspathInfo().getClassPath(pk));
@@ -1060,11 +1059,7 @@ public class ShellSession  {
     }
     
     private void closedDelayed() {
-        FORCE_CLOSE_RP.post(new Runnable() {
-            public void run() {
-                closed();
-            }
-        }, 300);
+        FORCE_CLOSE_RP.post(() -> { closed(); }, 300);
     }
 
     private synchronized void init(ShellSession prev) {
@@ -1311,7 +1306,7 @@ public class ShellSession  {
         private final String          cmd;
         private final ConsoleSection  exec;
         
-        private List<String>    toExec = new ArrayList<>();
+        private final List<String>    toExec = new ArrayList<>();
         private boolean         erroneous;
         private int             execOffset;
 
@@ -1415,7 +1410,7 @@ public class ShellSession  {
                     reportErrorMessage(ex);
                     reportShellMessage(Bundle.MSG_ErrorExecutingCommand());
                 } finally {
-                    if (sub != null) {
+                    if (sh != null && sub != null) {
                         sh.unsubscribe(sub);
                     }
                     ensureInputSectionAvailable();
@@ -1459,10 +1454,6 @@ public class ShellSession  {
      */
     public Task closeSession() {
         return detach();
-    }
-    
-    interface Processor {
-        public void handle(String data);
     }
     
     public ConsoleModel getModel() {

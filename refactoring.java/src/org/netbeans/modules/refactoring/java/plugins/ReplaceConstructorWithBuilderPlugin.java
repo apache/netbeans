@@ -62,7 +62,7 @@ public class ReplaceConstructorWithBuilderPlugin extends JavaRefactoringPlugin {
     private final ReplaceConstructorWithBuilderRefactoring refactoring;
     
     private final AtomicBoolean cancel = new AtomicBoolean();
-    private TreePathHandle treePathHandle;
+    private final TreePathHandle treePathHandle;
 
     public ReplaceConstructorWithBuilderPlugin(ReplaceConstructorWithBuilderRefactoring refactoring) {
         this.refactoring = refactoring;
@@ -112,11 +112,18 @@ public class ReplaceConstructorWithBuilderPlugin extends JavaRefactoringPlugin {
     @Override
     public Problem fastCheckParameters() {
         String builderName = refactoring.getBuilderName();
+        String buildMethodName = refactoring.getBuildMethodName();
         if (builderName == null || builderName.length() == 0) {
             return new Problem(true, NbBundle.getMessage(ReplaceConstructorWithBuilderPlugin.class, "ERR_NoFactory"));
         }
         if (!SourceVersion.isName(builderName)) {
             return new Problem(true, NbBundle.getMessage(ReplaceConstructorWithBuilderPlugin.class, "ERR_NotIdentifier", builderName));
+        }
+        if (buildMethodName == null || buildMethodName.isEmpty()) {
+            return new Problem(true, NbBundle.getMessage(ReplaceConstructorWithBuilderPlugin.class, "ERR_NoBuildMethod"));
+        }
+        if (!SourceVersion.isIdentifier(buildMethodName)) {
+            return new Problem(true, NbBundle.getMessage(ReplaceConstructorWithBuilderPlugin.class, "ERR_NotIdentifier", buildMethodName));
         }
         final TreePathHandle constr = treePathHandle;
         ClassPath classPath = ClassPath.getClassPath(constr.getFileObject(), ClassPath.SOURCE);
@@ -140,6 +147,7 @@ public class ReplaceConstructorWithBuilderPlugin extends JavaRefactoringPlugin {
         final TreePathHandle constr = refactoring.getRefactoringSource().lookup(TreePathHandle.class);
         final String[] ruleCode = new String[1];
         final String[] parentSimpleName = new String[1];
+        String buildMethodName = refactoring.getBuildMethodName();
 
         try {
             ModificationResult mod = JavaSource.forFileObject(constr.getFileObject()).runModificationTask(new Task<WorkingCopy>() {
@@ -284,7 +292,7 @@ public class ReplaceConstructorWithBuilderPlugin extends JavaRefactoringPlugin {
 
                     members.add(make.Method(
                             make.Modifiers(EnumSet.of(Modifier.PUBLIC)),
-                            "create" + parent.getSimpleName(), //NOI18N
+                            buildMethodName, //NOI18N
                             make.Type(parent.asType()),
                             Collections.<TypeParameterTree>emptyList(),
                             Collections.<VariableTree>emptyList(),
@@ -367,7 +375,7 @@ public class ReplaceConstructorWithBuilderPlugin extends JavaRefactoringPlugin {
 
                     MethodInvocationTree create = make.MethodInvocation(
                             Collections.<ExpressionTree>emptyList(),
-                            make.MemberSelect(expression, "create" + parentSimpleName[0]), //NOI18N
+                            make.MemberSelect(expression,buildMethodName), //NOI18N
                             Collections.<ExpressionTree>emptyList());
 
 

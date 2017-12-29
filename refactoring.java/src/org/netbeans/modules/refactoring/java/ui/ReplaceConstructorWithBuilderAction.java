@@ -18,8 +18,6 @@
  */
 package org.netbeans.modules.refactoring.java.ui;
 
-import org.netbeans.modules.refactoring.java.ui.ContextAnalyzer;
-import org.netbeans.modules.refactoring.java.ui.JavaRefactoringGlobalAction;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -44,14 +42,17 @@ public final class ReplaceConstructorWithBuilderAction extends JavaRefactoringGl
         putValue("noIconInMenu", Boolean.TRUE); // NOI18N
     }
 
+    @Override
     public org.openide.util.HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
+    @Override
     protected boolean asynchronous() {
         return false;
     }
 
+    @Override
     protected boolean enable(Lookup context) {
         return ContextAnalyzer.canRefactorSingle(context, true, false);
     }

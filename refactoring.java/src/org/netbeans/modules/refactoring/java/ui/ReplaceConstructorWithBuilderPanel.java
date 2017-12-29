@@ -25,9 +25,11 @@ import java.util.List;
 import javax.swing.JTable;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.BadLocationException;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.refactoring.java.api.ReplaceConstructorWithBuilderRefactoring;
 import org.netbeans.modules.refactoring.spi.ui.CustomRefactoringPanel;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -36,6 +38,7 @@ import org.openide.util.NbBundle;
  */
 public class ReplaceConstructorWithBuilderPanel extends javax.swing.JPanel implements CustomRefactoringPanel {
 
+    private final static String DEFAULT_PREFIX = "set";
     private static final String[] columnNames = {
         getString("LBL_BuilderParameter"), // NOI18N
         getString("LBL_BuilderSetterName"), // NOI18N
@@ -48,13 +51,18 @@ public class ReplaceConstructorWithBuilderPanel extends javax.swing.JPanel imple
     private static final Class[] columnTypes = new Class[]{
         String.class, String.class, String.class, Boolean.class
     };
-    private List<String> parameterTypes;
-    private List<Boolean> parameterTypeVars;
+    private final List<String> parameterTypes;
+    private final List<Boolean> parameterTypeVars;
+    private final List<String> parameterNames;
 
     public ReplaceConstructorWithBuilderPanel(final @NonNull ChangeListener parent, String initialFQN,
+            String initialBuildMethodName,
             List<String> paramaterNames, List<String> parameterTypes, List<Boolean> parameterTypeVars) {
         initComponents();
         this.parameterTypes = parameterTypes;
+        this.parameterNames = paramaterNames;
+        prefixField.setText(DEFAULT_PREFIX);
+        buildMethodNameField.setText(initialBuildMethodName);
         nameField.setText(initialFQN);
         nameField.setSelectionStart(0);
         nameField.setSelectionEnd(nameField.getText().length());
@@ -74,15 +82,55 @@ public class ReplaceConstructorWithBuilderPanel extends javax.swing.JPanel imple
             public void changedUpdate(DocumentEvent e) {
             }
         });
+        buildMethodNameField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                parent.stateChanged(new ChangeEvent(ReplaceConstructorWithBuilderPanel.this));
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                parent.stateChanged(new ChangeEvent(ReplaceConstructorWithBuilderPanel.this));
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });        
         DefaultTableModel model = (DefaultTableModel) paramTable.getModel();
         Iterator<String> typesIt = parameterTypes.iterator();
         for (String name : paramaterNames) {
-            model.addRow(new Object[]{typesIt.next() + " " + name, "set" + Character.toUpperCase(name.charAt(0)) + name.substring(1), null, false}); //NOI18N
+            model.addRow(new Object[]{typesIt.next() + " " + name, DEFAULT_PREFIX + Character.toUpperCase(name.charAt(0)) + name.substring(1), null, false}); //NOI18N
         }
         model.addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
                 parent.stateChanged(new ChangeEvent(ReplaceConstructorWithBuilderPanel.this));
+            }
+        });
+        prefixField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent de) {
+                updateSetters(de);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent de) {
+                updateSetters(de);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent de) {
+                updateSetters(de);
+            }
+
+            private void updateSetters(DocumentEvent de) {
+                try {
+                    String prefix = de.getDocument().getText(0, de.getDocument().getLength());
+                    updateSetterNames(prefix);
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         });
         this.parameterTypeVars = parameterTypeVars;
@@ -97,8 +145,8 @@ public class ReplaceConstructorWithBuilderPanel extends javax.swing.JPanel imple
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        builderName = new javax.swing.JLabel();
-        nameField = new javax.swing.JTextField();
+        buildName = new javax.swing.JLabel();
+        buildMethodNameField = new javax.swing.JTextField();
         paramScrollPane = new javax.swing.JScrollPane();
         paramTable = new JTable() {
 
@@ -110,10 +158,12 @@ public class ReplaceConstructorWithBuilderPanel extends javax.swing.JPanel imple
                 return super.isCellEditable(row, column);
             }
         };
+        prefixLabel = new javax.swing.JLabel();
+        prefixField = new javax.swing.JTextField();
+        buildMethodName = new javax.swing.JLabel();
+        nameField = new javax.swing.JTextField();
 
-        org.openide.awt.Mnemonics.setLocalizedText(builderName, org.openide.util.NbBundle.getMessage(ReplaceConstructorWithBuilderPanel.class, "ReplaceConstructorWithBuilder.jLabel1.text")); // NOI18N
-
-        nameField.setColumns(15);
+        org.openide.awt.Mnemonics.setLocalizedText(buildName, org.openide.util.NbBundle.getMessage(ReplaceConstructorWithBuilderPanel.class, "ReplaceConstructorWithBuilder.jLabel1.text")); // NOI18N
 
         paramTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object[][]{}, columnNames) {
@@ -127,32 +177,57 @@ public class ReplaceConstructorWithBuilderPanel extends javax.swing.JPanel imple
         });
         paramScrollPane.setViewportView(paramTable);
 
+        org.openide.awt.Mnemonics.setLocalizedText(prefixLabel, org.openide.util.NbBundle.getMessage(ReplaceConstructorWithBuilderPanel.class, "ReplaceConstructorWithBuilder.jLabel2.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(buildMethodName, org.openide.util.NbBundle.getMessage(ReplaceConstructorWithBuilderPanel.class, "ReplaceConstructorWithBuilder.jLabel3.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(paramScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 561, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(builderName)
+                .addComponent(prefixLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nameField, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE))
-            .addComponent(paramScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(prefixField, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(buildMethodName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buildName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(buildMethodNameField)
+                    .addComponent(nameField)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(paramScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(prefixLabel)
+                    .addComponent(prefixField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(paramScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buildMethodName)
+                    .addComponent(buildMethodNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(builderName)
-                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(buildName)
+                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(3, 3, 3))
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel builderName;
+    private javax.swing.JLabel buildMethodName;
+    private javax.swing.JTextField buildMethodNameField;
+    private javax.swing.JLabel buildName;
     private javax.swing.JTextField nameField;
     private javax.swing.JScrollPane paramScrollPane;
     private javax.swing.JTable paramTable;
+    private javax.swing.JTextField prefixField;
+    private javax.swing.JLabel prefixLabel;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -161,6 +236,10 @@ public class ReplaceConstructorWithBuilderPanel extends javax.swing.JPanel imple
 
     public String getBuilderName() {
         return nameField.getText();
+    }
+    
+    public String getBuildMethodName() {
+        return buildMethodNameField.getText();
     }
 
     @Override
@@ -191,5 +270,19 @@ public class ReplaceConstructorWithBuilderPanel extends javax.swing.JPanel imple
 
     private static String getString(String key) {
         return NbBundle.getMessage(ReplaceConstructorWithBuilderPanel.class, key);
+    }
+    
+    private void updateSetterNames(String prefix) {
+        DefaultTableModel model = (DefaultTableModel) paramTable.getModel();
+        
+        for (int k = 0;k < parameterNames.size();k ++) {
+            if (prefix == null || prefix.isEmpty()) {
+                model.setValueAt(parameterNames.get(k),k,1);
+            } else {
+                model.setValueAt(prefix + Character.toUpperCase(parameterNames.get(k).charAt(0)) 
+                        + parameterNames.get(k).substring(1),k,1);
+            }
+        }
+        
     }
 }

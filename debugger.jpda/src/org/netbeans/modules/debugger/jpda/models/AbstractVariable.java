@@ -330,7 +330,7 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
      * Override, but do not call directly!
      */
     protected void setValue (Value value) throws InvalidExpressionException {
-        throw new InternalError ();
+        throw new InternalError (getClass().getName());
     }
     
     @Override

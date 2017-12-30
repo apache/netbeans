@@ -451,9 +451,11 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     }
     
     @Messages({"# {0} - folder path",
-               "MSG_NoSpace=There is not enough space in your temp folder to download and unpack the index for ''{0}''.",
+               "# {1} - repository name",
+               "MSG_NoSpace=There is not enough space in {0} to download and unpack the index for ''{1}''.",
                "# {0} - folder path",
-               "MSG_SeemsNoSpace=It seems that there is not enough space in your temp folder to download and unpack the index for ''{0}''."})
+               "# {1} - repository name",
+               "MSG_SeemsNoSpace=It seems that there is not enough space in {0} to download and unpack the index for ''{1}''."})
     private void indexLoadedRepo(final RepositoryInfo repo, boolean updateLocal) throws IOException {
         Mutex mutex = getRepoMutex(repo);
         assert mutex.isWriteAccess();
@@ -554,7 +556,41 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
             if(e.getCause() instanceof ResourceDoesNotExistException) {
                 fireChange(repo, () -> repo.fireNoIndex());
             }
-            throw e;
+            File tmpFolder = Places.getCacheDirectory();
+            // see also issue #250365
+            String noSpaceLeftMsg = null;
+            if(e.getMessage().contains("No space left on device")) {
+                noSpaceLeftMsg = Bundle.MSG_NoSpace(tmpFolder.getAbsolutePath(), repo.getName());
+            }
+            
+            long downloaded = listener != null ? listener.getUnits() * 1024 : -1;
+            long usableSpace = -1;
+            try {
+                FileStore store = Files.getFileStore(tmpFolder.toPath());
+                usableSpace = store.getUsableSpace();                    
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            LOGGER.log(Level.INFO, "Downloaded maven index file has size {0} (zipped). The usable space in {1} is {2}.", new Object[]{downloaded, tmpFolder, usableSpace});
+
+            // still might be a problem with a too small tmp,
+            // let's try to figure out ...
+            if(noSpaceLeftMsg == null && downloaded > -1 && downloaded * 15 > usableSpace) {
+                noSpaceLeftMsg = Bundle.MSG_SeemsNoSpace(tmpFolder.getAbsolutePath(), repo.getName());
+            }
+
+            if(noSpaceLeftMsg != null) {
+                LOGGER.log(Level.INFO, null, e);
+                IndexingNotificationProvider np = Lookup.getDefault().lookup(IndexingNotificationProvider.class);
+                if(np != null) {
+                    np.notifyError(noSpaceLeftMsg);
+                    unloadIndexingContext(repo.getId());
+                } else {
+                    throw e;
+                }
+            } else {
+                throw e;
+            }
         } catch (Cancellation x) {
             throw new IOException("canceled indexing");
         } catch (ComponentLookupException x) {

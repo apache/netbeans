@@ -227,8 +227,8 @@ public class ActivatorTest extends NbTestCase {
                 "public class Install extends org.openide.modules.ModuleInstall {",
                 "public @Override void restored() {",
                 "org.netbeans.api.javahelp.Help.class.hashCode();",
-                "javax.help.HelpSet.class.hashCode();",
-                "javax.help.event.HelpSetEvent.class.hashCode();",
+     //           "javax.help.HelpSet.class.hashCode();",
+     //           "javax.help.event.HelpSetEvent.class.hashCode();",
                 "System.setProperty(\"used.javahelp\", \"true\");}",
                 "}").manifest(
                 "OpenIDE-Module: custom",

@@ -554,42 +554,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
             if(e.getCause() instanceof ResourceDoesNotExistException) {
                 fireChange(repo, () -> repo.fireNoIndex());
             }
-            
-            // see also issue #250365
-            String noSpaceLeftMsg = null;
-            if(e.getMessage().contains("No space left on device")) {
-                noSpaceLeftMsg = Bundle.MSG_NoSpace(repo.getName());
-            }
-            
-            long downloaded = listener != null ? listener.getUnits() * 1024 : -1;
-            long usableSpace = -1;
-            File tmpFolder = new File(System.getProperty("java.io.tmpdir"));
-            try {
-                FileStore store = Files.getFileStore(tmpFolder.toPath());
-                usableSpace = store.getUsableSpace();                    
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            LOGGER.log(Level.INFO, "Downloaded maven index file has size {0} (zipped). The usable space in {1} (java.io.tmpdir) is {2}.", new Object[]{downloaded, tmpFolder, usableSpace});
-
-            // still might be a problem with a too small tmp,
-            // let's try to figure out ...
-            if(noSpaceLeftMsg == null && downloaded > -1 && downloaded * 15 > usableSpace) {
-                noSpaceLeftMsg = Bundle.MSG_SeemsNoSpace(repo.getName());
-            }
-
-            if(noSpaceLeftMsg != null) {
-                LOGGER.log(Level.INFO, null, e);
-                IndexingNotificationProvider np = Lookup.getDefault().lookup(IndexingNotificationProvider.class);
-                if(np != null) {
-                    np.notifyError(noSpaceLeftMsg);
-                    unloadIndexingContext(repo.getId());
-                } else {
-                    throw e;
-                }
-            } else {
-                throw e;
-            }
+            throw e;
         } catch (Cancellation x) {
             throw new IOException("canceled indexing");
         } catch (ComponentLookupException x) {
@@ -702,8 +667,6 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
             throw new IOException( "Cannot create temporary directory: " + tmpDir );
         }
         final File tmpFile = new File(tmpDir, context.getId() + "-tmp");
-        LOGGER.log(Level.INFO, "NexusRepositoryIndexer using temporary directory ''{0} for repository directory ''{1}''", 
-                new Object[]{tmpDir.getAbsolutePath(), repositoryDirectory.getAbsolutePath()});
  
         IndexingContext tmpContext = null;
         try

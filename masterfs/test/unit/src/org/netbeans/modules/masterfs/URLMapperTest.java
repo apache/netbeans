@@ -21,6 +21,8 @@ package org.netbeans.modules.masterfs;
 
 import java.io.File;
 import java.net.URL;
+import org.junit.Assume;
+import static org.junit.Assume.assumeTrue;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.masterfs.filebasedfs.FileBasedFileSystem;
 import org.openide.filesystems.FileObject;
@@ -59,7 +61,7 @@ public class URLMapperTest extends NbTestCase {
         f.mkdirs();
         
         File shrtF = new File(getWorkDir(), "MYNEWT~1");
-        assertTrue("Short name exists", shrtF.isDirectory());
+        assumeTrue("Short name exists", shrtF.isDirectory());
         
         final URL u = shrtF.toURI().toURL();
         final FileObject fo = URLMapper.findFileObject(u);

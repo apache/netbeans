@@ -19,12 +19,19 @@
 
 package org.netbeans.modules.java.hints.infrastructure;
 
+import com.google.gson.Gson;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
+import java.beans.PropertyChangeListener;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,8 +42,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -46,6 +55,7 @@ import javax.swing.text.Position;
 import javax.swing.text.Position.Bias;
 import javax.swing.text.StyledDocument;
 import javax.tools.Diagnostic;
+
 import org.netbeans.api.editor.document.EditorDocumentUtils;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -58,15 +68,22 @@ import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.NbEditorDocument;
 import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.hints.friendapi.OverrideErrorMessage;
+import org.netbeans.modules.java.hints.infrastructure.ErrorHintsRemoteResource.EditShim;
+import org.netbeans.modules.java.hints.infrastructure.ErrorHintsRemoteResource.ErrorShim;
+import org.netbeans.modules.java.hints.infrastructure.ErrorHintsRemoteResource.FixShim;
 import org.netbeans.modules.java.hints.jdk.ConvertToDiamondBulkHint;
 import org.netbeans.modules.java.hints.jdk.ConvertToLambda;
 import org.netbeans.modules.java.hints.legacy.spi.RulesManager;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
 import org.netbeans.modules.java.hints.spi.ErrorRule.Data;
 import org.netbeans.modules.java.source.parsing.Hacks;
+import org.netbeans.modules.java.source.remote.api.Parser.Config;
+import org.netbeans.modules.java.source.remote.api.RemoteProvider;
+import org.netbeans.modules.java.source.remote.api.RemoteUtils;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
+import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.editor.hints.Fix;
@@ -738,7 +755,70 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
         long start = System.currentTimeMillis();
 
         try {
-            List<ErrorDescription> errors = computeErrors(info, doc, mimeType);
+            List<ErrorDescription> errors;
+            
+            URI base = RemoteProvider.getRemoteURL(info.getFileObject());
+            
+            if (base != null) {
+                Gson gson = new Gson();
+                Config conf = Config.create(info);
+
+                errors = new ArrayList<>();
+
+                for (ErrorShim shim : RemoteUtils.readAndDecode(conf, base, "/errors/get", ErrorShim[].class)) {
+                    LazyFixList fixes;
+
+                    if (shim.probablyContainsFixes) {
+                        int callbackId = shim.callbackId;
+                        fixes = new CreatorBasedLazyFixListBase(info.getFileObject()) {
+                            @Override
+                            protected List<Fix> doCompute(CompilationInfo info, AtomicBoolean cancelled) {
+                                List<Fix> fixes = new ArrayList<>();
+                                try {
+                                    for (FixShim shim : RemoteUtils.readAndDecode(conf, base, "/errors/fixes/get", FixShim[].class, "id=" + callbackId)) {
+                                        fixes.add(new Fix() {
+                                            @Override
+                                            public String getText() {
+                                                return shim.text;
+                                            }
+                                            @Override
+                                            public ChangeInfo implement() throws Exception {
+                                                try {
+                                                    EditShim[] edits = RemoteUtils.readAndDecode(conf, base, "/errors/fixes/apply", EditShim[].class, "id=" + shim.callbackId);
+
+                                                    NbDocument.runAtomic((StyledDocument) doc, () -> {
+                                                        try {
+                                                            for (EditShim edit : gson.fromJson(edits.toString(), EditShim[].class)) {
+                                                                doc.remove(edit.replaceStart, edit.replaceEnd - edit.replaceStart);
+                                                                doc.insertString(edit.replaceStart, edit.replaceText, null);
+                                                            }
+                                                        } catch (BadLocationException ex) {
+                                                            Exceptions.printStackTrace(ex);
+                                                        }
+                                                    });
+                                                } catch (IOException ex) {
+                                                    Exceptions.printStackTrace(ex);
+                                                }
+
+                                                return null; //TODO:
+                                            }
+                                        });
+                                    }
+                                } catch (IOException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                }
+                                return fixes;
+                            }
+                        };
+                    } else {
+                        fixes = ErrorDescriptionFactory.lazyListForFixes(Collections.emptyList());
+                    }
+                    errors.add(ErrorDescriptionFactory.createErrorDescription(Severity.ERROR, shim.description, fixes, info.getFileObject(), shim.start, shim.end));
+                }
+            } else {
+               errors = computeErrors(info, doc, mimeType);
+            }
+
 
             if (errors == null) //meaning: cancelled
                 return ;
@@ -815,6 +895,6 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
         
         return d.getPosition();
     }
-
+    
 }
 

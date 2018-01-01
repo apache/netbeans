@@ -49,7 +49,7 @@ public class EmbeddedLazyHintComputation extends JavaParserResultTask<JavacParse
             return;
         }
         
-        for (CreatorBasedLazyFixList i : LazyHintComputationFactory.getAndClearToCompute(result.getSnapshot().getSource().getFileObject())) {
+        for (CreatorBasedLazyFixListBase i : LazyHintComputationFactory.getAndClearToCompute(result.getSnapshot().getSource().getFileObject())) {
             i.compute(CompilationInfo.get(result), new AtomicBoolean());
         }
     }

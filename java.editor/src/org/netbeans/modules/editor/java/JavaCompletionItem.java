@@ -31,11 +31,14 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
@@ -264,6 +267,56 @@ public abstract class JavaCompletionItem implements CompletionItem {
         }
         return new ExcludeFromCompletionItem(name);
     }
+    
+    private static String toString(CharSequence seq) {
+        return seq != null ? seq.toString() : null;
+    }
+    
+    private static List<Object> serializeElementHandle(ElementHandle<?> handle) {
+        return Arrays.asList(handle.getKind().name(), SourceUtils.getJVMSignature(handle));
+    }
+
+    private static ElementHandle<?> deserializeElementHandle(List<Object> data) {
+        return SourceUtils.constructElementHandle(ElementKind.valueOf((String) data.get(0)), ((List<String>) data.get(1)).toArray(new String[0]));
+    }
+
+    private static List<Object> serializeParams(List<ParamDesc> params) {
+        return params.stream().map(p -> Arrays.asList(p.fullTypeName, p.typeName, p.name)).collect(Collectors.toList());
+    }
+
+    private static List<ParamDesc> deserializeParams(Object data) {
+        return ((List<List<String>>) data).stream().map(d -> new ParamDesc(d.get(0), d.get(1), d.get(2))).collect(Collectors.toList());
+    }
+
+    private static List<Object> serializeModifiers(Set<Modifier> modifiers) {
+        return modifiers.stream().map(m -> m.name()).collect(Collectors.toList());
+    }
+
+    private static Set<Modifier> deserializeModifiers(Object data) {
+        return ((List<String>) data).stream().map(m -> Modifier.valueOf(m)).collect(Collectors.toSet());
+    }
+    
+    private static List<Object> serializeTypeMirrorHandle(TypeMirrorHandle<?> tmh) {
+        List<Object> res = new ArrayList<>();
+        res.add(tmh.getKind().name());
+        res.addAll(serializeElementHandle(tmh.getElementHandleXXX()));
+        for (TypeMirrorHandle<?> nested : tmh.getTypeMirrorsXXX()) {
+            res.add(serializeTypeMirrorHandle(nested));
+        }
+        return res;
+    }
+
+    private static TypeMirrorHandle<?> deserializeTypeMirrorHandle(List<Object> data) {
+        return SourceUtils.constructTypeMirrorHandle(TypeKind.valueOf((String) data.get(0)), deserializeElementHandle(data.subList(1, 3)), data.subList(3, data.size()).stream().map(d -> deserializeTypeMirrorHandle((List<Object>) d)).toArray(s -> new TypeMirrorHandle[s]));
+    }
+
+    private static List<Object> serializeMemberDesc(List<MemberDesc> desc) {
+        return desc.stream().map(d -> Arrays.asList(d.kind.name(), d.name, serializeParams(d.params))).collect(Collectors.toList());
+    }
+
+    private static List<MemberDesc> deserializeMemberDesc(Object data) {
+        return ((List<List<Object>>) data).stream().map(d -> new MemberDesc(ElementKind.valueOf((String) d.get(0)), (String) d.get(1), deserializeParams(d.get(2)))).collect(Collectors.toList());
+    }
 
     public static final String COLOR_END = "</font>"; //NOI18N
     public static final String STRIKE = "<s>"; //NOI18N
@@ -273,6 +326,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
 
     protected int substitutionOffset;
     protected boolean showTooltip;
+    protected boolean remote;
 
     protected JavaCompletionItem(int substitutionOffset) {
         this.substitutionOffset = substitutionOffset;
@@ -457,7 +511,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         }
         Position semiPos = null;
         if (toAdd.length() > 0 && ';' == toAdd.charAt(toAdd.length() - 1)) {
-            int pos = findPositionForSemicolon(c);
+            int pos = findPositionForSemicolon(c); //XXX: precompute for remote!
             if (pos > -2) {
                 toAdd.deleteCharAt(toAdd.length() - 1);
                 if (pos > -1) {
@@ -597,6 +651,26 @@ public abstract class JavaCompletionItem implements CompletionItem {
         });
         return null;
     }
+    
+    public void serialize(Map<Object, Object> to) {
+        to.put("completion-item-class", getClass().getName());
+        to.put("substitutionOffset", substitutionOffset);
+    }
+
+    public JavaCompletionItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+        substitutionOffset = ((Number) from.get("substitutionOffset")).intValue();
+        remote = true;
+    }
+    
+    public static JavaCompletionItem create(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+        try {
+            Class<?> c = Class.forName((String) from.get("completion-item-class"), true, JavaCompletionItem.class.getClassLoader());
+            Constructor<?> nue = c.getConstructor(Map.class, WhiteListQuery.WhiteList.class);
+            return (JavaCompletionItem) nue.newInstance(from, whiteList);
+        } catch (Throwable t) {
+            throw new IllegalStateException(t);
+        }
+    }
 
     static abstract class WhiteListJavaCompletionItem<T extends Element> extends JavaCompletionItem {
 
@@ -675,6 +749,19 @@ public abstract class JavaCompletionItem implements CompletionItem {
         protected ImageIcon getBaseIcon() {
             return super.getIcon();
         }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("handles", handles.stream().map(h -> Stream.concat(Stream.of(h.getKind().name()), Arrays.stream(SourceUtils.getJVMSignature(h))).toArray(s -> new String[s])).toArray(s -> new String[s][]));
+        }
+
+        public WhiteListJavaCompletionItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.handles = ((List<List<String>>) from.get("handles")).stream().map(d -> SourceUtils.constructElementHandle(ElementKind.valueOf(d.get(0)), d.subList(1, d.size()).toArray(new String[0]))).collect(Collectors.toList());
+            this.whiteList = whiteList;
+        }
+        
     }
 
     static class KeywordItem extends JavaCompletionItem {
@@ -785,6 +872,26 @@ public abstract class JavaCompletionItem implements CompletionItem {
             }
             return sb.toString();
         }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("kwd", kwd);
+            to.put("dim", dim);
+            to.put("postfix", postfix);
+            to.put("smartType", smartType);
+            to.put("leftText", leftText);
+        }
+
+        public KeywordItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.kwd = (String) from.get("kwd");
+            this.dim = ((Number) from.get("dim")).intValue();
+            this.postfix = (String) from.get("postfix");
+            this.smartType = (boolean) from.get("smartType");
+            this.leftText = (String) from.get("leftText");
+        }
+
     }
 
     static class ModuleItem extends JavaCompletionItem {
@@ -840,6 +947,19 @@ public abstract class JavaCompletionItem implements CompletionItem {
         @Override
         public String toString() {
             return name;
+        }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("name", name);
+            to.put("leftText", leftText);
+        }
+
+        public ModuleItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.name = (String) from.get("name");
+            this.leftText = (String) from.get("leftText");
         }
     }
 
@@ -916,6 +1036,23 @@ public abstract class JavaCompletionItem implements CompletionItem {
         @Override
         public String toString() {
             return simpleName;
+        }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("inPackageStatement", inPackageStatement);
+            to.put("simpleName", simpleName);
+            to.put("sortText", sortText);
+            to.put("leftText", leftText);
+        }
+
+        public PackageItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.inPackageStatement = (boolean) from.get("inPackageStatement");
+            this.simpleName = (String) from.get("simpleName");
+            this.sortText = (String) from.get("sortText");
+            this.leftText = (String) from.get("leftText");
         }
     }
 
@@ -1266,6 +1403,46 @@ public abstract class JavaCompletionItem implements CompletionItem {
         public String toString() {
             return simpleName;
         }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("typeHandle", serializeTypeMirrorHandle(typeHandle));
+            to.put("dim", dim);
+            to.put("hasTypeArgs", hasTypeArgs);
+            to.put("isDeprecated", isDeprecated);
+            to.put("insideNew", insideNew);
+            to.put("addTypeVars", addTypeVars);
+            to.put("addSimpleName", addSimpleName);
+            to.put("smartType", smartType);
+            to.put("simpleName", simpleName);
+            to.put("typeName", typeName);
+            to.put("enclName", enclName);
+            to.put("sortText", sortText.toString());
+            to.put("leftText", leftText);
+            to.put("autoImportEnclosingType", autoImportEnclosingType);
+            to.put("subItems", subItems.stream().map(ci -> JavaCompletionItem.toString(((ExcludeFromCompletionItem) ci).name)).collect(Collectors.toList()));
+        }
+        
+        public ClassItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.typeHandle = (TypeMirrorHandle<DeclaredType>) deserializeTypeMirrorHandle((List<Object>) from.get("typeHandle"));
+            this.dim = ((Number) from.get("dim")).intValue();
+            this.hasTypeArgs = (boolean) from.get("hasTypeArgs");
+            this.isDeprecated = (boolean) from.get("isDeprecated");
+            this.insideNew = (boolean) from.get("insideNew");
+            this.addTypeVars = (boolean) from.get("addTypeVars");
+            this.addSimpleName = (boolean) from.get("addSimpleName");
+            this.smartType = (boolean) from.get("smartType");
+            this.simpleName = (String) from.get("simpleName");
+            this.typeName = (String) from.get("typeName");
+            this.enclName = (String) from.get("enclName");
+            this.sortText = (String) from.get("sortText");
+            this.leftText = (String) from.get("leftText");
+            this.autoImportEnclosingType = (boolean) from.get("autoImportEnclosingType");
+            this.subItems = ((List<String>) from.get("subItems")).stream().map(ExcludeFromCompletionItem::new).collect(Collectors.toList());
+        }
+        
     }
 
     static class InterfaceItem extends ClassItem {
@@ -1290,6 +1467,10 @@ public abstract class JavaCompletionItem implements CompletionItem {
         protected String getColor() {
             return INTERFACE_COLOR;
         }
+
+        public InterfaceItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+        }
     }
 
     static class EnumItem extends ClassItem {
@@ -1307,6 +1488,10 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 icon = ImageUtilities.loadImageIcon(ENUM, false);
             }
             return icon;
+        }
+
+        public EnumItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
         }
     }
 
@@ -1326,6 +1511,11 @@ public abstract class JavaCompletionItem implements CompletionItem {
             }
             return icon;
         }
+
+        public AnnotationTypeItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+        }
+        
     }
 
     static class TypeParameterItem extends JavaCompletionItem {
@@ -1364,6 +1554,19 @@ public abstract class JavaCompletionItem implements CompletionItem {
         @Override
         public String toString() {
             return simpleName;
+        }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("simpleName", simpleName);
+            to.put("leftText", leftText);
+        }
+
+        public TypeParameterItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.simpleName = (String) from.get("simpleName");
+            this.leftText = (String) from.get("leftText");
         }
     }
 
@@ -1444,6 +1647,31 @@ public abstract class JavaCompletionItem implements CompletionItem {
         @Override
         public String toString() {
             return (typeName != null ? typeName + " " : "") + varName; //NOI18N
+        }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("varName", varName);
+            to.put("newVarName", newVarName);
+            to.put("smartType", smartType);
+            to.put("typeName", typeName);
+            to.put("leftText", leftText);
+            to.put("rightText", rightText);
+            to.put("assignToVarOffset", assignToVarOffset);
+            to.put("assignToVarText", assignToVarText != null ? assignToVarText.toString() : null);
+        }
+
+        public VariableItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.varName = (String) from.get("varName");
+            this.newVarName = (boolean) from.get("newVarName");
+            this.smartType = (boolean) from.get("smartType");
+            this.typeName = (String) from.get("typeName");
+            this.leftText = (String) from.get("leftText");
+            this.rightText = (String) from.get("rightText");
+            this.assignToVarOffset = ((Number) from.get("assignToVarOffset")).intValue();
+            this.assignToVarText = (String) from.get("assignToVarText");
         }
    }
 
@@ -1724,6 +1952,45 @@ public abstract class JavaCompletionItem implements CompletionItem {
             sb.append(' ');
             sb.append(simpleName);
             return sb.toString();
+        }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("isInherited", isInherited);
+            to.put("isDeprecated", isDeprecated);
+            to.put("smartType", smartType);
+            to.put("simpleName", simpleName);
+            to.put("modifiers", modifiers.stream().map(m -> m.name()).toArray());
+            to.put("typeName", typeName);
+            to.put("leftText", leftText);
+            to.put("rightText", rightText);
+            to.put("autoImportEnclosingType", autoImportEnclosingType);
+            to.put("enclSortText", enclSortText);
+            to.put("castEndOffset", castEndOffset);
+            if (castText != null)
+                to.put("castText", castText.toString());
+            to.put("startOffset", startOffset);
+            if (assignToVarText != null)
+                to.put("assignToVarText", assignToVarText.toString());
+        }
+
+        public FieldItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.isInherited = (boolean) from.get("isInherited");
+            this.isDeprecated = (boolean) from.get("isDeprecated");
+            this.smartType = (boolean) from.get("smartType");
+            this.simpleName = (String) from.get("simpleName");
+            this.modifiers = ((List<String>) from.get("modifiers")).stream().map(m -> Modifier.valueOf(m)).collect(Collectors.toSet());
+            this.typeName = (String) from.get("typeName");
+            this.leftText = (String) from.get("leftText");
+            this.rightText = (String) from.get("rightText");
+            this.autoImportEnclosingType = (boolean) from.get("autoImportEnclosingType");
+            this.enclSortText = (String) from.get("Sequence enclSortText");
+            this.castEndOffset = ((Number) from.get("castEndOffset")).intValue();
+            this.castText = (String) from.get("castText");
+            this.startOffset = ((Number) from.get("startOffset")).intValue();
+            this.assignToVarText = (String) from.get("assignToVarText");
         }
     }
 
@@ -2082,6 +2349,56 @@ public abstract class JavaCompletionItem implements CompletionItem {
             sb.append(')');
             return sb.toString();
         }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("isInherited", isInherited);
+            to.put("isDeprecated", isDeprecated);
+            to.put("inImport", inImport);
+            to.put("smartType", smartType);
+            to.put("memberRef", memberRef);
+            to.put("simpleName", simpleName);
+            to.put("modifiers", serializeModifiers(modifiers));
+            to.put("params", serializeParams(params));
+            to.put("typeName", typeName);
+            to.put("addSemicolon", addSemicolon);
+            to.put("sortText", sortText);
+            to.put("leftText", leftText);
+            to.put("rightText", rightText);
+            to.put("autoImportEnclosingType", autoImportEnclosingType);
+            to.put("enclSortText", enclSortText.toString());
+            to.put("castEndOffset", castEndOffset);
+            if (castText != null)
+                to.put("castText", castText.toString());
+            to.put("startOffset", startOffset);
+            if (assignToVarText != null)
+                to.put("assignToVarText", assignToVarText.toString());
+        }
+
+        public MethodItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.isInherited = (boolean) from.get("isInherited");
+            this.isDeprecated = (boolean) from.get("isDeprecated");
+            this.inImport = (boolean) from.get("inImport");
+            this.smartType = (boolean) from.get("smartType");
+            this.memberRef = (boolean) from.get("memberRef");
+            this.simpleName = (String) from.get("simpleName");
+            this.modifiers = deserializeModifiers(from.get("modifiers"));
+            this.params = deserializeParams(from.get("params"));
+            this.typeName = (String) from.get("typeName");
+            this.addSemicolon = (boolean) from.get("addSemicolon");
+            this.sortText = (String) from.get("sortText");
+            this.leftText = (String) from.get("leftText");
+            this.rightText = (String) from.get("rightText");
+            this.autoImportEnclosingType = (boolean) from.get("autoImportEnclosingType");
+            this.enclSortText = (String) from.get("enclSortText");
+            this.castEndOffset = ((Number) from.get("castEndOffset")).intValue();
+            this.castText = (String) from.get("castText");
+            this.startOffset = ((Number) from.get("startOffset")).intValue();
+            this.assignToVarText = (String) from.get("assignToVarText");
+        }
+        
     }
 
     static class OverrideMethodItem extends MethodItem {
@@ -2097,7 +2414,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private static ImageIcon merged_icon[][] = new ImageIcon[2][4];
 
         private boolean implement;
-        private String leftText;
+        private String leftTextOverridden;
 
         private OverrideMethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean implement, WhiteListQuery.WhiteList whiteList) {
             super(info, elem, type, null, substitutionOffset, null, false, false, false, false, false, -1, false, whiteList);
@@ -2118,11 +2435,11 @@ public abstract class JavaCompletionItem implements CompletionItem {
 
         @Override
         protected String getLeftHtmlText() {
-            if (leftText == null) {
-                leftText = super.getLeftHtmlText() + " - "; //NOI18N
-                leftText += (implement ? IMPLEMENT_TEXT : OVERRIDE_TEXT);
+            if (leftTextOverridden == null) {
+                leftTextOverridden = super.getLeftHtmlText() + " - "; //NOI18N
+                leftTextOverridden += (implement ? IMPLEMENT_TEXT : OVERRIDE_TEXT);
             }
-            return leftText;
+            return leftTextOverridden;
         }
 
         @Override
@@ -2208,6 +2525,20 @@ public abstract class JavaCompletionItem implements CompletionItem {
         public boolean instantSubstitution(JTextComponent component) {
             return false;
         }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("implement", implement);
+            to.put("leftTextOverridden", leftTextOverridden);
+        }
+
+        public OverrideMethodItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.implement = (boolean) from.get("implement");
+            this.leftTextOverridden = (String) from.get("leftTextOverridden");
+        }
+
     }
 
     static class GetterSetterMethodItem extends JavaCompletionItem {
@@ -2392,6 +2723,31 @@ public abstract class JavaCompletionItem implements CompletionItem {
         @Override
         public boolean instantSubstitution(JTextComponent component) {
             return false;
+        }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("elementHandle", serializeElementHandle(elementHandle));
+            to.put("setter", setter);
+            to.put("paramName", paramName);
+            to.put("name", name);
+            to.put("typeName", typeName);
+            to.put("sortText", sortText);
+            to.put("leftText", leftText);
+            to.put("rightText", rightText);
+        }
+
+        public GetterSetterMethodItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.elementHandle = (ElementHandle<VariableElement>) deserializeElementHandle((List<Object>) from.get("elementHandle"));
+            this.setter = (boolean) from.get("setter");
+            this.paramName = (String) from.get("paramName");
+            this.name = (String) from.get("name");
+            this.typeName = (String) from.get("typeName");
+            this.sortText = (String) from.get("sortText");
+            this.leftText = (String) from.get("leftText");
+            this.rightText = (String) from.get("rightText");
         }
     }
 
@@ -2653,6 +3009,35 @@ public abstract class JavaCompletionItem implements CompletionItem {
             sb.append(')');
             return sb.toString();
         }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("isDeprecated", isDeprecated);
+            to.put("smartType", smartType);
+            to.put("simpleName", simpleName);
+            to.put("modifiers", serializeModifiers(modifiers));
+            to.put("params", serializeParams(params));
+            to.put("isAbstract", isAbstract);
+            to.put("isProtected", isProtected);
+            to.put("insertName", insertName);
+            to.put("sortText", sortText);
+            to.put("leftText", leftText);
+        }
+
+        public ConstructorItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.isDeprecated = (boolean) from.get("isDeprecated");
+            this.smartType = (boolean) from.get("smartType");
+            this.simpleName = (String) from.get("simpleName");
+            this.modifiers = deserializeModifiers(from.get("modifiers"));
+            this.params = deserializeParams(from.get("params"));
+            this.isAbstract = (boolean) from.get("isAbstract");
+            this.isProtected = (boolean) from.get("isProtected");
+            this.insertName = (boolean) from.get("insertName");
+            this.sortText = (String) from.get("sortText");
+            this.leftText = (String) from.get("leftText");
+        }
     }
 
     static class DefaultConstructorItem extends JavaCompletionItem {
@@ -2778,6 +3163,25 @@ public abstract class JavaCompletionItem implements CompletionItem {
         public String toString() {
             return simpleName + "()";
         }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("smartType", smartType);
+            to.put("simpleName", simpleName);
+            to.put("isAbstract", isAbstract);
+            to.put("sortText", sortText);
+            to.put("leftText", leftText);
+        }
+
+        public DefaultConstructorItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.smartType = (boolean) from.get("smartType");
+            this.simpleName = (String) from.get("simpleName");
+            this.isAbstract = (boolean) from.get("isAbstract");
+            this.sortText = (String) from.get("sortText");
+            this.leftText = (String) from.get("leftText");
+        }
     }
 
     static class ParametersItem extends JavaCompletionItem {
@@ -2788,7 +3192,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private boolean isDeprecated;
         private int activeParamsIndex;
         private String simpleName;
-        private ArrayList<ParamDesc> params;
+        private List<ParamDesc> params;
         private String typeName;
         private String sortText;
         private String leftText;
@@ -2944,6 +3348,33 @@ public abstract class JavaCompletionItem implements CompletionItem {
             sb.append(") - parameters"); //NOI18N
             return sb.toString();
         }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("elementHandle", serializeElementHandle(elementHandle));
+            to.put("isDeprecated", isDeprecated);
+            to.put("activeParamsIndex", activeParamsIndex);
+            to.put("simpleName", simpleName);
+            to.put("params", serializeParams(params));
+            to.put("typeName", typeName);
+            to.put("sortText", sortText);
+            to.put("leftText", leftText);
+            to.put("rightText", rightText);
+        }
+
+        public ParametersItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.elementHandle = (ElementHandle<ExecutableElement>) deserializeElementHandle((List<Object>) from.get("elementHandle"));
+            this.isDeprecated = (boolean) from.get("isDeprecated");
+            this.activeParamsIndex = ((Number) from.get("activeParamsIndex")).intValue();
+            this.simpleName = (String) from.get("simpleName");
+            this.params = deserializeParams(from.get("params"));
+            this.typeName = (String) from.get("typeName");
+            this.sortText = (String) from.get("sortText");
+            this.leftText = (String) from.get("leftText");
+            this.rightText = (String) from.get("rightText");
+        }
     }
 
     static class AnnotationItem extends AnnotationTypeItem {
@@ -3006,6 +3437,16 @@ public abstract class JavaCompletionItem implements CompletionItem {
             super.substituteText(c, offset, length, null, null);
             return sb;
         }
+        
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+        }
+
+        public AnnotationItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+        }
+        
     }
 
     static class AttributeItem extends JavaCompletionItem {
@@ -3106,6 +3547,29 @@ public abstract class JavaCompletionItem implements CompletionItem {
         @Override
         public String toString() {
             return simpleName;
+        }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("elementHandle", serializeElementHandle(elementHandle));
+            to.put("isDeprecated", isDeprecated);
+            to.put("simpleName", simpleName);
+            to.put("typeName", typeName);
+            to.put("defaultValue", defaultValue);
+            to.put("leftText", leftText);
+            to.put("rightText", rightText);
+        }
+
+        public AttributeItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.elementHandle = (ElementHandle<ExecutableElement>) deserializeElementHandle((List<Object>) from.get("elementHandle"));
+            this.isDeprecated = (boolean) from.get("isDeprecated");
+            this.simpleName = (String) from.get("simpleName");
+            this.typeName = (String) from.get("typeName");
+            this.defaultValue = (String) from.get("defaultValue");
+            this.leftText = (String) from.get("leftText");
+            this.rightText = (String) from.get("rightText");
         }
     }
 
@@ -3244,6 +3708,25 @@ public abstract class JavaCompletionItem implements CompletionItem {
         @Override
         public String toString() {
             return value;
+        }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            Map<Object, Object> del = new HashMap<>();
+            delegate.serialize(del);
+            to.put("delegate", del);
+            to.put("value", value);
+            to.put("documentation", documentation);
+            to.put("leftText", leftText);
+        }
+
+        public AttributeValueItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.delegate = JavaCompletionItem.create((Map<Object, Object>) from.get("delegate"), whiteList);
+            this.value = (String) from.get("value");
+            this.documentation = (String) from.get("documentation");
+            this.leftText = (String) from.get("leftText");
         }
     }
 
@@ -3593,6 +4076,37 @@ public abstract class JavaCompletionItem implements CompletionItem {
             }
             return sb.toString();
         }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("typeHandle", serializeTypeMirrorHandle(typeHandle));
+            to.put("isDeprecated", isDeprecated);
+            to.put("typeName", typeName);
+            to.put("memberName", memberName);
+            to.put("memberTypeName", memberTypeName);
+            to.put("addSemicolon", addSemicolon);
+            to.put("modifiers", serializeModifiers(modifiers));
+            to.put("params", serializeParams(params));
+            to.put("sortText", sortText);
+            to.put("leftText", leftText);
+            to.put("rightText", rightText);
+        }
+
+        public StaticMemberItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.typeHandle = (TypeMirrorHandle<DeclaredType>) deserializeTypeMirrorHandle((List<Object>) from.get(typeHandle));
+            this.isDeprecated = (boolean) from.get("isDeprecated");
+            this.typeName = (String) from.get("typeName");
+            this.memberName = (String) from.get("memberName");
+            this.memberTypeName = (String) from.get("memberTypeName");
+            this.addSemicolon = (boolean) from.get("addSemicolon");
+            this.modifiers = deserializeModifiers(from.get("modifiers"));
+            this.params = deserializeParams(from.get("params"));
+            this.sortText = (String) from.get("sortText");
+            this.leftText = (String) from.get("leftText");
+            this.rightText = (String) from.get("rightText");
+        }
     }
 
     static class ChainedMembersItem extends WhiteListJavaCompletionItem<Element> {
@@ -3912,6 +4426,35 @@ public abstract class JavaCompletionItem implements CompletionItem {
             }
             return sb.toString();
         }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("members", serializeMemberDesc(members));
+            to.put("firstMemberName", firstMemberName);
+            to.put("lastMemberTypeName", lastMemberTypeName);
+            to.put("isLastMethod", isLastMethod);
+            to.put("isDeprecated", isDeprecated);
+            to.put("addSemicolon", addSemicolon);
+            to.put("modifiers", serializeModifiers(modifiers));
+            to.put("sortText", sortText);
+            to.put("leftText", leftText);
+            to.put("rightText", rightText);
+        }
+
+        public ChainedMembersItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.members = deserializeMemberDesc(from.get("members"));
+            this.firstMemberName = (String) from.get("firstMemberName");
+            this.lastMemberTypeName = (String) from.get("lastMemberTypeName");
+            this.isLastMethod = (boolean) from.get("isLastMethod");
+            this.isDeprecated = (boolean) from.get("isDeprecated");
+            this.addSemicolon = (boolean) from.get("addSemicolon");
+            this.modifiers = deserializeModifiers(from.get("modifiers"));
+            this.sortText = (String) from.get("sortText");
+            this.leftText = (String) from.get("leftText");
+            this.rightText = (String) from.get("rightText");
+        }
     }
 
     static class InitializeAllConstructorItem extends JavaCompletionItem {
@@ -4110,6 +4653,31 @@ public abstract class JavaCompletionItem implements CompletionItem {
         public boolean instantSubstitution(JTextComponent component) {
             return false;
         }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("isDefault", isDefault);
+            to.put("fieldHandles", fieldHandles.stream().map(h -> serializeElementHandle(h)).collect(Collectors.toList()));
+            to.put("parentHandle", serializeElementHandle(parentHandle));
+            to.put("superConstructorHandle", serializeElementHandle(superConstructorHandle));
+            to.put("simpleName", simpleName);
+            to.put("params", serializeParams(params));
+            to.put("sortText", sortText);
+            to.put("leftText", leftText);
+        }
+
+        public InitializeAllConstructorItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.isDefault = (boolean) from.get("isDefault");
+            this.fieldHandles = ((List<List<Object>>) from.get("fieldHandles")).stream().map(d -> (ElementHandle<VariableElement>) deserializeElementHandle(d)).collect(Collectors.toList());
+            this.parentHandle = (ElementHandle<TypeElement>) deserializeElementHandle((List<Object>) from.get("parentHandle"));
+            this.superConstructorHandle = (ElementHandle<ExecutableElement>) deserializeElementHandle((List<Object>) from.get("superConstructorHandle"));
+            this.simpleName = (String) from.get("simpleName");
+            this.params = deserializeParams(from.get("params"));
+            this.sortText = (String) from.get("sortText");
+            this.leftText = (String) from.get("leftText");
+        }
     }
     
     static class LambdaCompletionItem extends JavaCompletionItem {
@@ -4119,7 +4687,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private static ImageIcon icon;
 
         private ElementHandle<ExecutableElement> handle;
-        private ArrayList<ParamDesc> params;
+        private List<ParamDesc> params;
         private boolean addSemicolon;
         private String typeName;
         private String sortText;
@@ -4311,6 +4879,29 @@ public abstract class JavaCompletionItem implements CompletionItem {
             }
             sb.append(") -> {...}"); //NOI18N
             return sb.toString();
+        }
+
+        @Override
+        public void serialize(Map<Object, Object> to) {
+            super.serialize(to);
+            to.put("handle", serializeElementHandle(handle));
+            to.put("params", serializeParams(params));
+            to.put("addSemicolon", addSemicolon);
+            to.put("typeName", typeName);
+            to.put("sortText", sortText);
+            to.put("leftText", leftText);
+            to.put("rightText", rightText);
+        }
+
+        public LambdaCompletionItem(Map<Object, Object> from, WhiteListQuery.WhiteList whiteList) {
+            super(from, whiteList);
+            this.handle = (ElementHandle<ExecutableElement>) deserializeElementHandle((List<Object>) from.get("handle"));
+            this.params = deserializeParams(from.get("params"));
+            this.addSemicolon = (boolean) from.get("addSemicolon");
+            this.typeName = (String) from.get("typeName");
+            this.sortText = (String) from.get("sortText");
+            this.leftText = (String) from.get("leftText");
+            this.rightText = (String) from.get("rightText");
         }
     }
 

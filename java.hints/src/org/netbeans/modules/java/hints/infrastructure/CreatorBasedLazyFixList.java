@@ -19,8 +19,6 @@
 package org.netbeans.modules.java.hints.infrastructure;
 
 import com.sun.source.util.TreePath;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,26 +26,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Logger;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
 import org.netbeans.modules.java.hints.spi.ErrorRule.Data;
 import org.netbeans.spi.editor.hints.Fix;
-import org.netbeans.spi.editor.hints.LazyFixList;
 import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author Jan Lahoda
  */
-public class CreatorBasedLazyFixList implements LazyFixList {
+public class CreatorBasedLazyFixList extends CreatorBasedLazyFixListBase {
     
-    private PropertyChangeSupport pcs;
-    private boolean computed;
-    private boolean computing;
-    private List<Fix> fixes;
-    
-    private FileObject file;
     private String diagnosticKey;
     private int offset;
     private final Collection<ErrorRule> c;
@@ -55,60 +45,27 @@ public class CreatorBasedLazyFixList implements LazyFixList {
     
     /** Creates a new instance of CreatorBasedLazyFixList */
     public CreatorBasedLazyFixList(FileObject file, String diagnosticKey, int offset, Collection<ErrorRule> c, Map<Class, Data> class2Data) {
-        this.pcs = new PropertyChangeSupport(this);
-        this.file = file;
+        super(file);
         this.diagnosticKey = diagnosticKey;
         this.offset = offset;
         this.c = c;
         this.class2Data = class2Data;
-        this.fixes = Collections.<Fix>emptyList();
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener l) {
-        pcs.addPropertyChangeListener(l);
-    }
-    
-    public void removePropertyChangeListener(PropertyChangeListener l) {
-        pcs.removePropertyChangeListener(l);
-    }
-    
-    public boolean probablyContainsFixes() {
-        return true;
-    }
-    
-    public synchronized List<Fix> getFixes() {
-        if (!computed && !computing) {
-            LazyHintComputationFactory.addToCompute(file, this);
-            computing = true;
-        }
-        return fixes;
-    }
-    
-    public synchronized boolean isComputed() {
-        return computed;
-    }
-    
     private ErrorRule<?> currentRule;
     
     private synchronized void setCurrentRule(ErrorRule currentRule) {
         this.currentRule = currentRule;
     }
     
-    public void compute(CompilationInfo info, AtomicBoolean cancelled) {
-        synchronized (this) {
-            //resume:
-            if (this.computed) {
-                return ; //already done.
-            }
-        }
-        
+    protected List<Fix> doCompute(CompilationInfo info, AtomicBoolean cancelled) {
         List<Fix> fixes = new ArrayList<Fix>();
         TreePath path = info.getTreeUtilities().pathFor(offset + 1);
         
         for (ErrorRule rule : c) {
             if (cancelled.get()) {
                 //has been canceled, the computation was not finished:
-                return ;
+                return null;
             }
             
             setCurrentRule(rule);
@@ -124,7 +81,7 @@ public class CreatorBasedLazyFixList implements LazyFixList {
                 
                 if (currentRuleFixes == CANCELLED) {
                     cancelled.set(true);
-                    return ;
+                    return null;
                 }
                 
                 if (currentRuleFixes != null) {
@@ -134,19 +91,8 @@ public class CreatorBasedLazyFixList implements LazyFixList {
                 setCurrentRule(null);
             }
         }
-        
-        if (cancelled.get()) {
-            //has been canceled, the computation was not finished:
-            return ;
-        }
-        
-        synchronized (this) {
-            this.fixes    = fixes;
-            this.computed = true;
-        }
-        
-        pcs.firePropertyChange(PROP_FIXES, null, null);
-        pcs.firePropertyChange(PROP_COMPUTED, null, null);
+
+        return fixes;
     }
     
     public void cancel() {

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.editor.semantic;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -50,7 +51,12 @@ public class SemanticHighlighter extends SemanticHighlighterBase {
 
     protected boolean process(final CompilationInfo info, final Document doc) {
         long start = System.currentTimeMillis();
-        boolean ret = process(info, doc, ERROR_DESCRIPTION_SETTER);
+        boolean ret;
+        try {
+            ret = process(info, doc, ERROR_DESCRIPTION_SETTER);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex); //TODO: error handling
+        }
         Logger.getLogger("TIMER").log(Level.FINE, "Semantic",
             new Object[] {NbEditorUtilities.getFileObject(doc), System.currentTimeMillis() - start});
         return ret;

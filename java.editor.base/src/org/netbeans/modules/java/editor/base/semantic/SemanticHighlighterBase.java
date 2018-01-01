@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.editor.base.semantic;
 
+import com.google.gson.Gson;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ArrayTypeTree;
@@ -68,7 +69,11 @@ import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.URI;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -76,7 +81,9 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -89,6 +96,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.swing.text.Document;
+import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaParserResultTask;
@@ -97,9 +105,12 @@ import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.api.lexer.TokenSequence;
 //import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.java.editor.base.imports.UnusedImports;
 import org.netbeans.modules.java.editor.base.semantic.ColoringAttributes.Coloring;
+import org.netbeans.modules.java.source.remote.api.Parser;
+import org.netbeans.modules.java.source.remote.api.RemoteProvider;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
@@ -260,7 +271,53 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         return SERIALIZABLE_SIGNATURES.contains(sign);
     }
     
-    protected boolean process(CompilationInfo info, final Document doc, ErrorDescriptionSetter setter) {
+    protected boolean process(CompilationInfo info, final Document doc, ErrorDescriptionSetter setter) throws IOException {
+        URI base = RemoteProvider.getRemoteURL(info.getFileObject());
+        if (base != null) {
+            Gson gson = new Gson();
+            Parser.Config conf = Parser.Config.create(info);
+            URI highlightsURI = base.resolve("/highlightData?parser-config=" + URLEncoder.encode(gson.toJson(conf), "UTF-8"));
+            StringBuilder data = new StringBuilder();
+
+            try (InputStream in = highlightsURI.toURL().openStream()) { //XXX: encoding!!!
+                int read;
+
+                while ((read = in.read()) != (-1)) {
+                    data.append((char) read);
+                }
+
+                SemanticHighlighterRemoteResource.HighlightData remoteData = gson.fromJson(data.toString(), SemanticHighlighterRemoteResource.HighlightData.class);
+                Iterator<String> categoriesIt = remoteData.categories.iterator();
+                Map<Token, Coloring> newColoring = new IdentityHashMap<>();
+                doc.render(() -> {
+                    TokenSequence<JavaTokenId> ts = TokenHierarchy.get(doc).tokenSequence(JavaTokenId.language()); //XXX: embedding
+
+                    while (ts.moveNext() && categoriesIt.hasNext()) {
+                        String category = categoriesIt.next();
+
+                        if (category.isEmpty())
+                            continue;
+
+                        Coloring c = ColoringAttributes.empty();
+
+                        for (String key : category.split(" ")) {
+                            c = ColoringAttributes.add(c, ColoringAttributes.valueOf(key.toUpperCase(Locale.US)));
+                        }
+
+                        newColoring.put(ts.token(), c);
+                    }
+                });
+
+                setter.setColorings(doc, newColoring);
+                
+                return false;
+            }
+        }
+        
+        return doCompute(info, doc, setter);
+    }
+    
+    boolean doCompute(CompilationInfo info, final Document doc, ErrorDescriptionSetter setter) throws IOException {
         DetectorVisitor v = new DetectorVisitor(info, doc, cancel);
         
         Map<Token, Coloring> newColoring = new IdentityHashMap<>();

@@ -46,12 +46,12 @@ public class LazyHintComputation implements CancellableTask<CompilationInfo> {
         }
     }
 
-    private synchronized void setDelegate(CreatorBasedLazyFixList delegate) {
+    private synchronized void setDelegate(CreatorBasedLazyFixListBase delegate) {
         this.delegate = delegate;
     }
     
     private AtomicBoolean cancelled = new AtomicBoolean();
-    private CreatorBasedLazyFixList delegate;
+    private CreatorBasedLazyFixListBase delegate;
     private boolean isCancelled() {
         return cancelled.get();
     }
@@ -65,7 +65,7 @@ public class LazyHintComputation implements CancellableTask<CompilationInfo> {
         
         boolean cancelled = false;
         
-        List<CreatorBasedLazyFixList> toCompute = new LinkedList<CreatorBasedLazyFixList>();
+        List<CreatorBasedLazyFixListBase> toCompute = new LinkedList<>();
         
         try {
             toCompute.addAll(LazyHintComputationFactory.getAndClearToCompute(file));
@@ -81,7 +81,7 @@ public class LazyHintComputation implements CancellableTask<CompilationInfo> {
                     return;
                 }
                 
-                CreatorBasedLazyFixList l = toCompute.remove(0);
+                CreatorBasedLazyFixListBase l = toCompute.remove(0);
                 
                 setDelegate(l);
                 l.compute(info, this.cancelled);
@@ -95,7 +95,7 @@ public class LazyHintComputation implements CancellableTask<CompilationInfo> {
             }
         } finally {
             if (cancelled && !toCompute.isEmpty()) {
-                for (CreatorBasedLazyFixList l : toCompute) {
+                for (CreatorBasedLazyFixListBase l : toCompute) {
                     LazyHintComputationFactory.addToCompute(file, l);
                 }
             }

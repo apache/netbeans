@@ -40,7 +40,7 @@ import org.openide.util.Lookup;
 @org.openide.util.lookup.ServiceProvider(service=org.netbeans.api.java.source.JavaSourceTaskFactory.class)
 public class LazyHintComputationFactory extends EditorAwareJavaSourceTaskFactory {
     
-    private static Map<FileObject, List<Reference<CreatorBasedLazyFixList>>> file2Creators = new WeakHashMap<FileObject, List<Reference<CreatorBasedLazyFixList>>>();
+    private static Map<FileObject, List<Reference<CreatorBasedLazyFixListBase>>> file2Creators = new WeakHashMap<>();
     
     /** Creates a new instance of LazyHintComputationFactory */
     public LazyHintComputationFactory() {
@@ -59,12 +59,12 @@ public class LazyHintComputationFactory extends EditorAwareJavaSourceTaskFactory
         }
     }
     
-    public static void addToCompute(FileObject file, CreatorBasedLazyFixList list) {
+    public static void addToCompute(FileObject file, CreatorBasedLazyFixListBase list) {
         synchronized (LazyHintComputationFactory.class) {
-            List<Reference<CreatorBasedLazyFixList>> references = file2Creators.get(file);
+            List<Reference<CreatorBasedLazyFixListBase>> references = file2Creators.get(file);
             
             if (references == null) {
-                file2Creators.put(file, references = new ArrayList<Reference<CreatorBasedLazyFixList>>());
+                file2Creators.put(file, references = new ArrayList<>());
             }
             
             references.add(new WeakReference(list));
@@ -73,17 +73,17 @@ public class LazyHintComputationFactory extends EditorAwareJavaSourceTaskFactory
         rescheduleImpl(file);
     }
     
-    public static synchronized List<CreatorBasedLazyFixList> getAndClearToCompute(FileObject file) {
-        List<Reference<CreatorBasedLazyFixList>> references = file2Creators.get(file);
+    public static synchronized List<CreatorBasedLazyFixListBase> getAndClearToCompute(FileObject file) {
+        List<Reference<CreatorBasedLazyFixListBase>> references = file2Creators.get(file);
         
         if (references == null) {
             return Collections.emptyList();
         }
         
-        List<CreatorBasedLazyFixList> result = new ArrayList<CreatorBasedLazyFixList>();
+        List<CreatorBasedLazyFixListBase> result = new ArrayList<>();
         
-        for (Reference<CreatorBasedLazyFixList> r : references) {
-            CreatorBasedLazyFixList c = r.get();
+        for (Reference<CreatorBasedLazyFixListBase> r : references) {
+            CreatorBasedLazyFixListBase c = r.get();
             
             if (c != null) {
                 result.add(c);

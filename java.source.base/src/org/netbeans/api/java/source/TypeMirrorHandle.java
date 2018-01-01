@@ -396,7 +396,19 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
     ElementHandle<? extends Element> getElementHandle() {
         return element;
     }
-    
+
+    public ElementHandle<? extends Element> getElementHandleXXX() {
+        return element;
+    }
+
+    public List<TypeMirrorHandle<? extends TypeMirror>> getTypeMirrorsXXX() {
+        return typeMirrors != null ? typeMirrors : Collections.emptyList();
+    }
+
+    public static TypeMirrorHandle<?> createXXX(TypeKind kind, ElementHandle<? extends Element> element, List<TypeMirrorHandle<? extends TypeMirror>> typeArguments) {
+        return new TypeMirrorHandle<>(kind, element, typeArguments);
+    }
+
     private static class PlaceholderType extends Type implements ReferenceType {
 
         private Type delegate = null;

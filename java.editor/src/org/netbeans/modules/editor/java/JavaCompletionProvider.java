@@ -19,15 +19,26 @@
 
 package org.netbeans.modules.editor.java;
 
+import com.google.gson.Gson;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.ByteArrayInputStream;
+import java.lang.reflect.Constructor;
+import java.net.URI;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 
 import javax.lang.model.element.Element;
+import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
@@ -37,15 +48,21 @@ import org.netbeans.api.editor.completion.Completion;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.ui.ElementJavadoc;
+import org.netbeans.api.whitelist.WhiteListQuery;
 import org.netbeans.editor.ext.ToolTipSupport;
+import org.netbeans.modules.editor.java.CompletionRemoteResource.CompletionShim;
 import org.netbeans.modules.java.completion.JavaCompletionTask;
 import org.netbeans.modules.java.completion.JavaDocumentationTask;
 import org.netbeans.modules.java.completion.JavaTooltipTask;
+import org.netbeans.modules.java.source.remote.api.Parser;
+import org.netbeans.modules.java.source.remote.api.RemoteProvider;
+import org.netbeans.modules.java.source.remote.api.RemoteUtils;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.spi.editor.completion.*;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
+import org.netbeans.spi.editor.completion.support.CompletionUtilities;
 
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -173,6 +190,17 @@ public class JavaCompletionProvider implements CompletionProvider {
                     Source source = Source.create(doc);
                     if (source != null) {
                         if ((queryType & COMPLETION_QUERY_TYPE) != 0) {
+                            URI base = RemoteProvider.getRemoteURL(source.getFileObject());
+            
+                            if (base != null) {
+                                WhiteListQuery.WhiteList whiteList = WhiteListQuery.getWhiteList(source.getFileObject());
+                                Parser.Config conf = Parser.Config.create(source.getFileObject());
+                                CompletionShim cs = RemoteUtils.readAndDecode(conf, base, "/completion/compute", CompletionShim.class, "caretOffset=" + caretOffset);
+                                
+                                for (CompletionRemoteResource.CompletionItemShim cis : cs.completions) {
+                                    resultSet.addItem(JavaCompletionItem.create(cis.content, whiteList));
+                                }
+                            } else {
                             Set<JavaCompletionTask.Options> options = EnumSet.noneOf(JavaCompletionTask.Options.class);
                             Object prop = component != null ? component.getDocument().getProperty(SKIP_ACCESSIBILITY_CHECK) : null;
                             if (prop instanceof String && Boolean.parseBoolean((String)prop)) {
@@ -209,6 +237,7 @@ public class JavaCompletionProvider implements CompletionProvider {
                             anchorOffset = task.getAnchorOffset();
                             if (anchorOffset > -1) {
                                 resultSet.setAnchorOffset(anchorOffset);
+                            }
                             }
                         } else if (queryType == TOOLTIP_QUERY_TYPE) {
                             JavaTooltipTask task = JavaTooltipTask.create(caretOffset, new Callable<Boolean>() {

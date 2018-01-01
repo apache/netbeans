@@ -22,6 +22,7 @@ import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.Repository;
+import org.openide.util.Utilities;
 import org.openide.util.actions.SystemAction;
 
 /**
@@ -53,7 +54,11 @@ public class CustomWritableSystemFileSystemTest extends NbTestCase {
         ModuleLayeredFileSystem mlf = (ModuleLayeredFileSystem) writable;
         assertTrue("Expected fs" + mlf.getWritableLayer(), mlf.getWritableLayer() instanceof PoohFileSystem);
         PoohFileSystem pooh = (PoohFileSystem)mlf.getWritableLayer();
-        assertEquals("Proper value of nb user", getWorkDirPath(), pooh.netbeansUser);
+        if (Utilities.isWindows()) {
+            assertEquals("Proper value of nb user", 0, String.CASE_INSENSITIVE_ORDER.compare(getWorkDirPath(), pooh.netbeansUser));
+        } else {
+            assertEquals("Proper value of nb user", getWorkDirPath(), pooh.netbeansUser);
+        }
     }
 
     public static class PoohFileSystem extends FileSystem {

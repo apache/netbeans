@@ -384,9 +384,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 if ((decl.mods.flags & Flags.ENUM) == 0) {
                     decl.init = null;
                 }
-                if (decl.type.getKind() == TypeKind.ERROR) {
-                    decl.sym.type = decl.type = syms.objectType;
-                }
+                decl.sym.type = decl.type = error2Object(decl.type);
                 clearAnnotations(decl.sym.getMetadata());
                 return super.visitVariable(node, p);
             }

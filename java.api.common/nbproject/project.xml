@@ -444,6 +444,7 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
+                <friend>com.sun.tools.java.analysis.parfait</friend>
                 <friend>org.netbeans.modules.android.project</friend>
                 <friend>org.netbeans.modules.apisupport.ant</friend>
                 <friend>org.netbeans.modules.avatar_js.project</friend>

@@ -23,6 +23,10 @@
 
 Apache NetBeans is an open source development environment, tooling platform, and application framework.
 
+# Download
+
+Developer builds can be downloaded from https://builds.apache.org/view/Incubator%20Projects/job/incubator-netbeans-release/
+
 ### Requirements
 
   * Git

@@ -23,10 +23,6 @@
 
 Apache NetBeans is an open source development environment, tooling platform, and application framework.
 
-# Download
-
-Developer builds can be downloaded from https://builds.apache.org/view/Incubator%20Projects/job/incubator-netbeans-release/
-
 ### Requirements
 
   * Git
@@ -61,6 +57,14 @@ $ ant tryme
 [Subscribe](mailto:users-subscribe@netbeans.incubator.apache.org) or [mail](mailto:users@netbeans.incubator.apache.org) the [users@netbeans.incubator.apache.org](mailto:users@netbeans.incubator.apache.org) list - Ask questions, find answers, and also help other users.
 
 [Subscribe](mailto:dev-subscribe@netbeans.incubator.apache.org) or [mail](mailto:dev@netbeans.incubator.apache.org) the [dev@netbeans.incubator.apache.org](mailto:dev@netbeans.incubator.apache.org) list - Join developement discussions, propose new ideas and connect with contributors.
+
+### Download
+
+Developer builds can be downloaded from https://builds.apache.org/job/incubator-netbeans-release/
+
+### Reporting Bugs
+
+Bugs should be reported to https://issues.apache.org/jira/projects/NETBEANS/issues/
 
 ### Full History
 

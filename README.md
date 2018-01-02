@@ -58,6 +58,14 @@ $ ant tryme
 
 [Subscribe](mailto:dev-subscribe@netbeans.incubator.apache.org) or [mail](mailto:dev@netbeans.incubator.apache.org) the [dev@netbeans.incubator.apache.org](mailto:dev@netbeans.incubator.apache.org) list - Join developement discussions, propose new ideas and connect with contributors.
 
+### Download
+
+Developer builds can be downloaded from https://builds.apache.org/job/incubator-netbeans-release/
+
+### Reporting Bugs
+
+Bugs should be reported to https://issues.apache.org/jira/projects/NETBEANS/issues/
+
 ### Full History
 
 The origins of the code in this repository are older than its Apache existence.

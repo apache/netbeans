@@ -350,6 +350,17 @@
     <copy file="../ide/launcher/netbeans.conf" todir="${netbeans.dest.dir}/etc" overwrite="true"/>
     <copy file="../ide/launcher/netbeans.clusters" todir="${netbeans.dest.dir}/etc" overwrite="true"/>
 
+    <mkdir dir="${nb.build.dir}/license-temp" />
+    <concat destfile="${nb.build.dir}/license-temp/LICENSE.txt">
+        <filelist dir="${nb_all}/nbbuild" files="license-dialog-stub.txt" />
+        <filelist dir="${netbeans.dest.dir}" files="LICENSE" />
+    </concat>
+
+    <jar destfile="${netbeans.dest.dir}/nb/core/org-netbeans-upgrader.jar"
+         update="true"
+         compress="${build.package.compress}" >
+        <zipfileset dir="${nb.build.dir}/license-temp" prefix="org/netbeans/license" />
+    </jar>
     <echo message="${netbeans.dest.dir}/${nb.cluster.platform.dir}/lib/nbexec" />
     <fixcrlf eol="lf" srcdir="${netbeans.dest.dir}" >
       <include name="etc/netbeans.conf" />
@@ -1594,7 +1605,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             </tokenfilter>
         </filterchain>
     </concat>
-    <condition property="source.zip.readme" else="${nb_all}/o.n.bootstrap/readme/README-src.txt" value="${nb_all}/ide.branding/does-not-exist-yet">
+    <condition property="source.zip.readme" else="${nb_all}/o.n.bootstrap/readme/README-src.txt"
+                                            value="${nb_all}/ide.branding/README-src.txt">
         <isset property="has.nb.cluster" />
     </condition>
     <zip zipfile="${nb.build.dir}/${cluster.config}-src-${buildnum}.zip" duplicate="preserve">

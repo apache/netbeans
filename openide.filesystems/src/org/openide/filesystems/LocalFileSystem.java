@@ -33,6 +33,7 @@ import java.io.ObjectInputValidation;
 import java.io.OutputStream;
 import java.io.SyncFailedException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
@@ -403,7 +404,7 @@ public class LocalFileSystem extends AbstractFileSystem {
         try {
             file = getFile(name);
             fis = new BufferedInputStream(Files.newInputStream(file.toPath()));
-        } catch (IOException exc) {
+        } catch (IOException | InvalidPathException exc) {
             FileNotFoundException fnfException = new FileNotFoundException(exc.getMessage());
             if ((file == null) || !file.exists()) {
                 ExternalUtil.annotate(fnfException,
@@ -421,14 +422,17 @@ public class LocalFileSystem extends AbstractFileSystem {
         if (!f.exists()) {
             f.getParentFile().mkdirs();
         }
-        OutputStream retVal = new BufferedOutputStream(Files.newOutputStream(f.toPath()));
+        try {
+            OutputStream retVal = new BufferedOutputStream(Files.newOutputStream(f.toPath()));
 
-        // workaround for #42624
-        if (BaseUtilities.isMac()) {
-            retVal = getOutputStreamForMac42624(retVal, name);
+            // workaround for #42624
+            if (BaseUtilities.isMac()) {
+                retVal = getOutputStreamForMac42624(retVal, name);
+            }
+            return retVal;
+        } catch (InvalidPathException ex) {
+            throw new IOException(ex);
         }
-
-        return retVal;
     }
 
     private OutputStream getOutputStreamForMac42624(final OutputStream originalStream, final String name) {

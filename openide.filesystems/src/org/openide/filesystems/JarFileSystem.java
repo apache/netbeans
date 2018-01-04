@@ -24,7 +24,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -35,6 +34,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -505,6 +505,8 @@ public class JarFileSystem extends AbstractFileSystem {
             //is = j.getInputStream (je);
             try (InputStream is = getInputStream4336753(jf, je); OutputStream os = Files.newOutputStream(f.toPath())) {
                 FileUtil.copy(is, os);
+            } catch (InvalidPathException ex) {
+                throw new IOException(ex);
             }
         }
 

@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.StandardOpenOption;
 import java.util.logging.Handler;
 import java.util.regex.Pattern;
@@ -45,7 +46,7 @@ public final class NbLogging {
                 File debugLog = new File(System.getProperty("java.io.tmpdir"), "TopLogging.log"); // NOI18N
                 System.err.println("Logging sent to: " + debugLog); // NOI18N
                 _D = new PrintStream(Files.newOutputStream(debugLog.toPath(), StandardOpenOption.APPEND));
-            } catch (IOException x) {
+            } catch (IOException | InvalidPathException x) {
                 x.printStackTrace();
             }
         }

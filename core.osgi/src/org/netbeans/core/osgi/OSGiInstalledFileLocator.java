@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -135,7 +136,7 @@ class OSGiInstalledFileLocator extends InstalledFileLocator {
                         }
                     }
                     return f;
-                } catch (IOException x) {
+                } catch (IOException | InvalidPathException x) {
                     Exceptions.printStackTrace(x);
                 }
             }

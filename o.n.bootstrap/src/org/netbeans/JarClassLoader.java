@@ -37,6 +37,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
 import java.security.Policy;
@@ -707,8 +708,10 @@ public class JarClassLoader extends ProxyClassLoader {
                 while ((j = is.read(buf)) != -1) {
                     os.write(buf, 0, j);
                 }
+            } catch (InvalidPathException ex) {
+                throw new IOException(ex);
             }
- 
+
             doCloseJar();
             file = temp;
             dead = true;
@@ -858,7 +861,7 @@ public class JarClassLoader extends ProxyClassLoader {
             if (maniF.canRead()) {
                 try (InputStream istm = Files.newInputStream(maniF.toPath())) {
                     mf.read(istm);
-                } catch (IOException ex) {
+                } catch (IOException | InvalidPathException ex) {
                     Exceptions.printStackTrace(ex);
                 }
             }
@@ -886,6 +889,8 @@ public class JarClassLoader extends ProxyClassLoader {
                     count += is.read(data, count, len - count);
                 }
                 return data;
+            } catch (InvalidPathException ex) {
+                throw new IOException(ex);
             }
         }
         

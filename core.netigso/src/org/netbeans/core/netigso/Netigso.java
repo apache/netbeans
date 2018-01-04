@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.security.ProtectionDomain;
 import java.util.Arrays;
 import java.util.Collection;
@@ -454,6 +455,8 @@ implements Cloneable, Stamps.Updater {
                     LOG.log(Level.FINE, "Updating bundle {0}", original.getLocation());
                     try (InputStream is = Files.newInputStream(m.getJarFile().toPath())) {
                         original.update(is);
+                    } catch (InvalidPathException ex) {
+                        throw new IOException(ex);
                     }
                     b = original;
                 } else {

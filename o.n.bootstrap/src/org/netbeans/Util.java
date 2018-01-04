@@ -21,6 +21,7 @@ package org.netbeans;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -67,6 +68,8 @@ public final class Util {
             while ((i = is.read(buf)) != -1) {
                 os.write(buf, 0, i);
             }
+        } catch (InvalidPathException ex) {
+            throw new IOException(ex);
         }
         err.fine("Made " + physicalModuleFile);
         return physicalModuleFile;

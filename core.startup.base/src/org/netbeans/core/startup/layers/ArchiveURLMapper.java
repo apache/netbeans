@@ -30,6 +30,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -243,6 +244,8 @@ public class ArchiveURLMapper extends URLMapper {
                 }
                 try (InputStream is = fo.getInputStream(); OutputStream os = Files.newOutputStream(copy.toPath())) {
                     FileUtil.copy(is, os);
+                } catch (InvalidPathException ex) {
+                    throw new IOException(ex);
                 }
                 copiedJARs.put(archiveFileURI, copy);
             }

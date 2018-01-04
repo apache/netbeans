@@ -29,6 +29,7 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.net.UnknownServiceException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -140,7 +141,11 @@ public class NbinstURLStreamHandler extends URLStreamHandler {
         public InputStream getInputStream() throws IOException {
             this.connect();
             if (iStream == null) {
-                iStream = Files.newInputStream(f.toPath());
+                try {
+                    iStream = Files.newInputStream(f.toPath());
+                } catch (InvalidPathException ex) {
+                    throw new IOException(ex);
+                }
             }
             return iStream;
         }

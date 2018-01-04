@@ -35,6 +35,7 @@ import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -201,7 +202,7 @@ public final class Stamps {
             }
 
             return master;
-        } catch (IOException ex) {
+        } catch (IOException | InvalidPathException ex) {
             LOG.log(Level.WARNING, "Cannot read cache " + cacheFile, ex); // NOI18N
             return null;
         }
@@ -454,7 +455,7 @@ public final class Stamps {
                 }
             }
             return areCachesOK;
-        } catch (IOException ex) {
+        } catch (IOException | InvalidPathException ex) {
             ex.printStackTrace();
             return false;
         }
@@ -568,7 +569,7 @@ public final class Stamps {
                 }
             }
             zip.close();
-        } catch (IOException ex) {
+        } catch (IOException | InvalidPathException ex) {
             LOG.log(Level.INFO, "Failed to populate {0}", cache);
         }
     }
@@ -585,7 +586,7 @@ public final class Stamps {
                 if (Clusters.compareDirs(dis)) {
                     return false;
                 }
-            } catch (IOException ex) {
+            } catch (IOException | InvalidPathException ex) {
                 return clustersChanged = true;
             }
         } else {
@@ -688,7 +689,7 @@ public final class Stamps {
                 updater.flushCaches(dos);
                 dos.close();
                 LOG.log(Level.FINE, "Done Storing cache {0}", cacheFile);
-            } catch (IOException ex) {
+            } catch (IOException | InvalidPathException ex) {
                 LOG.log(Level.WARNING, "Error saving cache {0}", cacheFile);
                 LOG.log(Level.INFO, ex.getMessage(), ex); // NOI18N
                 delete = true;

@@ -21,6 +21,7 @@ package org.netbeans.core.startup.logging;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -85,7 +86,7 @@ final class MessagesHandler extends StreamHandler {
     private void initStream() {
         try {
             setOutputStream(Files.newOutputStream(files[0].toPath()));
-        } catch (IOException ex) {
+        } catch (IOException | InvalidPathException ex) {
             setOutputStream(System.err);
         }
     }

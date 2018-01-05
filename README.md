@@ -57,3 +57,44 @@ $ ant tryme
 [Subscribe](mailto:users-subscribe@netbeans.incubator.apache.org) or [mail](mailto:users@netbeans.incubator.apache.org) the [users@netbeans.incubator.apache.org](mailto:users@netbeans.incubator.apache.org) list - Ask questions, find answers, and also help other users.
 
 [Subscribe](mailto:dev-subscribe@netbeans.incubator.apache.org) or [mail](mailto:dev@netbeans.incubator.apache.org) the [dev@netbeans.incubator.apache.org](mailto:dev@netbeans.incubator.apache.org) list - Join developement discussions, propose new ideas and connect with contributors.
+
+### Download
+
+Developer builds can be downloaded from https://builds.apache.org/job/incubator-netbeans-release/
+
+### Reporting Bugs
+
+Bugs should be reported to https://issues.apache.org/jira/projects/NETBEANS/issues/
+
+### Full History
+
+The origins of the code in this repository are older than its Apache existence.
+As such significant part of the history (before the code was donated to Apache)
+is kept in an independent repository. To fully understand the code
+you may want to merge the modern and ancient versions together:
+
+```bash
+$ git clone https://github.com/apache/incubator-netbeans.git
+$ cd incubator-netbeans
+$ git log uihandler/arch.xml
+```
+
+This gives you just few log entries including the initial checkin and
+change of the file headers to Apache. But then the magic comes:
+
+```bash
+$ git remote add emilian https://github.com/emilianbold/netbeans-releases.git
+$ git fetch emilian # this takes a while, the history is huge!
+$ git replace 6daa72c98 32042637
+```
+
+When you search the log, or use the blame tool, the full history is available:
+
+```bash
+$ git log uihandler/arch.xml
+$ git blame uihandler/arch.xml
+```
+
+Many thanks to Emilian Bold who converted the ancient history to his
+[Git repository](https://github.com/emilianbold/netbeans-releases)
+and made the magic possible!

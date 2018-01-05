@@ -214,4 +214,22 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                                                        "cache/s1/java/15/classes/test/Test3.sig")),
                      createdFiles);
     }
+
+    public void testRepairFieldBrokenGenerics() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; import java.util.List; public class Test4 { public List<Undef> test; }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
+        //TODO: check file content!!!
+    }
+
 }

@@ -29,6 +29,7 @@ import java.security.Permission;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -39,6 +40,8 @@ import java.util.logging.Logger;
 import junit.framework.Assert;
 import org.netbeans.core.startup.InstalledFileLocatorImpl;
 import org.openide.modules.Places;
+import org.openide.util.Exceptions;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -61,6 +64,7 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
     
     public static void initialize(String prefix, Mode mode, Set<String> allowedFiles) {
         System.setProperty("counting.security.disabled", "true");
+        inSubtree("", "");
 
         if (System.getSecurityManager() instanceof CountingSecurityManager) {
             // ok
@@ -161,7 +165,13 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
             setCnt(getCnt() + 1);
             pw.println("checkRead: " + file);
             if (who.get(file) == null) {
-                Exception now = new Exception("checkRead: " + file);
+                File home = new File(System.getProperty("netbeans.home"));
+                try {
+                    home = home.getCanonicalFile();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                Exception now = new Exception("canon: " + home + " home: " + System.getProperty("netbeans.home") + " dirs: " + dirs + " prefix: " + prefix + " checkRead: " + file);
                 who.put(file, now);
                 now.printStackTrace(pw);
                 pw.flush();
@@ -172,7 +182,7 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
     @Override
     public void checkRead(String file, Object context) {
         /*
-        if (file.startsWith(prefix)) {
+        if (inSubtree(file, prefix)) {
             cnt++;
             pw.println("checkRead2: " + file);
         }
@@ -385,7 +395,7 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
             // still initializing
             return false;
         }
-        if (!file.startsWith(ud)) {
+        if (!inSubtree(file, ud)) {
             return false;
         }
 
@@ -408,7 +418,7 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
             }
         }
         
-        if (file.startsWith(ud)) {
+        if (inSubtree(file, ud)) {
             if (f.startsWith("/")) {
                 f = f.substring(1);
             }
@@ -417,11 +427,11 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
             }
         }
 
-        return prefix == null || file.startsWith(prefix);
+        return prefix == null || inSubtree(file, prefix);
     }
 
     private boolean acceptFileRead(String file) {
-        if (prefix != null && !file.startsWith(prefix)) {
+        if (prefix != null && !inSubtree(file, prefix)) {
             return false;
         }
         if (acceptAll) {
@@ -433,7 +443,7 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
         }
         for (Class c : this.getClassContext()) {
             if (c.getName().equals(InstalledFileLocatorImpl.class.getName())) {
-                if (file.startsWith(Places.getCacheDirectory().getPath())) {
+                if (inSubtree(file, Places.getCacheDirectory().getPath())) {
                     return false;
                 }
                 if (file.equals(System.getProperty("netbeans.home"))) {
@@ -461,26 +471,26 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
         if (file.endsWith("org-netbeans-modules-nbjunit.jar")) {
             return false;
         }
-        if (file.startsWith(System.getProperty("java.home").replaceAll("[/\\\\][^/\\\\]*$", ""))) {
+        if (inSubtree(file, System.getProperty("java.home").replaceAll("[/\\\\][^/\\\\]*$", ""))) {
             return false;
         }
-        if (file.startsWith("/usr/jdk/packages/javax.help-")) {
-            // ignore javahelp location on solaris
+        if (inSubtree(file, "/usr/jdk/packages/javax.help-")) {
+            // iile.startsWith(System.getProperty("netbeans.home") + File.separator + "core")gnore javahelp location on solaris
             return false;
         }
-        if (file.startsWith(System.getProperty("netbeans.home") + File.separator + "lib")) {
+        if (inSubtree(file, System.getProperty("netbeans.home") + File.separator + "lib")) {
             return false;
         }
-        if (file.startsWith(System.getProperty("netbeans.home") + File.separator + "core")) {
+        if (inSubtree(file, System.getProperty("netbeans.home") + File.separator + "core")) {
             return false;
         }
         String dirs = System.getProperty("netbeans.dirs");
         if (dirs != null) {
             for (String dir : dirs.split(File.pathSeparator)) {
-                if (file.startsWith(dir + File.separator + "lib")) {
+                if (inSubtree(file, dir + File.separator + "lib")) {
                     return false;
                 }
-                if (file.startsWith(dir + File.separator + "core")) {
+                if (inSubtree(file, dir + File.separator + "core")) {
                     return false;
                 }
             }
@@ -489,12 +499,20 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
         dirs = System.getProperty("java.ext.dirs");
         if (dirs != null) {
             for (String dir : dirs.split(File.pathSeparator)) {
-                if (file.startsWith(dir)) {
+                if (inSubtree(file, dir)) {
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    private static boolean inSubtree(String file, String dir) {
+        if (Utilities.isWindows()) {
+            file = file.replace(File.separatorChar, '/').toLowerCase(Locale.ENGLISH);
+            dir = dir.replace(File.separatorChar, '/').toLowerCase(Locale.ENGLISH);
+        }
+        return file.startsWith(dir);
     }
 
     @Override

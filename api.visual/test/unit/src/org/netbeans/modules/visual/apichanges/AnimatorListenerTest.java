@@ -39,12 +39,46 @@ public class AnimatorListenerTest extends VisualTestCase {
         super (name);
     }
 
+    @Override
+    protected boolean runInEQ() {
+        return false;
+    }
+
     @RandomlyFails
-    public void testAnimatorListener () {
+    public void testAnimatorListener () throws InterruptedException, InvocationTargetException {
+        Scene[] scene = { null };
+        SwingUtilities.invokeAndWait (new Runnable() {
+            @Override
+            public void run () {
+                scene[0] = initScene();
+            }
+        });
+
+        final JFrame[] frame = new JFrame[1];
+        SwingUtilities.invokeAndWait (new Runnable() {
+            @Override
+            public void run () {
+                frame[0] = showFrame (scene[0]);
+            }
+        });
+
+        Thread.sleep (2000);
+
+        SwingUtilities.invokeAndWait (new Runnable() {
+            @Override
+            public void run () {
+                frame[0].setVisible (false);
+                frame[0].dispose ();
+            }
+        });
+
+        compareReferenceFiles ();
+    }
+
+    private Scene initScene() {
         final Scene scene = new Scene ();
         Widget widget = new Widget (scene);
         scene.addChild (widget);
-
         AnimatorListener listener = new AnimatorListener() {
             public void animatorStarted (AnimatorEvent event) {
                 getRef ().println ("Animator started");
@@ -61,36 +95,13 @@ public class AnimatorListenerTest extends VisualTestCase {
             }
             public void animatorPostTick (AnimatorEvent event) {
                 if (event.getProgress () >= 1.0)
-                getRef ().println ("Animator post-tick: " + event.getProgress ());
+                    getRef ().println ("Animator post-tick: " + event.getProgress ());
             }
         };
         scene.getSceneAnimator ().getPreferredLocationAnimator ().addAnimatorListener (listener);
         widget.setPreferredLocation (new Point (0, 0));
         scene.getSceneAnimator ().animatePreferredLocation (widget, new Point (100, 100));
-
-        final JFrame[] frame = new JFrame[1];
-        try {
-            SwingUtilities.invokeAndWait (new Runnable() {
-                public void run () {
-                    frame[0] = showFrame (scene);
-                }
-            });
-
-            Thread.sleep (2000);
-
-            SwingUtilities.invokeAndWait (new Runnable() {
-                public void run () {
-                    frame[0].setVisible (false);
-                    frame[0].dispose ();
-                }
-            });
-        } catch (InterruptedException e) {
-            throw new AssertionError (e);
-        } catch (InvocationTargetException e) {
-            throw new AssertionError (e);
-        }
-
-        compareReferenceFiles ();
+        return scene;
     }
 
 }

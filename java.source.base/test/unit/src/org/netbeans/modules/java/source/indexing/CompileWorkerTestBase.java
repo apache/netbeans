@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.source.indexing;
 
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,10 +27,15 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.ElementFilter;
 import javax.swing.event.ChangeListener;
+import javax.tools.JavaFileObject;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.queries.SourceLevelQuery;
+import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
+import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.indexing.CompileWorker.ParsingOutput;
@@ -81,6 +87,44 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
                                                        "cache/s1/java/15/classes/test/Test2a.sig")),
                      createdFiles);
         assertFalse(ErrorsCache.isInError(getRoot(), true));
+    }
+
+    public void testStoreAndReadParameterNames() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java",
+                                                                      "package test; public class Test { public void test(int parameter) { } }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+                     createdFiles);
+        assertFalse(ErrorsCache.isInError(getRoot(), false));
+
+        JavaSource js = JavaSource.forFileObject(src.getFileObject("test/Test.java"));
+
+        js = JavaSource.create(js.getClasspathInfo());
+        js.runUserActionTask(new Task<CompilationController>() {
+            @Override
+            public void run(CompilationController cc) throws Exception {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+                TypeElement clazz = cc.getElements().getTypeElement("test.Test");
+                assertEquals(JavaFileObject.Kind.CLASS, ((ClassSymbol) clazz).classfile.getKind());
+                assertEquals("parameter", ElementFilter.methodsIn(clazz.getEnclosedElements())
+                                                       .iterator()
+                                                       .next()
+                                                       .getParameters()
+                                                       .get(0)
+                                                       .getSimpleName()
+                                                       .toString());
+            }
+        }, true);
     }
 
     protected ParsingOutput runIndexing(List<CompileTuple> files, List<CompileTuple> virtualFiles) throws Exception {

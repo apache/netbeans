@@ -19,13 +19,7 @@
 
 package org.netbeans.modules.project.ui.groups;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.PrintStream;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.sendopts.CommandException;
 import org.netbeans.spi.sendopts.Env;
 import org.openide.util.NbBundle.Messages;
@@ -33,8 +27,6 @@ import static org.netbeans.modules.project.ui.groups.Bundle.*;
 import org.netbeans.spi.sendopts.Arg;
 import org.netbeans.spi.sendopts.Description;
 import org.netbeans.spi.sendopts.ArgsProcessor;
-import org.openide.util.Exceptions;
-import org.openide.util.RequestProcessor;
 
 public class GroupOptionProcessor implements ArgsProcessor {
     @Arg(longName="open-group")
@@ -44,7 +36,7 @@ public class GroupOptionProcessor implements ArgsProcessor {
     )
     @Messages({
         "GroupOptionProcessor.open.name=--open-group NAME",
-        "GroupOptionProcessor.open.desc=open a project group by name"
+        "GroupOptionProcessor.open.desc=open a project group by shortened or full name (or unique substring)"
     })
     public String openOption;
     @Arg(longName="close-group")
@@ -68,14 +60,26 @@ public class GroupOptionProcessor implements ArgsProcessor {
     })
     @Override public void process(Env env) throws CommandException {
         if (openOption != null) {
+            Group found = null;
             for (Group g : Group.allGroups()) {
                 if (g.id.equals(openOption) || g.getName().equals(openOption)) {
-                    supressWinsysLazyLoading();
-                    Group.setActiveGroup(g, false);
-                    return;
+                    found = g;
+                    break;
                 }
             }
-            throw new CommandException(2, GroupOptionProcessor_no_such_group(openOption));
+            if (found == null) {
+                for (Group g : Group.allGroups()) {
+                    if (g.id.contains(openOption) || g.getName().contains(openOption)) {
+                        found = g;
+                        break;
+                    }
+                }
+            }
+            if (found == null) {
+                throw new CommandException(2, GroupOptionProcessor_no_such_group(openOption));
+            }
+            supressWinsysLazyLoading();
+            Group.setActiveGroup(found, false);
         } else if (closeOption) {
             supressWinsysLazyLoading();
             Group.setActiveGroup(null, false);

@@ -30,7 +30,7 @@ Apache NetBeans is an open source development environment, tooling platform, and
   * Oracle JDK 8 (to build NetBeans)
   * Oracle JDK 9 (to run NetBeans)
 
-**Note:** NetBeans also runs with JDK 8, although then it will not include tools for the JDK 9 Shell.
+**Note:** NetBeans also runs with Oracle JDK 8, although then it will not include tools for the Oracle JDK 9 Shell.
 
 ### Building NetBeans
 

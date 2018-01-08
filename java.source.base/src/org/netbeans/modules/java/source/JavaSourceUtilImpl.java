@@ -143,6 +143,8 @@ public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preproce
         final JavaFileObject toCompile = FileObjects.memoryFileObject(
                 ncs[0],
                 ncs[1]+'.'+file.getExt(),
+                file.toURI(),
+                System.currentTimeMillis(),
                 content);
         boolean success = false;
         final TransactionContext ctx = TransactionContext.beginTrans()

@@ -1605,8 +1605,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             </tokenfilter>
         </filterchain>
     </concat>
-    <condition property="source.zip.readme" else="${nb_all}/o.n.bootstrap/readme/README-src.txt"
-                                            value="${nb_all}/ide.branding/README-src.txt">
+    <condition property="source.zip.readme" else="${nb_all}/README.md"
+                                            value="${nb_all}/README.md">
         <isset property="has.nb.cluster" />
     </condition>
     <zip zipfile="${nb.build.dir}/${cluster.config}-src-${buildnum}.zip" duplicate="preserve">
@@ -1623,7 +1623,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <zipfileset file="${nb.build.dir}/NOTICE" />
       <zipfileset file="${nb.build.dir}/LICENSE" />
       <zipfileset file="${nb_all}/DISCLAIMER" />
-      <zipfileset file="${source.zip.readme}" fullpath="README.txt" erroronmissingarchive="false" />
+      <zipfileset file="${source.zip.readme}" fullpath="README.md" erroronmissingarchive="false" />
     </zip>
   </target>
 
@@ -2138,7 +2138,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <exclude name="html.editor/src/org/netbeans/modules/html/editor/resources/DTDs/*/catalog" /> <!--no degree of creativity-->
             <exclude name="hudson.subversion/test/unit/src/org/netbeans/modules/hudson/subversion/sample-entries-file" /> <!--test data-->
             <exclude name="ide/launcher/macosx/NetBeansLauncher/ReadMe.rtf" /> <!--does not natively support comments-->
-            <exclude name="ide.branding/README-src.txt" /> <!--README-->
             <exclude name="j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/dd/resources/*.xsd" /> <!-- XSDs for usage at runtime and code generation - the XSDs are not modified, so covered by https://www.apache.org/legal/resolved.html#category-b -->
             <exclude name="j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/ui/resources/*.xml" /> <!-- user visible file template -->
             <exclude name="j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/wizard/jpacontroller/resources/*.txt" /> <!-- user visible file template -->

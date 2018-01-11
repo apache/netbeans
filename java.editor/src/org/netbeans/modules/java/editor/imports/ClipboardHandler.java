@@ -469,7 +469,19 @@ public class ClipboardHandler {
                                 private void handleDeclaration() {
                                     int s = (int) parameter.getTrees().getSourcePositions().getStartPosition(parameter.getCompilationUnit(), getCurrentPath().getLeaf());
                                     int e = (int) parameter.getTrees().getSourcePositions().getEndPosition(parameter.getCompilationUnit(), getCurrentPath().getLeaf());
-                                    javax.lang.model.element.Element el = parameter.getTrees().getElement(getCurrentPath());
+                                    javax.lang.model.element.Element el = null;
+                                    try {
+                                        el = parameter.getTrees().getElement(getCurrentPath());
+                                    } catch (AssertionError ignored) {
+                                        // Probably related to the Java - source issue
+                                        // reported in NETBEANS-267, selecting the entire
+                                        // contents of the report's Test.java file and
+                                        // copying causes an AssertionError deep within
+                                        // the com.sun.tools.javac package from the
+                                        // getElement() call.
+                                        // As a temporary work-around, catch the
+                                        // AssertionError and ignore it.
+                                    }
 
                                     if (el != null && ((start <= s && s <= end) || (start <= e && e <= end))) {
                                         simple2ImportFQN.remove(el.getSimpleName().toString());

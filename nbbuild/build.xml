@@ -321,12 +321,13 @@
   <!-- Use of nbmerge target has the effect of automatically depending on all-X for every module. -->
   <!-- It also runs deltree(dir=wherever) and copydir(src=../X/netbeans,dest=wherever) to create the IDE install. -->
 
-  <target name="build-nozip" depends="init,download-selected-extbins,clean-cluster-flags,build-clusters,create-mandatory-files-for-binary,create-netbeans-import,finish-build-platform,finish-build-nb,add-junit" description="Build the IDE but do not create a final ZIP file."/>
+  <target name="build-nozip" depends="init,download-selected-extbins,clean-cluster-flags,build-clusters,create-mandatory-files-for-binary,create-netbeans-import,finish-build,add-junit" description="Build the IDE but do not create a final ZIP file."/>
   <target name="-check-nb-cluster" depends="init">
        <condition property="has.nb.cluster">
            <contains string="${nb.clusters.list}" substring="nb.cluster.nb" />
        </condition>
   </target>
+  <target name="finish-build" depends="finish-build-platform,finish-build-nb"/>
   <target name="finish-build-platform" depends="init,-check-nb-cluster" unless="has.nb.cluster">
     <copy file="../o.n.bootstrap/readme/README-bin.txt" tofile="${netbeans.dest.dir}/README.txt" overwrite="true"/>
     <fixcrlf eol="lf" srcdir="${netbeans.dest.dir}" >

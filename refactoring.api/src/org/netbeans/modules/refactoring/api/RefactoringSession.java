@@ -144,7 +144,7 @@ public final class RefactoringSession {
                     DataObject[] dataObjects = DataObject.getRegistry().getModified();
                     Arrays.asList(dataObjects)
                             .stream()
-                            .forEach(dataObject -> {
+                            .forEachOrdered(dataObject -> {
                                 SaveCookie cookie = dataObject.getLookup().lookup(SaveCookie.class);
                                 try {
                                     cookie.save();
@@ -410,9 +410,7 @@ public final class RefactoringSession {
                 @Override
                 public RefactoringElement next() {
                     if (index < internalList.size()) {
-                        RefactoringElementImplementation implementation = internalList.get(index);
-                        ++index;
-                        return new RefactoringElement(implementation);
+                        return new RefactoringElement(internalList.get(index++));
                     } else {
                         return new RefactoringElement(inner2.next());
                     }

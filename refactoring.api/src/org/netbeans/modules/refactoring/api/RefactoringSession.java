@@ -213,7 +213,7 @@ public final class RefactoringSession {
 
     private Problem reallyUndoRefactoring(boolean saveAfterDone) {
         try {
-            ListIterator internalListIterator = internalList.listIterator(internalList.size());
+            ListIterator<RefactoringElementImplementation> internalListIterator = internalList.listIterator(internalList.size());
             fireProgressListenerStart(0, internalList.size() + 1);
             ArrayList<RefactoringElementImplementation> fileChanges = SPIAccessor.DEFAULT.getFileChanges(bag);
             ArrayList<Transaction> commits = SPIAccessor.DEFAULT.getCommits(bag);
@@ -235,7 +235,7 @@ public final class RefactoringSession {
             SPIAccessor.DEFAULT.getCommits(bag).forEach((commit) -> SPIAccessor.DEFAULT.sum(commit));
             while (internalListIterator.hasPrevious()) {
                 fireProgressListenerStep();
-                RefactoringElementImplementation element = (RefactoringElementImplementation) internalListIterator.previous();
+                RefactoringElementImplementation element = internalListIterator.previous();
                 changeRefactoringElement(element, false);
             }
             if (saveAfterDone) {
@@ -347,7 +347,7 @@ public final class RefactoringSession {
         @Override
         public Iterator<RefactoringElement> iterator() {
             return new Iterator() {
-                
+
                 private final Iterator<RefactoringElementImplementation> inner2 = SPIAccessor.DEFAULT.getFileChanges(bag).iterator();
                 private int index = 0;
 

@@ -144,7 +144,7 @@ public final class RefactoringSession {
                     DataObject[] dataObjects = DataObject.getRegistry().getModified();
                     Arrays.asList(dataObjects)
                             .stream()
-                            .forEachOrdered(dataObject -> {
+                            .forEach(dataObject -> {
                                 SaveCookie cookie = dataObject.getLookup().lookup(SaveCookie.class);
                                 try {
                                     cookie.save();

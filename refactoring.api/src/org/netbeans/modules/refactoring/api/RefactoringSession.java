@@ -23,6 +23,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
@@ -142,8 +143,7 @@ public final class RefactoringSession {
                 if (saveAfterDone) {
                     LifecycleManager.getDefault().saveAll();
                     DataObject[] dataObjects = DataObject.getRegistry().getModified();
-                    Arrays.asList(dataObjects)
-                            .stream()
+                    Stream.of(dataObjects)
                             .forEach(dataObject -> {
                                 SaveCookie cookie = dataObject.getLookup().lookup(SaveCookie.class);
                                 try {
@@ -229,36 +229,20 @@ public final class RefactoringSession {
                     fireProgressListenerStart(0, count);
                 }
 
-                /* file changes */
                 {
                     ArrayList<RefactoringElementImplementation> fileChanges = SPIAccessor.DEFAULT.getFileChanges(bag);
-                    /*
-                     * make a copy, reversing the original would probably cause negative side effects;
-                     * the original source code used an iterator object, which was a much less intrusive way to access data, 
-                     * but it also doesn't immediately leverage performance optimization for multi-processor hardware offered by the stream API, 
-                     * brought in with Java SE 8, and then you would have to trust and heavily rely on magic done by the virtual machine to make
-                     * it performance wise somewhat snappier
-                     */
-                    ArrayList<RefactoringElementImplementation> fileChangesReversed = new ArrayList<>(fileChanges.size());
-                    Collections.copy(fileChangesReversed, fileChanges);
+                    ArrayList<RefactoringElementImplementation> fileChangesReversed = new ArrayList<>(fileChanges);
                     Collections.reverse(fileChangesReversed);
                     fileChangesReversed.stream()
                             .filter(fileChange -> fileChange.isEnabled())
                             .forEachOrdered(fileChange -> fileChange.undoChange());
                 }
 
-                /* commits */
                 {
                     ArrayList<Transaction> commits = SPIAccessor.DEFAULT.getCommits(bag);
                     commits.forEach(commit -> SPIAccessor.DEFAULT.check(commit, true));
-                    ArrayList<Transaction> commitsReversed = new ArrayList<>(commits.size());
-                    Collections.copy(commitsReversed, commits);
+                    ArrayList<Transaction> commitsReversed = new ArrayList<>(commits);
                     Collections.reverse(commitsReversed);
-                    /* 
-                     * moved wrapper access out of the loop, since it doesn't access any particular loop object, 
-                     * and it seems to be more like an active light switch, which is constantly turned on an off for no good reason 
-                     * since it is dark anyway, as long as the loop processing occurs
-                     */
                     UndoableWrapper undoableWrapper = MimeLookup.getLookup(MimePath.EMPTY).lookup(UndoableWrapper.class);
                     undoableWrapper.setActive(true, this);
                     commitsReversed.stream()
@@ -268,10 +252,8 @@ public final class RefactoringSession {
                     commits.forEach(commit -> SPIAccessor.DEFAULT.sum(commit));
                 }
 
-                /* internal list */
                 {
-                    ArrayList<RefactoringElementImplementation> internalListReversed = new ArrayList<>(internalList.size());
-                    Collections.copy(internalListReversed, internalList);
+                    ArrayList<RefactoringElementImplementation> internalListReversed = new ArrayList<>(internalList);
                     Collections.reverse(internalListReversed);
                     internalListReversed.stream().forEachOrdered(element -> {
                         fireProgressListenerStep();
@@ -408,6 +390,7 @@ public final class RefactoringSession {
                 }
 
                 @Override
+                @SuppressWarnings("ValueOfIncrementOrDecrementUsed")
                 public RefactoringElement next() {
                     if (index < internalList.size()) {
                         return new RefactoringElement(internalList.get(index++));

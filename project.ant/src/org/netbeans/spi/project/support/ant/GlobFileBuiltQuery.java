@@ -119,8 +119,8 @@ final class GlobFileBuiltQuery implements FileBuiltQueryImplementation {
     private File findTarget(FileObject file) {
         File sourceF = FileUtil.toFile(file);
         if (sourceF == null) {
-            if (LOG.isLoggable(Level.INFO)) {
-                LOG.log(Level.INFO, "Not a disk file: {0}", file);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "Not a disk file: {0}", file);
             }
             return null;
         }
@@ -128,15 +128,15 @@ final class GlobFileBuiltQuery implements FileBuiltQueryImplementation {
         for (int i = 0; i < fromPrefixes.length; i++) {
             String prefixEval = eval.evaluate(fromPrefixes[i]);
             if (prefixEval == null) {
-                if (LOG.isLoggable(Level.INFO)) {
-                    LOG.log(Level.INFO, "{0} evaluates to null", fromPrefixes[i]);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "{0} evaluates to null", fromPrefixes[i]);
                 }
                 continue;
             }
             String suffixEval = eval.evaluate(fromSuffixes[i]);
             if (suffixEval == null) {
-                if (LOG.isLoggable(Level.INFO)) {
-                    LOG.log(Level.INFO, "{0} evaluates to null", fromSuffixes[i]);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "{0} evaluates to null", fromSuffixes[i]);
                 }
                 continue;
             }
@@ -155,26 +155,26 @@ final class GlobFileBuiltQuery implements FileBuiltQueryImplementation {
             String particular = remainder.substring(0, remainder.length() - suffixEval.length());
             String toPrefixEval = eval.evaluate(toPrefixes[i]);
             if (toPrefixEval == null) {
-                if (LOG.isLoggable(Level.INFO)) {
-                    LOG.log(Level.INFO, "{0} evaluates to null", toPrefixes[i]);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "{0} evaluates to null", toPrefixes[i]);
                 }
                 continue;
             }
             String toSuffixEval = eval.evaluate(toSuffixes[i]);
             if (toSuffixEval == null) {
-                if (LOG.isLoggable(Level.INFO)) {
-                    LOG.log(Level.INFO, "{0} evaluates to null", toSuffixes[i]);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "{0} evaluates to null", toSuffixes[i]);
                 }
                 continue;
             }
             File target = helper.resolveFile(toPrefixEval + particular + toSuffixEval);
-            if (LOG.isLoggable(Level.INFO)) {
-                LOG.log(Level.INFO, "Found target for {0}: {1}", new Object[]{source, target});
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "Found target for {0}: {1}", new Object[]{source, target});
             }
             return target;
         }
-        if (LOG.isLoggable(Level.INFO)) {
-            LOG.log(Level.INFO, "No match for path {0} among {1} {2}", new Object[]{source, Arrays.asList(fromPrefixes), Arrays.asList(fromSuffixes)});
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "No match for path {0} among {1} {2}", new Object[]{source, Arrays.asList(fromPrefixes), Arrays.asList(fromSuffixes)});
         }
         return null;
     }
@@ -239,8 +239,8 @@ final class GlobFileBuiltQuery implements FileBuiltQueryImplementation {
                     doFire = true;
                 }
                 built = Boolean.valueOf(b);
-                if (LOG.isLoggable(Level.INFO)) {
-                    LOG.log(Level.INFO, "isBuilt: {0} from {1}", new Object[]{b, this});
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "isBuilt: {0} from {1}", new Object[]{b, this});
                 }
             }
             if (doFire) {
@@ -251,20 +251,20 @@ final class GlobFileBuiltQuery implements FileBuiltQueryImplementation {
         
         private boolean isReallyBuilt() {
             if (!source.isValid()) {
-                if (LOG.isLoggable(Level.INFO)) {
-                    LOG.log(Level.INFO, "invalid: {0}", this);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "invalid: {0}", this);
                 }
                 return false; // whatever
             }
             if (source.isModified()) {
-                if (LOG.isLoggable(Level.INFO)) {
-                    LOG.log(Level.INFO, "modified: {0}", this);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "modified: {0}", this);
                 }
                 return false;
             }
             if (target == null) {
-                if (LOG.isLoggable(Level.INFO)) {
-                    LOG.log(Level.INFO, "no target matching {0}", this);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "no target matching {0}", this);
                 }
                 return false;
             }
@@ -273,8 +273,8 @@ final class GlobFileBuiltQuery implements FileBuiltQueryImplementation {
             if (targetTime >= sourceTime) {
                 return true;
             } else {
-                if (LOG.isLoggable(Level.INFO)) {
-                    LOG.log(Level.INFO, "out of date (target: {0} vs. source: {1}): {2}", new Object[]{targetTime, sourceTime, this});
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "out of date (target: {0} vs. source: {1}): {2}", new Object[]{targetTime, sourceTime, this});
                 }
                 return false;
             }

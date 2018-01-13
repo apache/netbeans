@@ -30,3 +30,5 @@
 .gitignore        text eol=lf
 .travis.yml       text eol=lf
 
+# Define some file types explicitly as being binary.
+*.jar             binary

@@ -58,6 +58,7 @@ public class ReplaceConstructorWithBuilderUI implements RefactoringUI, JavaRefac
 
     private ReplaceConstructorWithBuilderRefactoring refactoring;
     private String builderFQN;
+    private String buildMethodName;
     private ReplaceConstructorWithBuilderPanel panel;
     private String name;
     private List <String> paramaterNames;
@@ -96,6 +97,7 @@ public class ReplaceConstructorWithBuilderUI implements RefactoringUI, JavaRefac
         } else {
             builderFQN = typeEl.getQualifiedName().toString();
         }
+        buildMethodName = "create" + typeEl.getSimpleName();
     }
 
     private ReplaceConstructorWithBuilderUI() {
@@ -119,7 +121,8 @@ public class ReplaceConstructorWithBuilderUI implements RefactoringUI, JavaRefac
     @Override
     public CustomRefactoringPanel getPanel(final ChangeListener parent) {
         if (panel == null) {
-            panel = new ReplaceConstructorWithBuilderPanel(parent, builderFQN + "Builder", paramaterNames, parameterTypes, parameterTypeVars);
+            panel = new ReplaceConstructorWithBuilderPanel(parent, builderFQN + "Builder", buildMethodName,
+                    paramaterNames, parameterTypes, parameterTypeVars);
         }
         return panel;
     }
@@ -128,6 +131,7 @@ public class ReplaceConstructorWithBuilderUI implements RefactoringUI, JavaRefac
     public Problem setParameters() {
         refactoring.setSetters(panel.getSetters());
         refactoring.setBuilderName(panel.getBuilderName());
+        refactoring.setBuildMethodName(panel.getBuildMethodName());
         return refactoring.checkParameters();
     }
 
@@ -135,6 +139,7 @@ public class ReplaceConstructorWithBuilderUI implements RefactoringUI, JavaRefac
     public Problem checkParameters() {
         refactoring.setSetters(panel.getSetters());
         refactoring.setBuilderName(panel.getBuilderName());
+        refactoring.setBuildMethodName(panel.getBuildMethodName());
         return refactoring.fastCheckParameters();
     }
 

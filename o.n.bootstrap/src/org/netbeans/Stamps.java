@@ -26,7 +26,6 @@ import java.io.DataInputStream;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -36,6 +35,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -435,7 +435,7 @@ public final class Stamps {
                 areCachesOK = len == read.length && is.available() == 0 && Arrays.equals(expected, read);
                 writeFile = !areCachesOK;
                 lastMod = file.lastModified();
-            } catch (FileNotFoundException notFoundEx) {
+            } catch (NoSuchFileException notFoundEx) {
                 // ok, running for the first time, no need to invalidate the cache
                 areCachesOK = true;
                 writeFile = true;
@@ -681,7 +681,8 @@ public final class Stamps {
                 cacheFile.getParentFile().mkdirs();
 
                 LOG.log(Level.FINE, "Storing cache {0}", cacheFile);
-                os = Files.newOutputStream(cacheFile.toPath(), StandardOpenOption.APPEND); //append new entries only
+                //append new entries only
+                os = Files.newOutputStream(cacheFile.toPath(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
                 DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(this, 1024 * 1024));
                 
                 this.delay = delay;

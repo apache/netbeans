@@ -1530,7 +1530,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
 
     <target name="create-mandatory-files-for-binary" depends="bootstrap,download-selected-extbins" description="Create a summary of the licenses used by libraries in the build.">
         <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
-        <createlicensesummary licenseStub="license-stub.txt" noticeStub="notice-stub.txt" report="${nb.build.dir}/createlicensesummary.xml" nball=".." build="${netbeans.dest.dir}" license="${netbeans.dest.dir}/LICENSE" notice="${nb.build.dir}/notice-temp"/>
+        <createlicensesummary licenseStub="${nb_all}/LICENSE" noticeStub="notice-stub.txt" report="${nb.build.dir}/createlicensesummary.xml" nball=".." build="${netbeans.dest.dir}" license="${netbeans.dest.dir}/LICENSE" notice="${nb.build.dir}/notice-temp"/>
         <concat destfile="${netbeans.dest.dir}/NOTICE">
           <fileset file="${nb.build.dir}/notice-temp" />
           <fileset dir="${nb_all}"
@@ -1592,9 +1592,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
           </tokenfilter>
       </filterchain>
     </concat>
-    <concat destfile="${nb.build.dir}/LICENSE">
-      <fileset file="${nb_all}/nbbuild/license-stub.txt" />
-    </concat>
+    <copy tofile="${nb.build.dir}/LICENSE" file="${nb_all}/LICENSE" />
     <taskdef name="createdependencies" classname="org.netbeans.nbbuild.extlibs.CreateDependencies" classpath="${nbantext.jar}"/>
     <createdependencies refid="source.dirset" dependencies="${nb.build.dir}/DEPENDENCIES" sourceDependencies="true"/>
     <concat destfile="${nb.build.dir}/cluster.properties">
@@ -1611,7 +1609,9 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     </condition>
     <zip zipfile="${nb.build.dir}/${cluster.config}-src-${buildnum}.zip" duplicate="preserve">
       <zipfileset dir="${nb_all}" includes="${source.dirs}">
-          <exclude name="*/build/**/*"/>
+          <exclude name="*/build/"/>
+          <exclude name="*/external/*.jar"/>
+          <exclude name="*/external/*.zip"/>
           <exclude name="nbbuild/netbeans/**"/>
           <exclude name="nbbuild/cluster.properties" />
       </zipfileset>

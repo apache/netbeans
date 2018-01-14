@@ -183,6 +183,7 @@ public class DukeScriptWizard {
             boolean netbeans,
             boolean nbInstallationDefined,
             boolean ios, boolean iosMoe, boolean iosRoboVM,
+            Device selectedSimulator,
             String msg
     ) {
         if (android && "platforms".equals(current)) { // NOI18N
@@ -198,8 +199,13 @@ public class DukeScriptWizard {
                 return 8;
             }
         }
-        if (ios && !iosMoe && !iosRoboVM) {
-            return 9;
+        if (ios) {
+            if (!iosMoe && !iosRoboVM) {
+                return 3;
+            }
+            if (selectedSimulator == null || MavenUtilities.getDefault().readMoeDevice() == null) {
+                return 4;
+            }
         }
         if (msg != null) {
             return 6;

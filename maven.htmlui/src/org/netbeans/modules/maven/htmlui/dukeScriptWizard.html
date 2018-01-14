@@ -33,7 +33,7 @@
 
             #locations{
                 display: table;
-            }       
+            }
 
             .form-field{
                 display: table-row;
@@ -76,7 +76,7 @@
                         <label for="android" >Run on Android devices</label>
                 </div>
                 <div data-bind="if: errorCode()===7">
-                    <label for="androidSdkPath">Running on Android devices requires an Android SDK. Please specify the path to the directory containing the platform-tools folder:</label> 
+                    <label for="androidSdkPath">Running on Android devices requires an Android SDK. Please specify the path to the directory containing the platform-tools folder:</label>
                     <input type="text" class="form-field" id="androidSdkPath" data-bind="textInput: androidSdkPath"/>
                     <button data-bind="click: chooseAndroidSDK">Browse...</button>
                 </div>
@@ -110,7 +110,7 @@
                         <label for="netbeans">Run as a NetBeans Plugin</label>
                 </div>
                 <div data-bind="if: errorCode()===8">
-                    <label for="defineNbInstallation">Please select your NetBeans Installation Directory: </label> 
+                    <label for="defineNbInstallation">Please select your NetBeans Installation Directory: </label>
                     <input type="text" class="form-field" id="defineNbInstallation" data-bind="textInput: nbhome"/>
                     <button data-bind="click: defineNbInstallation">Browse...</button>
                 </div>
@@ -124,7 +124,7 @@
                         <input type="radio" name="archetype" data-bind="attr: {id: artifactId}, value: $data, checked: $root.archetype" />
                         <label data-bind="attr: {for: artifactId}, text: name"></label>
                         <br>
-                        </div>  
+                        </div>
                         <div data-bind="with: archetype">
                             <h4>Description:</h4>
                             <span data-bind="text: description"></span>
@@ -135,10 +135,10 @@
                             </div>
                         </div>
                         <br><br>
-                        </section>
+            </section>
 
 
-                        <section data-bind="step: { 'id' : 'summary', text : 'What will be created?' }" >
+            <section data-bind="step: { 'id' : 'summary', text : 'What will be created?' }" >
                             <p>
                                 Let's generate a project from following archetype:
                             </p>
@@ -147,18 +147,25 @@
                                 <li><b>groupId</b>: <span data-bind="text: groupId"></span></li>
                                 <li><b>version</b>: <span data-bind="text: version"></span></li>
                             </ul>
-                        </section>
-                </div>
-                <!-- display the error message -->
-                <div data-bind="visible: errorCode() === 9" class="error">
-                    Choose at least one: <b>MOE</b> or <b>RoboVM</b>!
-                </div>
-                <div data-bind="visible: errorCode() === 6" class="error">
-                    Warning: No network connection.
-                    This wizard is based on Maven. 
-                    To work properly it needs a network connection.
-                    Please check your network settings.
-                </div>
+            </section>
 
-                </body>
-                </html>
+
+        </div>
+
+
+        <!-- display the error message -->
+        <div data-bind="visible: errorCode() === 3" class="error">
+            Choose at least one: <b>MOE</b> or <b>RoboVM</b>!
+        </div>
+        <div data-bind="visible: errorCode() === 4" class="error">
+            Choose a device to define <b>moe.launcher.simulators</b> property in
+            <code>.m2/settings.xml</code> file.
+        </div>
+        <div data-bind="visible: errorCode() === 6" class="error">
+            Warning: No network connection.
+            This wizard is based on Maven.
+            To work properly it needs a network connection.
+            Please check your network settings.
+        </div>
+    </body>
+</html>

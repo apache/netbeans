@@ -48,6 +48,7 @@ final class MavenUtilities {
     private static final String DEFINITION = "android.sdk.path";
     private static final String NBDEFINITION = "netbeans.installation";
     private static final String MOEDEFINITION = "moe.launcher.simulators";
+    private static final String ROBOVMDEFINITION = "robovm.iosDeviceName";
 
     static final String HEADER_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
     static final String HEADER_SETTINGS = "<settings xmlns=\"http://maven.apache.org/SETTINGS/1.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
@@ -207,6 +208,10 @@ final class MavenUtilities {
 
     String readMoeDevice() {
         return readProperty(MOEDEFINITION);
+    }
+
+    void writeRobovmDeviceName(String name) {
+        writeProperty(ROBOVMDEFINITION, name);
     }
 
 }

@@ -257,6 +257,8 @@ public class DukeScriptWizard {
     static void deviceSelected(WizardData data) {
         if (data.getSelectedSimulator() != null) {
             MavenUtilities.getDefault().writeMoeDevice(data.getSelectedSimulator().getId());
+            String name = data.getSelectedSimulator().getName().replaceAll("\\(.*\\)", "").trim();
+            MavenUtilities.getDefault().writeRobovmDeviceName(name);
         }
     }
     

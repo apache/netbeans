@@ -41,6 +41,8 @@ import org.openide.filesystems.FileChooserBuilder;
     @Property(name = "archetypes", type = ArchetypeData.class, array = true),
     @Property(name = "android", type = boolean.class),
     @Property(name = "ios", type = boolean.class),
+    @Property(name = "iosMoe", type = boolean.class),
+    @Property(name = "iosRoboVM", type = boolean.class),
     @Property(name = "web", type = boolean.class),
     @Property(name = "netbeans", type = boolean.class),
     @Property(name = "installExample", type = boolean.class),
@@ -85,25 +87,26 @@ public class DukeScriptWizard {
         File nbHome = new File(System.getProperty("netbeans.home"));
         data.setNbhome(nbHome.getParent());
 
-        final ArchetypeData crudArch = new ArchetypeData(
-                "crud4j-archetype",
-                "com.dukescript.archetype",
-                false,
-                "0.17",
-                "DukeScript CRUD Template", "Client-Server Application demonstrating communication and reuse of DataModels",
-                null
-        );
-        data.getArchetypes().add(crudArch);
         final ArchetypeData koArch = new ArchetypeData(
                 "knockout4j-archetype",
                 "com.dukescript.archetype",
                 true,
-                "0.17",
+                "0.20",
                 "Basic DukeScript Template", "Default skeletal application",
                 null
         );
         data.setArchetype(koArch);
         data.getArchetypes().add(koArch);
+        final ArchetypeData crudArch = new ArchetypeData(
+                "crud4j-archetype",
+                "com.dukescript.archetype",
+                false,
+                "0.20",
+                "DukeScript CRUD Template", "Client-Server Application demonstrating communication and reuse of DataModels",
+                null
+        );
+        data.getArchetypes().add(crudArch);
+        data.setIosMoe(true);
         String srvPath = Boolean.getBoolean("staging.archetypes") ? "stage" : "archetypes";
         data.loadArchetypes(srvPath);
         data.setAndroidSdkPath(MavenUtilities.getDefault().readAndroidSdkPath());
@@ -149,8 +152,13 @@ public class DukeScriptWizard {
     }
 
     @ComputedProperty
-    static String iospath(boolean ios) {
-        return ios ? "client-ios" : null;
+    static String iospath(boolean iosRoboVM) {
+        return iosRoboVM ? "client-ios" : null;
+    }
+
+    @ComputedProperty
+    static String moepath(boolean iosMoe) {
+        return iosMoe ? "client-moe" : null;
     }
 
     @ComputedProperty
@@ -160,7 +168,7 @@ public class DukeScriptWizard {
 
     @ComputedProperty
     static String example(boolean installExample) {
-        return Boolean.valueOf(installExample).toString();
+        return Boolean.toString(installExample);
     }
 
     @ComputedProperty
@@ -169,7 +177,9 @@ public class DukeScriptWizard {
             boolean android,
             String androidSdkPath,
             boolean netbeans,
-            boolean nbInstallationDefined
+            boolean nbInstallationDefined,
+            boolean ios, boolean iosMoe, boolean iosRoboVM,
+            String msg
     ) {
         if (android && "platforms".equals(current)) { // NOI18N
             if (androidSdkPath == null) {
@@ -183,6 +193,12 @@ public class DukeScriptWizard {
             if (!nbInstallationDefined) {
                 return 8;
             }
+        }
+        if (ios && !iosMoe && !iosRoboVM) {
+            return 9;
+        }
+        if (msg != null) {
+            return 6;
         }
         return 0;
     }

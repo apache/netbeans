@@ -95,6 +95,8 @@
                             <input id="robovm" type="checkbox" data-bind="checked: iosRoboVM"/>
                             Use Mobidevelop RoboVM</label>
                         </div>
+                        <select data-bind='options: availableSimulators, optionsText: "name", value: selectedSimulator, optionsCaption: "Choose a device..."'>
+                        </select>
                     </div>
                 </div>
                 <div >

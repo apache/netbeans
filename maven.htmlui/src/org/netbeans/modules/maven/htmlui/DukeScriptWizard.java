@@ -20,6 +20,7 @@ package org.netbeans.modules.maven.htmlui;
 
 import java.awt.EventQueue;
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.JFileChooser;
 import org.netbeans.api.templates.TemplateRegistration;
@@ -32,6 +33,7 @@ import net.java.html.json.ModelOperation;
 import net.java.html.json.OnPropertyChange;
 import net.java.html.json.OnReceive;
 import org.openide.filesystems.FileChooserBuilder;
+import org.openide.util.RequestProcessor;
 
 @Model(className = "WizardData", properties = {
     @Property(name = "current", type = String.class),
@@ -43,6 +45,8 @@ import org.openide.filesystems.FileChooserBuilder;
     @Property(name = "ios", type = boolean.class),
     @Property(name = "iosMoe", type = boolean.class),
     @Property(name = "iosRoboVM", type = boolean.class),
+    @Property(name = "availableSimulators", type = Device.class, array = true),
+    @Property(name = "selectedSimulator", type = Device.class),
     @Property(name = "web", type = boolean.class),
     @Property(name = "netbeans", type = boolean.class),
     @Property(name = "installExample", type = boolean.class),
@@ -241,6 +245,37 @@ public class DukeScriptWizard {
     static void verifyNbInstallationDefined(WizardData data) {
         boolean ok = !data.isNetbeans() || MavenUtilities.getDefault().readNetBeansInstallation() != null;
         data.setNbInstallationDefined(ok);
+    }
+
+    @OnPropertyChange(value = "selectedSimulator")
+    static void deviceSelected(WizardData data) {
+        if (data.getSelectedSimulator() != null) {
+            MavenUtilities.getDefault().writeMoeDevice(data.getSelectedSimulator().getId());
+        }
+    }
+    
+    private static final RequestProcessor DEVICES = new RequestProcessor("List iOS Devices");
+    @OnPropertyChange(value = "ios")
+    static void verifySimulator(WizardData data) {
+        final List<Device> arr = data.getAvailableSimulators();
+        DEVICES.post(() -> {
+            DeviceType.listDevices(arr);
+            String selectedDevice = MavenUtilities.getDefault().readMoeDevice();
+            Iterator<Device> it = arr.iterator();
+            while (it.hasNext()) {
+                Device d = it.next();
+                if (d.getType() != DeviceType.SIMULATOR) {
+                    if (d.getType() == null) {
+                        data.setMsg(d.getInfo());
+                    }
+                    it.remove();
+                    continue;
+                }
+                if (selectedDevice != null && selectedDevice.equals(d.getId())) {
+                    data.setSelectedSimulator(d);
+                }
+            }
+        });
     }
 
     @Function

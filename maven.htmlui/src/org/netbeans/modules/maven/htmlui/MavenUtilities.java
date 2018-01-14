@@ -46,6 +46,7 @@ final class MavenUtilities {
     private static final Logger LOG = Logger.getLogger(MavenUtilities.class.getName());
     private static final String DEFINITION = "android.sdk.path";
     private static final String NBDEFINITION = "netbeans.installation";
+    private static final String MOEDEFINITION = "moe.launcher.simulators";
 
     static final String HEADER_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
     static final String HEADER_SETTINGS = "<settings xmlns=\"http://maven.apache.org/SETTINGS/1.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
@@ -180,11 +181,19 @@ final class MavenUtilities {
     }
 
     void writeNetBeansInstallation(String path) {
-        writeProperty("netbeans.installation", path);
+        writeProperty(NBDEFINITION, path);
     }
 
     String readNetBeansInstallation() {
         return readProperty(NBDEFINITION);
+    }
+
+    void writeMoeDevice(String id) {
+        writeProperty(MOEDEFINITION, id);
+    }
+
+    String readMoeDevice() {
+        return readProperty(MOEDEFINITION);
     }
 
 }

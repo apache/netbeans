@@ -179,6 +179,11 @@
                 <attr name="template" boolvalue="true"/>
                 <attr name="mavenLicenseURL" stringvalue="https://opensource.org/licenses/Apache-2.0 http://opensource.org/licenses/Apache-2.0 http://www.apache.org/licenses/LICENSE-2.0.txt"/>
             </file>
+            <file name="license-apache20-asf.txt" url="apache20-asf-license.txt">
+                <attr name="displayName" stringvalue="ASF - Apache License 2.0"/>
+                <attr name="template" boolvalue="true"/>
+                <attr name="mavenLicenseURL" stringvalue="https://opensource.org/licenses/Apache-2.0 http://opensource.org/licenses/Apache-2.0 http://www.apache.org/licenses/LICENSE-2.0.txt"/>
+            </file>
             <file name="license-mit.txt" url="mit-license.txt">
                 <attr name="displayName" stringvalue="MIT License"/>
                 <attr name="template" boolvalue="true"/>

@@ -73,7 +73,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
@@ -85,13 +84,13 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.ClassPath.PathConversionMode;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ClasspathInfo.PathKind;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.TreeMaker;
@@ -1337,6 +1336,7 @@ public class JavaFixUtilities {
 
         OPERATOR_PRIORITIES.put(Kind.ARRAY_ACCESS, 1);
         OPERATOR_PRIORITIES.put(Kind.METHOD_INVOCATION, 1);
+        OPERATOR_PRIORITIES.put(Kind.MEMBER_REFERENCE, 1);
         OPERATOR_PRIORITIES.put(Kind.MEMBER_SELECT, 1);
         OPERATOR_PRIORITIES.put(Kind.POSTFIX_DECREMENT, 1);
         OPERATOR_PRIORITIES.put(Kind.POSTFIX_INCREMENT, 1);
@@ -1394,7 +1394,21 @@ public class JavaFixUtilities {
         OPERATOR_PRIORITIES.put(Kind.UNSIGNED_RIGHT_SHIFT_ASSIGNMENT, 15);
         OPERATOR_PRIORITIES.put(Kind.XOR_ASSIGNMENT, 15);
     }
-    
+
+    /**
+     * Checks whether {@code tree} can be used in places where a Primary is
+     * required (for instance, as the receiver expression of a method invocation).
+     * <p>This is a friend API intended to be used by the java.hints module.
+     * Other modules should not use this API because it might not be stabilized.
+     * @param tree the tree to check
+     * @return {@code true} iff {@code tree} can be used where a Primary is
+     * required.
+     * @since 1.31
+     */
+    public static boolean isPrimary(@NonNull Tree tree) {
+        final Integer treePriority = OPERATOR_PRIORITIES.get(tree.getKind());
+        return (treePriority != null && treePriority <= 1);
+    }
 
     /**Checks whether putting {@code inner} tree into {@code outter} tree,
      * when {@code original} is being replaced with {@code inner} requires parentheses.

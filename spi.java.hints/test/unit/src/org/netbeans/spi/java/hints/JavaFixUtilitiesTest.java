@@ -1126,6 +1126,49 @@ public class JavaFixUtilitiesTest extends TestBase {
 		           "}\n", "1.8");
     }
 
+    public void testChangeMemberRefs() throws Exception {
+        performRewriteTest("package test;\n" +
+                           "\n" +
+                           "import java.util.Objects;\n" +
+                           "import java.util.stream.Stream;\n" +
+                           "\n" +
+                           "public class Test {\n" +
+                           "\n" +
+                           "    public static <T> T identity(T t) {\n" +
+                           "        return t;\n" +
+                           "    }\n" +
+                           "\n" +
+                           "    public static String toString(Object o) {\n" +
+                           "        return Objects.toString(o);\n" +
+                           "    }\n" +
+                           "\n" +
+                           "    public <T> Stream<?> test(Stream<T> stream) {\n" +
+                           "        return stream.map(Test::identity);\n" +
+                           "    }\n" +
+                           "}",
+                           "$expr::identity => $expr::toString",
+                           "package test;\n" +
+                           "\n" +
+                           "import java.util.Objects;\n" +
+                           "import java.util.stream.Stream;\n" +
+                           "\n" +
+                           "public class Test {\n" +
+                           "\n" +
+                           "    public static <T> T identity(T t) {\n" +
+                           "        return t;\n" +
+                           "    }\n" +
+                           "\n" +
+                           "    public static String toString(Object o) {\n" +
+                           "        return Objects.toString(o);\n" +
+                           "    }\n" +
+                           "\n" +
+                           "    public <T> Stream<?> test(Stream<T> stream) {\n" +
+                           "        return stream.map(Test::toString);\n" +
+                           "    }\n" +
+                           "}",
+                           "1.8");
+    }
+
     public void testComments232298() throws Exception {
         performRewriteTest("package test;\n" +
                            "public class Test {\n" +

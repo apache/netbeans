@@ -25,6 +25,20 @@
         <apidef name="JavaHintsSPI">Java Hints SPI</apidef>
     </apidefs>
     <changes>
+        <change id="JavaFixUtilities.isPrimary">
+            <api name="JavaHintsSPI"/>
+            <summary>Added JavaFixUtilities.isPrimary() utility</summary>
+            <version major="1" minor="31"/>
+            <date day="15" month="1" year="2018"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    The utility method JavaFixUtilities.isPrimary() was added.
+                    This API checks whether a specified tree can be used in
+                    places where a Primary expression is required.
+                </p>
+            </description>
+        </change>
         <change id="Hint.minSourceVersion">
             <api name="JavaHintsSPI"/>
             <summary>Hint can specify minimum source version for operation</summary>

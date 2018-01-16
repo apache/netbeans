@@ -19,8 +19,9 @@
 package org.netbeans.core.startup.logging;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -84,8 +85,8 @@ final class MessagesHandler extends StreamHandler {
     
     private void initStream() {
         try {
-            setOutputStream(new FileOutputStream(files[0], false));
-        } catch (FileNotFoundException ex) {
+            setOutputStream(Files.newOutputStream(files[0].toPath()));
+        } catch (IOException | InvalidPathException ex) {
             setOutputStream(System.err);
         }
     }

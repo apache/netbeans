@@ -34,7 +34,6 @@ import org.netbeans.ModuleManager;
 import org.netbeans.core.startup.Main;
 import org.netbeans.core.startup.MainLookup;
 import org.netbeans.SetupHid;
-import org.netbeans.core.startup.layers.SystemFileSystem;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
@@ -236,17 +235,18 @@ implements InstanceContent.Convertor<FileSystem,FileSystem>, FileChangeListener 
     }
     
     private static void write(FileObject fo, String txt) throws IOException {
-        OutputStream os = fo.getOutputStream();
-        os.write(txt.getBytes());
-        os.close();
+        try (OutputStream os = fo.getOutputStream()) {
+            os.write(txt.getBytes());
+        }
     }
     
     private static String read(FileObject fo) throws IOException {
         byte[] arr = new byte[(int)fo.getSize()];
-        InputStream is = fo.getInputStream();
-        int len = is.read(arr);
-        assertEquals("Not enough read", arr.length, len);
-        return new String(arr);
+        try (InputStream is = fo.getInputStream()) {
+            int len = is.read(arr);
+            assertEquals("Not enough read", arr.length, len);
+            return new String(arr);
+        }
     }
 
     public FileSystem convert(FileSystem obj) {

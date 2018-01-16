@@ -33,6 +33,7 @@ import java.io.ObjectInputValidation;
 import java.io.OutputStream;
 import java.io.SyncFailedException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
@@ -401,13 +402,16 @@ public class LocalFileSystem extends AbstractFileSystem {
         File file = null;
 
         try {
-            fis = new BufferedInputStream(new FileInputStream(file = getFile(name)));
-        } catch (FileNotFoundException exc) {
+            file = getFile(name);
+            fis = new BufferedInputStream(Files.newInputStream(file.toPath()));
+        } catch (IOException | InvalidPathException exc) {
+            FileNotFoundException fnfException = new FileNotFoundException(exc.getMessage());
             if ((file == null) || !file.exists()) {
-                ExternalUtil.annotate(exc, NbBundle.getMessage(LocalFileSystem.class, "EXC_FileOutsideModified", getFile(name)));
+                ExternalUtil.annotate(fnfException,
+                        NbBundle.getMessage(LocalFileSystem.class, "EXC_FileOutsideModified", getFile(name)));
             }
 
-            throw exc;
+            throw fnfException;
         }
 
         return fis;
@@ -418,14 +422,17 @@ public class LocalFileSystem extends AbstractFileSystem {
         if (!f.exists()) {
             f.getParentFile().mkdirs();
         }
-        OutputStream retVal = new BufferedOutputStream(new FileOutputStream(f));
+        try {
+            OutputStream retVal = new BufferedOutputStream(Files.newOutputStream(f.toPath()));
 
-        // workaround for #42624
-        if (BaseUtilities.isMac()) {
-            retVal = getOutputStreamForMac42624(retVal, name);
+            // workaround for #42624
+            if (BaseUtilities.isMac()) {
+                retVal = getOutputStreamForMac42624(retVal, name);
+            }
+            return retVal;
+        } catch (InvalidPathException ex) {
+            throw new IOException(ex);
         }
-
-        return retVal;
     }
 
     private OutputStream getOutputStreamForMac42624(final OutputStream originalStream, final String name) {

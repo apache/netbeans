@@ -18,10 +18,14 @@
  */
 package org.netbeans.core.startup.logging;
 
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
+
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.util.logging.Handler;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -43,8 +47,8 @@ public final class NbLogging {
             try {
                 File debugLog = new File(System.getProperty("java.io.tmpdir"), "TopLogging.log"); // NOI18N
                 System.err.println("Logging sent to: " + debugLog); // NOI18N
-                _D = new PrintStream(new FileOutputStream(debugLog), true);
-            } catch (FileNotFoundException x) {
+                _D = new PrintStream(Files.newOutputStream(debugLog.toPath(), CREATE, APPEND));
+            } catch (IOException | InvalidPathException x) {
                 x.printStackTrace();
             }
         }

@@ -25,7 +25,6 @@ import org.netbeans.spi.java.hints.Hint;
 import org.netbeans.spi.java.hints.HintContext;
 import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.netbeans.spi.java.hints.TriggerPattern;
-import org.netbeans.spi.java.hints.TriggerPatterns;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -33,26 +32,26 @@ import org.openide.util.NbBundle.Messages;
  * @author lahvac
  */
 @Messages({
-    "DN_redundantConditional=Redundant conditional statement",
-    "DESC_redundantConditional=Redundant conditional statement",
-    "ERR_redundantConditional=The conditional statement is redundant",
-    "FIX_redundantConditional=Remove the conditional statement",
+    "DN_redundantConditional=Redundant conditional expression",
+    "DESC_redundantConditional=Redundant conditional expression",
+    "ERR_redundantConditional=The conditional expression is redundant",
+    "FIX_redundantConditional=Remove the conditional expression",
 })
 @Hint(displayName="#DN_redundantConditional", description="#DESC_redundantConditional", category="general")
 public class RedundantConditional {
-    
+
     @TriggerPattern("$cond ? true : false")
     public static ErrorDescription redundantConditionalPos(HintContext ctx) {
-        Fix f = JavaFixUtilities.rewriteFix(ctx, Bundle.ERR_redundantConditional(), ctx.getPath(), "$cond");
+        Fix f = JavaFixUtilities.rewriteFix(ctx, Bundle.FIX_redundantConditional(), ctx.getPath(), "$cond"); // NOI18N
         
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_redundantConditional(), f);
     }
-    
+
     @TriggerPattern("$cond ? false : true")
     public static ErrorDescription redundantConditionalNeg(HintContext ctx) {
-        Fix f = JavaFixUtilities.rewriteFix(ctx, Bundle.ERR_redundantConditional(), ctx.getPath(), "!$cond");
+        Fix f = JavaFixUtilities.rewriteFix(ctx, Bundle.FIX_redundantConditional(), ctx.getPath(), "!$cond"); // NOI18N
         
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.ERR_redundantConditional(), f);
     }
-    
+
 }

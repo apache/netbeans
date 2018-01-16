@@ -38,7 +38,7 @@ import org.openide.util.RequestProcessor;
 @Model(className = "WizardData", properties = {
     @Property(name = "current", type = String.class),
     @Property(name = "ok", type = boolean.class),
-    @Property(name = "msg", type = String.class),
+    @Property(name = "warning", type = String.class),
     @Property(name = "archetype", type = ArchetypeData.class),
     @Property(name = "archetypes", type = ArchetypeData.class, array = true),
     @Property(name = "android", type = boolean.class),
@@ -184,7 +184,7 @@ public class DukeScriptWizard {
             boolean nbInstallationDefined,
             boolean ios, boolean iosMoe, boolean iosRoboVM,
             Device selectedSimulator,
-            String msg
+            String warning
     ) {
         if (android && "platforms".equals(current)) { // NOI18N
             if (androidSdkPath == null) {
@@ -199,6 +199,9 @@ public class DukeScriptWizard {
                 return 8;
             }
         }
+        if (warning != null) {
+            return 6;
+        }
         if (ios) {
             if (!iosMoe && !iosRoboVM) {
                 return 3;
@@ -207,10 +210,12 @@ public class DukeScriptWizard {
                 return 4;
             }
         }
-        if (msg != null) {
-            return 6;
-        }
         return 0;
+    }
+
+    @Function
+    static void cleanWarning(WizardData data) {
+        data.setWarning(null);
     }
 
     @Function
@@ -274,7 +279,7 @@ public class DukeScriptWizard {
                 Device d = it.next();
                 if (d.getType() != DeviceType.SIMULATOR) {
                     if (d.getType() == null) {
-                        data.setMsg(d.getInfo());
+                        data.setWarning(d.getInfo());
                     }
                     it.remove();
                     continue;
@@ -319,12 +324,15 @@ public class DukeScriptWizard {
         });
     }
 
+    @Messages({
+        "ERR_NoData=Loaded data are corrupted!"
+    })
     @OnReceive(url = "http://dukescript.com/presenters/{path}", onError = "loadError")
     static void loadArchetypes(WizardData model, List<ArchetypeData> found) {
         if (!found.isEmpty()) {
             final ArchetypeData first = found.get(0);
             if (first == null || first.getName() == null) {
-                model.setMsg("Loaded data are corrupted");
+                model.setWarning(Bundle.ERR_NoData());
                 return;
             }
             model.getArchetypes().clear();
@@ -333,8 +341,12 @@ public class DukeScriptWizard {
         }
     }
 
+    @Messages({
+        "ERR_NoNetwork=Warning: No network connection. This wizard is based on Maven.\n" +
+        "To work properly it needs a network connection. Please check your network settings: {0}\n",
+    })
     static void loadError(WizardData model, Throwable t) {
-        model.setMsg(t.getLocalizedMessage());
+        model.setWarning(Bundle.ERR_NoNetwork(t.getLocalizedMessage()));
     }
 
 }

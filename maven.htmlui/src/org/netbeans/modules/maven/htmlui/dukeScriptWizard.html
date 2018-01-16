@@ -162,10 +162,8 @@
             <code>.m2/settings.xml</code> file.
         </div>
         <div data-bind="visible: errorCode() === 6" class="error">
-            Warning: No network connection.
-            This wizard is based on Maven.
-            To work properly it needs a network connection.
-            Please check your network settings.
+            <span data-bind="text: warning"></span>
+            <a href="#" data-bind="click: cleanWarning">Dismiss</a>
         </div>
     </body>
 </html>

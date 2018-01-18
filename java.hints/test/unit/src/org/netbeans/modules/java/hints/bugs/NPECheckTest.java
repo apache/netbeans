@@ -1589,8 +1589,6 @@ public class NPECheckTest extends NbTestCase {
                 );
     }
 
-    /**
-     */
     public void testUnboxingInTernaryPossibleNullWorksWithOption() throws Exception {
         HintTest.create()
                 .sourceLevel("8")
@@ -1643,6 +1641,126 @@ public class NPECheckTest extends NbTestCase {
                         "}")
                 .run(NPECheck.class)
                 .assertWarnings("17:19-17:23:verifier:ERR_ReturningNullFromNonNull");
+    }
+
+    private static final String OTHER_TEST_CODE = "package test;\n" +
+            "\n" +
+            "public class OtherTest {\n" +
+            "\n" +
+            "    public static final Object A = new Object();\n" +
+            "    public static final Object B = new Object();\n" +
+            "\n" +
+            "    public final Object c;\n" +
+            "\n" +
+            "    public OtherTest() {\n" +
+            "        c = new Object();\n" +
+            "    }\n" +
+            "}";
+
+    public void testNullabilityOfFieldsDN() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                        "\n" +
+                        "public class Test {\n" +
+                        "    public String test() {\n" +
+                        "        return OtherTest.A.toString();\n" +
+                        "    }\n" +
+                        "}")
+                .input("test/OtherTest.java", OTHER_TEST_CODE)
+                .preference(NPECheck.KEY_NULLABILITY_OF_FIELDS, "test.OtherTest.A=yes")
+                .run(NPECheck.class)
+                .assertWarnings("4:27-4:35:verifier:DN");
+    }
+
+    public void testNullabilityOfFieldsDN2() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                        "\n" +
+                        "public class Test {\n" +
+                        "    public String test() {\n" +
+                        "        return OtherTest.A.toString();\n" +
+                        "    }\n" +
+                        "}")
+                .input("test/OtherTest.java", OTHER_TEST_CODE)
+                .preference(NPECheck.KEY_NULLABILITY_OF_FIELDS, "test.OtherTest.B=yes;test.OtherTest.A=yes")
+                .run(NPECheck.class)
+                .assertWarnings("4:27-4:35:verifier:DN");
+    }
+
+    public void testNullabilityOfFieldsPDN() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                        "\n" +
+                        "public class Test {\n" +
+                        "    public String test() {\n" +
+                        "        return OtherTest.A.toString();\n" +
+                        "    }\n" +
+                        "}")
+                .input("test/OtherTest.java", OTHER_TEST_CODE)
+                .preference(NPECheck.KEY_NULLABILITY_OF_FIELDS, "test.OtherTest.A=maybe")
+                .run(NPECheck.class)
+                .assertWarnings("4:27-4:35:verifier:Possibly Dereferencing null");
+    }
+
+    public void testNullabilityOfFieldsPDN2() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                        "\n" +
+                        "public class Test {\n" +
+                        "    public String test() {\n" +
+                        "        return OtherTest.A.toString();\n" +
+                        "    }\n" +
+                        "}")
+                .input("test/OtherTest.java", OTHER_TEST_CODE)
+                .preference(NPECheck.KEY_NULLABILITY_OF_FIELDS, "test.OtherTest.A=maybe; test.OtherTest.B=no")
+                .run(NPECheck.class)
+                .assertWarnings("4:27-4:35:verifier:Possibly Dereferencing null");
+    }
+
+    public void testNullabilityOfFieldsPDN3() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                        "\n" +
+                        "public class Test {\n" +
+                        "    public String test() {\n" +
+                        "        return new OtherTest().c.toString();\n" +
+                        "    }\n" +
+                        "}")
+                .input("test/OtherTest.java", OTHER_TEST_CODE)
+                // First one setting test.OtherTest.c=maybe wins
+                .preference(NPECheck.KEY_NULLABILITY_OF_FIELDS, "test.OtherTest.c=maybe; test.OtherTest.c=no")
+                .run(NPECheck.class)
+                .assertWarnings("4:33-4:41:verifier:Possibly Dereferencing null");
+    }
+
+    public void testNullabilityOfFieldsNN() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                        "\n" +
+                        "public class Test {\n" +
+                        "    public String test() {\n" +
+                        "        return OtherTest.A.toString();\n" +
+                        "    }\n" +
+                        "}")
+                .input("test/OtherTest.java", OTHER_TEST_CODE)
+                .preference(NPECheck.KEY_NULLABILITY_OF_FIELDS, "test.OtherTest.A=no")
+                .run(NPECheck.class)
+                .assertWarnings();
+    }
+
+    public void testNullabilityOfFieldsNN2() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                        "\n" +
+                        "public class Test {\n" +
+                        "    public String test() {\n" +
+                        "        return new OtherTest().c.toString();\n" +
+                        "    }\n" +
+                        "}")
+                .input("test/OtherTest.java", OTHER_TEST_CODE)
+                .preference(NPECheck.KEY_NULLABILITY_OF_FIELDS, ";  test.OtherTest.c = no  ;")
+                .run(NPECheck.class)
+                .assertWarnings();
     }
 
     private void performAnalysisTest(String fileName, String code, String... golden) throws Exception {

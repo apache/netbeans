@@ -22,11 +22,13 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.Trees;
 import java.util.Arrays;
 import java.util.Collections;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.spi.editor.hints.ErrorDescription;
@@ -36,6 +38,7 @@ import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
 import org.netbeans.spi.java.hints.HintContext;
 import org.netbeans.spi.java.hints.JavaFix;
+import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.netbeans.spi.java.hints.TriggerPattern;
 import org.netbeans.spi.java.hints.TriggerPatterns;
 import org.openide.util.NbBundle;
@@ -82,31 +85,93 @@ public class BoxedIdentityComparison {
 
     })
     public static ErrorDescription wrapperComparisonUsingIdentity(HintContext ctx) {
-        TreePath logExprPath = ctx.getPath();
-        BinaryTree bt = (BinaryTree)logExprPath.getLeaf();
+        TreePath comparisonExprPath = ctx.getPath();
+        BinaryTree bt = (BinaryTree)comparisonExprPath.getLeaf();
         TreePath wrapperPath = ctx.getVariables().get("$x"); // NOI18N
-        Tree otherOperand = bt.getRightOperand();
+        assert bt.getLeftOperand() == wrapperPath.getLeaf();
+        TreePath otherPath = ctx.getVariables().get("$y"); // NOI18N
+        assert bt.getRightOperand() == otherPath.getLeaf();
+
+        CompilationInfo info = ctx.getInfo();
+        Trees trees = info.getTrees();
 
         // JLS 15.21; if the other type is primitive, the comparison is correct
-        TypeMirror t = ctx.getInfo().getTrees().getTypeMirror(new TreePath(logExprPath, otherOperand));
+        TypeMirror t = trees.getTypeMirror(otherPath);
         if (t == null || t.getKind() != TypeKind.DECLARED) {
             return null;
         }
-        t = ctx.getInfo().getTrees().getTypeMirror(wrapperPath);
+        t = trees.getTypeMirror(wrapperPath);
         // primitive type is assignable to the wrapper, so it will trigger the hint
         if (t == null || t.getKind() != TypeKind.DECLARED) {
             return null;
         }
+
         final Fix fix;
-        
-        if (ctx.getInfo().getSourceVersion().compareTo(SourceVersion.RELEASE_7) < 0) {
-           fix = null;
+        if (NPECheck.isSafeToDereference(info, wrapperPath)) {
+            fix = new CallEqualsFix(info, comparisonExprPath, true).toEditorFix();
+        } else if (NPECheck.isSafeToDereference(info, otherPath)) {
+            fix = new CallEqualsFix(info, comparisonExprPath, false).toEditorFix();
+        } else if (info.getSourceVersion().compareTo(SourceVersion.RELEASE_7) < 0) {
+            fix = null;
         } else {
-            fix = new NullSafeEqualsFix(TreePathHandle.create(logExprPath, ctx.getInfo())).toEditorFix();
+            fix = new NullSafeEqualsFix(TreePathHandle.create(comparisonExprPath, info)).toEditorFix();
         }
-        
-        return ErrorDescriptionFactory.forTree(ctx, logExprPath, 
-                TEXT_BoxedValueIdentityComparison(ctx.getInfo().getTypeUtilities().getTypeName(t)), fix);
+
+        return ErrorDescriptionFactory.forTree(ctx, comparisonExprPath,
+                TEXT_BoxedValueIdentityComparison(info.getTypeUtilities().getTypeName(t)), fix);
+    }
+
+    @NbBundle.Messages({
+        "# {0} - stringified receiver expression tree",
+        "# {1} - stringified equals() arg expression tree",
+        "FIX_CallEquals=Replace with ''{0}.equals({1})''",
+        "# {0} - stringified receiver expression tree",
+        "# {1} - stringified equals() arg expression tree",
+        "FIX_NegateCallEquals=Replace with ''!{0}.equals({1})''",
+    })
+    private static class CallEqualsFix extends JavaFix {
+
+        private final boolean lhsIsReceiver;
+        private final String receiverString;
+        private final String argString;
+        private final boolean invert;
+
+        public CallEqualsFix(CompilationInfo info, TreePath comparisonExprPath, boolean lhsIsReceiver) {
+            super(info, comparisonExprPath);
+            this.lhsIsReceiver = lhsIsReceiver;
+            BinaryTree bt = (BinaryTree) comparisonExprPath.getLeaf();
+            ExpressionTree receiver = (lhsIsReceiver ? bt.getLeftOperand() : bt.getRightOperand());
+            String baseReceiverString = receiver.toString();
+            this.receiverString = (JavaFixUtilities.isPrimary(receiver) ? baseReceiverString : "(" + baseReceiverString + ")"); // NOI18N
+            this.argString = (lhsIsReceiver ? bt.getRightOperand() : bt.getLeftOperand()).toString();
+            this.invert = (bt.getKind() == Tree.Kind.NOT_EQUAL_TO);
+        }
+
+        @Override
+        protected String getText() {
+            return (invert ? FIX_NegateCallEquals(receiverString, argString) : FIX_CallEquals(receiverString, argString));
+        }
+
+        @Override
+        protected void performRewrite(TransformationContext ctx) throws Exception {
+            TreePath p = ctx.getPath();
+            if (p.getLeaf().getKind() != Tree.Kind.EQUAL_TO  && p.getLeaf().getKind() != Tree.Kind.NOT_EQUAL_TO) {
+                // TODO - report ?
+                return;
+            }
+            BinaryTree bt = (BinaryTree)p.getLeaf();
+            TreeMaker mk = ctx.getWorkingCopy().getTreeMaker();
+            ExpressionTree receiver = lhsIsReceiver ? bt.getLeftOperand() : bt.getRightOperand();
+            if (!JavaFixUtilities.isPrimary(receiver)) {
+                receiver = mk.Parenthesized(receiver);
+            }
+            ExpressionTree ms = mk.MemberSelect(receiver, "equals"); // NOI18N
+            ExpressionTree replace = mk.MethodInvocation(Collections.emptyList(), ms, Arrays.asList(lhsIsReceiver ? bt.getRightOperand() : bt.getLeftOperand()));
+            if (invert) {
+                replace = mk.Unary(Tree.Kind.LOGICAL_COMPLEMENT, replace);
+            }
+            ctx.getWorkingCopy().rewrite(bt, replace);
+        }
     }
 
     private static final String JU_OBJECTS = "java.util.Objects"; // NOI18N

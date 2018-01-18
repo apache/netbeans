@@ -30,12 +30,17 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.prefs.Preferences;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -46,7 +51,11 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+import javax.swing.JComponent;
+import org.apache.commons.lang.StringUtils;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 import org.netbeans.spi.editor.hints.ErrorDescription;
@@ -63,19 +72,32 @@ import org.openide.util.Lookup;
  * @author lahvac
  */
 @Hint(displayName="#DN_NPECheck", 
-        description="#DESC_NPECheck", 
+        description="#DESC_NPECheck",
+        customizerProvider = NPECheck.CustomizerProviderImpl.class,
         category="bugs", options=Options.QUERY, suppressWarnings = {"null", "", "NullableProblems"}
 )
 public class NPECheck {
 
     static final boolean DEF_ENABLE_FOR_FIELDS = false;
-    @BooleanOption(displayName = "#LBL_NPECheck.ENABLE_FOR_FIELDS", tooltip = "#TP_NPECheck.ENABLE_FOR_FIELDS", defaultValue=DEF_ENABLE_FOR_FIELDS)
     static final String KEY_ENABLE_FOR_FIELDS = "enable-for-fields"; // NOI18N
-    
+
     static final boolean DEF_UNBOXING_UNKNOWN_VALUES = true;
-    @BooleanOption(displayName = "#LBL_NPECheck.UNBOXING_UNKNOWN_VALUES", tooltip = "#TP_NPECheck.UNBOXING_UNKNOWN_VALUES", defaultValue=DEF_UNBOXING_UNKNOWN_VALUES)
     static final String KEY_UNBOXING_UNKNOWN_VALUES = "unboxing-unknown"; // NOI18N
-    
+
+    static final Map<String, State> BASE_NULLABILITY_OF_FIELDS = Collections.unmodifiableMap(new HashMap<String, State>() {{
+        put("java.lang.Boolean.TRUE", NOT_NULL); // NOI18N
+        put("java.lang.Boolean.FALSE", NOT_NULL); // NOI18N
+    }});
+    static final String DEF_NULLABILITY_OF_FIELDS = null;
+    /**
+     * The key for the "nullability of fields" preference. This is a list of
+     * semicolon-delimited key/value pairs, where the key is a fully-qualified
+     * field name and the value is one of either "yes", "no", or "maybe",
+     * corresponding to the named field being definitely null, definitely not null,
+     * or possibly null, respectively.
+     */
+    static final String KEY_NULLABILITY_OF_FIELDS = "nullability-of-fields"; // NOI18N
+
     @TriggerPatterns({
         @TriggerPattern("$mods$ $type $var = $expr;"),
         @TriggerPattern("$var = $expr")
@@ -197,7 +219,7 @@ public class NPECheck {
         String k;
         
         if (s == null || s == POSSIBLE_NULL) {
-            boolean report = ctx.getPreferences().getBoolean(KEY_UNBOXING_UNKNOWN_VALUES, DEF_UNBOXING_UNKNOWN_VALUES);
+            boolean report = getUnboxingUnknownValuesPreference(ctx.getPreferences());
             if (!report) {
                 return null;
             }
@@ -300,16 +322,26 @@ public class NPECheck {
     
     @TriggerTreeKind(Kind.METHOD_INVOCATION)
     public static List<ErrorDescription> methodInvocation(HintContext ctx) {
-        MethodInvocationTree mit = (MethodInvocationTree) ctx.getPath().getLeaf();
-        List<State> paramStates = new ArrayList<>(mit.getArguments().size());
         Map<Tree, State> expressionsState = computeExpressionsState(ctx);
+
+        TreePath miPath = ctx.getPath();
+        MethodInvocationTree mit = (MethodInvocationTree) miPath.getLeaf();
+
+        // Because the vast majority of MI trees will not result in an
+        // ErrorDescription being created, do not instantiate a new ArrayList
+        // here; but rather defer to instantiating the ArrayList until we want
+        // to return an ErrorDescription. This reduces the allocation of objects
+        // which are not used.
+        List<ErrorDescription> result = null;
+
+        List<State> paramStates = new ArrayList<>(mit.getArguments().size());
 
         for (Tree param : mit.getArguments()) {
             State r = expressionsState.get(param);
             paramStates.add(r != null ? r : State.POSSIBLE_NULL);
         }
 
-        Element e = ctx.getInfo().getTrees().getElement(ctx.getPath());
+        Element e = ctx.getInfo().getTrees().getElement(miPath);
 
         if (e == null || e.getKind() != ElementKind.METHOD) {
             return null;
@@ -317,17 +349,22 @@ public class NPECheck {
 
         ExecutableElement ee = (ExecutableElement) e;
         int index = 0;
-        List<ErrorDescription> result = new ArrayList<>();
         List<? extends VariableElement> params = ee.getParameters();
 
         for (VariableElement param : params) {
             if (getStateFromAnnotations(ctx.getInfo(), param) == NOT_NULL && (!ee.isVarArgs() || param != params.get(params.size() - 1))) {
                 switch (paramStates.get(index)) {
                     case NULL: case NULL_HYPOTHETICAL:
-                        result.add(ErrorDescriptionFactory.forTree(ctx, mit.getArguments().get(index), NbBundle.getMessage(NPECheck.class, "ERR_NULL_TO_NON_NULL_ARG")));
+                        if (result == null) {
+                            result = new ArrayList<>(1);
+                        }
+                        result.add(ErrorDescriptionFactory.forTree(ctx, mit.getArguments().get(index), NbBundle.getMessage(NPECheck.class, "ERR_NULL_TO_NON_NULL_ARG"))); // NOI18N
                         break;
                     case POSSIBLE_NULL_REPORT:
-                        result.add(ErrorDescriptionFactory.forTree(ctx, mit.getArguments().get(index), NbBundle.getMessage(NPECheck.class, "ERR_POSSIBLENULL_TO_NON_NULL_ARG")));
+                        if (result == null) {
+                            result = new ArrayList<>(1);
+                        }
+                        result.add(ErrorDescriptionFactory.forTree(ctx, mit.getArguments().get(index), NbBundle.getMessage(NPECheck.class, "ERR_POSSIBLENULL_TO_NON_NULL_ARG"))); // NOI18N
                         break;
                 }
             }
@@ -485,23 +522,11 @@ public class NPECheck {
         info.putCachedValue(KEY_EXPRESSION_STATE, result, CompilationInfo.CacheClearPolicy.ON_TASK_END);
         return result;
     }
-    //Cancelling:
-    private static Map<Tree, State> computeExpressionsState(HintContext ctx) {
-        Map<Tree, State> result = (Map<Tree, State>) ctx.getInfo().getCachedValue(KEY_EXPRESSION_STATE);
-        
-        if (result != null) {
-            return result;
-        }
-        
-        VisitorImpl v = new VisitorImpl(ctx);
-        
-        v.scan(ctx.getInfo().getCompilationUnit(), null);
 
-        result = v.expressionState;
-        ctx.getInfo().putCachedValue(KEY_EXPRESSION_STATE, result, CompilationInfo.CacheClearPolicy.ON_TASK_END);
-        return result;
+    private static Map<Tree, State> computeExpressionsState(HintContext ctx) {
+        return computeExpressionsState(ctx.getInfo(), ctx);
     }
-    
+
     private static State getStateFromAnnotations(CompilationInfo info, Element e) {
         return getStateFromAnnotations(info, e, State.POSSIBLE_NULL);
     }
@@ -720,21 +745,28 @@ public class NPECheck {
             if (expr == State.NULL || expr == State.NULL_HYPOTHETICAL || expr == State.POSSIBLE_NULL || expr == State.POSSIBLE_NULL_REPORT) {
                 wasNPE = true;
             }
-            
-            Element site = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getExpression()));
-            
+
+            TreePath currentPath = getCurrentPath();
+
+            Element site = info.getTrees().getElement(new TreePath(currentPath, node.getExpression()));
             if (isVariableElement(site) && wasNPE && (variable2State.get((VariableElement) site) == null || !variable2State.get((VariableElement) site).isNotNull())) {
                 variable2State.put((VariableElement) site, NOT_NULL_BE_NPE);
             }
-            // special case: if the memberSelect selects enum field = constant, it is never null.
-            if (site != null && site.getKind() == ElementKind.ENUM) {
-                Element enumConst = info.getTrees().getElement(getCurrentPath());
-                if (enumConst != null && enumConst.getKind() == ElementKind.ENUM_CONSTANT) {
-                    return State.NOT_NULL;
+
+            Element selected = info.getTrees().getElement(currentPath);
+            if (Utilities.isValidElement(selected)) {
+                switch (selected.getKind()) {
+                    case ENUM_CONSTANT:
+                    case FIELD:
+                        State s = getStateFromNullabilityOfFieldsPreference(ctx.getPreferences(), (VariableElement) selected);
+                        if (s != null) {
+                            return s;
+                        }
+                        break;
                 }
             }
-            
-            return getStateFromAnnotations(info, info.getTrees().getElement(getCurrentPath()));
+
+            return getStateFromAnnotations(info, selected);
         }
 
         @Override
@@ -1046,19 +1078,28 @@ public class NPECheck {
             
             Element e = info.getTrees().getElement(getCurrentPath());
 
-            if (e == null || !isVariableElement(e)) {
+            if (!Utilities.isValidElement(e)) {
                 return State.POSSIBLE_NULL;
             }
-            if (e.getKind() == ElementKind.ENUM_CONSTANT) {
-                // enum constants are never null
-                return State.NOT_NULL;
+            switch (e.getKind()) {
+                case ENUM_CONSTANT:
+                case FIELD:
+                    State s = getStateFromNullabilityOfFieldsPreference(ctx.getPreferences(), (VariableElement) e);
+                    if (s != null) {
+                        return s;
+                    }
+                    break;
+            }
+
+            if (!isVariableElement(e)) {
+                return State.POSSIBLE_NULL;
             }
 
             State s = variable2State.get((VariableElement) e);
             if (s != null) {
                 return s;
             }
-            
+
             return getStateFromAnnotations(info, e);
         }
 
@@ -1548,12 +1589,201 @@ public class NPECheck {
     }
     
     private static boolean isVariableElement(HintContext ctx, Element ve) {
-        return ve != null && ((ctx != null && ctx.getPreferences().getBoolean(KEY_ENABLE_FOR_FIELDS, DEF_ENABLE_FOR_FIELDS)) ? 
+        return ve != null && (ctx != null && getEnabledForFieldsPreference(ctx.getPreferences()) ?
                 VARIABLE_ELEMENT_FIELDS : 
                 VARIABLE_ELEMENT_NO_FIELDS).contains(ve.getKind());
     }
-        
+
+    static boolean getEnabledForFieldsPreference(@NonNull Preferences prefs) {
+        return prefs.getBoolean(KEY_ENABLE_FOR_FIELDS, DEF_ENABLE_FOR_FIELDS);
+    }
+
+    static void setEnabledForFieldsPreference(@NonNull Preferences prefs, boolean enabledForFields) {
+        prefs.putBoolean(KEY_ENABLE_FOR_FIELDS, enabledForFields);
+    }
+
+    static boolean getUnboxingUnknownValuesPreference(@NonNull Preferences prefs) {
+        return prefs.getBoolean(KEY_UNBOXING_UNKNOWN_VALUES, DEF_UNBOXING_UNKNOWN_VALUES);
+    }
+
+    static void setUnboxingUnknownValuesPreference(@NonNull Preferences prefs, boolean unboxingUnknownValues) {
+        prefs.putBoolean(KEY_UNBOXING_UNKNOWN_VALUES, unboxingUnknownValues);
+    }
+
+    // Matches the behavior of String.trim(), which considers characters in the
+    // range U+0000 through U+0020 inclusive "whitespace".
+    private static final String WHITESPACE_REGEX = "[\\u0000-\\u0020]"; // NOI18N
+    static @NonNull Map<String, State> getNullabilityOfFieldsPreference(@NonNull Preferences prefs) {
+        Map<String, State> result = null;
+
+        String nullabilityOfFieldsPref = prefs.get(KEY_NULLABILITY_OF_FIELDS, DEF_NULLABILITY_OF_FIELDS);
+        if (nullabilityOfFieldsPref != null) {
+            String[] pairs = nullabilityOfFieldsPref.split(WHITESPACE_REGEX + "*;" + WHITESPACE_REGEX + "*"); // NOI18N
+            for (String pair : pairs) {
+                int eqPos = pair.indexOf('=');
+                if (eqPos < 0) {
+                    continue;
+                }
+
+                String fullyQualifiedFieldName = pair.substring(0, eqPos).trim();
+                if (fullyQualifiedFieldName.isEmpty()) {
+                    continue;
+                }
+
+                if (result == null) {
+                    // Use the number of occurrences of ';' + 1 as the initial capacity
+                    // TODO Commons Lang3 supports StringUtils.countMatches(CharSequence, char)
+                    result = new LinkedHashMap<String, State>(StringUtils.countMatches(nullabilityOfFieldsPref, ";") + 1); // NOI18N
+                }
+
+                if (result.containsKey(fullyQualifiedFieldName)) {
+                    continue;
+                }
+
+                String val = pair.substring(eqPos + 1).trim();
+
+                State state = nullabilityValueToState(val);
+                if (state == null) {
+                    continue;
+                }
+
+                result.put(fullyQualifiedFieldName, state);
+            }
+        }
+
+        if (result == null) {
+            result = Collections.emptyMap();
+        }
+
+        // TODO filter out enum constants? This would require access to a CompilationInfo
+        // by NPECheckPanel.
+
+        return result;
+    }
+
+    static @CheckForNull String stateToNullabilityValue(@NullAllowed State state) {
+        if (state != null) {
+            switch (state) {
+                case NULL:
+                case NULL_HYPOTHETICAL:
+                    return "yes"; // NOI18N
+                case NOT_NULL:
+                case NOT_NULL_HYPOTHETICAL:
+                    return "no"; // NOI18N
+                case POSSIBLE_NULL:
+                case POSSIBLE_NULL_REPORT:
+                    return "maybe"; // NOI18N
+            }
+        }
+        return null;
+    }
+
+    static void setNullabilityOfFieldsPreference(@NonNull Preferences prefs, @NullAllowed Map<String, State> m) {
+        StringBuilder sb = null;
+        if (m != null) {
+            for (final Map.Entry<String, State> e : m.entrySet()) {
+                String fullyQualifiedFieldName = e.getKey();
+                if (fullyQualifiedFieldName == null) {
+                    continue;
+                }
+                fullyQualifiedFieldName = fullyQualifiedFieldName.trim();
+                if (fullyQualifiedFieldName.isEmpty()) {
+                    continue;
+                }
+                String val = stateToNullabilityValue(e.getValue());
+                if (val == null) {
+                    continue;
+                }
+
+                final boolean first = (sb == null);
+                if (first) {
+                    sb = new StringBuilder(fullyQualifiedFieldName.length() + 1 + val.length());
+                } else {
+                    sb.append(';');
+                }
+                sb.append(fullyQualifiedFieldName).append('=').append(val);
+            }
+        }
+        // For some reason, calling prefs.remove() to remove the value associated
+        // with KEY_NULLABILITY_OF_FIELDS affects preference change detection.
+        // In particular, going from a non-existent value to some non-null value
+        // does not register as a change.
+        prefs.put(KEY_NULLABILITY_OF_FIELDS, sb == null ? "" : sb.toString()); // NOI18N
+    }
+
+    static @CheckForNull State nullabilityValueToState(@NullAllowed String val) {
+        if (val != null) {
+            switch (val) {
+                case "yes": // NOI18N
+                    return NULL;
+                case "no": // NOI18N
+                    return NOT_NULL;
+                case "maybe": // NOI18N
+                    return POSSIBLE_NULL_REPORT;
+            }
+        }
+        return null;
+    }
+
+    private static final int MAX_NUM_CACHED_PATTERNS = 1000;
+    private static final Map<String, Pattern> CACHED_PATTERNS = Collections.synchronizedMap(new LinkedHashMap<String, Pattern>(100, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, Pattern> eldest) {
+            return size() > MAX_NUM_CACHED_PATTERNS;
+        }
+    });
+    static @CheckForNull State getStateFromNullabilityOfFieldsPreference(@NonNull Preferences prefs, @NonNull VariableElement fieldElem) {
+        // Special case: if the field is an enum constant, it is never null.
+        if (fieldElem.getKind() == ElementKind.ENUM_CONSTANT) {
+            return NOT_NULL;
+        }
+
+        assert fieldElem.getKind() == ElementKind.FIELD;
+
+        String fullyQualifiedFieldName;
+
+        {
+            String fieldSimpleName = Objects.toString(fieldElem.getSimpleName(), null);
+            if (fieldSimpleName == null) {
+                return null;
+            }
+            Element enclosingElem = fieldElem.getEnclosingElement();
+            if (!(enclosingElem instanceof TypeElement)) {
+                return null;
+            }
+            String fullyQualifiedEnclosingName = Objects.toString(((TypeElement) enclosingElem).getQualifiedName(), null);
+            if (fullyQualifiedEnclosingName == null) {
+                return null;
+            }
+            fullyQualifiedFieldName = fullyQualifiedEnclosingName + "." + fieldSimpleName; // NOI18N
+        }
+
+        String nullabilityOfFieldsPref = prefs.get(KEY_NULLABILITY_OF_FIELDS, DEF_NULLABILITY_OF_FIELDS);
+        if (nullabilityOfFieldsPref != null) {
+            Pattern pattern = CACHED_PATTERNS.computeIfAbsent(fullyQualifiedFieldName,
+                    (key) -> Pattern.compile("(?:^|;)" + WHITESPACE_REGEX + "*" + // NOI18N
+                            Pattern.quote(key) +
+                            WHITESPACE_REGEX + "*=" + WHITESPACE_REGEX + "*([a-z]+)" + WHITESPACE_REGEX + "*(?:;|$)")); // NOI18N
+            Matcher matcher = pattern.matcher(nullabilityOfFieldsPref);
+            while (matcher.find()) {
+                State state = nullabilityValueToState(matcher.group(1));
+                if (state != null) {
+                    return state;
+                }
+            }
+        }
+
+        return BASE_NULLABILITY_OF_FIELDS.get(fullyQualifiedFieldName);
+    }
+
     private static final Set<ElementKind> VARIABLE_ELEMENT_NO_FIELDS = EnumSet.of(ElementKind.EXCEPTION_PARAMETER, ElementKind.LOCAL_VARIABLE, ElementKind.PARAMETER);
     private static final Set<ElementKind> VARIABLE_ELEMENT_FIELDS = EnumSet.of(ElementKind.EXCEPTION_PARAMETER, ElementKind.FIELD, ElementKind.LOCAL_VARIABLE, ElementKind.PARAMETER);
-    
+
+    public static final class CustomizerProviderImpl implements CustomizerProvider {
+
+        @Override
+        public JComponent getCustomizer(Preferences prefs) {
+            return new NPECheckPanel(prefs);
+        }
+    }
 }

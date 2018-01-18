@@ -497,7 +497,9 @@ public class ScanStartedTest extends IndexingTestBase {
                 msg != null &&
                 msg.startsWith("scanStarting:") &&  //NOI18N
                 ie.first().equals(record.getParameters()[0])) {
-                throw ie.second();
+                RuntimeException exception = internalException.second();
+                internalException = null; // Reset handler internalException
+                throw exception;
             } else {
                 super.publish(record);
             }

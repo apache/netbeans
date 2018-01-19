@@ -249,7 +249,7 @@ public class JShellLauncher extends JShellTool {
             Thread.currentThread().setContextClassLoader(Lookup.getDefault().lookup(ClassLoader.class));
             JShell.Builder b = makeBuilder();
             if (execGen != null) {
-                    b.executionEngine(new CaptureExecControl(execGen), Collections.emptyMap());
+                    b.executionEngine(new CaptureExecControl(execGen), null);
             }
             String s = System.getProperty("jshell.logging.properties");
             if (s != null) {

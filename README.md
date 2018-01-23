@@ -4,6 +4,8 @@
 
 # Kotlin plugin for NetBeans IDE
 
+**NOTE**: This plugin is no longer actively developed. See https://github.com/JetBrains/kotlin-netbeans/issues/122 for more information.
+
 ## Installing Kotlin plugin
 
 ### NetBeans Update Center

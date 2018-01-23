@@ -277,6 +277,12 @@ public class RADProperty extends FormProperty {
         {   // get the enumeration values by standard means
             enumerationValues = (Object[])
                                 descriptor.getValue("enumerationValues"); // NOI18N
+            if (enumerationValues != null && enumerationValues.length == 0) {
+                //JDK-8131347: For @BeanProperty annotation,
+                //if there are no enumerationValues, an empty array is returned.
+                //But an EnumEditor shouldn't be created for it:
+                enumerationValues = null;
+            }
         }
         else { // hack: debugGraphicsOptions is problematic because its
                // default value (0) does not correspond to any of the

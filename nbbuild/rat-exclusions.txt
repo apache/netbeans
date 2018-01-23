@@ -200,8 +200,5 @@ spellchecker.dictionary_en/release/modules/dict/*.description
 spi.navigator/test/unit/src/org/netbeans/modules/navigator/resources/lastsel/file.lastsel_mime1
 ###  <!-- XSDs for usage at runtime and code generation - the XSDs are not modified, so covered by https://www.apache.org/legal/resolved.html#category-b -->
 websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/*.xsd
-###  <!-- specifies a standard -->
-welcome/src/org/netbeans/modules/welcome/resources/rss-0_91.dtd
 ###  <!-- template files - tracked by https://issues.apache.org/jira/browse/NETBEANS-85 -->
 xml/src/org/netbeans/modules/xml/resources/templates/*
-

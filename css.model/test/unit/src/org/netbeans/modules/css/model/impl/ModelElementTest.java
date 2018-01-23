@@ -47,38 +47,38 @@ public class ModelElementTest extends ModelTestBase {
         super(name);
     }
 
-    public void testAcceptVisitorGeneric_speed() throws IOException {
-        FileObject file = getTestFile("testfiles/bootstrap.css");
-        String content = file.asText();
-
-        System.out.println("Testing performance on " + file.getNameExt() + " ... ");
-
-        long a = System.currentTimeMillis();
-        CssParserResult result = TestUtil.parse(content);
-        long b = System.currentTimeMillis();
-        System.out.println("file parsing took " + (b - a) + "ms.");
-
-        Model model = createModel(result);
-
-        long c = System.currentTimeMillis();
-        System.out.println("model creation took " + (c - b) + "ms.");
-
-        StyleSheet s = getStyleSheet(model);
-        assertNotNull(s);
-
-        ModelVisitor visitor = new ModelVisitor.Adapter() {
-            @Override
-            public void visitRule(Rule rule) {
-                //no-op
-            }
-        };
-
-        s.accept(visitor);
-        long d = System.currentTimeMillis();
-
-        System.out.println("visiting took " + (d - c) + "ms.");
-
-    }
+//    public void testAcceptVisitorGeneric_speed() throws IOException {
+//        FileObject file = getTestFile("testfiles/bootstrap.css");
+//        String content = file.asText();
+//
+//        System.out.println("Testing performance on " + file.getNameExt() + " ... ");
+//
+//        long a = System.currentTimeMillis();
+//        CssParserResult result = TestUtil.parse(content);
+//        long b = System.currentTimeMillis();
+//        System.out.println("file parsing took " + (b - a) + "ms.");
+//
+//        Model model = createModel(result);
+//
+//        long c = System.currentTimeMillis();
+//        System.out.println("model creation took " + (c - b) + "ms.");
+//
+//        StyleSheet s = getStyleSheet(model);
+//        assertNotNull(s);
+//
+//        ModelVisitor visitor = new ModelVisitor.Adapter() {
+//            @Override
+//            public void visitRule(Rule rule) {
+//                //no-op
+//            }
+//        };
+//
+//        s.accept(visitor);
+//        long d = System.currentTimeMillis();
+//
+//        System.out.println("visiting took " + (d - c) + "ms.");
+//
+//    }
 
     public void testAcceptVisitorOfNewElements() {
         Model model = createModel();

@@ -125,7 +125,8 @@ implements Cloneable, Stamps.Updater {
             activator = new NetigsoActivator(this);
             configMap.put("netigso.archive", NetigsoArchiveFactory.DEFAULT.create(this)); // NOI18N
             if (!configMap.containsKey("felix.log.level")) { // NOI18N
-              configMap.put("felix.log.level", "4"); // NOI18N - allow others to set log level
+                String felixLevel = felixLogLevel(LOG);
+                configMap.put("felix.log.level", felixLevel); // NOI18N
             }
             configMap.put("felix.bootdelegation.classloaders", activator); // NOI18N
             String startLevel = FRAMEWORK_START_LEVEL();
@@ -155,6 +156,20 @@ implements Cloneable, Stamps.Updater {
                 LOG.log(Level.WARNING, "Cannot fake " + mi.getCodeName(), ex);
             }
         }
+    }
+
+    static String felixLogLevel(final Logger log) {
+        String felixLevel = "1"; // NOI18N
+        if (log.isLoggable(Level.WARNING)) {
+            felixLevel = "2"; // NOI18N
+        }
+        if (log.isLoggable(Level.CONFIG)) {
+            felixLevel = "3"; // NOI18N
+        }
+        if (log.isLoggable(Level.FINE)) {
+            felixLevel = "4"; // NOI18N
+        }
+        return felixLevel;
     }
 
     @Override

@@ -20,15 +20,21 @@ package org.netbeans.api.java.source.gen;
 
 import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import java.io.File;
 import java.util.*;
 import java.io.IOException;
+import java.util.prefs.Preferences;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.TypeKind;
 import org.netbeans.junit.NbTestSuite;
 import junit.textui.TestRunner;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
+import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.*;
 import static org.netbeans.api.java.source.JavaSource.*;
+import org.netbeans.modules.java.ui.FmtOptions;
 import org.openide.filesystems.FileUtil;
 
 /**
@@ -55,6 +61,7 @@ public class Method1Test extends GeneratorTestMDRCompat {
         suite.addTest(new Method1Test("test159944"));
         suite.addTest(new Method1Test("test159944b"));
         suite.addTest(new Method1Test("test159944c"));
+        suite.addTest(new Method1Test("testBinaryWrapIfLongNPE"));
         // suite.addTest(new Method1Test("testMethodBody"));
         // suite.addTest(new Method1Test("testParameterizedMethod"));
         // suite.addTest(new Method1Test("testAddRemoveInOneTrans"));
@@ -685,6 +692,57 @@ public class Method1Test extends GeneratorTestMDRCompat {
       String res = TestUtilities.copyFileToString(file);
       assertEquals(golden, res);
   }
+
+    public void testBinaryWrapIfLongNPE() throws Exception {
+        String test =
+                "class Test {\n" +
+                "\n" +
+                "}";
+        String golden =
+                "class Test {\n" +
+                "\n" +
+                "    int test() {\n" +
+                "        return 1 + other.x;\n" +
+                "    }\n" +
+                "\n" +
+                "}";
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, test);
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        preferences.put(FmtOptions.wrapBinaryOps, CodeStyle.WrapStyle.WRAP_IF_LONG.name());
+        try {
+            JavaSource src = getJavaSource(testFile);
+            Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+                public void run(WorkingCopy copy) throws Exception {
+                    if (copy.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
+                        return;
+                    }
+                    ClassTree node = (ClassTree) copy.getCompilationUnit().getTypeDecls().get(0);
+                    ExpressionTree expr = copy.getTreeUtilities().parseExpression("1 + other.x", new SourcePositions[1]);
+                    Scope scope = copy.getTrees().getScope(new TreePath(new TreePath(copy.getCompilationUnit()), node));
+                    copy.getTreeUtilities().attributeTree(expr, scope);
+                    TreeMaker make = copy.getTreeMaker();
+                    MethodTree test = make.Method(make.Modifiers(EnumSet.noneOf(Modifier.class)),
+                                                  "test",
+                                                  make.PrimitiveType(TypeKind.INT),
+                                                  Collections.emptyList(),
+                                                  Collections.emptyList(),
+                                                  Collections.emptyList(),
+                                                  make.Block(Collections.singletonList(make.Return(expr)), false),
+                                                  null);
+                    ClassTree modified = make.addClassMember(node, test);
+                    System.out.println("original: " + node);
+                    System.out.println("modified: " + modified);
+                    copy.rewrite(node, modified);            }
+            };
+            src.runModificationTask(task).commit();
+            String res = TestUtilities.copyFileToString(testFile);
+            assertEquals(golden, res);
+        } finally {
+            preferences.remove(FmtOptions.methodDeclBracePlacement);
+        }
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     /**

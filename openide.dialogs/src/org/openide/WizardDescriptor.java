@@ -813,7 +813,7 @@ public class WizardDescriptor extends DialogDescriptor {
     }
 
     private <A> void updateStateOpen(SettingsAndIterator<A> data) {
-        if( !initialized.get() ) //#220286
+        if( !initialized.get()) //#220286
             return;
         
         Panel<A> p = data.getIterator(this).current();

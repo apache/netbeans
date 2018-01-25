@@ -400,7 +400,7 @@ final class TemplateWizard2 extends javax.swing.JPanel implements DocumentListen
         File oldLocation = locationFolder;
         locationFolder = fd;
         if (locationFolderModel != null) {
-            locationFolderModel.getFeatureDescriptor().setValue("currentDir", fd);
+            locationFolderModel.getFeatureDescriptor().setValue("currentDir", fd); // NOI18N
         }
         firePropertyChange (PROP_LOCATION_FOLDER, oldLocation, locationFolder);
         fireStateChanged ();

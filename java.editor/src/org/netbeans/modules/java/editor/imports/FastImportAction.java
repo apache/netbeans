@@ -97,7 +97,15 @@ public class FastImportAction extends BaseAction {
                     final JavaSource javaSource = parameter.getJavaSource();
                     Pair<Map<String, List<Element>>, Map<String, List<Element>>> result = new ComputeImports(parameter).computeCandidates(Collections.singleton(ident));
 
-                    final List<TypeElement> priviledged = ElementFilter.typesIn(result.a.get(ident));
+                    List<Element> candidates = result.a.get(ident);
+                    // If the identifier is already imported, in scope, or does
+                    // not correspond to an importable element, then there will
+                    // not be any candidates.
+                    if (candidates == null) {
+                        Toolkit.getDefaultToolkit().beep();
+                        return;
+                    }
+                    final List<TypeElement> priviledged = ElementFilter.typesIn(candidates);
 
                     if (priviledged == null) {
                         //not found?

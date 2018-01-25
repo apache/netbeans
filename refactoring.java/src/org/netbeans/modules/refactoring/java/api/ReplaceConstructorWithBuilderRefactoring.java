@@ -49,6 +49,7 @@ public final class ReplaceConstructorWithBuilderRefactoring extends AbstractRefa
 
     
     private String builderName;
+    private String buildMethodName;
     private List<Setter> setters;
 
     /**
@@ -68,12 +69,28 @@ public final class ReplaceConstructorWithBuilderRefactoring extends AbstractRefa
     }
 
     /**
+     * Getter for build method name
+     * @return name of build method
+     */
+    public @NonNull String getBuildMethodName() {
+        return buildMethodName;
+    }
+
+    /**
      * 
      * @param builderName 
      */
     public void setBuilderName(@NonNull String builderName) {
         this.builderName = builderName;
     }
+    
+    /**
+     * 
+     * @param buildMethodName 
+     */
+    public void setBuildMethodName(@NonNull String buildMethodName) {
+        this.buildMethodName = buildMethodName;
+    }    
 
     /**
      * Getter for list of setters

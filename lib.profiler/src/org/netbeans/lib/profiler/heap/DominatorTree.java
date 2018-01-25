@@ -19,10 +19,11 @@
 
 package org.netbeans.lib.profiler.heap;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,14 +118,13 @@ class DominatorTree {
             if (oldIdom == -1 || (oldIdom > 0 && (ignoreDirty || dirtySet.contains(oldIdom) || dirtySet.contains(instanceId)))) {            
 //processedId++;
                 LongMap.Entry entry = heap.idToOffsetMap.get(instanceId);
-                List refs = entry.getReferences();
-                Iterator refIt = refs.iterator();
-                long newIdomId = ((Long)refIt.next()).longValue();
+                LongIterator refIt = entry.getReferences();
+                long newIdomId = refIt.next();
                 boolean dirty = false;
                 
                 while(refIt.hasNext() && newIdomId != 0) {
-                    Long refIdObj = (Long)refIt.next();
-                    newIdomId = intersect(newIdomId, refIdObj.longValue());
+                    long refIdObj = refIt.next();
+                    newIdomId = intersect(newIdomId, refIdObj);
                 }
                 if (oldIdom == -1) {
 //addedBynewDirtySet.add(newDirtySet.contains(instanceId) && !dirtySet.contains(instanceId));
@@ -344,6 +344,16 @@ class DominatorTree {
         Instance ii = heap.getInstanceByID(instanceid.longValue());
         return ii.getJavaClass().getName()+"#"+ii.getInstanceNumber();
         
+    }
+
+    //---- Serialization support
+    void writeToStream(DataOutputStream out) throws IOException {
+        map.writeToStream(out);
+    }
+
+    DominatorTree(HprofHeap h, DataInputStream dis) throws IOException {
+        heap = h;
+        map = new LongHashMap(dis);
     }
     
     private static final class NearestGCRootCache extends LinkedHashMap {

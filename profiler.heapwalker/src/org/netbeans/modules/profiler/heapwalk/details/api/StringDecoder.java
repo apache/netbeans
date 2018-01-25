@@ -16,7 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.profiler.heapwalk.details.basic;
+
+package org.netbeans.modules.profiler.heapwalk.details.api;
 
 import java.util.List;
 import org.netbeans.lib.profiler.heap.Heap;
@@ -26,14 +27,14 @@ import org.netbeans.lib.profiler.heap.JavaClass;
  *
  * @author Tomas Hurka
  */
-class StringDecoder {
+public final class StringDecoder {
     
     private final byte coder;
     private final List<String> values;
     private int HI_BYTE_SHIFT;
     private int LO_BYTE_SHIFT;
 
-    StringDecoder(Heap heap, byte c, List<String> val) {
+    public StringDecoder(Heap heap, byte c, List<String> val) {
         coder = c;
         values = val;
         if (coder == 1) {
@@ -43,7 +44,7 @@ class StringDecoder {
         }
     }
 
-    int getStringLength() {
+    public int getStringLength() {
         int size = values.size();
         switch (coder) {
             case -1:
@@ -57,7 +58,7 @@ class StringDecoder {
         }
     }
 
-    String getValueAt(int index) {
+    public String getValueAt(int index) {
         switch (coder) {
             case -1:
                 return values.get(index);

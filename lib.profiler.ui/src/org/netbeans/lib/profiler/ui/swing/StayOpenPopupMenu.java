@@ -17,11 +17,10 @@
  * under the License.
  */
 
-package org.netbeans.modules.profiler.v2.ui;
+package org.netbeans.lib.profiler.ui.swing;
 
 import java.awt.Component;
 import java.awt.EventQueue;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -29,16 +28,12 @@ import java.awt.event.MouseEvent;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComponent;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
 import javax.swing.MenuElement;
 import javax.swing.MenuSelectionManager;
-import javax.swing.UIManager;
-import org.netbeans.lib.profiler.ui.UIUtils;
 
 /**
  * A JPopupMenu implementation optionally allowing to interact with JMenuItems
@@ -49,9 +44,7 @@ import org.netbeans.lib.profiler.ui.UIUtils;
  *
  * @author Jiri Sedlacek
  */
-public class StayOpenPopupMenu extends JPopupMenu {
-    
-    private boolean forceBackground;
+public class StayOpenPopupMenu extends ProfilerPopupMenu {
     
     
     public StayOpenPopupMenu() {
@@ -60,36 +53,6 @@ public class StayOpenPopupMenu extends JPopupMenu {
 
     public StayOpenPopupMenu(String label) {
         super(label);
-    }
-    
-    
-    // --- Tweaking UI ---------------------------------------------------------
-    
-    public JMenuItem add(JMenuItem menuItem) {
-        if (forceBackground && !UIUtils.isOracleLookAndFeel()) menuItem.setOpaque(false);
-        return super.add(menuItem);
-    }
-    
-    public void add(Component comp, Object constraints) {
-        if (forceBackground && !UIUtils.isOracleLookAndFeel() && comp instanceof JComponent)
-            ((JComponent)comp).setOpaque(false);
-        comp.setMinimumSize(comp.getPreferredSize());
-        super.add(comp, constraints);
-    }
-    
-    
-    public void setForceBackground(boolean force) {
-        if (!UIUtils.isNimbus() || !Boolean.TRUE.equals(UIManager.getBoolean("nb.dark.theme"))) // NOI18N
-            this.forceBackground = force;
-    }
-    
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        
-        if (forceBackground) {
-            g.setColor(getBackground());
-            g.fillRect(1, 1, getWidth() - 2, getHeight() - 2);
-        }
     }
     
     

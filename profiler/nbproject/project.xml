@@ -67,7 +67,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.137</specification-version>
+                        <specification-version>1.145</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -255,6 +255,7 @@
             </test-dependencies>
             <friend-packages>
                 <friend>com.sun.tools.visualvm.core</friend>
+                <friend>com.sun.tools.visualvm.heapdump</friend>
                 <friend>com.sun.tools.visualvm.profiler</friend>
                 <friend>com.sun.tools.visualvm.profiling</friend>
                 <friend>com.sun.tools.visualvm.sampler</friend>
@@ -277,7 +278,6 @@
                 <package>org.netbeans.modules.profiler</package>
                 <package>org.netbeans.modules.profiler.actions</package>
                 <package>org.netbeans.modules.profiler.ui</package>
-                <package>org.netbeans.modules.profiler.ui.panels</package>
                 <package>org.netbeans.modules.profiler.utils</package>
                 <package>org.netbeans.modules.profiler.v2</package>
             </friend-packages>

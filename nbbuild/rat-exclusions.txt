@@ -1,4 +1,5 @@
 
+###### BEGIN OF EXCLUSIONS (Do not remove this marker!)
 ###### build artifacts 
 **/build/**
 nbbuild/licenses/**

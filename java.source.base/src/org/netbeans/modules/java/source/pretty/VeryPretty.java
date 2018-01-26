@@ -74,7 +74,6 @@ import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.*;
 import static com.sun.tools.javac.code.Flags.*;
-import com.sun.tools.javac.code.Symbol.*;
 import com.sun.tools.javac.comp.Operators;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.DCTree;
@@ -2116,27 +2115,6 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	out.toCol(n);
     }
 
-    private void printQualified(Symbol t) {
-	if (t.owner != null && t.owner.name.getByteLength() > 0
-		&& !(t.type instanceof Type.TypeVar)
-		&& !(t.owner instanceof MethodSymbol)) {
-	    if (t.owner instanceof Symbol.PackageSymbol)
-		printAllQualified(t.owner);
-	    else
-		printQualified(t.owner);
-	    print('.');
-	}
-	print(t.name);
-    }
-
-    private void printAllQualified(Symbol t) {
-	if (t.owner != null && t.owner.name.getByteLength() > 0) {
-	    printAllQualified(t.owner);
-	    print('.');
-	}
-	print(t.name);
-    }
-    
     protected void printTagName(DocTree node) {
         out.append("@");
         out.append(node.getKind().tagName);

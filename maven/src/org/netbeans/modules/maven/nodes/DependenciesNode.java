@@ -174,16 +174,21 @@ public class DependenciesNode extends AbstractNode {
         @SuppressWarnings("LeakingThisInConstructor")       
         DependenciesSet(NbMavenProjectImpl project, DependencyType type) {
             this.project = project;
-            this.type = type;           
+            this.type = type;
+            ModuleInfoSupport mis = null;
             switch (type) {   
                 case COMPILE:
                 case TEST:
-                    moduleInfoSupport = new ModuleInfoSupport(project, type);
-                    break;
+                    try {
+                        mis = new ModuleInfoSupport(project, type);
+                        break;
+                    } catch (LinkageError err) {
+                        LOG.log(Level.INFO, "Can't initialize dependencies", err);
+                        // fallthrough
+                    }
                 default:
-                    moduleInfoSupport = null;
-                    break;
             }
+            this.moduleInfoSupport = mis;
             
             NbMavenProject nbmp = project.getProjectWatcher();
             nbmp.addPropertyChangeListener(WeakListeners.propertyChange(this, nbmp));

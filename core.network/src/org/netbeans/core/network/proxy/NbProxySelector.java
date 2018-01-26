@@ -21,10 +21,11 @@ package org.netbeans.core.network.proxy;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -421,10 +422,9 @@ public final class NbProxySelector extends ProxySelector {
                 }
 
                 fname = netProperties.getCanonicalPath();
-                InputStream in = new FileInputStream(fname);
-                BufferedInputStream bin = new BufferedInputStream(in);
-                props.load(bin);
-                bin.close();
+                try (InputStream bin = new BufferedInputStream(Files.newInputStream(Paths.get(fname)))) {
+                    props.load(bin);
+                }
 
                 String val = props.getProperty(propertyKey);
                 val = System.getProperty(propertyKey, val);

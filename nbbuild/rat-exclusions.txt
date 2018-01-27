@@ -20,8 +20,6 @@ nbbuild/rat-exclusions.txt
 **/Makefile-vc
 **/Makefile-vc-wo-crt
 **/package-list
-html.editor/src/org/netbeans/modules/html/editor/todo.txt
-html.editor/src/org/netbeans/modules/html/editor/resources/DTDs/*/catalog
 java.editor/src/org/netbeans/modules/java/editor/resources/JavaExample
 lib.uihandler/src/org/netbeans/lib/uihandler/pubKey
 maven.indexer/external/NOTICE-patched-indexer-core-6.0.0
@@ -175,11 +173,6 @@ css.editor/src/org/netbeans/modules/css/resources/CascadeStyleSheet.css.template
 css.editor/src/org/netbeans/modules/css/resources/CssExample
 db.sql.editor/src/org/netbeans/modules/db/sql/editor/resources/SQLExample
 editor.plain/src/org/netbeans/modules/editor/plain/resources/PlainTextExample
-html.editor/src/org/netbeans/modules/html/editor/options/ui/formatSample.html
-html.editor/src/org/netbeans/modules/html/editor/resources/HTMLExample
-html.editor/src/org/netbeans/modules/html/editor/resources/XHTMLExample
-j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/ui/resources/*.xml
-j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/wizard/jpacontroller/resources/*.txt
 javafx2.project/src/org/netbeans/modules/javafx2/project/templates/**
 jshell.support/src/org/netbeans/modules/jshell/resources/consoleExample.jsh
 junit.ui/src/org/netbeans/modules/junit/ui/resources/*.template
@@ -193,8 +186,6 @@ xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample
 xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample
 
 ###### miscellaneous
-### <!-- XSDs for usage at runtime and code generation - the XSDs are not modified, so covered by https://www.apache.org/legal/resolved.html#category-b -->
-j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/dd/resources/*.xsd
 ###  <!-- config file with no place for license header-->
 maven.htmlui/src/org/netbeans/modules/maven/htmlui/UIDefaults
 ###  <!--READMEs-->

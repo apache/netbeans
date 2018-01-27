@@ -2100,9 +2100,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         </difference>
 
         <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="build/rat-report.txt">
-            <rat:substringMatcher licenseFamilyCategory="w3c2" licenseFamilyName="W3C Software and Document Notice and License">
-                <pattern substring="W3C Software and Document Notice and License"/>
-            </rat:substringMatcher>
             <rat:substringMatcher licenseFamilyCategory="oasis" licenseFamilyName="OASIS">
                 <pattern substring="[OASIS]"/>
             </rat:substringMatcher>
@@ -2110,12 +2107,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 International Business Machines Corporation and Microsoft Corporation
                 All Rights Reserved
                 License for WSDL Schema Files
-            </rat:fullTextMatcher>
-            <rat:fullTextMatcher licenseFamilyCategory="ISO-SGML" licenseFamilyName="International Organization for Standardization for SGML">
-                International Organization for Standardization 1986
-                Permission to copy in any form is granted for use with
-                conforming SGML systems and applications as defined in
-                ISO 8879, provided this notice is included in all copies.
             </rat:fullTextMatcher>
             <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
                 Licensed to the Apache Software Foundation (ASF) under one or more contributor 
@@ -2131,10 +2122,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 are made available under the terms of the Eclipse Public License v1.0
                 which accompanies this distribution
             </rat:fullTextMatcher>
-            <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
             <rat:approvedLicense familyName="OASIS"/>
             <rat:approvedLicense familyName="WSDL Schema Files" />
-            <rat:approvedLicense familyName="International Organization for Standardization for SGML"/>
             <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
             <rat:approvedLicense familyName="Eclipse Public License and Eclipse Distribution License" />
             <rat:approvedLicense familyName="Eclipse Public License" />
@@ -2142,9 +2131,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <resources refid="rat.files" />
         </rat:report>
         <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" format="xml" reportfile="build/rat-report.xml">
-            <rat:substringMatcher licenseFamilyCategory="w3c2" licenseFamilyName="W3C Software and Document Notice and License">
-                <pattern substring="W3C Software and Document Notice and License"/>
-            </rat:substringMatcher>
             <rat:substringMatcher licenseFamilyCategory="oasis" licenseFamilyName="OASIS">
                 <pattern substring="[OASIS]"/>
             </rat:substringMatcher>
@@ -2152,12 +2138,6 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 International Business Machines Corporation and Microsoft Corporation
                 All Rights Reserved
                 License for WSDL Schema Files
-            </rat:fullTextMatcher>
-            <rat:fullTextMatcher licenseFamilyCategory="ISO-SGML" licenseFamilyName="International Organization for Standardization for SGML">
-                International Organization for Standardization 1986
-                Permission to copy in any form is granted for use with
-                conforming SGML systems and applications as defined in
-                ISO 8879, provided this notice is included in all copies.
             </rat:fullTextMatcher>
             <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
                 Licensed to the Apache Software Foundation (ASF) under one or more contributor
@@ -2173,10 +2153,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
                 are made available under the terms of the Eclipse Public License v1.0
                 which accompanies this distribution
             </rat:fullTextMatcher>
-            <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
             <rat:approvedLicense familyName="OASIS"/>
             <rat:approvedLicense familyName="WSDL Schema Files" />
-            <rat:approvedLicense familyName="International Organization for Standardization for SGML"/>
             <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
             <rat:approvedLicense familyName="Eclipse Public License and Eclipse Distribution License" />
             <rat:approvedLicense familyName="Eclipse Public License" />

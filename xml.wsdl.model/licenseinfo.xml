@@ -21,12 +21,10 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>src/org/netbeans/modules/maven/coverage/coverage-04.dtd</file>
-        <license ref="ISO-8879-SGML" />
-    </fileset>
-    <fileset>
-        <file>src/org/netbeans/modules/maven/coverage/jacoco-1.0.dtd</file>
-        <license ref="EPL-v10" />
-        <comment type="CATEGORY_B">Used by XML parser at runtime.</comment>
+        <file>src/org/netbeans/modules/xml/wsdl/validator/resources/wsdl-2004-08-24.xsd</file>
+        <license ref="WSDL-2004" />
+        <comment type="CATEGORY_B">
+            Used at runtime for the XML validation.
+        </comment>
     </fileset>
 </licenseinfo>

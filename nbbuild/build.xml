@@ -2100,65 +2100,21 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         </difference>
 
         <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="build/rat-report.txt">
-            <rat:substringMatcher licenseFamilyCategory="oasis" licenseFamilyName="OASIS">
-                <pattern substring="[OASIS]"/>
-            </rat:substringMatcher>
-            <rat:fullTextMatcher licenseFamilyCategory="wsdl" licenseFamilyName="WSDL Schema Files">
-                International Business Machines Corporation and Microsoft Corporation
-                All Rights Reserved
-                License for WSDL Schema Files
-            </rat:fullTextMatcher>
             <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
                 Licensed to the Apache Software Foundation (ASF) under one or more contributor 
                 license agreements; and to You under the Apache License, Version 2.0.
             </rat:fullTextMatcher>
-            <rat:fullTextMatcher licenseFamilyCategory="EPL/EDL" licenseFamilyName="Eclipse Public License and Eclipse Distribution License">
-                This program and the accompanying materials are made available under the
-                terms of the Eclipse Public License v1.0 and Eclipse Distribution License v. 1.0
-                which accompanies this distribution.
-            </rat:fullTextMatcher>
-            <rat:fullTextMatcher licenseFamilyCategory="EPL" licenseFamilyName="Eclipse Public License">
-                This program and the accompanying materials
-                are made available under the terms of the Eclipse Public License v1.0
-                which accompanies this distribution
-            </rat:fullTextMatcher>
-            <rat:approvedLicense familyName="OASIS"/>
-            <rat:approvedLicense familyName="WSDL Schema Files" />
             <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
-            <rat:approvedLicense familyName="Eclipse Public License and Eclipse Distribution License" />
-            <rat:approvedLicense familyName="Eclipse Public License" />
-            
+
             <resources refid="rat.files" />
         </rat:report>
         <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" format="xml" reportfile="build/rat-report.xml">
-            <rat:substringMatcher licenseFamilyCategory="oasis" licenseFamilyName="OASIS">
-                <pattern substring="[OASIS]"/>
-            </rat:substringMatcher>
-            <rat:fullTextMatcher licenseFamilyCategory="wsdl" licenseFamilyName="WSDL Schema Files">
-                International Business Machines Corporation and Microsoft Corporation
-                All Rights Reserved
-                License for WSDL Schema Files
-            </rat:fullTextMatcher>
             <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
                 Licensed to the Apache Software Foundation (ASF) under one or more contributor
                 license agreements; and to You under the Apache License, Version 2.0.
             </rat:fullTextMatcher>
-            <rat:fullTextMatcher licenseFamilyCategory="EPL/EDL" licenseFamilyName="Eclipse Public License and Eclipse Distribution License">
-                This program and the accompanying materials are made available under the
-                terms of the Eclipse Public License v1.0 and Eclipse Distribution License v. 1.0
-                which accompanies this distribution.
-            </rat:fullTextMatcher>
-            <rat:fullTextMatcher licenseFamilyCategory="EPL" licenseFamilyName="Eclipse Public License">
-                This program and the accompanying materials
-                are made available under the terms of the Eclipse Public License v1.0
-                which accompanies this distribution
-            </rat:fullTextMatcher>
-            <rat:approvedLicense familyName="OASIS"/>
-            <rat:approvedLicense familyName="WSDL Schema Files" />
             <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
-            <rat:approvedLicense familyName="Eclipse Public License and Eclipse Distribution License" />
-            <rat:approvedLicense familyName="Eclipse Public License" />
-            
+
             <resources refid="rat.files" />
         </rat:report>
         <taskdef name="rattotest" classname="org.netbeans.nbbuild.RatReportTask" classpath="${build.ant.classes.dir}"/>

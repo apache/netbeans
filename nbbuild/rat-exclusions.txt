@@ -1,3 +1,19 @@
+###### Licensed to the Apache Software Foundation (ASF) under one
+###### or more contributor license agreements.  See the NOTICE file
+###### distributed with this work for additional information
+###### regarding copyright ownership.  The ASF licenses this file
+###### to you under the Apache License, Version 2.0 (the
+###### "License"); you may not use this file except in compliance
+###### with the License.  You may obtain a copy of the License at
+###### 
+######   http://www.apache.org/licenses/LICENSE-2.0
+###### 
+###### Unless required by applicable law or agreed to in writing,
+###### software distributed under the License is distributed on an
+###### "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+###### KIND, either express or implied.  See the License for the
+###### specific language governing permissions and limitations
+###### under the License.
 
 ###### BEGIN OF EXCLUSIONS (Do not remove this marker!)
 ###### build artifacts 
@@ -6,7 +22,6 @@ nbbuild/licenses/**
 nbbuild/netbeans/**
 nbbuild/testuserdir/**
 nbbuild/user.build.properties
-nbbuild/rat-exclusions.txt
 
 ###### user-specific files  
 **/nbproject/private/**
@@ -25,7 +40,6 @@ lib.uihandler/src/org/netbeans/lib/uihandler/pubKey
 maven.indexer/external/NOTICE-patched-indexer-core-6.0.0
 nbbuild/hudson/.hgmail-profiler
 nbbuild/l10n.patterns
-nbbuild/tagref
 o.n.core/test/unit/src/org/netbeans/core/modules/jars/localized-manifest/locmani/something.txt
 openide.util.lookup/test/unit/src/org/openide/util/lookup/MetaInfServicesLookupTestRunnable.txt
 openide.util.lookup/test/unit/src/org/openide/util/lookup/problem100320.txt
@@ -39,8 +53,6 @@ templates/src/org/netbeans/modules/templates/resources/userprop.txt
 ### limited degreed of creativity
 ## the files do not reach a level of creativity 
 maven.checkstyle/src/org/netbeans/modules/maven/format/checkstyle/config/configuration*.dtd
-##  Template for user - very limited degree of creativity  
-xsl/src/org/netbeans/modules/xsl/resources/templates/stylesheet.xsl
 
 ###### test data: https://www.apache.org/legal/src-headers.html#faq-exceptions 
 api.search/test/unit/src/org/netbeans/modules/search/data/**
@@ -184,21 +196,4 @@ o.apache.tools.ant.module/src/org/apache/tools/ant/module/resources/Project.xml_
 spring.beans/src/org/netbeans/modules/spring/beans/resources/templates/*.template
 xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample
 xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample
-
-###### miscellaneous
-###  <!-- config file with no place for license header-->
-maven.htmlui/src/org/netbeans/modules/maven/htmlui/UIDefaults
-###  <!--READMEs-->
-o.n.bootstrap/readme/*.txt
-###  <!-- ARGO UML zip file (documentation) -->
-performance/threaddemo/src/threaddemo/util/doc-files/TwoWaySupport.zargo
-###  <!-- user visible example for properties language -->
 properties.syntax/src/org/netbeans/modules/properties/syntax/PropertiesExample
-### <!--Description Files-->
-spellchecker.dictionary_en/release/modules/dict/*.description
-###  <!--empty file-->
-spi.navigator/test/unit/src/org/netbeans/modules/navigator/resources/lastsel/file.lastsel_mime1
-###  <!-- XSDs for usage at runtime and code generation - the XSDs are not modified, so covered by https://www.apache.org/legal/resolved.html#category-b -->
-websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/*.xsd
-###  <!-- template files - tracked by https://issues.apache.org/jira/browse/NETBEANS-85 -->
-xml/src/org/netbeans/modules/xml/resources/templates/*

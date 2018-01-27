@@ -21,12 +21,8 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>src/org/netbeans/modules/maven/coverage/coverage-04.dtd</file>
-        <license ref="ISO-8879-SGML" />
-    </fileset>
-    <fileset>
-        <file>src/org/netbeans/modules/maven/coverage/jacoco-1.0.dtd</file>
-        <license ref="EPL-v10" />
-        <comment type="CATEGORY_B">Used by XML parser at runtime.</comment>
+        <file>src/org/netbeans/modules/websvc/saas/model/wadl200902.xsd</file>
+        <license ref="CDDL-1.0" />
+        <comment>The file is needed to generate the model classes. There is no binary for this file, so it is included as is.</comment>
     </fileset>
 </licenseinfo>

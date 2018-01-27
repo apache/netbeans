@@ -21,12 +21,12 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>src/org/netbeans/modules/maven/coverage/coverage-04.dtd</file>
-        <license ref="ISO-8879-SGML" />
-    </fileset>
-    <fileset>
-        <file>src/org/netbeans/modules/maven/coverage/jacoco-1.0.dtd</file>
-        <license ref="EPL-v10" />
-        <comment type="CATEGORY_B">Used by XML parser at runtime.</comment>
+        <file>src/org/netbeans/modules/xml/resources/templates/emptyDTD.dtd.template</file>
+        <file>src/org/netbeans/modules/xml/resources/templates/emptyXML.xml.template</file>
+        <file>src/org/netbeans/modules/xml/resources/templates/emptyXmlSchema.xsd.template</file>
+        <file>src/org/netbeans/modules/xml/resources/templates/xhtml.xml.template</file>
+        <file>src/org/netbeans/modules/xml/resources/templates/xml_entity.ent.template</file>
+        <license ref="Apache-2.0" />
+        <comment type="TEMPLATE_MINIMAL_IP"/>
     </fileset>
 </licenseinfo>

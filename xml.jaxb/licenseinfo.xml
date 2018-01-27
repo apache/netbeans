@@ -21,12 +21,13 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>src/org/netbeans/modules/maven/coverage/coverage-04.dtd</file>
-        <license ref="ISO-8879-SGML" />
-    </fileset>
-    <fileset>
-        <file>src/org/netbeans/modules/maven/coverage/jacoco-1.0.dtd</file>
-        <license ref="EPL-v10" />
-        <comment type="CATEGORY_B">Used by XML parser at runtime.</comment>
+        <file>src/org/netbeans/modules/xml/jaxb/resources/eclipselink_oxm_2_3.xsd</file>
+        <license ref="EDL-1.0">
+Copyright (c) 1998, 2010 Oracle. All rights reserved.
+            
+ Contributors:
+     dmccann - December 22/2010 - 2.3 - Initial implementation
+        </license>
+        <comment type="CATEGORY_B">Used for XML Validation and code completion at runtime.</comment>
     </fileset>
 </licenseinfo>

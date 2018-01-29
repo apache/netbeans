@@ -1,5 +1,5 @@
 
-######  build artifacts 
+###### build artifacts 
 **/build/**
 nbbuild/licenses/**
 nbbuild/netbeans/**
@@ -7,10 +7,10 @@ nbbuild/testuserdir/**
 nbbuild/user.build.properties
 nbbuild/rat-exclusions.txt
 
-######  user-specific files  
+###### user-specific files  
 **/nbproject/private/**
 
-######   no degree of creativity
+###### no degree of creativity: https://www.apache.org/legal/src-headers.html#faq-exceptions
 **/*.exists
 **/*.palette_item
 **/*.url
@@ -43,7 +43,7 @@ maven.checkstyle/src/org/netbeans/modules/maven/format/checkstyle/config/configu
 ##  Template for user - very limited degree of creativity  
 xsl/src/org/netbeans/modules/xsl/resources/templates/stylesheet.xsl
 
-###### test data 
+###### test data: https://www.apache.org/legal/src-headers.html#faq-exceptions 
 api.search/test/unit/src/org/netbeans/modules/search/data/**
 api.templates/test/unit/src/org/netbeans/modules/templates/utf8.xml
 autoupdate.services/test/unit/**/data/**
@@ -123,13 +123,12 @@ websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.template
 ide/launcher/macosx/NetBeansLauncher/ReadMe.rtf
 jellytools.platform/src/org/netbeans/jellytools/version_info
 
-
 ######  generated test files 
 **/*.pass
 **/*.pass2
 **/*.pbxproj
 
-###### would cause tests to fail 
+###### would cause tests to fail: https://www.apache.org/legal/src-headers.html#faq-exceptions
 **/*.ref
 **/*.sln
 **/*.user
@@ -192,8 +191,7 @@ spring.beans/src/org/netbeans/modules/spring/beans/resources/templates/*.templat
 xml.text/src/org/netbeans/modules/xml/text/resources/DTDExample
 xml.text/src/org/netbeans/modules/xml/text/resources/XMLExample
 
-
-###### others
+###### miscellaneous
 ### <!-- XSDs for usage at runtime and code generation - the XSDs are not modified, so covered by https://www.apache.org/legal/resolved.html#category-b -->
 j2ee.persistence/src/org/netbeans/modules/j2ee/persistence/dd/resources/*.xsd
 ###  <!-- config file with no place for license header-->

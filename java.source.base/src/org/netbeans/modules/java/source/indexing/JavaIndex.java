@@ -366,4 +366,9 @@ public final class JavaIndex {
             }
         }
     }
+
+    public static boolean isCacheFolder(File dir) {
+        File cacheFolder = FileUtil.toFile(CacheFolder.getCacheFolder());
+        return dir.toURI().toASCIIString().startsWith(cacheFolder.toURI().toASCIIString());
+    }
 }

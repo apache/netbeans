@@ -27,10 +27,12 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
   * Git
   * Ant 1.9.9 or above
-  * Oracle JDK 8 (to build NetBeans)
-  * Oracle JDK 9 (to run NetBeans)
+  * Oracle JDK 8 or OpenJDK 8 (to build NetBeans)
+  * Oracle JDK 9 or OpenJDK 9 (to run NetBeans)
 
-**Note:** NetBeans also runs with Oracle JDK 8, although then it will not include tools for the Oracle JDK 9 Shell.
+**Note:** NetBeans also runs with JDK 8, although then it will not include tools for the JDK 9 Shell.
+
+**Note:** NetBeans license violation checks are managed via the [rat-exclusions.txt](https://github.com/apache/incubator-netbeans/blob/master/nbbuild/rat-exclusions.txt) file.
 
 ### Building NetBeans
 

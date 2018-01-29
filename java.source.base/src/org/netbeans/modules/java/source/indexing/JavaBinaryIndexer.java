@@ -120,7 +120,7 @@ public class JavaBinaryIndexer extends BinaryIndexer {
     }
 
     private static void deleteSigFiles(final URL root, final List<? extends ElementHandle<TypeElement>> toRemove) throws IOException {
-        File cacheFolder = JavaIndex.getClassFolder(root);
+        File cacheFolder = JavaIndex.getClassFolder(root, false, false);
         if (cacheFolder.exists()) {
             if (toRemove.size() > CLEAN_ALL_LIMIT) {
                 //Todo: do as SlowIOTask
@@ -287,9 +287,19 @@ public class JavaBinaryIndexer extends BinaryIndexer {
                 } else {
                     txCtx.commit();
                 }
+                File classes = JavaIndex.getClassFolder(context.getRootURI(), false, false);
+                if (classes.exists() && isEmpty(classes)) {
+                    classes.delete();
+                }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
+        }
+
+        private boolean isEmpty(File dir) {
+            String[] content = dir.list();
+
+            return content == null || content.length == 0;
         }
 
         @MimeRegistration(mimeType="", service=BinaryIndexerFactory.class)

@@ -413,9 +413,9 @@ public class BreakpointAnnotationProvider implements AnnotationProvider {
         List<DebuggerBreakpointAnnotation> annotations = new ArrayList<DebuggerBreakpointAnnotation>();
         for (int l : lines) {
             try {
-				if (l - 1 < 0){
-					continue;
-				}
+                if (l - 1 < 0){
+                    continue;
+                }
                 Line line = lc.getLineSet().getCurrent(l - 1);
                 DebuggerBreakpointAnnotation annotation = new DebuggerBreakpointAnnotation (annotationType, line, b);
                 annotations.add(annotation);

@@ -98,30 +98,30 @@ public class ProductInformationPanel extends JPanel implements HyperlinkListener
     })
     public ProductInformationPanel() {
         initComponents();
-		descripTemplate = NbBundle.getMessage(ProductInformationPanel.class,
-				"LBL_description");
-		aboutOverride = Lookup.getDefault().lookup(AboutMessageOverride.class);
-		if (aboutOverride == null) {
-			aboutOverride = new AboutMessageOverride() {
-				@Override
-				public String formatAboutText(String bundleString,
-						String productVersion, String javaVersion,
-						String vmVersion, String os, String encoding,
-						String locale, String userDir, String cacheDir,
-						String updates, int fontSize, String javaRuntime) {
-					return MessageFormat.format(bundleString, productVersion,
-							javaVersion, vmVersion, os, encoding, locale,
-							userDir, cacheDir, updates, fontSize, javaVersion);
-				}
-			};
-		}
+        descripTemplate = NbBundle.getMessage(ProductInformationPanel.class,
+                "LBL_description");
+        aboutOverride = Lookup.getDefault().lookup(AboutMessageOverride.class);
+        if (aboutOverride == null) {
+            aboutOverride = new AboutMessageOverride() {
+                @Override
+                public String formatAboutText(String bundleString,
+                        String productVersion, String javaVersion,
+                        String vmVersion, String os, String encoding,
+                        String locale, String userDir, String cacheDir,
+                        String updates, int fontSize, String javaRuntime) {
+                    return MessageFormat.format(bundleString, productVersion,
+                            javaVersion, vmVersion, os, encoding, locale,
+                            userDir, cacheDir, updates, fontSize, javaVersion);
+                }
+            };
+        }
         imageLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         description.setText(aboutOverride.formatAboutText(descripTemplate,
-				getProductVersionValue(), getJavaValue(), getVMValue(),
-				getOperatingSystemValue(), getEncodingValue(),
-				getSystemLocaleValue(), getUserDirValue(),
-				Places.getCacheDirectory().getAbsolutePath(), "",
-				FONT_SIZE, getJavaRuntime()));
+                getProductVersionValue(), getJavaValue(), getVMValue(),
+                getOperatingSystemValue(), getEncodingValue(),
+                getSystemLocaleValue(), getUserDirValue(),
+                Places.getCacheDirectory().getAbsolutePath(), "",
+                FONT_SIZE, getJavaRuntime()));
         description.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         description.putClientProperty( JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
         RequestProcessor.getDefault().post(new Runnable() {

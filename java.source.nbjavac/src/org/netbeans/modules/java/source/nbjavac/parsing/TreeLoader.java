@@ -391,7 +391,7 @@ public class TreeLoader extends LazyTreeLoader {
         }
         int index = surl.lastIndexOf(FileObjects.convertPackage2Folder(binaryName));
         if (index > 0) {
-            return JavaIndex.getClassFolder(new URL(surl.substring(0, index)));
+            return JavaIndex.getClassFolder(new URL(surl.substring(0, index)), false, false);
         } else {
             LOGGER.log(
                Level.INFO,

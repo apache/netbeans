@@ -28,6 +28,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -48,6 +52,8 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.netbeans.nbbuild.JUnitReportWriter;
+import org.netbeans.nbbuild.extlibs.licenseinfo.Fileset;
+import org.netbeans.nbbuild.extlibs.licenseinfo.Licenseinfo;
 
 /**
  * Creates a list of external binaries and their licenses.
@@ -95,66 +101,230 @@ public class CreateLicenseSummary extends Task {
     public void setReport(File report) {
         this.reportFile = report;
     }
+    
+    private File licenseTargetDir = null;
+    
+    public void setLicenseTargetDir(File licenseTargetDir) {
+        this.licenseTargetDir = licenseTargetDir;
+    }
 
+    private Set<String> modules;
+    public void setModules(String modules) {
+        if(modules == null) {
+            modules = "";
+        }
+        this.modules = new TreeSet<>();
+        this.modules.addAll(Arrays.asList(modules.split("[, ]+")));
+    }
+    
+    private boolean binary;
+    public void setBinary(boolean binary) {
+        this.binary = binary;
+    }
+    
     private Map<String, String> pseudoTests;
 
     public @Override
     void execute() throws BuildException {
+        if (modules == null || modules.isEmpty()) {
+            modules = new TreeSet<>();
+            for (String cluster : getProject().getProperty("nb.clusters.list").split("[, ]+")) {
+                modules.addAll(Arrays.asList(getProject().getProperty(cluster).split("[, ]+")));
+            }
+            modules.add("nbbuild");
+        }
+        
         pseudoTests = new LinkedHashMap<>();
-        try {
-            Map<Long, Map<String, String>> crc2License = findCrc2LicenseHeaderMapping();
-            Map<String, Map<String, String>> binaries2LicenseHeaders = new TreeMap<>();
-            StringBuilder testBinariesAreUnique = new StringBuilder();
-            List<String> ignoredPatterns = VerifyLibsAndLicenses.loadPatterns("ignored-binary-overlaps");
-            findBinaries(build, binaries2LicenseHeaders, crc2License, new HashMap<>(), "", testBinariesAreUnique, ignoredPatterns);
-            pseudoTests.put("testBinariesAreUnique", testBinariesAreUnique.length() > 0 ? "Some binaries are duplicated (edit nbbuild/antsrc/org/netbeans/nbbuild/extlibs/ignored-binary-overlaps as needed)" + testBinariesAreUnique : null);
-            try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(license), "UTF-8"));
-                    PrintWriter nw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(notice), "UTF-8"))) {
-                try (Reader r = new InputStreamReader(new FileInputStream(licenseStub), "UTF-8")) {
-                    int read;
-                    while ((read = r.read()) != (-1)) {
-                        pw.write(read);
+        
+        try (PrintWriter licenseWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(license), "UTF-8"));
+                PrintWriter noticeWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(notice), "UTF-8"))) {
+            
+            try (Reader r = new InputStreamReader(new FileInputStream(licenseStub), "UTF-8")) {
+                int read;
+                while ((read = r.read()) != (-1)) {
+                    licenseWriter.write(read);
+                }
+            }
+
+            try (Reader r = new InputStreamReader(new FileInputStream(noticeStub), "UTF-8")) {
+                int read;
+                while ((read = r.read()) != (-1)) {
+                    noticeWriter.write(read);
+                }
+            }
+
+            Set<String> notices = new HashSet<>();
+            Set<String> licenseNames = new TreeSet<>();
+
+            if(binary) {
+                evaluateBinaries(licenseWriter, noticeWriter, notices, licenseNames);
+            }
+            evaluateLicenseInfo(licenseWriter, noticeWriter, notices, licenseNames);
+
+            File licenses = new File(new File(nball, "nbbuild"), "licenses");
+            if(licenseTargetDir != null) {
+                licenseTargetDir.mkdirs();
+            }
+            for (String licenseName : licenseNames) {
+                if (licenseName == null) {
+                    continue;
+                }
+                File license = new File(licenses, licenseName);
+                if (!license.isFile()) {
+                    continue;
+                }
+                if (licenseTargetDir == null) {
+                    licenseWriter.println();
+                    licenseWriter.println();
+                    licenseWriter.println("===");
+                    licenseWriter.println("======");
+                    licenseWriter.println("========================= " + licenseName + " =========================");
+                    licenseWriter.println();
+                    try (InputStream is = new FileInputStream(license)) {
+                        BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                        String line;
+                        while ((line = r.readLine()) != null) {
+                            licenseWriter.println(line);
+                        }
+                        r.close();
+                    }
+                } else {
+                    File targetFile = new File(licenseTargetDir, licenseName);
+                    Files.copy(license.toPath(), targetFile.toPath(),
+                            StandardCopyOption.REPLACE_EXISTING);
+                }
+
+            }
+
+            licenseWriter.flush();
+        } catch (IOException x) {
+            throw new BuildException(x, getLocation());
+        }
+        log(license + ": written");
+        JUnitReportWriter.writeReport(this, null, reportFile, pseudoTests);
+    }
+    
+    private void evaluateLicenseInfo(final PrintWriter licenseWriter, final PrintWriter noticeWriter, Set<String> notices, Set<String> licenseNames) throws IOException {
+
+        licenseWriter.println();
+        licenseWriter.println("******************************************************************************************************************************************************");
+        licenseWriter.println("Apache NetBeans includes a number of source files that are not covered by the apache license. The following files are part of this distribution.");
+        licenseWriter.println("******************************************************************************************************************************************************");
+        licenseWriter.println();
+        
+        licenseWriter.printf("%-100s%40s%10s\n", "Sourcefile", "LICENSE", "NOTES");
+        if(licenseTargetDir != null) {
+            licenseWriter.printf("%-100s%40s\n", "(path in the source)", "(text is in file in licenses directory)");
+        } else {
+            licenseWriter.printf("%-100s%40s\n", "(path in the source)", "(see license text reproduced below)");
+        }
+        licenseWriter.println("------------------------------------------------------------------------------------------------------------------------------------------------------");
+        
+        List<String> footnotes = new ArrayList<>();
+        
+        for(String module : modules) {
+            File moduleDir = new File(nball, module);
+            File licenseInfoFile = new File(moduleDir, "licenseinfo.xml");
+            if(! licenseInfoFile.exists()) {
+                continue;
+            }
+            
+            Licenseinfo licenseInfo = Licenseinfo.parse(licenseInfoFile);
+            
+            for(Fileset fs: licenseInfo.getFilesets()) {
+                if("Apache-2.0".equals(fs.getLicenseRef())) {
+                    continue;
+                }
+                if(binary && fs.isSourceOnly()) {
+                    continue;
+                }
+                
+                String notes = "";
+                if(fs.getLicenseInfo() != null) {
+                    int idx = footnotes.indexOf(fs.getLicenseInfo());
+                    if(idx < 0) {
+                        footnotes.add(fs.getLicenseInfo());
+                        idx = footnotes.size() - 1;
+                    }
+                    notes = Integer.toString(idx + 1);
+                }
+                for(File f: fs.getFiles()) {
+                    Path relativePath = nball.toPath().relativize(f.toPath());
+                    licenseWriter.printf("%-120s%20s%10s\n", relativePath, fs.getLicenseRef(), notes);
+                }
+                
+                if(fs.getLicenseRef() != null) {
+                    licenseNames.add(fs.getLicenseRef());
+                }
+                
+                String notice = fs.getNotice();
+                if (notice != null) {
+                    notice = notice.trim();
+                    if (!notices.contains(notice)) {
+                        notices.add(notice);
+                        addNotice(noticeWriter, notice);
                     }
                 }
-                pw.println();
-                pw.println("********************************************************************************");
-                pw.println("Apache NetBeans includes a number of components and libraries with separate");
-                pw.println("copyright notices and license terms. Your use of those components are");
-                pw.println("subject to the terms and conditions of the following licenses. ");
-                pw.println("********************************************************************************");
-                pw.println();
+            }
+        }
+        
+        if (!footnotes.isEmpty()) {
+            licenseWriter.print("\n");
+            licenseWriter.print("Notes\n");
+            licenseWriter.print("-----\n");
+            for (int i = 0; i < footnotes.size(); i++) {
+                String footnote = footnotes.get(i);
+                licenseWriter.printf("[%3d] %s\n\n", i + 1, footnote.trim());
+            }
+        }
+    }
 
-                try (Reader r = new InputStreamReader(new FileInputStream(noticeStub), "UTF-8")) {
-                    int read;
-                    while ((read = r.read()) != (-1)) {
-                        nw.write(read);
-                    }
+    private void evaluateBinaries(final PrintWriter licenseWriter, final PrintWriter noticeWriter, Set<String> notices, Set<String> licenseNames) throws IOException {
+        Map<Long, Map<String, String>> crc2License = findCrc2LicenseHeaderMapping();
+        Map<String, Map<String, String>> binaries2LicenseHeaders = new TreeMap<>();
+        StringBuilder testBinariesAreUnique = new StringBuilder();
+        List<String> ignoredPatterns = VerifyLibsAndLicenses.loadPatterns("ignored-binary-overlaps");
+        findBinaries(build, binaries2LicenseHeaders, crc2License, new HashMap<>(), "", testBinariesAreUnique, ignoredPatterns);
+        pseudoTests.put("testBinariesAreUnique", testBinariesAreUnique.length() > 0 ? "Some binaries are duplicated (edit nbbuild/antsrc/org/netbeans/nbbuild/extlibs/ignored-binary-overlaps as needed)" + testBinariesAreUnique : null);
+        
+        licenseWriter.println();
+        licenseWriter.println("********************************************************************************");
+        licenseWriter.println("Apache NetBeans includes a number of components and libraries with separate");
+        licenseWriter.println("copyright notices and license terms. Your use of those components are");
+        licenseWriter.println("subject to the terms and conditions of the following licenses. ");
+        licenseWriter.println("********************************************************************************");
+        licenseWriter.println();
+        
+        licenseWriter.printf("%-68s%12s\n", "THIRD-PARTY COMPONENT FILE", "LICENSE");
+        if(licenseTargetDir != null) {
+            licenseWriter.printf("%-40s%40s\n", "(path in the installation)", "(text is in file in licenses directory)");
+        } else {
+            licenseWriter.printf("%-40s%40s\n", "(path in the installation)", "(see license text reproduced below)");
+        }
+        licenseWriter.println("--------------------------------------------------------------------------------");
+        
+        for (Map.Entry<String, Map<String, String>> entry : binaries2LicenseHeaders.entrySet()) {
+            String binary = entry.getKey();
+            Map<String, String> headers = entry.getValue();
+            licenseWriter.printf("%-69s %s\n", binary, getMaybeMissing(headers, "License"));
+            String license = headers.get("License");
+            if (license != null) {
+                licenseNames.add(license);
+            } else {
+                //TODO: should be error/test failure, or something like that.
+                System.err.println("No license for: " + binary);
+            }
+            
+            String notice = headers.get("notice");
+            if (notice != null) {
+                notice = notice.trim();
+                if (!notices.contains(notice)) {
+                    notices.add(notice);
+                    addNotice(noticeWriter, notice);
                 }
-
-                Set<String> licenseNames = new TreeSet<>();
-                pw.printf("%-72s %s\n", "THIRD-PARTY COMPONENT FILE", "LICENSE");
-                pw.printf("%-44s %s\n", "(path in the installation)", "(see license text reproduced below)");
-                pw.println("--------------------------------------------------------------------------------");
-                Set<Integer> notices = new HashSet<>();
-                for (Map.Entry<String, Map<String, String>> entry : binaries2LicenseHeaders.entrySet()) {
-                    String binary = entry.getKey();
-                    Map<String, String> headers = entry.getValue();
-                    pw.printf("%-69s %s\n", binary, getMaybeMissing(headers, "License"));
-                    String license = headers.get("License");
-                    if (license != null) {
-                        licenseNames.add(license);
-                    } else {
-                        //TODO: should be error/test failure, or something like that.
-                        System.err.println("No license for: " + binary);
-                    }
-
-                    String notice = headers.get("notice");
-                    if (notice != null && !notices.contains(notice.hashCode())) {
-                        notices.add(notice.hashCode());
-                        addNotice(nw, notice);
-                    }
-
-                }
+            }
+            
+        }
 //                String[] otherHeaders = {"Name", "Version", "Description", "Origin"};
 //                Map<Map<String,String>,Set<String>> licenseHeaders2Binaries = new LinkedHashMap<Map<String,String>,Set<String>>();
 //                for (Map.Entry<String,Map<String,String>> entry : binaries2LicenseHeaders.entrySet()) {
@@ -177,37 +347,6 @@ public class CreateLicenseSummary extends Task {
 //                        pw.println(binary);
 //                    }
 //                }
-                File licenses = new File(new File(nball, "nbbuild"), "licenses");
-                for (String licenseName : licenseNames) {
-                    if (licenseName == null) {
-                        continue;
-                    }
-                    File license = new File(licenses, licenseName);
-                    if (!license.isFile()) {
-                        continue;
-                    }
-                    pw.println();
-                    pw.println();
-                    pw.println("===");
-                    pw.println("======");
-                    pw.println("========================= " + licenseName + " =========================");
-                    pw.println();
-                    try (InputStream is = new FileInputStream(license)) {
-                        BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                        String line;
-                        while ((line = r.readLine()) != null) {
-                            pw.println(line);
-                        }
-                        r.close();
-                    }
-                }
-                pw.flush();
-            }
-            log(license + ": written");
-        } catch (IOException x) {
-            throw new BuildException(x, getLocation());
-        }
-        JUnitReportWriter.writeReport(this, null, reportFile, pseudoTests);
     }
 
     private String getMaybeMissing(Map<String, String> headers, String headerName) {

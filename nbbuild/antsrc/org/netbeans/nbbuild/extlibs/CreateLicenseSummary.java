@@ -392,9 +392,11 @@ public class CreateLicenseSummary extends Task {
                             if (!innerName.endsWith(".jar") && !innerName.endsWith(".zip")) {
                                 continue;
                             }
+                            Map<String, String> nestedHeaders = binary2License.get(n + "!/" + innerName);
+                            if (nestedHeaders == null) nestedHeaders = headers;
                             is = zf.getInputStream(entry);
                             try {
-                                crc2LicenseHeaders.put(computeCRC32(is), headers);
+                                crc2LicenseHeaders.put(computeCRC32(is), nestedHeaders);
                             } finally {
                                 is.close();
                             }

@@ -27,12 +27,12 @@
         <mkdir dir="${build.dir}/absolutelayoutclasses"/>
         <javac srcdir="release/sources" target="1.1" source="1.3" destdir="${build.dir}/absolutelayoutclasses"/>
         <mkdir dir="${cluster}/modules/ext"/>
-        <jar jarfile="${cluster}/modules/ext/AbsoluteLayout.jar">
+        <nb-ext-jar jarfile="${cluster}/modules/ext/AbsoluteLayout.jar">
             <manifest>
                 <attribute name="NetBeans-Own-Library" value="true"/>
             </manifest>
             <fileset dir="${build.dir}/absolutelayoutclasses"/>
-        </jar>
+        </nb-ext-jar>
     </target>
 
     <target name="compile" depends="absolute-layout,projectized-common.compile"/>

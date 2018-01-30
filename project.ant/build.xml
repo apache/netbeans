@@ -33,9 +33,9 @@
         <copy todir="build/antclasses">
             <fileset dir="antsrc" excludes="${jar-excludes}"/>
         </copy>
-        <jar jarfile="build/tasks.jar">
+        <nb-ext-jar jarfile="build/tasks.jar">
             <fileset dir="build/antclasses"/>
-        </jar>
+        </nb-ext-jar>
     </target>
 
 </project>

@@ -41,7 +41,7 @@
 
     <target name="modular-probe" depends="probe-init">
         <mkdir dir="${cluster}/modules/ext"/>
-        <jar jarfile="${cluster}/modules/ext/nb-mod-jshell-probe.jar">
+        <nb-ext-jar jarfile="${cluster}/modules/ext/nb-mod-jshell-probe.jar">
             <manifest>
                 <attribute name="NetBeans-Own-Library" value="true"/>
                 <attribute name="Main-Class" value="org.netbeans.lib.jshell.agent.AgentWorker"/>
@@ -52,7 +52,7 @@
             <fileset dir="build/agent/classes">
                 <exclude name="jdk/**"/>
             </fileset>
-        </jar>
+        </nb-ext-jar>
     </target>
 
     <target name="jar-probe" depends="probe-init">
@@ -71,7 +71,7 @@
             </patternset>
         </unjar>
         <mkdir dir="${cluster}/modules/ext"/>
-        <jar jarfile="${cluster}/modules/ext/nb-custom-jshell-probe.jar">
+        <nb-ext-jar jarfile="${cluster}/modules/ext/nb-custom-jshell-probe.jar">
             <manifest>
                 <attribute name="NetBeans-Own-Library" value="true"/>
                 <attribute name="Main-Class" value="org.netbeans.lib.jshell.agent.AgentWorker"/>
@@ -80,7 +80,7 @@
                 <attribute name="Can-Retransform-Classes" value="true"/>
             </manifest>
             <fileset dir="build/agent/classes"/>
-        </jar>
+        </nb-ext-jar>
     </target>
 
    <target name="probe" depends="modular-probe,jar-probe">

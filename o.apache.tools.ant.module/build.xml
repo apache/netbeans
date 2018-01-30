@@ -48,9 +48,9 @@
 
     <target name="jar-bridge" depends="compile-bridge">
         <mkdir dir="${cluster}/ant/nblib"/>
-        <jar jarfile="${cluster}/ant/nblib/bridge.jar" compress="false">
+        <nb-ext-jar jarfile="${cluster}/ant/nblib/bridge.jar" compress="false">
             <fileset dir="build/bridge-classes"/>
-        </jar>
+        </nb-ext-jar>
     </target>
 
     <target name="netbeans-extra" depends="jar-bridge">

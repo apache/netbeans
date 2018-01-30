@@ -38,13 +38,13 @@
 
     <target name="jar-updater" depends="init,compile-updater">
         <mkdir dir="${cluster}/modules/ext" />
-        <jar jarfile="${cluster}/modules/ext/updater.jar"
+        <nb-ext-jar jarfile="${cluster}/modules/ext/updater.jar"
              compress="${build.package.compress}">
             <manifest>
                 <attribute name="NetBeans-Own-Library" value="true"/>
             </manifest>
             <fileset dir="${build.dir}/updaterclasses"/>
-        </jar>
+        </nb-ext-jar>
     </target>
 
     <target name="compile" depends="jar-updater,projectized-common.compile"/>

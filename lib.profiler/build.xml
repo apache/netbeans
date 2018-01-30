@@ -73,21 +73,21 @@
         
        <!-- Server side -->
        <mkdir dir="${cluster}/lib"/>
-       <jar destfile="${cluster}/${jfluid.server.jar}"
+       <nb-ext-jar destfile="${cluster}/${jfluid.server.jar}"
          basedir="${build.classes.dir}"
          includes="org/netbeans/lib/profiler/server/** org/netbeans/lib/profiler/global/** org/netbeans/lib/profiler/wireprotocol/**"
          compress="false">
-       </jar>
-       <jar destfile="${cluster}/${jfluid.server.15.jar}"
+       </nb-ext-jar>
+       <nb-ext-jar destfile="${cluster}/${jfluid.server.15.jar}"
          manifest="${src15.dir}/manifest.mf"
          basedir="${build15.classes.dir}"
          compress="false">
-       </jar>
-       <jar destfile="${cluster}/${jfluid.server.cvm.jar}"
+       </nb-ext-jar>
+       <nb-ext-jar destfile="${cluster}/${jfluid.server.cvm.jar}"
          manifest="${srccvm.dir}/manifest.mf"
          basedir="${buildcvm.classes.dir}"
          compress="false">
-       </jar>
+       </nb-ext-jar>
     </target>
 
     <target name="release" depends="projectized-common.release">

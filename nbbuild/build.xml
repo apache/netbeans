@@ -97,6 +97,7 @@
         <exclude name="package-list"/>
       </fileset>
     </jar>
+    <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
   </target>
 
   <target name="download-all-extbins" unless="ext.binaries.downloaded" depends="bootstrap">
@@ -539,6 +540,7 @@ Hg ID:    ${hg.id}
     <taskdef name="find-executables" classname="org.netbeans.nbbuild.FindExecutables" classpath="${nbantext.jar}"/>
     <find-executables allmodules="${allmodules}" exeincludeproperty="nb.clusters.exe.includes"/>
     <!-- package the zip file -->
+    <echo>${netbeans.dest.dir}</echo>
     <zip destfile="${zip.name}" update="true" duplicate="preserve">
       <zipfileset dir="${netbeans.dest.dir}" filemode="755" prefix="${netbeans.dest}"
         includes="bin/netbeans,${nb.clusters.exe.includes}"
@@ -556,6 +558,7 @@ Hg ID:    ${hg.id}
             <include name="DISCLAIMER"/>
             <include name="LICENSE"/>
             <include name="NOTICE"/>
+            <include name="licenses/**"/>
       </zipfileset>
     </zip>
   </target>
@@ -1530,8 +1533,21 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     </target>
 
     <target name="create-mandatory-files-for-binary" depends="bootstrap,download-selected-extbins" description="Create a summary of the licenses used by libraries in the build.">
-        <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
-        <createlicensesummary licenseStub="${nb_all}/LICENSE" noticeStub="notice-stub.txt" report="${nb.build.dir}/createlicensesummary.xml" nball=".." build="${netbeans.dest.dir}" license="${netbeans.dest.dir}/LICENSE" notice="${nb.build.dir}/notice-temp"/>
+        
+        <delete dir="${netbeans.dest.dir}/licenses" />
+        <mkdir dir="${netbeans.dest.dir}/licenses" />
+        
+        <createlicensesummary licenseStub="${nb_all}/LICENSE" 
+                              noticeStub="notice-stub.txt" 
+                              report="${nb.build.dir}/createlicensesummary.xml" 
+                              nball=".." 
+                              build="${netbeans.dest.dir}" 
+                              license="${netbeans.dest.dir}/LICENSE"
+                              licenseTargetDir="${netbeans.dest.dir}/licenses"
+                              notice="${nb.build.dir}/notice-temp"
+                              binary="true"
+        />
+        
         <concat destfile="${netbeans.dest.dir}/NOTICE">
           <fileset file="${nb.build.dir}/notice-temp" />
           <fileset dir="${nb_all}"
@@ -1580,20 +1596,16 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <include name="libs.antlr3.devel/external/binaries-list"/>
         </manifest>
     </downloadbinaries>
-    <concat destfile="${nb.build.dir}/NOTICE">
-      <fileset file="${nb_all}/nbbuild/notice-stub.txt" />
-      <fileset dir="${nb_all}"
-               includes="*/notice.txt" />
-      <filterchain>
-          <tokenfilter>
-              <filetokenizer />
-              <replaceregex pattern="(\r?\n)(\r?\n)+"
-                            replace="\1\1"
-                            flags="g" />
-          </tokenfilter>
-      </filterchain>
-    </concat>
-    <copy tofile="${nb.build.dir}/LICENSE" file="${nb_all}/LICENSE" />
+    <createlicensesummary licenseStub="${nb_all}/LICENSE" 
+                          noticeStub="notice-stub.txt" 
+                          report="${nb.build.dir}/createlicensesummary.xml" 
+                          nball=".." 
+                          build="${netbeans.build.dir}" 
+                          license="${nb.build.dir}/LICENSE"
+                          licenseTargetDir="${nb.build.dir}/licenses"
+                          notice="${nb.build.dir}/NOTICE"
+                          binary="false"
+    />
     <taskdef name="createdependencies" classname="org.netbeans.nbbuild.extlibs.CreateDependencies" classpath="${nbantext.jar}"/>
     <createdependencies refid="source.dirset" dependencies="${nb.build.dir}/DEPENDENCIES" sourceDependencies="true"/>
     <concat destfile="${nb.build.dir}/cluster.properties">
@@ -1623,6 +1635,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <zipfileset file="${nb.build.dir}/DEPENDENCIES" />
       <zipfileset file="${nb.build.dir}/NOTICE" />
       <zipfileset file="${nb.build.dir}/LICENSE" />
+      <zipfileset dir="${nb.build.dir}/licenses" includes="**" prefix="licenses" /> 
       <zipfileset file="${nb_all}/DISCLAIMER" />
       <zipfileset file="${source.zip.readme}" fullpath="README.md" erroronmissingarchive="false" />
     </zip>
@@ -2062,110 +2075,54 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
     </target>
 
     <target name="rat" depends="bootstrap">
+        <taskdef name="exclusionsfromlicenseinfo" classname="org.netbeans.nbbuild.extlibs.ExclusionsFromLicenseInfo" classpath="${nbantext.jar}"/>
+        <taskdef name="reportFromLicenseinfo" classname="org.netbeans.nbbuild.extlibs.ReportFromLicenseinfo" classpath="${nbantext.jar}"/>
+        
         <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
             <manifest dir="${nb_all}">
                 <include name="nbbuild/external/binaries-list"/>
             </manifest>
         </downloadbinaries>
+        
         <taskdef uri="antlib:org.apache.rat.anttasks" resource="org/apache/rat/anttasks/antlib.xml">
             <classpath>
                 <pathelement location="external/apache-rat-0.12.jar"/>
             </classpath>
         </taskdef>
-        <patternset id="non.rat">
-            <!--add new one alphabetically-->
-            <excludesfile name="rat-exclusions.txt" />            
-        </patternset>
+        
+        <exclusionsfromlicenseinfo nball=".." licenseinfoFileset="exclusionsfromlicenseinfo" />
+        
+        <difference id="rat.files">
+            <fileset dir="${nb_all}">
+                <excludesfile name="rat-exclusions.txt" />
+            </fileset>
+            <fileset refid="exclusionsfromlicenseinfo" />
+        </difference>
+
         <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="build/rat-report.txt">
-            <rat:substringMatcher licenseFamilyCategory="w3c2" licenseFamilyName="W3C Software and Document Notice and License">
-                <pattern substring="W3C Software and Document Notice and License"/>
-            </rat:substringMatcher>
-            <rat:substringMatcher licenseFamilyCategory="oasis" licenseFamilyName="OASIS">
-                <pattern substring="[OASIS]"/>
-            </rat:substringMatcher>
-            <rat:fullTextMatcher licenseFamilyCategory="wsdl" licenseFamilyName="WSDL Schema Files">
-                International Business Machines Corporation and Microsoft Corporation
-                All Rights Reserved
-                License for WSDL Schema Files
-            </rat:fullTextMatcher>
-            <rat:fullTextMatcher licenseFamilyCategory="ISO-SGML" licenseFamilyName="International Organization for Standardization for SGML">
-                International Organization for Standardization 1986
-                Permission to copy in any form is granted for use with
-                conforming SGML systems and applications as defined in
-                ISO 8879, provided this notice is included in all copies.
-            </rat:fullTextMatcher>
             <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
                 Licensed to the Apache Software Foundation (ASF) under one or more contributor 
                 license agreements; and to You under the Apache License, Version 2.0.
             </rat:fullTextMatcher>
-            <rat:fullTextMatcher licenseFamilyCategory="EPL/EDL" licenseFamilyName="Eclipse Public License and Eclipse Distribution License">
-                This program and the accompanying materials are made available under the
-                terms of the Eclipse Public License v1.0 and Eclipse Distribution License v. 1.0
-                which accompanies this distribution.
-            </rat:fullTextMatcher>
-            <rat:fullTextMatcher licenseFamilyCategory="EPL" licenseFamilyName="Eclipse Public License">
-                This program and the accompanying materials
-                are made available under the terms of the Eclipse Public License v1.0
-                which accompanies this distribution
-            </rat:fullTextMatcher>
-            <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
-            <rat:approvedLicense familyName="OASIS"/>
-            <rat:approvedLicense familyName="WSDL Schema Files" />
-            <rat:approvedLicense familyName="International Organization for Standardization for SGML"/>
             <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
-            <rat:approvedLicense familyName="Eclipse Public License and Eclipse Distribution License" />
-            <rat:approvedLicense familyName="Eclipse Public License" />
-	    <fileset dir="${nb_all}">
-                <patternset refid="non.rat" />
-            </fileset>
+
+            <resources refid="rat.files" />
         </rat:report>
         <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" format="xml" reportfile="build/rat-report.xml">
-            <rat:substringMatcher licenseFamilyCategory="w3c2" licenseFamilyName="W3C Software and Document Notice and License">
-                <pattern substring="W3C Software and Document Notice and License"/>
-            </rat:substringMatcher>
-            <rat:substringMatcher licenseFamilyCategory="oasis" licenseFamilyName="OASIS">
-                <pattern substring="[OASIS]"/>
-            </rat:substringMatcher>
-            <rat:fullTextMatcher licenseFamilyCategory="wsdl" licenseFamilyName="WSDL Schema Files">
-                International Business Machines Corporation and Microsoft Corporation
-                All Rights Reserved
-                License for WSDL Schema Files
-            </rat:fullTextMatcher>
-            <rat:fullTextMatcher licenseFamilyCategory="ISO-SGML" licenseFamilyName="International Organization for Standardization for SGML">
-                International Organization for Standardization 1986
-                Permission to copy in any form is granted for use with
-                conforming SGML systems and applications as defined in
-                ISO 8879, provided this notice is included in all copies.
-            </rat:fullTextMatcher>
             <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
                 Licensed to the Apache Software Foundation (ASF) under one or more contributor
                 license agreements; and to You under the Apache License, Version 2.0.
             </rat:fullTextMatcher>
-            <rat:fullTextMatcher licenseFamilyCategory="EPL/EDL" licenseFamilyName="Eclipse Public License and Eclipse Distribution License">
-                This program and the accompanying materials are made available under the
-                terms of the Eclipse Public License v1.0 and Eclipse Distribution License v. 1.0
-                which accompanies this distribution.
-            </rat:fullTextMatcher>
-            <rat:fullTextMatcher licenseFamilyCategory="EPL" licenseFamilyName="Eclipse Public License">
-                This program and the accompanying materials
-                are made available under the terms of the Eclipse Public License v1.0
-                which accompanies this distribution
-            </rat:fullTextMatcher>
-            <rat:approvedLicense familyName="W3C Software and Document Notice and License"/>
-            <rat:approvedLicense familyName="OASIS"/>
-            <rat:approvedLicense familyName="WSDL Schema Files" />
-            <rat:approvedLicense familyName="International Organization for Standardization for SGML"/>
             <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
-            <rat:approvedLicense familyName="Eclipse Public License and Eclipse Distribution License" />
-            <rat:approvedLicense familyName="Eclipse Public License" />
-	    <fileset dir="${nb_all}">
-                <patternset refid="non.rat" />
-            </fileset>
+
+            <resources refid="rat.files" />
         </rat:report>
         <taskdef name="rattotest" classname="org.netbeans.nbbuild.RatReportTask" classpath="${build.ant.classes.dir}"/>
         <loadproperties srcFile="cluster.properties" />
         <property name="rat-report.haltonfailure" value="false" />
         <rattotest source="build/rat-report.xml" report="${nb.build.dir}/rat/" haltonfailure="${rat-report.haltonfailure}" />
+        
+        <reportFromLicenseinfo nball=".." report="${nb.build.dir}/rat-appendix.txt" />
     </target>
 
 </project>

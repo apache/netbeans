@@ -43,6 +43,7 @@ import java.util.Set;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
+import org.netbeans.lib.profiler.ui.AppearanceController;
 
 
 /**
@@ -383,7 +384,10 @@ public abstract class LivenessResultsPanel extends MemoryResultsPanel {
                     }
                 });
 
-            resTableModel.setRealColumnVisibility(7, false);
+            int[] unvisible = AppearanceController.getDefault().invisibleLivenessResultsColumns();
+            for (int c : unvisible) {
+                resTableModel.setRealColumnVisibility(c, false);
+            }
 
             resTable = new JExtendedTable(resTableModel) {
                     public void doLayout() {

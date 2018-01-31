@@ -122,11 +122,13 @@ public class HideableBarRenderer extends MultiRenderer {
         component.setSize(componentWidth, size.height);
         component.paint(g);
         
-        int freeWidth = size.width - maxRendererWidth - renderersGap();
-        if (freeWidth >= MIN_BAR_WIDTH) {
-            barRenderer.setSize(Math.min(freeWidth, MAX_BAR_WIDTH), size.height);
-            barRenderer.move(location.x, location.y);
-            barRenderer.paint(g);
+        if (numberPercentRenderer == null || numberPercentRenderer.valueRenderers()[1].getComponent().isVisible()) {
+            int freeWidth = size.width - maxRendererWidth - renderersGap();
+            if (freeWidth >= MIN_BAR_WIDTH) {
+                barRenderer.setSize(Math.min(freeWidth, MAX_BAR_WIDTH), size.height);
+                barRenderer.move(location.x, location.y);
+                barRenderer.paint(g);
+            }
         }
     }
     

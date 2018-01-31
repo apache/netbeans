@@ -16,7 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.profiler.heapwalk.details.basic;
+
+package org.netbeans.modules.profiler.heapwalk.details.api;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -46,26 +47,26 @@ import org.openide.windows.WindowManager;
 
 
 @NbBundle.Messages({
-    "BasicExportAction_BasicExportActionName=Export to...",
-    "BasicExportAction_BasicExportActionDescr=Export to...",
-    "BasicExportAction_ExportDialogTitle=Select File or Directory",
-    "BasicExportAction_ExportDialogButton=Export",
-    "BasicExportAction_OverwriteFileCaption=Overwrite Existing File",
-    "BasicExportAction_OverwriteFileMsg=<html><b>File {0} already exists.</b><br><br>Do you want to replace it?</html>",
-    "BasicExportAction_ExportDialogCSVFilter=CSV File (*.csv)",
-    "BasicExportAction_ExportDialogTXTFilter=Text File (*.txt)",
-    "BasicExportAction_ExportDialogBINFilter=Binary File (*.bin)",
-    "BasicExportAction_ExportingViewMsg=Exporting...",
-    "BasicExportAction_NoViewMsg=No view to export.",
-    "BasicExportAction_OomeExportingMsg=<html><b>Not enough memory to save the file.</b><br><br>To avoid this error increase the -Xmx<br>value in the etc/netbeans.conf file in NetBeans IDE installation.</html>",
-    "BasicExportAction_IOException_Exporting_Msg=<html>IOException occurred during export, see IDE log for details</html>",
-    "BasicExportAction_CannotWriteFileMsg=Failed to export File. Reason: {0}."})
-final class BasicExportAction extends AbstractAction {
-    private static final Logger LOGGER = Logger.getLogger(BasicExportAction.class.getName());
+    "ExportAction_BasicExportActionName=Export to...",
+    "ExportAction_BasicExportActionDescr=Export to...",
+    "ExportAction_ExportDialogTitle=Select File or Directory",
+    "ExportAction_ExportDialogButton=Export",
+    "ExportAction_OverwriteFileCaption=Overwrite Existing File",
+    "ExportAction_OverwriteFileMsg=<html><b>File {0} already exists.</b><br><br>Do you want to replace it?</html>",
+    "ExportAction_ExportDialogCSVFilter=CSV File (*.csv)",
+    "ExportAction_ExportDialogTXTFilter=Text File (*.txt)",
+    "ExportAction_ExportDialogBINFilter=Binary File (*.bin)",
+    "ExportAction_ExportingViewMsg=Exporting...",
+    "ExportAction_NoViewMsg=No view to export.",
+    "ExportAction_OomeExportingMsg=<html><b>Not enough memory to save the file.</b><br><br>To avoid this error increase the -Xmx<br>value in the etc/netbeans.conf file in NetBeans IDE installation.</html>",
+    "ExportAction_IOException_Exporting_Msg=<html>IOException occurred during export, see IDE log for details</html>",
+    "ExportAction_CannotWriteFileMsg=Failed to export File. Reason: {0}."})
+public final class ExportAction extends AbstractAction {
+    private static final Logger LOGGER = Logger.getLogger(ExportAction.class.getName());
 
 //~ Inner Interfaces ---------------------------------------------------------------------------------------------------------
 
-    static interface ExportProvider {
+    public static interface ExportProvider {
         //~ Methods --------------------------------------------------------------------------------------------------------------
 
         public void exportData(int exportedFileType, ExportDataDumper eDD);
@@ -117,9 +118,9 @@ final class BasicExportAction extends AbstractAction {
     private static final String FILE_EXTENSION_CSV = "csv"; // NOI18N
     private static final String FILE_EXTENSION_TXT = "txt"; // NOI18N
     private static final String FILE_EXTENSION_BIN = "bin"; // NOI18N
-    static final int MODE_CSV = 1;
-    static final int MODE_TXT = 2;
-    static final int MODE_BIN = 3;
+    public static final int MODE_CSV = 1;
+    public static final int MODE_TXT = 2;
+    public static final int MODE_BIN = 3;
     private static File exportDir;
 
 
@@ -131,9 +132,9 @@ final class BasicExportAction extends AbstractAction {
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
-    public BasicExportAction(ExportProvider exportProvider) {
-        putValue(Action.NAME, Bundle.BasicExportAction_BasicExportActionName());
-        putValue(Action.SHORT_DESCRIPTION, Bundle.BasicExportAction_BasicExportActionDescr());
+    public ExportAction(ExportProvider exportProvider) {
+        putValue(Action.NAME, Bundle.ExportAction_BasicExportActionName());
+        putValue(Action.SHORT_DESCRIPTION, Bundle.ExportAction_BasicExportActionDescr());
         putValue(Action.SMALL_ICON, ICON);
         putValue("iconBase", Icons.getResource(GeneralIcons.EXPORT)); // NOI18N
         this.exportProvider = exportProvider;
@@ -161,8 +162,8 @@ final class BasicExportAction extends AbstractAction {
             fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
             fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             fileChooser.setMultiSelectionEnabled(false);
-            fileChooser.setDialogTitle(Bundle.BasicExportAction_ExportDialogTitle());
-            fileChooser.setApproveButtonText(Bundle.BasicExportAction_ExportDialogButton());
+            fileChooser.setDialogTitle(Bundle.ExportAction_ExportDialogTitle());
+            fileChooser.setApproveButtonText(Bundle.ExportAction_ExportDialogButton());
         }
         fileChooser.resetChoosableFileFilters();
         setFilters();
@@ -172,8 +173,8 @@ final class BasicExportAction extends AbstractAction {
     private boolean checkFileExists(File target) {
         if (target.exists()) {
             if (!ProfilerDialogs.displayConfirmation(
-                    Bundle.BasicExportAction_OverwriteFileMsg(target.getName()),
-                    Bundle.BasicExportAction_OverwriteFileCaption())) {  // choose whether to overwrite
+                    Bundle.ExportAction_OverwriteFileMsg(target.getName()),
+                    Bundle.ExportAction_OverwriteFileCaption())) {  // choose whether to overwrite
                   return false; // user chose not to overwrite
               }
           }
@@ -200,13 +201,13 @@ final class BasicExportAction extends AbstractAction {
         String targetExt = null;
         FileFilter selectedFileFilter = chooser.getFileFilter();
         if (selectedFileFilter==null  // workaround for #227659
-                ||  selectedFileFilter.getDescription().equals(Bundle.BasicExportAction_ExportDialogCSVFilter())) {
+                ||  selectedFileFilter.getDescription().equals(Bundle.ExportAction_ExportDialogCSVFilter())) {
             targetExt=FILE_EXTENSION_CSV;
             exportedFileType=MODE_CSV;
-        } else if (selectedFileFilter.getDescription().equals(Bundle.BasicExportAction_ExportDialogTXTFilter())) {
+        } else if (selectedFileFilter.getDescription().equals(Bundle.ExportAction_ExportDialogTXTFilter())) {
             targetExt=FILE_EXTENSION_TXT;
             exportedFileType=MODE_TXT;
-        } else if (selectedFileFilter.getDescription().equals(Bundle.BasicExportAction_ExportDialogBINFilter())) {
+        } else if (selectedFileFilter.getDescription().equals(Bundle.ExportAction_ExportDialogBINFilter())) {
             targetExt=FILE_EXTENSION_BIN;
             exportedFileType=MODE_BIN;
         }
@@ -230,13 +231,13 @@ final class BasicExportAction extends AbstractAction {
 
         // 3. set type of exported file and return a newly created FileObject
 
-        return new BasicExportAction.SelectedFile(targetDir, targetName, targetExt);
+        return new ExportAction.SelectedFile(targetDir, targetName, targetExt);
     }
 
     @Override
     public void actionPerformed(ActionEvent evt) {
         if (!exportProvider.hasRawData() && !exportProvider.hasText()) { // nothing to export
-            ProfilerDialogs.displayError(Bundle.BasicExportAction_NoViewMsg());
+            ProfilerDialogs.displayError(Bundle.ExportAction_NoViewMsg());
             return;
         }
 
@@ -248,7 +249,7 @@ final class BasicExportAction extends AbstractAction {
         if (!checkFileExists(file)) return; // user doesn't want to overwrite existing file or it can't be overwritten
 
         new NBSwingWorker(true) {
-            final private ProgressHandle ph = ProgressHandle.createHandle(Bundle.BasicExportAction_ExportingViewMsg());
+            final private ProgressHandle ph = ProgressHandle.createHandle(Bundle.ExportAction_ExportingViewMsg());
             @Override
             protected void doInBackground() {
                 ph.setInitialDelay(500);
@@ -260,12 +261,12 @@ final class BasicExportAction extends AbstractAction {
                     ExportDataDumper eDD = new ExportDataDumper(fo);
                     exportProvider.exportData(exportedFileType, eDD);
                     if (eDD.getCaughtException()!=null) {
-                        ProfilerDialogs.displayError(eDD.getNumExceptions()+Bundle.BasicExportAction_IOException_Exporting_Msg());
+                        ProfilerDialogs.displayError(eDD.getNumExceptions()+Bundle.ExportAction_IOException_Exporting_Msg());
                     }
                 } catch (OutOfMemoryError e) {
-                    ProfilerDialogs.displayError(Bundle.BasicExportAction_OomeExportingMsg()+e.getMessage());
+                    ProfilerDialogs.displayError(Bundle.ExportAction_OomeExportingMsg()+e.getMessage());
                 } catch (IOException e1) {
-                    ProfilerDialogs.displayError(Bundle.BasicExportAction_CannotWriteFileMsg(e1.getLocalizedMessage()));
+                    ProfilerDialogs.displayError(Bundle.ExportAction_CannotWriteFileMsg(e1.getLocalizedMessage()));
                     LOGGER.log(Level.WARNING, e1.toString());
                 }
             }
@@ -293,11 +294,11 @@ final class BasicExportAction extends AbstractAction {
         @Override
         public String getDescription() {
             if (FILE_EXTENSION_CSV.equals(extension)) {
-                return Bundle.BasicExportAction_ExportDialogCSVFilter();
+                return Bundle.ExportAction_ExportDialogCSVFilter();
             } else if (FILE_EXTENSION_TXT.equals(extension)) {
-                return Bundle.BasicExportAction_ExportDialogTXTFilter();
+                return Bundle.ExportAction_ExportDialogTXTFilter();
             } else if (FILE_EXTENSION_BIN.equals(extension)) {
-                return Bundle.BasicExportAction_ExportDialogBINFilter();
+                return Bundle.ExportAction_ExportDialogBINFilter();
             } else {
                 return null;
             }

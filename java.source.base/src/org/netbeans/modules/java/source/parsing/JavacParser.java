@@ -66,6 +66,7 @@ import  javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
+import javax.tools.JavaFileObject.Kind;
 
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -724,8 +725,14 @@ public class JavacParser extends Parser {
                 compilerOptions = null;
                 sourceLevel = null;
             }
-            final JavacTaskImpl javacTask = createJavacTask(
-                    cpInfo,
+            AbstractSourceFileObject source = null;
+            if (file != null) {
+                source = FileObjects.sourceFileObject(file, root);
+                if (source.getKind() != Kind.SOURCE) {
+                    source = null;
+                }
+            }
+            final JavacTaskImpl javacTask = createJavacTask(cpInfo,
                     diagnosticListener,
                     sourceLevel != null ? sourceLevel.getSourceLevel() : null,
                     sourceLevel != null ? sourceLevel.getProfile() : null,
@@ -735,7 +742,7 @@ public class JavacParser extends Parser {
                     APTUtils.get(root),
                     compilerOptions,
                     additionalModules,
-                    file != null ? Arrays.asList(FileObjects.sourceFileObject(file, root)) : Collections.emptyList());
+                    source != null ? Arrays.asList(source) : Collections.emptyList());
             Lookup.getDefault()
                   .lookupAll(TreeLoaderRegistry.class)
                   .stream()

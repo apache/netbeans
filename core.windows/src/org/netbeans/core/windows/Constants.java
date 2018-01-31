@@ -21,6 +21,7 @@ package org.netbeans.core.windows;
 
 import java.awt.Dimension;
 import javax.swing.JSplitPane;
+import org.netbeans.core.windows.services.DialogDisplayerImpl;
 import org.netbeans.swing.tabcontrol.TabbedContainer;
 import org.openide.windows.TopComponent;
 
@@ -157,6 +158,14 @@ public abstract class Constants {
      *  When JDK-8163591 is fixed, the default may be revisited.
      *  @see java.awt.Window#isAutoRequestFocus() */
     public static final boolean AUTO_FOCUS = System.getProperty("netbeans.winsys.auto_focus") == null || Boolean.getBoolean("netbeans.winsys.auto_focus"); // NOI18N
+
+    /**
+     * Whether or not we should avoid using Dialogs as Dialog parents in
+     * {@link DialogDisplayerImpl}. For backwards compatability. See
+     * NETBEANS-320 (Mac modal dialogs pop-under non-modal dialogs)
+     */
+    public static final boolean DISALLOW_DIALOG_PARENTS = Boolean.
+            getBoolean("netbeans.winsys.disallow_dialog_parents");//NOI18N
 
     private Constants() {}
 }

@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
+import org.netbeans.core.windows.Constants;
 import org.netbeans.core.windows.view.ui.DefaultSeparateContainer;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
@@ -51,7 +52,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class DialogDisplayerImpl extends DialogDisplayer {
     /** delayed runnables */
     private static List<Runnable> run = Collections.synchronizedList(new ArrayList<Runnable>());
-    
+
     /** non-null if we are running in unit test and should no show any dialogs */
     private Object testResult;
     
@@ -88,6 +89,9 @@ public class DialogDisplayerImpl extends DialogDisplayer {
 
     /** Creates new dialog. */
     public Dialog createDialog (final DialogDescriptor d, final Frame preferredParent) {
+        return createDialog(d, (Window)preferredParent);
+    }
+    public Dialog createDialog (final DialogDescriptor d, final Window preferredParent) {
         if (GraphicsEnvironment.isHeadless()) {
             throw new HeadlessException();
         }
@@ -198,15 +202,27 @@ public class DialogDisplayerImpl extends DialogDisplayer {
                             presenter = new NbDialog((DialogDescriptor) descriptor, NbPresenter.currentModalDialog);
                         }
                     } else {
-                        Window w = KeyboardFocusManager.getCurrentKeyboardFocusManager ().getActiveWindow ();
-                        if (w instanceof NbPresenter && ((NbPresenter) w).isLeaf ()) {
-                            w = WindowManager.getDefault ().getMainWindow ();
+                        Window activeWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().
+                                getActiveWindow();
+                        Window w = activeWindow != null ? activeWindow :
+                                WindowManager.getDefault().getMainWindow();
+                        if (Constants.DISALLOW_DIALOG_PARENTS &&
+                                w instanceof Dialog){
+                            w = WindowManager.getDefault().getMainWindow();
                         }
-                        Frame f = w instanceof Frame ? (Frame) w : WindowManager.getDefault().getMainWindow();
                         if (noParent) {
-                            f = null;
+                            w = null;
                         }
-                        presenter = new NbDialog((DialogDescriptor) descriptor, f);
+                        //TODO: modify constructor to take Window instead of
+                        //Frame or Dialog.
+                        if (w instanceof Dialog){
+                            presenter = new NbDialog(
+                                    (DialogDescriptor)descriptor, (Dialog)w);
+                        }
+                        else{
+                            presenter = new NbDialog(
+                                    (DialogDescriptor)descriptor, (Frame)w);
+                        }
                     }
                 } else {
                     if (NbPresenter.currentModalDialog != null) {
@@ -216,15 +232,27 @@ public class DialogDisplayerImpl extends DialogDisplayer {
                             presenter = new NbPresenter(descriptor, NbPresenter.currentModalDialog, true);
                         }
                     } else {
-                        Frame f = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow() 
-                            instanceof Frame ? 
-                            (Frame) KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow() 
-                            : WindowManager.getDefault().getMainWindow();
-                        
-                        if (noParent) {
-                            f = null;
+                        Window activeWindow = KeyboardFocusManager.getCurrentKeyboardFocusManager().
+                                getActiveWindow();
+                        Window w = activeWindow != null ? activeWindow :
+                                WindowManager.getDefault().getMainWindow();
+                        if (Constants.DISALLOW_DIALOG_PARENTS &&
+                                w instanceof Dialog){
+                            w = WindowManager.getDefault().getMainWindow();
                         }
-                        presenter = new NbPresenter(descriptor, f, true);
+                        if (noParent) {
+                            w = null;
+                        }
+                        //TODO: modify constructor to take Window instead of
+                        //Frame or Dialog.
+                        if (w instanceof Dialog){
+                            presenter = new NbPresenter(descriptor, (Dialog)w,
+                                    true);
+                        }
+                        else{
+                            presenter = new NbPresenter(descriptor, (Frame)w,
+                                    true);
+                        }
                     }
                 }
                 
@@ -243,7 +271,9 @@ public class DialogDisplayerImpl extends DialogDisplayer {
                 // dialog is gone, restore the focus
 
                 if (focusOwner != null) {
-                    win.requestFocusInWindow();
+                    if (win != null){
+                        win.requestFocusInWindow();
+                    }
                     comp.requestFocusInWindow();
                     if( !(focusOwner instanceof JRootPane ) ) //#85068
                         focusOwner.requestFocusInWindow();

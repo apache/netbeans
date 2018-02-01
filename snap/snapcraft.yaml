@@ -1,0 +1,50 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: netbeans
+version: "9.0-dev"
+summary: NetBeans Java IDE
+description: |
+  NetBeans IDE lets you quickly and easily develop Java desktop, mobile, and 
+  web applications, as well as HTML5 applications with HTML, JavaScript, and
+  CSS. The IDE also provides a great set of tools for PHP and C/C++ developers.
+  It is free and open source and has a large community of users and developers
+  around the world. 
+icon: ide.branding/release/netbeans.png
+confinement: classic
+grade: devel
+
+parts:
+  build:
+    plugin: ant
+    ant-properties:
+        javac.compilerargs: "-nowarn"
+        build.compiler.deprecation: "false"
+    ant-build-targets: [ -quiet ]
+    filesets:
+        netbeans: [ netbeans/*, -netbeans/*.built ]
+    install: |
+        mv nbbuild/netbeans $SNAPCRAFT_PART_INSTALL/netbeans
+        sed -i 's/${HOME}\/.netbeans/${SNAP_USER_COMMON}\/data/' $SNAPCRAFT_PART_INSTALL/netbeans/bin/netbeans
+        sed -i 's/${HOME}\/.cache\/netbeans/${SNAP_USER_COMMON}\/cache/' $SNAPCRAFT_PART_INSTALL/netbeans/bin/netbeans
+    stage:
+        - $netbeans
+
+apps:
+  netbeans:
+    command: netbeans/bin/netbeans
+
+

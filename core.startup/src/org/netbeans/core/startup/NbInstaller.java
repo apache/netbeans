@@ -230,13 +230,15 @@ final class NbInstaller extends ModuleInstaller {
         List<Module.PackageExport> hiddenPackages = new ArrayList<Module.PackageExport>();
         List<Module> mWithDeps = new LinkedList<Module>();
         mWithDeps.add(m);
-        mWithDeps.addAll(mgr.getAttachedFragments(m));
-        for (Dependency d : m.getDependencies()) {
-            if (d.getType() == Dependency.TYPE_MODULE) {
-                Module _m = mgr.get((String) Util.parseCodeName(d.getName())[0]);
-                assert _m != null : d;
-                mWithDeps.add(_m);
-                mWithDeps.addAll(mgr.getAttachedFragments(_m));
+        if (mgr != null) {
+            mWithDeps.addAll(mgr.getAttachedFragments(m));
+            for (Dependency d : m.getDependencies()) {
+                if (d.getType() == Dependency.TYPE_MODULE) {
+                    Module _m = mgr.get((String) Util.parseCodeName(d.getName())[0]);
+                    assert _m != null : d;
+                    mWithDeps.add(_m);
+                    mWithDeps.addAll(mgr.getAttachedFragments(_m));
+                }
             }
         }
         for (Module _m : mWithDeps) {

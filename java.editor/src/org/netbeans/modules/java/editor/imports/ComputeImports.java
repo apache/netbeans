@@ -166,6 +166,10 @@ public final class ComputeImports {
     private static final Object IMPORT_CANDIDATES_KEY = new Object();
     
     public ComputeImports computeCandidatesEx() {
+        return computeCandidatesEx(Collections.emptySet());
+    }
+
+    private ComputeImports computeCandidatesEx(Set<String> forcedUnresolved) {
         ComputeImports cache = (ComputeImports)info.getCachedValue(IMPORT_CANDIDATES_KEY);
         if (cache != null) {
             return cache;
@@ -196,7 +200,7 @@ public final class ComputeImports {
                     public void run(CompilationController parameter) throws Exception {
                         allInfo = parameter;
                         parameter.toPhase(JavaSource.Phase.RESOLVED);
-                        computeCandidates(Collections.<String>emptySet());
+                        doComputeCandidates(forcedUnresolved);
                     }
                 }, true);
             } catch (IOException ex) {
@@ -204,7 +208,7 @@ public final class ComputeImports {
             }
         } else {
             allInfo = info;
-            computeCandidates(Collections.<String>emptySet());
+            doComputeCandidates(forcedUnresolved);
         }
         info.putCachedValue(IMPORT_CANDIDATES_KEY, this, CacheClearPolicy.ON_CHANGE);
         return this;
@@ -215,7 +219,11 @@ public final class ComputeImports {
     }
     
     public Pair<Map<String, List<Element>>, Map<String, List<Element>>> computeCandidates() {
-        return computeCandidatesEx().getSimpleCandidates();
+        return computeCandidates(Collections.emptySet());
+    }
+
+    public Pair<Map<String, List<Element>>, Map<String, List<Element>>> computeCandidates(Set<String> forcedUnresolved) {
+        return computeCandidatesEx(forcedUnresolved).getSimpleCandidates();
     }
     
     private TreeVisitorImpl visitor;
@@ -224,7 +232,7 @@ public final class ComputeImports {
         this.visitor = visitor;
     }
     
-    Pair<Map<String, List<Element>>, Map<String, List<Element>>> computeCandidates(Set<String> forcedUnresolved) {
+    private void doComputeCandidates(Set<String> forcedUnresolved) {
         final CompilationUnitTree cut = info.getCompilationUnit();
         ClasspathInfo cpInfo = allInfo.getClasspathInfo();
         final TreeVisitorImpl v = new TreeVisitorImpl(info);
@@ -243,17 +251,17 @@ public final class ComputeImports {
         
         for (String unresolved : unresolvedNames) {
             if (isCancelled())
-                return null;
+                return;
             
             List<Element> classes = new ArrayList<Element>();
             Set<ElementHandle<TypeElement>> typeNames = cpInfo.getClassIndex().getDeclaredTypes(unresolved, NameKind.SIMPLE_NAME,EnumSet.allOf(ClassIndex.SearchScope.class));
             if (typeNames == null) {
                 //Canceled
-                return null;
+                return;
             }
             for (ElementHandle<TypeElement> typeName : typeNames) {
                 if (isCancelled())
-                    return null;
+                    return;
                 TypeElement te = typeName.resolve(allInfo);
                 
                 if (te == null) {
@@ -272,12 +280,12 @@ public final class ComputeImports {
 
             if (simpleNames == null) {
                 //Canceled:
-                return null;
+                return;
             }
             
             for (final Symbols p : simpleNames) {
                 if (isCancelled())
-                    return null;
+                    return;
 
                 final TypeElement te = p.getEnclosingType().resolve(allInfo);
                 final Set<String> idents = p.getSymbols();
@@ -299,7 +307,7 @@ public final class ComputeImports {
         
         while (wasChanged) {
             if (isCancelled())
-                return new Pair(Collections.emptyMap(), Collections.emptyMap());
+                return;
             
             wasChanged = false;
             // reset possible FQNs, since the set of acessible stuff may have changed -> 
@@ -345,8 +353,6 @@ public final class ComputeImports {
                 }
             }
         }
-            
-        return new Pair<Map<String, List<Element>>, Map<String, List<Element>>>(candidates, notFilteredCandidates);
     }
     
     public void addMethodFqn(Element el) {

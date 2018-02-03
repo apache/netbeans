@@ -160,7 +160,7 @@ public class PostFlowAnalysis extends TreeScanner {
     public void visitNewClass(JCNewClass tree) {
         super.visitNewClass(tree);
         Symbol c = tree.constructor != null ? tree.constructor.owner : null;
-        if (c != null && c.hasOuterInstance()) {
+        if (c != null && c != syms.noSymbol && c.hasOuterInstance()) {
             if (tree.encl == null && c.isLocal()) {
                 checkThis(tree.pos(), c.type.getEnclosingType().tsym);
             }

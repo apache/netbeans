@@ -75,11 +75,8 @@ public class FixTestDependencies extends Task {
                 throw new BuildException("project.xml file doesn't exist.");
             }
             byte xmlBytes [] = new byte[(int)projectXmlFile.length()];
-            FileInputStream prjFis = new FileInputStream(projectXmlFile);
-            try {
+            try (FileInputStream prjFis = new FileInputStream(projectXmlFile)) {
                 prjFis.read(xmlBytes);
-            } finally {
-                prjFis.close();
             }
             String xml = new String(xmlBytes);
             String oldXsd = "<data xmlns=\"http://www.netbeans.org/ns/nb-module-project/2";
@@ -114,9 +111,9 @@ public class FixTestDependencies extends Task {
                 if (td && !testFix) {
                     // yes -> exit
                     xml = fixOpenideUtil(fixCoreStartup(xml));
-                    PrintStream ps = new PrintStream(projectXmlFile);
-                    ps.print(xml);
-                    ps.close();                  
+                    try (PrintStream ps = new PrintStream(projectXmlFile)) {
+                        ps.print(xml);
+                    }                  
                     return ;
                 }
                 Set<ModuleListParser.Entry> entries = getModuleList(projectType);
@@ -127,10 +124,10 @@ public class FixTestDependencies extends Task {
 
                 // unittest
                 //
-                Set<String> compileCNB = new TreeSet<String>();
-                Set<String> compileTestCNB = new TreeSet<String>();
-                Set<String> runtimeCNB = new TreeSet<String>();
-                Set<String> runtimeTestCNB = new TreeSet<String>();
+                Set<String> compileCNB = new TreeSet<>();
+                Set<String> compileTestCNB = new TreeSet<>();
+                Set<String> runtimeCNB = new TreeSet<>();
+                Set<String> runtimeTestCNB = new TreeSet<>();
 
                 Properties projectProperties = getTestProperties();
                 boolean found;
@@ -205,12 +202,12 @@ public class FixTestDependencies extends Task {
                 }
                 resultXml.append(xml.substring(moduleDepEnd + 1, xml.length()));
                 if (!testFix) {
-                   PrintStream ps = new PrintStream(projectXmlFile);
-                   ps.print(fixOpenideUtil(
-                           fixCoreStartup(
-                                   resultXml.toString()
-                           )));
-                   ps.close();
+                    try (PrintStream ps = new PrintStream(projectXmlFile)) {
+                        ps.print(fixOpenideUtil(
+                                fixCoreStartup(
+                                        resultXml.toString()
+                                )));
+                    }
                 } else {
                     System.out.println(resultXml);
                 }
@@ -235,7 +232,7 @@ public class FixTestDependencies extends Task {
     }
     
     private Set<String> getCNBsFromEntries(Set<ModuleListParser.Entry> entries) {
-        Set<String> cnbs = new HashSet<String>();
+        Set<String> cnbs = new HashSet<>();
         for (ModuleListParser.Entry e : entries) {
             cnbs.add(e.getCnb());
         }
@@ -364,11 +361,8 @@ public class FixTestDependencies extends Task {
             return new Properties();
         }
         Properties props = new Properties();
-        FileInputStream fis = new FileInputStream(propertiesFile);
-        try {
+        try (FileInputStream fis = new FileInputStream(propertiesFile)) {
             props.load(fis);
-        } finally {
-            fis.close();
         }
         return props;
     }
@@ -388,15 +382,15 @@ public class FixTestDependencies extends Task {
             return;
         }
         try {
-            List<String> lines = new ArrayList<String>();
+            List<String> lines = new ArrayList<>();
             if (propertiesFile.isFile()) {
                 // read properties
-                BufferedReader reader = new BufferedReader (new FileReader(propertiesFile));
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    lines.add(line);
+                try (BufferedReader reader = new BufferedReader (new FileReader(propertiesFile))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        lines.add(line);
+                    }
                 }
-                reader.close();
             }
             
             // merge properties
@@ -409,11 +403,11 @@ public class FixTestDependencies extends Task {
             }
 
             // store properties
-            PrintStream ps = new PrintStream(propertiesFile);
-            for (String l : lines) {
-                ps.println(l);
+            try (PrintStream ps = new PrintStream(propertiesFile)) {
+                for (String l : lines) {
+                    ps.println(l);
+                }
             }
-            ps.close();
             
         } catch (IOException ioe) {
             throw new BuildException(ioe);
@@ -422,7 +416,7 @@ public class FixTestDependencies extends Task {
     }
 
     private List<String> replaceProperty(String name, String value, List<String> lines) {
-        List<String> retLines = new ArrayList<String>();
+        List<String> retLines = new ArrayList<>();
         for (int i = 0 ; i < lines.size() ; i++) {
             String line = lines.get(i);
             String trimmedLine = line.trim();

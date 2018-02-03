@@ -1,6 +1,5 @@
 Name: HTML 5 Specification
 License: HTML5DOC
-OSR: -
 Version: -
 Description: Documentation for the HTML 5 standard
 Origin: http://www.whatwg.org/specs/web-apps/current-work/

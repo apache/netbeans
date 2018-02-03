@@ -52,13 +52,8 @@ public class Utilities {
         //need to preregister the Messages here, because the getTask below requires Log instance:
         Messager.preRegister(context, null, DEV_NULL, DEV_NULL, DEV_NULL);
         JavacTaskImpl task = (JavacTaskImpl)JavacTool.create().getTask(null, 
-                fm, new DiagnosticListener<JavaFileObject>() {
-            @Override
-            public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
-                System.err.println("diagnostic= " + diagnostic);
-            }
-                }
-                , Arrays.asList("-bootclasspath",  bootPath, "-source", version, "-target", version, "-Xjcov", "-XDshouldStopPolicy=GENERATE"), null, Arrays.asList(sources),
+                fm,
+                null, Arrays.asList("-bootclasspath",  bootPath, "-source", version, "-target", version, "-Xjcov", "-XDshouldStopPolicy=GENERATE"), null, Arrays.asList(sources),
                 context);
         NBParserFactory.preRegister(context);
         NBTreeMaker.preRegister(context);

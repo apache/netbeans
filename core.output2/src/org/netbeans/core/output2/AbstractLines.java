@@ -22,13 +22,15 @@ package org.netbeans.core.output2;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -869,7 +871,6 @@ abstract class AbstractLines implements Lines, Runnable, ActionListener {
         if (storage == null) {
             throw new IOException ("Data has already been disposed"); //NOI18N
         }
-        FileOutputStream fos = new FileOutputStream(path);
         try {
             String encoding = System.getProperty ("file.encoding"); //NOI18N
             if (encoding == null) {
@@ -878,30 +879,30 @@ abstract class AbstractLines implements Lines, Runnable, ActionListener {
             Charset charset = Charset.forName (encoding); //NOI18N
             CharsetEncoder encoder = charset.newEncoder ();
             String ls = System.getProperty("line.separator");
-            FileChannel ch = fos.getChannel();
-            ByteBuffer lsbb = encoder.encode(CharBuffer.wrap(ls));
-            for (int i = 0; i < getLineCount(); i++) {
-                int lineStart = getCharLineStart(i);
-                int lineLength = length(i);
-                BufferResource<CharBuffer> br = getCharBuffer(lineStart,
-                        lineLength);
-                try {
-                    CharBuffer cb = br.getBuffer();
-                    ByteBuffer bb = encoder.encode(cb);
-                    ch.write(bb);
-                    if (i != getLineCount() - 1) {
-                        lsbb.rewind();
-                        ch.write(lsbb);
-                    }
-                } finally {
-                    if (br != null) {
-                        br.releaseBuffer();
+            Path filePath = Paths.get(path);
+            try (FileChannel ch = FileChannel.open(filePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE)) {
+                ByteBuffer lsbb = encoder.encode(CharBuffer.wrap(ls));
+                for (int i = 0; i < getLineCount(); i++) {
+                    int lineStart = getCharLineStart(i);
+                    int lineLength = length(i);
+                    BufferResource<CharBuffer> br = getCharBuffer(lineStart,
+                            lineLength);
+                    try {
+                        CharBuffer cb = br.getBuffer();
+                        ByteBuffer bb = encoder.encode(cb);
+                        ch.write(bb);
+                        if (i != getLineCount() - 1) {
+                            lsbb.rewind();
+                            ch.write(lsbb);
+                        }
+                    } finally {
+                        if (br != null) {
+                            br.releaseBuffer();
+                        }
                     }
                 }
             }
-            ch.close();
         } finally {
-            fos.close();
             FileUtil.refreshFor(new java.io.File(path));
         }
     }

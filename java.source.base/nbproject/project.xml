@@ -70,6 +70,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.libs.asm</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>5.4</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.libs.javacapi</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -333,6 +341,10 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.java.guards</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.java.j2seplatform</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>

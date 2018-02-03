@@ -58,15 +58,12 @@ public class DeregisterExternalHook extends Task {
                 File hgrc = new File(dotHg, "hgrc");
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 if (hgrc.isFile()) {
-                    InputStream is = new FileInputStream(hgrc);
-                    try {
+                    try (InputStream is = new FileInputStream(hgrc)) {
                         byte[] buf = new byte[4096];
                         int read;
                         while ((read = is.read(buf)) != -1) {
                             baos.write(buf, 0, read);
                         }
-                    } finally {
-                        is.close();
                     }
                 }
                 String config = baos.toString();
@@ -77,11 +74,8 @@ public class DeregisterExternalHook extends Task {
                         replaceAll("(^|\r?\n)(\r?\n)*(\\[(extensions|encode|decode)\\](\r?\n)+)+(?=\\[|$)", "$1");
                 if (!newConfig.equals(config)) {
                     log("Unregistering external hook from " + hgrc);
-                    OutputStream os = new FileOutputStream(hgrc);
-                    try {
+                    try (OutputStream os = new FileOutputStream(hgrc)) {
                         os.write(newConfig.getBytes());
-                    } finally {
-                        os.close();
                     }
                 }
             } catch (IOException x) {

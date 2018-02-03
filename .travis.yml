@@ -18,8 +18,8 @@ language: java
 jdk:
   - oraclejdk8
 script:
-  - (ant -quiet -Dcluster.config=platform build-source-config && mkdir scratch && cd scratch && unzip -qq ../nbbuild/build/platform-src* && ant -quiet rat -Dcluster.config=platform -Drat-report.haltonfailure=true && cd .. && rm -rf scratch)
+  - ant -quiet rat -Drat-report.haltonfailure=true
   - ant -quiet build -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
   - ant -quiet test -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false -Dtest.includes=NoTestsJustBuild
-  - ant -quiet verify-libs-and-licenses -Dcluster.config=platform -Dverify-libs-and-licenses.haltonfailure=true
+  - ant -quiet verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true
   - ./travis-check-line-endings.sh

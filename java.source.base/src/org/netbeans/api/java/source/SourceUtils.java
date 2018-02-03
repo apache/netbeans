@@ -60,7 +60,6 @@ import com.sun.tools.javac.comp.Check;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
-
 import java.util.function.Predicate;
 
 import javax.swing.SwingUtilities;
@@ -200,6 +199,40 @@ public class SourceUtils {
      */
     public static List<? extends Completion> getAttributeValueCompletions(CompilationInfo info, Element element, AnnotationMirror annotation, ExecutableElement member, String userText) {
         List<Completion> completions = new LinkedList<>();
+        if (info.getPhase().compareTo(Phase.ELEMENTS_RESOLVED) >= 0) {
+            String fqn = ((TypeElement) annotation.getAnnotationType().asElement()).getQualifiedName().toString();
+            Iterable<? extends Processor> processors =
+                    JavacParser.ProcessorHolder.instance(info.impl.getJavacTask().getContext()).getProcessors();
+            if (processors != null) {
+                for (Processor processor : processors) {
+                    boolean match = false;
+                    for (String sat : processor.getSupportedAnnotationTypes()) {
+                        if ("*".equals(sat)) { //NOI18N
+                            match = true;
+                            break;
+                        } else if (sat.endsWith(".*")) { //NOI18N
+                            sat = sat.substring(0, sat.length() - 1);
+                            if (fqn.startsWith(sat)) {
+                                match = true;
+                                break;
+                            }
+                        } else if (fqn.equals(sat)) {
+                            match = true;
+                            break;
+                        }
+                    }
+                    if (match) {
+                        try {
+                            for (Completion c : processor.getCompletions(element, annotation, member, userText)) {
+                                completions.add(c);
+                            }
+                        } catch (Exception e) {
+                            Logger.getLogger(processor.getClass().getName()).log(Level.INFO, e.getMessage(), e);
+                        }
+                    }
+                }
+            }
+        }
         return completions;
     }
 

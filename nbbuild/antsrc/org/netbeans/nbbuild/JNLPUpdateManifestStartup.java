@@ -27,16 +27,12 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.tools.ant.BuildException;
@@ -121,11 +117,7 @@ public class JNLPUpdateManifestStartup extends Task {
             if (isSigned(jar) == null) {
                 tmpFile = extendLibraryManifest(getProject(), jar, destJar, codebase, permissions, appName);
             }
-        } catch (IOException ex) {
-            getProject().log(
-                    "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
-                    Project.MSG_WARN);
-        } catch (ManifestException ex) {
+        } catch (IOException | ManifestException ex) {
             getProject().log(
                     "Failed to extend libraries manifests: " + ex.getMessage(), //NOI18N
                     Project.MSG_WARN);
@@ -153,7 +145,7 @@ public class JNLPUpdateManifestStartup extends Task {
         cp.execute();
         boolean success = false;
         try {
-            final Map<String, String> extendedAttrs = new HashMap<String, String>();
+            final Map<String, String> extendedAttrs = new HashMap<>();
             final org.apache.tools.zip.ZipFile zf = new org.apache.tools.zip.ZipFile(sourceJar);
             try {
                 final org.apache.tools.zip.ZipEntry manifestEntry = zf.getEntry(MANIFEST);
@@ -275,8 +267,7 @@ public class JNLPUpdateManifestStartup extends Task {
      * return alias if signed, or null if not
      */
     private static String isSigned(File f) throws IOException {
-        JarFile jar = new JarFile(f);
-        try {
+        try (JarFile jar = new JarFile(f)) {
             Enumeration<JarEntry> en = jar.entries();
             while (en.hasMoreElements()) {
                 Matcher m = SF.matcher(en.nextElement().getName());
@@ -285,8 +276,6 @@ public class JNLPUpdateManifestStartup extends Task {
                 }
             }
             return null;
-        } finally {
-            jar.close();
         }
     }
     private static final Pattern SF = Pattern.compile("META-INF/(.+)\\.SF");
@@ -306,25 +295,7 @@ public class JNLPUpdateManifestStartup extends Task {
             to.getParentFile().mkdirs();
         }
         getSignTask().setSignedjar(to);
-        // use reflection for calling getSignTask().setDigestAlg("SHA1");
-        try {
-            Class sjClass = Class.forName("org.apache.tools.ant.taskdefs.SignJar");
-            Method sdaMethod = sjClass.getDeclaredMethod("setDigestAlg", String.class);
-            sdaMethod.invoke(getSignTask(), "SHA1");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchMethodException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(MakeJNLP.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        // end of getSignTask().setDigestAlg("SHA1");
+        getSignTask().setDigestAlg("SHA1");
         getSignTask().execute();
 
     }

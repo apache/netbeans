@@ -64,4 +64,31 @@ public class JavaCompletionItemElementCreatingTest extends CompletionTestBase {
     public void testOverrideInInnerClass() throws Exception {
         performTest("OverrideInInnerClass", 185, "pai", "paint\\(.*override", "OverrideInInnerClass.pass2");
     }
+
+    public void testOverrideInAnonClass() throws Exception {
+        performTest("OverrideInAnonClass", 880, null, "toString\\(\\).*override", "OverrideInAnonClass.pass2");
+    }
+
+    public void testOverrideInAnonClass2() throws Exception {
+        performTest("OverrideInAnonClass", 945, null, "toString\\(\\).*override", "OverrideInAnonClass2.pass2");
+    }
+
+    public void testOverrideInAnonInterfaceImpl() throws Exception {
+        performTest("OverrideInAnonInterfaceImpl", 922, null, "toString\\(\\).*override", "OverrideInAnonInterfaceImpl.pass2");
+    }
+
+    public void testOverrideInAnonInterfaceImpl2() throws Exception {
+        performTest("OverrideInAnonInterfaceImpl", 999, null, "toString\\(\\).*override", "OverrideInAnonInterfaceImpl2.pass2");
+    }
+
+    // Tests the fix for NETBEANS-252 / #271633
+    public void testOverrideInEnumConstantBody() throws Exception {
+        performTest("OverrideInEnumConstantBody", 901, null, "toString\\(\\).*override", "OverrideInEnumConstantBody.pass2");
+    }
+    public void testOverrideInEnumBody2() throws Exception {
+        performTest("OverrideInEnumConstantBody", 935, null, "toString\\(\\).*override", "OverrideInEnumConstantBody2.pass2");
+    }
+    public void testOverrideInEnumBody3() throws Exception {
+        performTest("OverrideInEnumConstantBody", 967, null, "toString\\(\\).*override", "OverrideInEnumConstantBody3.pass2");
+    }
 }

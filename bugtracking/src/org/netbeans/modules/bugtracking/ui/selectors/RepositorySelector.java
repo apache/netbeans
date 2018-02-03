@@ -1,6 +1,4 @@
-package org.netbeans.modules.bugtracking.ui.selectors;
-
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,7 +17,7 @@ package org.netbeans.modules.bugtracking.ui.selectors;
  * under the License.
  */
 
-
+package org.netbeans.modules.bugtracking.ui.selectors;
 
 import java.util.ArrayList;
 import java.util.List;

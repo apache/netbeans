@@ -19,14 +19,27 @@
 
 package org.netbeans.modules.java.source.indexing;
 
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import com.sun.tools.javac.code.SymbolMetadata;
+import com.sun.tools.javac.code.Symtab;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.ClassType;
+import com.sun.tools.javac.code.Type.ForAll;
+import com.sun.tools.javac.code.Type.TypeVar;
+import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.CompileStates.CompileState;
 import com.sun.tools.javac.comp.Enter;
@@ -37,10 +50,13 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCModuleDecl;
 import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
+import com.sun.tools.javac.tree.TreeMaker;
 import org.netbeans.lib.nbjavac.services.CancelAbort;
 import org.netbeans.lib.nbjavac.services.CancelService;
 import com.sun.tools.javac.util.FatalError;
+import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Log;
+import com.sun.tools.javac.util.Names;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -48,11 +64,14 @@ import java.util.Map.Entry;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-import javax.annotation.processing.Processor;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
@@ -151,14 +170,14 @@ final class VanillaCompileWorker extends CompileWorker {
             Log.instance(jt.getContext()).nerrors = 0;
         } catch (CancelAbort ca) {
             if (context.isCancelled() && JavaIndex.LOG.isLoggable(Level.FINEST)) {
-                JavaIndex.LOG.log(Level.FINEST, "SuperOnePassCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
+                JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
             }
         } catch (Throwable t) {
             if (JavaIndex.LOG.isLoggable(Level.WARNING)) {
                 final ClassPath bootPath   = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.BOOT);
                 final ClassPath classPath  = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
                 final ClassPath sourcePath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
-                final String message = String.format("SuperOnePassCompileWorker caused an exception\nFile: %s\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
+                final String message = String.format("VanillaCompileWorker caused an exception\nFile: %s\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
                             fileObjects.values().iterator().next().indexable.getURL().toString(),
                             FileUtil.getFileDisplayName(context.getRoot()),
                             bootPath == null   ? null : bootPath.toString(),
@@ -188,7 +207,6 @@ final class VanillaCompileWorker extends CompileWorker {
         boolean aptEnabled = true;
         Log log = Log.instance(jt.getContext());
         JavaCompiler compiler = JavaCompiler.instance(jt.getContext());
-        Set<JavaFileObject> haveErrors = new HashSet<>();
         try {
             final Iterable<? extends Element> types = jt.enter(trees);
             if (context.isCancelled()) {
@@ -262,8 +280,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     modifiedTypes.addAll(aTypes);
                 }
                 ExecutableFilesIndex.DEFAULT.setMainClass(context.getRoot().toURL(), active.indexable.getURL(), main[0]);
-                if (!dc.getDiagnostics(active.jfo).isEmpty())
-                    haveErrors.add(active.jfo);
+                dropMethodsAndErrors(jt.getContext(), unit.getKey());
                 JavaCustomIndexer.setErrors(context, active, dc);
             }
             if (context.isCancelled()) {
@@ -281,7 +298,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     for (Element type : types) {
                         TreePath tp = Trees.instance(jtFin).getPath(type);
                         assert tp != null;
-                        log.nerrors = haveErrors.contains(tp.getCompilationUnit().getSourceFile()) ? 1 : 0;
+                        log.nerrors = 0;
                         Iterable<? extends JavaFileObject> generatedFiles = jtFin.generate(Collections.singletonList(type));
                         CompileTuple unit = clazz2Tuple.get(type);
                         if (unit == null || !unit.virtual) {
@@ -319,7 +336,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 final ClassPath bootPath   = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.BOOT);
                 final ClassPath classPath  = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
                 final ClassPath sourcePath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
-                final String message = String.format("SuperOnePassCompileWorker caused an exception\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
+                final String message = String.format("VanillaCompileWorker caused an exception\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
                             FileUtil.getFileDisplayName(context.getRoot()),
                             bootPath == null   ? null : bootPath.toString(),
                             classPath == null  ? null : classPath.toString(),
@@ -331,7 +348,7 @@ final class VanillaCompileWorker extends CompileWorker {
             if (isLowMemory(null)) {
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             } else if (JavaIndex.LOG.isLoggable(Level.FINEST)) {
-                JavaIndex.LOG.log(Level.FINEST, "SuperOnePassCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
+                JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
             }
         } catch (Throwable t) {
             if (t instanceof ThreadDeath) {
@@ -342,7 +359,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     final ClassPath bootPath   = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.BOOT);
                     final ClassPath classPath  = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
                     final ClassPath sourcePath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
-                    final String message = String.format("SuperOnePassCompileWorker caused an exception\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
+                    final String message = String.format("VanillaCompileWorker caused an exception\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
                                 FileUtil.getFileDisplayName(context.getRoot()),
                                 bootPath == null   ? null : bootPath.toString(),
                                 classPath == null  ? null : classPath.toString(),
@@ -353,5 +370,153 @@ final class VanillaCompileWorker extends CompileWorker {
             }
         }
         return ParsingOutput.failure(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
+    }
+
+    private void dropMethodsAndErrors(com.sun.tools.javac.util.Context ctx, CompilationUnitTree cut) {
+        Symtab syms = Symtab.instance(ctx);
+        Names names = Names.instance(ctx);
+        TreeMaker make = TreeMaker.instance(ctx);
+        //TODO: should preserve error types!!!
+        new TreePathScanner<Void, Void>() {
+            @Override
+            public Void visitVariable(VariableTree node, Void p) {
+                JCTree.JCVariableDecl decl = (JCTree.JCVariableDecl) node;
+                if ((decl.mods.flags & Flags.ENUM) == 0) {
+                    decl.init = null;
+                }
+                decl.sym.type = decl.type = error2Object(decl.type);
+                clearAnnotations(decl.sym.getMetadata());
+                return super.visitVariable(node, p);
+            }
+
+            @Override
+            public Void visitMethod(MethodTree node, Void p) {
+                JCTree.JCMethodDecl decl = (JCTree.JCMethodDecl) node;
+                Symbol.MethodSymbol msym = decl.sym;
+                if (Collections.disjoint(msym.getModifiers(), EnumSet.of(Modifier.NATIVE, Modifier.ABSTRACT))) {
+                    JCTree.JCNewClass nct =
+                            make.NewClass(null,
+                                          com.sun.tools.javac.util.List.nil(),
+                                          make.QualIdent(syms.runtimeExceptionType.tsym),
+                                          com.sun.tools.javac.util.List.of(make.Literal("")),
+                                          null);
+                    nct.type = syms.runtimeExceptionType;
+                    nct.constructor = syms.runtimeExceptionType.tsym.members().getSymbols(
+                            s -> s.getKind() == ElementKind.CONSTRUCTOR && s.type.getParameterTypes().size() == 1 && s.type.getParameterTypes().head.tsym == syms.stringType.tsym
+                    ).iterator().next();
+                    decl.body = make.Block(0, com.sun.tools.javac.util.List.of(make.Throw(nct)));
+                }
+                Type.MethodType mt;
+                if (msym.type.hasTag(TypeTag.FORALL)) {
+                    ForAll fa = (ForAll) msym.type;
+                    fa.tvars = error2Object(fa.tvars);
+                    mt = fa.asMethodType();
+                } else {
+                    mt = (Type.MethodType) msym.type;
+                }
+                mt.restype = error2Object(mt.restype);
+                mt.argtypes = error2Object(mt.argtypes);
+                mt.thrown = error2Object(mt.thrown);
+                clearAnnotations(decl.sym.getMetadata());
+                return super.visitMethod(node, p);
+            }
+
+            @Override
+            public Void visitClass(ClassTree node, Void p) {
+                JCClassDecl clazz = (JCTree.JCClassDecl) node;
+                Symbol.ClassSymbol csym = clazz.sym;
+                Type.ClassType ct = (Type.ClassType) csym.type;
+                ct.all_interfaces_field = error2Object(ct.all_interfaces_field);
+                ct.allparams_field = error2Object(ct.allparams_field);
+                ct.interfaces_field = error2Object(ct.interfaces_field);
+                ct.typarams_field = error2Object(ct.typarams_field);
+                ct.supertype_field = error2Object(ct.supertype_field);
+                super.visitClass(node, p);
+                for (JCTree def : clazz.defs) {
+                    if (def.hasTag(JCTree.Tag.ERRONEOUS)) {
+                        clazz.defs = com.sun.tools.javac.util.List.filter(clazz.defs, def);
+                    }
+                }
+                return null;
+            }
+
+            private void clearAnnotations(SymbolMetadata metadata) {
+                if (metadata == null)
+                    return;
+
+                //TODO: type annotations, etc.
+                com.sun.tools.javac.util.List<Attribute.Compound> annotations = metadata.getDeclarationAttributes();
+                com.sun.tools.javac.util.List<Attribute.Compound> prev = null;
+                while (annotations.nonEmpty()) {
+                    if (isErroneous(annotations.head.type)) {
+                        if (prev == null) {
+                            metadata.reset();
+                            metadata.setDeclarationAttributes(annotations.tail);
+                        } else {
+                            prev.tail = annotations.tail;
+                        }
+                    }
+                    prev = annotations;
+                    annotations = annotations.tail;
+                }
+            }
+
+            private boolean isErroneous(TypeMirror type) {
+                return type == null || type.getKind() == TypeKind.ERROR || type.getKind() == TypeKind.NONE || type.getKind() == TypeKind.OTHER;
+            }
+
+            private Set<Type> seen = Collections.newSetFromMap(new IdentityHashMap<>());
+
+            private Type error2Object(Type t) {
+                if (t == null)
+                    return null;
+
+                if (isErroneous(t)) {
+                    return syms.objectType;
+                }
+
+                if (!seen.add(t))
+                    return t;
+
+                switch (t.getKind()) {
+                    case DECLARED: {
+                        resolveErrors((ClassType) t);
+                        break;
+                    }
+                    case WILDCARD: {
+                        Type.WildcardType wt = ((Type.WildcardType) t);
+                        wt.type = error2Object(wt.type);
+                        TypeVar tv = wt.bound;
+                        tv.bound = error2Object(tv.bound);
+                        tv.lower = error2Object(tv.lower);
+                        break;
+                    }
+                }
+                return t;
+            }
+
+            private com.sun.tools.javac.util.List<Type> error2Object(com.sun.tools.javac.util.List<Type> types) {
+                if (types == null)
+                    return null;
+
+                ListBuffer<Type> lb = new ListBuffer<>();
+                boolean changed = false;
+                for (Type t : types) {
+                    Type nue = error2Object(t);
+                    changed |= nue != t;
+                    lb.append(nue);
+                }
+                return changed ? lb.toList() : types;
+            }
+
+            private void resolveErrors(ClassType ct) {
+                if (ct.tsym == syms.objectType.tsym) return ;
+                ct.all_interfaces_field = error2Object(ct.all_interfaces_field);
+                ct.allparams_field = error2Object(ct.allparams_field); //TODO: should replace with bounds
+                ct.interfaces_field = error2Object(ct.interfaces_field);
+                ct.typarams_field = error2Object(ct.typarams_field);
+                ct.supertype_field = error2Object(ct.supertype_field);
+            }
+        }.scan(cut, null);
     }
 }

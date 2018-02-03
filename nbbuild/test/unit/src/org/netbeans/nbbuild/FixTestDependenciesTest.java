@@ -102,8 +102,8 @@ public class FixTestDependenciesTest extends TestBase {
 
     public void testWrongBuilClassDep() throws IOException {
         FixTestDependencies ftd = newFixTestDependencies();
-        Set<String> cnb = new HashSet<String>();
-        Set<String> testCnb = new HashSet<String>();
+        Set<String> cnb = new HashSet<>();
+        Set<String> testCnb = new HashSet<>();
  
         Properties props = new Properties();
         String PNAME = "cp.extra";
@@ -133,21 +133,20 @@ public class FixTestDependenciesTest extends TestBase {
     }
 
     private File copyFile(String resourceName) throws IOException {
-       InputStream is = getClass().getResourceAsStream(resourceName);
-       byte buf[] = new byte[10000];
-       File retFile = new File(getWorkDir(),resourceName);
-       FileOutputStream fos = new FileOutputStream(retFile);
-       int size;
-       while ((size = is.read(buf)) > 0 ) {
-           fos.write(buf,0,size);
-       }
-       is.close();
-       fos.close();
-       return retFile;
+        File retFile = new File(getWorkDir(), resourceName);
+        try (InputStream is = getClass().getResourceAsStream(resourceName);
+                FileOutputStream fos = new FileOutputStream(retFile);) {
+            byte buf[] = new byte[10000];
+            int size;
+            while ((size = is.read(buf)) > 0) {
+                fos.write(buf, 0, size);
+            }
+        }
+        return retFile;
     }
 
     private Set<ModuleListParser.Entry> getEntries() {
-        Set<ModuleListParser.Entry> entries = new HashSet<ModuleListParser.Entry>();
+        Set<ModuleListParser.Entry> entries = new HashSet<>();
         File nonexistent = new File("nonexistent");
         entries.add(new ModuleListParser.Entry("org.openide.io",new File("extra/modules/org-openide-io.jar"),
             new File[0],    null,"openide/io",

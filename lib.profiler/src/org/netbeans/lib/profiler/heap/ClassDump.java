@@ -19,6 +19,9 @@
 
 package org.netbeans.lib.profiler.heap;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -109,8 +112,11 @@ class ClassDump extends HprofObject implements JavaClass {
             return -1;
         }
 
-        return classDumpSegment.getMinimumInstanceSize()
-               + getHprofBuffer().getInt(fileOffset + classDumpSegment.instanceSizeOffset);
+        int size = getRawInstanceSize();
+        if (!classDumpSegment.newSize) {
+            size += classDumpSegment.getMinimumInstanceSize();
+        }
+        return size;
     }
 
     public long getRetainedSizeByClass() {
@@ -333,6 +339,10 @@ class ClassDump extends HprofObject implements JavaClass {
         return (int) (cpOffset - (fileOffset + classDumpSegment.constantPoolSizeOffset));
     }
 
+    int getRawInstanceSize() {
+        return getHprofBuffer().getInt(fileOffset + classDumpSegment.instanceSizeOffset);
+    }
+
     HprofHeap getHprof() {
         return classDumpSegment.hprofHeap;
     }
@@ -502,4 +512,22 @@ class ClassDump extends HprofObject implements JavaClass {
             throw new NoSuchElementException();
         } 
     }
+
+    //---- Serialization support
+    void writeToStream(DataOutputStream out) throws IOException {
+        out.writeLong(fileOffset);
+        out.writeInt(instances);
+        out.writeLong(firstInstanceOffset);
+        out.writeLong(loadClassOffset);
+        out.writeLong(retainedSizeByClass);        
+    }
+
+    ClassDump(ClassDumpSegment segment, long offset, DataInputStream dis) throws IOException {
+        this(segment, offset);
+        instances = dis.readInt();
+        firstInstanceOffset = dis.readLong();
+        loadClassOffset = dis.readLong();
+        retainedSizeByClass = dis.readLong();        
+    }
+
 }

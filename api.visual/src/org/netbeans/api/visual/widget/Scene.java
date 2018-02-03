@@ -380,6 +380,7 @@ public class Scene extends Widget {
     }
 
     private void resolveRepaints () {
+        assert SwingUtilities.isEventDispatchThread();
         for (Widget widget : repaintWidgets) {
             Rectangle repaintBounds = widget.getBounds ();
             if (repaintBounds == null)
@@ -590,6 +591,27 @@ public class Scene extends Widget {
                 (double) (sceneRectangle.y + location.y) * zoomFactor,
                 (double) sceneRectangle.width * zoomFactor,
                 (double) sceneRectangle.height * zoomFactor));
+    }
+
+    /**
+     * Converts a rectangle in the view coordination system into the scene one. It is just the inverse
+     * fiunction to {@link #convertSceneToView(java.awt.Rectangle)}.
+     * 
+     * @param viewRect the rectangle, in view coordinates
+     * @return the same rectangle, in scene coordinates
+     * @since 2.49
+     */
+    public Rectangle convertViewToScene(Rectangle viewRect) {
+        Point pt1 = new Point(viewRect.x, viewRect.y);
+        pt1 = convertViewToScene(pt1);
+        if (viewRect.isEmpty()) {
+            return new Rectangle(pt1.x, pt1.y, 0, 0);
+        }
+        Point pt2 = new Point(viewRect.x + viewRect.width - 1, viewRect.y + viewRect.height - 1);
+        pt2 = convertViewToScene(pt2);
+        Rectangle r = new Rectangle(pt1);
+        r.add(pt2);
+        return r;
     }
 
     /**

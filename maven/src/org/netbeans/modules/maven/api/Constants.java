@@ -150,6 +150,15 @@ public interface Constants {
      * @since 2.113
      */
     public static final String ACTION_PROPERTY_JPDAATTACH_TRANSPORT = "jpda.attach.transport";
+ 
+    /**
+     * Name of a property used for checking the maven output for the approriate time to attach to
+     * {@link #ACTION_PROPERTY_JPDAATTACH_ADDRESS} address.
+     * This property is meaningful only when {@link #ACTION_PROPERTY_JPDAATTACH_ADDRESS}
+     * is defined.
+     * @since 2.127
+     */
+    public static final String ACTION_PROPERTY_JPDAATTACH_TRIGGER = "jpda.attach.trigger";
 
     /**
      * Optional property, if defined the project type will attempt to redirect meaningful

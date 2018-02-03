@@ -20,11 +20,9 @@ package org.netbeans.modules.maven.htmlui;
 
 import java.awt.EventQueue;
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.JFileChooser;
-import javax.swing.LookAndFeel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import org.netbeans.api.templates.TemplateRegistration;
 import org.openide.util.NbBundle.Messages;
 import net.java.html.json.Model;
@@ -35,22 +33,26 @@ import net.java.html.json.ModelOperation;
 import net.java.html.json.OnPropertyChange;
 import net.java.html.json.OnReceive;
 import org.openide.filesystems.FileChooserBuilder;
+import org.openide.util.RequestProcessor;
 
 @Model(className = "WizardData", properties = {
     @Property(name = "current", type = String.class),
     @Property(name = "ok", type = boolean.class),
-    @Property(name = "msg", type = String.class),
+    @Property(name = "warning", type = String.class),
     @Property(name = "archetype", type = ArchetypeData.class),
     @Property(name = "archetypes", type = ArchetypeData.class, array = true),
     @Property(name = "android", type = boolean.class),
     @Property(name = "ios", type = boolean.class),
+    @Property(name = "iosMoe", type = boolean.class),
+    @Property(name = "iosRoboVM", type = boolean.class),
+    @Property(name = "availableSimulators", type = Device.class, array = true),
+    @Property(name = "selectedSimulator", type = Device.class),
     @Property(name = "web", type = boolean.class),
     @Property(name = "netbeans", type = boolean.class),
     @Property(name = "installExample", type = boolean.class),
     @Property(name = "androidSdkPath", type = String.class),
     @Property(name = "nbhome", type = String.class),
     @Property(name = "nbInstallationDefined", type = boolean.class),
-    @Property(name = "laf", type = String.class)
 })
 public class DukeScriptWizard {
 
@@ -70,29 +72,6 @@ public class DukeScriptWizard {
         return data;
     }
 
-    private static void setUIDefaults(final WizardData data) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
-                    String name = lookAndFeel.getName();
-                    if (name.equals("Mac OS X")) name="mac";
-                    else if (name.equals("Metal"))name="metal";
-                    else if (name.equals("GTK look and feel"))name="gtk";
-                    else if (name.equals("Nimbus"))name="nimbus";
-                    else if (name.startsWith("Windows"))name="win";
-                    final String laf = name;
-                    data.setLaf("wizard-"+laf+".css");
-                }
-            });
-       
-
-    }
-    
-//    private static String toHex(Color c){  
-//        return String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue()); 
-//    }
-
     @Model(className = "ArchetypeData", properties = {
         @Property(name = "artifactId", type = String.class),
         @Property(name = "groupId", type = String.class),
@@ -109,29 +88,29 @@ public class DukeScriptWizard {
     static void init(WizardData data,
             Boolean android, Boolean ios, Boolean web, Boolean netbeans
     ) {
-        setUIDefaults(data);
         File nbHome = new File(System.getProperty("netbeans.home"));
         data.setNbhome(nbHome.getParent());
 
-        final ArchetypeData crudArch = new ArchetypeData(
-                "crud4j-archetype",
-                "com.dukescript.archetype",
-                false,
-                "0.17",
-                "DukeScript CRUD Template", "Client-Server Application demonstrating communication and reuse of DataModels",
-                null
-        );
-        data.getArchetypes().add(crudArch);
         final ArchetypeData koArch = new ArchetypeData(
                 "knockout4j-archetype",
                 "com.dukescript.archetype",
                 true,
-                "0.17",
+                "0.20",
                 "Basic DukeScript Template", "Default skeletal application",
                 null
         );
         data.setArchetype(koArch);
         data.getArchetypes().add(koArch);
+        final ArchetypeData crudArch = new ArchetypeData(
+                "crud4j-archetype",
+                "com.dukescript.archetype",
+                false,
+                "0.20",
+                "DukeScript CRUD Template", "Client-Server Application demonstrating communication and reuse of DataModels",
+                null
+        );
+        data.getArchetypes().add(crudArch);
+        data.setIosMoe(true);
         String srvPath = Boolean.getBoolean("staging.archetypes") ? "stage" : "archetypes";
         data.loadArchetypes(srvPath);
         data.setAndroidSdkPath(MavenUtilities.getDefault().readAndroidSdkPath());
@@ -177,8 +156,13 @@ public class DukeScriptWizard {
     }
 
     @ComputedProperty
-    static String iospath(boolean ios) {
-        return ios ? "client-ios" : null;
+    static String iospath(boolean iosRoboVM) {
+        return iosRoboVM ? "client-ios" : null;
+    }
+
+    @ComputedProperty
+    static String moepath(boolean iosMoe) {
+        return iosMoe ? "client-moe" : null;
     }
 
     @ComputedProperty
@@ -188,7 +172,7 @@ public class DukeScriptWizard {
 
     @ComputedProperty
     static String example(boolean installExample) {
-        return Boolean.valueOf(installExample).toString();
+        return Boolean.toString(installExample);
     }
 
     @ComputedProperty
@@ -197,7 +181,10 @@ public class DukeScriptWizard {
             boolean android,
             String androidSdkPath,
             boolean netbeans,
-            boolean nbInstallationDefined
+            boolean nbInstallationDefined,
+            boolean ios, boolean iosMoe, boolean iosRoboVM,
+            Device selectedSimulator,
+            String warning
     ) {
         if (android && "platforms".equals(current)) { // NOI18N
             if (androidSdkPath == null) {
@@ -212,7 +199,23 @@ public class DukeScriptWizard {
                 return 8;
             }
         }
+        if (warning != null) {
+            return 6;
+        }
+        if (ios) {
+            if (!iosMoe && !iosRoboVM) {
+                return 3;
+            }
+            if (selectedSimulator == null || MavenUtilities.getDefault().readMoeDevice() == null) {
+                return 4;
+            }
+        }
         return 0;
+    }
+
+    @Function
+    static void cleanWarning(WizardData data) {
+        data.setWarning(null);
     }
 
     @Function
@@ -255,6 +258,39 @@ public class DukeScriptWizard {
         data.setNbInstallationDefined(ok);
     }
 
+    @OnPropertyChange(value = "selectedSimulator")
+    static void deviceSelected(WizardData data) {
+        if (data.getSelectedSimulator() != null) {
+            MavenUtilities.getDefault().writeMoeDevice(data.getSelectedSimulator().getId());
+            String name = data.getSelectedSimulator().getName().replaceAll("\\(.*\\)", "").trim();
+            MavenUtilities.getDefault().writeRobovmDeviceName(name);
+        }
+    }
+    
+    private static final RequestProcessor DEVICES = new RequestProcessor("List iOS Devices");
+    @OnPropertyChange(value = "ios")
+    static void verifySimulator(WizardData data) {
+        final List<Device> arr = data.getAvailableSimulators();
+        DEVICES.post(() -> {
+            DeviceType.listDevices(arr);
+            String selectedDevice = MavenUtilities.getDefault().readMoeDevice();
+            Iterator<Device> it = arr.iterator();
+            while (it.hasNext()) {
+                Device d = it.next();
+                if (d.getType() != DeviceType.SIMULATOR) {
+                    if (d.getType() == null) {
+                        data.setWarning(d.getInfo());
+                    }
+                    it.remove();
+                    continue;
+                }
+                if (selectedDevice != null && selectedDevice.equals(d.getId())) {
+                    data.setSelectedSimulator(d);
+                }
+            }
+        });
+    }
+
     @Function
     static void defineNbInstallation(final WizardData data) {
         EventQueue.invokeLater(new Runnable() {
@@ -288,12 +324,15 @@ public class DukeScriptWizard {
         });
     }
 
+    @Messages({
+        "ERR_NoData=Loaded data are corrupted!"
+    })
     @OnReceive(url = "http://dukescript.com/presenters/{path}", onError = "loadError")
     static void loadArchetypes(WizardData model, List<ArchetypeData> found) {
         if (!found.isEmpty()) {
             final ArchetypeData first = found.get(0);
             if (first == null || first.getName() == null) {
-                model.setMsg("Loaded data are corrupted");
+                model.setWarning(Bundle.ERR_NoData());
                 return;
             }
             model.getArchetypes().clear();
@@ -302,8 +341,12 @@ public class DukeScriptWizard {
         }
     }
 
+    @Messages({
+        "ERR_NoNetwork=Warning: No network connection. This wizard is based on Maven.\n" +
+        "To work properly it needs a network connection. Please check your network settings: {0}\n",
+    })
     static void loadError(WizardData model, Throwable t) {
-        model.setMsg(t.getLocalizedMessage());
+        model.setWarning(Bundle.ERR_NoNetwork(t.getLocalizedMessage()));
     }
 
 }

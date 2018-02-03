@@ -21,7 +21,6 @@ package org.netbeans.lib.nbjavac.services;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javadoc.main.JavadocClassFinder;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -94,7 +93,6 @@ public class NBClassWriterTest extends NbTestCase {
         final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-bootclasspath",  bootPath, "-source", "1.6", "-target", "1.6"), null, Arrays.asList(new MyFileObject(code)), context);
 
         NBClassReader.preRegister(ct.getContext());
-//        JavadocClassFinder.preRegister(ct.getContext());
         NBClassWriter.preRegister(ct.getContext());
 
         ct.call();
@@ -115,7 +113,6 @@ public class NBClassWriterTest extends NbTestCase {
         JavacTaskImpl ct = (JavacTaskImpl)((JavacTool)tool).getTask(null, std, null, Arrays.asList("-bootclasspath",  bootPath, "-source", "1.8", "-target", "1.8"), null, Arrays.<JavaFileObject>asList(), context);
 
         NBClassReader.preRegister(ct.getContext());
-//        JavadocClassFinder.preRegister(ct.getContext());
         NBClassWriter.preRegister(ct.getContext());
         
         PackageElement pack = ct.getElements().getPackageElement(packageName);

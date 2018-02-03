@@ -1,6 +1,4 @@
-package org.netbeans.modules.maven.indexer.spi.impl;
-
-/**
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -19,6 +17,7 @@ package org.netbeans.modules.maven.indexer.spi.impl;
  * under the License.
  */
 
+package org.netbeans.modules.maven.indexer.spi.impl;
 
 import java.util.Collection;
 import org.apache.maven.artifact.Artifact;

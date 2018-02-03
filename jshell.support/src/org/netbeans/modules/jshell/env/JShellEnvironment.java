@@ -20,7 +20,6 @@ package org.netbeans.modules.jshell.env;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.FilterReader;
 import java.io.IOException;
@@ -29,9 +28,7 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import javax.swing.text.Document;
 import jdk.jshell.JShell;
 import jdk.jshell.spi.ExecutionControlProvider;
@@ -41,20 +38,16 @@ import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.queries.SourceLevelQuery.Result;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ClasspathInfo.PathKind;
-import org.netbeans.api.java.source.SourceUtils;
-import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.jshell.model.ConsoleEvent;
 import org.netbeans.modules.jshell.model.ConsoleListener;
 import org.netbeans.modules.jshell.project.ShellProjectUtils;
 import org.netbeans.modules.jshell.support.ShellSession;
-import static org.netbeans.modules.jshell.tool.JShellLauncher.quote;
 import org.netbeans.spi.java.classpath.ClassPathFactory;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
 import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
@@ -718,7 +711,7 @@ public class JShellEnvironment {
         return s == null ? null : s.getShell();
     }
     
-    class ShellL implements PropertyChangeListener {
+    private class ShellL implements PropertyChangeListener {
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {

@@ -410,7 +410,8 @@ public class XMLCompletionQuery {
         return result;
     }
     
-    private String shouldCloseTagLocked(TokenSequence ts) {
+    private static String shouldCloseTagLocked(TokenSequence ts) {
+        int offset = ts.offset();
         if (!ts.movePrevious()) {
             return null;
         }
@@ -424,7 +425,7 @@ public class XMLCompletionQuery {
             // closing brace of a tag, iterate towards tag's begin, skip attributes and their values.
             boolean ok;
             
-            while (ok = !ts.movePrevious()) {
+            while (ok = ts.movePrevious()) {
                 previous = ts.token();
                 if (previous.id() == XMLTokenId.TAG) {
                     break;
@@ -444,7 +445,7 @@ public class XMLCompletionQuery {
         } 
         // tag name does not include end sharp brace
         tagName = tagName.substring(1, tagName.length()).trim();
-        if (isClosingEndTagFoundAfter(ts.offset(), ts, tagName)) {
+        if (isClosingEndTagFoundAfter(offset, ts, tagName)) {
             // I know, there may be multiple levels of the same tag name, and the innermost may
             // be missing...
             return null;
@@ -452,10 +453,9 @@ public class XMLCompletionQuery {
         return tagName;
     }
     
-    private String shouldCloseTag(SyntaxQueryHelper helper, Document doc, XMLSyntaxSupport sup) {
-        Token<XMLTokenId> ti = helper.getToken();
+    static String shouldCloseTag(SyntaxQueryHelper helper, Document doc, XMLSyntaxSupport sup) {
         try {
-            return sup.runWithSequence(helper.getTokenOffset(), this::shouldCloseTagLocked);
+            return sup.runWithSequence(helper.getOffset(), XMLCompletionQuery::shouldCloseTagLocked);
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
         }

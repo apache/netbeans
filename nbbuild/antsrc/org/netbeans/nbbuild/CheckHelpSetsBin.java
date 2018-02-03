@@ -73,7 +73,7 @@ import org.xml.sax.SAXException;
  */
 public class CheckHelpSetsBin extends Task {
     
-    private List<FileSet> filesets = new ArrayList<FileSet>();
+    private List<FileSet> filesets = new ArrayList<>();
     
     private Set<String> excludedModulesSet;
     
@@ -93,15 +93,12 @@ public class CheckHelpSetsBin extends Task {
     }
 
     private Map<String,URLClassLoader> createClassLoaderMap(File dir, String[] files) throws IOException {
-        Map<String,URLClassLoader> m = new TreeMap<String,URLClassLoader>();
+        Map<String,URLClassLoader> m = new TreeMap<>();
         for (int i = 0; i < files.length; i++) {
             File moduleJar = new File(dir, files[i]);
             Manifest manifest;
-            JarFile jar = new JarFile(moduleJar);
-            try {
+            try (JarFile jar = new JarFile(moduleJar)) {
                 manifest = jar.getManifest();
-            } finally {
-                jar.close();
             }
             if (manifest == null) {
                 log(moduleJar + " has no manifest", Project.MSG_WARN);
@@ -121,7 +118,7 @@ public class CheckHelpSetsBin extends Task {
         if (prop == null) {
             return Collections.emptySet();
         }
-        return new HashSet<String>(Arrays.asList(prop.split(",")));
+        return new HashSet<>(Arrays.asList(prop.split(",")));
     }
     
     public @Override void execute() throws BuildException {
@@ -249,9 +246,9 @@ public class CheckHelpSetsBin extends Task {
         }
         javax.help.Map map = hs.getCombinedMap();
         Enumeration<?> e = map.getAllIDs();
-        Set<URI> okurls = new HashSet<URI>(1000);
-        Set<URI> badurls = new HashSet<URI>(1000);
-        Set<URI> cleanurls = new HashSet<URI>(1000);
+        Set<URI> okurls = new HashSet<>(1000);
+        Set<URI> badurls = new HashSet<>(1000);
+        Set<URI> cleanurls = new HashSet<>(1000);
         while (e.hasMoreElements()) {
             javax.help.Map.ID id = (javax.help.Map.ID)e.nextElement();
             URL u = null;
@@ -267,7 +264,7 @@ public class CheckHelpSetsBin extends Task {
             log("Checking ID " + id.id, Project.MSG_VERBOSE);
             try {
                 //System.out.println("CALL OF CheckLinks.scan");
-                List<String> errors = new ArrayList<String>();
+                List<String> errors = new ArrayList<>();
                 CheckLinks.scan(this, globalClassLoader, classLoaderMap, id.id, "",
                 new URI(u.toExternalForm()), okurls, badurls, cleanurls, false, false, false, 2, 
                 Collections.<Mapper>emptyList(), errors);
@@ -275,9 +272,7 @@ public class CheckHelpSetsBin extends Task {
                     log(error, Project.MSG_WARN);
                 }
                 //System.out.println("RETURN OF CheckLinks.scan");
-            } catch (URISyntaxException ex) {
-                ex.printStackTrace();
-            } catch (IOException ex) {
+            } catch (URISyntaxException | IOException ex) {
                 ex.printStackTrace();
             }
         }

@@ -24,7 +24,4 @@
   <name value='MySQL'/>
   <display-name value='MySQL (Connector/J driver)'/>
   <class value='com.mysql.jdbc.Driver'/>
-  <urls>
-  	<url value="nbinst://org.netbeans.modules.db.drivers/modules/ext/mysql-connector-java-5.1.23-bin.jar"/>
-  </urls>
 </driver>

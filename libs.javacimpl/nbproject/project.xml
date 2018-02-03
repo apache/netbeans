@@ -34,35 +34,11 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-<!--            <friend-packages>
-                <friend>org.netbeans.modules.jackpot.rules</friend>
-                <friend>org.netbeans.modules.java.hints</friend>
-                <friend>org.netbeans.modules.java.source</friend>
-                <friend>org.netbeans.modules.javadoc</friend>
-                <friend>org.netbeans.modules.java.module.graph</friend>
-                <friend>org.netbeans.lib.nbjshell</friend>
-                <friend>org.netbeans.libs.jshell</friend>
-                <friend>org.netbeans.libs.jshell.compile</friend>
-                <friend>org.netbeans.modules.jdk.jshell</friend>
-                <friend>org.netbeans.modules.jshell.support</friend>
-                <package>com.sun.tools.javac</package>
-                <package>com.sun.tools.javac.api</package>
-                <package>com.sun.tools.javac.code</package>
-                <package>com.sun.tools.javac.comp</package>
-                <package>com.sun.tools.javac.jvm</package>
-                <package>com.sun.tools.javac.main</package>
-                <package>com.sun.tools.javac.model</package>
-                <package>com.sun.tools.javac.parser</package>
-                <package>com.sun.tools.javac.processing</package>
-                <package>com.sun.tools.javac.tree</package>
-                <package>com.sun.tools.javac.util</package>
-                <package>com.sun.tools.javadoc</package>
-            </friend-packages>-->
             <public-packages/>
-<!--            <class-path-extension>
-                <runtime-relative-path>ext/nb-javac-impl.jar</runtime-relative-path>
-                <binary-origin>external/nb-javac-impl.jar</binary-origin>
-            </class-path-extension>-->
+            <class-path-extension>
+                <runtime-relative-path />
+                <binary-origin>external/nb-javac-9-impl.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

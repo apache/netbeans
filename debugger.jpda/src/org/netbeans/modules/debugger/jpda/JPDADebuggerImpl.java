@@ -1985,8 +1985,8 @@ public class JPDADebuggerImpl extends JPDADebugger {
         return (JPDAThreadGroup) threadsTranslation.translate (tgr);
     }
 
-    public Variable getLocalVariable(LocalVariable lv, Value v) {
-        return (Variable) localsTranslation.translate(lv, v);
+    public Variable getLocalVariable(JPDAThread thread, LocalVariable lv, Value v) {
+        return (Variable) localsTranslation.translateOnThread(thread, lv, v);
     }
 
     public JPDAClassType getClassType(ReferenceType cr) {

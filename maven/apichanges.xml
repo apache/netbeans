@@ -83,6 +83,23 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="jpda-attach-trigger">
+           <api name="general"/>
+           <summary>Attach to Debugger on triggers</summary>
+           <version major="2" minor="127"/>
+           <date day="8" month="12" year="2017"/>
+           <author login="monacotoni"/>
+           <compatibility modification="yes" semantic="compatible"/>
+           <description>
+               <p>
+                   New property to allow  to attach debugger while goal execution is in progress:
+                   <code>ACTION_PROPERTY_JPDAATTACH_TRIGGER</code>. Read more about 
+    usage of this property in 
+    the <a href="@TOP@architecture-summary.html#property-jpda.attach.trigger">nbactions.xml file</a>.
+               </p>
+           </description>
+           <class package="org.netbeans.modules.maven.api" name="Constants"/>
+        </change>
         <change id="jpda-attach">
            <api name="general"/>
            <summary>Attach to Debugger after Goal Execution</summary>
@@ -142,26 +159,29 @@ is the proper place.
 
                 SEE projects/projectuiapi/apichanges.xml
 
--->
-    <head>
-      <title>Change History for the Maven Project API</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
-    </head>
-    <body>
+        -->
+        <head>
+            <title>Change History for the Maven Project API</title>
+            <link rel="stylesheet" href="prose.css" type="text/css"/>
+        </head>
+        <body>
 
-<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+            <p class="overviewlink">
+                <a href="overview-summary.html">Overview</a>
+            </p>
 
-<h1>Introduction</h1>
+            <h1>Introduction</h1>
 
-<p>This document lists changes made to the <a href="@org-netbeans-modules-maven@/index.html">Maven Project API</a>.</p>
+            <p>This document lists changes made to the <a href="@org-netbeans-modules-maven@/index.html">Maven Project API</a>.</p>
 
-<!-- The actual lists of changes, as summaries and details: -->
-      <hr/>
-      <standard-changelists module-code-name="org.netbeans.modules.maven/1"/>
+            <!-- The actual lists of changes, as summaries and details: -->
+            <hr/>
+            <standard-changelists module-code-name="org.netbeans.modules.maven/1"/>
 
-      <hr/><p>@FOOTER@</p>
+            <hr/>
+            <p>@FOOTER@</p>
 
-    </body>
-  </htmlcontents>
+        </body>
+    </htmlcontents>
 
 </apichanges>

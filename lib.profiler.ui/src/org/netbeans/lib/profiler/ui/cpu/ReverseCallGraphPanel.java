@@ -53,6 +53,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import org.netbeans.lib.profiler.results.FilterSortSupport;
 import org.netbeans.lib.profiler.results.cpu.PrestimeCPUCCTNodeFree;
+import org.netbeans.lib.profiler.ui.AppearanceController;
 import org.netbeans.lib.profiler.ui.components.FilterComponent;
 import org.netbeans.modules.profiler.api.GoToSource;
 import org.netbeans.modules.profiler.api.icons.Icons;
@@ -592,7 +593,7 @@ public class ReverseCallGraphPanel extends SnapshotCPUResultsPanel implements Sc
     private void enableDisablePopup(PrestimeCPUCCTNode node) {
         boolean regularNode = node.getMethodId() != 0 && !node.isFiltered();
         if (popupShowSource != null) popupShowSource.setEnabled(regularNode && isShowSourceAvailable());
-        popupAddToRoots.setEnabled(regularNode && isAddToRootsAvailable());
+        if (popupAddToRoots != null) popupAddToRoots.setEnabled(regularNode && isAddToRootsAvailable());
     }
 
     public void requestFocus() {
@@ -619,7 +620,9 @@ public class ReverseCallGraphPanel extends SnapshotCPUResultsPanel implements Sc
     protected JPopupMenu createPopupMenu() {
         JPopupMenu popup = new JPopupMenu();
         if (GoToSource.isAvailable()) popupShowSource = new JMenuItem();
-        popupAddToRoots = new JMenuItem();
+        if (AppearanceController.getDefault().isAddToRootsVisible()) {
+            popupAddToRoots = new JMenuItem();
+        }
 
         Font boldfont = popup.getFont().deriveFont(Font.BOLD);
 
@@ -630,9 +633,10 @@ public class ReverseCallGraphPanel extends SnapshotCPUResultsPanel implements Sc
             popup.addSeparator();
         }
 
-
-        popupAddToRoots.setText(ADD_ROOT_METHOD_POPUP_ITEM);
-        popup.add(popupAddToRoots);
+        if (AppearanceController.getDefault().isAddToRootsVisible()) {
+            popupAddToRoots.setText(ADD_ROOT_METHOD_POPUP_ITEM);
+            popup.add(popupAddToRoots);
+        }
 
         ActionListener menuListener = new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -641,7 +645,7 @@ public class ReverseCallGraphPanel extends SnapshotCPUResultsPanel implements Sc
         };
 
         if (popupShowSource != null) popupShowSource.addActionListener(menuListener);
-        popupAddToRoots.addActionListener(menuListener);
+        if (popupAddToRoots != null) popupAddToRoots.addActionListener(menuListener);
 
         return popup;
     }

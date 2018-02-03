@@ -48,9 +48,9 @@ public class MakeListOfNBM extends Task {
 
     public MakeListOfNBM() {
         // initialize locales and brandings lists, add empty value at beginning
-        locales = new ArrayList<String>();
+        locales = new ArrayList<>();
         locales.add("");
-        brandings = new ArrayList<String>();
+        brandings = new ArrayList<>();
         brandings.add("");
     }
 
@@ -267,7 +267,7 @@ public class MakeListOfNBM extends Task {
         // update the fileset only if we have got at least one locale or one branding
         DirectoryScanner ds = fs.getDirectoryScanner();
         String[] included = ds.getIncludedFiles();
-        ArrayList<String> newIncludes = new ArrayList<String>();
+        ArrayList<String> newIncludes = new ArrayList<>();
         String dirName; String filename; String fname; String fext; String newinc;
         
         for (String include : included) {

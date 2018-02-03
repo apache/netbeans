@@ -96,14 +96,14 @@ public class MakeOSGiTest extends NbTestCase {
         // boilerplate:
         assertEquals("1.0", osgi.remove(new Attributes.Name("Manifest-Version")));
         assertEquals("2", osgi.remove(new Attributes.Name("Bundle-ManifestVersion")));
-        SortedMap<String,String> osgiMap = new TreeMap<String,String>();
+        SortedMap<String,String> osgiMap = new TreeMap<>();
         for (Map.Entry<Object,Object> entry : osgi.entrySet()) {
             osgiMap.put(((Attributes.Name) entry.getKey()).toString(), (String) entry.getValue());
         }
         assertEquals(expectedOsgi, osgiMap.toString().replace('"', '\''));
     }
     private static Set<String> set(String... items) {
-        return new TreeSet<String>(Arrays.asList(items));
+        return new TreeSet<>(Arrays.asList(items));
     }
 
     public void testTranslateDependency() throws Exception {
@@ -129,13 +129,10 @@ public class MakeOSGiTest extends NbTestCase {
 
     public void testPrescan() throws Exception {
         File j = new File(getWorkDir(), "x.jar");
-        OutputStream os = new FileOutputStream(j);
-        try {
+        try (OutputStream os = new FileOutputStream(j)) {
             JarOutputStream jos = new JarOutputStream(os, new Manifest(new ByteArrayInputStream("Manifest-Version: 1.0\nBundle-SymbolicName: org.eclipse.mylyn.bugzilla.core;singleton:=true\nExport-Package: org.eclipse.mylyn.internal.bugzilla.core;x-friends:=\"org.eclipse.mylyn.bugzilla.ide,org.eclipse.mylyn.bugzilla.ui\",org.eclipse.mylyn.internal.bugzilla.core.history;x-friends:=\"org.eclipse.mylyn.bugzilla.ide,org.eclipse.mylyn.bugzilla.ui\",org.eclipse.mylyn.internal.bugzilla.core.service;x-internal:=true\n".getBytes())));
             jos.flush();
             jos.close();
-        } finally {
-            os.close();
         }
         Info info = new MakeOSGi.Info();
         JarFile jf = new JarFile(j);

@@ -19,12 +19,11 @@
     under the License.
 
 -->
-<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "${nbroot}/nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
-  <!ENTITY api-questions SYSTEM "${nbroot}/nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
 ]>
 
 <api-answers
-  version="$Revision$" date="$date$"
   question-version="1.7"
   author="rnajman@netbeans.org"
 >

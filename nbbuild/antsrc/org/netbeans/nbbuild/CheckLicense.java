@@ -41,7 +41,7 @@ import org.apache.tools.ant.types.FileSet;
  */
 public class CheckLicense extends Task {
 
-    private final List<FileSet> filesets = new ArrayList<FileSet>(1);
+    private final List<FileSet> filesets = new ArrayList<>(1);
     private String fragment;
     private List<Convert> fragments;
     private FailType fail;
@@ -68,7 +68,7 @@ public class CheckLicense extends Task {
     public Convert createConvert() {
         Convert f = new Convert();
         if (fragments == null) {
-            fragments = new ArrayList<Convert>();
+            fragments = new ArrayList<>();
         }
         
         fragments.add(f);
@@ -97,8 +97,7 @@ public class CheckLicense extends Task {
                 for (int i = 0; i < files.length; i++) {
                     File f = new File (baseDir, files[i]);
                     //log("Scanning " + f, Project.MSG_VERBOSE);
-                    BufferedReader br = new BufferedReader (new FileReader (f));
-                    try {
+                    try (BufferedReader br = new BufferedReader (new FileReader (f))) {
                         String line;
                         while ((line = br.readLine ()) != null) {
                             if (line.indexOf (fragment) != -1) {
@@ -122,8 +121,6 @@ public class CheckLicense extends Task {
                                 log (msg, Project.MSG_ERR);
                             }
                         }
-                    } finally {
-                        br.close ();
                     }
                 }
             }
@@ -156,10 +153,10 @@ public class CheckLicense extends Task {
                     String workingString = new String(workingArray, 0, workingLength);
                     boolean changed = false;
                     String prefix = null;
-                    
+
                     for (Convert f : fragments) {
                         Matcher matcher = f.orig.matcher(workingString);
-                        
+
                         while (matcher.find()) {
                             if (f.prefix) {
                                 if (prefix != null) {
@@ -170,7 +167,7 @@ public class CheckLicense extends Task {
                                 }
                                 prefix = matcher.group(1);
                             }
-                            
+
                             String before = workingString.substring(0, matcher.start());
                             String after = workingString.substring(matcher.end());
                             String middle = wrapWithPrefix(f.repl, prefix, before.length() == 0 || before.endsWith("\n"));
@@ -182,7 +179,7 @@ public class CheckLicense extends Task {
                             } else {
                                 log("Matched, but no change: " + middle, Project.MSG_VERBOSE);
                             }
-                            
+
                             if (!f.all) {
                                 break;
                             } else {
@@ -190,17 +187,16 @@ public class CheckLicense extends Task {
                             }
                         }
                     }
-                    
+
                     byte[] rest = null;
                     if (is.available() > 0 && changed) {
                         rest = new byte[is.available()];
                         int read = is.read(rest);
                         assert read == rest.length;
                     }
-                    
+
                     is.close();
 
-                    
                     if (changed) {
                         log ("Rewriting " + file);
                         FileOutputStream os = new FileOutputStream(file);

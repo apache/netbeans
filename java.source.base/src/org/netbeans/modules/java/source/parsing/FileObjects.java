@@ -139,6 +139,7 @@ public class FileObjects {
     private static final Set<String> javaFlavorExt = new HashSet<String>();
     static {
         javaFlavorExt.add("btrace");    //NOI18N
+        javaFlavorExt.add("jsh");       //NOI18N
     }
 
     /** Creates a new instance of FileObjects */

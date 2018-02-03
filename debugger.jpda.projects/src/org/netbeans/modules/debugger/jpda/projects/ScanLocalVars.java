@@ -133,9 +133,9 @@ final class ScanLocalVars extends ErrorAwareTreePathScanner<Void, Void> {
     public Void visitReturn(ReturnTree node, Void p) {
         if (isMethodCode() /*&& phase == PHASE_INSIDE_SELECTION*/) {
             hasReturns = true;
-            Element retExpElem = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getExpression())); //.asType().toString();
-            if (retExpElem != null) {
-                returnTypes.add(getElementType(retExpElem));
+            TypeMirror type = info.getTrees().getTypeMirror(new TreePath(getCurrentPath(), node.getExpression())); //.asType().toString();
+            if (type != null && type.getKind() != TypeKind.ERROR) {
+                returnTypes.add(type);
             } else {
                 // Unresolved element
                 TypeElement object = info.getElements().getTypeElement("java.lang.Object");
@@ -152,36 +152,15 @@ final class ScanLocalVars extends ErrorAwareTreePathScanner<Void, Void> {
         if (node == lastStatement) {
             if (!hasReturns) {
                 ExpressionTree expression = node.getExpression();
-                Element retExpElem = info.getTrees().getElement(new TreePath(getCurrentPath(), expression));
-                if (retExpElem == null) {
-                    TreePath elementPath = null;
-                    if (Tree.Kind.ASSIGNMENT.equals(expression.getKind())) {
-                        elementPath = new TreePath(getCurrentPath(), ((AssignmentTree) expression).getVariable());
-                    } else if (Tree.Kind.VARIABLE.equals(expression.getKind())) {
-                        elementPath = new TreePath(getCurrentPath(), ((VariableTree) expression));
-                    }
-                    if (elementPath != null) {
-                        retExpElem = info.getTrees().getElement(elementPath);
-                    }
-                }
-                if (retExpElem != null && !TypeKind.ERROR.equals(retExpElem.asType().getKind())) {
-                    returnTypes.add(getElementType(retExpElem));
+                TypeMirror type = info.getTrees().getTypeMirror(new TreePath(getCurrentPath(), expression));
+                if (type != null && !TypeKind.ERROR.equals(type.getKind())) {
+                    returnTypes.add(type);
                 }
             }
         }
         return super.visitExpressionStatement(node, p);
     }
     
-    private TypeMirror getElementType(Element element) {
-        switch (element.getKind()) {
-            case METHOD:
-            case CONSTRUCTOR:
-                return ((ExecutableElement) element).getReturnType();
-            default:
-                return element.asType();
-        }
-    }
-
     Set<VariableElement> getReferencedVariables() {
         return referencedVariables;
     }

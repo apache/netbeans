@@ -151,21 +151,20 @@ public class ParseProjectXmlTest extends TestBase {
 
     private File extractFile(String content, String fileName) throws IOException {
         File f = new File(getWorkDir(),fileName);
-        FileOutputStream fos = new FileOutputStream(f);
-        fos.write(content.getBytes("UTF-8"));
-        fos.close();
+        try (FileOutputStream fos = new FileOutputStream(f)) {
+            fos.write(content.getBytes("UTF-8"));
+        }
         return f;
     }
 
     private File generateJar (File f, String[] content, Manifest manifest) throws IOException {
-        JarOutputStream os = new JarOutputStream (new FileOutputStream (f), manifest);
-
-        for (int i = 0; i < content.length; i++) {
-            os.putNextEntry(new JarEntry (content[i]));
-            os.closeEntry();
+        try (JarOutputStream os = new JarOutputStream (new FileOutputStream (f), manifest)) {
+            for (int i = 0; i < content.length; i++) {
+                os.putNextEntry(new JarEntry (content[i]));
+                os.closeEntry();
+            }
+            os.closeEntry ();
         }
-        os.closeEntry ();
-        os.close();
 
         return f;
     }

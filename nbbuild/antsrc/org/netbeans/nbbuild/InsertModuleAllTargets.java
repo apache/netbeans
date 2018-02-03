@@ -103,7 +103,7 @@ public final class InsertModuleAllTargets extends Task {
                 }
             }
             
-            Map<String,String> clustersOfModules = new HashMap<String,String>();
+            Map<String,String> clustersOfModules = new HashMap<>();
             if (useClusters) {
                 for (Map.Entry<String,Object> pair : props.entrySet()) {
                     String cluster = pair.getKey();
@@ -116,7 +116,7 @@ public final class InsertModuleAllTargets extends Task {
                 }
             }
             ModuleListParser mlp = new ModuleListParser(props, ModuleType.NB_ORG, prj);
-            SortedMap<String,ModuleListParser.Entry> entries = new TreeMap<String,ModuleListParser.Entry>();
+            SortedMap<String,ModuleListParser.Entry> entries = new TreeMap<>();
             for (ModuleListParser.Entry entry : mlp.findAll()) {
                 String path = entry.getNetbeansOrgPath();
                 if (path == null) continue; // It is taken from binary

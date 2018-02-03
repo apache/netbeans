@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -251,15 +252,12 @@ public class CSS {
     // Chrome 35 replaces CSS.getSupportedCSSProperties by a hardcoded list,
     // see https://chromium.googlesource.com/chromium/blink/+/master/Source/core/css/CSSShorthands.in
     private Map<String,PropertyInfo> loadSupportedProperties() {
-        Map<String,PropertyInfo> map = new HashMap<String,PropertyInfo>();
-        InputStream stream = getClass().getResourceAsStream("Longhands.txt"); // NOI18N
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        try {
-            String s;
-            while ((s = reader.readLine()) != null) {
-                int index = s.indexOf('=');
-                String name = s.substring(0,index);
-                StringTokenizer tokenizer = new StringTokenizer(s.substring(index+1), ","); // NOI18N
+        Map<String,PropertyInfo> map = new HashMap<>();
+        try (InputStream stream = getClass().getResourceAsStream("Longhands.properties"); ) { // NOI18N
+            Properties properties = new Properties();
+            properties.load(stream);
+            for(String name: properties.stringPropertyNames()) {
+                StringTokenizer tokenizer = new StringTokenizer(properties.getProperty(name), ","); // NOI18N
                 JSONArray longhands = new JSONArray();
                 while (tokenizer.hasMoreTokens()) {
                     String longhand = tokenizer.nextToken();
@@ -272,10 +270,6 @@ public class CSS {
             }
         } catch (IOException ioex) {
             Logger.getLogger(CSS.class.getName()).log(Level.INFO, null, ioex);
-        } finally {
-            try {
-                reader.close();
-            } catch (IOException ex) {}
         }
         return map;
     }

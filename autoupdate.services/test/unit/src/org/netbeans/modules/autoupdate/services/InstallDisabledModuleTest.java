@@ -51,7 +51,7 @@ public class InstallDisabledModuleTest extends OperationsTestImpl {
         super.setUp();        
         assertEquals(test.getPath(), System.getProperty("netbeans.dirs"));
         
-        File jar = new File(new File(test, "modules"), "com-sun-testmodule-cluster.jar");
+        File jar = new File(new File(test, "modules"), "com-example-testmodule-cluster.jar");
         jar.getParentFile().mkdirs();
         jar.createNewFile();
         
@@ -60,11 +60,11 @@ public class InstallDisabledModuleTest extends OperationsTestImpl {
         OutputStream os = fo.getOutputStream();
         String cfg = "<?xml version='1.0' encoding='UTF-8'?>\n" +
                 "<!DOCTYPE module PUBLIC '-//NetBeans//DTD Module Status 1.0//EN' 'http://www.netbeans.org/dtds/module-status-1_0.dtd'>\n" +
-                "<module name='com.sun.testmodule.cluster'>\n" +
+                "<module name='com.example.testmodule.cluster'>\n" +
                 "   <param name='autoload'>false</param>\n" +
                 "   <param name='eager'>false</param>\n" +
                 "   <param name='enabled'>false</param>\n" +
-                "   <param name='jar'>modules/com-sun-testmodule-cluster.jar</param>\n" +
+                "   <param name='jar'>modules/com-example-testmodule-cluster.jar</param>\n" +
                 "   <param name='reloadable'>false</param>\n" +
                 "   <param name='specversion'>1.0</param>\n" +
                 "</module>\n" +
@@ -86,7 +86,7 @@ public class InstallDisabledModuleTest extends OperationsTestImpl {
     }
 
     protected String moduleCodeNameBaseForTest() {
-        return "com.sun.testmodule.cluster"; //NOI18N
+        return "com.example.testmodule.cluster"; //NOI18N
     }
 
     @RandomlyFails @Override
@@ -103,9 +103,9 @@ public class InstallDisabledModuleTest extends OperationsTestImpl {
         }
         LOG.log(Level.INFO, "Info installModule over with {0}", t);
         
-        File f = new File(new File(new File(new File(System.getProperty("netbeans.user")), "config"), "Modules"), "com-sun-testmodule-cluster.xml");
+        File f = new File(new File(new File(new File(System.getProperty("netbeans.user")), "config"), "Modules"), "com-example-testmodule-cluster.xml");
         LOG.log(Level.INFO, "Does {0} exists: {1}", new Object[]{f, f.exists()});
-        File m = new File(new File(new File(getWorkDir(), "test"), "modules"), "com-sun-testmodule-cluster.jar");
+        File m = new File(new File(new File(getWorkDir(), "test"), "modules"), "com-example-testmodule-cluster.jar");
         LOG.log(Level.INFO, "Does {0} exists: {1}", new Object[]{m, m.exists()});
         if (t != null) {
             throw t;

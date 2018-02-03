@@ -45,7 +45,7 @@ import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 import junit.framework.TestCase;
 
-/**XXX: why is this passing?????
+/**TODO: finished?
  *
  * @author lahvac
  */

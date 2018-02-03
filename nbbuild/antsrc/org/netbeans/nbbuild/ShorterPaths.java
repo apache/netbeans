@@ -67,7 +67,7 @@ public class ShorterPaths extends Task {
             return dir + (excluded != null ? " - " + excluded : "") + " => ${" + name + "}";
         }
     }
-    private List<Replacement> replacements = new LinkedList<Replacement>(); // List<Nestme>
+    private List<Replacement> replacements = new LinkedList<>(); // List<Nestme>
 
     public Replacement createReplacement() {
         Replacement r = new Replacement();
@@ -154,32 +154,31 @@ public class ShorterPaths extends Task {
 
             if (testProperties != null) {
                 // create properties file
-                PrintWriter pw = new PrintWriter(testProperties);
-
-                // copy extra unit.test.properties
-                Map<String,Object> properties = getProject().getProperties();
-                StringBuffer outProp = new StringBuffer();
-                for (String name : properties.keySet()) {
-                    if (name.matches("test-(unit|qa-functional)-sys-prop\\..+")) {
-                        if (name.equals("test-unit-sys-prop.xtest.data")) {
-                            // ignore overring xtest.data.dir, data.zip placed to standard location
-                            continue;
+                try (PrintWriter pw = new PrintWriter(testProperties)) {
+                    // copy extra unit.test.properties
+                    Map<String,Object> properties = getProject().getProperties();
+                    StringBuffer outProp = new StringBuffer();
+                    for (String name : properties.keySet()) {
+                        if (name.matches("test-(unit|qa-functional)-sys-prop\\..+")) {
+                            if (name.equals("test-unit-sys-prop.xtest.data")) {
+                                // ignore overring xtest.data.dir, data.zip placed to standard location
+                                continue;
+                            }
+                            //
+                            outProp.setLength(0);
+                            for (String path : tokenizePath(properties.get(name).toString())) {
+                                replacePath(path, outProp);
+                            }
+                            pw.println(name.replaceFirst("^test-(unit|qa-functional)-sys-prop\\.", "test-sys-prop.") + "=" + outProp);
+                        } else if (name.startsWith("test.config")) {
+                            pw.println(name + "=" + properties.get(name));
+                        } else if ("requires.nb.javac".equals(name)) {
+                            pw.println(name + "=" + properties.get(name));
                         }
-                        //  
-                        outProp.setLength(0);
-                        for (String path : tokenizePath(properties.get(name).toString())) {
-                            replacePath(path, outProp);
-                        }
-                        pw.println(name.replaceFirst("^test-(unit|qa-functional)-sys-prop\\.", "test-sys-prop.") + "=" + outProp);
-                    } else if (name.startsWith("test.config")) {
-                        pw.println(name + "=" + properties.get(name));
-                    } else if ("requires.nb.javac".equals(name)) {
-                        pw.println(name + "=" + properties.get(name));
                     }
+                    pw.println("extra.test.libs=" + externalLibBuf.toString());
+                    pw.println("test.run.cp=" + nbLibBuff.toString());
                 }
-                pw.println("extra.test.libs=" + externalLibBuf.toString());
-                pw.println("test.run.cp=" + nbLibBuff.toString());
-                pw.close();
             }
         } catch (IOException ex) {
             throw new BuildException(ex);
@@ -283,12 +282,9 @@ public class ShorterPaths extends Task {
         if (wasCopied && file.getName().endsWith(".jar")) {
             String cp;
             try {
-                JarFile jf = new JarFile(file);
-                try {
+                try (JarFile jf = new JarFile(file)) {
                     Manifest manifest = jf.getManifest();
                     cp = manifest != null ? manifest.getMainAttributes().getValue(Name.CLASS_PATH) : null;
-                } finally {
-                    jf.close();
                 }
             } catch (IOException x) {
                 log("Could not parse " + file + " for Class-Path", Project.MSG_WARN);
@@ -334,7 +330,7 @@ public class ShorterPaths extends Task {
      * @return a tokenization of that path into components
      */
     public static String[] tokenizePath(String path) {
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
         StringTokenizer tok = new StringTokenizer(path, ":;", true); // NOI18N
         char dosHack = '\0';
         char lastDelim = '\0';

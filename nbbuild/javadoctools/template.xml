@@ -29,6 +29,8 @@
 
 <project name="template" default="die" basedir=".">
 
+    <import file="../default-properties.xml"/>
+
     <description><![CDATA[
 Templated targets:
 
@@ -84,7 +86,7 @@ cause it to fail.
         
         <!-- Docs to link to: -->
         <property name="javadoc.web.root" value="http://root/"/>
-        <property name="javadoc.docs.jdk" value="http://download.oracle.com/javase/7/docs/api"/>
+        <property name="javadoc.docs.jdk" value="http://download.oracle.com/javase/8/docs/api"/>
         &properties;
         <!-- add more here as needed... -->
         <property name="javadoc.css.dir" location="."/>
@@ -271,8 +273,8 @@ cause it to fail.
         <tstamp>
             <format property="YEAR" pattern="yyyy"/>
         </tstamp>
-        <property name="javadoc.footer" value='&lt;span class="footnote"&gt;Built on ${TODAY}.&amp;nbsp;&amp;nbsp;|&amp;nbsp;&amp;nbsp;Portions
-        Copyright 1997-${YEAR} Oracle. All rights reserved.&lt;/span&gt;'/>
+        <property name="javadoc.footer" value='&lt;span class="footnote"&gt;Built on ${TODAY}.&amp;nbsp;&amp;nbsp;|&amp;nbsp;&amp;nbsp;
+        Copyright &amp;#169; 2017-${YEAR} Apache Software Foundation. All Rights Reserved.&lt;/span&gt;'/>
     </target>
     
     <target name="javadoc-exec-packages" depends="javadoc-init,javadoc-generate-references,javadoc-generate-overview,javadoc-exec-condition,javadoc-check-timestamps,javadoc-make-plain-title,javadoc-make-hyperlinked-title,javadoc-exec-condition,-javadoc-set-footer" unless="javadoc.exec.packages">
@@ -318,23 +320,29 @@ cause it to fail.
 
     <target name="javadoc-stage-apichanges" depends="javadoc-init,javadoc-check-timestamps,javadoc-stage-export-apichanges" unless="javadoc.up.to.date">
         <xslt in="${javadoc.apichanges}" out="${javadoc.out.dir}/apichanges.html" style="apichanges.xsl">
+            <xmlcatalog refid="nbantextcatalog" />
             <param name="javadoc-url-base" expression="."/>
         </xslt>
     </target>
+
     <target name="javadoc-stage-export-apichanges" depends="javadoc-init,javadoc-check-timestamps,javadoc-stage-init-apichanges" unless="javadoc.apichanges.should.not.be.generated">
         <fail message="Need to specify the date of branching of previous.release.year: ${previous.release.year}" unless="previous.release.year" />
         <fail message="Need to specify the date of branching of previous.release.month: ${previous.release.month}" unless="previous.release.month" />
         <fail message="Need to specify the date of branching of previous.release.day: ${previous.release.day}" unless="previous.release.day" />
-    
+
         <xslt in="${javadoc.apichanges}" out="${export.apichanges}/${javadoc.name}" style="export-apichanges.xsl">
+            <xmlcatalog refid="nbantextcatalog" />
             <param name="changes-since-url" expression="${javadoc.name}/apichanges.html"/>
             <param name="changes-since-year" expression="${previous.release.year}"/>
             <param name="changes-since-day" expression="${previous.release.day}"/>
             <param name="changes-since-month" expression="${previous.release.month}"/>
         </xslt>
     </target>
+
     <target name="javadoc-stage-init-apichanges" depends="javadoc-init,javadoc-check-timestamps" unless="javadoc.up.to.date">
-        <xmlvalidate file="${javadoc.apichanges}" failonerror="true"/>
+        <xmlvalidate file="${javadoc.apichanges}" failonerror="true">
+            <xmlcatalog refid="nbantextcatalog" />
+        </xmlvalidate>
     </target>
 
     <target name="javadoc-stage-arch" depends="javadoc-init,javadoc-check-timestamps" unless="javadoc.up.to.date">

@@ -14,4 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-886FAF4B85054DD6E50D9B3438542F432B5F9251 org.jruby.extras:bytelist:0.1
+80294E59315B314D57782DC37F983AE5B29C2E4C org.jruby.extras:bytelist:1.0.15
+E2C76A19F00128BB1806207E2989139BFB45F49D org.jruby.jcodings:jcodings:1.0.18

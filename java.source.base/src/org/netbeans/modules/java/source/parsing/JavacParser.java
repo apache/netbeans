@@ -31,7 +31,6 @@ import org.netbeans.lib.nbjavac.services.CancelAbort;
 import org.netbeans.lib.nbjavac.services.CancelService;
 
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javadoc.main.JavadocClassFinder;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -67,6 +66,7 @@ import  javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
+import javax.tools.JavaFileObject.Kind;
 
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -89,17 +89,21 @@ import org.netbeans.modules.java.source.PostFlowAnalysis;
 import org.netbeans.modules.java.source.indexing.APTUtils;
 import org.netbeans.modules.java.source.indexing.FQN2Files;
 import org.netbeans.lib.nbjavac.services.NBAttr;
+import org.netbeans.lib.nbjavac.services.NBClassFinder;
 import org.netbeans.lib.nbjavac.services.NBClassReader;
 import org.netbeans.lib.nbjavac.services.NBEnter;
+import org.netbeans.lib.nbjavac.services.NBJavaCompiler;
 import org.netbeans.lib.nbjavac.services.NBJavadocEnter;
 import org.netbeans.lib.nbjavac.services.NBJavadocMemberEnter;
 import org.netbeans.lib.nbjavac.services.NBMemberEnter;
 import org.netbeans.lib.nbjavac.services.NBParserFactory;
 import org.netbeans.lib.nbjavac.services.NBClassWriter;
 import org.netbeans.lib.nbjavac.services.NBJavacTrees;
+import org.netbeans.lib.nbjavac.services.NBJavadocClassFinder;
 import org.netbeans.lib.nbjavac.services.NBMessager;
 import org.netbeans.lib.nbjavac.services.NBResolve;
 import org.netbeans.lib.nbjavac.services.NBTreeMaker;
+import org.netbeans.modules.java.source.base.SourceLevelUtils;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.tasklist.CompilerSettings;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
@@ -405,8 +409,8 @@ public class JavacParser extends Parser {
                 default:
                     init (snapshot, task, false);
                     ciImpl = createCurrentInfo(this, file, root, snapshot,
-                        sequentialParsing != null && ciImpl == null ? null : ciImpl.getJavacTask(),
-                        sequentialParsing != null && ciImpl == null ? null : ciImpl.getDiagnosticListener());
+                        sequentialParsing == null || ciImpl == null ? null : ciImpl.getJavacTask(),
+                        sequentialParsing == null || ciImpl == null ? null : ciImpl.getDiagnosticListener());
             }
             success = true;
         } finally {
@@ -721,8 +725,14 @@ public class JavacParser extends Parser {
                 compilerOptions = null;
                 sourceLevel = null;
             }
-            final JavacTaskImpl javacTask = createJavacTask(
-                    cpInfo,
+            AbstractSourceFileObject source = null;
+            if (file != null) {
+                source = FileObjects.sourceFileObject(file, root);
+                if (source.getKind() != Kind.SOURCE) {
+                    source = null;
+                }
+            }
+            final JavacTaskImpl javacTask = createJavacTask(cpInfo,
                     diagnosticListener,
                     sourceLevel != null ? sourceLevel.getSourceLevel() : null,
                     sourceLevel != null ? sourceLevel.getProfile() : null,
@@ -732,7 +742,7 @@ public class JavacParser extends Parser {
                     APTUtils.get(root),
                     compilerOptions,
                     additionalModules,
-                    file != null ? Arrays.asList(FileObjects.sourceFileObject(file, root)) : Collections.emptyList());
+                    source != null ? Arrays.asList(source) : Collections.emptyList());
             Lookup.getDefault()
                   .lookupAll(TreeLoaderRegistry.class)
                   .stream()
@@ -808,6 +818,7 @@ public class JavacParser extends Parser {
         }
         options.add("-XDide");   // NOI18N, javac runs inside the IDE
         options.add("-XDsave-parameter-names");   // NOI18N, javac runs inside the IDE
+        options.add("-parameters");   // NOI18N, save and read parameter names
         options.add("-XDsuppressAbortOnBadClassFile");   // NOI18N, when a class file cannot be read, produce an error type instead of failing with an exception
         options.add("--should-stop:at=GENERATE");   // NOI18N, parsing should not stop in phase where an error is found
         options.add("-g:source"); // NOI18N, Make the compiler to maintian source file info
@@ -872,10 +883,13 @@ public class JavacParser extends Parser {
                 context);
         if (aptEnabled) {
             task.setProcessors(processors);
+            ProcessorHolder.instance(context).setProcessors(processors);
         }
         NBClassReader.preRegister(context);
-        if (!backgroundCompilation)
-            JavadocClassFinder.preRegister(context);
+        Lookup.getDefault()
+              .lookupAll(ContextEnhancer.class)
+              .stream()
+              .forEach(r -> r.enhance(context, backgroundCompilation));
         Lookup.getDefault()
               .lookupAll(DuplicateClassRegistry.class)
               .stream()
@@ -938,7 +952,7 @@ public class JavacParser extends Parser {
         } else {
             if (isModuleInfo) {
                 //Module info requires at least 9 otherwise module.compete fails with ISE.
-                final com.sun.tools.javac.code.Source java9 = com.sun.tools.javac.code.Source.JDK1_9;
+                final com.sun.tools.javac.code.Source java9 = SourceLevelUtils.JDK1_9;
                 final com.sun.tools.javac.code.Source required = com.sun.tools.javac.code.Source.lookup(sourceLevel);
                 if (required == null || required.compareTo(java9) < 0) {
                     sourceLevel = java9.name;
@@ -963,7 +977,7 @@ public class JavacParser extends Parser {
                         }
                     }
                 }
-                if (source.compareTo(com.sun.tools.javac.code.Source.JDK1_5) >= 0 &&
+                if (source.compareTo(SourceLevelUtils.JDK1_5) >= 0 &&
                     !hasResource("java/lang/StringBuilder", new ClassPath[] {bootClassPath}, new ClassPath[] {classPath}, new ClassPath[] {srcClassPath})) { //NOI18N
                     LOGGER.log(warnLevel,
                                "Even though the source level of {0} is set to: {1}, java.lang.StringBuilder cannot be found on the bootclasspath: {2}\n" +
@@ -971,28 +985,28 @@ public class JavacParser extends Parser {
                                new Object[]{srcClassPath, sourceLevel, bootClassPath}); //NOI18N
                     return com.sun.tools.javac.code.Source.JDK1_4;
                 }
-                if (source.compareTo(com.sun.tools.javac.code.Source.JDK1_7) >= 0 &&
+                if (source.compareTo(SourceLevelUtils.JDK1_7) >= 0 &&
                     !hasResource("java/lang/AutoCloseable", new ClassPath[] {bootClassPath}, new ClassPath[] {classPath}, new ClassPath[] {srcClassPath})) { //NOI18N
                     LOGGER.log(warnLevel,
                                "Even though the source level of {0} is set to: {1}, java.lang.AutoCloseable cannot be found on the bootclasspath: {2}\n" +   //NOI18N
                                "Try with resources is unsupported.",  //NOI18N
                                new Object[]{srcClassPath, sourceLevel, bootClassPath}); //NOI18N
                 }
-                if (source.compareTo(com.sun.tools.javac.code.Source.JDK1_8) >= 0 &&
+                if (source.compareTo(SourceLevelUtils.JDK1_8) >= 0 &&
                     !hasResource("java/util/stream/Streams", new ClassPath[] {bootClassPath}, new ClassPath[] {classPath}, new ClassPath[] {srcClassPath})) { //NOI18N
                     LOGGER.log(warnLevel,
                                "Even though the source level of {0} is set to: {1}, java.util.stream.Streams cannot be found on the bootclasspath: {2}\n" +   //NOI18N
                                "Changing source level to 1.7",  //NOI18N
                                new Object[]{srcClassPath, sourceLevel, bootClassPath}); //NOI18N
-                    return com.sun.tools.javac.code.Source.JDK1_7;
+                    return SourceLevelUtils.JDK1_7;
                 }
-                if (source.compareTo(com.sun.tools.javac.code.Source.JDK1_9) >= 0 &&
+                if (source.compareTo(SourceLevelUtils.JDK1_9) >= 0 &&
                     !hasResource("java/util/zip/CRC32C", new ClassPath[] {moduleBoot}, new ClassPath[] {moduleCompile, moduleAllUnnamed}, new ClassPath[] {srcClassPath})) { //NOI18N
                     LOGGER.log(warnLevel,
                                "Even though the source level of {0} is set to: {1}, java.util.zip.CRC32C cannot be found on the system module path: {2}\n" +   //NOI18N
                                "Changing source level to 1.8",  //NOI18N
                                new Object[]{srcClassPath, sourceLevel, bootClassPath}); //NOI18N
-                    return com.sun.tools.javac.code.Source.JDK1_8;
+                    return SourceLevelUtils.JDK1_8;
                 }
                 return source;
             }
@@ -1268,6 +1282,28 @@ public class JavacParser extends Parser {
         
     }
     
+    public static class ProcessorHolder {
+        public static ProcessorHolder instance(Context ctx) {
+            ProcessorHolder instance = ctx.get(ProcessorHolder.class);
+
+            if (instance == null) {
+                ctx.put(ProcessorHolder.class, instance = new ProcessorHolder());
+            }
+
+            return instance;
+        }
+
+        private Collection<? extends Processor> processors;
+
+        public void setProcessors(Collection<? extends Processor> processors) {
+            this.processors = processors;
+        }
+
+        public Collection<? extends Processor> getProcessors() {
+            return processors;
+        }
+    }
+
     public static interface TreeLoaderRegistry {
         public void enhance(Context context, ClasspathInfo cpInfo, boolean detached);
     }
@@ -1276,6 +1312,22 @@ public class JavacParser extends Parser {
         public void enhance(Context context, FQN2Files fqn2Files);
     }
     
+    public static interface ContextEnhancer {
+        public void enhance(Context context, boolean backgroundCompilation);
+    }
+
+    @ServiceProvider(service=ContextEnhancer.class)
+    public static class VanillaJavacContextEnhancer implements ContextEnhancer {
+        @Override
+        public void enhance(Context context, boolean backgroundCompilation) {
+            if (!backgroundCompilation)
+                NBJavadocClassFinder.preRegister(context);
+            else
+                NBClassFinder.preRegister(context);
+            NBJavaCompiler.preRegister(context);
+        }
+    }
+
     public static interface SequentialParsing {
         public Iterable<? extends CompilationUnitTree> parse(JavacTask task, JavaFileObject file) throws IOException;
     }

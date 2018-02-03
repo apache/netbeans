@@ -36,11 +36,11 @@ import org.netbeans.spi.autoupdate.UpdateItem;
  * @author Jiri Rechtacek
  */
 public class InstallEagerModuleTest extends NbmAdvancedTestCase {
-    
+
     public InstallEagerModuleTest (String testName) {
         super (testName);
     }
-    
+
     public void testIfAutoupdateUnderstandsEagerAttribute () throws IOException {
         // Lookup.getDefault ().lookup (ModuleInfo.class);
         String eagerModule = "com.sun.testmodule.eager";
@@ -60,25 +60,25 @@ public class InstallEagerModuleTest extends NbmAdvancedTestCase {
                     "org.openide.nodes > 6.2",
                     "org.openide.loaders",
                     "org.openide.io")
-                
+
                 );
         AutoupdateCatalogProvider p = createUpdateProvider (catalog);
         p.refresh (true);
         Map<String, UpdateItem> updates = p.getUpdateItems ();
         assertNotNull ("Some modules are installed.", updates);
         assertFalse ("Some modules are installed.", updates.isEmpty ());
-        
-        // check being 
+
+        // check being
         assertTrue (eagerModule + " found in parsed items.", updates.keySet ().contains (eagerModule + "_1.3"));
         assertTrue (regularModule + " found in parsed items.", updates.keySet ().contains (regularModule + "_1.3"));
-        
+
         // check state
         ModuleItem eagerModuleItem = (ModuleItem) Trampoline.SPI.impl (updates.get (eagerModule + "_1.3"));
         ModuleItem regularModuleItem = (ModuleItem) Trampoline.SPI.impl (updates.get (regularModule + "_1.3"));
         assertTrue (eagerModule + " is eager.", eagerModuleItem.isEager () && ! eagerModuleItem.isAutoload ());
         assertFalse (regularModule + " is regular.", regularModuleItem.isEager () || regularModuleItem.isAutoload ());
     }
-    
+
     public void testAquireEargersFromManager () throws IOException {
         String eagerModule = "com.sun.testmodule.eager";
         String regularModule1 = "org.yourorghere.independent";
@@ -89,23 +89,23 @@ public class InstallEagerModuleTest extends NbmAdvancedTestCase {
                     regularModule2),
                 generateModuleElement (regularModule1, "1.0", null, null, false, false),
                 generateModuleElement (regularModule2, "1.0", null, null, false, false, regularModule1)
-                
+
                 );
 
         UpdateUnitProviderFactory.getDefault ().create ("test-update-provider", "test-update-provider", generateFile (catalog));
         UpdateUnitProviderFactory.getDefault ().refreshProviders (null, true);
-        
+
         Set<UpdateElement> eagerElements = UpdateManagerImpl.getInstance ().getAvailableEagers ();
         assertFalse ("Some available eagers are found.", eagerElements.isEmpty ());
         UpdateUnit ea = UpdateManagerImpl.getInstance ().getUpdateUnit (eagerModule);
         UpdateElement foundEaEl = eagerElements.iterator ().next ();
         UpdateUnit foundEaU = foundEaEl.getUpdateUnit ();
         assertEquals ("Same eager UpdateUnit", ea, foundEaU);
-        
+
         // assertFalse ("Some installed eagers are found.", UpdateManagerImpl.getInstance ().getInstalledEagers ().isEmpty ());
     }
-    
-    public void disable_testInstallRegularModule () throws IOException {
+
+    public void testInstallRegularModule () throws IOException {
         String eagerModule = "com.sun.testmodule.eager";
         String regularModule1 = "org.yourorghere.independent";
         String regularModule2 = "org.yourorghere.engine";
@@ -115,13 +115,13 @@ public class InstallEagerModuleTest extends NbmAdvancedTestCase {
                     regularModule2),
                 generateModuleElement (regularModule1, "1.0", null, null, true, false),
                 generateModuleElement (regularModule2, "1.0", null, null, true, false, regularModule1)
-                
+
                 );
 
         AutoupdateCatalogProvider p = createUpdateProvider (catalog);
         p.refresh (true);
         Map<String, UpdateItem> updates = p.getUpdateItems ();
-        
+
         // initial check of updates being and its states
         ModuleItem eagerModuleItem = (ModuleItem) Trampoline.SPI.impl (updates.get (eagerModule + "_1.0"));
         assertFalse (eagerModuleItem.getModuleInfo ().getDependencies () + " are not empty.",
@@ -131,13 +131,13 @@ public class InstallEagerModuleTest extends NbmAdvancedTestCase {
         assertTrue (eagerModule + " is eager.", eagerModuleItem.isEager () && ! eagerModuleItem.isAutoload ());
         assertFalse (regularModule1 + " is regular.", regularModule1Item.isEager () || regularModule1Item.isAutoload ());
         assertFalse (regularModule2 + " is regular.", regularModule2Item.isEager () || regularModule2Item.isAutoload ());
-        
+
         // acquire UpdateUnits for test modules
         UpdateUnitProviderFactory.getDefault ().create ("test-update-provider", "test-update-provider", generateFile (catalog));
         UpdateUnitProviderFactory.getDefault ().refreshProviders (null, true);
         UpdateUnit u1 = UpdateManagerImpl.getInstance ().getUpdateUnit (regularModule1);
         assertTrue (UpdateManager.TYPE.KIT_MODULE.equals (u1.getType ()));
-        
+
         //keep it to prevent GC-ed cache in UpdateManagerImpl
         List<UpdateUnit> uuu =   UpdateManagerImpl.getInstance ().getUpdateUnits();
         UpdateUnit u2 = UpdateManagerImpl.getInstance ().getUpdateUnit (regularModule2);
@@ -145,7 +145,7 @@ public class InstallEagerModuleTest extends NbmAdvancedTestCase {
         assertNotNull ("Unit " + regularModule1 + " found.", u1);
         assertNotNull ("Unit " + regularModule2 + " found.", u2);
         assertNotNull ("Unit " + eagerModule + " found.", ea);
-        
+
         // install regular module 1
         installUpdateUnit (u1);
 
@@ -153,15 +153,15 @@ public class InstallEagerModuleTest extends NbmAdvancedTestCase {
         assertNotNull (u1 + " is installed.", u1.getInstalled ());
         assertNull (u2 + " is not installed.", u2.getInstalled ());
         assertNull (ea + " is not installed.", ea.getInstalled ());
-        
+
         // installe regular module 2
         installUpdateUnit (u2);
-        
+
         // check states installed regular 1 and others
         assertNotNull (u1 + " is installed.", u1.getInstalled ());
         assertNotNull (u2 + " is installed.", u2.getInstalled ());
         assertNotNull (ea + " is must be installed as well because all required modules are on.", ea.getInstalled ());
-        
+
     }
-    
+
 }

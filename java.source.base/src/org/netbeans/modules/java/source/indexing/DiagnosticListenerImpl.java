@@ -62,6 +62,10 @@ public class DiagnosticListenerImpl implements DiagnosticListener<JavaFileObject
         return result;
     }
 
+    public List<Diagnostic<? extends JavaFileObject>> peekDiagnostics(JavaFileObject file) {
+        return diagnostics.getOrDefault(file.toUri(), Collections.emptyList());
+    }
+
     public void cleanDiagnostics() {
         diagnostics.clear();
     }

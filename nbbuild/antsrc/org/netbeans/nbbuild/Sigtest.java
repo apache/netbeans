@@ -195,11 +195,11 @@ public class Sigtest extends Task {
             String email = getProject().getProperty("sigtest.mail");
             if (email != null) {
                 try {
-                    FileWriter w = new FileWriter(outputFile);
-                    w.write("email: ");
-                    w.write(email);
-                    w.write("\n");
-                    w.close();
+                    try (FileWriter w = new FileWriter(outputFile)) {
+                        w.write("email: ");
+                        w.write(email);
+                        w.write("\n");
+                    }
                 } catch (IOException ex) {
                     throw new BuildException(ex);
                 }
@@ -261,7 +261,7 @@ public class Sigtest extends Task {
     private void apitest() throws Exception {
         URLClassLoader url = new URLClassLoader(new URL[] { sigtestJar.toURI().toURL() }, Sigtest.class.getClassLoader());
         Class<?> clazz = url.loadClass("org.netbeans.apitest.Sigtest");
-        Task task = (Task)clazz.newInstance();
+        Task task = (Task) clazz.getConstructor().newInstance();
         
         task.setProject(getProject());
         task.setTaskName(getTaskName());

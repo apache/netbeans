@@ -1,14 +1,13 @@
 Name: libpam4j
 Version: 1.1
 License: MIT
-OSR: 12293
 Origin: https://libpam4j.dev.java.net
 Source: https://libpam4j.dev.java.net
 Description: Java binding for Unix PAM library.
 
 The MIT License
 
-Copyright (c) <year> <copyright holders>
+Copyright (c) __YEARS__, __NAMES__
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

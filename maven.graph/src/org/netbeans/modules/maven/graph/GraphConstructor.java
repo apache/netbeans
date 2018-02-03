@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
+import javax.swing.SwingUtilities;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
@@ -41,7 +41,6 @@ import org.netbeans.modules.java.graph.GraphNodeVisitor;
  * @author mkleint
  */
 public class GraphConstructor implements GraphNodeVisitor<MavenDependencyNode> {
-    private final DependencyGraphScene scene;
     private final MavenProject proj;
     
     private MavenDependencyNode root;
@@ -50,8 +49,7 @@ public class GraphConstructor implements GraphNodeVisitor<MavenDependencyNode> {
     final Map<String, GraphNode<MavenDependencyNode>> cache;
     private final List<GraphEdge<MavenDependencyNode>> edges;
 
-    public GraphConstructor(DependencyGraphScene scene, MavenProject proj) {
-        this.scene = scene;
+    public GraphConstructor(MavenProject proj) {
         this.proj = proj;
         path = new Stack<>();
 //        graphPath = new Stack<ArtifactGraphNode>();
@@ -100,31 +98,33 @@ public class GraphConstructor implements GraphNodeVisitor<MavenDependencyNode> {
 
         return true;
     }
-
+    
+    public void updateScene(final DependencyGraphScene scene) {
+        assert SwingUtilities.isEventDispatchThread();
+        //add all nodes and edges now
+        GraphNode rootNode = cache.get(root.getDependencyConflictId());
+        //root needs to go first..
+        scene.addNode(rootNode);
+        for (GraphNode nd : cache.values()) {
+            if (nd != rootNode) {
+                scene.addNode(nd);
+            }
+        }
+        for (GraphEdge<MavenDependencyNode> ed : edges) {
+            scene.addEdge(ed);
+            GraphNode grNode = cache.get(ed.getTarget().getDependencyConflictId());
+            if (grNode == null) { //FOR conflicting nodes..
+                grNode = cache.get(ed.getTarget().getRelatedDependencyConflictId());
+            }
+            scene.setEdgeTarget(ed, grNode);
+            GraphNode parentGrNode = cache.get(ed.getSource().getDependencyConflictId());
+            scene.setEdgeSource(ed, parentGrNode);
+        }
+    }
+    
     @Override public boolean endVisit(MavenDependencyNode node) {
         path.pop();
 //        graphPath.pop();
-        if (root == node) {
-            //add all nodes and edges now
-            GraphNode rootNode = cache.get(node.getDependencyConflictId());
-            //root needs to go first..
-            scene.addNode(rootNode);
-            for (GraphNode nd : cache.values()) {
-                if (nd != rootNode) {
-                    scene.addNode(nd);
-                }
-            }
-            for (GraphEdge<MavenDependencyNode> ed : edges) {
-                scene.addEdge(ed);
-                GraphNode grNode = cache.get(ed.getTarget().getDependencyConflictId());
-                if (grNode == null) { //FOR conflicting nodes..
-                    grNode = cache.get(ed.getTarget().getRelatedDependencyConflictId());
-                }
-                scene.setEdgeTarget(ed, grNode);
-                GraphNode parentGrNode = cache.get(ed.getSource().getDependencyConflictId());
-                scene.setEdgeSource(ed, parentGrNode);
-            }
-        }
         return true;
     }
 

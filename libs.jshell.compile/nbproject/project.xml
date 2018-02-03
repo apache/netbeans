@@ -25,23 +25,6 @@
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
             <code-name-base>org.netbeans.libs.jshell.compile</code-name-base>
             <module-dependencies>
-<!--                <dependency>
-                    <code-name-base>org.netbeans.libs.javacapi</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>8.19</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.libs.javacimpl</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>0.47</specification-version>
-                    </run-dependency>
-                </dependency>-->
                 <dependency>
                     <code-name-base>org.netbeans.lib.nbjshell</code-name-base>
                     <run-dependency>
@@ -62,7 +45,7 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path></runtime-relative-path>
-                <binary-origin>external/jshell.jar</binary-origin>
+                <binary-origin>external/jshell-9.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

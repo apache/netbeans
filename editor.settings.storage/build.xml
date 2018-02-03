@@ -23,4 +23,9 @@
 <project name="editor.settings.storage" default="netbeans" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 
+    <target name="test-init" depends="projectized-common.test-init">
+        <mkdir dir="${build.test.unit.dir}/data" />
+        <copy file="external/SFS-Editors-Folder-8.2.zip" todir="${build.test.unit.dir}/data" />
+    </target>
+
 </project>

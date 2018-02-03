@@ -28,6 +28,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -91,7 +92,7 @@ public class ConvertClusterPath extends Task {
             final Pattern pat = Pattern.compile("(?:.*[\\\\/])?([^/\\\\]*?)([0-9.]+)?[/\\\\]?$");
             Path convPath = new Path(fakeproj);
 
-            for (Iterator it = absPath.iterator(); it.hasNext();) {
+            for (Iterator<Resource> it = absPath.iterator(); it.hasNext();) {
                 FileResource element = (FileResource) it.next();
                 File f = element.getFile();
                 String fPath = f.getAbsolutePath();

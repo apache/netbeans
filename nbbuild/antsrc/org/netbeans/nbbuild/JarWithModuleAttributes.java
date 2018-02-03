@@ -253,7 +253,7 @@ public class JarWithModuleAttributes extends Jar {
                         specVersBaseWarning(manifestFile, "use of spec.version.base with non-integer OpenIDE-Module-Implementation-Version");
                     }
                 }
-                SortedMap<String,Integer> additions = new TreeMap<String,Integer>();
+                SortedMap<String,Integer> additions = new TreeMap<>();
                 if (moduleDeps != null) {
                     for (String individualDep : COMMA_SPACE.split(moduleDeps)) {
                         Matcher m = IMPL_DEP.matcher(individualDep);

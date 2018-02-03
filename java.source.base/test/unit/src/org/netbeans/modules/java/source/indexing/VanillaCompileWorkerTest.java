@@ -30,7 +30,7 @@ import org.netbeans.modules.java.source.indexing.CompileWorker.ParsingOutput;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 
-/**TODO: this test needs to run with vanilla javac
+/**
  *
  * @author lahvac
  */
@@ -50,22 +50,186 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                                                          compileTuple("test/Test4.java", "package test; public class Test4 { Undef undef; }")),
                                            Arrays.asList(virtualCompileTuple("test/Test1.virtual", "package test; public class Test1 {}"),
                                                          virtualCompileTuple("test/Test2.virtual", "package test; public class Test2 {}")));
-        
+
         assertFalse(result.lowMemory);
         assertTrue(result.success);
-        
+
         Set<String> createdFiles = new HashSet<String>();
-        
+
         for (File created : result.createdFiles) {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
-        
-        //TODO:
-//        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test3.sig")), createdFiles);
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test3.sig",
+                                                       "cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
         result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; public class Test4 { void t() { Undef undef; } }")),
                              Collections.emptyList());
-        
+
         assertFalse(result.lowMemory);
         assertTrue(result.success);
     }
+
+    public void testRepair1() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; public class Test4 { public void test() { Undef undef; } }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
+    }
+
+    public void testRepair2() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; public class Test4 { @Undef public void test1() { } @Deprecated @Undef public void test2() { } }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
+        //TODO: check file content!!!
+    }
+
+    public void testRepair3() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; public class Test4 { public <T> void test1(T t) { } }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
+        //TODO: check file content!!!
+    }
+
+    public void testRepair4() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; import java.util.List; public class Test4 { public List<Undef> test() { } }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
+        //TODO: check file content!!!
+    }
+
+    public void testRepairEnum() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; public enum Test4 { A {} }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig",
+                                                       "cache/s1/java/15/classes/test/Test4$1.sig")),
+                     createdFiles);
+        //TODO: check file content!!!
+    }
+
+    public void testRepairWildcard() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; import java.util.*; public class Test4 { void test(List<? extends Undef> l1, List<? super Undef> l2) { } }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+                     createdFiles);
+        //TODO: check file content!!!
+    }
+
+    public void testModuleInfoAndSourceLevel8() throws Exception {
+        setSourceLevel("8");
+
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("module-info.java", "module m {}"),
+                                                         compileTuple("test/Test.java", "package test; public class Test { }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+                     createdFiles);
+    }
+
+    public void testErroneousMethodClassNETBEANS_224() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test1.java", "package test; public class Test1 { public abstract void }"),
+                                                         compileTuple("test/Test2.java", "package test; public class Test2 { public abstract Object }"),
+                                                         compileTuple("test/Test3.java", "package test; public class Test3 { public abstract class }"),
+                                                         compileTuple("test/Test4.java", "package test; public class ")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test1.sig",
+                                                       "cache/s1/java/15/classes/test/Test2.sig",
+                                                       "cache/s1/java/15/classes/test/Test3.sig")),
+                     createdFiles);
+    }
+
+    public void testRepairFieldBrokenGenerics() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; import java.util.List; public class Test4 { public List<Undef> test; }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")), createdFiles);
+        //TODO: check file content!!!
+    }
+
 }

@@ -20,9 +20,12 @@
 package org.netbeans.lib.nbjavac.services;
 
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.comp.Enter;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javadoc.main.JavadocEnter;
@@ -48,11 +51,13 @@ public class NBJavadocEnter extends JavadocEnter {
 
     private final Messager messager;
     private final CancelService cancelService;
+    private final Symtab syms;
 
     protected NBJavadocEnter(Context context) {
         super(context);
         messager = Messager.instance0(context);
         cancelService = CancelService.instance(context);
+        syms = Symtab.instance(context);
     }
 
     public @Override void main(com.sun.tools.javac.util.List<JCCompilationUnit> trees) {
@@ -70,6 +75,15 @@ public class NBJavadocEnter extends JavadocEnter {
     public void visitClassDef(JCClassDecl tree) {
         cancelService.abortIfCanceled();
         super.visitClassDef(tree);
+    }
+
+    @Override
+    public void visitTopLevel(JCTree.JCCompilationUnit tree) {
+        if (TreeInfo.isModuleInfo(tree) && tree.modle == syms.noModule) {
+            //workaround: when source level is == 8, then visitTopLevel crashes for module-info.java
+            return ;
+        }
+        super.visitTopLevel(tree);
     }
 
     //no @Override to ensure compatibility with ordinary javac:

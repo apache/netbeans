@@ -95,6 +95,7 @@ import org.netbeans.lib.nbjavac.services.CancelService;
 import org.netbeans.lib.nbjavac.services.NBParserFactory;
 import org.netbeans.lib.nbjavac.services.NBResolve;
 import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
+import org.netbeans.modules.java.source.TreeUtilitiesAccessor;
 import org.netbeans.modules.java.source.builder.CommentHandlerService;
 import org.netbeans.modules.java.source.builder.CommentSetImpl;
 import org.netbeans.modules.java.source.pretty.ImportAnalysis2;
@@ -575,7 +576,11 @@ public final class TreeUtilities {
      * @return parsed {@link StatementTree} or null?
      */
     public StatementTree parseStatement(String stmt, SourcePositions[] sourcePositions) {
-        return doParse(stmt, sourcePositions, 0, Parser::parseStatement);
+        return parseStatementImpl(info.impl.getJavacTask(), stmt, sourcePositions);
+    }
+
+    private static StatementTree parseStatementImpl(JavacTaskImpl task, String stmt, SourcePositions[] sourcePositions) {
+        return doParse(task, stmt, sourcePositions, 0, Parser::parseStatement);
     }
 
     /**Parses given expression.
@@ -618,16 +623,20 @@ public final class TreeUtilities {
      * @return parsed {@link T} or null?
      */
     private <T extends Tree> T doParse(String text, SourcePositions[] sourcePositions, int offset, Function<Parser, T> actualParse) {
+        return doParse(info.impl.getJavacTask(), text, sourcePositions, offset, actualParse);
+    }
+
+    private static <T extends Tree> T doParse(JavacTaskImpl task, String text, SourcePositions[] sourcePositions, int offset, Function<Parser, T> actualParse) {
         if (text == null || (sourcePositions != null && sourcePositions.length != 1))
             throw new IllegalArgumentException();
         //use a working init order:
-        com.sun.tools.javac.main.JavaCompiler.instance(info.impl.getJavacTask().getContext());
-        com.sun.tools.javac.tree.TreeMaker jcMaker = com.sun.tools.javac.tree.TreeMaker.instance(info.impl.getJavacTask().getContext());
+        com.sun.tools.javac.main.JavaCompiler.instance(task.getContext());
+        com.sun.tools.javac.tree.TreeMaker jcMaker = com.sun.tools.javac.tree.TreeMaker.instance(task.getContext());
         int oldPos = jcMaker.pos;
         
         try {
             //from org/netbeans/modules/java/hints/spiimpl/Utilities.java:
-            Context context = info.impl.getJavacTask().getContext();
+            Context context = task.getContext();
             JavaCompiler compiler = JavaCompiler.instance(context);
             JavaFileObject prev = compiler.log.useSource(new DummyJFO());
             Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(compiler.log) {
@@ -1874,5 +1883,14 @@ public final class TreeUtilities {
         public Iterable<? extends Element> getLocalElements() {
             return delegate.getLocalElements();
         }
+    }
+
+    static {
+        TreeUtilitiesAccessor.setInstance(new TreeUtilitiesAccessor() {
+            @Override
+            public StatementTree parseStatement(JavacTaskImpl task, String stmt, SourcePositions[] sourcePositions) {
+                return parseStatementImpl(task, stmt, sourcePositions);
+            }
+        });
     }
 }

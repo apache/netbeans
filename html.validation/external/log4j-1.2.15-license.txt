@@ -1,10 +1,9 @@
 Name: Log4j
-Version: 1.2.15
-License: Apache-2.0
-OSR: -
-Files: log4j-1.2.15.jar
 Description: Logging support library
-Origin: http://logging.apache.org/log4j/
+Version: 1.2.15
+Origin: Apache Software Foundation
+License: Apache-2.0
+URL: http://logging.apache.org/log4j/
 
 
                                  Apache License
@@ -195,7 +194,7 @@ Origin: http://logging.apache.org/log4j/
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
-   Copyright 1999-2005 The Apache Software Foundation
+   Copyright [yyyy] [name of copyright owner]
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.

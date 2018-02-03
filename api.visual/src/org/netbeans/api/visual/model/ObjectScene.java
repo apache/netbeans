@@ -86,15 +86,64 @@ public class ObjectScene extends Scene {
         objects.put (object, object);
         object2widget.put (object, mainWidget);
         object2widgets.put (object, mainWidget != null ? Arrays.asList (widgets) : EMPTY_WIDGETS_LIST);
-        objectStates.put (object, ObjectState.createNormal ());
-
+        ObjectState state = objectStates.computeIfAbsent(object, (o) -> ObjectState.createNormal());
         for (Widget widget : widgets) {
             widget2object.put (widget, object);
-            widget.setState (ObjectState.createNormal ());
+            widget.setState (state);
         }
 
         for (ObjectSceneListener listener : getListeners (ObjectSceneEventType.OBJECT_ADDED))
             listener.objectAdded (event, object);
+    }
+    
+    /**
+     * Removes mapping for an object. The caller is responsible for removing
+     * widgets from the scene before this call. If the object is already removed or did not exist, the method
+     * does nothing. The method <b>will not</b> clear object's state. 
+     * <p/>
+     * As {@link #addObject} allows to add object-widget mapping as the user works with the scene,
+     * this method allows to remove such mapping. Selection, highlight and other flags remain unchanged.
+     * 
+     * @param object object, whose mapping should be removed
+     * @since 2.49
+     */
+    public final void removeObjectMapping(Object object) {
+        boolean removed = objects.remove(object) != null;
+        object2widget.remove (object);
+        List<Widget> widgets = object2widgets.remove (object);
+        for (Widget widget : widgets) {
+            widget2object.remove (widget);
+        }
+        if (removed) {
+            for (ObjectSceneListener listener : getListeners (ObjectSceneEventType.OBJECT_REMOVED))
+                listener.objectRemoved (event, object);
+        }
+    }
+
+    /**
+     * Removes the object's state, removes the object from selection, hover etc. Does not deregister
+     * the object or remove its widgets.
+     * @param object to clear
+     * @since 2.49
+     */
+    public void clearObjectState(Object object) {
+        if (selectedObjects.contains (object)) {
+            HashSet<Object> temp = new HashSet<Object> (selectedObjects);
+            temp.remove (object);
+            setSelectedObjects (temp);
+        }
+        if (highlightedObjects.contains (object)) {
+            HashSet<Object> temp = new HashSet<Object> (highlightedObjects);
+            temp.remove (object);
+            setHighlightedObjects (temp);
+        }
+        if (object.equals (hoveredObject)) {
+            setHoveredObject (null);
+        }
+        if (object.equals (focusedObject)) {
+            setFocusedObject (null);
+        }
+        objectStates.remove (object);
     }
 
     /**
@@ -171,7 +220,8 @@ public class ObjectScene extends Scene {
                 ObjectState previousState = objectStates.get (object);
                 ObjectState newState = previousState.deriveSelected (false);
                 objectStates.put (object, newState);
-                for (Widget widget : object2widgets.get (object))
+                List<Widget> lst = object2widgets.get (object);
+                if (lst != null) for (Widget widget : lst)
                     widget.setState (widget.getState ().deriveSelected (false));
                 for (ObjectSceneListener listener : listeners)
                     listener.objectStateChanged (event, object, previousState, newState);
@@ -181,10 +231,11 @@ public class ObjectScene extends Scene {
         for (Object object : selectedObjects) {
             if (! this.selectedObjects.contains (object)) {
                 this.selectedObjects.add (object);
-                ObjectState previousState = objectStates.get (object);
+                ObjectState previousState = findObjectState (object);
                 ObjectState newState = previousState.deriveSelected (true);
                 objectStates.put (object, newState);
-                for (Widget widget : object2widgets.get (object))
+                List<Widget> lst = object2widgets.get (object);
+                if (lst != null) for (Widget widget : lst)
                     widget.setState (widget.getState ().deriveSelected (true));
                 for (ObjectSceneListener listener : listeners)
                     listener.objectStateChanged (event, object, previousState, newState);
@@ -219,7 +270,8 @@ public class ObjectScene extends Scene {
                 ObjectState previousState = objectStates.get (object);
                 ObjectState newState = previousState.deriveHighlighted (false);
                 objectStates.put (object, newState);
-                for (Widget widget : object2widgets.get (object))
+                List<Widget> lst = object2widgets.get (object);
+                if (lst != null) for (Widget widget : lst)
                     widget.setState (widget.getState ().deriveHighlighted (false));
                 for (ObjectSceneListener listener : listeners)
                     listener.objectStateChanged (event, object, previousState, newState);
@@ -229,10 +281,11 @@ public class ObjectScene extends Scene {
         for (Object object : highlightedObjects) {
             if (! this.highlightedObjects.contains (object)) {
                 this.highlightedObjects.add (object);
-                ObjectState previousState = objectStates.get (object);
+                ObjectState previousState = findObjectState(object);
                 ObjectState newState = previousState.deriveHighlighted (true);
                 objectStates.put (object, newState);
-                for (Widget widget : object2widgets.get (object))
+                List<Widget> lst = object2widgets.get (object);
+                if (lst != null) for (Widget widget : object2widgets.get (object))
                     widget.setState (widget.getState ().deriveHighlighted (true));
                 for (ObjectSceneListener listener : listeners)
                     listener.objectStateChanged (event, object, previousState, newState);
@@ -272,7 +325,8 @@ public class ObjectScene extends Scene {
             ObjectState previousState = objectStates.get (this.hoveredObject);
             ObjectState newState = previousState.deriveObjectHovered (false);
             objectStates.put (this.hoveredObject, newState);
-            for (Widget widget : object2widgets.get (this.hoveredObject))
+            List<Widget> lst = object2widgets.get (this.hoveredObject);
+            if (lst != null) for (Widget widget : lst)
                 widget.setState (widget.getState ().deriveObjectHovered (false));
             for (ObjectSceneListener listener : listeners)
                 listener.objectStateChanged (event, this.hoveredObject, previousState, newState);
@@ -281,10 +335,11 @@ public class ObjectScene extends Scene {
         this.hoveredObject = hoveredObject;
 
         if (this.hoveredObject != null) {
-            ObjectState previousState = objectStates.get (this.hoveredObject);
+            ObjectState previousState = findObjectState (this.hoveredObject);
             ObjectState newState = previousState.deriveObjectHovered (true);
             objectStates.put (this.hoveredObject, newState);
-            for (Widget widget : object2widgets.get (this.hoveredObject))
+            List<Widget> lst = object2widgets.get (this.hoveredObject);
+            if (lst != null) for (Widget widget : lst)
                 widget.setState (widget.getState ().deriveObjectHovered (true));
             for (ObjectSceneListener listener : listeners)
                 listener.objectStateChanged (event, this.hoveredObject, previousState, newState);
@@ -323,7 +378,8 @@ public class ObjectScene extends Scene {
             ObjectState previousState = objectStates.get (this.focusedObject);
             ObjectState newState = previousState.deriveObjectFocused (false);
             objectStates.put (this.focusedObject, newState);
-            for (Widget widget : object2widgets.get (this.focusedObject))
+            List<Widget> lst = object2widgets.get (this.focusedObject);
+            if (lst != null) for (Widget widget : lst)
                 widget.setState (widget.getState ().deriveObjectFocused (false));
             for (ObjectSceneListener listener : listeners)
                 listener.objectStateChanged (event, this.focusedObject, previousState, newState);
@@ -332,10 +388,11 @@ public class ObjectScene extends Scene {
         this.focusedObject = focusedObject;
 
         if (this.focusedObject != null) {
-            ObjectState previousState = objectStates.get (this.focusedObject);
+            ObjectState previousState = findObjectState (this.focusedObject);
             ObjectState newState = previousState.deriveObjectFocused (true);
             objectStates.put (this.focusedObject, newState);
-            for (Widget widget : object2widgets.get (this.focusedObject))
+            List<Widget> lst = object2widgets.get (this.focusedObject);
+            if (lst != null) for (Widget widget : lst)
                 widget.setState (widget.getState ().deriveObjectFocused (true));
             for (ObjectSceneListener listener : listeners)
                 listener.objectStateChanged (event, this.focusedObject, previousState, newState);
@@ -532,6 +589,24 @@ public class ObjectScene extends Scene {
             setHoveredObject (findObject (widget));
         }
 
+    }
+
+    /**
+     * Finds the state for the given object. The object must be a valid part of the model, although
+     * it may not be registered yet and no widgets are created for it. The method may return {@code null}
+     * for instances that are not proper models for the scene. The default method returns {@link ObjectState#createNormal}
+     * for all inputs. 
+     * <p/>
+     * Note that even objects, which have currently no widgets can have ObjectState associated.
+     * For example objects, for which the widgets were not created yet, or whose widgets were removed.
+     * 
+     * @param o the object
+     * @return the ObjectState or {@code null} for objects that cannot be part of the model.
+     * @since 2.49
+     */
+    protected ObjectState findObjectState(Object o) throws IllegalArgumentException {
+        ObjectState s = objectStates.get(o);
+        return s != null ? s : ObjectState.createNormal();
     }
 
 }

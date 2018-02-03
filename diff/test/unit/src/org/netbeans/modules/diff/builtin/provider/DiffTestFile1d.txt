@@ -1,7 +1,3 @@
-10c10
-<  * Code is Sun Microsystems, Inc. Portions Copyright 1997-2005 Sun
----
->  * Code is Sun Microsystems, Inc. Portions Copyright 1997-2000 Sun
 25a26
 > import com.sun.jdi.IncompatibleThreadStateException;
 38a40

@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -42,7 +43,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jdk.jshell.execution.JdiDefaultExecutionControl;
 import jdk.jshell.execution.JdiExecutionControl;
 import jdk.jshell.execution.JdiInitiator;
 import jdk.jshell.execution.Util;
@@ -50,7 +50,6 @@ import jdk.jshell.spi.ExecutionControl;
 import jdk.jshell.spi.ExecutionControlProvider;
 import jdk.jshell.spi.ExecutionEnv;
 import org.netbeans.api.java.platform.JavaPlatform;
-import org.netbeans.api.project.Project;
 
 /**
  * Launches a JShell VM using standard JDI agent, but incorporates
@@ -212,9 +211,10 @@ public class LaunchJDIAgent extends JdiExecutionControl
                 // TODO: if jHome is null for some reason, the connector fails.
                 customArguments.put("home", jHome);
             }
+            String loopback = InetAddress.getLoopbackAddress().getHostAddress();
             // Set-up the JDI connection
             JdiInitiator jdii = new JdiInitiator(port,
-                    env.extraRemoteVMOptions(), REMOTE_AGENT, isLaunch, null, 
+                    env.extraRemoteVMOptions(), REMOTE_AGENT, isLaunch, loopback, 
                     5000, customArguments);
             VirtualMachine vm = jdii.vm();
             Process process = jdii.process();

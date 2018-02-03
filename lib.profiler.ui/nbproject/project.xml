@@ -31,7 +31,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.97</specification-version>
+                        <specification-version>1.106</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -82,7 +82,12 @@
             <friend-packages>
                 <friend>com.sun.tools.visualvm.application.views</friend>
                 <friend>com.sun.tools.visualvm.coredump</friend>
+                <friend>com.sun.tools.visualvm.heapviewer</friend>
+                <friend>com.sun.tools.visualvm.heapviewer.console</friend>
+                <friend>com.sun.tools.visualvm.heapviewer.truffle</friend>
                 <friend>com.sun.tools.visualvm.modules.appui</friend>
+                <friend>com.sun.tools.visualvm.profiler</friend>
+                <friend>com.sun.tools.visualvm.profiling</friend>
                 <friend>com.sun.tools.visualvm.sampler</friend>
                 <friend>com.sun.tools.visualvm.uisupport</friend>
                 <friend>oracle.jdevimpl.profiler.impl</friend>

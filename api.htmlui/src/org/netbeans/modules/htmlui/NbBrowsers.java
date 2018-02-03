@@ -20,6 +20,7 @@ package org.netbeans.modules.htmlui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -36,11 +37,67 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javax.swing.LookAndFeel;
+import javax.swing.UIManager;
 import net.java.html.boot.fx.FXBrowsers;
+import net.java.html.js.JavaScriptBody;
 import org.openide.util.NbBundle;
 
 final class NbBrowsers {
-    public static void load(WebView view, URL page, Runnable onPageLoad, ClassLoader loader, Object... args) {
+    static {
+        Platform.setImplicitExit(false);
+    }
+    public static void load(WebView view, URL page, final Runnable onPageLoad, ClassLoader loader, Object... args) {
+        class ApplySkin implements Runnable {
+            @Override
+            public void run() {
+                applyNbSkin();
+                onPageLoad.run();
+            }
+        }
+        load0(view, page, new ApplySkin(), loader, args);
+    }
+
+    static void applyNbSkin() {
+        LookAndFeel lookAndFeel = UIManager.getLookAndFeel();
+        String name = lookAndFeel.getName();
+        switch (name) {
+            case "Mac OS X":
+                name = "mac";
+                break;
+            case "Metal":
+                name = "metal";
+                break;
+            case "GTK look and feel":
+                name = "gtk";
+                break;
+            case "Nimbus":
+                name = "nimbus";
+                break;
+            case "Windows":
+                name = "win";
+                break;
+            case "Darcula":
+                name = "darcula";
+                break;
+        }
+        final String resource = "nbres:/org/netbeans/modules/htmlui/css/wizard-" + name + ".css";
+        loadCss(resource);
+    }
+
+    @JavaScriptBody(args = { "css" }, body =
+"  if (!document.head || document.head.getAttribute(\"data-netbeans-css\") == \"false\") {\n" +
+"     return;\n" +
+"  }\n" +
+"  var link = document.createElement(\"link\");\n" +
+"  link.rel = \"stylesheet\";\n" +
+"  link.type = \"text/css\";\n" +
+"  link.href = css;\n" +
+"  document.head.appendChild(link);"
+    )
+    private static native void loadCss(String css);
+
+    private static void load0(WebView view, URL page, Runnable onPageLoad, ClassLoader loader, Object... args) {
         final Stage stage = null;
         view.setContextMenuEnabled(false);
         view.getEngine().setOnAlert(new EventHandler<WebEvent<String>>() {

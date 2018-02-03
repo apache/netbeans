@@ -42,7 +42,6 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import javax.annotation.processing.Processor;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
@@ -53,7 +52,6 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.lib.nbjavac.services.CancelAbort;
 import org.netbeans.lib.nbjavac.services.CancelService;
-//import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.modules.java.source.indexing.APTUtils;
 import org.netbeans.modules.java.source.indexing.CompileWorker;
 import org.netbeans.modules.java.source.indexing.DiagnosticListenerImpl;
@@ -62,6 +60,7 @@ import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.indexing.JavaParsingContext;
 import org.netbeans.modules.java.source.indexing.SourcePrefetcher;
+import org.netbeans.modules.java.source.nbjavac.parsing.TreeLoader;
 import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
@@ -316,7 +315,7 @@ final class OnePassCompileWorker extends CompileWorker {
             return ParsingOutput.success(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
         } catch (CouplingAbort ca) {
             //Coupling error
-//            TreeLoader.dumpCouplingAbort(ca, null);
+            TreeLoader.dumpCouplingAbort(ca, null);
         } catch (OutputFileManager.InvalidSourcePath isp) {
             //Deleted project - log & ignore
             if (JavaIndex.LOG.isLoggable(Level.FINEST)) {

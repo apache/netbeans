@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.java.hints.bugs;
 
-import junit.framework.TestSuite;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.api.HintTest;
 import org.openide.filesystems.FileUtil;
@@ -1613,6 +1612,37 @@ public class NPECheckTest extends NbTestCase {
                         "8:49-8:50:verifier:ERR_UnboxingPotentialNullValue",
                         "9:15-9:32:verifier:ERR_NotNull"
                 );
+    }
+
+    public void testLambdaExpressionShouldntReturnNull() throws Exception {
+        HintTest.create()
+                .sourceLevel("8")
+                .input("package test;\n" +
+                        "\n" +
+                        "import java.util.function.Function;\n" +
+                        "\n" +
+                        "public class Test {\n" +
+                        "\n" +
+                        "    interface Custom {\n" +
+                        "        @Nonnull\n" +
+                        "        Object doStuff();\n" +
+                        "    }\n" +
+                        "\n" +
+                        "    @Nonnull\n" +
+                        "    public static Object test() {\n" +
+                        "        Function<String, String> f = (input) -> {\n" +
+                        "            return null;\n" + // shouldn't warn (#271823)
+                        "        };\n" +
+                        "        Object o = (Custom) (() -> {\n" +
+                        "            return null;\n" +
+                        "        });\n" +
+                        "        return new Object();\n" +
+                        "    }\n" +
+                        "\n" +
+                        "    @interface Nonnull { }\n" +
+                        "}")
+                .run(NPECheck.class)
+                .assertWarnings("17:19-17:23:verifier:ERR_ReturningNullFromNonNull");
     }
 
     private void performAnalysisTest(String fileName, String code, String... golden) throws Exception {

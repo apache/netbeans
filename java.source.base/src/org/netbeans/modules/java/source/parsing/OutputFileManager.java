@@ -21,13 +21,14 @@ package org.netbeans.modules.java.source.parsing;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +36,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-import javax.tools.JavaFileManager;
 import javax.tools.JavaFileManager.Location;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
@@ -171,7 +171,6 @@ public class OutputFileManager extends CachingFileManager {
         final File file = FileUtil.normalizeFile(new File (activeRoot,path.replace(FileObjects.NBFS_SEPARATOR_CHAR, File.separatorChar)));
         return tx.createFileObject(l, file, activeRoot,null,null);
     }
-
 
     @Override
     public javax.tools.FileObject getFileForInput(Location l, String pkgName, String relativeName) {

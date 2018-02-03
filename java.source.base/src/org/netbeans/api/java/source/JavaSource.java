@@ -48,6 +48,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
+import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.parsing.CachingArchiveProvider;
 import org.netbeans.modules.java.source.parsing.ClassParser;
 import org.netbeans.modules.java.source.parsing.ClasspathInfoTask;
@@ -185,6 +186,8 @@ public final class JavaSource {
         if (files == null) {
             throw new IllegalArgumentException ();
         }
+        if (!NoJavacHelper.hasWorkingJavac())
+            return null;
         try {
             return new JavaSource(cpInfo, files);
 // TODO: Split

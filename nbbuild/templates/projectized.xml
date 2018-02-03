@@ -172,8 +172,8 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <property name="locmakenbm.brands" value="${brandings}"/>
         <!-- When requires.nb.javac property is true, prepend javac-api and javac-impl on bootclasspath to allow override the default annotation
              processing API located in rt.jar. -->
-        <property name="bootclasspath.prepend.nb" value="${nb_all}/nbbuild/external/vanilla-javac-api.jar:${nb_all}/nbbuild/external/nb-javac-impl.jar" />
-        <property name="bootclasspath.prepend.vanilla" value="${nb_all}/nbbuild/external/vanilla-javac-api.jar:${nb_all}/nbbuild/external/vanilla-javac-impl.jar" />
+        <property name="bootclasspath.prepend.nb" value="${nb_all}/libs.javacapi/external/nb-javac-9-api.jar${path.separator}${nb_all}/libs.javacimpl/external/nb-javac-9-impl.jar" />
+        <property name="bootclasspath.prepend.vanilla" value="${nb_all}/nbbuild/external/vanilla-javac-api.jar${path.separator}${nb_all}/nbbuild/external/vanilla-javac-impl.jar" />
         <condition property="bootclasspath.prepend" value="${bootclasspath.prepend.nb}">
             <istrue value="${requires.nb.javac.impl}"/>
         </condition>
@@ -345,8 +345,11 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
     </target>
 
     <target name="-verify-apichanges" if="javadoc.apichanges" depends="basic-init">
-        <xmlvalidate file="${javadoc.apichanges}" failonerror="true"/>
+        <xmlvalidate file="${javadoc.apichanges}" failonerror="true">
+            <xmlcatalog refid="nbantextcatalog" />
+        </xmlvalidate>
         <xslt in="${javadoc.apichanges}" out="${build.dir}/apichanges.html" style="${nb_all}/nbbuild/javadoctools/apichanges.xsl">
+            <xmlcatalog refid="nbantextcatalog" />
             <param name="javadoc-url-base" expression="."/>
         </xslt>
         <!-- XXX could perhaps validate arch.xml too, if it exists -->

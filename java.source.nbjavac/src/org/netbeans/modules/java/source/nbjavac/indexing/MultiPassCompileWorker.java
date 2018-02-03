@@ -61,13 +61,13 @@ import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.modules.java.source.indexing.APTUtils;
-//import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.modules.java.source.indexing.CompileWorker;
 import org.netbeans.modules.java.source.indexing.DiagnosticListenerImpl;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer.CompileTuple;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.indexing.JavaParsingContext;
+import org.netbeans.modules.java.source.nbjavac.parsing.TreeLoader;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.OutputFileManager;
@@ -349,7 +349,7 @@ final class MultiPassCompileWorker extends CompileWorker {
                 }
             } catch (CouplingAbort ca) {
                 //Coupling error
-//                TreeLoader.dumpCouplingAbort(ca, null);
+                TreeLoader.dumpCouplingAbort(ca, null);
                 jt = null;
                 diagnosticListener.cleanDiagnostics();
                 if ((state & ERR) != 0) {
@@ -472,8 +472,8 @@ final class MultiPassCompileWorker extends CompileWorker {
                                 if (stEnv != null && env != stEnv) {
                                     if (checked.add(stEnv)) {
                                         scan(stEnv.tree);
-//                                        if (TreeLoader.pruneTree(stEnv.tree, syms, syms2trees))
-//                                            dependencies.add(stEnv);
+                                        if (TreeLoader.pruneTree(stEnv.tree, syms, syms2trees))
+                                            dependencies.add(stEnv);
                                     }
                                     envForSuperTypeFound = true;
                                 }
@@ -494,8 +494,8 @@ final class MultiPassCompileWorker extends CompileWorker {
                                 dumpSymFile(jfm, jti, dep.enclClass.sym, alreadyCreated, classes, syms2trees);
                             }
                         }
-//                        if (TreeLoader.pruneTree(env.tree, syms, syms2trees))
-//                            dumpSymFile(jfm, jti, env.enclClass.sym, alreadyCreated, classes, syms2trees);
+                        if (TreeLoader.pruneTree(env.tree, syms, syms2trees))
+                            dumpSymFile(jfm, jti, env.enclClass.sym, alreadyCreated, classes, syms2trees);
                     }
                 }
             } finally {
@@ -519,7 +519,7 @@ final class MultiPassCompileWorker extends CompileWorker {
         JavaFileObject file = jfm.getJavaFileForOutput(StandardLocation.CLASS_OUTPUT,
                 cs.flatname.toString(), JavaFileObject.Kind.CLASS, cs.sourcefile);
         if (file instanceof FileObjects.FileBase && !alreadyCreated.contains(((FileObjects.FileBase)file).getFile())) {
-//            TreeLoader.dumpSymFile(jfm, jti, cs, classes, syms2trees);
+            TreeLoader.dumpSymFile(jfm, jti, cs, classes, syms2trees);
         }
     }
 }

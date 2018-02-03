@@ -39,10 +39,10 @@
                 <package>javax.lang.model.util</package>
                 <package>javax.tools</package>
             </public-packages>
-<!--            <class-path-extension>
-                <runtime-relative-path>ext/nb-javac-api.jar</runtime-relative-path>
-                <binary-origin>external/nb-javac-api.jar</binary-origin>
-            </class-path-extension>-->
+            <class-path-extension>
+                <runtime-relative-path />
+                <binary-origin>external/nb-javac-9-api.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

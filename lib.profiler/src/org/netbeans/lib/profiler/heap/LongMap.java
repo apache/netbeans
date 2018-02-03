@@ -19,11 +19,11 @@
 
 package org.netbeans.lib.profiler.heap;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -141,23 +141,23 @@ class LongMap extends AbstractLongMap {
             }
         }
         
-        List getReferences() {
+        LongIterator getReferences() {
             byte flags = getFlags();
             long ref = getReferencesPointer();
             if ((flags & NUMBER_LIST) == 0) {
                 if (ref == 0L) {
-                    return Collections.EMPTY_LIST;
+                    return LongIterator.EMPTY_ITERATOR;
                 } else {
-                    return Collections.singletonList(new Long(ref));
+                    return LongIterator.singleton(ref);
                 }
             } else {
                 try {
-                    return referenceList.getNumbers(ref);
+                    return referenceList.getNumbersIterator(ref);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
             }
-            return Collections.EMPTY_LIST;
+            return LongIterator.EMPTY_ITERATOR;
         }
         
         long getOffset() {
@@ -238,9 +238,9 @@ class LongMap extends AbstractLongMap {
     
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
-    LongMap(int size,int idSize,int foffsetSize) throws FileNotFoundException, IOException {
-        super(size,idSize,foffsetSize,foffsetSize + 4 + 1 + idSize + foffsetSize);
-        referenceList = new NumberList(ID_SIZE);
+    LongMap(int size,int idSize,int foffsetSize,CacheDirectory cacheDir) throws FileNotFoundException, IOException {
+        super(size,idSize,foffsetSize,foffsetSize + 4 + 1 + idSize + foffsetSize, cacheDir);
+        referenceList = new NumberList(ID_SIZE, cacheDir);
     }
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
@@ -289,5 +289,16 @@ class LongMap extends AbstractLongMap {
             bigIds[i++]=((RetainedSizeEntry)it.next()).instanceId;
         }
         return bigIds;
+    }
+
+    //---- Serialization support    
+    void writeToStream(DataOutputStream out) throws IOException {
+        super.writeToStream(out);
+        referenceList.writeToStream(out);
+    }
+    
+    LongMap(DataInputStream dis, CacheDirectory cacheDir) throws IOException {
+        super(dis, cacheDir);
+        referenceList = new NumberList(dis, cacheDir);
     }
 }

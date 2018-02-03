@@ -34,10 +34,10 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
+import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
-//import org.netbeans.modules.java.source.TreeLoader;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -57,8 +57,7 @@ public class EvaluationSpanTaskTest extends NbTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[0]);
-        //XXX:
-//        TreeLoader.DISABLE_CONFINEMENT_TEST = true;
+        SourceUtilsTestUtil2.disableConfinementTest();
     }
 
     public void testHintConditions() throws Exception {

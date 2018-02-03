@@ -37,6 +37,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -97,7 +98,13 @@ public final class SvnOptionsController extends OptionsPanelController implement
                 return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             }
         });
-        panel.cmbPreferredClient.setModel(new DefaultComboBoxModel(new Object[] { panel.panelCLI, panel.panelJavahl, panel.panelSvnkit }));
+        List<JPanel> clients = new ArrayList<>(3);
+        clients.add(panel.panelCLI);
+        clients.add(panel.panelJavahl);
+        if (SvnClientFactory.hasSvnKit()) {
+            clients.add(panel.panelSvnkit);
+        }
+        panel.cmbPreferredClient.setModel(new DefaultComboBoxModel(clients.toArray()));
         panel.textPaneClient.addHyperlinkListener(new HyperlinkListener() {
             @Override
             public void hyperlinkUpdate (HyperlinkEvent e) {

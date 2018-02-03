@@ -63,7 +63,7 @@ public final class XMLUtil extends Object {
     private static final ThreadLocal<DocumentBuilder>[] builderTL = (ThreadLocal<DocumentBuilder>[]) new ThreadLocal<?>[4];
     static {
         for (int i = 0; i < 4; i++) {
-            builderTL[i] = new ThreadLocal<DocumentBuilder>();
+            builderTL[i] = new ThreadLocal<>();
         }
     }
 
@@ -166,9 +166,7 @@ public final class XMLUtil extends Object {
             Source source = new DOMSource(doc);
             Result result = new StreamResult(out);
             t.transform(source, result);
-        } catch (Exception e) {
-            throw new IOException(e);
-        } catch (TransformerFactoryConfigurationError e) {
+        } catch (Exception | TransformerFactoryConfigurationError e) {
             throw new IOException(e);
         }
     }
@@ -182,9 +180,7 @@ public final class XMLUtil extends Object {
             Source source = new DOMSource(el);
             Result result = new StreamResult(out);
             t.transform(source, result);
-        } catch (Exception e) {
-            throw new IOException(e);
-        } catch (TransformerFactoryConfigurationError e) {
+        } catch (Exception | TransformerFactoryConfigurationError e) {
             throw new IOException(e);
         }
     }
@@ -248,7 +244,7 @@ public final class XMLUtil extends Object {
      */
     static List<Element> findSubElements(Element parent) throws IllegalArgumentException {
         NodeList l = parent.getChildNodes();
-        List<Element> elements = new ArrayList<Element>(l.getLength());
+        List<Element> elements = new ArrayList<>(l.getLength());
         for (int i = 0; i < l.getLength(); i++) {
             Node n = l.item(i);
             if (n.getNodeType() == Node.ELEMENT_NODE) {

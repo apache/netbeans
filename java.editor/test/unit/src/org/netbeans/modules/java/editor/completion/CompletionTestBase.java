@@ -61,7 +61,6 @@ import org.netbeans.modules.editor.completion.CompletionItemComparator;
 import org.netbeans.modules.editor.java.JavaCompletionProvider;
 import org.netbeans.modules.editor.java.JavaKit;
 import org.netbeans.modules.java.JavaDataLoader;
-//import org.netbeans.modules.java.source.TreeLoader;
 import org.netbeans.modules.java.source.indexing.TransactionContext;
 import org.netbeans.modules.java.source.parsing.JavacParserFactory;
 import org.netbeans.modules.java.source.usages.BinaryAnalyser;

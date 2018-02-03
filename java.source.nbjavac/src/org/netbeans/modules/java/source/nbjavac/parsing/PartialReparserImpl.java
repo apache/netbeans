@@ -111,10 +111,10 @@ public class PartialReparserImpl implements PartialReparser {
             final int firstInner = fav.firstInner;
             final int noInner = fav.noInner;
             final Context ctx = task.getContext();
-//            final TreeLoader treeLoader = TreeLoader.instance(ctx);
-//            if (treeLoader != null) {
-//                treeLoader.startPartialReparse();
-//            }
+            final TreeLoader treeLoader = TreeLoader.instance(ctx);
+            if (treeLoader != null) {
+                treeLoader.startPartialReparse();
+            }
             try {
                 final Log l = Log.instance(ctx);
                 l.startPartialReparse();
@@ -202,9 +202,9 @@ public class PartialReparserImpl implements PartialReparser {
                 }
                 ci.update(snapshot);
             } finally {
-//              if (treeLoader != null) {
-//                  treeLoader.endPartialReparse();
-//              }
+              if (treeLoader != null) {
+                  treeLoader.endPartialReparse();
+              }
             }
         } catch (CouplingAbort ca) {
             //Needs full reparse

@@ -166,7 +166,7 @@ public class ProfilerTable extends JTable {
         getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "DEFAULT_ACTION"); // NOI18N
         getActionMap().put("DEFAULT_ACTION", new AbstractAction() { // NOI18N
-                    public void actionPerformed(ActionEvent e) { performDefaultAction(); }
+                    public void actionPerformed(ActionEvent e) { performDefaultAction(e); }
                 });
         
         addFocusListener(new FocusListener() {
@@ -219,8 +219,7 @@ public class ProfilerTable extends JTable {
             c.setBackground(UIManager.getColor("TextField.inactiveBackground")); // NOI18N
         } else {
             if (cEnabled) c.setForeground(getForeground());
-            c.setBackground((row & 0x1) == 0 ? getBackground() :
-                            UIUtils.getDarker(getBackground()));
+            c.setBackground(background(row, column));
         }
         
         c.move(0, 0);
@@ -232,6 +231,18 @@ public class ProfilerTable extends JTable {
         } else {
             return c;
         }
+    }
+    
+    private Color background(int row, int column) {
+        Color background = (row & 0x1) == 0 ? getBackground() : UIUtils.getDarker(getBackground());
+//        if (convertColumnIndexToModel(column) == getSortColumn()) return UIUtils.getDarker(background);
+        if (convertColumnIndexToModel(column) == getSortColumn() && !SortOrder.UNSORTED.equals(_getRowSorter().getSortOrder())) {
+            int r = background.getRed() - 4;
+            int g = background.getGreen() - 4;
+            int b = background.getBlue() + 6;
+            background = UIUtils.getSafeColor(r, g, b);
+        }
+        return background;
     }
     
     public Component prepareEditor(TableCellEditor editor, int row, int column) {
@@ -403,6 +414,7 @@ public class ProfilerTable extends JTable {
     // --- Selection -----------------------------------------------------------
     
     private boolean shadeUnfocusedSelection = false;
+    private boolean selectionOnMiddlePress = false;
     
     boolean internal;
     private Object selection;
@@ -431,13 +443,22 @@ public class ProfilerTable extends JTable {
     }
     
     protected void restoreSelection() {
-        if (!(selection instanceof Object[])) selection = selectValue(selection, mainColumn, false);
-        else selection = selectValues((Object[])selection, mainColumn, false);
+        try {
+            if (!(selection instanceof Object[])) selection = selectValue(selection, mainColumn, false);
+            else selection = selectValues((Object[])selection, mainColumn, false);
+        } catch (Exception e) {
+            System.err.println(">>> Exception in ProfilerTable.restoreSelection: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     public void selectRow(int row, boolean scrollToVisible) {
         internal = true;
         try { setRowSelectionInterval(row, row); saveSelection(); }
+        catch (Exception e) {
+            System.err.println(">>> Exception in ProfilerTable.selectRow: " + e.getMessage());
+            e.printStackTrace();
+        }
         finally { internal = false; }
         if (scrollToVisible) scrollRectToVisible(getCellRect(row, getSelectedColumn(), true));
     }
@@ -445,6 +466,10 @@ public class ProfilerTable extends JTable {
     public void selectColumn(int column, boolean scrollToVisible) {
         internal = true;
         try { setColumnSelectionInterval(column, column); }
+        catch (Exception e) {
+            System.err.println(">>> Exception in ProfilerTable.selectColumn: " + e.getMessage());
+            e.printStackTrace();
+        }
         finally { internal = false; }
         if (scrollToVisible) scrollRectToVisible(getCellRect(getSelectedRow(), column, true));
     }
@@ -541,6 +566,14 @@ public class ProfilerTable extends JTable {
         return shadeUnfocusedSelection;
     }
     
+    public final void setSelectionOnMiddlePress(boolean select) {
+        selectionOnMiddlePress = select;
+    }
+    
+    public final boolean isSelectionOnMiddlePress() {
+        return selectionOnMiddlePress;
+    }
+    
     // --- Traversing rows -----------------------------------------------------
     
     int getNextRow(int row) {
@@ -616,7 +649,8 @@ public class ProfilerTable extends JTable {
         
         ProfilerColumnModel cModel = _getColumnModel();
         
-        if (getRowCount() == 0) {
+        int rowCount = getRowCount();
+        if (rowCount == 0) {
             for (int column : scrollableColumns)
                 cModel.setColumnPreferredWidth(column, 0);
             return;
@@ -629,6 +663,8 @@ public class ProfilerTable extends JTable {
         int first = rowAtPoint(visibleP);
         visibleP.translate(0, visible.height - 1);
         int last = rowAtPoint(visibleP);
+        
+        if (last == -1) last = rowCount - 1; // last column above the visible rect boundary
         
         for (int column : scrollableColumns) {
             int _column = convertColumnIndexToView(column);
@@ -886,6 +922,14 @@ public class ProfilerTable extends JTable {
         if (isSortable()) _getRowSorter().setDefaultSortOrder(column, sortOrder);
     }
     
+    public void setAllowsThreeStateColumns(boolean threeStateColumns) {
+        _getRowSorter().setAllowsThreeStateColumns(threeStateColumns);
+    }
+    
+    public boolean allowsThreeStateColumns() {
+        return _getRowSorter().allowsThreeStateColumns();
+    }
+    
     // --- Row filter ----------------------------------------------------------
     
     // false = OR, true = AND
@@ -921,7 +965,7 @@ public class ProfilerTable extends JTable {
         this.defaultAction = action;
     }
     
-    public void performDefaultAction() {
+    public void performDefaultAction(ActionEvent e) {
         if (defaultAction != null) defaultAction.actionPerformed(null);
     }
     
@@ -969,6 +1013,7 @@ public class ProfilerTable extends JTable {
             TableColumn column = columns.get(col);
             if (column.getWidth() > 0) {
                 String columnName = column.getHeaderValue().toString();
+                if (columnName.toLowerCase().startsWith("<html>")) columnName = columnName.replaceAll("<[^>]*>", ""); // NOI118N
                 copyItem.add(new JMenuItem(MessageFormat.format(genericItemName, columnName)) {
                     protected void fireActionPerformed(ActionEvent e) {
                         StringSelection s = new StringSelection(getStringValue(row, _col));
@@ -1030,11 +1075,21 @@ public class ProfilerTable extends JTable {
         }
         
         // Right-press selects row for popup
-        if (popupEvent && e.getID() == MouseEvent.MOUSE_PRESSED && row != -1) {
-            ListSelectionModel sel = getSelectionModel();
-            if (sel.getSelectionMode() == ListSelectionModel.SINGLE_SELECTION ||
-                !sel.isSelectedIndex(row)) selectRow(row, true);
+        // Middle-press selects if enabled
+        if (e.getID() == MouseEvent.MOUSE_PRESSED && row != -1) {
+            if (popupEvent || (selectionOnMiddlePress && SwingUtilities.isMiddleMouseButton(e))) {
+                ListSelectionModel sel = getSelectionModel();
+                if (sel.getSelectionMode() == ListSelectionModel.SINGLE_SELECTION || !sel.isSelectedIndex(row)) {
+                    selectRow(row, true);
+                    requestFocusInWindow();
+                }
+            }
         }
+//        if (popupEvent && e.getID() == MouseEvent.MOUSE_PRESSED && row != -1) {
+//            ListSelectionModel sel = getSelectionModel();
+//            if (sel.getSelectionMode() == ListSelectionModel.SINGLE_SELECTION ||
+//                !sel.isSelectedIndex(row)) selectRow(row, true);
+//        }
         
         super.processMouseEvent(e);
         
@@ -1050,7 +1105,8 @@ public class ProfilerTable extends JTable {
         }
         
         // Only perform default action if not already processed (expand tree)
-        if (!e.isConsumed() && clickEvent && e.getClickCount() == 2) performDefaultAction();
+        if (!e.isConsumed() && clickEvent && e.getClickCount() == 2)
+            performDefaultAction(new ActionEvent(e.getSource(), e.getID(), "default action", e.getWhen(), e.getModifiers())); // NOI18N
         
         if (generatedClick != null) processMouseEvent(generatedClick);
     }

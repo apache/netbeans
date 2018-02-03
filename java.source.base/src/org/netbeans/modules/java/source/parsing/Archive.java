@@ -20,6 +20,7 @@
 package org.netbeans.modules.java.source.parsing;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Set;
 import javax.tools.JavaFileObject;
 import org.netbeans.api.annotations.common.NonNull;
@@ -69,4 +70,30 @@ public interface Archive {
      * @return true if the {@link Archive} is supports multiple releases.
      */
     public boolean isMultiRelease();
+
+    public static Archive EMPTY = new Archive() {
+        @Override
+        public Iterable<JavaFileObject> getFiles(String folderName, ClassPath.Entry entry, Set<JavaFileObject.Kind> kinds, JavaFileFilterImplementation filter, boolean recursive) throws IOException {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public JavaFileObject create(String relativeName, JavaFileFilterImplementation filter) throws UnsupportedOperationException {
+            return null;
+        }
+
+        @Override
+        public void clear() {
+        }
+
+        @Override
+        public JavaFileObject getFile(String name) throws IOException {
+            return null;
+        }
+
+        @Override
+        public boolean isMultiRelease() {
+            return false;
+        }
+    };
 }

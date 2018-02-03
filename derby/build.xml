@@ -21,4 +21,31 @@
 -->
 <project basedir="." default="netbeans" name="derby">
     <import file="../nbbuild/templates/projectized.xml"/>
+
+    <target name="-check-derbysampledb" depends="basic-init">
+        <condition property="derbysampledb.exists">
+            <available file="${build.dir}/derbysampledb.zip" />
+        </condition>
+    </target>
+
+    <target name="-generate-derbysampledb" depends="-check-derbysampledb" unless="derbysampledb.exists">
+        <delete dir="${build.dir}/sampledb" />
+        <mkdir dir="${build.dir}/sampledb" />        
+        <java fork="yes" classname="org.apache.derby.tools.ij">
+            <arg value="etc/sample.sql"/>
+            <sysproperty key="derby.system.home" value="${build.dir}/sampledb" />
+            <classpath>
+                <pathelement location="external/derby-10.14.1.0.jar"/>
+                <pathelement location="external/derbytools-10.14.1.0.jar"/>
+            </classpath>
+        </java>
+        <zip basedir="${build.dir}/sampledb/sample"
+            includes="**"
+            file="${build.dir}/derbysampledb.zip">
+            
+        </zip>
+    </target>
+
+    <target name="build-init" depends="projectized.build-init,-generate-derbysampledb">
+    </target>
 </project>

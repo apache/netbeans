@@ -66,6 +66,7 @@ committed to the repository for legal reasons. You need to download it:
 
     <!-- Overridable parameters: -->
     <xsl:param name="issue-url-base" select="'https://netbeans.org/bugzilla/show_bug.cgi?id='"/>
+    <xsl:param name="apache-issue-url-base" select="'https://issues.apache.org/jira/browse/'"/>
     <xsl:param name="javadoc-url-base" select="'???'"/>
 
     <!-- Main document structure: -->
@@ -482,8 +483,14 @@ committed to the repository for legal reasons. You need to download it:
 
     <xsl:template match="issue">
         <a>
-            <xsl:attribute name="href"><xsl:value-of select="$issue-url-base"/><xsl:value-of select="@number"/></xsl:attribute>
+            <xsl:if test="contains(@number, 'NETBEANS')">
+                <xsl:attribute name="href"><xsl:value-of select="$apache-issue-url-base"/><xsl:value-of select="@number"/></xsl:attribute>
+            <xsl:value-of select="@number"/>
+            </xsl:if>
+            <xsl:if test="not(contains(@number, 'NETBEANS'))">
+                    <xsl:attribute name="href"><xsl:value-of select="$issue-url-base"/><xsl:value-of select="@number"/></xsl:attribute>
             #<xsl:value-of select="@number"/>
+            </xsl:if>
         </a>
     </xsl:template>
 

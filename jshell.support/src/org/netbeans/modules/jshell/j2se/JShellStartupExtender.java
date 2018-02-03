@@ -21,7 +21,6 @@ package org.netbeans.modules.jshell.j2se;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -81,12 +80,10 @@ public class JShellStartupExtender implements StartupExtenderImplementation {
         List<String> args = ShellProjectUtils.quoteCmdArgs(
                 ShellLaunchManager.buildLocalJVMAgentArgs(platform, agent, prjEval.evaluator()::getProperty)
         );
+
+        args.addAll(ShellProjectUtils.launchVMOptions(p));
+
         LOG.log(Level.FINE, "Final args: {0}", args);
-        
-        List<String> shellArgs = ShellProjectUtils.launchVMOptions(p);
-        if (shellArgs != null) {
-            args.addAll(shellArgs);
-        }
         return args;
     }
 }

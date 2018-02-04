@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.java.lexer;
 
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.function.Supplier;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.lexer.PartType;
@@ -1028,7 +1030,8 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                             if ((c = nextChar()) == 'r') {
                                 c = nextChar();
                                 // Check whether the given char is non-ident and if so then return keyword
-                                if (c == EOF || !Character.isJavaIdentifierPart(c = translateSurrogates(c))) {
+                                if (c != EOF && !Character.isJavaIdentifierPart(c = translateSurrogates(c)) &&
+                                    version >= 10) {
                                     // For surrogate 2 chars must be backed up
                                     backup((c >= Character.MIN_SUPPLEMENTARY_CODE_POINT) ? 2 : 1);
 
@@ -1037,11 +1040,10 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                                     Token next = nextToken();
                                     boolean varKeyword = false;
 
-                                    if (next.id() == JavaTokenId.BLOCK_COMMENT ||
-                                        next.id() == JavaTokenId.JAVADOC_COMMENT ||
-                                        next.id() == JavaTokenId.LINE_COMMENT ||
-                                        next.id() == JavaTokenId.WHITESPACE) {
-                                        next = nextToken();
+                                    if (AFTER_VAR_TOKENS.contains(next.id())) {
+                                        do {
+                                            next = nextToken();
+                                        } while (AFTER_VAR_TOKENS.contains(next.id()));
 
                                         varKeyword = next.id() == JavaTokenId.IDENTIFIER;
                                     }
@@ -1050,8 +1052,12 @@ public class JavaLexer implements Lexer<JavaTokenId> {
 
                                     assert input.readLength() == len;
 
-                                    if (varKeyword)
+                                    if (varKeyword) {
                                         return token(JavaTokenId.VAR);
+                                    }
+                                } else {
+                                    // For surrogate 2 chars must be backed up
+                                    backup((c >= Character.MIN_SUPPLEMENTARY_CODE_POINT) ? 2 : 1);
                                 }
                             }
                             c = nextChar();
@@ -1285,7 +1291,12 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                 ? tokenFactory.getFlyweightToken(id, fixedText)
                 : tokenFactory.createToken(id);
     }
-    
+
+    private static final Set<JavaTokenId> AFTER_VAR_TOKENS = EnumSet.of(
+            JavaTokenId.BLOCK_COMMENT, JavaTokenId.JAVADOC_COMMENT,
+            JavaTokenId.LINE_COMMENT, JavaTokenId.WHITESPACE
+    );
+
     public void release() {
     }
 

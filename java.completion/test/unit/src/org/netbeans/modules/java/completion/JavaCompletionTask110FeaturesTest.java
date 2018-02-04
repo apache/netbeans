@@ -19,6 +19,10 @@
 package org.netbeans.modules.java.completion;
 
 import javax.lang.model.SourceVersion;
+import junit.framework.Test;
+import junit.framework.TestResult;
+import org.junit.runners.Suite;
+import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 
 /**
@@ -31,18 +35,29 @@ public class JavaCompletionTask110FeaturesTest extends CompletionTestBase {
         super(testName);
     }
 
-    // Java 1.10 var tests -------------------------------------------
-
-    public void testVar() throws Exception {
+    public static NbTestSuite suite() {
+        NbTestSuite suite = new NbTestSuite();
         try {
             SourceVersion.valueOf("RELEASE_10");
+            suite.addTestSuite(JavaCompletionTask110FeaturesTest.class);
         } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_10, skip test:
-            return ;
+            //OK, no RELEASE_10, skip tests
+            suite.addTest(new JavaCompletionTask110FeaturesTest("noop"));
         }
-        //TODO: should not propose "null"!
-        performTest("Method", 125, "var v =", "emptyVar.pass", "1.10");
+        return suite;
     }
+
+    // Java 1.10 var tests -------------------------------------------
+
+    public void testVarAfterEq() throws Exception {
+        performTest("Method", 935, "var v =", "emptyVar.pass", "1.10");
+    }
+
+    public void testVarKeyword() throws Exception {
+        performTest("Method", 935, "v", "varKeyword.pass", "1.10");
+    }
+
+    public void noop() {}
 
     static {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;

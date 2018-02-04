@@ -191,6 +191,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
     private static final String TRUE_KEYWORD = "true"; //NOI18N
     private static final String TRY_KEYWORD = "try"; //NOI18N
     private static final String USES_KEYWORD = "uses"; //NOI18N
+    private static final String VAR_KEYWORD = "var"; //NOI18N
     private static final String VOID_KEYWORD = "void"; //NOI18N
     private static final String VOLATILE_KEYWORD = "volatile"; //NOI18N
     private static final String WHILE_KEYWORD = "while"; //NOI18N
@@ -270,6 +271,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             env.skipAccessibilityCheck();
         }
         results = new ArrayList<>();
+
         anchorOffset = controller.getSnapshot().getOriginalOffset(env.getOffset());
         TreePath path = env.getPath();
         switch (path.getLeaf().getKind()) {
@@ -3731,6 +3733,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
             addLocalAndImportedTypes(env, kinds, baseType);
             hasAdditionalClasses = true;
         }
+        if (env.getPath().getLeaf().getKind() == Tree.Kind.BLOCK) {
+            results.add(itemFactory.createKeywordItem(VAR_KEYWORD, SPACE, anchorOffset, false));
+        }
         addPackages(env, null, kinds.isEmpty());
     }
 
@@ -4390,7 +4395,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (Utilities.startsWith(TRUE_KEYWORD, prefix)) {
             results.add(itemFactory.createKeywordItem(TRUE_KEYWORD, null, anchorOffset, smartType));
         }
-        if (Utilities.startsWith(NULL_KEYWORD, prefix)) {
+        boolean isVar = env.getPath().getLeaf().getKind() == Tree.Kind.VARIABLE &&
+                        env.getController().getTreeUtilities().isSynthetic(new TreePath(env.getPath(), ((VariableTree) env.getPath().getLeaf()).getType()));
+        if (Utilities.startsWith(NULL_KEYWORD, prefix) && !isVar) {
             results.add(itemFactory.createKeywordItem(NULL_KEYWORD, null, anchorOffset, false));
         }
         if (Utilities.startsWith(NEW_KEYWORD, prefix)) {

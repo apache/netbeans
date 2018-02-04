@@ -231,6 +231,20 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TRANSIENT_KEYWORD, VOID_KEYWORD, VOLATILE_KEYWORD
     };
 
+    private static final SourceVersion SOURCE_VERSION_RELEASE_10;
+
+    static {
+        SourceVersion r10;
+
+        try {
+            r10 = SourceVersion.valueOf("RELEASE_10");
+        } catch (IllegalArgumentException ex) {
+            r10 = null;
+        }
+
+        SOURCE_VERSION_RELEASE_10 = r10;
+    }
+
     private final ItemFactory<T> itemFactory;
     private final Set<Options> options;
 
@@ -271,7 +285,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
             env.skipAccessibilityCheck();
         }
         results = new ArrayList<>();
-
         anchorOffset = controller.getSnapshot().getOriginalOffset(env.getOffset());
         TreePath path = env.getPath();
         switch (path.getLeaf().getKind()) {
@@ -3733,7 +3746,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
             addLocalAndImportedTypes(env, kinds, baseType);
             hasAdditionalClasses = true;
         }
-        if (env.getPath().getLeaf().getKind() == Tree.Kind.BLOCK) {
+        if (SOURCE_VERSION_RELEASE_10 != null &&
+            env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_10) >= 0 &&
+            env.getPath().getLeaf().getKind() == Tree.Kind.BLOCK) {
             results.add(itemFactory.createKeywordItem(VAR_KEYWORD, SPACE, anchorOffset, false));
         }
         addPackages(env, null, kinds.isEmpty());

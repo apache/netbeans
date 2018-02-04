@@ -19,9 +19,6 @@
 package org.netbeans.modules.java.completion;
 
 import javax.lang.model.SourceVersion;
-import junit.framework.Test;
-import junit.framework.TestResult;
-import org.junit.runners.Suite;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 

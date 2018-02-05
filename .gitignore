@@ -44,9 +44,9 @@
 
 # Snapcraft Generated files #
 #######################
-/snap/.snapcraft/
-/parts/
-/prime/
-/stage/
+/nbbuild/packaging/snap/.snapcraft/
+/nbbuild/packaging/parts/
+/nbbuild/packaging/prime/
+/nbbuild/packaging/stage/
 *.snap
 

@@ -18,7 +18,7 @@
 Type=Application
 Encoding=UTF-8
 Name=NetBeans Dev
-Comment=The Smater Way to Code
+Comment=The Smarter Way to Code
 Exec=netbeans %F
 Categories=Application;Development;Java;IDE
 Icon=${SNAP}/meta/gui/icon.png

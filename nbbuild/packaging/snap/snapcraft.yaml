@@ -23,7 +23,7 @@ description: |
   CSS. The IDE also provides a great set of tools for PHP and C/C++ developers.
   It is free and open source and has a large community of users and developers
   around the world. 
-icon: ide.branding/release/netbeans.png
+icon: ../../ide.branding/release/netbeans.png
 confinement: classic
 grade: devel
 
@@ -34,6 +34,7 @@ parts:
         javac.compilerargs: "-nowarn"
         build.compiler.deprecation: "false"
     ant-build-targets: [ -quiet ]
+    source: ../../
     filesets:
         netbeans: [ netbeans/*, -netbeans/*.built ]
     install: |

@@ -60,8 +60,8 @@ import org.openide.util.RequestProcessor;
 import org.openide.modules.AboutMessageOverride;
 
 public class ProductInformationPanel extends JPanel implements HyperlinkListener {
-	private AboutMessageOverride aboutOverride;
-	private String descripTemplate;
+    private AboutMessageOverride aboutOverride;
+    private String descripTemplate;
     URL url = null;
     Icon about;
     
@@ -134,12 +134,12 @@ public class ProductInformationPanel extends JPanel implements HyperlinkListener
                     @Override
                     public void run() {
                         description.setText(aboutOverride.formatAboutText(
-								descripTemplate, getProductVersionValue(),
-								getJavaValue(), getVMValue(),
-								getOperatingSystemValue(), getEncodingValue(),
-								getSystemLocaleValue(), getUserDirValue(),
-								Places.getCacheDirectory().getAbsolutePath(),
-								updates, FONT_SIZE, getJavaRuntime()));
+                                descripTemplate, getProductVersionValue(),
+                                getJavaValue(), getVMValue(),
+                                getOperatingSystemValue(), getEncodingValue(),
+                                getSystemLocaleValue(), getUserDirValue(),
+                                Places.getCacheDirectory().getAbsolutePath(),
+                                updates, FONT_SIZE, getJavaRuntime()));
                         description.setCursor(null);
                         description.revalidate();
                     }

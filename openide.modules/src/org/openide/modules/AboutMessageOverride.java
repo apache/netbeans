@@ -26,8 +26,8 @@ import org.openide.util.lookup.ServiceProvider;
  * @author astephens
  */
 public interface AboutMessageOverride {
-	public String formatAboutText(String bundleString, String productVersion,
-			String javaVersion, String vmVersion, String os, String encoding,
-			String locale, String userDir, String cacheDir, String updates,
-			int fontSize, String javaRuntime);
+    public String formatAboutText(String bundleString, String productVersion,
+            String javaVersion, String vmVersion, String os, String encoding,
+            String locale, String userDir, String cacheDir, String updates,
+            int fontSize, String javaRuntime);
 }

@@ -24,7 +24,7 @@
     <import file="../nbbuild/templates/projectized.xml"/>
 
     <property name="profiler.cluster" value="./release"/>
-    <target name="-release.files" depends="projectized-common.-release.files,-define-downloadbinaries-task">
+    <target name="-release.dir" depends="projectized-common.-release.dir,-define-downloadbinaries-task">
         <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
             <manifest dir=".">
                 <include name="external/binaries-list"/>

@@ -257,10 +257,11 @@ public final class EditorActionRegistrationProcessor extends LayerGeneratingProc
         int toolBarPosition = annotation.toolBarPosition();
         if (toolBarPosition != Integer.MAX_VALUE) {
             StringBuilder toolBarPresenterFilePath = new StringBuilder(50);
-            toolBarPresenterFilePath.append("Editors/Toolbar/");
+            toolBarPresenterFilePath.append("Editors/");
             if (mimeType.length() > 0) {
                 toolBarPresenterFilePath.append(mimeType).append("/");
             }
+            toolBarPresenterFilePath.append("Toolbars/Default/");
             toolBarPresenterFilePath.append(actionName).append(".shadow");
             LayerBuilder.File toolBarPresenterShadowFile = layer.file(toolBarPresenterFilePath.toString());
             toolBarPresenterShadowFile.stringvalue("originalFile", actionFilePath);

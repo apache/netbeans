@@ -41,7 +41,13 @@ public class JavaHelpQuickSearchProviderImpl implements SearchProvider {
     public void evaluate(SearchRequest request, SearchResponse response) {
         synchronized( this ) {
             if( null == query ) {
-                query = JavaHelpQuery.getDefault();
+                try {
+                    query = JavaHelpQuery.getDefault();
+                } catch (NoClassDefFoundError er) {
+                    // Fixing [NETBEANS-285]
+                    // The JavaHelp Runtime might be not provided with the Platform
+                    return;
+                } 
             }
         }
         List<SearchTOCItem> res = query.search( request.getText() );

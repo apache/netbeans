@@ -64,6 +64,7 @@ import javax.xml.validation.Validator;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Ant;
 import org.apache.tools.ant.types.Path;
@@ -85,6 +86,7 @@ public final class ParseProjectXml extends Task {
     static final String PROJECT_NS = "http://www.netbeans.org/ns/project/1";
     static final String NBM_NS2 = "http://www.netbeans.org/ns/nb-module-project/2";
     static final String NBM_NS3 = "http://www.netbeans.org/ns/nb-module-project/3";
+    static final String PROP_FRIENDLY_MODULES = "netbeans.friendly.modules";
 
     private File moduleProject;
     /**
@@ -991,7 +993,16 @@ public final class ParseProjectXml extends Task {
                 if (!dep.impl && /* #71807 */ dep.run && !recursive && !runtime) {
                     String friends = attr.getValue("OpenIDE-Module-Friends");
                     if (friends != null && !Arrays.asList(friends.split(" *, *")).contains(myCNB)) {
-                        throw new BuildException("The module " + myCNB + " is not a friend of " + depJar, getLocation());
+                        String friendIssue = "The module " + myCNB + " is not a friend of " + depJar;
+                        if (Boolean.parseBoolean(getProject().getProperty(PROP_FRIENDLY_MODULES))) {
+                            log(friendIssue, Project.MSG_WARN);
+                        } else {                           
+                            log("The " + depJar.getName() + " is a non-stable API/SPI. It is only available for its friends.", Project.MSG_ERR);
+                            log("Add project following property, in order to overcome this restriction:", Project.MSG_ERR);
+                            log("\t" + PROP_FRIENDLY_MODULES + "=true", Project.MSG_ERR);
+                            log("Remember, runtime support of the friendship is still required. See: https://bitbucket.org/jglick/yenta", Project.MSG_ERR);
+                            throw new BuildException(friendIssue, getLocation());
+                        }
                     }
                     String pubpkgs = attr.getValue("OpenIDE-Module-Public-Packages");
                     if ("-".equals(pubpkgs)) {

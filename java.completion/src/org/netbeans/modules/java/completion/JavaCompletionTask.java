@@ -3746,11 +3746,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
             addLocalAndImportedTypes(env, kinds, baseType);
             hasAdditionalClasses = true;
         }
-        if (SOURCE_VERSION_RELEASE_10 != null &&
-            env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_10) >= 0 &&
-            env.getPath().getLeaf().getKind() == Tree.Kind.BLOCK) {
-            results.add(itemFactory.createKeywordItem(VAR_KEYWORD, SPACE, anchorOffset, false));
-        }
         addPackages(env, null, kinds.isEmpty());
     }
 
@@ -4330,6 +4325,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     break;
             }
             tp = tp.getParentPath();
+        }
+        if (SOURCE_VERSION_RELEASE_10 != null &&
+            env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_10) >= 0 &&
+            Utilities.startsWith(VAR_KEYWORD, prefix)) {
+            results.add(itemFactory.createKeywordItem(VAR_KEYWORD, SPACE, anchorOffset, false));
         }
     }
 

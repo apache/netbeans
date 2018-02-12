@@ -54,6 +54,10 @@ public class JavaCompletionTask110FeaturesTest extends CompletionTestBase {
         performTest("Method", 935, "v", "varKeyword.pass", "1.10");
     }
 
+    public void testVarKeywordFiltered() throws Exception {
+        performTest("Method", 935, "nonExisting", "empty.pass", "1.10");
+    }
+
     public void noop() {}
 
     static {

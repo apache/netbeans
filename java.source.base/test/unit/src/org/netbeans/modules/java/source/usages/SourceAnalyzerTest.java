@@ -23,6 +23,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import java.io.File;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
@@ -106,14 +107,14 @@ public class SourceAnalyzerTest extends NbTestCase {
                 true,
                 false,
                 true);
+            final JavaFileObject jfo = FileObjects.sourceFileObject(javaFile, src);
             final JavacTaskImpl jt = JavacParser.createJavacTask(
                 cpInfo,
                 diag,
                 SourceLevelQuery.getSourceLevel(src),  //NOI18N
                 SourceLevelQuery.Profile.DEFAULT,
-                null, null, null, null, null);
-            final JavaFileObject jfo = FileObjects.sourceFileObject(javaFile, src);
-            final Iterable<? extends CompilationUnitTree> trees = jt.parse(jfo);
+                null, null, null, null, Arrays.asList(jfo));
+            final Iterable<? extends CompilationUnitTree> trees = jt.parse();
             jt.enter();
             jt.analyze();
             final SourceAnalyzerFactory.SimpleAnalyzer sa = SourceAnalyzerFactory.createSimpleAnalyzer();
@@ -159,14 +160,14 @@ public class SourceAnalyzerTest extends NbTestCase {
                 true,
                 false,
                 true);
+            final JavaFileObject jfo = FileObjects.sourceFileObject(javaFile, src);
             final JavacTaskImpl jt = JavacParser.createJavacTask(
                 cpInfo,
                 diag,
                 SourceLevelQuery.getSourceLevel(src),  //NOI18N
                 SourceLevelQuery.Profile.DEFAULT,
-                null, null, null, null, null);
-            final JavaFileObject jfo = FileObjects.sourceFileObject(javaFile, src);
-            final Iterable<? extends CompilationUnitTree> trees = jt.parse(jfo);
+                null, null, null, null, Arrays.asList(jfo));
+            final Iterable<? extends CompilationUnitTree> trees = jt.parse();
             jt.enter();
             jt.analyze();
             final SourceAnalyzerFactory.SimpleAnalyzer sa = SourceAnalyzerFactory.createSimpleAnalyzer();
@@ -208,14 +209,14 @@ public class SourceAnalyzerTest extends NbTestCase {
                 true,
                 false,
                 true);
+            final JavaFileObject jfo = FileObjects.sourceFileObject(javaFile, src);
             final JavacTaskImpl jt = JavacParser.createJavacTask(
                 cpInfo,
                 diag,
                 SourceLevelQuery.getSourceLevel(src),  //NOI18N
                 SourceLevelQuery.Profile.DEFAULT,
-                null, null, null, null, null);
-            final JavaFileObject jfo = FileObjects.sourceFileObject(javaFile, src);
-            final Iterable<? extends CompilationUnitTree> trees = jt.parse(jfo);
+                null, null, null, null, Arrays.asList(jfo));
+            final Iterable<? extends CompilationUnitTree> trees = jt.parse();
             jt.enter();
             jt.analyze();
             final SourceAnalyzerFactory.SimpleAnalyzer sa = SourceAnalyzerFactory.createSimpleAnalyzer();

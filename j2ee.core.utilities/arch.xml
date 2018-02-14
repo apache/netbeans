@@ -174,8 +174,7 @@
    Several classes exposed in the friend APIs of the j2ee/utilities and j2ee/persistence 
    modules will be removed and all their clients will need to be changed to use the new module instead.
  </p>
- <p>
-     The following classes will be removed:
+ <p>The following classes will be removed:</p>
      <ul>
          <li>o.n.m.j2ee.common.source.GenarationUtils</li>
          <li>o.n.m.j2ee.common.source.SourceUtils</li>
@@ -195,7 +194,6 @@
          <li>o.n.m.j2ee.persistence.wizard.Util#mergeSteps(WizardDescriptor, WizardDescriptor.Panel[], String[])</li>
          <li>o.n.m.j2ee.persistence.wizard.Util#String simpleClassName(String)</li>
      </ul>
-  </p>
  </answer>
 
 

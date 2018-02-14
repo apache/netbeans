@@ -1634,6 +1634,31 @@ public class IntroduceHintTest extends NbTestCase {
                        3, 1);
     }
 
+    public void testLocalVariableToFieldInitMethod270296() throws Exception {
+        performFixTest("package test;\n" +
+                       "public class Test {\n" +
+                       "    public void test(int i) {\n" +
+                       "        switch (i) {\n" +
+                       "            case 0:\n" +
+                       "                |String str = \"test\";|\n" +
+                       "        }\n" +
+                       "    }\n" +
+                       "}",
+                       ("package test;\n" +
+                       "public class Test {\n" +
+                       "    private String str;\n" +
+                       "    public void test(int i) {\n" +
+                       "        switch (i) {\n" +
+                       "            case 0:\n" +
+                       "                str = \"test\";\n" +
+                       "        }\n" +
+                       "    }\n" +
+                       "}").replaceAll("[ \t\n]+", " "),
+                       new DialogDisplayerImpl2(null, IntroduceFieldPanel.INIT_METHOD, false,
+                                                EnumSet.of(Modifier.PRIVATE), false, true),
+                       3, 1);
+    }
+
     public void testLocalVariableToConstant1() throws Exception {
         performFixTest("package test;\n" +
                        "import java.util.ArrayList;\n" +

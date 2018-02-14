@@ -19,6 +19,7 @@
 package org.netbeans.modules.maven.htmlui;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.NoSuchFileException;
@@ -46,6 +47,8 @@ final class MavenUtilities {
     private static final Logger LOG = Logger.getLogger(MavenUtilities.class.getName());
     private static final String DEFINITION = "android.sdk.path";
     private static final String NBDEFINITION = "netbeans.installation";
+    private static final String MOEDEFINITION = "moe.launcher.simulators";
+    private static final String ROBOVMDEFINITION = "robovm.iosDeviceName";
 
     static final String HEADER_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
     static final String HEADER_SETTINGS = "<settings xmlns=\"http://maven.apache.org/SETTINGS/1.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
@@ -64,6 +67,9 @@ final class MavenUtilities {
 
     private String readProperty(final String tag) {
         try {
+            if (!this.settings.isFile()) {
+                return null;
+            }
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder;
             dBuilder = dbFactory.newDocumentBuilder();
@@ -99,16 +105,26 @@ final class MavenUtilities {
                 dBuilder = dbFactory.newDocumentBuilder();
                 Document settingsDoc = dBuilder.parse(this.settings);
                 settingsDoc.getDocumentElement().normalize();
-                NodeList profiles = settingsDoc.getElementsByTagName("profiles");
+                NodeList profilesNode = settingsDoc.getElementsByTagName("profiles");
                 Node parent = null;
-                if (profiles.getLength() > 0) {
-                    parent = profiles.item(0);
+                if (profilesNode.getLength() > 0) {
+                    parent = profilesNode.item(0);
                 } else {
                     parent = settingsDoc.createElement("profiles");
-                    settingsDoc.appendChild(parent);
+                    settingsDoc.getDocumentElement().appendChild(parent);
                 }
 
                 Document doc = parent.getOwnerDocument();
+
+                NodeList profiles = parent.getChildNodes();
+                for (int i = 0; i < profiles.getLength();) {
+                    Node profileNode = profiles.item(i);
+                    if (name.equals(profileId(profileNode))) {
+                        parent.removeChild(profileNode);
+                    } else {
+                        i++;
+                    }
+                }
 
                 Node fragmentNode = DocumentBuilderFactory
                         .newInstance()
@@ -131,22 +147,10 @@ final class MavenUtilities {
                         + singleProfile(name, value)
                         + "  </profiles>\n"
                         + FOOTER_SETTINGS;
-                Document newDoc = DocumentBuilderFactory
-                        .newInstance()
-                        .newDocumentBuilder().newDocument();
-                Node fragmentNode = DocumentBuilderFactory
-                        .newInstance()
-                        .newDocumentBuilder().parse(
-                                new InputSource(new StringReader(dump)))
-                        .getDocumentElement();
-                newDoc.adoptNode(fragmentNode);
-                                newDoc.getDocumentElement().normalize();
-                TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                Transformer transformer = transformerFactory.newTransformer();
-                DOMSource source = new DOMSource(newDoc);
-                StreamResult result = new StreamResult(settings);
-                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-                transformer.transform(source, result);
+
+                FileWriter w = new FileWriter(settings);
+                w.write(dump);
+                w.close();
             }
         } catch (IOException ex) {
             LOG.log(Level.INFO, "Cannot modify " + settings, ex);
@@ -179,12 +183,35 @@ final class MavenUtilities {
                 + "    </profile>\n";
     }
 
+    private static String profileId(Node profile) {
+        NodeList children = profile.getChildNodes();
+        for (int i = 0; i < children.getLength(); i++) {
+            Node ch = children.item(i);
+            if (ch.getNodeName().equals("id")) {
+                return ch.getTextContent();
+            }
+        }
+        return null;
+    }
+
     void writeNetBeansInstallation(String path) {
-        writeProperty("netbeans.installation", path);
+        writeProperty(NBDEFINITION, path);
     }
 
     String readNetBeansInstallation() {
         return readProperty(NBDEFINITION);
+    }
+
+    void writeMoeDevice(String id) {
+        writeProperty(MOEDEFINITION, id);
+    }
+
+    String readMoeDevice() {
+        return readProperty(MOEDEFINITION);
+    }
+
+    void writeRobovmDeviceName(String name) {
+        writeProperty(ROBOVMDEFINITION, name);
     }
 
 }

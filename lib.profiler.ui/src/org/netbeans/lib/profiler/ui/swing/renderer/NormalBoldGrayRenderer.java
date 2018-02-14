@@ -141,9 +141,31 @@ public class NormalBoldGrayRenderer extends MultiRenderer {
         }
     }
     
-    
-    public String toString() {
-        return normalRenderer.toString() + boldRenderer.toString() + grayRenderer.toString();
+    public Icon getIcon() {
+        Icon icon = normalRenderer.getIcon();
+        if (icon == null) icon = boldRenderer.getIcon();
+        if (icon == null) icon = grayRenderer.getIcon();
+        return icon;
     }
     
+    // Invoke after values are set!
+    protected void setIconTextGap(int gap) {
+        String text = normalRenderer.getText();
+        if (text == null || text.isEmpty()) {
+//            normalRenderer.setIcon(null);
+            text = boldRenderer.getText();
+            if (text == null || text.isEmpty()) {
+//                boldRenderer.setIcon(null);
+                grayRenderer.setIconTextGap(gap);
+            } else {
+                boldRenderer.setIconTextGap(gap);
+//                grayRenderer.setIcon(null);
+            }
+        } else {
+            normalRenderer.setIconTextGap(gap);
+//            boldRenderer.setIcon(null);
+//            grayRenderer.setIcon(null);
+        }
+    }
+        
 }

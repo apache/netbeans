@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,6 +38,7 @@ import java.util.logging.Logger;
 import org.eclipse.jgit.diff.DiffConfig;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.FollowFilter;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -151,11 +151,37 @@ public class LogCommand extends GitCommand {
                 walk.sort(RevSort.TOPO);
                 walk.sort(RevSort.COMMIT_TIME_DESC, true);
                 int remaining = criteria.getLimit();
-                for (Iterator<RevCommit> it = walk.iterator(); it.hasNext() && !monitor.isCanceled() && remaining != 0;) {
-                    RevCommit commit = it.next();
-                    addRevision(getClassFactory().createRevisionInfo(fullWalk.parseCommit(commit),
-                            getAffectedBranches(commit, branchFlags), repository));
-                    --remaining;
+                Map<String, GitBranch> extraBranches = null;
+                while (remaining-- > 0) {
+                    if (monitor.isCanceled()) {
+                        break;
+                    }
+                    RevCommit commit = walk.next();
+                    if (commit == null) {
+                        break;
+                    }
+                    final Map<String, GitBranch> branches = getAffectedBranches(extraBranches, commit, branchFlags);
+                    addRevision(getClassFactory().createRevisionInfo(
+                        fullWalk.parseCommit(commit), branches, repository)
+                    );
+                    if (commit.getParentCount() == 0) {
+                        Ref replace = repository.getAllRefs().get("refs/replace/" + commit.getId().getName());
+                        if (replace != null) {
+                            final RevCommit newCommit = Utils.findCommit(repository, replace.getTarget().getName());
+                            if (newCommit != null) {
+                                if (extraBranches == null) {
+                                    extraBranches = branches;
+                                } else {
+                                    extraBranches.putAll(branches);
+                                }
+                                walk.reset();
+                                walk.markStart(markStartCommit(walk.lookupCommit(newCommit), interestingFlag));
+                                applyCriteria(walk, criteria, interestingFlag, diffConfig);
+                                walk.sort(RevSort.TOPO);
+                                walk.sort(RevSort.COMMIT_TIME_DESC, true);
+                            }
+                        }
+                    }
                 }
             } catch (MissingObjectException ex) {
                 throw new GitException.MissingObjectException(ex.getObjectId().toString(), GitObjectType.COMMIT);
@@ -302,8 +328,10 @@ public class LogCommand extends GitCommand {
         return commit;
     }
 
-    private Map<String, GitBranch> getAffectedBranches (RevCommit commit, Map<RevFlag, List<GitBranch>> flags) {
-        Map<String, GitBranch> affected = new LinkedHashMap<>();
+    private Map<String, GitBranch> getAffectedBranches (Map<String, GitBranch> extraBranches, RevCommit commit, Map<RevFlag, List<GitBranch>> flags) {
+        Map<String, GitBranch> affected = new LinkedHashMap<>(
+            extraBranches == null ? Collections.<String, GitBranch>emptyMap() : extraBranches
+        );
         for (Map.Entry<RevFlag, List<GitBranch>> e : flags.entrySet()) {
             if (commit.has(e.getKey())) {
                 for (GitBranch b : e.getValue()) {

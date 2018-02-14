@@ -52,7 +52,7 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SourcePositions;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,7 +69,7 @@ import javax.tools.Diagnostic;
  * 
  * @author Martin Entlicher
  */
-class ExpressionScanner extends TreeScanner<List<Tree>, ExpressionScanner.ExpressionsInfo> {
+class ExpressionScanner extends ErrorAwareTreeScanner<List<Tree>, ExpressionScanner.ExpressionsInfo> {
     
     private int lineNumber;
     private int statementStart;

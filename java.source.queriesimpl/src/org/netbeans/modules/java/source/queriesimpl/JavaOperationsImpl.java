@@ -20,7 +20,7 @@ package org.netbeans.modules.java.source.queriesimpl;
 
 import com.sun.source.tree.*;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -340,7 +340,7 @@ class JavaOperationsImpl<T> implements ModelOperations {
                 oldVarTree.getInitializer());
         wcopy.rewrite(oldVarTree, newVarTree);
         final VariableElement fieldF = field;
-        final TreePathScanner<Void,Void> scanner = new TreePathScanner<Void, Void>(){
+        final ErrorAwareTreePathScanner<Void,Void> scanner = new ErrorAwareTreePathScanner<Void, Void>(){
             @Override
             public Void visitIdentifier(IdentifierTree node, Void p) {
                 super.visitIdentifier(node, p);
@@ -397,7 +397,7 @@ class JavaOperationsImpl<T> implements ModelOperations {
         final Trees trees = wcopy.getTrees();
         final GeneratorUtilities utils = GeneratorUtilities.get(wcopy);
         final List<Tree> toImport = new ArrayList<Tree>();
-        final TreePathScanner<Void,Void> scanner = new TreePathScanner<Void, Void>(){
+        final ErrorAwareTreePathScanner<Void,Void> scanner = new ErrorAwareTreePathScanner<Void, Void>(){
             @Override
             public Void scan(Tree node, Void p) {
                 final int start = (int) trees.getSourcePositions().getStartPosition(cu, node);
@@ -518,7 +518,7 @@ nextM:  for (ExecutableElement me : ElementFilter.methodsIn(te.getEnclosedElemen
             throw new QueryException(ioe);
         }
         final Trees trees = control.getTrees();
-        final TreePathScanner<TreePath,Void> visitor = new TreePathScanner<TreePath, Void>() {
+        final ErrorAwareTreePathScanner<TreePath,Void> visitor = new ErrorAwareTreePathScanner<TreePath, Void>() {
             @Override
             public TreePath visitClass(ClassTree node, Void p) {
                 final Element el = trees.getElement(getCurrentPath());

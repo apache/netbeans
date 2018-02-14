@@ -38,7 +38,7 @@ public class RedundantConditionalTest {
                        "}\n")
                 .run(RedundantConditional.class)
                 .findWarning("3:15-3:36:verifier:" + Bundle.ERR_redundantConditional())
-                .applyFix()
+                .applyFix(Bundle.FIX_redundantConditional())
                 .assertCompilable()
                 .assertOutput("package test;\n" +
                               "public class Test {\n" +
@@ -59,7 +59,7 @@ public class RedundantConditionalTest {
                        "}\n")
                 .run(RedundantConditional.class)
                 .findWarning("3:15-3:36:verifier:" + Bundle.ERR_redundantConditional())
-                .applyFix()
+                .applyFix(Bundle.FIX_redundantConditional())
                 .assertCompilable()
                 .assertOutput("package test;\n" +
                               "public class Test {\n" +
@@ -82,7 +82,7 @@ public class RedundantConditionalTest {
                        "}\n")
                 .run(RedundantConditional.class)
                 .findWarning("4:12-4:33:verifier:" + Bundle.ERR_redundantConditional())
-                .applyFix()
+                .applyFix(Bundle.FIX_redundantConditional())
                 .assertCompilable()
                 .assertOutput("package test;\n" +
                               "public class Test {\n" +
@@ -107,7 +107,7 @@ public class RedundantConditionalTest {
                        "}\n")
                 .run(RedundantConditional.class)
                 .findWarning("4:12-4:33:verifier:" + Bundle.ERR_redundantConditional())
-                .applyFix()
+                .applyFix(Bundle.FIX_redundantConditional())
                 .assertCompilable()
                 .assertOutput("package test;\n" +
                               "public class Test {\n" +
@@ -131,7 +131,7 @@ public class RedundantConditionalTest {
                        "}\n")
                 .run(RedundantConditional.class)
                 .findWarning("3:20-3:41:verifier:" + Bundle.ERR_redundantConditional())
-                .applyFix()
+                .applyFix(Bundle.FIX_redundantConditional())
                 .assertCompilable()
                 .assertOutput("package test;\n" +
                               "public class Test {\n" +
@@ -154,7 +154,7 @@ public class RedundantConditionalTest {
                        "}\n")
                 .run(RedundantConditional.class)
                 .findWarning("3:20-3:41:verifier:" + Bundle.ERR_redundantConditional())
-                .applyFix()
+                .applyFix(Bundle.FIX_redundantConditional())
                 .assertCompilable()
                 .assertOutput("package test;\n" +
                               "public class Test {\n" +

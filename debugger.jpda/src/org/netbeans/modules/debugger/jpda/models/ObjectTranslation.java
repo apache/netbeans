@@ -33,7 +33,9 @@ import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.WeakHashMap;
+import org.netbeans.api.debugger.jpda.JPDAThread;
 
 import org.netbeans.modules.debugger.jpda.JPDADebuggerImpl;
 
@@ -53,8 +55,8 @@ public final class ObjectTranslation {
     private int translationID;
     
     /* original Object to a new one.*/
-    private final WeakHashMap<Mirror, WeakReference<Object>> cache
-            = new WeakHashMap<Mirror, WeakReference<Object>>();
+    private final Map<Mirror, WeakReference<Object>> cache = new WeakHashMap<>();
+    private final Map<JPDAThread, Map<Mirror, WeakReference<Object>>> threadCache = new WeakHashMap<>();
     
     
     /**
@@ -221,6 +223,40 @@ public final class ObjectTranslation {
         return r;
     }
     
+    /**
+     * Translates a debuggee Mirror to a thread-specific wrapper object.
+     *
+     * @param thread the thread on which the object lives
+     * @param o the Mirror object in the debuggee
+     * @param v an additional argument used for the translation
+     * @return translated object or <code>null</code> when the argument
+     *         is not possible to translate.
+     */
+    public Object translateOnThread (JPDAThread thread, Mirror o, Object v) {
+        Object r = null;
+        boolean verify = false;
+        synchronized (threadCache) {
+            Map<Mirror, WeakReference<Object>> cache = threadCache.get(thread);
+            if (cache == null) {
+                cache = new WeakHashMap<>();
+                threadCache.put(thread, cache);
+            }
+            WeakReference wr = cache.get (o);
+            if (wr != null)
+                r = wr.get ();
+            if (r == null) {
+                r = createTranslation (o, v);
+                cache.put (o, new WeakReference<Object>(r));
+            } else {
+                verify = true;
+            }
+        }
+        if (verify) {
+            verifyTranslation(r, o, v);
+        }
+        return r;
+    }
+
     /**
      * Explicitly remove the translation of the mirror object.
      */

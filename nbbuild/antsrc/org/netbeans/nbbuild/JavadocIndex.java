@@ -39,7 +39,7 @@ import org.apache.tools.ant.types.FileSet;
 public class JavadocIndex extends Task {
     private File target;
     private FileSet set;
-    private Map<String,List<Clazz>> classes = new HashMap<String,List<Clazz>>(101);
+    private Map<String,List<Clazz>> classes = new HashMap<>(101);
     
     /** The file to generate the index to.
      */
@@ -73,15 +73,15 @@ public class JavadocIndex extends Task {
 
         try {
             log ("Generating list of all classes to " + target);
-            PrintStream ps = new PrintStream (new BufferedOutputStream (
-                new FileOutputStream (target)
-            ));
-            if (target.getName ().endsWith (".xml")) {
-                printClassesAsXML (ps);
-            } else {
-                printClassesAsHtml (ps);
+            try (PrintStream ps = new PrintStream (new BufferedOutputStream (
+                    new FileOutputStream (target)
+            ))) {
+                if (target.getName ().endsWith (".xml")) {
+                    printClassesAsXML (ps);
+                } else {
+                    printClassesAsHtml (ps);
+                }
             }
-            ps.close ();
         } catch (IOException ex) {
             throw new BuildException (ex);
         }
@@ -151,7 +151,7 @@ public class JavadocIndex extends Task {
                     
                     List<Clazz> l = classes.get(c.pkg);
                     if (l == null) {
-                        l = new ArrayList<Clazz>();
+                        l = new ArrayList<>();
                         classes.put (c.pkg, l);
                     }
                     l.add (c);
@@ -173,9 +173,9 @@ public class JavadocIndex extends Task {
         ps.println ("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
         ps.println ("<HTML>\n<HEAD><TITLE>List of All Classes</TITLE></HEAD>");
         ps.println ();
-        for (String pkg : new TreeSet<String>(classes.keySet())) {
+        for (String pkg : new TreeSet<>(classes.keySet())) {
             ps.println ("<H2>" + pkg + "</H2>");
-            for (Clazz c : new TreeSet<Clazz>(classes.get(pkg))) {
+            for (Clazz c : new TreeSet<>(classes.get(pkg))) {
                 ps.print ("<A HREF=\"" + c.url + "\">");
                 if (c.isInterface) {
                     ps.print ("<I>");
@@ -193,8 +193,8 @@ public class JavadocIndex extends Task {
     private void printClassesAsXML (PrintStream ps) {
         ps.println ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         ps.println ("<classes>");
-        for (String pkg : new TreeSet<String>(classes.keySet())) {
-            for (Clazz c : new TreeSet<Clazz>(classes.get(pkg))) {
+        for (String pkg : new TreeSet<>(classes.keySet())) {
+            for (Clazz c : new TreeSet<>(classes.get(pkg))) {
                 ps.print ("<class name=\"");
                 ps.print (c.name);
                 ps.print ("\"");

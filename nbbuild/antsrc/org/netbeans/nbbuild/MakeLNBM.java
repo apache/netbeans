@@ -80,15 +80,12 @@ public class MakeLNBM extends MatchingTask {
 		if (lmod > mostRecentInput) mostRecentInput = lmod;
 		addSeparator ();
 		try {
-		    InputStream is = new FileInputStream (file);
-		    try {
+		    try (InputStream is = new FileInputStream (file)) {
 			Reader r = new InputStreamReader (is, "UTF-8"); //NOI18N
 			char[] buf = new char[4096];
 			int len;
 			while ((len = r.read (buf)) != -1)
 			    text.append (buf, 0, len);
-		    } finally {
-			is.close ();
 		    }
 		} catch (IOException ioe) {
                     throw new BuildException ("Exception reading blurb from " + file, ioe, getLocation ());
@@ -369,7 +366,7 @@ public class MakeLNBM extends MatchingTask {
     public ExternalPackage createExternalPackage(){
 	ExternalPackage externalPackage = new ExternalPackage ();
 	if (externalPackages == null)
-	    externalPackages = new Vector<ExternalPackage>();
+	    externalPackages = new Vector<>();
 	externalPackages.add( externalPackage );
 	return externalPackage;
     }
@@ -397,19 +394,15 @@ public class MakeLNBM extends MatchingTask {
             long mMod = module.lastModified();
             if (mostRecentInput < mMod) mostRecentInput = mMod;
             try {
-                JarFile modulejar = new JarFile(module);
-                try {
+                try (JarFile modulejar = new JarFile(module)) {
                     attr = modulejar.getManifest().getMainAttributes();
                     String bundlename = attr.getValue("OpenIDE-Module-Localizing-Bundle"); //NOI18N
                     if (bundlename != null) {
                         Properties p = new Properties();
                         ZipEntry bundleentry = modulejar.getEntry(bundlename);
                         if (bundleentry != null) {
-                            InputStream is = modulejar.getInputStream(bundleentry);
-                            try {
+                            try (InputStream is = modulejar.getInputStream(bundleentry)) {
                                 p.load(is);
-                            } finally {
-                                is.close();
                             }
                         } else {
                             // Not found in main JAR, check locale variant JAR.
@@ -417,8 +410,7 @@ public class MakeLNBM extends MatchingTask {
                             if (!variant.isFile()) throw new BuildException(bundlename + " not found in " + module, getLocation());
                             long vmMod = variant.lastModified();
                             if (mostRecentInput < vmMod) mostRecentInput = vmMod;
-                            ZipFile variantjar = new ZipFile(variant);
-                            try {
+                            try (ZipFile variantjar = new ZipFile(variant)) {
                                 bundleentry = variantjar.getEntry(bundlename);
                                 if (bundleentry == null) throw new BuildException(bundlename + " not found in " + module + " nor in " + variant, getLocation());
                                 InputStream is = variantjar.getInputStream(bundleentry);
@@ -427,21 +419,15 @@ public class MakeLNBM extends MatchingTask {
                                 } finally {
                                     is.close();
                                 }
-                            } finally {
-                                variantjar.close();
                             }
                         }
                         // Now pick up attributes from the bundle.
-                        Iterator it = p.entrySet().iterator();
-                        while (it.hasNext()) {
-                            Map.Entry entry = (Map.Entry)it.next();
-                            String name = (String)entry.getKey();
-                            if (! name.startsWith("OpenIDE-Module-")) continue; //NOI18N
-                            attr.putValue(name, (String)entry.getValue());
+                        for(String key: p.stringPropertyNames()) {
+                            if(key.startsWith("OpenIDE-Module-")) {
+                                attr.putValue(key, p.getProperty(key));
+                            }
                         }
                     } // else all loc attrs in main manifest, OK
-                } finally {
-                    modulejar.close();
                 }
             } catch (IOException ioe) {
                 throw new BuildException("exception while reading " + module, ioe, getLocation());
@@ -459,19 +445,15 @@ public class MakeLNBM extends MatchingTask {
             if (manifest != null) {
                 // Read module manifest for main attributes.
                 try {
-                    InputStream manifestStream = new FileInputStream (manifest);
-                    try {
+                    try (InputStream manifestStream = new FileInputStream (manifest)) {
                         attr = new Manifest (manifestStream).getMainAttributes ();
-                    } finally {
-                        manifestStream.close ();
                     }
                 } catch (IOException e) {
                     throw new BuildException("exception when reading manifest " + manifest, e, getLocation());
                 }
             } // else we read attr before
 	    try {
-		OutputStream infoStream = new FileOutputStream (infofile);
-		try {
+		try (OutputStream infoStream = new FileOutputStream (infofile)) {
                     PrintWriter ps = new PrintWriter(new OutputStreamWriter(infoStream, "UTF-8"));
 		    // Begin writing XML.
                     ps.println ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); //NOI18N
@@ -522,7 +504,7 @@ public class MakeLNBM extends MatchingTask {
 		    if( attr != null) {
 		        ps.print ("  <manifest "); //NOI18N
 			boolean firstline = true;
-		        List<String> attrNames = new ArrayList<String>(attr.size());
+		        List<String> attrNames = new ArrayList<>(attr.size());
 			Iterator<Object> it = attr.keySet().iterator();
 			while (it.hasNext()) {
 			    attrNames.add(((Attributes.Name)it.next()).toString());
@@ -608,8 +590,6 @@ public class MakeLNBM extends MatchingTask {
 		    }
 		    ps.println ("</module>"); //NOI18N
                     ps.flush();
-		} finally {
-		    infoStream.close ();
 		}
 	    } catch (IOException e) {
 		throw new BuildException("exception when creating Info/info.xml", e, getLocation());
@@ -646,7 +626,7 @@ public class MakeLNBM extends MatchingTask {
                 //I have to use Reflection API, because there was changed API in ANT1.5
                 try {
                     try {
-                        Class[] paramsT = {String.class};
+                        Class<?>[] paramsT = {String.class};
                         Object[] paramsV1 = {signature.keystore.getAbsolutePath()};
                         Object[] paramsV2 = {file.getAbsolutePath()};
                         signjar.getClass().getDeclaredMethod( "setKeystore", paramsT ).invoke( signjar, paramsV1 ); //NOI18N
@@ -654,7 +634,7 @@ public class MakeLNBM extends MatchingTask {
                     } catch (NoSuchMethodException ex1) {
                         //Probably ANT 1.5
                         try {
-                            Class[] paramsT = {File.class};
+                            Class<?>[] paramsT = {File.class};
                             Object[] paramsV1 = {signature.keystore};
                             Object[] paramsV2 = {file};
                             signjar.getClass().getDeclaredMethod( "setKeystore", paramsT ).invoke( signjar, paramsV1 ); //NOI18N
@@ -662,8 +642,8 @@ public class MakeLNBM extends MatchingTask {
                         } catch (NoSuchMethodException ex2) {
 			    //Probably ANT1.5.3
 			    try {
-				Class[] paramsT1 = {File.class};
-				Class[] paramsT2 = {String.class};
+				Class<?>[] paramsT1 = {File.class};
+				Class<?>[] paramsT2 = {String.class};
 				Object[] paramsV1 = {signature.keystore.getAbsolutePath()};
 				Object[] paramsV2 = {file};
 				signjar.getClass().getDeclaredMethod( "setKeystore", paramsT2 ).invoke( signjar, paramsV1 ); //NOI18N
@@ -673,10 +653,8 @@ public class MakeLNBM extends MatchingTask {
                             }
                         }
                     }
-                } catch (IllegalAccessException ex4) {
+                } catch (IllegalAccessException | java.lang.reflect.InvocationTargetException ex4) {
                     throw new BuildException(ex4);
-                } catch (java.lang.reflect.InvocationTargetException ex5) {
-                    throw new BuildException(ex5);
                 }
                 signjar.setStorepass (signature.storepass);
                 signjar.setAlias (signature.alias);
@@ -704,18 +682,12 @@ public class MakeLNBM extends MatchingTask {
 
     public Attributes getAttributes() throws IOException {
         if (manifest != null) {
-            InputStream is = new FileInputStream(manifest);
-            try {
+            try (InputStream is = new FileInputStream(manifest)) {
                 return new Manifest(is).getMainAttributes();
-            } finally {
-                is.close();
             }
         } else if (module != null) {
-            JarFile jar = new JarFile(module);
-            try {
+            try (JarFile jar = new JarFile(module)) {
                 return jar.getManifest().getMainAttributes();
-            } finally {
-                jar.close();
             }
         } else {
             throw new IOException(getLocation() + "must give either 'manifest' or 'module' on <makenbm>");
@@ -817,16 +789,15 @@ public class MakeLNBM extends MatchingTask {
    * global property.
    */
   public boolean reqManOrMod() {
-    String s = null ;
     boolean req = true ;
 
     if( manOrModReqSet) {
       req = manOrModReq ;
     }
     else {
-      s = getProject().getProperty("makenbm.manOrModReq"); //NOI18N
+      String s = getProject().getProperty("makenbm.manOrModReq"); //NOI18N
       if( s != null && !s.equals( "")) { //NOI18N
-	req = getProject().toBoolean(s);
+	req = Project.toBoolean(s);
       }
     }
 

@@ -18,8 +18,11 @@
  */
 package org.netbeans.lib.nbjavac.services;
 
+import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.comp.Enter;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Context;
 import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
 
@@ -38,10 +41,12 @@ public class NBEnter extends Enter {
     }
 
     private final CancelService cancelService;
+    private final Symtab syms;
 
     public NBEnter(Context context) {
         super(context);
         cancelService = CancelService.instance(context);
+        syms = Symtab.instance(context);
     }
 
     @Override
@@ -51,6 +56,15 @@ public class NBEnter extends Enter {
     }
 
     @Override
+    public void visitTopLevel(JCTree.JCCompilationUnit tree) {
+        if (TreeInfo.isModuleInfo(tree) && tree.modle == syms.noModule) {
+            //workaround: when source level == 8, then visitTopLevel crashes for module-info.java
+            return ;
+        }
+        super.visitTopLevel(tree);
+    }
+
+    //no @Override to ensure compatibility with ordinary javac:
     protected int getIndex(JCClassDecl clazz) {
         return clazz instanceof IndexedClassDecl ? ((IndexedClassDecl) clazz).index : -1;
     }

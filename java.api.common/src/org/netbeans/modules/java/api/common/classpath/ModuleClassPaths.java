@@ -20,7 +20,7 @@ package org.netbeans.modules.java.api.common.classpath;
 
 import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.RequiresTree;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -1249,7 +1249,7 @@ final class ModuleClassPaths {
                 }
                 if (moduleTree != null) {
                     //Add dependencies for non resolvable modules.
-                    moduleTree.accept(new TreeScanner<Void, Void>() {
+                    moduleTree.accept(new ErrorAwareTreeScanner<Void, Void>() {
                                 @Override
                                 public Void visitRequires(RequiresTree node, Void p) {
                                     final String moduleName = node.getModuleName().toString();

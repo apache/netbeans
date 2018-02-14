@@ -1568,6 +1568,7 @@ public class ProfilerClient implements CommonConstants {
         status.maxHeapSize = resp.getMaxHeapSize();
         status.startupTimeMillis = resp.getStartupTimeMillis();
         status.startupTimeInCounts = resp.getStartupTimeInCounts();
+        status.canInstrumentConstructor = resp.canInstrumentConstructor();
 
         if (!status.remoteProfiling && settings.getTargetJDKVersionString() != CommonConstants.JDK_19_STRING) {
             settings.setWorkingDir(resp.getWorkingDir());

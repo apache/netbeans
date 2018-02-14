@@ -26,6 +26,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.spi.ParserFactory;
 import org.openide.filesystems.FileObject;
@@ -49,6 +50,8 @@ public class JavacParserFactory extends ParserFactory {
     
     @Override
     public JavacParser createParser(final Collection<Snapshot> snapshots) {
+        if (!NoJavacHelper.hasWorkingJavac())
+            return null;
         assert snapshots != null;
         if (snapshots.size() == 1) {
             final FileObject fo = snapshots.iterator().next().getSource().getFileObject();

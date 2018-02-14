@@ -147,7 +147,7 @@ public class RatReportTask extends Task {
                 modulebycluster.get(clusterName).add(amo);
             }
         }
-        modulebycluster.put(OTHERS_AREA, new HashSet<String>());
+        modulebycluster.put(OTHERS_AREA, new HashSet<>());
         for (String k : moduleDB) {
             modulebycluster.get(OTHERS_AREA).add(k);
         }

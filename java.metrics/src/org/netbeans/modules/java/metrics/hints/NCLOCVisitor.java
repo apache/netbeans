@@ -40,7 +40,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 
 /**
  * Non-comment line visitor. Counts the number of non-comment
@@ -50,7 +50,7 @@ import com.sun.source.util.TreePathScanner;
  * 
  * @author sdedic
  */
-public final class NCLOCVisitor extends TreePathScanner<Object, Object> {
+public final class NCLOCVisitor extends ErrorAwareTreePathScanner<Object, Object> {
     /**
      * The source text 
      */

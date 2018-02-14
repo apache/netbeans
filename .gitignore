@@ -9,6 +9,7 @@
 /*/external/*.js
 /*/external/*/**
 /nbbuild/netbeans/
+/nbbuild/nbms/
 /nbbuild/testuserdir/
 /nbbuild/*.zip
 /nbbuild/user.build.properties

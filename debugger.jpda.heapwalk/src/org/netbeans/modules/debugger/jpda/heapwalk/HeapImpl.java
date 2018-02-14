@@ -160,6 +160,16 @@ public class HeapImpl implements Heap {
         return Collections.emptyIterator();
     }
 
+    @Override
+    public boolean isRetainedSizeComputed() {
+        return true;
+    }
+
+    @Override
+    public boolean isRetainedSizeByClassComputed() {
+        return true;
+    }
+
     private static class InstancesIterator implements Iterator {
 
         private Iterator clsIt;

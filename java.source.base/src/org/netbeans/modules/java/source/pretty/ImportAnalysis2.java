@@ -27,7 +27,7 @@ import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.comp.Modules;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.util.Context;
@@ -178,7 +178,7 @@ public class ImportAnalysis2 {
     private String getFQN(Tree expression) {
         final StringBuffer result = new StringBuffer();
 
-        new TreeScanner<Void, Void>() {
+        new ErrorAwareTreeScanner<Void, Void>() {
 
             @Override
             public Void visitMemberSelect(MemberSelectTree tree, Void p) {
@@ -402,7 +402,7 @@ public class ImportAnalysis2 {
         
         usedImplicitlyImportedClassesCache = new HashMap<String, Element>();
         
-        new TreeScanner<Void, Void>() {
+        new ErrorAwareTreeScanner<Void, Void>() {
             @Override
             public Void visitIdentifier(IdentifierTree node, Void p) {
                 Element e = overlay.wrap(model, elements, model.getElement(node));

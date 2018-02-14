@@ -34,7 +34,7 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -51,7 +51,7 @@ import org.netbeans.api.java.source.CompilationInfo;
  * Collect dependencies on external classes.
  * Depending on 'ignoreJavaLibraries' it ignores classes whose QN begins with 'java.' or 'javax.'.
  */
-class DependencyCollector extends TreePathScanner<Object, Object> {
+class DependencyCollector extends ErrorAwareTreePathScanner<Object, Object> {
     private boolean ignoreJavaLibraries;
     private final CompilationInfo info;
     private TypeElement outermostClass;

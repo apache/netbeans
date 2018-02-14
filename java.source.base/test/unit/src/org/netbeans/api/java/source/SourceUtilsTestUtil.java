@@ -28,11 +28,13 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import junit.framework.Assert;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.editor.BaseDocument;
@@ -75,7 +77,7 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
     
     private static SourceUtilsTestUtil DEFAULT_LOOKUP = null;
     private static final Set<String> NB_JAVAC = Collections.unmodifiableSet(new HashSet<String>(
-        Arrays.asList("nb-javac-api.jar","nb-javac-impl.jar")));    //NOI18N
+        Arrays.asList("nb-javac-api.jar","nb-javac-impl.jar", "vanilla-javac-api.jar")));    //NOI18N
     
     public SourceUtilsTestUtil() {
 //        Assert.assertNull(DEFAULT_LOOKUP);
@@ -217,37 +219,14 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
     
     public static synchronized List<URL> getBootClassPath() {
         if (bootClassPath == null) {
-            try {
-                String cp = System.getProperty("sun.boot.class.path");
-                String tools = System.getProperty("tools.jar.location");
-                if (tools != null) {
-                    cp = cp + System.getProperty("path.separator") + tools;
-                }
-                List<URL> urls = new ArrayList<URL>();
-                for (String path : cp.split(Pattern.quote(System.getProperty("path.separator")))) {
-                    final File f = new File(path);
-                    if (!f.canRead())
-                        continue;
-                    //Remove nb-javac-impl.jar & nb-javac-api.jar added to test as boot prepend
-                    if (NB_JAVAC.contains(f.getName())) {
-                        continue;
-                    }
-
-                    FileObject fo = FileUtil.toFileObject(f);
-                    
-                    if (FileUtil.isArchiveFile(fo)) {
-                        fo = FileUtil.getArchiveRoot(fo);
-                    }
-                    
-                    if (fo != null) {
-                        urls.add(fo.getURL());
-                    }
-                }
-                bootClassPath = urls;
-            } catch (FileStateInvalidException e) {
-                if (log.isLoggable(Level.SEVERE))
-                    log.log(Level.SEVERE, e.getMessage(), e);
-            }
+            bootClassPath = TestUtil.getBootClassPath()
+                                    .entries()
+                                    .stream()
+                                    .map(e -> e.getURL())
+                                    .filter(u -> {
+                                        return NB_JAVAC.stream().noneMatch(j -> u.getPath().contains(j));
+                                    })
+                                    .collect(Collectors.toList());
         }
 
         return bootClassPath;
@@ -301,7 +280,7 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
         
         public ClassPath findClassPath(FileObject file, String type) {
             try {
-            if (ClassPath.BOOT == type) {
+            if (ClassPath.BOOT == type || JavaClassPathConstants.MODULE_BOOT_PATH.equals(type)) {
                 return ClassPathSupport.createClassPath(getBootClassPath().toArray(new URL[0]));
             }
             

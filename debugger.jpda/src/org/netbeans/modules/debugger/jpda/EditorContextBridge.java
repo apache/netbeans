@@ -19,7 +19,7 @@
 package org.netbeans.modules.debugger.jpda;
 
 import com.sun.jdi.AbsentInformationException;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.MalformedURLException;
@@ -96,8 +96,8 @@ public class EditorContextBridge {
 
     public static <R,D> R interpretOrCompileCode(final Expression<Object> expression,
                                                  final String url, final int line,
-                                                 final TreePathScanner<Boolean,D> canInterpret,
-                                                 final TreePathScanner<R,D> interpreter,
+                                                 final ErrorAwareTreePathScanner<Boolean,D> canInterpret,
+                                                 final ErrorAwareTreePathScanner<R,D> interpreter,
                                                  final D context, final boolean staticContext,
                                                  final Function<Pair<String, byte[]>, Boolean> compiledClassHandler,
                                                  final SourcePathProvider sp) throws InvalidExpressionException {
@@ -105,7 +105,7 @@ public class EditorContextBridge {
             return (R) getContext ().getClass().getMethod(
                     "interpretOrCompileCode",
                     new Class[] { Expression.class, String.class, Integer.TYPE,
-                                  TreePathScanner.class, TreePathScanner.class,
+                                  ErrorAwareTreePathScanner.class, ErrorAwareTreePathScanner.class,
                                   Object.class, Boolean.TYPE, Function.class,
                                   SourcePathProvider.class }).
                         invoke(getContext(), new Object[] { expression, url, line,
@@ -347,8 +347,8 @@ public class EditorContextBridge {
 
         public <R,D> R interpretOrCompileCode(final Expression<Object> expression,
                                               final String url, final int line,
-                                              final TreePathScanner<Boolean,D> canInterpret,
-                                              final TreePathScanner<R,D> interpreter,
+                                              final ErrorAwareTreePathScanner<Boolean,D> canInterpret,
+                                              final ErrorAwareTreePathScanner<R,D> interpreter,
                                               final D context, final boolean staticContext,
                                               final Function<Pair<String, byte[]>, Boolean> compiledClassHandler,
                                               final SourcePathProvider sp) throws InvalidExpressionException {
@@ -356,8 +356,8 @@ public class EditorContextBridge {
             try {
                 ret = (R) cp1.getClass().getMethod(
                     "interpretOrCompileCode",
-                    new Class[] { Expression.class, String.class, Integer.TYPE, TreePathScanner.class,
-                                  TreePathScanner.class, Object.class, Boolean.TYPE, Function.class,
+                    new Class[] { Expression.class, String.class, Integer.TYPE, ErrorAwareTreePathScanner.class,
+                                  ErrorAwareTreePathScanner.class, Object.class, Boolean.TYPE, Function.class,
                                   SourcePathProvider.class }).
                         invoke(cp1, new Object[] { expression, url, line, canInterpret, interpreter,
                                                    context, staticContext, compiledClassHandler, sp });
@@ -375,8 +375,8 @@ public class EditorContextBridge {
                 try {
                     ret = (R) cp2.getClass().getMethod(
                     "interpretOrCompileCode",
-                    new Class[] { Expression.class, String.class, Integer.TYPE, TreePathScanner.class,
-                                  TreePathScanner.class, Object.class, Boolean.TYPE, Function.class,
+                    new Class[] { Expression.class, String.class, Integer.TYPE, ErrorAwareTreePathScanner.class,
+                                  ErrorAwareTreePathScanner.class, Object.class, Boolean.TYPE, Function.class,
                                   SourcePathProvider.class }).
                         invoke(cp2, new Object[] { expression, url, line, canInterpret, interpreter,
                                                    context, staticContext, compiledClassHandler, sp });

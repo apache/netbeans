@@ -23,7 +23,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -201,7 +201,7 @@ public final class TemplateModuleDeclarator implements CreateFromTemplateDecorat
         }
     }
    
-    private static class Scanner extends TreePathScanner<Boolean, Boolean> {
+    private static class Scanner extends ErrorAwareTreePathScanner<Boolean, Boolean> {
         private final CompilationInfo info;
         private final Set<String> unresolved;
         

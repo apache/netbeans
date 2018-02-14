@@ -34,7 +34,7 @@ import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.source.util.Trees;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -235,7 +235,7 @@ public class ConvertToLambdaPreconditionChecker {
         foundOverloadWhichMakesLambdaAmbiguous = doesOverloadMakeLambdaAmbiguous();
     }
 
-    private class PreconditionScanner extends TreePathScanner<Tree, Trees> {
+    private class PreconditionScanner extends ErrorAwareTreePathScanner<Tree, Trees> {
 
         @Override
         public Tree visitClass(ClassTree node, Trees p) {

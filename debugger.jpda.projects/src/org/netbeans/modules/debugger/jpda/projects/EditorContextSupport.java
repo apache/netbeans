@@ -32,7 +32,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -1428,8 +1428,8 @@ public final class EditorContextSupport {
     
     public static <R,D> R interpretOrCompileCode(final Expression<Object> expression,
                                                  final String url, final int line,
-                                                 final TreePathScanner<Boolean,D> canInterpret,
-                                                 final TreePathScanner<R,D> interpreter,
+                                                 final ErrorAwareTreePathScanner<Boolean,D> canInterpret,
+                                                 final ErrorAwareTreePathScanner<R,D> interpreter,
                                                  final D context, boolean staticContext,
                                                  final Function<Pair<String, byte[]>, Boolean> compiledClassHandler,
                                                  final SourcePathProvider sp) throws InvalidExpressionException {

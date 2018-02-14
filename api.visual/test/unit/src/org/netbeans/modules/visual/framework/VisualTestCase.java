@@ -48,6 +48,11 @@ public class VisualTestCase extends NbTestCase {
         super(testName);
     }
 
+    @Override
+    protected boolean runInEQ() {
+        return true;
+    }
+
     /**
      * Shows a frame for a scene and wait until it shown on a screen. View size is [400,300].
      * @param scene the scene

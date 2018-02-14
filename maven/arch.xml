@@ -286,6 +286,35 @@
         <code>address:port</code> or just port number to connect to.
         </p>
         </api>
+        <api category="stable" group="property" name="jpda.attach.trigger" type="export">
+             <p>
+             One can define following code in nbactions.xml file to start
+             a process during goal execution and attach a debugger to it
+             when the external process prints a text indicating it's ready for attaching debugger. 
+                 One example is debugging applications using <a href="https://software.intel.com/en-us/multi-os-engine">Multi-OS Engine</a>:
+             </p>
+<pre>
+    &lt;action&gt;
+        &lt;actionName&gt;debug&lt;/actionName&gt;
+        &lt;goals&gt;
+            &lt;goal&gt;package&lt;/goal&gt;
+            &lt;goal&gt;moe:launch&lt;/goal&gt;
+        &lt;/goals&gt;
+        &lt;properties&gt;
+            &lt;skipTests&gt;true&lt;/skipTests&gt;
+            &lt;moe.options&gt;debug:${jpda.attach.port}&lt;/moe.options&gt;
+            &lt;jpda.attach&gt;true&lt;/jpda.attach&gt;
+            &lt;jpda.attach.trigger&gt;JDWP will wait for debugger on port&lt;/jpda.attach.trigger&gt;
+        &lt;/properties&gt;
+        &lt;activatedProfiles&gt;
+            &lt;activatedProfile&gt;moe&lt;/activatedProfile&gt;
+        &lt;/activatedProfiles&gt;
+    &lt;/action&gt;
+</pre>             
+        <p>
+        Value of <code>jpda.attach.trigger</code> property is the expected text. 
+        </p>
+        </api>
      </p>
  </answer>
 

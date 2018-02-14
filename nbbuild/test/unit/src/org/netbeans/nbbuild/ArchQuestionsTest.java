@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  */
 public class ArchQuestionsTest extends TestBase implements EntityResolver {
     /** debug messages to show if necessary */
-    private List<String> msg = new ArrayList<String>();
+    private List<String> msg = new ArrayList<>();
     
     public ArchQuestionsTest (String name) {
         super (name);

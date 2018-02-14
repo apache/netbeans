@@ -57,8 +57,8 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -522,7 +522,7 @@ public class JavaFixUtilities {
 
             final Set<Tree> originalTrees = Collections.newSetFromMap(new IdentityHashMap<Tree, Boolean>());
             
-            new TreeScanner<Void, Void>() {
+            new ErrorAwareTreeScanner<Void, Void>() {
                 @Override public Void scan(Tree tree, Void p) {
                     originalTrees.add(tree);
                     return super.scan(tree, p);
@@ -580,7 +580,7 @@ public class JavaFixUtilities {
 
     private static final Set<Kind> NUMBER_LITERAL_KINDS = EnumSet.of(Kind.FLOAT_LITERAL, Kind.DOUBLE_LITERAL, Kind.INT_LITERAL, Kind.LONG_LITERAL);
 
-    private static class ReplaceParameters extends TreePathScanner<Number, Void> {
+    private static class ReplaceParameters extends ErrorAwareTreePathScanner<Number, Void> {
 
         private final CompilationInfo info;
         private final TreeMaker make;

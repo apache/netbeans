@@ -222,6 +222,9 @@ public class FileEditor extends PropertyEditorSupport implements ExPropertyEdito
             if (originalFile != null && ! originalFile.isAbsolute() && baseDirectory != null) {
                 originalFile = new File(baseDirectory, originalFile.getPath());
             }
+            // must precede setting of the selected file, in order to properly set 
+            // the name textfield in case of directory selection.
+            chooser.setFileSelectionMode(mode);
             if (currentDirectory != null) {
                 chooser.setCurrentDirectory (currentDirectory);
             } else if (originalFile != null && originalFile.getParentFile() != null) {
@@ -230,7 +233,6 @@ public class FileEditor extends PropertyEditorSupport implements ExPropertyEdito
             } else if (lastCurrentDir != null) {
                 chooser.setCurrentDirectory(lastCurrentDir);
             }
-            chooser.setFileSelectionMode(mode);
             if (fileFilter != null) {
                 chooser.setFileFilter(fileFilter);
             }

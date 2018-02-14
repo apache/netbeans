@@ -21,7 +21,7 @@ package org.netbeans.api.java.source.gen;
 import com.sun.source.tree.*;
 import java.io.File;
 import static com.sun.source.tree.Tree.Kind.*;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.*;
 import java.io.IOException;
 import java.util.EnumSet;
@@ -287,7 +287,7 @@ public class ConstructorTest extends GeneratorTestBase {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
 
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
 
                     @Override
                     public Void scan(Tree node, Void p) {
@@ -332,7 +332,7 @@ public class ConstructorTest extends GeneratorTestBase {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
 
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
 
                     @Override
                     public Void scan(Tree node, Void p) {

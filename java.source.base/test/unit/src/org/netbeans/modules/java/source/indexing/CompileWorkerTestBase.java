@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.java.source.indexing;
 
-import com.sun.source.tree.CompilationUnitTree;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,17 +26,16 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.ElementFilter;
+import javax.swing.event.ChangeListener;
 import javax.tools.JavaFileObject;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
+import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.indexing.CompileWorker.ParsingOutput;
@@ -52,7 +51,9 @@ import org.netbeans.modules.parsing.impl.indexing.SPIAccessor;
 import org.netbeans.modules.parsing.impl.indexing.SuspendSupport.SuspendStatusImpl;
 import org.netbeans.modules.parsing.impl.indexing.lucene.LuceneIndexFactory;
 import org.netbeans.modules.parsing.spi.indexing.Context;
+import org.netbeans.modules.parsing.spi.indexing.ErrorsCache;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -66,10 +67,10 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
         super(name);
     }
     
-    public void test219787() throws Exception {
-        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test3.java", "package test; public class Test3")),
-                                           Arrays.asList(virtualCompileTuple("test/Test1.virtual", "package test; public class Test1 {}"),
-                                                         virtualCompileTuple("test/Test2.virtual", "package test; public class Test2 {}")));
+    public void testClassesLivingElsewhere() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test1.java", "package test; public class Test1 { Test2a t; } class Test1a { }"),
+                                                         compileTuple("test/Test2.java", "package test; public class Test2 { Test1a t; } class Test2a { }")),
+                                           Arrays.asList());
         
         assertFalse(result.lowMemory);
         assertTrue(result.success);
@@ -80,10 +81,53 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
         
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test3.sig")), createdFiles);
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test1.sig",
+                                                       "cache/s1/java/15/classes/test/Test1a.sig",
+                                                       "cache/s1/java/15/classes/test/Test2.sig",
+                                                       "cache/s1/java/15/classes/test/Test2a.sig")),
+                     createdFiles);
+        assertFalse(ErrorsCache.isInError(getRoot(), true));
     }
-    
-    private ParsingOutput runIndexing(List<CompileTuple> files, List<CompileTuple> virtualFiles) throws Exception {
+
+    public void testStoreAndReadParameterNames() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java",
+                                                                      "package test; public class Test { public void test(int parameter) { } }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+                     createdFiles);
+        assertFalse(ErrorsCache.isInError(getRoot(), false));
+
+        JavaSource js = JavaSource.forFileObject(src.getFileObject("test/Test.java"));
+
+        js = JavaSource.create(js.getClasspathInfo());
+        js.runUserActionTask(new Task<CompilationController>() {
+            @Override
+            public void run(CompilationController cc) throws Exception {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+                TypeElement clazz = cc.getElements().getTypeElement("test.Test");
+                assertEquals(JavaFileObject.Kind.CLASS, ((ClassSymbol) clazz).classfile.getKind());
+                assertEquals("parameter", ElementFilter.methodsIn(clazz.getEnclosedElements())
+                                                       .iterator()
+                                                       .next()
+                                                       .getParameters()
+                                                       .get(0)
+                                                       .getSimpleName()
+                                                       .toString());
+            }
+        }, true);
+    }
+
+    protected ParsingOutput runIndexing(List<CompileTuple> files, List<CompileTuple> virtualFiles) throws Exception {
         TransactionContext txc = TransactionContext.beginStandardTransaction(src.toURL(), true, false, false);
         Factory f = new JavaCustomIndexer.Factory();
         Context ctx = SPIAccessor.getInstance().createContext(CacheFolder.getDataFolder(src.toURL()), src.toURL(), f.getIndexerName(), f.getIndexVersion(), LuceneIndexFactory.getDefault(), false, false, true, SPIAccessor.getInstance().createSuspendStatus(new SuspendStatusImpl() {
@@ -118,7 +162,7 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
     
     @Override
     protected void setUp() throws Exception {
-        SourceUtilsTestUtil.prepareTest(new String[0], new Object[0]);
+        SourceUtilsTestUtil.prepareTest(new String[0], new Object[] {new SourceLevelQueryImpl()});
         
         clearWorkDir();
         File wdFile = getWorkDir();
@@ -134,6 +178,7 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
     }
     
     private FileObject src;
+    private String sourceLevel;
     
     private FileObject createSrcFile(String pathAndName, String content) throws Exception {
         FileObject testFile = FileUtil.createData(src, pathAndName);
@@ -142,13 +187,41 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
         return testFile;
     }
     
-    private CompileTuple virtualCompileTuple(String relativePath, String content) throws Exception {
+    protected CompileTuple virtualCompileTuple(String relativePath, String content) throws Exception {
         FileObject file = createSrcFile(relativePath, "");
         return new CompileTuple(FileObjects.sourceFileObject(file, src, null, content), SPIAccessor.getInstance().create(new FileObjectIndexable(src, relativePath)), true, true);
     }
     
-    private CompileTuple compileTuple(String relativePath, String content) throws Exception {
+    protected CompileTuple compileTuple(String relativePath, String content) throws Exception {
         FileObject file = createSrcFile(relativePath, content);
         return new CompileTuple(FileObjects.sourceFileObject(file, src), SPIAccessor.getInstance().create(new FileObjectIndexable(src, relativePath)), false, true);
+    }
+    
+    protected FileObject getRoot() {
+        return src;
+    }
+
+    protected void setSourceLevel(String sourceLevel) {
+        this.sourceLevel = sourceLevel;
+    }
+
+    private final class SourceLevelQueryImpl implements SourceLevelQueryImplementation2 {
+
+        @Override
+        public Result getSourceLevel(FileObject file) {
+            return new Result() {
+                @Override
+                public String getSourceLevel() {
+                    return sourceLevel;
+                }
+
+                @Override
+                public void addChangeListener(ChangeListener l) {}
+
+                @Override
+                public void removeChangeListener(ChangeListener l) {}
+            };
+        }
+
     }
 }

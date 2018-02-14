@@ -24,7 +24,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1565,7 +1565,7 @@ public class CopyFinderTest extends NbTestCase {
 
         for (final String name : remappableVariables.split(",")) {
             if (name.isEmpty()) continue;
-            new TreePathScanner<Object, Object>() {
+            new ErrorAwareTreePathScanner<Object, Object>() {
                 @Override
                 public Object visitVariable(VariableTree node, Object p) {
                     if (node.getName().contentEquals(name)) {

@@ -20,7 +20,6 @@ package org.netbeans.modules.java.source.pretty;
 
 import com.sun.tools.javac.util.*;
 import com.sun.tools.javac.code.*;
-import com.sun.tools.javac.code.Symbol.*;
 import com.sun.tools.javac.comp.Operators;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.*;
@@ -34,11 +33,9 @@ public class WidthEstimator extends JCTree.Visitor {
     private int width;
     private int prec;
     private int maxwidth;
-    private final Symtab symbols;
     private final Operators operators;
 
     public WidthEstimator(Context context) {
-	symbols = Symtab.instance(context);
         operators = Operators.instance(context);
     }
 
@@ -67,36 +64,6 @@ public class WidthEstimator extends JCTree.Visitor {
     private void width(Name n) { width += n.getByteLength(); }
     private void width(String n) { width += n.length(); }
     private void width(JCTree n) { if(width<maxwidth) n.accept(this); }
-    private void width(JCTree n, Type t) { if(t==null) width(n); else width(t); }
-    private void width(Type ty) {
-	    while(ty instanceof Type.ArrayType) {
-		ty = ((Type.ArrayType)ty).elemtype;
-		width+=2;
-	    }
-	    widthQ(ty.tsym);
-	    if (ty instanceof Type.ClassType) {
-		List < Type > typarams = ((Type.ClassType) ty).typarams_field;
-		if (typarams != null && typarams.nonEmpty()) {
-		    width++;
-		    for (; typarams.nonEmpty(); typarams = typarams.tail) {
-			width++;
-			width(typarams.head);
-		    }
-		}
-	    }
-    }
-    public void widthQ(Symbol t) {
-        if (t == null) {
-            return;
-        }
-	if (t.owner != null && t.owner != symbols.rootPackage && t.owner != t.packge().modle.unnamedPackage
-	        && !(t.type instanceof Type.TypeVar)
-		&& !(t.owner instanceof MethodSymbol)) {
-	    width++;
-	    widthQ(t.owner);
-	}
-	width(t.name);
-    }
     private void width(List<? extends JCTree> n, int pad) {
 	int nadd = 0;
 	while(!n.isEmpty() && width<maxwidth) {
@@ -136,12 +103,7 @@ System.err.println("Need width calc for "+tree);
 	    width++;
 	}
 	width+=4;
-	if (tree.encl == null)
-	    width(tree.clazz, tree.clazz.type);
-	else if (tree.clazz.type != null)
-	    width(tree.clazz.type.tsym.name);
-	else
-	    width(tree.clazz);
+        width(tree.clazz);
 	width+=2;
 	width(tree.args, 2);
 	if (tree.def != null) {
@@ -191,7 +153,7 @@ System.err.println("Need width calc for "+tree);
         if ((tree.mods.flags & Flags.ENUM) == 0) {
             widthFlags(tree.mods.flags);
             if (tree.vartype != null)
-                width(tree.vartype, tree.type);
+                width(tree.vartype);
             width++;
         }
         width(tree.name);
@@ -240,7 +202,7 @@ System.err.println("Need width calc for "+tree);
     public void visitTypeCast(JCTypeCast tree) {
 	width+=2;
 	open(prec, TreeInfo.prefixPrec);
-	width(tree.clazz, tree.clazz.type);
+	width(tree.clazz);
 	width(tree.expr, TreeInfo.prefixPrec);
     }
 
@@ -248,7 +210,7 @@ System.err.println("Need width calc for "+tree);
 	open(prec, TreeInfo.ordPrec);
 	width += 12;
 	width(tree.expr, TreeInfo.ordPrec);
-	width(tree.clazz, tree.clazz.type);
+	width(tree.clazz);
     }
 
     public void visitIndexed(JCArrayAccess tree) {
@@ -258,19 +220,13 @@ System.err.println("Need width calc for "+tree);
     }
 
     public void visitSelect(JCFieldAccess tree) {
-	if (tree.sym instanceof Symbol.ClassSymbol && tree.type != null) {
-	    width(tree.type);
-	} else {
-	    width+=1;
-	    width(tree.selected, TreeInfo.postfixPrec);
-	    width(tree.name);
-	}
+        width+=1;
+        width(tree.selected, TreeInfo.postfixPrec);
+        width(tree.name);
     }
 
     public void visitIdent(JCIdent tree) {
-	if (tree.sym instanceof Symbol.ClassSymbol)
-	    width(tree.type);
-	else width(tree.name);
+	width(tree.name);
     }
 
     public void visitLiteral(JCLiteral tree) {

@@ -27,6 +27,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Enumeration;
@@ -45,6 +46,7 @@ import junit.framework.*;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.ElementUtils;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.indexing.TransactionContext;
@@ -108,9 +110,8 @@ public class ClasspathInfoTest extends NbTestCase {
     
     public void testGetTypeDeclaration() throws Exception {
         ClasspathInfo ci = ClasspathInfo.create( bootPath, classPath, null);
-        JavacTaskImpl jTask = JavacParser.createJavacTask(ci,  (DiagnosticListener) null, (String) null, null, null, null, null, null, null);
+        JavacTaskImpl jTask = JavacParser.createJavacTask(ci,  (DiagnosticListener) null, (String) null, null, null, null, null, null, Collections.emptyList());
         jTask.enter(); 
-	JavacElements elements = (JavacElements) jTask.getElements();
 	
         List<String> notFound = new LinkedList<String>();
         JarFile jf = new JarFile( rtJar );       
@@ -121,7 +122,7 @@ public class ClasspathInfoTest extends NbTestCase {
                 String typeName = jeName.substring( 0, jeName.length() - ".class".length() );
 
                 typeName = typeName.replace( "/", "." ); //.replace( "$", "." );
-                TypeElement te = elements.getTypeElementByBinaryName( typeName );
+                TypeElement te = ElementUtils.getTypeElementByBinaryName(jTask, typeName );
 //                assertNotNull( "Declaration for " + typeName + " should not be null.", td );
                 if ( te == null ) {
                     if (!typeName.endsWith("package-info")) {
@@ -148,7 +149,7 @@ public class ClasspathInfoTest extends NbTestCase {
                     // empty package
                     continue;
                 }
-                PackageElement pd = JavacParser.createJavacTask(ci,  (DiagnosticListener) null, (String) null, null, null, null, null, null, null).getElements().getPackageElement( packageName );
+                PackageElement pd = JavacParser.createJavacTask(ci,  (DiagnosticListener) null, (String) null, null, null, null, null, null, Collections.emptyList()).getElements().getPackageElement( packageName );
                 assertNotNull( "Declaration for " + packageName + " should not be null.", pd );
             }
         }

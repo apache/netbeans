@@ -33,6 +33,7 @@ import org.netbeans.lib.profiler.client.ClientUtils;
 import org.netbeans.lib.profiler.common.Profiler;
 import org.netbeans.lib.profiler.ui.components.ProfilerToolbar;
 import org.netbeans.lib.profiler.ui.cpu.LiveCPUView;
+import org.netbeans.lib.profiler.ui.cpu.LiveCPUViewUpdater;
 import org.netbeans.lib.profiler.ui.swing.GrayLabel;
 import org.netbeans.lib.profiler.ui.swing.MultiButtonGroup;
 import org.netbeans.modules.profiler.actions.ResetResultsAction;
@@ -70,6 +71,7 @@ abstract class MethodsFeatureUI extends FeatureUI {
     
     private ProfilerToolbar toolbar;
     private LiveCPUView cpuView;
+    private LiveCPUViewUpdater updater;
 
     
     // --- External implementation ---------------------------------------------
@@ -113,11 +115,11 @@ abstract class MethodsFeatureUI extends FeatureUI {
     }
     
     void setForceRefresh() {
-        if (cpuView != null) cpuView.setForceRefresh(true);
+        if (updater != null) updater.setForceRefresh(true);
     }
     
     void refreshData() throws ClientUtils.TargetAppOrVMTerminated {
-        if (cpuView != null) cpuView.refreshData();
+        if (updater != null) updater.update();
     }
     
     void resetData() {
@@ -133,7 +135,7 @@ abstract class MethodsFeatureUI extends FeatureUI {
     
     
     void cleanup() {
-        if (cpuView != null) cpuView.cleanup();
+        if (updater != null) updater.cleanup();
     }
     
     
@@ -162,9 +164,20 @@ abstract class MethodsFeatureUI extends FeatureUI {
         // --- Results ---------------------------------------------------------
         
         cpuView = new LiveCPUView(getMethodsSelection()) {
-            protected ProfilerClient getProfilerClient() {
-                return MethodsFeatureUI.this.getProfilerClient();
-            }
+//            protected ProfilerClient getProfilerClient() {
+//                return MethodsFeatureUI.this.getProfilerClient();
+//            }
+////            protected boolean isSampling() {
+////                return MethodsFeatureUI.this.getProfilerClient().getCurrentInstrType() == ProfilerClient.INSTR_NONE_SAMPLING;
+////            }
+////            protected void requestResults() throws ClientUtils.TargetAppOrVMTerminated {
+////                MethodsFeatureUI.this.getProfilerClient().forceObtainedResultsDump(true);
+////            }
+////            protected CPUResultsSnapshot getResults() throws ClientUtils.TargetAppOrVMTerminated, CPUResultsSnapshot.NoDataAvailableException {
+////                ProfilerClient client = MethodsFeatureUI.this.getProfilerClient();
+////                return client.getStatus().getInstrMethodClasses() == null ?
+////                       null : client.getCPUProfilingResultsSnapshot(false);
+////            }
             protected boolean showSourceSupported() {
                 return GoToSource.isAvailable();
             }
@@ -206,6 +219,8 @@ abstract class MethodsFeatureUI extends FeatureUI {
         
         cpuView.putClientProperty("HelpCtx.Key", "ProfileMethods.HelpCtx"); // NOI18N
         
+        updater = new LiveCPUViewUpdater(cpuView, getProfilerClient());
+        
         
         // --- Toolbar ---------------------------------------------------------
         
@@ -214,7 +229,7 @@ abstract class MethodsFeatureUI extends FeatureUI {
         lrPauseButton = new JToggleButton(Icons.getIcon(GeneralIcons.PAUSE)) {
             protected void fireItemStateChanged(ItemEvent event) {
                 boolean paused = isSelected();
-                cpuView.setPaused(paused);
+                updater.setPaused(paused);
                 if (!paused) refreshResults();
                 refreshToolbar(getSessionState());
             }

@@ -35,7 +35,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
@@ -269,7 +269,7 @@ public class IteratorToFor {
             return false;
         }
         for (TreePath tp : statements) {
-            boolean occurs = Boolean.TRUE.equals(new TreePathScanner<Boolean, Void>() {
+            boolean occurs = Boolean.TRUE.equals(new ErrorAwareTreePathScanner<Boolean, Void>() {
                 @Override public Boolean scan(Tree tree, Void p) {
                     if (tree == null) {
                         return false;

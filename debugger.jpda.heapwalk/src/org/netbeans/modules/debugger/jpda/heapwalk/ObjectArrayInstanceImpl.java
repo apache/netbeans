@@ -58,4 +58,9 @@ public class ObjectArrayInstanceImpl extends InstanceImpl implements ObjectArray
         return instances;
     }
 
+    @Override
+    public List getItems() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }

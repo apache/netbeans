@@ -78,7 +78,6 @@ import org.netbeans.modules.maven.indexer.spi.ui.ArtifactViewerFactory;
 import org.netbeans.modules.maven.model.Utilities;
 import org.netbeans.modules.maven.model.pom.POMModel;
 import org.netbeans.modules.maven.spi.IconResources;
-import org.netbeans.modules.java.graph.GraphNodeImplementation;
 import org.openide.awt.Mnemonics;
 import org.openide.filesystems.FileObject;
 import org.openide.util.ImageUtilities;
@@ -606,16 +605,16 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
                         
                     };
                     
-                    final DependencyGraphScene<MavenDependencyNode> scene2 = new DependencyGraphScene<>(
-                            new MavenActionsProvider(DependencyGraphTopComponent.this, nbProj, model), 
-                            DependencyGraphTopComponent.this::getSelectedDepth, 
-                            versionProvider, 
-                            pp);
-                    
-                    GraphConstructor constr = new GraphConstructor(scene2, prj);
+                    GraphConstructor constr = new GraphConstructor(prj);
                     constr.accept(root);
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override public void run() {
+                            final DependencyGraphScene<MavenDependencyNode> scene2 = new DependencyGraphScene<>(
+                                new MavenActionsProvider(DependencyGraphTopComponent.this, nbProj, model), 
+                                DependencyGraphTopComponent.this::getSelectedDepth, 
+                                versionProvider, 
+                                pp);
+                            constr.updateScene(scene2);
                             scene = scene2;
                             JComponent sceneView = scene.getView();
                             if (sceneView == null) {

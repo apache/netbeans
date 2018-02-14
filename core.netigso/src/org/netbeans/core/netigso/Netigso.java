@@ -22,10 +22,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.security.ProtectionDomain;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,7 +37,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -125,7 +125,8 @@ implements Cloneable, Stamps.Updater {
             activator = new NetigsoActivator(this);
             configMap.put("netigso.archive", NetigsoArchiveFactory.DEFAULT.create(this)); // NOI18N
             if (!configMap.containsKey("felix.log.level")) { // NOI18N
-              configMap.put("felix.log.level", "4"); // NOI18N - allow others to set log level
+                String felixLevel = felixLogLevel(LOG);
+                configMap.put("felix.log.level", felixLevel); // NOI18N
             }
             configMap.put("felix.bootdelegation.classloaders", activator); // NOI18N
             String startLevel = FRAMEWORK_START_LEVEL();
@@ -155,6 +156,20 @@ implements Cloneable, Stamps.Updater {
                 LOG.log(Level.WARNING, "Cannot fake " + mi.getCodeName(), ex);
             }
         }
+    }
+
+    static String felixLogLevel(final Logger log) {
+        String felixLevel = "1"; // NOI18N
+        if (log.isLoggable(Level.WARNING)) {
+            felixLevel = "2"; // NOI18N
+        }
+        if (log.isLoggable(Level.CONFIG)) {
+            felixLevel = "3"; // NOI18N
+        }
+        if (log.isLoggable(Level.FINE)) {
+            felixLevel = "4"; // NOI18N
+        }
+        return felixLevel;
     }
 
     @Override
@@ -453,9 +468,11 @@ implements Cloneable, Stamps.Updater {
             } else if (symbolicName != null) { // NOI18N
                 if (original != null) {
                     LOG.log(Level.FINE, "Updating bundle {0}", original.getLocation());
-                    FileInputStream is = new FileInputStream(m.getJarFile());
-                    original.update(is);
-                    is.close();
+                    try (InputStream is = Files.newInputStream(m.getJarFile().toPath())) {
+                        original.update(is);
+                    } catch (InvalidPathException ex) {
+                        throw new IOException(ex);
+                    }
                     b = original;
                 } else {
                     BundleContext bc = framework.getBundleContext();

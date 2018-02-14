@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.source.parsing;
 
+import com.sun.tools.javac.api.ClientCodeWrapper.Trusted;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -71,7 +72,7 @@ class WriteBackTransaction extends FileManagerTransaction {
         super(true);
         this.root = root;
         try {
-            this.classesFolder = BaseUtilities.toURI(JavaIndex.getClassFolder(root)).toURL();
+            this.classesFolder = BaseUtilities.toURI(JavaIndex.getClassFolder(root, false, false)).toURL();
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
@@ -387,6 +388,7 @@ class WriteBackTransaction extends FileManagerTransaction {
      * 
      * The CacheFO may be "flushed" (written to shadowFile) or "committed" (moved to the final dest).
      */
+    @Trusted
     static class CachedFileObject extends FileObjects.FileBase {
 
         private static final byte[] NOTHING = new byte[0];

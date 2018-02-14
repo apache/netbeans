@@ -22,12 +22,6 @@
 
 <project name="o.n.upgrader" default="netbeans" basedir=".">
 
-    <target name="compile" depends="projectized-common.compile">
-        <echo message="${build.classes.dir}"/>
-        <copy file="../ide.branding/release-toplevel/LICENSE.txt"
-              tofile="${build.classes.dir}/org/netbeans/license/LICENSE.txt" failonerror="true"/>
-    </target>
-
     <import file="../nbbuild/templates/projectized.xml"/>
 
 </project>

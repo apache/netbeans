@@ -31,7 +31,7 @@ import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
-class DiagnosticListenerImpl implements DiagnosticListener<JavaFileObject> {
+public class DiagnosticListenerImpl implements DiagnosticListener<JavaFileObject> {
 
     private static final Logger ERROR_LOG = Logger.getLogger(DiagnosticListenerImpl.class.getName() + "-errors");
     private final Map<URI, List<Diagnostic<? extends JavaFileObject>>> diagnostics = new HashMap<URI, List<Diagnostic<? extends JavaFileObject>>>();
@@ -60,6 +60,10 @@ class DiagnosticListenerImpl implements DiagnosticListener<JavaFileObject> {
         }
 
         return result;
+    }
+
+    public List<Diagnostic<? extends JavaFileObject>> peekDiagnostics(JavaFileObject file) {
+        return diagnostics.getOrDefault(file.toUri(), Collections.emptyList());
     }
 
     public void cleanDiagnostics() {

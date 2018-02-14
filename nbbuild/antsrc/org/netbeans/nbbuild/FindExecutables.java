@@ -44,7 +44,7 @@ public class FindExecutables extends Task {
         StringBuilder b = new StringBuilder();
         for (String module : allmodules.split(",")) {
             // Have to replace substitutions in e.g. o.jruby.distro/nbproject/project.properties:
-            final AtomicReference<String> execFiles = new AtomicReference<String>();
+            final AtomicReference<String> execFiles = new AtomicReference<>();
             final String prefix = "Load.";
             class Load extends Property {
                 protected @Override void addProperty(String n, String v) {

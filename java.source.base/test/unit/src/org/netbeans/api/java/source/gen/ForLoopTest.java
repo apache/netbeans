@@ -19,7 +19,7 @@
 package org.netbeans.api.java.source.gen;
 
 import com.sun.source.tree.*;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.*;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -768,7 +768,7 @@ public class ForLoopTest extends GeneratorTestMDRCompat {
             public void run(final WorkingCopy workingCopy) throws java.io.IOException {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitVariable(VariableTree node, Void p) {
                         if (node.getName().contentEquals("i"))

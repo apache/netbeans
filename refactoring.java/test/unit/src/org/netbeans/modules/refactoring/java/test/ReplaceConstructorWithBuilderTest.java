@@ -95,6 +95,20 @@ public class ReplaceConstructorWithBuilderTest extends RefTestBase {
                 new File("test/TestBuilder.java", "package test; public class TestBuilder { private int i; public TestBuilder() { } public TestBuilder setI(int i) { this.i = i; return this; } public Test createTest() { return new Test(i); } } "));
     }
     
+    
+    public void testReplaceWithBuilderBuildMethod() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("test/Test.java", "package test;\n public class Test {\n public Test() {}\n private void t() {\n Test t = new Test();\n }\n }\n"),
+                new File("test/Use.java", "package test; public class Use { private void t(java.util.List<String> ll) { Test t = new Test(); } }"));
+
+        performTest2("test.TestBuilder", "build");
+
+        assertContent(src,
+                new File("test/Test.java", "package test;\n public class Test {\n public Test() {}\n private void t() {\n Test t = new TestBuilder().build();\n }\n }\n"),
+                new File("test/Use.java", "package test; public class Use { private void t(java.util.List<String> ll) { Test t = new TestBuilder().build(); } }"),
+                new File("test/TestBuilder.java", "package test; public class TestBuilder { public TestBuilder() { } public Test build() { return new Test(); } } "));
+    }      
+    
     public void testReplaceWithBuilderUndo() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("test/Test.java", "package test;\n public class Test {\n public Test(int i) {}\n private void t() {\n Test t = new Test(1);\n }\n }\n"),
@@ -162,7 +176,7 @@ public class ReplaceConstructorWithBuilderTest extends RefTestBase {
                 new File("test/Test.java", "package test; public class Test { public Test() { } }"),
                 new File("test/Use.java", "package test; public class Use { private void t(java.util.List<String> ll) { Test t = new Test(); } }"));
 
-        performTest2("test.TestBuilder");
+        performTest2("test.TestBuilder","createTest");
 
         assertContent(src,
                 new File("test/Test.java", "package test; public class Test { public Test() { } }"),
@@ -211,7 +225,7 @@ public class ReplaceConstructorWithBuilderTest extends RefTestBase {
                 TreePath tp = TreePath.getPath(cut, var);
                 r[0] = new ReplaceConstructorWithBuilderRefactoring(TreePathHandle.create(tp, parameter));
                 r[0].setBuilderName(builderName);
-
+                r[0].setBuildMethodName("createTest");
                 r[0].setSetters(Collections.singletonList(setter));
             }
         }, true);
@@ -234,7 +248,7 @@ public class ReplaceConstructorWithBuilderTest extends RefTestBase {
         //assertEquals(false, TaskCache.getDefault().isInError(src, true));
     }
     
-    private void performTest2(final String builderName) throws Exception {
+    private void performTest2(final String builderName,final String buildMethodName) throws Exception {
         final ReplaceConstructorWithBuilderRefactoring[] r = new ReplaceConstructorWithBuilderRefactoring[1];
         FileObject testFile = src.getFileObject("test/Test.java");
 
@@ -249,6 +263,7 @@ public class ReplaceConstructorWithBuilderTest extends RefTestBase {
                 TreePath tp = TreePath.getPath(cut, var);
                 r[0] = new ReplaceConstructorWithBuilderRefactoring(TreePathHandle.create(tp, parameter));
                 r[0].setBuilderName(builderName);
+                r[0].setBuildMethodName(buildMethodName);
             }
         }, true);
 

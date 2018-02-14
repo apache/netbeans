@@ -19,7 +19,7 @@
 
 package org.netbeans.modules.debugger.jpda.projectsui;
 
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -817,8 +817,8 @@ public class EditorContextImpl extends EditorContext {
     }
     
     public <R,D> R interpretOrCompileCode(final Expression<Object> expression, String url, final int line,
-                                          final TreePathScanner<Boolean,D> canInterpret,
-                                          final TreePathScanner<R,D> interpreter,
+                                          final ErrorAwareTreePathScanner<Boolean,D> canInterpret,
+                                          final ErrorAwareTreePathScanner<R,D> interpreter,
                                           final D context, final boolean staticContext,
                                           final Function<Pair<String, byte[]>, Boolean> compiledClassHandler,
                                           final SourcePathProvider sp) throws InvalidExpressionException {

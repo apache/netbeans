@@ -25,7 +25,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.comp.AttrContext;
@@ -36,13 +36,18 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCErroneous;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Log;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.JavaFileObject;
+
+import com.sun.tools.javac.parser.ParserFactory;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -83,26 +88,21 @@ public class Hacks {
         Log.instance(context).nerrors = 0;
 
         JavaFileObject jfo = FileObjects.memoryFileObject("$$", "$", new File("/tmp/t.java").toURI(), System.currentTimeMillis(), clazz.toString());
-        boolean oldSkipAPs = jc.skipAnnotationProcessing;
 
         try {
-            jc.skipAnnotationProcessing = true;
+            CompilationUnitTree cut = ParserFactory.instance(context).newParser(jfo.getCharContent(true), true, true, true).parseCompilationUnit();
 
-            Iterable<? extends CompilationUnitTree> parsed = jti.parse(jfo);
-            CompilationUnitTree cut = parsed.iterator().next();
-
-            jti.analyze(jti.enter(parsed));
+            jti.analyze(jti.enter(Collections.singletonList(cut)));
 
             return new ScannerImpl().scan(cut, info);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
             return null;
         } finally {
-            jc.skipAnnotationProcessing = oldSkipAPs;
         }
     }
 
-    private static final class ScannerImpl extends TreePathScanner<Scope, CompilationInfo> {
+    private static final class ScannerImpl extends ErrorAwareTreePathScanner<Scope, CompilationInfo> {
 
         @Override
         public Scope visitBlock(BlockTree node, CompilationInfo p) {

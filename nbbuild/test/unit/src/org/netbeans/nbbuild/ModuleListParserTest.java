@@ -69,7 +69,7 @@ public class ModuleListParserTest extends TestBase {
     }
 
     public void testScanSourcesInNetBeansOrg() throws Exception {
-        Hashtable<String,Object> properties = new Hashtable<String,Object>();
+        Hashtable<String,Object> properties = new Hashtable<>();
         properties.put("nb_all", nball.getAbsolutePath());
         File build = file(nball, "nbbuild/netbeans");
         properties.put("netbeans.dest.dir", build.getAbsolutePath());
@@ -132,7 +132,7 @@ public class ModuleListParserTest extends TestBase {
             public void buildStarted(BuildEvent buildEvent) {}
             public void buildFinished(BuildEvent buildEvent) {}
         });
-        Hashtable<String,Object> properties = new Hashtable<String,Object>();
+        Hashtable<String,Object> properties = new Hashtable<>();
         properties.put("cluster.path.final", filePath(nball, "nbbuild/netbeans/platform")
                 + File.pathSeparator + filePath(nball, "nbbuild/netbeans/ide"));
         properties.put("basedir", filePath(nball, "apisupport.ant/test/unit/data/example-external-projects/suite1/action-project"));
@@ -225,7 +225,7 @@ public class ModuleListParserTest extends TestBase {
         assertEquals("One file generated", 1, arr.length);
         assertEquals(dashCnb + ".xml", arr[0]);
 
-        Hashtable<String,Object> properties = new Hashtable<String,Object>();
+        Hashtable<String,Object> properties = new Hashtable<>();
         properties.put("cluster.path.final", filePath(nball, "nbbuild/netbeans/platform")
                 + File.pathSeparator + getWorkDir());
         properties.put("basedir", filePath(nball, "apisupport.ant/test/unit/data/example-external-projects/suite1/action-project"));
@@ -256,14 +256,13 @@ public class ModuleListParserTest extends TestBase {
 //    }
 
     private File generateJar (File f, String[] content, Manifest manifest) throws IOException {
-        JarOutputStream os = new JarOutputStream (new FileOutputStream (f), manifest);
-
-        for (int i = 0; i < content.length; i++) {
-            os.putNextEntry(new JarEntry (content[i]));
-            os.closeEntry();
+        try (JarOutputStream os = new JarOutputStream (new FileOutputStream (f), manifest)) {
+            for (int i = 0; i < content.length; i++) {
+                os.putNextEntry(new JarEntry (content[i]));
+                os.closeEntry();
+            }
+            os.closeEntry ();
         }
-        os.closeEntry ();
-        os.close();
 
         return f;
     }

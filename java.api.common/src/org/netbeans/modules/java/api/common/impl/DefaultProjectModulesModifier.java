@@ -22,7 +22,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.DirectiveTree;
 import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.RequiresTree;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -190,7 +190,7 @@ public class DefaultProjectModulesModifier implements ProjectModulesModifier {
             final Set<String> knownModules = new HashSet<>();
             final ModuleTree[] module = new ModuleTree[1];
             final RequiresTree[] lastRequires = new RequiresTree[1];
-            cu.accept(new TreeScanner<Void, Void>() {
+            cu.accept(new ErrorAwareTreeScanner<Void, Void>() {
                         @Override
                         public Void visitModule(ModuleTree m, Void p) {
                             module[0] = m;
@@ -259,7 +259,7 @@ public class DefaultProjectModulesModifier implements ProjectModulesModifier {
                     final Set<DirectiveTree> toRemove = new HashSet<>();
                     final ModuleTree[] module = new ModuleTree[1];
                     cu.accept(
-                            new TreeScanner<Void, Set<DirectiveTree>>() {
+                            new ErrorAwareTreeScanner<Void, Set<DirectiveTree>>() {
                                 @Override
                                 public Void visitModule(final ModuleTree node, Set<DirectiveTree> param) {
                                     module[0] = node;
@@ -339,7 +339,7 @@ public class DefaultProjectModulesModifier implements ProjectModulesModifier {
         return resultMap;
     }
     
-    private static class S extends TreeScanner implements Task<CompilationController> {
+    private static class S extends ErrorAwareTreeScanner implements Task<CompilationController> {
         final Map<URL, Collection<ClassPath>> resultMap;
         final ClassPath g;
         final Map<String, URL> modLocations;

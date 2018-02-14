@@ -21,8 +21,8 @@ package org.netbeans.api.java.source.gen;
 import com.sun.source.tree.*;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.*;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -1499,7 +1499,7 @@ public class CommentsTest extends GeneratorTestBase {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final TreeMaker make = workingCopy.getTreeMaker();
 
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override
                     public Void visitVariable(VariableTree node, Void p) {
                         GeneratorUtilities gu = GeneratorUtilities.get(workingCopy);
@@ -1633,7 +1633,7 @@ public class CommentsTest extends GeneratorTestBase {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitIf(IfTree node, Void p) {
                         node = GeneratorUtilities.get(workingCopy).importComments(node, cut);
                         workingCopy.rewrite(node.getThenStatement(), make.Block(Collections.singletonList(node.getThenStatement()), false));
@@ -1683,7 +1683,7 @@ public class CommentsTest extends GeneratorTestBase {
                 workingCopy.toPhase(Phase.RESOLVED);
                 final CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitIf(IfTree node, Void p) {
                         node = GeneratorUtilities.get(workingCopy).importComments(node, cut);
                         workingCopy.rewrite(node.getThenStatement(), make.Block(Collections.singletonList(node.getThenStatement()), false));
@@ -1918,7 +1918,7 @@ public class CommentsTest extends GeneratorTestBase {
                 wc.toPhase(JavaSource.Phase.RESOLVED);
                 final TreeMaker tm = wc.getTreeMaker();
                 final TreeUtilities tu = wc.getTreeUtilities();
-                wc.getCompilationUnit().accept(new TreeScanner<Void, Void>() {
+                wc.getCompilationUnit().accept(new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(MethodTree mt, Void p) {
                         Tree nt = tm.setLabel(mt, mt.getName());

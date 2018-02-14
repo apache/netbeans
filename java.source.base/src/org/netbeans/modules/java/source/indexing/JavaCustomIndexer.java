@@ -66,6 +66,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 //import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
@@ -79,6 +80,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.JavaSourceTaskFactoryManager;
 import org.netbeans.modules.java.source.ModuleNames;
+import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.base.Module;
 import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
 import org.netbeans.modules.java.source.parsing.FileObjects;
@@ -114,6 +116,7 @@ import org.openide.util.Parameters;
 import org.openide.util.TopologicalSortException;
 import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -121,13 +124,12 @@ import org.openide.util.Lookup;
  */
 public class JavaCustomIndexer extends CustomIndexer {
 
-            static       boolean NO_ONE_PASS_COMPILE_WORKER = Boolean.getBoolean(JavaCustomIndexer.class.getName() + ".no.one.pass.compile.worker");
+    public  static       boolean NO_ONE_PASS_COMPILE_WORKER = Boolean.getBoolean(JavaCustomIndexer.class.getName() + ".no.one.pass.compile.worker");
     private static final String DUMP_ON_LOW_MEM = System.getProperty(JavaCustomIndexer.class.getName() + ".dump.on.low.mem");    //NOI18N
     private static final String SOURCE_PATH = "sourcePath"; //NOI18N
     private static final String APT_SOURCE_OUTPUT = "apSrcOut"; //NOI18N
     private static final Pattern ANONYMOUS = Pattern.compile("\\$[0-9]"); //NOI18N
     private static final ClassPath EMPTY = ClassPathSupport.createClassPath(new URL[0]);
-    private static final int TRESHOLD = 500;
 
     @Override
     protected void index(final Iterable<? extends Indexable> files, final Context context) {
@@ -266,10 +268,7 @@ public class JavaCustomIndexer extends CustomIndexer {
                     int round = 0;
                     String moduleName = null;
                     while (round++ < 2) {
-                        CompileWorker[] WORKERS = {
-                            toCompileRound.size() < TRESHOLD ? new SuperOnePassCompileWorker() : new OnePassCompileWorker(),
-                            new MultiPassCompileWorker()
-                        };
+                        CompileWorker[] WORKERS = Lookup.getDefault().lookup(CompileWorkerProvider.class).getWorkers(toCompileRound);
                         for (CompileWorker w : WORKERS) {
                             compileResult = w.compile(compileResult, context, javaContext, toCompileRound);
                             if (compileResult == null || context.isCancelled()) {
@@ -705,7 +704,7 @@ public class JavaCustomIndexer extends CustomIndexer {
         return result;
     }
 
-    static void addAptGenerated(
+    public static void addAptGenerated(
             @NonNull final Context context,
             @NonNull JavaParsingContext javaContext,
             @NonNull final CompileTuple source,
@@ -716,14 +715,14 @@ public class JavaCustomIndexer extends CustomIndexer {
         }
     }
 
-    static void setErrors(Context context, CompileTuple active, DiagnosticListenerImpl errors) {
+    public static void setErrors(Context context, CompileTuple active, DiagnosticListenerImpl errors) {
         if (!active.virtual) {
             Iterable<Diagnostic<? extends JavaFileObject>> filteredErrorsList = Iterators.filter(errors.getDiagnostics(active.jfo), new FilterOutJDK7AndLaterWarnings());
             ErrorsCache.setErrors(context.getRootURI(), active.indexable, filteredErrorsList, active.aptGenerated ? ERROR_CONVERTOR_NO_BADGE : ERROR_CONVERTOR);
         }
     }
 
-    static void brokenPlatform(
+    public static void brokenPlatform(
             @NonNull final Context ctx,
             @NonNull final Iterable<? extends CompileTuple> files,
             @NullAllowed final Diagnostic<JavaFileObject> diagnostic) {
@@ -1178,7 +1177,12 @@ public class JavaCustomIndexer extends CustomIndexer {
         @Override
         public int hashCode() {
             return getIndexerName().hashCode();
-        }        
+        }
+
+        @MimeRegistration(mimeType="text/x-java", service=CustomIndexerFactory.class)
+        public static Factory register() {
+            return NoJavacHelper.hasWorkingJavac() ? new Factory() : null;
+        }
     }
 
     public static final class CompileTuple {
@@ -1420,5 +1424,21 @@ public class JavaCustomIndexer extends CustomIndexer {
             }
             return vote;
         }
+    }
+    
+    public static interface CompileWorkerProvider {
+        public CompileWorker[] getWorkers(List<CompileTuple> toCompile);
+    }
+
+    @ServiceProvider(service=CompileWorkerProvider.class, position=1000)
+    public static class DefaultCompileWorkerProvider implements CompileWorkerProvider {
+
+        @Override
+        public CompileWorker[] getWorkers(List<CompileTuple> toCompile) {
+            return new CompileWorker[] {
+                new VanillaCompileWorker()
+            };
+        }
+        
     }
 }

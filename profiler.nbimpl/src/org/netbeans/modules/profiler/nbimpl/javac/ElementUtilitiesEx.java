@@ -19,7 +19,7 @@
 package org.netbeans.modules.profiler.nbimpl.javac;
 
 import com.sun.source.tree.ClassTree;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -191,7 +191,7 @@ public class ElementUtilitiesEx {
                 @Override
                 public void run(final CompilationController cc) throws Exception {
                     cc.toPhase(Phase.RESOLVED);
-                    new TreePathScanner<Void, Void>() {
+                    new ErrorAwareTreePathScanner<Void, Void>() {
 
                         @Override
                         public Void visitClass(ClassTree node, Void p) {

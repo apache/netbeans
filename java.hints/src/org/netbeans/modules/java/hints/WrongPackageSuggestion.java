@@ -25,7 +25,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -93,7 +93,7 @@ public class WrongPackageSuggestion extends AbstractHint {
         boolean hasPackageClause = tree.getPackageName() != null;
         
         if (hasPackageClause) {
-            new TreeScanner<Void, StringBuffer>() {
+            new ErrorAwareTreeScanner<Void, StringBuffer>() {
                 @Override
                 public Void visitIdentifier(IdentifierTree node, StringBuffer p) {
                     p.append(node.getName().toString());

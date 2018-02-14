@@ -20,7 +20,7 @@
 package org.netbeans.api.java.source;
 
 import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.io.File;
 import java.io.OutputStream;
 import java.net.URL;
@@ -187,7 +187,7 @@ public class TypeMirrorHandleTest extends NbTestCase {
 
             public void run(final CompilationController info) throws Exception {
                 info.toPhase(Phase.RESOLVED);
-                new TreePathScanner<Void, Void>() {
+                new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override public Void visitVariable(VariableTree node, Void p) {
                         if (node.getName().contentEquals("e")) {
                             TypeMirror tm = info.getTrees().getTypeMirror(getCurrentPath());

@@ -45,6 +45,7 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.indexing.JavaCustomIndexer;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
@@ -202,7 +203,7 @@ public class RefactoringTestBase extends NbTestCase {
                         public ClassPath findClassPath(FileObject file, String type) {
                     if (sourcePath != null && sourcePath.contains(file)){
                                 if (ClassPath.BOOT.equals(type)) {
-                                    return ClassPathSupport.createClassPath(System.getProperty("sun.boot.class.path"));
+                                    return TestUtil.getBootClassPath();
                                 }
                                 if (ClassPath.COMPILE.equals(type)) {
                                     return ClassPathSupport.createClassPath(new FileObject[0]);
@@ -321,7 +322,7 @@ public class RefactoringTestBase extends NbTestCase {
         Main.initializeURLFactory();
         org.netbeans.api.project.ui.OpenProjects.getDefault().getOpenProjects();
         
-        org.netbeans.modules.java.source.TreeLoader.DISABLE_CONFINEMENT_TEST = true;
+//        org.netbeans.modules.java.source.TreeLoader.DISABLE_CONFINEMENT_TEST = true;
         
         prepareTest();
         org.netbeans.api.project.ui.OpenProjects.getDefault().open(new Project[] {prj = ProjectManager.getDefault().findProject(src.getParent())}, false);

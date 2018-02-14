@@ -60,7 +60,7 @@ public class JHIndexer extends MatchingTask {
     private File db;
     private File basedir;
     private String locale;
-    private List<BrandedFileSet> brandings = new LinkedList<BrandedFileSet>();
+    private List<BrandedFileSet> brandings = new LinkedList<>();
 
     /** Set the location of <samp>jhall.jar</samp> or <samp>jsearch.jar</samp> (JavaHelp tools library). */
     public Path createClasspath() {
@@ -329,8 +329,7 @@ public class JHIndexer extends MatchingTask {
         try {
             File config = File.createTempFile ("jhindexer-config", ".txt");
             try {
-                OutputStream os = new FileOutputStream (config);
-                try {
+                try (OutputStream os = new FileOutputStream (config)) {
                     PrintWriter pw = new PrintWriter (os);
                     pw.println ("IndexRemove " + basedir + File.separator);
                     String message = "Files to be indexed:";
@@ -343,8 +342,6 @@ public class JHIndexer extends MatchingTask {
                     }
                     log (message, Project.MSG_VERBOSE);
                     pw.flush ();
-                } finally {
-                    os.close ();
                 }
                 AntClassLoader loader = new AntClassLoader(getProject(), classpath);
                 loader.addLoaderPackageRoot("com.sun.java.help.search");
@@ -356,7 +353,7 @@ public class JHIndexer extends MatchingTask {
                         "-db", db.getAbsolutePath()
                     );
                     if (locale != null) {
-                        args = new ArrayList<String>(args); // #35244
+                        args = new ArrayList<>(args); // #35244
                         args.add("-locale");
                         args.add(locale);
                     }

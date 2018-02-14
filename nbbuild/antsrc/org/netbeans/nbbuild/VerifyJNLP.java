@@ -60,7 +60,7 @@ import org.xml.sax.SAXParseException;
  */
 public class VerifyJNLP extends Task {
 
-    private List<FileSet> filesets = new ArrayList<FileSet>();
+    private List<FileSet> filesets = new ArrayList<>();
     /**
      * Add one or more JNLP files to validate.
      * Use &lt;fileset file="..."/> if you have just one.
@@ -87,7 +87,7 @@ public class VerifyJNLP extends Task {
     }
 
     public @Override void execute() throws BuildException {
-        Map<String,String> results = new LinkedHashMap<String,String>();
+        Map<String,String> results = new LinkedHashMap<>();
         for (FileSet fs : filesets) {
             DirectoryScanner s = fs.getDirectoryScanner(getProject());
             File basedir = s.getBasedir();
@@ -185,9 +185,8 @@ public class VerifyJNLP extends Task {
                         validate(f, results);
                     } else if (el.getTagName().equals("jar") && f.exists()) {
                         try {
-                            JarFile jf = new JarFile(f, true);
                             // Try to find signers.
-                            try {
+                            try (JarFile jf = new JarFile(f, true)) {
                                 Enumeration<JarEntry> entries = jf.entries();
                                 while (entries.hasMoreElements()) {
                                     JarEntry entry = entries.nextElement();
@@ -217,8 +216,6 @@ public class VerifyJNLP extends Task {
                                     existingSignedJar = f;
                                     break; // just check one representative file
                                 }
-                            } finally {
-                                jf.close();
                             }
                         } catch (IOException x) {
                             error(jnlp, results, "Signatures", "error examining signatures in " + f + ": " + x);

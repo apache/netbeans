@@ -75,7 +75,7 @@ public final class ProcessJsAnnotationsTask extends Task {
             return;
         }
         
-        LinkedList<URL> arr = new LinkedList<URL>();
+        LinkedList<URL> arr = new LinkedList<>();
         boolean foundAsm = false;
         for (String s : cp.list()) {
             final File f = FileUtils.getFileUtils().resolveFile(getProject().getBaseDir(), s);
@@ -133,11 +133,8 @@ public final class ProcessJsAnnotationsTask extends Task {
         }
         
         byte[] arr = new byte[(int)f.length()];
-        FileInputStream is = new FileInputStream(f);
-        try {
+        try (FileInputStream is = new FileInputStream(f)) {
             readArr(arr, is);
-        } finally {
-            is.close();
         }
 
         byte[] newArr = null;
@@ -159,11 +156,8 @@ public final class ProcessJsAnnotationsTask extends Task {
     }
 
     private void writeArr(File f, byte[] newArr) throws IOException, FileNotFoundException {
-        FileOutputStream os = new FileOutputStream(f);
-        try {
+        try (FileOutputStream os = new FileOutputStream(f)) {
             os.write(newArr);
-        } finally {
-            os.close();
         }
     }
 
@@ -186,32 +180,32 @@ public final class ProcessJsAnnotationsTask extends Task {
             className = className.substring(0, className.length() - 6);
         }
         
-        BufferedReader r = new BufferedReader(new FileReader(f));
-        List<String> arr = new ArrayList<String>();
+        List<String> arr = new ArrayList<>();
         boolean modified = false;
-        for (;;) {
-            String line = r.readLine();
-            if (line == null) {
-                break;
+        try (BufferedReader r = new BufferedReader(new FileReader(f))) {
+            for (;;) {
+                String line = r.readLine();
+                if (line == null) {
+                    break;
+                }
+                if (line.endsWith(className)) {
+                    modified = true;
+                    continue;
+                }
+                arr.add(line);
             }
-            if (line.endsWith(className)) {
-                modified = true;
-                continue;
-            }
-            arr.add(line);
         }
-        r.close();
         
         if (modified) {
             if (arr.isEmpty()) {
                 f.delete();
             } else {
-                FileWriter w = new FileWriter(f);
-                for (String l : arr) {
-                    w.write(l);
-                    w.write("\n");
+                try (FileWriter w = new FileWriter(f)) {
+                    for (String l : arr) {
+                        w.write(l);
+                        w.write("\n");
+                    }
                 }
-                w.close();
             }
         }
     }

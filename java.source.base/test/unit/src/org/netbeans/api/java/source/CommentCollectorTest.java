@@ -19,7 +19,7 @@
 package org.netbeans.api.java.source;
 
 import com.sun.source.tree.*;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import org.junit.Test;
@@ -127,7 +127,7 @@ public class CommentCollectorTest extends NbTestCase {
                 cu.accept(printer, null);
 
 
-                TreeVisitor<Void, Void> w = new TreeScanner<Void, Void>() {
+                TreeVisitor<Void, Void> w = new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(MethodTree node, Void aVoid) {
                         switch (node.getName().toString()) {
@@ -205,7 +205,7 @@ public class CommentCollectorTest extends NbTestCase {
                 cu.accept(printer, null);
 
 
-                TreeVisitor<Void, Void> w = new TreeScanner<Void, Void>() {
+                TreeVisitor<Void, Void> w = new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitClass(ClassTree node, Void aVoid) {
                         verify(node, CommentSet.RelativePosition.PRECEDING, service, "/** (COMM1) This comment belongs before class */");
@@ -282,7 +282,7 @@ public class CommentCollectorTest extends NbTestCase {
 
                 JCTree.JCClassDecl clazz = (JCTree.JCClassDecl) cu.getTypeDecls().get(0);
                 final boolean[] processed = new boolean[1];
-                TreeVisitor<Void, Void> w = new TreeScanner<Void, Void>() {
+                TreeVisitor<Void, Void> w = new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitExpressionStatement(ExpressionStatementTree node, Void p) {
                         verify(node, CommentSet.RelativePosition.PRECEDING, service, "// Test");
@@ -329,7 +329,7 @@ public class CommentCollectorTest extends NbTestCase {
                 cu.accept(printer, null);
 
                 JCTree.JCClassDecl clazz = (JCTree.JCClassDecl) cu.getTypeDecls().get(0);
-                TreeVisitor<Void, Void> w = new TreeScanner<Void, Void>() {
+                TreeVisitor<Void, Void> w = new ErrorAwareTreeScanner<Void, Void>() {
 
                     @Override
                     public Void visitReturn(ReturnTree node, Void aVoid) {
@@ -382,7 +382,7 @@ public class CommentCollectorTest extends NbTestCase {
                 workingCopy.toPhase(JavaSource.Phase.PARSED);
                 final CommentHandlerService service = CommentHandlerService.instance(workingCopy.impl.getJavacTask().getContext());
 
-                TreeScanner<Void, Void> w = new TreeScanner<Void, Void>() {
+                ErrorAwareTreeScanner<Void, Void> w = new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitVariable(VariableTree node, Void p) {
                         GeneratorUtilities.get(workingCopy).importComments(node, workingCopy.getCompilationUnit());
@@ -433,7 +433,7 @@ public class CommentCollectorTest extends NbTestCase {
                 workingCopy.toPhase(JavaSource.Phase.PARSED);
                 final CommentHandlerService service = CommentHandlerService.instance(workingCopy.impl.getJavacTask().getContext());
 
-                TreeScanner<Void, Void> w = new TreeScanner<Void, Void>() {
+                ErrorAwareTreeScanner<Void, Void> w = new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(MethodTree node, Void p) {
                         if (node.getName().contentEquals("m3")) {
@@ -471,7 +471,7 @@ public class CommentCollectorTest extends NbTestCase {
                 workingCopy.toPhase(JavaSource.Phase.PARSED);
                 final CommentHandlerService service = CommentHandlerService.instance(workingCopy.impl.getJavacTask().getContext());
 
-                TreeScanner<Void, Void> w = new TreeScanner<Void, Void>() {
+                ErrorAwareTreeScanner<Void, Void> w = new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(MethodTree node, Void p) {
                         GeneratorUtilities.get(workingCopy).importComments(node, workingCopy.getCompilationUnit());
@@ -517,7 +517,7 @@ public class CommentCollectorTest extends NbTestCase {
                 workingCopy.toPhase(JavaSource.Phase.PARSED);
                 final CommentHandlerService service = CommentHandlerService.instance(workingCopy.impl.getJavacTask().getContext());
 
-                TreeScanner<Void, Void> w = new TreeScanner<Void, Void>() {
+                ErrorAwareTreeScanner<Void, Void> w = new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitMethod(MethodTree node, Void p) {
                         if (node.getName().contentEquals("test")) {
@@ -552,7 +552,7 @@ public class CommentCollectorTest extends NbTestCase {
                 workingCopy.toPhase(JavaSource.Phase.PARSED);
                 final CommentHandlerService service = CommentHandlerService.instance(workingCopy.impl.getJavacTask().getContext());
 
-                TreeScanner<Void, Void> w = new TreeScanner<Void, Void>() {
+                ErrorAwareTreeScanner<Void, Void> w = new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitClass(ClassTree node, Void p) {
                         GeneratorUtilities.get(workingCopy).importComments(node, workingCopy.getCompilationUnit());
@@ -746,7 +746,7 @@ public class CommentCollectorTest extends NbTestCase {
         }
     }
 
-    private static class CommentPrinter extends TreeScanner<Void, Void> {
+    private static class CommentPrinter extends ErrorAwareTreeScanner<Void, Void> {
         private CommentHandlerService service;
 
         CommentPrinter(CommentHandlerService service) {

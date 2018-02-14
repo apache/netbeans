@@ -19,9 +19,13 @@
 
 package org.netbeans.lib.profiler.heap;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 
 /**
@@ -60,6 +64,31 @@ public class HeapFactory {
      */
     public static Heap createHeap(File heapDump, int segment)
                            throws FileNotFoundException, IOException {
-        return new HprofHeap(heapDump, segment);
+        CacheDirectory cacheDir = CacheDirectory.getHeapDumpCacheDirectory(heapDump);
+        if (!cacheDir.isTemporary()) {
+            File savedDump = cacheDir.getHeapDumpAuxFile();
+
+            if (savedDump.exists() && savedDump.isFile() && savedDump.canRead()) {
+                try {
+                    return loadHeap(cacheDir);
+                } catch (IOException ex) {
+                    System.err.println("Loading heap dump "+heapDump+" from cache failed.");
+                    ex.printStackTrace(System.err);
+                }
+            }
+        }
+        return new HprofHeap(heapDump, segment, cacheDir);
+
     }
+    
+    static Heap loadHeap(CacheDirectory cacheDir)
+                           throws FileNotFoundException, IOException {
+        File savedDump = cacheDir.getHeapDumpAuxFile();
+        InputStream is = new BufferedInputStream(new FileInputStream(savedDump), 64*1024);
+        DataInputStream dis = new DataInputStream(is);
+        Heap heap = new HprofHeap(dis, cacheDir);
+        dis.close();
+        return heap;
+    }
+    
 }

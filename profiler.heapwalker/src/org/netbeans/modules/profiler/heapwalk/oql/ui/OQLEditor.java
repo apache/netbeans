@@ -24,7 +24,6 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -33,12 +32,15 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.Document;
+import javax.swing.text.Element;
+import javax.swing.text.StyleConstants;
 import org.netbeans.lib.profiler.ui.UIUtils;
 import org.netbeans.lib.profiler.ui.components.NoCaret;
 import org.netbeans.modules.profiler.oql.engine.api.OQLEngine;
 import org.netbeans.modules.profiler.oql.engine.api.OQLException;
 import org.netbeans.modules.profiler.oql.spi.OQLEditorImpl;
 import org.openide.awt.StatusDisplayer;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
 /**
@@ -63,6 +65,8 @@ public class OQLEditor extends JPanel {
 
     private Color lastBgColor = null;
     private Caret lastCaret = null;
+    
+    private Font font;
 
     public OQLEditor(OQLEngine engine) {
         this.engine = engine;
@@ -90,11 +94,20 @@ public class OQLEditor extends JPanel {
             queryEditor.getCaret().addChangeListener(new ChangeListener() {
                 public void stateChanged(ChangeEvent e) {
                     try {
-                        Rectangle edit = queryEditor.getUI().modelToView(queryEditor, queryEditor.getCaretPosition());
+                        Rectangle edit = queryEditor == null ? null :
+                                         queryEditor.getUI().modelToView(
+                                         queryEditor, queryEditor.getCaretPosition());
                         if (edit != null) queryEditor.scrollRectToVisible(edit);
-                    } catch (BadLocationException ex) {}
+                    } catch (BadLocationException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 }
             });
+            
+            Element root = queryEditor.getDocument().getDefaultRootElement();
+            String family = StyleConstants.getFontFamily(root.getAttributes());
+            int size = StyleConstants.getFontSize(root.getAttributes());
+            font = new Font(family, Font.PLAIN, size);
         } else {
             queryEditor = new JEditorPane() {
                 public void setText(String text) {
@@ -112,8 +125,8 @@ public class OQLEditor extends JPanel {
                 queryEditor.setContentType("text/x-oql"); // NOI18N
             } catch (NullPointerException e) {}
             
-            int fontsize = new JTextArea().getFont().getSize();
-            queryEditor.setFont(new Font("Monospaced", Font.PLAIN, fontsize)); // NOI18N
+            font = Font.decode("Monospaced"); // NOI18N
+            queryEditor.setFont(font);
             lexervalid = true; // no lexer info available; assume the lexing info is valid
         }
 
@@ -128,11 +141,11 @@ public class OQLEditor extends JPanel {
     }
 
     public void setScript(String script) {
-        editor().setText(script);
+        getEditor().setText(script);
     }
 
     public String getScript() {
-        return editor().getText();
+        return getEditor().getText();
     }
 
     @Override
@@ -149,7 +162,7 @@ public class OQLEditor extends JPanel {
 
     @Override
     public void requestFocus() {
-        editor().requestFocus();
+        getEditor().requestFocus();
     }
 
     final private void validateScript() {
@@ -169,7 +182,7 @@ public class OQLEditor extends JPanel {
     }
 
     public void setEditable(boolean b) {
-        JEditorPane editor = editor();
+        JEditorPane editor = getEditor();
         if (editor.isEditable() == b) return;
         
         editor.setEditable(b);
@@ -186,10 +199,15 @@ public class OQLEditor extends JPanel {
     }
 
     public boolean isEditable() {
-        return editor().isEditable();
+        return getEditor().isEditable();
     }
     
-    private JEditorPane editor() {
+    public Font getFont() {
+        if (queryEditor == null) init();
+        return font;
+    }
+    
+    public JEditorPane getEditor() {
         if (queryEditor == null) init();
         return queryEditor;
     }

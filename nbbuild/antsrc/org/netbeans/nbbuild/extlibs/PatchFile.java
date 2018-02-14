@@ -244,7 +244,7 @@ public class PatchFile extends Task {
             patch.targetFile = computeTargetFile(patch);
             if (patch.sourceFile != null && patch.sourceFile.exists()) {
                 if (patch.binary) {
-                    target = new ArrayList<String>();
+                    target = new ArrayList<>();
                 } else {
                     target = readFile(patch.sourceFile);
                     if (patchCreatesNewFileThatAlreadyExists(patch, target)) {

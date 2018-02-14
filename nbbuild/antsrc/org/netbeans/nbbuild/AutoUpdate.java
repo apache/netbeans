@@ -67,7 +67,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author Jaroslav Tulach <jtulach@netbeans.org>
  */
 public class AutoUpdate extends Task {
-    private List<Modules> modules = new ArrayList<Modules>();
+    private List<Modules> modules = new ArrayList<>();
     private FileSet nbmSet;
     private File download;
     private File dir;
@@ -134,7 +134,7 @@ public class AutoUpdate extends Task {
             }
             DirectoryScanner s = nbmSet.getDirectoryScanner(getProject());
             File basedir = s.getBasedir();
-            units = new HashMap<String, ModuleItem>();
+            units = new HashMap<>();
             for (String incl : s.getIncludedFiles()) {
                 File nbm = new File(basedir, incl);
                 try {
@@ -256,8 +256,7 @@ public class AutoUpdate extends Task {
                 module_version.setAttribute("origin", "Ant"); // XXX set to URL origin
                 module_version.setAttribute("specification_version", uu.getSpecVersion());
 
-                JarFile  zf = new JarFile(tmp);
-                try {
+                try (JarFile zf = new JarFile(tmp)) {
                 Manifest manifest = zf.getManifest();
                 if (manifest == null || manifest.getMainAttributes().getValue("Bundle-SymbolicName") == null) { // regular NBM
                 Enumeration<? extends ZipEntry> en = zf.entries();
@@ -326,21 +325,17 @@ public class AutoUpdate extends Task {
                     String relName = "config/Modules/" + dash + ".xml";
                     File configModulesXml = new File(whereTo, relName);
                     configModulesXml.getParentFile().mkdirs();
-                    PrintWriter w = new PrintWriter(configModulesXml);
-                    try {
+                    try (PrintWriter w = new PrintWriter(configModulesXml)) {
                         w.print("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE module PUBLIC \"-//NetBeans//DTD Module Status 1.0//EN\"\n                        \"http://www.netbeans.org/dtds/module-status-1_0.dtd\">\n<module name=\"");
                         w.print(uu.getCodeName());
                         w.print("\">\n    <param name=\"autoload\">true</param>\n    <param name=\"eager\">false</param>\n    <param name=\"jar\">modules/");
                         w.print(dash);
                         w.print(".jar</param>\n    <param name=\"reloadable\">false</param>\n</module>\n");
-                    } finally {
-                        w.close();
                     }
                     Element file = (Element) module_version.appendChild(doc.createElement("file"));
                     file.setAttribute("crc", String.valueOf(getFileCRC(configModulesXml)));
                     file.setAttribute("name", relName);
                     relName = "modules/" + dash + ".jar";
-                    zf.close();
                     File bundle = new File(whereTo, relName);
                     bundle.getParentFile().mkdirs();
                     FileUtils.getFileUtils().copyFile(tmp, bundle);
@@ -348,8 +343,6 @@ public class AutoUpdate extends Task {
                     file.setAttribute("crc", String.valueOf(getFileCRC(bundle)));
                     file.setAttribute("name", relName);
                 }
-                } finally {
-                    zf.close();
                 }
                 File tracking = new File(new File(whereTo, "update_tracking"), dash + ".xml");
                 log("Writing tracking file " + tracking, Project.MSG_VERBOSE);
@@ -438,9 +431,7 @@ public class AutoUpdate extends Task {
             //https://netbeans.org/bugzilla/show_bug.cgi?id=119861
             result = process.waitFor();
             process.destroy();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return result == 0;
@@ -487,7 +478,7 @@ public class AutoUpdate extends Task {
     }
 
     private Map<String,List<String>> findExistingModules(File... clusters) {
-        Map<String,List<String>> all = new HashMap<String, List<String>>();
+        Map<String,List<String>> all = new HashMap<>();
         for (File c : clusters) {
             File mc = new File(c, "update_tracking");
             final File[] arr = mc.listFiles();
@@ -541,7 +532,7 @@ public class AutoUpdate extends Task {
                     if (name == null || version == null) {
                         throw new BuildException("Cannot find version in " + config);
                     }
-                    arr = new ArrayList<String>();
+                    arr = new ArrayList<>();
                     arr.add(version);
                     toAdd.put(name, arr);
                     return;

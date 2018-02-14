@@ -18,6 +18,6 @@
 
 archetypeArtifactId=knockout4j-archetype
 archetypeGroupId=com.dukescript.archetype
-archetypeVersion=0.17
+archetypeVersion=0.20
 archetypeBuild=true
 archetypeOpen=client/src/main/java/.*/DataModel.java,client/src/main/webapp/pages/index.html

@@ -103,8 +103,7 @@ public class MakeNBM extends Task {
 		if (lmod > mostRecentInput) mostRecentInput = lmod;
 		addSeparator ();
 		try {
-		    InputStream is = new FileInputStream (file);
-		    try {
+		    try (InputStream is = new FileInputStream (file)) {
 			BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                         String line;
                         while ((line = r.readLine()) != null) {
@@ -128,8 +127,6 @@ public class MakeNBM extends Task {
                             text.append(line);
                             text.append('\n');
                         }
-		    } finally {
-			is.close ();
 		    }
 		} catch (IOException ioe) {
                     throw new BuildException ("Exception reading blurb from " + file, ioe, getLocation ());
@@ -313,7 +310,7 @@ public class MakeNBM extends Task {
 
     /** Try to find and create localized info.xml files */
     public void setLocales(String s) {
-        locales = new ArrayList<String>();
+        locales = new ArrayList<>();
         for (String st : s.split("[, ]+")) {
             if (! st.trim().isEmpty()) {
                 locales.add(st);
@@ -434,7 +431,7 @@ public class MakeNBM extends Task {
     public ExternalPackage createExternalPackage(){
 	ExternalPackage externalPackage = new ExternalPackage ();
 	if (externalPackages == null)
-	    externalPackages = new ArrayList<ExternalPackage>();
+	    externalPackages = new ArrayList<>();
 	externalPackages.add( externalPackage );
 	return externalPackage;
     }
@@ -497,8 +494,7 @@ public class MakeNBM extends Task {
             }
         }
         try {
-            JarFile mjar = new JarFile(mfile);
-            try {
+            try (JarFile mjar = new JarFile(mfile)) {
                 if (mjar.getManifest().getMainAttributes().getValue("Bundle-SymbolicName") != null) {
                     // #181025: treat bundles specially.
                     return null;
@@ -523,24 +519,16 @@ public class MakeNBM extends Task {
                     Properties p = new Properties();
                     ZipEntry bundleentry = mjar.getEntry(bundlename);
                     if (bundleentry != null) {
-                        InputStream is = mjar.getInputStream(bundleentry);
-                        try {
+                        try (InputStream is = mjar.getInputStream(bundleentry)) {
                             p.load(is);
-                        } finally {
-                            is.close();
                         }
                         // Now pick up attributes from the bundle.
-                        Iterator it = p.entrySet().iterator();
-                        while (it.hasNext()) {
-                            Map.Entry entry = (Map.Entry)it.next();
-                            String name = (String)entry.getKey();
+                        for(String name: p.stringPropertyNames()) {
                             if (! name.startsWith("OpenIDE-Module-")) continue;
-                            attr.putValue(name, (String)entry.getValue());
+                            attr.putValue(name, p.getProperty(name));
                         }
                     }
                 }
-            } finally {
-                mjar.close();
             }
         } catch (IOException ioe) {
             throw new BuildException("exception while reading " + mfile.getName(), ioe, getLocation());
@@ -577,7 +565,7 @@ public class MakeNBM extends Task {
             throw new BuildException("cannot set both manifest and module for makenbm", getLocation());
         }
         if (locales == null) {
-            locales = new ArrayList<String>();
+            locales = new ArrayList<>();
         }
 
     File nbm;
@@ -593,7 +581,7 @@ public class MakeNBM extends Task {
 	overrideLicenseIfNeeded() ;
         
         
-        moduleAttributes = new ArrayList<Attributes> ();
+        moduleAttributes = new ArrayList<> ();
         File module = new File( productDir, moduleName );
         Attributes attr = getModuleAttributesForLocale("");
         if (attr == null) {
@@ -626,7 +614,7 @@ public class MakeNBM extends Task {
             log("Most recent input: " + mostRecentInput + " file: " + nbm.lastModified(), Project.MSG_DEBUG);
         }
         
-        ArrayList<ZipFileSet> infoXMLFileSets = new ArrayList<ZipFileSet>();
+        ArrayList<ZipFileSet> infoXMLFileSets = new ArrayList<>();
         for (Attributes modAttr : moduleAttributes) {
             Document infoXmlContents = createInfoXml(modAttr);
             File infofile;
@@ -635,11 +623,8 @@ public class MakeNBM extends Task {
                 throw new BuildException("Found attributes without assigned locale code", getLocation());
             try {
                 infofile = File.createTempFile("info_"+loc,".xml");
-                OutputStream infoStream = new FileOutputStream (infofile);
-                try {
+                try (OutputStream infoStream = new FileOutputStream (infofile)) {
                     XMLUtil.write(infoXmlContents, infoStream);
-                } finally {
-                    infoStream.close ();
                 }
             } catch (IOException e) {
                 throw new BuildException("exception when creating Info/info.xml for locale '"+loc+"'", e, getLocation());
@@ -660,8 +645,8 @@ public class MakeNBM extends Task {
  	    new BuildException( "Can't get codenamebase" );
  	
  	UpdateTracking tracking = new UpdateTracking(productDir.getAbsolutePath());
- 	Set<String> _files = new LinkedHashSet<String>(Arrays.asList(tracking.getListOfNBM(codename)));
-    List<String> __files = new ArrayList<String>(_files);
+ 	Set<String> _files = new LinkedHashSet<>(Arrays.asList(tracking.getListOfNBM(codename)));
+    List<String> __files = new ArrayList<>(_files);
     for (String f : _files) {
         if (f.endsWith(".external")) { // #195041
             __files.remove(f.substring(0, f.length() - 9));
@@ -669,7 +654,7 @@ public class MakeNBM extends Task {
     }
     String[] files = __files.toArray(new String[__files.size()]);
  	ZipFileSet fs = new ZipFileSet();
-        List <String> moduleFiles = new ArrayList <String>();
+        List <String> moduleFiles = new ArrayList <>();
  	fs.setDir( productDir );
         String [] filesForPackaging = null;
         if(usePack200 && pack200excludes!=null && !pack200excludes.equals("")) {
@@ -685,7 +670,7 @@ public class MakeNBM extends Task {
             filesForPackaging = ds.getIncludedFiles();            
         }
 
-        List<File> packedFiles = new ArrayList<File>();
+        List<File> packedFiles = new ArrayList<>();
         for (int i = 0; i < files.length; i++) {
             if (usePack200) {
                 File sourceFile = new File(productDir, files[i]);
@@ -776,11 +761,8 @@ public class MakeNBM extends Task {
                     }
                 try {
                     executablesFile = File.createTempFile("executables",".list");
-                    OutputStream infoStream = new FileOutputStream (executablesFile);
-                    try {
+                    try (OutputStream infoStream = new FileOutputStream (executablesFile)) {
                         infoStream.write(sb.toString().getBytes("UTF-8"));
-                    } finally {
-                        infoStream.close ();
                     }
                 } catch (IOException e) {
                     throw new BuildException("exception when creating Info/executables.list", e, getLocation());
@@ -879,8 +861,7 @@ public class MakeNBM extends Task {
     }
 
     private boolean pack200(final File sourceFile, final File targetFile) throws IOException {
-        JarFile jarFile = new JarFile(sourceFile);
-        try {
+        try (JarFile jarFile = new JarFile(sourceFile)) {
             if (isSigned(jarFile)) {
                 return false;
             }
@@ -902,8 +883,6 @@ public class MakeNBM extends Task {
                     targetFile.setLastModified(sourceFile.lastModified());
                 }
             }
-        } finally {
-            jarFile.close();
         }
     }
 
@@ -940,7 +919,7 @@ public class MakeNBM extends Task {
         Document doc = domimpl.createDocument(null, "module", domimpl.createDocumentType("module", pub, sys));
         String codenamebase = attr.getValue("OpenIDE-Module");
         if (codenamebase == null) {
-            Iterator it = attr.keySet().iterator();
+            Iterator<Object> it = attr.keySet().iterator();
             Name key; String val;
             while (it.hasNext()) {
                 key = (Name) it.next();
@@ -1017,15 +996,12 @@ public class MakeNBM extends Task {
         }
         // Write manifest attributes.
         Element el = doc.createElement("manifest");
-        List<String> attrNames = new ArrayList<String>(attr.size());
-        Iterator it = attr.keySet().iterator();
-        while (it.hasNext()) {
-            attrNames.add(((Attributes.Name)it.next()).toString());
+        List<String> attrNames = new ArrayList<>(attr.size());
+        for(Object key: attr.keySet()) {
+            attrNames.add(((Attributes.Name)key).toString());
         }
         Collections.sort(attrNames);
-        it = attrNames.iterator();
-        while (it.hasNext()) {
-            String name = (String) it.next();
+        for(String name: attrNames) {
             if (name.matches("OpenIDE-Module(|-(Name|(Specification|Implementation)-Version|(Module|Package|Java|IDE)-Dependencies|" +
                     "(Short|Long)-Description|Display-Category|Provides|Requires|Recommends|Needs|Fragment-Host))|AutoUpdate-(Show-In-Client|Essential-Module)")) {
                 el.setAttribute(name, attr.getValue(name));

@@ -19,11 +19,13 @@
 
 package org.netbeans.lib.nbjavac.services;
 
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.comp.Modules;
 import com.sun.tools.javac.util.Name;
 import java.io.IOException;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import junit.framework.TestCase;
@@ -38,7 +40,7 @@ public class AnonymousNumberingTest extends TestCase {
         super(name);
     }
 
-    public void testCorrectAnonymousIndicesForMethodInvocations() throws IOException {
+    public void testCorrectAnonymousIndicesForMethodInvocations() throws Exception {
         String code = "package test;\n" +
                       "public class Test {\n" +
                       "    public Test main(Object o) {\n" +
@@ -56,7 +58,8 @@ public class AnonymousNumberingTest extends TestCase {
 
         JavacTaskImpl ct = Utilities.createJavac(null, Utilities.fileObjectFor(code));
         
-        ct.analyze();
+        Iterable<? extends CompilationUnitTree> cuts = ct.parse();
+        Iterable<? extends Element> analyze = ct.analyze();
         
         Symtab symTab = Symtab.instance(ct.getContext());
         Modules modules = Modules.instance(ct.getContext());

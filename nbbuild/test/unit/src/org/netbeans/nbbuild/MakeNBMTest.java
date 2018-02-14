@@ -58,16 +58,16 @@ public class MakeNBMTest extends TestBase {
         
         File ut = new File (new File(getWorkDir(), "update_tracking"), "org-my-module.xml");
         ut.getParentFile().mkdirs();
-        FileWriter w = new FileWriter(ut);
-        String UTfile =   
-            "<?xml version='1.0' encoding='UTF-8'?>" +
-            "<module codename='org.netbeans.modules.autoupdate/1'>" +
-            "    <module_version install_time='1136503038669' last='true' origin='installer' specification_version='2.16.1'>" +
-            "        <file crc='3405032071' name='modules/" + simpleJar.getName() + "'/>" +
-            "    </module_version>" +
-            "</module>";
-        w.write(UTfile);
-        w.close();
+        try (FileWriter w = new FileWriter(ut)) {
+            String UTfile =
+                    "<?xml version='1.0' encoding='UTF-8'?>" +
+                    "<module codename='org.netbeans.modules.autoupdate/1'>" +
+                    "    <module_version install_time='1136503038669' last='true' origin='installer' specification_version='2.16.1'>" +
+                    "        <file crc='3405032071' name='modules/" + simpleJar.getName() + "'/>" +
+                    "    </module_version>" +
+                    "</module>";
+            w.write(UTfile);
+        }
         
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
@@ -161,21 +161,20 @@ public class MakeNBMTest extends TestBase {
             manifest.getMainAttributes().putValue("OpenIDE-Module-Localizing-Bundle", "some/fake/prop/name/Bundle.properties");
         }
         
-        JarOutputStream os = new JarOutputStream (new FileOutputStream (f), manifest);
-        
-        if (props != null) {
-            os.putNextEntry(new JarEntry("some/fake/prop/name/Bundle.properties"));
-            props.store(os, "# properties for the module");
-            os.closeEntry();
+        try (JarOutputStream os = new JarOutputStream (new FileOutputStream (f), manifest)) {
+            if (props != null) {
+                os.putNextEntry(new JarEntry("some/fake/prop/name/Bundle.properties"));
+                props.store(os, "# properties for the module");
+                os.closeEntry();
+            }
+            
+            
+            for (int i = 0; i < content.length; i++) {
+                os.putNextEntry(new JarEntry (content[i]));
+                os.closeEntry();
+            }
+            os.closeEntry ();
         }
-        
-        
-        for (int i = 0; i < content.length; i++) {
-            os.putNextEntry(new JarEntry (content[i]));
-            os.closeEntry();
-        }
-        os.closeEntry ();
-        os.close();
         
         return f;
     }
@@ -232,9 +231,9 @@ public class MakeNBMTest extends TestBase {
         mani.getMainAttributes().putValue("OpenIDE-Module", "mod");
         OutputStream os = new FileOutputStream(new File(modules, "mod.jar"));
         try {
-            JarOutputStream jos = new JarOutputStream(os, mani);
-            jos.finish();
-            jos.close();
+            try (JarOutputStream jos = new JarOutputStream(os, mani)) {
+                jos.finish();
+            }
         } finally {
             os.close();
         }

@@ -61,6 +61,9 @@ public class ValidateLayerMenuTest extends NbTestCase {
     
     /** Allowes to skip filest that are know to be broken */
     protected boolean skipFile (FileObject fo) {
+        if (fo.getPath().equals("Menu/Help/org-netbeans-modules-usersguide-master.xml")) {
+            return true;
+        }
         // ignore these files, there are helper for implementation of 
         // View/filesystems, View/Runtime, View/Projects, etc.
         return fo.getPath().startsWith ("Menu/Window/oldRoots") && fo.hasExt ("txt");

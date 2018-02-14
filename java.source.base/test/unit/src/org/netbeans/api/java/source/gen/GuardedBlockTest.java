@@ -35,7 +35,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -807,7 +807,7 @@ public class GuardedBlockTest extends GeneratorTestMDRCompat {
                 workingCopy.toPhase(Phase.RESOLVED);
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 final TreeMaker make = workingCopy.getTreeMaker();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                     @Override
                     public Void visitIdentifier(IdentifierTree node, Void p) {
                         if ("X".equals(node.getName().toString())) {
@@ -895,7 +895,7 @@ public class GuardedBlockTest extends GeneratorTestMDRCompat {
                 CompilationUnitTree cut = workingCopy.getCompilationUnit();
                 final TreeMaker make = workingCopy.getTreeMaker();
                 final TreeUtilities tu = workingCopy.getTreeUtilities();
-                new TreeScanner<Void, Void>() {
+                new ErrorAwareTreeScanner<Void, Void>() {
                   @Override
                   public Void visitMethod(MethodTree mt, Void p) {
                      Tree nt = make.setLabel(mt, mt.getName());

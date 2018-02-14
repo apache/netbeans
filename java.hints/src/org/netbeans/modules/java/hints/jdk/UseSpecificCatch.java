@@ -25,7 +25,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -262,7 +262,7 @@ public class UseSpecificCatch implements CustomizerProvider {
         final boolean[] result = new boolean[1];
 
         for (TreePath tp : statements) {
-            new TreePathScanner<Void, Void>() {
+            new ErrorAwareTreePathScanner<Void, Void>() {
                 @Override
                 public Void visitAssignment(AssignmentTree node, Void p) {
                     if (tEl.equals(ctx.getInfo().getTrees().getElement(new TreePath(getCurrentPath(), node.getVariable())))) {

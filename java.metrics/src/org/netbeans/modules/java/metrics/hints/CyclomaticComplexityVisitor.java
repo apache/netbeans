@@ -30,7 +30,7 @@ import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.WhileLoopTree;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 
 /**
  * This Visitor counts a Cyclomatic complexity on the visited tree. 
@@ -40,7 +40,7 @@ import com.sun.source.util.TreePathScanner;
  * 
  * @author sdedic
  */
-public final class CyclomaticComplexityVisitor extends TreePathScanner<Object, Object> {
+public final class CyclomaticComplexityVisitor extends ErrorAwareTreePathScanner<Object, Object> {
     private int complexity;
     
     private boolean inClass;

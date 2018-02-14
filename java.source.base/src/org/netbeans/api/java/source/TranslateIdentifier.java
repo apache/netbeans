@@ -27,7 +27,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +47,7 @@ import org.netbeans.api.annotations.common.NonNull;
  *
  * @author Pavel Flaska
  */
-class TranslateIdentifier extends TreePathScanner<Void, Void>{
+class TranslateIdentifier extends ErrorAwareTreePathScanner<Void, Void>{
     
     public static <T extends Tree> T importFQNs(WorkingCopy copy, T tree) {
         if (tree == null) return null;

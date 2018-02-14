@@ -211,6 +211,7 @@ public class CLIHandlerTest extends NbTestCase {
         }
     }
 
+    @RandomlyFails
     public void testHelpIsPassedToRunningServer() throws Exception {
         class UserDir extends CLIHandler implements Runnable {
             private int cnt;

@@ -58,13 +58,13 @@ public class CombinationRSSFeed extends RSSFeed {
         this.url1 = url1;
         this.url2 = url2;
     }
-
+    
     @Override
     protected List<FeedItem> buildItemList() throws SAXException, ParserConfigurationException, IOException {
         XMLReader reader = XMLUtil.createXMLReader( false, true );
         FeedHandler handler = new FeedHandler( getMaxItemCount() );
         reader.setContentHandler( handler );
-        reader.setEntityResolver( org.openide.xml.EntityCatalog.getDefault() );
+        reader.setEntityResolver( new RSSEntityResolver() );
         reader.setErrorHandler( new ErrorCatcher() );
         reader.parse( findInputSource(new URL(url1)) );
 

@@ -29,7 +29,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.List;
 import javax.tools.Diagnostic;
 import org.netbeans.spi.debugger.jpda.EditorContext.MethodArgument;
@@ -39,7 +39,7 @@ import org.netbeans.spi.debugger.jpda.EditorContext.MethodArgument;
  * 
  * @author Martin Entlicher
  */
-class MethodArgumentsScanner extends TreeScanner<MethodArgument[], Object> {
+class MethodArgumentsScanner extends ErrorAwareTreeScanner<MethodArgument[], Object> {
     
     private int offset;
     private CompilationUnitTree tree;

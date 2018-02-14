@@ -19,6 +19,9 @@
 
 package org.netbeans.lib.profiler.heap;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -55,6 +58,7 @@ class ClassDumpSegment extends TagBounds {
     final int stackTraceSerialNumberOffset;
     final int superClassIDOffset;
     ClassDump java_lang_Class;
+    boolean newSize;
     Map /*<JavaClass,List<Field>>*/ fieldsCache;
     private List /*<JavaClass>*/ classes;
     private Map /*<Byte,JavaClass>*/ primitiveArrayMap;
@@ -229,7 +233,8 @@ class ClassDumpSegment extends TagBounds {
         return classes;
     }
 
-    private void extractSpecialClasses() {
+    void extractSpecialClasses() {
+        ClassDump java_lang_Object = null;
         primitiveArrayMap = new HashMap();
 
         Iterator classIt = classes.iterator();
@@ -257,6 +262,8 @@ class ClassDumpSegment extends TagBounds {
                 typeObj = Integer.valueOf(HprofHeap.LONG);
             } else if (vmName.equals("java/lang/Class")) { // NOI18N
                 java_lang_Class = jcls;
+            } else if (vmName.equals("java/lang/Object")) { // NOI18N
+                java_lang_Object = jcls;
             } else if (vmName.equals("boolean[]")) { // NOI18N
                 typeObj = Integer.valueOf(HprofHeap.BOOLEAN);
             } else if (vmName.equals("char[]")) { // NOI18N
@@ -275,11 +282,55 @@ class ClassDumpSegment extends TagBounds {
                 typeObj = Integer.valueOf(HprofHeap.LONG);
             } else if (vmName.equals("java.lang.Class")) { // NOI18N
                 java_lang_Class = jcls;
+            } else if (vmName.equals("java.lang.Object")) { // NOI18N
+                java_lang_Object = jcls;
             }
 
             if (typeObj != null) {
                 primitiveArrayMap.put(typeObj, jcls);
             }
+        }
+        if (java_lang_Object != null) {
+            newSize = java_lang_Object.getRawInstanceSize() > 0;
+        }
+    }
+
+    //---- Serialization support
+    void writeToStream(DataOutputStream out) throws IOException {
+        super.writeToStream(out);
+        if (classes == null) {
+            out.writeInt(0);
+        } else {
+            out.writeInt(classes.size());
+            for (int i=0; i<classes.size(); i++) {
+                ClassDump classDump = (ClassDump) classes.get(i);
+
+                classDump.writeToStream(out);
+                Long size = (Long) arrayMap.get(classDump);
+                out.writeBoolean(size != null);
+                if (size != null) {
+                    out.writeLong(size.longValue());
+                }
+            }
+        }
+    }
+
+    ClassDumpSegment(HprofHeap heap, long start, long end, DataInputStream dis) throws IOException {
+        this(heap, start, end);
+        int classesSize = dis.readInt();
+        if (classesSize != 0) {
+            List cls = new ArrayList /*<JavaClass>*/(classesSize);
+            arrayMap = new HashMap(classesSize / 15);
+            
+            for (int i=0; i<classesSize; i++) {
+                ClassDump c = new ClassDump(this, dis.readLong(), dis);
+                cls.add(c);
+                if (dis.readBoolean()) {
+                    Long size = Long.valueOf(dis.readLong());
+                    arrayMap.put(c, size);
+                }
+            }
+            classes = Collections.unmodifiableList(cls);
         }
     }
     

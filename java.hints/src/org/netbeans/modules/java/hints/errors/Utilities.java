@@ -30,7 +30,7 @@ import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.TryTree;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
@@ -72,7 +72,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -841,7 +841,7 @@ public class Utilities {
     @NbBundle.Messages({
         "DisplayName_Unknown=<missing>"
     })
-    private static class HintDisplayNameVisitor extends TreeScanner<String, Void> {
+    private static class HintDisplayNameVisitor extends ErrorAwareTreeScanner<String, Void> {
 
         private CompilationInfo info;
 
@@ -1234,7 +1234,7 @@ public class Utilities {
      * {@link #seenTrees} before processing, so if a break/continue targets such a node, such jump is not considered an exit.
      * Jumps can register the target Tree in {@link #targetTrees} which causes false to be returned from that tree's inspection.
      */
-    private static final class ExitsFromAllBranches extends TreePathScanner<Boolean, Void> {
+    private static final class ExitsFromAllBranches extends ErrorAwareTreePathScanner<Boolean, Void> {
 
         private CompilationInfo info;
         private final Set<Tree> seenTrees = new HashSet<Tree>();
@@ -1856,10 +1856,10 @@ public class Utilities {
                 }
             }            
         };
-        ArgumentAttr argumentAttr = ArgumentAttr.instance(jti.getContext());
-        ArgumentAttr.LocalCacheContext cacheContext = argumentAttr.withLocalCacheContext();
+//        ArgumentAttr argumentAttr = ArgumentAttr.instance(jti.getContext());
+//        ArgumentAttr.LocalCacheContext cacheContext = argumentAttr.withLocalCacheContext();
         try {
-            enter.shadowTypeEnvs(true);
+//            enter.shadowTypeEnvs(true);
             Attr attr = Attr.instance(jti.getContext());
             Env<AttrContext> env = ((JavacScope) scope).getEnv();
             if (tree instanceof JCTree.JCExpression) {
@@ -1867,10 +1867,10 @@ public class Utilities {
             }
             return attr.attribStat((JCTree) tree,env);
         } finally {
-            cacheContext.leave();
+//            cacheContext.leave();
             log.useSource(prev);
             log.popDiagnosticHandler(discardHandler);
-            enter.shadowTypeEnvs(false);
+//            enter.shadowTypeEnvs(false);
         }
     }
     // -------------------------------------------------------------------------------------

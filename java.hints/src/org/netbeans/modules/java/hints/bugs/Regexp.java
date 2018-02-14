@@ -26,7 +26,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import javax.lang.model.element.Element;
@@ -97,7 +97,7 @@ public class Regexp {
         final StringBuilder regexp = new StringBuilder();
         final boolean[] accept = {true};
         TreePath pattern = ctx.getVariables().get("$pattern");
-        new TreePathScanner<Void, Void>() {
+        new ErrorAwareTreePathScanner<Void, Void>() {
             @Override
             public Void visitLiteral(LiteralTree node, Void p) {
                 if (node.getValue() instanceof String) {

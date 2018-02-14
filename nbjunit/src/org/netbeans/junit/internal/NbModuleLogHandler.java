@@ -110,10 +110,17 @@ public final class NbModuleLogHandler extends Handler {
         sb.append('\n');
         return sb;
     }
+    
+    private static boolean isLikelyCaseInsensitive() {
+        String osName = System.getProperty("os.name");
+        return osName != null && osName.startsWith("Win");
+    }
 
     private static final List<String> hexes = new ArrayList<String>();
     private static final String integerToHexString = "[0-9a-fA-F]{5,8}";
-    private static final Pattern hex = Pattern.compile("(?<=@(?:" + integerToHexString + ":)?)" + integerToHexString);
+    private static final Pattern hex = Pattern.compile("(?<=@(?:" + integerToHexString + ":)?)" + integerToHexString,
+        isLikelyCaseInsensitive() ? Pattern.CASE_INSENSITIVE : 0
+    );
     public static synchronized String normalize(StringBuffer txt, String workDirPath) {
         Matcher m = hex.matcher(txt.toString().replace(workDirPath, "WORKDIR"));
         @SuppressWarnings("StringBufferMayBeStringBuilder")

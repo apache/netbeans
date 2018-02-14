@@ -70,6 +70,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.libs.asm</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>5.4</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.libs.javacapi</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -290,6 +298,9 @@
                 <test-type>
                     <name>unit</name>
                     <test-dependency>
+                        <code-name-base>org.netbeans.api.progress.nb</code-name-base>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.netbeans.core.startup</code-name-base>
                     </test-dependency>
                     <test-dependency>
@@ -330,6 +341,10 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.java.guards</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.java.j2seplatform</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
@@ -410,17 +425,14 @@
                         <code-name-base>org.openide.text</code-name-base>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.openide.util.ui</code-name-base>
-                        <compile-dependency/>
-                        <test/>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.openide.util.lookup</code-name-base>
                         <compile-dependency/>
                         <test/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.api.progress.nb</code-name-base>
+                        <code-name-base>org.openide.util.ui</code-name-base>
+                        <compile-dependency/>
+                        <test/>
                     </test-dependency>
                 </test-type>
             </test-dependencies>

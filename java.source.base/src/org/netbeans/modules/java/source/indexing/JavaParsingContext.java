@@ -65,7 +65,7 @@ import org.openide.util.Pair;
 import org.openide.util.lookup.Lookups;
 
 //@NotThreadSafe
-final class JavaParsingContext {
+public final class JavaParsingContext {
 
     private final Context ctx;
     private final boolean rootNotNeeded;    
@@ -160,7 +160,7 @@ final class JavaParsingContext {
     }
     
     @CheckForNull
-    ClasspathInfo getClasspathInfo() {
+    public ClasspathInfo getClasspathInfo() {
         return cpInfo;
     }
     
@@ -170,13 +170,13 @@ final class JavaParsingContext {
     }
     
     @CheckForNull
-    String getSourceLevel() {
+    public String getSourceLevel() {
         final SourceLevelQuery.Result sl = initSourceLevel();
         return sl == null ? null : sl.getSourceLevel();
     }
 
     @CheckForNull
-    SourceLevelQuery.Profile getProfile() {
+    public SourceLevelQuery.Profile getProfile() {
         final SourceLevelQuery.Result sl = initSourceLevel();
         return sl == null ? null : sl.getProfile();
     }
@@ -208,7 +208,7 @@ final class JavaParsingContext {
     }
     
     @NonNull
-    CheckSums getCheckSums() throws IOException {
+    public CheckSums getCheckSums() throws IOException {
         if (checkSums == null) {
             try {
                 checkSums = CheckSums.forContext(ctx);
@@ -220,7 +220,7 @@ final class JavaParsingContext {
     }
     
     @NonNull
-    FQN2Files getFQNs() throws IOException {
+    public FQN2Files getFQNs() throws IOException {
         if (fqn2Files == null) {
             fqn2Files = FQN2Files.forRoot(ctx.getRootURI());
         }
@@ -236,7 +236,7 @@ final class JavaParsingContext {
     }
 
     @CheckForNull
-    String getModuleName() {
+    public String getModuleName() {
         try {
             return JavaIndex.getAttribute(ctx.getRootURI(), JavaIndex.ATTR_MODULE_NAME, null);
         } catch (IOException ioe) {
@@ -244,7 +244,7 @@ final class JavaParsingContext {
         }
     }
 
-    void analyze(
+    public void analyze(
             @NonNull final Iterable<? extends CompilationUnitTree> trees,
             @NonNull final JavacTaskImpl jt,
             @NonNull final CompileTuple active,

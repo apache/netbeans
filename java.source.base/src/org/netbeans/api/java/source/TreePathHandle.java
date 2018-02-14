@@ -24,7 +24,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;                                                                                                                                                                                               
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;                                                                                                                                                                                           
-import com.sun.source.util.TreeScanner;
+import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;                                                                                                                                                                                        
 
@@ -864,7 +864,7 @@ public final class TreePathHandle {
     private static List<Tree> listChildren(@NonNull Tree t) {
         final List<Tree> result = new LinkedList<Tree>();
 
-        t.accept(new TreeScanner<Void, Void>() {
+        t.accept(new ErrorAwareTreeScanner<Void, Void>() {
             @Override
             public Void scan(Tree node, Void p) {
                 result.add(node);

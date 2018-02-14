@@ -353,16 +353,16 @@ class UpdateTracking {
     }
 
     static CRC32 crcForFile(File inFile) throws FileNotFoundException, IOException {
-        FileInputStream inFileStream = new FileInputStream(inFile);
-        byte[] array = new byte[(int) inFile.length()];
-        CRC32 crc = new CRC32();
-        int len = inFileStream.read(array);
-        if (len != array.length) {
-            throw new BuildException("Cannot fully read " + inFile);
+        try (FileInputStream inFileStream = new FileInputStream(inFile)) {
+            byte[] array = new byte[(int) inFile.length()];
+            CRC32 crc = new CRC32();
+            int len = inFileStream.read(array);
+            if (len != array.length) {
+                throw new BuildException("Cannot fully read " + inFile);
+            }
+            crc.update(array);
+            return crc;
         }
-        inFileStream.close();
-        crc.update(array);
-        return crc;
     }
     
     class Module extends Object {        
@@ -371,7 +371,7 @@ class UpdateTracking {
         private String codename;
         
         /** Holds value of property versions. */
-        private List<Version> versions = new ArrayList<Version>();
+        private List<Version> versions = new ArrayList<>();
         
         /** Getter for property codenamebase.
          * @return Value of property codenamebase.
@@ -413,19 +413,17 @@ class UpdateTracking {
         }
         
         void addVersion( Version version ) {
-            versions = new ArrayList<Version>();
+            versions = new ArrayList<>();
             versions.add( version );
         }
 
         void setVersion( Version version ) {
-            versions = new ArrayList<Version>();
+            versions = new ArrayList<>();
             versions.add( version );
         }
         
         void removeLocalized( String locale ) {
-            Iterator it = versions.iterator();
-            while (it.hasNext()) {
-                Version ver = (Version) it.next();
+            for(Version ver: versions) {
                 ver.removeLocalized( locale );
             }
         }
@@ -446,7 +444,7 @@ class UpdateTracking {
         private long install_time = 0;
         
         /** Holds value of property files. */
-        private List<ModuleFile> files = new ArrayList<ModuleFile>();
+        private List<ModuleFile> files = new ArrayList<>();
         
         /** Getter for property version.
          * @return Value of property version.
@@ -530,7 +528,7 @@ class UpdateTracking {
         }
         
         public void removeLocalized( String locale ) {
-            List<ModuleFile> newFiles = new ArrayList<ModuleFile>();
+            List<ModuleFile> newFiles = new ArrayList<>();
             for (ModuleFile file : files) {
                 if (file.getName().indexOf("_" + locale + ".") == -1 // NOI18N
                         && file.getName().indexOf("_" + locale + "/") == -1 // NOI18N

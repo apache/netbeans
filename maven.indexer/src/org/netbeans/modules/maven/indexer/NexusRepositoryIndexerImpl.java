@@ -527,6 +527,19 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                     }
                     try {
                         remoteIndexUpdater.fetchAndUpdateIndex(iur);
+                    } catch (IllegalArgumentException ex) {
+                        // This exception is raised from the maven-indexer.
+                        // maven-indexer supported two formats:
+                        // - legacy/zip: zipped lucene (v2.3) index files
+                        // - gz: maven-indexer specific file format
+                        // The legacy format is no longer supported and when
+                        // the indexer encounters old index files it raises
+                        // this exception
+                        //
+                        // Convert to IOException to utilize the existing error
+                        // handling paths
+                        fetchFailed = true;
+                        throw new IOException("Failed to load maven-index for: " + indexingContext.getRepositoryUrl(), ex);
                     } catch (IOException ex) {
                         fetchFailed = true;
                         throw ex;

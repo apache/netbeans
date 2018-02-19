@@ -26,6 +26,7 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.AttributeSet;
@@ -61,7 +62,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
     
     private final Document document;
     private TokenHierarchy<? extends Document> hierarchy = null;
-    private long version = 0;
+    private final AtomicLong version = new AtomicLong();
     
     /** Creates a new instance of Highlighting */
     public Highlighting(Document doc) {
@@ -94,7 +95,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
     public HighlightsSequence getHighlights(int startOffset, int endOffset) {
         synchronized(this) {
             if (hierarchy.isActive()) {
-                return new HSImpl(version, hierarchy, startOffset, endOffset);
+                return new HSImpl(version.get(), hierarchy, startOffset, endOffset);
             } else {
                 return HighlightsSequence.EMPTY;
             }
@@ -132,10 +133,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
         }
         
         if (affectedArea != null) {
-            synchronized (this) {
-                version++;
-            }
-
+            version.incrementAndGet();
             fireHighlightsChange(affectedArea[0], affectedArea[1]);
         }
     }
@@ -308,7 +306,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
         }
         
         private void checkVersion() {
-            if (this.version != Highlighting.this.version) {
+            if (this.version != Highlighting.this.version.get()) {
                 throw new ConcurrentModificationException();
             }
         }

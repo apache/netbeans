@@ -369,16 +369,6 @@
                         <attr name="prjType" stringvalue="javafx2"/>
                     </file>
 
-                    <file name="Xylophone.zip" url="Xylophone.zip">
-                        <attr name="displayName" bundlevalue="org.netbeans.modules.javafx2.samples.Bundle#Templates/Project/Samples/JavaFX/Xylophone.zip"/>
-                        <attr name="iconBase" stringvalue="org/netbeans/modules/javafx2/project/ui/resources/jfxjava.png"/>
-                        <attr name="position" intvalue="3500"/>
-                        <attr name="template" boolvalue="true"/>
-                        <attr name="instantiatingIterator" newvalue="org.netbeans.modules.javafx2.samples.JavaFXSampleProjectIterator"/>
-                        <attr name="instantiatingWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javafx2/samples/resources/Xylophone.html"/>
-                        <attr name="prjType" stringvalue="javafx2"/>
-                    </file>
-
                 </folder>
             </folder>
         </folder>

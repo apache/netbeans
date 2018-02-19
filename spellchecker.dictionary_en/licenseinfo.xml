@@ -24,7 +24,7 @@
         <file>release/modules/dict/dictionary_en.description</file>
         <file>release/modules/dict/dictionary_en_GB.description</file>
         <file>release/modules/dict/dictionary_en_US.description</file>
-        <license ref="Apache-2.0" />
+        <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
 </licenseinfo>

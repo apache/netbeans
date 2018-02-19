@@ -53,14 +53,14 @@
         <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_0/catalog</file>
         <file>src/org/netbeans/modules/html/editor/resources/DTDs/4_01/catalog</file>
         <file>src/org/netbeans/modules/html/editor/resources/DTDs/xhtml/catalog</file>
-        <license ref="Apache-2.0" />
+        <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
     <fileset>
         <file>src/org/netbeans/modules/html/editor/options/ui/formatSample.html</file>
         <file>src/org/netbeans/modules/html/editor/resources/HTMLExample</file>
         <file>src/org/netbeans/modules/html/editor/resources/XHTMLExample</file>
-        <license ref="Apache-2.0" />
+        <license ref="Apache-2.0-ASF" />
         <comment type="GUI_USABILITY"/>
     </fileset>
 </licenseinfo>

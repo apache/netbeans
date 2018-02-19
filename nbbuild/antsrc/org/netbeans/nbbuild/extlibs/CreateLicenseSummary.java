@@ -232,7 +232,7 @@ public class CreateLicenseSummary extends Task {
             Licenseinfo licenseInfo = Licenseinfo.parse(licenseInfoFile);
             
             for(Fileset fs: licenseInfo.getFilesets()) {
-                if("Apache-2.0".equals(fs.getLicenseRef())) {
+                if("Apache-2.0-ASF".equals(fs.getLicenseRef())) {
                     continue;
                 }
                 if(binary && fs.isSourceOnly()) {

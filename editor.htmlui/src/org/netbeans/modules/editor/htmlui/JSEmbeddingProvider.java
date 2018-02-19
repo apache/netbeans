@@ -108,6 +108,13 @@ public final class JSEmbeddingProvider extends JavaParserResultTask<Parser.Resul
                             final int end = (int) sp.getEndPosition(cu, lt);
                             seq.move(start);
                             while (seq.moveNext() && seq.offset() < end) {
+                                if (
+                                    seq.embedded() != null &&
+                                    seq.embedded().language() != null &&
+                                    "text/x-java-string".equals(seq.embedded().language().mimeType())
+                                ) {
+                                    seq.removeEmbedding(seq.embedded().language());
+                                }
                                 seq.createEmbedding(javaScript, 1, 1, true);
                             }
                         }

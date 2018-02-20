@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.java.lexer;
 
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.function.Supplier;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.lexer.PartType;
@@ -1023,21 +1025,59 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                     return finishIdentifier(c);
 
                 case 'v':
-                    if ((c = nextChar()) == 'o') {
-                        switch (c = nextChar()) {
-                            case 'i':
-                                if ((c = nextChar()) == 'd')
-                                    return keywordOrIdentifier(JavaTokenId.VOID);
-                                break;
-                            case 'l':
-                                if ((c = nextChar()) == 'a'
-                                 && (c = nextChar()) == 't'
-                                 && (c = nextChar()) == 'i'
-                                 && (c = nextChar()) == 'l'
-                                 && (c = nextChar()) == 'e')
-                                    return keywordOrIdentifier(JavaTokenId.VOLATILE);
-                                break;
-                        }
+                    switch ((c = nextChar())) {
+                        case 'a':
+                            if ((c = nextChar()) == 'r') {
+                                c = nextChar();
+                                // Check whether the given char is non-ident and if so then return keyword
+                                if (c != EOF && !Character.isJavaIdentifierPart(c = translateSurrogates(c)) &&
+                                    version >= 10) {
+                                    // For surrogate 2 chars must be backed up
+                                    backup((c >= Character.MIN_SUPPLEMENTARY_CODE_POINT) ? 2 : 1);
+
+                                    int len = input.readLength();
+
+                                    Token next = nextToken();
+                                    boolean varKeyword = false;
+
+                                    if (AFTER_VAR_TOKENS.contains(next.id())) {
+                                        do {
+                                            next = nextToken();
+                                        } while (AFTER_VAR_TOKENS.contains(next.id()));
+
+                                        varKeyword = next.id() == JavaTokenId.IDENTIFIER;
+                                    }
+
+                                    input.backup(input.readLengthEOF()- len);
+
+                                    assert input.readLength() == len;
+
+                                    if (varKeyword) {
+                                        return token(JavaTokenId.VAR);
+                                    }
+                                } else {
+                                    // For surrogate 2 chars must be backed up
+                                    backup((c >= Character.MIN_SUPPLEMENTARY_CODE_POINT) ? 2 : 1);
+                                }
+                            }
+                            c = nextChar();
+                            break;
+                        case 'o':
+                            switch (c = nextChar()) {
+                                case 'i':
+                                    if ((c = nextChar()) == 'd')
+                                        return keywordOrIdentifier(JavaTokenId.VOID);
+                                    break;
+                                case 'l':
+                                    if ((c = nextChar()) == 'a'
+                                     && (c = nextChar()) == 't'
+                                     && (c = nextChar()) == 'i'
+                                     && (c = nextChar()) == 'l'
+                                     && (c = nextChar()) == 'e')
+                                        return keywordOrIdentifier(JavaTokenId.VOLATILE);
+                                    break;
+                            }
+                            break;
                     }
                     return finishIdentifier(c);
 
@@ -1251,7 +1291,12 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                 ? tokenFactory.getFlyweightToken(id, fixedText)
                 : tokenFactory.createToken(id);
     }
-    
+
+    private static final Set<JavaTokenId> AFTER_VAR_TOKENS = EnumSet.of(
+            JavaTokenId.BLOCK_COMMENT, JavaTokenId.JAVADOC_COMMENT,
+            JavaTokenId.LINE_COMMENT, JavaTokenId.WHITESPACE
+    );
+
     public void release() {
     }
 

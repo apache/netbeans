@@ -1050,7 +1050,7 @@ public final class PlatformUiSupport {
         private static int minor(@NonNull final SpecificationVersion specVer) {
             final String s = specVer.toString();
             final int split = s.indexOf('.');   //NOI18N
-            return split < 0 ? 0 : Integer.parseInt(s.substring(split+1));
+            return split < 0 ? -1 : Integer.parseInt(s.substring(split+1));
         }
 
         private static int major(@NonNull final SpecificationVersion specVer) {

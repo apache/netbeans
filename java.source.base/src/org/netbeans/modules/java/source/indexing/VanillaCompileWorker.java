@@ -71,7 +71,6 @@ import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
@@ -414,11 +413,17 @@ final class VanillaCompileWorker extends CompileWorker {
                 } else {
                     mt = (Type.MethodType) msym.type;
                 }
+                clearMethodType(mt);
+                if (msym.erasure_field != null && msym.erasure_field.hasTag(TypeTag.METHOD))
+                    clearMethodType((Type.MethodType) msym.erasure_field);
+                clearAnnotations(decl.sym.getMetadata());
+                return super.visitMethod(node, p);
+            }
+
+            private void clearMethodType(Type.MethodType mt) {
                 mt.restype = error2Object(mt.restype);
                 mt.argtypes = error2Object(mt.argtypes);
                 mt.thrown = error2Object(mt.thrown);
-                clearAnnotations(decl.sym.getMetadata());
-                return super.visitMethod(node, p);
             }
 
             @Override
@@ -431,6 +436,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 ct.interfaces_field = error2Object(ct.interfaces_field);
                 ct.typarams_field = error2Object(ct.typarams_field);
                 ct.supertype_field = error2Object(ct.supertype_field);
+                clearAnnotations(clazz.sym.getMetadata());
                 super.visitClass(node, p);
                 for (JCTree def : clazz.defs) {
                     if (def.hasTag(JCTree.Tag.ERRONEOUS)) {

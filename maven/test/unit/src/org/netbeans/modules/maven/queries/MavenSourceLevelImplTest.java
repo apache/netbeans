@@ -183,4 +183,31 @@ public class MavenSourceLevelImplTest extends NbTestCase {
         assertTrue(m.find());
         assertEquals("compact1", m.group(1));
     }
+
+    public void testRelease() throws Exception { // #NETBEANS-353
+        TestFileUtils.writeFile(wd,
+                "pom.xml",
+                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
+                "<modelVersion>4.0.0</modelVersion>" +
+                "<groupId>grp</groupId>" +
+                "<artifactId>art</artifactId>" +
+                "<packaging>jar</packaging>" +
+                "<version>0</version>" +
+                "<build><plugins><plugin><artifactId>maven-compiler-plugin</artifactId><version>3.6</version><executions>" +
+                "<execution><id>comp-src</id><phase>compile</phase><goals><goal>compile</goal></goals><configuration><release>1.8</release></configuration></execution>" +
+                "<execution><id>comp-tsrc</id><phase>test-compile</phase><goals><goal>testCompile</goal></goals><configuration><release>1.9</release></configuration></execution>" +
+                "</executions></plugin></plugins></build>" +
+                "</project>");
+        FileObject src = FileUtil.createFolder(wd, "src/main/java");
+        FileObject gsrc = FileUtil.createFolder(wd, "target/generated-sources/xjc");
+        gsrc.createData("Whatever.class");
+        FileObject tsrc = FileUtil.createFolder(wd, "src/test/java");
+        FileObject gtsrc = FileUtil.createFolder(wd, "target/generated-test-sources/jaxb");
+        gtsrc.createData("Whatever.class");
+        assertEquals("1.8", SourceLevelQuery.getSourceLevel(src));
+        assertEquals("1.8", SourceLevelQuery.getSourceLevel(gsrc));
+        assertEquals("9", SourceLevelQuery.getSourceLevel(tsrc));
+        assertEquals("9", SourceLevelQuery.getSourceLevel(gtsrc));
+    }
+
 }

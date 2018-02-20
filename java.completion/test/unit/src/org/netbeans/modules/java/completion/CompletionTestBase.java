@@ -55,6 +55,7 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.JavaDataLoader;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.indexing.TransactionContext;
 import org.netbeans.modules.java.source.usages.BinaryAnalyser;
@@ -118,6 +119,7 @@ public class CompletionTestBase extends NbTestCase {
     protected void setUp() throws Exception {
         ClassPathProvider cpp = new ClassPathProvider() {
             volatile ClassPath bootCache;
+            volatile ClassPath moduleBootCache;
             @Override
             public ClassPath findClassPath(FileObject file, String type) {
                 try {
@@ -127,10 +129,17 @@ public class CompletionTestBase extends NbTestCase {
                     if (type.equals(ClassPath.COMPILE)) {
                         return ClassPathSupport.createClassPath(new FileObject[0]);
                     }
-                    if (type.equals(ClassPath.BOOT) || type.equals(JavaClassPathConstants.MODULE_BOOT_PATH)) {
+                    if (type.equals(ClassPath.BOOT)) {
                         ClassPath cp = bootCache;
                         if (cp == null) {
-                            cp = TestUtil.getBootClassPath();
+                            bootCache = cp = BootClassPathUtil.getBootClassPath();
+                        }
+                        return cp;
+                    }
+                    if (type.equals(JavaClassPathConstants.MODULE_BOOT_PATH)) {
+                        ClassPath cp = moduleBootCache;
+                        if (cp == null) {
+                            moduleBootCache = cp = BootClassPathUtil.getModuleBootPath();
                         }
                         return cp;
                     }

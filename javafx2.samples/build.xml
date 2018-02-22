@@ -232,11 +232,6 @@
             <exclude name="nbproject/private/"/>
         </zip>
         
-        <zip basedir="Xylophone" destfile="${examples}/Xylophone.zip">
-            <exclude name="build/"/>
-            <exclude name="dist/"/>
-            <exclude name="nbproject/private/"/>
-        </zip>
     </target>    
 
 </project>

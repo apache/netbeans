@@ -89,11 +89,15 @@ public final class JSEmbeddingProvider extends JavaParserResultTask<Parser.Resul
     public void run(Parser.Result t, SchedulerEvent se) {
         canceled.set(false);
         final CompilationInfo ci = CompilationInfo.get(t);
+        colorizeJSB(ci);
+    }
+
+    public static void colorizeJSB(final CompilationInfo ci) {
         final CompilationUnitTree cu = ci.getCompilationUnit();
         final Trees trees = ci.getTrees();
         final SourcePositions sp = trees.getSourcePositions();
         final Finder f = new Finder(trees);
-        final List<LiteralTree> result = new ArrayList<LiteralTree>();
+        final List<LiteralTree> result = new ArrayList<>();
         f.scan(cu, result);
         if (!result.isEmpty()) {
             try {
@@ -108,6 +112,13 @@ public final class JSEmbeddingProvider extends JavaParserResultTask<Parser.Resul
                             final int end = (int) sp.getEndPosition(cu, lt);
                             seq.move(start);
                             while (seq.moveNext() && seq.offset() < end) {
+                                if (
+                                    seq.embedded() != null &&
+                                    seq.embedded().language() != null &&
+                                    "text/x-java-string".equals(seq.embedded().language().mimeType())
+                                ) {
+                                    seq.removeEmbedding(seq.embedded().language());
+                                }
                                 seq.createEmbedding(javaScript, 1, 1, true);
                             }
                         }

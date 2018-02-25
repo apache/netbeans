@@ -1645,6 +1645,57 @@ public class NPECheckTest extends NbTestCase {
                 .assertWarnings("17:19-17:23:verifier:ERR_ReturningNullFromNonNull");
     }
 
+    public void testNETBEANS407a() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "  public void test(Object o) {\n" +
+                       "    boolean b1 = o instanceof Integer;\n" +
+                       "    boolean b2 = o instanceof Integer && o != null;\n" +
+                       "    System.out.println(o.toString());\n" +
+                       "  }\n" +
+                       "}")
+                .run(NPECheck.class)
+                .assertWarnings("4:41-4:50:verifier:ERR_NotNull");
+    }
+    
+    public void testNETBEANS407b() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "  public void test(Object o) {\n" +
+                       "    boolean b = !(o instanceof Integer) && o.toString() != null;\n" +
+                       "  }\n" +
+                       "}")
+                .run(NPECheck.class)
+                .assertWarnings("3:45-3:53:verifier:Possibly Dereferencing null");
+    }
+    
+    public void testNETBEANS407c() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "  public void test(Object o) {\n" +
+                       "    boolean b = o != null;\n" +
+                       "    System.out.println(o.toString());\n" +
+                       "  }\n" +
+                       "}")
+                .run(NPECheck.class)
+                .assertWarnings("4:25-4:33:verifier:Possibly Dereferencing null");
+    }
+    
+    public void testNETBEANS407d() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "  public void test(Object o) {\n" +
+                       "    boolean b = (o == null || o == \"\") && o.toString() != null;\n" +
+                       "  }\n" +
+                       "}")
+                .run(NPECheck.class)
+                .assertWarnings("3:44-3:52:verifier:Possibly Dereferencing null");
+    }
+    
     private void performAnalysisTest(String fileName, String code, String... golden) throws Exception {
         HintTest.create()
                 .input(fileName, code)

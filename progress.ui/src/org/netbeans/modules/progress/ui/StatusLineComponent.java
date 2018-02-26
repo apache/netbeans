@@ -68,6 +68,7 @@ import org.netbeans.modules.progress.spi.ProgressEvent;
 import org.netbeans.modules.progress.spi.ProgressUIWorkerWithModel;
 import org.netbeans.modules.progress.spi.TaskModel;
 import org.openide.DialogDisplayer;
+import org.openide.Leafable;
 import org.openide.NotifyDescriptor;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
@@ -502,7 +503,18 @@ public class StatusLineComponent extends JPanel implements ProgressUIWorkerWithM
         // 2. on mac, needs an owner frame otherwise hiding tooltip also hides the popup. (linux requires no owner frame to force heavyweight)
         // 3. the created window is not focusable window
         if (popupWindow == null) {
-            popupWindow = new JWindow(WindowManager.getDefault().getMainWindow());
+            class ProgressPopUpWindow extends JWindow implements Leafable{
+                ProgressPopUpWindow(Frame parent) {
+                    super(parent);
+                }
+                @Override
+                public boolean isLeaf() {
+                    //never a parent
+                    return true;
+                }
+            }
+            popupWindow = new ProgressPopUpWindow(WindowManager.getDefault().
+                    getMainWindow());
             popupWindow.getContentPane().add(pane);
         }
         Toolkit.getDefaultToolkit().addAWTEventListener(hideListener, AWTEvent.MOUSE_EVENT_MASK);

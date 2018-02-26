@@ -40,6 +40,7 @@ import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 import org.netbeans.core.windows.Constants;
 import org.netbeans.core.windows.view.ui.DefaultSeparateContainer;
+import org.openide.Leafable;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -125,7 +126,7 @@ public class DialogDisplayerImpl extends DialogDisplayer {
                                     w = WindowManager.getDefault ().getMainWindow ();
                                 }
                             }
-                        } else if (w instanceof NbPresenter && ((NbPresenter) w).isLeaf ()) {
+                        } else if (isWindowLeaf(w)) {
                             w = WindowManager.getDefault ().getMainWindow ();
                         }
                     }
@@ -206,8 +207,9 @@ public class DialogDisplayerImpl extends DialogDisplayer {
                                 getActiveWindow();
                         Window w = activeWindow != null ? activeWindow :
                                 WindowManager.getDefault().getMainWindow();
-                        if (Constants.DISALLOW_DIALOG_PARENTS &&
-                                w instanceof Dialog){
+                        boolean isLeaf = isWindowLeaf(w);
+                        if (isLeaf || (Constants.DISALLOW_DIALOG_PARENTS &&
+                                w instanceof Dialog)){
                             w = WindowManager.getDefault().getMainWindow();
                         }
                         if (noParent) {
@@ -236,8 +238,13 @@ public class DialogDisplayerImpl extends DialogDisplayer {
                                 getActiveWindow();
                         Window w = activeWindow != null ? activeWindow :
                                 WindowManager.getDefault().getMainWindow();
-                        if (Constants.DISALLOW_DIALOG_PARENTS &&
-                                w instanceof Dialog){
+                        if (!w.isVisible() || !w.isDisplayable()){
+                            //why is an invisible window the active window?
+                            w = WindowManager.getDefault().getMainWindow();
+                        }
+                        boolean isLeaf = isWindowLeaf(w);
+                        if (isLeaf || (Constants.DISALLOW_DIALOG_PARENTS &&
+                                w instanceof Dialog)){
                             w = WindowManager.getDefault().getMainWindow();
                         }
                         if (noParent) {
@@ -337,5 +344,17 @@ public class DialogDisplayerImpl extends DialogDisplayer {
         for (PresenterDecorator p : Lookup.getDefault().lookupAll(PresenterDecorator.class)) {
             p.customizePresenter(presenter);
         }
+    }
+    /**
+     * Should the given window ever be considered a dialog parent?
+     * @param w
+     * @return 
+     */
+    private boolean isWindowLeaf(Window w) {
+        boolean isLeaf = w instanceof Leafable && ((Leafable)w).isLeaf();
+        if (!isLeaf && !(w instanceof Frame || w instanceof Dialog)){
+            isLeaf = true;
+        }
+        return isLeaf;
     }
 }

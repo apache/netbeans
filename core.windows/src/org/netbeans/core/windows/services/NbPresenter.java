@@ -84,6 +84,7 @@ import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import org.netbeans.core.windows.Constants;
 import org.openide.DialogDescriptor;
+import org.openide.Leafable;
 import org.openide.NotificationLineSupport;
 import org.openide.NotifyDescriptor;
 import org.openide.WizardDescriptor;
@@ -103,7 +104,8 @@ import org.openide.util.Utilities;
  * @author Ian Formanek, Jaroslav Tulach
  */
 class NbPresenter extends JDialog
-implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparator<Object> {
+        implements PropertyChangeListener, WindowListener, Mutex.Action<Void>,
+        Comparator<Object>, Leafable {
     
     /** variable holding current modal dialog in the system */
     public static NbPresenter currentModalDialog;
@@ -188,7 +190,8 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
         initialize(d);
     }
     
-    boolean isLeaf () {
+    @Override
+    public boolean isLeaf () {
         return leaf;
     }
     

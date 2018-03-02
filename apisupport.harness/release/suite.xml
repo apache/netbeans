@@ -420,7 +420,17 @@ See: http://wiki.netbeans.org/DevFaqHowToReuseModules
               tofile="${dist.dir}/${app.name}.app/Contents/Resources/${app.name}.icns"/>
         
         <delete file="${dist.dir}/${app.name}.app/Contents/MacOS/${app.name}"/>
-        <symlink link="${dist.dir}/${app.name}.app/Contents/MacOS/${app.name}" resource="../Resources/${app.name}/bin/${app.name}"/>
+        <echo file="${dist.dir}/${app.name}.app/Contents/MacOS/${app.name}">#!/bin/sh
+#cd to script directory
+cd "${0%/*}"
+#cd to executable directory
+cd "../Resources/${app.name}/bin"
+#make absolute and resolve symlinks
+cd "$$(pwd -P)"
+#run the executable
+sh -- "${app.name}" "$$@"
+</echo>
+        <chmod file="${dist.dir}/${app.name}.app/Contents/MacOS/${app.name}" perm="755"/>
         <chmod file="${dist.dir}/${app.name}.app/Contents/Resources/${app.name}/bin/${app.name}" perm="755"/>
         <chmod dir="${dist.dir}" includes="${app.name}.app/Contents/Resources/${app.name}/platform*/lib/nbexec" perm="755"/>
         

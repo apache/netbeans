@@ -94,7 +94,7 @@ public abstract class FileManagerTransaction extends TransactionContext.Service 
      * @return 
      */
     @NonNull
-    abstract JavaFileObject  createFileObject(
+    public abstract JavaFileObject  createFileObject(
             @NonNull Location location,
             @NonNull File file,
             @NonNull File root,
@@ -229,7 +229,7 @@ public abstract class FileManagerTransaction extends TransactionContext.Service 
 
         @Override
         @NonNull
-        JavaFileObject createFileObject(
+        public JavaFileObject createFileObject(
                 @NonNull final Location location,
                 @NonNull final File file,
                 @NonNull final File root,
@@ -261,7 +261,7 @@ public abstract class FileManagerTransaction extends TransactionContext.Service 
 
         @Override
         @NonNull
-        JavaFileObject createFileObject(
+        public JavaFileObject createFileObject(
                 @NonNull final Location location,
                 @NonNull final File file,
                 @NonNull final File root,
@@ -304,7 +304,7 @@ public abstract class FileManagerTransaction extends TransactionContext.Service 
 
         @Override
         @NonNull
-        JavaFileObject createFileObject(
+        public JavaFileObject createFileObject(
                 @NonNull final Location location,
                 @NonNull final File file,
                 @NonNull final File root,
@@ -355,7 +355,7 @@ public abstract class FileManagerTransaction extends TransactionContext.Service 
         }
 
         @Override
-        JavaFileObject createFileObject(Location location, File file, File root, JavaFileFilterImplementation filter, Charset encoding) {
+        public JavaFileObject createFileObject(Location location, File file, File root, JavaFileFilterImplementation filter, Charset encoding) {
             return getDelegate().createFileObject(location, file, root, filter, encoding);
         }
 

@@ -19,11 +19,9 @@
 
 package org.netbeans.modules.parsing.nb;
 
-import org.netbeans.modules.parsing.nb.EventSupport;
 import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.SwingUtilities;
-import static junit.framework.Assert.assertNotNull;
 import junit.framework.TestSuite;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;

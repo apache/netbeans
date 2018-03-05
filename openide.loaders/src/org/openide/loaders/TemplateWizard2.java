@@ -20,6 +20,8 @@
 package org.openide.loaders;
 
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.IOException;
@@ -151,6 +153,17 @@ final class TemplateWizard2 extends javax.swing.JPanel implements DocumentListen
         listener = l;
     }    
     
+    /**
+     * Tracks whether setValue was called on the wizard to switch / close panels.
+     * Should be reset when this panel becomes visible.
+     */
+    private boolean setValueCalled;
+    
+    /**
+     * Reference to the current wizard
+     */
+    private TemplateWizard theWizard;
+    
     public void addNotify () {
         super.addNotify();
         //Fix for issue 31086, initial focus on Back button 
@@ -158,7 +171,24 @@ final class TemplateWizard2 extends javax.swing.JPanel implements DocumentListen
         getAccessibleContext().setAccessibleDescription(
             NbBundle.getBundle(TemplateWizard2.class).getString ("ACSD_TemplateWizard2") // NOI18N
         );
+        setValueCalled = false;
     }
+    
+    @Override
+    public void removeNotify() {
+        if (!setValueCalled) {
+            // record wizard close if the panel was just removed;
+            // this is the case of ESC pressed in file chooser.
+            theWizard.setValue(WizardDescriptor.CLOSED_OPTION);
+        }
+        super.removeNotify();
+    }
+
+    /**
+     * Prevents Wizard listener from GC. TemplateWizard do not hard-reference
+     * this Panel through property change listener.
+     */
+    private PropertyChangeListener valueChangedL;
     
     /** Helper implementation of WizardDescription.Panel for TemplateWizard.Panel2.
      * Provides the wizard panel with the current data--either
@@ -181,11 +211,29 @@ final class TemplateWizard2 extends javax.swing.JPanel implements DocumentListen
         }
         
         setNewObjectName (wizard.getTargetName ());
-
+        
         try {
             setLocationDataFolder(wizard.getTargetFolder());
         } catch (IOException ioe) {
             setLocationFolder (null);
+        }
+        assert this.theWizard == null || this.theWizard == wizard;
+        this.theWizard = wizard;
+        if (valueChangedL == null) {
+            // listener records that setValue() was called on the WizardDescriptor
+            // before the panel goes away. If the panel is just removed,
+            // it is assumed that the Wizard got closed.
+            valueChangedL = new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (WizardDescriptor.PROP_VALUE.equals(evt.getPropertyName()) 
+                        && isDisplayable()) {
+                        setValueCalled = true;
+                    }
+                }
+            };
+            wizard.addPropertyChangeListener(WeakListeners.propertyChange(valueChangedL, 
+                    WizardDescriptor.PROP_VALUE, wizard));
         }
     }
     
@@ -239,11 +287,12 @@ final class TemplateWizard2 extends javax.swing.JPanel implements DocumentListen
         // target filesystem should be writable
         if (!lF.getPrimaryFile().canWrite())
             return NbBundle.getMessage(TemplateWizard2.class, "MSG_fs_is_readonly"); // NOI18N
-        
-        if (locationFolder.exists()) {
+
+        FileObject target = lF.getPrimaryFile().getFileObject(newObjectName.getText(), extension);
+        if (target != null) {
             return NbBundle.getMessage(TemplateWizard2.class, "MSG_file_already_exist", locationFolder.getAbsolutePath()); // NOI18N
         }
-
+        
         if ((Utilities.isWindows () || (Utilities.getOperatingSystem () == Utilities.OS_OS2))) {
             if (TemplateWizard.checkCaseInsensitiveName(lF.getPrimaryFile(), newObjectName.getText(), extension)) {
                 return NbBundle.getMessage(TemplateWizard2.class, "MSG_file_already_exist", newObjectName.getText ()); // NOI18N
@@ -350,6 +399,9 @@ final class TemplateWizard2 extends javax.swing.JPanel implements DocumentListen
             return ;
         File oldLocation = locationFolder;
         locationFolder = fd;
+        if (locationFolderModel != null) {
+            locationFolderModel.getFeatureDescriptor().setValue("currentDir", fd); // NOI18N
+        }
         firePropertyChange (PROP_LOCATION_FOLDER, oldLocation, locationFolder);
         fireStateChanged ();
     }

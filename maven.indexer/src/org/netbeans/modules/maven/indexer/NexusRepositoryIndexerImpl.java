@@ -451,9 +451,11 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
     }
     
     @Messages({"# {0} - folder path",
-               "MSG_NoSpace=There is not enough space in your temp folder to download and unpack the index for ''{0}''.",
+               "# {1} - repository name",
+               "MSG_NoSpace=There is not enough space in {0} to download and unpack the index for ''{1}''.",
                "# {0} - folder path",
-               "MSG_SeemsNoSpace=It seems that there is not enough space in your temp folder to download and unpack the index for ''{0}''."})
+               "# {1} - repository name",
+               "MSG_SeemsNoSpace=It seems that there is not enough space in {0} to download and unpack the index for ''{1}''."})
     private void indexLoadedRepo(final RepositoryInfo repo, boolean updateLocal) throws IOException {
         Mutex mutex = getRepoMutex(repo);
         assert mutex.isWriteAccess();
@@ -525,6 +527,19 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                     }
                     try {
                         remoteIndexUpdater.fetchAndUpdateIndex(iur);
+                    } catch (IllegalArgumentException ex) {
+                        // This exception is raised from the maven-indexer.
+                        // maven-indexer supported two formats:
+                        // - legacy/zip: zipped lucene (v2.3) index files
+                        // - gz: maven-indexer specific file format
+                        // The legacy format is no longer supported and when
+                        // the indexer encounters old index files it raises
+                        // this exception
+                        //
+                        // Convert to IOException to utilize the existing error
+                        // handling paths
+                        fetchFailed = true;
+                        throw new IOException("Failed to load maven-index for: " + indexingContext.getRepositoryUrl(), ex);
                     } catch (IOException ex) {
                         fetchFailed = true;
                         throw ex;
@@ -554,28 +569,27 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
             if(e.getCause() instanceof ResourceDoesNotExistException) {
                 fireChange(repo, () -> repo.fireNoIndex());
             }
-            
+            File tmpFolder = Places.getCacheDirectory();
             // see also issue #250365
             String noSpaceLeftMsg = null;
             if(e.getMessage().contains("No space left on device")) {
-                noSpaceLeftMsg = Bundle.MSG_NoSpace(repo.getName());
+                noSpaceLeftMsg = Bundle.MSG_NoSpace(tmpFolder.getAbsolutePath(), repo.getName());
             }
             
             long downloaded = listener != null ? listener.getUnits() * 1024 : -1;
             long usableSpace = -1;
-            File tmpFolder = new File(System.getProperty("java.io.tmpdir"));
             try {
                 FileStore store = Files.getFileStore(tmpFolder.toPath());
                 usableSpace = store.getUsableSpace();                    
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
-            LOGGER.log(Level.INFO, "Downloaded maven index file has size {0} (zipped). The usable space in {1} (java.io.tmpdir) is {2}.", new Object[]{downloaded, tmpFolder, usableSpace});
+            LOGGER.log(Level.INFO, "Downloaded maven index file has size {0} (zipped). The usable space in {1} is {2}.", new Object[]{downloaded, tmpFolder, usableSpace});
 
             // still might be a problem with a too small tmp,
             // let's try to figure out ...
             if(noSpaceLeftMsg == null && downloaded > -1 && downloaded * 15 > usableSpace) {
-                noSpaceLeftMsg = Bundle.MSG_SeemsNoSpace(repo.getName());
+                noSpaceLeftMsg = Bundle.MSG_SeemsNoSpace(tmpFolder.getAbsolutePath(), repo.getName());
             }
 
             if(noSpaceLeftMsg != null) {
@@ -695,14 +709,13 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
             throw new IOException( "Repository directory " + repositoryDirectory + " does not exist" );
         }
  
-        // always use temporary context when reindexing
-        //TODO select a location within netbeans cache directory not File.createTempFile
-        final File tmpFile = File.createTempFile( context.getId() + "-tmp", "" );
-        final File tmpDir = new File( tmpFile.getParentFile(), tmpFile.getName() + ".dir" );
+        // always use cache directory when reindexing
+        final File tmpDir = new File(Places.getCacheDirectory(), "tmp-" + context.getRepositoryId());
         if ( !tmpDir.mkdirs() )
         {
             throw new IOException( "Cannot create temporary directory: " + tmpDir );
         }
+        final File tmpFile = new File(tmpDir, context.getId() + "-tmp");
  
         IndexingContext tmpContext = null;
         try

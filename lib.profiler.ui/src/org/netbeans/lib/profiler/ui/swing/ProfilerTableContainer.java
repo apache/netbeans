@@ -43,6 +43,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.JTableHeader;
+import org.netbeans.lib.profiler.ui.AppearanceController;
 import org.netbeans.lib.profiler.ui.UIUtils;
 
 /**
@@ -60,7 +61,7 @@ public class ProfilerTableContainer extends JPanel {
     public ProfilerTableContainer(final ProfilerTable table, boolean decorated,
                                   ColumnChangeAdapter adapter) {
         super(new BorderLayout());
-        setOpaque(false);
+        AppearanceController.getDefault().customizeProfilerTableContainer(this);
         
         this.table = table;
         

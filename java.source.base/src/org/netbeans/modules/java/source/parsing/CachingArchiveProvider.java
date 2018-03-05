@@ -27,17 +27,21 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
+import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
@@ -241,7 +245,9 @@ public final class CachingArchiveProvider {
         String protocol = root.first().getProtocol();
         if ("file".equals(protocol)) {      //NOI18N
             File f = BaseUtilities.toFile(root.second());
-            if (f.isDirectory()) {
+            if (JavaIndex.isCacheFolder(f)) {
+                return Pair.<Archive,URI>of(new CacheFolderArchive(f), null);
+            } else if (f.isDirectory()) {
                 return Pair.<Archive,URI>of(new FolderArchive (f), null);
             }
             else {

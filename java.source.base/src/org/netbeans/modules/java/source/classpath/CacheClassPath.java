@@ -245,7 +245,7 @@ public class CacheClassPath implements ClassPathImplementation, PropertyChangeLi
             if (result == null) {
                 result = EMPTY;
                 try {
-                    File sigs = JavaIndex.getClassFolder(originalRoot,false,scan);
+                    File sigs = JavaIndex.getClassFolder(originalRoot,false,false);
                     URL orl = FileUtil.urlForArchiveOrDir(sigs);
                     if (orl != null) {
                         result = new URL[] {orl};

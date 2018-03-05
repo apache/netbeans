@@ -36,6 +36,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.swing.BorderFactory;
@@ -57,6 +58,7 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.TreeWillExpandListener;
 import javax.swing.plaf.TreeUI;
 import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.plaf.synth.SynthTreeUI;
@@ -67,6 +69,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
@@ -96,10 +99,10 @@ public class ProfilerTreeTable extends ProfilerTable {
         this.model = (TableModelImpl)getModel();
         tree = this.model.getTree();
         
-        
         Adapter adapter = new Adapter();
         tree.addTreeSelectionListener(adapter);
         tree.addTreeExpansionListener(adapter);
+        tree.addTreeWillExpandListener(adapter);
         tree.getModel().addTreeModelListener(adapter);
         getSelectionModel().addListSelectionListener(adapter);
 
@@ -173,7 +176,7 @@ public class ProfilerTreeTable extends ProfilerTable {
         return path;
     }
     
-    void selectPath(TreePath path, boolean scrollToVisible) {
+    public void selectPath(TreePath path, boolean scrollToVisible) {
         internal = true;
         markExpansionTransaction();
         try {
@@ -216,8 +219,16 @@ public class ProfilerTreeTable extends ProfilerTable {
         if (tree != null) tree.setShowsRootHandles(newValue);
     }
     
+    public boolean getShowsRootHandles() {
+        return tree != null ? tree.getShowsRootHandles() : false;
+    }
+    
     public void setRootVisible(boolean rootVisible) {
         if (tree != null) tree.setRootVisible(rootVisible);
+    }
+    
+    public boolean isRootVisible() {
+        return tree != null ? tree.isRootVisible() : false;
     }
     
     
@@ -246,6 +257,27 @@ public class ProfilerTreeTable extends ProfilerTable {
             int nchildren = tmodel.getChildCount(selected);
             for (int i = 0; i < nchildren; i++)
                 tree.collapsePath(tpath.pathByAddingChild(tmodel.getChild(selected, i)));
+        
+        } finally {
+            clearExpansionTransaction();
+        }
+    }
+    
+    public void collapseChildren(TreePath tpath) {
+        if (tree != null) try {
+            markExpansionTransaction();
+            
+            if (tpath == null || tree.isCollapsed(tpath)) return;
+            
+            TreeModel tmodel = tree.getModel();
+            Object selected = tpath.getLastPathComponent();
+            
+            int nchildren = tmodel.getChildCount(selected);
+            for (int i = 0; i < nchildren; i++) {
+                TreePath tp = tpath.pathByAddingChild(tmodel.getChild(selected, i));
+                tree.collapsePath(tp);
+//                tree.resetExpandedState(tp);
+            }
         
         } finally {
             clearExpansionTransaction();
@@ -324,8 +356,79 @@ public class ProfilerTreeTable extends ProfilerTable {
         }
     }
     
+    public void expandPath(TreePath path) {
+        if (tree != null) try {
+            markExpansionTransaction();
+
+            tree.putClientProperty(UIUtils.PROP_AUTO_EXPANDING, Boolean.TRUE);
+            try { tree.expandPath(path); }
+            finally { tree.putClientProperty(UIUtils.PROP_AUTO_EXPANDING, null); }
+
+        } finally {
+            clearExpansionTransaction();
+        }
+    }
+    
+    public void expandRow(int row) {
+        if (tree != null) try {
+            markExpansionTransaction();
+
+            tree.putClientProperty(UIUtils.PROP_AUTO_EXPANDING, Boolean.TRUE);
+            try { tree.expandRow(row); }
+            finally { tree.putClientProperty(UIUtils.PROP_AUTO_EXPANDING, null); }
+
+        } finally {
+            clearExpansionTransaction();
+        }
+    }
+    
     public void makeTreeAutoExpandable(int maxChildToExpand) {
         if (tree != null) UIUtils.makeTreeAutoExpandable(tree, maxChildToExpand);
+    }
+    
+    protected void nodeExpanding(TreeNode node) {}
+    
+    protected void nodeExpanded(TreeNode node) {}
+    
+    protected void nodeCollapsing(TreeNode node) {}
+    
+    protected void nodeCollapsed(TreeNode node) {}
+    
+    public void setForgetPreviouslyExpanded(boolean ignorePreviouslyExpanded) {
+        tree.setForgetPreviouslyExpanded(ignorePreviouslyExpanded);
+    }
+    
+    public Enumeration<TreePath> getExpandedNodes() {
+        return tree == null ? null : tree.getExpandedDescendants(new TreePath(tree.getModel().getRoot()));
+    }
+    
+    public void clearExpandedNodes(Enumeration<TreePath> nodes) {
+        if (tree != null) {
+            tree.removeDescendantToggledPaths(nodes);
+            tree.updateUI();
+        }
+    }
+    
+    public void resetExpandedNodes() {
+        if (tree != null) tree.resetExpandedNodes();
+    }
+    
+    public void resetPath(TreePath path) {
+        if (tree != null) ((SortedFilteredTreeModel)tree.getModel()).clearPath(path);
+    }
+    
+    public DefaultTreeModel getTreeModel() {
+        return tree == null ? null : (DefaultTreeModel)tree.getModel();
+    }
+    
+//    public void resetTreeUI() {
+//        tree.updateUI();
+//    }
+    
+    public static abstract class NodeExpansionEvaluator {
+        
+        public abstract Boolean hasBeenExpanded(TreePath path);
+        
     }
     
     
@@ -400,7 +503,7 @@ public class ProfilerTreeTable extends ProfilerTable {
             Point point = e.getPoint();
             int column = columnAtPoint(point);
             
-            if (getColumnClass(column) == JTree.class) {
+            if (column != -1 && getColumnClass(column) == JTree.class) {
                 int row = rowAtPoint(point);
                 Rectangle treeCellRect = tree.getRowBounds(row);
                 
@@ -445,6 +548,11 @@ public class ProfilerTreeTable extends ProfilerTable {
     }
     
     
+    public Comparator getCurrentComparator() {
+        return model.getComparator();
+    }
+    
+    
     // --- String value --------------------------------------------------------
     
     // column - view index
@@ -474,12 +582,19 @@ public class ProfilerTreeTable extends ProfilerTable {
                     public void run() { updateColumnsPreferredWidth(); }
                 });
             }
+            protected void setSortKeysImpl(List newKeys) {
+                // TODO: Improve to not call createComparator(newKeys) here and from super
+                willBeSorted(Collections.unmodifiableList(newKeys));
+                super.setSortKeysImpl(newKeys);
+            }
         };
         s.setDefaultSortOrder(SortOrder.DESCENDING);
         s.setDefaultSortOrder(0, SortOrder.ASCENDING);
-        s.setSortColumn(0);
+//        s.setSortColumn(0);
         return s;
     }
+    
+    protected void willBeSorted(List<? extends RowSorter.SortKey> sortKeys) {}
     
     private static class ProfilerTreeTableSorter extends ProfilerRowSorter {
         
@@ -522,39 +637,103 @@ public class ProfilerTreeTable extends ProfilerTable {
         protected void setSortKeysImpl(List newKeys) {
             sortKeys = newKeys == null ? Collections.emptyList() :
                        Collections.unmodifiableList(new ArrayList(newKeys));
-            model.sort(newKeys == null ? null : getComparator());
+//            long start = System.currentTimeMillis();
+            model.sort(createComparator(newKeys));
+//            System.err.println(">>> Sorted in " + (System.currentTimeMillis() - start));
+//            Thread.dumpStack();
         }
         
         public List<? extends RowSorter.SortKey> getSortKeys() {
             return sortKeys;
         }
         
-        private Comparator getComparator() {
-            SortOrder sortOrder = getSortOrder();
+        protected Comparator createComparator(List<RowSorter.SortKey> sortKeys) {
+            if (sortKeys == null || sortKeys.isEmpty()) return null;
+            
+            SortKey sortKey = sortKeys.get(0);
+            SortOrder sortOrder = sortKey.getSortOrder();
             if (SortOrder.UNSORTED.equals(sortOrder)) return null;
             
             final boolean ascending = SortOrder.ASCENDING.equals(sortOrder);
-            final int sortColumn = getSortColumn();
-            boolean sortingTree = JTree.class.equals(model.getColumnClass(sortColumn));
-            final Comparator comparator = sortingTree ? null : getComparator(sortColumn);
+            final int sortColumn = sortKey.getColumn();
+            
+            Class columnClass = model.getColumnClass(sortColumn);
+            final Comparator comp = JTree.class.equals(columnClass) ? null : 
+                    (Comparable.class.isAssignableFrom(columnClass) ? new Comparator() {
+                        public int compare(Object o1, Object o2) {
+                            return ((Comparable)o1).compareTo(o2);
+                        }
+                    } : getComparator(sortColumn));
+            
+//            System.err.println(">>> ascending: " + ascending);
+//            System.err.println(">>> sortColumn: " + sortColumn);
+//            System.err.println(">>> columnClass: " + columnClass + " - name: " + model.getColumnName(sortColumn));
             
             return new Comparator() {
                 public int compare(Object o1, Object o2) {
                     int result;
-                    if (comparator == null) {
-                        String s1 = o1.toString();
-                        String s2 = o2.toString();
-                        result = s1.compareTo(s2);
+                    
+                    if (o1 instanceof CCTNode.FixedPosition) {
+                        result = o1 instanceof CCTNode.AlwaysFirst ? -1 : 1;
+                        result = ascending ? result : -result;
+                    } else if (o2 instanceof CCTNode.FixedPosition) {
+                        result = o2 instanceof CCTNode.AlwaysFirst ? 1 : -1;
+                        result = ascending ? result : -result;
+                    } else if (comp == null) {
+                        result = o1.toString().compareTo(o2.toString());
                     } else {
                         Object v1 = model.getValueAt((TreeNode)o1, sortColumn);
                         Object v2 = model.getValueAt((TreeNode)o2, sortColumn);
-                        result = comparator.compare(v1, v2);
+                        
+                        if (v1 == v2) result = 0;
+                        else if (v1 == null) result = -1;
+                        else if (v2 == null) result = 1;
+                        else result = comp.compare(v1, v2);
                     }
                     
                     return ascending ? result : result * -1;
                 }
             };
         }
+        
+//        private Comparator getComparator() {
+//            SortOrder sortOrder = getSortOrder();
+//            if (SortOrder.UNSORTED.equals(sortOrder)) return null;
+//            
+//            final boolean ascending = SortOrder.ASCENDING.equals(sortOrder);
+//            final int sortColumn = getSortColumn();
+//            Class columnClass = model.getColumnClass(sortColumn);
+//            final boolean sortingTree = JTree.class.equals(columnClass);
+//            final Comparator comparator = sortingTree ? null : 
+//                    (Comparable.class.isAssignableFrom(columnClass) ? new Comparator() {
+//                        public int compare(Object o1, Object o2) {
+//                            return ((Comparable)o1).compareTo(o2);
+//                        }
+//                    } : getComparator(sortColumn));
+////            Class columnClass = model.getColumnClass(sortColumn);
+////            boolean sortingStrings = JTree.class.equals(columnClass) || String.class.equals(columnClass);
+////            final Comparator comparator = sortingStrings ? null : getComparator(sortColumn);
+//            
+//            return new Comparator() {
+//                public int compare(Object o1, Object o2) {
+//                    int result;
+//                    
+//                    if (sortingTree) {
+//                        result = o1.toString().compareTo(o2.toString());
+//                    } else {
+//                        Object v1 = model.getValueAt((TreeNode)o1, sortColumn);
+//                        Object v2 = model.getValueAt((TreeNode)o2, sortColumn);
+//                        
+//                        if (v1 == v2) result = 0;
+//                        else if (v1 == null) result = -1;
+//                        else if (v2 == null) result = 1;
+//                        else result = comparator.compare(v1, v2);
+//                    }
+//                    
+//                    return ascending ? result : result * -1;
+//                }
+//            };
+//        }
         
     }
     
@@ -565,7 +744,7 @@ public class ProfilerTreeTable extends ProfilerTable {
         private SortedFilteredTreeModel treeModel;
         private final ProfilerTreeTableModel treeTableModel;
         
-        TableModelImpl(ProfilerTreeTableModel model) {
+        TableModelImpl(final ProfilerTreeTableModel model) {
             this.treeTableModel = model;
             
             treeModel = treeModelImpl(model.getRoot(), null, null);
@@ -573,6 +752,16 @@ public class ProfilerTreeTable extends ProfilerTable {
             model.addListener(new ProfilerTreeTableModel.Adapter() {
                 public void dataChanged() {
                     fireTableDataChanged();
+                }
+                public void structureChanged() {
+                    treeModel.reload();
+//                    fireTableDataChanged();
+                }
+                public void childrenChanged(TreeNode node) {
+//                    System.err.println(">>>      Firing nodeStructureChanged to the tree...");
+                    treeModel.reload(node);
+//                    System.err.println(">>>      Fired nodeStructureChanged to the tree.");
+//                    fireTableDataChanged();
                 }
                 public void rootChanged(TreeNode oldRoot, TreeNode newRoot) {
                     // NOTE: would be cleaner to change root of existing model,
@@ -617,6 +806,10 @@ public class ProfilerTreeTable extends ProfilerTable {
         
         void sort(Comparator comparator) {
             treeModel.setComparator(comparator);
+        }
+        
+        Comparator getComparator() {
+            return treeModel.getComparator();
         }
         
         void filter(RowFilter filter) {
@@ -723,6 +916,27 @@ public class ProfilerTreeTable extends ProfilerTable {
         public int getChildCount(Object parent) {
             if (renderer == null || filter == null) return super.getChildCount(parent);
             return filteredChildren(parent).size();
+        }
+        
+        
+        void clearPath(TreePath path) {
+            clearKey(null);
+//            clearKey(new TreePathKey(getPath(path)));
+        }
+        
+//        private TreeNode[] getPath(TreePath path) {
+//            int i = path.getPathCount();
+//            TreeNode[] result = new TreeNode[i--];
+//
+//            for(TreePath tp = path; tp != null; tp = tp.getParentPath())
+//                result[i--] = (TreeNode)tp.getLastPathComponent();
+//            
+//            return result;
+//        }
+        
+        protected void clearKey(TreePathKey key) {
+            cache = null;
+//            if (cache != null) cache.remove(key);
         }
         
         
@@ -836,10 +1050,18 @@ public class ProfilerTreeTable extends ProfilerTable {
         }
         
         
+        protected void clearKey(TreePathKey key) {
+            super.clearKey(key);
+            viewToModel = null;
+//            if (viewToModel != null) viewToModel.remove(key);
+        }
+        
+        
         protected void fireTreeStructureChanged(Object source, Object[] path,
                                                 int[] childIndices,
                                                 Object[] children) {
             viewToModel = null;
+//            System.err.println(">>> CLEARING MODEL <<<");
             super.fireTreeStructureChanged(source, path, childIndices, children);
         }
         
@@ -869,11 +1091,16 @@ public class ProfilerTreeTable extends ProfilerTable {
     private static final class TreePathKey {
         
         private final TreeNode[] pathToRoot;
-        private final int hashCode;
+        private int hashCode;
 
         TreePathKey(TreeNode[] _pathToRoot) {
             pathToRoot = _pathToRoot;
-            hashCode = Arrays.deepHashCode(pathToRoot);
+            
+            hashCode = 1;
+            for (TreeNode node : pathToRoot)
+                hashCode = 31 * hashCode + node.hashCode();
+            
+//            hashCode = Arrays.deepHashCode(pathToRoot);
         }
 
         public final int hashCode() {
@@ -910,19 +1137,80 @@ public class ProfilerTreeTable extends ProfilerTable {
         try {
             tree.putClientProperty(UIUtils.PROP_EXPANSION_TRANSACTION, Boolean.TRUE);
             Enumeration<TreePath> paths = uiState.getExpandedPaths();
-            if (paths != null) while (paths.hasMoreElements())
-                tree.expandPath(paths.nextElement());
+            if (paths != null) while (paths.hasMoreElements()) {
+                TreePath tp = paths.nextElement();
+//                System.err.println(">>> Restoring expanded " + tp);
+                tree.expandPath(getSimilarPath(tp, tree.getModel()));
+            }
+        } catch (Exception e) {
+            System.err.println(">>> Exception in ProfilerTreeTable.restoreExpandedNodes: " + e.getMessage());
+            e.printStackTrace();
         } finally {
             tree.putClientProperty(UIUtils.PROP_EXPANSION_TRANSACTION, null);
         }
     }
     
     static void restoreSelectedNodes(JTree tree, UIState uiState) {
-        tree.setSelectionPaths(uiState.getSelectedPaths());
+        try {
+            TreePath[] sel = uiState.getSelectedPaths();
+
+            if (sel != null)
+                for (int i = 0; i < sel.length; i++)
+                    sel[i] = getSimilarPath(sel[i], tree.getModel());
+            tree.setSelectionPaths(sel);
+        } catch (Exception e) {
+            System.err.println(">>> Exception in ProfilerTreeTable.restoreSelectedNodes: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     
-    static class UIState {
+    protected UIState getUIState() {
+        return tree == null ? null : getUIState(tree);
+    }
+    
+    protected void restoreExpandedNodes(UIState uiState) {
+        if (tree != null) restoreExpandedNodes(tree, uiState);
+    }
+    
+    protected void restoreSelectedNodes(UIState uiState) {
+        if (tree != null) restoreSelectedNodes(tree, uiState);
+    }
+    
+    
+    private static TreePath getSimilarPath(TreePath oldPath, TreeModel currentModel) {
+        if (oldPath == null || oldPath.getPathCount() < 1) return null;
+
+//        TreeModel currentModel = getModel();
+        Object currentRoot = currentModel.getRoot();
+        if (!currentRoot.equals(oldPath.getPathComponent(0))) return null;
+
+        TreePath p = new TreePath(currentRoot);
+        Object[] op = oldPath.getPath();
+        Object n = currentRoot;
+
+        for (int i = 1; i < op.length; i++) {
+            Object nn = null;
+
+            for (int ii = 0; ii < currentModel.getChildCount(n); ii++) {
+                Object c = currentModel.getChild(n, ii);
+                if (c.equals(op[i])) {
+                    nn = c;
+                    break;
+                }
+            }
+
+            if (nn == null) return null;
+
+            n = nn;
+            p = p.pathByAddingChild(n);
+        }
+//        System.err.println(">>> Similar path for " + oldPath + " is " + p);
+        return p;
+    }
+    
+    
+    protected static class UIState {
         
         private final TreePath[] selectedPaths;
         private final Enumeration<TreePath> expandedPaths;
@@ -945,14 +1233,30 @@ public class ProfilerTreeTable extends ProfilerTable {
     }
     
     
-    private class Adapter implements TreeModelListener, TreeExpansionListener,
+    private class Adapter implements TreeModelListener, TreeExpansionListener, TreeWillExpandListener,
                                      TreeSelectionListener, ListSelectionListener {
         
         private boolean internal;
         
-        public void treeExpanded(TreeExpansionEvent event) { notifyTable(); }
-
-        public void treeCollapsed(TreeExpansionEvent event) { notifyTable(); }
+        public void treeExpanded(TreeExpansionEvent event) {
+            notifyTable();
+            Object expanded = event.getPath().getLastPathComponent();
+            if (expanded instanceof TreeNode) nodeExpanded((TreeNode)expanded);
+        }
+        public void treeCollapsed(final TreeExpansionEvent event) {
+            notifyTable();
+            Object collapsed = event.getPath().getLastPathComponent();
+            if (collapsed instanceof TreeNode) nodeCollapsed((TreeNode)collapsed);
+        }
+        
+        public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
+            Object expanding = event.getPath().getLastPathComponent();
+            if (expanding instanceof TreeNode) nodeExpanding((TreeNode)expanding);
+        }
+        public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
+            Object collapsing = event.getPath().getLastPathComponent();
+            if (collapsing instanceof TreeNode) nodeCollapsing((TreeNode)collapsing);
+        }
 
         public void treeNodesChanged(TreeModelEvent e) { notifyTable(); }
 
@@ -960,7 +1264,11 @@ public class ProfilerTreeTable extends ProfilerTable {
 
         public void treeNodesRemoved(TreeModelEvent e) { notifyTable(); }
 
-        public void treeStructureChanged(TreeModelEvent e) { notifyTable(); }
+        public void treeStructureChanged(TreeModelEvent e) {
+            tree.setChangingModel(true);
+            try { notifyTable(); }
+            finally { tree.setChangingModel(false); }
+        }
         
         private void notifyTable() {
             if (tree.isChangingModel()) return;
@@ -975,6 +1283,12 @@ public class ProfilerTreeTable extends ProfilerTable {
             if (internal) return;
             
             TreePath selected = e.getPath();
+            
+            // NOTE: workaround to not break scrollRectToVisible() when there's
+            //       an expanded node above the selection.
+            //       Can be detected by e.getPath() != tree.getSelectionPath().
+            if (!Objects.equals(selected, tree.getSelectionPath())) return;
+            
             int row = selected == null ? -1 : tree.getRowForPath(selected);
             try {
                 internal = true;
@@ -1016,6 +1330,8 @@ public class ProfilerTreeTable extends ProfilerTable {
         
         private SynthLikeTreeUI synthLikeUI;
         private boolean workaroundVerticalLines;
+        
+        private boolean forgetPreviouslyExpanded;
 
         
         ProfilerTreeTableTree(SortedFilteredTreeModel model) {
@@ -1032,7 +1348,7 @@ public class ProfilerTreeTable extends ProfilerTable {
         
         public void setUI(TreeUI ui) {
             if (ui instanceof SynthTreeUI) {
-                if (synthLikeUI == null) {
+//                if (synthLikeUI == null) {
                     super.setUI(ui);
                     SynthTreeUI synthUI = (SynthTreeUI)ui;
                     int left = synthUI.getLeftChildIndent();
@@ -1044,10 +1360,12 @@ public class ProfilerTreeTable extends ProfilerTable {
                     boolean nimbus = UIUtils.isNimbusLookAndFeel();
                     synthLikeUI.setLeftChildIndent(left + (nimbus ? 4 : 6));
                     synthLikeUI.setRightChildIndent(right);
-                } else {
-                    super.setUI(synthLikeUI);
-                }
+//                } else {
+//                    super.setUI(synthLikeUI);
+//                }
             } else {
+                synthLikeUI = null;
+                
                 super.setUI(ui);
                 
                 // #269500 - performance workaround for BasicTreeUI
@@ -1077,8 +1395,13 @@ public class ProfilerTreeTable extends ProfilerTable {
             currentSelected = isSelected;
             
             Rectangle cellBounds = getRowBounds(row);
-            currentX = cellBounds.x;
-            currentWidth = cellBounds.width;
+            if (cellBounds == null) { // row may be -1
+                currentX = 0;
+                currentWidth = 0;
+            } else {
+                currentX = cellBounds.x;
+                currentWidth = cellBounds.width;
+            }
             
             customRendering = ptable.isCustomRendering();
             if (synthLikeUI != null) synthLikeUI.setSelected(isSelected);
@@ -1115,6 +1438,37 @@ public class ProfilerTreeTable extends ProfilerTable {
             return x == 0;
         }
         
+        
+        public void setAnchorSelectionPath(TreePath newPath) {
+            // TODO: should only be disabled for forgetPreviouslyExpanded?
+        }
+        
+        void setForgetPreviouslyExpanded(boolean forgetPreviouslyExpanded) {
+            this.forgetPreviouslyExpanded = forgetPreviouslyExpanded;
+        }
+        
+        public boolean hasBeenExpanded(TreePath path) {
+            return forgetPreviouslyExpanded ? false : super.hasBeenExpanded(path);
+        }
+        
+        public void fireTreeCollapsed(TreePath path) {
+            super.fireTreeCollapsed(path);
+            if (forgetPreviouslyExpanded) {
+                super.removeDescendantToggledPaths(Collections.enumeration(Collections.singletonList(path)));
+                // NOTE: uncachePath() must be called for all DescendantToggledPaths once implemented!
+                ((SortedFilteredTreeModel)getModel()).clearPath(path);
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() { updateUI(); }
+                });
+            }
+        }
+        
+        protected void removeDescendantToggledPaths(Enumeration<TreePath> toRemove) {
+//            System.err.println(">>> REMOVING descendant toggled paths...");
+//            Thread.dumpStack();
+            super.removeDescendantToggledPaths(toRemove);
+        }
+        
         void resetExpandedNodes() {
             clearToggledPaths();
             updateUI();
@@ -1136,10 +1490,16 @@ public class ProfilerTreeTable extends ProfilerTable {
         }
         
         public void setSelectionPaths(TreePath[] paths) {
-            if (changingModel && paths != null)
-                for (int i = 0; i < paths.length; i++)
-                    paths[i] = getSimilarPath(paths[i]);
-            super.setSelectionPaths(paths);
+            if (changingModel && paths != null) {
+                List<TreePath> similarPaths = new ArrayList();
+                for (int i = 0; i < paths.length; i++) {
+                    TreePath similarPath = getSimilarPath(paths[i]);
+                    if (similarPath != null) similarPaths.add(similarPath);
+                }
+                super.setSelectionPaths(similarPaths.toArray(new TreePath[0]));
+            } else {
+                super.setSelectionPaths(paths);
+            }
         }
         
         private TreePath getSimilarPath(TreePath oldPath) {

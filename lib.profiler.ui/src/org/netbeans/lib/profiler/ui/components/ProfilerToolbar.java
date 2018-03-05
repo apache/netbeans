@@ -142,6 +142,7 @@ public abstract class ProfilerToolbar {
         @Override
         public Component add(Action action) {
             Component c = toolbar.add(action);
+            tweakComponent(c);
             toolbar.repaint();
             return c;
         }
@@ -149,6 +150,7 @@ public abstract class ProfilerToolbar {
         @Override
         public Component add(Component component) {
             Component c = toolbar.add(component);
+            tweakComponent(c);
             toolbar.repaint();
             return c;
         }
@@ -156,6 +158,7 @@ public abstract class ProfilerToolbar {
         @Override
         public Component add(Component component, int index) {
             Component c = toolbar.add(component, index);
+            tweakComponent(c);
             toolbar.repaint();
             return c;
         }
@@ -195,6 +198,11 @@ public abstract class ProfilerToolbar {
         @Override
         public int getComponentCount() {
             return toolbar.getComponentCount();
+        }
+        
+        
+        private void tweakComponent(Component c) {
+            if (c instanceof JComponent) ((JComponent)c).setOpaque(false);
         }
         
     }

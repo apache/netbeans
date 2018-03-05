@@ -19,16 +19,12 @@
 
 package org.netbeans.modules.masterfs;
 
-import java.io.File;
-import java.net.URL;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.masterfs.filebasedfs.FileBasedFileSystem;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.URLMapper;
 import org.openide.util.Lookup;
-import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -49,25 +45,6 @@ public class URLMapperTest extends NbTestCase {
         assertEquals(MyInstance2.class, obj.getClass());
     }
     
-    public void testNormalize8_3Names() throws Exception {
-        if (!Utilities.isWindows()) {
-            return;
-        }
-        
-        clearWorkDir();
-        File f = new File(getWorkDir(), "my new temp folder with long name");
-        f.mkdirs();
-        
-        File shrtF = new File(getWorkDir(), "MYNEWT~1");
-        assertTrue("Short name exists", shrtF.isDirectory());
-        
-        final URL u = shrtF.toURI().toURL();
-        final FileObject fo = URLMapper.findFileObject(u);
-        File found = FileUtil.toFile(fo);
-        
-        assertEquals("The same file as original", f, found);
-    }
-
     @ServiceProvider(service=Object.class)
     public static class MyInstance2 {
         public MyInstance2() {

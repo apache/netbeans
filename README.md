@@ -23,14 +23,23 @@
 
 Apache NetBeans is an open source development environment, tooling platform, and application framework.
 
+### Build status
+   * TravisCI:
+     * [![Build Status](https://travis-ci.org/apache/incubator-netbeans.svg?branch=master)](https://travis-ci.org/apache/incubator-netbeans)
+   * Apache Jenkins: 
+     * Linux: [![Build Status](https://builds.apache.org/job/incubator-netbeans-linux/badge/icon)](https://builds.apache.org/job/incubator-netbeans-linux/)
+     * Windows: [![Build Status](https://builds.apache.org/job/incubator-netbeans-windows/badge/icon)](https://builds.apache.org/job/incubator-netbeans-windows/)
+
 ### Requirements
 
   * Git
   * Ant 1.9.9 or above
-  * JDK 8 (to build NetBeans)
-  * JDK 9 (to run NetBeans)
+  * Oracle JDK 8 or OpenJDK 8 (to build NetBeans)
+  * Oracle JDK 9 or OpenJDK 9 (to run NetBeans)
 
 **Note:** NetBeans also runs with JDK 8, although then it will not include tools for the JDK 9 Shell.
+
+**Note:** NetBeans license violation checks are managed via the [rat-exclusions.txt](https://github.com/apache/incubator-netbeans/blob/master/nbbuild/rat-exclusions.txt) file.
 
 ### Building NetBeans
 
@@ -57,6 +66,14 @@ $ ant tryme
 [Subscribe](mailto:users-subscribe@netbeans.incubator.apache.org) or [mail](mailto:users@netbeans.incubator.apache.org) the [users@netbeans.incubator.apache.org](mailto:users@netbeans.incubator.apache.org) list - Ask questions, find answers, and also help other users.
 
 [Subscribe](mailto:dev-subscribe@netbeans.incubator.apache.org) or [mail](mailto:dev@netbeans.incubator.apache.org) the [dev@netbeans.incubator.apache.org](mailto:dev@netbeans.incubator.apache.org) list - Join developement discussions, propose new ideas and connect with contributors.
+
+### Download
+
+Developer builds can be downloaded from https://builds.apache.org/job/incubator-netbeans-release/
+
+### Reporting Bugs
+
+Bugs should be reported to https://issues.apache.org/jira/projects/NETBEANS/issues/
 
 ### Full History
 

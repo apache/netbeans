@@ -26,7 +26,6 @@ import org.netbeans.MockModuleInstaller;
 import org.netbeans.MockEvents;
 import org.netbeans.Module;
 import org.netbeans.ModuleManager;
-import org.netbeans.core.startup.Main;
 import org.netbeans.junit.RandomlyFails;
 
 /**

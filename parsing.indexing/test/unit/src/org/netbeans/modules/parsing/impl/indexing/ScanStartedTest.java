@@ -60,6 +60,10 @@ public class ScanStartedTest extends IndexingTestBase {
     
     private final Map<String, Map<ClassPath,Void>> registeredClasspaths = new HashMap<String, Map<ClassPath,Void>>();
     
+    private static final Logger LOG = Logger.getLogger(RepositoryUpdater.class.getName()+".tests"); //NOI18N
+    
+    private TestHandler handler;
+    
     private IndexerFactory factory1;
     private IndexerFactory factory2;
     private IndexerFactory factory3;
@@ -84,12 +88,12 @@ public class ScanStartedTest extends IndexingTestBase {
         super.getAdditionalServices(clazz);
         clazz.add(FooCPP.class);
     }
-
-    final TestHandler handler = new TestHandler();
     
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        
+        handler = new TestHandler(); 
 
         this.clearWorkDir();
         final File _wd = this.getWorkDir();
@@ -125,29 +129,24 @@ public class ScanStartedTest extends IndexingTestBase {
         MockMimeLookup.setInstances(MimePath.EMPTY, binFactory1, binFactory2, binFactory3);
         MockMimeLookup.setInstances(MimePath.get(FOO_MIME), factory1, factory2, factory3);
         RepositoryUpdaterTest.setMimeTypes(FOO_MIME);
-
-        RepositoryUpdaterTest.waitForRepositoryUpdaterInit();
         
-        final Logger logger = Logger.getLogger(RepositoryUpdater.class.getName()+".tests"); //NOI18N
-        logger.setLevel (Level.FINEST);
-        logger.addHandler(handler);
+        RepositoryUpdaterTest.waitForRepositoryUpdaterInit();  
+        
+        LOG.setLevel (Level.FINEST);
+        LOG.addHandler(handler);
 
     }
 
     @Override
     protected void tearDown() throws Exception {
-        final TestHandler handler = new TestHandler();
-        final Logger logger = Logger.getLogger(RepositoryUpdater.class.getName()+".tests"); //NOI18N
         try {
-            logger.setLevel (Level.FINEST);
-            logger.addHandler(handler);
             for(String id : registeredClasspaths.keySet()) {
                 final Map<ClassPath,Void> classpaths = registeredClasspaths.get(id);
                 GlobalPathRegistry.getDefault().unregister(id, classpaths.keySet().toArray(new ClassPath[classpaths.size()]));
             }
             handler.await();
         } finally {
-            logger.removeHandler(handler);
+            LOG.removeHandler(handler);
         }
         super.tearDown();
     }
@@ -252,7 +251,6 @@ public class ScanStartedTest extends IndexingTestBase {
 
     public void testBinaryScanFinishedAfterScanStartedWithException() throws Exception {
         assertTrue(GlobalPathRegistry.getDefault().getPaths(FOO_BINARY).isEmpty());
-
         binFactory2.throwFromScanStarted = new RuntimeException();
 
         //Testing classpath registration

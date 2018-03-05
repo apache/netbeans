@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.profiler.heapwalk.details.basic;
 
+import org.netbeans.modules.profiler.heapwalk.details.api.ExportAction;
+import org.netbeans.modules.profiler.heapwalk.details.api.StringDecoder;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -58,11 +60,11 @@ import org.openide.util.NbBundle;
     "ArrayValueView_Truncated=... <truncated>",                                     // NOI18N
     "ArrayValueView_Value=Value:",                                                  // NOI18N
     "ArrayValueView_Items=Array items:",                                            // NOI18N
-    "ArrayValueView_All=Show all",                                                  // NOI18N
-    "ArrayValueView_Save=Save to file",                                             // NOI18N
+    "ArrayValueView_All=Show All",                                                  // NOI18N
+    "ArrayValueView_Save=Save to File",                                             // NOI18N
     "ArrayValueView_OutOfMemory=Out of memory - value too long."                    // NOI18N
 })
-final class ArrayValueView extends DetailsProvider.View implements Scrollable, BasicExportAction.ExportProvider {
+final class ArrayValueView extends DetailsProvider.View implements Scrollable, ExportAction.ExportProvider {
     
     private static final int MAX_PREVIEW_LENGTH = 256;
     private static final int MAX_ARRAY_ITEMS = 1000;
@@ -144,6 +146,7 @@ final class ArrayValueView extends DetailsProvider.View implements Scrollable, B
                 view.setLineWrap(true);
                 view.setWrapStyleWord(true);
                 view.setText(preview);
+                try { view.setCaretPosition(0); } catch (IllegalArgumentException e) {}
                 
                 JScrollPane viewScroll = new JScrollPane(view,
                         JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -163,7 +166,7 @@ final class ArrayValueView extends DetailsProvider.View implements Scrollable, B
                 
                 JButton save = htmlButton(Bundle.ArrayValueView_Save(), !preview.isEmpty(), new Runnable() {
                     public void run() {
-                        new BasicExportAction(ArrayValueView.this).actionPerformed(null);
+                        new ExportAction(ArrayValueView.this).actionPerformed(null);
                     }
                 });
                 c = new GridBagConstraints();
@@ -206,6 +209,7 @@ final class ArrayValueView extends DetailsProvider.View implements Scrollable, B
                     public void run() {
                         try {
                             view.setText(preview);
+                            try { view.setCaretPosition(0); } catch (IllegalArgumentException e) {}
                             view.setEnabled(true);
                         } catch (OutOfMemoryError e) {
                             ProfilerDialogs.displayError(Bundle.ArrayValueView_OutOfMemory());
@@ -298,14 +302,14 @@ final class ArrayValueView extends DetailsProvider.View implements Scrollable, B
                 String value = decoder.getValueAt(i);
                 
                 switch (exportedFileType) {
-                    case BasicExportAction.MODE_CSV:
+                    case ExportAction.MODE_CSV:
                         eDD.dumpData(value);
                         eDD.dumpData(comma);
                         break;
-                    case BasicExportAction.MODE_TXT:
+                    case ExportAction.MODE_TXT:
                         eDD.dumpData(value);
                         break;
-                    case BasicExportAction.MODE_BIN:
+                    case ExportAction.MODE_BIN:
                         byte b = Byte.valueOf(value);
                         eDD.dumpByte(b);
                         break;

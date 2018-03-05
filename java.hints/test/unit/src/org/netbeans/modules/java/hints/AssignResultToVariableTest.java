@@ -309,7 +309,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
             "import java.util.Set;\n" +
             "public class Test {\n" +
             "    void test(Map<? extends String, ? extends Number> map) {\n"
-                + "   Set<? extends Map.Entry<? extends String, ? extends Number>> entrySet = map.entrySet(); //assign return value to a new variable here\n"
+                + "   Set<Map.Entry<? extends String, ? extends Number>> entrySet = map.entrySet(); //assign return value to a new variable here\n"
                 + "    }\n"
                 + "}").replaceAll("\\s+", " "));
     }

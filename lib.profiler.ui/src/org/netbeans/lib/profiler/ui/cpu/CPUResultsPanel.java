@@ -31,6 +31,7 @@ import java.util.ResourceBundle;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.TreePath;
+import org.netbeans.lib.profiler.ui.AppearanceController;
 import org.netbeans.modules.profiler.api.GoToSource;
 
 
@@ -124,7 +125,9 @@ public abstract class CPUResultsPanel extends ResultsPanel implements CommonCons
         currentView = view;
 
         if (popupShowSource != null) popupShowSource.setEnabled(isShowSourceAvailable());
-        popupAddToRoots.setEnabled(isAddToRootsAvailable());
+        if (popupAddToRoots != null) {
+            popupAddToRoots.setEnabled(isAddToRootsAvailable());
+        }
 
         actionsHandler.viewChanged(view); // notify the actions handler about this
     }
@@ -153,7 +156,9 @@ public abstract class CPUResultsPanel extends ResultsPanel implements CommonCons
     protected JPopupMenu createPopupMenu() {
         JPopupMenu popup = new JPopupMenu();
         if (GoToSource.isAvailable()) popupShowSource = new JMenuItem();
-        popupAddToRoots = new JMenuItem();
+        if (AppearanceController.getDefault().isAddToRootsVisible()) {
+            popupAddToRoots = new JMenuItem();
+        }
         popupFind = new JMenuItem();
 
         Font boldfont = popup.getFont().deriveFont(Font.BOLD);
@@ -198,13 +203,15 @@ public abstract class CPUResultsPanel extends ResultsPanel implements CommonCons
 
         popup.add(popupFind);
 
-        popup.addSeparator();
+        if (popupAddToRoots != null) {
+            popup.addSeparator();
 
-        popupAddToRoots.setText(ROOT_METHODS_ITEM_NAME);
-        popup.add(popupAddToRoots);
-
+            popupAddToRoots.setText(ROOT_METHODS_ITEM_NAME);
+            popup.add(popupAddToRoots);
+            popupAddToRoots.addActionListener(menuListener);
+        }
+        
         if (popupShowSource != null) popupShowSource.addActionListener(menuListener);
-        popupAddToRoots.addActionListener(menuListener);
         popupFind.addActionListener(menuListener);
 
         return popup;

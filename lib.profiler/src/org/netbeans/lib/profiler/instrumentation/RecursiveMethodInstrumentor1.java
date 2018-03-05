@@ -398,6 +398,7 @@ public class RecursiveMethodInstrumentor1 extends RecursiveMethodInstrumentor {
     private boolean locateAndMarkMethodReachable(DynamicClassInfo clazz, String methodName, String methodSignature,
                                                  boolean virtualCall, boolean lookupInSuperIfNotFoundInThis,
                                                  boolean checkSubclasses, boolean setAsMarkerMethod) {
+        boolean constructorNotInstrumented = false;
         if (clazz == null) {
             return false; // Normally shouldn't happen, it's just development-time facilitation (introduced when working on 1.5 support)
         }
@@ -421,6 +422,9 @@ public class RecursiveMethodInstrumentor1 extends RecursiveMethodInstrumentor {
                     || (!clazz.isMethodRoot(idx) && !clazz.isMethodMarker(idx) && !instrFilter.passes(className))
                     || (className == OBJECT_SLASHED_CLASS_NAME)) {  // Actually, just the Object.<init> method?
                 clazz.setMethodUnscannable(idx);
+            } else if (methodName == "<init>" && !status.canInstrumentConstructor && clazz.getMajorVersion()>50) {
+                clazz.setMethodUnscannable(idx);
+                constructorNotInstrumented = true;
             } else {
                 byte[] bytecode = clazz.getMethodBytecode(idx);
 
@@ -444,6 +448,8 @@ public class RecursiveMethodInstrumentor1 extends RecursiveMethodInstrumentor {
                 if (setAsMarkerMethod) {
                     clazz.setMethodMarker(idx);
                 }
+            } else if (constructorNotInstrumented) {
+                scanMethod(clazz, idx);
             }
         }
 

@@ -50,6 +50,7 @@ import org.netbeans.lib.profiler.global.CommonConstants;
 import org.netbeans.lib.profiler.results.DataManagerListener;
 import org.netbeans.lib.profiler.results.threads.ThreadData;
 import org.netbeans.lib.profiler.results.threads.ThreadsDataManager;
+import org.netbeans.lib.profiler.ui.AppearanceController;
 import org.netbeans.lib.profiler.ui.Formatters;
 import org.netbeans.lib.profiler.ui.UIUtils;
 import org.netbeans.lib.profiler.ui.results.DataView;
@@ -149,6 +150,7 @@ public class ThreadsPanel extends DataView {
     
     
     private void initUI(Action saveView) {
+        AppearanceController.getDefault().customizeThreadPanel(this);
         
         final AbstractTableModel threadsTableModel = new AbstractTableModel() {
             public String getColumnName(int columnIndex) {

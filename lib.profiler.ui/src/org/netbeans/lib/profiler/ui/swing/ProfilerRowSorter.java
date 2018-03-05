@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import javax.swing.RowFilter;
 import javax.swing.RowSorter;
@@ -49,10 +50,50 @@ class ProfilerRowSorter extends TableRowSorter {
     private SortOrder defaultSortOrder = SortOrder.ASCENDING;
     private Map<Integer, SortOrder> defaultSortOrders;
     
-    private int secondarySortColumn;
+    private int secondarySortColumn = -1;
+    
+    private boolean threeStateColumns;
+    
+    public void setAllowsThreeStateColumns(boolean threeStateColumns) {
+        this.threeStateColumns = threeStateColumns;
+    }
+    
+    public boolean allowsThreeStateColumns() {
+        return threeStateColumns;
+    }
+    
+    public void toggleSortOrder(int column) {
+        // UNSORTED not allowed for sorting columns (default)
+        if (!allowsThreeStateColumns()) {
+            super.toggleSortOrder(column);
+            return;
+        }
+        
+        // Switching from one column to another
+        if (getSortColumn() != column) {
+            super.toggleSortOrder(column);
+            return;
+        }
+        
+        // Toggling from default sort order
+        SortOrder so = getSortOrder();
+        if (Objects.equals(getDefaultSortOrder(column), so)) {
+            super.toggleSortOrder(column);
+            return;
+        }
+        
+        // Resetting UNSORTED, use default sort order
+        if (Objects.equals(SortOrder.UNSORTED, so)) {
+            setSortColumn(column);
+            return;
+        }
+        
+        // Toggling from second sort order, switch to UNSORTED
+        setSortColumn(column, SortOrder.UNSORTED);
+    }
     
     public void setSortKeys(List newKeys) {
-        if (newKeys == null) {
+        if (newKeys == null || newKeys.isEmpty()) {
             setSortKeysImpl(newKeys);
             return;
         }
@@ -81,8 +122,9 @@ class ProfilerRowSorter extends TableRowSorter {
     }
     
     void setSortKey(RowSorter.SortKey key) {
-        RowSorter.SortKey secondaryKey = secondarySortColumn == key.getColumn() ?
-                          null : new RowSorter.SortKey(secondarySortColumn,
+        RowSorter.SortKey secondaryKey = secondarySortColumn == -1 ||
+                          secondarySortColumn == key.getColumn() ? null :
+                          new RowSorter.SortKey(secondarySortColumn,
                           getDefaultSortOrder(secondarySortColumn));
         setSortKeysImpl(secondaryKey == null ? Arrays.asList(key) :
                           Arrays.asList(key, secondaryKey));
@@ -100,7 +142,7 @@ class ProfilerRowSorter extends TableRowSorter {
     
     RowSorter.SortKey getSortKey() {
         List<? extends RowSorter.SortKey> keys = getSortKeys();
-        return keys.isEmpty() ? null : keys.get(0);
+        return keys == null || keys.isEmpty() ? null : keys.get(0);
     }
     
     
@@ -180,7 +222,7 @@ class ProfilerRowSorter extends TableRowSorter {
             try {
                 int column = Integer.parseInt(columnS);
                 SortOrder order = getSortOrder(orderS);
-                if (SortOrder.UNSORTED.equals(order)) order = getDefaultSortOrder(column);
+//                if (SortOrder.UNSORTED.equals(order)) order = getDefaultSortOrder(column);
                 setSortColumn(column, order);
             } catch (NumberFormatException e) {
                 // Reset sorting? Set default column?

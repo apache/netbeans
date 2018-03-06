@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="xml.catalog" default="netbeans" basedir=".">
+<project name="xml.catalog" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

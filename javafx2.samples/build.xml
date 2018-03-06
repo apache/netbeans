@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="javafx2.samples">
+<project basedir="." default="build" name="javafx2.samples">
     <description>Builds, tests, and runs the project org.netbeans.modules.javafx2.samples</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 

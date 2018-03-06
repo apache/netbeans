@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="o.eclipse.core.runtime" default="netbeans" basedir=".">
+<project name="o.eclipse.core.runtime" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
     <target name="jar"/>
     <target name="check-sigtest"/>

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="api.htmlui">
+<project basedir="." default="build" name="api.htmlui">
     <description>Builds, tests, and runs the project org.netbeans.api.htmlui</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="servletapi" basedir="." default="netbeans">
+<project name="servletapi" basedir="." default="build">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

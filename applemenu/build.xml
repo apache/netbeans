@@ -20,7 +20,7 @@
 
 -->
 
-<project name="applemenu" basedir="." default="netbeans">
+<project name="applemenu" basedir="." default="build">
   <import file="../nbbuild/templates/projectized.xml"/>
 
   <target name="build-init" depends="projectized.build-init">

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="o.n.swing.dirchooser">
+<project basedir="." default="build" name="o.n.swing.dirchooser">
     <description>Builds, tests, and runs the project org.netbeans.swing.dirchooser</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

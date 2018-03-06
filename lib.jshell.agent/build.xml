@@ -20,7 +20,7 @@
 
 -->
 
-<project name="lib.jshell.agent" default="netbeans" basedir=".">
+<project name="lib.jshell.agent" default="build" basedir=".">
     <description>Builds, tests, and runs the project org.netbeans.lib.jshell.agent.</description>
     <import file="../nbbuild/templates/projectized.xml"/>
     

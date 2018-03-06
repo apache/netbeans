@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="o.apache.commons.httpclient" default="netbeans" basedir=".">
+<project name="o.apache.commons.httpclient" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
     <target name="jar">
         <jar jarfile="${cluster}/${module.jar}">

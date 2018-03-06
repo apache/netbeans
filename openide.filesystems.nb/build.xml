@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="openide.filesystems.nb">
+<project basedir="." default="build" name="openide.filesystems.nb">
     <description>Builds, tests, and runs the project openide.filesystems.nb</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

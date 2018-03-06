@@ -20,7 +20,7 @@
 
 -->
 
-<project name="openide.modules" default="netbeans" basedir=".">
+<project name="openide.modules" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

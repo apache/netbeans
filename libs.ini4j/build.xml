@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="libs.ini4j" default="netbeans" basedir=".">
+<project name="libs.ini4j" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

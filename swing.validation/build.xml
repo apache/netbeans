@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="swing.validation">
+<project basedir="." default="build" name="swing.validation">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

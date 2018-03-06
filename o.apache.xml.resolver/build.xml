@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="o.apache.xml.resolver" default="netbeans" basedir=".">
+<project name="o.apache.xml.resolver" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

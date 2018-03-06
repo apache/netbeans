@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="profiler.api">
+<project basedir="." default="build" name="profiler.api">
     <description>Builds, tests, and runs the project org.netbeans.modules.profiler.api</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

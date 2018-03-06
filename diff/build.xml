@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="diff" default="netbeans" basedir=".">
+<project name="diff" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

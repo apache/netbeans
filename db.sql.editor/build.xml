@@ -20,7 +20,7 @@
 
 -->
 
-<project name="db.sql.editor" default="netbeans" basedir=".">
+<project name="db.sql.editor" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

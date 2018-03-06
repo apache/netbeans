@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="junitlib">
+<project basedir="." default="build" name="junitlib">
     <property name="license.file" location="../nbbuild/licenses/CPL-1.0"/>
     <target name="-create-license.file"/>
     <import file="../nbbuild/templates/projectized.xml"/>

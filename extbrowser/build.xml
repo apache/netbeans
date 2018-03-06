@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="extbrowser" default="netbeans" basedir=".">
+<project name="extbrowser" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

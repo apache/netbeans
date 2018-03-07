@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="o.n.swing.outline">
+<project basedir="." default="build" name="o.n.swing.outline">
     <description>Builds, tests, and runs the project org.netbeans.swing.outline</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

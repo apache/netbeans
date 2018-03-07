@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="xml.tools.java">
+<project basedir="." default="build" name="xml.tools.java">
     <description>Builds, tests, and runs the project org.netbeans.modules.xml.tools.java</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

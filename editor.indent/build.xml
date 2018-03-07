@@ -20,6 +20,6 @@
 
 -->
 
-<project name="editor.indent" default="netbeans" basedir=".">
+<project name="editor.indent" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

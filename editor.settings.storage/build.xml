@@ -20,7 +20,7 @@
 
 -->
 
-<project name="editor.settings.storage" default="netbeans" basedir=".">
+<project name="editor.settings.storage" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 
     <target name="test-init" depends="projectized-common.test-init">

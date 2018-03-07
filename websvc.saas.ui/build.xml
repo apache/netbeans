@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="websvc.saas.ui">
+<project basedir="." default="build" name="websvc.saas.ui">
     <description>Builds, tests, and runs the project org.netbeans.modules.websvc.saas.ui</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

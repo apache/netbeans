@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="debugger.jpda.jsui">
+<project basedir="." default="build" name="debugger.jpda.jsui">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

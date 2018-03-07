@@ -20,7 +20,7 @@
 
 -->
 
-<project name="xml.xdm" default="netbeans" basedir=".">
+<project name="xml.xdm" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

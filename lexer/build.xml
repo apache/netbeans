@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="lexer" default="netbeans" basedir=".">
+<project name="lexer" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

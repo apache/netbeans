@@ -20,6 +20,6 @@
 
 -->
 
-<project name="core.output2" default="netbeans" basedir=".">
+<project name="core.output2" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

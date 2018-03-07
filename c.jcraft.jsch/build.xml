@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="c.jcraft.jsch" default="netbeans" basedir=".">
+<project name="c.jcraft.jsch" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
     <target name="jar">
         <jar jarfile="${cluster}/${module.jar}">

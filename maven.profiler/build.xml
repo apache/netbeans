@@ -20,7 +20,7 @@
 
 -->
 
-<project basedir="." default="netbeans" name="maven.profiler">
+<project basedir="." default="build" name="maven.profiler">
     <description>Builds, tests, and runs the project org.netbeans.modules.maven.profiler</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

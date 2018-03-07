@@ -20,7 +20,7 @@
 
 -->
 
-<project basedir="." default="netbeans" name="server">
+<project basedir="." default="build" name="server">
     <description>Builds, tests, and runs the project org.netbeans.modules.server</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

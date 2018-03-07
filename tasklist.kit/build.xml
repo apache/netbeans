@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="tasklist.kit">
+<project basedir="." default="build" name="tasklist.kit">
     <description>Builds, tests, and runs the project org.netbeans.modules.tasklist.kit</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

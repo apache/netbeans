@@ -20,7 +20,7 @@
 
 -->
 
-<project name="o.n.insane" default="netbeans" basedir=".">
+<project name="o.n.insane" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

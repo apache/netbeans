@@ -20,7 +20,7 @@
 
 -->
 
-<project name="javascript2.debug" default="netbeans" basedir=".">
+<project name="javascript2.debug" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>
 

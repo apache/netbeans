@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="masterfs.ui">
+<project basedir="." default="build" name="masterfs.ui">
     <description>Builds, tests, and runs the project org.netbeans.modules.masterfs.ui</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

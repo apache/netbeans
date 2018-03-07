@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="o.n.bootstrap" default="netbeans" basedir=".">
+<project name="o.n.bootstrap" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

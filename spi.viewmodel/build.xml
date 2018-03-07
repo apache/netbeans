@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="spi.viewmodel">
+<project basedir="." default="build" name="spi.viewmodel">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

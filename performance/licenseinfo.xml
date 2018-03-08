@@ -22,7 +22,7 @@
 <licenseinfo>
     <fileset>
         <file>threaddemo/src/threaddemo/util/doc-files/TwoWaySupport.zargo</file>
-        <license ref="Apache-2.0" />
+        <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
 </licenseinfo>

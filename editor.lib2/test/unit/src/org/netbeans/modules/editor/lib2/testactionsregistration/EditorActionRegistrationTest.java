@@ -21,16 +21,20 @@ package org.netbeans.modules.editor.lib2.testactionsregistration;
 
 import java.awt.event.ActionEvent;
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.api.editor.EditorActionRegistration;
+import org.netbeans.modules.editor.impl.ToolbarActionsProvider;
 import org.netbeans.modules.editor.lib2.actions.EditorActionUtilities;
 import org.netbeans.modules.editor.lib2.actions.SearchableEditorKit;
 import org.netbeans.spi.editor.AbstractEditorAction;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.test.AnnotationProcessorTestUtils;
+
+import org.openide.loaders.DataShadow;
 
 /**
  * Test registration of editor actions through an annotation.
@@ -92,6 +96,29 @@ public class EditorActionRegistrationTest extends NbTestCase {
         AbstractEditorAction a = (AbstractEditorAction) globalActionsKit.getAction(NAME_NO_ICON_AND_KEY_BINDING);
         assertTrue((Boolean) a.getValue(AbstractEditorAction.NO_ICON_IN_MENU));
         assertTrue((Boolean) a.getValue(AbstractEditorAction.NO_KEY_BINDING));
+    }
+    
+    public void testToolbarRegistration() throws Exception {
+        FileObject toolbarDir = FileUtil.getConfigFile("/Editors/text/foo/Toolbars/Default");
+        assertNotNull("text/base toolbar directory is null", toolbarDir);
+        FileObject toolbarLink = toolbarDir.getFileObject(EditorTestActionToolbar.id + ".shadow"); // NOI18N
+        assertNotNull("Action link in toolbar must exist", toolbarLink);
+        FileObject orig = DataShadow.findOriginal(toolbarLink);
+        assertNotNull("Action registration must exist", orig);
+        
+        List items = ToolbarActionsProvider.getToolbarItems("text/foo");
+        assertFalse("At least one registration must be present", items.isEmpty());
+        for (Object o : items) {
+            if (!(o instanceof Action)) {
+                continue;
+            }
+            Action a = (Action)o;
+            String name = (String)a.getValue(Action.NAME);
+            if (EditorTestActionToolbar.id.equals(name)) {
+                return; // OK
+            }
+        }
+        fail("Registered action not found");
     }
 
     public void testNonPublicClass() throws Exception {
@@ -201,5 +228,18 @@ public class EditorActionRegistrationTest extends NbTestCase {
         }
 
     }
+    
+    @EditorActionRegistration(name = "ToolbarIcon", shortDescription = "", 
+            mimeType="text/foo", toolBarPosition = 1000)
+    public static final class EditorTestActionToolbar extends AbstractAction {
+        static final String id = "ToolbarIcon";
+        public EditorTestActionToolbar() {
+        }
 
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+        }
+
+    }
+    
 }

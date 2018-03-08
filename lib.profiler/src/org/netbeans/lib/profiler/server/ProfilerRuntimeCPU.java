@@ -674,6 +674,8 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
             return 1;
         } else if (type == Character.class) {
             return 2;
+        } else if (type == Short.class) {
+            return 2;
         } else if (type == Long.class) {
             return 8;
         } else if (type == Float.class) {
@@ -705,6 +707,11 @@ public class ProfilerRuntimeCPU extends ProfilerRuntime {
         } else if (type == Character.class) {
             char vp = ((Character)p).charValue();
             evBuf[curPos++] = ProfilerInterface.CHAR;
+            evBuf[curPos++] = (byte) ((vp >> 8) & 0xFF);
+            evBuf[curPos++] = (byte) ((vp) & 0xFF);
+        } else if (type == Short.class) {
+            short vp = ((Short) p).shortValue();
+            evBuf[curPos++] = ProfilerInterface.SHORT;
             evBuf[curPos++] = (byte) ((vp >> 8) & 0xFF);
             evBuf[curPos++] = (byte) ((vp) & 0xFF);
         } else if (type == Long.class) {

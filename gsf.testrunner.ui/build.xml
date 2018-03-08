@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="gsf.testrunner.ui">
+<project basedir="." default="build" name="gsf.testrunner.ui">
     <description>Builds, tests, and runs the project org.netbeans.modules.gsf.testrunner.ui</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

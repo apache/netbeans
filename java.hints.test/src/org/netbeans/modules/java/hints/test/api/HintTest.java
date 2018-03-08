@@ -56,13 +56,14 @@ import javax.swing.text.Document;
 import javax.tools.Diagnostic;
 import junit.framework.Assert;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.TestCase.assertFalse;
 
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.java.queries.SourceForBinaryQuery.Result;
@@ -97,8 +98,10 @@ import org.netbeans.modules.java.hints.spiimpl.SyntheticFix;
 import org.netbeans.modules.java.hints.spiimpl.batch.BatchUtilities;
 import org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
+import org.netbeans.modules.java.hints.test.BootClassPathUtil;
 import org.netbeans.modules.java.hints.test.Utilities.TestLookup;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
+import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.modules.parsing.impl.indexing.MimeTypes;
@@ -261,6 +264,7 @@ public class HintTest {
         sourcePath = ClassPathSupport.createClassPath(sourceRoot);
         
         Main.initializeURLFactory();
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
     }
 
     /**Bootstraps the test framework.
@@ -664,51 +668,18 @@ public class HintTest {
 
     }
 
-    private static List<URL> bootClassPath;
-
     private static Logger log = Logger.getLogger(HintTest.class.getName());
 
-    private static synchronized List<URL> getBootClassPath() {
-        if (bootClassPath == null) {
-            try {
-                String cp = System.getProperty("sun.boot.class.path");
-                List<URL> urls = new ArrayList<URL>();
-                String[] paths = cp.split(Pattern.quote(System.getProperty("path.separator")));
-
-                for (String path : paths) {
-                    File f = new File(path);
-
-                    if (!f.canRead())
-                        continue;
-
-                    FileObject fo = FileUtil.toFileObject(f);
-
-                    if (FileUtil.isArchiveFile(fo)) {
-                        fo = FileUtil.getArchiveRoot(fo);
-                    }
-
-                    if (fo != null) {
-                        urls.add(fo.getURL());
-                    }
-                }
-
-                bootClassPath = urls;
-            } catch (FileStateInvalidException e) {
-                if (log.isLoggable(Level.SEVERE))
-                    log.log(Level.SEVERE, e.getMessage(), e);
-            }
-        }
-
-        return bootClassPath;
-    }
-    
     private class TestProxyClassPathProvider implements ClassPathProvider {
 
         public ClassPath findClassPath(FileObject file, String type) {
             try {
             if (ClassPath.BOOT == type) {
-                // XXX simpler to use JavaPlatformManager.getDefault().getDefaultPlatform().getBootstrapLibraries()
-                return ClassPathSupport.createClassPath(getBootClassPath().toArray(new URL[0]));
+                return BootClassPathUtil.getBootClassPath();
+            }
+
+            if (JavaClassPathConstants.MODULE_BOOT_PATH == type) {
+                return BootClassPathUtil.getModuleBootPath();
             }
 
             if (ClassPath.SOURCE == type) {

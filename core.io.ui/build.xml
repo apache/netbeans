@@ -20,6 +20,6 @@
 
 -->
 
-<project basedir="." default="netbeans" name="core.io.ui">
+<project basedir="." default="build" name="core.io.ui">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

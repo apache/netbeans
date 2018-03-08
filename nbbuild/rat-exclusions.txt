@@ -73,7 +73,6 @@ ide.kit/test/qa-functional/**/*.txt
 ###   module-info.bin (compiled Java class)
 java.j2seproject/copylibstask/test/org/netbeans/modules/java/j2seproject/moduletask/resources/module-info.bin
 lexer/demo/src/org/netbeans/modules/lexer/demo/**/*.txt
-lib.profiler/test/unit/src/org/netbeans/lib/profiler/heap/testHeapDumpLog.txt
 lib.uihandler/test/unit/src/**
 o.n.core/test/unit/src/org/netbeans/core/projects/cache/data/**
 openide.nodes/test/unit/src/org/openide/nodes/data/**

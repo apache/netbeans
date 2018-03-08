@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="xml.multiview">
+<project basedir="." default="build" name="xml.multiview">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

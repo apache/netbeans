@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="net.java.html.boot.fx" default="netbeans" basedir=".">
+<project name="net.java.html.boot.fx" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
     <target name="jar"/>
 </project>

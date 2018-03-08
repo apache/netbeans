@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="tasklist.ui">
+<project basedir="." default="build" name="tasklist.ui">
     <description>Builds, tests, and runs the project org.netbeans.spi.tasklist</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

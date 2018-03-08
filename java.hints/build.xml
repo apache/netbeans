@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="java.hints" default="netbeans" basedir=".">
+<project name="java.hints" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>	
 </project>

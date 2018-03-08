@@ -58,7 +58,7 @@ Specification available from http://jcp.org/en/jsr/detail?id=338
         <file>src/org/netbeans/modules/j2ee/persistence/wizard/jpacontroller/resources/NonexistentEntityException.java.txt</file>
         <file>src/org/netbeans/modules/j2ee/persistence/wizard/jpacontroller/resources/PreexistingEntityException.java.txt</file>
         <file>src/org/netbeans/modules/j2ee/persistence/wizard/jpacontroller/resources/RollbackFailureException.java.txt</file>
-        <license ref="Apache-2.0" />
+        <license ref="Apache-2.0-ASF" />
         <comment type="TEMPLATE_MINIMAL_IP" />
     </fileset>
 </licenseinfo>

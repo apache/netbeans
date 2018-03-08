@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="api.intent">
+<project basedir="." default="build" name="api.intent">
     <description>Builds, tests, and runs the project org.netbeans.api.intent</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

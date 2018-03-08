@@ -21,7 +21,7 @@
 -->
 
 <!-- fixed license bug, this is typical netbeans xml file -->
-<project name="options.keymap" default="netbeans" basedir=".">
+<project name="options.keymap" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

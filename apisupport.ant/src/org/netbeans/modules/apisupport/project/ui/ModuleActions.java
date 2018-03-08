@@ -32,6 +32,8 @@ import java.util.regex.Pattern;
 import javax.lang.model.element.TypeElement;
 import javax.swing.Action;
 import org.apache.tools.ant.module.api.support.ActionUtils;
+import org.apache.tools.ant.module.api.support.AntScriptUtils;
+import org.apache.tools.ant.module.api.support.TargetLister;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -121,14 +123,9 @@ public final class ModuleActions implements ActionProvider, ExecProject {
 
     public void refresh() {
         Set<String> supportedActionsSet = new HashSet<String>();
-        globalCommands.put(ActionProvider.COMMAND_BUILD, new String[] {"netbeans"}); // NOI18N
+        globalCommands.put(ActionProvider.COMMAND_BUILD, new String[] {"build"}); // NOI18N
         globalCommands.put(ActionProvider.COMMAND_CLEAN, new String[] {"clean"}); // NOI18N
-        //a gross hack to prevent 158481 and the like
-        if ("mkleint".equals(System.getProperty("user.name"))) {
-            globalCommands.put(ActionProvider.COMMAND_REBUILD, new String[] {"clean", "netbeans", "do-test-build"}); // NOI18N
-        } else {
-            globalCommands.put(ActionProvider.COMMAND_REBUILD, new String[] {"clean", "netbeans"}); // NOI18N
-        }
+        globalCommands.put(ActionProvider.COMMAND_REBUILD, new String[] {"clean", "build"}); // NOI18N
         globalCommands.put(ActionProvider.COMMAND_RUN, new String[] {"run"}); // NOI18N
         globalCommands.put(ActionProvider.COMMAND_DEBUG, new String[] {"debug"}); // NOI18N
         globalCommands.put(ActionProvider.COMMAND_PROFILE, new String[] {"profile"}); // NOI18N
@@ -582,11 +579,27 @@ public final class ModuleActions implements ActionProvider, ExecProject {
                     if (targetNames == null) {
                         throw new IllegalArgumentException(command);
                     }
+                    if (command.equals(ActionProvider.COMMAND_BUILD) || command.equals(ActionProvider.COMMAND_REBUILD)) {
+                        try {
+                            final Set<TargetLister.Target> targets = TargetLister.getTargets(AntScriptUtils.antProjectCookieFor(findBuildXml(project)));
+                            TARGETS: for (int i = 0; i < targetNames.length; i++) {
+                                for (TargetLister.Target t : targets) {
+                                    if (t.getName().equals(targetNames[i])) {
+                                        continue TARGETS;
+                                    }
+                                }
+                                // target not found, replacing with default one
+                                targetNames[i] = "netbeans"; // NOI18N
+                                globalCommands.put(command, targetNames);
+                            }
+                        } catch (IOException ex) {
+                            Util.err.notify(ErrorManager.INFORMATIONAL, ex);
+                        }
+                    }
                 }
                 try {
                     setRunArgsIde(project, project.evaluator(), command, p);
-                    task =
-                    ActionUtils.runTarget(findBuildXml(project), targetNames, p);
+                    task = ActionUtils.runTarget(findBuildXml(project), targetNames, p);
                 } catch (IOException e) {
                     Util.err.notify(e);
                 }

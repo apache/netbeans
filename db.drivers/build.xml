@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="db.drivers" default="netbeans" basedir=".">
+<project name="db.drivers" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

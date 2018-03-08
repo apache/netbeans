@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="editor.document">
+<project basedir="." default="build" name="editor.document">
     <description>Builds, tests, and runs the project editor.document</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

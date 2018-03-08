@@ -86,7 +86,7 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
     }
 
     public void testRepair2() throws Exception {
-        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; public class Test4 { @Undef public void test1() { } @Deprecated @Undef public void test2() { } }")),
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; @Undef public class Test4 { @Undef public void test1() { } @Deprecated @Undef public void test2() { } }")),
                                            Arrays.asList());
 
         assertFalse(result.lowMemory);
@@ -157,6 +157,24 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
 
     public void testRepairWildcard() throws Exception {
         ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; import java.util.*; public class Test4 { void test(List<? extends Undef> l1, List<? super Undef> l2) { } }")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+                     createdFiles);
+        //TODO: check file content!!!
+    }
+
+    public void testErasureField() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; public class Test4<T> { void test(Test4<Undef> t2, Undef t1) { } static void t(Test4 raw) { raw.test(null, null); } }")),
                                            Arrays.asList());
 
         assertFalse(result.lowMemory);

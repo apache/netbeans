@@ -20,7 +20,7 @@
 
 -->
 
-<project basedir="." default="netbeans" name="autoupdate.cli">
+<project basedir="." default="build" name="autoupdate.cli">
     <description>Builds, tests, and runs the project org.netbeans.modules.autoupdate.cli</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

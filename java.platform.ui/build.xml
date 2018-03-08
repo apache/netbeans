@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="java.platform.ui">
+<project basedir="." default="build" name="java.platform.ui">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

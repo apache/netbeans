@@ -23,6 +23,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -158,6 +159,8 @@ public class RepositoryUpdaterTest extends IndexingTestBase {
     private FileObject unknown2;
     private FileObject unknownSrc2;
     protected FileObject srcRootWithFiles1;
+    
+    private FileObject jarFile;
 
     FileObject f1;
     protected FileObject f3;
@@ -232,12 +235,15 @@ public class RepositoryUpdaterTest extends IndexingTestBase {
         assertNotNull (bootRoot1);
         bootRoot2 = wd.createFolder("boot2");
         assertNotNull (bootRoot2);
-        FileUtil.setMIMEType("jar", JARMIME);
-        FileObject jarFile = FileUtil.toFileObject(getDataDir()).getFileObject("JavaApplication1.jar");
-        assertNotNull(jarFile);
-        assertTrue(FileUtil.isArchiveFile(jarFile));
-        bootRoot3 = FileUtil.getArchiveRoot(jarFile);
+        bootRoot3 = wd.createFolder("boot3");
         assertNotNull (bootRoot3);
+        
+        FileUtil.setMIMEType("jar", JARMIME);
+        jarFile = FileUtil.createData(bootRoot3, "JavaApplication1.jar");
+        assertNotNull(jarFile);
+        zipFileObject(jarFile);
+        assertTrue(FileUtil.isArchiveFile(jarFile));
+        
         compSrc1 = wd.createFolder("cs1");
         assertNotNull (compSrc1);
         compSrc2 = wd.createFolder("cs2");
@@ -593,10 +599,6 @@ public class RepositoryUpdaterTest extends IndexingTestBase {
         final Logger logger = Logger.getLogger(RepositoryUpdater.class.getName()+".tests");
         logger.setLevel (Level.FINEST);
         logger.addHandler(handler);
-
-        final FileObject jarFile = FileUtil.toFileObject(getDataDir()).getFileObject("JavaApplication1.jar");
-        assertNotNull(jarFile);
-        assertTrue(FileUtil.isArchiveFile(jarFile));
 
         final FileObject wd = FileUtil.toFileObject(getWorkDir());
         final FileObject[] jar2Delete = new FileObject[] {jarFile.copy(wd, "test", "jar")};
@@ -2451,6 +2453,13 @@ public class RepositoryUpdaterTest extends IndexingTestBase {
     public static void setMimeTypes(final String... mimes) {
         Set<String> mt = new HashSet<>(Arrays.asList(mimes));
         Util.allMimeTypes = mt;
+    }
+    
+    protected static void zipFileObject(FileObject fileObject) throws FileNotFoundException, IOException {
+        File file = FileUtil.toFile(fileObject);
+        FileOutputStream fileOutputStream = new FileOutputStream(file);
+        ZipOutputStream os = new ZipOutputStream(fileOutputStream);
+        os.close();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Mock Services">

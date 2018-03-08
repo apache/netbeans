@@ -22,7 +22,7 @@
 <licenseinfo>
     <fileset>
         <file>src/org/netbeans/modules/xsl/resources/templates/stylesheet.xsl</file>
-        <license ref="Apache-2.0" />
+        <license ref="Apache-2.0-ASF" />
         <comment type="TEMPLATE_MINIMAL_IP"/>
     </fileset>
 </licenseinfo>

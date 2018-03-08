@@ -35,7 +35,7 @@ import org.apache.tools.ant.Task;
  * it is very quick. Does not check for second merge parent or modification status
  * or tags. Sets property to {@code unknown-revn} if there is any problem.
  * 
- * (This task formaly computed a Mercurial changeset ID hence the name)
+ * (This task formerly computed a Mercurial changeset ID hence the name)
  */
 public class HgId extends Task {
 

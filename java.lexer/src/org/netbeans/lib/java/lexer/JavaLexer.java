@@ -69,7 +69,7 @@ public class JavaLexer implements Lexer<JavaTokenId> {
         }
         
         Integer ver = (Integer)info.getAttributeValue("version"); //NOI18N
-        this.version = (ver != null) ? ver.intValue() : 9; // TODO: Java 1.8 used by default        
+        this.version = (ver != null) ? ver.intValue() : 10; // TODO: Java 1.8 used by default        
     }
     
     public Object state() {

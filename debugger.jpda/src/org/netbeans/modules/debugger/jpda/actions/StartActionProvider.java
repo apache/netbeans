@@ -164,14 +164,21 @@ public class StartActionProvider extends ActionsProvider implements Cancellable 
             debuggerImpl.setAttaching(null);
             VirtualMachineWrapper.setDebugTraceMode (virtualMachine, jdiTrace);
 
-            final Object startLock = new Object();
+            final boolean[] startLock = { false };
             Operator o = createOperator (virtualMachine, startLock);
             synchronized (startLock) {
                 logger.fine("S StartActionProvider.doAction () - " +
                             "starting operator thread");
                 o.start ();
-                if (cookie instanceof ListeningDICookie) 
-                    startLock.wait(1500);
+                if (cookie instanceof ListeningDICookie){
+                    // need to wait longer for debugger in certain cases (RoboVM)
+                    long now = System.currentTimeMillis();
+                    startLock.wait(60000);
+                    if (!startLock[0]) {
+                        long ms = System.currentTimeMillis() - now;
+                        logger.log(Level.WARNING, "start notification not obtained in {0} ms", ms);
+                    }
+                }
             }
        
             debuggerImpl.setRunning (
@@ -232,7 +239,7 @@ public class StartActionProvider extends ActionsProvider implements Cancellable 
     
     private Operator createOperator (
         VirtualMachine virtualMachine,
-        final Object startLock
+        final boolean [] startLock
     ) {
         return new Operator (
             virtualMachine,
@@ -241,6 +248,7 @@ public class StartActionProvider extends ActionsProvider implements Cancellable 
                 @Override
                 public boolean exec(Event event) {
                     synchronized(startLock) {
+                        startLock[0] = true;
                         startLock.notify();
                     }
                     return false;

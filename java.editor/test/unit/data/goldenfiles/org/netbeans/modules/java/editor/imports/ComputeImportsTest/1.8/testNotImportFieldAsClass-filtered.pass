@@ -1,0 +1,5 @@
+CONSTANT_A:[org.netbeans.modules.java.editor.imports.data.TestNotImportFieldAsClass.CONSTANT_A]
+CONSTANT_B:[]
+SHOULD_IMPORT1:[org.netbeans.modules.java.editor.imports.data.TestNotImportFieldAsClass.SHOULD_IMPORT1]
+SHOULD_IMPORT2:[org.netbeans.modules.java.editor.imports.data.TestNotImportFieldAsClass.SHOULD_IMPORT2]
+SHOULD_NOT_IMPORT:[]

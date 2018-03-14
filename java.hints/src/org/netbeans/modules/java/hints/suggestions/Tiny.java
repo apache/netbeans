@@ -223,6 +223,15 @@ public class Tiny {
 
         if (parentKind != Tree.Kind.BLOCK && parentKind != Tree.Kind.CASE) return null;
 
+        Tree.Kind leafKind = ctx.getPath().getLeaf().getKind();
+        if (leafKind == Tree.Kind.VARIABLE){
+            int start = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getInfo().getCompilationUnit(), ctx.getPath().getLeaf());
+            int end   = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getInfo().getCompilationUnit(), ctx.getPath().getLeaf());
+            String code = ctx.getInfo().getText().substring(start, end);            
+            if (code.startsWith("var")){
+                return null;
+            }
+        }
         String displayName = NbBundle.getMessage(Tiny.class, "ERR_splitDeclaration");
         Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix();
 

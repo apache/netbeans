@@ -230,7 +230,7 @@ public class Tiny {
         int start = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getInfo().getCompilationUnit(), ctx.getPath().getLeaf());
         int end   = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getInfo().getCompilationUnit(), ctx.getPath().getLeaf());
         String code = ctx.getInfo().getText().substring(start, end);   // Statement for variable declaration         
-        if (code.startsWith("var")){ // NOI18N
+        if (code.startsWith("var ")){ // NOI18N
             return null;
         }
         String displayName = NbBundle.getMessage(Tiny.class, "ERR_splitDeclaration");

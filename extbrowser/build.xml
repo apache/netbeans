@@ -24,7 +24,8 @@
     <import file="../nbbuild/templates/projectized.xml"/>
     
     <property name="resourcesdir" value="./release/modules/lib/"/>
-    <target name="build-init" depends="projectized.build-init">
+    <target name="-release.dir" depends="projectized-common.-release.dir">
+        <mkdir dir="${resourcesdir}"/>
         <unzip src="external/extbrowser-dlls-18.03.15.zip" dest="${resourcesdir}"/>
     </target>
 

@@ -222,15 +222,16 @@ public class Tiny {
         Tree.Kind parentKind = ctx.getPath().getParentPath().getLeaf().getKind();
 
         if (parentKind != Tree.Kind.BLOCK && parentKind != Tree.Kind.CASE) return null;
-
-        Tree.Kind leafKind = ctx.getPath().getLeaf().getKind();
-        if (leafKind == Tree.Kind.VARIABLE){
-            int start = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getInfo().getCompilationUnit(), ctx.getPath().getLeaf());
-            int end   = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getInfo().getCompilationUnit(), ctx.getPath().getLeaf());
-            String code = ctx.getInfo().getText().substring(start, end);            
-            if (code.startsWith("var")){
-                return null;
-            }
+        
+	/*
+         Fix for Jira bugs: https://issues.apache.org/jira/browse/NETBEANS-465
+         The "Split into declaration and assignment" hints should not show for var type variables
+        */ 
+        int start = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getInfo().getCompilationUnit(), ctx.getPath().getLeaf());
+        int end   = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getInfo().getCompilationUnit(), ctx.getPath().getLeaf());
+        String code = ctx.getInfo().getText().substring(start, end);   // Statement for variable declaration         
+        if (code.startsWith("var")){ // NOI18N
+            return null;
         }
         String displayName = NbBundle.getMessage(Tiny.class, "ERR_splitDeclaration");
         Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix();

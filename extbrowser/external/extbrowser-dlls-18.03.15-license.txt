@@ -1,6 +1,6 @@
 Name: External Browser DLLs
 Description: Windows DLLs for external browser integration
-Version: 8.2
+Version: 18.03.15
 License: CDDL-1.0
 Source: https://netbeans.org/
 Origin: NetBeans

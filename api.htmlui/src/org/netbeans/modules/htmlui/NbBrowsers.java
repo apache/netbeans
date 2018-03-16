@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.htmlui;
 
-import java.awt.Font;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -38,7 +37,6 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javax.swing.JOptionPane;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import net.java.html.boot.fx.FXBrowsers;
@@ -46,14 +44,11 @@ import net.java.html.js.JavaScriptBody;
 import org.openide.util.NbBundle;
 
 final class NbBrowsers {
-
     static {
         Platform.setImplicitExit(false);
     }
-
     public static void load(WebView view, URL page, final Runnable onPageLoad, ClassLoader loader, Object... args) {
         class ApplySkin implements Runnable {
-
             @Override
             public void run() {
                 applyNbSkin();
@@ -90,15 +85,15 @@ final class NbBrowsers {
         loadCss(resource);
     }
 
-    @JavaScriptBody(args = {"css"}, body
-            = "  if (!document.head || document.head.getAttribute(\"data-netbeans-css\") == \"false\") {\n"
-            + "     return;\n"
-            + "  }\n"
-            + "  var link = document.createElement(\"link\");\n"
-            + "  link.rel = \"stylesheet\";\n"
-            + "  link.type = \"text/css\";\n"
-            + "  link.href = css;\n"
-            + "  document.head.appendChild(link);"
+    @JavaScriptBody(args = { "css" }, body =
+"  if (!document.head || document.head.getAttribute(\"data-netbeans-css\") == \"false\") {\n" +
+"     return;\n" +
+"  }\n" +
+"  var link = document.createElement(\"link\");\n" +
+"  link.rel = \"stylesheet\";\n" +
+"  link.type = \"text/css\";\n" +
+"  link.href = css;\n" +
+"  document.head.appendChild(link);"
     )
     private static native void loadCss(String css);
 
@@ -200,7 +195,6 @@ final class NbBrowsers {
 
         FXBrowsers.load(view, page, onPageLoad, loader, args);
     }
-
     private static final class CloseDialogHandler implements EventHandler<ActionEvent> {
 
         private final Stage dialogStage;

@@ -67,9 +67,7 @@ input[type=checkbox]:hover:checked {
 }
 
 input[type=radio]{
-    position: relative;
     background: #ffffff;
-    top: 4px;
     width: 16px;
     height: 16px;
     border-radius: 10px;

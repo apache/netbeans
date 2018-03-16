@@ -22,6 +22,12 @@
 <project name="extbrowser" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
+    
+    <property name="resourcesdir" value="./release/modules/lib/"/>
+    <target name="-release.dir" depends="projectized-common.-release.dir">
+        <mkdir dir="${resourcesdir}"/>
+        <unzip src="external/extbrowser-dlls-18.03.15.zip" dest="${resourcesdir}"/>
+    </target>
 
     <target name="jnlp" depends="netbeans,-jnlp-init">
         <property name="dir" location="${jnlp.dest.dir}/${code.name.base.dashes}"/>

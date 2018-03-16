@@ -24,7 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -49,10 +49,10 @@ public class SQLHistoryPersistenceManagerTest extends NbTestCase {
     public void tearDown() throws IOException {
         clearWorkDir();
     }
-
+    
     /** Test testExecuteStatements passes if no exceptions occur. */
     public void testExecuteStatements() throws Exception {
-        SQLHistoryManager testableManager = new SQLHistoryManager() {
+        class TestSQLHistoryManager extends SQLHistoryManager {
 
             @Override
             protected FileObject getConfigRoot() {
@@ -67,15 +67,17 @@ public class SQLHistoryPersistenceManagerTest extends NbTestCase {
             protected String getRelativeHistoryPath() {
                 return "";
             }
-            
         };
+        
+        Date refDate = new Date();
+        SQLHistoryManager testableManager = new TestSQLHistoryManager();
         // History does not yet exists as file
         assertNull(testableManager.getHistoryRoot(false));
-        testableManager.getSQLHistory().add(new SQLHistoryEntry("jdbc:// mysql", "select * from TRAVEL.PERSON", Calendar.getInstance().getTime()));
+        testableManager.getSQLHistory().add(new SQLHistoryEntry("jdbc:// mysql", "select * from TRAVEL.PERSON", refDate));
         // History does not yet exists as file
         testableManager.save();
         assertNull(testableManager.getHistoryRoot(false));
-        testableManager.getSQLHistory().add(new SQLHistoryEntry("jdbc:// oracle", "select * from PERSON", Calendar.getInstance().getTime()));
+        testableManager.getSQLHistory().add(new SQLHistoryEntry("jdbc:// oracle", "select * from PERSON", refDate));
         final Semaphore s = new Semaphore(0);
         PropertyChangeListener releasingListener =
                 new PropertyChangeListener() {
@@ -97,6 +99,24 @@ public class SQLHistoryPersistenceManagerTest extends NbTestCase {
         // History file need to exist now!
         assertNotNull(testableManager.getHistoryRoot(false));
         assertTrue(testableManager.getHistoryRoot(false).isData());
+        
+        // Create a second SQLHistoryManager and ensure the content survived
+        // the serialization/deserialization cycle
+        SQLHistoryManager testableManager2 = new TestSQLHistoryManager();
+        assertEquals(2, testableManager2.getSQLHistory().size());
+        List<String> expectedURLs = new ArrayList<>();
+        expectedURLs.add("jdbc:// mysql");
+        expectedURLs.add("jdbc:// oracle");
+        List<String> expectedSQLs = new ArrayList<>();
+        expectedSQLs.add("select * from TRAVEL.PERSON");
+        expectedSQLs.add("select * from PERSON");
+        for(SQLHistoryEntry she: testableManager2.getSQLHistory()) {
+            expectedSQLs.remove(she.getSql());
+            expectedURLs.remove(she.getUrl());
+            assertEquals(refDate, she.getDate());
+        }
+        assertTrue(expectedSQLs.isEmpty());
+        assertTrue(expectedURLs.isEmpty());
     }
 
     /** Tests parsing of date format. */

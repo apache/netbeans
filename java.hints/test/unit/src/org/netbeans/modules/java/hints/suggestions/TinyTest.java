@@ -268,6 +268,21 @@ public class TinyTest extends NbTestCase {
                               "}\n");
     }
 
+    public void testSplitDeclarationForVar() throws Exception {
+        HintTest
+                .create()
+                .setCaretMarker('|')
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    void m1(){\n" +
+                       "         var I =| -1;\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("1.10")
+                .run(Tiny.class)
+                .assertNotContainsWarnings("ERR_splitDeclaration");
+    }
+
     public void testFillSwitch1() throws Exception {
         HintTest
                 .create()

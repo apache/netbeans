@@ -401,7 +401,7 @@ bool NbLauncher::findCacheDir(const char *str) {
 string NbLauncher::getDefaultUserDirRoot() {
     TCHAR defUserDirRootChar[MAX_PATH];
     if (FAILED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, defUserDirRootChar))) {
-        return false;
+        return std::string();
     }
     defUserDirRoot = ((string) defUserDirRootChar) + NETBEANS_DIRECTORY;
     defUserDirRoot.erase(defUserDirRoot.rfind('\\'));
@@ -412,7 +412,7 @@ string NbLauncher::getDefaultUserDirRoot() {
 string NbLauncher::getDefaultCacheDirRoot() {
     TCHAR defCacheDirRootChar[MAX_PATH];
     if (FAILED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, defCacheDirRootChar))) {
-        return false;
+        return std::string();
     }
     defCacheDirRoot = ((string) defCacheDirRootChar) + NETBEANS_CACHES_DIRECTORY;
     defCacheDirRoot.erase(defCacheDirRoot.rfind('\\'));

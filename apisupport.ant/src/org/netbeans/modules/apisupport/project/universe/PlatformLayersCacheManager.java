@@ -48,7 +48,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.core.startup.layers.LayerCacheManager;
 import org.netbeans.modules.apisupport.project.api.ManifestManager;
 import org.netbeans.modules.apisupport.project.spi.LayerUtil;
@@ -237,8 +236,7 @@ public class PlatformLayersCacheManager {
         List<FileSystem> entries = new ArrayList<FileSystem>();
         LOGGER.fine("getCache for clusters: " + Arrays.toString(clusters) + (filter != null ? ", FILTERED" : ""));
         synchronized (loadedCaches) {
-            ProgressHandle handle = ProgressHandleFactory.createHandle(MSG_scanning_layers());
-            try {
+            try (ProgressHandle handle = ProgressHandle.createHandle(MSG_scanning_layers())) {
                 handle.start(clusters.length + 1);
                 int c = 0;
                 for (File cl : clusters) {
@@ -287,8 +285,6 @@ public class PlatformLayersCacheManager {
                 // getCache would wait for finishing its cache, optionally scheduling it as priority
                 storeCaches();
                 handle.progress(c++);
-            } finally {
-                handle.finish();
             }
         }
         return entries;

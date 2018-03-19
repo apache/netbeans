@@ -229,10 +229,13 @@ public class Tiny {
         tokenSequence.moveStart();
         while(tokenSequence.moveNext()){
             Token<JavaTokenId> token = tokenSequence.token();
-            if(token.id().primaryCategory().equals("keyword") && token.text().equals("var")){ // NOI18N
+            if(token.id() == JavaTokenId.VAR){
                 return null;
             }
-        }       
+            if(token.id() == JavaTokenId.EQ){
+                break;
+            } 
+	}       
         String displayName = NbBundle.getMessage(Tiny.class, "ERR_splitDeclaration");
         Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix();
 

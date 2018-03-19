@@ -1306,13 +1306,14 @@ public class JavaLexer implements Lexer<JavaTokenId> {
             JavaTokenId.LINE_COMMENT, JavaTokenId.WHITESPACE
     );
 
+    // Get version as Integer x for version String 1.x
     private Integer getVersionAsInt(String version) {
         Integer ver = null;
         if (version != null) {
             try {
                 // expect format 1.x or x
                 if (version.startsWith("1.")) { //NOI18N
-                    ver = Integer.parseInt(version.substring(version.indexOf(".") + 1)); //NOI18N
+                    ver = Integer.parseInt(version.substring(2));
                 } else {
                     ver = Integer.parseInt(version);
                 }

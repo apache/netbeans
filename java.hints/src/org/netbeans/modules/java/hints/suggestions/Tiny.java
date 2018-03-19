@@ -51,7 +51,6 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
-import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.modules.java.hints.suggestions.FillSwitchCustomizer.CustomizerProviderImpl;
@@ -227,16 +226,12 @@ public class Tiny {
         if (parentKind != Tree.Kind.BLOCK && parentKind != Tree.Kind.CASE) return null;
         TokenSequence<JavaTokenId> tokenSequence = ctx.getInfo().getTreeUtilities().tokensFor(ctx.getPath().getLeaf());
         tokenSequence.moveStart();
-        while(tokenSequence.moveNext()){
-            Token<JavaTokenId> token = tokenSequence.token();
-            if(token.id() == JavaTokenId.VAR){
+        while(tokenSequence.moveNext() && tokenSequence.token().id() != JavaTokenId.EQ){
+            if(tokenSequence.token().id() == JavaTokenId.VAR){
                 return null;
             }
-            if(token.id() == JavaTokenId.EQ){
-                break;
-            } 
-	}       
-        String displayName = NbBundle.getMessage(Tiny.class, "ERR_splitDeclaration");
+        } 
+	String displayName = NbBundle.getMessage(Tiny.class, "ERR_splitDeclaration");
         Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix();
 
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), displayName, fix);

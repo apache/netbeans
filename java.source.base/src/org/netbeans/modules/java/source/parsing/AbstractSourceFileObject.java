@@ -41,6 +41,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.lexer.JavaTokenId;
+import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.queries.FileEncodingQuery;
@@ -303,6 +304,11 @@ public abstract class AbstractSourceFileObject implements PrefetchableJavaFileOb
             final CharBuffer charBuffer = getCharContent(true);
             InputAttributes attrs = new InputAttributes();
             attrs.setValue(JavaTokenId.language(), "fileName", (Supplier<String>) () -> getName(), true); //NOI18N            
+            attrs.setValue(JavaTokenId.language(), "version", (Supplier<String>) () -> { //NOI18N  
+                FileObject fo = handle.resolveFileObject(false);
+                return (fo != null) ? SourceLevelQuery.getSourceLevel(fo) : null;
+            }, true);         
+  
             this.tokens = TokenHierarchy.create(charBuffer, false, JavaTokenId.language(), null, attrs); //TODO: .createSnapshot();
         }
         return this.tokens;

@@ -20,6 +20,7 @@
 package org.netbeans.lib.java.lexer;
 
 import java.util.EnumSet;
+import java.util.function.Supplier;
 import junit.framework.TestCase;
 import org.netbeans.api.java.lexer.JavaStringTokenId;
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -593,6 +594,44 @@ public class JavaLexerBatchTest extends TestCase {
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.DOT, ".");
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.IDENTIFIER, "var");
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.RPAREN, ")");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.SEMICOLON, ";");
+    }
+    
+    public void testVarKeywordWithStringVersion() {
+        String text = "var /*comment*/ /**comment*/ var = 0;";
+        InputAttributes attr = new InputAttributes();
+        attr.setValue(JavaTokenId.language(), "version", (Supplier<String>) () -> {return "10";}, true);
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.VAR, "var");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.BLOCK_COMMENT, "/*comment*/");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.JAVADOC_COMMENT, "/**comment*/");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.IDENTIFIER, "var");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.EQ, "=");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.INT_LITERAL, "0");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.SEMICOLON, ";");
+    }
+
+    public void testVarIdentWithStringVersion() {
+        String text = "var var = 0;";
+        InputAttributes attr = new InputAttributes();
+        attr.setValue(JavaTokenId.language(), "version", (Supplier<String>) () -> {return "1.8";}, true);
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.IDENTIFIER, "var");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.IDENTIFIER, "var");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.EQ, "=");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.INT_LITERAL, "0");
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.SEMICOLON, ";");
     }
 }

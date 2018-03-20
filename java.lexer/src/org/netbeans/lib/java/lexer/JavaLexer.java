@@ -56,7 +56,7 @@ public class JavaLexer implements Lexer<JavaTokenId> {
     private final int version;
     
     private Integer state = null;
-
+    
     public JavaLexer(LexerRestartInfo<JavaTokenId> info) {
         this.input = info.input();
         this.tokenFactory = info.tokenFactory();
@@ -68,7 +68,16 @@ public class JavaLexer implements Lexer<JavaTokenId> {
             }
         }
         
-        Integer ver = (Integer)info.getAttributeValue("version"); //NOI18N
+        Integer ver = null;
+        Object verAttribute = info.getAttributeValue("version"); //NOI18N 
+        if (verAttribute instanceof Supplier) {
+            Object val = ((Supplier) verAttribute).get();
+            if (val instanceof String) {
+                ver = getVersionAsInt(((Supplier<String>) (verAttribute)).get());
+            }
+        } else if (verAttribute instanceof Integer) {
+            ver = (Integer) verAttribute;
+        }
         this.version = (ver != null) ? ver.intValue() : 10; // TODO: Java 1.8 used by default        
     }
     
@@ -1296,6 +1305,26 @@ public class JavaLexer implements Lexer<JavaTokenId> {
             JavaTokenId.BLOCK_COMMENT, JavaTokenId.JAVADOC_COMMENT,
             JavaTokenId.LINE_COMMENT, JavaTokenId.WHITESPACE
     );
+
+    // Get version as Integer x for version String 1.x
+    private Integer getVersionAsInt(String version) {
+        Integer ver = null;
+        if (version != null) {
+            try {
+                // expect format 1.x or x
+                if (version.startsWith("1.")) { //NOI18N
+                    ver = Integer.parseInt(version.substring(2));
+                } else {
+                    ver = Integer.parseInt(version);
+                }
+            } catch (NumberFormatException e) {
+                // should not happen if version is
+                // set using SourceLevelQuery,
+                // ignore other strings
+            }
+        }
+        return ver;
+    }
 
     public void release() {
     }

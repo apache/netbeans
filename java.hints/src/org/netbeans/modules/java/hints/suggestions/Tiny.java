@@ -225,13 +225,9 @@ public class Tiny {
 
         if (parentKind != Tree.Kind.BLOCK && parentKind != Tree.Kind.CASE) return null;
         
-	TokenSequence<JavaTokenId> tokenSequence = ctx.getInfo().getTreeUtilities().tokensFor(ctx.getPath().getLeaf());
-        tokenSequence.moveStart();
-        while(tokenSequence.moveNext() && tokenSequence.token().id() != JavaTokenId.EQ){
-            if(tokenSequence.token().id() == JavaTokenId.VAR){
-                return null;
-            }
-        } 
+	if(ctx.getInfo().getTreeUtilities().isVarKeywordAvailable(ctx.getPath().getLeaf())){
+            return null; // hints discarded for var keyword
+        }      
 
 	String displayName = NbBundle.getMessage(Tiny.class, "ERR_splitDeclaration");
         Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix();

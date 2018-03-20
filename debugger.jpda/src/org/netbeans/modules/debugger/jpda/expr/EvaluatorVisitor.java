@@ -4217,7 +4217,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
         if (primitiveType instanceof DoubleType) {
             typeClass = Double.class;
         }
-        if (typeClass != null) {
+        if (typeClass != null && evaluationContext != null && evaluationContext.getVMCache() != null) {
             type = evaluationContext.getVMCache().getClass(typeClass.getName());
         }
         return type;

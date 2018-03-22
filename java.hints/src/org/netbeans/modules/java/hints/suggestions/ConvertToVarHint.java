@@ -82,19 +82,17 @@ public class ConvertToVarHint {
     @Messages("MSG_ConvertibleToVarType=Explict type can be replaced with 'var'")  //NOI18N
     public static ErrorDescription checkNewObjInit(HintContext ctx) {
 
+        if (!isHintEnabled(ctx)) {
+            return null;
+        }
         TreePath treePath = ctx.getVariables().get("$var");
 
         if (treePath == null) {
             return null;
         }
 
-        if (!isHintEnabled(ctx)) {
-            return null;
-        }
-
         Fix fix = new FixImpl(ctx.getInfo(), treePath).toEditorFix();
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.MSG_ConvertibleToVarType(), fix);
-
     }
 
     /**
@@ -106,6 +104,10 @@ public class ConvertToVarHint {
     @TriggerPattern("$mods$ $type $var = $value;") //NOI18N
 
     public static ErrorDescription checkLiteralInit(HintContext ctx) {
+
+        if (!isHintEnabled(ctx)) {
+            return null;
+        }
 
         TreePath initPath = ctx.getVariables().get("$value");
 
@@ -120,13 +122,8 @@ public class ConvertToVarHint {
             return null;
         }
 
-        if (!isHintEnabled(ctx)) {
-            return null;
-        }
-
         Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix();
         return ErrorDescriptionFactory.forName(ctx, ctx.getPath(), Bundle.MSG_ConvertibleToVarType(), fix);
-
     }
 
     /**
@@ -137,12 +134,10 @@ public class ConvertToVarHint {
     @Hint(displayName = "#DN_CanUseVarForLambdaExpRef", description = "#DESC_CanUseVarForLambdaExpRef", category = "suggestions")
     @TriggerTreeKind(Kind.LAMBDA_EXPRESSION)
     public static ErrorDescription checkLambdaExpr(HintContext ctx) {
-        TypeMirror samType = ctx.getInfo().getTrees().getTypeMirror(ctx.getPath());
 
         if (!isHintEnabled(ctx)) {
             return null;
         }
-
         return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), Bundle.MSG_ConvertibleToVarType(), new LambdaExprFixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix());
     }
 
@@ -160,7 +155,6 @@ public class ConvertToVarHint {
         if (!isHintEnabled(ctx)) {
             return null;
         }
-
         return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), Bundle.MSG_ConvertibleToVarType(), new FixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix());
     }
 
@@ -172,13 +166,13 @@ public class ConvertToVarHint {
      */
     @Hint(displayName = "#DN_CanUseVarForDiamondInterfaceRef", description = "#DESC_CanUseVarForDiamondInterfaceRef", category = "suggestions")
     @TriggerPattern("new $type<$T$>($params$)") //NOI18N
-    public static ErrorDescription checkdiamondType(HintContext ctx) {
-
-        TreePath treePath = ctx.getPath();
+    public static ErrorDescription checkDiamondType(HintContext ctx) {
 
         if (!isHintEnabled(ctx)) {
             return null;
         }
+
+        TreePath treePath = ctx.getPath();
 
         VariableTree oldVariableTree = (VariableTree) treePath.getParentPath().getLeaf();
         Tree type = oldVariableTree.getType();
@@ -198,7 +192,6 @@ public class ConvertToVarHint {
                     return null;
                 }
                 return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), Bundle.MSG_ConvertibleToVarType(), new DiamondInterface2VarFixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix());
-
             }
         }
         return null;
@@ -212,12 +205,10 @@ public class ConvertToVarHint {
     @Hint(displayName = "#DN_CanUseVarForArrayRef", description = "#DESC_CanUseVarForArrayRef", category = "suggestions")
     @TriggerTreeKind(Kind.NEW_ARRAY)
     public static ErrorDescription checkNewArrayinit(HintContext ctx) {
-        TypeMirror samType = ctx.getInfo().getTrees().getTypeMirror(ctx.getPath());
 
         if (!isHintEnabled(ctx)) {
             return null;
         }
-
         return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), Bundle.MSG_ConvertibleToVarType(), new FixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix());
     }
 

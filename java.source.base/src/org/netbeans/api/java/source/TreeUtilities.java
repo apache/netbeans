@@ -1850,7 +1850,23 @@ public final class TreeUtilities {
         
         return ref.paramTypes;
     }
-    
+   
+    /**Check the var keyword in given statement line {@link Tree}.
+     * 
+     * @param leaf the leaf must be {@link Tree}
+     * @return the true if tree contains var keyword else return false.
+     */
+    public boolean isVarKeywordAvailable(@NonNull Tree leaf) {
+        TokenSequence<JavaTokenId> tokenSequence = tokensFor(leaf);
+        tokenSequence.moveStart();
+        while(tokenSequence.moveNext() && tokenSequence.token().id() != JavaTokenId.EQ){
+            if(tokenSequence.token().id() == JavaTokenId.VAR){
+                return true;
+            }
+        }
+        return false;
+    }
+ 
     private static final class NBScope implements Scope {
 
         private final JavacScope delegate;

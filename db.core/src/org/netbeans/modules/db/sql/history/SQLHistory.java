@@ -20,20 +20,14 @@
 package org.netbeans.modules.db.sql.history;
 
 import java.util.*;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement(name="history")
 public class SQLHistory implements Set<SQLHistoryEntry> {
     // Public methods are synchronized to protect the backing set from concurrent
     // modifications. The performance penality is considered acceptable, as this
     // history logs SQL execution, so execution time is considered far greater
     // than the overhead for synchronisation.
     
-    @XmlTransient
     private int historyLimit = 100;
-    @XmlElement(name="sql")
     private Set<SQLHistoryEntry> history;
 
     public SQLHistory() {
@@ -145,7 +139,6 @@ public class SQLHistory implements Set<SQLHistoryEntry> {
         }
     }
     
-    @XmlTransient
     public synchronized int getHistoryLimit() {
         return historyLimit;
     }

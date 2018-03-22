@@ -203,7 +203,7 @@
         </condition>
 
         <!-- Fallback? -->
-        <property name="nbjdk.home" location="${java.home.parent}"/>
+        <property name="nbjdk.home" location="${java.home}"/>
         <available property="have-jdk-1.4" classname="java.lang.CharSequence"/>
         <available property="have-jdk-1.5" classname="java.lang.StringBuilder"/>
         <available property="have-jdk-1.6" classname="java.util.ServiceLoader"/>

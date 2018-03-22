@@ -113,6 +113,8 @@ public enum JavaTokenId implements TokenId {
     UNDERSCORE("_", "keyword"),
     /**@since 1.34*/
     USES("uses", "keyword"),
+    /**@since 1.36*/
+    VAR("var", "keyword"),
     VOID("void", "keyword"),
     VOLATILE("volatile", "keyword"),
     WHILE("while", "keyword-directive"),

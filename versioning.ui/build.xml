@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="versioning.ui">
+<project basedir="." default="build" name="versioning.ui">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

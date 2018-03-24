@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.heap;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -30,6 +32,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
@@ -47,19 +50,20 @@ class NumberList {
     private long blocks;
     private MappedByteBuffer buf;
     private long mappedSize;
+    private CacheDirectory cacheDirectory;
     
-    NumberList(long dumpFileSize) throws IOException {
-        this(bytes(dumpFileSize));
+    NumberList(long dumpFileSize, CacheDirectory cacheDir) throws IOException {
+        this(bytes(dumpFileSize), cacheDir);
     }
     
-    NumberList(int elSize) throws IOException {
-        dataFile = File.createTempFile("NBProfiler", ".ref"); // NOI18N
+    NumberList(int elSize, CacheDirectory cacheDir) throws IOException {
+        dataFile = cacheDir.createTempFile("NBProfiler", ".ref"); // NOI18N
         data = new RandomAccessFile(dataFile, "rw"); // NOI18N
         numberSize = elSize;
         blockCache = new BlockLRUCache();
         dirtyBlocks = new HashSet(100000);
         blockSize = (NUMBERS_IN_BLOCK + 1) * numberSize;
-        dataFile.deleteOnExit();
+        cacheDirectory = cacheDir;
         addBlock(); // first block is unused, since it starts at offset 0
     }
      
@@ -89,7 +93,9 @@ class NumberList {
     }
     
     protected void finalize() throws Throwable {
-        dataFile.delete();
+        if (cacheDirectory.isTemporary()) {
+            dataFile.delete();
+        }
         super.finalize();
     }
     
@@ -155,6 +161,10 @@ class NumberList {
         return readNumber(block,0);
     }
     
+    LongIterator getNumbersIterator(long startOffset) throws IOException {
+        return new NumberIterator(startOffset);
+    }
+
     List getNumbers(long startOffset) throws IOException {
         int slot;
         List numbers = new ArrayList();
@@ -316,7 +326,89 @@ class NumberList {
         data.write(blocks,0,dataOffset);
         dirtyBlocks.clear();
     }
+
+    //---- Serialization support
+    void writeToStream(DataOutputStream out) throws IOException {
+        out.writeUTF(dataFile.getAbsolutePath());
+        out.writeInt(numberSize);
+        out.writeLong(blocks);
+        out.writeBoolean(buf != null);        
+    }
+
+    NumberList(DataInputStream dis, CacheDirectory cacheDir) throws IOException {
+        boolean mmaped;
+        
+        cacheDirectory = cacheDir;
+        dataFile = cacheDirectory.getCacheFile(dis.readUTF());
+        data = new RandomAccessFile(dataFile, "rw"); // NOI18N
+        numberSize = dis.readInt();
+        blocks = dis.readLong();
+        mmaped = dis.readBoolean();
+        blockCache = new BlockLRUCache();
+        dirtyBlocks = new HashSet(100000);
+        blockSize = (NUMBERS_IN_BLOCK + 1) * numberSize;
+        if (mmaped) {
+            mmapData();
+        }
+    }    
     
+    private class NumberIterator extends LongIterator {
+        private int slot;
+        private byte[] block;
+        private long nextNumber;
+
+        private NumberIterator(long startOffset) throws IOException {
+            slot = 0;
+            block = getBlock(startOffset);
+            nextNumber();
+        }
+
+        @Override
+        boolean hasNext() {
+            return nextNumber != 0;
+        }
+
+        @Override
+        long next() {
+            if (hasNext()) {
+                long num = nextNumber;
+                try {
+                    nextNumber();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    nextNumber = 0;
+                }
+                return num;
+            }
+            throw new NoSuchElementException();
+        }
+
+        private void nextNumber() throws IOException {
+            if (slot < NUMBERS_IN_BLOCK) {
+                long nextNum = readNumber(block,slot++);
+                if (nextNum == 0) {     // end of the block, move to next one
+                    nextBlock();
+                } else {
+                    nextNumber = nextNum;
+                }
+            } else {
+               nextBlock();
+            }
+        }
+
+        private void nextBlock() throws IOException {
+            long nextBlock = getOffsetToNextBlock(block);
+
+            if (nextBlock == 0) { // end of list
+                nextNumber = 0;
+                return;
+            }
+            block = getBlock(nextBlock);
+            slot = 0;
+            nextNumber();
+        }
+    }
+
     private class BlockLRUCache extends LinkedHashMap {
         
         private static final int MAX_CAPACITY = 10000;

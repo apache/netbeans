@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="debugger.jpda.projectsui">
+<project basedir="." default="build" name="debugger.jpda.projectsui">
     <description>Builds, tests, and runs the project org.netbeans.modules.debugger.jpda.projectsui</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

@@ -19,6 +19,8 @@
 
 package org.netbeans.lib.profiler.heap;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -42,6 +44,8 @@ class NearestGCRoot {
     };
     private static final String JAVA_LANG_REF_REFERENCE = "java.lang.ref.Reference";   // NOI18N
     private static final String REFERENT_FILED_NAME = "referent"; // NOI18N
+    private static final String SVM_REFFERENCE = "com.oracle.svm.core.heap.heapImpl.DiscoverableReference";    // NOI18N
+    private static final String SVM_REFERENT_FILED_NAME = "rawReferent"; // NOI18N
     
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
@@ -86,15 +90,12 @@ class NearestGCRoot {
         if (gcRootsComputed) {
             return;
         }
-        referenceClasses = new HashSet();
-        for (int i=0; i<REF_CLASSES.length; i++) {
-            JavaClass ref = heap.getJavaClassByName(REF_CLASSES[i]);
-            if (ref != null) {
-                referenceClasses.add(ref);
-                referenceClasses.addAll(ref.getSubClasses());
+        HeapProgress.progressStart();
+        if (!initHotSpotReference()) {
+            if (!initSVMReference()) {
+                throw new IllegalArgumentException("reference field not found"); // NOI18N
             }
         }
-        referentFiled = computeReferentFiled();
         heap.computeReferences(); // make sure references are computed first
         allInstances = heap.getSummary().getTotalLiveInstances();
         Set processedClasses = new HashSet(heap.getAllClasses().size()*4/3);
@@ -113,8 +114,38 @@ class NearestGCRoot {
 
         deleteBuffers();
         heap.idToOffsetMap.flush();
-        HeapProgress.progressFinish();
         gcRootsComputed = true;
+        heap.writeToFile();
+        HeapProgress.progressFinish();
+    }
+
+    private boolean initHotSpotReference() {
+        referentFiled = computeReferentFiled(JAVA_LANG_REF_REFERENCE, REFERENT_FILED_NAME);
+        if (referentFiled != null) {
+            referenceClasses = new HashSet();
+            for (int i=0; i<REF_CLASSES.length; i++) {
+                JavaClass ref = heap.getJavaClassByName(REF_CLASSES[i]);
+                if (ref != null) {
+                    referenceClasses.add(ref);
+                    referenceClasses.addAll(ref.getSubClasses());
+                }
+            }
+            return referenceClasses.size() >= REF_CLASSES.length;
+        }
+        return false;
+    }
+
+    private boolean initSVMReference() {
+        referentFiled = computeReferentFiled(SVM_REFFERENCE, SVM_REFERENT_FILED_NAME);
+        if (referentFiled != null) {
+            JavaClass ref = referentFiled.getDeclaringClass();
+
+            referenceClasses = new HashSet();
+            referenceClasses.add(ref);
+            referenceClasses.addAll(ref.getSubClasses());
+            return !referenceClasses.isEmpty();
+        }
+        return false;
     }
 
     private void computeOneLevel(Set processedClasses) throws IOException {
@@ -195,27 +226,29 @@ class NearestGCRoot {
         }
     }
 
-    private Field computeReferentFiled() {
-        JavaClass reference = heap.getJavaClassByName(JAVA_LANG_REF_REFERENCE);
-        Iterator fieldRef = reference.getFields().iterator();
+    private Field computeReferentFiled(String className, String fieldName) {
+        JavaClass reference = heap.getJavaClassByName(className);
 
-        while (fieldRef.hasNext()) {
-            Field f = (Field) fieldRef.next();
+        if (reference != null) {
+            Iterator fieldRef = reference.getFields().iterator();
 
-            if (f.getName().equals(REFERENT_FILED_NAME)) {
+            while (fieldRef.hasNext()) {
+                Field f = (Field) fieldRef.next();
 
-                return f;
+                if (f.getName().equals(fieldName)) {
+
+                    return f;
+                }
             }
         }
-
-        throw new IllegalArgumentException("reference field not found in " + reference.getName()); // NOI18N
+        return null;
     }
 
     private void createBuffers() {
-        readBuffer = new LongBuffer(BUFFER_SIZE);
-        writeBuffer = new LongBuffer(BUFFER_SIZE);
-        leaves = new LongBuffer(BUFFER_SIZE);
-        multipleParents = new LongBuffer(BUFFER_SIZE);
+        readBuffer = new LongBuffer(BUFFER_SIZE, heap.cacheDirectory);
+        writeBuffer = new LongBuffer(BUFFER_SIZE, heap.cacheDirectory);
+        leaves = new LongBuffer(BUFFER_SIZE, heap.cacheDirectory);
+        multipleParents = new LongBuffer(BUFFER_SIZE, heap.cacheDirectory);
     }
 
     private void deleteBuffers() {
@@ -348,5 +381,23 @@ class NearestGCRoot {
     LongBuffer getMultipleParents() {
         computeGCRoots();
         return multipleParents;
+    }
+
+    //---- Serialization support
+    void writeToStream(DataOutputStream out) throws IOException {
+        out.writeBoolean(gcRootsComputed);
+        if (gcRootsComputed) {
+            leaves.writeToStream(out);
+            multipleParents.writeToStream(out);
+        }
+    }
+
+    NearestGCRoot(HprofHeap h, DataInputStream dis) throws IOException {
+        this(h);
+        gcRootsComputed = dis.readBoolean();
+        if (gcRootsComputed) {
+            leaves = new LongBuffer(dis, heap.cacheDirectory);
+            multipleParents = new LongBuffer(dis, heap.cacheDirectory);
+        }
     }
 }

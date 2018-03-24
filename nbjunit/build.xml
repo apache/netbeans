@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="nbjunit" basedir="." default="netbeans">
+<project name="nbjunit" basedir="." default="build">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

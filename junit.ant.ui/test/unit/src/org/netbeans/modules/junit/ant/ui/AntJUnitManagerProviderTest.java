@@ -25,6 +25,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.netbeans.modules.gsf.testrunner.ui.api.Manager;
+import org.netbeans.modules.gsf.testrunner.ui.api.TestRunnerNodeFactory;
 
 /**
  *
@@ -56,11 +58,11 @@ public class AntJUnitManagerProviderTest {
      */
     @Test
     public void testRegisterNodeFactory() {
-        System.out.println("registerNodeFactory");
         AntJUnitManagerProvider instance = new AntJUnitManagerProvider();
         instance.registerNodeFactory();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        TestRunnerNodeFactory nodeFactory = Manager.getInstance().getNodeFactory();
+        assertNotNull(nodeFactory);
+        assertTrue(AntJUnitTestRunnerNodeFactory.class.isAssignableFrom(nodeFactory.getClass()));
     }
     
 }

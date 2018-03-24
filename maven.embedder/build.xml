@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="maven.embedder">
+<project basedir="." default="build" name="maven.embedder">
     <import file="../nbbuild/templates/projectized.xml"/>
     <target name="-release.files" depends="projectized.-release.files">
         <mkdir dir="${cluster}/maven"/>

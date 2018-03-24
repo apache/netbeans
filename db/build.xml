@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="db" default="netbeans" basedir=".">
+<project name="db" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

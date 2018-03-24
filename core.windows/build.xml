@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="core.windows" default="netbeans" basedir=".">
+<project name="core.windows" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="xml.jaxb.api">
+<project basedir="." default="build" name="xml.jaxb.api">
     <description>Builds, tests, and runs the project org.netbeans.libs.jaxb</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

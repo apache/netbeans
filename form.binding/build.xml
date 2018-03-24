@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="form.binding">
+<project basedir="." default="build" name="form.binding">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

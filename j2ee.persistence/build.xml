@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="j2ee.persistence">
+<project basedir="." default="build" name="j2ee.persistence">
     <import file="../nbbuild/templates/projectized.xml"/>
 
 

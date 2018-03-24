@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="libs.jna.platform" default="netbeans" basedir=".">
+<project name="libs.jna.platform" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

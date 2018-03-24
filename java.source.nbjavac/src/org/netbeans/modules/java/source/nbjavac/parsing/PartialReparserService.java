@@ -47,6 +47,7 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.JCDiagnostic.Error;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
@@ -171,8 +172,9 @@ public class PartialReparserService {
                 // in enum constructors, except in the compiler
                 // generated one.
                 log.error(tree.body.stats.head.pos(),
-                          "call.to.super.not.allowed.in.enum.ctor",
-                          env.enclClass.sym);
+                          new Error("compiler",
+                                    "call.to.super.not.allowed.in.enum.ctor",
+                                    env.enclClass.sym));
                     }
                 }
         attr.attribStat((JCBlock)block, env);

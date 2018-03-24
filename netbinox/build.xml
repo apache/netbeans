@@ -20,7 +20,7 @@
 
 -->
 
-<project basedir="." default="netbeans" name="netbinox">
+<project basedir="." default="build" name="netbinox">
     <description>Builds, tests, and runs the project org.netbeans.modules.netbinox</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="javahelp" default="netbeans" basedir=".">
+<project name="javahelp" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

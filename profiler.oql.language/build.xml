@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="profiler.oql.language">
+<project basedir="." default="build" name="profiler.oql.language">
     <description>Builds, tests, and runs the project org.netbeans.modules.profiler.oql.language</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

@@ -170,6 +170,15 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.openide.loaders</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.openide.nodes</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.editor</code-name-base>
+                        <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.openide.util.ui</code-name-base>

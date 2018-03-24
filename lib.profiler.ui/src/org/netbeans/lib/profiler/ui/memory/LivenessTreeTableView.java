@@ -356,6 +356,10 @@ abstract class LivenessTreeTableView extends MemoryView {
     
     protected abstract void populatePopup(JPopupMenu popup, Object value, ClientUtils.SourceCodeSelection userValue);
     
+    protected void popupShowing() {};
+    
+    protected void popupHidden()  {};
+    
     
     private HideableBarRenderer[] renderers;
     private NumberRenderer[] renderersEx;
@@ -371,6 +375,12 @@ abstract class LivenessTreeTableView extends MemoryView {
             }
             protected void populatePopup(JPopupMenu popup, Object value, Object userValue) {
                 LivenessTreeTableView.this.populatePopup(popup, value, (ClientUtils.SourceCodeSelection)userValue);
+            }
+            protected void popupShowing() {
+                LivenessTreeTableView.this.popupShowing();
+            }
+            protected void popupHidden() {
+                LivenessTreeTableView.this.popupHidden();
             }
         };
         

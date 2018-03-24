@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="editor.fold.nbui">
+<project basedir="." default="build" name="editor.fold.nbui">
     <description>Builds, tests, and runs the project org.netbeans.modules.editor.fold.nbui</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

@@ -302,4 +302,22 @@ public class HintTestTest {
         Assert.assertEquals("6\n7\n", doc.getText(0, doc.getLength()));
     }
 
+    @Test
+    public void testModuleBootPath() throws Exception {
+        HintTest.create()
+                .sourceLevel("9")
+                .input("module-info.java",
+                       "module m1 {}\n")
+                .run(ModuleBootPath.class)
+                .assertWarnings("0:0-0:12:verifier:Test");
+    }
+
+    @Hint(displayName="testModuleBootPath", description="testModuleBootPath", category="test")
+    public static final class ModuleBootPath {
+        @TriggerTreeKind(Kind.MODULE)
+        public static ErrorDescription hint(HintContext ctx) {
+            return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), "Test");
+        }
+    }
+
 }

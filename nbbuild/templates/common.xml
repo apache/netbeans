@@ -359,6 +359,8 @@
         </genlist>
     </target>
 
+    <target name="build" depends="netbeans,test-build"/>
+
     <target name="-jnlp-init">
         <fail unless="jnlp.dest.dir" >
             You have to provide value to jnlp.dest.dir property!

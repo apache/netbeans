@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="debugger.jpda.js">
+<project basedir="." default="build" name="debugger.jpda.js">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

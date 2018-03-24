@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="libs.jsr223" default="netbeans" basedir=".">
+<project name="libs.jsr223" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

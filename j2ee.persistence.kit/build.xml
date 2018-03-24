@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="j2ee.persistence.kit">
+<project basedir="." default="build" name="j2ee.persistence.kit">
     <description>Builds, tests, and runs the project org.netbeans.modules.j2ee.persistence.kit</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

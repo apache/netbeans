@@ -79,5 +79,7 @@ public class NbApplicationAdapterJDK8 extends NbApplicationAdapter implements Ab
     @Override
     public void handleQuitRequestWith(AppEvent.QuitEvent e, QuitResponse response) {
         handleQuit();
+        //need to do this otherwise the user will never be able to quit again
+        response.cancelQuit();
     }
 }

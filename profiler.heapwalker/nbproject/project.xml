@@ -40,7 +40,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.103</specification-version>
+                        <specification-version>1.106</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -58,7 +58,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.33</specification-version>
+                        <specification-version>1.142</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -163,9 +163,12 @@
             </module-dependencies>
             <friend-packages>
                 <friend>com.sun.tools.visualvm.heapdump</friend>
+                <friend>com.sun.tools.visualvm.heapviewer</friend>
+                <friend>com.sun.tools.visualvm.heapviewer.truffle</friend>
                 <friend>oracle.jdevimpl.profiler.impl</friend>
                 <friend>org.netbeans.modules.debugger.jpda.heapwalk</friend>
                 <package>org.netbeans.modules.profiler.heapwalk</package>
+                <package>org.netbeans.modules.profiler.heapwalk.details.api</package>
                 <package>org.netbeans.modules.profiler.heapwalk.details.spi</package>
                 <package>org.netbeans.modules.profiler.heapwalk.ui.icons</package>
             </friend-packages>

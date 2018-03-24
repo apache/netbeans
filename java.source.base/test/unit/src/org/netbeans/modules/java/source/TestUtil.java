@@ -405,65 +405,7 @@ public class TestUtil {
       }
 
     public static ClassPath getBootClassPath() {
-        String cp = System.getProperty("sun.boot.class.path");
-        if (cp != null) {
-            List<URL> urls = new ArrayList<>();
-            String[] paths = cp.split(Pattern.quote(System.getProperty("path.separator")));
-            for (String path : paths) {
-                File f = new File(path);
-
-                if (!f.canRead())
-                    continue;
-
-                FileObject fo = FileUtil.toFileObject(f);
-                if (FileUtil.isArchiveFile(fo)) {
-                    fo = FileUtil.getArchiveRoot(fo);
-                }
-                if (fo != null) {
-                    urls.add(fo.toURL());
-                }
-            }
-            return ClassPathSupport.createClassPath((URL[])urls.toArray(new URL[0]));
-        } else {
-            ProxyURLStreamHandlerFactory.register();
-            final List<PathResourceImplementation> modules = new ArrayList<>();
-            final File installDir = new File(System.getProperty("java.home"));
-            final URI imageURI = getImageURI(installDir);
-            try {
-                final FileObject jrtRoot = URLMapper.findFileObject(imageURI.toURL());
-                final FileObject root = getModulesRoot(jrtRoot);
-                for (FileObject module : root.getChildren()) {
-                    modules.add(ClassPathSupport.createResource(module.toURL()));
-                }
-            } catch (MalformedURLException e) {
-                throw new IllegalStateException(e);
-            }
-            assertFalse(modules.isEmpty());
-            return ClassPathSupport.createClassPath(modules);
-        }
+        return BootClassPathUtil.getBootClassPath();
     }
 
-    private static final String PROTOCOL = "nbjrt"; //NOI18N
-
-    private static URI getImageURI(@NonNull final File jdkHome) {
-        try {
-            return new URI(String.format(
-                "%s:%s!/%s",  //NOI18N
-                PROTOCOL,
-                BaseUtilities.toURI(jdkHome).toString(),
-                ""));
-        } catch (URISyntaxException e) {
-            throw new IllegalStateException();
-        }
-    }
-
-    @NonNull
-    private static FileObject getModulesRoot(@NonNull final FileObject jrtRoot) {
-        final FileObject modules = jrtRoot.getFileObject("modules");    //NOI18N
-        //jimage v1 - modules are located in the root
-        //jimage v2 - modules are located in "modules" folder
-        return modules == null ?
-            jrtRoot :
-            modules;
-    }
 }

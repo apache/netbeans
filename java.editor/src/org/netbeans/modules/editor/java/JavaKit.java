@@ -146,6 +146,9 @@ public class JavaKit extends NbEditorKit {
             FileObject fo = NbEditorUtilities.getFileObject(doc);
             return fo != null ? fo.getNameExt() : null;
         }, true);
+        attrs.setValue(JavaTokenId.language(), "version", (Supplier<String>) () -> { //NOI18N
+            return getSourceLevel(doc);
+        }, true);
         doc.putProperty(InputAttributes.class, attrs);
       }
     

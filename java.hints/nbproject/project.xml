@@ -544,6 +544,9 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
+                        <code-name-base>org.netbeans.modules.java.j2seplatform</code-name-base>
+                    </test-dependency>
+                    <test-dependency>
                         <code-name-base>org.netbeans.modules.java.source.base</code-name-base>
                         <compile-dependency/>
                         <test/>

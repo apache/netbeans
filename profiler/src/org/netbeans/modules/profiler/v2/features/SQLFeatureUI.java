@@ -37,6 +37,7 @@ import org.netbeans.lib.profiler.common.Profiler;
 import org.netbeans.lib.profiler.ui.components.HTMLTextArea;
 import org.netbeans.lib.profiler.ui.components.ProfilerToolbar;
 import org.netbeans.lib.profiler.ui.jdbc.LiveJDBCView;
+import org.netbeans.lib.profiler.ui.jdbc.LiveJDBCViewUpdater;
 import org.netbeans.lib.profiler.ui.swing.GrayLabel;
 import org.netbeans.modules.profiler.actions.ResetResultsAction;
 import org.netbeans.modules.profiler.actions.TakeSnapshotAction;
@@ -62,6 +63,8 @@ abstract class SQLFeatureUI extends FeatureUI {
     
     private ProfilerToolbar toolbar;
     private LiveJDBCView jdbcView;
+    private LiveJDBCViewUpdater updater;
+    
     
     // --- External implementation ---------------------------------------------
         
@@ -90,11 +93,11 @@ abstract class SQLFeatureUI extends FeatureUI {
     void sessionStateChanged(int sessionState) {
         refreshToolbar(sessionState);
         
-        if (sessionState == Profiler.PROFILING_INACTIVE || sessionState == Profiler.PROFILING_IN_TRANSITION) {
-            if (jdbcView != null) jdbcView.profilingSessionFinished();
-        } else if (sessionState == Profiler.PROFILING_RUNNING) {
-            if (jdbcView != null) jdbcView.profilingSessionStarted();
-        }
+//        if (sessionState == Profiler.PROFILING_INACTIVE || sessionState == Profiler.PROFILING_IN_TRANSITION) {
+//            if (jdbcView != null) jdbcView.profilingSessionFinished();
+//        } else if (sessionState == Profiler.PROFILING_RUNNING) {
+//            if (jdbcView != null) jdbcView.profilingSessionStarted();
+//        }
     }
 
     void resetPause() {
@@ -102,15 +105,22 @@ abstract class SQLFeatureUI extends FeatureUI {
     }
     
     void setForceRefresh() {
-        if (jdbcView != null) jdbcView.setForceRefresh(true);
+        if (updater != null) updater.setForceRefresh(true);
     }
     
     void refreshData() throws ClientUtils.TargetAppOrVMTerminated {
-        if (jdbcView != null) jdbcView.refreshData();
+        if (updater != null) updater.update();
     }
         
     void resetData() {
-        if (jdbcView != null) jdbcView.resetData();
+        if (lrDeltasButton != null) {
+            lrDeltasButton.setSelected(false);
+            lrDeltasButton.setToolTipText(Bundle.MethodsFeatureUI_showDeltas());
+        }
+        if (jdbcView != null) {
+            jdbcView.resetData();
+            jdbcView.setDiffView(false);
+        }
     }
     
     void cleanup() {
@@ -188,6 +198,8 @@ abstract class SQLFeatureUI extends FeatureUI {
         
         jdbcView.putClientProperty("HelpCtx.Key", "ProfileSQL.HelpCtx"); // NOI18N
         
+        updater = new LiveJDBCViewUpdater(jdbcView, getProfilerClient());
+        
         
         // --- Toolbar ---------------------------------------------------------
         
@@ -196,7 +208,7 @@ abstract class SQLFeatureUI extends FeatureUI {
         lrPauseButton = new JToggleButton(Icons.getIcon(GeneralIcons.PAUSE)) {
             protected void fireItemStateChanged(ItemEvent event) {
                 boolean paused = isSelected();
-                jdbcView.setPaused(paused);
+                updater.setPaused(paused);
                 if (!paused) refreshResults();
                 refreshToolbar(getSessionState());
             }

@@ -26,7 +26,7 @@
         <file>src/org/netbeans/modules/xml/resources/templates/emptyXmlSchema.xsd.template</file>
         <file>src/org/netbeans/modules/xml/resources/templates/xhtml.xml.template</file>
         <file>src/org/netbeans/modules/xml/resources/templates/xml_entity.ent.template</file>
-        <license ref="Apache-2.0" />
+        <license ref="Apache-2.0-ASF" />
         <comment type="TEMPLATE_MINIMAL_IP"/>
     </fileset>
 </licenseinfo>

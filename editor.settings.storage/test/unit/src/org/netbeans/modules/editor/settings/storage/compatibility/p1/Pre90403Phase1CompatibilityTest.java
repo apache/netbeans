@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.editor.settings.storage.compatibility.p1;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -67,8 +68,7 @@ public class Pre90403Phase1CompatibilityTest extends NbTestCase {
                     "org/netbeans/modules/editor/settings/storage/layer.xml"),
                 getClass().getClassLoader().getResource(
                     "org/netbeans/core/resources/mf-layer.xml"), // for MIMEResolverImpl to work
-                getClass().getClassLoader().getResource(
-                    "org/netbeans/modules/editor/settings/storage/compatibility/p1/SFS-Editors-Folder.zip"), 
+                new File(getDataDir(), "SFS-Editors-Folder-8.2.zip").toURI().toURL(),
             },
             getWorkDir(),
             new Object[] {},

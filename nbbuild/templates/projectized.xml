@@ -372,9 +372,26 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
     <target name="netbeans" depends="projectized-common.netbeans,check-sigtest"/>
 -->    
     <target name="sources-zip" depends="build-init, check-sources-exist" if="sources.exist" description="Simple sources zip creation intended for use in maven repository.">
+
+        <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
+        <property name="module.name.temp" location="." />
+        <basename property="module.name" file="${module.name.temp}" />
+        <mkdir dir="${build.classes.dir}/META-INF" />
+        <createlicensesummary licenseStub="${nb_all}/LICENSE"
+                              noticeStub="${nb_all}/nbbuild/notice-stub.txt"
+                              nball="${nb_all}"
+                              license="${build.dir}/LICENSE"
+                              notice="${build.dir}/NOTICE"
+                              binary="false"
+                              modules="${module.name}"
+        />
+
         <mkdir dir="${netbeans.zipped.sources.dir}"/>
-        <zip zipfile="${netbeans.zipped.sources.dir}/${code.name.base.dashes}.zip"
-             basedir="${src.dir}"/>
+        <zip zipfile="${netbeans.zipped.sources.dir}/${code.name.base.dashes}.zip">
+            <zipfileset dir="${src.dir}" />
+            <zipfileset dir="${build.dir}" prefix="META-INF" includes="LICENSE NOTICE" />
+            <zipfileset dir="${nb_all}" prefix="META-INF" includes="DISCLAIMER" />
+        </zip>
     </target>
 
     

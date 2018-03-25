@@ -60,12 +60,12 @@ public class DukeScriptWizard {
             position = 133,
             page = "dukeScriptWizard.html",
             content = "dukescript.archetype",
-            folder = "Project/JavaFX",
+            folder = "Project/Standard",
             displayName = "#DukeScriptWizard_displayName",
             iconBase = "org/netbeans/modules/maven/htmlui/DukeHTML.png",
             description = "description.html"
     )
-    @Messages("DukeScriptWizard_displayName=Java HTML5 Application")
+    @Messages("DukeScriptWizard_displayName=Java Frontend Application")
     public static WizardData javafxWebViewAppWizard() {
         WizardData data = new WizardData();
         data.init(Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE);

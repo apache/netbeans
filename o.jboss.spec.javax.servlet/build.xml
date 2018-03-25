@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="o.eclipse.jgit.java7" default="build" basedir=".">
+<project name="o.jboss.spec.javax.servlet" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
-    <target name="jar" depends="release"/>
+    <target name="jar"/>
 </project>

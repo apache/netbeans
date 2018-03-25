@@ -81,7 +81,7 @@ public class GetPreviousCommitCommand extends GitCommand {
                 throw new GitException(ex);
             } finally {
                 if (walk != null) {
-                    walk.release();
+                    walk.close();
                 }
             }
     }

@@ -1,5 +1,5 @@
 Name: JZlib
-Version: 1.0.7
+Version: 1.1.1
 License: BSD-jzlib
 Origin: JCraft, Inc.
 URL: http://www.jcraft.com/jzlib/

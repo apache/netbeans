@@ -179,8 +179,8 @@ public class AddCommand extends GitCommand {
                     builder.commit();
                 }
             } finally {
-                inserter.release();
-                or.release();
+                inserter.close();
+                or.close();
                 if (cache != null ) {
                     cache.unlock();
                 }

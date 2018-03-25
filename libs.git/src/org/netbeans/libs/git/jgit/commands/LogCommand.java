@@ -189,8 +189,8 @@ public class LogCommand extends GitCommand {
             } catch (IOException ex) {
                 throw new GitException(ex);
             } finally {
-                walk.release();
-                fullWalk.release();
+                walk.close();
+                fullWalk.close();
             }
         } 
     }

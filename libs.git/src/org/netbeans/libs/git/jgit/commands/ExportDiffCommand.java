@@ -121,9 +121,9 @@ public class ExportDiffCommand extends GitCommand {
             throw new GitException(ex);
         } finally {
             if (or != null) {
-                or.release();
+                or.close();
             }
-            formatter.release();
+            formatter.close();
         }
     }
 

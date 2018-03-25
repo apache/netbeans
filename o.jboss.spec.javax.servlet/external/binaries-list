@@ -14,5 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-release.external/org.eclipse.jgit-4.11.0.201803080745-r.jar=modules/org-eclipse-jgit.jar
-is.autoload=true
+C61FD650E120CEC1A0390DB9457BB36D1E7121A9 org.jboss.spec.javax.servlet:jboss-servlet-api_3.1_spec:1.0.2.Final

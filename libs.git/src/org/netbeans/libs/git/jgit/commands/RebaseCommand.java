@@ -73,7 +73,7 @@ public class RebaseCommand extends GitCommand {
         if (operation == GitClient.RebaseOperationType.BEGIN) {
             Ref ref = null;
             try {
-                ref = repository.getRef(revision);
+                ref = repository.findRef(revision);
             } catch (IOException ex) {
                 throw new GitException(ex);
             }

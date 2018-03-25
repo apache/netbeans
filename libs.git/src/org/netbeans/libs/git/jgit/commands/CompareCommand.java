@@ -97,7 +97,7 @@ public class CompareCommand extends GitCommand {
         } catch (IOException ex) {
             throw new GitException(ex);
         } finally {
-            walk.release();
+            walk.close();
         }
     }
 

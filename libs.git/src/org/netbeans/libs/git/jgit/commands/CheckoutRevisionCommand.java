@@ -96,7 +96,7 @@ public class CheckoutRevisionCommand extends GitCommand {
     protected void run () throws GitException {
         Repository repository = getRepository();
         try {
-            Ref headRef = repository.getRef(Constants.HEAD);
+            Ref headRef = repository.findRef(Constants.HEAD);
             if (headRef == null) {
                 throw new GitException("Corrupted repository, missing HEAD file in .git folder.");
             }
@@ -104,7 +104,7 @@ public class CheckoutRevisionCommand extends GitCommand {
             try {
                 headTree = Utils.findCommit(repository, Constants.HEAD).getTree();
             } catch (GitException.MissingObjectException ex) { }
-            Ref ref = repository.getRef(revision);
+            Ref ref = repository.findRef(revision);
             if (ref != null && !ref.getName().startsWith(Constants.R_HEADS) && !ref.getName().startsWith(Constants.R_REMOTES)) {
                 ref = null;
             }
@@ -270,7 +270,7 @@ public class CheckoutRevisionCommand extends GitCommand {
             }
             inserter.flush();
         } finally {
-            inserter.release();
+            inserter.close();
         }
     }
 
@@ -310,7 +310,7 @@ public class CheckoutRevisionCommand extends GitCommand {
         } catch (IOException ex) {
             throw new GitException(ex);
         } finally {
-            walk.release();
+            walk.close();
             if (od != null) {
                 od.close();
             }

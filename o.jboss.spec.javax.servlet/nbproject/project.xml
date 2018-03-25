@@ -23,12 +23,12 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
-            <code-name-base>com.jcraft.jzlib</code-name-base>
+            <code-name-base>org.jboss.spec.javax.servlet</code-name-base>
             <module-dependencies/>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>com-jcraft-jzlib.jar</runtime-relative-path>
-		<binary-origin>external/jzlib-1.1.1.jar</binary-origin>
+                <runtime-relative-path>org-jboss-spec-javax-servlet.jar</runtime-relative-path>
+                <binary-origin>external/jboss-servlet-api_3.1_spec-1.0.2.Final.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

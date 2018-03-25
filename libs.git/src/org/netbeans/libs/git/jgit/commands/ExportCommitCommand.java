@@ -100,7 +100,7 @@ public class ExportCommitCommand extends GitCommand {
             throw new GitException(ex);
         } finally {
             if (formatter != null) {
-                formatter.release();
+                formatter.close();
             }
         }
     }

@@ -263,7 +263,7 @@ public class StatusCommand extends GitCommand {
                 handleConflict(conflicts, workTreePath);
                 handleSymlink(symLinks, workTreePath);
             } finally {
-                od.release();
+                od.close();
                 cache.unlock();
             }
         } catch (CorruptObjectException ex) {
@@ -298,7 +298,7 @@ public class StatusCommand extends GitCommand {
         } catch (IOException ex) {
             entries = Collections.<DiffEntry>emptyList();
         } finally {
-            treeWalk.release();
+            treeWalk.close();
         }
         Map<String, DiffEntry> renames = new HashMap<String, DiffEntry>();
         for (DiffEntry e : entries) {

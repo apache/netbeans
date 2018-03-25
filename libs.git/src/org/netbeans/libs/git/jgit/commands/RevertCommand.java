@@ -87,7 +87,7 @@ public class RevertCommand extends GitCommand {
         DirCache dc = null;
         GitRevertResult NO_CHANGE_INSTANCE = getClassFactory().createRevertResult(GitRevertResult.Status.NO_CHANGE, null, null, null);
         try {
-            Ref headRef = repository.getRef(Constants.HEAD);
+            Ref headRef = repository.findRef(Constants.HEAD);
             if (headRef == null) {
                 throw new GitException.MissingObjectException(Constants.HEAD, GitObjectType.COMMIT);
             }
@@ -147,7 +147,7 @@ public class RevertCommand extends GitCommand {
             if (dc != null) {
                 dc.unlock();
             }
-            revWalk.release();
+            revWalk.close();
         }
     }
 

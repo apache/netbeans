@@ -66,7 +66,7 @@ public class StashListCommand extends GitCommand {
         } catch (GitAPIException | IOException ex) {
             throw new GitException(ex);
         } finally {
-            fullWalk.release();
+            fullWalk.close();
         }
     }
 

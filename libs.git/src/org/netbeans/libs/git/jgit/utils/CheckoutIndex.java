@@ -94,8 +94,8 @@ public class CheckoutIndex {
             }
         }
         } finally {
-            od.release();
-            treeWalk.release();
+            od.close();
+            treeWalk.close();
         }
     }
 
@@ -122,7 +122,7 @@ public class CheckoutIndex {
             }
             file.createNewFile();
             if (file.isFile()) {
-                DirCacheCheckout.checkoutEntry(repository, file, e, od);
+                DirCacheCheckout.checkoutEntry(repository, e, od);
             } else {
                 monitor.notifyError(MessageFormat.format(Utils.getBundle(CheckoutIndex.class).getString("MSG_Warning_CannotCreateFile"), file.getAbsolutePath())); //NOI18N
             }

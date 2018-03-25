@@ -207,8 +207,8 @@ public final class GitRevisionInfo {
         } catch (IOException ex) {
             throw new GitException(ex);
         } finally {
-            revWalk.release();
-            walk.release();
+            revWalk.close();
+            walk.close();
         }
     }
 

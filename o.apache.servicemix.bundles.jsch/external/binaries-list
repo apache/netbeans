@@ -14,5 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-release.external/org.eclipse.jgit.java7-3.6.2.201501210735-r.jar=modules/org-eclipse-jgit-java7.jar
-is.autoload=true
+76F72D955290C7AF190C20BD817FE896D3BDED6C org.apache.servicemix.bundles:org.apache.servicemix.bundles.jsch:0.1.54_1

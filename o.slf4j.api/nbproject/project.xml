@@ -23,12 +23,12 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
-            <code-name-base>org.eclipse.jgit.java7</code-name-base>
+            <code-name-base>org.slf4j.api</code-name-base>
             <module-dependencies/>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>org-eclipse-jgit-java7.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.jgit.java7-3.6.2.201501210735-r.jar</binary-origin>
+                <runtime-relative-path>org-slf4j-api.jar</runtime-relative-path>
+                <binary-origin>external/org.slf4j.api-1.7.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

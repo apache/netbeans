@@ -30,14 +30,14 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>0.1.49</specification-version>
+                        <specification-version>0.1.54</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
                     <code-name-base>org.eclipse.jgit</code-name-base>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>3.6.2</specification-version>
+                        <specification-version>4.11.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -54,7 +54,7 @@
                 <test-type>
                     <name>unit</name>
                     <test-dependency>
-                        <code-name-base>org.eclipse.jgit.java7</code-name-base>
+                        <code-name-base>org.eclipse.jgit</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>

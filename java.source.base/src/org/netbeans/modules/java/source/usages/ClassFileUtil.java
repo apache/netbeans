@@ -135,7 +135,6 @@ public class ClassFileUtil {
     
     public static String[] createFieldDescriptor (final VariableElement ve) {
 	assert ve != null;
-
         String[] result = new String[3];
 	Element enclosingElement = ve.getEnclosingElement();
         if (enclosingElement != null && enclosingElement.asType().getKind() == TypeKind.NONE) {

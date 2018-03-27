@@ -50,6 +50,8 @@ import org.openide.util.Utilities;
 @ActionReference(path = "Loaders/content/unknown/Actions", position = 200)
 public final class SystemOpenAction extends AbstractAction implements ContextAwareAction {
     
+    private static final RequestProcessor PROC = new RequestProcessor(SystemOpenAction.class);
+    
     public SystemOpenAction() {
         super(NbBundle.getMessage(SystemOpenAction.class, "CTL_SystemOpenAction"));
     }
@@ -69,7 +71,7 @@ public final class SystemOpenAction extends AbstractAction implements ContextAwa
         public ContextAction(Lookup context) {
             super(NbBundle.getMessage(SystemOpenAction.class, "CTL_SystemOpenAction"));
             putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
-            files = new HashSet<File>();
+            files = new HashSet<>();
             for (DataObject d : context.lookupAll(DataObject.class)) {
                 File f = FileUtil.toFile(d.getPrimaryFile());
                 if (f == null || /* #144575 */Utilities.isWindows() && f.isFile() && !f.getName().contains(".")) {
@@ -85,7 +87,7 @@ public final class SystemOpenAction extends AbstractAction implements ContextAwa
         }
 
         public @Override void actionPerformed(ActionEvent e) {
-            RequestProcessor.getDefault().post(new Runnable() { // #176879: asynch
+            PROC.post(new Runnable() { // #176879: asynch
                 public @Override void run() {
                     Desktop desktop = Desktop.getDesktop();
                     for (File f : files) {

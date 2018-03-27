@@ -135,6 +135,7 @@ public class ClassFileUtil {
     
     public static String[] createFieldDescriptor (final VariableElement ve) {
 	assert ve != null;
+
         String[] result = new String[3];
 	Element enclosingElement = ve.getEnclosingElement();
         if (enclosingElement != null && enclosingElement.asType().getKind() == TypeKind.NONE) {
@@ -287,6 +288,11 @@ public class ClassFileUtil {
             case INTERSECTION:
             {
                 encodeType(((IntersectionType) type).getBounds().get(0), sb);
+                break;
+            }
+            case NONE: {
+                // ignore none kind returned for invalid var
+                // usage like 'var v'
                 break;
             }
 	    default:

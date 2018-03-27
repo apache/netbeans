@@ -27,10 +27,14 @@ import com.sun.source.util.TreePath;
 import java.io.File;
 import java.io.OutputStream;
 import java.security.Permission;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.parsing.JavacParser;
+import org.netbeans.modules.java.source.usages.ClassFileUtil;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -63,6 +67,7 @@ public class TreePathHandleTest extends NbTestCase {
         FileObject cache = workFO.createFolder("cache");
         
         SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, cache);
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
     }
     
     private void writeIntoFile(FileObject file, String what) throws Exception {
@@ -422,6 +427,35 @@ public class TreePathHandleTest extends NbTestCase {
         assertNotNull(handle.resolveElement(info));
     }
 
+    public void testVarInstanceMember() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_10");
+        } catch (IllegalArgumentException ex) {
+            //no RELEASE_10, skip test:
+            return;
+        }
+        FileObject file = FileUtil.createData(sourceRoot, "test/Test.java");
+        String code = "package test; public class Test {var v;  \n public Test() {}}";
+
+        writeIntoFile(file, code);
+        SourceUtilsTestUtil.setSourceLevel(file, "1.10");
+        JavaSource js = JavaSource.forFileObject(file);
+
+        CompilationInfo info = SourceUtilsTestUtil.getCompilationInfo(js, Phase.RESOLVED);
+        assertTrue(info.getDiagnostics().size() > 0);
+
+        TreePath tp = info.getTreeUtilities().pathFor(code.indexOf("var") + 1); //NOI18N
+        VariableElement elem = (VariableElement) info.getTrees().getElement(tp);
+        try {
+            ClassFileUtil.createFieldDescriptor(elem);
+        } catch (IllegalArgumentException e) {
+            fail("IllegalArgumentException thrown"); //NOI18N
+        }
+        TreePathHandle handle = TreePathHandle.create(tp, info);
+        assertTrue(handle.getElementHandle() != null);
+        
+    }
+    
     private static final class SecMan extends SecurityManager {
 
         @Override

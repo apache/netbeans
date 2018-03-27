@@ -429,16 +429,16 @@ public class TreePathHandleTest extends NbTestCase {
 
     public void testVarInstanceMember() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_10");
+            SourceVersion.valueOf("RELEASE_10"); //NOI18N
         } catch (IllegalArgumentException ex) {
             //no RELEASE_10, skip test:
             return;
         }
-        FileObject file = FileUtil.createData(sourceRoot, "test/Test.java");
-        String code = "package test; public class Test {var v;  \n public Test() {}}";
+        FileObject file = FileUtil.createData(sourceRoot, "test/Test.java"); //NOI18N
+        String code = "package test; public class Test {var v;  \n public Test() {}}"; //NOI18N
 
         writeIntoFile(file, code);
-        SourceUtilsTestUtil.setSourceLevel(file, "1.10");
+        SourceUtilsTestUtil.setSourceLevel(file, "1.10"); //NOI18N
         JavaSource js = JavaSource.forFileObject(file);
 
         CompilationInfo info = SourceUtilsTestUtil.getCompilationInfo(js, Phase.RESOLVED);
@@ -452,10 +452,9 @@ public class TreePathHandleTest extends NbTestCase {
             fail("IllegalArgumentException thrown"); //NOI18N
         }
         TreePathHandle handle = TreePathHandle.create(tp, info);
-        assertTrue(handle.getElementHandle() != null);
-        
+        assertTrue(handle.getElementHandle() != null);        
     }
-    
+
     private static final class SecMan extends SecurityManager {
 
         @Override

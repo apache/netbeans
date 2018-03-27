@@ -223,7 +223,7 @@ public class Tiny {
 
         if (parentKind != Tree.Kind.BLOCK && parentKind != Tree.Kind.CASE) return null;
         
-        if(ctx.getInfo().getTreeUtilities().isVarVariable(ctx.getPath())){
+        if(ctx.getInfo().getTreeUtilities().isVarType(ctx.getPath())){
             return null; // hints discarded for var keyword
         }      
 

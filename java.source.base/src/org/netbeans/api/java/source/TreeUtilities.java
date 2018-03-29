@@ -1851,13 +1851,14 @@ public final class TreeUtilities {
         return ref.paramTypes;
     }
    
-    /**Check the var keyword in given statement line {@link Tree}.
+    /**Check the var type variable in given tree path {@link TreePath}.
      * 
-     * @param leaf the leaf must be {@link Tree}
-     * @return the true if tree contains var keyword else return false.
+     * @param path the path of tree {@link TreePath}
+     * @return the true if tree contains var keyword else return false
+     * @since 2.31.0
      */
-    public boolean isVarKeywordAvailable(@NonNull Tree leaf) {
-        TokenSequence<JavaTokenId> tokenSequence = tokensFor(leaf);
+    public boolean isVarType(@NonNull TreePath path) {
+        TokenSequence<JavaTokenId> tokenSequence = tokensFor(path.getLeaf());
         tokenSequence.moveStart();
         while(tokenSequence.moveNext() && tokenSequence.token().id() != JavaTokenId.EQ){
             if(tokenSequence.token().id() == JavaTokenId.VAR){

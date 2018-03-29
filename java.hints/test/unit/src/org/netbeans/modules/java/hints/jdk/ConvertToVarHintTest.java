@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.hints.suggestions;
+package org.netbeans.modules.java.hints.jdk;
 
+import org.netbeans.modules.java.hints.jdk.ConvertToVarHint;
 import org.junit.Test;
 import org.netbeans.modules.java.hints.test.api.HintTest;
 
@@ -42,7 +43,7 @@ public class ConvertToVarHintTest {
                         + "}\n")
                 .sourceLevel("1.10")
                 .run(ConvertToVarHint.class)
-                .findWarning("3:18-3:19:" + VAR_CONV_WARNING)
+                .findWarning("3:8-3:25:" + VAR_CONV_WARNING)
                 .applyFix()
                 .assertCompilable()
                 .assertVerbatimOutput("package test;\n"
@@ -65,7 +66,7 @@ public class ConvertToVarHintTest {
                         + "}\n")
                 .sourceLevel("1.10")
                 .run(ConvertToVarHint.class)
-                .findWarning("3:15-3:18:" + VAR_CONV_WARNING)
+                .findWarning("3:8-3:29:" + VAR_CONV_WARNING)
                 .applyFix()
                 .assertCompilable()
                 .assertVerbatimOutput("package test;\n"
@@ -89,7 +90,7 @@ public class ConvertToVarHintTest {
                         + "}\n")
                 .sourceLevel("1.10")
                 .run(ConvertToVarHint.class)
-                .findWarning("4:37-4:40:" + VAR_CONV_WARNING)
+                .findWarning("4:8-4:72:" + VAR_CONV_WARNING)
                 .applyFix()
                 .assertCompilable()
                 .assertVerbatimOutput("package test;\n"
@@ -116,50 +117,7 @@ public class ConvertToVarHintTest {
                         + "}\n")
                 .sourceLevel("1.10")
                 .run(ConvertToVarHint.class)
-                .findWarning("3:21-3:28:" + VAR_CONV_WARNING)
-                .applyFix()
-                .assertCompilable()
-                .assertVerbatimOutput("package test;\n"
-                        + "public class Test {\n"
-                        + "    void m2() {\n"
-                        + "        var r = (Runnable) () -> {\n"
-                        + "        };\n"
-                        + "        r.run();\n"
-                        + "    }\n"
-                        + "}\n");
-
-    }
-
-    @Test
-    public void testLambdaExpr2RefToVar() throws Exception {
-
-        HintTest.create()
-                .setCaretMarker('^')
-                .input("package test;\n"
-                        + "public class Test {\n"
-                        + "    public static void main(String javalatte[]) {\n"
-                        + "        TwoArgInterface plusOperation = (a, b) -> a + b^;\n"
-                        + "        System.out.println(\"Sum of 10,34 : \" + plusOperation.operation(10, 34));\n"
-                        + "    }\n"
-                        + "}\n"
-                        + "interface TwoArgInterface {\n"
-                        + "    public int operation(int a, int b);\n"
-                        + "}")
-                .sourceLevel("1.10")
-                .run(ConvertToVarHint.class)
-                .findWarning("3:40-3:55:" + VAR_CONV_WARNING)
-                .applyFix()
-                .assertCompilable()
-                .assertVerbatimOutput("package test;\n"
-                        + "public class Test {\n"
-                        + "    public static void main(String javalatte[]) {\n"
-                        + "        var plusOperation = (TwoArgInterface) (a, b) -> a + b;\n"
-                        + "        System.out.println(\"Sum of 10,34 : \" + plusOperation.operation(10, 34));\n"
-                        + "    }\n"
-                        + "}\n"
-                        + "interface TwoArgInterface {\n"
-                        + "    public int operation(int a, int b);\n"
-                        + "}");
+                .assertNotContainsWarnings(VAR_CONV_DESC);
 
     }
 
@@ -180,19 +138,7 @@ public class ConvertToVarHintTest {
                         + "}\n")
                 .sourceLevel("1.10")
                 .run(ConvertToVarHint.class)
-                .findWarning("3:21-3:37:" + VAR_CONV_WARNING)
-                .applyFix()
-                .assertCompilable()
-                .assertVerbatimOutput("package test;\n"
-                        + "public class Test {\n"
-                        + "    void m1() {\n"
-                        + "        var r = new Runnable() {\n"
-                        + "            @Override\n"
-                        + "            public void run() {\n"
-                        + "            }\n"
-                        + "        };\n"
-                        + "    }\n"
-                        + "}\n");
+                .assertNotContainsWarnings(VAR_CONV_DESC);
 
     }
 
@@ -202,44 +148,44 @@ public class ConvertToVarHintTest {
                 .setCaretMarker('^')
                 .input("package test;\n"
                         + "public class Test {\n"
-                        + "void m1(){\n"
-                        + "Obj^ect obj = new Object();\n"
-                        + "}\n"
-                        + "}\n")
+                        + "    void m1(){\n"
+                        + "        Obj^ect obj = new Object();\n"
+                        + "    }\n"
+                        + "}")
                 .sourceLevel("1.10")
                 .run(ConvertToVarHint.class)
-                .findWarning("3:7-3:10:" + VAR_CONV_WARNING)
+                .findWarning("3:8-3:34:" + VAR_CONV_WARNING)
                 .applyFix()
                 .assertCompilable()
                 .assertVerbatimOutput("package test;\n"
                         + "public class Test {\n"
-                        + "void m1(){\n"
-                        + "var obj = new Object();\n"
-                        + "}\n"
-                        + "}\n");
+                        + "    void m1(){\n"
+                        + "        var obj = new Object();\n"
+                        + "    }\n"
+                        + "}");
     }
 
     @Test
-    public void testarrayRefToVar() throws Exception {
+    public void testArrayRefToVar() throws Exception {
         HintTest.create()
                 .setCaretMarker('^')
                 .input("package test;\n"
                         + "public class Test {\n"
-                        + "void m1(){\n"
-                        + "int[][] arr = new int[4][]^;\n"
-                        + "}\n"
-                        + "}\n")
+                        + "    void m1(){\n"
+                        + "        int[][] arr = new int[4][]^;\n"
+                        + "    }\n"
+                        + "}")
                 .sourceLevel("1.10")
                 .run(ConvertToVarHint.class)
-                .findWarning("3:14-3:26:" + VAR_CONV_WARNING)
+                .findWarning("3:8-3:35:" + VAR_CONV_WARNING)
                 .applyFix()
                 .assertCompilable()
                 .assertVerbatimOutput("package test;\n"
                         + "public class Test {\n"
-                        + "void m1(){\n"
-                        + "    var arr = new int[4][];\n"
-                        + "}\n"
-                        + "}\n");
+                        + "    void m1(){\n"
+                        + "        var arr = new int[4][];\n"
+                        + "    }\n"
+                        + "}");
     }
 
     @Test
@@ -255,16 +201,7 @@ public class ConvertToVarHintTest {
                         + "}")
                 .sourceLevel("1.10")
                 .run(ConvertToVarHint.class)
-                .findWarning("4:44-4:59:" + VAR_CONV_WARNING)
-                .applyFix()
-                .assertCompilable()
-                .assertVerbatimOutput("package test;\n"
-                        + "import java.util.HashMap;\n"
-                        + "public class Test {\n"
-                        + "    void m1() {\n"
-                        + "        final var map = new HashMap<String, String>();\n"
-                        + "    }\n"
-                        + "}");
+                .assertNotContainsWarnings(VAR_CONV_DESC);
     }
 
     @Test
@@ -281,7 +218,7 @@ public class ConvertToVarHintTest {
                         + "}\n")
                 .sourceLevel("1.10")
                 .run(ConvertToVarHint.class)
-                .findWarning("3:17-3:18:" + VAR_CONV_WARNING)
+                .findWarning("3:13-3:22:" + VAR_CONV_WARNING)
                 .applyFix()
                 .assertCompilable()
                 .assertVerbatimOutput("package test;\n"
@@ -301,7 +238,7 @@ public class ConvertToVarHintTest {
                 .input("package test;\n"
                         + "public class Test {\n"
                         + "void m1(){\n"
-                        + "    var arr = 20^;\n"
+                        + "    var k = 20^;\n"
                         + "}\n"
                         + "}\n")
                 .sourceLevel("1.10")
@@ -343,4 +280,79 @@ public class ConvertToVarHintTest {
 
     }
 
+    @Test
+    public void testClassMemberRefToVar() throws Exception {
+        HintTest.create()
+                .setCaretMarker('^')
+                .input("package test;\n"
+                        + "public class Test {\n"
+                        + "    int i =10 ^;\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .assertNotContainsWarnings(VAR_CONV_DESC);
+
+    }
+
+    @Test
+    public void testMethodAssignToVar() throws Exception {
+        HintTest.create()
+                .setCaretMarker('^')
+                .input("package test;\n"
+                        + "import java.util.ArrayList;\n"
+                        + "public class Test {\n"
+                        + "    public static void main(String[] args) {\n"
+                        + "        Object obj = m1()^;\n"
+                        + "    }\n"
+                        + "    static Object m1()\n"
+                        + "    {\n"
+                        + "        return new ArrayList<String>();\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .findWarning("4:8-4:26:" + VAR_CONV_WARNING)
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;\n"
+                        + "import java.util.ArrayList;\n"
+                        + "public class Test {\n"
+                        + "    public static void main(String[] args) {\n"
+                        + "        var obj = m1();\n"
+                        + "    }\n"
+                        + "    static Object m1()\n"
+                        + "    {\n"
+                        + "        return new ArrayList<String>();\n"
+                        + "    }\n"
+                        + "}");
+    }
+
+    @Test
+    public void testMethod2AssignToVar() throws Exception {
+        HintTest.create()
+                .setCaretMarker('^')
+                .input("package test;\n"
+                        + "import java.util.Collections;\n"
+                        + "import java.util.List;\n"
+                        + "import java.util.ArrayList;\n"
+                        + "public class Test {\n"
+                        + "    public static void main(String[] args) {\n"
+                        + "        List<String> list = Collections.unmodifiableList(new ArrayList<String>())^;\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .findWarning("6:8-6:82:" + VAR_CONV_WARNING)
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;\n"
+                        + "import java.util.Collections;\n"
+                        + "import java.util.List;\n"
+                        + "import java.util.ArrayList;\n"
+                        + "public class Test {\n"
+                        + "    public static void main(String[] args) {\n"
+                        + "        var list = Collections.unmodifiableList(new ArrayList<String>());\n"
+                        + "    }\n"
+                        + "}");
+    }
 }

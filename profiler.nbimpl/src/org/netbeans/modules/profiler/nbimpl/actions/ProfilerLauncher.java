@@ -532,6 +532,9 @@ public class ProfilerLauncher {
             } else if (javaVersion.equals(CommonConstants.JDK_19_STRING)) {
                 agentArgs =  IDEUtils.getAntProfilerStartArgument19(ss.getPortNo(), ss.getSystemArchitecture());
                 activateOOMProtection(gps, props, project);
+            } else if (javaVersion.equals(CommonConstants.JDK_110_BEYOND_STRING)) {
+                agentArgs =  IDEUtils.getAntProfilerStartArgument110Beyond(ss.getPortNo(), ss.getSystemArchitecture());
+                activateOOMProtection(gps, props, project);
             } else {
                 throw new IllegalArgumentException("Unsupported JDK " + javaVersion); // NOI18N
             }

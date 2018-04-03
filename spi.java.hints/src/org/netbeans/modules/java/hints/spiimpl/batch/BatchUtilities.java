@@ -49,6 +49,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.ClassPath.PathConversionMode;
+import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
@@ -415,7 +416,15 @@ public class BatchUtilities {
         Map<ClasspathInfo, Collection<FileObject>> result = new IdentityHashMap<ClasspathInfo, Collection<FileObject>>();
 
         for (Entry<CPCategorizer, Collection<FileObject>> e : m.entrySet()) {
-            result.put(ClasspathInfo.create(e.getKey().boot, e.getKey().compile, e.getKey().source), e.getValue());
+            ClasspathInfo cpInfo = new ClasspathInfo.Builder(e.getKey().boot)
+                                                    .setClassPath(e.getKey().compile)
+                                                    .setSourcePath(e.getKey().source)
+                                                    .setModuleSourcePath(e.getKey().moduleSrcPath)
+                                                    .setModuleBootPath(e.getKey().moduleBootPath)
+                                                    .setModuleCompilePath(e.getKey().moduleCompilePath)
+                                                    .setModuleClassPath(e.getKey().moduleClassPath)
+                                                    .build();
+            result.put(cpInfo, e.getValue());
         }
         
         return result;
@@ -440,12 +449,20 @@ public class BatchUtilities {
         private final ClassPath boot;
         private final ClassPath compile;
         private final ClassPath source;
+        private final ClassPath moduleSrcPath;
+        private final ClassPath moduleBootPath;
+        private final ClassPath moduleCompilePath;
+        private final ClassPath moduleClassPath;
         private final FileObject sourceRoot;
 
         public CPCategorizer(FileObject file) {
             this.boot = getClassPath(file, ClassPath.BOOT);
             this.compile = getClassPath(file, ClassPath.COMPILE);
             this.source = getClassPath(file, ClassPath.SOURCE);
+            this.moduleSrcPath = getClassPath(file, JavaClassPathConstants.MODULE_SOURCE_PATH);
+            this.moduleBootPath = getClassPath(file, JavaClassPathConstants.MODULE_BOOT_PATH);
+            this.moduleCompilePath = getClassPath(file, JavaClassPathConstants.MODULE_COMPILE_PATH);
+            this.moduleClassPath = getClassPath(file, JavaClassPathConstants.MODULE_CLASS_PATH);
             this.sourceRoot = source != null ? source.findOwnerRoot(file) : null;
             
             StringBuilder cps = new StringBuilder();
@@ -453,6 +470,10 @@ public class BatchUtilities {
             if (boot != null) cps.append(boot.toString(PathConversionMode.PRINT));
             if (compile != null) cps.append(compile.toString(PathConversionMode.PRINT));
             if (source != null) cps.append(source.toString(PathConversionMode.PRINT));
+            if (moduleSrcPath != null) cps.append(moduleSrcPath.toString(PathConversionMode.PRINT));
+            if (moduleBootPath != null) cps.append(moduleBootPath.toString(PathConversionMode.PRINT));
+            if (moduleCompilePath != null) cps.append(moduleCompilePath.toString(PathConversionMode.PRINT));
+            if (moduleClassPath != null) cps.append(moduleClassPath.toString(PathConversionMode.PRINT));
             
             this.cps = cps.toString();
         }

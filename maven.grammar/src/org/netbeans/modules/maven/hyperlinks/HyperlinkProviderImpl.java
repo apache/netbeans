@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.maven.hyperlinks;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -26,8 +27,10 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.Document;
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.InputLocation;
 import org.apache.maven.model.InputSource;
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.editor.mimelookup.MimeRegistrations;
@@ -46,6 +49,8 @@ import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.ModelUtils;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.PluginPropertyUtils;
+import org.netbeans.modules.maven.embedder.EmbedderFactory;
+import org.netbeans.modules.maven.embedder.MavenEmbedder;
 import org.netbeans.modules.maven.grammar.POMDataObject;
 import org.openide.awt.HtmlBrowser;
 import org.openide.cookies.EditCookie;
@@ -57,6 +62,7 @@ import org.openide.text.Line;
 import org.openide.util.NbBundle.Messages;
 import static org.netbeans.modules.maven.hyperlinks.Bundle.*;
 import org.netbeans.modules.maven.spi.nodes.NodeUtils;
+import org.openide.filesystems.FileUtil;
 
 /**
  * adds hyperlinking support to pom.xml files..
@@ -68,300 +74,56 @@ import org.netbeans.modules.maven.spi.nodes.NodeUtils;
 })
 public class HyperlinkProviderImpl implements HyperlinkProviderExt {
     private static final Logger LOG = Logger.getLogger(HyperlinkProviderImpl.class.getName());
-    
+
     @Override
     public boolean isHyperlinkPoint(final Document doc, final int offset, HyperlinkType type) {
-        final boolean[] isText = new boolean[1];
-        final int[] ftokenOff = new int[1];
-        final String[] ftext = new String[1];
-        doc.render(new Runnable() {
-
-            @Override
-            public void run() {
-                isText[0] = false;
-                TokenHierarchy th = TokenHierarchy.get(doc);
-                TokenSequence<XMLTokenId> xml = th.tokenSequence(XMLTokenId.language());
-                xml.move(offset);
-                xml.moveNext();
-                Token<XMLTokenId> token = xml.token();
-
-                // when it's not a value -> do nothing.
-                if (token == null) {
-                   
-                    return;
-                }
-                if (token.id() == XMLTokenId.TEXT) {
-                    isText[0] = true;
-                    ftokenOff[0] = xml.offset();
-                    ftext[0] = token.text().toString();
-                }
-            }
-        });
-           
-        if (isText[0]) {
-            //we are in element text
-            FileObject fo = getProjectDir(doc);
-            String text = ftext[0];
-            int tokenOff = ftokenOff[0];
-            if (fo != null && getPath(fo, text) != null) {
-                return true;
-            }
-            // urls get opened..
-            if (text != null &&
-                    (text.startsWith("http://") || //NOI18N
-                    (text.startsWith("https://")))) { //NOI18N
-                return true;
-            }
-            if (text != null) {
-                int ff = offset - tokenOff;
-                if (ff > -1 && ff < text.length()) {
-                    String before = text.substring(0, ff);
-                    String after = text.substring(ff, text.length());
-                    int bo = before.lastIndexOf("${");//NOI18N
-                    int bc = before.lastIndexOf("}");//NOI18N
-                    int ao = after.indexOf("${");//NOI18N
-                    int ac = after.indexOf("}");//NOI18N
-                    if (bo > bc && ac > -1 && (ac < ao || ao == -1)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+        final PomHyperlinkInfo hyperLinkInfo = new PomHyperlinkInfo(doc, offset);
+        doc.render(new PomParserRunnable(hyperLinkInfo, doc, offset));
+        
+        return hyperLinkInfo.isHyperlinkPoint();
     }
-
+    
     @Override
     public int[] getHyperlinkSpan(final Document doc, final int offset, HyperlinkType type) {
-        final boolean[] isText = new boolean[1];
-        final int[] ftokenOff = new int[1];
-        final String[] ftext = new String[1];
+        final PomHyperlinkInfo hyperLinkInfo = new PomHyperlinkInfo(doc, offset);
+        doc.render(new PomParserRunnable(hyperLinkInfo, doc, offset));
         
-        doc.render(new Runnable() {
-
-            @Override
-            public void run() {
-                isText[0] = false;
-                TokenHierarchy th = TokenHierarchy.get(doc);
-                TokenSequence<XMLTokenId> xml = th.tokenSequence(XMLTokenId.language());
-                xml.move(offset);
-                xml.moveNext();
-                Token<XMLTokenId> token = xml.token();
-
-                // when it's not a value -> do nothing.
-                if (token == null) {
-                   
-                    return;
-                }
-                if (token.id() == XMLTokenId.TEXT) {
-                    isText[0] = true;
-                    ftokenOff[0] = xml.offset();
-                    ftext[0] = token.text().toString();
-                }
-            }
-        });
-               
-        if (isText[0]) {
-            //we are in element text
-            FileObject fo = getProjectDir(doc);
-            int tokenOff = ftokenOff[0];
-            String text = ftext[0];
-            if (fo != null && getPath(fo, text) != null) {
-                return new int[] { tokenOff, tokenOff + text.length() };
-            }
-            // urls get opened..
-            if (text != null &&
-                    (text.startsWith("http://") || //NOI18N
-                    (text.startsWith("https://")))) { //NOI18N
-                return new int[] { tokenOff, tokenOff + text.length() };
-            }
-            if (text != null) {
-                Tuple prop = findProperty(text, tokenOff, offset);
-                if (prop != null) {
-                    return new int[] { prop.spanStart, prop.spanEnd};
-                }
-            }            
-        }
-        return null;
+        return hyperLinkInfo.getHyperLinkSpan();
     }
 
     @Override
     public void performClickAction(final Document doc, final int offset, HyperlinkType type) {
-        final boolean[] isText = new boolean[1];
-        final int[] ftokenOff = new int[1];
-        final String[] ftext = new String[1];
-        final FileObject fo = getProjectDir(doc);
-        doc.render(new Runnable() {
-
-            @Override
-            public void run() {
-                isText[0] = false;
-                TokenHierarchy th = TokenHierarchy.get(doc);
-                TokenSequence<XMLTokenId> xml = th.tokenSequence(XMLTokenId.language());
-                xml.move(offset);
-                xml.moveNext();
-                Token<XMLTokenId> token = xml.token();
-
-                // when it's not a value -> do nothing.
-                if (token == null) {
-                   
-                    return;
-                }
-                if (token.id() == XMLTokenId.TEXT) {
-                    isText[0] = true;
-                    ftokenOff[0] = xml.offset();
-                    ftext[0] = token.text().toString();
-                    if (fo != null && getPath(fo, ftext[0]) != null) {
-                        xml.movePrevious();
-                        token = xml.token();
-                        if (token != null && token.id().equals(XMLTokenId.TAG) && TokenUtilities.equals(token.text(), ">")) {//NOI18N
-                            xml.movePrevious();
-                            token = xml.token();
-                            if (token != null && token.id().equals(XMLTokenId.TAG) && TokenUtilities.equals(token.text(), "<module")) {//NOI18N
-                                if (!ftext[0].endsWith("/pom.xml")) {
-                                    ftext[0] = ftext[0] + "/pom.xml"; //NOI18N
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        if (isText[0]) {
-            //we are in element text
-            int tokenOff = ftokenOff[0];
-            String text = ftext[0];
-            
-            if (fo != null && getPath(fo, text) != null) {
-                FileObject file = getPath(fo, text);
-                NodeUtils.openPomFile(file);
-            }
-            // urls get opened..
-            if (text != null &&
-                    (text.startsWith("http://") || //NOI18N
-                    (text.startsWith("https://")))) { //NOI18N
-                try {
-                    String urlText = text;
-                    if (urlText.contains("${")) {//NOI18N
-                        //special case, need to evaluate expression
-                        Project nbprj = getProject(doc);
-                        if (nbprj != null) {
-                            Object exRes;
-                            try {
-                                exRes = PluginPropertyUtils.createEvaluator(nbprj).evaluate(urlText);
-                                if (exRes != null) {
-                                    urlText = exRes.toString();
-                                }
-                            } catch (ExpressionEvaluationException ex) {
-                                //just ignore
-                                LOG.log(Level.FINE, "Expression evaluation failed", ex);
-                            }
-
-                        }
-                    }
-                    URL url = new URL(urlText);
-                    HtmlBrowser.URLDisplayer.getDefault().showURL(url);
-                } catch (MalformedURLException ex) {
-                    LOG.log(Level.FINE, "malformed url for hyperlink", ex);
-                }
-            }
-            else if (text != null) {
-                Tuple tup = findProperty(text, tokenOff, offset);
-                if (tup != null) {
-                    String prop = tup.value.substring("${".length(), tup.value.length() - 1); //remove the brackets//NOI18N
-                    NbMavenProject nbprj = getNbMavenProject(doc);
-                    if (nbprj != null) {
-                        if (prop != null && (prop.startsWith("project.") || prop.startsWith("pom."))) {//NOI18N
-                            String val = prop.substring(prop.indexOf('.') + 1, prop.length());//NOI18N
-                            //TODO eventually we want to process everything through an evaluation engine..
-                            InputLocation iloc = nbprj.getMavenProject().getModel().getLocation(val);
-                            if (iloc != null) {
-                                ModelUtils.openAtSource(iloc);
-                                return;
-                            }
-                        }
-                        InputLocation propLoc = nbprj.getMavenProject().getModel().getLocation("properties");
-                        if (propLoc != null) { //#212984
-                            InputLocation location = propLoc.getLocation(prop);
-                            if (location != null) {
-                                ModelUtils.openAtSource(location);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        final PomHyperlinkInfo hyperLinkInfo = new PomHyperlinkInfo(doc, offset);
+        doc.render(new PomParserRunnable(hyperLinkInfo, doc, offset));
+        
+        hyperLinkInfo.performClickAction();
     }
-    
+
     @Override
     public Set<HyperlinkType> getSupportedHyperlinkTypes() {
         return Collections.singleton(HyperlinkType.GO_TO_DECLARATION);
     }
 
-
     @Override
     @Messages({
         "# {0} - property name",
-        "# {1} - resolved value", 
-        "Hint_prop_resolution={0} resolves to ''{1}''\nNavigate to definition.", 
+        "# {1} - resolved value",
+        "Hint_prop_resolution={0} resolves to ''{1}''\nNavigate to definition.",
         "Hint_prop_cannot=Cannot resolve expression\nNavigates to definition."})
     public String getTooltipText(final Document doc, final int offset, HyperlinkType type) {
-
-        final boolean[] isText = new boolean[1];
-        final int[] ftokenOff = new int[1];
-        final String[] ftext = new String[1];
+        final PomHyperlinkInfo hyperLinkInfo = new PomHyperlinkInfo(doc, offset);
+        doc.render(new PomParserRunnable(hyperLinkInfo, doc, offset));
+        String[] tooltip = hyperLinkInfo.getTooltipText();
         
-        doc.render(new Runnable() {
-
-            @Override
-            public void run() {
-                isText[0] = false;
-                TokenHierarchy th = TokenHierarchy.get(doc);
-                TokenSequence<XMLTokenId> xml = th.tokenSequence(XMLTokenId.language());
-                xml.move(offset);
-                xml.moveNext();
-                Token<XMLTokenId> token = xml.token();
-
-                // when it's not a value -> do nothing.
-                if (token == null) {
-                   
-                    return;
-                }
-                if (token.id() == XMLTokenId.TEXT) {
-                    isText[0] = true;
-                    ftokenOff[0] = xml.offset();
-                    ftext[0] = token.text().toString();
-                }
-            }
-        });
- 
-        if (isText[0]) {
-            //we are in element text
-            String text = ftext[0];
-            int tokenOff = ftokenOff[0];
-            Tuple tup = findProperty(text, tokenOff, offset);
-
-            if (tup != null) {
-               String prop = tup.value.substring("${".length(), tup.value.length() - 1); //remove the brackets
-                try {
-                    Project nbprj = getProject(doc);
-                    if (nbprj != null) {
-                        Object exRes = PluginPropertyUtils.createEvaluator(nbprj).evaluate(tup.value);
-                        if (exRes != null) {
-                            return Hint_prop_resolution(prop, exRes);
-                        } else {
-                        }
-                    } else {
-                        //pom file in repository or settings file.
-                    }
-                } catch (ExpressionEvaluationException ex) {
-                    return Hint_prop_cannot();
-                }
-            }  
+        if (tooltip == null) {
+            return Hint_prop_cannot();
+        } else if (tooltip.length == 2){
+            return Hint_prop_resolution(tooltip[0],tooltip[1]);
+        } else {
+            return tooltip[0];
         }
-        return null;
     }
-    
+
     public static void openAtSource(InputLocation location) {
         InputSource source = location.getSource();
         if (source != null && source.getLocation() != null) {
@@ -389,10 +151,10 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         public Tuple(String val, int start, int end) {
             this.value = val;
             this.spanStart = start;
-            this.spanEnd = end; 
+            this.spanEnd = end;
         }
-    } 
-    
+    }
+
     
     private Tuple findProperty(String textToken, int tokenOffset, int currentOffset) {
         if (textToken == null) {
@@ -410,15 +172,15 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             if (bo > bc && ac > -1 && (ac < ao || ao == -1)) { //case where currentOffset is on property
                 return new Tuple(textToken.substring(bo, before.length() + ac + 1), tokenOffset + bo, tokenOffset + ff + ac + 1);
             }
-         
+
             if (before.length() == 0 && ao == 0 && ac > 0) { //case where currentOffset is at beginning
                 return new Tuple(textToken.substring(0, ac + 1), tokenOffset, tokenOffset +  ac + 1);
             }
-            
+
         }
         return null;
     }
-    
+
     private FileObject getProjectDir(Document doc) {
         DataObject dObject = NbEditorUtilities.getDataObject(doc);
         if (dObject != null) {
@@ -426,7 +188,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         }
         return null;
     }
-    
+
     private NbMavenProject getNbMavenProject(Document doc) {
         Project prj = getProject(doc);
         if (prj != null) {
@@ -453,5 +215,331 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         }
         return parent.getFileObject(path);
     }
+    
+    private class PomParserRunnable implements Runnable {
 
+        private final PomHyperlinkInfo hyperLinkInfo;
+        private final Document document;
+        private final int offset;
+
+        public PomParserRunnable(PomHyperlinkInfo hyperLinkInfo, Document document, int offset) {
+            this.hyperLinkInfo = hyperLinkInfo;
+            this.document = document;
+            this.offset = offset;
+        }
+        
+        @Override
+        public void run() {
+            TokenHierarchy th = TokenHierarchy.get(document);
+            TokenSequence<XMLTokenId> xml = th.tokenSequence(XMLTokenId.language());
+            xml.move(offset);
+            xml.moveNext();
+            Token<XMLTokenId> token = xml.token();
+
+            // when it's not a value -> do nothing.
+            if (token == null) {
+                return;
+            }
+
+            if (token.id() == XMLTokenId.TEXT) {
+                hyperLinkInfo.calculateInfo(token, xml);
+            }
+        }   
+    }
+
+    private class PomHyperlinkInfo {
+        final Document doc;
+        final int documentOffset;
+        final FileObject projectFileObject;
+        boolean isText;
+        int ftokenOff;
+        String ftext;
+        
+        String artifactId;
+        String groupId;
+        String version;
+        String type;
+
+        public PomHyperlinkInfo(Document doc, int documentOffset) {
+            this.doc = doc;
+            this.documentOffset = documentOffset;
+            this.projectFileObject = getProjectDir(doc);
+        }
+        
+        boolean isHyperlinkUrl() {
+            return ftext != null &&
+                   (ftext.startsWith("http://") || //NOI18N
+                   ftext.startsWith("https://")); //NOI18N;
+        }
+        
+        private boolean isFileSystemLink() {
+            FileObject fo = getProjectDir(doc);
+            return (fo != null && ftext != null) && getPath(fo, ftext) != null;
+        }
+        
+        boolean isMavenProperty() {
+            if (ftext != null) {
+                int ff = documentOffset - ftokenOff;
+                if (ff > -1 && ff < ftext.length()) {
+                    String before = ftext.substring(0, ff);
+                    String after = ftext.substring(ff, ftext.length());
+                    int bo = before.lastIndexOf("${");//NOI18N
+                    int bc = before.lastIndexOf("}");//NOI18N
+                    int ao = after.indexOf("${");//NOI18N
+                    int ac = after.indexOf("}");//NOI18N
+                    if (bo > bc && ac > -1 && (ac < ao || ao == -1)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        
+        boolean isMavenDependency() {
+            return artifactId != null && groupId != null && version != null;
+        }
+        
+        boolean isHyperlinkPoint() {
+            return (isHyperlinkUrl() || isFileSystemLink() || isMavenProperty() || isMavenDependency());
+        }
+        
+        private void calculateInfo(Token<XMLTokenId> token, TokenSequence<XMLTokenId> xml) {
+            isText = token.id() == XMLTokenId.TEXT;
+            if (isText) {
+                ftokenOff = xml.offset();
+                ftext = token.text().toString();
+                
+                if (projectFileObject != null && getPath(projectFileObject, ftext) != null) {
+                    xml.movePrevious();
+                    token = xml.token();
+                    if (token != null && token.id().equals(XMLTokenId.TAG) && TokenUtilities.equals(token.text(), ">")) {//NOI18N
+                        xml.movePrevious();
+                        token = xml.token();
+                        if (token != null && token.id().equals(XMLTokenId.TAG)) {
+                            if (TokenUtilities.equals(token.text(), "<module")) {//NOI18N
+                                if (!ftext.endsWith("/pom.xml")) {
+                                    ftext += "/pom.xml"; //NOI18N
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    xml.movePrevious();
+                    token = xml.token();
+                    if (token != null && token.id().equals(XMLTokenId.TAG) && TokenUtilities.equals(token.text(), ">")) { //NOI18N
+                        xml.movePrevious();
+                        token = xml.token();
+                        if (TokenUtilities.equals(token.text(), "<artifactId") || //NOI18N
+                            TokenUtilities.equals(token.text(), "<groupId") || //NOI18N
+                            TokenUtilities.equals(token.text(), "<type") || //NOI18N
+                            (TokenUtilities.equals(token.text(), "<version") && !ftext.startsWith("${"))) { //NOI18N
+                            resetSequenceToDependencyTagToken(xml);
+                            if (TokenUtilities.equals(xml.token().text(), "<dependency")) {
+                                while(!TokenUtilities.equals(xml.token().text(), "</dependency")) { //NOI18N
+                                    xml.moveNext();
+                                    token = xml.token();
+                                    if (TokenUtilities.equals(token.text(), "<artifactId")) { //NOI18N
+                                        xml.moveNext();
+                                        xml.moveNext();
+                                        token = xml.token();
+                                        artifactId = token.text().toString();
+                                        xml.moveNext();
+                                    } else if (TokenUtilities.equals(token.text(), "<groupId")) { //NOI18N
+                                        xml.moveNext(); 
+                                        xml.moveNext();
+                                        token = xml.token();
+                                        groupId = token.text().toString();
+                                        xml.moveNext();
+                                    } else if (TokenUtilities.equals(token.text(), "<version")) { //NOI18N
+                                        xml.moveNext(); 
+                                        xml.moveNext();
+                                        token = xml.token();
+                                        if (token.text().toString().startsWith("${")) { //NOI18N
+                                            Project nbprj = getProject(doc);
+                                            try { 
+                                                version = (String)PluginPropertyUtils.createEvaluator(nbprj).evaluate(token.text().toString());
+                                            } catch (ExpressionEvaluationException eee) {
+                                                LOG.log(Level.INFO, "Unable to evaluate property: " + token.text().toString(), eee);
+                                            }
+                                        } else {
+                                            version = token.text().toString();
+                                        }
+                                        xml.moveNext();
+                                    } else if (TokenUtilities.equals(token.text(), "<type")) { //NOI18N
+                                        xml.moveNext();
+                                        xml.moveNext();
+                                        token = xml.token();
+                                        type = token.text().toString();
+                                        xml.moveNext();
+                                    }
+                                }
+                                // handle cases where the version element is covered in a 
+                                // parent pom/dependenciesManagement
+                                if (version == null) {
+                                    MavenProject mavenProject = getNbMavenProject(doc).getMavenProject();
+                                    for (Artifact artifact : mavenProject.getArtifacts()) {
+                                        if (artifact.getGroupId().equals(groupId) 
+                                                && artifact.getArtifactId().equals(artifactId)) {
+                                            version = artifact.getVersion();
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }     
+        }
+        
+        String[] getTooltipText() {
+            if (isText) {
+                //we are in element text
+                String text = ftext;
+                int tokenOff = ftokenOff;
+                if (isMavenProperty()){
+                    Tuple tup = findProperty(text, tokenOff, documentOffset);
+
+                    if (tup != null) {
+                        String prop = tup.value.substring("${".length(), tup.value.length() - 1); //remove the brackets
+                        try {
+                            Project nbprj = getProject(doc);
+                            if (nbprj != null) {
+                                Object exRes = PluginPropertyUtils.createEvaluator(nbprj).evaluate(tup.value);
+                                if (exRes != null) {
+                                    return new String[] {prop, (String)exRes};
+                                } 
+                            } else {
+                                //pom file in repository or settings file.
+                            }
+                        } catch (ExpressionEvaluationException ex) {
+                            return null;
+                        }
+                    }
+                } else if(isMavenDependency()) {
+                    return new String[] { getMavenArtifactAbsolutePomPath() };
+                }
+            }
+            return null;
+        }
+        
+        String getMavenArtifactAbsolutePomPath() {
+            if (!isMavenDependency()) {
+                return null;
+            } else {
+                MavenEmbedder embedder = EmbedderFactory.getProjectEmbedder();
+                Artifact mavenArtifact =  embedder.createArtifact(groupId, artifactId, version, type == null ? "jar" : type);
+                return embedder.getLocalRepository().find(mavenArtifact).getFile().getAbsolutePath().replace(".jar", ".pom");
+            }
+        }
+
+        private int[] getHyperLinkSpan() {
+            if (isText) {
+                //we are in element text
+                FileObject fo = getProjectDir(doc);
+                if (fo != null && getPath(fo, ftext) != null) {
+                    return new int[] { ftokenOff, ftokenOff + ftext.length() };
+                }
+                // urls get opened..
+                if (ftext != null &&
+                        (ftext.startsWith("http://") || //NOI18N
+                        (ftext.startsWith("https://")))) { //NOI18N
+                    return new int[] { ftokenOff, ftokenOff + ftext.length() };
+                }
+                if (ftext != null) {
+                    Tuple prop = findProperty(ftext, ftokenOff, documentOffset);
+                    if (prop != null) {
+                        return new int[] { prop.spanStart, prop.spanEnd};
+                    }
+                }
+                if (isMavenDependency()) {
+                    return new int[] { ftokenOff, ftokenOff + ftext.length() };
+                }
+            }
+            return null;
+        }
+
+        private void resetSequenceToDependencyTagToken(TokenSequence<XMLTokenId> tokenSequence) {
+            while(!TokenUtilities.equals("<dependency", tokenSequence.token().text()) &&
+                    !TokenUtilities.equals("<plugin", tokenSequence.token().text())) {
+                tokenSequence.movePrevious();
+                resetSequenceToDependencyTagToken(tokenSequence);
+            }
+        }
+
+        private void performClickAction() {
+            if (isText) {
+                //we are in element text
+                int tokenOff = ftokenOff;
+                String text = ftext;
+                if (isFileSystemLink()) {
+                    if (projectFileObject != null && getPath(projectFileObject, text) != null) {
+                        FileObject file = getPath(projectFileObject, text);
+                        NodeUtils.openPomFile(file);
+                    }
+                } else if (isHyperlinkUrl()) {
+                    // urls get opened..
+                    if (text != null &&
+                            (text.startsWith("http://") || //NOI18N
+                            (text.startsWith("https://")))) { //NOI18N
+                        try {
+                            String urlText = text;
+                            if (urlText.contains("${")) {//NOI18N
+                                //special case, need to evaluate expression
+                                Project nbprj = getProject(doc);
+                                if (nbprj != null) {
+                                    Object exRes;
+                                    try {
+                                        exRes = PluginPropertyUtils.createEvaluator(nbprj).evaluate(urlText);
+                                        if (exRes != null) {
+                                            urlText = exRes.toString();
+                                        }
+                                    } catch (ExpressionEvaluationException ex) {
+                                        //just ignore
+                                        LOG.log(Level.FINE, "Expression evaluation failed", ex);
+                                    }
+
+                                }
+                            }
+                            URL url = new URL(urlText);
+                            HtmlBrowser.URLDisplayer.getDefault().showURL(url);
+                        } catch (MalformedURLException ex) {
+                            LOG.log(Level.FINE, "malformed url for hyperlink", ex);
+                        }
+                    }
+                } else if (isMavenProperty()) {
+                    Tuple tup = findProperty(text, tokenOff, documentOffset);
+                    if (tup != null) {
+                        String prop = tup.value.substring("${".length(), tup.value.length() - 1); //remove the brackets//NOI18N
+                        NbMavenProject nbprj = getNbMavenProject(doc);
+                        if (nbprj != null) {
+                            if (prop != null && (prop.startsWith("project.") || prop.startsWith("pom."))) {//NOI18N
+                                String val = prop.substring(prop.indexOf('.') + 1, prop.length());//NOI18N
+                                //TODO eventually we want to process everything through an evaluation engine..
+                                InputLocation iloc = nbprj.getMavenProject().getModel().getLocation(val);
+                                if (iloc != null) {
+                                    ModelUtils.openAtSource(iloc);
+                                    return;
+                                }
+                            }
+                            InputLocation propLoc = nbprj.getMavenProject().getModel().getLocation("properties");
+                            if (propLoc != null) { //#212984
+                                InputLocation location = propLoc.getLocation(prop);
+                                if (location != null) {
+                                    ModelUtils.openAtSource(location);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (isMavenDependency()) { 
+                    File pomFile = new File(getMavenArtifactAbsolutePomPath());
+                    FileObject fileToOpen = FileUtil.toFileObject(pomFile);
+                    if (fileToOpen != null) {
+                        NodeUtils.openPomFile(fileToOpen);
+                    }
+                }
+            }
+        }
+    }
 }

@@ -1069,7 +1069,9 @@ public class Utilities {
                     }
                 }
             }
-            final ClasspathInfo result = ClasspathInfo.create(select.getBootstrapLibraries(), ClassPath.EMPTY, ClassPath.EMPTY);
+            final ClasspathInfo result = new ClasspathInfo.Builder(select.getBootstrapLibraries())
+                                                          .setModuleBootPath(select.getBootstrapLibraries())
+                                                          .build();
             if (cached != null) {
                     this.cached = new WeakReference<>(result);
             }

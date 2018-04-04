@@ -28,6 +28,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -73,6 +74,7 @@ import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.impl.ToolbarActionsProvider;
 import org.netbeans.modules.editor.lib2.EditorPreferencesDefaults;
 import org.netbeans.modules.editor.lib2.actions.EditorActionUtilities;
+import org.openide.awt.DynamicMenuContent;
 import org.openide.awt.ToolbarWithOverflow;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileChangeListener;
@@ -399,6 +401,63 @@ import org.openide.util.lookup.ProxyLookup;
 	return (JTextComponent)componentRef.get();
     }
     
+    private ToolbarItemHider hider;
+    
+    void attachHidingComponent(Component c) {
+        if (hider == null) {
+            hider = new ToolbarItemHider();
+        }
+        c.addPropertyChangeListener("enabled", hider); // NOI18N
+    }
+    
+    private class ToolbarItemHider implements PropertyChangeListener {
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if ("enabled".equals(evt.getPropertyName())) { // NOI18N
+                hideShowPresenter((JComponent)evt.getSource());
+            }
+        }
+    }
+    
+    private void hideShowPresenter(JComponent jc) {
+        boolean vis = jc.isEnabled();
+        jc.setVisible(vis);
+        // check surroundings and hide possible adjacent separators
+        Component[] comps = getComponents();
+        int idx = getComponentIndex(jc);
+        if (idx == -1) {
+            return;
+        }
+        int sepBefore;
+        for (sepBefore = idx - 1; sepBefore >= 0; sepBefore--) {
+            Component c = comps[sepBefore];
+            if (c.isVisible()) {
+                if (!(c instanceof JSeparator)) {
+                    break;
+                }
+            }
+        }
+        int sepAfter;
+        final int l = comps.length;
+        for (sepAfter = idx + 1; sepAfter < l; sepAfter++) {
+            Component c = comps[sepAfter];
+            if (c.isVisible()) {
+                if (!(c instanceof JSeparator)) {
+                    break;
+                }
+            }
+        }
+        boolean first = sepBefore >= 0;
+        // hide all JSeparators except one between sepBefore + 1 and sepAfter - 1
+        for (int i = sepBefore + 1; i < sepAfter; i++) {
+            Component c = comps[i];
+            if (c instanceof JSeparator) {
+                c.setVisible(first);
+                first = false;
+            }
+        }
+    }
+    
     /** Add the presenters (usually buttons) for the contents of the toolbar
      * contained in the base and mime folders.
      * @param baseFolder folder that corresponds to "text/base"
@@ -428,6 +487,7 @@ import org.openide.util.lookup.ProxyLookup;
             items.add(new JSeparator());
             items.addAll(oldTextBaseItems);
         }
+        List<JComponent>    processHiding = new ArrayList<>();
         
         for(Object item : items) {
             LOG.log(Level.FINE, "Adding item {0}", item); //NOI18N
@@ -473,6 +533,8 @@ import org.openide.util.lookup.ProxyLookup;
                 }
             }
             
+            Action ai = item instanceof Action ? (Action)item : null;
+            
             if (item instanceof Presenter.Toolbar) {
                 Component presenter = ((Presenter.Toolbar) item).getToolbarPresenter();
                 if (presenter != null) {
@@ -486,6 +548,9 @@ import org.openide.util.lookup.ProxyLookup;
                     item = presenter;
                 }
             }
+            
+            boolean hideWhenDisabled = ai != null && (ai.getValue(DynamicMenuContent.HIDE_WHEN_DISABLED) == Boolean.TRUE) &&
+                        !ai.isEnabled();
             
             if (item instanceof Component) {
                 add((Component)item);
@@ -514,7 +579,13 @@ import org.openide.util.lookup.ProxyLookup;
                 }
                 continue;
             }
-
+            if (hideWhenDisabled) {
+                JComponent jc = (JComponent)item;
+                attachHidingComponent(jc);
+                if (!jc.isEnabled()) {
+                    processHiding.add(jc);
+                }
+            }
             if (item instanceof AbstractButton) {
                 AbstractButton button = (AbstractButton)item;
                 processButton(button);
@@ -528,6 +599,9 @@ import org.openide.util.lookup.ProxyLookup;
                     LOG.log(Level.FINE, "Special treatment for button {0}", s2s(item)); //NOI18N
                 }
             }
+        }
+        for (JComponent jc : processHiding) {
+            hideShowPresenter(jc);
         }
     }
     

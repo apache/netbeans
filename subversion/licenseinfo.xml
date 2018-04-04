@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/subversion/resources/icons/annotate24.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/diff24.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/update.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/conflict-resolve.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/commit24.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/refresh.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/diff-next.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/update24.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/onefolder.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/modified-badge.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/show_changes24.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/get_clean24.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/versioning-view.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/twofolders.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/load_template.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/diff.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/local_vs_local.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/get_clean.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/reintegrate.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/error.gif</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/properties24.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/commit.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/search_history.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/info.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/remote_vs_local.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/conflict-resolve24.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/warning.gif</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/conflicts-badge.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/ending_revision.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/properties.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/starting_revision.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/recent_messages.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/sinceorigin.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/show_changes.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/search_history24.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/diff-prev.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/remote_vs_remote.png</file>
+        <file>src/org/netbeans/modules/subversion/resources/icons/annotate.png</file>
+        <file>src/org/netbeans/modules/subversion/ui/browser/wait.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

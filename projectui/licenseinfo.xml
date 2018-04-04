@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/project/ui/resources/runSingle24.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/setMainProject.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/runProject.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/rerun.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/newProject.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/filesTab.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/openProject.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/rebuildCurrentProject.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/cleanCurrentProject.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/runCurrentProject.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/buildCurrentProject24.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/close.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/projectsRootNode.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/javadocProject.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/testSingle24.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/buildProject.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/buildCurrentProject.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/brokenProjectBadge.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/testSingle.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/closeProject.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/empty.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/runCurrentProject24.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/stop.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/cleanProject24.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/cleanProject.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/rebuildCurrentProject24.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/newFile24.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/broken-reference.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/newProject24.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/testProject.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/wait.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/cleanCurrentProject24.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/testProject24.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/rebuildProject.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/newFile.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/compileSingle.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/buildProject24.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/compileSingle24.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/resolved-reference.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/mainProjectBadge.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/rebuildProject24.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/stopBuild.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/openProject24.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/runProject24.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/runSingle.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/debugFix.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/testDebugSingle.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/projectTab.png</file>
+        <file>src/org/netbeans/modules/project/ui/resources/customizeProject.gif</file>
+        <file>src/org/netbeans/modules/project/ui/resources/open.gif</file>
+        <file>test/unit/src/org/netbeans/modules/project/ui/resources/icon-2.png</file>
+        <file>test/unit/src/org/netbeans/modules/project/ui/resources/icon-3.png</file>
+        <file>test/unit/src/org/netbeans/modules/project/ui/resources/icon-1.png</file>
+        <file>test/unit/src/org/netbeans/modules/project/ui/api/testimage.png</file>
+        <file>test/unit/src/org/netbeans/modules/project/ui/module.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

@@ -30,24 +30,24 @@
         <file>src/org/netbeans/modules/j2ee/persistence/dd/resources/orm_2_0.xsd</file>
         <file>src/org/netbeans/modules/j2ee/persistence/dd/resources/persistence_2_0.xsd</file>
         <license ref="EDL-1.0">
-Copyright (c) 2008, 2009 Sun Microsystems. All rights reserved.
+            Copyright (c) 2008, 2009 Sun Microsystems. All rights reserved.
 
-Contributors:
-Linda DeMichiel - Java Persistence 2.0, Version 2.0 (October 1, 2009)
-Specification available from http://jcp.org/en/jsr/detail?id=317
-</license>
+            Contributors:
+            Linda DeMichiel - Java Persistence 2.0, Version 2.0 (October 1, 2009)
+            Specification available from http://jcp.org/en/jsr/detail?id=317
+        </license>
         <comment type="CATEGORY_B">Used for XML Validation and code completion at runtime.</comment>
     </fileset>
     <fileset>
         <file>src/org/netbeans/modules/j2ee/persistence/dd/resources/orm_2_1.xsd</file>
         <file>src/org/netbeans/modules/j2ee/persistence/dd/resources/persistence_2_1.xsd</file>
         <license ref="EDL-1.0">
-Copyright (c) 2008  - 2013 Oracle Corporation. All rights reserved. 
+            Copyright (c) 2008  - 2013 Oracle Corporation. All rights reserved. 
 
-Contributors:
-Linda DeMichiel - Java Persistence 2.1, Version 2.1 (February 4, 2013)
-Specification available from http://jcp.org/en/jsr/detail?id=338
-</license>
+            Contributors:
+            Linda DeMichiel - Java Persistence 2.1, Version 2.1 (February 4, 2013)
+            Specification available from http://jcp.org/en/jsr/detail?id=338
+        </license>
         <comment type="CATEGORY_B">Used for XML Validation and code completion at runtime.</comment>
     </fileset>
     <fileset>
@@ -60,5 +60,22 @@ Specification available from http://jcp.org/en/jsr/detail?id=338
         <file>src/org/netbeans/modules/j2ee/persistence/wizard/jpacontroller/resources/RollbackFailureException.java.txt</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="TEMPLATE_MINIMAL_IP" />
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/j2ee/persistence/jpqleditor/ui/resources/run_jpql_query_16.png</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/jpqleditor/ui/resources/queryEditor16X16.png</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/dd/resources/persistenceCatalog.gif</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/resources/hibernate-mapping.png</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/unit/PersistenceIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/ui/resources/EntityNodeIcon.gif</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/ui/resources/connection.gif</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/ui/resources/PersistenceBadge.png</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/ui/resources/connectionDisconnected.gif</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/ui/resources/warning.gif</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/editor/completion/resources/column.gif</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/editor/completion/resources/connectionDisconnected.gif</file>
+        <file>src/org/netbeans/modules/j2ee/persistence/editor/completion/resources/table.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
 </licenseinfo>

@@ -41,4 +41,9 @@ The files are used in the GUI to represent the browsers and so need
 to be close to the original artwork of their icons.
         </comment>
     </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/css/resources/style_sheet_16.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
 </licenseinfo>

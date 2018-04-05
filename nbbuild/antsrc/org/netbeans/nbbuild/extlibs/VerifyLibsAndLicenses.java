@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -358,8 +359,21 @@ public class VerifyLibsAndLicenses extends Task {
                 if (files != null) {
                     for (String file : files.split("[, ]+")) {
                         referencedBinaries.add(file);
+                        String nested = null;
+                        if (file.contains("!/")) {
+                            final int nestedStart = file.indexOf("!/");
+                            nested = file.substring(nestedStart + 2);
+                            file = file.substring(0, nestedStart);
+                        }
                         if (!hgFiles.contains(file)) {
                             msg.append("\n" + path + " mentions a nonexistent binary in Files: " + file);
+                        } else if (nested != null) {
+                            try (JarFile jf = new JarFile(new File(d, file))) {
+                                ZipEntry e = jf.getEntry(nested);
+                                if (e == null) {
+                                    msg.append("\n" + path + " mentions a nonexistent nested binary in Files: " + nested + "; enclosing jar: " + file);
+                                }
+                            }
                         }
                     }
                 } else {

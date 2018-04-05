@@ -222,6 +222,10 @@ public class Tiny {
         Tree.Kind parentKind = ctx.getPath().getParentPath().getLeaf().getKind();
 
         if (parentKind != Tree.Kind.BLOCK && parentKind != Tree.Kind.CASE) return null;
+        
+        if(ctx.getInfo().getTreeUtilities().isVarType(ctx.getPath())){
+            return null; // hints discarded for var keyword
+        }      
 
         String displayName = NbBundle.getMessage(Tiny.class, "ERR_splitDeclaration");
         Fix fix = new FixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix();

@@ -1005,7 +1005,7 @@ public class JavacParser extends Parser {
                     LOGGER.log(warnLevel,
                                "Even though the source level of {0} is set to: {1}, java.util.zip.CRC32C cannot be found on the system module path: {2}\n" +   //NOI18N
                                "Changing source level to 1.8",  //NOI18N
-                               new Object[]{srcClassPath, sourceLevel, bootClassPath}); //NOI18N
+                               new Object[]{srcClassPath, sourceLevel, moduleBoot}); //NOI18N
                     return SourceLevelUtils.JDK1_8;
                 }
                 return source;

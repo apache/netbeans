@@ -42,6 +42,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic.Kind;
@@ -264,7 +265,12 @@ public final class LayerBuilder {
                 if (!originatingElement.getModifiers().contains(Modifier.STATIC)) {
                     throw new LayerGenerationException(clazz + "." + method + " must be static", originatingElement, processingEnv, annotation, annotationMethod);
                 }
-                if (!((ExecutableElement) originatingElement).getParameters().isEmpty()) {
+                List<? extends VariableElement> params = ((ExecutableElement) originatingElement).getParameters();
+                TypeMirror utilMapType = processingEnv.getTypeUtils().getDeclaredType(
+                        processingEnv.getElementUtils().getTypeElement("java.util.Map"));
+                boolean mapParam = (params.size() == 1 && processingEnv.getTypeUtils().isAssignable(
+                        params.get(0).asType(), utilMapType));
+                if (!params.isEmpty() && !mapParam) {
                     throw new LayerGenerationException(clazz + "." + method + " must not take arguments", originatingElement, processingEnv, annotation, annotationMethod);
                 }
                 if (typeMirror != null && !processingEnv.getTypeUtils().isAssignable(((ExecutableElement) originatingElement).getReturnType(), typeMirror)) {

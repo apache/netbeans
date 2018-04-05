@@ -49,9 +49,9 @@
    
     <target name="jar-jnlp-launcher" depends="compile-jnlp-launcher">
         <mkdir dir="${cluster}/jnlp/"/>
-        <jar jarfile="${cluster}/jnlp/jnlp-launcher.jar" compress="false" manifest="jnlp-manifest.mf" >
+        <nb-ext-jar jarfile="${cluster}/jnlp/jnlp-launcher.jar" compress="false" manifest="jnlp-manifest.mf" >
             <fileset dir="${build.dir}/jnlp-launcher-classes"/>
-        </jar>
+        </nb-ext-jar>
     </target>
 
     <target name="netbeans-extra" depends="nbantext,jar-jnlp-launcher"/>

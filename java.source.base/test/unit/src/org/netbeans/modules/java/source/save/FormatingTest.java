@@ -4431,6 +4431,32 @@ public class FormatingTest extends NbTestCase {
         reformat(doc, content, golden);
     }
 
+    public void testForNoCondition() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie)testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        for (;;);\n"
+                + "    }\n"
+                + "}\n";
+
+        String golden =
+                "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public static void main(String[] args) {\n"
+                + "        for (;;);\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+    }
+
     private void reformat(Document doc, String content, String golden) throws Exception {
         reformat(doc, content, golden, 0, content.length());
     }

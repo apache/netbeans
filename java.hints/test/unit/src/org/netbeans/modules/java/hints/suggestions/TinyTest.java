@@ -268,6 +268,86 @@ public class TinyTest extends NbTestCase {
                               "}\n");
     }
 
+    public void testSplitDeclarationForVar1() throws Exception {
+        HintTest
+                .create()
+                .setCaretMarker('|')
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    void m1(){\n" +
+                       "        var v =| 10; \n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("1.10")
+                .run(Tiny.class)
+                .assertNotContainsWarnings("ERR_splitDeclaration");
+    }
+    
+    public void testSplitDeclarationForVar2() throws Exception {
+        HintTest
+                .create()
+                .setCaretMarker('|')
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    void m1(){\n" +
+                       "        final var i =| 10; \n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("1.10")
+                .run(Tiny.class)
+                .assertNotContainsWarnings("ERR_splitDeclaration");
+    }
+    
+    public void testSplitDeclarationForVar3() throws Exception {
+        HintTest
+                .create()
+                .setCaretMarker('|')
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    void m1(){\n" +
+                       "        final/*comment*/var x =| 1.5; \n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("1.10")
+                .run(Tiny.class)
+                .assertNotContainsWarnings("ERR_splitDeclaration");
+    }
+    
+    public void testSplitDeclarationForVar4() throws Exception {
+        HintTest
+                .create()
+                .setCaretMarker('|')
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    void m1(){\n" +
+                       "        var/*comment*/y =| 100; \n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("1.10")
+                .run(Tiny.class)
+                .assertNotContainsWarnings("ERR_splitDeclaration");
+    }
+    
+    public void testSplitDeclarationForVar5() throws Exception {
+        HintTest
+                .create()
+                .setCaretMarker('|')
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    void m1(){\n" +
+                       "        Runnable r =| new Runnable(){ \n" +
+                       "        @Override \n" +
+                       "        public void run() { \n" +
+                       "        var v = 10; \n" +
+                       "        } \n" +
+                       "      }; \n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("1.10")
+                .run(Tiny.class)
+                .findWarning("3:20-3:20:hint:ERR_splitDeclaration");
+    }
+ 
     public void testFillSwitch1() throws Exception {
         HintTest
                 .create()

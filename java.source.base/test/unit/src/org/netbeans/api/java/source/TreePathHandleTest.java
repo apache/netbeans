@@ -66,8 +66,7 @@ public class TreePathHandleTest extends NbTestCase {
         FileObject buildRoot  = workFO.createFolder("build");
         FileObject cache = workFO.createFolder("cache");
         
-        SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, cache);
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, cache);        
     }
     
     private void writeIntoFile(FileObject file, String what) throws Exception {
@@ -428,12 +427,7 @@ public class TreePathHandleTest extends NbTestCase {
     }
 
     public void testVarInstanceMember() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_10"); //NOI18N
-        } catch (IllegalArgumentException ex) {
-            //no RELEASE_10, skip test:
-            return;
-        }
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         FileObject file = FileUtil.createData(sourceRoot, "test/Test.java"); //NOI18N
         String code = "package test; public class Test {var v;  \n public Test() {}}"; //NOI18N
 
@@ -446,13 +440,10 @@ public class TreePathHandleTest extends NbTestCase {
 
         TreePath tp = info.getTreeUtilities().pathFor(code.indexOf("var") + 1); //NOI18N
         VariableElement elem = (VariableElement) info.getTrees().getElement(tp);
-        try {
-            ClassFileUtil.createFieldDescriptor(elem);
-        } catch (IllegalArgumentException e) {
-            fail("IllegalArgumentException thrown"); //NOI18N
-        }
+        ClassFileUtil.createFieldDescriptor(elem);
         TreePathHandle handle = TreePathHandle.create(tp, info);
-        assertTrue(handle.getElementHandle() != null);        
+        assertNotNull(handle.getElementHandle());
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = false;
     }
 
     private static final class SecMan extends SecurityManager {

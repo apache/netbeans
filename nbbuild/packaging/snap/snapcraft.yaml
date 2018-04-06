@@ -39,6 +39,7 @@ parts:
         netbeans: [ netbeans/*, -netbeans/*.built ]
     install: |
         mv nbbuild/netbeans $SNAPCRAFT_PART_INSTALL/netbeans
+        # Make the default cache and data directory relative to Snap user directory
         sed -i 's/${HOME}\/.netbeans/${SNAP_USER_COMMON}\/data/' $SNAPCRAFT_PART_INSTALL/netbeans/bin/netbeans
         sed -i 's/${HOME}\/.cache\/netbeans/${SNAP_USER_COMMON}\/cache/' $SNAPCRAFT_PART_INSTALL/netbeans/bin/netbeans
     stage:

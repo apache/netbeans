@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.maven.hyperlinks;
 
 import java.io.File;
@@ -66,28 +65,31 @@ import org.openide.filesystems.FileUtil;
 
 /**
  * adds hyperlinking support to pom.xml files..
+ *
  * @author mkleint
  */
 @MimeRegistrations({
-    @MimeRegistration(mimeType=Constants.POM_MIME_TYPE, service=HyperlinkProviderExt.class, position = 1000),
-    @MimeRegistration(mimeType=POMDataObject.SETTINGS_MIME_TYPE, service=HyperlinkProviderExt.class, position = 1000)
+    @MimeRegistration(mimeType = Constants.POM_MIME_TYPE, service = HyperlinkProviderExt.class, position = 1000)
+    ,
+    @MimeRegistration(mimeType = POMDataObject.SETTINGS_MIME_TYPE, service = HyperlinkProviderExt.class, position = 1000)
 })
 public class HyperlinkProviderImpl implements HyperlinkProviderExt {
+
     private static final Logger LOG = Logger.getLogger(HyperlinkProviderImpl.class.getName());
 
     @Override
     public boolean isHyperlinkPoint(final Document doc, final int offset, HyperlinkType type) {
         final PomHyperlinkInfo hyperLinkInfo = new PomHyperlinkInfo(doc, offset);
         doc.render(new PomParserRunnable(hyperLinkInfo, doc, offset));
-        
+
         return hyperLinkInfo.isHyperlinkPoint();
     }
-    
+
     @Override
     public int[] getHyperlinkSpan(final Document doc, final int offset, HyperlinkType type) {
         final PomHyperlinkInfo hyperLinkInfo = new PomHyperlinkInfo(doc, offset);
         doc.render(new PomParserRunnable(hyperLinkInfo, doc, offset));
-        
+
         return hyperLinkInfo.getHyperLinkSpan();
     }
 
@@ -95,7 +97,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
     public void performClickAction(final Document doc, final int offset, HyperlinkType type) {
         final PomHyperlinkInfo hyperLinkInfo = new PomHyperlinkInfo(doc, offset);
         doc.render(new PomParserRunnable(hyperLinkInfo, doc, offset));
-        
+
         hyperLinkInfo.performClickAction();
     }
 
@@ -114,11 +116,11 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         final PomHyperlinkInfo hyperLinkInfo = new PomHyperlinkInfo(doc, offset);
         doc.render(new PomParserRunnable(hyperLinkInfo, doc, offset));
         String[] tooltip = hyperLinkInfo.getTooltipText();
-        
+
         if (tooltip == null) {
             return Hint_prop_cannot();
-        } else if (tooltip.length == 2){
-            return Hint_prop_resolution(tooltip[0],tooltip[1]);
+        } else if (tooltip.length == 2) {
+            return Hint_prop_resolution(tooltip[0], tooltip[1]);
         } else {
             return tooltip[0];
         }
@@ -143,11 +145,13 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             }
         }
     }
-    
+
     private static class Tuple {
+
         final int spanStart;
         final int spanEnd;
         final String value;
+
         public Tuple(String val, int start, int end) {
             this.value = val;
             this.spanStart = start;
@@ -155,7 +159,6 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         }
     }
 
-    
     private Tuple findProperty(String textToken, int tokenOffset, int currentOffset) {
         if (textToken == null) {
             return null;
@@ -174,7 +177,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             }
 
             if (before.length() == 0 && ao == 0 && ac > 0) { //case where currentOffset is at beginning
-                return new Tuple(textToken.substring(0, ac + 1), tokenOffset, tokenOffset +  ac + 1);
+                return new Tuple(textToken.substring(0, ac + 1), tokenOffset, tokenOffset + ac + 1);
             }
 
         }
@@ -204,6 +207,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         }
         return null;
     }
+
     private FileObject getPath(FileObject parent, String path) {
         // TODO more substitutions necessary probably..
         if (path.startsWith("${basedir}/")) { //NOI18N
@@ -215,7 +219,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         }
         return parent.getFileObject(path);
     }
-    
+
     private class PomParserRunnable implements Runnable {
 
         private final PomHyperlinkInfo hyperLinkInfo;
@@ -227,7 +231,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             this.document = document;
             this.offset = offset;
         }
-        
+
         @Override
         public void run() {
             TokenHierarchy th = TokenHierarchy.get(document);
@@ -244,17 +248,18 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             if (token.id() == XMLTokenId.TEXT) {
                 hyperLinkInfo.calculateInfo(token, xml);
             }
-        }   
+        }
     }
 
     private class PomHyperlinkInfo {
+
         final Document doc;
         final int documentOffset;
         final FileObject projectFileObject;
         boolean isText;
         int ftokenOff;
         String ftext;
-        
+
         String artifactId;
         String groupId;
         String version;
@@ -265,18 +270,22 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             this.documentOffset = documentOffset;
             this.projectFileObject = getProjectDir(doc);
         }
-        
+
         boolean isHyperlinkUrl() {
-            return ftext != null &&
-                   (ftext.startsWith("http://") || //NOI18N
-                   ftext.startsWith("https://")); //NOI18N;
+            return ftext != null
+                    && (ftext.startsWith("http://")
+                    || //NOI18N
+                    ftext.startsWith("https://")); //NOI18N;
         }
-        
-        private boolean isFileSystemLink() {
+
+        private FileObject getFileSystemLinkObject() {
             FileObject fo = getProjectDir(doc);
-            return (fo != null && ftext != null) && getPath(fo, ftext) != null;
+            if (fo != null && ftext != null) {
+                return getPath(fo, ftext) ;
+            }
+            return null;
         }
-        
+
         boolean isMavenProperty() {
             if (ftext != null) {
                 int ff = documentOffset - ftokenOff;
@@ -294,21 +303,21 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             }
             return false;
         }
-        
+
         boolean isMavenDependency() {
             return artifactId != null && groupId != null && version != null;
         }
-        
+
         boolean isHyperlinkPoint() {
-            return (isHyperlinkUrl() || isFileSystemLink() || isMavenProperty() || isMavenDependency());
+            return (isHyperlinkUrl() || getFileSystemLinkObject() != null|| isMavenProperty() || isMavenDependency());
         }
-        
+
         private void calculateInfo(Token<XMLTokenId> token, TokenSequence<XMLTokenId> xml) {
             isText = token.id() == XMLTokenId.TEXT;
             if (isText) {
                 ftokenOff = xml.offset();
                 ftext = token.text().toString();
-                
+
                 if (projectFileObject != null && getPath(projectFileObject, ftext) != null) {
                     xml.movePrevious();
                     token = xml.token();
@@ -328,57 +337,58 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
                     token = xml.token();
                     if (token != null && token.id().equals(XMLTokenId.TAG) && TokenUtilities.equals(token.text(), ">")) { //NOI18N
                         xml.movePrevious();
-                        token = xml.token();
-                        if (TokenUtilities.equals(token.text(), "<artifactId") || //NOI18N
-                            TokenUtilities.equals(token.text(), "<groupId") || //NOI18N
-                            TokenUtilities.equals(token.text(), "<type") || //NOI18N
-                            (TokenUtilities.equals(token.text(), "<version") && !ftext.startsWith("${"))) { //NOI18N
-                            resetSequenceToDependencyTagToken(xml);
-                            if (TokenUtilities.equals(xml.token().text(), "<dependency")) {
-                                while(!TokenUtilities.equals(xml.token().text(), "</dependency")) { //NOI18N
-                                    xml.moveNext();
-                                    token = xml.token();
-                                    if (TokenUtilities.equals(token.text(), "<artifactId")) { //NOI18N
-                                        xml.moveNext();
-                                        xml.moveNext();
-                                        token = xml.token();
-                                        artifactId = token.text().toString();
-                                        xml.moveNext();
-                                    } else if (TokenUtilities.equals(token.text(), "<groupId")) { //NOI18N
-                                        xml.moveNext(); 
-                                        xml.moveNext();
-                                        token = xml.token();
-                                        groupId = token.text().toString();
-                                        xml.moveNext();
-                                    } else if (TokenUtilities.equals(token.text(), "<version")) { //NOI18N
-                                        xml.moveNext(); 
-                                        xml.moveNext();
-                                        token = xml.token();
-                                        if (token.text().toString().startsWith("${")) { //NOI18N
-                                            Project nbprj = getProject(doc);
-                                            try { 
-                                                version = (String)PluginPropertyUtils.createEvaluator(nbprj).evaluate(token.text().toString());
-                                            } catch (ExpressionEvaluationException eee) {
-                                                LOG.log(Level.INFO, "Unable to evaluate property: " + token.text().toString(), eee);
+                        String tokenString = xml.token().text().toString();
+                        if ("<artifactId".equals(tokenString) || //NOI18N
+                                "<groupId".equals(tokenString) || //NOI18N
+                                "<type".equals(tokenString) || //NOI18N
+                                ("<version".equals(tokenString) && !ftext.startsWith("${"))) { 
+                            
+                            resetSequenceToDependencytagToken(xml);
+                            
+                            if (TokenUtilities.equals(xml.token().text(), "<dependency")) {          //NOI18N
+                                
+                                while (!TokenUtilities.equals(xml.token().text(), "</dependency")) { //NOI18N
+                                    
+                                    switch (xml.token().text().toString()) {
+                                        case "<artifactId":
+                                            moveToXmlTokenById(xml, XMLTokenId.TEXT);
+                                            token = xml.token();
+                                            artifactId = token.text().toString();
+                                            break;
+                                        case "<groupId":
+                                            moveToXmlTokenById(xml, XMLTokenId.TEXT);
+                                            token = xml.token();
+                                            groupId = token.text().toString();
+                                            break;
+                                        case "<version":
+                                            moveToXmlTokenById(xml, XMLTokenId.TEXT);
+                                            token = xml.token();
+                                            if (TokenUtilities.startsWith(token.text(), "${")) { //NOI18N
+                                                Project nbprj = getProject(doc);
+                                                try {
+                                                    version = (String) PluginPropertyUtils.createEvaluator(nbprj).evaluate(token.text().toString());
+                                                } catch (ExpressionEvaluationException eee) {
+                                                    LOG.log(Level.INFO, "Unable to evaluate property: " + token.text().toString(), eee);
+                                                }
+                                            } else {
+                                                version = token.text().toString();
                                             }
-                                        } else {
-                                            version = token.text().toString();
-                                        }
-                                        xml.moveNext();
-                                    } else if (TokenUtilities.equals(token.text(), "<type")) { //NOI18N
-                                        xml.moveNext();
-                                        xml.moveNext();
-                                        token = xml.token();
-                                        type = token.text().toString();
-                                        xml.moveNext();
+                                            break;
+                                        case "<type" :
+                                            moveToXmlTokenById(xml, XMLTokenId.TEXT);
+                                            token = xml.token();
+                                            type = token.text().toString();
+                                            break;
                                     }
+                                    xml.moveNext();
+                                    moveToXmlTokenById(xml, XMLTokenId.TAG);
                                 }
                                 // handle cases where the version element is covered in a 
                                 // parent pom/dependenciesManagement
                                 if (version == null) {
                                     MavenProject mavenProject = getNbMavenProject(doc).getMavenProject();
                                     for (Artifact artifact : mavenProject.getArtifacts()) {
-                                        if (artifact.getGroupId().equals(groupId) 
+                                        if (artifact.getGroupId().equals(groupId)
                                                 && artifact.getArtifactId().equals(artifactId)) {
                                             version = artifact.getVersion();
                                             break;
@@ -389,15 +399,15 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
                         }
                     }
                 }
-            }     
+            }
         }
-        
+
         String[] getTooltipText() {
             if (isText) {
                 //we are in element text
                 String text = ftext;
                 int tokenOff = ftokenOff;
-                if (isMavenProperty()){
+                if (isMavenProperty()) {
                     Tuple tup = findProperty(text, tokenOff, documentOffset);
 
                     if (tup != null) {
@@ -407,8 +417,8 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
                             if (nbprj != null) {
                                 Object exRes = PluginPropertyUtils.createEvaluator(nbprj).evaluate(tup.value);
                                 if (exRes != null) {
-                                    return new String[] {prop, (String)exRes};
-                                } 
+                                    return new String[]{prop, (String) exRes};
+                                }
                             } else {
                                 //pom file in repository or settings file.
                             }
@@ -416,19 +426,19 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
                             return null;
                         }
                     }
-                } else if(isMavenDependency()) {
-                    return new String[] { getMavenArtifactAbsolutePomPath() };
+                } else if (isMavenDependency()) {
+                    return new String[]{getMavenArtifactAbsolutePomPath()};
                 }
             }
             return null;
         }
-        
+
         String getMavenArtifactAbsolutePomPath() {
             if (!isMavenDependency()) {
                 return null;
             } else {
                 MavenEmbedder embedder = EmbedderFactory.getProjectEmbedder();
-                Artifact mavenArtifact =  embedder.createArtifact(groupId, artifactId, version, type == null ? "jar" : type);
+                Artifact mavenArtifact = embedder.createArtifact(groupId, artifactId, version, type == null ? "jar" : type);
                 return embedder.getLocalRepository().find(mavenArtifact).getFile().getAbsolutePath().replace(".jar", ".pom");
             }
         }
@@ -438,32 +448,31 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
                 //we are in element text
                 FileObject fo = getProjectDir(doc);
                 if (fo != null && getPath(fo, ftext) != null) {
-                    return new int[] { ftokenOff, ftokenOff + ftext.length() };
+                    return new int[]{ftokenOff, ftokenOff + ftext.length()};
                 }
                 // urls get opened..
-                if (ftext != null &&
-                        (ftext.startsWith("http://") || //NOI18N
-                        (ftext.startsWith("https://")))) { //NOI18N
-                    return new int[] { ftokenOff, ftokenOff + ftext.length() };
+                if (isHyperlinkUrl()) {
+                    return new int[]{ftokenOff, ftokenOff + ftext.length()};
                 }
                 if (ftext != null) {
                     Tuple prop = findProperty(ftext, ftokenOff, documentOffset);
                     if (prop != null) {
-                        return new int[] { prop.spanStart, prop.spanEnd};
+                        return new int[]{prop.spanStart, prop.spanEnd};
                     }
                 }
                 if (isMavenDependency()) {
-                    return new int[] { ftokenOff, ftokenOff + ftext.length() };
+                    return new int[]{ftokenOff, ftokenOff + ftext.length()};
                 }
             }
             return null;
         }
 
-        private void resetSequenceToDependencyTagToken(TokenSequence<XMLTokenId> tokenSequence) {
-            while(!TokenUtilities.equals("<dependency", tokenSequence.token().text()) &&
-                    !TokenUtilities.equals("<plugin", tokenSequence.token().text())) {
-                tokenSequence.movePrevious();
-                resetSequenceToDependencyTagToken(tokenSequence);
+        private void resetSequenceToDependencytagToken(TokenSequence<XMLTokenId> xml) {
+            while (!TokenUtilities.equals("<dependency", xml.token().text())             //NOI18N
+                    && !TokenUtilities.equals("<plugin", xml.token().text())             //NOI18N
+                    && !TokenUtilities.equals("<parent", xml.token().text())             //NOI18N
+                    && !TokenUtilities.equals("<project", xml.token().text())) {         //NOI18N
+                xml.movePrevious();
             }
         }
 
@@ -472,45 +481,39 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
                 //we are in element text
                 int tokenOff = ftokenOff;
                 String text = ftext;
-                if (isFileSystemLink()) {
-                    if (projectFileObject != null && getPath(projectFileObject, text) != null) {
-                        FileObject file = getPath(projectFileObject, text);
-                        NodeUtils.openPomFile(file);
-                    }
+                FileObject fileSystemLinkObject = getFileSystemLinkObject();
+                if (fileSystemLinkObject != null) {
+                    NodeUtils.openPomFile(fileSystemLinkObject);
                 } else if (isHyperlinkUrl()) {
                     // urls get opened..
-                    if (text != null &&
-                            (text.startsWith("http://") || //NOI18N
-                            (text.startsWith("https://")))) { //NOI18N
-                        try {
-                            String urlText = text;
-                            if (urlText.contains("${")) {//NOI18N
-                                //special case, need to evaluate expression
-                                Project nbprj = getProject(doc);
-                                if (nbprj != null) {
-                                    Object exRes;
-                                    try {
-                                        exRes = PluginPropertyUtils.createEvaluator(nbprj).evaluate(urlText);
-                                        if (exRes != null) {
-                                            urlText = exRes.toString();
-                                        }
-                                    } catch (ExpressionEvaluationException ex) {
-                                        //just ignore
-                                        LOG.log(Level.FINE, "Expression evaluation failed", ex);
+                    try {
+                        String urlText = text;
+                        if (urlText.contains("${")) {//NOI18N
+                            //special case, need to evaluate expression
+                            Project nbprj = getProject(doc);
+                            if (nbprj != null) {
+                                Object exRes;
+                                try {
+                                    exRes = PluginPropertyUtils.createEvaluator(nbprj).evaluate(urlText);
+                                    if (exRes != null) {
+                                        urlText = exRes.toString();
                                     }
-
+                                } catch (ExpressionEvaluationException ex) {
+                                    //just ignore
+                                    LOG.log(Level.FINE, "Expression evaluation failed", ex);
                                 }
+
                             }
-                            URL url = new URL(urlText);
-                            HtmlBrowser.URLDisplayer.getDefault().showURL(url);
-                        } catch (MalformedURLException ex) {
-                            LOG.log(Level.FINE, "malformed url for hyperlink", ex);
                         }
+                        URL url = new URL(urlText);
+                        HtmlBrowser.URLDisplayer.getDefault().showURL(url);
+                    } catch (MalformedURLException ex) {
+                        LOG.log(Level.FINE, "malformed url for hyperlink", ex);
                     }
                 } else if (isMavenProperty()) {
                     Tuple tup = findProperty(text, tokenOff, documentOffset);
                     if (tup != null) {
-                        String prop = tup.value.substring("${".length(), tup.value.length() - 1); //remove the brackets//NOI18N
+                        String prop = tup.value.substring(2, tup.value.length() - 1);
                         NbMavenProject nbprj = getNbMavenProject(doc);
                         if (nbprj != null) {
                             if (prop != null && (prop.startsWith("project.") || prop.startsWith("pom."))) {//NOI18N
@@ -531,8 +534,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
                             }
                         }
                     }
-                }
-                else if (isMavenDependency()) { 
+                } else if (isMavenDependency()) {
                     File pomFile = new File(getMavenArtifactAbsolutePomPath());
                     FileObject fileToOpen = FileUtil.toFileObject(pomFile);
                     if (fileToOpen != null) {
@@ -541,5 +543,12 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
                 }
             }
         }
+
+        private void moveToXmlTokenById(TokenSequence<XMLTokenId> xml, XMLTokenId tokenId) {
+            while (xml.token() != null && !xml.token().id().equals(tokenId)) {
+                xml.moveNext();
+            }
+        }
+
     }
 }

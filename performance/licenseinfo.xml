@@ -21,6 +21,17 @@
 -->
 <licenseinfo>
     <fileset>
+        <file>actionsframework/src/org/netbeans/actions/examples/icons/delete.gif</file>
+        <file>actionsframework/src/org/netbeans/actions/examples/icons/save.gif</file>
+        <file>actionsframework/src/org/netbeans/actions/examples/icons/copy.gif</file>
+        <file>actionsframework/src/org/netbeans/actions/examples/icons/saveall.gif</file>
+        <file>actionsframework/src/org/netbeans/actions/examples/icons/redo.gif</file>
+        <file>actionsframework/src/org/netbeans/actions/examples/icons/new.gif</file>
+        <file>actionsframework/src/org/netbeans/actions/examples/icons/undo.gif</file>
+        <file>actionsframework/src/org/netbeans/actions/examples/icons/paste.gif</file>
+        <file>actionsframework/src/org/netbeans/actions/examples/icons/open.gif</file>
+        <file>actionsframework/src/org/netbeans/actions/examples/icons/cut.gif</file>
+        <file>threaddemo/src/threaddemo/util/doc-files/TwoWaySupportStateDiagram.png</file>
         <file>threaddemo/src/threaddemo/util/doc-files/TwoWaySupport.zargo</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />

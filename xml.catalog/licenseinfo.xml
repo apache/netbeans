@@ -29,4 +29,12 @@
         <file>src/org/netbeans/modules/xml/catalog/resources/datatypes.dtd</file>
         <license ref="W3C2" />
     </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/xml/catalog/impl/xmlCatalog.gif</file>
+        <file>src/org/netbeans/modules/xml/catalog/impl/sysCatalog.gif</file>
+        <file>src/org/netbeans/modules/xml/catalog/resources/catalog-entry.gif</file>
+        <file>src/org/netbeans/modules/xml/catalog/resources/catalog-root.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
 </licenseinfo>

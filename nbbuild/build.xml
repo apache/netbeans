@@ -2093,15 +2093,13 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             </classpath>
         </taskdef>
         
-        <exclusionsfromlicenseinfo nball=".." licenseinfoFileset="exclusionsfromlicenseinfo" />
+        <exclusionsfromlicenseinfo nball=".." licenseinfoFileset="exclusionsfromlicenseinfo" exclusionFile="build/rat-exclusions-licenseinfo.txt"/>
         
-        <difference id="rat.files">
-            <fileset dir="${nb_all}">
-                <excludesfile name="rat-exclusions.txt" />
-            </fileset>
-            <fileset refid="exclusionsfromlicenseinfo" />
-        </difference>
-
+        <fileset dir="${nb_all}" id="rat.files">
+            <excludesfile name="rat-exclusions.txt" />
+            <excludesfile name="build/rat-exclusions-licenseinfo.txt" />
+        </fileset>
+        
         <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="build/rat-report.txt">
             <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
                 Licensed to the Apache Software Foundation (ASF) under one or more contributor 

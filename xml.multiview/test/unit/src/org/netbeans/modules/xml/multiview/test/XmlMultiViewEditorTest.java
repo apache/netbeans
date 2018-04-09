@@ -19,18 +19,17 @@
 
 package org.netbeans.modules.xml.multiview.test;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import junit.textui.TestRunner;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.junit.NbTestSuite;
 import org.netbeans.junit.AssertionFailedErrorException;
 
 import org.openide.cookies.EditorCookie;
@@ -47,6 +46,7 @@ import org.netbeans.modules.xml.multiview.XmlMultiViewEditorSupport;
 import javax.swing.*;
 import javax.swing.text.Document;
 import javax.swing.text.BadLocationException;
+import org.netbeans.modules.xml.multiview.XmlMultiViewDataObject;
 
 /**
  *
@@ -227,4 +227,34 @@ public class XmlMultiViewEditorTest extends NbTestCase {
 //    public static void main(String[] args) {
 //        TestRunner.run(new NbTestSuite(XmlMultiViewEditorTest.class));
 //    }
+    
+
+    public void testSetModifiedNestedChange() throws Exception {
+        File f = Helper.getBookFile(getDataDir(), getWorkDir());
+        FileObject fo = FileUtil.toFileObject(f);
+        assertNotNull(fo);
+
+        doSetPreferredLoader(fo, loader);
+        final DataObject dob = DataObject.find(fo);
+
+        assertTrue("The right object", dob instanceof XmlMultiViewDataObject);
+        dob.getLookup().lookup(EditorCookie.class).openDocument().insertString(0,
+                "modified", null);
+        assertTrue("Should be modified.", dob.isModified());
+        dob.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                String s = evt.getPropertyName();
+                if (DataObject.PROP_MODIFIED.equals(s) && !dob.isModified()) {
+                    dob.setModified(true);
+                }
+            }
+        });
+        dob.setModified(false);
+        assertTrue("Should be still modified.", dob.isModified());
+        assertNotNull("Still should have save cookie.",
+                dob.getLookup().lookup(SaveCookie.class));
+    }
+
+    
 }

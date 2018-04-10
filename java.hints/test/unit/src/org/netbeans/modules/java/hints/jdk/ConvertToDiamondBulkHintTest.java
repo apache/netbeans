@@ -290,6 +290,20 @@ public class ConvertToDiamondBulkHintTest extends NbTestCase {
                 .assertWarnings();
     }
     
+    public void testConfiguration9() throws Exception {
+        HintTest
+                .create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    {\n" +
+                       "        var list = new java.util.LinkedList<String>();\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("1.10")
+                .run(ConvertToDiamondBulkHint.class)
+                .assertWarnings();
+    }
+
     static {
         TestCompilerSettings.commandLine = "-XDfind=diamond";
     }

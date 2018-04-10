@@ -820,7 +820,7 @@ public class JavacParser extends Parser {
         options.add("-XDsave-parameter-names");   // NOI18N, javac runs inside the IDE
         options.add("-parameters");   // NOI18N, save and read parameter names
         options.add("-XDsuppressAbortOnBadClassFile");   // NOI18N, when a class file cannot be read, produce an error type instead of failing with an exception
-        options.add("--should-stop:at=GENERATE");   // NOI18N, parsing should not stop in phase where an error is found
+        options.add("-XDshould-stop.at=GENERATE");   // NOI18N, parsing should not stop in phase where an error is found
         options.add("-g:source"); // NOI18N, Make the compiler to maintian source file info
         options.add("-g:lines"); // NOI18N, Make the compiler to maintain line table
         options.add("-g:vars");  // NOI18N, Make the compiler to maintain local variables table

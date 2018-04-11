@@ -225,7 +225,9 @@ public class CompilationInfo {
             final String name = FileObjects.convertFolder2Package(FileObjects.stripExtension(FileUtil.getRelativePath(this.impl.getRoot(), this.impl.getFileObject())));
             final TypeElement e = Optional.ofNullable(
                     SourceVersion.RELEASE_9.compareTo(getSourceVersion()) <= 0 ?
-                            SourceUtils.getModuleName(impl.getRoot().toURL(), true) :
+                            SourceUtils.getModuleName(
+                                Source.instance(impl.getJavacTask().getContext()),
+                                impl.getRoot().toURL(), true) :
                             null)
                     .map(elements::getModuleElement)
                     .map((module) -> ElementUtils.getTypeElementByBinaryName(this, module, name))

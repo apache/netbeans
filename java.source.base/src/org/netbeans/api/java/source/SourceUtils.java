@@ -71,6 +71,7 @@ import javax.tools.JavaFileObject;
 
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -1279,7 +1280,23 @@ public class SourceUtils {
     public static String getModuleName(
             @NonNull final URL rootUrl,
             @NonNull final boolean canUseSources) {
-        return ModuleNames.getInstance().getModuleName(null, rootUrl, canUseSources);
+        return getModuleName(null, rootUrl, canUseSources);
+    }
+
+    /**
+     * Returns the name of the module for the given source version.
+     * @param source the source version or null
+     * @param rootUrl the binary root
+     * @param canUseSources
+     * @return the module name or null when no or invalid module
+     * @since 2.31.0
+     */
+    @CheckForNull
+    public static String getModuleName(
+            @NullAllowed final Source source,
+            @NonNull final URL rootUrl,
+            @NonNull final boolean canUseSources) {
+        return ModuleNames.getInstance().getModuleName(source, rootUrl, canUseSources);
     }
 
     /**

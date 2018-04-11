@@ -309,7 +309,7 @@ final class ModuleFileManager implements JavaFileManager {
             for (ClassPath.Entry e : modulePath.entries()) {
                 final URL root = e.getURL();
                 if (!seen.contains(root)) {
-                    final String moduleName = SourceUtils.getModuleName(root);
+                    final String moduleName = SourceUtils.getModuleName(this.sourceLevel, root, false);
                     if (moduleName != null) {
                         Collection<? extends URL> p = peers.apply(root);
                         moduleRoots.add(ModuleLocation.create(baseLocation, p, moduleName));

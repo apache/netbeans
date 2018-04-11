@@ -20,6 +20,7 @@ package org.netbeans.modules.java.source;
 
 import com.sun.source.util.JavacTask;
 import com.sun.tools.javac.api.ClientCodeWrapper;
+import com.sun.tools.javac.code.Source;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -76,6 +77,7 @@ import org.netbeans.api.java.queries.BinaryForSourceQuery;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.base.SourceLevelUtils;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.parsing.Archive;
 import org.netbeans.modules.java.source.parsing.CachingArchiveProvider;
@@ -104,6 +106,7 @@ public class ModuleNamesTest extends NbTestCase {
     private static final String RES_MANIFEST = "META-INF/MANIFEST.MF";  //NOI18N
     private FileObject wd;
     private ModuleNames names;
+    private Source source;
 
     public ModuleNamesTest(@NonNull final String name) {
         super(name);
@@ -121,6 +124,8 @@ public class ModuleNamesTest extends NbTestCase {
         CacheFolder.setCacheFolder(cache);
         names = ModuleNames.getInstance();
         assertNotNull(names);
+        source = null;
+        assertNull(source);
     }
 
     public void testAutomaticModule() throws Exception {
@@ -128,29 +133,29 @@ public class ModuleNamesTest extends NbTestCase {
         try {
             FileObject mod1 = FileUtil.getArchiveRoot(jar(wd, "app-core-1.0.jar", null).get());    //NOI18N
             final FileObject mod2 = FileUtil.getArchiveRoot(jar(wd,"app-main-1.0.jar", null).get());     //NOI18N
-            String moduleName = names.getModuleName(mod1.toURL(), false);
+            String moduleName = names.getModuleName(source, mod1.toURL(), false);
             assertEquals("app.core", moduleName);   //NOI18N
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(mod2.toURL(), false);
+            moduleName = names.getModuleName(source, mod2.toURL(), false);
             assertEquals("app.main", moduleName);   //NOI18N
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(mod1.toURL(), false);
+            moduleName = names.getModuleName(source, mod1.toURL(), false);
             assertEquals("app.core", moduleName);   //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(mod2.toURL(), false);
+            moduleName = names.getModuleName(source, mod2.toURL(), false);
             assertEquals("app.main", moduleName);   //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
             final URL origURL = mod2.toURL();
             final FileObject mod2new = rename(mod2, "app-ui-1.0.jar");    //NOI18N
-            moduleName = names.getModuleName(mod2new.toURL(), false);
+            moduleName = names.getModuleName(source, mod2new.toURL(), false);
             assertEquals("app.ui", moduleName);   //NOI18N
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(origURL, false);
+            moduleName = names.getModuleName(source, origURL, false);
             assertNull(moduleName);
             assertTrue(th.isCalculated());
             th.reset();
@@ -163,7 +168,7 @@ public class ModuleNamesTest extends NbTestCase {
                             moduleInfoClz(moduleInfoJava("org.me.app.core", Collections.emptyList())).get()))   //NOI18N
                     ).get();
             mod1 = FileUtil.getArchiveRoot(jar);
-            moduleName = names.getModuleName(mod1.toURL(), false);
+            moduleName = names.getModuleName(source, mod1.toURL(), false);
             assertTrue(th.isCalculated());
             assertEquals("org.me.app.core", moduleName);    //NOI18N
             th.reset();
@@ -194,11 +199,11 @@ public class ModuleNamesTest extends NbTestCase {
                         }
                     }
             ).get());
-            String moduleName = names.getModuleName(mod.toURL(), false);
+            String moduleName = names.getModuleName(source, mod.toURL(), false);
             assertEquals("org.me.app.core", moduleName);    //NOI18N
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(mod.toURL(), false);
+            moduleName = names.getModuleName(source, mod.toURL(), false);
             assertEquals("org.me.app.core", moduleName);    //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
@@ -207,11 +212,11 @@ public class ModuleNamesTest extends NbTestCase {
                     wd,
                     "app-core-1.0.jar", //NOI18N
                     null).get());
-            moduleName = names.getModuleName(mod.toURL(), false);
+            moduleName = names.getModuleName(source, mod.toURL(), false);
             assertEquals("app.core", moduleName);    //NOI18N
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(mod.toURL(), false);
+            moduleName = names.getModuleName(source, mod.toURL(), false);
             assertEquals("app.core", moduleName);    //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
@@ -254,11 +259,11 @@ public class ModuleNamesTest extends NbTestCase {
                         }
                     }
             ).get());    //NOI18N
-            moduleName = names.getModuleName(mod.toURL(), false);
+            moduleName = names.getModuleName(source, mod.toURL(), false);
             assertEquals("com.me.app.core", moduleName);    //NOI18N
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(mod.toURL(), false);
+            moduleName = names.getModuleName(source, mod.toURL(), false);
             assertEquals("com.me.app.core", moduleName);    //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
@@ -277,11 +282,11 @@ public class ModuleNamesTest extends NbTestCase {
                             "module-info.class",    //NOI18N
                             moduleInfoClz(moduleInfoJava("org.me.app", Collections.emptyList())).get()))        //NOI18N
                     ).get());
-            String moduleName = names.getModuleName(mod.toURL(), false);
+            String moduleName = names.getModuleName(source, mod.toURL(), false);
             assertEquals("org.me.app", moduleName);    //NOI18N
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(mod.toURL(), false);
+            moduleName = names.getModuleName(source, mod.toURL(), false);
             assertEquals("org.me.app", moduleName);    //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
@@ -294,11 +299,11 @@ public class ModuleNamesTest extends NbTestCase {
                             moduleInfoClz(moduleInfoJava("com.me.app", Collections.emptyList())).get()))    //NOI18N
                     ).get();
             mod = FileUtil.getArchiveRoot(jar);
-            moduleName = names.getModuleName(mod.toURL(), false);
+            moduleName = names.getModuleName(source, mod.toURL(), false);
             assertTrue(th.isCalculated());
             assertEquals("com.me.app", moduleName);    //NOI18N
             th.reset();
-            moduleName = names.getModuleName(mod.toURL(), false);
+            moduleName = names.getModuleName(source, mod.toURL(), false);
             assertEquals("com.me.app", moduleName);    //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
@@ -306,11 +311,11 @@ public class ModuleNamesTest extends NbTestCase {
             FileUtil.getArchiveFile(mod).delete();
             jar = jar(wd, "dist.jar", null).get();   //NOI18N
             mod = FileUtil.getArchiveRoot(jar);
-            moduleName = names.getModuleName(mod.toURL(), false);
+            moduleName = names.getModuleName(source, mod.toURL(), false);
             assertTrue(th.isCalculated());
             assertEquals("dist", moduleName);    //NOI18N
             th.reset();
-            moduleName = names.getModuleName(mod.toURL(), false);
+            moduleName = names.getModuleName(source, mod.toURL(), false);
             assertFalse(th.isCalculated());
             assertEquals("dist", moduleName);    //NOI18N
         } finally {
@@ -334,41 +339,41 @@ public class ModuleNamesTest extends NbTestCase {
 
         final TraceHandler th = TraceHandler.register();
         try {
-            String moduleName = names.getModuleName(distJarURL, false);
+            String moduleName = names.getModuleName(source, distJarURL, false);
             assertNull(moduleName);
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(distJarURL, false);
+            moduleName = names.getModuleName(source, distJarURL, false);
             assertNull(moduleName);
             assertTrue(th.isCalculated());  //null not cached as it may differ for getModuleName(root, true);
             th.reset();
             fakeIndex(src, distJarURL, "org.me.prj");   //NOI18N
-            moduleName = names.getModuleName(distJarURL, false);
+            moduleName = names.getModuleName(source, distJarURL, false);
             assertEquals("org.me.prj", moduleName);     //NOI18N
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(distJarURL, false);
+            moduleName = names.getModuleName(source, distJarURL, false);
             assertEquals("org.me.prj", moduleName);     //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
             final Supplier<Pair<Boolean, String>> mij2 = moduleInfoJava("org.me.foo", Collections.emptySet());   //NOI18N
             final FileObject modInfo = writeFile(src, "module-info.java", () -> mij2.get().second()).get();   //NOI18N
             fakeIndex(src, distJarURL, "org.me.foo");   //NOI18N
-            moduleName = names.getModuleName(distJarURL, false);
+            moduleName = names.getModuleName(source, distJarURL, false);
             assertEquals("org.me.foo", moduleName);     //NOI18N
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(distJarURL, false);
+            moduleName = names.getModuleName(source, distJarURL, false);
             assertEquals("org.me.foo", moduleName);     //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
             modInfo.delete();
             fakeIndex(src, distJarURL, null);
-            moduleName = names.getModuleName(distJarURL, false);
+            moduleName = names.getModuleName(source, distJarURL, false);
             assertEquals("prj", moduleName);     //NOI18N
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(distJarURL, false);
+            moduleName = names.getModuleName(source, distJarURL, false);
             assertEquals("prj", moduleName);     //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
@@ -392,38 +397,38 @@ public class ModuleNamesTest extends NbTestCase {
         AutomaticModuleName.getInstance().register(src, null);  //Register Result for root to listen on it.
         try {
             fakeIndex(src, distJarURL, null);
-            String moduleName = names.getModuleName(distJarURL, false);
+            String moduleName = names.getModuleName(source, distJarURL, false);
             assertEquals("prj", moduleName);    //NOI18N
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(distJarURL, false);
+            moduleName = names.getModuleName(source, distJarURL, false);
             assertEquals("prj", moduleName);    //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
             AutomaticModuleName.getInstance().register(src, "org.me.foo");  //NOI18N
-            moduleName = names.getModuleName(distJarURL, false);
+            moduleName = names.getModuleName(source, distJarURL, false);
             assertEquals("org.me.foo", moduleName);    //NOI18N
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(distJarURL, false);
+            moduleName = names.getModuleName(source, distJarURL, false);
             assertEquals("org.me.foo", moduleName);    //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
             AutomaticModuleName.getInstance().register(src, "org.me.boo");  //NOI18N
-            moduleName = names.getModuleName(distJarURL, false);
+            moduleName = names.getModuleName(source, distJarURL, false);
             assertEquals("org.me.boo", moduleName);    //NOI18N
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(distJarURL, false);
+            moduleName = names.getModuleName(source, distJarURL, false);
             assertEquals("org.me.boo", moduleName);    //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
             AutomaticModuleName.getInstance().register(src, null);
-            moduleName = names.getModuleName(distJarURL, false);
+            moduleName = names.getModuleName(source, distJarURL, false);
             assertEquals("prj", moduleName);    //NOI18N
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(distJarURL, false);
+            moduleName = names.getModuleName(source, distJarURL, false);
             assertEquals("prj", moduleName);    //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
@@ -437,20 +442,54 @@ public class ModuleNamesTest extends NbTestCase {
         final URL JAVA_BASE = new URL("nbjrt:file:/Library/Java/JavaVirtualMachines/jdk-9.jdk/Contents/Home/!/modules/java.base/");   //NOI18N
         final URL JVMCI = new URL("nbjrt:file:/Library/Java/JavaVirtualMachines/jdk-9.jdk/Contents/Home/!/modules/jdk.internal.vm.ci/"); //NOI18N
         try {
-            String moduleName = names.getModuleName(JAVA_BASE, false);
+            String moduleName = names.getModuleName(source, JAVA_BASE, false);
             assertEquals("java.base", moduleName);  //NOI18N
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(JAVA_BASE, false);
+            moduleName = names.getModuleName(source, JAVA_BASE, false);
             assertEquals("java.base", moduleName);  //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(JVMCI, false);
+            moduleName = names.getModuleName(source, JVMCI, false);
             assertEquals("jdk.internal.vm.ci", moduleName); //NOI18N
             assertTrue(th.isCalculated());
             th.reset();
-            moduleName = names.getModuleName(JVMCI, false);
+            moduleName = names.getModuleName(source, JVMCI, false);
             assertEquals("jdk.internal.vm.ci", moduleName); //NOI18N
+            assertFalse(th.isCalculated());
+            th.reset();
+        } finally {
+            th.unregister();
+        }
+    }
+
+    public void testVersionedAutomaticModule() throws Exception {
+        final TraceHandler th = TraceHandler.register();
+        try {
+            final FileObject mod1 = FileUtil.getArchiveRoot(jar(wd, "ver-auto-0.jar", null).get());    //NOI18N
+            String moduleName;
+            moduleName = names.getModuleName(null, mod1.toURL(), false);
+            assertEquals("ver.auto", moduleName);   //NOI18N
+            assertTrue(th.isCalculated());
+            th.reset();
+            moduleName = names.getModuleName(SourceLevelUtils.JDK1_8, mod1.toURL(), false);
+            assertEquals("ver.auto", moduleName);   //NOI18N
+            assertTrue(th.isCalculated());
+            th.reset();
+            moduleName = names.getModuleName(SourceLevelUtils.JDK1_9, mod1.toURL(), false);
+            assertEquals("ver.auto", moduleName);   //NOI18N
+            assertTrue(th.isCalculated());
+            th.reset();
+            moduleName = names.getModuleName(null, mod1.toURL(), false);
+            assertEquals("ver.auto", moduleName);   //NOI18N
+            assertFalse(th.isCalculated());
+            th.reset();
+            moduleName = names.getModuleName(SourceLevelUtils.JDK1_8, mod1.toURL(), false);
+            assertEquals("ver.auto", moduleName);   //NOI18N
+            assertFalse(th.isCalculated());
+            th.reset();
+            moduleName = names.getModuleName(SourceLevelUtils.JDK1_9, mod1.toURL(), false);
+            assertEquals("ver.auto", moduleName);   //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
         } finally {

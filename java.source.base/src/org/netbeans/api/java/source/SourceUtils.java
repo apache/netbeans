@@ -51,6 +51,7 @@ import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Scope.NamedImportScope;
 import com.sun.tools.javac.code.Scope.StarImportScope;
+import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.*;
 import com.sun.tools.javac.code.Type;
@@ -1278,7 +1279,7 @@ public class SourceUtils {
     public static String getModuleName(
             @NonNull final URL rootUrl,
             @NonNull final boolean canUseSources) {
-        return ModuleNames.getInstance().getModuleName(rootUrl, canUseSources);
+        return ModuleNames.getInstance().getModuleName(null, rootUrl, canUseSources);
     }
 
     /**

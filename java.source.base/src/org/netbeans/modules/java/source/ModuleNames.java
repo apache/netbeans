@@ -22,6 +22,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.api.JavacTaskImpl;
+import com.sun.tools.javac.code.Source;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +32,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -79,7 +81,7 @@ public final class ModuleNames {
     private static final Pattern AUTOMATIC_MODULE_NAME_MATCHER = Pattern.compile("-XDautomatic-module-name:(.*)");  //NOI18N
     private static final ModuleNames INSTANCE = new ModuleNames();
 
-    private final Map<URL,CacheLine> cache;
+    private final Map<SourceUrl, CacheLine> cache;
 
     private ModuleNames() {
         this.cache = new ConcurrentHashMap<>();
@@ -87,10 +89,12 @@ public final class ModuleNames {
 
     @CheckForNull
     public String getModuleName(
+            @NullAllowed final Source source,
             @NonNull final URL rootUrl,
             final boolean canUseSources) {
+        final SourceUrl sourceUrl = new SourceUrl(source, rootUrl);
         try {
-            final CacheLine cl = cache.get(rootUrl);
+            final CacheLine cl = cache.get(sourceUrl);
             if (cl != null) {
                 return cl.getValue();
             }
@@ -104,13 +108,13 @@ public final class ModuleNames {
             int endIndex = path.length() - 1;
             int startIndex = path.lastIndexOf('/', endIndex - 1);   //NOI18N
             return register(
-                    rootUrl,
+                    sourceUrl,
                     new CacheLine(rootUrl, path.substring(startIndex+1, endIndex)));
         }
         final URL srcRootURL = JavaIndex.getSourceRootForClassFolder(rootUrl);
         if (srcRootURL != null) {
             //Cache folder
-            return register(rootUrl, getProjectModuleName(rootUrl, Collections.singletonList(srcRootURL), canUseSources));
+            return register(sourceUrl, getProjectModuleName(rootUrl, Collections.singletonList(srcRootURL), canUseSources));
         }
         final SourceForBinaryQuery.Result2 sfbqRes = SourceForBinaryQuery.findSourceRoots2(rootUrl);
         if (sfbqRes.preferSources()) {
@@ -120,7 +124,7 @@ public final class ModuleNames {
                     Arrays.stream(sfbqRes.getRoots()).map(FileObject::toURL).collect(Collectors.toList()),
                     canUseSources);
             if (cl.getValueNoCheck() != null) {
-                return register(rootUrl, cl);
+                return register(sourceUrl, cl);
             }
         }
         //Binary
@@ -137,7 +141,7 @@ public final class ModuleNames {
                                 .map(FileUtil::toFile)
                                 .orElse(null);
                         return register(
-                                rootUrl,
+                                sourceUrl,
                                 path != null ?
                                     new FileCacheLine(rootUrl, modName, path):
                                     new FileObjectCacheLine(rootUrl, modName, moduleInfo));
@@ -156,7 +160,7 @@ public final class ModuleNames {
                                         .map(FileUtil::toFile)
                                         .orElse(null);
                                 return register(
-                                    rootUrl,
+                                    sourceUrl,
                                     path != null ?
                                         new FileCacheLine(rootUrl, autoModName, path):
                                         new FileObjectCacheLine(
@@ -176,7 +180,7 @@ public final class ModuleNames {
                     final String modName = autoName(file.getName());
                     final File path = FileUtil.toFile(file);
                     return register(
-                            rootUrl,
+                            sourceUrl,
                             path != null ?
                                 new FileCacheLine(rootUrl, modName, path):
                                 new FileObjectCacheLine(rootUrl, modName, file));
@@ -191,7 +195,7 @@ public final class ModuleNames {
                     final String modName = readModuleName(moduleInfo);
                     final File path = FileUtil.toFile(moduleInfo);
                     return register(
-                            rootUrl,
+                            sourceUrl,
                             path != null ?
                                     new FileCacheLine(rootUrl, modName, path):
                                     new FileObjectCacheLine(rootUrl, modName, moduleInfo));
@@ -204,14 +208,17 @@ public final class ModuleNames {
     }
 
     public void reset(@NonNull final URL binRootURL) {
-        Optional.ofNullable(cache.get(binRootURL))
-                .ifPresent(CacheLine::invalidate);
+        cache.forEach((su, cl) -> {
+            if (su.getUrl().equals(binRootURL)) {
+                cl.invalidate();
+            }
+        });
     }
 
     private String register(
-            @NonNull final URL rootUrl,
+            @NonNull final SourceUrl sourceUrl,
             @NonNull final CacheLine cacheLine) {
-            cache.put(rootUrl, cacheLine);
+            cache.put(sourceUrl, cacheLine);
             return cacheLine.getValueNoCheck();
     }
 
@@ -374,6 +381,39 @@ public final class ModuleNames {
         @Override
         public synchronized Throwable fillInStackTrace() {
             return this;
+        }
+    }
+
+    private static final class SourceUrl {
+        private final Source source;
+        private final URL url;
+
+        SourceUrl(
+                @NullAllowed final Source source,
+                @NonNull final URL url) {
+            this.source = source;
+            this.url = url;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof SourceUrl))
+                return false;
+            SourceUrl su = (SourceUrl)obj;
+            return Objects.equals(su.source, source) && su.url.equals(url);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(source) + url.hashCode();
+        }
+
+        public Source getSource() {
+            return source;
+        }
+
+        public URL getUrl() {
+            return url;
         }
     }
 

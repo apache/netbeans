@@ -104,6 +104,7 @@ import org.openide.util.Pair;
  */
 public class ModuleNamesTest extends NbTestCase {
     private static final String RES_MANIFEST = "META-INF/MANIFEST.MF";  //NOI18N
+    private static final String RES_VERSIONS = "META-INF/versions/"; //NOI18N
     private FileObject wd;
     private ModuleNames names;
     private Source source;
@@ -492,6 +493,72 @@ public class ModuleNamesTest extends NbTestCase {
             assertEquals("ver.auto", moduleName);   //NOI18N
             assertFalse(th.isCalculated());
             th.reset();
+        } finally {
+            th.unregister();
+        }
+    }
+
+    public void testMultiRelease() throws Exception {
+        final TraceHandler th = TraceHandler.register();
+        try {
+            final FileObject mod = FileUtil.getArchiveRoot(jar(
+                    wd,
+                    "multi-rel-1.0.jar", //NOI18N
+                    () -> {
+                        try {
+                            final ByteArrayOutputStream out = new ByteArrayOutputStream();
+                            final Manifest mf = new Manifest();
+                            mf.getMainAttributes().putValue(Attributes.Name.MANIFEST_VERSION.toString(), "1.0"); //NOI18N
+                            mf.getMainAttributes().putValue("Multi-Release", "true"); //NOI18N
+                            mf.getMainAttributes().putValue("Automatic-Module-Name", "multi.rel.auto"); //NOI18N
+                            mf.write(out);
+                            return Arrays.asList(
+                                Pair.of(
+                                        RES_MANIFEST,
+                                        out.toByteArray()
+                                ),
+                                Pair.of(
+                                    "module-info.class", //NOI18N
+                                    moduleInfoClz(moduleInfoJava("multi.rel.root", Collections.emptyList())).get() //NOI18N
+                                ),
+                                Pair.of(
+                                    RES_VERSIONS + "8/module-info.class", //NOI18N
+                                    moduleInfoClz(moduleInfoJava("multi.rel.eight", Collections.emptyList())).get() //NOI18N
+                                ),
+                                Pair.of(
+                                    RES_VERSIONS + "9/module-info.class", //NOI18N
+                                    moduleInfoClz(moduleInfoJava("multi.rel.nine", Collections.emptyList())).get() //NOI18N
+                                ),
+                                Pair.of(
+                                    RES_VERSIONS + "11/module-info.class", //NOI18N
+                                    moduleInfoClz(moduleInfoJava("multi.rel.eleven", Collections.emptyList())).get() //NOI18N
+                                )
+                            );
+                        } catch (IOException ioe) {
+                            throw new RuntimeException(ioe);
+                        }
+                    }
+            ).get());
+            String moduleName;
+            moduleName = names.getModuleName(null, mod.toURL(), false);
+            assertEquals("multi.rel.root", moduleName); //NOI18N
+            assertTrue(th.isCalculated());
+            th.reset();
+            moduleName = names.getModuleName(SourceLevelUtils.JDK1_8, mod.toURL(), false);
+            assertEquals("multi.rel.root", moduleName); //NOI18N
+            assertTrue(th.isCalculated());
+            th.reset();
+            moduleName = names.getModuleName(SourceLevelUtils.JDK1_9, mod.toURL(), false);
+            assertEquals("multi.rel.nine", moduleName); //NOI18N
+            assertTrue(th.isCalculated());
+            th.reset();
+            final Source source10 = Source.lookup("10"); //NOI18N
+            if (source10 != null) {
+                moduleName = names.getModuleName(source10, mod.toURL(), false);
+                assertEquals("multi.rel.nine", moduleName); //NOI18N
+                assertTrue(th.isCalculated());
+                th.reset();
+            }
         } finally {
             th.unregister();
         }

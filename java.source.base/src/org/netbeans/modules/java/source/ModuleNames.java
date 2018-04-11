@@ -55,6 +55,7 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.classfile.Module;
+import org.netbeans.modules.java.source.base.SourceLevelUtils;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
@@ -71,13 +72,16 @@ import org.openide.util.WeakListeners;
 /**
  * Computes module names.
  * Computes and caches module names.
+ * @see https://docs.oracle.com/javase/9/docs/specs/jar/jar.html
  * @author Tomas Zezula
  */
 public final class ModuleNames {
     private static final Logger LOG = Logger.getLogger(ModuleNames.class.getName());
     private static final java.util.regex.Pattern AUTO_NAME_PATTERN = java.util.regex.Pattern.compile("-(\\d+(\\.|$))"); //NOI18N
     private static final String RES_MANIFEST = "META-INF/MANIFEST.MF";              //NOI18N
+    private static final String RES_VERSIONS = "META-INF/versions/"; //NOI18N
     private static final String ATTR_AUTOMATIC_MOD_NAME = "Automatic-Module-Name";   //NOI18N
+    private static final String ATTR_MULTI_RELEASE = "Multi-Release"; //NOI18N
     private static final Pattern AUTOMATIC_MODULE_NAME_MATCHER = Pattern.compile("-XDautomatic-module-name:(.*)");  //NOI18N
     private static final ModuleNames INSTANCE = new ModuleNames();
 
@@ -133,6 +137,47 @@ public final class ModuleNames {
             final FileObject root = URLMapper.findFileObject(rootUrl);
             if (root != null) {
                 final FileObject file = FileUtil.getArchiveFile(root);
+                String autoModName = null;
+                boolean multiRelease = false;
+                final FileObject manifest = root.getFileObject(RES_MANIFEST);
+                if (manifest != null) {
+                    try {
+                        try (final InputStream in = new BufferedInputStream(manifest.getInputStream())) {
+                            final Manifest mf = new Manifest(in);
+                            autoModName = mf.getMainAttributes().getValue(ATTR_AUTOMATIC_MOD_NAME);
+                            final String multiReleaseString = mf.getMainAttributes().getValue(ATTR_MULTI_RELEASE);
+                            if (multiReleaseString != null) {
+                                multiRelease = Boolean.valueOf(multiReleaseString);
+                            }
+                        }
+                    } catch (IOException ioe) {
+                        //Follow jar spec: Pass to module-info
+                    }
+                }
+                //Multi-Release attribute
+                if (multiRelease && (source != null) && (source.compareTo(SourceLevelUtils.JDK1_9) >= 0)) {
+                    int sourceInt = Integer.parseInt(source.name);
+                    for (; sourceInt >= 9; sourceInt--) {
+                        //Versioned module-info
+                        final FileObject moduleInfo = root.getFileObject(RES_VERSIONS + sourceInt + "/" + FileObjects.MODULE_INFO + "." + FileObjects.CLASS);
+                        if (moduleInfo != null) {
+                            try {
+                                final String modName = readModuleName(moduleInfo);
+                                final File path = Optional.ofNullable(file)
+                                        .map(FileUtil::toFile)
+                                        .orElse(null);
+                                return register(
+                                        sourceUrl,
+                                        path != null ?
+                                            new FileCacheLine(rootUrl, modName, path):
+                                            new FileObjectCacheLine(rootUrl, modName, moduleInfo));
+                            } catch (IOException ioe) {
+                                //Follow jar spec: Try lower version or pass to root module-info
+                            }
+                        }
+                    }
+                }
+                //Root module-info
                 final FileObject moduleInfo = root.getFileObject(FileObjects.MODULE_INFO, FileObjects.CLASS);
                 if (moduleInfo != null) {
                     try {
@@ -146,34 +191,24 @@ public final class ModuleNames {
                                     new FileCacheLine(rootUrl, modName, path):
                                     new FileObjectCacheLine(rootUrl, modName, moduleInfo));
                     } catch (IOException ioe) {
-                        //Behave as javac: Pass to automatic module
+                        //Follow jar spec: Pass to automatic module
                     }
                 }
-                final FileObject manifest = root.getFileObject(RES_MANIFEST);
-                if (manifest != null) {
-                    try {
-                        try (final InputStream in = new BufferedInputStream(manifest.getInputStream())) {
-                            final Manifest mf = new Manifest(in);
-                            final String autoModName = mf.getMainAttributes().getValue(ATTR_AUTOMATIC_MOD_NAME);
-                            if (autoModName != null) {
-                                final File path = Optional.ofNullable(file)
-                                        .map(FileUtil::toFile)
-                                        .orElse(null);
-                                return register(
-                                    sourceUrl,
-                                    path != null ?
-                                        new FileCacheLine(rootUrl, autoModName, path):
-                                        new FileObjectCacheLine(
-                                                rootUrl,
-                                                autoModName,
-                                                file != null ?
-                                                        file :
-                                                        manifest));
-                            }
-                        }
-                    } catch (IOException ioe) {
-                        //Behave as javac: Pass to automatic module
-                    }
+                //Automatic-Module-Name attribute
+                if (autoModName != null) {
+                    final File path = Optional.ofNullable(file)
+                            .map(FileUtil::toFile)
+                            .orElse(null);
+                    return register(
+                        sourceUrl,
+                        path != null ?
+                            new FileCacheLine(rootUrl, autoModName, path):
+                            new FileObjectCacheLine(
+                                    rootUrl,
+                                    autoModName,
+                                    file != null ?
+                                            file :
+                                            manifest));
                 }
                 //Automatic module
                 if (file != null) {

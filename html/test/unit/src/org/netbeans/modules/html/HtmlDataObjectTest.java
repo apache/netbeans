@@ -18,17 +18,16 @@
  */
 package org.netbeans.modules.html;
 
-import java.awt.EventQueue;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.junit.MockServices;
 import org.netbeans.modules.csl.api.test.CslTestBase;
@@ -36,6 +35,7 @@ import org.netbeans.spi.queries.FileEncodingQueryImplementation;
 import org.openide.cookies.EditorCookie;
 import org.openide.cookies.SaveCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.Children;
@@ -197,6 +197,29 @@ public class HtmlDataObjectTest extends CslTestBase {
 
         assertFalse(obj.isModified());
         assertNull(obj.getLookup().lookup(SaveCookie.class));
+    }
+
+    public void testSetModifiedNestedChange() throws Exception {
+        FileSystem fs = FileUtil.createMemoryFileSystem();
+        FileObject f = fs.getRoot().createData("modify.html");
+        final DataObject dob = DataObject.find(f);
+        assertEquals("The right object", HtmlDataObject.class, dob.getClass());
+        dob.getLookup().lookup(EditorCookie.class).openDocument().insertString(0,
+                "modified", null);
+        assertTrue("Should be modified.", dob.isModified());
+        dob.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                String s = evt.getPropertyName();
+                if (DataObject.PROP_MODIFIED.equals(s) && !dob.isModified()) {
+                    dob.setModified(true);
+                }
+            }
+        });
+        dob.setModified(false);
+        assertTrue("Should be still modified.", dob.isModified());
+        assertNotNull("Still should have save cookie.",
+                dob.getLookup().lookup(SaveCookie.class));
     }
 
     public void testFindEncoding() {

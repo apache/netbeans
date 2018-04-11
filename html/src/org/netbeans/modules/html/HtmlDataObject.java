@@ -160,7 +160,7 @@ public class HtmlDataObject extends MultiDataObject implements CookieSet.Factory
     @Override
     public void setModified(boolean modif) {
         super.setModified(modif);
-        if(!modif) {
+        if(!isModified()) {
             HtmlEditorSupport support = getLookup().lookup(HtmlEditorSupport.class);
             support.removeSaveCookie();
         }

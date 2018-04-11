@@ -230,14 +230,19 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
     <target name="-define-downloadbinaries-task" unless="have-downloadbinaries-task">
         <taskdef name="downloadbinaries" classname="org.netbeans.nbbuild.extlibs.DownloadBinaries" classpath="${nbantext.jar}"/>
     </target>
-
-    <!-- See: http://wiki.netbeans.org/wiki/view/DevFaqExternalLibrariesUpdated -->
-    <target name="-release.files" depends="projectized-common.-release.files,-define-downloadbinaries-task">
+    
+    <target name="-process.release.files"/>
+    
+    <target name="-download.release.files" depends="-define-downloadbinaries-task">
         <downloadbinaries cache="${binaries.cache}" server="${binaries.server}">
             <manifest dir=".">
                 <include name="external/binaries-list"/>
             </manifest>
         </downloadbinaries>
+    </target>
+
+    <!-- See: http://wiki.netbeans.org/wiki/view/DevFaqExternalLibrariesUpdated -->
+    <target name="-release.files" depends="projectized-common.-release.files,-download.release.files,-process.release.files">
         <taskdef name="releasefilesextra" classname="org.netbeans.nbbuild.extlibs.ReleaseFilesExtra" classpath="${nbantext.jar}"/>
         <releasefilesextra property="release.files.extra"/>
     </target>
@@ -811,5 +816,5 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
             <arg value="org.codehaus.mojo:nb-repository-plugin:1.3:populate"/>
         </exec>
     </target>
-
+    
 </project>

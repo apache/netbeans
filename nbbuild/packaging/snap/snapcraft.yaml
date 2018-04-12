@@ -29,11 +29,15 @@ grade: devel
 
 parts:
   build:
-    plugin: ant
-    ant-properties:
-        javac.compilerargs: "-nowarn"
-        build.compiler.deprecation: "false"
-    ant-build-targets: [ -quiet ]
+    build-packages:
+        - openjdk-8-jdk-headless
+        - ant
+    build: |
+        JAVA_HOME="/usr/lib/jvm/java-8-openjdk-$SNAP_ARCH"
+        export JAVA_HOME
+        ant -quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
+    build-attributes: [ no-patchelf ]
+    plugin: nil
     source: ../../
     filesets:
         netbeans: [ netbeans/*, -netbeans/*.built ]

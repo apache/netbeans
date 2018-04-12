@@ -250,11 +250,7 @@ implements ActionListener, Runnable, Callable<JButton> {
         if (w != null) {
             w.dispose();
         }
-        try {
-            HtmlBrowser.URLDisplayer.getDefault().showURL(new URL(ISSUE_REPORTER_LINK));
-        } catch (MalformedURLException ex) {
-            Installer.LOG.log(Level.FINE, null, ex);
-        }
+        Installer.RP.post(this);
     }
 
     private boolean shouldReportScanCancel() {

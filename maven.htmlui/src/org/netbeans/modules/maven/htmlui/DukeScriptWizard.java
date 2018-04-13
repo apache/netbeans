@@ -55,7 +55,6 @@ import org.openide.util.RequestProcessor;
     @Property(name = "nbInstallationDefined", type = boolean.class),
 })
 public class DukeScriptWizard {
-
     @TemplateRegistration(
             position = 133,
             page = "dukeScriptWizard.html",

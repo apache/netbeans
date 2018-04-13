@@ -65,6 +65,7 @@ public class DukeScriptWizard {
             iconBase = "org/netbeans/modules/maven/htmlui/DukeHTML.png",
             description = "description.html"
     )
+    
     @Messages("DukeScriptWizard_displayName=Java Frontend Application")
     public static WizardData javafxWebViewAppWizard() {
         WizardData data = new WizardData();

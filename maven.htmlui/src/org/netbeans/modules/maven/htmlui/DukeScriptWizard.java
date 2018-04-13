@@ -95,7 +95,7 @@ public class DukeScriptWizard {
                 "knockout4j-archetype",
                 "com.dukescript.archetype",
                 true,
-                "0.20",
+                "0.23",
                 "Basic DukeScript Template", "Default skeletal application",
                 null
         );
@@ -105,11 +105,20 @@ public class DukeScriptWizard {
                 "crud4j-archetype",
                 "com.dukescript.archetype",
                 false,
-                "0.20",
+                "0.23",
                 "DukeScript CRUD Template", "Client-Server Application demonstrating communication and reuse of DataModels",
                 null
         );
         data.getArchetypes().add(crudArch);
+        final ArchetypeData visArch = new ArchetypeData(
+                "visual-archetype",
+                "com.dukescript.archetype",
+                false,
+                "0.23",
+                "DukeScript Visual Archetype", "A sample application demonstrating Canvas, Charts & Maps",
+                null
+        );
+        data.getArchetypes().add(visArch);
         data.setIosMoe(true);
         String srvPath = Boolean.getBoolean("staging.archetypes") ? "stage" : "archetypes";
         data.loadArchetypes(srvPath);
@@ -156,15 +165,15 @@ public class DukeScriptWizard {
     }
 
     @ComputedProperty
-    static String iospath(boolean iosRoboVM) {
-        return iosRoboVM ? "client-ios" : null;
+    static String iospath(boolean ios, boolean iosRoboVM) {
+         return ios && iosRoboVM ? "client-ios" : null;
     }
 
     @ComputedProperty
-    static String moepath(boolean iosMoe) {
-        return iosMoe ? "client-moe" : null;
+    static String moepath(boolean ios, boolean iosMoe) {
+       return ios && iosMoe ? "client-moe" : null;
     }
-
+    
     @ComputedProperty
     static String netbeanspath(boolean netbeans) {
         return netbeans ? "client-netbeans" : null;

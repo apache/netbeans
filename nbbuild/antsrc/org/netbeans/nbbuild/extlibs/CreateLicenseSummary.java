@@ -305,7 +305,6 @@ public class CreateLicenseSummary extends Task {
                         binaries2LicenseHeaders.put(r.getName(), headers);
                     }
                 }
-                System.err.println(r.as(File.class));
             }
         }
         if (binaries2LicenseHeaders.isEmpty())

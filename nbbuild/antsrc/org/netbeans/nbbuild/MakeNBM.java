@@ -598,8 +598,6 @@ public class MakeNBM extends Task {
         File module = new File( productDir, moduleName );
         Attributes attr = getModuleAttributesForLocale("");
         if (attr == null) {
-            System.err.println("attr=" + attr);
-            System.err.println("alwaysCreateNBM=" + alwaysCreateNBM);
             if (!alwaysCreateNBM) {
                 // #181025: OSGi bundle, copy unmodified.
                 Copy copy = new Copy();
@@ -663,7 +661,6 @@ public class MakeNBM extends Task {
         String codename = englishAttr.getValue("OpenIDE-Module");
         if (codename == null)
  	    new BuildException( "Can't get codenamebase" );
- 	      System.err.println("codename=" + codename);
  	UpdateTracking tracking = new UpdateTracking(productDir.getAbsolutePath());
  	Set<String> _files = new LinkedHashSet<>(Arrays.asList(tracking.getListOfNBM(codename)));
     List<String> __files = new ArrayList<>(_files);
@@ -1032,13 +1029,7 @@ public class MakeNBM extends Task {
             }
         }
         module.appendChild(el);
-        // Maybe write out license text.
-        if (license != null) {
-            el = doc.createElement("license");
-            el.setAttribute("name", license.getName());
-            el.appendChild(license.getTextNode(doc));
-            module.appendChild(el);
-        }
+        maybeAddLicense(module);
         if (updaterJar != null && updaterJar.size() > 0) {
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -1069,11 +1060,23 @@ public class MakeNBM extends Task {
         
         try (JarFile jf = new JarFile(osgiJar)) {
             MakeUpdateDesc.fakeOSGiInfoXml(jf, osgiJar, doc);
+            maybeAddLicense(doc.getDocumentElement());
         } catch (IOException x) {
             throw new BuildException(x, getLocation());
         }
 
         return doc;
+    }
+
+    private void maybeAddLicense(Element module) {
+        // Maybe write out license text.
+        if (license != null) {
+            Document doc = module.getOwnerDocument();
+            Element el = doc.createElement("license");
+            el.setAttribute("name", license.getName());
+            el.appendChild(license.getTextNode(doc));
+            module.appendChild(el);
+        }
     }
 
     static void validateAgainstAUDTDs(InputSource input, final Path updaterJar, final Task task) throws IOException, SAXException {

@@ -962,14 +962,7 @@ public class MakeNBM extends Task {
         } else {
             throw new BuildException("NBM distribution URL is not set", getLocation());
         }
-        // Here we only write a name for the license.
-        if (license != null) {
-            String name = license.getName();
-            if (name == null) {
-                throw new BuildException("Every license must have a name or file attribute", getLocation());
-            }
-            module.setAttribute("license", name);
-        }
+        maybeAddLicenseName(module);
         module.setAttribute("downloadsize", "0");
         if (needsrestart != null) {
             module.setAttribute("needsrestart", needsrestart);
@@ -1060,12 +1053,24 @@ public class MakeNBM extends Task {
         
         try (JarFile jf = new JarFile(osgiJar)) {
             MakeUpdateDesc.fakeOSGiInfoXml(jf, osgiJar, doc);
+            maybeAddLicenseName(doc.getDocumentElement());
             maybeAddLicense(doc.getDocumentElement());
         } catch (IOException x) {
             throw new BuildException(x, getLocation());
         }
 
         return doc;
+    }
+
+    private void maybeAddLicenseName(Element module) {
+        // Here we only write a name for the license.
+        if (license != null) {
+            String name = license.getName();
+            if (name == null) {
+                throw new BuildException("Every license must have a name or file attribute", getLocation());
+            }
+            module.setAttribute("license", name);
+        }
     }
 
     private void maybeAddLicense(Element module) {

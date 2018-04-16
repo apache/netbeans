@@ -58,6 +58,7 @@ import org.netbeans.api.queries.FileBuiltQuery.Status;
 import org.netbeans.api.queries.VisibilityQuery;
 import org.netbeans.modules.java.preprocessorbridge.api.CompileOnSaveActionQuery;
 import org.netbeans.modules.java.preprocessorbridge.spi.CompileOnSaveAction;
+import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.indexing.COSSynchronizingIndexer;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.parsing.FileObjects;
@@ -125,6 +126,13 @@ public class BuildArtifactMapperImpl {
     private static final Set<Object> alreadyWarned = new WeakSet<Object>();
 
     private static boolean protectAgainstErrors(URL targetFolder, FileObject[][] sources, Object context) throws MalformedURLException {
+        if (!NoJavacHelper.hasNbJavac()) {
+            UIProvider uip = Lookup.getDefault().lookup(UIProvider.class);
+            if (uip != null) {
+                uip.warnNoNbJavac();
+            }
+            return false;
+        }
         Preferences pref = NbPreferences.forModule(BuildArtifactMapperImpl.class).node(BuildArtifactMapperImpl.class.getSimpleName());
 
         if (!pref.getBoolean(UIProvider.ASK_BEFORE_RUN_WITH_ERRORS, true)) {

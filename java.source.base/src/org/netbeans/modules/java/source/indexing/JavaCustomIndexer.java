@@ -130,6 +130,7 @@ public class JavaCustomIndexer extends CustomIndexer {
     private static final String APT_SOURCE_OUTPUT = "apSrcOut"; //NOI18N
     private static final Pattern ANONYMOUS = Pattern.compile("\\$[0-9]"); //NOI18N
     private static final ClassPath EMPTY = ClassPathSupport.createClassPath(new URL[0]);
+    private static final String PROP_NB_JAVAC = "nb-javac.installed"; //NOI18N
 
     @Override
     protected void index(final Iterable<? extends Indexable> files, final Context context) {
@@ -1416,6 +1417,10 @@ public class JavaCustomIndexer extends CustomIndexer {
             }
             if (JavaIndex.ensureAttributeValue(ctx.getRootURI(), ClassIndexManager.PROP_DIRTY_ROOT, null)) {
                 JavaIndex.LOG.fine("forcing reindex due to dirty root"); //NOI18N
+                vote = false;
+            }
+            if (JavaIndex.ensureAttributeValue(ctx.getRootURI(), PROP_NB_JAVAC, String.valueOf(NoJavacHelper.hasNbJavac()))) {
+                JavaIndex.LOG.fine("forcing reindex due to nb-javac status change"); //NOI18N
                 vote = false;
             }
             if (!JavaFileFilterListener.getDefault().startListeningOn(ctx.getRoot())) {

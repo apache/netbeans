@@ -31,4 +31,5 @@ public interface UIProvider {
 
     boolean warnContainsErrors(Preferences pref);
     void notifyLowMemory(String rootName);
+    void warnNoNbJavac();
 }

@@ -191,13 +191,14 @@ public class BuildArtifactMapperImpl {
                 false;                
     }
 
-    public static void classCacheUpdated(URL sourceRoot, File cacheRoot, Iterable<File> deleted, Iterable<File> updated, boolean resource) {
+    public static void classCacheUpdated(URL sourceRoot, File cacheRoot, Iterable<File> deleted, Iterable<File> updated, boolean resource, boolean isAllFilesIndexing) {
         final CompileOnSaveAction a = CompileOnSaveActionQuery.getAction(sourceRoot);
         if (a != null) {
             try {
                 final CompileOnSaveAction.Context ctx = CompileOnSaveAction.Context.update(
                         sourceRoot,
                         resource,
+                        isAllFilesIndexing,
                         cacheRoot,
                         updated,
                         deleted,

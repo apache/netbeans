@@ -446,7 +446,7 @@ public class ModuleOraculumTest extends NbTestCase {
 
     private static void scan(@NonNull final FileObject root) throws IOException {
         final TransactionContext ctx = TransactionContext.beginTrans()
-                .register(ClassIndexEventsTransaction.class, ClassIndexEventsTransaction.create(true));
+                .register(ClassIndexEventsTransaction.class, ClassIndexEventsTransaction.create(true, ()->true));
         try {
             ClassIndexImpl ci = ClassIndexManager.getDefault().createUsagesQuery(root.toURL(), true);
             if (ci == null) {

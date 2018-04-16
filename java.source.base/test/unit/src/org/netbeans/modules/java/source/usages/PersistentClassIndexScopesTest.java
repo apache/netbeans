@@ -160,7 +160,7 @@ public class PersistentClassIndexScopesTest extends NbTestCase {
             @NonNull final URL root) throws IOException {
         TransactionContext.beginTrans().register(
                 ClassIndexEventsTransaction.class,
-                ClassIndexEventsTransaction.create(true));
+                ClassIndexEventsTransaction.create(true, ()->true));
         try {
             ClassIndexManager.getDefault().removeRoot(root);
         } finally {

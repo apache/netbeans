@@ -50,7 +50,8 @@ public class SourcesPanelProvider implements ProjectCustomizer.CompositeCategory
     public JComponent createComponent(Category category, Lookup context) {
         ModelHandle2 handle = context.lookup(ModelHandle2.class);
         NbMavenProjectImpl project = context.lookup(NbMavenProjectImpl.class);
-        return new SourcesPanel(handle, project);
+        MavenProjectPropertiesUiSupport uiSupport = context.lookup(MavenProjectPropertiesUiSupport.class);
+        return new SourcesPanel(handle, project, uiSupport);
     }
 
     @ProjectCustomizer.CompositeCategoryProvider.Registration(projectType="org-netbeans-modules-maven", position=1000, category="Formatting", categoryLabel="#LBL_CategoryFormatting")

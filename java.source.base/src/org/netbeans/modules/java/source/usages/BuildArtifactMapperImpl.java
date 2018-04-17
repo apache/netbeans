@@ -239,10 +239,10 @@ public class BuildArtifactMapperImpl {
         }
 
         if (targetNewerThanSourceFile(target, sourceFile)) {
-            LOG.log(Level.FINE, "#227791: declining to overwrite {0} with {1}", new Object[] {target, updatedFile});
+            LOG.log(Level.FINER, "#227791: declining to overwrite {0} with {1}", new Object[] {target, updatedFile});
             return false;
         } else {
-            LOG.log(Level.FINE, "#227791: proceeding to overwrite {0} with {1}", new Object[] {target, updatedFile});
+            LOG.log(Level.FINER, "#227791: proceeding to overwrite {0} with {1}", new Object[] {target, updatedFile});
         }
 
         InputStream ins = null;
@@ -789,7 +789,7 @@ public class BuildArtifactMapperImpl {
                         return null;
                     }
 
-                    LOG.log(Level.FINE, "#227791: copying {0} to {1} given sources in {2}", new Object[] {index, targetFolder, srURL});
+                    LOG.log(Level.FINER, "#227791: copying {0} to {1} given sources in {2}", new Object[] {index, targetFolder, srURL});
                     copyRecursively(index, targetFolder, srURL);
                 }
 
@@ -845,9 +845,9 @@ public class BuildArtifactMapperImpl {
                 File toDelete = resolveFile(targetFolder, relPath);
 
                 if (targetNewerThanSourceFile(toDelete, new URL(ctx.getSourceRoot(), relPath))) {
-                    LOG.log(Level.FINE, "#227791: declining to delete {0}", toDelete);
+                    LOG.log(Level.FINER, "#227791: declining to delete {0}", toDelete);
                 } else {
-                    LOG.log(Level.FINE, "#227791: proceeding to delete {0}", toDelete);
+                    LOG.log(Level.FINER, "#227791: proceeding to delete {0}", toDelete);
                     toDelete.delete();
                     updatedFiles.add(toDelete);
                 }
@@ -893,11 +893,11 @@ public class BuildArtifactMapperImpl {
 
     private static boolean targetNewerThanSourceFile(File target, URL approximateSource) {
         if (!"file".equals(approximateSource.getProtocol())) {
-            LOG.log(Level.FINE, "#227791: ignoring non-file-based source {0}", approximateSource);
+            LOG.log(Level.FINER, "#227791: ignoring non-file-based source {0}", approximateSource);
             return false;
         }
         if (!target.isFile()) {
-            LOG.log(Level.FINE, "#227791: {0} does not even exist", target);
+            LOG.log(Level.FINER, "#227791: {0} does not even exist", target);
             return false;
         }
         long targetLastMod = target.lastModified();
@@ -905,20 +905,20 @@ public class BuildArtifactMapperImpl {
         try {
             mockSrc = BaseUtilities.toFile(approximateSource.toURI());
         } catch (URISyntaxException x) {
-            LOG.log(Level.FINE, "#227791: cannot convert " + approximateSource, x);
+            LOG.log(Level.FINER, "#227791: cannot convert " + approximateSource, x);
             return false;
         }
         File src = new File(mockSrc.getParentFile(), mockSrc.getName().replaceFirst("([$].+)*[.]sig$", ".java"));
         if (!src.isFile()) {
-            LOG.log(Level.FINE, "#227791: could not locate estimated source file {0}", src);
+            LOG.log(Level.FINER, "#227791: could not locate estimated source file {0}", src);
             return false;
         }
         long sourceLastMod = src.lastModified();
         if (targetLastMod > sourceLastMod) {
-            LOG.log(Level.INFO, "#227791: skipping delete/overwrite since {0} @{1,time,yyyy-MM-dd'T'HH:mm:ssZ} is newer than {2} @{3,time,yyyy-MM-dd'T'HH:mm:ssZ}", new Object[] {target, targetLastMod, src, sourceLastMod});
+            LOG.log(Level.FINE, "#227791: skipping delete/overwrite since {0} @{1,time,yyyy-MM-dd'T'HH:mm:ssZ} is newer than {2} @{3,time,yyyy-MM-dd'T'HH:mm:ssZ}", new Object[] {target, targetLastMod, src, sourceLastMod});
             return true;
         } else {
-            LOG.log(Level.FINE, "#227791: {0} @{1,time,yyyy-MM-dd'T'HH:mm:ssZ} is older than {2} @{3,time,yyyy-MM-dd'T'HH:mm:ssZ}", new Object[] {target, targetLastMod, src, sourceLastMod});
+            LOG.log(Level.FINER, "#227791: {0} @{1,time,yyyy-MM-dd'T'HH:mm:ssZ} is older than {2} @{3,time,yyyy-MM-dd'T'HH:mm:ssZ}", new Object[] {target, targetLastMod, src, sourceLastMod});
             return false;
         }
     }

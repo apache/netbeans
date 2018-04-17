@@ -223,7 +223,17 @@ public class DriverListUtil {
         url.setSampleUrl("jdbc:mysql://localhost:3306/mysql?zeroDateTimeBehavior=convertToNull");
         url.setSampleUser("root");
         url.setSamplePassword("");
-        
+
+        url = add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_MariaDB"),
+                "org.mariadb.jdbc.Driver",
+                "jdbc:mariadb://[<HOST>[:<PORT>]][/<DB>][?<ADDITIONAL>]", true); // NOI18N
+        /* The zeroDateTimeBehavior property is not supported by the MariaDB driver, so drop it from
+        the sample URL ( https://jira.mariadb.org/browse/CONJ-204 ). The system database seems to
+        still be called "mysql" ( https://mariadb.com/kb/en/library/the-mysql-database-tables ). */
+        url.setSampleUrl("jdbc:mariadb://localhost:3306/mysql");
+        url.setSampleUser("root");
+        url.setSamplePassword("");
+
         add("MySQL (MM.MySQL driver)",
         "org.gjt.mm.mysql.Driver",
         "jdbc:mysql://<HOST>[:<PORT>]/<DB>");

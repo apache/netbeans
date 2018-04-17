@@ -207,6 +207,26 @@ public class DriverListUtilTest extends TestCase {
         propValues.remove(JdbcUrl.TOKEN_HOST);
         testUrlString(url, propValues, "jdbc:mysql:///" + DB); 
     }
+
+    public void testMariaDB() throws Exception {
+        ArrayList<String> requiredProps = new ArrayList<String>();
+        JdbcUrl url = checkUrl(getDriverName("DRIVERNAME_MariaDB"), null, "org.mariadb.jdbc.Driver",
+                "jdbc:mariadb://[<HOST>[:<PORT>]][/<DB>][?<ADDITIONAL>]",
+                STD_SUPPORTED_PROPS, requiredProps);
+
+        HashMap<String, String> propValues = buildPropValues(STD_SUPPORTED_PROPS);
+
+        testUrlString(url, propValues, "jdbc:mariadb://" + HOST + ":" + PORT + "/" + DB + "?" + ADDITIONAL);
+
+        propValues.remove(JdbcUrl.TOKEN_ADDITIONAL);
+        testUrlString(url, propValues, "jdbc:mariadb://" + HOST + ":" + PORT + "/" + DB);
+
+        propValues.remove(JdbcUrl.TOKEN_PORT);
+        testUrlString(url, propValues, "jdbc:mariadb://" + HOST + "/" + DB);
+
+        propValues.remove(JdbcUrl.TOKEN_HOST);
+        testUrlString(url, propValues, "jdbc:mariadb:///" + DB);
+    }
     
     enum DB2Types { DB2, IDS, CLOUDSCAPE };
     

@@ -302,6 +302,10 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
         }
         final List<AnnotateLine> lines = new LinkedList<AnnotateLine>(annotateLines);
         int lineCount = lines.size();
+//        String lineTest;
+//        try{
+//            doc.getContent().toString();
+//        }
         /** 0 based line numbers => 1 based line numbers*/
         final int ann2editorPermutation[] = new int[lineCount];
         for (int i = 0; i< lineCount; i++) {

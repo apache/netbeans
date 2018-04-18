@@ -26,6 +26,7 @@ description: |
 icon: ../../ide.branding/release/netbeans.png
 confinement: classic
 grade: devel
+architectures: [ amd64 ]
 
 parts:
   build:
@@ -33,7 +34,7 @@ parts:
         - openjdk-8-jdk-headless
         - ant
     build: |
-        JAVA_HOME="/usr/lib/jvm/java-8-openjdk-$SNAP_ARCH"
+        JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
         export JAVA_HOME
         ant -quiet -Djavac.compilerargs=-nowarn -Dbuild.compiler.deprecation=false
     build-attributes: [ no-patchelf ]

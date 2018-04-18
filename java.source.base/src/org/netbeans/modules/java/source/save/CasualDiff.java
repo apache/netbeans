@@ -1443,7 +1443,12 @@ public class CasualDiff {
         int addDimensions = 0;
         if (diffContext.syntheticTrees.contains(oldT.vartype)) {
             if (!diffContext.syntheticTrees.contains(newT.vartype)) {
-                copyTo(localPointer, localPointer = oldT.pos);
+                int varOffset = skipExtraVarKeyWordIfPresent(localPointer, oldT.pos);
+
+                if (varOffset == -1) {
+                    copyTo(localPointer, oldT.pos);
+                }
+                localPointer = oldT.pos;
                 printer.suppressVariableType = suppressParameterTypes;
                 int l = printer.out.length();
                 printer.print(newT.vartype);
@@ -6027,5 +6032,26 @@ public class CasualDiff {
         } catch (Exception ex) {}
         return sb.toString();
     }
-
+    
+    private int skipExtraVarKeyWordIfPresent(int start, int end) {
+        int varoffset = -1;
+        int newStart = -1;
+        tokenSequence.move(start);
+        tokenSequence.moveNext();
+        while (tokenSequence.offset() < end) {
+            JavaTokenId token = tokenSequence.token().id();
+            if (token == JavaTokenId.VAR) {
+                varoffset = tokenSequence.offset();
+                copyTo(start, varoffset);
+            } else if (varoffset > -1) {
+                if (token != JavaTokenId.WHITESPACE) {
+                    newStart = tokenSequence.offset();
+                    copyTo(newStart, end);
+                    break;
+                }
+            }
+            tokenSequence.moveNext();
+        }
+        return varoffset;
+    }
 }

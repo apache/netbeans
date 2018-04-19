@@ -25,6 +25,19 @@
     <apidef name="javasource_base">Java Source API</apidef>
 </apidefs>
 <changes>
+    <change id="BuildArtifactMapper.isCompileOnSaveSupported">
+        <api name="javasource_base"/>
+        <summary>Check the var type variable in given tree path.</summary>
+        <version major="1" minor="2.32"/>
+        <date day="20" month="4" year="2018"/>
+        <author login="jlahoda"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+            Added BuildArtifactMapper.isCompileOnSaveSupported method, which
+            checks if compile on save is suported in the current configuration.
+        </description>
+        <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="TreeUtilities.isVarType">
         <api name="javasource_base"/>
         <summary>Check the var type variable in given tree path.</summary>

@@ -25,6 +25,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.java.source.BuildArtifactMapper;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.execute.BeanRunConfig;
@@ -128,7 +129,7 @@ public final class RunUtils {
         if (cos == null) {
             cos = "all";
         }
-        return !"none".equalsIgnoreCase(cos);    
+        return !"none".equalsIgnoreCase(cos) && BuildArtifactMapper.isCompileOnSaveSupported();
     }
     
     public static boolean isCompileOnSaveEnabled(RunConfig config) {

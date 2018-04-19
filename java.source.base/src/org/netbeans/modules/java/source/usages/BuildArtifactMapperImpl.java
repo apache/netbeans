@@ -126,13 +126,6 @@ public class BuildArtifactMapperImpl {
     private static final Set<Object> alreadyWarned = new WeakSet<Object>();
 
     private static boolean protectAgainstErrors(URL targetFolder, FileObject[][] sources, Object context) throws MalformedURLException {
-        if (!NoJavacHelper.hasNbJavac()) {
-            UIProvider uip = Lookup.getDefault().lookup(UIProvider.class);
-            if (uip != null) {
-                uip.warnNoNbJavac();
-            }
-            return false;
-        }
         Preferences pref = NbPreferences.forModule(BuildArtifactMapperImpl.class).node(BuildArtifactMapperImpl.class.getSimpleName());
 
         if (!pref.getBoolean(UIProvider.ASK_BEFORE_RUN_WITH_ERRORS, true)) {
@@ -481,6 +474,10 @@ public class BuildArtifactMapperImpl {
         } else {
             return path + File.separatorChar;
         }
+    }
+
+    public static boolean isCompileOnSaveSupported() {
+        return NoJavacHelper.hasNbJavac();
     }
 
     @org.openide.util.lookup.ServiceProvider(service=org.netbeans.spi.queries.FileBuiltQueryImplementation.class, position=1000)

@@ -1443,7 +1443,7 @@ public class CasualDiff {
         int addDimensions = 0;
         if (diffContext.syntheticTrees.contains(oldT.vartype)) {
             if (!diffContext.syntheticTrees.contains(newT.vartype)) {
-                int varOffset = skipExtraVarKeyWordIfPresent(localPointer, oldT.pos);
+                int varOffset = skipExtraVarKeywordIfPresent(localPointer, oldT.pos);
 
                 if (varOffset == -1) {
                     copyTo(localPointer, oldT.pos);
@@ -6033,7 +6033,7 @@ public class CasualDiff {
         return sb.toString();
     }
     
-    private int skipExtraVarKeyWordIfPresent(int start, int end) {
+    private int skipExtraVarKeywordIfPresent(int start, int end) {
         int varoffset = -1;
         int newStart = -1;
         tokenSequence.move(start);

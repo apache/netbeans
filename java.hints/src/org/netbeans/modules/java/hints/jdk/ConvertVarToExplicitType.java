@@ -55,7 +55,7 @@ import org.openide.util.NbBundle.Messages;
  * @author rtaneja
  */
 @Hint(displayName = "#DN_ConvertVarToExplicitType", description = "#DESC_ConvertVarToExplicitType", category = "rules15", minSourceVersion = "10")
-@Messages("MSG_ConvertibleToExplicitType=Convert var type to explict type")
+@Messages("MSG_ConvertibleToExplicitType=Convert var to explicit type")
 public class ConvertVarToExplicitType {
 
     @TriggerPattern("$mods$ $type $var = $init") //NOI18N

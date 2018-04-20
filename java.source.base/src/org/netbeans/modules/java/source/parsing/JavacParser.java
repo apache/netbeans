@@ -727,9 +727,15 @@ public class JavacParser extends Parser {
             }
             AbstractSourceFileObject source = null;
             if (file != null) {
-                source = FileObjects.sourceFileObject(file, root);
-                if (source.getKind() != Kind.SOURCE) {
-                    source = null;
+                try {
+                    source = FileObjects.sourceFileObject(file, root, null, false);
+                    if (source.getKind() != Kind.SOURCE) {
+                        source = null;
+                    }
+                } catch (FileObjects.InvalidFileException ife) {
+                    //ignore, it will be handled again later, see #parse.
+                } catch (IOException ex) {
+                    throw new IllegalStateException(ex);
                 }
             }
             final JavacTaskImpl javacTask = createJavacTask(cpInfo,

@@ -172,7 +172,7 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
         comSourceLevel.setEditable(false);
         sourceLevel = SourceLevelQuery.getSourceLevel(project.getProjectDirectory());
         comSourceLevel.setModel(new DefaultComboBoxModel(new String[] {
-            "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "9" //NOI18N
+            "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "9", "10", "11" //NOI18N
         }));
         
         comSourceLevel.setSelectedItem(sourceLevel);

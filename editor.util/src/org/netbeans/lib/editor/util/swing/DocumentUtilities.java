@@ -972,6 +972,11 @@ public final class DocumentUtilities {
      * @since 1.35
      */
     public static void addPropertyChangeListener(Document doc, PropertyChangeListener l) {
+        /* In case the listener is a weak listener, we have added a package-private
+        BaseDocument.removePropertyChangeListener(PropertyChangeListener) method that can be found
+        and called by org.openide.util.WeakListenerImpl. (In the case that doc is not a
+        BaseDocument, pcs will likely be null here, and so the listener will not be added in the first
+        place.) */
         PropertyChangeSupport pcs = (PropertyChangeSupport) doc.getProperty(PropertyChangeSupport.class);
         if (pcs != null) {
             pcs.addPropertyChangeListener(l);

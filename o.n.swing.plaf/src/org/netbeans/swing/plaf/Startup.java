@@ -175,7 +175,7 @@ public final class Startup {
         if (isWindows()) {
             uiClassName = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"; //NOI18N
         } else if (isMac()) {
-            uiClassName = "apple.laf.AquaLookAndFeel";
+            uiClassName = "com.apple.laf.AquaLookAndFeel";
         } else if (shouldUseMetal()) {
             uiClassName = "javax.swing.plaf.metal.MetalLookAndFeel"; //NOI18N
         } else {

@@ -1325,7 +1325,7 @@ final class PropUtils {
      * cell and its text.  The default is 2, or it can be customized via the
      * UIManager integer key netbeans.ps.textMargin */
     static int getTextMargin() {
-        if ("apple.laf.AquaLookAndFeel".equals(UIManager.getLookAndFeel().getClass().getName())) {
+        if ("com.apple.laf.AquaLookAndFeel".equals(UIManager.getLookAndFeel().getClass().getName())) {
             return 0;
         }
 

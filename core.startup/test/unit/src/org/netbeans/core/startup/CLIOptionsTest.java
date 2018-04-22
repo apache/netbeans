@@ -70,7 +70,7 @@ public class CLIOptionsTest extends NbTestCase {
         if (Utilities.isMac()) {
             new CLIOptions().cli(new String[] { "--laf", "Aqua" });
             try {
-                assertEquals("Must be MacOS", CLIOptions.uiClass, Class.forName("apple.laf.AquaLookAndFeel"));
+                assertEquals("Must be MacOS", CLIOptions.uiClass, Class.forName("com.apple.laf.AquaLookAndFeel"));
             } catch (ClassNotFoundException exc) {
             }
         }

@@ -909,7 +909,7 @@ public final class DocumentViewOp
             Document doc = docView.getDocument();
             updateTextLimitLine(doc);
             clearStatusBits(AVAILABLE_WIDTH_VALID);
-            DocumentUtilities.addPropertyChangeListener(doc, WeakListeners.propertyChange(this, doc));
+            DocumentUtilities.addWeakPropertyChangeListener(doc, this);
         }
     }
     

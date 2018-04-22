@@ -75,13 +75,12 @@ public class Hacks {
 
     private static final String SOURCE_LEVEL = "1.8"; //TODO: could be possibly inferred from the current Java platform
 
-    public static Map<String, byte[]> compile(ClassPath boot, ClassPath compile, final String code) throws IOException {
+    public static Map<String, byte[]> compile(ClassPath compile, final String code) throws IOException {
         DiagnosticListener<JavaFileObject> devNull = new DiagnosticListener<JavaFileObject>() {
             public void report(Diagnostic<? extends JavaFileObject> diagnostic) {}
         };
         StandardJavaFileManager sjfm = ToolProvider.getSystemJavaCompiler().getStandardFileManager(devNull, null, null);
 
-        sjfm.setLocation(StandardLocation.PLATFORM_CLASS_PATH, toFiles(boot));
         sjfm.setLocation(StandardLocation.CLASS_PATH, toFiles(compile));
 
         final Map<String, ByteArrayOutputStream> class2BAOS = new HashMap<String, ByteArrayOutputStream>();

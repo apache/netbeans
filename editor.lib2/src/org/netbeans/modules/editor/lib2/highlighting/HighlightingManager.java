@@ -197,11 +197,15 @@ public final class HighlightingManager {
         public Highlighting(HighlightingManager manager, JTextComponent pane) {
             this.manager = manager;
             this.pane = pane;
-            this.paneFilter = new RegExpFilter(pane.getClientProperty(PROP_HL_INCLUDES), pane.getClientProperty(PROP_HL_EXCLUDES));
+            updatePaneFilter();
             this.pane.addPropertyChangeListener(WeakListeners.propertyChange(this, pane));
             rebuildAll();
         }
         
+        private void updatePaneFilter() {
+            paneFilter = new RegExpFilter(pane.getClientProperty(PROP_HL_INCLUDES), pane.getClientProperty(PROP_HL_EXCLUDES));
+        }
+
         synchronized HighlightsContainer bottomHighlights() {
             return bottomHighlights;
         }
@@ -241,6 +245,7 @@ public final class HighlightingManager {
 
         public @Override void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName() == null || PROP_DOCUMENT.equals(evt.getPropertyName())) {
+                updatePaneFilter();
                 Document doc = pane.getDocument();
                 if (doc != null) {
                     doc.render(new Runnable() {
@@ -253,6 +258,7 @@ public final class HighlightingManager {
             }
 
             if (PROP_HL_INCLUDES.equals(evt.getPropertyName()) || PROP_HL_EXCLUDES.equals(evt.getPropertyName())) {
+                updatePaneFilter();
                 rebuildAllLayers();
             }
         }

@@ -413,16 +413,16 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
 
     static final class SourceLevelComboBoxModel extends AbstractListModel<String> implements ComboBoxModel<String>, ListDataListener {
 
-        private final ComboBoxModel platformComboBoxModle;
+        private final ComboBoxModel platformComboBoxModel;
         private String selectedSourceLevel;
         private String[] sourceLevelCache;
 
         private static final SpecificationVersion MINIMAL_SOURCE_LEVEL = new SpecificationVersion("1.3"); // NOI18N
         private static final long serialVersionUID = 1L;
 
-        public SourceLevelComboBoxModel(ComboBoxModel platformComboBoxModle, String selectedSourceLevel) {
-            this.platformComboBoxModle = platformComboBoxModle;
-            this.platformComboBoxModle.addListDataListener(this);
+        public SourceLevelComboBoxModel(ComboBoxModel platformComboBoxModel, String selectedSourceLevel) {
+            this.platformComboBoxModel = platformComboBoxModel;
+            this.platformComboBoxModel.addListDataListener(this);
             this.selectedSourceLevel = selectedSourceLevel;
         }
 
@@ -472,7 +472,7 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
 
         private synchronized String[] getSourceLevels() {
             if (sourceLevelCache == null) {
-                Union2<JavaPlatform, String> union = (Union2<JavaPlatform, String>) platformComboBoxModle.getSelectedItem();
+                Union2<JavaPlatform, String> union = (Union2<JavaPlatform, String>) platformComboBoxModel.getSelectedItem();
                 JavaPlatform platform = union.first();
                 List<String> sourceLevels = new ArrayList<>();
                 if (platform != null) {

@@ -913,6 +913,7 @@ public class J2SEActionProvider extends BaseActionProvider {
                 final JavaSource js = createSource();
                 synchronized (this) {
                     if (deferredGuard == 1) {
+                        deferredGuard = 2;
                         try {
                             js.runWhenScanFinished((cc) -> drainDeferred(), true);
                         } catch (IOException ioe) {

@@ -77,7 +77,7 @@ public class JavaBinaryIndexerTest  extends NbTestCase {
     @Override
     protected void tearDown() throws Exception {
         LowMemoryWatcherAccessor.setLowMemory(false);
-        final TransactionContext ctx = TransactionContext.beginStandardTransaction(me, false, false, false);
+        final TransactionContext ctx = TransactionContext.beginStandardTransaction(me, false, ()->false, false);
         try {
             ClassIndexManager.getDefault().removeRoot(me);
         } finally {

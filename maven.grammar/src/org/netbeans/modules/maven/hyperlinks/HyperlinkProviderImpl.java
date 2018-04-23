@@ -386,12 +386,15 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
                                 // handle cases where the version element is covered in a 
                                 // parent pom/dependenciesManagement
                                 if (version == null) {
-                                    MavenProject mavenProject = getNbMavenProject(doc).getMavenProject();
-                                    for (Artifact artifact : mavenProject.getArtifacts()) {
-                                        if (artifact.getGroupId().equals(groupId)
-                                                && artifact.getArtifactId().equals(artifactId)) {
-                                            version = artifact.getVersion();
-                                            break;
+                                    NbMavenProject projectForDocument = getNbMavenProject(doc);
+                                    if (projectForDocument != null) {
+                                        MavenProject mavenProject = projectForDocument.getMavenProject();
+                                        for (Artifact artifact : mavenProject.getArtifacts()) {
+                                            if (artifact.getGroupId().equals(groupId)
+                                                    && artifact.getArtifactId().equals(artifactId)) {
+                                                version = artifact.getVersion();
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -471,6 +474,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             while (!TokenUtilities.equals("<dependency", xml.token().text())             //NOI18N
                     && !TokenUtilities.equals("<plugin", xml.token().text())             //NOI18N
                     && !TokenUtilities.equals("<parent", xml.token().text())             //NOI18N
+                    && !TokenUtilities.equals("<exclusion", xml.token().text())             //NOI18N
                     && !TokenUtilities.equals("<project", xml.token().text())) {         //NOI18N
                 xml.movePrevious();
             }

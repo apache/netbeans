@@ -166,6 +166,7 @@ import org.netbeans.modules.java.source.transform.FieldGroupTree;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
+import javax.lang.model.type.TypeKind;
 
 public class CasualDiff {
 
@@ -1469,8 +1470,77 @@ public class CasualDiff {
                 addDimensions = dimension(newT.vartype, -1);
                 cLikeArray = vartypeBounds[1] > oldT.pos;
                 cLikeArrayChange =  cLikeArray && dimension(oldT.vartype, oldT.pos) > addDimensions;
-                copyTo(localPointer, vartypeBounds[0]);
+
+                /**
+                 * Extracting modifier from oldTree using symbol position and
+                 * modifier positions when oldT.type is error and vartype
+                 * upperbound is not proper.
+                 */
+                if (oldT.type.getKind() == TypeKind.ERROR && vartypeBounds[1] == -1) {
+
+                    // returns -1 if modifiers not present.
+                    int modsUpperBound = getCommentCorrectedEndPos(oldT.mods);
+                    if (modsUpperBound > -1) {
+                        tokenSequence.move(modsUpperBound);
+                        tokenSequence.moveNext();
+
+                        // copying modifiers from oldTree
+                        if (JavaTokenId.WHITESPACE == tokenSequence.token().id()) {
+                            int offset = tokenSequence.offset();
+                            copyTo(localPointer, localPointer = offset);
+                        } else {
+                            copyTo(localPointer, localPointer = modsUpperBound);
+                        }
+                    }
+
+                    tokenSequence.move(localPointer);
+                    tokenSequence.moveNext();
+                    int offset = tokenSequence.offset();
+                    JavaTokenId tokenId = tokenSequence.token().id();
+
+                    //adding back all whitespaces/block-comment/javadoc-comments present in OldTree before variable type token.
+                    while ((tokenId == JavaTokenId.WHITESPACE || tokenId == JavaTokenId.BLOCK_COMMENT || tokenId == JavaTokenId.JAVADOC_COMMENT) && offset < oldT.sym.pos) {
+                        printer.print(tokenSequence.token().text().toString());
+                        tokenSequence.moveNext();
+                        offset = tokenSequence.offset();
+                        tokenId = tokenSequence.token().id();
+                    }
+
+                    // Correcting lower/upper bounds for oldT.vartype tree.
+                    vartypeBounds[1] = oldT.sym.pos;
+                    vartypeBounds[0] = offset;
+
+                } else {
+                    copyTo(localPointer, vartypeBounds[0]);
+
+                }
+
                 localPointer = diffTree(oldT.vartype, newT.vartype, vartypeBounds);
+
+                /**
+                 * For erroneous variable type sometime diffTree function return
+                 * wrong position. In that scenario only old variable type will
+                 * be replaced with new variable type leaving out succeeding
+                 * comments tokens present(if any). Below code copies successive
+                 * tokens after excluding variable type token which will be the
+                 * first token.
+                 */
+                if (oldT.type.getKind() == TypeKind.ERROR && localPointer == -1) {
+
+                    // moving to variable type token
+                    tokenSequence.move(vartypeBounds[0]);
+                    tokenSequence.moveNext();
+
+                    //moving to first token after variable type token.
+                    tokenSequence.moveNext();
+
+                    // copying tokens from vartype bounds after excluding variable type token.
+                    int offset = tokenSequence.offset();
+                    if (offset < vartypeBounds[1]) {
+                        copyTo(offset, vartypeBounds[1]);
+                    }
+                    localPointer = vartypeBounds[1];
+                }
             }
         }
         if (nameChanged(oldT.name, newT.name)) {

@@ -199,6 +199,47 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                                         input.readLength(), PartType.START);
                         }
 
+                case '`': //raw string literal
+                    if (input.readLength() > 1) {
+                        //even the first backtick must be unencoded for a raw string:
+                        return token(JavaTokenId.ERROR);
+                    }
+                    //detect delimiter:
+                    int delimiterCount = 1;
+                    while ((c = input.read()) == '`') {
+                        delimiterCount++;
+                    }
+
+                    if (c == EOF) {
+                        return tokenFactory.createToken(JavaTokenId.RAW_STRING_LITERAL,
+                                input.readLength(), PartType.START);
+                    }
+
+                    while (true) {
+                        while ((c = input.read()) != '`' && c != EOF)
+                            ;
+
+                        if (c == EOF) {
+                            return tokenFactory.createToken(JavaTokenId.RAW_STRING_LITERAL,
+                                    input.readLength(), PartType.START);
+                        }
+
+                        int endDelimiterCount = 1;
+
+                        while ((c = input.read()) == '`') {
+                            endDelimiterCount++;
+                        }
+
+                        if (delimiterCount == endDelimiterCount) {
+                            input.backup(1);
+                            return token(JavaTokenId.RAW_STRING_LITERAL);
+                        }
+
+                        if (c == EOF) {
+                            return tokenFactory.createToken(JavaTokenId.RAW_STRING_LITERAL,
+                                    input.readLength(), PartType.START);
+                        }
+                    }
                 case '/':
                     switch (nextChar()) {
                         case '/': // in single-line comment

@@ -634,4 +634,56 @@ public class JavaLexerBatchTest extends TestCase {
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.INT_LITERAL, "0");
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.SEMICOLON, ";");
     }
+
+    private void enableRawStringLiterals(InputAttributes attr) {
+        //any setup needed for raw string literals:
+        //e.g.:
+//        attr.setValue(JavaTokenId.language(), "version", Integer.valueOf(11), true);
+    }
+
+    public void testRawLiteral() {
+        String text = "`foo bar` `` foo ` bar `` ` `` `";
+        InputAttributes attr = new InputAttributes();
+        enableRawStringLiterals(attr);
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.RAW_STRING_LITERAL, "`foo bar`");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.RAW_STRING_LITERAL, "`` foo ` bar ``");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.RAW_STRING_LITERAL, "` `` `");
+    }
+
+    public void testUnclosed1() {
+        String text = "```";
+        InputAttributes attr = new InputAttributes();
+        enableRawStringLiterals(attr);
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.RAW_STRING_LITERAL, "```");
+    }
+
+    public void testEscapes1() {
+        String text = "```\\u0061\\u0060`` ```";
+        InputAttributes attr = new InputAttributes();
+        enableRawStringLiterals(attr);
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.RAW_STRING_LITERAL, "```\\u0061\\u0060`` ```");
+    }
+
+    public void testEscapesStart() {
+        String text = "\\u0060`\\u0061`` `";
+        InputAttributes attr = new InputAttributes();
+        enableRawStringLiterals(attr);
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.ERROR, "\\u0060");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.RAW_STRING_LITERAL, "`\\u0061`` `");
+    }
+
 }

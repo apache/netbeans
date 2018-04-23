@@ -1036,7 +1036,7 @@ public class JavaCustomIndexer extends CustomIndexer {
             final TransactionContext txctx = TransactionContext.beginStandardTransaction(
                     context.getRootURI(),
                     true,
-                    context.isAllFilesIndexing(),
+                    context::isAllFilesIndexing,
                     context.checkForEditorModifications());
             try {
                 return JavaIndexerWorker.reduce(
@@ -1093,7 +1093,7 @@ public class JavaCustomIndexer extends CustomIndexer {
             assert removedRoots != null;
             JavaIndex.LOG.log(Level.FINE, "roots removed: {0}", removedRoots);
             final TransactionContext txCtx = TransactionContext.beginTrans().
-                    register(ClassIndexEventsTransaction.class, ClassIndexEventsTransaction.create(true));
+                    register(ClassIndexEventsTransaction.class, ClassIndexEventsTransaction.create(true, ()->false));
             try {
                 APTUtils.sourceRootUnregistered(removedRoots);
                 final ClassIndexManager cim = ClassIndexManager.getDefault();

@@ -105,7 +105,13 @@ public class COSSynchronizingIndexer extends CustomIndexer {
             File sourceRootFile = BaseUtilities.toFile(context.getRootURI().toURI());
 
             if (!context.checkForEditorModifications()) { // #187514, see also #152222 and JavaCustomIndexer
-                BuildArtifactMapperImpl.classCacheUpdated(context.getRootURI(), sourceRootFile, Collections.<File>emptyList(), updated, true);
+                BuildArtifactMapperImpl.classCacheUpdated(
+                        context.getRootURI(),
+                        sourceRootFile,
+                        Collections.<File>emptyList(),
+                        updated,
+                        true,
+                        context.isAllFilesIndexing());
             }
         } catch (URISyntaxException ex) {
             Exceptions.printStackTrace(ex);
@@ -162,7 +168,13 @@ public class COSSynchronizingIndexer extends CustomIndexer {
             try {
                 File sourceRootFile = BaseUtilities.toFile(context.getRootURI().toURI());
 
-                BuildArtifactMapperImpl.classCacheUpdated(context.getRootURI(), sourceRootFile, deletedFiles, Collections.<File>emptyList(), true);
+                BuildArtifactMapperImpl.classCacheUpdated(
+                        context.getRootURI(),
+                        sourceRootFile,
+                        deletedFiles,
+                        Collections.<File>emptyList(),
+                        true,
+                        context.isAllFilesIndexing());
             } catch (URISyntaxException ex) {
                 Exceptions.printStackTrace(ex);
             }

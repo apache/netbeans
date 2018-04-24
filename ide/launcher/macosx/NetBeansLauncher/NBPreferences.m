@@ -34,7 +34,7 @@
 
 #define DEFAULT_LOOKFEEL 0
 #define LOOKFEEL_STRING @"--laf"
-NSString *look_and_feels[]={@"apple.laf.AquaLookAndFeel",@"javax.swing.plaf.metal.MetalLookAndFeel"};
+NSString *look_and_feels[]={@"com.apple.laf.AquaLookAndFeel",@"javax.swing.plaf.metal.MetalLookAndFeel"};
 
 #define DEFAULT_USERDIR @""
 #define USERDIR_STRING @"--userdir"

@@ -19,6 +19,8 @@
 package org.netbeans.modules.java.hints.jdk;
 
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -41,8 +43,11 @@ import org.netbeans.spi.java.hints.TriggerPattern;
 import org.openide.util.NbBundle.Messages;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
+import org.netbeans.spi.java.hints.MatcherUtilities;
 
 /**
  * Hint will convert explicit type of local variable to 'var'. Supported: JDK 10
@@ -75,10 +80,22 @@ public class ConvertToVarHint {
         TypeMirror initTypeMirror = ctx.getInfo().getTreeUtilities().attributeTree(t, s);
 
         TypeMirror VariableTypeMiror = ctx.getInfo().getTrees().getElement(treePath).asType();
-
+        
+        boolean diamondOpType  = false;
         // variable initializer type should be same as variable type.
         if (!ctx.getInfo().getTypes().isSameType(VariableTypeMiror, initTypeMirror)) {
-            return null;
+            if(MatcherUtilities.matches(ctx, initTreePath, "new $clazz<$tparams$>($params$)")) {
+                if(initTypeMirror.getKind() == TypeKind.DECLARED && (VariableTypeMiror.getKind() == TypeKind.DECLARED)) {
+                    DeclaredType dtInit = (DeclaredType)initTypeMirror;
+                    DeclaredType dtVarType = (DeclaredType)VariableTypeMiror;
+                    if(dtInit.asElement().equals(dtVarType.asElement())) {
+                        diamondOpType = true;
+                    }
+                }
+            }
+            if(!diamondOpType) {
+                return null;
+            }            
         }
 
         return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), Bundle.MSG_ConvertibleToVarType(), new JavaFixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix());
@@ -106,17 +123,30 @@ public class ConvertToVarHint {
             WorkingCopy wc = tc.getWorkingCopy();
             TreePath statementPath = tc.getPath();
             TreeMaker make = wc.getTreeMaker();
-
+              
             if (statementPath.getLeaf().getKind() == Tree.Kind.VARIABLE) {
                 VariableTree oldVariableTree = (VariableTree) statementPath.getLeaf();
-
+                ExpressionTree initializerTree = oldVariableTree.getInitializer();
+                //replace diamond operator with type params
+                if (initializerTree.getKind() == Tree.Kind.NEW_CLASS) {
+                    NewClassTree nct = (NewClassTree)initializerTree;
+                    if (nct.getIdentifier().getKind() == Tree.Kind.PARAMETERIZED_TYPE) {                        
+                        if(oldVariableTree.getType().getKind() == Tree.Kind.PARAMETERIZED_TYPE) {
+                            ParameterizedTypeTree ptt = (ParameterizedTypeTree) oldVariableTree.getType();
+                            ParameterizedTypeTree nue = (ParameterizedTypeTree)nct.getIdentifier();
+                            if(nue.getTypeArguments().isEmpty() && ptt.getTypeArguments().size() > 0) {
+                                wc.rewrite(nue, ptt);
+                            }                            
+                        }    
+                    }
+                }
                 VariableTree newVariableTree = make.Variable(
                         oldVariableTree.getModifiers(),
                         oldVariableTree.getName(),
                         make.Type("var"),
-                        oldVariableTree.getInitializer()
+                        initializerTree
                 );
-                tc.getWorkingCopy().rewrite(oldVariableTree, newVariableTree);
+                wc.rewrite(oldVariableTree, newVariableTree);
             }
         }
 

@@ -38,28 +38,29 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
     }
 
     @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        sourceLevel = "1.10";
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+    }
+
+    @Override
     protected void tearDown() throws Exception {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = false;
         super.tearDown();
     }
 
     public void testArrayHetrogeneousElements() throws Exception {
-        sourceLevel = "1.10";
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performAnalysisTest("test/Test.java", "package test; public class Test {{var/*comment1*/ k = {1,'c'};}}", -1);
     }
 
     public void testParameterizedElements() throws Exception {
-        sourceLevel = "1.10";
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performAnalysisTest("test/Test.java",
                 "package test; public class Test {{final var j = {new java.util.ArrayList<String>(),new java.util.ArrayList<String>()};}}",
                 -1);
     }
 
     public void testArrayObjectElementsFix() throws Exception {
-        sourceLevel = "1.10";
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performFixTest("test/Test.java",
                 "package test; public class Test {{final/*comment1*/ var/**comment2**/ j/*comment3*/ = /*comment4*/{new java.util.ArrayList(),new java.util.ArrayList()};}}",
                 -1, "Convert Var to Explicit Type",
@@ -67,18 +68,14 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
     }
 
     public void testArrayPrimitiveNumericElementsFix() throws Exception {
-        sourceLevel = "1.10";
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performFixTest("test/Test.java",
                 "package test; public class Test {{final var j = {1,2.1,3f};}}",
                 -1,
                 "Convert Var to Explicit Type",
                 "package test; public class Test {{final double[] j = {1,2.1,3f};}}");
     }
-    
-     public void testArrayPrimitiveNumeric2ElementsFix() throws Exception {
-        sourceLevel = "1.10";
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+    public void testArrayPrimitiveNumeric2ElementsFix() throws Exception {
         performFixTest("test/Test.java",
                 "package test; public class Test {{final var j = {(short)1,(byte)2};}}",
                 -1,
@@ -87,8 +84,6 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
     }
 
     public void testArrayStringElementsFix() throws Exception {
-        sourceLevel = "1.10";
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performFixTest("test/Test.java",
                 "package test; public class Test {{/*comment1*/ /*comment2*/@NotNull final var j = {\"hello\",\"world\"};}}",
                 -1,
@@ -97,8 +92,6 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
     }
 
     public void testArrayObject1ElementsFix() throws Exception {
-        sourceLevel = "1.10";
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performFixTest("test/Test.java",
                 "package test; public class Test {{@NotNull final var j = {new Object(),new Object()};}}",
                 -1,
@@ -107,8 +100,6 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
     }
 
     public void testArrayObject2ElementsFix() throws Exception {
-        sourceLevel = "1.10";
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performFixTest("test/Test.java",
                 "package test; public class Test {{@NotNull var j = {new Object(),new Object()};}}",
                 -1,
@@ -117,8 +108,6 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
     }
 
     public void testArrayObject3ElementsFix() throws Exception {
-        sourceLevel = "1.10";
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performFixTest("test/Test.java",
                 "package test; public class Test {{final @NotNull var j = {new Object(),new Object()};}}",
                 -1,
@@ -127,8 +116,6 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
     }
 
     public void testArrayObject4ElementsFix() throws Exception {
-        sourceLevel = "1.10";
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performFixTest("test/Test.java",
                 "package test; public class Test {{final/*comment1*/var a = {new Object(),new Object()};}}",
                 -1,
@@ -137,8 +124,6 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
     }
 
     public void testArrayObject5ElementsFix() throws Exception {
-        sourceLevel = "1.10";
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performFixTest("test/Test.java",
                 "package test; public class Test {{final/*comment1*/var /*comment2*/ a = {2,3.1f};}}",
                 -1,
@@ -147,8 +132,6 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
     }
 
     public void testArrayObject6ElementsFix() throws Exception {
-        sourceLevel = "1.10";
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performFixTest("test/Test.java",
                 "package test; public class Test {{/*comment1*/var/*comment2*/ a = {2,3.1f};}}",
                 -1,
@@ -157,18 +140,14 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
     }
 
     public void testArrayObject7ElementsFix() throws Exception {
-        sourceLevel = "1.10";
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performFixTest("test/Test.java",
                 "package test; public class Test {{var/*comment1*/ a = {2,3.1f};}}",
                 -1,
                 "Convert Var to Explicit Type",
                 "package test; public class Test {{float[]/*comment1*/ a = {2,3.1f};}}");
     }
-    
-        public void testArrayObject8ElementsFix() throws Exception {
-        sourceLevel = "1.10";
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
+    public void testArrayObject8ElementsFix() throws Exception {
         performFixTest("test/Test.java",
                 "package test; public class Test {{@NotNull var j = {new Object(),new Object()};}}",
                 -1,

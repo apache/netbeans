@@ -28,6 +28,7 @@
                 <attribute name="Bundle-SymbolicName" value="com.jcraft.jzlib"/>
                 <attribute name="Bundle-Version" value="1.0.7"/>
                 <attribute name="Export-Package" value="com.jcraft.jzlib"/>
+                <attribute name="NB-Original-CRC" value="2186560448"/>
             </manifest>
         </jar>
     </target>

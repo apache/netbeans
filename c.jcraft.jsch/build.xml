@@ -30,6 +30,7 @@
                 <attribute name="Export-Package" value="com.jcraft.jsch"/>
                 <attribute name="Import-Package" value="javax.crypto,javax.crypto.spec,javax.crypto.interfaces,org.ietf.jgss"/>
                 <attribute name="Require-Bundle" value="com.jcraft.jzlib"/>
+                <attribute name="NB-Original-CRC" value="226563049"/>
             </manifest>
         </jar>
     </target>

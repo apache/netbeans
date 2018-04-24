@@ -28,6 +28,7 @@
                 <attribute name="Bundle-SymbolicName" value="org.apache.commons.logging"/>
                 <attribute name="Bundle-Version" value="1.1.1"/>
                 <attribute name="Export-Package" value="org.apache.commons.logging;version=&quot;1.1.1&quot;,org.apache.commons.logging.impl;version=&quot;1.1.1&quot;"/>
+                <attribute name="NB-Original-CRC" value="3077296198"/>
             </manifest>
         </jar>
     </target>

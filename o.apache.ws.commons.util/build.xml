@@ -29,6 +29,7 @@
                 <attribute name="Bundle-Version" value="1.0.1"/>
                 <attribute name="Export-Package" value="org.apache.ws.commons.serialize;version=&quot;1.0.1&quot;,org.apache.ws.commons.util;version=&quot;1.0.1&quot;"/>
                 <attribute name="Import-Package" value="javax.xml,javax.xml.namespace,org.w3c.dom,org.xml.sax,org.xml.sax.ext,org.xml.sax.helpers"/>
+                <attribute name="NB-Original-CRC" value="1266531998"/>
             </manifest>
         </jar>
     </target>

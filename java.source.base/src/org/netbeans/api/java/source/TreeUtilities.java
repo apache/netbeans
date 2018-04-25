@@ -1858,6 +1858,10 @@ public final class TreeUtilities {
      * @since 2.31.0
      */
     public boolean isVarType(@NonNull TreePath path) {
+        if (info.getSourceVersion().compareTo(SourceVersion.RELEASE_9) < 1) {
+            return false;
+        }
+
         TokenSequence<JavaTokenId> tokenSequence = tokensFor(path.getLeaf());
         tokenSequence.moveStart();
         while(tokenSequence.moveNext() && tokenSequence.token().id() != JavaTokenId.EQ){

@@ -24,21 +24,14 @@ import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
+import javax.tools.Diagnostic.Kind;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.Hint;
@@ -65,16 +58,19 @@ public class ConvertVarToExplicitType {
             return null;
         }
         TreePath treePath = ctx.getPath();
+        if (hasDiagnosticErrors(ctx.getInfo(), treePath.getLeaf())) {
+            return null;
+        }
 
         TreePath initTreePath = ctx.getVariables().get("$init");  //NOI18N
         ExpressionTree t = ctx.getInfo().getTreeUtilities().parseExpression(initTreePath.getLeaf().toString(), null);
         Scope s = ctx.getInfo().getTrees().getScope(ctx.getPath());
         TypeMirror initTypeMirror = ctx.getInfo().getTreeUtilities().attributeTree(t, s);
 
-        TypeMirror variableTypeMiror = ctx.getInfo().getTrees().getElement(treePath).asType();
+        TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
 
-        // variable initializer type should be same as variable type.
-        if ((variableTypeMiror.getKind() == TypeKind.ERROR) || (!ctx.getInfo().getTypes().isSameType(variableTypeMiror, initTypeMirror))) {
+        // variable initializer type should be valid and same as variable type.
+        if (!Utilities.isValidType(variableTypeMirror) || (!ctx.getInfo().getTypes().isSameType(variableTypeMirror, initTypeMirror))) {
             return null;
         }
         return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), Bundle.MSG_ConvertibleToExplicitType(),
@@ -129,10 +125,6 @@ public class ConvertVarToExplicitType {
 
         CompilationInfo info = ctx.getInfo();
 
-        if (info.getSourceVersion().compareTo(SourceVersion.RELEASE_9) < 1) {
-            return false;
-        }
-
         TreePath treePath = ctx.getPath();
 
         // should be local variable
@@ -144,4 +136,17 @@ public class ConvertVarToExplicitType {
         return info.getTreeUtilities().isVarType(treePath);
     }
 
+    private static boolean hasDiagnosticErrors(CompilationInfo info, Tree tree) {
+        long startPos = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
+        long endPos = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
+
+        for (Diagnostic<?> d : info.getDiagnostics()) {
+            if (d.getKind() == Kind.ERROR) {
+                if ((d.getPosition() >= startPos) && (d.getPosition() <= endPos)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

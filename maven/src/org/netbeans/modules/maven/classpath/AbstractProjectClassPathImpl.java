@@ -217,11 +217,16 @@ public abstract class AbstractProjectClassPathImpl implements ClassPathImplement
     protected static File getFile(Artifact art) {
         File f = art.getFile();
         if (f != null) {
-            if (art.isSnapshot() && !art.getVersion().equals(art.getBaseVersion())) {
+            String baseVersion = art.getBaseVersion();
+            if (art.isSnapshot() && !art.getVersion().equals(baseVersion)) {
                 String name = f.getName();
-                int dot = name.lastIndexOf(/* DefaultRepositoryLayout.GROUP_SEPARATOR */'.');
-                if (dot > 0 && name.substring(0, dot).endsWith(art.getBaseVersion())) {
-                    File f2 = new File(f.getParentFile(), name.substring(0, dot - art.getBaseVersion().length()) + art.getVersion() + name.substring(dot));
+                int endOfVersion = name.lastIndexOf(/* DefaultRepositoryLayout.GROUP_SEPARATOR */'.');
+                String classifier = art.getClassifier();
+                if (classifier != null) {
+                    endOfVersion -= classifier.length() + /* "-" */1;
+                }
+                if (endOfVersion > 0 && name.substring(0, endOfVersion).endsWith(baseVersion)) {
+                    File f2 = new File(f.getParentFile(), name.substring(0, endOfVersion - baseVersion.length()) + art.getVersion() + name.substring(endOfVersion));
                     if (f2.isFile()) {
                         LOGGER.log(Level.FINE, "swapped {0} → {1}", new Object[] {f, f2});
                         return f2;

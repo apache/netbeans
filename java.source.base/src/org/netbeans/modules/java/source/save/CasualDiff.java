@@ -1500,11 +1500,11 @@ public class CasualDiff {
 
                     //adding back all whitespaces/block-comment/javadoc-comments present in OldTree before variable type token.
                     while ((tokenId == JavaTokenId.WHITESPACE || tokenId == JavaTokenId.BLOCK_COMMENT || tokenId == JavaTokenId.JAVADOC_COMMENT) && offset < oldT.sym.pos) {
-                        printer.print(tokenSequence.token().text().toString());
                         tokenSequence.moveNext();
                         offset = tokenSequence.offset();
                         tokenId = tokenSequence.token().id();
                     }
+                    copyTo(localPointer, localPointer = offset);
 
                     // Correcting lower/upper bounds for oldT.vartype tree.
                     vartypeBounds[1] = oldT.sym.pos;
@@ -1536,10 +1536,7 @@ public class CasualDiff {
 
                     // copying tokens from vartype bounds after excluding variable type token.
                     int offset = tokenSequence.offset();
-                    if (offset < vartypeBounds[1]) {
-                        copyTo(offset, vartypeBounds[1]);
-                    }
-                    localPointer = vartypeBounds[1];
+                    copyTo(offset, localPointer = vartypeBounds[1]);
                 }
             }
         }

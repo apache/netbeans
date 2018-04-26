@@ -3723,7 +3723,7 @@ public class CasualDiff {
                     if (!fieldGroup.isEmpty()) {
                         int oldPos = getOldPos(fieldGroup.get(0));
 
-                        if (oldPos != (-1) && oldPos != NOPOS && oldPos == getOldPos(var) && fieldGroup.get(0).getModifiers() == var.getModifiers()) {
+                        if (oldPos != (-1) && oldPos != NOPOS && oldPos == getOldPos(var) && fieldGroup.get(0).getModifiers() == var.getModifiers() && !isVarTypeVariable(var)) {
                             //seems like a field group:
                             fieldGroup.add(var);
                         } else {
@@ -6028,4 +6028,13 @@ public class CasualDiff {
         return sb.toString();
     }
 
+    /**
+     * Check the JCVariableDecl tree has var type
+     * @param tree instance of JCVariableDecl
+     * @return true if tree contains var type else return false
+     */
+    private static boolean isVarTypeVariable(JCVariableDecl tree){
+        if(tree == null) return false;
+        return tree.getType() instanceof JCIdent && ((JCIdent)tree.getType()).name.contentEquals("var");
+    }
 }

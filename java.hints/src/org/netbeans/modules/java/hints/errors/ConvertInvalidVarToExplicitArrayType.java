@@ -91,13 +91,13 @@ public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
             Integer maxTypePriority = -1;
 
             boolean isHomoGeneousArray = true;
+            TreePath initArrayTreePath = new TreePath(treePath, arrayTree);
+
             for (ExpressionTree tree : currentValues) {
 
-                Scope s = compilationInfo.getTrees().getScope(treePath);
+                arrayElementTypeMirror = compilationInfo.getTrees().getTypeMirror(new TreePath(initArrayTreePath, tree));
 
-                arrayElementTypeMirror = compilationInfo.getTreeUtilities().attributeTree(tree, s);
-
-                if (tree instanceof NewClassTree) {
+                if (tree.getKind() == Tree.Kind.NEW_CLASS) {
                     NewClassTree nct = (NewClassTree) tree;
                     if (nct.getIdentifier().getKind() == Tree.Kind.PARAMETERIZED_TYPE) {
 

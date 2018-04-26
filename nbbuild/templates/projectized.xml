@@ -231,6 +231,10 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         <taskdef name="downloadbinaries" classname="org.netbeans.nbbuild.extlibs.DownloadBinaries" classpath="${nbantext.jar}"/>
     </target>
     
+    <target name="-define-FileCRC32Calculator">
+        <taskdef name="FileCRC32Calculator" classname="org.netbeans.nbbuild.FileCRC32Calculator" classpath="${nbantext.jar}"/>
+    </target>
+    
     <target name="-process.release.files"/>
     
     <target name="-download.release.files" depends="-define-downloadbinaries-task">

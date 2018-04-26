@@ -21,7 +21,8 @@
 -->
 <project name="o.apache.commons.httpclient" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
-    <target name="jar">
+    <target name="jar" depends="-define-FileCRC32Calculator">
+        <FileCRC32Calculator file="external/commons-httpclient-3.1.jar" property="o.apache.commons.httpclient.crc32" />
         <jar jarfile="${cluster}/${module.jar}">
             <zipfileset src="external/commons-httpclient-3.1.jar"/>
             <manifest>
@@ -30,7 +31,7 @@
                 <attribute name="Export-Package" value="org.apache.commons.httpclient;version=&quot;3.1.0&quot;,org.apache.commons.httpclient.auth;version=&quot;3.1.0&quot;,org.apache.commons.httpclient.cookie;version=&quot;3.1.0&quot;,org.apache.commons.httpclient.methods;version=&quot;3.1.0&quot;,org.apache.commons.httpclient.methods.multipart;version=&quot;3.1.0&quot;,org.apache.commons.httpclient.params;version=&quot;3.1.0&quot;,org.apache.commons.httpclient.protocol;version=&quot;3.1.0&quot;,org.apache.commons.httpclient.util;version=&quot;3.1.0&quot;"/>
                 <attribute name="Import-Package" value="javax.crypto;resolution:=optional,javax.crypto.spec;resolution:=optional,javax.net;resolution:=optional,javax.net.ssl;resolution:=optional,org.apache.commons.codec;version=&quot;[1.2.0,2.0.0)&quot;,org.apache.commons.codec.binary;version=&quot;[1.2.0,2.0.0)&quot;,org.apache.commons.codec.net;version=&quot;[1.2.0,2.0.0)&quot;,org.apache.commons.logging;version=&quot;[1.0.4,2.0.0)&quot;"/>
                 <attribute name="Bundle-ManifestVersion" value="2"/>
-                <attribute name="NB-Original-CRC" value="1640872803"/>
+                <attribute name="NB-Original-CRC" value="${o.apache.commons.httpclient.crc32}"/>
             </manifest>
         </jar>
     </target>

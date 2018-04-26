@@ -21,7 +21,8 @@
 -->
 <project name="c.jcraft.jsch" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
-    <target name="jar">
+    <target name="jar" depends="-define-FileCRC32Calculator">
+        <FileCRC32Calculator file="external/jsch-0.1.54.jar" property="c.jcraft.jsch.crc32" />
         <jar jarfile="${cluster}/${module.jar}">
             <zipfileset src="external/jsch-0.1.54.jar"/>
             <manifest>
@@ -30,7 +31,7 @@
                 <attribute name="Export-Package" value="com.jcraft.jsch"/>
                 <attribute name="Import-Package" value="javax.crypto,javax.crypto.spec,javax.crypto.interfaces,org.ietf.jgss"/>
                 <attribute name="Require-Bundle" value="com.jcraft.jzlib"/>
-                <attribute name="NB-Original-CRC" value="226563049"/>
+                <attribute name="NB-Original-CRC" value="${c.jcraft.jsch.crc32}"/>
             </manifest>
         </jar>
     </target>

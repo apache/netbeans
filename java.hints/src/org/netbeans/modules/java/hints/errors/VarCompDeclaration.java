@@ -108,7 +108,7 @@ public class VarCompDeclaration implements ErrorRule<Void> {
         protected void performRewrite(TransformationContext ctx) throws Exception {
             TreePath statementPath = ctx.getPath();
             Tree parent = statementPath.getParentPath().getLeaf();
-            List<? extends StatementTree> statements;
+            List<? extends StatementTree> statements = null;
             switch (parent.getKind()) {
                 case BLOCK:
                     statements = ((BlockTree) parent).getStatements();
@@ -156,7 +156,7 @@ public class VarCompDeclaration implements ErrorRule<Void> {
                 newStatements.addAll(statements.subList(current + 1, statements.size()));
             }
 
-            Tree target;
+            Tree target = null;
 
             switch (parent.getKind()) {
                 case BLOCK:

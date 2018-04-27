@@ -23,6 +23,7 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
@@ -116,6 +117,10 @@ public class ConvertVarToExplicitType {
     private static boolean isLocalVarType(HintContext ctx) {
 
         CompilationInfo info = ctx.getInfo();
+        
+        if (info.getSourceVersion().compareTo(SourceVersion.RELEASE_9) < 1) {
+            return false;
+        }        
 
         TreePath treePath = ctx.getPath();
 

@@ -118,7 +118,8 @@ public class VarCompDeclaration implements ErrorRule<Void> {
                     statements = ((CaseTree) parent).getStatements();
                     break;*/
                 default:
-                    throw new IllegalStateException(parent.getKind().name());
+                    // Ignore other scenario
+                    break;
             }
             WorkingCopy wc = ctx.getWorkingCopy();
             TreeMaker make = wc.getTreeMaker();
@@ -166,7 +167,8 @@ public class VarCompDeclaration implements ErrorRule<Void> {
                     target = make.Case(((CaseTree) parent).getExpression(), newStatements);
                     break;*/
                 default:
-                    throw new IllegalStateException(parent.getKind().name());
+                    // Ignore other scenario
+                    break;
             }
 
             wc.rewrite(parent, target);

@@ -19,8 +19,7 @@
 package org.netbeans.modules.java.hints.jdk;
 
 import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.Scope;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
@@ -62,17 +61,10 @@ public class ConvertVarToExplicitType {
             return null;
         }
 
-        TreePath initTreePath = ctx.getVariables().get("$init");  //NOI18N
-        ExpressionTree t = ctx.getInfo().getTreeUtilities().parseExpression(initTreePath.getLeaf().toString(), null);
-        Scope s = ctx.getInfo().getTrees().getScope(ctx.getPath());
-        TypeMirror initTypeMirror = ctx.getInfo().getTreeUtilities().attributeTree(t, s);
-
-        TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
-
-        // variable initializer type should be valid and same as variable type.
-        if (!Utilities.isValidType(variableTypeMirror) || (!ctx.getInfo().getTypes().isSameType(variableTypeMirror, initTypeMirror))) {
+        if (!isValidType(ctx)) {
             return null;
         }
+
         return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), Bundle.MSG_ConvertibleToExplicitType(),
                 new JavaFixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix());
     }
@@ -148,5 +140,26 @@ public class ConvertVarToExplicitType {
             }
         }
         return false;
+    }
+
+    //filter anonymous class and intersection types
+    private static boolean isValidType(HintContext ctx) {
+        TreePath treePath = ctx.getPath();
+        TreePath initTreePath = ctx.getVariables().get("$init");  //NOI18N
+
+        boolean isAnonymousClass = false;
+        if (initTreePath.getLeaf().getKind() == Tree.Kind.NEW_CLASS) {
+            NewClassTree nct = ((NewClassTree) initTreePath.getLeaf());
+            if (nct.getClassBody() != null) {
+                isAnonymousClass = true;
+            }
+        }
+
+        TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
+
+        if (!Utilities.isValidType(ctx.getInfo().getTypeUtilities().getDenotableType(variableTypeMirror)) || isAnonymousClass) {
+            return false;
+        }
+        return true;
     }
 }

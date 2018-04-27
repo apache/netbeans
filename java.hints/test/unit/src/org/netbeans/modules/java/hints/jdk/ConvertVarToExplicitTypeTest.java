@@ -32,11 +32,10 @@ public class ConvertVarToExplicitTypeTest {
     @Test
     public void testConvertVartoIntType() throws Exception {
         HintTest.create()
-                .setCaretMarker('^')
                 .input("package test;\n"
                         + "public class Test {\n"
                         + "    void m1() {\n"
-                        + "        @Deprecated /*some var*/final /*s*/var var = 10^;//s\n"                        
+                        + "        @Deprecated /*some var*/final /*s*/var var = 10;//s\n"                        
                         + "    }\n"
                         + "}\n")
                 .sourceLevel("1.10")
@@ -55,11 +54,10 @@ public class ConvertVarToExplicitTypeTest {
     @Test
     public void testConvertVarToString() throws Exception {
         HintTest.create()
-                .setCaretMarker('^')
                 .input("package test;\n"
                         + "public class Test {\n"
                         + "    void m1() {\n"
-                        + "        var str = \"Hello\"^;\n"
+                        + "        var str = \"Hello\";\n"
                         + "    }\n"
                         + "}\n")
                 .sourceLevel("1.10")
@@ -78,12 +76,11 @@ public class ConvertVarToExplicitTypeTest {
     @Test
     public void testVartoHashMap() throws Exception {
         HintTest.create()
-                .setCaretMarker('^')
                 .input("package test;\n"
                         + "import java.util.HashMap;\n"
                         + "public class Test {\n"
                         + "    {\n"
-                        + "        final var map = new HashMap<String, String>()^;\n"
+                        + "        final var map = new HashMap<String, String>();\n"
                         + "    }\n"
                         + "}\n")
                 .sourceLevel("1.10")
@@ -101,13 +98,12 @@ public class ConvertVarToExplicitTypeTest {
     }
 
     @Test
-    public void testVarHintForAnonymousObjType() throws Exception {
+    public void testNoVarHintForAnonymousObjType() throws Exception {
         HintTest.create()
-                .setCaretMarker('^')
                 .input("package test;\n"
                         + "public class Test {\n"
                         + "    void m1() {\n"
-                        + "        var r = new Runnable()^ {\n"
+                        + "        var r = new Runnable() {\n"
                         + "            @Override\n"
                         + "            public void run() {\n"
                         + "            }\n"
@@ -122,11 +118,10 @@ public class ConvertVarToExplicitTypeTest {
     @Test
     public void testVarToObjType() throws Exception {
         HintTest.create()
-                .setCaretMarker('^')
                 .input("package test;\n"
                         + "public class Test {\n"
                         + "    void m1(){\n"
-                        + "        va^r obj = new Object();\n"
+                        + "        var obj = new Object();\n"
                         + "    }\n"
                         + "}")
                 .sourceLevel("1.10")
@@ -145,11 +140,10 @@ public class ConvertVarToExplicitTypeTest {
     @Test
     public void testVarToArrayType() throws Exception {
         HintTest.create()
-                .setCaretMarker('^')
                 .input("package test;\n"
                         + "public class Test {\n"
                         + "    void m1(){\n"
-                        + "        var arr = new int[4][]^;\n"
+                        + "        var arr = new int[4][];\n"
                         + "    }\n"
                         + "}")
                 .sourceLevel("1.10")
@@ -168,11 +162,10 @@ public class ConvertVarToExplicitTypeTest {
     @Test
     public void testVarToIntInsideForLoop() throws Exception {
         HintTest.create()
-                .setCaretMarker('^')
                 .input("package test;\n"
                         + "public class Test {\n"
                         + "    void m2() {\n"
-                        + "        for (var i = 0^; i < 10; i++) {\n"
+                        + "        for (var i = 0; i < 10; i++) {\n"
                         + "            i = i + 2;\n"
                         + "        }\n"
                         + "    }\n"
@@ -193,13 +186,12 @@ public class ConvertVarToExplicitTypeTest {
     }
 
     @Test
-    public void testHintForExplicitType() throws Exception {
+    public void testNoHintForExplicitType() throws Exception {
         HintTest.create()
-                .setCaretMarker('^')
                 .input("package test;\n"
                         + "public class Test {\n"
                         + "void m1(){\n"
-                        + "    int k = 20^;\n"
+                        + "    int k = 20;\n"
                         + "}\n"
                         + "}\n")
                 .sourceLevel("1.10")
@@ -210,12 +202,11 @@ public class ConvertVarToExplicitTypeTest {
     @Test
     public void testVarToMethodRetType1() throws Exception {
         HintTest.create()
-                .setCaretMarker('^')
                 .input("package test;\n"
                         + "import java.util.ArrayList;\n"
                         + "public class Test {\n"
                         + "    public void m() {\n"
-                        + "        var obj = t()^;\n"
+                        + "        var obj = t();\n"
                         + "    }\n"
                         + "    Object t()\n"
                         + "    {\n"
@@ -243,14 +234,13 @@ public class ConvertVarToExplicitTypeTest {
     @Test
     public void testVarToMethodRetType2() throws Exception {
         HintTest.create()
-                .setCaretMarker('^')
                 .input("package test;\n"
                         + "import java.util.Collections;\n"
                         + "import java.util.List;\n"
                         + "import java.util.ArrayList;\n"
                         + "public class Test {\n"
                         + "    public static void main(String[] args) {\n"
-                        + "        var list = Collections.unmodifiableList(new ArrayList<String>())^;\n"
+                        + "        var list = Collections.unmodifiableList(new ArrayList<String>());\n"
                         + "    }\n"
                         + "}")
                 .sourceLevel("1.10")
@@ -268,5 +258,98 @@ public class ConvertVarToExplicitTypeTest {
                         + "    }\n"
                         + "}");
     }
+    
+    @Test
+    public void testNoVarHintForIntersectionType() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                        + "public class Test {\n"
+                        + "    void m() {\n"
+                        + "        var v = get();\n"
+                        + "    }\n"
+                        + "    <Z extends Runnable & CharSequence> Z get() { return null; }\n"
+                        + "}\n")
+                .sourceLevel("1.10")
+                .run(ConvertVarToExplicitType.class)
+                .assertNotContainsWarnings(VAR_CONV_DESC);
+    }
+    
+    @Test
+    public void testVarToGenericWildCardType() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                        + "import java.util.List;\n"
+                        + "public class Test {\n"
+                        + "    void m() {\n"
+                        + "        List<? extends String> ll = null;\n" 
+                        + "        var l = ll.get(0);\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertVarToExplicitType.class)
+                .findWarning("5:8-5:26:" + VAR_CONV_WARNING)
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;\n"
+                        + "import java.util.List;\n"
+                        + "public class Test {\n"
+                        + "    void m() {\n"
+                        + "        List<? extends String> ll = null;\n" 
+                        + "        String l = ll.get(0);\n"
+                        + "    }\n"
+                        + "}");
+    }
+    
+    @Test
+    public void testVarToGenericWildCardType2() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                        + "import java.util.List;\n"
+                        + "public class Test {\n"
+                        + "    void m() {\n"
+                        + "        List<?> ll = null;\n" 
+                        + "        var l = ll.get(0);\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertVarToExplicitType.class)
+                .findWarning("5:8-5:26:" + VAR_CONV_WARNING)
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;\n"
+                        + "import java.util.List;\n"
+                        + "public class Test {\n"
+                        + "    void m() {\n"
+                        + "        List<?> ll = null;\n" 
+                        + "        Object l = ll.get(0);\n"
+                        + "    }\n"
+                        + "}");
+    }
+    
+    @Test
+    public void testVarToGenericType2() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                        + "import java.util.List;\n"
+                        + "public class Test {\n"
+                        + "    void m() {\n"
+                        + "        var l = listOf(\"\");\n"
+                        + "    }\n"
+                        + "    <Z> List<Z> listOf(Z z) { return null; }\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertVarToExplicitType.class)
+                .findWarning("4:8-4:27:" + VAR_CONV_WARNING)
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;\n"
+                        + "import java.util.List;\n"
+                        + "public class Test {\n"
+                        + "    void m() {\n"
+                        + "        List<String> l = listOf(\"\");\n"
+                        + "    }\n"
+                        + "    <Z> List<Z> listOf(Z z) { return null; }\n"
+                        + "}");
+    }    
 
 }

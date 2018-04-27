@@ -122,7 +122,7 @@ public class NodesAnnotationProcessor extends LayerGeneratingProcessor {
                         
                         @Override
                         public String visitType(TypeMirror t, Object p) {
-                            return t.toString();
+                            return processingEnv.getElementUtils().getBinaryName((TypeElement) processingEnv.getTypeUtils().asElement(t)).toString();
                         }
                     }, null);
                     file.stringvalue("targetType." + i, clsName); //NOI18N

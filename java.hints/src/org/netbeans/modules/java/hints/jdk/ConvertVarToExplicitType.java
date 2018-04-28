@@ -152,17 +152,16 @@ public class ConvertVarToExplicitType {
         TreePath treePath = ctx.getPath();
         TreePath initTreePath = ctx.getVariables().get("$init");  //NOI18N
 
-        boolean isAnonymousClass = false;
         if (initTreePath.getLeaf().getKind() == Tree.Kind.NEW_CLASS) {
             NewClassTree nct = ((NewClassTree) initTreePath.getLeaf());
             if (nct.getClassBody() != null) {
-                isAnonymousClass = true;
+                return false;
             }
         }
 
         TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
 
-        if (!Utilities.isValidType(ctx.getInfo().getTypeUtilities().getDenotableType(variableTypeMirror)) || isAnonymousClass) {
+        if (!Utilities.isValidType(ctx.getInfo().getTypeUtilities().getDenotableType(variableTypeMirror))) {
             return false;
         }
         return true;

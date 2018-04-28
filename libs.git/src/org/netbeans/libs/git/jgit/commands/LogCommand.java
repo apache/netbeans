@@ -152,7 +152,7 @@ public class LogCommand extends GitCommand {
                 walk.sort(RevSort.COMMIT_TIME_DESC, true);
                 int remaining = criteria.getLimit();
                 Map<String, GitBranch> extraBranches = null;
-                while (remaining-- > 0) {
+                while (remaining != 0) {
                     if (monitor.isCanceled()) {
                         break;
                     }
@@ -182,6 +182,7 @@ public class LogCommand extends GitCommand {
                             }
                         }
                     }
+                    remaining--;
                 }
             } catch (MissingObjectException ex) {
                 throw new GitException.MissingObjectException(ex.getObjectId().toString(), GitObjectType.COMMIT);

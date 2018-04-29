@@ -706,6 +706,8 @@ public class NPECheck {
             mergeHypotheticalVariable2State(orig);
             
             if (e != null) {
+                if (e.getKind() == ElementKind.EXCEPTION_PARAMETER)
+                    r = NOT_NULL;
                 variable2State.put((VariableElement) e, r);
                 TreePath pp = getCurrentPath().getParentPath();
                 if (pp != null) {

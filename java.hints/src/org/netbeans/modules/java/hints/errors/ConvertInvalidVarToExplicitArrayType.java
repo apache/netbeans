@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.Trees;
 import java.util.HashMap;
 import java.util.Map;
 import javax.lang.model.type.TypeKind;
@@ -41,6 +42,7 @@ import org.netbeans.modules.java.hints.spi.ErrorRule;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.JavaFix;
 import org.openide.util.NbBundle.Messages;
+import javax.lang.model.util.Types;
 
 /**
  *
@@ -52,21 +54,11 @@ import org.openide.util.NbBundle.Messages;
 public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
 
     private static final Set<String> CODES;
-    private static final Map<TypeKind, Integer> NUMERIC_PRIMITIVE_TYPE_PRIORITY_MAP;
 
     static {
         Set<String> codes = new HashSet<>();
         codes.add("compiler.err.cant.infer.local.var.type"); // NOI18N
         CODES = Collections.unmodifiableSet(codes);
-
-        Map<TypeKind, Integer> map = new HashMap<>();
-        map.put(TypeKind.BYTE, 1);
-        map.put(TypeKind.SHORT, 2);
-        map.put(TypeKind.INT, 3);
-        map.put(TypeKind.LONG, 4);
-        map.put(TypeKind.FLOAT, 5);
-        map.put(TypeKind.DOUBLE, 6);
-        NUMERIC_PRIMITIVE_TYPE_PRIORITY_MAP = Collections.unmodifiableMap(map);
     }
 
     @Override
@@ -81,22 +73,20 @@ public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
             return null;
         }
 
-        TypeMirror arrayTypeMirror = null;
+        TypeMirror arrayType = null;
         if (treePath.getLeaf().getKind() == Tree.Kind.VARIABLE) {
             VariableTree oldVariableTree = (VariableTree) treePath.getLeaf();
             NewArrayTree arrayTree = (NewArrayTree) oldVariableTree.getInitializer();
             List<? extends ExpressionTree> currentValues = arrayTree.getInitializers();
-
-            TypeMirror arrayElementTypeMirror = null;
-            Integer maxTypePriority = -1;
-
-            boolean isHomoGeneousArray = true;
             TreePath initArrayTreePath = new TreePath(treePath, arrayTree);
+            Types types = compilationInfo.getTypes();
+            Trees trees = compilationInfo.getTrees();
 
             for (ExpressionTree tree : currentValues) {
 
-                arrayElementTypeMirror = compilationInfo.getTrees().getTypeMirror(new TreePath(initArrayTreePath, tree));
+                TypeMirror etType = trees.getTypeMirror(new TreePath(initArrayTreePath, tree));
 
+                //skipped fix for parameterized array member as parameterized array is not possible.
                 if (tree.getKind() == Tree.Kind.NEW_CLASS) {
                     NewClassTree nct = (NewClassTree) tree;
                     if (nct.getIdentifier().getKind() == Tree.Kind.PARAMETERIZED_TYPE) {
@@ -104,35 +94,18 @@ public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
                         return null;
                     }
                 }
-
-                if (arrayTypeMirror == null) {
-                    arrayTypeMirror = arrayElementTypeMirror;
-                }
-
-                isHomoGeneousArray = compilationInfo.getTypes().isSameType(arrayElementTypeMirror, arrayTypeMirror);
-                if (isHomoGeneousArray) {
-                    continue;
-                }
-
-                // Hint will be enabled only for primitive Numeric array initializers or for homogeneous array members.
-                if (!isHomoGeneousArray && !isPrimitiveNumeric(arrayElementTypeMirror.getKind())) {
-                    return null;
-                }
-
-                if (!isHomoGeneousArray) {
-                    Integer arrayElementPriority = NUMERIC_PRIMITIVE_TYPE_PRIORITY_MAP.get(arrayElementTypeMirror.getKind());
-                    if (maxTypePriority == -1) {
-                        maxTypePriority = NUMERIC_PRIMITIVE_TYPE_PRIORITY_MAP.get(arrayTypeMirror.getKind());
-                    }
-
-                    if (maxTypePriority < arrayElementPriority) {
-                        arrayTypeMirror = arrayElementTypeMirror;
-                        maxTypePriority = arrayElementPriority;
+                if (arrayType == null) {
+                    arrayType = etType;
+                } else if (!types.isAssignable(etType, arrayType)) {
+                    if (types.isAssignable(arrayType, etType)) {
+                        arrayType = etType;
+                    } else {
+                        return null; //the array is not sufficiently homogeneous.
                     }
                 }
             }
         }
-        return Collections.<Fix>singletonList(new FixImpl(compilationInfo, treePath, arrayTypeMirror).toEditorFix());
+        return Collections.<Fix>singletonList(new FixImpl(compilationInfo, treePath, arrayType).toEditorFix());
 
     }
 
@@ -186,12 +159,5 @@ public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
                 tc.getWorkingCopy().rewrite(oldVariableTree, newVariableTree);
             }
         }
-    }
-
-    private boolean isPrimitiveNumeric(TypeKind type) {
-        Set<TypeKind> primitiveNumbericTypes = NUMERIC_PRIMITIVE_TYPE_PRIORITY_MAP.keySet();
-
-        return primitiveNumbericTypes.contains(type);
-
     }
 }

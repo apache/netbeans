@@ -50,13 +50,15 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
         super.tearDown();
     }
 
-    public void testArrayHetrogeneousElements() throws Exception {
-        performAnalysisTest("test/Test.java", "package test; public class Test {{var/*comment1*/ k = {1,'c'};}}", -1);
-    }
-
     public void testParameterizedElements() throws Exception {
         performAnalysisTest("test/Test.java",
                 "package test; public class Test {{final var j = {new java.util.ArrayList<String>(),new java.util.ArrayList<String>()};}}",
+                -1);
+    }
+
+    public void testArrayHetrogeneousElements() throws Exception {
+        performAnalysisTest("test/Test.java",
+                "package test; public class Test {{final/*comment1*/ var/**comment2**/ j/*comment3*/ = /*comment4*/{new java.util.ArrayList(),new java.util.HashMap()};}}",
                 -1);
     }
 
@@ -153,6 +155,13 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
                 -1,
                 "Convert Var to Explicit Type",
                 "package test; public class Test {{@NotNull Object[] j = {new Object(),new Object()};}}");
+    }
+
+    public void testArrayObject9ElementsFix() throws Exception {
+        performFixTest("test/Test.java",
+                "package test; public class Test {{var/*comment1*/ k = {1,'c'};}}",
+                -1, "Convert Var to Explicit Type",
+                "package test; public class Test {{int[]/*comment1*/ k = {1,'c'};}}");
     }
 
     protected List<Fix> computeFixes(CompilationInfo info, int pos, TreePath path) {

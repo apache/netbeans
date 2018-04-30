@@ -309,7 +309,8 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
         }
 
         boolean isHyperlinkPoint() {
-            return (isHyperlinkUrl() || getFileSystemLinkObject() != null|| isMavenProperty() || isMavenDependency());
+            return (isHyperlinkUrl() || getFileSystemLinkObject() != null || 
+                    isMavenProperty() || (isMavenDependency() && getMavenArtifactAbsolutePomPath() != null));
         }
 
         private void calculateInfo(Token<XMLTokenId> token, TokenSequence<XMLTokenId> xml) {
@@ -365,10 +366,12 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
                                             token = xml.token();
                                             if (TokenUtilities.startsWith(token.text(), "${")) { //NOI18N
                                                 Project nbprj = getProject(doc);
-                                                try {
-                                                    version = (String) PluginPropertyUtils.createEvaluator(nbprj).evaluate(token.text().toString());
-                                                } catch (ExpressionEvaluationException eee) {
-                                                    LOG.log(Level.INFO, "Unable to evaluate property: " + token.text().toString(), eee);
+                                                if (nbprj != null) {
+                                                    try {
+                                                        version = (String) PluginPropertyUtils.createEvaluator(nbprj).evaluate(token.text().toString());
+                                                    } catch (ExpressionEvaluationException eee) {
+                                                        LOG.log(Level.INFO, "Unable to evaluate property: " + token.text().toString(), eee);
+                                                    }
                                                 }
                                             } else {
                                                 version = token.text().toString();
@@ -442,7 +445,11 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
             } else {
                 MavenEmbedder embedder = EmbedderFactory.getProjectEmbedder();
                 Artifact mavenArtifact = embedder.createArtifact(groupId, artifactId, version, type == null ? "jar" : type);
-                return embedder.getLocalRepository().find(mavenArtifact).getFile().getAbsolutePath().replace(".jar", ".pom");
+                String mavenPomPath = embedder.getLocalRepository().find(mavenArtifact).getFile().getAbsolutePath().replace(".jar", ".pom");
+                if (mavenPomPath == null) {
+                    return null;
+                }
+                return new File(mavenPomPath).exists() ? mavenPomPath : null;
             }
         }
 

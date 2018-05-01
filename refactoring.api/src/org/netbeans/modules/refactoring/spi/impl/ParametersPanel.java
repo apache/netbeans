@@ -349,7 +349,6 @@ public class ParametersPanel extends JPanel implements ProgressListener, ChangeL
     }//GEN-LAST:event_backActionPerformed
 
     private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
-        synchronized (this) {
             canceledDialog = true;
             if (evt != null && evt.getSource() instanceof Cancellable) {
                 putResult(null);
@@ -365,7 +364,6 @@ public class ParametersPanel extends JPanel implements ProgressListener, ChangeL
                 }
                 cancelRequest = true;
             }
-        }
     }//GEN-LAST:event_cancelActionPerformed
     private void refactor(final boolean previewAll) {
         LOGGER.log(Level.FINEST, "refactor - currentState={0}", currentState);
@@ -587,7 +585,7 @@ public class ParametersPanel extends JPanel implements ProgressListener, ChangeL
      * operation or
      * <code>null</code> if the operation was cancelled.
      */
-    public synchronized RefactoringSession showDialog() {
+    public RefactoringSession showDialog() {
         RefactoringPanel.checkEventThread();
         putClientProperty(JUMP_TO_FIRST_OCCURENCE, false);
         if (rui != null) {

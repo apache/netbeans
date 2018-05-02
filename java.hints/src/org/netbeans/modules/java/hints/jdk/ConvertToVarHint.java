@@ -19,12 +19,13 @@
 package org.netbeans.modules.java.hints.jdk;
 
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
-import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Type.CapturedType;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -43,11 +44,8 @@ import org.netbeans.spi.java.hints.TriggerPattern;
 import org.openide.util.NbBundle.Messages;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
-import org.netbeans.spi.java.hints.MatcherUtilities;
 
 /**
  * Hint will convert explicit type of local variable to 'var'. Supported: JDK 10
@@ -72,32 +70,10 @@ public class ConvertToVarHint {
             return null;
         }
 
-        TreePath treePath = ctx.getPath();
-
-        TreePath initTreePath = ctx.getVariables().get("$init");     //NOI18N
-        ExpressionTree t = ctx.getInfo().getTreeUtilities().parseExpression(initTreePath.getLeaf().toString(), null);
-        Scope s = ctx.getInfo().getTrees().getScope(ctx.getPath());
-        TypeMirror initTypeMirror = ctx.getInfo().getTreeUtilities().attributeTree(t, s);
-
-        TypeMirror VariableTypeMiror = ctx.getInfo().getTrees().getElement(treePath).asType();
-        
-        boolean diamondOpType  = false;
-        // variable initializer type should be same as variable type.
-        if (!ctx.getInfo().getTypes().isSameType(VariableTypeMiror, initTypeMirror)) {
-            if(MatcherUtilities.matches(ctx, initTreePath, "new $clazz<$tparams$>($params$)")) {
-                if(initTypeMirror.getKind() == TypeKind.DECLARED && (VariableTypeMiror.getKind() == TypeKind.DECLARED)) {
-                    DeclaredType dtInit = (DeclaredType)initTypeMirror;
-                    DeclaredType dtVarType = (DeclaredType)VariableTypeMiror;
-                    if(dtInit.asElement().equals(dtVarType.asElement())) {
-                        diamondOpType = true;
-                    }
-                }
-            }
-            if(!diamondOpType) {
-                return null;
-            }            
+        if(!isValidVarType(ctx)) {
+            return null;
         }
-
+        
         return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), Bundle.MSG_ConvertibleToVarType(), new JavaFixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix());
     }
 
@@ -127,7 +103,7 @@ public class ConvertToVarHint {
             if (statementPath.getLeaf().getKind() == Tree.Kind.VARIABLE) {
                 VariableTree oldVariableTree = (VariableTree) statementPath.getLeaf();
                 ExpressionTree initializerTree = oldVariableTree.getInitializer();
-                //replace diamond operator with type params
+                //check if initializer with diamond operator
                 if (initializerTree.getKind() == Tree.Kind.NEW_CLASS) {
                     NewClassTree nct = (NewClassTree)initializerTree;
                     if (nct.getIdentifier().getKind() == Tree.Kind.PARAMETERIZED_TYPE) {                        
@@ -135,6 +111,7 @@ public class ConvertToVarHint {
                             ParameterizedTypeTree ptt = (ParameterizedTypeTree) oldVariableTree.getType();
                             ParameterizedTypeTree nue = (ParameterizedTypeTree)nct.getIdentifier();
                             if(nue.getTypeArguments().isEmpty() && ptt.getTypeArguments().size() > 0) {
+                                //replace diamond operator with type params from lhs
                                 wc.rewrite(nue, ptt);
                             }                            
                         }    
@@ -189,5 +166,41 @@ public class ConvertToVarHint {
     private static boolean isDiagnosticCodeTobeSkipped(CompilationInfo info) {
         List<Diagnostic> diagnosticsList = info.getDiagnostics();
         return diagnosticsList.stream().anyMatch((d) -> (SKIPPED_ERROR_CODES.contains(d.getCode())));
+    }
+    
+    private static boolean isValidVarType(HintContext ctx) {
+        TreePath treePath = ctx.getPath();
+        TreePath initTreePath = ctx.getVariables().get("$init");  //NOI18N
+
+        TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
+
+        if (initTreePath.getLeaf().getKind() == Tree.Kind.NEW_CLASS) {
+            NewClassTree nct = (NewClassTree) (initTreePath.getLeaf());
+            //anonymous class type
+            if (nct.getClassBody() != null) {
+                return false;
+            }
+        } else if (initTreePath.getLeaf().getKind() == Tree.Kind.NEW_ARRAY) {
+            NewArrayTree nat = (NewArrayTree) ((VariableTree) treePath.getLeaf()).getInitializer();
+            //array initializer expr type
+            if (nat.getType() == null) {
+                return false;
+            }
+        } else if (initTreePath.getLeaf().getKind() == Tree.Kind.LAMBDA_EXPRESSION) {
+            return false;
+        }
+        // variable initializer type should be same as variable type.
+        TypeMirror initTypeMirror = ctx.getInfo().getTrees().getTypeMirror(initTreePath);
+        
+        //TODO: add support for CapturedType TypeParams: testcase testCapturedTypeTypeParamsAssignToVar3()
+        if (!(initTypeMirror instanceof CapturedType) && (!ctx.getInfo().getTypes().isSameType(variableTypeMirror, initTypeMirror))) {
+            return false;
+        }
+        
+        if (!ctx.getInfo().getTypes().isSameType(variableTypeMirror, ctx.getInfo().getTypeUtilities().getDenotableType(initTypeMirror))) {
+            return false;
+        }
+
+        return true;
     }
 }

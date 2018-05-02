@@ -160,14 +160,12 @@ public class ProfilerInterface implements CommonConstants {
             }
 
             if (Platform.getJDKVersionNumber() >= CommonConstants.JDK_19) {
-                boolean java9 = Platform.getJDKVersionNumber() == CommonConstants.JDK_19;
-                String weakPairPackage = java9 ? "java.lang.reflect." : "java.lang."; // NOI18N
                 try {
                     // preload classes for classLoadHook()
-                    Class.forName(weakPairPackage + "WeakPairMap$Pair"); // NOI18N
-                    Class.forName(weakPairPackage + "WeakPairMap$WeakRefPeer");    // NOI18N
-                    Class.forName(weakPairPackage + "WeakPairMap$Pair$Weak"); // NOI18N
-                    Class.forName(weakPairPackage + "WeakPairMap$Pair$Weak$1"); // NOI18N
+                    Class.forName("java.lang.WeakPairMap$Pair"); // NOI18N
+                    Class.forName("java.lang.WeakPairMap$WeakRefPeer");    // NOI18N
+                    Class.forName("java.lang.WeakPairMap$Pair$Weak"); // NOI18N
+                    Class.forName("java.lang.WeakPairMap$Pair$Weak$1"); // NOI18N
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace(System.err);
                 }

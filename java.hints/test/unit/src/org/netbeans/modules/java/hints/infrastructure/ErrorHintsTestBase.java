@@ -129,7 +129,7 @@ public abstract class ErrorHintsTestBase extends NbTestCase {
     @Override
     protected void tearDown() throws Exception {
         for (URL bootCP : SourceUtilsTestUtil.getBootClassPath()) {
-            TransactionContext ctx = TransactionContext.beginStandardTransaction(bootCP, false, false, false);
+            TransactionContext ctx = TransactionContext.beginStandardTransaction(bootCP, false, ()->false, false);
             try {
                 ClassIndexManager.getDefault().removeRoot(bootCP);
             } finally {

@@ -46,6 +46,7 @@ import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.platform.PlatformsCustomizer;
 import org.netbeans.api.java.platform.Specification;
+import org.netbeans.api.java.source.BuildArtifactMapper;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.api.common.util.CommonProjectUtils;
 import org.netbeans.modules.maven.api.Constants;
@@ -114,6 +115,10 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
     }
 
     private void initValues() {
+        boolean cosSupported = BuildArtifactMapper.isCompileOnSaveSupported();
+        if (!cosSupported) {
+            cbCompileOnSave.setEnabled(false);
+        }
         new CheckBoxUpdater(cbCompileOnSave) {
             private String modifiedValue;
 
@@ -132,11 +137,14 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
 
             @Override
             public boolean getDefaultValue() {
-                return true;
+                return cosSupported;
             }
 
             @Override
             public Boolean getValue() {
+                if (!cosSupported) {
+                    return false;
+                }
                 String val = modifiedValue;
                 if (val == null) {
                     val = handle.getRawAuxiliaryProperty(Constants.HINT_COMPILE_ON_SAVE, true);

@@ -204,7 +204,7 @@ public class LafPanel extends javax.swing.JPanel {
         boolean isAqua = "Aqua".equals(UIManager.getLookAndFeel().getID()); //NOI18N
         for( LookAndFeelInfo li : lafs ) {
             if( currentLAFClassName.equals( li.getClassName() ) 
-                    || (isAqua && li.getClassName().contains("apple.laf.AquaLookAndFeel")) ) { //NOI18N
+                    || (isAqua && li.getClassName().contains("com.apple.laf.AquaLookAndFeel")) ) { //NOI18N
                 currentLaf = li;
                 break;
             }
@@ -220,7 +220,7 @@ public class LafPanel extends javax.swing.JPanel {
         boolean isAqua = "Aqua".equals(UIManager.getLookAndFeel().getID()); //NOI18N
         for( LookAndFeelInfo li : lafs ) {
             if( lafClassName.equals( li.getClassName() )
-                    || (isAqua && li.getClassName().contains("apple.laf.AquaLookAndFeel")) ) { //NOI18N
+                    || (isAqua && li.getClassName().contains("com.apple.laf.AquaLookAndFeel")) ) { //NOI18N
                 currentLaf = li;
                 break;
             }

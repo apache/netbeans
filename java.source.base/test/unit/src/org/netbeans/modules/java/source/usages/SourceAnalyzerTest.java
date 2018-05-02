@@ -98,7 +98,7 @@ public class SourceAnalyzerTest extends NbTestCase {
                 problems.offer(diagnostic);
             }
         };
-        TransactionContext.beginStandardTransaction(src.toURL(), true, false, true);
+        TransactionContext.beginStandardTransaction(src.toURL(), true, ()->false, true);
         try {
             final ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create(
                 src,
@@ -151,7 +151,7 @@ public class SourceAnalyzerTest extends NbTestCase {
                 problems.offer(diagnostic);
             }
         };
-        TransactionContext.beginStandardTransaction(src.toURL(), true, false, true);
+        TransactionContext.beginStandardTransaction(src.toURL(), true, ()->false, true);
         try {
             final ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create(
                 src,
@@ -200,7 +200,7 @@ public class SourceAnalyzerTest extends NbTestCase {
                 problems.offer(diagnostic);
             }
         };
-        TransactionContext.beginStandardTransaction(src.toURL(), true, false, true);
+        TransactionContext.beginStandardTransaction(src.toURL(), true, ()->false, true);
         try {
             final ClasspathInfo cpInfo = ClasspathInfoAccessor.getINSTANCE().create(
                 src,

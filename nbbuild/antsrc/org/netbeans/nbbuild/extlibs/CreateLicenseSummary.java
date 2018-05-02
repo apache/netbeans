@@ -50,6 +50,8 @@ import java.util.zip.ZipFile;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.netbeans.nbbuild.JUnitReportWriter;
 import org.netbeans.nbbuild.extlibs.licenseinfo.Fileset;
@@ -122,6 +124,11 @@ public class CreateLicenseSummary extends Task {
         this.binary = binary;
     }
     
+    private FileSet moduleFiles;
+    public FileSet createModuleFiles() {
+        return (moduleFiles = new FileSet());
+    }
+
     private Map<String, String> pseudoTests;
 
     public @Override
@@ -289,6 +296,17 @@ public class CreateLicenseSummary extends Task {
         List<String> ignoredPatterns = VerifyLibsAndLicenses.loadPatterns("ignored-binary-overlaps");
         if (build != null)
             findBinaries(build, binaries2LicenseHeaders, crc2License, new HashMap<>(), "", testBinariesAreUnique, ignoredPatterns);
+        if (moduleFiles != null) {
+            for (Resource r : moduleFiles) {
+                try (InputStream is = r.getInputStream()) {
+                    long crc = computeCRC32(is);
+                    Map<String, String> headers = crc2License.get(crc);
+                    if (headers != null) {
+                        binaries2LicenseHeaders.put(r.getName(), headers);
+                    }
+                }
+            }
+        }
         if (binaries2LicenseHeaders.isEmpty())
             return ;
         pseudoTests.put("testBinariesAreUnique", testBinariesAreUnique.length() > 0 ? "Some binaries are duplicated (edit nbbuild/antsrc/org/netbeans/nbbuild/extlibs/ignored-binary-overlaps as needed)" + testBinariesAreUnique : null);

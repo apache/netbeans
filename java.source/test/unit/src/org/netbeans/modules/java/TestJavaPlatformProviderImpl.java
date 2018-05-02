@@ -31,6 +31,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.modules.java.platform.implspi.JavaPlatformProvider;
 import org.netbeans.api.java.platform.Specification;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileStateInvalidException;
@@ -82,24 +83,7 @@ public class TestJavaPlatformProviderImpl implements JavaPlatformProvider {
 
         private static synchronized ClassPath getBootClassPath() {
             if (bootClassPath == null) {
-                String cp = System.getProperty("sun.boot.class.path");
-                List<URL> urls = new ArrayList<>();
-                String[] paths = cp.split(Pattern.quote(System.getProperty("path.separator")));
-                for (String path : paths) {
-                    File f = new File(path);
-
-                    if (!f.canRead())
-                        continue;
-
-                    FileObject fo = FileUtil.toFileObject(f);
-                    if (FileUtil.isArchiveFile(fo)) {
-                        fo = FileUtil.getArchiveRoot(fo);
-                    }
-                    if (fo != null) {
-                        urls.add(fo.toURL());
-                    }
-                }
-                bootClassPath = ClassPathSupport.createClassPath((URL[])urls.toArray(new URL[0]));
+                bootClassPath = BootClassPathUtil.getBootClassPath();
             }
             return bootClassPath;
         }

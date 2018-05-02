@@ -34,6 +34,7 @@ class MultiDiffPanel extends javax.swing.JPanel {
             setBackground(UIManager.getColor("NbExplorerView.background")); // NOI18N
             controlToolbar.setBackground(UIManager.getColor("NbExplorerView.background")); // NOI18N
             jPanel1.setBackground(UIManager.getColor("NbExplorerView.background")); // NOI18N
+            jPanel2.setBackground(UIManager.getColor("NbExplorerView.background")); // NOI18N
             jPanel3.setBackground(UIManager.getColor("NbExplorerView.background")); // NOI18N
             jPanel4.setBackground(UIManager.getColor("NbExplorerView.background")); // NOI18N
             treeSelectionPanel.setBackground(UIManager.getColor("NbExplorerView.background")); //NOI18N

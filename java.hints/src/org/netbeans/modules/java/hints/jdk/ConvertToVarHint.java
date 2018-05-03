@@ -196,11 +196,7 @@ public class ConvertToVarHint {
         if (!(initTypeMirror instanceof CapturedType) && (!ctx.getInfo().getTypes().isSameType(variableTypeMirror, initTypeMirror))) {
             return false;
         }
-        
-        if (!ctx.getInfo().getTypes().isSameType(variableTypeMirror, ctx.getInfo().getTypeUtilities().getDenotableType(initTypeMirror))) {
-            return false;
-        }
-
+                
         return true;
     }
 }

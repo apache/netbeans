@@ -1872,7 +1872,7 @@ public final class TreeUtilities {
      *
      * @param tree the tree {@link Tree}
      * @return the true if tree ends with comma else return false
-     * @since 2.31.1
+     * @since 2.33.0
      */
     public boolean isTreeEndsWithComma(@NonNull Tree tree) {
         TokenSequence<JavaTokenId> tokenSequence = tokensFor(tree);

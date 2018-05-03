@@ -569,6 +569,11 @@ final class CloseButtonTabbedPane extends JTabbedPane implements PropertyChangeL
             };
             add(label);
             JButton tabCloseButton = CloseButtonFactory.createCloseButton();
+            if (IS_AQUA_LAF) {
+              // NETBEANS-172: Improve positioning of label and close button within the tab button.
+              setBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0));
+              tabCloseButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 0, 0));
+            }
             tabCloseButton.addActionListener(new ActionListener() {
 
                 @Override

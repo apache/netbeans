@@ -71,5 +71,14 @@ public class BuildArtifactMapper {
          */
         public void artifactsUpdated(@NonNull Iterable<File> artifacts);
     }
-    
+
+    /**
+     * Checks if compile on save is supported in the current configuration.
+     *
+     * @return true iff compile on save is supported in this run.
+     * @since 2.32
+     */
+    public static boolean isCompileOnSaveSupported() {
+        return BuildArtifactMapperImpl.isCompileOnSaveSupported();
+    }
 }

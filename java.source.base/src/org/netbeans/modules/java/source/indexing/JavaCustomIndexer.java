@@ -109,6 +109,7 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.modules.InstalledFileLocator;
 import org.openide.util.Exceptions;
 //import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -130,6 +131,7 @@ public class JavaCustomIndexer extends CustomIndexer {
     private static final String APT_SOURCE_OUTPUT = "apSrcOut"; //NOI18N
     private static final Pattern ANONYMOUS = Pattern.compile("\\$[0-9]"); //NOI18N
     private static final ClassPath EMPTY = ClassPathSupport.createClassPath(new URL[0]);
+    private static final String PROP_JAVAC_VERSION = "javac.version"; //NOI18N
 
     @Override
     protected void index(final Iterable<? extends Indexable> files, final Context context) {
@@ -1306,6 +1308,18 @@ public class JavaCustomIndexer extends CustomIndexer {
 
     private static Pair<Object,Method> heapDumper;
 
+    private static String computeJavacVersion() {
+        if (NoJavacHelper.hasNbJavac()) {
+            File nbJavac = InstalledFileLocator.getDefault().locate("modules/ext/nb-javac-impl.jar", null, false);
+            if (nbJavac != null) {
+                return String.valueOf(nbJavac.lastModified());
+            }
+            return "-1";
+        } else {
+            return System.getProperty("java.vm.version", "unknown");
+        }
+    }
+
     private static class FilterOutJDK7AndLaterWarnings implements Comparable<Diagnostic<? extends JavaFileObject>> {
         @Override public int compareTo(Diagnostic<? extends JavaFileObject> o) {
             return JDK7AndLaterWarnings.contains(o.getCode()) ? 0 : -1;
@@ -1416,6 +1430,10 @@ public class JavaCustomIndexer extends CustomIndexer {
             }
             if (JavaIndex.ensureAttributeValue(ctx.getRootURI(), ClassIndexManager.PROP_DIRTY_ROOT, null)) {
                 JavaIndex.LOG.fine("forcing reindex due to dirty root"); //NOI18N
+                vote = false;
+            }
+            if (JavaIndex.ensureAttributeValue(ctx.getRootURI(), PROP_JAVAC_VERSION, computeJavacVersion())) {
+                JavaIndex.LOG.fine("forcing reindex due to nb-javac status change"); //NOI18N
                 vote = false;
             }
             if (!JavaFileFilterListener.getDefault().startListeningOn(ctx.getRoot())) {

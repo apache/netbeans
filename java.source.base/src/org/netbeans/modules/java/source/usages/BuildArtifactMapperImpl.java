@@ -58,6 +58,7 @@ import org.netbeans.api.queries.FileBuiltQuery.Status;
 import org.netbeans.api.queries.VisibilityQuery;
 import org.netbeans.modules.java.preprocessorbridge.api.CompileOnSaveActionQuery;
 import org.netbeans.modules.java.preprocessorbridge.spi.CompileOnSaveAction;
+import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.indexing.COSSynchronizingIndexer;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.parsing.FileObjects;
@@ -474,6 +475,10 @@ public class BuildArtifactMapperImpl {
         } else {
             return path + File.separatorChar;
         }
+    }
+
+    public static boolean isCompileOnSaveSupported() {
+        return NoJavacHelper.hasNbJavac();
     }
 
     @org.openide.util.lookup.ServiceProvider(service=org.netbeans.spi.queries.FileBuiltQueryImplementation.class, position=1000)

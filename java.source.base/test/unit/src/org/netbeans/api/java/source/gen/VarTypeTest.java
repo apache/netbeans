@@ -42,21 +42,21 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
 /**
- * Tests conversion of invalid 'var' type variable with explicit array type
+ * Tests 'var' type variable rewrite statements.
  *
  * @author arusinha
  */
-public class InvalidVarToExplicitArrayConversionTest extends GeneratorTestBase {
+public class VarTypeTest extends GeneratorTestBase {
 
     private static final String SOURCE_LEVEL = "1.10";  // NOI18N
 
-    public InvalidVarToExplicitArrayConversionTest(String testName) {
+    public VarTypeTest(String testName) {
         super(testName);
     }
 
     public static NbTestSuite suite() {
         NbTestSuite suite = new NbTestSuite();
-        suite.addTestSuite(InvalidVarToExplicitArrayConversionTest.class);
+        suite.addTestSuite(VarTypeTest.class);
         return suite;
     }
 
@@ -99,7 +99,7 @@ public class InvalidVarToExplicitArrayConversionTest extends GeneratorTestBase {
 
         prepareTest(code);
 
-        RewriteStatement("int");
+        RewriteInvalidVarArrayInitStatement("int");
         String res = TestUtilities.copyFileToString(testFile);
         System.err.println(res);
         assertEquals(golden, res);
@@ -125,7 +125,7 @@ public class InvalidVarToExplicitArrayConversionTest extends GeneratorTestBase {
 
         prepareTest(code);
 
-        RewriteStatement("ArrayList");
+        RewriteInvalidVarArrayInitStatement("ArrayList");
         String res = TestUtilities.copyFileToString(testFile);
         System.err.println(res);
         assertEquals(golden, res);
@@ -150,13 +150,13 @@ public class InvalidVarToExplicitArrayConversionTest extends GeneratorTestBase {
 
         prepareTest(code);
 
-        RewriteStatement("String");
+        RewriteInvalidVarArrayInitStatement("String");
         String res = TestUtilities.copyFileToString(testFile);
         System.err.println(res);
         assertEquals(golden, res);
     }
 
-    protected void prepareTest(String code) throws Exception {
+    private void prepareTest(String code) throws Exception {
 
         FileObject workFO = FileUtil.toFileObject(getWorkDir());
 
@@ -179,11 +179,13 @@ public class InvalidVarToExplicitArrayConversionTest extends GeneratorTestBase {
     }
 
     /**
+     * Replaces invalid var type array initialization statement with explicit
+     * array type.
      *
      * @param arrayType : target explicit array type.
      * @throws IOException
      */
-    void RewriteStatement(String arrayType) throws IOException {
+    private void RewriteInvalidVarArrayInitStatement(String arrayType) throws IOException {
 
         JavaSource js = getJavaSource(getTestFile());
         assertNotNull(js);

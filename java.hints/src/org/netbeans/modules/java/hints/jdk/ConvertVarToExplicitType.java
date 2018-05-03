@@ -25,6 +25,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
@@ -161,7 +162,7 @@ public class ConvertVarToExplicitType {
 
         TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
 
-        if (!Utilities.isValidType(ctx.getInfo().getTypeUtilities().getDenotableType(variableTypeMirror))) {
+        if (!Utilities.isValidType(variableTypeMirror) ||(variableTypeMirror.getKind() == TypeKind.INTERSECTION)) {
             return false;
         }
         return true;

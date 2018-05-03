@@ -584,4 +584,12 @@ public class TreeUtilitiesTest extends NbTestCase {
             }
         }, true);
     }
+
+    public void testIsTreeEndsWithComma() throws Exception {
+        prepareTest("Test", "package test; public class Test {public Test(){int i = 10, j = 11;}}");
+        TreePath tp = info.getTreeUtilities().pathFor(47);
+        BlockTree bt = (BlockTree) tp.getLeaf();
+        assertTrue(info.getTreeUtilities().isTreeEndsWithComma(bt.getStatements().get(1)));
+        assertFalse(info.getTreeUtilities().isTreeEndsWithComma(bt.getStatements().get(2)));
+    }
 }

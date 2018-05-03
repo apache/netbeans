@@ -6035,6 +6035,6 @@ public class CasualDiff {
      */
     private static boolean isVarTypeVariable(JCVariableDecl tree){
         if(tree == null) return false;
-        return tree.getType() instanceof JCIdent && ((JCIdent)tree.getType()).name.contentEquals("var");
+        return tree.getType() instanceof JCIdent && ((JCIdent)tree.getType()).name.contentEquals("var"); // NOI18N
     }
 }

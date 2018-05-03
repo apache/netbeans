@@ -1867,6 +1867,21 @@ public final class TreeUtilities {
         }
         return false;
     }
+
+    /**Check the tree end with comma {@link Tree}.
+     *
+     * @param tree the tree {@link Tree}
+     * @return the true if tree ends with comma else return false
+     * @since 2.31.1
+     */
+    public boolean isTreeEndsWithComma(@NonNull Tree tree) {
+        TokenSequence<JavaTokenId> tokenSequence = tokensFor(tree);
+        tokenSequence.moveEnd();
+        if (tokenSequence.movePrevious() && tokenSequence.token().id() == JavaTokenId.COMMA) {
+            return true;
+        }
+        return false;
+    }
  
     private static final class NBScope implements Scope {
 

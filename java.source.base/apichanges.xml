@@ -37,6 +37,18 @@
         </description>
         <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
     </change>
+    <change id="TreeUtilities.isTreeEndsWithComma">
+        <api name="javasource_base"/>
+        <summary>Check the tree end with comma.</summary>
+        <version major="1" minor="2.31"/>
+        <date day="3" month="5" year="2018"/>
+        <author login="vikasprabhakar"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+            Check the tree end with comma.
+        </description>
+        <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="ElementHandle.createModuleElementHandle">
         <api name="javasource_base"/>
         <summary>Added a method to create an <code>ElementHandle</code> for module</summary>

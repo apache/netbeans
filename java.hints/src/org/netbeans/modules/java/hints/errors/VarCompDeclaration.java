@@ -143,13 +143,7 @@ public class VarCompDeclaration implements ErrorRule<Void> {
                     newStatements.add(make.asReplacementOf(newVariableTree, oldVariableTree));
                     
                     // Check variable tree seperated with ","
-                    TokenSequence<JavaTokenId> tokenSequence = info.getTreeUtilities().tokensFor(t);
-                    tokenSequence.moveEnd();
-                    if (tokenSequence.movePrevious()) {
-                        if (tokenSequence.token().id() != JavaTokenId.COMMA) {
-                            break;
-                        }
-                    }
+                    if(!info.getTreeUtilities().isTreeEndsWithComma(t)) break;
                 }
             }
             if (current + 1 < statements.size()) {

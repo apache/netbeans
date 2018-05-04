@@ -75,6 +75,8 @@ public class PEAnnotationProcessorTest extends NbTestCase {
         assertEquals("org.netbeans.modules.openide.nodes.TestPropertyEditor", pEditor.getClass().getName());
         pEditor = PropertyEditorManager.findEditor(short.class);
         assertEquals("org.netbeans.modules.openide.nodes.TestPropertyEditor", pEditor.getClass().getName());
+        pEditor = PropertyEditorManager.findEditor(CustomData.Inner.class);
+        assertEquals("org.netbeans.modules.openide.nodes.TestPropertyEditor", pEditor.getClass().getName());
     }
     
     public void testClassRegistration() {

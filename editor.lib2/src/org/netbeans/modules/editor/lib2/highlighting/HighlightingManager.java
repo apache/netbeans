@@ -202,7 +202,7 @@ public final class HighlightingManager {
             rebuildAll();
         }
         
-        private void updatePaneFilter() {
+        private synchronized void updatePaneFilter() {
             paneFilter = new RegExpFilter(pane.getClientProperty(PROP_HL_INCLUDES), pane.getClientProperty(PROP_HL_EXCLUDES));
         }
 

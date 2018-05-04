@@ -37,9 +37,9 @@
         </description>
         <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
     </change>
-    <change id="TreeUtilities.isTreeEndsWithComma">
+    <change id="TreeUtilities.isEndOfCompoundVariableDeclaration">
         <api name="javasource_base"/>
-        <summary>Check the tree end with comma.</summary>
+        <summary>Check the tree is the end of compound declaration.</summary>
         <version major="1" minor="2.33"/>
         <date day="3" month="5" year="2018"/>
         <author login="vikasprabhakar"/>

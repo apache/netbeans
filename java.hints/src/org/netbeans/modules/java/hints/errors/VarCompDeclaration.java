@@ -19,7 +19,6 @@
 package org.netbeans.modules.java.hints.errors;
 
 import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -30,11 +29,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
-import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.JavaFix;
@@ -143,7 +140,7 @@ public class VarCompDeclaration implements ErrorRule<Void> {
                     newStatements.add(make.asReplacementOf(newVariableTree, oldVariableTree));
                     
                     // Check variable tree seperated with ","
-                    if(!info.getTreeUtilities().isTreeEndsWithComma(t)) break;
+                    if(info.getTreeUtilities().isEndOfCompoundVariableDeclaration(t)) break;
                 }
             }
             if (current + 1 < statements.size()) {

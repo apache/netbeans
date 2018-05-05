@@ -1,3 +1,0 @@
-OpenIDE-Module: org.jboss.spec.javax.servlet
-OpenIDE-Module-Specification-Version: 3.1
-OpenIDE-Module-Implementation-Version: 1.0.2.Final

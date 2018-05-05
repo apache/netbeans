@@ -26,7 +26,7 @@
             <code-name-base>org.eclipse.jgit</code-name-base>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>org.apache.servicemix.bundles.jsch</code-name-base>
+                    <code-name-base>com.jcraft.jsch</code-name-base>
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>0.1.54</specification-version>
@@ -40,13 +40,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.jboss.spec.javax.servlet</code-name-base>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>3.1</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.slf4j.api</code-name-base>
                     <compile-dependency/>
                     <run-dependency>
@@ -57,7 +50,7 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>org-eclipse-jgit.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.jgit-4.11.0.201803080745-r.jar</binary-origin>
+                <binary-origin>external/org.eclipse.jgit-4.11.0.201803080745-r-nbm.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

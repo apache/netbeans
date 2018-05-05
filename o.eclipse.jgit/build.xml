@@ -21,5 +21,11 @@
 -->
 <project name="o.eclipse.jgit" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
+    <target name="-process.release.files">
+        <unzip src="external/org.eclipse.jgit-4.11.0.201803080745-r.jar" dest="external/tmp" />
+        <jar destfile="external/org.eclipse.jgit-4.11.0.201803080745-r-nbm.jar" manifest="manifest.mf">
+            <fileset dir="external/tmp" />
+        </jar>
+    </target>
     <target name="jar" depends="release"/>
 </project>

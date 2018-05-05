@@ -1,3 +1,0 @@
-OpenIDE-Module: org.apache.servicemix.bundles.jsch
-OpenIDE-Module-Specification-Version: 0.1.54
-OpenIDE-Module-Implementation-Version: 0.1.54_1

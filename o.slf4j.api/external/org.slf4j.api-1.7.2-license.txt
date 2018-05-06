@@ -1,11 +1,12 @@
 Name: SLF4J
-Description: Simple Logging Facade for Java (SLF4J)
 Version: 1.7.2
 License: MIT
 Origin: https://www.slf4j.org/
+Description: Simple Logging Facade for Java (SLF4J).
 
-Copyright (c) 2004-2017 QOS.ch
-All rights reserved.
+The MIT License
+
+Copyright (c) __YEARS__, __NAMES__
 
 Permission is hereby granted, free  of charge, to any person obtaining
 a  copy  of this  software  and  associated  documentation files  (the

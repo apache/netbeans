@@ -19,12 +19,17 @@
 
 package org.netbeans.modules.maven.indexer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import org.netbeans.modules.maven.indexer.api.RepositoryQueries.ClassUsage;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.test.JarBuilder;
 import org.openide.util.test.TestFileUtils;
 
@@ -75,6 +80,7 @@ public class ClassDependencyIndexCreatorTest extends NexusTestBase {
         install(TestFileUtils.writeZipFile(new File(getWorkDir(), "mod5.nbm"), "Info/info.xml:<whatever/>"), "test", "mod5", "0", "nbm");
         nrii.indexRepo(info);
         // repo set up, now index and query:
+        System.out.println("GOT: " + nrii.findClassUsages("mod1.API", Collections.singletonList(info)).getResults().toString());
         assertEquals("[test:mod2:0:test[mod2.Client, mod2.OtherClient], test:mod3:0:test[mod3.Client]]", nrii.findClassUsages("mod1.API", Collections.singletonList(info)).getResults().toString());
         List<ClassUsage> r = nrii.findClassUsages("mod1.Util", Collections.singletonList(info)).getResults();
         assertEquals("[test:mod4:0:test[mod4.Install]]", r.toString());
@@ -93,7 +99,12 @@ public class ClassDependencyIndexCreatorTest extends NexusTestBase {
         File jar = TestFileUtils.writeZipFile(new File(getWorkDir(), "x.jar"),
                 // XXX failed to produce a manifest that would generate a SecurityException if loaded with verify=true
                 "pkg/Clazz.class:ABC");
-        Map<String,byte[]> content = ClassDependencyIndexCreator.read(jar);
+        Map<String, byte[]> content = new TreeMap<>();
+        new ClassDependencyIndexCreator().read(jar, (String name, InputStream classData, Set<String> siblings) -> {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            FileUtil.copy(classData, out);
+            content.put(name, out.toByteArray());
+        });
         assertEquals("[pkg/Clazz]", content.keySet().toString());
         assertEquals("[65, 66, 67]", Arrays.toString(content.get("pkg/Clazz")));
     }

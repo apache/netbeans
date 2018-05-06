@@ -20,7 +20,7 @@
 
 -->
 
-<project name="o.n.insane" default="build" basedir=".">
+<project name="harness/o.n.insane" default="build" basedir=".">
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 

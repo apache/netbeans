@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="apisupport.harness" default="build" basedir=".">
+<project name="harness/apisupport.harness" default="build" basedir=".">
 
     <import file="../../nbbuild/templates/projectized.xml"/>
 

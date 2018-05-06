@@ -315,6 +315,19 @@ public class JavacParserTest extends NbTestCase {
         }, true);
     }
     
+    public void testInvalidFile654() throws Exception {
+        FileObject f = createFile("test/Test.java", "package test; class Test { }");
+        JavaSource js = JavaSource.forFileObject(f);
+
+
+        js.runUserActionTask(new Task<CompilationController>() {
+            public void run(CompilationController parameter) throws Exception {
+                f.delete();
+                assertTrue(Phase.RESOLVED.compareTo(parameter.toPhase(Phase.RESOLVED)) <= 0);
+            }
+        }, true);
+    }
+
     public void testIfMissingObjectOnBootCPUseCPToGuessSourceLevel() throws Exception {
         Source ret = guessSourceLevel(false, false, false);
         assertEquals("Downgraded to 1.4", Source.JDK1_4, ret);

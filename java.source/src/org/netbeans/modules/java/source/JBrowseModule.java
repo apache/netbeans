@@ -63,7 +63,8 @@ public class JBrowseModule extends ModuleInstall {
                                  "<li>run NetBeans on JDK 9 or later</li>" +
                              "</ul>",
         "BN_Install=Install nb-javac",
-        "DN_nbjavac=nb-javac library"
+        "DN_nbjavac=nb-javac library",
+        "DESC_InstallNbJavac=It is recommended to install nb-javac Library to improve Java editing experience and enable compile on save."
     })
     public void restored() {
         WindowManager.getDefault().invokeWhenUIReady(() -> {
@@ -84,7 +85,7 @@ public class JBrowseModule extends ModuleInstall {
                 }
 
                 if (!NoJavacHelper.hasNbJavac()) {
-                    NotificationDisplayer.getDefault().notify("Install nb-javac Library", ImageUtilities.loadImageIcon("/org/netbeans/modules/java/source/resources/icons/warning.png", false), "It is recommended to install nb-javac Library to improve Java editing experience.", evt -> {
+                    NotificationDisplayer.getDefault().notify("Install nb-javac Library", ImageUtilities.loadImageIcon("/org/netbeans/modules/java/source/resources/icons/warning.png", false), Bundle.DESC_InstallNbJavac(), evt -> {
                         PluginManager.installSingle("org.netbeans.modules.nbjavac", Bundle.DN_nbjavac());
                     }, prefs.getBoolean(KEY_WARNING_SHOWN, false) ? Priority.SILENT : Priority.HIGH);
                     prefs.putBoolean(KEY_WARNING_SHOWN, true);

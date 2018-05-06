@@ -16,29 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-package org.netbeans.modules.java.hints.declarative;
-
-import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.spi.java.classpath.ClassPathProvider;
-import org.openide.filesystems.FileObject;
-import org.openide.util.lookup.ServiceProvider;
+package org.netbeans.modules.openide.nodes;
 
 /**
  *
- * @author lahvac
+ * @author sdedic
  */
-@ServiceProvider(service=ClassPathProvider.class, position=50)
-public class ClassPathProviderImpl implements ClassPathProvider {
-
-    public ClassPath findClassPath(FileObject file, String type) {
-        if ("hint".equals(file.getExt())) {
-            if (ClassPath.COMPILE.equals(type)) {
-                return MethodInvocationContext.computeCompileClassPath();
-            }
-        }
-
-        return null;
+public class CustomData {
+    public static class Inner {
+        
     }
-
 }

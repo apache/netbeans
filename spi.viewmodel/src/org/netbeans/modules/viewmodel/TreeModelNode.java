@@ -2099,7 +2099,7 @@ public class TreeModelNode extends AbstractNode {
                 String sd = null;
                 try {
                     tooltip.putClientProperty("getShortDescription", object); // NOI18N
-                    Object tooltipObj = model.getValueAt(tooltip, id);
+                    Object tooltipObj = model.getValueAt(object, id);
                     if (tooltipObj != null) {
                         sd = adjustHTML(tooltipObj.toString());
                     }

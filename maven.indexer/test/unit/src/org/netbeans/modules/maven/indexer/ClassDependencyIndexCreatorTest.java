@@ -80,7 +80,6 @@ public class ClassDependencyIndexCreatorTest extends NexusTestBase {
         install(TestFileUtils.writeZipFile(new File(getWorkDir(), "mod5.nbm"), "Info/info.xml:<whatever/>"), "test", "mod5", "0", "nbm");
         nrii.indexRepo(info);
         // repo set up, now index and query:
-        System.out.println("GOT: " + nrii.findClassUsages("mod1.API", Collections.singletonList(info)).getResults().toString());
         assertEquals("[test:mod2:0:test[mod2.Client, mod2.OtherClient], test:mod3:0:test[mod3.Client]]", nrii.findClassUsages("mod1.API", Collections.singletonList(info)).getResults().toString());
         List<ClassUsage> r = nrii.findClassUsages("mod1.Util", Collections.singletonList(info)).getResults();
         assertEquals("[test:mod4:0:test[mod4.Install]]", r.toString());

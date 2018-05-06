@@ -69,6 +69,7 @@ final class MatchWords implements Predicate<String> {
             for (int i = 0; i < result.length; i++) {
                 result[i] = matchers.get(i).copy();
             }
+            local.set(result);
         }
         return result;
     }

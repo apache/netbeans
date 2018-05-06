@@ -81,7 +81,7 @@
         <condition property="asm.jar" value="${nbplatform.active.dir}/platform/core/asm-all-5.0.1.jar">
             <available file="${nbplatform.active.dir}/platform/core/asm-all-5.0.1.jar"/>
         </condition>
-        <property name="asm.jar" location="${libs.asm.dir}/core/asm-all-5.0.1.jar"/>
+        <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-all-5.0.1.jar"/>
     </target>
 
     <target name="-release.dir">

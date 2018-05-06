@@ -82,7 +82,7 @@
      <pathelement location="${ant.core.lib}"/>
      <fileset dir="..">
         <!-- For JavaHelp indexing and link checking: -->
-        <include name="javahelp/external/jhall*.jar"/>
+        <include name="platform/javahelp/external/jhall*.jar"/>
       </fileset>
     </path>
     <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.8" target="1.8">
@@ -178,7 +178,7 @@
     <fail message="You need to have some modules checked out to build NetBeans. For example, try running the 'checkout' target.">
         <condition>
             <not>
-                <available file="../core.startup/"/>
+                <available file="../platform/core.startup/"/>
             </not>
         </condition>
     </fail>

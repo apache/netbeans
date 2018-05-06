@@ -99,9 +99,9 @@ final class ModuleListParser {
             Set<String> standardModules = new HashSet<>();
             boolean doFastScan = false;
             String basedir = (String) properties.get("basedir");
+            String clusterList = (String) properties.get("nb.clusters.list");
             if (basedir != null) {
                 File basedirF = new File(basedir);
-                String clusterList = (String) properties.get("nb.clusters.list");
                 if (clusterList == null) {
                     String config = (String) properties.get("cluster.config");
                     if (config != null) {
@@ -203,7 +203,18 @@ final class ModuleListParser {
                         project.log("Scanning for modules in " + root);
                         project.log("Quick scan mode disabled since " + basedir + " not among standard modules of " + root + " which are " + standardModules, Project.MSG_VERBOSE);
                     }
-                    for (String tree : FOREST) {
+                    List<String> subDirs = new ArrayList<>();
+                    subDirs.addAll(Arrays.asList(FOREST));
+                    StringTokenizer tok = new StringTokenizer(clusterList, ", ");
+                    while (tok.hasMoreTokens()) {
+                        String clusterName = tok.nextToken();
+                        String clusterDir = (String) project.getProperty(clusterName + ".dir");
+                        if (subDirs.contains(clusterDir)) {
+                            continue;
+                        }
+                        subDirs.add(clusterDir);
+                    }
+                    for (String tree : subDirs) {
                         File dir = tree == null ? root : new File(root, tree);
                         File[] kids = dir.listFiles();
                         if (kids == null) {

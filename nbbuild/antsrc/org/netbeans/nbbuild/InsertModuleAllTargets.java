@@ -92,8 +92,12 @@ public final class InsertModuleAllTargets extends Task {
                     for( String module: clusterModules) {
                         File moduleBuild = new File(nbRoot, module + File.separator + "build.xml");
                         if (!moduleBuild.exists() || !moduleBuild.isFile()) {
-                            missingModules = true;
-                            log("This module is missing from checkout: " + module + " - at least can't find: " + moduleBuild.getAbsolutePath());
+                            String clusterDir = (String) props.get(cluster + ".dir");
+                            File subModuleBuild = new File(new File(nbRoot, clusterDir), module + File.separator + "build.xml");
+                            if (!subModuleBuild.exists() || !subModuleBuild.isFile()) {
+                                missingModules = true;
+                                log("This module is missing from checkout: " + module + " - at least can't find: " + moduleBuild.getAbsolutePath());
+                            }
                         }
                     }
                 }

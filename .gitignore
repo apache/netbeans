@@ -8,6 +8,12 @@
 /*/external/*.exe
 /*/external/*.js
 /*/external/*/**
+/*/*/external/*.zip
+/*/*/external/*.jar
+/*/*/external/*.dll
+/*/*/external/*.exe
+/*/*/external/*.js
+/*/*/external/*/**
 /nbbuild/netbeans/
 /nbbuild/nbms/
 /nbbuild/testuserdir/

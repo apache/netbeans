@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Search for CHANGEME in this document when copying and using it: -->
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<?xml-stylesheet type="text/xml" href="CHANGEME/nbbuild/javadoctools/apichanges.xsl"?>
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+
+<!--
+
+INFO FOR PEOPLE ADDING CHANGES:
+
+Check the DTD (apichanges.dtd) for details on the syntax. You do not
+need to regenerate the HTML, as this is part of Javadoc generation; just
+change the XML. Rough syntax of a change (several parts optional):
+
+<change>
+    <api name="compiler"/>
+    <summary>Some brief description here, can use <b>XHTML</b></summary>
+    <version major="1" minor="99"/>
+    <date day="13" month="6" year="2001"/>
+    <author login="jrhacker"/>
+    <compatibility addition="yes"/>
+    <description>
+        The main description of the change here.
+        Again can use full <b>XHTML</b> as needed.
+    </description>
+    <class package="org.openide.compiler" name="DoWhatIWantCompiler"/>
+    <issue number="14309"/>
+</change>
+
+Also permitted elements: <package>, <branch>. <version> is API spec
+version, recommended for all new changes. <compatibility> should say
+if things were added/modified/deprecated/etc. and give all information
+related to upgrading old code. List affected top-level classes and
+link to issue numbers if applicable. See the DTD for more details.
+
+Changes need not be in any particular order, they are sorted in various
+ways by the stylesheet anyway.
+
+Dates are assumed to mean "on the trunk". If you *also* make the same
+change on a stabilization branch, use the <branch> tag to indicate this
+and explain why the change was made on a branch in the <description>.
+
+Please only change this file on the trunk! Rather: you can change it
+on branches if you want, but these changes will be ignored; only the
+trunk version of this file is important.
+
+Deprecations do not count as incompatible, assuming that code using the
+deprecated calls continues to see their documented behavior. But do
+specify deprecation="yes" in <compatibility>.
+
+This file is not a replacement for Javadoc: it is intended to list changes,
+not describe the complete current behavior, for which ordinary documentation
+is the proper place.
+
+-->
+
+<apichanges>
+
+    <!-- First, a list of API names you may use: -->
+    <apidefs>
+        <apidef name="progress_api">Progress API</apidef>
+        <!-- etc. -->
+    </apidefs>
+
+    <!-- ACTUAL CHANGES BEGIN HERE: -->
+  <changes>
+      <change id="progresshandle.time">
+          <api name="progress_api"/>
+          <summary>
+              Allow tracking of stale handles
+          </summary>
+          <version major="1" minor="45"/>
+          <date day="4" month="2" year="2015"/>
+          <author login="sdedic"/>
+          <compatibility binary="compatible" source="compatible" addition="yes"/>
+          <description>
+              Internal handle allows to inspect the last time the handle was pinged by the
+              running process. This is needed to report stale processes and/or stop them.
+          </description>
+          <class package="org.netbeans.modules.progress.spi" name="InternalHandle"/>
+      </change>
+      <change id="taskmodel.sync">
+          <api name="progress_api"/>
+          <summary>
+              Allow to synchronize with Controller's event delivery.
+          </summary>
+          <version major="1" minor="44"/>
+          <date day="7" month="12" year="2014"/>
+          <author login="sdedic"/>
+          <compatibility binary="compatible" source="compatible" addition="yes"/>
+          <description>
+              Exposes Executor used by the <a href="@TOP@/org/netbeans/modules/progress/spi/Controller.html">Controller</a> to deliver progress events, so that 
+              <a href="@TOP@/org/netbeans/modules/progress/spi/TaskModel.html">TaskModel</a> can synchronize its change events to the same event stream.
+          </description>
+          <class package="org.netbeans.modules.progress.spi" name="Controller"/>
+          <class package="org.netbeans.modules.progress.spi" name="TaskModel"/>
+      </change>
+      <change id="swingSplit">
+          <api name="progress_api"/>
+          <summary>
+              Swing dependencies separated into a new module.
+          </summary>
+          <version major="1" minor="40"/>
+          <date day="18" month="9" year="2014"/>
+          <author login="sdedic"/>
+          <compatibility binary="compatible" source="incompatible" deprecation="yes" deletion="yes" addition="yes"/>
+          <description>
+              <p>
+                Progress API was split so that parts that are directly connected to Swing types were migrated
+                to a separate module. Please see <a href="@org-netbeans-api-progress-nb@/apichanges.html">it's API changes 
+                document</a> for additional info. Affected classes:
+              </p>
+              <ul>
+                  <li>
+                      <a href="@org-netbeans-api-progress-nb@/org/netbeans/api/progress/ProgressHandleFactory.html">ProgressHandleFactory</a>
+                  </li>
+                  <li>
+                      <a href="@org-netbeans-api-progress-nb@/org/netbeans/api/progress/ProgressUtils.html">ProgressUtils</a>
+                  </li>
+                  <li>
+                      <a href="@org-netbeans-api-progress-nb@/org/netbeans/api/progress/aggregate/AggregateProgressFactory.html">AggregateProgressFactory</a>
+                  </li>
+                  <li>
+                      <a href="@org-netbeans-api-progress-nb@/org/netbeans/modules/progress/spi/ExtractedProgressUIWorker.html">ExtractedProgressUIWorker</a>
+                  </li>
+                  <li>
+                      <a href="@org-netbeans-api-progress-nb@/org/netbeans/modules/progress/spi/ExtractedProgressUIWorker.html">ProressUIWorkerProvider</a>
+                  </li>
+                  <li>
+                      <a href="@org-netbeans-api-progress-nb@/org/netbeans/modules/progress/spi/SwingController.html">SwingController</a>
+                  </li>
+                  <li>
+                      <a href="@org-netbeans-api-progress-nb@/org/netbeans/modules/progress/spi/UIInternalHandle.html">UIInternalHandle</a>
+                  </li>
+              </ul>
+          </description>
+          <class package="org.netbeans.api.progress" name="ProgressHandleFactory" link="no"/>
+          <class package="org.netbeans.api.progress" name="ProgressUtils" link="no"/>
+          <class package="org.netbeans.api.progress.aggregate" name="AggregateProgressFactory" link="no"/>
+          <class package="org.netbeans.modules.progress.spi" name="ExtractedProgressUIWorker" link="no"/>
+          <class package="org.netbeans.modules.progress.spi" name="ProgressUIWorkerProvider" link="no"/>
+          <class package="org.netbeans.modules.progress.spi" name="Controller"/>
+          <class package="org.netbeans.modules.progress.spi" name="InternalHandle"/>
+          <issue number="247111"/>
+      </change>
+    <change id="customDialogs">
+        <api name="progress_api"/>
+        <summary><code>ProgressUtils</code> class with <code>runOffEventThreadWithCustomDialogContent</code> and <code>runOffEventThreadWithProgressDialog</code> methods were added.</summary>
+        <version major="1" minor="30"/>
+        <date day="28" month="8" year="2012"/>
+        <author login="pflaska	"/>
+        <compatibility binary="compatible" source="compatible" deprecation="no" deletion="no" addition="yes"/>
+        <description><code>ProgressUtils</code> class with <code>runOffEventThreadWithCustomDialogContent</code> and <code>runOffEventThreadWithProgressDialog</code> methods were added. These methods allow movement of operations out of AWT thread, showing the waint cursor after one second and a dialog when task is not finished in a three seconds.
+        </description>
+        <class package="org.netbeans.api.progress" name="ProgressUtils" link="no"/>
+        <issue number="204553"/>
+    </change>
+
+    <change id="modalRunMethods">
+        <api name="progress_api"/>
+        <summary>Modal progress dialogs</summary>
+        <version major="1" minor="19"/>
+        <date day="8" month="2" year="2010"/>
+        <author login="tboudreau"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Added methods to ProgressUtils for invoking a runnable or
+                similar with
+                a modal dialog blocking the UI and showing progress:
+                </p>
+                <ul>
+                    <li><code>public static void showProgressDialogAndRun(Runnable operation, String displayName)</code></li>
+                    <li><code>public static &lt;T&gt; T showProgressDialogAndRun(final ProgressRunnable&lt;T&gt; operation, final String displayName, boolean includeDetailLabel)</code></li>
+                    <li><code>public static void showProgressDialogAndRun(Runnable operation, ProgressHandle progress, boolean includeDetailLabel)</code></li>
+                    <li><code>public static RequestProcessor.Task showProgressDialogAndRunLater(Runnable operation, ProgressHandle progress, boolean includeDetailLabel)</code></li>
+                </ul>
+                <p>
+                Added interface ProgressRunnable for performing background
+                work, and an SPI class ProgressRunOffEdtProvider which is
+                implemented by the Progress UI module.
+            </p>
+        </description>
+        <issue number="165005"/>
+    </change>
+    <change id="spi">
+        <api name="progress_api"/>
+        <summary>SPI added</summary>
+        <version major="1" minor="18"/>
+        <date day="8" month="1" year="2010"/>
+        <author login="jglick"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                An internal SPI package was exposed. Normal modules should not
+                need to access this package.
+            </p>
+        </description>
+        <issue number="177945"/>
+    </change>
+    <change id="ProgressUtils">
+        <api name="progress_api"/>
+        <summary><code>ProgressUtils</code> class with <code>runOffEventDispatchThread</code> methods was added.</summary>
+        <version major="1" minor="16"/>
+        <date day="2" month="11" year="2009"/>
+        <author login="t_h"/>
+        <compatibility binary="compatible" source="compatible" deprecation="no" deletion="no" addition="yes"/>
+        <description><code>ProgressUtils</code> class with <code>runOffEventDispatchThread</code> methods
+        was added. These methods allow movement of operations out of AWT thread while blocking UI.
+        </description>
+        <class package="org.netbeans.api.progress" name="ProgressUtils" link="no"/>
+        <issue number="170882"/>
+    </change>
+    <change id="suspend">
+        <api name="progress_api"/>
+        <summary>Add <code>ProgressHandle.suspend(String)</code> method for visual suspend of a running task.</summary>
+        <version major="1" minor="9"/>
+        <date day="23" month="10" year="2006"/>
+        <author login="mkleint"/>
+        <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+        <description>
+            <p>Adding <code>suspend(String)</code>  to <code>ProgressHandle</code> class. 
+            Any progress event coming after this call wakes up the progress bar to previous state. </p> 
+            <p>
+           Currently running task can switch to silent suspend mode where the progress bar stops moving, hides completely or partially. 
+           The exact UI behaviour is undefined. </p>
+           <p>
+        Useful to make progress in status bar less intrusive for very long running tasks, eg. running an ant script that executes user application, debugs user application etc.
+            </p>
+        </description>
+        <class package="org.netbeans.api.progress" name="ProgressHandle"/>
+        <issue number="63586"/>
+    </change>      
+    <change>
+        <api name="progress_api"/>
+        <summary>Add methods to create main/detail labels for an custom placed progress component.</summary>
+        <version major="1" minor="8"/>
+        <date day="3" month="8" year="2006"/>
+        <author login="mkleint"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>Adding <code>createMainLabelComponent(ProgressHandle)</code> and 
+                      <code>createDetailLabelComponent(ProgressHandle)</code> to <code>ProgressHandleFactory</code> and <code>AggregateProgressFactory</code> classes.
+              These are complementary to the <code>createProgressComponent(ProgressHandle)</code> method and allow to 
+              externalize the display of task's display name and detail messages when embedded in custom UI components.
+            </p>
+        </description>
+        <class package="org.netbeans.api.progress" name="ProgressHandleFactory" link="no"/>
+        <class package="org.netbeans.api.progress.aggregate" name="AggregateProgressFactory" link="no"/>
+        <issue number="58889"/>
+    </change>      
+    <change>
+        <api name="progress_api"/>
+        <summary>Split API and implementation of progress component</summary>
+        <version major="1" minor="7"/>
+        <date day="24" month="7" year="2006"/>
+        <author login="mkleint"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Split the implementation and APIs of progress component.
+            </p>
+        </description>
+        <issue number="78605"/>
+    </change>      
+    <change>
+        <api name="progress_api"/>
+        <summary>Allow to change display name of running progress task</summary>
+        <version major="1" minor="5"/>
+        <date day="25" month="11" year="2005"/>
+        <author login="mkleint"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Added new method <code>setDisplayName(String)</code> to <code>ProgressHandle</code> and <code>AggregateProgressHandle</code>,
+                allows to change the main identifying name of the progress task.
+            </p>
+        </description>
+        <class package="org.netbeans.api.progress" name="ProgressHandle"/>
+        <class package="org.netbeans.api.progress.aggregate" name="AggregateProgressHandle"/>
+        <issue number="68923"/>
+    </change>      
+    <change>
+        <api name="progress_api"/>
+        <summary>Adding <code>createProgressComponent(AggregateProgressHandle)</code> method to <code>AggregateProgressFactory</code></summary>
+        <version major="1" minor="3"/>
+        <date day="19" month="10" year="2005"/>
+        <author login="mkleint"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+              For aggregated progress handles the equivalent of ProgressHandleFactory.createProgressComponent() was missing.
+              Added in this version.
+            </p>
+        </description>
+        <class package="org.netbeans.api.progress.aggregate" name="AggregateProgressFactory" link="no"/>
+        <class package="org.netbeans.api.progress.aggregate" name="AggregateProgressHandle"/>
+        <issue number="66554"/>
+    </change>      
+    <change>
+        <api name="progress_api"/>
+        <summary>Adding <code>setInitialDelay(int)</code> method to <code>ProgressHandle</code> and <code>AggregateProgressHandle</code></summary>
+        <version major="1" minor="2"/>
+        <date day="26" month="9" year="2005"/>
+        <author login="mkleint"/>
+        <compatibility addition="yes"/>
+        <description><p>
+            The newly added methods allow to customize the amount of time that shall pass between the start of handle's progress 
+            and it's appearance in the status bar. If the progress task finishes fast enough it won't appear in the UI at all.
+            The default value is around 0.5s. </p>
+            <p>
+            For handles that are used in dialogs and elsewhere, this property has no effect and the handle's component is shown immediately.
+            </p>
+        </description>
+        <class package="org.netbeans.api.progress" name="ProgressHandle"/>
+        <class package="org.netbeans.api.progress.aggregate" name="AggregateProgressHandle"/>
+        <issue number="60966"/>
+    </change>      
+    <change>
+        <api name="progress_api"/>
+        <summary>Initial version released</summary>
+        <version major="1" minor="0"/>
+        <date day="4" month="5" year="2005"/>
+        <author login="mkleint"/>
+        <compatibility addition="yes"/>
+        <description>first initial release of the progress api.
+        </description>
+    </change>      
+  </changes>
+
+    <!-- Now the surrounding HTML text and document structure: -->
+
+    <htmlcontents>
+<!--
+
+                            NO NO NO NO NO!
+
+         ==============>    DO NOT EDIT ME!  <==============
+
+          AUTOMATICALLY GENERATED FROM APICHANGES.XML, DO NOT EDIT
+
+                SEE CHANGEME/apichanges.xml
+
+-->
+    <head>
+      <title>Change History for the Progress API</title>
+      <link rel="stylesheet" href="prose.css" type="text/css"/>
+    </head>
+    <body>
+
+<p class="overviewlink"><a href="overview-summary.html">Overview</a></p>
+
+<h1>Introduction</h1>
+
+<p>This document lists changes made to the Progress API/SPI.</p>
+
+<!-- The actual lists of changes, as summaries and details: -->
+
+      <hr/><standard-changelists module-code-name="org.netbeans.api.progress"/>
+
+      <hr/><p>@FOOTER@</p>
+
+    </body>
+  </htmlcontents>
+
+</apichanges>

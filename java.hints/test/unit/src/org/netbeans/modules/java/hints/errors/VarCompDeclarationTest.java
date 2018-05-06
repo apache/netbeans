@@ -204,6 +204,60 @@ public class VarCompDeclarationTest extends ErrorHintsTestBase {
                        "    } \n" +
                        "}").replaceAll("[\\s]+", " "));
     }
+
+    public void testCase9() throws Exception {
+        performFixTest("test/Test.java",
+                       "package test; \n" +
+                       "public class Test {\n" +
+                       "    private void test() { \n" +
+                       "        int i = 1; \n" +
+                       "        switch(i){ \n" +
+                       "            case 1: \n" +
+                       "            var v = 1, v1 = 10;\n" +
+                       "            } \n" +
+                       "    } \n" +
+                       "}",
+                       -1,
+                       NbBundle.getMessage(VarCompDeclarationTest.class, "FIX_VarCompDeclaration"),
+                       ("package test; \n" +
+                       "public class Test {\n" +
+                       "    private void test() { \n" +
+                       "        int i = 1; \n" +
+                       "        switch(i){ \n" +
+                       "            case 1: \n" +
+                       "            var v = 1;\n" +
+                       "            var v1 = 10;\n" +
+                       "            } \n" +
+                       "    } \n" +
+                       "}").replaceAll("[\\s]+", " "));
+    }
+
+    public void testCase10() throws Exception {
+        performFixTest("test/Test.java",
+                       "package test; \n" +
+                       "public class Test {\n" +
+                       "    private void test() { \n" +
+                       "        int i = 1; \n" +
+                       "        switch(i){ \n" +
+                       "            case 1: \n" +
+                       "                final var v = 1, v1 = 10;\n" +
+                       "            } \n" +
+                       "    } \n" +
+                       "}",
+                       -1,
+                       NbBundle.getMessage(VarCompDeclarationTest.class, "FIX_VarCompDeclaration"),
+                       ("package test; \n" +
+                       "public class Test {\n" +
+                       "    private void test() { \n" +
+                       "        int i = 1; \n" +
+                       "        switch(i){ \n" +
+                       "            case 1: \n" +
+                       "            final var v = 1;\n" +
+                       "            final var v1 = 10;\n" +
+                       "            } \n" +
+                       "    } \n" +
+                       "}").replaceAll("[\\s]+", " "));
+    }
     
     @Override
     protected List<Fix> computeFixes(CompilationInfo info, int pos, TreePath path) throws Exception {

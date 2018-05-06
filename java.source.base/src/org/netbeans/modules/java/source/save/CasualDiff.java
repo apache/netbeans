@@ -1820,15 +1820,21 @@ public class CasualDiff {
             return bounds[1];
         }
         PositionEstimator est = EstimatorFactory.statements(
-                oldT.getStatements(),
-                newT.getStatements(),
+                filterHidden(oldT.stats),
+                filterHidden(newT.stats),
                 diffContext
         );
-        localPointer = diffList(oldT.stats, newT.stats, localPointer, est, Measure.MEMBER, printer);
-
-        copyTo(localPointer, bounds[1]);
-
-        return bounds[1];
+        int old = printer.indent();
+        localPointer = diffInnerComments(oldT, newT, localPointer);
+        JCClassDecl oldEnclosing = printer.enclClass;
+        printer.enclClass = null;
+        localPointer = diffList(filterHidden(oldT.stats), filterHidden(newT.stats), localPointer, est, Measure.MEMBER, printer);
+        printer.enclClass = oldEnclosing;
+        if (localPointer < endPos(oldT)) {
+            copyTo(localPointer, localPointer = endPos(oldT));
+        }
+        printer.undent(old);
+        return localPointer;
     }
 
     protected int diffSynchronized(JCSynchronized oldT, JCSynchronized newT, int[] bounds) {

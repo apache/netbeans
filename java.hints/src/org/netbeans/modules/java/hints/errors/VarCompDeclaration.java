@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.hints.errors;
 
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -56,7 +57,7 @@ public class VarCompDeclaration implements ErrorRule<Void> {
     public List<Fix> run(CompilationInfo info, String diagnosticKey, int offset, TreePath treePath, Data<Void> data) {
 
         Tree.Kind parentKind = treePath.getParentPath().getLeaf().getKind();
-        if (parentKind != Tree.Kind.BLOCK /*&& parentKind != Tree.Kind.CASE*/) {  //Todo : Handle CASE scenario
+        if (parentKind != Tree.Kind.BLOCK && parentKind != Tree.Kind.CASE) {
             return null;
         }
 
@@ -110,10 +111,9 @@ public class VarCompDeclaration implements ErrorRule<Void> {
                 case BLOCK:
                     statements = ((BlockTree) parent).getStatements();
                     break;
-                //Todo : Handle CASE scenario
-                /*case CASE:
+                case CASE:
                     statements = ((CaseTree) parent).getStatements();
-                    break;*/
+                    break;
                 default:
                     // Ignore other scenario
                     break;
@@ -153,10 +153,9 @@ public class VarCompDeclaration implements ErrorRule<Void> {
                 case BLOCK:
                     target = make.Block(newStatements, ((BlockTree) parent).isStatic());
                     break;
-                //Todo : Handle CASE scenario
-                /*case CASE:
+                case CASE:
                     target = make.Case(((CaseTree) parent).getExpression(), newStatements);
-                    break;*/
+                    break;
                 default:
                     // Ignore other scenario
                     break;

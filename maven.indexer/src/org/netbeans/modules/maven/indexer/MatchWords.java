@@ -76,14 +76,15 @@ final class MatchWords implements Predicate<String> {
 
     @Override
     public boolean test(String t) {
-        char[] c = t.toCharArray();
+        int max = t.length();
         MatchState[] mtchrs = matchers();
         for (MatchState mtchr : mtchrs) {
             mtchr.reset();
         }
-        for (int i = 0; i < c.length; i++) {
+        for (int i = 0; i < max; i++) {
+            char c = t.charAt(i);
             for (int j = 0; j < mtchrs.length; j++) {
-                mtchrs[j].check(c[i]);
+                mtchrs[j].check(c);
                 if (mtchrs[j].isMatched()) {
                     return true;
                 }

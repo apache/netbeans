@@ -23,63 +23,45 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import java.io.IOException;
-import java.net.URL;
 import static junit.framework.TestCase.assertNotNull;
 import org.netbeans.api.java.source.JavaSource;
-import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
-import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestSuite;
-import org.netbeans.modules.java.source.indexing.TransactionContext;
 import org.netbeans.modules.java.source.parsing.JavacParser;
-import org.netbeans.modules.java.source.usages.ClassIndexManager;
-import org.netbeans.modules.parsing.api.indexing.IndexingManager;
-import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 
 /**
- * Tests 'var' type variable rewrite statements.
+ * Tests conversion of invalid var type variable to explicit array type.
  *
  * @author arusinha
  */
-public class VarTypeTest extends GeneratorTestBase {
+public class InvalidVarToExplicitArrayConversionTest extends TreeRewriteTestBase {
 
-    private static final String SOURCE_LEVEL = "1.10";  // NOI18N
-
-    public VarTypeTest(String testName) {
+    public InvalidVarToExplicitArrayConversionTest(String testName) {
         super(testName);
     }
 
     public static NbTestSuite suite() {
         NbTestSuite suite = new NbTestSuite();
-        suite.addTestSuite(VarTypeTest.class);
+        suite.addTestSuite(InvalidVarToExplicitArrayConversionTest.class);
         return suite;
     }
 
     @Override
     protected void setUp() throws Exception {
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         super.setUp();
-        TestUtilities.analyzeBinaries(SourceUtilsTestUtil.getBootClassPath());
-        Main.initializeURLFactory();
+        sourceLevel = "1.10";
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+
     }
 
     @Override
     protected void tearDown() throws Exception {
-        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = false;
-        for (URL bootCP : SourceUtilsTestUtil.getBootClassPath()) {
-            TransactionContext ctx = TransactionContext.beginStandardTransaction(bootCP, false, () -> false, false);
-            try {
-                ClassIndexManager.getDefault().removeRoot(bootCP);
-            } finally {
-                ctx.commit();
-            }
-        }
         super.tearDown();
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = false;
+
     }
 
     public void testInvalidVarToExplicitArrayConversion() throws Exception {
@@ -97,10 +79,10 @@ public class VarTypeTest extends GeneratorTestBase {
                 + "    }\n"
                 + "}\n";
 
-        prepareTest(code);
+        prepareTest("Test", code);
 
-        RewriteInvalidVarArrayInitStatement("int");
-        String res = TestUtilities.copyFileToString(testFile);
+        rewriteStatement("int");
+        String res = TestUtilities.copyFileToString(getTestFile());
         System.err.println(res);
         assertEquals(golden, res);
 
@@ -115,6 +97,7 @@ public class VarTypeTest extends GeneratorTestBase {
                 + "        /*comment1*/var k = {new ArrayList(), new ArrayList()};\n"
                 + "    }\n"
                 + "}\n";
+
         String golden = "package test;\n"
                 + "import java.util.ArrayList;\n"
                 + "public class Test {\n"
@@ -123,16 +106,15 @@ public class VarTypeTest extends GeneratorTestBase {
                 + "    }\n"
                 + "}\n";
 
-        prepareTest(code);
+        prepareTest("Test", code);
 
-        RewriteInvalidVarArrayInitStatement("ArrayList");
-        String res = TestUtilities.copyFileToString(testFile);
+        rewriteStatement("ArrayList");
+        String res = TestUtilities.copyFileToString(getTestFile());
         System.err.println(res);
         assertEquals(golden, res);
     }
 
     public void testInvalidVarToExplicitArray3Conversion() throws Exception {
-
         String code = "package test;\n"
                 + "import java.util.ArrayList;\n"
                 + "public class Test {\n"
@@ -148,34 +130,35 @@ public class VarTypeTest extends GeneratorTestBase {
                 + "    }\n"
                 + "}\n";
 
-        prepareTest(code);
+        prepareTest("Test", code);
 
-        RewriteInvalidVarArrayInitStatement("String");
-        String res = TestUtilities.copyFileToString(testFile);
+        rewriteStatement("String");
+        String res = TestUtilities.copyFileToString(getTestFile());
         System.err.println(res);
         assertEquals(golden, res);
     }
 
-    private void prepareTest(String code) throws Exception {
+    public void testInvalidVarToExplicitArray4Conversion() throws Exception {
 
-        FileObject workFO = FileUtil.toFileObject(getWorkDir());
+        String code = "package test;\n"
+                + "public class Test {\n"
+                + "    void m1() {\n"
+                + "        var/*comment2*/ k = {1, 'C'};\n"
+                + "    }\n"
+                + "}\n";
+        String golden = "package test;\n"
+                + "public class Test {\n"
+                + "    void m1() {\n"
+                + "        int[]/*comment2*/ k = {1, 'C'};\n"
+                + "    }\n"
+                + "}\n";
 
-        assertNotNull(workFO);
+        prepareTest("Test", code);
 
-        FileObject sourceRoot = FileUtil.createFolder(workFO, "src");
-        FileObject buildRoot = workFO.createFolder("build");
-        FileObject data = FileUtil.createData(sourceRoot, "Test.java");
-
-        testFile = FileUtil.toFile(data);
-        assertNotNull(testFile);
-        TestUtilities.copyStringToFile(testFile, code);
-
-        SourceUtilsTestUtil.setSourceLevel(data, SOURCE_LEVEL);
-
-        SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, CacheFolder.getCacheFolder(), new FileObject[0]);
-
-        //re-index, in order to find classes-living-elsewhere
-        IndexingManager.getDefault().refreshIndexAndWait(sourceRoot.getURL(), null);
+        rewriteStatement("int");
+        String res = TestUtilities.copyFileToString(getTestFile());
+        System.err.println(res);
+        assertEquals(golden, res);
     }
 
     /**
@@ -185,9 +168,9 @@ public class VarTypeTest extends GeneratorTestBase {
      * @param arrayType : target explicit array type.
      * @throws IOException
      */
-    private void RewriteInvalidVarArrayInitStatement(String arrayType) throws IOException {
+    private void rewriteStatement(String arrayType) throws IOException {
 
-        JavaSource js = getJavaSource(getTestFile());
+        JavaSource js = getJavaSource();
         assertNotNull(js);
 
         Task<WorkingCopy> task = new Task<WorkingCopy>() {
@@ -211,15 +194,6 @@ public class VarTypeTest extends GeneratorTestBase {
             }
         };
         js.runModificationTask(task).commit();
-
-    }
-
-    String getGoldenPckg() {
-        return "";
-    }
-
-    String getSourcePckg() {
-        return "";
     }
 
 }

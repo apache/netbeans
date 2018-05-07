@@ -33,6 +33,8 @@ import org.netbeans.api.java.source.CompilationInfo;
  */
 public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase {
 
+    private static final String FIX_MSG = "Replace var with explicit type"; // NOI18N
+
     public ConvertInvalidVarToExplicitArrayTypeTest(String name) throws Exception {
         super(name, ConvertInvalidVarToExplicitArrayType.class);
     }
@@ -56,6 +58,38 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
                 -1);
     }
 
+    public void testParameterizedElements2() throws Exception {
+        performAnalysisTest("test/Test.java",
+                "package test; import java.util.ArrayList; import java.util.Arrays; public class Test"
+                + "{{ \n"
+                + "     ArrayList<ArrayList<String>> l = new ArrayList<ArrayList<String>>(); \n"
+                + "     ArrayList<String> places = new ArrayList<String>(Arrays.asList(\"New York\", \"Tokyo\"));\n"
+                + "     l.add(places); "
+                + "     final var j = {l.get(0)};"
+                + "}}",
+                -1);
+    }
+
+    public void testMethodInvocation() throws Exception {
+        performAnalysisTest("test/Test.java",
+                "package test; import java.util.ArrayList; import java.util.Arrays; public class Test"
+                + " {{ \n"
+                + "     ArrayList<String> places = new ArrayList<String>(Arrays.asList(\"New York\", \"Tokyo\"));\n"
+                + "     final var j = {places.get(0)};\n"
+                + "}}",
+                -1, FIX_MSG);
+    }
+
+    public void testMethodInvocation2() throws Exception {
+        performFixTest("test/Test.java",
+                "package test; public class Test"
+                + " {{ \n"
+                + "     final var arr = {m3()};}"
+                + "     static String m3(){ return new String(\"hello\") ;}"
+                + "}",
+                -1, FIX_MSG, "package test; public class Test {{ final String[] arr = {m3()};} static String m3(){ return new String(\"hello\") ;}}");
+    }
+
     public void testArrayHetrogeneousElements() throws Exception {
         performAnalysisTest("test/Test.java",
                 "package test; public class Test {{final/*comment1*/ var/**comment2**/ j/*comment3*/ = /*comment4*/{new java.util.ArrayList(),new java.util.HashMap()};}}",
@@ -65,7 +99,7 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
     public void testArrayObjectElementsFix() throws Exception {
         performFixTest("test/Test.java",
                 "package test; public class Test {{final/*comment1*/ var/**comment2**/ j/*comment3*/ = /*comment4*/{new java.util.ArrayList(),new java.util.ArrayList()};}}",
-                -1, "Convert Var to Explicit Type",
+                -1, FIX_MSG,
                 "package test; import java.util.ArrayList; public class Test {{final/*comment1*/ ArrayList[]/**comment2**/ j/*comment3*/ = /*comment4*/{new java.util.ArrayList(),new java.util.ArrayList()};}}");
     }
 
@@ -73,7 +107,7 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
         performFixTest("test/Test.java",
                 "package test; public class Test {{final var j = {1,2.1,3f};}}",
                 -1,
-                "Convert Var to Explicit Type",
+                FIX_MSG,
                 "package test; public class Test {{final double[] j = {1,2.1,3f};}}");
     }
 
@@ -81,7 +115,7 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
         performFixTest("test/Test.java",
                 "package test; public class Test {{final var j = {(short)1,(byte)2};}}",
                 -1,
-                "Convert Var to Explicit Type",
+                FIX_MSG,
                 "package test; public class Test {{final short[] j = {(short)1,(byte)2};}}");
     }
 
@@ -89,7 +123,7 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
         performFixTest("test/Test.java",
                 "package test; public class Test {{/*comment1*/ /*comment2*/@NotNull final var j = {\"hello\",\"world\"};}}",
                 -1,
-                "Convert Var to Explicit Type",
+                FIX_MSG,
                 "package test; public class Test {{/*comment1*/ /*comment2*/@NotNull final String[] j = {\"hello\",\"world\"};}}");
     }
 
@@ -97,7 +131,7 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
         performFixTest("test/Test.java",
                 "package test; public class Test {{@NotNull final var j = {new Object(),new Object()};}}",
                 -1,
-                "Convert Var to Explicit Type",
+                FIX_MSG,
                 "package test; public class Test {{@NotNull final Object[] j = {new Object(),new Object()};}}");
     }
 
@@ -105,7 +139,7 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
         performFixTest("test/Test.java",
                 "package test; public class Test {{@NotNull var j = {new Object(),new Object()};}}",
                 -1,
-                "Convert Var to Explicit Type",
+                FIX_MSG,
                 "package test; public class Test {{@NotNull Object[] j = {new Object(),new Object()};}}");
     }
 
@@ -113,7 +147,7 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
         performFixTest("test/Test.java",
                 "package test; public class Test {{final @NotNull var j = {new Object(),new Object()};}}",
                 -1,
-                "Convert Var to Explicit Type",
+                FIX_MSG,
                 "package test; public class Test {{final @NotNull Object[] j = {new Object(),new Object()};}}");
     }
 
@@ -121,7 +155,7 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
         performFixTest("test/Test.java",
                 "package test; public class Test {{final/*comment1*/var a = {new Object(),new Object()};}}",
                 -1,
-                "Convert Var to Explicit Type",
+                FIX_MSG,
                 "package test; public class Test {{final/*comment1*/Object[] a = {new Object(),new Object()};}}");
     }
 
@@ -129,7 +163,7 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
         performFixTest("test/Test.java",
                 "package test; public class Test {{final/*comment1*/var /*comment2*/ a = {2,3.1f};}}",
                 -1,
-                "Convert Var to Explicit Type",
+                FIX_MSG,
                 "package test; public class Test {{final/*comment1*/float[] /*comment2*/ a = {2,3.1f};}}");
     }
 
@@ -137,7 +171,7 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
         performFixTest("test/Test.java",
                 "package test; public class Test {{/*comment1*/var/*comment2*/ a = {2,3.1f};}}",
                 -1,
-                "Convert Var to Explicit Type",
+                FIX_MSG,
                 "package test; public class Test {{/*comment1*/float[]/*comment2*/ a = {2,3.1f};}}");
     }
 
@@ -145,7 +179,7 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
         performFixTest("test/Test.java",
                 "package test; public class Test {{var/*comment1*/ a = {2,3.1f};}}",
                 -1,
-                "Convert Var to Explicit Type",
+                FIX_MSG,
                 "package test; public class Test {{float[]/*comment1*/ a = {2,3.1f};}}");
     }
 
@@ -153,14 +187,14 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
         performFixTest("test/Test.java",
                 "package test; public class Test {{@NotNull var j = {new Object(),new Object()};}}",
                 -1,
-                "Convert Var to Explicit Type",
+                FIX_MSG,
                 "package test; public class Test {{@NotNull Object[] j = {new Object(),new Object()};}}");
     }
 
     public void testArrayObject9ElementsFix() throws Exception {
         performFixTest("test/Test.java",
                 "package test; public class Test {{var/*comment1*/ k = {1,'c'};}}",
-                -1, "Convert Var to Explicit Type",
+                -1, FIX_MSG,
                 "package test; public class Test {{int[]/*comment1*/ k = {1,'c'};}}");
     }
 

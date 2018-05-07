@@ -21,7 +21,6 @@ package org.netbeans.modules.java.hints.errors;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.util.Collections;
@@ -30,8 +29,7 @@ import java.util.List;
 import java.util.Set;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.Trees;
-import java.util.HashMap;
-import java.util.Map;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -49,7 +47,7 @@ import javax.lang.model.util.Types;
  * @author arusinha
  */
 @Messages({
-    "DN_ConvertVarToExplicitType=Convert Var to Explicit Type"
+    "DN_ConvertVarToExplicitType=Replace var with explicit type" // NOI18N
 })
 public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
 
@@ -76,6 +74,13 @@ public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
         TypeMirror arrayType = null;
         if (treePath.getLeaf().getKind() == Tree.Kind.VARIABLE) {
             VariableTree oldVariableTree = (VariableTree) treePath.getLeaf();
+
+            ExpressionTree init = oldVariableTree.getInitializer();
+
+            if (init == null || init.getKind() != Tree.Kind.NEW_ARRAY) {
+                return null;
+            }
+
             NewArrayTree arrayTree = (NewArrayTree) oldVariableTree.getInitializer();
             List<? extends ExpressionTree> currentValues = arrayTree.getInitializers();
             TreePath initArrayTreePath = new TreePath(treePath, arrayTree);
@@ -87,13 +92,10 @@ public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
                 TypeMirror etType = trees.getTypeMirror(new TreePath(initArrayTreePath, tree));
 
                 //skipped fix for parameterized array member as parameterized array is not possible.
-                if (tree.getKind() == Tree.Kind.NEW_CLASS) {
-                    NewClassTree nct = (NewClassTree) tree;
-                    if (nct.getIdentifier().getKind() == Tree.Kind.PARAMETERIZED_TYPE) {
-
-                        return null;
-                    }
+                if (etType.getKind() == TypeKind.DECLARED && !((DeclaredType) etType).getTypeArguments().isEmpty()) {
+                    return null;
                 }
+
                 if (arrayType == null) {
                     arrayType = etType;
                 } else if (!types.isAssignable(etType, arrayType)) {
@@ -104,8 +106,9 @@ public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
                     }
                 }
             }
+            return Collections.<Fix>singletonList(new FixImpl(compilationInfo, treePath, arrayType).toEditorFix());
         }
-        return Collections.<Fix>singletonList(new FixImpl(compilationInfo, treePath, arrayType).toEditorFix());
+        return Collections.<Fix>emptyList();
 
     }
 

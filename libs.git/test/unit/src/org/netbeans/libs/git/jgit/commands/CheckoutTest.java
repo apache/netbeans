@@ -348,7 +348,7 @@ public class CheckoutTest extends AbstractGitTestCase {
         WindowCacheConfig cfg = new WindowCacheConfig();
         cfg.setStreamFileThreshold((int) large.length() - 1);
         cfg.install();
-        DirCacheCheckout.checkoutEntry(repository, large, e);
+        DirCacheCheckout.checkoutEntry(repository, e, repository.newObjectReader());
     }
     
     public void testCheckoutBranch () throws Exception {

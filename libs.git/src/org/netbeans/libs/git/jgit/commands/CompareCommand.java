@@ -74,8 +74,7 @@ public class CompareCommand extends GitCommand {
     @Override
     protected void run () throws GitException {
         Repository repository = getRepository();
-        TreeWalk walk = new TreeWalk(repository);
-        try {
+        try (TreeWalk walk = new TreeWalk(repository)) {
             walk.reset();
             walk.setRecursive(true);
             walk.addTree(Utils.findCommit(repository, revisionFirst).getTree());
@@ -96,8 +95,6 @@ public class CompareCommand extends GitCommand {
             }
         } catch (IOException ex) {
             throw new GitException(ex);
-        } finally {
-            walk.close();
         }
     }
 

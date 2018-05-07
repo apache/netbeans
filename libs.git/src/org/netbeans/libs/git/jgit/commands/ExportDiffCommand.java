@@ -79,11 +79,10 @@ public class ExportDiffCommand extends GitCommand {
     @Override
     protected void run() throws GitException {
         Repository repository = getRepository();
-        DiffFormatter formatter = new DiffFormatter(out);
-        formatter.setRepository(repository);
         ObjectReader or = null;
         String workTreePath = repository.getWorkTree().getAbsolutePath();
-        try {
+        try (DiffFormatter formatter = new DiffFormatter(out)) {
+            formatter.setRepository(repository);
             Collection<PathFilter> pathFilters = Utils.getPathFilters(repository.getWorkTree(), roots);
             if (!pathFilters.isEmpty()) {
                 formatter.setPathFilter(PathFilterGroup.create(pathFilters));
@@ -123,7 +122,6 @@ public class ExportDiffCommand extends GitCommand {
             if (or != null) {
                 or.close();
             }
-            formatter.close();
         }
     }
 

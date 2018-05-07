@@ -65,37 +65,35 @@ public class CheckoutIndex {
     }
 
     public void checkout () throws IOException, GitException {
-        TreeWalk treeWalk = new TreeWalk(repository);
-        Collection<String> relativePaths = Utils.getRelativePaths(repository.getWorkTree(), roots);
-        if (!relativePaths.isEmpty()) {
-            treeWalk.setFilter(PathFilterGroup.createFromStrings(relativePaths));
-        }
-        treeWalk.setRecursive(true);
-        treeWalk.reset();
-        treeWalk.addTree(new DirCacheIterator(cache));
-        treeWalk.addTree(new FileTreeIterator(repository));
-        String lastAddedPath = null;
-        ObjectReader od = repository.newObjectReader();
-        try {
-        while (treeWalk.next() && !monitor.isCanceled()) {
-            File path = new File(repository.getWorkTree(), treeWalk.getPathString());
-            if (treeWalk.getPathString().equals(lastAddedPath)) {
-                // skip conflicts
-                continue;
-            } else {
-                lastAddedPath = treeWalk.getPathString();
+        try (TreeWalk treeWalk = new TreeWalk(repository);
+             ObjectReader od = repository.newObjectReader()) {
+            Collection<String> relativePaths = Utils.getRelativePaths(repository.getWorkTree(), roots);
+            if (!relativePaths.isEmpty()) {
+                treeWalk.setFilter(PathFilterGroup.createFromStrings(relativePaths));
             }
-            DirCacheIterator dit = treeWalk.getTree(0, DirCacheIterator.class);
-            FileTreeIterator fit = treeWalk.getTree(1, FileTreeIterator.class);
-            if (dit != null && (recursively || directChild(roots, repository.getWorkTree(), path)) && (fit == null || fit.isModified(dit.getDirCacheEntry(), checkContent, od))) {
-                // update entry
-                listener.notifyFile(path, treeWalk.getPathString());
-                checkoutEntry(repository, path, dit.getDirCacheEntry(), od);
+            treeWalk.setRecursive(true);
+            treeWalk.reset();
+            treeWalk.addTree(new DirCacheIterator(cache));
+            treeWalk.addTree(new FileTreeIterator(repository));
+            String lastAddedPath = null;
+            while (treeWalk.next() && !monitor.isCanceled()) {
+                File path = new File(repository.getWorkTree(), treeWalk.getPathString());
+                if (treeWalk.getPathString().equals(lastAddedPath)) {
+                    // skip conflicts
+                    continue;
+                } else {
+                    lastAddedPath = treeWalk.getPathString();
+                }
+                DirCacheIterator dit = treeWalk.getTree(0, DirCacheIterator.class);
+                FileTreeIterator fit = treeWalk.getTree(1, FileTreeIterator.class);
+                if (dit != null
+                    && (recursively || directChild(roots, repository.getWorkTree(), path))
+                    && (fit == null || fit.isModified(dit.getDirCacheEntry(), checkContent, od))) {
+                    // update entry
+                    listener.notifyFile(path, treeWalk.getPathString());
+                    checkoutEntry(repository, path, dit.getDirCacheEntry(), od);
+                }
             }
-        }
-        } finally {
-            od.close();
-            treeWalk.close();
         }
     }
 

@@ -62,7 +62,9 @@ public enum ColoringAttributes {
     
     KEYWORD,
     
-    JAVADOC_IDENTIFIER;
+    JAVADOC_IDENTIFIER,
+
+    UNINDENTED_RAW_STRING_LITERAL;
     
     public static Coloring empty() {
         return new Coloring();

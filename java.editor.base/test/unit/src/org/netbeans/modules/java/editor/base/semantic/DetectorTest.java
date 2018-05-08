@@ -21,6 +21,7 @@ package org.netbeans.modules.java.editor.base.semantic;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import javax.lang.model.SourceVersion;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.java.source.CompilationController;
@@ -398,6 +399,28 @@ public class DetectorTest extends TestBase {
         performTest("IncDecReading230408");
     }
 
+    public void testRawStringLiteral() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_11");
+        } catch (IllegalArgumentException iae) {
+            //OK, presumably no support for raw string literals
+        }
+        setSourceLevel("11");
+        performTest("RawStringLiteral.java",
+                    "public class RawStringLiteral {\n" +
+                    "    String s = `\n" +
+                    "               int i1 = 1;\n" +
+                    "               int i2 = 2;\n" +
+                    "               `.stripIndent();\n" +
+                    "}\n",
+                    "[PUBLIC, CLASS, DECLARATION], 0:13-0:29",
+                    "[PUBLIC, CLASS], 1:4-1:10",
+                    "[PACKAGE_PRIVATE, FIELD, DECLARATION], 1:11-1:12",
+                    "[UNINDENTED_RAW_STRING_LITERAL], 2:15-2:26",
+                    "[UNINDENTED_RAW_STRING_LITERAL], 3:15-3:26",
+                    "[PUBLIC, METHOD], 4:17-4:28");
+    }
+
     private void performTest(String fileName) throws Exception {
         performTest(fileName, new Performer() {
             public void compute(CompilationController parameter, Document doc, final ErrorDescriptionSetter setter) {
@@ -411,6 +434,19 @@ public class DetectorTest extends TestBase {
         });
     }
     
+    private void performTest(String fileName, String code, String... expected) throws Exception {
+        performTest(fileName, code, new Performer() {
+            public void compute(CompilationController parameter, Document doc, final ErrorDescriptionSetter setter) {
+                new SemanticHighlighterBase() {
+                    @Override
+                    protected boolean process(CompilationInfo info, Document doc) {
+                        return process(info, doc, setter);
+                    }
+                }.process(parameter, doc);
+            }
+        }, expected);
+    }
+
     private FileObject testSourceFO;
     
     static {

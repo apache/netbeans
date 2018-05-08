@@ -125,6 +125,7 @@ public final class HighlightImpl {
         ColoringAttributes.DECLARATION,
         
         ColoringAttributes.MARK_OCCURRENCES,
+        ColoringAttributes.UNINDENTED_RAW_STRING_LITERAL,
     });
  
     public static HighlightImpl parse(StyledDocument doc, String line) throws ParseException, BadLocationException {

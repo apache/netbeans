@@ -4028,6 +4028,16 @@ public class CasualDiff {
     }
 
     /**
+     * Check the JCVariableDecl tree has var type
+     * @param tree instance of JCVariableDecl
+     * @return true if tree contains var type else return false
+     */
+    private static boolean isVarTypeVariable(JCVariableDecl tree){
+        if(tree == null) return false;
+        return tree.getType() instanceof JCIdent && ((JCIdent)tree.getType()).name.contentEquals("var"); // NOI18N
+    }
+
+    /**
      * Retrieves comment set for the specified tree t. The FieldGroupTree is handled specially:
      * preceding commenst are taken from the FG's first item, following comments from the last item
      * <p/>
@@ -6034,13 +6044,4 @@ public class CasualDiff {
         return sb.toString();
     }
 
-    /**
-     * Check the JCVariableDecl tree has var type
-     * @param tree instance of JCVariableDecl
-     * @return true if tree contains var type else return false
-     */
-    private static boolean isVarTypeVariable(JCVariableDecl tree){
-        if(tree == null) return false;
-        return tree.getType() instanceof JCIdent && ((JCIdent)tree.getType()).name.contentEquals("var"); // NOI18N
-    }
 }

@@ -47,7 +47,7 @@ import javax.lang.model.util.Types;
  * @author arusinha
  */
 @Messages({
-    "DN_ConvertVarToExplicitType=Replace var with explicit type" // NOI18N
+    "DN_ConvertVarToExplicitType=Replace var with explicit type" 
 })
 public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
 

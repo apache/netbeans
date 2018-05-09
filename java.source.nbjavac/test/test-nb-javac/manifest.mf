@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: org.netbeans.modules.java.source.nbjavac.test
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/source/nbjavac/test/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Provides: org.netbeans.modules.nbjavac
+

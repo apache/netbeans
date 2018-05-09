@@ -15,6 +15,7 @@
 /nbbuild/user.build.properties
 /nbi/engine/native/*/*/dist/
 /nb-javac/
+/java.source.nbjavac/test/test-nb-javac/nbproject/private/
 
 # OS generated files #
 ######################

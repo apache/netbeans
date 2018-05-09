@@ -429,7 +429,7 @@ public class TreePathHandleTest extends NbTestCase {
     public void testVarInstanceMember() throws Exception {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         FileObject file = FileUtil.createData(sourceRoot, "test/Test.java"); //NOI18N
-        String code = "package test; public class Test {var v;  \n public Test() {}}"; //NOI18N
+        String code = "package test; public class Test {var v1;\n var v2=()->{}; \n public Test() {}}"; //NOI18N
 
         writeIntoFile(file, code);
         SourceUtilsTestUtil.setSourceLevel(file, "1.10"); //NOI18N
@@ -438,10 +438,17 @@ public class TreePathHandleTest extends NbTestCase {
         CompilationInfo info = SourceUtilsTestUtil.getCompilationInfo(js, Phase.RESOLVED);
         assertTrue(info.getDiagnostics().size() > 0);
 
-        TreePath tp = info.getTreeUtilities().pathFor(code.indexOf("var") + 1); //NOI18N
+        TreePath tp = info.getTreeUtilities().pathFor(code.indexOf("var v1") + 1); //NOI18N
         VariableElement elem = (VariableElement) info.getTrees().getElement(tp);
         ClassFileUtil.createFieldDescriptor(elem);
         TreePathHandle handle = TreePathHandle.create(tp, info);
+        assertNotNull(handle.getElementHandle());
+        
+        tp = info.getTreeUtilities().pathFor(code.indexOf("var v2") + 1); //NOI18N
+        elem = (VariableElement) info.getTrees().getElement(tp);
+        ClassFileUtil.createFieldDescriptor(elem);
+        
+        handle = TreePathHandle.create(tp, info);
         assertNotNull(handle.getElementHandle());
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = false;
     }

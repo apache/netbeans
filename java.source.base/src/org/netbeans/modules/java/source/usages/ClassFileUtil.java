@@ -289,11 +289,6 @@ public class ClassFileUtil {
                 encodeType(((IntersectionType) type).getBounds().get(0), sb);
                 break;
             }
-            case NONE: {
-                // ignore none kind returned for invalid var
-                // usage like 'var v'
-                break;
-            }
 	    default:
 		throw new IllegalArgumentException (
                     String.format(

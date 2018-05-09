@@ -21,7 +21,6 @@ package org.netbeans.editor;
 
 import java.awt.Font;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.beans.VetoableChangeListener;
 import java.io.IOException;
@@ -1826,23 +1825,6 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     public @Override void atomicUndo() {
         breakAtomicLock();
-    }
-
-    /**
-     * Remove a PropertyChangeListener that was added via
-     * {@code o.n.lib.editor.util.swing.DocumentUtilities#addPropertyChangeListener(Document,PropertyChangeListener)}.
-     * This method exists so that org.openide.util.WeakListenerImpl can find it by reflection in
-     * case {@code DocumentUtilities#addPropertyChangeListener} was called with a weak listener.
-     * The method is package-private to minimize avoid exposure as a public API. WeakListenerImpl
-     * will still be able to call it, since it calls
-     * {@code java.lang.reflect.Method.setAccessible(true)} first.
-     *
-     * @deprecated do not call directly; this method exists only so it can be found and invoked by
-     *             reflection via org.openide.util.WeakListenerImpl.
-     */
-    @Deprecated
-    void removePropertyChangeListener(PropertyChangeListener l) {
-        org.netbeans.lib.editor.util.swing.DocumentUtilities.removePropertyChangeListener(this, l);
     }
 
     /**

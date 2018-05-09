@@ -50,6 +50,8 @@ import java.util.zip.ZipFile;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.netbeans.nbbuild.JUnitReportWriter;
 import org.netbeans.nbbuild.extlibs.licenseinfo.Fileset;
@@ -122,6 +124,11 @@ public class CreateLicenseSummary extends Task {
         this.binary = binary;
     }
     
+    private FileSet moduleFiles;
+    public FileSet createModuleFiles() {
+        return (moduleFiles = new FileSet());
+    }
+
     private Map<String, String> pseudoTests;
 
     public @Override
@@ -205,22 +212,8 @@ public class CreateLicenseSummary extends Task {
     }
     
     private void evaluateLicenseInfo(final PrintWriter licenseWriter, final PrintWriter noticeWriter, Set<String> notices, Set<String> licenseNames) throws IOException {
-
-        licenseWriter.println();
-        licenseWriter.println("******************************************************************************************************************************************************");
-        licenseWriter.println("Apache NetBeans includes a number of source files that are not covered by the apache license. The following files are part of this distribution.");
-        licenseWriter.println("******************************************************************************************************************************************************");
-        licenseWriter.println();
-        
-        licenseWriter.printf("%-100s%40s%10s\n", "Sourcefile", "LICENSE", "NOTES");
-        if(licenseTargetDir != null) {
-            licenseWriter.printf("%-100s%40s\n", "(path in the source)", "(text is in file in licenses directory)");
-        } else {
-            licenseWriter.printf("%-100s%40s\n", "(path in the source)", "(see license text reproduced below)");
-        }
-        licenseWriter.println("------------------------------------------------------------------------------------------------------------------------------------------------------");
-        
         List<String> footnotes = new ArrayList<>();
+        boolean headerPrinted = false;
         
         for(String module : modules) {
             File moduleDir = new File(nball, module);
@@ -238,7 +231,24 @@ public class CreateLicenseSummary extends Task {
                 if(binary && fs.isSourceOnly()) {
                     continue;
                 }
-                
+
+                if (!headerPrinted) {
+                    licenseWriter.println();
+                    licenseWriter.println("******************************************************************************************************************************************************");
+                    licenseWriter.println("Apache NetBeans includes a number of source files that are not covered by the apache license. The following files are part of this distribution.");
+                    licenseWriter.println("******************************************************************************************************************************************************");
+                    licenseWriter.println();
+
+                    licenseWriter.printf("%-100s%40s%10s\n", "Sourcefile", "LICENSE", "NOTES");
+                    if(licenseTargetDir != null) {
+                        licenseWriter.printf("%-100s%40s\n", "(path in the source)", "(text is in file in licenses directory)");
+                    } else {
+                        licenseWriter.printf("%-100s%40s\n", "(path in the source)", "(see license text reproduced below)");
+                    }
+                    licenseWriter.println("------------------------------------------------------------------------------------------------------------------------------------------------------");
+                    headerPrinted = true;
+                }
+
                 String notes = "";
                 if(fs.getLicenseInfo() != null) {
                     int idx = footnotes.indexOf(fs.getLicenseInfo());
@@ -284,7 +294,21 @@ public class CreateLicenseSummary extends Task {
         Map<String, Map<String, String>> binaries2LicenseHeaders = new TreeMap<>();
         StringBuilder testBinariesAreUnique = new StringBuilder();
         List<String> ignoredPatterns = VerifyLibsAndLicenses.loadPatterns("ignored-binary-overlaps");
-        findBinaries(build, binaries2LicenseHeaders, crc2License, new HashMap<>(), "", testBinariesAreUnique, ignoredPatterns);
+        if (build != null)
+            findBinaries(build, binaries2LicenseHeaders, crc2License, new HashMap<>(), "", testBinariesAreUnique, ignoredPatterns);
+        if (moduleFiles != null) {
+            for (Resource r : moduleFiles) {
+                try (InputStream is = r.getInputStream()) {
+                    long crc = computeCRC32(is);
+                    Map<String, String> headers = crc2License.get(crc);
+                    if (headers != null) {
+                        binaries2LicenseHeaders.put(r.getName(), headers);
+                    }
+                }
+            }
+        }
+        if (binaries2LicenseHeaders.isEmpty())
+            return ;
         pseudoTests.put("testBinariesAreUnique", testBinariesAreUnique.length() > 0 ? "Some binaries are duplicated (edit nbbuild/antsrc/org/netbeans/nbbuild/extlibs/ignored-binary-overlaps as needed)" + testBinariesAreUnique : null);
         
         licenseWriter.println();
@@ -392,9 +416,11 @@ public class CreateLicenseSummary extends Task {
                             if (!innerName.endsWith(".jar") && !innerName.endsWith(".zip")) {
                                 continue;
                             }
+                            Map<String, String> nestedHeaders = binary2License.get(n + "!/" + innerName);
+                            if (nestedHeaders == null) nestedHeaders = headers;
                             is = zf.getInputStream(entry);
                             try {
-                                crc2LicenseHeaders.put(computeCRC32(is), headers);
+                                crc2LicenseHeaders.put(computeCRC32(is), nestedHeaders);
                             } finally {
                                 is.close();
                             }

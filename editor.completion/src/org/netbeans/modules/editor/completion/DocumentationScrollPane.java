@@ -56,6 +56,7 @@ import org.openide.util.RequestProcessor;
  *  @author  Martin Roskanin, Dusan Balek
  */
 public class DocumentationScrollPane extends JScrollPane {
+    private static final String TEXT_ZOOM_PROPERTY = "text-zoom"; // Defined in DocumentView in editor.lib2
 
     private static final String BACK = "org/netbeans/modules/editor/completion/resources/back.png"; //NOI18N
     private static final String FORWARD = "org/netbeans/modules/editor/completion/resources/forward.png"; //NOI18N
@@ -105,6 +106,16 @@ public class DocumentationScrollPane extends JScrollPane {
         
         // Add the completion doc view
         view = new HTMLDocView(bgColor);
+        Integer textZoom = (Integer) editorComponent.getClientProperty(TEXT_ZOOM_PROPERTY);
+        // Use the same logic as in o.n.editor.GlyphGutter.update().
+        if (textZoom != null && textZoom != 0) {
+            Font font = view.getFont();
+            if (Math.max(font.getSize() + textZoom, 2) == 2) {
+                textZoom = -(font.getSize() - 2);
+            }
+            view.setFont(new Font(font.getFamily(), font.getStyle(),
+                    font.getSize() + textZoom));
+        }
         view.addHyperlinkListener(new HyperlinkAction());
         setViewportView(view);
         

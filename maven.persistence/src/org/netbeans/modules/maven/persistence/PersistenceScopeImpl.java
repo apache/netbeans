@@ -23,6 +23,7 @@ package org.netbeans.modules.maven.persistence;
 
 import org.netbeans.modules.maven.api.classpath.ProjectSourcesClassPathProvider;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
 import org.netbeans.modules.j2ee.persistence.api.metadata.orm.EntityMappingsMetadata;
 import org.netbeans.modules.j2ee.persistence.spi.PersistenceLocationProvider;
@@ -111,10 +112,14 @@ public class PersistenceScopeImpl implements PersistenceScopeImplementation
     }
     
     private EntityMappingsMetadataModelHelper createEntityMappingsHelper() {
-        return EntityMappingsMetadataModelHelper.create(
-            cpProvider.getProjectSourcesClassPath(ClassPath.BOOT),
-            cpProvider.getProjectSourcesClassPath(ClassPath.COMPILE),
-            cpProvider.getProjectSourcesClassPath(ClassPath.SOURCE));
+        return new EntityMappingsMetadataModelHelper.Builder(cpProvider.getProjectSourcesClassPath(ClassPath.BOOT))
+                .setModuleBootPath(cpProvider.getProjectSourcesClassPath(JavaClassPathConstants.MODULE_BOOT_PATH))
+                .setClassPath(cpProvider.getProjectSourcesClassPath(ClassPath.COMPILE))
+                .setModuleCompilePath(cpProvider.getProjectSourcesClassPath(JavaClassPathConstants.MODULE_COMPILE_PATH))
+                .setModuleClassPath(cpProvider.getProjectSourcesClassPath(JavaClassPathConstants.MODULE_CLASS_PATH))
+                .setSourcePath(cpProvider.getProjectSourcesClassPath(ClassPath.SOURCE))
+                //The CP provider does not support: JavaClassPathConstants.MODULE_SOURCE_PATH
+                .build();
     }
     
     

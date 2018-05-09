@@ -34,6 +34,7 @@ class MultiDiffPanel extends javax.swing.JPanel {
             setBackground(UIManager.getColor("NbExplorerView.background")); // NOI18N
             controlToolbar.setBackground(UIManager.getColor("NbExplorerView.background")); // NOI18N
             jPanel1.setBackground(UIManager.getColor("NbExplorerView.background")); // NOI18N
+            jPanel2.setBackground(UIManager.getColor("NbExplorerView.background")); // NOI18N
             jPanel3.setBackground(UIManager.getColor("NbExplorerView.background")); // NOI18N
             jPanel4.setBackground(UIManager.getColor("NbExplorerView.background")); // NOI18N
             treeSelectionPanel.setBackground(UIManager.getColor("NbExplorerView.background")); //NOI18N
@@ -61,20 +62,20 @@ class MultiDiffPanel extends javax.swing.JPanel {
         controlToolbar.setRollover(true);
 
         btnModeGroup.add(tgbHeadVsWorking);
-        tgbHeadVsWorking.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/head_vs_working.png", false)); // NOI18N
+        tgbHeadVsWorking.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/head_vs_working.png", false));
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/netbeans/modules/git/ui/diff/Bundle"); // NOI18N
         tgbHeadVsWorking.setToolTipText(bundle.getString("MultiDiffPanel.tgbHeadVsWorking.toolTipText")); // NOI18N
         tgbHeadVsWorking.setFocusable(false);
         controlToolbar.add(tgbHeadVsWorking);
 
         btnModeGroup.add(tgbHeadVsIndex);
-        tgbHeadVsIndex.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/head_vs_index.png", false)); // NOI18N
+        tgbHeadVsIndex.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/head_vs_index.png", false));
         tgbHeadVsIndex.setToolTipText(bundle.getString("MultiDiffPanel.tgbHeadVsIndex.toolTipText")); // NOI18N
         tgbHeadVsIndex.setFocusable(false);
         controlToolbar.add(tgbHeadVsIndex);
 
         btnModeGroup.add(tgbIndexVsWorking);
-        tgbIndexVsWorking.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/index_vs_working.png", false)); // NOI18N
+        tgbIndexVsWorking.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/index_vs_working.png", false));
         tgbIndexVsWorking.setToolTipText(bundle.getString("MultiDiffPanel.tgbIndexVsWorking.toolTipText")); // NOI18N
         tgbIndexVsWorking.setFocusable(false);
         controlToolbar.add(tgbIndexVsWorking);
@@ -95,7 +96,7 @@ class MultiDiffPanel extends javax.swing.JPanel {
         controlToolbar.add(jPanel1);
 
         viewTypeGroup.add(listButton);
-        listButton.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/file_view.png", false)); // NOI18N
+        listButton.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/file_view.png", false));
         listButton.setToolTipText(bundle.getString("MultiDiffPanel.listButton.toolTipText")); // NOI18N
         listButton.setFocusable(false);
         listButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -103,7 +104,7 @@ class MultiDiffPanel extends javax.swing.JPanel {
         controlToolbar.add(listButton);
 
         viewTypeGroup.add(treeButton);
-        treeButton.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/logical_view.png", false)); // NOI18N
+        treeButton.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/logical_view.png", false));
         treeButton.setSelected(true);
         treeButton.setToolTipText(bundle.getString("MultiDiffPanel.treeButton.toolTipText")); // NOI18N
         treeButton.setFocusable(false);
@@ -126,14 +127,14 @@ class MultiDiffPanel extends javax.swing.JPanel {
 
         controlToolbar.add(jPanel2);
 
-        nextButton.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/diff-next.png", false)); // NOI18N
+        nextButton.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/diff-next.png", false));
         nextButton.setToolTipText(org.openide.util.NbBundle.getMessage(MultiDiffPanel.class, "MultiDiffPanel.nextButton.toolTipText")); // NOI18N
         nextButton.setFocusable(false);
         nextButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         nextButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         controlToolbar.add(nextButton);
 
-        prevButton.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/diff-prev.png", false)); // NOI18N
+        prevButton.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/diff-prev.png", false));
         prevButton.setToolTipText(org.openide.util.NbBundle.getMessage(MultiDiffPanel.class, "MultiDiffPanel.prevButton.toolTipText")); // NOI18N
         prevButton.setFocusable(false);
         prevButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -155,7 +156,7 @@ class MultiDiffPanel extends javax.swing.JPanel {
 
         controlToolbar.add(jPanel4);
 
-        btnRefresh.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/refresh.png", false)); // NOI18N
+        btnRefresh.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/refresh.png", false));
         btnRefresh.setToolTipText(bundle.getString("MultiDiffPanel.btnRefresh.toolTipText")); // NOI18N
         btnRefresh.setActionCommand("null"); // NOI18N
         btnRefresh.setFocusable(false);
@@ -166,13 +167,13 @@ class MultiDiffPanel extends javax.swing.JPanel {
         jPanel3.setOpaque(false);
         controlToolbar.add(jPanel3);
 
-        btnRevert.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/get_clean.png", false)); // NOI18N
+        btnRevert.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/get_clean.png", false));
         btnRevert.setToolTipText(bundle.getString("MultiDiffPanel.btnRevert.toolTipText")); // NOI18N
         btnRevert.setFocusable(false);
         btnRevert.setPreferredSize(new java.awt.Dimension(22, 25));
         controlToolbar.add(btnRevert);
 
-        btnCommit.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/commit.png", false)); // NOI18N
+        btnCommit.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/commit.png", false));
         btnCommit.setToolTipText(bundle.getString("MultiDiffPanel.btnCommit.toolTipText")); // NOI18N
         btnCommit.setFocusable(false);
         btnCommit.setPreferredSize(new java.awt.Dimension(22, 25));
@@ -208,6 +209,8 @@ class MultiDiffPanel extends javax.swing.JPanel {
                 .addComponent(cmbDiffTreeSecond, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        controlToolbar.add(treeSelectionPanel);
+
         splitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -216,15 +219,12 @@ class MultiDiffPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(splitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 716, Short.MAX_VALUE)
             .addComponent(controlToolbar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(treeSelectionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(controlToolbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(treeSelectionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(splitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents

@@ -232,7 +232,7 @@ public class JavaBinaryIndexer extends BinaryIndexer {
             assert removedRoots != null;
             final TransactionContext txCtx = TransactionContext.beginTrans().register(
                 ClassIndexEventsTransaction.class,
-                ClassIndexEventsTransaction.create(false));
+                ClassIndexEventsTransaction.create(false, ()->false));
             try {
                 final ClassIndexManager cim = ClassIndexManager.getDefault();
                 for (URL removedRoot : removedRoots) {
@@ -259,7 +259,7 @@ public class JavaBinaryIndexer extends BinaryIndexer {
                 TransactionContext.beginStandardTransaction(
                         context.getRootURI(),
                         false,
-                        context.isAllFilesIndexing(),
+                        context::isAllFilesIndexing,
                         context.checkForEditorModifications());
                 final ClassIndexImpl uq = ClassIndexManager.getDefault().createUsagesQuery(context.getRootURI(), false);
                 if (uq == null) {

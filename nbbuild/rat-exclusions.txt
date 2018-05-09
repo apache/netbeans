@@ -58,7 +58,6 @@ maven.checkstyle/src/org/netbeans/modules/maven/format/checkstyle/config/configu
 api.search/test/unit/src/org/netbeans/modules/search/data/**
 api.templates/test/unit/src/org/netbeans/modules/templates/utf8.xml
 autoupdate.services/test/unit/**/data/**
-classfile/test/unit/src/org/netbeans/modules/classfile/datafiles/WithLambda.classx
 debugger.jpda/test/unit/src/org/netbeans/api/debugger/jpda/testapps/JspLineBreakpointApp.txt
 diff/test/unit/src/org/netbeans/modules/diff/builtin/provider/*.txt
 diff/test/unit/src/org/netbeans/modules/diff/builtin/visualizer/data/**

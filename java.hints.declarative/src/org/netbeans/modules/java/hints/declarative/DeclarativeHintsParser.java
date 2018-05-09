@@ -477,6 +477,7 @@ public class DeclarativeHintsParser {
         JavaSource.create(cpInfo).runUserActionTask(new Task<CompilationController>() {
             @SuppressWarnings("fallthrough")
             public void run(CompilationController parameter) throws Exception {
+                parameter.toPhase(JavaSource.Phase.RESOLVED);
                 if (invocation == null || invocation.length() == 0) {
                     //XXX: report an error
                     return ;

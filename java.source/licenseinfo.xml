@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/java/resources/error-glyph.gif</file>
+        <file>src/org/netbeans/modules/java/resources/class.png</file>
+        <file>src/org/netbeans/modules/java/resources/enum_file.png</file>
+        <file>src/org/netbeans/modules/java/resources/interface_file.png</file>
+        <file>src/org/netbeans/modules/java/resources/annotation_file.png</file>
+        <file>src/org/netbeans/modules/java/resources/needs-compile.png</file>
+        <file>src/org/netbeans/modules/java/resources/abstract_class_file.png</file>
+        <file>src/org/netbeans/modules/java/resources/main-class.png</file>
+        <file>src/org/netbeans/modules/java/resources/class.gif</file>
+        <file>src/org/netbeans/modules/java/resources/needs-compile.gif</file>
+        <file>src/org/netbeans/modules/java/resources/findusages.png</file>
+        <file>src/org/netbeans/modules/java/resources/clazz.gif</file>
+        <file>src/org/netbeans/modules/java/resources/executable-badge.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/methodProtected.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/module.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/override.gif</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/methodPackage.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/class.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/methodStaticPrivate.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/methodStaticPublic.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/fieldProtected.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/provides.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/fieldPrivate.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/constant.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/initializerStatic.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/methodDefaultPublic.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/fieldStaticPackage.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/uses.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/exports.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/methodStaticProtected.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/package-empty.gif</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/annotation.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/constructorPublic.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/fieldPublic.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/constructorPackage.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/methodAbstractPublic.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/warning.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/initializer.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/constructorProtected.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/implement-glyph.gif</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/jar.gif</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/fieldStaticPrivate.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/enum.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/wait.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/fieldPackage.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/methodStaticPackage.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/enum.gif</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/wait.gif</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/requires.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/package.gif</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/constant.gif</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/exception.gif</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/methodAbstractProtected.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/class.gif</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/interface.gif</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/fieldStaticProtected.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/methodPublic.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/fieldStaticPublic.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/constructorPrivate.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/interface.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/annotation.gif</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/methodPrivate.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/opens.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/methodAbstractPackage.png</file>
+        <file>src/org/netbeans/modules/java/source/resources/icons/override-glyph.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

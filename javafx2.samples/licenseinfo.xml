@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/gameover.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/ball/ball0.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/ball/ball3.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/ball/ball2.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/ball/ball4.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/ball/ball5.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/ball/ball1.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/splash/breaker.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/splash/strikeshadow.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/splash/pressanykey.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/splash/strike.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/splash/brickshadow.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/splash/brick.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/splash/pressanykeyshadow.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/splash/breakershadow.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/splash/sun.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/vline.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/logo.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/brick/magenta.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/brick/broken1.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/brick/grey.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/brick/violet.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/brick/white.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/brick/yellow.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/brick/blue.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/brick/red.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/brick/orange.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/brick/broken2.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/brick/brown.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/brick/green.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/brick/cyan.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/ready.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/background.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/bonus/strike.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/bonus/catch.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/bonus/batreduce.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/bonus/ballreduce.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/bonus/batgrow.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/bonus/ballgrow.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/bonus/ballfast.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/bonus/extralife.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/bonus/ballslow.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/bat/left.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/bat/right.png</file>
+        <file>BrickBreaker/src/brickbreaker/images/desktop/bat/center.png</file>
+        <file>StopWatch/src/stopwatch/stopwatch.png</file>
+        <file>FXML-LoginDemo/src/demo/CoarseGrid.png</file>
+        <file>FXML-LoginDemo/src/demo/LoginLogo.png</file>
+        <file>DigitalClock/src/digitalclock/DigitalClock-background.png</file>
+        <file>AdvancedMedia/src/advancedmedia/playbutton.png</file>
+        <file>AdvancedMedia/src/advancedmedia/pausebutton.png</file>
+        <file>PaginationDemo/src/paginationdemo/animal1.jpg</file>
+        <file>PaginationDemo/src/paginationdemo/animal2.jpg</file>
+        <file>PaginationDemo/src/paginationdemo/animal3.jpg</file>
+        <file>PaginationDemo/src/paginationdemo/animal4.jpg</file>
+        <file>PaginationDemo/src/paginationdemo/animal5.jpg</file>
+        <file>PaginationDemo/src/paginationdemo/animal6.jpg</file>
+        <file>PaginationDemo/src/paginationdemo/animal7.jpg</file>
+        <file>PaginationDemo/src/paginationdemo/animal8.jpg</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/profiler/impl/icons/liveResultsMemView32.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/controlPanel.gif</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/stackTracesTab.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/settings.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/filterStartsWith.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/variableProtected.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/backTracesTab.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/sqlWindow.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/heapSnapshot.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/pause.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/methodProtected.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/back.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/fragment.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/array.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/methodPackage.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/snapshotDataObject32.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/class.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/sortDesc.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/attach.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/findPrevious.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/liveResults.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/runButton.gif</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/rerun.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/variableStProtected.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/clearFilter.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/expandedSnippet.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/attachButton.gif</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/remove.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/filter.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/initializerSt.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/restorePanel.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/telemetryOverviewWindow.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/infoTab.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/snapshotDataObject.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/openSnapshot.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/reverseNode.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/javaProcess.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/hideColumn.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/snapshotDataObjectFragment.gif</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/filterNotContains.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/detach.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/controlPanelWindow.gif</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/slaveUp.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/variables.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/variableStPrivate.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/leafNode.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/popupArrow.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/libraries.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/compareSnapshots.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/startup32.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/custom32.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/down.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/scaleToFit.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/snapshotDataObjectCPU32.gif</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/liveResultsFragmentView32.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/methodStPackage.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/zoom.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/profileRunning.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/constructorPublic.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/primitive.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/telemetryView32.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/addFolder.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/filterHighl.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/liveResultsWindow.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/badgeAdd.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/rename.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/edit.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/locksView32.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/showGraphs.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/setFilter.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/monitoring32.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/up.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/forwardNode.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/cpu.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/constructorPackage.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/sqlQuery.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/variablePackage.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/variableStPackage.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/initializer.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/start.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/constructorProtected.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/save.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/updateNow.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/forward.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/jar.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/modifyProfiling.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/threadsWindow.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/memory32.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/slaveDown.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/empty.gif</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/deltaValues.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/stop.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/folder.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/profile.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/infoIcon.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/variableStPublic.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/sortAsc.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/removeFolder.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/collapsedSnippet.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/locksWindow.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/filterRegExp.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/threadsView32.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/cpu32.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/matchCase.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/takeSnapshotCPU32.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/threadsSnapshot.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/hotspotsTab.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/attach24.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/resetResults.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/classAnonymous.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/pie.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/add.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/snapshotDataObjectFragment32.gif</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/badgeRemove.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/filterEndsWith.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/error.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/methodInherited.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/closePanel.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/clearFilterHighl.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/runGC.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/find.gif</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/subtreeTab.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/methodStPublic.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/resume.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/filterContains.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/findNext.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/profileInactive.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/takeSnapshot.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/package.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/methodPublic.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/thread.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/variablePublic.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/takeSnapshotFragment32.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/profile24.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/snapshotDataObjectCPU.gif</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/zoomIn.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/methodStProtected.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/zoomOut.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/liveResultsCPUView32.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/callTreeTab.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/takeSnapshotMem32.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/memory.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/constructorPrivate.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/variablePrivate.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/maximizePanel.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/memoryResultsTab.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/snapshotDataObjectMemory32.gif</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/telemetryWindow.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/memorySnapshot32.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/interface.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/combinedTab.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/autoRefresh.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/methodStPrivate.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/snapshotDataObjectMemory.gif</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/methods.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/saveAs.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/instance.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/method.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/allThreads.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/methodPrivate.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/constructors.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/saveView.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/setFilterHighl.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/minimizePanel.png</file>
+        <file>src/org/netbeans/modules/profiler/impl/icons/monitoring.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

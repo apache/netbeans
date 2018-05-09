@@ -33,10 +33,8 @@ public class ClassPathProviderImpl implements ClassPathProvider {
 
     public ClassPath findClassPath(FileObject file, String type) {
         if ("hint".equals(file.getExt())) {
-            if (ClassPath.BOOT.equals(type)) {
-                return MethodInvocationContext.computeClassPaths()[0];
-            } else if (ClassPath.COMPILE.equals(type)) {
-                return MethodInvocationContext.computeClassPaths()[1];
+            if (ClassPath.COMPILE.equals(type)) {
+                return MethodInvocationContext.computeCompileClassPath();
             }
         }
 

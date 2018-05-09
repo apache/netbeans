@@ -24,10 +24,19 @@
         <file>src/org/netbeans/modules/xml/jaxb/resources/eclipselink_oxm_2_3.xsd</file>
         <license ref="EDL-1.0">
 Copyright (c) 1998, 2010 Oracle. All rights reserved.
-            
- Contributors:
-     dmccann - December 22/2010 - 2.3 - Initial implementation
+
+Contributors:
+dmccann - December 22/2010 - 2.3 - Initial implementation
         </license>
         <comment type="CATEGORY_B">Used for XML Validation and code completion at runtime.</comment>
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/xml/jaxb/resources/packageOpen.gif</file>
+        <file>src/org/netbeans/modules/xml/jaxb/resources/packageRoot.gif</file>
+        <file>src/org/netbeans/modules/xml/jaxb/resources/XML_file.png</file>
+        <file>src/org/netbeans/modules/xml/jaxb/resources/package.gif</file>
+        <file>src/org/netbeans/modules/xml/jaxb/resources/packageRootOpen.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
     </fileset>
 </licenseinfo>

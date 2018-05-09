@@ -35,6 +35,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleAnnotationValueVisitor6;
 import javax.tools.Diagnostic.Kind;
@@ -122,6 +123,9 @@ public class NodesAnnotationProcessor extends LayerGeneratingProcessor {
                         
                         @Override
                         public String visitType(TypeMirror t, Object p) {
+                            if (t.getKind() == TypeKind.DECLARED) {
+                                return processingEnv.getElementUtils().getBinaryName((TypeElement) processingEnv.getTypeUtils().asElement(t)).toString();
+                            }
                             return t.toString();
                         }
                     }, null);

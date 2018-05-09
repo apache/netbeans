@@ -207,6 +207,32 @@ public class ClassPathProviderImplTest extends NbTestCase {
         assertRoots(entries, "target/classes");
     }        
 
+    public void testModuleBootPathNoModuleInfo() throws Exception {
+        if (systemModules == null) {
+            System.out.println("No jdk 9 home configured.");    //NOI18N
+            return;
+        }
+        TestFileUtils.writeFile(d,
+                "pom.xml",
+                "<project xmlns='http://maven.apache.org/POM/4.0.0'>" +
+                "<modelVersion>4.0.0</modelVersion>" +
+                "<groupId>grp</groupId>" +
+                "<artifactId>art</artifactId>" +
+                "<packaging>jar</packaging>" +
+                "<version>1.0-SNAPSHOT</version>" +
+                "<name>Test</name>" +
+                "    <properties>" +
+                "        <maven.compiler.source>11</maven.compiler.source>" +
+                "        <maven.compiler.target>11</maven.compiler.target>" +
+                "    </properties>" +
+                "</project>");
+        FileObject src = FileUtil.createFolder(d, "src/main/java");
+        ClassPath cp = ClassPath.getClassPath(src, JavaClassPathConstants.MODULE_BOOT_PATH);
+        assertNotNull(cp);
+        List<ClassPath.Entry> entries = cp.entries();
+        assertFalse(entries.isEmpty());
+    }
+
     private void assertRoots(List<ClassPath.Entry> entries, String rootPath) throws URISyntaxException {
         for (ClassPath.Entry entry : entries) {
             URL url = entry.getURL();

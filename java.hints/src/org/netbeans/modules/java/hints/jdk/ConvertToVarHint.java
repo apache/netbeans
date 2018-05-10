@@ -19,7 +19,9 @@
 package org.netbeans.modules.java.hints.jdk;
 
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.Scope;
+import com.sun.source.tree.NewArrayTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
@@ -43,6 +45,8 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
+import javax.tools.Diagnostic.Kind;
+import org.netbeans.modules.java.hints.errors.Utilities;
 
 /**
  * Hint will convert explicit type of local variable to 'var'. Supported: JDK 10
@@ -67,20 +71,10 @@ public class ConvertToVarHint {
             return null;
         }
 
-        TreePath treePath = ctx.getPath();
-
-        TreePath initTreePath = ctx.getVariables().get("$init");     //NOI18N
-        ExpressionTree t = ctx.getInfo().getTreeUtilities().parseExpression(initTreePath.getLeaf().toString(), null);
-        Scope s = ctx.getInfo().getTrees().getScope(ctx.getPath());
-        TypeMirror initTypeMirror = ctx.getInfo().getTreeUtilities().attributeTree(t, s);
-
-        TypeMirror VariableTypeMiror = ctx.getInfo().getTrees().getElement(treePath).asType();
-
-        // variable initializer type should be same as variable type.
-        if (!ctx.getInfo().getTypes().isSameType(VariableTypeMiror, initTypeMirror)) {
+        if(!isValidVarType(ctx)) {
             return null;
         }
-
+        
         return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), Bundle.MSG_ConvertibleToVarType(), new JavaFixImpl(ctx.getInfo(), ctx.getPath()).toEditorFix());
     }
 
@@ -106,20 +100,36 @@ public class ConvertToVarHint {
             WorkingCopy wc = tc.getWorkingCopy();
             TreePath statementPath = tc.getPath();
             TreeMaker make = wc.getTreeMaker();
-
+              
             if (statementPath.getLeaf().getKind() == Tree.Kind.VARIABLE) {
                 VariableTree oldVariableTree = (VariableTree) statementPath.getLeaf();
-
+                ExpressionTree initializerTree = oldVariableTree.getInitializer();
+                if(initializerTree == null) {
+                    return;
+                }
+                //check if initializer with diamond operator
+                if (initializerTree.getKind() == Tree.Kind.NEW_CLASS) {
+                    NewClassTree nct = (NewClassTree)initializerTree;
+                    if (nct.getIdentifier().getKind() == Tree.Kind.PARAMETERIZED_TYPE) {                        
+                        if(oldVariableTree.getType().getKind() == Tree.Kind.PARAMETERIZED_TYPE) {
+                            ParameterizedTypeTree ptt = (ParameterizedTypeTree) oldVariableTree.getType();
+                            ParameterizedTypeTree nue = (ParameterizedTypeTree)nct.getIdentifier();
+                            if(nue.getTypeArguments().isEmpty() && ptt.getTypeArguments().size() > 0) {
+                                //replace diamond operator with type params from lhs
+                                wc.rewrite(nue, ptt);
+                            }                            
+                        }    
+                    }
+                }
                 VariableTree newVariableTree = make.Variable(
                         oldVariableTree.getModifiers(),
                         oldVariableTree.getName(),
                         make.Type("var"),
-                        oldVariableTree.getInitializer()
+                        initializerTree
                 );
-                tc.getWorkingCopy().rewrite(oldVariableTree, newVariableTree);
+                wc.rewrite(oldVariableTree, newVariableTree);
             }
         }
-
     }
 
     /**
@@ -143,7 +153,7 @@ public class ConvertToVarHint {
             return false;
         }
 
-        if (isDiagnosticCodeTobeSkipped(ctx.getInfo())) {
+        if (isDiagnosticCodeTobeSkipped(ctx.getInfo(), treePath.getLeaf())) {
             return false;
         }
 
@@ -156,8 +166,55 @@ public class ConvertToVarHint {
      * @param info : compilationInfo
      * @return true if Diagnostic Code is present in SKIPPED_ERROR_CODES
      */
-    private static boolean isDiagnosticCodeTobeSkipped(CompilationInfo info) {
+    private static boolean isDiagnosticCodeTobeSkipped(CompilationInfo info, Tree tree) {
+        long startPos = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
+        long endPos = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
+
         List<Diagnostic> diagnosticsList = info.getDiagnostics();
-        return diagnosticsList.stream().anyMatch((d) -> (SKIPPED_ERROR_CODES.contains(d.getCode())));
+        if (diagnosticsList.stream().anyMatch((d)
+                -> ((d.getKind() == Kind.ERROR) && ((d.getStartPosition() >= startPos) && (d.getEndPosition() <= endPos)) && (SKIPPED_ERROR_CODES.contains(d.getCode()))))) {
+            return true;
+        }
+        return false;
+    }
+    
+    private static boolean isValidVarType(HintContext ctx) {
+        TreePath treePath = ctx.getPath();
+        TreePath initTreePath = ctx.getVariables().get("$init");  //NOI18N
+        
+        if (initTreePath != null) {
+            Tree.Kind kind = initTreePath.getLeaf().getKind();
+            switch (kind) {
+                case NEW_CLASS:
+                    NewClassTree nct = (NewClassTree) (initTreePath.getLeaf());
+                    //anonymous class type
+                    if (nct.getClassBody() != null) {
+                        return false;
+                    }
+                    break;
+                case NEW_ARRAY:
+                    NewArrayTree nat = (NewArrayTree) ((VariableTree) treePath.getLeaf()).getInitializer();
+                    //array initializer expr type
+                    if (nat.getType() == null) {
+                        return false;
+                    }
+                    break;
+                case LAMBDA_EXPRESSION:
+                    return false;
+                default:
+                    break;
+            }
+        } else {
+            return false;
+        }
+        // variable initializer type should be same as variable type.
+        TypeMirror initTypeMirror = ctx.getInfo().getTrees().getTypeMirror(initTreePath);
+        TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
+
+        if ((!Utilities.isValidType(initTypeMirror)) || (!ctx.getInfo().getTypes().isSameType(variableTypeMirror, Utilities.resolveCapturedType(ctx.getInfo(), initTypeMirror)))) {
+            return false;
+        }
+                
+        return true;
     }
 }

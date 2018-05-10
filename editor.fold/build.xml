@@ -20,7 +20,7 @@
 
 -->
 
-<project name="editor.fold" default="netbeans" basedir=".">
+<project name="editor.fold" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 
 </project>

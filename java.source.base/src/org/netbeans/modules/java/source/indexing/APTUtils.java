@@ -269,9 +269,11 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
             if (pp == null) {
                 pp = ClassPath.EMPTY;
             }
+            ClassLoader contextCL = Context.class.getClassLoader();
             cl = CachingArchiveClassLoader.forClassPath(
                     pp,
-                    new BypassOpenIDEUtilClassLoader(Context.class.getClassLoader()),
+                    contextCL != null ? new BypassOpenIDEUtilClassLoader(contextCL)
+                                      : ClassLoader.getSystemClassLoader().getParent(),
                     usedRoots);
             classLoaderCache = !DISABLE_CLASSLOADER_CACHE ? new ClassLoaderRef(cl, root, isModule) : null;
         } else {

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/openide/resources/html/back_normal.png</file>
+        <file>src/org/openide/resources/html/forward_normal.png</file>
+        <file>src/org/openide/resources/html/back_hover.png</file>
+        <file>src/org/openide/resources/html/forward_hover.png</file>
+        <file>src/org/openide/resources/html/stop_hover.png</file>
+        <file>src/org/openide/resources/html/refresh.png</file>
+        <file>src/org/openide/resources/html/refresh_hover.png</file>
+        <file>src/org/openide/resources/html/forward_disabled.png</file>
+        <file>src/org/openide/resources/html/stop.png</file>
+        <file>src/org/openide/resources/html/htmlView.gif</file>
+        <file>src/org/openide/resources/html/back_disabled.png</file>
+        <file>src/org/openide/awt/resources/mac_bigclose_rollover.png</file>
+        <file>src/org/openide/awt/resources/vista_bigclose_pressed.png</file>
+        <file>src/org/openide/awt/resources/xp_bigclose_pressed.png</file>
+        <file>src/org/openide/awt/resources/toolbar_arrow_horizontal.png</file>
+        <file>src/org/openide/awt/resources/win_close_rollover.png</file>
+        <file>src/org/openide/awt/resources/mac_close_rollover.png</file>
+        <file>src/org/openide/awt/resources/gtk_close_pressed.png</file>
+        <file>src/org/openide/awt/resources/metal_close_pressed.png</file>
+        <file>src/org/openide/awt/resources/xp_close_rollover.png</file>
+        <file>src/org/openide/awt/resources/vista_close_rollover.png</file>
+        <file>src/org/openide/awt/resources/gtk_bigclose_pressed.png</file>
+        <file>src/org/openide/awt/resources/metal_close_rollover.png</file>
+        <file>src/org/openide/awt/resources/gtk_close_rollover.png</file>
+        <file>src/org/openide/awt/resources/priority_silent.png</file>
+        <file>src/org/openide/awt/resources/xp_bigclose_rollover.png</file>
+        <file>src/org/openide/awt/resources/xp_close_pressed.png</file>
+        <file>src/org/openide/awt/resources/gtk_bigclose_rollover.png</file>
+        <file>src/org/openide/awt/resources/win8_bigclose_enabled.png</file>
+        <file>src/org/openide/awt/resources/priority_normal.png</file>
+        <file>src/org/openide/awt/resources/win8_bigclose_pressed.png</file>
+        <file>src/org/openide/awt/resources/win_bigclose_disabled.png</file>
+        <file>src/org/openide/awt/resources/unknown.gif</file>
+        <file>src/org/openide/awt/resources/arrow.png</file>
+        <file>src/org/openide/awt/resources/vista_close_enabled.png</file>
+        <file>src/org/openide/awt/resources/xp_close_enabled.png</file>
+        <file>src/org/openide/awt/resources/priority_low.png</file>
+        <file>src/org/openide/awt/resources/vista_bigclose_enabled.png</file>
+        <file>src/org/openide/awt/resources/metal_bigclose_pressed.png</file>
+        <file>src/org/openide/awt/resources/mac_bigclose_enabled.png</file>
+        <file>src/org/openide/awt/resources/win_bigclose_enabled.png</file>
+        <file>src/org/openide/awt/resources/mac_bigclose_pressed.png</file>
+        <file>src/org/openide/awt/resources/win8_bigclose_rollover.png</file>
+        <file>src/org/openide/awt/resources/vista_bigclose_rollover.png</file>
+        <file>src/org/openide/awt/resources/win_bigclose_rollover.png</file>
+        <file>src/org/openide/awt/resources/win_close_enabled.png</file>
+        <file>src/org/openide/awt/resources/mac_close_enabled.png</file>
+        <file>src/org/openide/awt/resources/xp_bigclose_enabled.png</file>
+        <file>src/org/openide/awt/resources/quicksearch/progress_1.png</file>
+        <file>src/org/openide/awt/resources/quicksearch/progress_6.png</file>
+        <file>src/org/openide/awt/resources/quicksearch/progress_7.png</file>
+        <file>src/org/openide/awt/resources/quicksearch/findMenu.png</file>
+        <file>src/org/openide/awt/resources/quicksearch/progress_3.png</file>
+        <file>src/org/openide/awt/resources/quicksearch/progress_4.png</file>
+        <file>src/org/openide/awt/resources/quicksearch/progress_5.png</file>
+        <file>src/org/openide/awt/resources/quicksearch/progress_0.png</file>
+        <file>src/org/openide/awt/resources/quicksearch/find.png</file>
+        <file>src/org/openide/awt/resources/quicksearch/progress_2.png</file>
+        <file>src/org/openide/awt/resources/win_close_pressed.png</file>
+        <file>src/org/openide/awt/resources/win_bigclose_pressed.png</file>
+        <file>src/org/openide/awt/resources/gtk_bigclose_enabled.png</file>
+        <file>src/org/openide/awt/resources/metal_close_enabled.png</file>
+        <file>src/org/openide/awt/resources/priority_high.png</file>
+        <file>src/org/openide/awt/resources/metal_bigclose_rollover.png</file>
+        <file>src/org/openide/awt/resources/metal_bigclose_enabled.png</file>
+        <file>src/org/openide/awt/resources/mac_close_pressed.png</file>
+        <file>src/org/openide/awt/resources/gtk_close_enabled.png</file>
+        <file>src/org/openide/awt/resources/vista_close_pressed.png</file>
+        <file>src/org/openide/awt/resources/toolbar_arrow_vertical.png</file>
+        <file>test/unit/src/org/openide/awt/TestIcon.png</file>
+        <file>test/unit/src/org/openide/awt/data/testIcon_pressed.gif</file>
+        <file>test/unit/src/org/openide/awt/data/testIcon_disabledSelected.gif</file>
+        <file>test/unit/src/org/openide/awt/data/testIcon_rolloverSelected.gif</file>
+        <file>test/unit/src/org/openide/awt/data/testIcon24_disabledSelected.gif</file>
+        <file>test/unit/src/org/openide/awt/data/testIcon24_pressed.gif</file>
+        <file>test/unit/src/org/openide/awt/data/testIcon24_selected.gif</file>
+        <file>test/unit/src/org/openide/awt/data/testIcon_rollover.gif</file>
+        <file>test/unit/src/org/openide/awt/data/testIcon24_rollover.gif</file>
+        <file>test/unit/src/org/openide/awt/data/testIcon24_disabled.gif</file>
+        <file>test/unit/src/org/openide/awt/data/testIcon.gif</file>
+        <file>test/unit/src/org/openide/awt/data/testIcon24.gif</file>
+        <file>test/unit/src/org/openide/awt/data/testIcon_disabled.gif</file>
+        <file>test/unit/src/org/openide/awt/data/testIcon24_rolloverSelected.gif</file>
+        <file>test/unit/src/org/openide/awt/data/testIcon_selected.gif</file>
+        <file>test/unit/src/org/openide/awt/TestIcon_big.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

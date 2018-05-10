@@ -840,7 +840,7 @@ public abstract class FlatProfilePanel extends CPUResultsPanel {
 
                             popupPath = null;
                             methodId = flatProfileContainer.getMethodIdAtRow(selectedRow);
-                            popupAddToRoots.setVisible(true);
+                            if (popupAddToRoots != null) popupAddToRoots.setVisible(true);
 
                             Rectangle cellRect = resTable.getCellRect(selectedRow, 0, false);
 
@@ -870,8 +870,7 @@ public abstract class FlatProfilePanel extends CPUResultsPanel {
                     if (line == -1) {
                         if (popupShowSource != null) popupShowSource.setVisible(false);
                         if (popupShowReverse != null) popupShowReverse.setVisible(false);
-
-                        popupAddToRoots.setVisible(false);
+                        if (popupAddToRoots != null) popupAddToRoots.setVisible(false);
 
                         if (e.getModifiers() == InputEvent.BUTTON3_MASK) {
                             popupPath = null;
@@ -882,8 +881,8 @@ public abstract class FlatProfilePanel extends CPUResultsPanel {
                         
                         if (popupShowSource != null) popupShowSource.setVisible(true);
                         if (popupShowReverse != null) popupShowReverse.setVisible(true);
-
-                        popupAddToRoots.setVisible(true);
+                        if (popupAddToRoots != null) popupAddToRoots.setVisible(true);
+                        
                         methodId = flatProfileContainer.getMethodIdAtRow(line);
 
                         if (e.getModifiers() == InputEvent.BUTTON3_MASK) {

@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="openide.execution" default="netbeans" basedir=".">
+<project name="openide.execution" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="api.io">
+<project basedir="." default="build" name="api.io">
     <description>Builds, tests, and runs the project org.netbeans.api.io</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

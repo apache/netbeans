@@ -18,6 +18,9 @@
  */
 package org.netbeans.lib.profiler.heap;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -553,5 +556,24 @@ class LongHashMap {
         return result;
     }
 
+    //---- Serialization support
+    void writeToStream(DataOutputStream out) throws IOException {
+        out.writeInt(modCount);
+        out.writeInt(size);
+        out.writeInt(threshold);
+        out.writeInt(table.length);
+        for (int i = 0; i < table.length; i++) {
+            out.writeLong(table[i]);
+        }
+    }
 
+    LongHashMap(DataInputStream dis) throws IOException {
+        modCount = dis.readInt();
+        size = dis.readInt();
+        threshold = dis.readInt();
+        table = new long[dis.readInt()];
+        for (int i = 0; i < table.length; i++) {
+            table[i] = dis.readLong();
+        }
+    }
 }

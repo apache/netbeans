@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="target.iterator">
+<project basedir="." default="build" name="target.iterator">
     <description>Builds, tests, and runs the project org.netbeans.modules.target.iterator</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

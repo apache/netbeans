@@ -165,7 +165,7 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
         XMLReader reader = XMLUtil.createXMLReader( false, true );
         FeedHandler handler = new FeedHandler( getMaxItemCount() );
         reader.setContentHandler( handler );
-        reader.setEntityResolver( org.openide.xml.EntityCatalog.getDefault() );
+        reader.setEntityResolver( new RSSEntityResolver() );
         reader.setErrorHandler( new ErrorCatcher() );
 
         InputSource is = findInputSource(new URL(url));

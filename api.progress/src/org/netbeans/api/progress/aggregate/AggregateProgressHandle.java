@@ -37,7 +37,7 @@ import org.openide.util.Cancellable;
  * For a more simple version of progress indication, see {@link org.netbeans.api.progress.ProgressHandle}
  * @author Milos Kleint (mkleint@netbeans.org)
  */
-public final class AggregateProgressHandle {
+public final class AggregateProgressHandle implements AutoCloseable {
     private static final Logger LOG = Logger.getLogger(AggregateProgressHandle.class.getName());
 
     private ProgressMonitor monitor;
@@ -80,6 +80,14 @@ public final class AggregateProgressHandle {
         handle.start(WORKUNITS, estimate);
         current = 0;
     }  
+
+    /**
+     * Calls {@link #finish()}
+     */
+    @Override
+    public void close() {
+        finish();
+    }
     
     /**
      * finish the task, remove the task's component from the progress bar UI, any additional incoming events from the 

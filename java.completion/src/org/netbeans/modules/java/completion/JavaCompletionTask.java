@@ -191,6 +191,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
     private static final String TRUE_KEYWORD = "true"; //NOI18N
     private static final String TRY_KEYWORD = "try"; //NOI18N
     private static final String USES_KEYWORD = "uses"; //NOI18N
+    private static final String VAR_KEYWORD = "var"; //NOI18N
     private static final String VOID_KEYWORD = "void"; //NOI18N
     private static final String VOLATILE_KEYWORD = "volatile"; //NOI18N
     private static final String WHILE_KEYWORD = "while"; //NOI18N
@@ -229,6 +230,20 @@ public final class JavaCompletionTask<T> extends BaseTask {
         PUBLIC_KEYWORD, STATIC_KEYWORD, STRICT_KEYWORD, SYNCHRONIZED_KEYWORD,
         TRANSIENT_KEYWORD, VOID_KEYWORD, VOLATILE_KEYWORD
     };
+
+    private static final SourceVersion SOURCE_VERSION_RELEASE_10;
+
+    static {
+        SourceVersion r10;
+
+        try {
+            r10 = SourceVersion.valueOf("RELEASE_10");
+        } catch (IllegalArgumentException ex) {
+            r10 = null;
+        }
+
+        SOURCE_VERSION_RELEASE_10 = r10;
+    }
 
     private final ItemFactory<T> itemFactory;
     private final Set<Options> options;
@@ -4311,6 +4326,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
             tp = tp.getParentPath();
         }
+        if (SOURCE_VERSION_RELEASE_10 != null &&
+            env.getController().getSourceVersion().compareTo(SOURCE_VERSION_RELEASE_10) >= 0 &&
+            Utilities.startsWith(VAR_KEYWORD, prefix)) {
+            results.add(itemFactory.createKeywordItem(VAR_KEYWORD, SPACE, anchorOffset, false));
+        }
     }
 
     private void addKeywordsForStatement(Env env) {
@@ -4390,7 +4410,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (Utilities.startsWith(TRUE_KEYWORD, prefix)) {
             results.add(itemFactory.createKeywordItem(TRUE_KEYWORD, null, anchorOffset, smartType));
         }
-        if (Utilities.startsWith(NULL_KEYWORD, prefix)) {
+        boolean isVar = env.getPath().getLeaf().getKind() == Tree.Kind.VARIABLE &&
+                        env.getController().getTreeUtilities().isSynthetic(new TreePath(env.getPath(), ((VariableTree) env.getPath().getLeaf()).getType()));
+        if (Utilities.startsWith(NULL_KEYWORD, prefix) && !isVar) {
             results.add(itemFactory.createKeywordItem(NULL_KEYWORD, null, anchorOffset, false));
         }
         if (Utilities.startsWith(NEW_KEYWORD, prefix)) {
@@ -4910,7 +4932,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             Tree tree = path.getLeaf();
             switch (tree.getKind()) {
                 case VARIABLE:
-                    TypeMirror type = controller.getTrees().getTypeMirror(new TreePath(path, ((VariableTree) tree).getType()));
+                    TypeMirror type = controller.getTrees().getTypeMirror(path);
                     if (type == null) {
                         return null;
                     }

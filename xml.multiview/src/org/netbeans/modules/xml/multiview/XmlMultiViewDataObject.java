@@ -185,7 +185,7 @@ public abstract class XmlMultiViewDataObject extends MultiDataObject implements 
     public void setModified(boolean modif) {
         super.setModified(modif);
         //getEditorSupport().updateDisplayName();
-        if (modif) {
+        if (isModified()) {
             // Add save cookie
             if (getCookie(SaveCookie.class) == null) {
                 getCookieSet().add(saveCookie);

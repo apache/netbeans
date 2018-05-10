@@ -28,7 +28,6 @@ import java.text.DateFormat;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.ErrorManager;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
@@ -109,9 +108,8 @@ public class PatchAction extends NodeAction {
     }
 
     public static boolean performPatch(File patch, File file) throws MissingResourceException {
-        ProgressHandle ph = ProgressHandleFactory.createHandle(NbBundle.getMessage(PatchAction.class, "MSG_AplyingPatch", new Object[] {patch.getName()}));
         List<ContextualPatch.PatchReport> report = null;
-        try {
+        try (ProgressHandle ph = ProgressHandle.createHandle(NbBundle.getMessage(PatchAction.class, "MSG_AplyingPatch", new Object[] {patch.getName()}))) {
             ph.start();
             ContextualPatch cp = ContextualPatch.create(patch, file);
             try {
@@ -122,8 +120,6 @@ public class PatchAction extends NodeAction {
                 ErrorManager.getDefault().notify(ErrorManager.USER, ioex);
                 return false;
             }
-        } finally {
-            ph.finish();
         }
         return displayPatchReport(report, patch);
     }

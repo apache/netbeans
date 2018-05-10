@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="harness" basedir="." default="netbeans">
+<project name="harness" basedir="." default="build">
 
     <import file="common.xml"/>
     <import file="jdk.xml"/>

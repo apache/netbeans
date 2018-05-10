@@ -45,4 +45,7 @@ public interface ObjectArrayInstance extends Instance {
      * @return list {@link Instance} of elements.
      */
     List /*<Instance>*/ getValues();
+    
+    List /*<ArrayItemValue>*/ getItems();
+    
 }

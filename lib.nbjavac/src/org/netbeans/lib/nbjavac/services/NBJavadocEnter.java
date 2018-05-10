@@ -28,6 +28,7 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
+import com.sun.tools.javac.util.JCDiagnostic.Error;
 import com.sun.tools.javadoc.main.JavadocEnter;
 import com.sun.tools.javadoc.main.Messager;
 import org.netbeans.lib.nbjavac.services.NBTreeMaker.IndexedClassDecl;
@@ -68,7 +69,7 @@ public class NBJavadocEnter extends JavadocEnter {
 
     @Override
     protected void duplicateClass(DiagnosticPosition pos, ClassSymbol c) {
-        messager.error(pos, "duplicate.class", c.fullname);
+        messager.error(pos, new Error("compiler", "duplicate.class", c.fullname));
     }
     
     @Override

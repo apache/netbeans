@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="libs.svnClientAdapter" default="netbeans" basedir=".">
+<project name="libs.svnClientAdapter" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

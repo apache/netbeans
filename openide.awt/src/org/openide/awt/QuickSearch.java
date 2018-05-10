@@ -21,8 +21,7 @@ package org.openide.awt;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.ref.WeakReference;
-import javax.activation.DataContentHandler;
-import javax.activation.DataContentHandlerFactory;
+import java.util.function.Consumer;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -295,12 +294,12 @@ public class QuickSearch {
         }
     }
     
-    private void findMaxPrefix(String prefix, DataContentHandlerFactory newPrefixSetter) {
+    private void findMaxPrefix(String prefix, Consumer<String> newPrefixSetter) {
         if (asynchronous) {
             rp.post(new LazyFire(QS_FIRE.MAX, prefix, newPrefixSetter));
         } else {
             prefix = callback.findMaxPrefix(prefix);
-            newPrefixSetter.createDataContentHandler(prefix);
+            newPrefixSetter.accept(prefix);
         }
     }
     
@@ -554,7 +553,7 @@ public class QuickSearch {
         //private final QuickSearchListener[] qsls;
         private final String searchText;
         private final boolean forward;
-        private final DataContentHandlerFactory newPrefixSetter;
+        private final Consumer<String> newPrefixSetter;
         
         LazyFire(QS_FIRE fire, String searchText) {
             this(fire, searchText, true, null);
@@ -569,12 +568,12 @@ public class QuickSearch {
         }
         
         LazyFire(QS_FIRE fire, String searchText,
-                 DataContentHandlerFactory newPrefixSetter) {
+                 Consumer<String> newPrefixSetter) {
             this(fire, searchText, true, newPrefixSetter);
         }
         
         LazyFire(QS_FIRE fire, String searchText, boolean forward,
-                 DataContentHandlerFactory newPrefixSetter) {
+                 Consumer<String> newPrefixSetter) {
             this.fire = fire;
             //this.qsls = qsls;
             this.searchText = searchText;
@@ -592,7 +591,7 @@ public class QuickSearch {
                 case NEXT:      callback.showNextSelection(forward);//fireShowNextSelection(qsls, forward);
                                 break;
                 case MAX:       String mp = callback.findMaxPrefix(searchText);//String mp = findMaxPrefix(qsls, searchText);
-                                newPrefixSetter.createDataContentHandler(mp);
+                                newPrefixSetter.accept(mp);
                                 break;
             }
             } finally {
@@ -770,18 +769,18 @@ public class QuickSearch {
                 // to the tree too (which scrolls)
                 e.consume();
             } else if (keyCode == KeyEvent.VK_TAB) {
-                findMaxPrefix(searchTextField.getText(), new DataContentHandlerFactory() {
+                findMaxPrefix(searchTextField.getText(), new Consumer<String>() {
                     @Override
-                    public DataContentHandler createDataContentHandler(final String maxPrefix) {
+                    public void accept(final String maxPrefix) {
                         if (!SwingUtilities.isEventDispatchThread()) {
                             SwingUtilities.invokeLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    createDataContentHandler(maxPrefix);
+                                    accept(maxPrefix);
                                     searchTextField.transferFocus();
                                 }
                             });
-                            return null;
+                            return ;
                         }
                         ignoreEvents = true;
                         try {
@@ -789,7 +788,6 @@ public class QuickSearch {
                         } finally {
                             ignoreEvents = false;
                         }
-                        return null;
                     }
                 });
 

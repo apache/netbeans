@@ -44,6 +44,7 @@ import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.ElementUtils;
+import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
@@ -115,7 +116,9 @@ public class ElementHandleTest extends NbTestCase {
         } finally {
             lock.releaseLock();
         }
-        ClassPathProviderImpl.getDefault().setClassPaths(createBootPath(),ClassPathSupport.createClassPath(new URL[0]),ClassPathSupport.createClassPath(new FileObject[]{this.src}));
+        ClassPathProviderImpl.getDefault().setClassPaths(TestUtil.getBootClassPath(),
+                                                         ClassPathSupport.createClassPath(new URL[0]),
+                                                         ClassPathSupport.createClassPath(new FileObject[]{this.src}));
     }
 
     protected void tearDown() throws Exception {
@@ -687,22 +690,7 @@ public class ElementHandleTest extends NbTestCase {
         }
     }
     
-    private static ClassPath createBootPath () throws IOException {
-        String bootPath = System.getProperty ("sun.boot.class.path");   //NOI18N
-        String[] paths = bootPath.split(File.pathSeparator);
-        List<URL>roots = new ArrayList<URL> (paths.length);
-        for (String path : paths) {
-            File f = new File (path);            
-            if (!f.exists()) {
-                continue;
-            }
-            URL url = Utilities.toURI(f).toURL();
-            if (FileUtil.isArchiveFile(url)) {
-                url = FileUtil.getArchiveRoot(url);
-            }
-            roots.add (url);
-        }
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
-    }        
-    
+    static {
+        System.setProperty("CachingArchiveProvider.disableCtSym", "true");
+    }
 }

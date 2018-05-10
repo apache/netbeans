@@ -21,12 +21,7 @@ package org.netbeans.modules.db.sql.history;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.XmlValue;
 
-@XmlType(name = "sql")
 public class SQLHistoryEntry {
 
     private String url;
@@ -42,21 +37,19 @@ public class SQLHistoryEntry {
         this.date = date;
     }
 
-    @XmlTransient
     public Date getDate() {
         return date;
     }
 
-    protected void setDate(Date date) {
+    void setDate(Date date) {
         this.date = date;
     }
 
-    @XmlValue
     public String getSql() {
         return sql;
     }
 
-    protected void setSql(String sql) {
+    void setSql(String sql) {
         if (sql != null) {
             this.sql = sql.trim();
         } else {
@@ -64,37 +57,38 @@ public class SQLHistoryEntry {
         }
     }
 
-    @XmlAttribute
     public String getUrl() {
         return url;
     }
 
-    protected void setUrl(String url) {
+    void setUrl(String url) {
         this.url = url;
     }
 
-    @XmlAttribute(name = "date")
-    protected String getDateXMLVariant() {
+    String getDateXMLVariant() {
         if (this.date == null) {
-            return null;
+            return Long.toString(new Date().getTime());
         } else {
             return Long.toString(date.getTime());
         }
     }
 
-    protected void setDateXMLVariant(String value) {
-        try {
-            date = new Date(Long.parseLong(value));
-        } catch (NumberFormatException nfe) {
-            // #152486 - previously date stored in text format
+    void setDateXMLVariant(String value) {
+        if(value == null) {
+            date = new Date();
+        } else {
             try {
-                date = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).parse(value);
-            } catch (ParseException pe) {
-                // # 152486; Date stored is not parsable, so reset the date to the current timestamp
-                date = new Date();
+                date = new Date(Long.parseLong(value));
+            } catch (NumberFormatException nfe) {
+                // #152486 - previously date stored in text format
+                try {
+                    date = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).parse(value);
+                } catch (ParseException pe) {
+                    // # 152486; Date stored is not parsable, so reset the date to the current timestamp
+                    date = new Date();
+                }
             }
         }
-
     }
 
     @Override

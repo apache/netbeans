@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/git/resources/icons/stash.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/fetch-setting.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/push.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/annotate24.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/diff24.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/rebase-destination.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/pull-setting.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/conflict-resolve.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/fetch-setting24.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/file_view.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/commit24.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/remote_fetch.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/refresh.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/diff-next.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/add24.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/checkout.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/stashes.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/push-setting24.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/modified-badge.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/show_changes24.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/tag.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/push24.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/get_clean24.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/tag_sm.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/branch-badge.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/tags.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/versioning-view.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/diff.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/get_clean.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/checkout24.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/base.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/push-setting.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/branches.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/commit.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/pull.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/destinations.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/search_history.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/add.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/info.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/active_branch.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/index_vs_working.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/fetch24.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/fetch.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/remote_push.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/pull24.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/head_vs_index.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/conflict-resolve24.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/remote.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/rebase-default.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/conflicts-badge.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/repository.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/logical_view.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/pull-setting24.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/branch.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/show_changes.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/head_vs_working.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/search_history24.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/diff-prev.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/tracked.png</file>
+        <file>src/org/netbeans/modules/git/resources/icons/annotate.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

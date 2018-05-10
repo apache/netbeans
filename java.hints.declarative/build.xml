@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="java.hints.declarative">
+<project basedir="." default="build" name="java.hints.declarative">
     <description>Builds, tests, and runs the project org.netbeans.modules.java.hints.declarative</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

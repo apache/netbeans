@@ -21,6 +21,7 @@
 package org.netbeans.modules.editor.completion;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -32,7 +33,6 @@ import java.io.StringReader;
 
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
@@ -169,12 +169,14 @@ public class HTMLDocView extends JEditorPane {
     private void setBodyFontInCSS() {
         javax.swing.text.html.StyleSheet css =
                 new javax.swing.text.html.StyleSheet();
-        java.awt.Font f = new EditorUI().getDefaultColoring().getFont();
-        setFont(f);
+        Font editorFont = new EditorUI().getDefaultColoring().getFont();
+        // do not use monospaced font, just adjust fontsize
+        Font useFont =
+            new Font(getFont().getFamily(), Font.PLAIN, editorFont.getSize());
+        setFont(useFont);
         try {
-            css.addRule(new StringBuilder("body, div { font-size: ").append(f.getSize()) // NOI18N
-                    .append("; font-family: ").append(getFont().getFamily()).append(";}").toString()); // NOI18N
-            // do not use monospaced font, just adjust fontsize
+            css.addRule(new StringBuilder("body, div { font-size: ").append(useFont.getSize()) // NOI18N
+                    .append("; font-family: ").append(useFont.getFamily()).append(";}").toString()); // NOI18N
         } catch (Exception e) {
         }
         css.addStyleSheet(htmlKit.getStyleSheet());

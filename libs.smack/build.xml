@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="libs.smack">
+<project basedir="." default="build" name="libs.smack">
     <description>Builds, tests, and runs the project Smack API</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

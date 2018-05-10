@@ -20,6 +20,7 @@ package org.netbeans.modules.java.source.indexing;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.function.Supplier;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.java.source.usages.ClassIndexManager;
@@ -33,14 +34,14 @@ class CacheAttributesTransaction extends TransactionContext.Service {
 
     private final URL root;
     private final boolean srcRoot;
-    private final boolean allFiles;
+    private final Supplier<Boolean> allFiles;
     private boolean closed;
     private boolean invalid;
 
     private CacheAttributesTransaction(
         @NonNull final URL root,
         final boolean srcRoot,
-        final boolean allFiles) {
+        final Supplier<Boolean> allFiles) {
         this.root = root;
         this.srcRoot = srcRoot;
         this.allFiles = allFiles;
@@ -49,7 +50,7 @@ class CacheAttributesTransaction extends TransactionContext.Service {
     static CacheAttributesTransaction create(
             @NonNull final URL root,
             final boolean srcRoot,
-            final boolean allFiles) {
+            final Supplier<Boolean> allFiles) {
         Parameters.notNull("root", root);   //NOI18N
         return new CacheAttributesTransaction(root, srcRoot, allFiles);
     }
@@ -67,7 +68,7 @@ class CacheAttributesTransaction extends TransactionContext.Service {
                 JavaIndex.setAttribute(root, ClassIndexManager.PROP_SOURCE_ROOT, Boolean.TRUE.toString());
             }
         } else {            
-            if (allFiles) {
+            if (allFiles.get()) {
                 JavaIndex.setAttribute(root, ClassIndexManager.PROP_SOURCE_ROOT, Boolean.FALSE.toString());
             }
         }

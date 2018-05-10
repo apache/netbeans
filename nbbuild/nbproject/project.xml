@@ -200,7 +200,7 @@
                 </context-menu>
             </view>
             <subprojects/>
-            <project-license>cddl-netbeans-sun</project-license>
+            <project-license>apache20-asf</project-license>
         </general-data>
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/4">
             <compilation-unit>

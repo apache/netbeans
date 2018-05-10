@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="form.kit">
+<project basedir="." default="build" name="form.kit">
     <description>Builds, tests, and runs the project org.netbeans.modules.form.kit</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

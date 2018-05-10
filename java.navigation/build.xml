@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="java.navigation" default="netbeans" basedir=".">
+<project name="java.navigation" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

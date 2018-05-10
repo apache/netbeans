@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="progress.ui">
+<project basedir="." default="build" name="progress.ui">
     <description>Builds, tests, and runs the project org.netbeans.modules.progress.ui</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

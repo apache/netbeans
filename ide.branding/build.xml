@@ -22,7 +22,7 @@
 <!--
 Contributor(s): Vincent Brabant, Maxym Mykhalchuk
  -->
-<project basedir="." default="netbeans" name="ide.branding">
+<project basedir="." default="build" name="ide.branding">
 
   <import file="../nbbuild/templates/projectized.xml"/>
 

@@ -88,7 +88,7 @@ public class DiffPresenter extends javax.swing.JPanel {
      */
     public DiffPresenter() {
         String label = NbBundle.getMessage(DiffPresenter.class, "diff.prog");
-        ProgressHandle progress = ProgressHandleFactory.createHandle(label);
+        ProgressHandle progress = ProgressHandle.createHandle(label);
         progressPanel = ProgressHandleFactory.createProgressComponent(progress);
         add(progressPanel);
         progress.start();
@@ -366,16 +366,13 @@ public class DiffPresenter extends javax.swing.JPanel {
                 try {
                     Difference[] adiffs = fdiffs;
                     String message = NbBundle.getMessage(DiffPresenter.class, "BK0001");
-                    ProgressHandle ph = ProgressHandleFactory.createHandle(message);
                     if (adiffs == null) {
-                        try {
+                        try (ProgressHandle ph = ProgressHandle.createHandle(message)) {
                             ph.start();
                             adiffs = p.computeDiff(
                                     diffInfo.createFirstReader(),
                                     diffInfo.createSecondReader()
                             );
-                        } finally {
-                            ph.finish();
                         }
                     }
 

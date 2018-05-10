@@ -33,6 +33,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.netbeans.lib.profiler.results.ExportDataDumper;
+import org.netbeans.lib.profiler.ui.AppearanceController;
 
 
 /**
@@ -158,6 +159,7 @@ public class LiveFlatProfilePanel extends JPanel implements LiveResultsPanel {
 
     private void initComponents() {
         setLayout(new BorderLayout());
+        AppearanceController.getDefault().customizeLiveFlatProfilePanel(this);
 
         noResultsPanel = new JPanel();
         noResultsPanel.setLayout(new BorderLayout());

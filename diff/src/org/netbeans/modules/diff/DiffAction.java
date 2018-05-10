@@ -43,7 +43,6 @@ import org.openide.windows.WindowManager;
 import org.netbeans.api.diff.*;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.diff.builtin.DefaultDiff;
 import org.netbeans.modules.diff.builtin.SingleDiffPanel;
 import org.netbeans.modules.diff.options.AccessibleJFileChooser;
@@ -220,12 +219,9 @@ public class DiffAction extends NodeAction {
                 }
             };
             String name = NbBundle.getMessage(DiffAction.class, "BK0001");
-            ProgressHandle ph = ProgressHandleFactory.createHandle(name, killer);
-            try {
+            try (ProgressHandle ph = ProgressHandle.createHandle(name, killer)) {
                 ph.start();
                 sdp = new SingleDiffPanel(fo1, fo2, type);
-            } finally {
-                ph.finish();
             }
         } catch (IOException ioex) {
             ErrorManager.getDefault().notify(ioex);

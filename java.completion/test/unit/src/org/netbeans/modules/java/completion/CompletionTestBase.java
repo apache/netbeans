@@ -55,6 +55,7 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.JavaDataLoader;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.indexing.TransactionContext;
 import org.netbeans.modules.java.source.usages.BinaryAnalyser;
@@ -118,6 +119,7 @@ public class CompletionTestBase extends NbTestCase {
     protected void setUp() throws Exception {
         ClassPathProvider cpp = new ClassPathProvider() {
             volatile ClassPath bootCache;
+            volatile ClassPath moduleBootCache;
             @Override
             public ClassPath findClassPath(FileObject file, String type) {
                 try {
@@ -127,10 +129,17 @@ public class CompletionTestBase extends NbTestCase {
                     if (type.equals(ClassPath.COMPILE)) {
                         return ClassPathSupport.createClassPath(new FileObject[0]);
                     }
-                    if (type.equals(ClassPath.BOOT) || type.equals(JavaClassPathConstants.MODULE_BOOT_PATH)) {
+                    if (type.equals(ClassPath.BOOT)) {
                         ClassPath cp = bootCache;
                         if (cp == null) {
-                            cp = TestUtil.getBootClassPath();
+                            bootCache = cp = BootClassPathUtil.getBootClassPath();
+                        }
+                        return cp;
+                    }
+                    if (type.equals(JavaClassPathConstants.MODULE_BOOT_PATH)) {
+                        ClassPath cp = moduleBootCache;
+                        if (cp == null) {
+                            moduleBootCache = cp = BootClassPathUtil.getModuleBootPath();
                         }
                         return cp;
                     }
@@ -156,7 +165,7 @@ public class CompletionTestBase extends NbTestCase {
         final ClassPath sourcePath = ClassPathSupport.createClassPath(new FileObject[] {FileUtil.toFileObject(getDataDir())});
         final ClassIndexManager mgr  = ClassIndexManager.getDefault();
         for (ClassPath.Entry entry : sourcePath.entries()) {
-            TransactionContext tx = TransactionContext.beginStandardTransaction(entry.getURL(), true, true, false);
+            TransactionContext tx = TransactionContext.beginStandardTransaction(entry.getURL(), true, ()->true, false);
             try {
                 mgr.createUsagesQuery(entry.getURL(), true);
             } finally {
@@ -173,7 +182,7 @@ public class CompletionTestBase extends NbTestCase {
             public void run(CompilationController parameter) throws Exception {
                 for (ClassPath.Entry entry : bootPath.entries()) {
                     final URL url = entry.getURL();
-                    TransactionContext.beginStandardTransaction(entry.getURL(), false, true, false);
+                    TransactionContext.beginStandardTransaction(entry.getURL(), false, ()->true, false);
                     try {
                         final ClassIndexImpl cii = mgr.createUsagesQuery(url, false);
                         BinaryAnalyser ba = cii.getBinaryAnalyser();
@@ -215,10 +224,6 @@ public class CompletionTestBase extends NbTestCase {
     }
     
     protected void performTest(String source, int caretPos, String textToInsert, String goldenFileName, String sourceLevel) throws Exception {
-        String version = System.getProperty("java.specification.version");
-        if (com.sun.tools.javac.code.Source.lookup(version).compareTo(com.sun.tools.javac.code.Source.lookup(sourceLevel)) < 0) {
-            sourceLevel = com.sun.tools.javac.code.Source.lookup(version).name;
-        }
         this.sourceLevel.set(sourceLevel);
         File testSource = new File(getWorkDir(), "test/Test.java");
         testSource.getParentFile().mkdirs();
@@ -257,6 +262,7 @@ public class CompletionTestBase extends NbTestCase {
         
         
         File goldenFile = null;
+        String version = System.getProperty("java.specification.version");
         for (String variant : VERSION_VARIANTS.get(version)) {
             goldenFile = new File(getDataDir(), "/goldenfiles/org/netbeans/modules/java/completion/JavaCompletionTaskTest/" + variant + "/" + goldenFileName);
             if (goldenFile.exists())
@@ -277,6 +283,8 @@ public class CompletionTestBase extends NbTestCase {
         VERSION_VARIANTS.put("1.9", Arrays.asList("9", "1.8"));
         VERSION_VARIANTS.put("10", Arrays.asList("10", "9", "1.8"));
         VERSION_VARIANTS.put("1.10", Arrays.asList("10", "9", "1.8"));
+        VERSION_VARIANTS.put("11", Arrays.asList("11", "10", "9", "1.8"));
+        VERSION_VARIANTS.put("1.11", Arrays.asList("11", "10", "9", "1.8"));
     }
 
     private void copyToWorkDir(File resource, File toFile) throws IOException {

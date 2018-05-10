@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="profiler.freeform">
+<project basedir="." default="build" name="profiler.freeform">
     <description>Builds, tests, and runs the project org.netbeans.modules.profiler.freeform</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

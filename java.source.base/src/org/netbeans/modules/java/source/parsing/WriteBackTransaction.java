@@ -72,7 +72,7 @@ class WriteBackTransaction extends FileManagerTransaction {
         super(true);
         this.root = root;
         try {
-            this.classesFolder = BaseUtilities.toURI(JavaIndex.getClassFolder(root)).toURL();
+            this.classesFolder = BaseUtilities.toURI(JavaIndex.getClassFolder(root, false, false)).toURL();
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
@@ -192,7 +192,7 @@ class WriteBackTransaction extends FileManagerTransaction {
 
     @Override
     @NonNull
-    JavaFileObject createFileObject(
+    public JavaFileObject createFileObject(
             @NonNull final Location location,
             @NonNull final File file,
             @NonNull final File root,

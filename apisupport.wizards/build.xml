@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="apisupport.wizards">
+<project basedir="." default="build" name="apisupport.wizards">
     <description>Builds, tests, and runs the project org.netbeans.modules.apisupport.wizards</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

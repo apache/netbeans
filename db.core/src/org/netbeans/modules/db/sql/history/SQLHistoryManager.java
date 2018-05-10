@@ -21,20 +21,25 @@ package org.netbeans.modules.db.sql.history;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import org.netbeans.modules.db.sql.execute.ui.SQLHistoryPanel;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -48,6 +53,11 @@ public class SQLHistoryManager  {
     
     private static final String SQL_HISTORY_DIRECTORY = "Databases/SQLHISTORY"; // NOI18N
     private static final String SQL_HISTORY_FILE = "sql_history.xml"; // NOI18N
+    private static final String TAG_HISTORY = "history"; // NOI18N
+    private static final String TAG_SQL = "sql"; // NOI18N
+    private static final String ATTR_DATE = "date"; // NOI18N
+    private static final String ATTR_URL = "url"; // NOI18N
+    private static final String CONTENT_NEWLINE = "\n"; // NOI18N
     private static final Logger LOGGER = Logger.getLogger(SQLHistoryEntry.class.getName());
     private static final RequestProcessor RP = new RequestProcessor(
             SQLHistoryManager.class.getName(), 1, false, false);
@@ -60,20 +70,10 @@ public class SQLHistoryManager  {
     private final PropertyChangeSupport PROPERTY_CHANGE_SUPPORT =
             new PropertyChangeSupport(this);
     
-    private JAXBContext context;
     private SQLHistory sqlHistory;
 
     protected SQLHistoryManager() {
-        ClassLoader orig = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(SQLHistoryManager.class.getClassLoader());
-        try {
-            context = JAXBContext.newInstance("org.netbeans.modules.db.sql.history", SQLHistoryManager.class.getClassLoader());
-            loadHistory();
-        } catch (JAXBException ex) {
-            throw new RuntimeException(ex);
-        } finally {
-            Thread.currentThread().setContextClassLoader(orig);
-        }
+        loadHistory();
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
@@ -103,15 +103,15 @@ public class SQLHistoryManager  {
         if (historyRootDir != null || create) {
             if (historyRootDir == null) {
                 historyRootDir = FileUtil.createFolder(getConfigRoot(), getRelativeHistoryPath());
-    }
+            }
             FileObject historyRoot = historyRootDir.getFileObject(getHistoryFilename());
 
             if (historyRoot != null || create) {
-                if(historyRoot == null) {
+                if (historyRoot == null) {
                     historyRoot = historyRootDir.createData(getHistoryFilename());
-    }
+                }
                 result = historyRoot;
-    }
+            }
         }
         return result;
     }
@@ -138,15 +138,32 @@ public class SQLHistoryManager  {
     }
 
     private void loadHistory() {
-        try (InputStream is = getHistoryRoot(false).getInputStream()) {
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            sqlHistory = (SQLHistory) unmarshaller.unmarshal(is);
-            sqlHistory.setHistoryLimit(getListSize());
-        } catch (JAXBException | IOException | RuntimeException ex) {
+        try {
             sqlHistory = new SQLHistory();
-            sqlHistory.setHistoryLimit(getListSize());
+            FileObject historyFile = getHistoryRoot(false);
+            if(historyFile != null) {
+                DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                Document doc = db.parse(historyFile.getInputStream());
+                Element rootElement = doc.getDocumentElement();
+                if(TAG_HISTORY.equals(rootElement.getTagName())) {
+                    NodeList sqlNodes = rootElement.getElementsByTagName(TAG_SQL);
+                    for(int i = 0; i < sqlNodes.getLength(); i++) {
+                        Element sql = (Element) sqlNodes.item(i);
+                        SQLHistoryEntry sqe = new SQLHistoryEntry();
+                        sqe.setDateXMLVariant(sql.getAttribute(ATTR_DATE));
+                        sqe.setUrl(sql.getAttribute(ATTR_URL));
+                        sqe.setSql(sql.getTextContent());
+                        sqlHistory.add(sqe);
+                    }
+                }
+            } else {
+                
+            }
+        } catch (IOException | ParserConfigurationException | SAXException ex) {
+            sqlHistory = new SQLHistory();
             LOGGER.log(Level.INFO, ex.getMessage());
         }
+        sqlHistory.setHistoryLimit(getListSize());
     }
     
     public void save() {
@@ -193,23 +210,32 @@ public class SQLHistoryManager  {
                         runAtomicAction(new FileSystem.AtomicAction() {
                     @Override
                     public void run() throws IOException {
-                        OutputStream os = null;
-                        try {
-                            Marshaller marshaller = context.createMarshaller();
-                            os = targetFile.getOutputStream();
-                            marshaller.marshal(sqlHistory, os);
-                        } catch (JAXBException | IOException | RuntimeException ex) {
+                        ;
+                        try (OutputStream os = targetFile.getOutputStream()) {
+                            XMLStreamWriter xsw = XMLOutputFactory
+                                    .newInstance()
+                                    .createXMLStreamWriter(os);
+                            
+                            xsw.writeStartDocument();
+                            xsw.writeCharacters(CONTENT_NEWLINE);
+                            xsw.writeStartElement(TAG_HISTORY);
+                            xsw.writeCharacters(CONTENT_NEWLINE);
+                            for(SQLHistoryEntry sqe: sqlHistory) {
+                                xsw.writeStartElement(TAG_SQL);
+                                xsw.writeAttribute(ATTR_DATE, sqe.getDateXMLVariant());
+                                xsw.writeAttribute(ATTR_URL, sqe.getUrl());
+                                xsw.writeCharacters(sqe.getSql());
+                                xsw.writeEndElement();
+                                xsw.writeCharacters(CONTENT_NEWLINE);
+                            }
+                            xsw.writeEndElement();
+                            xsw.flush();
+                            xsw.close();
+                        } catch (IOException | XMLStreamException ex) {
                             LOGGER.log(Level.INFO, ex.getMessage(), ex);
                         } finally {
-                            try {
-                                if (os != null) {
-                                    os.close();
-                                }
-                                PROPERTY_CHANGE_SUPPORT.firePropertyChange(
-                                        PROP_SAVED, null, null);
-                            } catch (IOException ex) {
-                                LOGGER.log(Level.INFO, null, ex);
-                            }
+                            PROPERTY_CHANGE_SUPPORT.firePropertyChange(
+                                    PROP_SAVED, null, null);
                         }
                     }
                 });

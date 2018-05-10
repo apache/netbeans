@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="api.annotations.common">
+<project basedir="." default="build" name="api.annotations.common">
     <description>Builds, tests, and runs the project org.netbeans.annotations.common</description>
 
     <import file="../nbbuild/templates/projectized.xml"/>

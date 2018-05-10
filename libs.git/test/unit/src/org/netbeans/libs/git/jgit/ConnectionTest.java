@@ -251,12 +251,12 @@ public class ConnectionTest extends AbstractGitTestCase {
 
             @Override
             public String getIdentityFile (String uri, String prompt) {
-                return new File(getDataDir(), "private_key").getAbsolutePath();
+                return new File(getDataDir(), "testing_key").getAbsolutePath();
             }
             
             @Override
             public char[] getPassphrase (String uri, String prompt) {
-                assertTrue("Expected passphrase prompt for private_key, was " + prompt, prompt.contains(new File(getDataDir(), "private_key").getAbsolutePath()));
+                assertTrue("Expected passphrase prompt for testing_key, was " + prompt, prompt.contains(new File(getDataDir(), "testing_key").getAbsolutePath()));
                 return "qwerty".toCharArray();
             }
         });
@@ -286,12 +286,12 @@ public class ConnectionTest extends AbstractGitTestCase {
 
                 @Override
                 public String getIdentityFile (String uri, String prompt) {
-                    return new File(getDataDir(), "private_key").getAbsolutePath();
+                    return new File(getDataDir(), "testing_key").getAbsolutePath();
                 }
 
                 @Override
                 public char[] getPassphrase (String uri, String prompt) {
-                    assertTrue("Expected passphrase prompt for private_key, was " + prompt, prompt.contains(new File(getDataDir(), "private_key").getAbsolutePath()));
+                    assertTrue("Expected passphrase prompt for testing_key, was " + prompt, prompt.contains(new File(getDataDir(), "testing_key").getAbsolutePath()));
                     return "qwerty".toCharArray();
                 }
             });
@@ -332,7 +332,7 @@ public class ConnectionTest extends AbstractGitTestCase {
 
             @Override
             public String getIdentityFile (String uri, String prompt) {
-                return new File(getDataDir(), "private_key").getAbsolutePath();
+                return new File(getDataDir(), "testing_key").getAbsolutePath();
             }
             
             @Override

@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="o.jdesktop.beansbinding" default="netbeans" basedir=".">
+<project name="o.jdesktop.beansbinding" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

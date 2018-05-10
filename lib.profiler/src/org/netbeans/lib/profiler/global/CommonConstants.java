@@ -73,6 +73,7 @@ public interface CommonConstants {
     public static final int JDK_17 = 4; // we treat JDK 17 the same as JDK 1.5 for now
     public static final int JDK_18 = 6;
     public static final int JDK_19 = 7;
+    public static final int JDK_110_BEYOND = 8; //JDK 10 and beyond
     public static final int JDK_CVM = 5;
     public static final int JDK_UNSUPPORTED = -1;
 
@@ -82,6 +83,7 @@ public interface CommonConstants {
     public static final String JDK_17_STRING = "jdk17"; // NOI18N
     public static final String JDK_18_STRING = "jdk18"; // NOI18N
     public static final String JDK_19_STRING = "jdk19"; // NOI18N
+    public static final String JDK_110_BEYOND_STRING = "jdk110"; // NOI18N
     public static final String JDK_CVM_STRING = "cvm";  // NOI18N
     public static final String JDK_UNSUPPORTED_STRING = "UNSUPPORTED_JDK"; // NOI18N
 
@@ -285,5 +287,6 @@ public interface CommonConstants {
     public static final int AGENT_VERSION_80 = 15;
     public static final int AGENT_VERSION_81 = 16;
     public static final int AGENT_VERSION_82 = 17;
-    public static final int CURRENT_AGENT_VERSION = AGENT_VERSION_82;
+    public static final int AGENT_VERSION_90 = 18;
+    public static final int CURRENT_AGENT_VERSION = AGENT_VERSION_90;
 }

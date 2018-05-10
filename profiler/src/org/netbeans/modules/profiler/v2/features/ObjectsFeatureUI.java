@@ -33,6 +33,7 @@ import org.netbeans.lib.profiler.client.ClientUtils;
 import org.netbeans.lib.profiler.common.Profiler;
 import org.netbeans.lib.profiler.ui.components.ProfilerToolbar;
 import org.netbeans.lib.profiler.ui.memory.LiveMemoryView;
+import org.netbeans.lib.profiler.ui.memory.LiveMemoryViewUpdater;
 import org.netbeans.lib.profiler.ui.swing.GrayLabel;
 import org.netbeans.modules.profiler.actions.ResetResultsAction;
 import org.netbeans.modules.profiler.actions.TakeSnapshotAction;
@@ -60,6 +61,7 @@ abstract class ObjectsFeatureUI extends FeatureUI {
     
     private ProfilerToolbar toolbar;
     private LiveMemoryView memoryView;
+    private LiveMemoryViewUpdater updater;
 
     
     // --- External implementation ---------------------------------------------
@@ -101,11 +103,11 @@ abstract class ObjectsFeatureUI extends FeatureUI {
     }
     
     void setForceRefresh() {
-        if (memoryView != null) memoryView.setForceRefresh(true);
+        if (updater != null) updater.setForceRefresh(true);
     }
     
     void refreshData() throws ClientUtils.TargetAppOrVMTerminated {
-        if (memoryView != null) memoryView.refreshData();
+        if (updater != null) updater.update();
     }
     
     void resetData() {
@@ -121,7 +123,7 @@ abstract class ObjectsFeatureUI extends FeatureUI {
     
     
     void cleanup() {
-        if (memoryView != null) memoryView.cleanup();
+        if (updater != null) updater.cleanup();
     }
     
     
@@ -177,6 +179,8 @@ abstract class ObjectsFeatureUI extends FeatureUI {
         
         memoryView.putClientProperty("HelpCtx.Key", "ProfileObjects.HelpCtx"); // NOI18N
         
+        updater = new LiveMemoryViewUpdater(memoryView, getProfilerClient());
+        
         
         // --- Toolbar ---------------------------------------------------------
         
@@ -185,7 +189,7 @@ abstract class ObjectsFeatureUI extends FeatureUI {
         lrPauseButton = new JToggleButton(Icons.getIcon(GeneralIcons.PAUSE)) {
             protected void fireItemStateChanged(ItemEvent event) {
                 boolean paused = isSelected();
-                memoryView.setPaused(paused);
+                updater.setPaused(paused);
                 if (!paused) refreshResults();
                 refreshToolbar(getSessionState());
             }

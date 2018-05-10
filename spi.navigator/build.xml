@@ -20,7 +20,7 @@
 
 -->
 
-<project name="spi.navigator" default="netbeans" basedir=".">
+<project name="spi.navigator" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

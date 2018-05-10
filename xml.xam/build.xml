@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="xml.xam" default="netbeans" basedir=".">
+<project name="xml.xam" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

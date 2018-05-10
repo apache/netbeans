@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="api.progress" default="netbeans" basedir=".">
+<project name="api.progress" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

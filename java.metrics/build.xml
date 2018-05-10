@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="java.metrics">
+<project basedir="." default="build" name="java.metrics">
     <description>Builds, tests, and runs the project org.netbeans.modules.java.metrics</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

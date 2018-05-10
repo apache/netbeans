@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="httpserver" default="netbeans" basedir=".">
+<project name="httpserver" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

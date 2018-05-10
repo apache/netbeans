@@ -75,7 +75,7 @@ public class Util {
         if (Utilities.isWindows()) {
             uiClassName = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"; //NOI18N
         } else if (Utilities.isMac()) {
-            uiClassName = "apple.laf.AquaLookAndFeel"; //NOI18N
+            uiClassName = "com.apple.laf.AquaLookAndFeel"; //NOI18N
         } else if (Utilities.isUnix()) {
             uiClassName = "javax.swing.plaf.metal.MetalLookAndFeel"; //NOI18N
         } else {

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="masterfs.macosx">
+<project basedir="." default="build" name="masterfs.macosx">
     <description>Builds, tests, and runs the project org.netbeans.modules.masterfs.macosx</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

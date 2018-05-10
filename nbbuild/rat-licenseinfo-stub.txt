@@ -1,0 +1,11 @@
+Licensed to the Apache Software Foundation (ASF) under one or more contributor
+license agreements; and to You under the Apache License, Version 2.0.
+===================================================================================================
+
+
+Apache Netbeans RAT Exclusions
+------------------------------
+
+The Apache NetBeans codebase contains files that are either not covered by the
+Apache License 2.0 or can't include license headers for various reasons.
+

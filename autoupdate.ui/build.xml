@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="autoupdate.ui">
+<project basedir="." default="build" name="autoupdate.ui">
     <description>Builds, tests, and runs the project org.netbeans.modules.autoupdate.ui</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

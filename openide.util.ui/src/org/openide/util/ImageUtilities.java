@@ -403,6 +403,9 @@ public final class ImageUtilities {
 
     static Image getIcon(String resource, boolean localized) {
         if (localized) {
+            if (resource == null) {
+                return null;
+            }
             synchronized (localizedCache) {
                 ActiveRef<String> ref = localizedCache.get(resource);
                 Image img = null;
@@ -475,6 +478,9 @@ public final class ImageUtilities {
     *  and is not optimized/interned
     */
     private static Image getIcon(String name, ClassLoader loader, boolean localizedQuery) {
+        if (name == null) {
+            return null;
+        }
         ActiveRef<String> ref = cache.get(name);
         Image img = null;
 

@@ -346,9 +346,12 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
                     // into a byte array, likely due to random access
                     byte[] target = bytes(size);
                     try (InputStream in = jf.getInputStream(entry)) {
-                        for (int pos = 0, count = in.read(target);
-                                count != -1 && pos < size;
-                                count = in.read(target, pos, size - pos), pos += count == -1 ? 0 : count);
+                        int pos = 0;
+                        int count = 0;
+                        while (count != -1 && pos < size) {
+                            count = in.read(target, pos, size - pos);
+                            pos += count == -1 ? 0 : count;
+                        }
                     }
                     try (InputStream in = new ByteArrayInputStream(target, 0, size)) {
                         String clazz = name.substring(0, name.length() - 6);

@@ -1696,6 +1696,53 @@ public class NPECheckTest extends NbTestCase {
                 .assertWarnings("3:44-3:52:verifier:Possibly Dereferencing null");
     }
     
+    public void testExceptionIsNonNullNETBEANS734a() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "  public void test(Object o) {\n" +
+                       "    try {\n" +
+                       "    } catch (Exception e) {\n" +
+                       "        if (e instanceof RuntimeException) {}\n" +
+                       "        System.err.println(e.toString());\n" +
+                       "    }\n" +
+                       "  }\n" +
+                       "}")
+                .run(NPECheck.class)
+                .assertWarnings();
+    }
+
+    public void testExceptionIsNonNullNETBEANS734b() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "  public void test(Object o) {\n" +
+                       "    try {\n" +
+                       "    } catch (Exception e) {\n" +
+                       "        if (e != null) {}\n" +
+                       "    }\n" +
+                       "  }\n" +
+                       "}")
+                .run(NPECheck.class)
+                .assertWarnings("5:12-5:21:verifier:ERR_NotNull");
+    }
+
+    public void testExceptionIsNonNullNETBEANS734c() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "  public void test(Object o) {\n" +
+                       "    try {\n" +
+                       "    } catch (Exception e) {\n" +
+                       "        e = null;\n" +
+                       "        System.err.println(e.toString());\n" +
+                       "    }\n" +
+                       "  }\n" +
+                       "}")
+                .run(NPECheck.class)
+                .assertWarnings("6:29-6:37:verifier:DN");
+    }
+
     private void performAnalysisTest(String fileName, String code, String... golden) throws Exception {
         HintTest.create()
                 .input(fileName, code)

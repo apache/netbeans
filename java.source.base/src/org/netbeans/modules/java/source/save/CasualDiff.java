@@ -1477,27 +1477,26 @@ public class CasualDiff {
                     int modsUpperBound = getCommentCorrectedEndPos(oldT.mods);
                     if (modsUpperBound > -1) {
                         tokenSequence.move(modsUpperBound);
-                        tokenSequence.moveNext();
 
                         // copying modifiers from oldTree
-                        if (JavaTokenId.WHITESPACE == tokenSequence.token().id()) {
-                            int offset = tokenSequence.offset();
-                            copyTo(localPointer, localPointer = offset);
-                        } else {
+                        if (tokenSequence.moveNext()) {
                             copyTo(localPointer, localPointer = modsUpperBound);
                         }
-                    }
 
+                    }
+                    int offset = localPointer;
+                    JavaTokenId tokenId = null;
                     tokenSequence.move(localPointer);
-                    tokenSequence.moveNext();
-                    int offset = tokenSequence.offset();
-                    JavaTokenId tokenId = tokenSequence.token().id();
 
                     //adding back all whitespaces/block-comment/javadoc-comments present in OldTree before variable type token.
-                    while ((tokenId == JavaTokenId.WHITESPACE || tokenId == JavaTokenId.BLOCK_COMMENT || tokenId == JavaTokenId.JAVADOC_COMMENT) && offset < oldT.sym.pos) {
-                        tokenSequence.moveNext();
+                    while (tokenSequence.moveNext()) {
                         offset = tokenSequence.offset();
                         tokenId = tokenSequence.token().id();
+
+                        if (!((tokenId == JavaTokenId.WHITESPACE || tokenId == JavaTokenId.BLOCK_COMMENT || tokenId == JavaTokenId.JAVADOC_COMMENT) && offset < oldT.sym.pos)) {
+                            break;
+                        }
+
                     }
                     copyTo(localPointer, localPointer = offset);
 
@@ -1521,17 +1520,16 @@ public class CasualDiff {
                  * first token.
                  */
                 if (oldT.type.getKind() == TypeKind.ERROR && localPointer == -1) {
-
                     // moving to variable type token
                     tokenSequence.move(vartypeBounds[0]);
                     tokenSequence.moveNext();
 
                     //moving to first token after variable type token.
-                    tokenSequence.moveNext();
-
-                    // copying tokens from vartype bounds after excluding variable type token.
-                    int offset = tokenSequence.offset();
-                    copyTo(offset, localPointer = vartypeBounds[1]);
+                    if (tokenSequence.moveNext()) {
+                        // copying tokens from vartype bounds after excluding variable type token.
+                        int offset = tokenSequence.offset();
+                        copyTo(offset, localPointer = vartypeBounds[1]);
+                    }
                 }
             }
         }

@@ -375,7 +375,6 @@ public class ConvertToVarHintTest {
                         + "}");
     }
 
-    //TODO: add support for usecase, currently this testcase fails
     @Test
     public void testCapturedTypeTypeParamsAssignToVar() throws Exception {
         HintTest.create()

@@ -25,7 +25,6 @@ import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.code.Type.CapturedType;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -46,6 +45,8 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
+import javax.tools.Diagnostic.Kind;
+import org.netbeans.modules.java.hints.errors.Utilities;
 
 /**
  * Hint will convert explicit type of local variable to 'var'. Supported: JDK 10
@@ -150,7 +151,7 @@ public class ConvertToVarHint {
             return false;
         }
 
-        if (isDiagnosticCodeTobeSkipped(ctx.getInfo())) {
+        if (isDiagnosticCodeTobeSkipped(ctx.getInfo(), treePath.getLeaf())) {
             return false;
         }
 
@@ -163,9 +164,17 @@ public class ConvertToVarHint {
      * @param info : compilationInfo
      * @return true if Diagnostic Code is present in SKIPPED_ERROR_CODES
      */
-    private static boolean isDiagnosticCodeTobeSkipped(CompilationInfo info) {
+    private static boolean isDiagnosticCodeTobeSkipped(CompilationInfo info, Tree tree) {
+        long startPos = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
+        long endPos = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
+
         List<Diagnostic> diagnosticsList = info.getDiagnostics();
-        return diagnosticsList.stream().anyMatch((d) -> (SKIPPED_ERROR_CODES.contains(d.getCode())));
+        if (diagnosticsList.stream().filter((d)
+                -> ((d.getStartPosition() >= startPos) && (d.getEndPosition() <= endPos))).anyMatch((d)
+                -> ((d.getKind() == Kind.ERROR) && (SKIPPED_ERROR_CODES.contains(d.getCode()))))) {
+            return true;
+        }
+        return false;
     }
     
     private static boolean isValidVarType(HintContext ctx) {
@@ -174,26 +183,34 @@ public class ConvertToVarHint {
 
         TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
 
-        if (initTreePath.getLeaf().getKind() == Tree.Kind.NEW_CLASS) {
-            NewClassTree nct = (NewClassTree) (initTreePath.getLeaf());
-            //anonymous class type
-            if (nct.getClassBody() != null) {
-                return false;
+        if (initTreePath != null) {
+            Tree.Kind kind = initTreePath.getLeaf().getKind();
+            switch (kind) {
+                case NEW_CLASS:
+                    NewClassTree nct = (NewClassTree) (initTreePath.getLeaf());
+                    //anonymous class type
+                    if (nct.getClassBody() != null) {
+                        return false;
+                    }
+                    break;
+                case NEW_ARRAY:
+                    NewArrayTree nat = (NewArrayTree) ((VariableTree) treePath.getLeaf()).getInitializer();
+                    //array initializer expr type
+                    if (nat.getType() == null) {
+                        return false;
+                    }
+                    break;
+                case LAMBDA_EXPRESSION:
+                    return false;
+                default:
+                    break;
             }
-        } else if (initTreePath.getLeaf().getKind() == Tree.Kind.NEW_ARRAY) {
-            NewArrayTree nat = (NewArrayTree) ((VariableTree) treePath.getLeaf()).getInitializer();
-            //array initializer expr type
-            if (nat.getType() == null) {
-                return false;
-            }
-        } else if (initTreePath.getLeaf().getKind() == Tree.Kind.LAMBDA_EXPRESSION) {
-            return false;
-        }
+        }   
         // variable initializer type should be same as variable type.
         TypeMirror initTypeMirror = ctx.getInfo().getTrees().getTypeMirror(initTreePath);
+       
         
-        //TODO: add support for CapturedType TypeParams: testcase testCapturedTypeTypeParamsAssignToVar3()
-        if (!(initTypeMirror instanceof CapturedType) && (!ctx.getInfo().getTypes().isSameType(variableTypeMirror, initTypeMirror))) {
+        if ((Utilities.isValidType(initTypeMirror)) && (!ctx.getInfo().getTypes().isSameType(variableTypeMirror, Utilities.resolveCapturedType(ctx.getInfo(), initTypeMirror)))) {
             return false;
         }
                 

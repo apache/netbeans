@@ -23,11 +23,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * Fast test for matching any of a set of prefixes, iterating the characters of
- * the passed string only once. Borrowed from
- * https://github.com/timboudreau/bunyan-java/blob/master/bunyan-parse/src/main/java/com/mastfrog/bunyan/parse/MatchWords.java
- * (MIT license)
- *
  * @author Tim Boudreau
  */
 final class MatchWords implements Predicate<String> {

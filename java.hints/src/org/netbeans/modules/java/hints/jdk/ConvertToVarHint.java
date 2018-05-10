@@ -104,6 +104,9 @@ public class ConvertToVarHint {
             if (statementPath.getLeaf().getKind() == Tree.Kind.VARIABLE) {
                 VariableTree oldVariableTree = (VariableTree) statementPath.getLeaf();
                 ExpressionTree initializerTree = oldVariableTree.getInitializer();
+                if(initializerTree == null) {
+                    return;
+                }
                 //check if initializer with diamond operator
                 if (initializerTree.getKind() == Tree.Kind.NEW_CLASS) {
                     NewClassTree nct = (NewClassTree)initializerTree;
@@ -127,7 +130,6 @@ public class ConvertToVarHint {
                 wc.rewrite(oldVariableTree, newVariableTree);
             }
         }
-
     }
 
     /**
@@ -169,9 +171,8 @@ public class ConvertToVarHint {
         long endPos = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
 
         List<Diagnostic> diagnosticsList = info.getDiagnostics();
-        if (diagnosticsList.stream().filter((d)
-                -> ((d.getStartPosition() >= startPos) && (d.getEndPosition() <= endPos))).anyMatch((d)
-                -> ((d.getKind() == Kind.ERROR) && (SKIPPED_ERROR_CODES.contains(d.getCode()))))) {
+        if (diagnosticsList.stream().anyMatch((d)
+                -> ((d.getKind() == Kind.ERROR) && ((d.getStartPosition() >= startPos) && (d.getEndPosition() <= endPos)) && (SKIPPED_ERROR_CODES.contains(d.getCode()))))) {
             return true;
         }
         return false;
@@ -180,9 +181,7 @@ public class ConvertToVarHint {
     private static boolean isValidVarType(HintContext ctx) {
         TreePath treePath = ctx.getPath();
         TreePath initTreePath = ctx.getVariables().get("$init");  //NOI18N
-
-        TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
-
+        
         if (initTreePath != null) {
             Tree.Kind kind = initTreePath.getLeaf().getKind();
             switch (kind) {
@@ -205,12 +204,14 @@ public class ConvertToVarHint {
                 default:
                     break;
             }
-        }   
+        } else {
+            return false;
+        }
         // variable initializer type should be same as variable type.
         TypeMirror initTypeMirror = ctx.getInfo().getTrees().getTypeMirror(initTreePath);
-       
-        
-        if ((Utilities.isValidType(initTypeMirror)) && (!ctx.getInfo().getTypes().isSameType(variableTypeMirror, Utilities.resolveCapturedType(ctx.getInfo(), initTypeMirror)))) {
+        TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
+
+        if ((!Utilities.isValidType(initTypeMirror)) || (!ctx.getInfo().getTypes().isSameType(variableTypeMirror, Utilities.resolveCapturedType(ctx.getInfo(), initTypeMirror)))) {
             return false;
         }
                 

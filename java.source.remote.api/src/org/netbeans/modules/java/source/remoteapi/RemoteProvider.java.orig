@@ -37,7 +37,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.netbeans.api.progress.ProgressHandle;
 
 import org.netbeans.modules.java.source.remoteapi.Server;
 import org.netbeans.modules.java.source.remote.spi.RemotePlatform;
@@ -46,7 +45,6 @@ import org.openide.modules.InstalledFileLocator;
 import org.openide.modules.OnStop;
 import org.openide.modules.Places;
 import org.openide.util.Lookup;
-import org.openide.util.NbBundle;
 
 /**
  *
@@ -56,9 +54,6 @@ public class RemoteProvider {
 
     private static final Map<RemotePlatform, RemoteProcessDescription> platform2Remote = new IdentityHashMap<>();
 
-    @NbBundle.Messages({
-        "CAP_StartingRemote=Starting Java editor support on target platform"
-    })
     public static URI getRemoteURL(FileObject source) {
         synchronized (platform2Remote) {
         RemotePlatform p = null;
@@ -82,9 +77,7 @@ public class RemoteProvider {
             return desc.baseURI;
         }
 
-        ProgressHandle h = ProgressHandle.createHandle(Bundle.CAP_StartingRemote());
         try {
-            h.start();
             byte[] data = MessageDigest.getInstance("SHA-1").digest(p.getJavaCommand().getBytes("UTF-8"));
             StringBuilder name = new StringBuilder();
             for (byte b : data) {
@@ -123,8 +116,6 @@ public class RemoteProvider {
             return desc.baseURI;
         } catch (NoSuchAlgorithmException | IOException | URISyntaxException ex) {
             throw new IllegalStateException(ex);
-        } finally {
-            h.finish();
         }
         }
     }

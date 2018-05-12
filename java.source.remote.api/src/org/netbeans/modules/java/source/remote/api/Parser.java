@@ -22,14 +22,18 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Map;
+import javax.swing.text.Document;
+import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
+import org.netbeans.modules.java.source.remoteapi.SourceLevelQueryImpl;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 
 /**TODO: relies on get/putCachedValue for correctness (error fixes, etc.)
  *
@@ -39,6 +43,7 @@ public class Parser {
 
     private static int lastConfig;
     private static JavaSource source;
+    private static Document lastDoc;
 
     public static <T> T parse(Config config, ParserTask<T> task) throws IOException {
         JavaSource source;
@@ -49,12 +54,14 @@ public class Parser {
             FileObject root = FileUtil.createMemoryFileSystem().getRoot();
             FileObject file = FileUtil.createData(root, config.fileName);
 
+            file.setAttribute(SourceLevelQueryImpl.KEY_SOURCE_LEVEL, config.sourceLevel);
+
             try (OutputStream out = file.getOutputStream();
                  Writer w = new OutputStreamWriter(out)) {
                 w.append(config.fileContent);
             }
 
-            ClasspathInfo cpInfo = ClasspathInfo.create(file);
+            ClasspathInfo cpInfo = SourceUtils.deserializeClasspathInfo(config.cpInfo);
 
             lastConfig = config.id;
             Parser.source = source = JavaSource.create(cpInfo, file);
@@ -83,7 +90,7 @@ public class Parser {
         public static Config create(CompilationInfo info) {
             Object conf = info.getCachedValue(Config.class);
             if (conf == null) {
-                conf = new Config(nextId++, info.getFileObject().getNameExt(), info.getText());
+                conf = new Config(nextId++, info.getFileObject().getNameExt(), info.getText(), info.getClasspathInfo(), SourceLevelQuery.getSourceLevel(info.getFileObject()));
                 info.putCachedValue(Config.class, conf, CompilationInfo.CacheClearPolicy.ON_CHANGE);
             }
             return (Config) conf;
@@ -92,7 +99,7 @@ public class Parser {
         public static Config create(FileObject file) {
             //caching...
             try {
-                return new Config(nextId++, file.getNameExt(), file.asText());
+                return new Config(nextId++, file.getNameExt(), file.asText(), ClasspathInfo.create(file), SourceLevelQuery.getSourceLevel(file));
             } catch (IOException ex) {
                 throw new IllegalStateException(ex); //XXX: error handling
             }
@@ -101,12 +108,16 @@ public class Parser {
         private int id;
         private String fileName;
         private String fileContent;
-        //TODO: paths...
+        private Map<String, Object> cpInfo;
+        private String sourceLevel;
 
-        private Config(int id, String fileName, String fileContent) {
+        public Config(int id, String fileName, String fileContent,
+                      ClasspathInfo cpInfo, String sourceLevel) {
             this.id = id;
             this.fileName = fileName;
             this.fileContent = fileContent;
+            this.cpInfo = SourceUtils.serializeClasspathInfo(cpInfo);
+            this.sourceLevel = sourceLevel;
         }
 
     }

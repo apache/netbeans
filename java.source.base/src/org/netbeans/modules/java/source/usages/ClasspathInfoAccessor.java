@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.java.source.usages;
 
+import java.util.Map;
 import java.util.function.Function;
 import javax.tools.JavaFileManager;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -108,5 +109,7 @@ public abstract class ClasspathInfoAccessor {
      */
     public abstract boolean unregisterVirtualSource (ClasspathInfo cpnfo, String fqn) throws UnsupportedOperationException;
     
+    public abstract Map<String, Object> serialize(ClasspathInfo cpInfo);
+    public abstract ClasspathInfo deserialize(Map<String, Object> data);
     
 }

@@ -1145,6 +1145,7 @@ public class JavacParser extends Parser {
             i++;
         }
         if (!f.exists()) {
+            f.getParentFile().mkdirs();
             try {
                 OutputStream os = new FileOutputStream(f);
                 try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(os, "UTF-8"))) {   //NOI18N

@@ -161,8 +161,7 @@ public final class DefaultCacheFolderProvider extends CacheFolderProvider {
         return cacheFolder;
     }
 
-    //Unit tests methods
-    void setCacheFolder(@NonNull final FileObject folder) {
+    public void setCacheFolder(@NonNull final FileObject folder) {
         saver.schedule(0);
         saver.waitFinished();
         synchronized (this) {

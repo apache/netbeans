@@ -22,6 +22,7 @@ import java.io.DataOutputStream;
 
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import java.io.File;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,17 +30,18 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.ext.RuntimeDelegate;
 
 import org.netbeans.modules.java.source.remote.api.ResourceRegistration;
-import org.openide.modules.OnStop;
+import org.netbeans.modules.parsing.impl.indexing.DefaultCacheFolderProvider;
+import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
+import org.openide.filesystems.FileUtil;
+import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 
@@ -48,6 +50,15 @@ import org.openide.util.Lookup;
  * @author lahvac
  */
 public class Server {
+
+    public static void main(String... args) throws Exception {
+        System.setProperty("netbeans.user", args[1]);
+        Class<?> main = Class.forName("org.netbeans.core.startup.Main");
+        main.getDeclaredMethod("initializeURLFactory").invoke(null);
+        DefaultCacheFolderProvider.getInstance().setCacheFolder(FileUtil.toFileObject(new File(args[2], "index")));
+        CacheFolderProvider.getCacheFolderForRoot(Places.getUserDirectory().toURI().toURL(), EnumSet.noneOf(CacheFolderProvider.Kind.class), CacheFolderProvider.Mode.EXISTENT);
+        startImpl(Integer.parseInt(args[0]));
+    }
 
     public static void start(int reportPort) {
         try {
@@ -69,7 +80,6 @@ public class Server {
         HttpServer server = HttpServer.create(new InetSocketAddress(0), 0);
         
         Set<Class<?>> resources = Lookup.getDefault().lookupAll(ResourceRegistration.class).stream().map(rr -> rr.getResourceClass()).collect(Collectors.toSet());
-        System.err.println("resources=" + resources);
         //TODO: shutdown..
         HttpHandler hh = RuntimeDelegate.getInstance().createEndpoint(new Application() {
             @Override

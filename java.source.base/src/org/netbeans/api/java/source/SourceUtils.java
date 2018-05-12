@@ -1552,4 +1552,12 @@ public class SourceUtils {
     public static Object getDiagnosticParam(Diagnostic<?> d, int index) {
         return Hacks.getDiagnosticParam(d, index);
     }
+
+    public static Map<String, Object> serializeClasspathInfo(ClasspathInfo cpInfo) {
+        return ClasspathInfoAccessor.getINSTANCE().serialize(cpInfo);
+    }
+
+    public static ClasspathInfo deserializeClasspathInfo(Map<String, Object> data) {
+        return ClasspathInfoAccessor.getINSTANCE().deserialize(data);
+    }
 }

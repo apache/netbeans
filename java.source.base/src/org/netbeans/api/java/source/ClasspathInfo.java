@@ -22,6 +22,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -31,8 +32,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -61,6 +64,7 @@ import org.netbeans.modules.parsing.impl.Utilities;
 import org.netbeans.modules.parsing.impl.indexing.PathRegistry;
 import org.netbeans.spi.java.classpath.ClassPathFactory;
 import org.netbeans.spi.java.classpath.ClassPathImplementation;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.BaseUtilities;
@@ -86,7 +90,7 @@ public final class ClasspathInfo {
         }
     }
 
-    private final ClassPath srcClassPath;
+    public ClassPath srcClassPath;
     private final ClassPath moduleSrcPath;
     private final ClassPath bootClassPath;
     private final ClassPath moduleBootPath;
@@ -193,6 +197,102 @@ public final class ClasspathInfo {
         assert fmTx != null : "No file manager transaction.";   //NOI18N
         assert pgTx != null : "No processor generated transaction.";   //NOI18N
         this.jfmProvider = jfmProvider;
+    }
+
+    private ClasspathInfo(Map<String, Object> data) {
+        this.cpListener = new ClassPathListener ();
+        this.bootClassPath = getClassPath(data, PathKind.BOOT.name());
+        this.moduleBootPath = getClassPath(data, PathKind.MODULE_BOOT.name());
+        this.compileClassPath = getClassPath(data, PathKind.COMPILE.name());
+        this.moduleCompilePath = getClassPath(data, PathKind.MODULE_COMPILE.name());
+        this.moduleClassPath = getClassPath(data, PathKind.MODULE_CLASS.name());
+        this.listenerList = new ChangeSupport(this);
+        this.cachedBootClassPath = getClassPath(data, PathKind.BOOT.name() + "-cached");
+        this.cachedCompileClassPath = getClassPath(data, PathKind.COMPILE.name() + "-cached");
+        this.cachedModuleCompilePath = getClassPath(data, PathKind.MODULE_COMPILE.name() + "-cached");
+        this.cachedModuleClassPath = getClassPath(data, PathKind.MODULE_CLASS.name() + "-cached");
+        this.srcClassPath = getClassPath(data, PathKind.SOURCE.name());
+        this.cachedSrcClassPath = getClassPath(data, PathKind.SOURCE.name() + "-cached");
+        this.cachedAptSrcClassPath = getClassPath(data, PathKind.SOURCE.name() + "-apt-cached");
+        this.outputClassPath = getClassPath(data, "output");
+        this.moduleSrcPath = getClassPath(data, PathKind.MODULE_SOURCE.name());
+        this.ignoreExcludes = (boolean) data.get("ignoreExcludes");
+        this.useModifiedFiles = (boolean) data.get("useModifiedFiles");
+        this.filter = null;
+        if ((boolean) data.get("hasMemoryFileManager")) {
+            this.memoryFileManager = new MemoryFileManager();
+        } else {
+            this.memoryFileManager = null;
+        }
+        //No real transaction, read-only mode.
+        fmTx = FileManagerTransaction.treeLoaderOnly();
+        pgTx = ProcessorGenerated.nullWrite();
+        this.peerProviders = new IdentityHashMap<>();
+        Peers peers = new Peers(this.moduleCompilePath);
+        this.peerProviders.put(cachedModuleCompilePath, peers);
+        Map<String, List<String>> peersData = (Map<String, List<String>>) data.get("peerProviders");
+        peers.cache = peersData.entrySet().stream().collect(Collectors.toMap(e -> newURL(e.getKey()), e -> e.getValue().stream().map(u -> newURL(u)).collect(Collectors.toList())));
+        assert fmTx != null : "No file manager transaction.";   //NOI18N
+        assert pgTx != null : "No processor generated transaction.";   //NOI18N
+        this.jfmProvider = null;
+    }
+
+    private URL newURL(String str) {
+        try {
+            return new URL(str);
+        } catch (MalformedURLException ex) {
+            return null;
+        }
+    }
+
+    private static ClassPath getClassPath(Map<String, Object> data, String key) {
+        List<String> paths = (List<String>) data.get(key);
+        if (paths == null) return null;
+        URL[] urls = new URL[paths.size()];
+
+        for (int i = 0; i < paths.size(); i++) {
+            try {
+                urls[i] = new URL(paths.get(i));
+            } catch (MalformedURLException ex) {
+                ex.printStackTrace(); //XXX
+            }
+        }
+
+        if (urls.length == 0) return ClassPath.EMPTY; //XXX what if a different empty instance was provided???
+        return ClassPathSupport.createClassPath(urls);
+    }
+
+    private Map<String, Object> serialize() {
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put(PathKind.BOOT.name(), getPath(bootClassPath));
+        result.put(PathKind.MODULE_BOOT.name(), getPath(moduleBootPath));
+        result.put(PathKind.COMPILE.name(), getPath(compileClassPath));
+        result.put(PathKind.MODULE_COMPILE.name(), getPath(moduleCompilePath));
+        result.put(PathKind.MODULE_CLASS.name(), getPath(moduleClassPath));
+        result.put(PathKind.BOOT.name() + "-cached", getPath(cachedBootClassPath));
+        result.put(PathKind.COMPILE.name() + "-cached", getPath(cachedCompileClassPath));
+        result.put(PathKind.MODULE_COMPILE.name() + "-cached", getPath(cachedModuleCompilePath));
+        result.put(PathKind.MODULE_CLASS.name() + "-cached", getPath(cachedModuleClassPath));
+        result.put(PathKind.SOURCE.name(), getPath(srcClassPath));
+        result.put(PathKind.SOURCE.name() + "-cached", getPath(cachedSrcClassPath));
+        result.put(PathKind.SOURCE.name() + "-apt-cached", getPath(cachedAptSrcClassPath));
+        result.put("output", getPath(outputClassPath));
+        result.put(PathKind.MODULE_SOURCE.name(), getPath(moduleSrcPath));
+        result.put("ignoreExcludes", ignoreExcludes);
+        result.put("useModifiedFiles", useModifiedFiles);
+        result.put("hasMemoryFileManager", memoryFileManager != null);
+        assert peerProviders.size() == 1 && peerProviders.keySet().iterator().next() == cachedModuleCompilePath;
+        result.put("peerProviders", ((Peers) peerProviders.values().iterator().next()).getCache().entrySet().stream().collect(Collectors.toMap(e -> e.getKey().toExternalForm(), e-> e.getValue().stream().map(u -> u.toExternalForm()).collect(Collectors.toList()))));
+        return result;
+    }
+
+    private static String[] getPath(ClassPath cp) {
+        if (cp == null) return null;
+        List<String> result = new ArrayList<>();
+        for (ClassPath.Entry e : cp.entries()) {
+            result.add(e.getURL().toExternalForm());
+        }
+        return result.toArray(new String[0]);
     }
 
     @Override
@@ -664,6 +764,12 @@ public final class ClasspathInfo {
             }
             return res;
         }
+
+        @Override
+        public String toString() {
+            return "Peers{" + "base=" + base + ", cache=" + cache + '}';
+        }
+
     }
     
     private static class ClasspathInfoAccessorImpl extends ClasspathInfoAccessor {
@@ -745,6 +851,17 @@ public final class ClasspathInfo {
             }
             return cpInfo.memoryFileManager.unregister(fqn);
         }
+
+        @Override
+        public Map<String, Object> serialize(ClasspathInfo cpInfo) {
+            return cpInfo.serialize();
+        }
+
+        @Override
+        public ClasspathInfo deserialize(Map<String, Object> data) {
+            return new ClasspathInfo(data);
+        }
+
     }
 
     /** Interface for {@link Task}s that want to provide {@link ClasspathInfo}. The interface is to be implemented

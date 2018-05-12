@@ -20,7 +20,7 @@ package org.netbeans.modules.java.source.remoteapi;
 
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.java.source.remote.api.RemotePlatform;
+import org.netbeans.modules.java.source.remote.spi.RemotePlatform;
 import org.openide.filesystems.FileObject;
 import org.openide.util.lookup.ServiceProvider;
 

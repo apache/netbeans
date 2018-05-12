@@ -19,16 +19,11 @@
 package org.netbeans.modules.editor.java;
 
 import com.google.gson.Gson;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.function.Function;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -37,7 +32,6 @@ import org.netbeans.modules.java.completion.JavaCompletionTask.Options;
 import org.netbeans.modules.java.source.remote.api.Parser;
 import org.netbeans.modules.java.source.remote.api.Parser.Config;
 import org.netbeans.modules.java.source.remote.api.ResourceRegistration;
-import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -54,15 +48,15 @@ public class CompletionRemoteResource {
         //TODO: options, etc.
         Gson gson = new Gson();
         Config conf = gson.fromJson(config, Config.class);
-        return Parser.parse(conf, ci -> {
-            JavaCompletionTask<JavaCompletionItem> task = JavaCompletionTask.create(caretOffset, new JavaCompletionItemFactory(ci.getFileObject()), EnumSet.noneOf(Options.class), new Callable<Boolean>() {
+        return Parser.runControllerTask(conf, cc -> {
+            JavaCompletionTask<JavaCompletionItem> task = JavaCompletionTask.create(caretOffset, new JavaCompletionItemFactory(cc.getFileObject()), EnumSet.noneOf(Options.class), new Callable<Boolean>() {
                 @Override
                 public Boolean call() throws Exception {
                     return false;
                 }
             });
 
-            task.resolve(ci);
+            task.resolve(cc);
             return gson.toJson(new CompletionShim(task));
         });
         } catch (Throwable t) {

@@ -25,14 +25,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -56,7 +53,7 @@ public class SemanticHighlighterRemoteResource {
         try {
         Gson gson = new Gson();
         Config conf = gson.fromJson(config, Config.class);
-        HighlightData highlights = Parser.parse(conf, info -> colorTokens(info));
+        HighlightData highlights = Parser.runTask(conf, info -> colorTokens(info));
         
         return gson.toJson(highlights);
         } catch (Throwable t) {

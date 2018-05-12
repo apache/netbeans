@@ -27,7 +27,7 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
-import org.netbeans.modules.java.source.remote.api.RemotePlatform;
+import org.netbeans.modules.java.source.remote.spi.RemotePlatform;
 import org.openide.filesystems.FileObject;
 import org.openide.util.lookup.ServiceProvider;
 

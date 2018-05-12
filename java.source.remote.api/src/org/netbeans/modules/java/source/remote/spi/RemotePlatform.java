@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.source.remote.api;
+package org.netbeans.modules.java.source.remote.spi;
 
 import java.util.List;
 import javax.swing.event.ChangeListener;

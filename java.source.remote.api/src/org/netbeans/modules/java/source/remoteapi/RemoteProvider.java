@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.source.remote.api;
+package org.netbeans.modules.java.source.remoteapi;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -39,6 +39,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.netbeans.modules.java.source.remoteapi.Server;
+import org.netbeans.modules.java.source.remote.spi.RemotePlatform;
 import org.openide.filesystems.FileObject;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.modules.OnStop;
@@ -185,5 +186,5 @@ public class RemoteProvider {
     }
     
     //for tests:
-    static File extraClassPathElements;
+    public static File extraClassPathElements;
 }

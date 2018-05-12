@@ -55,14 +55,12 @@ import org.netbeans.modules.java.completion.JavaCompletionTask;
 import org.netbeans.modules.java.completion.JavaDocumentationTask;
 import org.netbeans.modules.java.completion.JavaTooltipTask;
 import org.netbeans.modules.java.source.remote.api.Parser;
-import org.netbeans.modules.java.source.remote.api.RemoteProvider;
-import org.netbeans.modules.java.source.remote.api.RemoteUtils;
+import org.netbeans.modules.java.source.remote.api.RemoteRunner;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.spi.editor.completion.*;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionQuery;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
-import org.netbeans.spi.editor.completion.support.CompletionUtilities;
 
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -190,12 +188,12 @@ public class JavaCompletionProvider implements CompletionProvider {
                     Source source = Source.create(doc);
                     if (source != null) {
                         if ((queryType & COMPLETION_QUERY_TYPE) != 0) {
-                            URI base = RemoteProvider.getRemoteURL(source.getFileObject());
+                            RemoteRunner remote = RemoteRunner.create(source.getFileObject());
             
-                            if (base != null) {
+                            if (remote != null) {
                                 WhiteListQuery.WhiteList whiteList = WhiteListQuery.getWhiteList(source.getFileObject());
                                 Parser.Config conf = Parser.Config.create(source.getFileObject());
-                                CompletionShim cs = RemoteUtils.readAndDecode(conf, base, "/completion/compute", CompletionShim.class, "caretOffset=" + caretOffset);
+                                CompletionShim cs = remote.readAndDecode(conf, "/completion/compute", CompletionShim.class, "caretOffset=" + caretOffset);
                                 
                                 for (CompletionRemoteResource.CompletionItemShim cis : cs.completions) {
                                     resultSet.addItem(JavaCompletionItem.create(cis.content, whiteList));

@@ -45,7 +45,14 @@ public class Parser {
     private static JavaSource source;
     private static Document lastDoc;
 
-    public static <T> T parse(Config config, ParserTask<T> task) throws IOException {
+    public static <T> T runTask(Config config, ParserTask<T, CompilationInfo> task) throws IOException {
+        return runControllerTask(config, cc -> {
+            cc.toPhase(JavaSource.Phase.RESOLVED);
+            return task.run(cc);
+        });
+    }
+
+    public static <T> T runControllerTask(Config config, ParserTask<T, CompilationController> task) throws IOException {
         JavaSource source;
         
         if (lastConfig == config.id && Parser.source != null) {
@@ -71,7 +78,6 @@ public class Parser {
         source.runUserActionTask(new Task<CompilationController>() {
             @Override
             public void run(CompilationController cc) throws Exception {
-                cc.toPhase(JavaSource.Phase.RESOLVED);
                 result[0] = task.run(cc);
             }
         }, true);
@@ -79,9 +85,8 @@ public class Parser {
         return (T) result[0];
     }
     
-    public interface ParserTask<T> {
-//        public T run(CompilationInfo info) throws Exception;
-        public T run(CompilationController info) throws Exception; //XXX: CompilationController due to completion, allow?
+    public interface ParserTask<T, CI extends CompilationInfo> {
+        public T run(CI info) throws Exception;
     }
 
     public static final class Config {

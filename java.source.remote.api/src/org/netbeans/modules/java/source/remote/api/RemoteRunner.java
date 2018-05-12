@@ -26,17 +26,32 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLEncoder;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.java.source.remote.api.Parser.Config;
+import org.netbeans.modules.java.source.remoteapi.RemoteProvider;
+import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author lahvac
  */
-public class RemoteUtils {
+public class RemoteRunner {
     
+    public static @CheckForNull RemoteRunner create(FileObject source) {
+        URI base = RemoteProvider.getRemoteURL(source);
+        
+        return base != null ? new RemoteRunner(base) : null;
+    }
+
     private static final Gson gson = new Gson();
 
-    public static <T> T readAndDecode(Config conf, URI base, String path, Class<T> decodeType, String... extraParams) throws IOException {
+    private final URI base;
+
+    private RemoteRunner(URI base) {
+        this.base = base;
+    }
+    
+    public <T> @CheckForNull T readAndDecode(Config conf, String path, Class<T> decodeType, String... extraParams) throws IOException {
         StringBuilder targetPath = new StringBuilder();
         
         targetPath.append(path);

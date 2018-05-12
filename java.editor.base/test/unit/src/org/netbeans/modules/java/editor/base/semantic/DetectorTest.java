@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.editor.base.semantic;
 
+import java.io.IOException;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -404,7 +405,11 @@ public class DetectorTest extends TestBase {
                 new SemanticHighlighterBase() {
                     @Override
                     protected boolean process(CompilationInfo info, Document doc) {
-                        return process(info, doc, setter);
+                        try {
+                            return process(info, doc, setter);
+                        } catch (IOException ex) {
+                            throw new IllegalStateException(ex);
+                        }
                     }
                 }.process(parameter, doc);
             }

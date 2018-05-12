@@ -18,16 +18,13 @@
  */
 package org.netbeans.modules.java.source.remote.api;
 
-import com.google.gson.Gson;
 import java.io.File;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URLEncoder;
 import javax.swing.event.ChangeListener;
 import org.junit.Test;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.remote.api.Parser.Config;
+import org.netbeans.modules.java.source.remoteapi.RemoteProvider;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -37,9 +34,9 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author lahvac
  */
-public class RemoteProviderTest extends NbTestCase {
+public class RemoteRunnerTest extends NbTestCase {
     
-    public RemoteProviderTest(String name) {
+    public RemoteRunnerTest(String name) {
         super(name);
     }
 
@@ -59,20 +56,9 @@ public class RemoteProviderTest extends NbTestCase {
         File src  = new File(root, "Test.java");
         assertTrue(src.getParentFile().mkdirs());
         TestUtilities.copyStringToFile(src, "public class Test { }");
-        URI url = RemoteProvider.getRemoteURL(FileUtil.toFileObject(src));
-        URI test = url.resolve("/test?parser-config=" + URLEncoder.encode(new Gson().toJson(Config.create(FileUtil.toFileObject(src))), "UTF-8"));
-        Gson gson = new Gson();
-        StringBuilder data = new StringBuilder();
-
-        try (InputStream in = test.toURL().openStream()) { //XXX: encoding!!!
-            int read;
-
-            while ((read = in.read()) != (-1)) {
-                data.append((char) read);
-            }
-        }
-  
-        String actual = gson.fromJson(data.toString(), String.class);
+        RemoteRunner runner = RemoteRunner.create(FileUtil.toFileObject(src));
+        assertNotNull(runner);
+        String actual = runner.readAndDecode(Config.create(FileUtil.toFileObject(src)), "/test", String.class);
         
         assertEquals("good: Test/RELEASE_7", actual);
     }

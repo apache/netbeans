@@ -110,7 +110,7 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.editor.base.imports.UnusedImports;
 import org.netbeans.modules.java.editor.base.semantic.ColoringAttributes.Coloring;
 import org.netbeans.modules.java.source.remote.api.Parser;
-import org.netbeans.modules.java.source.remote.api.RemoteProvider;
+import org.netbeans.modules.java.source.remote.api.RemoteRunner;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
@@ -272,46 +272,34 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
     }
     
     protected boolean process(CompilationInfo info, final Document doc, ErrorDescriptionSetter setter) throws IOException {
-        URI base = RemoteProvider.getRemoteURL(info.getFileObject());
-        if (base != null) {
-            Gson gson = new Gson();
+        RemoteRunner remote = RemoteRunner.create(info.getFileObject());
+        if (remote != null) {
             Parser.Config conf = Parser.Config.create(info);
-            URI highlightsURI = base.resolve("/highlightData?parser-config=" + URLEncoder.encode(gson.toJson(conf), "UTF-8"));
-            StringBuilder data = new StringBuilder();
+            SemanticHighlighterRemoteResource.HighlightData remoteData = remote.readAndDecode(conf, "/highlightData", SemanticHighlighterRemoteResource.HighlightData.class);
+            Iterator<String> categoriesIt = remoteData.categories.iterator();
+            Map<Token, Coloring> newColoring = new IdentityHashMap<>();
+            doc.render(() -> {
+                TokenSequence<JavaTokenId> ts = TokenHierarchy.get(doc).tokenSequence(JavaTokenId.language()); //XXX: embedding
 
-            try (InputStream in = highlightsURI.toURL().openStream()) { //XXX: encoding!!!
-                int read;
+                while (ts.moveNext() && categoriesIt.hasNext()) {
+                    String category = categoriesIt.next();
 
-                while ((read = in.read()) != (-1)) {
-                    data.append((char) read);
-                }
+                    if (category.isEmpty())
+                        continue;
 
-                SemanticHighlighterRemoteResource.HighlightData remoteData = gson.fromJson(data.toString(), SemanticHighlighterRemoteResource.HighlightData.class);
-                Iterator<String> categoriesIt = remoteData.categories.iterator();
-                Map<Token, Coloring> newColoring = new IdentityHashMap<>();
-                doc.render(() -> {
-                    TokenSequence<JavaTokenId> ts = TokenHierarchy.get(doc).tokenSequence(JavaTokenId.language()); //XXX: embedding
+                    Coloring c = ColoringAttributes.empty();
 
-                    while (ts.moveNext() && categoriesIt.hasNext()) {
-                        String category = categoriesIt.next();
-
-                        if (category.isEmpty())
-                            continue;
-
-                        Coloring c = ColoringAttributes.empty();
-
-                        for (String key : category.split(" ")) {
-                            c = ColoringAttributes.add(c, ColoringAttributes.valueOf(key.toUpperCase(Locale.US)));
-                        }
-
-                        newColoring.put(ts.token(), c);
+                    for (String key : category.split(" ")) {
+                        c = ColoringAttributes.add(c, ColoringAttributes.valueOf(key.toUpperCase(Locale.US)));
                     }
-                });
 
-                setter.setColorings(doc, newColoring);
-                
-                return false;
-            }
+                    newColoring.put(ts.token(), c);
+                }
+            });
+
+            setter.setColorings(doc, newColoring);
+
+            return false;
         }
         
         return doCompute(info, doc, setter);

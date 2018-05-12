@@ -37,7 +37,7 @@ public class TestRemoteResource {
         try {
         Gson gson = new Gson();
         Parser.Config conf = gson.fromJson(config, Parser.Config.class);
-        String result = Parser.parse(conf, ci -> "good: " + ci.getTopLevelElements().get(0).getQualifiedName() + "/" + ci.getSourceVersion());
+        String result = Parser.runTask(conf, ci -> "good: " + ci.getTopLevelElements().get(0).getQualifiedName() + "/" + ci.getSourceVersion());
 
         return gson.toJson(result);
         } catch (Throwable t) {

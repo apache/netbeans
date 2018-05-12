@@ -19,19 +19,13 @@
 
 package org.netbeans.modules.java.hints.infrastructure;
 
-import com.google.gson.Gson;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import java.beans.PropertyChangeListener;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -78,8 +72,7 @@ import org.netbeans.modules.java.hints.spi.ErrorRule;
 import org.netbeans.modules.java.hints.spi.ErrorRule.Data;
 import org.netbeans.modules.java.source.parsing.Hacks;
 import org.netbeans.modules.java.source.remote.api.Parser.Config;
-import org.netbeans.modules.java.source.remote.api.RemoteProvider;
-import org.netbeans.modules.java.source.remote.api.RemoteUtils;
+import org.netbeans.modules.java.source.remote.api.RemoteRunner;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
@@ -757,15 +750,14 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
         try {
             List<ErrorDescription> errors;
             
-            URI base = RemoteProvider.getRemoteURL(info.getFileObject());
+            RemoteRunner remote = RemoteRunner.create(info.getFileObject());
             
-            if (base != null) {
-                Gson gson = new Gson();
+            if (remote != null) {
                 Config conf = Config.create(info);
 
                 errors = new ArrayList<>();
 
-                for (ErrorShim shim : RemoteUtils.readAndDecode(conf, base, "/errors/get", ErrorShim[].class)) {
+                for (ErrorShim shim : remote.readAndDecode(conf, "/errors/get", ErrorShim[].class)) {
                     LazyFixList fixes;
 
                     if (shim.probablyContainsFixes) {
@@ -775,7 +767,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
                             protected List<Fix> doCompute(CompilationInfo info, AtomicBoolean cancelled) {
                                 List<Fix> fixes = new ArrayList<>();
                                 try {
-                                    for (FixShim shim : RemoteUtils.readAndDecode(conf, base, "/errors/fixes/get", FixShim[].class, "id=" + callbackId)) {
+                                    for (FixShim shim : remote.readAndDecode(conf, "/errors/fixes/get", FixShim[].class, "id=" + callbackId)) {
                                         fixes.add(new Fix() {
                                             @Override
                                             public String getText() {
@@ -784,11 +776,11 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
                                             @Override
                                             public ChangeInfo implement() throws Exception {
                                                 try {
-                                                    EditShim[] edits = RemoteUtils.readAndDecode(conf, base, "/errors/fixes/apply", EditShim[].class, "id=" + shim.callbackId);
+                                                    EditShim[] edits = remote.readAndDecode(conf, "/errors/fixes/apply", EditShim[].class, "id=" + shim.callbackId);
 
                                                     NbDocument.runAtomic((StyledDocument) doc, () -> {
                                                         try {
-                                                            for (EditShim edit : gson.fromJson(edits.toString(), EditShim[].class)) {
+                                                            for (EditShim edit : edits) {
                                                                 doc.remove(edit.replaceStart, edit.replaceEnd - edit.replaceStart);
                                                                 doc.insertString(edit.replaceStart, edit.replaceText, null);
                                                             }

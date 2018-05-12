@@ -58,7 +58,7 @@ public class ErrorHintsRemoteResource {
         Gson gson = new Gson();
         Config conf = gson.fromJson(config, Config.class);
 
-        return Parser.parse(conf, ci -> {
+        return Parser.runTask(conf, ci -> {
             ErrorHintsProvider ehp = new ErrorHintsProvider();
             EditorCookie ec = ci.getFileObject().getLookup().lookup(EditorCookie.class);
             Document doc = ec.openDocument();
@@ -83,7 +83,7 @@ public class ErrorHintsRemoteResource {
         Gson gson = new Gson();
         Config conf = gson.fromJson(config, Config.class);
 
-        return Parser.parse(conf, ci -> {
+        return Parser.runTask(conf, ci -> {
             Map<Integer, ErrorDescription> id2Error = (Map<Integer, ErrorDescription>) ci.getCachedValue(ErrorDescription[].class);
             ErrorDescription err = id2Error != null ? id2Error.get(id) : null;
             List<Fix> fixes;
@@ -121,7 +121,7 @@ public class ErrorHintsRemoteResource {
         Gson gson = new Gson();
         Config conf = gson.fromJson(config, Config.class);
 
-        return Parser.parse(conf, ci -> {
+        return Parser.runTask(conf, ci -> {
             Map<Integer, Fix> id2Fix = (Map<Integer, Fix>) ci.getCachedValue(Fix[].class);
             Document doc = ci.getSnapshot().getSource().getDocument(true);
             List<EditShim> edits = new ArrayList<>();

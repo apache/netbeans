@@ -473,6 +473,9 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
         private synchronized String[] getSourceLevels() {
             if (sourceLevelCache == null) {
                 Union2<JavaPlatform, String> union = (Union2<JavaPlatform, String>) platformComboBoxModel.getSelectedItem();
+                if (!union.hasFirst()) {
+                    return new String[0];
+                }
                 JavaPlatform platform = union.first();
                 List<String> sourceLevels = new ArrayList<>();
                 if (platform != null) {

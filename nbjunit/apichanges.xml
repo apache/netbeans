@@ -34,6 +34,20 @@
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="NbModuleSuite.Configuration.parentClassLoader">
+        <api name="nbjunit"/>
+        <summary>NbModuleSuite.Configuration.parentClassLoader()</summary>
+        <version major="1" minor="91"/>
+        <date day="17" month="6" year="2018"/>
+        <author login="jlahoda"/>
+        <compatibility addition="yes"/>
+        <description>
+            <p>
+                Adding a way to set parent classloader on which the NB platform should start.
+            </p>
+        </description>
+        <class package="org.netbeans.junit" name="NbModuleSuite"/>
+    </change>
     <change id="branding.token">
         <api name="nbjunit"/>
         <summary>System property branding.token</summary>

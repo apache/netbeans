@@ -124,6 +124,7 @@ class IntroduceClass {
                 lsBegin -= codeOffset;
                 this.snippetCode = new StringBuilder(this.snippetCode)
                         .insert((int) lsBegin, "return ")
+                        .append(';')
                         .toString();
             }
             if (returnType == null) {

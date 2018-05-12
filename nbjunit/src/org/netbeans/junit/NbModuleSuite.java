@@ -508,6 +508,19 @@ public class NbModuleSuite {
         }
 
         /**
+         * Sets the parent ClassLoader on which the NB platform should start.
+         * @param parentCL the parent ClassLoader
+         * @return clone of this configuration with the parent ClassLoader set
+         * @since 1.91
+         */
+        public Configuration parentClassLoader(ClassLoader parentCL) {
+            return new Configuration(
+                clusterRegExp, moduleRegExp, startupArgs, parentCL, tests,
+                latestTestCaseClass, reuseUserDir, gui, enableClasspathModules
+            ,honorAutoEager, failOnMessage, failOnException, hideExtraModules);
+        }
+
+        /**
          * Creates a test suite from this configuration.
          * Same as {@link #create(org.netbeans.junit.NbModuleSuite.Configuration)} but more fluid.
          * @return a suite ready for returning from a {@code public static Test suite()} method

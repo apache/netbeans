@@ -846,7 +846,7 @@ public class EvaluatorApp extends BaseClass {
     }
     
     public static int testMember7() {
-        // return pointObject.x;
+        // return-TODO pointObject.x;
         return ((java.awt.Point) pointObject).x;
     }
     
@@ -1120,6 +1120,10 @@ public class EvaluatorApp extends BaseClass {
         return super.basedField;
     }
     
+    public long testLambdas() {
+        return Arrays.stream(new String[] {"a", "b"}).map(str -> str.length()).distinct().count();
+    }
+
     // Private access
     
     // Test public class first

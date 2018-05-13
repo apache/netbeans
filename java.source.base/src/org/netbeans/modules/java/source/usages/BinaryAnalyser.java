@@ -345,8 +345,17 @@ public class BinaryAnalyser {
      */
     @NonNull
     public final Changes analyse (final @NonNull Context ctx) throws IOException, IllegalArgumentException  {
+        return analyse(ctx, createProcessor(ctx));
+    }
+
+    @NonNull
+    public final Changes analyse (final @NonNull Context ctx, File root, Iterable<File> files) throws IOException, IllegalArgumentException  {
+        return analyse(ctx, new EnumerateFilesProcessor(ctx, root, files));
+    }
+
+    @NonNull
+    private Changes analyse (final @NonNull Context ctx, final @NonNull RootProcessor p) throws IOException, IllegalArgumentException  {
         Parameters.notNull("ctx", ctx); //NOI18N
-        final RootProcessor p = createProcessor(ctx);
         if (p.execute()) {
             if (!p.hasChanges() && timeStampsEmpty()) {
                 assert refs.isEmpty();
@@ -1373,6 +1382,72 @@ public class BinaryAnalyser {
                         if (lmListener.isLowMemory()) {
                             flush();
                         }
+                    }
+                }
+                if (isCancelled()) {
+                    return false;
+                }
+            }
+            for (String deleted : getTimeStamps().second()) {
+                if (FileObjects.MODULE_INFO.equals(deleted)) {
+                    delete(null,String.format("%s.%s", FileObjects.MODULE_INFO, FileObjects.CLASS));  //NOI18N
+                } else {
+                    delete(deleted, null);  //TODO
+                }
+                markChanged();
+            }
+            return true;
+        }
+    }
+
+    private final class EnumerateFilesProcessor extends RootProcessor {
+        private final File todoRoot;
+        private final Iterable<File> todo;
+
+        public EnumerateFilesProcessor(
+                final @NonNull Context ctx,
+                final @NonNull File todoRoot,
+                final @NonNull Iterable<File> todo) throws IOException {
+            super(ctx);
+            this.todoRoot = todoRoot;
+            this.todo = todo;
+        }
+
+        @Override
+        @NonNull
+        protected boolean executeImpl() throws IOException {
+            for (File file : todo) {
+                long fileMTime = file.lastModified();
+                String relativePath = FileObjects.convertFolder2Package(FileObjects.getRelativePath(todoRoot, file), File.separatorChar);
+                report(
+                    ElementHandleAccessor.getInstance().create(ElementKind.OTHER, relativePath),
+                    fileMTime);
+                if (!isUpToDate (relativePath, fileMTime)) {
+                    markChanged();
+                    toDelete.add(Pair.<String,String>of (relativePath,null));
+                    try {
+                        InputStream in = new BufferedInputStream(new FileInputStream(file));
+                        try {
+                            analyse(in);
+                        } catch (InvalidClassFormatException | RuntimeException icf) {
+                            LOGGER.log(
+                                Level.WARNING,
+                                "Invalid class file format: {0}",      //NOI18N
+                                file.getAbsolutePath());
+                                LOGGER.log(
+                                    Level.INFO,
+                                    "Class File Exception Details",             //NOI18N
+                                    icf);
+                        } finally {
+                            in.close();
+                        }
+                    } catch (IOException ex) {
+                        //unreadable file?
+                        LOGGER.log(Level.WARNING, "Cannot read file: {0}", file.getAbsolutePath());      //NOI18N
+                        LOGGER.log(Level.FINE, null, ex);
+                    }
+                    if (lmListener.isLowMemory()) {
+                        flush();
                     }
                 }
                 if (isCancelled()) {

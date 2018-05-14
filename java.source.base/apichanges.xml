@@ -62,6 +62,18 @@
         </description>
         <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
     </change>
+    <change id="TreeUtilities.isPartOfCompoundVariableDeclaration">
+        <api name="javasource_base"/>
+        <summary>Check the tree is the end of compound declaration.</summary>
+        <version major="1" minor="2.34"/>
+        <date day="14" month="5" year="2018"/>
+        <author login="arusinha"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+            Check whether tree is part of compound declaration.
+        </description>
+        <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="ElementHandle.createModuleElementHandle">
         <api name="javasource_base"/>
         <summary>Added a method to create an <code>ElementHandle</code> for module</summary>

@@ -27,7 +27,6 @@ import com.sun.source.util.TreePath;
 import java.io.File;
 import java.io.OutputStream;
 import java.security.Permission;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -66,7 +65,7 @@ public class TreePathHandleTest extends NbTestCase {
         FileObject buildRoot  = workFO.createFolder("build");
         FileObject cache = workFO.createFolder("cache");
         
-        SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, cache);        
+        SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, cache);
     }
     
     private void writeIntoFile(FileObject file, String what) throws Exception {

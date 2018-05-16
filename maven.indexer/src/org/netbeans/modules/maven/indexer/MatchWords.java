@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
+ * Given multiple strings, this {@link Predicate} tests positive, if one or
+ * multiple of the strings are prefixes of the string, that is tested.
+ *
  * @author Tim Boudreau
  */
 final class MatchWords implements Predicate<String> {
@@ -71,6 +74,7 @@ final class MatchWords implements Predicate<String> {
 
         private final char[] what;
         private int matched = 0;
+        private boolean failed = false;
 
         MatchState(String what) {
             this.what = what.toCharArray();
@@ -86,18 +90,21 @@ final class MatchWords implements Predicate<String> {
 
         private void reset() {
             matched = 0;
+            failed = false;
         }
 
         boolean isMatched() {
-            return matched >= what.length - 1;
+            return matched >= what.length;
         }
 
         void check(char c) {
-            if (isMatched()) {
+            if (failed || isMatched()) {
                 return;
             }
             if (what[matched] == c) {
                 matched++;
+            } else {
+                failed = true;
             }
         }
     }

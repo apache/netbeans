@@ -315,7 +315,6 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
         return result;
     }
 
-    @SuppressWarnings("empty-statement")
     void read(File jar, JarClassEntryConsumer consumer) throws IOException {
         Set<String> classNames = new HashSet<>();
         try (JarFile jf = new JarFile(jar, false)) {

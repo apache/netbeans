@@ -76,7 +76,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
         AttributeSet firstLineFontColor = MimeLookup.getLookup(MimePath.get("text/x-java")).lookup(FontColorSettings.class).getTokenFontColors("javadoc-first-sentence"); //NOI18N
         AttributeSet commentFontColor = MimeLookup.getLookup(MimePath.get("text/x-java")).lookup(FontColorSettings.class).getTokenFontColors("comment"); //NOI18N
         if(firstLineFontColor != null && commentFontColor != null) {
-            Collection<Object> attrs = new LinkedList<Object>();
+            Collection<Object> attrs = new LinkedList<>();
             for (Enumeration<?> e = firstLineFontColor.getAttributeNames(); e.hasMoreElements(); ) {
                 Object key = e.nextElement();
                 Object value = firstLineFontColor.getAttribute(key);
@@ -209,11 +209,11 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
 
     private final class HSImpl implements HighlightsSequence {
 
-        private long version;
-        private TokenHierarchy<? extends Document> scanner;
+        private final long version;
+        private final TokenHierarchy<? extends Document> scanner;
         private List<TokenSequence<? extends TokenId>> sequences;
-        private int startOffset;
-        private int endOffset;
+        private final int startOffset;
+        private final int endOffset;
 
         private List<Integer> lines = null;
         private int linesIdx = -1;
@@ -226,6 +226,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
             this.sequences = null;
         }
 
+        @Override
         public boolean moveNext() {
             synchronized (Highlighting.this) {
                 checkVersion();
@@ -239,7 +240,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
                         return false;
                     }
                     TokenSequence<?> seq = tokenSequence.subSequence(startOffset, endOffset);
-                    sequences = new ArrayList<TokenSequence<? extends TokenId>>();
+                    sequences = new ArrayList<>();
                     sequences.add(seq);
                 }
 
@@ -288,6 +289,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
             }
         }
 
+        @Override
         public int getStartOffset() {
             synchronized (Highlighting.this) {
                 checkVersion();
@@ -304,6 +306,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
             }
         }
 
+        @Override
         public int getEndOffset() {
             synchronized (Highlighting.this) {
                 checkVersion();
@@ -320,6 +323,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
             }
         }
 
+        @Override
         public AttributeSet getAttributes() {
             synchronized (Highlighting.this) {
                 checkVersion();
@@ -343,7 +347,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
         }
 
         private List<Integer> splitByLines(int sentenceStart, int sentenceEnd) {
-            ArrayList<Integer> lines = new ArrayList<Integer>();
+            ArrayList<Integer> lines = new ArrayList<>();
             int offset = sentenceStart;
 
             try {

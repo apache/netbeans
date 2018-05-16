@@ -62,15 +62,15 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
     private static final List<String> PERIODS = Arrays.asList(
             JAPANESE_PERIOD
     );
-    
+
     public static final String LAYER_ID = "org.netbeans.modules.javadoc.highlighting"; //NOI18N
-    
+
     private final AttributeSet fontColor;
-    
+
     private final Document document;
     private TokenHierarchy<? extends Document> hierarchy = null;
     private final AtomicLong version = new AtomicLong();
-    
+
     /** Creates a new instance of Highlighting */
     public Highlighting(Document doc) {
         AttributeSet firstLineFontColor = MimeLookup.getLookup(MimePath.get("text/x-java")).lookup(FontColorSettings.class).getTokenFontColors("javadoc-first-sentence"); //NOI18N
@@ -117,7 +117,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
     public void tokenHierarchyChanged(TokenHierarchyEvent evt) {
         TokenChange<?> tc = evt.tokenChange();
         int affectedArea [] = null;
-        
+
         TokenSequence<? extends TokenId> seq = tc.currentTokenSequence();
         if (seq.language().equals(JavadocTokenId.language())) {
             // Change inside javadoc
@@ -138,7 +138,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
             // find out whether it really involves javadoc or not.
             affectedArea = new int [] { tc.offset(), evt.affectedEndOffset() };
         }
-        
+
         if (affectedArea != null) {
             version.incrementAndGet();
             fireHighlightsChange(affectedArea[0], affectedArea[1]);
@@ -208,16 +208,16 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
     }
 
     private final class HSImpl implements HighlightsSequence {
-        
+
         private long version;
         private TokenHierarchy<? extends Document> scanner;
         private List<TokenSequence<? extends TokenId>> sequences;
         private int startOffset;
         private int endOffset;
-        
+
         private List<Integer> lines = null;
         private int linesIdx = -1;
-        
+
         public HSImpl(long version, TokenHierarchy<? extends Document> scanner, int startOffset, int endOffset) {
             this.version = version;
             this.scanner = scanner;
@@ -229,7 +229,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
         public boolean moveNext() {
             synchronized (Highlighting.this) {
                 checkVersion();
-                
+
                 if (sequences == null) {
                     // initialize
                     TokenSequence<?> tokenSequence = scanner.tokenSequence();
@@ -248,11 +248,11 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
                         linesIdx += 2;
                         return true;
                     }
-                    
+
                     lines = null;
                     linesIdx = -1;
                 }
-                
+
                 while (!sequences.isEmpty()) {
                     TokenSequence<? extends TokenId> seq = sequences.get(sequences.size() - 1);
 
@@ -291,7 +291,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
         public int getStartOffset() {
             synchronized (Highlighting.this) {
                 checkVersion();
-                
+
                 if (sequences == null) {
                     throw new NoSuchElementException("Call moveNext() first."); //NOI18N
                 }
@@ -307,7 +307,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
         public int getEndOffset() {
             synchronized (Highlighting.this) {
                 checkVersion();
-                
+
                 if (sequences == null) {
                     throw new NoSuchElementException("Call moveNext() first."); //NOI18N
                 }
@@ -323,7 +323,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
         public AttributeSet getAttributes() {
             synchronized (Highlighting.this) {
                 checkVersion();
-                
+
                 if (sequences == null) {
                     throw new NoSuchElementException("Call moveNext() first."); //NOI18N
                 }
@@ -335,17 +335,17 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
                 }
             }
         }
-        
+
         private void checkVersion() {
             if (this.version != Highlighting.this.version.get()) {
                 throw new ConcurrentModificationException();
             }
         }
-        
+
         private List<Integer> splitByLines(int sentenceStart, int sentenceEnd) {
             ArrayList<Integer> lines = new ArrayList<Integer>();
             int offset = sentenceStart;
-            
+
             try {
                 while (offset < sentenceEnd) {
                     Element lineElement = document.getDefaultRootElement().getElement(
@@ -356,9 +356,9 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
 
                     String line = document.getText(rowStart, rowEnd - rowStart);
                     int idx = 0;
-                    while (idx < line.length() && 
-                        (line.charAt(idx) == ' ' || 
-                        line.charAt(idx) == '\t' || 
+                    while (idx < line.length() &&
+                        (line.charAt(idx) == ' ' ||
+                        line.charAt(idx) == '\t' ||
                         line.charAt(idx) == '*'))
                     {
                         idx++;
@@ -374,7 +374,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
             } catch (BadLocationException e) {
                 LOG.log(Level.WARNING, "Can't determine javadoc first sentence", e);
             }
-            
+
             return lines.isEmpty() ? null : lines;
         }
     } // End of HSImpl class

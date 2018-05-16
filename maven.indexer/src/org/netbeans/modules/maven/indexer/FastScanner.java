@@ -38,6 +38,9 @@ import org.apache.maven.index.ScanningResult;
 import org.apache.maven.index.context.IndexingContext;
 
 /**
+ * Alternative to Maven's DefaultScanner which ignores files NetBeans will not
+ * be interested in indexing; and publishes scanning requests incrementally,
+ * per-directory, rather than first collecting a tree's worth of artifacts.
  *
  * @author Tim Boudreau
  */
@@ -45,7 +48,7 @@ public class FastScanner
         implements Scanner {
 
     private final ArtifactContextProducer artifactContextProducer;
-    private static final Logger LOG = Logger.getLogger(ClassDependencyIndexCreator.class.getName());
+    private static final Logger LOG = Logger.getLogger(FastScanner.class.getName());
 
     @Inject
     public FastScanner(ArtifactContextProducer artifactContextProducer) {
@@ -71,8 +74,8 @@ public class FastScanner
             return;
         }
         Files.walkFileTree(dir, new FileVisitor<Path>() {
-            private Set<Path> poms = new HashSet<>();
-            private Set<Path> artifacts = new HashSet<>();
+            private final Set<Path> poms = new HashSet<>();
+            private final Set<Path> artifacts = new HashSet<>();
 
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
@@ -88,7 +91,7 @@ public class FastScanner
                     poms.add(file);
                     // txt and sha1 are needed for tests to pass, but not likely useful
                     // in NetBeans, and will impact performance
-                } else if (nm.endsWith(".jar") || nm.endsWith(".nbm") || nm.endsWith(".txt") || nm.endsWith(".sha1") || nm.endsWith(".xml")) {
+                } else if (nm.endsWith(".jar") || nm.endsWith(".nbm") || nm.endsWith(".txt") || nm.endsWith(".xml")) {
                     artifacts.add(file);
                 }
                 return FileVisitResult.CONTINUE;
@@ -102,7 +105,7 @@ public class FastScanner
 
             @Override
             public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                // Ensure JARs are proessed before POMs - see comments on
+                // Ensure JARs are procssed before POMs - see comments on
                 // DefaultScanner's nested comparator class for why
                 try {
                     if (!artifacts.isEmpty()) {

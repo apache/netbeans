@@ -20,6 +20,7 @@
 package org.netbeans.modules.javadoc.highlighting;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Enumeration;
@@ -45,6 +46,7 @@ import org.netbeans.api.lexer.TokenHierarchyEvent;
 import org.netbeans.api.lexer.TokenHierarchyListener;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.spi.editor.highlighting.HighlightsSequence;
 import org.netbeans.spi.editor.highlighting.support.AbstractHighlightsContainer;
 import org.openide.util.WeakListeners;
@@ -55,6 +57,11 @@ import org.openide.util.WeakListeners;
 public class Highlighting extends AbstractHighlightsContainer implements TokenHierarchyListener {
 
     private static final Logger LOG = Logger.getLogger(Highlighting.class.getName());
+    private static final String WS = " \t\n"; // NOI18N
+    private static final String JAPANESE_PERIOD = "。"; // NOI18N
+    private static final List<String> PERIODS = Arrays.asList(
+            JAPANESE_PERIOD
+    );
     
     public static final String LAYER_ID = "org.netbeans.modules.javadoc.highlighting"; //NOI18N
     
@@ -147,6 +154,18 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
         if (seq.moveNext()) {
             int start = seq.offset();
             do {
+                String period = null;
+                int indexOfPeriod = -1;
+                for (String p : PERIODS) {
+                    int index = TokenUtilities.indexOf(seq.token().text(), p);
+                    if (index != -1) {
+                        if (indexOfPeriod == -1 || index < indexOfPeriod) {
+                            indexOfPeriod = index;
+                            period = p;
+                        }
+                    }
+                }
+
                 if (seq.token().id() == JavadocTokenId.DOT) {
                     if (seq.moveNext()) {
                         if (isWhiteSpace(seq.token())) {
@@ -154,6 +173,15 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
                         }
                         seq.movePrevious();
                      }
+                } else if (period != null && indexOfPeriod != -1) {
+                    // NETBEANS-791
+                    int offset = TokenUtilities.indexOf(seq.token().text(), period) + 1;
+                    while (offset < seq.token().length()
+                            && isPeriod(seq.token().text().subSequence(offset, offset + 1))) {
+                        // e.g. 。。。
+                        offset++;
+                    }
+                    return new int[]{start, seq.offset() + offset};
                 } else if (seq.token().id() == JavadocTokenId.TAG) {
                     if (seq.movePrevious()) {
                         if (!seq.token().text().toString().trim().endsWith("{")) {
@@ -172,8 +200,11 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
         if (token == null || token.id() != JavadocTokenId.OTHER_TEXT) {
             return false;
         }
-        String ws = " \t\n";
-        return ws.indexOf(token.text().charAt(0)) >= 0;
+        return WS.indexOf(token.text().charAt(0)) >= 0;
+    }
+
+    private static boolean isPeriod(CharSequence cs) {
+        return PERIODS.stream().anyMatch(period -> TokenUtilities.equals(cs, period));
     }
 
     private final class HSImpl implements HighlightsSequence {

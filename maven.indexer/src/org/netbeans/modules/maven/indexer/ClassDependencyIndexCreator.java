@@ -20,9 +20,6 @@
 package org.netbeans.modules.maven.indexer;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInput;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,11 +30,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -66,7 +64,6 @@ import org.netbeans.modules.classfile.ClassFile;
 import org.netbeans.modules.classfile.ClassName;
 import org.netbeans.modules.maven.indexer.api.NBVersionInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryQueries.ClassUsage;
-import org.openide.filesystems.FileUtil;
 
 /**
  * Scans classes in (local) JARs for their Java dependencies.
@@ -86,7 +83,8 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
     /** class/in/this/Jar -> [foreign/Class, other/foreign/Nested$Class] */
     private Map<String,Set<String>> classDeps;
 
-    @Override public void populateArtifactInfo(ArtifactContext context) throws IOException {
+    @Override
+    public void populateArtifactInfo(ArtifactContext context) throws IOException {
         classDeps = null;
         ArtifactInfo ai = context.getArtifactInfo();
         if (ai.getClassifier() != null) {
@@ -100,18 +98,24 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
             LOG.log(Level.FINER, "no artifact for {0}", ai); // not a big deal, maybe just *.pom (or *.pom + *.nbm) here
             return;
         }
+        if (jar.length() == 0) {
+            LOG.log(Level.FINER, "zero length jar for {0}", ai); // Don't try to index zero length files
+            return;
+        }
         String packaging = ai.getPackaging();
         if (packaging == null || (!packaging.equals("jar") && !isArchiveFile(jar))) {
             LOG.log(Level.FINE, "skipping artifact {0} with unrecognized packaging based on {1}", new Object[] {ai, jar});
             return;
         }
         LOG.log(Level.FINER, "reading {0}", jar);
-        Map<String, byte[]> classfiles = read(jar);
-        classDeps = new HashMap<String, Set<String>>();
-        Set<String> classes = classfiles.keySet();
-        for (Map.Entry<String, byte[]> entry : classfiles.entrySet()) {
-            addDependenciesToMap(entry.getKey(), entry.getValue(), classDeps, classes, jar);
-        }
+        classDeps = new HashMap<>();
+        read(jar, (String name, InputStream stream, Set<String> classes) -> {
+            try {
+                addDependenciesToMap(name, stream, classDeps, classes, jar);
+            } catch (IOException ex) {
+                LOG.log(Level.INFO, "Exception indexing " + jar, ex);
+            }
+        });
     }
 
     // adapted from FileUtil, since we do not want to have to use FileObject's here
@@ -213,6 +217,50 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
         return referrers;
     }
 
+    static final Predicate<String> JDK_CLASS_TEST = new MatchWords(new String[]{
+        "apple/applescript", "apple/laf", "apple/launcher", "apple/security",
+        "com/apple/concurrent", "com/apple/eawt", "com/apple/eio", "com/apple/laf", "com/oracle/net",
+        "com/oracle/nio", "com/oracle/util", "com/oracle/webservices", "com/oracle/xmlns",
+        "com/sun/accessibility", "com/sun/activation", "com/sun/awt", "com/sun/beans", "com/sun/corba",
+        "com/sun/demo", "com/sun/image", "com/sun/imageio", "com/sun/istack", "com/sun/java",
+        "com/sun/java_cup", "com/sun/jmx", "com/sun/jndi", "com/sun/management", "com/sun/media",
+        "com/sun/naming", "com/sun/net", "com/sun/nio", "com/sun/org", "com/sun/rmi", "com/sun/rowset",
+        "com/sun/security", "com/sun/swing", "com/sun/tracing", "com/sun/xml", "java/applet", "java/awt",
+        "java/awt/color", "java/awt/datatransfer", "java/awt/dnd", "java/awt/event", "java/awt/font",
+        "java/awt/geom", "java/awt/im", "java/awt/image", "java/awt/peer", "java/awt/print",
+        "java/beans", "java/beans/beancontext", "java/io", "java/lang", "java/lang/annotation",
+        "java/lang/instrument", "java/lang/invoke", "java/lang/management", "java/lang/ref",
+        "java/lang/reflect", "java/math", "java/net", "java/nio", "java/nio/channels", "java/nio/charset",
+        "java/nio/file", "java/rmi", "java/rmi/activation", "java/rmi/dgc", "java/rmi/registry",
+        "java/rmi/server", "java/security", "java/security/acl", "java/security/cert",
+        "java/security/interfaces", "java/security/spec", "java/sql", "java/text", "java/text/spi", "java/time",
+        "java/time/chrono", "java/time/format", "java/time/temporal", "java/time/zone", "java/util",
+        "java/util/concurrent", "java/util/function", "java/util/jar", "java/util/logging",
+        "java/util/prefs", "java/util/regex", "java/util/spi", "java/util/stream", "java/util/zip",
+        "javax/accessibility", "javax/activation", "javax/activity", "javax/annotation",
+        "javax/annotation/processing", "javax/imageio", "javax/imageio/event", "javax/imageio/metadata",
+        "javax/imageio/plugins", "javax/imageio/spi", "javax/imageio/stream", "javax/jws", "javax/jws/soap",
+        "javax/lang/model", "javax/management", "javax/management/loading",
+        "javax/management/modelmbean", "javax/management/monitor", "javax/management/openmbean",
+        "javax/management/relation", "javax/management/remote", "javax/management/timer", "javax/naming",
+        "javax/naming/directory", "javax/naming/event", "javax/naming/ldap", "javax/naming/spi", "javax/net",
+        "javax/net/ssl", "javax/print", "javax/print/attribute", "javax/print/event", "javax/rmi",
+        "javax/rmi/CORBA", "javax/rmi/ssl", "javax/script", "javax/security/auth",
+        "javax/security/cert", "javax/security/sasl", "javax/smartcardio", "javax/sound/midi",
+        "javax/sound/sampled", "javax/sql", "javax/sql/rowset", "javax/swing", "javax/swing/border",
+        "javax/swing/colorchooser", "javax/swing/event", "javax/swing/filechooser", "javax/swing/plaf",
+        "javax/swing/table", "javax/swing/text", "javax/swing/tree", "javax/swing/undo", "javax/tools",
+        "javax/transaction", "javax/transaction/xa", "javax/xml", "javax/xml/bind", "javax/xml/crypto",
+        "javax/xml/datatype", "javax/xml/namespace", "javax/xml/parsers", "javax/xml/soap",
+        "javax/xml/stream", "javax/xml/transform", "javax/xml/validation", "javax/xml/ws",
+        "javax/xml/xpath", "jdk/internal/cmm", "jdk/internal/instrumentation", "jdk/internal/org",
+        "jdk/internal/util", "jdk/management/cmm", "jdk/management/resource", "jdk/net",
+        "jdk/xml/internal", "org/ietf/jgss", "org/jcp/xml", "org/omg/CORBA", "org/omg/CORBA_2_3",
+        "org/omg/CosNaming", "org/omg/Dynamic", "org/omg/DynamicAny", "org/omg/IOP", "org/omg/Messaging",
+        "org/omg/PortableInterceptor", "org/omg/PortableServer", "org/omg/SendingContext", "org/omg/stub",
+        "org/w3c/dom", "org/xml/sax"
+    });
+
     /**
      * @param referrer a referring class, as {@code pkg/Outer$Inner}
      * @param data its bytecode
@@ -220,32 +268,60 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
      * @param siblings other referring classes in the same artifact (including this one), as {@code pkg/Outer$Inner}
      * @param jar the jar file, for diagnostics
      */
-    private static void addDependenciesToMap(String referrer, byte[] data, Map<String, Set<String>> depsMap, Set<String> siblings, File jar) throws IOException {
-        ClassLoader jre = ClassLoader.getSystemClassLoader().getParent();
+    private static void addDependenciesToMap(String referrer, InputStream data, Map<String, Set<String>> depsMap, Set<String> siblings, File jar) throws IOException {
         int shell = referrer.indexOf('$', referrer.lastIndexOf('/') + 1);
         String referrerTopLevel = shell == -1 ? referrer : referrer.substring(0, shell);
-        for (String referee : dependencies(data, referrer, jar)) {
+        for (String referee : dependencies(data, jar)) {
+            if (referrer.equals(referee)) {
+                continue;
+            }
             if (siblings.contains(referee)) {
                 continue; // in same JAR, not interesting
             }
-            try {
-                jre.loadClass(referee.replace('/', '.')); // XXX ought to cache this result
-                continue; // in JRE, not interesting
-            } catch (ClassNotFoundException x) {
+            if (JDK_CLASS_TEST.test(referee)) {
+                continue;
             }
             Set<String> referees = depsMap.get(referrerTopLevel);
             if (referees == null) {
-                referees = new TreeSet<String>();
+                referees = new HashSet<>();
                 depsMap.put(referrerTopLevel, referees);
             }
             referees.add(referee);
         }
     }
 
-    static Map<String,byte[]> read(File jar) throws IOException {
-        JarFile jf = new JarFile(jar, false);
-        try {
-            Map<String, byte[]> classfiles = new TreeMap<String, byte[]>();
+    @FunctionalInterface
+    interface JarClassEntryConsumer {
+
+        void accept(String name, InputStream classData, Set<String> siblings) throws IOException;
+    }
+
+    // XXX in unit tests, indexing is always single-threaded,
+    // in which case the byte array can be a field instead of
+    // a thread local.  Not clear if that is the case in the IDE.
+    final ThreadLocal<byte[]> BYTES = new ThreadLocal<>();
+    // A reasonable base array size that will accommodate typical
+    // class files, to avoid reallocating more than necessary
+    private static final int MIN_ARRAY_SIZE = 16384;
+
+    byte[] bytes(int size) {
+        // There is a pretty significant performance benefit
+        // to not allocating vast numbers of byte arrays
+        byte[] result = BYTES.get();
+        if (result == null || result.length < size) {
+            result = new byte[Math.max(MIN_ARRAY_SIZE, size)];
+            BYTES.set(result);
+        }
+        return result;
+    }
+
+    void read(File jar, JarClassEntryConsumer consumer) throws IOException {
+        Set<String> classNames = new HashSet<>();
+        try (JarFile jf = new JarFile(jar, false)) {
+            // XXX the original code ignores siblings by first having a list
+            // of the class names.  Getting this before processing JAR entries
+            // means iterating the zip index twice.  Not horrible, but would
+            // be nice to avoid it
             Enumeration<JarEntry> e = jf.entries();
             while (e.hasMoreElements()) {
                 JarEntry entry = e.nextElement();
@@ -254,29 +330,44 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
                     continue;
                 }
                 String clazz = name.substring(0, name.length() - 6);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream(Math.max((int) entry.getSize(), 0));
-                InputStream is = jf.getInputStream(entry);
-                try {
-                    FileUtil.copy(is, baos);
-                } finally {
-                    is.close();
-                }
-                classfiles.put(clazz, baos.toByteArray());
+                classNames.add(clazz);
             }
-            return classfiles;
+            e = jf.entries();
+            while (e.hasMoreElements()) {
+                JarEntry entry = e.nextElement();
+                String name = entry.getName();
+                if (!name.endsWith(".class")) {
+                    continue;
+                }
+                int size = Math.max((int) entry.getSize(), 0);
+                if (size > 0) {
+                    // Parsing is considerably faster if the data is preloaded
+                    // into a byte array, likely due to random access
+                    byte[] target = bytes(size);
+                    try (InputStream in = jf.getInputStream(entry)) {
+                        int pos = 0;
+                        int count = 0;
+                        while (count != -1 && pos < size) {
+                            count = in.read(target, pos, size - pos);
+                            pos += count == -1 ? 0 : count;
+                        }
+                    }
+                    try (InputStream in = new ByteArrayInputStream(target, 0, size)) {
+                        String clazz = name.substring(0, name.length() - 6);
+                        consumer.accept(clazz, in, classNames);
+                    }
+                }
+            }
         } catch (SecurityException x) {
             throw new IOException(x);
-        } finally {
-            jf.close();
         }
     }
 
     // adapted from org.netbeans.nbbuild.VerifyClassLinkage
-    private static Set<String> dependencies(byte[] data, String clazz, File jar) throws IOException {
-        Set<String> result = new TreeSet<String>();
-        DataInputStream input = new DataInputStream(new ByteArrayInputStream(data));
-        ClassFile cf = new ClassFile(input);
-        
+    private static Collection<String> dependencies(InputStream data, File jar) throws IOException {
+        Set<String> result = new HashSet<String>();
+        ClassFile cf = new ClassFile(data);
+
         Set<ClassName> cl = cf.getAllClassNames();
         for (ClassName className : cl) {
             result.add(className.getInternalName());
@@ -284,15 +375,10 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
         return result;
     }
 
-    private static void skip(DataInput input, int bytes) throws IOException {
-        int skipped = input.skipBytes(bytes);
-        if (skipped != bytes) {
-            throw new IOException("Truncated class file");
-        }
-    }
-
-    @Override public Collection<IndexerField> getIndexerFields() {
-        return Arrays.asList(FLD_NB_DEPENDENCY_CLASS);
+    static final List<IndexerField> INDEXER_FIELDS = Collections.singletonList(FLD_NB_DEPENDENCY_CLASS);
+    @Override
+    public Collection<IndexerField> getIndexerFields() {
+        return INDEXER_FIELDS;
     }
 
     /**

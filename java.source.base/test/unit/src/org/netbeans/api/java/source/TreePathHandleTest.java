@@ -29,8 +29,11 @@ import java.io.OutputStream;
 import java.security.Permission;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.parsing.JavacParser;
+import org.netbeans.modules.java.source.usages.ClassFileUtil;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -420,6 +423,33 @@ public class TreePathHandleTest extends NbTestCase {
 
         assertTrue(tp.getLeaf() == resolved.getLeaf());
         assertNotNull(handle.resolveElement(info));
+    }
+
+    public void testVarInstanceMember() throws Exception {
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        FileObject file = FileUtil.createData(sourceRoot, "test/Test.java"); //NOI18N
+        String code = "package test; public class Test {var v1;\n var v2=()->{}; \n public Test() {}}"; //NOI18N
+
+        writeIntoFile(file, code);
+        SourceUtilsTestUtil.setSourceLevel(file, "1.10"); //NOI18N
+        JavaSource js = JavaSource.forFileObject(file);
+
+        CompilationInfo info = SourceUtilsTestUtil.getCompilationInfo(js, Phase.RESOLVED);
+        assertTrue(info.getDiagnostics().size() > 0);
+
+        TreePath tp = info.getTreeUtilities().pathFor(code.indexOf("var v1") + 1); //NOI18N
+        VariableElement elem = (VariableElement) info.getTrees().getElement(tp);
+        ClassFileUtil.createFieldDescriptor(elem);
+        TreePathHandle handle = TreePathHandle.create(tp, info);
+        assertNotNull(handle.getElementHandle());
+        
+        tp = info.getTreeUtilities().pathFor(code.indexOf("var v2") + 1); //NOI18N
+        elem = (VariableElement) info.getTrees().getElement(tp);
+        ClassFileUtil.createFieldDescriptor(elem);
+        
+        handle = TreePathHandle.create(tp, info);
+        assertNotNull(handle.getElementHandle());
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = false;
     }
 
     private static final class SecMan extends SecurityManager {

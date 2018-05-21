@@ -1885,11 +1885,10 @@ public final class TreeUtilities {
  
     /**
      * Checks whether tree is part of compound variable declaration.
-     * {@link Tree}.
      *
-     * @param tree the tree{@link Tree}
-     * @return true if tree is part of compound variable declaration else return
-     * false.
+     * @param tree tree to examine.
+     * @return true if {@code tree} is part of compound var declaration.
+     * @since 2.34.0
      */
     public boolean isPartOfCompoundVariableDeclaration(@NonNull Tree tree) {
         TokenSequence<JavaTokenId> tokenSequence = tokensFor(tree);

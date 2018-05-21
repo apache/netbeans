@@ -58,7 +58,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
 
     private static final Logger LOG = Logger.getLogger(Highlighting.class.getName());
     private static final String WS = " \t\n"; // NOI18N
-    private static final String JAPANESE_PERIOD = "。"; // NOI18N
+    private static final String JAPANESE_PERIOD = "\u3002"; // 。 NOI18N
     private static final List<String> PERIODS = Arrays.asList(
             JAPANESE_PERIOD
     );
@@ -175,7 +175,7 @@ public class Highlighting extends AbstractHighlightsContainer implements TokenHi
                      }
                 } else if (period != null && indexOfPeriod != -1) {
                     // NETBEANS-791
-                    int offset = TokenUtilities.indexOf(seq.token().text(), period) + 1;
+                    int offset = indexOfPeriod + 1;
                     while (offset < seq.token().length()
                             && isPeriod(seq.token().text().subSequence(offset, offset + 1))) {
                         // e.g. 。。。

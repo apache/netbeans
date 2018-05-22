@@ -182,7 +182,20 @@ is the proper place.
                  ErrorDescriptionFactory which uses new ErrorDescription constructor.
              </description>
              <issue number="271070"/>
-        </change>        
+        </change>   
+        
+        <change id="fixable-annotation-default-action">
+             <api name="EditorHintsSPI"/>
+             <summary>Provide a way to have fixable annotation with default action</summary>
+             <version major="1" minor="43" subsubminor="0"/>
+             <date day="24" month="7" year="2017"/>
+             <author login="mromashova"/>
+             <compatibility addition="no" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 For custom type of annotations will dynamically register this annotation type as fixable, so Fix action (click on the icon) will work for it
+             </description>
+             <issue number="271069"/>
+        </change>                    
 
     </changes>
 

@@ -880,46 +880,9 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
             List<int[]> currentHighlights = new ArrayList<int[]>();
 
             for (ErrorDescription e : filteredDescriptions) {
-                int beginOffset = e.getRange().getBegin().getPosition().getOffset();
-                int endOffset   = e.getRange().getEnd().getPosition().getOffset();
-
-                if (endOffset < beginOffset) {
-                    //see issue #112566
-                    int swap = endOffset;
-
-                    endOffset = beginOffset;
-                    beginOffset = swap;
-
-                    LOG.log(Level.WARNING, "Incorrect highlight in ErrorDescription, attach your messages.log to issue #112566: {0}", e.toString()); //NOI18N
-                }
-
-                int[] h = new int[] {beginOffset, endOffset};
-
-                OUT: for (Iterator<int[]> it = currentHighlights.iterator(); it.hasNext() && h != null; ) {
-                    int[] hl = it.next();
-
-                    switch (detectCollisions(hl, h)) {
-                        case 0:
-                            break;
-                        case 1:
-                            it.remove();
-                            break;
-                        case 2:
-                            h = null; //nothing to add, hl is bigger:
-                            break OUT;
-                        case 4:
-                        case 3:
-                            int start = Math.min(hl[0], h[0]);
-                            int end = Math.max(hl[1], h[1]);
-
-                                h = new int[] {start, end};
-                                it.remove();
-                            break;
-                    }
-                }
-
-                if (h != null) {
-                    currentHighlights.add(h);
+                addHighlights(currentHighlights, e.getRange());
+                for (PositionBounds positionBounds : e.getRangeTail()) {
+                    addHighlights(currentHighlights, positionBounds);
                 }
             }
 
@@ -954,6 +917,51 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
         }
 
         return bag;
+    }
+
+    private static void addHighlights(List<int[]> currentHighlights, PositionBounds pos) throws IOException {
+        int beginOffset = pos.getBegin().getPosition().getOffset();
+        int endOffset = pos.getEnd().getPosition().getOffset();
+
+        if (endOffset < beginOffset) {
+            //see issue #112566
+            int swap = endOffset;
+
+            endOffset = beginOffset;
+            beginOffset = swap;
+
+            LOG.log(Level.WARNING, "Incorrect highlight in ErrorDescription, attach your messages.log to issue #112566: {0}", pos.toString()); //NOI18N
+        }
+
+        int[] h = new int[]{beginOffset, endOffset};
+
+        OUT:
+        for (Iterator<int[]> it = currentHighlights.iterator(); it.hasNext() && h != null;) {
+            int[] hl = it.next();
+
+            switch (detectCollisions(hl, h)) {
+                case 0:
+                    break;
+                case 1:
+                    it.remove();
+                    break;
+                case 2:
+                    h = null; //nothing to add, hl is bigger:
+                    break OUT;
+                case 4:
+                case 3:
+                    int start = Math.min(hl[0], h[0]);
+                    int end = Math.max(hl[1], h[1]);
+
+                    h = new int[]{start, end};
+                    it.remove();
+                    break;
+            }
+        }
+
+        if (h != null) {
+            currentHighlights.add(h);
+        }        
     }
 
     static AttributeSet getColoring(Severity s, Document d) {

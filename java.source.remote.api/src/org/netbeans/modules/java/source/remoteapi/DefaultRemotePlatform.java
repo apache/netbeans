@@ -67,9 +67,18 @@ public class DefaultRemotePlatform implements RemotePlatform {
     @ServiceProvider(service=Provider.class, position=10000)
     public static class ProviderImpl implements Provider {
         private final Map<JavaPlatform, DefaultRemotePlatform> platform2Remote = new WeakHashMap<>();
+        private final boolean useRemotePlatform;
+
+        public ProviderImpl() {
+            this(USE_REMOTE_PLATFORM);
+        }
+
+        public ProviderImpl(boolean useRemotePlatform) {
+            this.useRemotePlatform = useRemotePlatform;
+        }
 
         public RemotePlatform findPlatform(FileObject source) {
-            if (!USE_REMOTE_PLATFORM) {
+            if (!useRemotePlatform) {
                 return null;
             }
 

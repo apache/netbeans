@@ -262,7 +262,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
         </condition>
     </target>
     <target name="-build-libs.junit4" depends="-check-for-libs.junit4" if="build.libs.junit4">
-        <ant dir="${nb_all}/libs.junit4" inheritall="false"/>
+        <ant dir="${nb_all}/platform/libs.junit4" inheritall="false"/>
     </target>
     <target name="test-lib-init" depends="init,-build-libs.junit4">
         <path id="test.unit.lib.cp"/>

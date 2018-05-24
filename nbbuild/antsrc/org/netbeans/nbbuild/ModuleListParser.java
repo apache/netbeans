@@ -208,7 +208,7 @@ final class ModuleListParser {
                     StringTokenizer tok = new StringTokenizer(clusterList, ", ");
                     while (tok.hasMoreTokens()) {
                         String clusterName = tok.nextToken();
-                        String clusterDir = (String) project.getProperty(clusterName + ".dir");
+                        String clusterDir = project.getProperty(clusterName + ".dir");
                         if (subDirs.contains(clusterDir)) {
                             continue;
                         }
@@ -350,35 +350,20 @@ final class ModuleListParser {
         faketask.setName("module.jar");
         faketask.setValue(fakeproj.replaceProperties("${module.jar.dir}/${module.jar.basename}"));
         faketask.execute();
+        String id = null;
         switch (moduleType) {
         case NB_ORG:
             assert path != null;
             // Find the associated cluster.
             // first try direct mapping in nbbuild/netbeans/moduleCluster.properties
-            String clusterDir = (String) properties.get(path + ".dir");
-            if (clusterDir != null) {
-                clusterDir = clusterDir.substring(clusterDir.lastIndexOf('/') + 1);
+            String[] clusterDir = { (String) properties.get(path + ".dir") };
+            if (clusterDir[0] != null) {
+                clusterDir[0] = clusterDir[0].substring(clusterDir[0].lastIndexOf('/') + 1);
             } else {
-                // not found, try indirect nbbuild/cluster.properties
-                for (Map.Entry<String,Object> entry : properties.entrySet()) {
-                    String val = (String) entry.getValue();
-                    String[] modules = val.split(", *");
-                    if (Arrays.asList(modules).contains(path)) {
-                        String key = entry.getKey();
-                        clusterDir = (String) properties.get(key + ".dir");
-                        if (clusterDir != null) {
-                            faketask.setName("cluster.dir");
-                            faketask.setValue(clusterDir);
-                            faketask.execute();
-                            break;
-                        }
-                    }
-                }
-                if (clusterDir == null)
-                    clusterDir = "extra";   // fallback
+                id = SetCluster.findClusterAndId("cluster.dir", clusterDir, properties, path, faketask, "extra");
             }
             faketask.setName("cluster.dir");
-            faketask.setValue(clusterDir);
+            faketask.setValue(clusterDir[0]);
             faketask.execute();
             faketask.setName("netbeans.dest.dir");
             faketask.setValue(properties.get("netbeans.dest.dir"));
@@ -493,7 +478,7 @@ final class ModuleListParser {
             prereqs.add(cnb2);
         }
         String cluster = fakeproj.getProperty("cluster.dir"); // may be null
-        Entry entry = new Entry(cnb, jar, exts.toArray(new File[exts.size()]), dir, path,
+        Entry entry = new Entry(cnb, jar, exts.toArray(new File[exts.size()]), dir, path, id == null ? path : id,
                 prereqs.toArray(new String[prereqs.size()]), 
                 cluster, 
                 rundeps.toArray(new String[rundeps.size()]),
@@ -897,7 +882,7 @@ final class ModuleListParser {
             String moduleDependencies = attr.getValue("OpenIDE-Module-Module-Dependencies");
 
 
-            Entry entry = new Entry(codenamebase, m, exts, null, null, null, cluster.getName(),
+            Entry entry = new Entry(codenamebase, m, exts, null, null, null, null, cluster.getName(),
                     parseRuntimeDependencies(moduleDependencies), Collections.<String,String[]>emptyMap(),
                     new File(moduleAutoDepsDir, codenamebase.replace('.', '-') + ".xml"));
             Entry prev = entries.put(codenamebase, entry);
@@ -921,6 +906,7 @@ final class ModuleListParser {
         private final File[] classPathExtensions;
         private final File sourceLocation;
         private final String netbeansOrgPath;
+        private final String netbeansOrgId;
         private final String[] buildPrerequisites;
         private final String clusterName;
         private final String[] runtimeDependencies; 
@@ -928,13 +914,14 @@ final class ModuleListParser {
         private final Map<String,String[]> testDependencies;
         private final File moduleAutoDeps;
         
-        Entry(String cnb, File jar, File[] classPathExtensions, File sourceLocation, String netbeansOrgPath,
+        Entry(String cnb, File jar, File[] classPathExtensions, File sourceLocation, String netbeansOrgPath, String netbeansOrgId,
                 String[] buildPrerequisites, String clusterName,String[] runtimeDependencies, Map<String,String[]> testDependencies, File moduleAutoDeps) {
             this.cnb = cnb;
             this.jar = jar;
             this.classPathExtensions = classPathExtensions;
             this.sourceLocation = sourceLocation;
             this.netbeansOrgPath = netbeansOrgPath;
+            this.netbeansOrgId = netbeansOrgId;
             this.buildPrerequisites = buildPrerequisites;
             this.clusterName = clusterName;
             this.runtimeDependencies = runtimeDependencies;
@@ -1044,6 +1031,9 @@ final class ModuleListParser {
             if ((this.netbeansOrgPath == null) ? (other.netbeansOrgPath != null) : !this.netbeansOrgPath.equals(other.netbeansOrgPath)) {
                 return false;
             }
+            if ((this.netbeansOrgId == null) ? (other.netbeansOrgId != null) : !this.netbeansOrgId.equals(other.netbeansOrgId)) {
+                return false;
+            }
             if (!Arrays.deepEquals(this.buildPrerequisites, other.buildPrerequisites)) {
                 return false;
             }
@@ -1067,11 +1057,16 @@ final class ModuleListParser {
             hash = 83 * hash + Arrays.deepHashCode(this.classPathExtensions);
             hash = 83 * hash + (this.sourceLocation != null ? this.sourceLocation.hashCode() : 0);
             hash = 83 * hash + (this.netbeansOrgPath != null ? this.netbeansOrgPath.hashCode() : 0);
+            hash = 83 * hash + (this.netbeansOrgId != null ? this.netbeansOrgId.hashCode() : 0);
             hash = 83 * hash + Arrays.deepHashCode(this.buildPrerequisites);
             hash = 83 * hash + (this.clusterName != null ? this.clusterName.hashCode() : 0);
             hash = 83 * hash + Arrays.deepHashCode(this.runtimeDependencies);
             hash = 83 * hash + (this.testDependencies != null ? this.testDependencies.hashCode() : 0);
             return hash;
+        }
+
+        String getNetbeansOrgId() {
+            return netbeansOrgId;
         }
 
 

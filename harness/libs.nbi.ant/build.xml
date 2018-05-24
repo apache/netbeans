@@ -26,16 +26,17 @@
     <description>Builds, tests, and runs the project org.netbeans.libs.nbi.ant</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 
-    <property name="nbi.engine.dir" value="../nbi/engine/"/>
+    <property name="nbi.dir" value="../../nbi/"/>
+    <property name="nbi.engine.dir" value="${nbi.dir}/engine/"/>
 
     <target name="build-nbi-ant-tasks" depends="init">
-         <ant dir="${basedir}/../nbi/engine" target="jar" inheritAll="false">
+         <ant dir="${nbi.dir}/engine" target="jar" inheritAll="false">
             <property name="platforms.JDK_1.5.home" value="${nbjdk.home}"/>
             <property name="no.dependencies" value="true"/>
             <property name="build.dir" location="${build.dir}/engine/build"/>
             <property name="dist.dir" location="${build.dir}/engine/dist"/>
          </ant>
-         <ant dir="${basedir}/../nbi/infra/lib/registries-management" target="jar" inheritAll="false">
+         <ant dir="${nbi.dir}/infra/lib/registries-management" target="jar" inheritAll="false">
             <property name="platforms.JDK_1.5.home" value="${nbjdk.home}"/>
             <property name="no.dependencies" value="true"/>
             <property name="reference.NBI_Engine.jar" location="${build.dir}/engine/dist/nbi-engine.jar"/>
@@ -43,7 +44,7 @@
             <property name="dist.dir" location="${build.dir}/registries-management/dist"/>
          </ant>
 
-         <ant dir="${basedir}/../nbi/infra/build/.ant-lib" target="jar" inheritAll="false">
+         <ant dir="${nbi.dir}/infra/build/.ant-lib" target="jar" inheritAll="false">
             <property name="platforms.JDK_1.5.home" value="${nbjdk.home}"/>
             <property name="no.dependencies" value="true"/>
             <property name="reference.NBI_Engine.jar" location="${build.dir}/engine/dist/nbi-engine.jar"/>
@@ -60,7 +61,7 @@
          <copy file="${build.dir}/ant-lib/dist/nbi-ant-tasks.jar" todir="${cluster}/modules/ext"/> 
          <copy file="${build.dir}/registries-management/dist/registries-management.jar" tofile="${cluster}/modules/ext/nbi-registries-management.jar"/> 
          <copy todir="${cluster}/nbi/.common">
-             <fileset dir="${basedir}/../nbi/infra/build/.common">
+             <fileset dir="${nbi.dir}/infra/build/.common">
                 <exclude name=".templates/**"/>
              </fileset>
          </copy>

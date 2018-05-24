@@ -361,7 +361,11 @@ final class ModuleListParser {
             // first try direct mapping in nbbuild/netbeans/moduleCluster.properties
             String[] clusterDir = { (String) properties.get(path + ".dir") };
             if (clusterDir[0] != null) {
-                clusterDir[0] = clusterDir[0].substring(clusterDir[0].lastIndexOf('/') + 1);
+                final String subStr = clusterDir[0].substring(clusterDir[0].lastIndexOf('/') + 1);
+                if (path.startsWith(subStr + "/")) {
+                    id = path.substring(subStr.length() + 1);
+                }
+                clusterDir[0] = subStr;
             } else {
                 id = SetCluster.findClusterAndId("cluster.dir", clusterDir, properties, path, faketask, "extra");
             }

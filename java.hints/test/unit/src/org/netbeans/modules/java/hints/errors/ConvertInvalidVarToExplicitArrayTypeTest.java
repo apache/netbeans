@@ -52,6 +52,18 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
         super.tearDown();
     }
 
+        public void testEmptyArrayAsInitializer() throws Exception {
+        performAnalysisTest("test/Test.java",
+                "package test; public class Test {{final var j = {};}}",
+                -1);
+    }
+        
+    public void testInvalidArrayAsInitializer() throws Exception {
+        performAnalysisTest("test/Test.java",
+                "package test; public class Test {{final var j = {int1,var1,\"hello\"};}}",
+                -1);
+    }
+
     public void testParameterizedElements() throws Exception {
         performAnalysisTest("test/Test.java",
                 "package test; public class Test {{final var j = {new java.util.ArrayList<String>(),new java.util.ArrayList<String>()};}}",

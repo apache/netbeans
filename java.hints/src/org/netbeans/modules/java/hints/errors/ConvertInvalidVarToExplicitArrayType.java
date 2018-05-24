@@ -47,7 +47,7 @@ import javax.lang.model.util.Types;
  * @author arusinha
  */
 @Messages({
-    "DN_ConvertVarToExplicitType=Replace var with explicit type" 
+    "DN_ConvertVarToExplicitType=Replace var with explicit type"
 })
 public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
 
@@ -83,6 +83,11 @@ public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
 
             NewArrayTree arrayTree = (NewArrayTree) oldVariableTree.getInitializer();
             List<? extends ExpressionTree> currentValues = arrayTree.getInitializers();
+
+            if (currentValues.isEmpty()) {
+                return null;
+            }
+
             TreePath initArrayTreePath = new TreePath(treePath, arrayTree);
             Types types = compilationInfo.getTypes();
             Trees trees = compilationInfo.getTrees();
@@ -91,8 +96,9 @@ public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
 
                 TypeMirror etType = trees.getTypeMirror(new TreePath(initArrayTreePath, tree));
 
-                //skipped fix for parameterized array member as parameterized array is not possible.
-                if (etType.getKind() == TypeKind.DECLARED && !((DeclaredType) etType).getTypeArguments().isEmpty()) {
+                //skipped fix for invalid array member and for parameterized array member.
+                if (etType == null || etType.getKind() == TypeKind.ERROR || (etType.getKind() == TypeKind.DECLARED
+                        && !((DeclaredType) etType).getTypeArguments().isEmpty())) {
                     return null;
                 }
 

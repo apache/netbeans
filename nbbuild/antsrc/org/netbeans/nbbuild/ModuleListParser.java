@@ -190,6 +190,9 @@ final class ModuleListParser {
                 registerTimestampAndSize(new File(root, "nbbuild" + File.separatorChar + "cluster.properties"), timestampsAndSizes);
                 registerTimestampAndSize(new File(root, "nbbuild" + File.separatorChar + "build.properties"), timestampsAndSizes);
                 registerTimestampAndSize(new File(root, "nbbuild" + File.separatorChar + "user.build.properties"), timestampsAndSizes);
+
+                doFastScan = false;
+
                 if (doFastScan) {
                     if (project != null) {
                         project.log("Scanning for modules in " + root + " among standard clusters");

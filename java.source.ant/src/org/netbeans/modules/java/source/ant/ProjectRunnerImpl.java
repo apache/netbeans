@@ -89,6 +89,7 @@ import static org.netbeans.api.java.project.runner.JavaRunner.*;
 import org.netbeans.api.java.queries.BinaryForSourceQuery;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
+import org.netbeans.api.java.source.BuildArtifactMapper;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
@@ -121,7 +122,8 @@ public class ProjectRunnerImpl implements JavaRunnerImplementation {
     private static final RequestProcessor RP = new RequestProcessor(ProjectRunnerImpl.class);
     
     public boolean isSupported(String command, Map<String, ?> properties) {
-        return locateScript(command) != null;
+        return BuildArtifactMapper.isCompileOnSaveSupported() &&
+               locateScript(command) != null;
     }
 
     @Override

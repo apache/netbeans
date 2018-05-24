@@ -163,6 +163,12 @@
           section in <code>pom.xml</code> to <em>suppress</em> the JDK libraries.
       </api>
   </p>
+  <p>
+      <api category="devel" group="systemproperty" name="org.netbeans.modules.maven.execute.AbstractOutputHandler.SLEEP_DELAY" type="export">
+          A system property can be used to change the default indexing sleep delay during builds,
+          in case reparsing starts too soon (wasting CPU) or too late (impeding editing).
+      </api>
+  </p>
  </answer>
  
  <answer id="resources-file">

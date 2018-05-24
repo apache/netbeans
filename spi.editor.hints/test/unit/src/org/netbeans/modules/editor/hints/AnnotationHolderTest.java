@@ -21,6 +21,7 @@ package org.netbeans.modules.editor.hints;
 
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -46,11 +47,11 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
-import org.openide.text.Annotation;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
 import static org.netbeans.modules.editor.hints.AnnotationHolder.*;
+import org.netbeans.spi.editor.hints.Fix;
 import static org.netbeans.spi.editor.hints.Severity.*;
 
 /**
@@ -82,6 +83,22 @@ public class AnnotationHolderTest extends NbTestCase {
         ec = od.getCookie(EditorCookie.class);
         doc = ec.openDocument();
     }
+    
+    public void testMultiLineErrors() throws Exception {
+        ErrorDescription ed1 = ErrorDescriptionFactory.createErrorDescription(null, Severity.ERROR, "clank-diagnostics-error", "1", null, 
+                ErrorDescriptionFactory.lazyListForFixes(Collections.<Fix>emptyList()), file, new int[] {33 - 30, 55 - 30 - 1}, 
+                new int[] {40 - 30, 58 - 30 -1});
+        ErrorDescription ed2 = ErrorDescriptionFactory.createErrorDescription(null, Severity.WARNING, "clank-diagnostics-warning", "1", null, 
+                ErrorDescriptionFactory.lazyListForFixes(Collections.<Fix>emptyList()), file, new int[] {55 - 30 - 1, 69 - 30 - 2}, 
+                new int[] {58 - 30 - 1, 75 - 30 - 2});
+        
+        List<ErrorDescription> errors = Arrays.asList(ed1, ed2);
+        final OffsetsBag bag = AnnotationHolder.computeHighlights(doc, errors);
+        assertHighlights("",bag, new int[] {33 - 30, 40 - 30, 55 - 30 - 1, 58 - 30 - 1, 69 - 30 -2, 75 - 30 - 2}, 
+                new AttributeSet[] {AnnotationHolder.getColoring(ERROR, doc), 
+                    AnnotationHolder.getColoring(ERROR, doc), 
+                    AnnotationHolder.getColoring(WARNING, doc)});
+    }    
     
     public void testComputeHighlightsOneLayer1() throws Exception {
         ErrorDescription ed1 = ErrorDescriptionFactory.createErrorDescription(Severity.ERROR, "1", file, 1, 3);

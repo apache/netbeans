@@ -205,6 +205,7 @@
       <subant-junit target="nbm" failonerror="${nbms.fail.on.error}" report="${nb.build.dir}/build-nbms.xml" inheritall="false">
           <buildpath path="${modules.sorted}"/>
           <property name="base.nbm.target.dir" value="${base.nbm.target.dir}"/>
+          <property name="nbm.always.create" value="true" />
       </subant-junit>
   </target>
 
@@ -1888,9 +1889,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <property name="catalog.notification.url"     value=""/>
       <property name="catalog.content.description"  value=""/>
       <property name="catalog.content.description.url" value=""/>
+      <property name="catalog.license.header" value="${nb_all}/nbbuild/catalog-license-header.txt"/>
 
 <!--      <genau config="ausrc/modules.setup" nbmLocation="${nbms.location}" catalog="${catalog.file}" catalogDeploymentLocation="${catalog.base.url}"/>-->
-      <makeupdatedesc desc="${catalog.file}" distbase="${catalog.base.url}" automaticgrouping="true" uselicenseurl="${use.license.url.in.catalog}" notificationmessage="${catalog.notification.message}" notificationurl="${catalog.notification.url}" contentdescription="${catalog.content.description}" contentdescriptionurl="${catalog.content.description.url}">
+      <makeupdatedesc desc="${catalog.file}" distbase="${catalog.base.url}" automaticgrouping="true" uselicenseurl="${use.license.url.in.catalog}" notificationmessage="${catalog.notification.message}" notificationurl="${catalog.notification.url}" contentdescription="${catalog.content.description}" contentdescriptionurl="${catalog.content.description.url}" desclicense="${catalog.license.header}">
           <fileset dir="${nbms.location}">
               <include name="**/*.nbm"/>
               <include name="**/*.jar"/>

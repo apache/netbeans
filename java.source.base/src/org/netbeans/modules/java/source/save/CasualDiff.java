@@ -1443,7 +1443,12 @@ public class CasualDiff {
         int addDimensions = 0;
         if (diffContext.syntheticTrees.contains(oldT.vartype)) {
             if (!diffContext.syntheticTrees.contains(newT.vartype)) {
-                copyTo(localPointer, localPointer = oldT.pos);
+                int varOffset = skipExtraVarKeywordIfPresent(localPointer, oldT.pos);
+
+                if (varOffset == -1) {
+                    copyTo(localPointer, oldT.pos);
+                }
+                localPointer = oldT.pos;
                 printer.suppressVariableType = suppressParameterTypes;
                 int l = printer.out.length();
                 printer.print(newT.vartype);
@@ -1820,15 +1825,21 @@ public class CasualDiff {
             return bounds[1];
         }
         PositionEstimator est = EstimatorFactory.statements(
-                oldT.getStatements(),
-                newT.getStatements(),
+                filterHidden(oldT.stats),
+                filterHidden(newT.stats),
                 diffContext
         );
-        localPointer = diffList(oldT.stats, newT.stats, localPointer, est, Measure.MEMBER, printer);
-
-        copyTo(localPointer, bounds[1]);
-
-        return bounds[1];
+        int old = printer.indent();
+        localPointer = diffInnerComments(oldT, newT, localPointer);
+        JCClassDecl oldEnclosing = printer.enclClass;
+        printer.enclClass = null;
+        localPointer = diffList(filterHidden(oldT.stats), filterHidden(newT.stats), localPointer, est, Measure.MEMBER, printer);
+        printer.enclClass = oldEnclosing;
+        if (localPointer < endPos(oldT)) {
+            copyTo(localPointer, localPointer = endPos(oldT));
+        }
+        printer.undent(old);
+        return localPointer;
     }
 
     protected int diffSynchronized(JCSynchronized oldT, JCSynchronized newT, int[] bounds) {
@@ -3723,7 +3734,7 @@ public class CasualDiff {
                     if (!fieldGroup.isEmpty()) {
                         int oldPos = getOldPos(fieldGroup.get(0));
 
-                        if (oldPos != (-1) && oldPos != NOPOS && oldPos == getOldPos(var) && fieldGroup.get(0).getModifiers() == var.getModifiers()) {
+                        if (oldPos != (-1) && oldPos != NOPOS && oldPos == getOldPos(var) && fieldGroup.get(0).getModifiers() == var.getModifiers() && !isVarTypeVariable(var)) {
                             //seems like a field group:
                             fieldGroup.add(var);
                         } else {
@@ -4019,6 +4030,16 @@ public class CasualDiff {
             }
         }
         return localPointer;
+    }
+
+    /**
+     * Check the JCVariableDecl tree has var type
+     * @param tree instance of JCVariableDecl
+     * @return true if tree contains var type else return false
+     */
+    private static boolean isVarTypeVariable(JCVariableDecl tree){
+        if(tree == null) return false;
+        return tree.getType() instanceof JCIdent && ((JCIdent)tree.getType()).name.contentEquals("var"); // NOI18N
     }
 
     /**
@@ -6027,5 +6048,26 @@ public class CasualDiff {
         } catch (Exception ex) {}
         return sb.toString();
     }
-
+    
+    private int skipExtraVarKeywordIfPresent(int start, int end) {
+        int varoffset = -1;
+        int newStart = -1;
+        tokenSequence.move(start);
+        tokenSequence.moveNext();
+        while (tokenSequence.offset() < end) {
+            JavaTokenId token = tokenSequence.token().id();
+            if (token == JavaTokenId.VAR) {
+                varoffset = tokenSequence.offset();
+                copyTo(start, varoffset);
+            } else if (varoffset > -1) {
+                if (token != JavaTokenId.WHITESPACE) {
+                    newStart = tokenSequence.offset();
+                    copyTo(newStart, end);
+                    break;
+                }
+            }
+            tokenSequence.moveNext();
+        }
+        return varoffset;
+    }
 }

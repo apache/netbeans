@@ -21,6 +21,7 @@
 /nbbuild/user.build.properties
 /nbi/engine/native/*/*/dist/
 /nb-javac/
+/java.source.nbjavac/test/test-nb-javac/nbproject/private/
 
 # OS generated files #
 ######################
@@ -47,3 +48,12 @@
 /xml/test/qa-functional/data/ActionsTestProject/nbproject/private/
 /xml/test/qa-functional/data/CoreTemplatesTestProject/nbproject/private/
 /javafx2.samples/FXML-LoginDemo/nbproject/private/
+
+# Snapcraft Generated files #
+#######################
+/nbbuild/packaging/snap/.snapcraft/
+/nbbuild/packaging/parts/
+/nbbuild/packaging/prime/
+/nbbuild/packaging/stage/
+*.snap
+

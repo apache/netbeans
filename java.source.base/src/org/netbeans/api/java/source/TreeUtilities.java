@@ -1867,6 +1867,21 @@ public final class TreeUtilities {
         }
         return false;
     }
+
+    /**Check the tree is the end of compound declaration. {@link Tree}.
+     *
+     * @param tree the tree {@link Tree}
+     * @return the true if tree is end of compound declaration else return false
+     * @since 2.33.0
+     */
+    public boolean isEndOfCompoundVariableDeclaration(@NonNull Tree tree) {
+        TokenSequence<JavaTokenId> tokenSequence = tokensFor(tree);
+        tokenSequence.moveEnd();
+        if (tokenSequence.movePrevious() && tokenSequence.token().id() != JavaTokenId.COMMA) {
+            return true;
+        }
+        return false;
+    }
  
     private static final class NBScope implements Scope {
 

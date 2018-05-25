@@ -492,7 +492,7 @@ If you are sure you want to build with JDK 9+ anyway, use: -Dpermit.jdk9.builds=
             <classpath>
                 <pathelement location="${nbantext.jar}"/>
                 <fileset dir="${nb_all}">
-                    <include name="javahelp/external/jhall*.jar"/>
+                    <include name="platform/javahelp/external/jhall*.jar"/>
                 </fileset>
                 <fileset dir="${netbeans.dest.dir}">
                     <include name="platform/modules/ext/jhall*.jar"/>

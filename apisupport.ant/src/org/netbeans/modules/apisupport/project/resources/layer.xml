@@ -255,13 +255,6 @@
         </folder>
     </folder>
     <folder name="Templates">
-        <folder name="Licenses">
-            <file name="license-cddl-netbeans-sun.txt" url="license-cddl-netbeans-sun.txt">
-                <attr name="template" boolvalue="true"/>
-                <attr name="displayName" bundlevalue="org.netbeans.modules.apisupport.project.ui.Bundle#Templates/Licenses/license-cddl-netbeans-sun.txt"/>
-                <attr name="mavenLicenseURL" stringvalue="http://www.netbeans.org/cddl-gplv2.html"/>
-            </file>
-        </folder>
         <folder name="Project">
             <folder name="APISupport">
                 <attr name="displayName" bundlevalue="org.netbeans.modules.apisupport.project.ui.wizard.Bundle#Templates/Project/APISupport"/>

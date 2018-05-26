@@ -107,7 +107,7 @@ public class CreateDependencies extends Task {
 
                 Map<String, Map<String, Set<String>>> dependenciesDesc = new LinkedHashMap<>();
                 dependenciesDesc.put("Runtime dependencies:", origin2TextsRuntime);
-                if (sourceDependencies) {
+                if (sourceDependencies && /*don't print the compile-time dependencies*/false) {
                     dependenciesDesc.put("Compile time dependencies:", origin2TextsCompileTime);
                 }
 

@@ -287,13 +287,10 @@ public class VerifyLibsAndLicenses extends Task {
                 } else {
                     for (String header : requiredHeaders) {
                         if (!headers.containsKey(header)) {
-                            if (header.equals("OSR") && (headers.get("License") != null)) {
-                                if (headers.get("License").startsWith("CDDL")) { // CDDL does not require OSR
-                                    continue;
-                                }
-                                if (headers.get("License").startsWith("SLA")) { // SLA does not require OSR
-                                    continue;
-                                }
+                            if (header.equals("License") &&
+                                headers.getOrDefault("Type", "").contains("compile-time")) {
+                                //compile-time dependencies may have unspecified license
+                                continue;
                             }
                             msg.append("\n" + path + " is missing a required header: " + header);
                         }
@@ -312,15 +309,7 @@ public class VerifyLibsAndLicenses extends Task {
                 String license = headers.get("License");
                 if (license != null) {
                     if (license.contains("GPL")) {
-                        if (license.contains("GPL-2-CP") &&
-                            headers.getOrDefault("Type", "").contains("compile-time")) {
-                            //OK to include GPLv2+CPE as a compile-time/runtime optional dependency
-                            if (!headers.containsKey("Comment")) {
-                                msg.append("\n" + path + " has a GPL-family license but does not have a Comment.");
-                            }
-                        } else {
-                            msg.append("\n" + path + " has a GPL-family license but is either not covered by the Classpath Exception, or is not compile-time/optional only.");
-                        }
+                        msg.append("\n" + path + " has a GPL-family license.");
                     }
                     File licenseFile = new File(licenses, license);
                     if (licenseFile.isFile()) {

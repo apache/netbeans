@@ -26,7 +26,6 @@
     <property name="homepage.base" value="netbeans.org"/>
     <property name="dist.base" value="www.netbeans.org/download/nbms/40"/>
     <property name="nb_all" location="../../o.n.core/.."/>
-    <property name="license.file" location="${nb_all}/nbbuild/standard-nbm-license.txt"/>
 
     <taskdef name="makenbm" classname="org.netbeans.nbbuild.MakeNBM" classpath="${nb_all}/nbbuild/build/nbantext.jar"/>
     <taskdef name="genlist" classname="org.netbeans.nbbuild.MakeListOfNBM" classpath="${nb_all}/nbbuild/build/nbantext.jar"/>

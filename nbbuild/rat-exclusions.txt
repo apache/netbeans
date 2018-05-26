@@ -103,7 +103,6 @@ xml/test/unit/src/org/netbeans/modules/xml/resources/*
 xsl/test/unit/src/org/netbeans/modules/xsl/utils/data/*
 
 ###### template file
-apisupport.ant/src/org/netbeans/modules/apisupport/project/resources/license-*.txt
 apisupport.project/src/org/netbeans/modules/apisupport/project/ui/resources/layer_template.xml
 dbschema/src/org/netbeans/modules/dbschema/jdbcimpl/resources/templates/*
 editor/demosrc/base/org/netbeans/editor/example/res/template.html_
@@ -171,7 +170,6 @@ o.n.core/licenses/**
 ### A prefix that is added to license file
 nbbuild/license-dialog-stub.txt
 nbbuild/notice-stub.txt
-nbbuild/standard-nbm-license.txt
 projectui/src/org/netbeans/modules/project/ui/resources/*-license.txt
 projectui/src/org/netbeans/modules/project/ui/resources/license-default.txt
 

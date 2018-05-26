@@ -37,7 +37,6 @@
 
   <property name="nbantext.jar" location="${nb.build.dir}/nbantext.jar"/>
 
-  <property name="license.file" location="${nb_all}/nbbuild/standard-nbm-license.txt"/>
   <property name="build.sysclasspath" value="ignore"/>
 
   <property name="clusters.list.file" location="${nb_all}/nbbuild/cluster.properties"/>

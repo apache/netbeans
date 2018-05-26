@@ -231,10 +231,8 @@ public class MethodInvocationContext {
 
         code.append("}\n");
 
-        ClassPath[] classpaths = computeClassPaths();
-
         try {
-            final Map<String, byte[]> classes = Hacks.compile(classpaths[0], classpaths[1], code.toString());
+            final Map<String, byte[]> classes = Hacks.compile(computeCompileClassPath(), code.toString());
 
             if (!classes.containsKey("$." + className)) {
                 //presumably an error in the custom code, skip
@@ -271,14 +269,8 @@ public class MethodInvocationContext {
         "import org.netbeans.modules.java.hints.declarative.conditionapi.Variable;"
     };
 
-    static ClassPath[] computeClassPaths() {
-        ClassPath boot = JavaPlatform.getDefault().getBootstrapLibraries();
-        ClassPath compile = ClassPathSupport.createClassPath(apiJarURL());
-
-        return new ClassPath[] {
-            boot,
-            compile
-        };
+    static ClassPath computeCompileClassPath() {
+        return ClassPathSupport.createClassPath(apiJarURL());
     }
 
     public static URL apiJarURL() {

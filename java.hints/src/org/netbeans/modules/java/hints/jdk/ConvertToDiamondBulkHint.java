@@ -95,6 +95,15 @@ public class ConvertToDiamondBulkHint {
         @TriggerPattern("new $clazz<$tparams$>($params$)")
     })
     public static ErrorDescription compute(HintContext ctx) {
+        // hint disabled for var type variable initialization.
+        TreePath parentPath = ctx.getPath().getParentPath();
+        boolean isVarInit = MatcherUtilities.matches(ctx, parentPath, "$mods$ $type $name = $init;");   //NOI18N
+        if (isVarInit) {
+            if (ctx.getInfo().getTreeUtilities().isVarType(parentPath)) {
+                return null;
+            }
+        }
+
         if (ctx.getMultiVariables().get("$tparams$").isEmpty()) return null;
         
         TreePath clazz = ctx.getVariables().get("$clazz");

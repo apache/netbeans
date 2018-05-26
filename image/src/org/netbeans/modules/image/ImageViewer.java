@@ -399,12 +399,9 @@ public class ImageViewer extends CloneableTopComponent {
         loadImageTask = RP.create(new Runnable() {
 
             public void run() {
-                ProgressHandle loadImageProgress = ProgressHandleFactory.createHandle(NbBundle.getMessage(ImageViewer.class, "LBL_LoadingImage"));
-                loadImageProgress.start();
-                try {
+                try (ProgressHandle loadImageProgress = ProgressHandle.createHandle(NbBundle.getMessage(ImageViewer.class, "LBL_LoadingImage"))) {
+                    loadImageProgress.start();
                     performLoadImage(imageObj);
-                } finally {
-                    loadImageProgress.finish();
                 }
             }
         });

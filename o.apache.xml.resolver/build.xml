@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="o.apache.xml.resolver" default="netbeans" basedir=".">
+<project name="o.apache.xml.resolver" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 
@@ -58,5 +58,7 @@
     </target>
 
     <!-- Hook into harness "basic-init" task -->
-    <target name="-javac-init" depends="-prepare-patched-binary, projectized-common.-javac-init" />
+    <target name="-process.release.files" depends="-prepare-patched-binary"/>
+
+
 </project>

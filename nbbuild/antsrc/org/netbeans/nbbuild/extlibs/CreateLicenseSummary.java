@@ -31,6 +31,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -39,9 +40,12 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.jar.JarInputStream;
+import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
@@ -50,6 +54,8 @@ import java.util.zip.ZipFile;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.netbeans.nbbuild.JUnitReportWriter;
 import org.netbeans.nbbuild.extlibs.licenseinfo.Fileset;
@@ -122,6 +128,11 @@ public class CreateLicenseSummary extends Task {
         this.binary = binary;
     }
     
+    private FileSet moduleFiles;
+    public FileSet createModuleFiles() {
+        return (moduleFiles = new FileSet());
+    }
+
     private Map<String, String> pseudoTests;
 
     public @Override
@@ -205,22 +216,8 @@ public class CreateLicenseSummary extends Task {
     }
     
     private void evaluateLicenseInfo(final PrintWriter licenseWriter, final PrintWriter noticeWriter, Set<String> notices, Set<String> licenseNames) throws IOException {
-
-        licenseWriter.println();
-        licenseWriter.println("******************************************************************************************************************************************************");
-        licenseWriter.println("Apache NetBeans includes a number of source files that are not covered by the apache license. The following files are part of this distribution.");
-        licenseWriter.println("******************************************************************************************************************************************************");
-        licenseWriter.println();
-        
-        licenseWriter.printf("%-100s%40s%10s\n", "Sourcefile", "LICENSE", "NOTES");
-        if(licenseTargetDir != null) {
-            licenseWriter.printf("%-100s%40s\n", "(path in the source)", "(text is in file in licenses directory)");
-        } else {
-            licenseWriter.printf("%-100s%40s\n", "(path in the source)", "(see license text reproduced below)");
-        }
-        licenseWriter.println("------------------------------------------------------------------------------------------------------------------------------------------------------");
-        
         List<String> footnotes = new ArrayList<>();
+        boolean headerPrinted = false;
         
         for(String module : modules) {
             File moduleDir = new File(nball, module);
@@ -238,7 +235,24 @@ public class CreateLicenseSummary extends Task {
                 if(binary && fs.isSourceOnly()) {
                     continue;
                 }
-                
+
+                if (!headerPrinted) {
+                    licenseWriter.println();
+                    licenseWriter.println("******************************************************************************************************************************************************");
+                    licenseWriter.println("Apache NetBeans includes a number of source files that are not covered by the apache license. The following files are part of this distribution.");
+                    licenseWriter.println("******************************************************************************************************************************************************");
+                    licenseWriter.println();
+
+                    licenseWriter.printf("%-100s%40s%10s\n", "Sourcefile", "LICENSE", "NOTES");
+                    if(licenseTargetDir != null) {
+                        licenseWriter.printf("%-100s%40s\n", "(path in the source)", "(text is in file in licenses directory)");
+                    } else {
+                        licenseWriter.printf("%-100s%40s\n", "(path in the source)", "(see license text reproduced below)");
+                    }
+                    licenseWriter.println("------------------------------------------------------------------------------------------------------------------------------------------------------");
+                    headerPrinted = true;
+                }
+
                 String notes = "";
                 if(fs.getLicenseInfo() != null) {
                     int idx = footnotes.indexOf(fs.getLicenseInfo());
@@ -284,7 +298,18 @@ public class CreateLicenseSummary extends Task {
         Map<String, Map<String, String>> binaries2LicenseHeaders = new TreeMap<>();
         StringBuilder testBinariesAreUnique = new StringBuilder();
         List<String> ignoredPatterns = VerifyLibsAndLicenses.loadPatterns("ignored-binary-overlaps");
-        findBinaries(build, binaries2LicenseHeaders, crc2License, new HashMap<>(), "", testBinariesAreUnique, ignoredPatterns);
+        if (build != null)
+            findBinaries(build, binaries2LicenseHeaders, crc2License, new HashMap<>(), "", testBinariesAreUnique, ignoredPatterns);
+        if (moduleFiles != null) {
+            for (Resource r : moduleFiles) {
+                Entry<Map<String, String>,Long> headers = getHeaders(crc2License, () -> r.getInputStream());
+                if (headers != null) {
+                    binaries2LicenseHeaders.put(r.getName(), headers.getKey());
+                }
+            }
+        }
+        if (binaries2LicenseHeaders.isEmpty())
+            return ;
         pseudoTests.put("testBinariesAreUnique", testBinariesAreUnique.length() > 0 ? "Some binaries are duplicated (edit nbbuild/antsrc/org/netbeans/nbbuild/extlibs/ignored-binary-overlaps as needed)" + testBinariesAreUnique : null);
         
         licenseWriter.println();
@@ -392,9 +417,11 @@ public class CreateLicenseSummary extends Task {
                             if (!innerName.endsWith(".jar") && !innerName.endsWith(".zip")) {
                                 continue;
                             }
+                            Map<String, String> nestedHeaders = binary2License.get(n + "!/" + innerName);
+                            if (nestedHeaders == null) nestedHeaders = headers;
                             is = zf.getInputStream(entry);
                             try {
-                                crc2LicenseHeaders.put(computeCRC32(is), headers);
+                                crc2LicenseHeaders.put(computeCRC32(is), nestedHeaders);
                             } finally {
                                 is.close();
                             }
@@ -429,6 +456,41 @@ public class CreateLicenseSummary extends Task {
                 }
             }
         }
+    }
+
+    private Entry<Map<String, String>, Long> getHeaders(Map<Long, Map<String, String>> crc2License,
+                                                        OpenInputStream in) throws IOException {
+        Map<String, String> headers;
+        long crc;
+
+        try (InputStream is = in.open()) {
+            crc = computeCRC32(is);
+            headers = crc2License.get(crc);
+        }
+
+        if (headers == null) {
+            try (InputStream is = in.open();
+                 JarInputStream jin = new JarInputStream(is)) {
+                Manifest man = jin.getManifest();
+                if (man != null) {
+                    String origCRC = man.getMainAttributes().getValue("NB-Original-CRC");
+                    if (origCRC != null) {
+                        try {
+                            crc = Long.parseLong(origCRC);
+                            headers = crc2License.get(crc);
+                        } catch (NumberFormatException ex) {
+                            throw new BuildException(ex);
+                        }
+                    }
+                }
+            }
+        }
+
+        return headers != null ? new SimpleEntry<>(headers, crc) : null;
+    }
+
+    private interface OpenInputStream {
+        public InputStream open() throws IOException;
     }
 
     private long computeCRC32(InputStream is) throws IOException {
@@ -501,30 +563,27 @@ public class CreateLicenseSummary extends Task {
             if (f.isDirectory()) {
                 findBinaries(f, binaries2LicenseHeaders, crc2LicenseHeaders, crc2Binary, prefix + n + "/", testBinariesAreUnique, ignoredPatterns);
             } else if (n.endsWith(".jar") || n.endsWith(".zip") || n.endsWith(".xml") || n.endsWith(".js") || n.endsWith(".dylib")) {
-                try (InputStream is = new FileInputStream(f)) {
-                    long crc = computeCRC32(is);
-                    Map<String, String> headers = crc2LicenseHeaders.get(crc);
-                    if (headers != null) {
-                        String path = prefix + n;
-                        binaries2LicenseHeaders.put(path, headers);
-                        String otherPath = crc2Binary.put(crc, path);
-                        if (otherPath != null) {
-                            boolean ignored = false;
-                            for (String pattern : ignoredPatterns) {
-                                String[] parts = pattern.split(" ");
-                                assert parts.length == 2 : pattern;
-                                if (SelectorUtils.matchPath(parts[0], otherPath) && SelectorUtils.matchPath(parts[1], path)) {
-                                    ignored = true;
-                                    break;
-                                }
-                                if (SelectorUtils.matchPath(parts[0], path) && SelectorUtils.matchPath(parts[1], otherPath)) {
-                                    ignored = true;
-                                    break;
-                                }
+                Entry<Map<String, String>,Long> headersAndCRC = getHeaders(crc2LicenseHeaders, () -> new FileInputStream(f));
+                if (headersAndCRC != null) {
+                    String path = prefix + n;
+                    binaries2LicenseHeaders.put(path, headersAndCRC.getKey());
+                    String otherPath = crc2Binary.put(headersAndCRC.getValue(), path);
+                    if (otherPath != null) {
+                        boolean ignored = false;
+                        for (String pattern : ignoredPatterns) {
+                            String[] parts = pattern.split(" ");
+                            assert parts.length == 2 : pattern;
+                            if (SelectorUtils.matchPath(parts[0], otherPath) && SelectorUtils.matchPath(parts[1], path)) {
+                                ignored = true;
+                                break;
                             }
-                            if (!ignored) {
-                                testBinariesAreUnique.append('\n').append(otherPath).append(" and ").append(path).append(" are identical");
+                            if (SelectorUtils.matchPath(parts[0], path) && SelectorUtils.matchPath(parts[1], otherPath)) {
+                                ignored = true;
+                                break;
                             }
+                        }
+                        if (!ignored) {
+                            testBinariesAreUnique.append('\n').append(otherPath).append(" and ").append(path).append(" are identical");
                         }
                     }
                 }

@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="libs.asm" default="netbeans" basedir=".">
+<project name="libs.asm" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

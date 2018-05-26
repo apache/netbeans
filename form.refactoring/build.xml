@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="form.refactoring">
+<project basedir="." default="build" name="form.refactoring">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

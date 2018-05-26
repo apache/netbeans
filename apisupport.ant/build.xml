@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="apisupport.ant" default="netbeans" basedir=".">
+<project name="apisupport.ant" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 
@@ -34,9 +34,9 @@
             <fileset dir="antsrc" excludes="${jar-excludes}"/>
         </copy>
         <mkdir dir="${cluster}/ant/nblib"/>
-        <jar jarfile="${cluster}/ant/nblib/${code.name.base.dashes}.jar" compress="false">
+        <nb-ext-jar jarfile="${cluster}/ant/nblib/${code.name.base.dashes}.jar" compress="false">
             <fileset dir="build/antclasses"/>
-        </jar>
+        </nb-ext-jar>
     </target>
 
     <target name="netbeans-extra" depends="nblib"/>

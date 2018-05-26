@@ -24,6 +24,7 @@ import com.sun.source.tree.*;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.model.JavacElements;
+import com.sun.tools.javac.tree.JCTree.JCLambda;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.util.Context;
 import java.util.ArrayList;
@@ -778,6 +779,10 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
             parameters != tree.getParameters())
         {
             LambdaExpressionTree n = make.LambdaExpression(parameters, body);
+            // issue #239256, NETBEANS-345
+            // Subsequent to the construction of tree, the vartype of the head
+            // param might have been filled in, so we need to copy tree's paramKind.
+            ((JCLambda)n).paramKind = ((JCLambda)tree).paramKind;
             model.setType(n, model.getType(tree));
 	    copyCommentTo(tree,n);
             copyPosTo(tree,n);

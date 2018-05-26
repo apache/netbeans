@@ -414,23 +414,23 @@ public class JdbcGraphBuilder extends BaseCallGraphBuilder implements CPUProfili
     private boolean implementsInterface(String thisClass, String STATEMENT_INTERFACE) {
         try {
             String slashedClass = thisClass.replace('.', '/');  // NOI18N
-            DynamicClassInfo clazz = ClassRepository.lookupClass(STATEMENT_INTERFACE, 0);
-            if (clazz != null) {
-                List subclasses = clazz.getSubclasses();
+            List<DynamicClassInfo> clazzes = ClassRepository.getAllClassVersions(STATEMENT_INTERFACE);
+            if (null != clazzes) {
+                for (DynamicClassInfo dynamicClassInfo : clazzes) {
+                    List subclasses = dynamicClassInfo.getSubclasses();
 
-                if (subclasses != null) {
-                    for (int i = 0; i < subclasses.size(); i++) {
-                        DynamicClassInfo subclass = (DynamicClassInfo) subclasses.get(i);
+                    if (subclasses != null) {
+                        for (int i = 0; i < subclasses.size(); i++) {
+                            DynamicClassInfo subclass = (DynamicClassInfo) subclasses.get(i);
 
-                        if (subclass.getName().equals(slashedClass)) {
-                            return true;
+                            if (subclass.getName().equals(slashedClass)) {
+                                return true;
+                            }
                         }
-                    }
+                    }                
                 }
             }
             return false;
-        } catch (IOException ex) {
-            Logger.getLogger(JdbcGraphBuilder.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassFormatError ex) {
             Logger.getLogger(JdbcGraphBuilder.class.getName()).log(Level.SEVERE, null, ex);
         }

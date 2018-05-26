@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="editor.bookmarks" default="netbeans" basedir=".">
+<project name="editor.bookmarks" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="openide.filesystems.compat8">
+<project basedir="." default="build" name="openide.filesystems.compat8">
     <description>Builds, tests, and runs the project org.openide.filesystems.compat8</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

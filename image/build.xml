@@ -20,7 +20,7 @@
 
 -->
 
-<project name="image" default="netbeans" basedir=".">
+<project name="image" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

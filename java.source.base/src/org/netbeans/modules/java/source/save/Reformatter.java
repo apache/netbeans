@@ -2509,7 +2509,7 @@ public class Reformatter implements ReformatTask {
             lastIndent = indent;
             CodeStyle.BracesGenerationStyle redundantForBraces = cs.redundantForBraces();
             int eoln = findNewlineAfterStatement(node);
-            if (redundantForBraces == CodeStyle.BracesGenerationStyle.GENERATE && (startOffset > sp.getStartPosition(root, node) || endOffset < eoln || node.getCondition().getKind() == Tree.Kind.ERRONEOUS)) {
+            if (redundantForBraces == CodeStyle.BracesGenerationStyle.GENERATE && (startOffset > sp.getStartPosition(root, node) || endOffset < eoln || (node.getCondition() != null && node.getCondition().getKind() == Tree.Kind.ERRONEOUS))) {
                 redundantForBraces = CodeStyle.BracesGenerationStyle.LEAVE_ALONE;
             }
             wrapStatement(cs.wrapForStatement(), redundantForBraces, cs.spaceBeforeForLeftBrace() ? 1 : 0, node.getStatement());

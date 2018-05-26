@@ -39,6 +39,9 @@ public class DefaultDiffControllerProvider extends DiffControllerProvider {
 
     @Override
     public DiffControllerImpl createEnhancedDiffController(StreamSource base, StreamSource modified) throws IOException {
+        if (Boolean.getBoolean("netbeans.diff.default.compact")) {
+            return createDiffController(base, modified);
+        }
         return new EditableDiffView(base, modified, true);
     }
 }

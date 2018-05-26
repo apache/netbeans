@@ -25,10 +25,10 @@
 
   <target name="jars" depends="compile">
     <mkdir dir="build"/>
-	<jar jarfile="build/cslanttask.jar"
+	<nb-ext-jar jarfile="build/cslanttask.jar"
 	  basedir="build/classes"
 	  compress="false">
-	</jar>
+	</nb-ext-jar>
   </target>
 
   <target name="compile">

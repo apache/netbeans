@@ -31,7 +31,7 @@
         Target overrides
     ======================================================================== -->
     <target name="-post-clean" depends="native-clean"/>
-    <target name="-post-compile" depends="native-build,copy-native,create-jar-contents-list"/>
+    <target name="-post-compile" depends="native-build,copy-native,create-jar-contents-list,probe"/>
     
     <!-- =======================================================================
         NetBeans Installer engine specific targets
@@ -138,6 +138,10 @@
 	<copy file="${native.dirname}/${native.cleaner.unix.srcdir}/${native.cleaner.unix.file}" 
               todir="${build.classes.dir}/${native.dirname}/${native.cleaner.unix.dir}"/>
         
+    </target>
+
+    <target name="probe">
+        <javac srcdir="probesrc" destdir="${build.classes.dir}/org/netbeans/installer/utils/applications/" source="1.3" debug="true" deprecation="true" target="1.1"/>
     </target>
 
 </project>

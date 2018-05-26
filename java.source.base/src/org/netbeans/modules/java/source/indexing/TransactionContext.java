@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.java.source.parsing.FileManagerTransaction;
@@ -193,7 +194,7 @@ public final class TransactionContext {
     public static TransactionContext beginStandardTransaction(
             @NonNull final URL root,
             final boolean srcIndex,
-            final boolean allFilesIndexing,
+            final Supplier<Boolean> allFilesIndexing,
             final boolean checkForEditorModifications) throws IllegalStateException {
         boolean hasCache;
         if (srcIndex) {
@@ -218,7 +219,7 @@ public final class TransactionContext {
                 CacheAttributesTransaction.create(root, srcIndex, allFilesIndexing)).
             register(
                 ClassIndexEventsTransaction.class,
-                ClassIndexEventsTransaction.create(srcIndex)).
+                ClassIndexEventsTransaction.create(srcIndex, allFilesIndexing)).
             register(
                 SourceFileManager.ModifiedFilesTransaction.class,
                 SourceFileManager.newModifiedFilesTransaction(srcIndex, checkForEditorModifications));

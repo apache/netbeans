@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="css.lib">
+<project basedir="." default="build" name="css.lib">
     <description>Builds, tests, and runs the project org.netbeans.modules.css.lib</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 

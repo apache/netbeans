@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="javawebstart">
+<project basedir="." default="build" name="javawebstart">
     
     <import file="../nbbuild/templates/projectized.xml"/>
     

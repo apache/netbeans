@@ -30,6 +30,7 @@ import java.lang.ref.WeakReference;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -39,6 +40,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Queue;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.Future;
@@ -456,6 +458,10 @@ public class J2SEActionProvider extends BaseActionProvider {
         private final Map</*@GuardedBy("this")*/URL,BuildArtifactMapper.ArtifactsUpdated> currentListeners;
         private final ChangeSupport cs;
         private final AtomicReference<Pair<URI,Collection<File>>> importantFilesCache;
+        //@GuardedBy("this")
+        private final Queue<Runnable> deferred = new ArrayDeque<>();
+        //@GuardedBy("this")
+        private byte deferredGuard; //0 - unset, 1 - pending, 2 - set
         private volatile Object targetCache;
         private volatile Object updatedFSProp;
 
@@ -602,7 +608,11 @@ public class J2SEActionProvider extends BaseActionProvider {
 
         @NonNull
         Future<?> newSyncTask(@NonNull final Runnable callback) {
-            return RUNNER.submit(callback, null);
+            return RUNNER.submit(() -> {
+                    drainDeferred();
+                    callback.run();
+                },
+                null);
         }
 
         private void updateRootsListeners() {
@@ -684,7 +694,7 @@ public class J2SEActionProvider extends BaseActionProvider {
                                 props.setProperty(PROP_SRCDIR, root.getAbsolutePath());
                                 props.setProperty(PROP_INCLUDES, includes);
                                 props.setProperty(COS_CUSTOM, getUpdatedFileSetProperty());
-                                RUNNER.execute(()-> {
+                                final Runnable work = () -> {
                                     try {
                                         final ExecutorTask task = runTargetInDedicatedTab(
                                                 NbBundle.getMessage(J2SEActionProvider.class, "LBL_CompileOnSaveUpdate"),
@@ -703,7 +713,12 @@ public class J2SEActionProvider extends BaseActionProvider {
                                                 ex.getMessage()
                                             });
                                     }
-                                });
+                                };
+                                if (ctx.isAllFilesIndexing()) {
+                                    enqueueDeferred(work);
+                                } else {
+                                    RUNNER.execute(work);
+                                }
                             } else {
                                 LOG.warning("BuildArtifactMapper artifacts do not provide attributes.");    //NOI18N
                             }
@@ -883,8 +898,44 @@ public class J2SEActionProvider extends BaseActionProvider {
                 start++;
             }
             return file.getAbsolutePath().substring(start);
-        }                        
-        
+        }
+
+        private void enqueueDeferred(final Runnable work) {
+            boolean addGuard = false;
+            synchronized (this) {
+                this.deferred.offer(work);
+                if (deferredGuard == 0) {
+                     addGuard = true;
+                    deferredGuard = 1;
+                }
+            }
+            if (addGuard) {
+                final JavaSource js = createSource();
+                synchronized (this) {
+                    if (deferredGuard == 1) {
+                        deferredGuard = 2;
+                        try {
+                            js.runWhenScanFinished((cc) -> drainDeferred(), true);
+                        } catch (IOException ioe) {
+                            Exceptions.printStackTrace(ioe);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void drainDeferred() {
+            Runnable[] todo;
+            synchronized (this) {
+                todo = deferred.toArray(new Runnable[deferred.size()]);
+                deferred.clear();
+                deferredGuard = 0;
+            }
+            for (Runnable r : todo) {
+                r.run();
+            }
+        }
+
         @CheckForNull
         static CosAction getInstance(@NonNull final Project p) {
             final Reference<CosAction> r = instances.get(p);

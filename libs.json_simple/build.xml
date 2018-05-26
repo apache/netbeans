@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="libs.json_simple">
+<project basedir="." default="build" name="libs.json_simple">
     <description>Builds, tests, and runs the project org.netbeans.libs.json_simple</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

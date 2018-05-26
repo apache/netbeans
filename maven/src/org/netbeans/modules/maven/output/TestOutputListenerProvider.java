@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -42,6 +43,7 @@ import org.openide.ErrorManager;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
@@ -68,6 +70,7 @@ public class TestOutputListenerProvider implements OutputProcessor {
     private final Pattern outDirPattern;
     private final Pattern outDirPattern2;
     private final Pattern runningPattern;
+    private final Pattern runningPattern2;
     
     private static final Logger LOG = Logger.getLogger(TestOutputListenerProvider.class.getName());
 
@@ -84,12 +87,13 @@ public class TestOutputListenerProvider implements OutputProcessor {
         runningPattern = Pattern.compile("(?:\\[surefire\\] )?Running (.*)", Pattern.DOTALL); //NOI18N
         outDirPattern = Pattern.compile(".*(?:Surefire)?(?:Failsafe)? report directory\\: (.*)", Pattern.DOTALL); //NOI18N
         outDirPattern2 = Pattern.compile(".*Setting reports dir\\: (.*)", Pattern.DOTALL); //NOI18N
+        runningPattern2 = Pattern.compile("^---\\smaven-surefire-plugin:\\d+\\.\\d+:test\\s.*$", Pattern.DOTALL);
     }
     
     public String[] getWatchedGoals() {
         return TESTGOALS;
     }
-    
+
     @Override
     public void processLine(String line, OutputVisitor visitor) {
         if (delayedLine != null) {
@@ -116,6 +120,21 @@ public class TestOutputListenerProvider implements OutputProcessor {
         if (match.matches()) {
             runningTestClass = match.group(1);
             return;
+        }
+        match = runningPattern2.matcher(line);
+        if (match.matches()) {
+            try {
+                Object defaultValue = PluginPropertyUtils.createEvaluator(visitor.getContext().getCurrentProject())
+                        .evaluate("${project.build.directory}/surefire-reports");
+                if (defaultValue instanceof String) {
+                    outputDir = (String) defaultValue;
+                    visitor.setOutputListener(new TestOutputListener(runningTestClass, outputDir), true);
+                }
+                return;
+            } catch (ExpressionEvaluationException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+
         }
         match = failSeparatePattern.matcher(line);
         if (match.matches()) {

@@ -153,6 +153,7 @@ public final class SubprojectProviderImpl implements SubprojectProvider {
                 }
             }
         }
+        s.remove(project);
         return s;
     }
     

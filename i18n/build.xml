@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="i18n">
+<project basedir="." default="build" name="i18n">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

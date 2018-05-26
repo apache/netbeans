@@ -20,7 +20,7 @@
 
 -->
 
-<project name="o.openidex.util" default="netbeans" basedir=".">
+<project name="o.openidex.util" default="build" basedir=".">
 
     <import file="../nbbuild/templates/projectized.xml"/>
 

@@ -19,7 +19,8 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="parsing.nb">
+<project basedir="." default="build" name="parsing.nb">
     <description>Builds, tests, and runs the project org.netbeans.modules.parsing.nb</description>
     <import file="../nbbuild/templates/projectized.xml"/>
+   
 </project>

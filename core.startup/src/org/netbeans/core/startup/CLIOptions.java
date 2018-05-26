@@ -150,7 +150,7 @@ public class CLIOptions extends CLIHandler {
                     } else if ("Windows".equals(ui)) {
                         ui = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
                     } else if ("Aqua".equals(ui)) {
-                        ui = "apple.laf.AquaLookAndFeel";
+                        ui = "com.apple.laf.AquaLookAndFeel";
                     }
                     uiClass = Class.forName(ui);
                 } catch(ArrayIndexOutOfBoundsException e) {

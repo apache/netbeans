@@ -32,4 +32,18 @@
         <license ref="ISO-8879-SGML" />
         <sourceOnly />
     </fileset>
+    <fileset>
+        <file>javadoctools/resources/stability-deprecated.png</file>
+        <file>javadoctools/resources/stability-friend.png</file>
+        <file>javadoctools/resources/stability-devel.png</file>
+        <file>javadoctools/resources/stability-deprecated.xcf</file>
+        <file>javadoctools/resources/stability-devel.xcf</file>
+        <file>javadoctools/resources/stability-friend.xcf</file>
+        <file>test/unit/src/org/netbeans/nbbuild/data/columnIndex.gif</file>
+        <file>test/unit/src/org/netbeans/nbbuild/data/Category.png</file>
+        <file>test/unit/src/org/netbeans/nbbuild/data/instanceObject.gif</file>
+        <file>test/unit/src/org/netbeans/nbbuild/data/instanceBroken.gif</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
 </licenseinfo>

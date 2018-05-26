@@ -192,7 +192,7 @@ class WriteBackTransaction extends FileManagerTransaction {
 
     @Override
     @NonNull
-    JavaFileObject createFileObject(
+    public JavaFileObject createFileObject(
             @NonNull final Location location,
             @NonNull final File file,
             @NonNull final File root,

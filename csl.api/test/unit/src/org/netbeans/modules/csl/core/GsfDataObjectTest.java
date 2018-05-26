@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.csl.core;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import org.netbeans.junit.NbTestCase;
 import org.openide.cookies.EditorCookie;
 import org.openide.cookies.SaveCookie;
@@ -47,6 +49,29 @@ public class GsfDataObjectTest extends NbTestCase {
         dob.setModified(false);
         assertFalse("Should not be modified.", dob.isModified());
         assertNull("Should not have SaveCookie.",
+                dob.getLookup().lookup(SaveCookie.class));
+    }
+    
+    public void testSetModifiedNestedChange() throws Exception {
+        FileSystem fs = FileUtil.createMemoryFileSystem();
+        FileObject f = fs.getRoot().createData("index.test");
+        DataObject dob = DataObject.find(f);
+        assertEquals("The right object", GsfDataObject.class, dob.getClass());
+        dob.getLookup().lookup(EditorCookie.class).openDocument().insertString(0,
+                "modified", null);
+        assertTrue("Should be modified.", dob.isModified());
+        dob.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                String s = evt.getPropertyName();
+                if (DataObject.PROP_MODIFIED.equals(s) && !dob.isModified()) {
+                    dob.setModified(true);
+                }
+            }
+        });
+        dob.setModified(false);
+        assertTrue("Should be still modified.", dob.isModified());
+        assertNotNull("Still should have save cookie.",
                 dob.getLookup().lookup(SaveCookie.class));
     }
 }

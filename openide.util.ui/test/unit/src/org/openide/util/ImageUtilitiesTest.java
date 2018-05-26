@@ -21,10 +21,9 @@ package org.openide.util;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.net.MalformedURLException;
 import java.net.URL;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import junit.framework.*;
 
@@ -36,6 +35,16 @@ public class ImageUtilitiesTest extends TestCase {
     
     public ImageUtilitiesTest (String testName) {
         super (testName);
+    }
+
+    public void testNullYieldsNullLocalized() throws Exception {
+        ImageIcon icon = ImageUtilities.loadImageIcon(null, true);
+        assertNull(icon);
+    }
+
+    public void testNullYieldsNull() throws Exception {
+        ImageIcon icon = ImageUtilities.loadImageIcon(null, false);
+        assertNull(icon);
     }
 
     public void testMergeImages() throws Exception {

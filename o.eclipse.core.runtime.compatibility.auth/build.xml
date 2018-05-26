@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="o.eclipse.core.runtime.compatibility.auth" default="netbeans" basedir=".">
+<project name="o.eclipse.core.runtime.compatibility.auth" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
     <target name="jar"/>
 </project>

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="keyring">
+<project basedir="." default="build" name="keyring">
     <import file="../nbbuild/templates/projectized.xml"/>
     <target name="debug" depends="netbeans">
         <ant dir="../keyring.impl" inheritall="false"/>

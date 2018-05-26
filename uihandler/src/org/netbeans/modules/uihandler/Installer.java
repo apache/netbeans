@@ -2347,7 +2347,7 @@ public class Installer extends ModuleInstall implements Runnable {
                         }
                         Dimension dim = new Dimension(350, 50);
                         if ("ERROR_URL".equals(msg)) {
-                            dim = new Dimension(370, 250);
+                            dim = new Dimension(370, 200);
                         }
                         browser = new JEditorPane();
                         try {
@@ -2672,7 +2672,7 @@ public class Installer extends ModuleInstall implements Runnable {
         
         @Override
         protected void alterMessage(final DialogDescriptor dd) {
-            if ("ERROR_URL".equals(msg)&(dd.getOptions().length > 1)){
+            if ((dd.getOptions().length > 1) && ("ERROR_URL".equals(msg))){
                 Object obj = dd.getOptions()[0];
                 AbstractButton abut = null;
                 String rptr = null;
@@ -2698,6 +2698,8 @@ public class Installer extends ModuleInstall implements Runnable {
                         }
                     });
                 }
+            } else if("ERROR_URL".equals(msg)) {
+                jpb.setVisible(false);
             }
         }
 

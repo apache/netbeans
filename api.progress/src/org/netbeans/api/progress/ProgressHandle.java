@@ -38,7 +38,7 @@ import org.openide.util.Cancellable;
  * 
  * @author Milos Kleint (mkleint@netbeans.org)
  */
-public final class ProgressHandle {
+public final class ProgressHandle implements AutoCloseable {
 
     private static final Logger LOG = Logger.getLogger(ProgressHandle.class.getName());
 
@@ -165,6 +165,14 @@ public final class ProgressHandle {
         internal.toDeterminate(workunits, estimate);
     }
     
+    /**
+     * Calls {@link #finish()}
+     */
+    @Override
+    public final void close() {
+        finish();
+    }
+
     /**
      * Finish the task, remove the task's component from the progress bar UI.
      * This method has to be called after calling <code>start</code> method (the task has to be running).

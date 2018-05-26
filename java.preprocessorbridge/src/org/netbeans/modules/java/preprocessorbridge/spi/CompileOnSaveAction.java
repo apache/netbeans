@@ -103,6 +103,7 @@ public interface CompileOnSaveAction {
         private final URL srcRoot;
         private final boolean isCopyResources;
         private final boolean isKeepResourcesUpToDate;
+        private final boolean isAllFilesIndexing;
         private final File cacheRoot;
         private final Iterable<? extends File> updated;
         private final Iterable<? extends File> deleted;
@@ -114,6 +115,7 @@ public interface CompileOnSaveAction {
                 @NonNull final URL srcRoot,
                 final boolean isCopyResources,
                 final boolean isKeepResourcesUpToDate,
+                final boolean isAllFilesIndexing,
                 @NullAllowed final File cacheRoot,
                 @NullAllowed final Iterable<? extends File> updated,
                 @NullAllowed final Iterable<? extends File> deleted,
@@ -123,6 +125,7 @@ public interface CompileOnSaveAction {
             this.srcRoot = srcRoot;
             this.isCopyResources = isCopyResources;
             this.isKeepResourcesUpToDate = isKeepResourcesUpToDate;
+            this.isAllFilesIndexing = isAllFilesIndexing;
             this.cacheRoot = cacheRoot;
             this.updated = updated;
             this.deleted = deleted;
@@ -260,7 +263,7 @@ public interface CompileOnSaveAction {
         @NonNull
         public static Context clean(@NonNull final URL srcRoot) {
             Parameters.notNull("srcRoot", srcRoot); //NOI18N
-            return new Context(Operation.CLEAN, srcRoot, false, false, null, null, null, null, null);
+            return new Context(Operation.CLEAN, srcRoot, false, false, false, null, null, null, null, null);
         }
         
         /**
@@ -281,12 +284,36 @@ public interface CompileOnSaveAction {
                 @NonNull final Iterable<? extends File> updated,
                 @NonNull final Iterable<? extends File> deleted,
                 @NullAllowed final Consumer<Iterable<File>> firer) {
+            return update(srcRoot, isCopyResources, false, cacheRoot, updated, deleted, firer);
+        }
+
+        /**
+         * Creates context for update operation.
+         * @param srcRoot the root
+         * @param isCopyResources true for resource update
+         * @param isAllFilesIndexing true for all files indexing
+         * @param cacheRoot the cache root
+         * @param updated the changed files
+         * @param deleted the deleted files
+         * @param firer the fire callback
+         * @return the {@link Context} for update operation
+         * @since 1.50
+         */
+        @NonNull
+        public static Context update(
+                @NonNull final URL srcRoot,
+                final boolean isCopyResources,
+                final boolean isAllFilesIndexing,
+                @NonNull final File cacheRoot,
+                @NonNull final Iterable<? extends File> updated,
+                @NonNull final Iterable<? extends File> deleted,
+                @NullAllowed final Consumer<Iterable<File>> firer) {
             Parameters.notNull("srcRoot", srcRoot); //NOI18N
             Parameters.notNull("cacheRoot", cacheRoot); //NOI18N
             Parameters.notNull("updated", updated); //NOI18N
-            Parameters.notNull("deleted", deleted); //NOI18N            
+            Parameters.notNull("deleted", deleted); //NOI18N
             return new Context(
-                    Operation.UPDATE, srcRoot, isCopyResources, false, cacheRoot, updated, deleted, null, firer);
+                    Operation.UPDATE, srcRoot, isCopyResources, false, isAllFilesIndexing, cacheRoot, updated, deleted, null, firer);
         }
         
         /**
@@ -306,7 +333,7 @@ public interface CompileOnSaveAction {
             Parameters.notNull("srcRoot", srcRoot); //NOI18N
             Parameters.notNull("owner", owner); //NOI18N
             return new Context(
-                    Operation.SYNC, srcRoot, isCopyResources, isKeepResourcesUpToDate, null, null, null, owner, null);
+                    Operation.SYNC, srcRoot, isCopyResources, isKeepResourcesUpToDate, false, null, null, null, owner, null);
         }
         
         /**
@@ -377,6 +404,15 @@ public interface CompileOnSaveAction {
             }
 
             return result;
+        }
+
+        /**
+         * Returns true if the action represents an all files indexing.
+         * @return true for all files indexing
+         * @since 1.50
+         */
+        public boolean isAllFilesIndexing() {
+            return this.isAllFilesIndexing;
         }
     }
 

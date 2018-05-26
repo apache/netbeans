@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="java.source.queries">
+<project basedir="." default="build" name="java.source.queries">
     <description>Builds, tests, and runs the project org.netbeans.modules.java.source.queries</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

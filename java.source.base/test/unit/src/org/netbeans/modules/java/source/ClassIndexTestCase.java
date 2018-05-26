@@ -67,7 +67,7 @@ public class ClassIndexTestCase extends NbTestCase {
         try {
             return TransactionContext.beginTrans().
                     register(ClassIndexEventsTransaction.class, 
-                             ClassIndexEventsTransaction.create(true)).
+                             ClassIndexEventsTransaction.create(true, ()->true)).
                     register(FileManagerTransaction.class, FileManagerTransaction.writeThrough()).
                     register(ProcessorGenerated.class, ProcessorGenerated.nullWrite());
         } catch (IllegalStateException ise) {

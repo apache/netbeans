@@ -1850,7 +1850,39 @@ public final class TreeUtilities {
         
         return ref.paramTypes;
     }
-    
+   
+    /**Check the var type variable in given tree path {@link TreePath}.
+     * 
+     * @param path the path of tree {@link TreePath}
+     * @return the true if tree contains var keyword else return false
+     * @since 2.31.0
+     */
+    public boolean isVarType(@NonNull TreePath path) {
+        TokenSequence<JavaTokenId> tokenSequence = tokensFor(path.getLeaf());
+        tokenSequence.moveStart();
+        while(tokenSequence.moveNext() && tokenSequence.token().id() != JavaTokenId.EQ){
+            if(tokenSequence.token().id() == JavaTokenId.VAR){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**Check the tree is the end of compound declaration. {@link Tree}.
+     *
+     * @param tree the tree {@link Tree}
+     * @return the true if tree is end of compound declaration else return false
+     * @since 2.33.0
+     */
+    public boolean isEndOfCompoundVariableDeclaration(@NonNull Tree tree) {
+        TokenSequence<JavaTokenId> tokenSequence = tokensFor(tree);
+        tokenSequence.moveEnd();
+        if (tokenSequence.movePrevious() && tokenSequence.token().id() != JavaTokenId.COMMA) {
+            return true;
+        }
+        return false;
+    }
+ 
     private static final class NBScope implements Scope {
 
         private final JavacScope delegate;

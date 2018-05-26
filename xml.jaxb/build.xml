@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="xml.jaxb" default="netbeans" basedir=".">
+<project name="xml.jaxb" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

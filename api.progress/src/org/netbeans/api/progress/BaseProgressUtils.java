@@ -192,13 +192,10 @@ public final class BaseProgressUtils {
             PROVIDER.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
-                    ProgressHandle handle = ProgressHandle.createHandle(displayName);
-                    handle.start();
-                    handle.switchToIndeterminate();
-                    try {
+                    try (ProgressHandle handle = ProgressHandle.createHandle(displayName)) {
+                        handle.start();
+                        handle.switchToIndeterminate();
                         ref.set(operation.run(handle));
-                    } finally {
-                        handle.finish();
                     }
                 }
             }, displayName, new AtomicBoolean(false), true, 0, 0);

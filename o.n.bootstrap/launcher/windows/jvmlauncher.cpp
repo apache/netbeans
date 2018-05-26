@@ -28,6 +28,8 @@ using namespace std;
 
 const char *JvmLauncher::JDK_KEY = "Software\\JavaSoft\\Java Development Kit";
 const char *JvmLauncher::JRE_KEY = "Software\\JavaSoft\\Java Runtime Environment";
+const char *JvmLauncher::JDK_POST9_KEY = "Software\\JavaSoft\\JDK";
+const char *JvmLauncher::JRE_POST9_KEY = "Software\\JavaSoft\\JRE";
 const char *JvmLauncher::CUR_VERSION_NAME = "CurrentVersion";
 const char *JvmLauncher::JAVA_HOME_NAME = "JavaHome";
 const char *JvmLauncher::JAVA_BIN_DIR = "\\bin";
@@ -399,6 +401,13 @@ bool JvmLauncher::startOutProcJvm(const char *mainClassName, const std::list<std
 }
 
 bool JvmLauncher::findJava(const char *minJavaVersion) {
+    // scan for registry for jdk/jre version 9
+    if (findJava(JDK_POST9_KEY, "", minJavaVersion)) {
+        return true;
+    }
+    if (findJava(JRE_POST9_KEY, "", minJavaVersion)) {
+        return true;
+    }
     if (findJava(JDK_KEY, JAVA_JRE_PREFIX, minJavaVersion)) {
         return true;
     }

@@ -20,6 +20,6 @@
 
 -->
 
-<project name="classfile" default="netbeans" basedir=".">
+<project name="classfile" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

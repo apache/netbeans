@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="nashorn.execution">
+<project basedir="." default="build" name="nashorn.execution">
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

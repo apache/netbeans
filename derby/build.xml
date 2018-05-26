@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="derby">
+<project basedir="." default="build" name="derby">
     <import file="../nbbuild/templates/projectized.xml"/>
 
     <target name="-check-derbysampledb" depends="basic-init">

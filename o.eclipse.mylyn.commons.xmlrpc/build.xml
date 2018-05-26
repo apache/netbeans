@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="o.eclipse.mylyn.commons.xmlrpc" default="netbeans" basedir=".">
+<project name="o.eclipse.mylyn.commons.xmlrpc" default="build" basedir=".">
     <import file="../nbbuild/templates/projectized.xml"/>
     <target name="jar"/>
 </project>

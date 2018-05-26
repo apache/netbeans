@@ -20,10 +20,7 @@ package org.netbeans.modules.java.module.graph;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.code.Symbol;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -156,19 +153,11 @@ final class DependencyCalculator {
     }   
 
     private boolean isJDK(final ModuleElement me, ClasspathInfo cpinfo) {
-        boolean isJDK = false;
-        Symbol.ClassSymbol mi = ((Symbol.ModuleSymbol) me).module_info;
-        JavaFileObject cf = mi != null ? mi.classfile : null;
-        if(cf != null) {
-            URI uri = cf.toUri();
-            ClassPath cp = cpinfo.getClassPath(ClasspathInfo.PathKind.BOOT);
-            try {
-                isJDK = cp.findOwnerRoot(URLMapper.findFileObject(uri.toURL())) != null;
-            } catch (MalformedURLException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+        for (FileObject root : cpinfo.getClassPath(ClasspathInfo.PathKind.BOOT).getRoots()) {
+            if (root.getNameExt().contentEquals(me.getQualifiedName()))
+                return true;
         }
-        return isJDK;
+        return false;
     }
     
     Collection<DependencyEdge> collectTransitiveDependencies(Collection<DependencyEdge> deps) {

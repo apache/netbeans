@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project basedir="." default="netbeans" name="maven.model">
+<project basedir="." default="build" name="maven.model">
     <description>Builds, tests, and runs the project org.netbeans.modules.maven.model</description>
     <import file="../nbbuild/templates/projectized.xml"/>
 </project>

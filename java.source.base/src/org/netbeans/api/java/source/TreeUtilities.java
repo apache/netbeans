@@ -1883,6 +1883,50 @@ public final class TreeUtilities {
         return false;
     }
  
+    /**
+     * Checks whether tree is part of compound variable declaration.
+     *
+     * @param tree tree to examine.
+     * @return true if {@code tree} is part of compound var declaration.
+     * @since 2.34.0
+     */
+    public boolean isPartOfCompoundVariableDeclaration(@NonNull Tree tree) {
+        TokenSequence<JavaTokenId> tokenSequence = tokensFor(tree);
+
+        if (tree.getKind() != Tree.Kind.VARIABLE) {
+            return false;
+        }
+
+        // If tree ends with comma then tree is part of compound variable declaration.
+        tokenSequence.moveEnd();
+        if (tokenSequence.movePrevious() && tokenSequence.token().id() == JavaTokenId.COMMA) {
+            return true;
+        }
+
+        int startPos = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
+        tokenSequence.moveStart();
+
+        int tokensLength = 0;
+
+        // To find out the first subtree from compound varaible declaration statement(if any).
+        while (tokenSequence.moveNext()) {
+            tokensLength += tokenSequence.token().length();
+            if (tokenSequence.token().id() == JavaTokenId.IDENTIFIER) {
+
+                Tree path = pathFor(startPos + tokensLength).getLeaf();
+                TokenSequence<JavaTokenId> TokenSeq = tokensFor(path);
+                TokenSeq.moveEnd();
+
+                if (TokenSeq.movePrevious() && TokenSeq.token().id() == JavaTokenId.COMMA) {
+                    return true;
+                }
+                break;
+            }
+        }
+
+        return false;
+    }
+
     private static final class NBScope implements Scope {
 
         private final JavacScope delegate;

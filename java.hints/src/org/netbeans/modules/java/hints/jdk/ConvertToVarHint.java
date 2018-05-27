@@ -157,6 +157,10 @@ public class ConvertToVarHint {
             return false;
         }
 
+        // hint is not applicable for compound variable declaration.
+        if (info.getTreeUtilities().isPartOfCompoundVariableDeclaration(treePath.getLeaf()))
+            return false;
+
         //  hint is not applicable for  variable declaration where type is already 'var'
         return !info.getTreeUtilities().isVarType(treePath);
     }

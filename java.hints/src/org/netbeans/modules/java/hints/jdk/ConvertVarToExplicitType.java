@@ -23,8 +23,11 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
@@ -152,15 +155,24 @@ public class ConvertVarToExplicitType {
     private static boolean isValidType(HintContext ctx) {
         TreePath treePath = ctx.getPath();
         TreePath initTreePath = ctx.getVariables().get("$init");  //NOI18N
+        TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
 
         if (initTreePath.getLeaf().getKind() == Tree.Kind.NEW_CLASS) {
             NewClassTree nct = ((NewClassTree) initTreePath.getLeaf());
             if (nct.getClassBody() != null) {
                 return false;
             }
+        } else if (initTreePath.getLeaf().getKind() == Tree.Kind.METHOD_INVOCATION) {
+            //filter anonymous class type return type
+            if (variableTypeMirror.getKind() == TypeKind.DECLARED) {
+                DeclaredType dt = (DeclaredType) variableTypeMirror;
+                TypeElement typeElem = (TypeElement) dt.asElement();
+                ClassSymbol sym = (ClassSymbol) typeElem;
+                if (sym.isAnonymous()) {
+                    return false;
+                }
+            }
         }
-
-        TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
 
         if (!Utilities.isValidType(variableTypeMirror) ||(variableTypeMirror.getKind() == TypeKind.INTERSECTION)) {
             return false;

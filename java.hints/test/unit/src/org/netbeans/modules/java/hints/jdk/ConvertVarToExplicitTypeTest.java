@@ -350,6 +350,23 @@ public class ConvertVarToExplicitTypeTest {
                         + "    }\n"
                         + "    <Z> List<Z> listOf(Z z) { return null; }\n"
                         + "}");
-    }    
-
+    } 
+    
+    @Test
+    public void testNoVarHintForAnonymousType() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                        + "public class Test {\n"
+                        + "void v() {\n"
+                        + "  var v = get(new Object(){});\n" 
+                        + "}\n"
+                        + "\n" 
+                        + "<Z> Z get(Z z) {\n" 
+                        + "  return z; \n"
+                        + "}"
+                        + "}")                        
+                .sourceLevel("1.10")
+                .run(ConvertVarToExplicitType.class)
+                .assertNotContainsWarnings(VAR_CONV_WARNING);
+    }
 }

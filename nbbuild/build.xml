@@ -164,13 +164,7 @@
   <target name="init-module-list" depends="bootstrap,init-tasks,prepare-vanilla-javac">
     <!-- Define modules. -->
     <checkmoduleconfigs nbroot=".."/>
-    <resolvelist name="allmodules" list="${nb.clusters.list}"/>
-    <pathconvert property="modules.fullpath" >
-        <path>
-            <dirset dir="${nb_all}" includes="${allmodules}" />
-        </path>
-        <mapper type="identity" />
-    </pathconvert>
+    <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${nb.clusters.list}"/>
     <sortsuitemodules unsortedmodules="${modules.fullpath}" sortedmodulesproperty="modules.sorted"/>
   </target>
 

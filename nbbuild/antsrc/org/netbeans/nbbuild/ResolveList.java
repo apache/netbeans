@@ -19,12 +19,15 @@
 
 package org.netbeans.nbbuild;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Mapper;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 /** Expand the comma-separated list of properties to 
  *  their values and assing it to single property
@@ -36,6 +39,8 @@ public class ResolveList extends Task {
     private List<String> properties;
     private String name;
     private Mapper mapper;
+    private File dir;
+    private String path;
 
     /** Comma-separated list of properties to expand */
     public void setList (String s) {
@@ -50,6 +55,10 @@ public class ResolveList extends Task {
         name = s;
     }
 
+    public void setDir(File dir) {
+        this.dir = dir;
+    }
+
     /** Mapper to be applied to each property in the list before its
      * value is taken
      */
@@ -57,9 +66,21 @@ public class ResolveList extends Task {
         this.mapper = m;
     }
 
+    /** Name of the path to fill with fully qualified paths to projects.
+     */
+    public void setPath(String pathName) {
+        this.path = pathName;
+    }
+
     @Override
     public void execute () throws BuildException {
         if (name == null) throw new BuildException("name property have to be set", getLocation());
+
+        if (path != null && dir != null) {
+            seekHarderExecute();
+            return;
+        }
+
         String value = "";
         String prefix = "";
         for (String property: properties) {
@@ -81,4 +102,52 @@ public class ResolveList extends Task {
         
         getProject().setNewProperty(name,value);
     }        
+
+    private void seekHarderExecute() {
+        StringBuilder value = new StringBuilder();
+        Path full = new Path(getProject());
+        String prefix = "";
+        for (String property: properties) {
+            String[] props;
+            if (mapper != null) {
+                props = mapper.getImplementation().mapFileName(property);
+            } else {
+                props = new String[] { property };
+            }
+            final FileUtils fileUtils = FileUtils.getFileUtils();
+
+            String clusterDir = getProject().getProperty(property + ".dir");
+            File cluster = fileUtils.resolveFile(dir, clusterDir);
+
+            for (String p : props) {
+                String[] pValues = getProject().getProperty(p).split(",");
+
+                for (String oneValue : pValues) {
+                    File oneFile = fileUtils.resolveFile(dir, oneValue);
+                    if (!nbProjectExists(oneFile)) {
+                        File sndFile = fileUtils.resolveFile(cluster, oneValue);
+                        if (!nbProjectExists(sndFile)) {
+                            throw new BuildException("Cannot resolve " + oneValue + ". Neither one exist:\n  " + oneFile + "\n  " + sndFile);
+                        }
+                        oneValue = clusterDir + "/" + oneValue;
+                        oneFile = sndFile;
+                    }
+
+                    if (oneValue != null && oneValue.length() > 0) {
+                        value.append(prefix).append(oneValue);
+                        full.createPathElement().setLocation(oneFile);
+                        prefix = ",";
+                    }
+                }
+            }
+        }
+
+        getProject().setNewProperty(name, value.toString());
+        getProject().setNewProperty(path, full.toString());
+    }
+
+    private static boolean nbProjectExists(File d) {
+        File projectXml = new File(d, "nbproject" + File.separatorChar + "project.xml");
+        return projectXml.exists();
+    }
 }

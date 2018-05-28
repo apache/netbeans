@@ -23,14 +23,17 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -88,10 +91,7 @@ public final class ModuleList {
     static int jarsOpened;
 
     /** Synch with org.netbeans.nbbuild.ModuleListParser.FOREST: */
-    private static final String[] FOREST = {
-        /*root*/null,
-        "contrib",
-    };
+    private final String[] FOREST;
 
     /**
      * Cache of source-derived lists, by source root.
@@ -1176,7 +1176,7 @@ public final class ModuleList {
         // Check for post-Hg layout:
         File repo = f.getParentFile();
         if (repo != null) {
-            for (String tree : FOREST) {
+            for (String tree : new String[] { null, "contrib" }) {
                 File mainrepo;
                 if (tree == null) {
                     mainrepo = repo;
@@ -1196,7 +1196,7 @@ public final class ModuleList {
             if (f == null) {
                 return null;
             }
-            if (new File(f, "nbbuild").isDirectory() && new File(f, "core").isDirectory()) { // NOI18N
+            if (new File(f, "nbbuild").isDirectory()) { // NOI18N
                 return f;
             }
         }
@@ -1263,6 +1263,18 @@ public final class ModuleList {
                     clusterLocations.put(nbroot, clusterLocationsHere);
                 }
                 cluster = clusterLocationsHere.get(path);
+                if (cluster == null && path != null) {
+                    int clusterSep = path.lastIndexOf('/');
+                    if (clusterSep >= 0) {
+                        String id = path.substring(clusterSep + 1);
+                        String expCluster = path.substring(0, clusterSep);
+
+                        cluster = clusterLocationsHere.get(id);
+                        if (!expCluster.equals(cluster)) {
+                            cluster = null;
+                        }
+                    }
+                }
                 if (cluster == null) {
                     cluster = "extra"; // NOI18N
                 }
@@ -1290,6 +1302,26 @@ public final class ModuleList {
     private ModuleList(Map<String,ModuleEntry> entries, File home) {
         this.entries = entries;
         this.home = home;
+        Set<String> forest = new LinkedHashSet<>();
+        forest.add(null);
+        forest.add("contrib");
+        File cluster = new File(new File(home, "nbbuild"), "cluster.properties");
+        if (cluster.exists()) {
+            Properties p = new Properties();
+            try (FileInputStream is = new FileInputStream(cluster)) {
+                p.load(is);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            Enumeration<?> en = p.propertyNames();
+            while (en.hasMoreElements()) {
+                String propName = (String) en.nextElement();
+                if (propName.endsWith(".dir")) {
+                    forest.add(p.getProperty(propName));
+                }
+            }
+        }
+        FOREST = forest.toArray(new String[0]);
     }
     
     public @Override String toString() {

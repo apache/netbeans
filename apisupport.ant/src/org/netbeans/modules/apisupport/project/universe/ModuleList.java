@@ -1263,6 +1263,18 @@ public final class ModuleList {
                     clusterLocations.put(nbroot, clusterLocationsHere);
                 }
                 cluster = clusterLocationsHere.get(path);
+                if (cluster == null && path != null) {
+                    int clusterSep = path.lastIndexOf('/');
+                    if (clusterSep >= 0) {
+                        String id = path.substring(clusterSep + 1);
+                        String expCluster = path.substring(0, clusterSep);
+
+                        cluster = clusterLocationsHere.get(id);
+                        if (!expCluster.equals(cluster)) {
+                            cluster = null;
+                        }
+                    }
+                }
                 if (cluster == null) {
                     cluster = "extra"; // NOI18N
                 }

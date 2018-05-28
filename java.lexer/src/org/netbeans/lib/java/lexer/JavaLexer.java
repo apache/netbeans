@@ -1051,15 +1051,10 @@ public class JavaLexer implements Lexer<JavaTokenId> {
 
                                     if (AFTER_VAR_TOKENS.contains(next.id())) {
                                         do {
-                                            if (next.partType() != PartType.COMPLETE) {
-                                                break;
-                                            }
-
                                             next = nextToken();
+                                        } while (next != null && AFTER_VAR_TOKENS.contains(next.id()));
 
-                                        } while (AFTER_VAR_TOKENS.contains(next.id()));
-
-                                        varKeyword = next.id() == JavaTokenId.IDENTIFIER;
+                                        varKeyword = next != null && next.id() == JavaTokenId.IDENTIFIER;
                                     }
 
                                     input.backup(input.readLengthEOF()- len);

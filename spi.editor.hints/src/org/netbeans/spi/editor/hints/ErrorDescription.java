@@ -19,6 +19,7 @@
 package org.netbeans.spi.editor.hints;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.openide.filesystems.FileObject;
 import org.openide.text.PositionBounds;
@@ -39,6 +40,7 @@ public final class ErrorDescription {
     private final String customType;
     private final LazyFixList fixes;
     private final PositionBounds span;
+    private final ArrayList<PositionBounds> spanTail = new ArrayList<>();
     private final FileObject file;
 
     /**
@@ -53,6 +55,21 @@ public final class ErrorDescription {
         this.customType = null;
         this.fixes       = fixes;
         this.span        = span;
+        this.file        = file;
+    }
+    
+    
+    ErrorDescription(FileObject file, String id, String description, CharSequence details, Severity severity, String customType, LazyFixList fixes, 
+            PositionBounds span, ArrayList<PositionBounds> spanTail) {
+        this.id = id;
+        this.description = description;
+        this.details = details;
+        this.severity    = severity;
+        this.customType = customType;
+        this.fixes       = fixes;
+        this.span        = span;
+        this.spanTail.clear();
+        this.spanTail.addAll(spanTail);
         this.file        = file;
     }
     
@@ -125,6 +142,15 @@ public final class ErrorDescription {
      */
     public PositionBounds getRange() {
         return span;
+    }
+    
+    /**
+     *  Return range tail: to support multiple ranges for error/warning
+     * @return 
+     * @since 1.42
+     */
+    public ArrayList<PositionBounds> getRangeTail() {
+        return spanTail;
     }
 
     /**

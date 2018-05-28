@@ -1,7 +1,7 @@
 Name: JDOM
 Version: 1.0
 Description: Java API for XML manipulation.
-License: Apache-JDOM
+License: BSD-JDOM
 Origin: http://www.jdom.org/dist/binary/jdom-1.0.tar.gz
 
 Copyright (C) 2000-2004 Jason Hunter & Brett McLaughlin.

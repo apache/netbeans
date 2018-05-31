@@ -138,6 +138,7 @@ import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
 import java.net.URI;
 import java.util.concurrent.Callable;
+import javax.lang.model.element.NestingKind;
 import javax.lang.model.type.ErrorType;
 import javax.lang.model.type.UnionType;
 import javax.tools.Diagnostic;
@@ -2994,5 +2995,16 @@ public class Utilities {
     
     public static boolean isModular(CompilationInfo info) {
         return getModuleInfo(info) != null;
+    }
+    
+    public static boolean isAnonymousType(TypeMirror type) {
+        if (type.getKind() == TypeKind.DECLARED) {
+            DeclaredType dt = (DeclaredType) type;
+            TypeElement typeElem = (TypeElement) dt.asElement();
+            if (typeElem.getNestingKind() == NestingKind.ANONYMOUS) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -18,9 +18,9 @@
  */
 package org.netbeans.lib.nbjavac.services;
 
+import com.sun.javadoc.SourcePosition;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javadoc.main.Messager;
 import java.io.PrintWriter;
@@ -79,7 +79,7 @@ public final class NBMessager extends Messager {
 
     @Override
     public void error(
-            final DiagnosticPosition pos,
+            final SourcePosition pos,
             final String key,
             final Object ... args) {
         if (ERR_NOT_IN_PROFILE.equals(key)) {

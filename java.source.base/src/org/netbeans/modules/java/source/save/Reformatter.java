@@ -1200,10 +1200,10 @@ public class Reformatter implements ReformatTask {
                         if (node.getType() != null) {
                             spaces(1, fieldGroup);
                         }else {
-                            if(tokens.token().id() == JavaTokenId.VAR){
-                               //Add space after 'var' token
-                               addDiff(new Diff(tokens.offset() + 3, tokens.offset() + 3, " "));
-                               tokens.moveNext();
+                            if (tokens.token().id() == JavaTokenId.VAR) {
+                                //Add space after 'var' token
+                                addDiff(new Diff(tokens.offset() + 3, tokens.offset() + 3, " "));
+                                tokens.moveNext();
                             }
                         }
                         if (!ERROR.contentEquals(node.getName()))

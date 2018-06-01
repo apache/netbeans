@@ -4462,19 +4462,19 @@ public class FormatingTest extends NbTestCase {
         TestUtilities.copyStringToFile(testFile, "");
         FileObject testSourceFO = FileUtil.toFileObject(testFile);
         DataObject testSourceDO = DataObject.find(testSourceFO);
-        EditorCookie ec = (EditorCookie)testSourceDO.getCookie(EditorCookie.class);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
         final Document doc = ec.openDocument();
         doc.putProperty(Language.class, JavaTokenId.language());
-        String content =
-                "package hierbas.del.litoral;\n\n"
+        String content
+                = "package hierbas.del.litoral;\n\n"
                 + "public class Test {\n\n"
                 + "    public static void main(String[] args) {\n"
                 + "            var    v    =   10; \n"
                 + "    }\n"
                 + "}\n";
 
-        String golden =
-                "package hierbas.del.litoral;\n\n"
+        String golden
+                = "package hierbas.del.litoral;\n\n"
                 + "public class Test {\n\n"
                 + "    public static void main(String[] args) {\n"
                 + "        var v = 10;\n"
@@ -4488,19 +4488,19 @@ public class FormatingTest extends NbTestCase {
         TestUtilities.copyStringToFile(testFile, "");
         FileObject testSourceFO = FileUtil.toFileObject(testFile);
         DataObject testSourceDO = DataObject.find(testSourceFO);
-        EditorCookie ec = (EditorCookie)testSourceDO.getCookie(EditorCookie.class);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
         final Document doc = ec.openDocument();
         doc.putProperty(Language.class, JavaTokenId.language());
-        String content =
-                "package hierbas.del.litoral;\n\n"
+        String content
+                = "package hierbas.del.litoral;\n\n"
                 + "public class Test {\n\n"
                 + "    public static void main(String[] args) {\n"
                 + "           final   var    v    =   10; \n"
                 + "    }\n"
                 + "}\n";
 
-        String golden =
-                "package hierbas.del.litoral;\n\n"
+        String golden
+                = "package hierbas.del.litoral;\n\n"
                 + "public class Test {\n\n"
                 + "    public static void main(String[] args) {\n"
                 + "        final var v = 10;\n"

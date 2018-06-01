@@ -63,6 +63,12 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
                 "package test; public class Test {{final var j = {int1,var1,\"hello\"};}}",
                 -1);
     }
+    
+    public void testAnonymousClassTypeArray() throws Exception {
+        performAnalysisTest("test/Test.java",
+                "package test; public class Test {{var j = {new Object(){}};}}",
+                -1);
+    }
 
     public void testParameterizedElements() throws Exception {
         performAnalysisTest("test/Test.java",

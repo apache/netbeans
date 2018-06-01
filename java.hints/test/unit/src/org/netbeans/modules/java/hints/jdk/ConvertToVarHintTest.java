@@ -492,5 +492,38 @@ public class ConvertToVarHintTest {
                         + "    }\n"
                         + "}");
     }
+
+    @Test
+    public void testCompoundVariableDeclStatement() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                        + "import java.util.List;\n"
+                        + "public class Test {\n"
+                        + "    void m() {\n"
+                        + "         int i =10,j=20;\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .assertNotContainsWarnings(VAR_CONV_DESC);
+
+    }
+
+    @Test
+    public void testCompoundVariableDeclStatement2() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                        + "import java.util.List;\n"
+                        + "public class Test {\n"
+                        + "    void m() {\n"
+                        + "        final int /*comment*/l =10/*comment*/,i=20/*comment*/,j=5/*comment*/;\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel("1.10")
+                .run(ConvertToVarHint.class)
+                .assertNotContainsWarnings(VAR_CONV_DESC);
+
+    }
+
     
 }

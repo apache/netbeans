@@ -424,7 +424,7 @@ public class SourceUtils {
                 importScope.prependSubScope(((PackageSymbol)toImport).members());
                 unit.starImportScope = importScope;
             } else {
-                NamedImportScope importScope = new NamedImportScope(unit.packge, unit.toplevelScope);
+                NamedImportScope importScope = new NamedImportScope(unit.packge);
                 for (Symbol symbol : unit.namedImportScope.getSymbols()) {
                     importScope.importType(symbol.owner.members(), symbol.owner.members(), symbol);
                 }

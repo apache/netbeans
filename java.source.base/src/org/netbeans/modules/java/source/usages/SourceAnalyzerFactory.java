@@ -749,8 +749,10 @@ public final class SourceAnalyzerFactory {
         @CheckForNull
         public Void visitErroneous(@NonNull final ErroneousTree tree, @NonNull final Map<Pair<BinaryName,String>, UsagesData<String>> p) {
             List<? extends Tree> trees = tree.getErrorTrees();
-            for (Tree t : trees) {
-                this.scan(t,p);
+            if (trees != null) {
+                for (Tree t : trees) {
+                    this.scan(t,p);
+                }
             }
             return null;
         }

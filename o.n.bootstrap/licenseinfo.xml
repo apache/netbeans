@@ -25,4 +25,10 @@
         <license ref="Apache-2.0-ASF" />
         <comment>RAT recognises files as binary</comment>
     </fileset>
+    <fileset>
+        <file>launcher/windows/include/jni.h</file>
+        <file>launcher/windows/include/jni_types.h</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment>These header files originate in the Apache Harmony project, tag 5.0m12a.</comment>
+    </fileset>
 </licenseinfo>

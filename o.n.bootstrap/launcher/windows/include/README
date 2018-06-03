@@ -15,19 +15,4 @@
 # specific language governing permissions and limitations
 # under the License.
 
-javac.compilerargs=-Xlint -Xlint:-serial
-javac.source=1.7
-module.jar.dir=lib
-module.jar.basename=boot.jar
-release.launcher/unix/nbexec=lib/nbexec
-release.external/platform-launchers-9.0.zip!/nbexec.exe=lib/nbexec.exe
-release.external/platform-launchers-9.0.zip!/nbexec64.exe=lib/nbexec64.exe
-release.external/platform-launchers-9.0.zip!/nbexec.dll=lib/nbexec.dll
-release.external/platform-launchers-9.0.zip!/nbexec64.dll=lib/nbexec64.dll
-nbm.executable.files=lib/nbexec
-
-javadoc.arch=${basedir}/arch.xml
-javadoc.apichanges=${basedir}/apichanges.xml
-
-# When changing this list, change 'verifyexcludes' param. of 'makejnlp' task in apisupport.harness/release/jnlp.xml as well
-jnlp.verify.excludes=lib/nbexec,lib/nbexec.exe,lib/nbexec64.exe,lib/nbexec.dll,lib/nbexec64.dll
+These header files originate in the Apache Harmony project, tag 5.0m12a.

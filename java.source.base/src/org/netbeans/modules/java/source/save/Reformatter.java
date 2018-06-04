@@ -1199,7 +1199,7 @@ public class Reformatter implements ReformatTask {
                     if (node.getType() == null || scan(node.getType(), p)) {
                         if (node.getType() != null) {
                             spaces(1, fieldGroup);
-                        }else {
+                        } else {
                             if (tokens.token().id() == JavaTokenId.VAR) {
                                 //Add space after 'var' token
                                 addDiff(new Diff(tokens.offset() + 3, tokens.offset() + 3, " "));

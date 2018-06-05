@@ -871,7 +871,7 @@ public class JavacParser extends Parser {
             options.add("-proc:none"); // NOI18N, Disable annotation processors
         }
         if (compilerOptions != null) {
-            for (String compilerOption : validateCompilerOptions(compilerOptions.getArguments())) {
+            for (String compilerOption : validateCompilerOptions(compilerOptions.getArguments(), validatedSourceLevel)) {
                 options.add(compilerOption);
             }
         }
@@ -1029,8 +1029,9 @@ public class JavacParser extends Parser {
     }
 
     @NonNull
-    public static List<? extends String> validateCompilerOptions(@NonNull final List<? extends String> options) {
+    public static List<? extends String> validateCompilerOptions(@NonNull final List<? extends String> options, @NullAllowed com.sun.tools.javac.code.Source sourceLevel) {
         final List<String> res = new ArrayList<>();
+        boolean allowModularOptions = sourceLevel == null || com.sun.tools.javac.code.Source.lookup("9").compareTo(sourceLevel) <= 0;
         boolean xmoduleSeen = false;
         for (int i = 0; i < options.size(); i++) {
             String option = options.get(i);
@@ -1047,12 +1048,13 @@ public class JavacParser extends Parser {
                 xmoduleSeen = true;
             } else if (option.equals("-parameters") || option.startsWith("-Xlint")) {     //NOI18N
                 res.add(option);
-            } else if (
+            } else if ((
                     option.startsWith("--add-modules") ||   //NOI18N
                     option.startsWith("--limit-modules") || //NOI18N
                     option.startsWith("--add-exports") ||   //NOI18N
                     option.startsWith("--add-reads")  ||
-                    option.startsWith(OPTION_PATCH_MODULE)) {
+                    option.startsWith(OPTION_PATCH_MODULE)) &&
+                    allowModularOptions) {
                 int idx = option.indexOf('=');
                 if (idx > 0) {
                    res.add(option);

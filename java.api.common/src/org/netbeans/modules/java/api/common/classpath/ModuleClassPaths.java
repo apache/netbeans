@@ -676,7 +676,7 @@ final class ModuleClassPaths {
                 bestSoFar[1] = Boolean.TRUE;
                 return (List<? extends PathResourceImplementation>) bestSoFar[0];
             }
-            final Collection<File> newModuleInfos = new ArrayDeque<>();
+            final Collection<File> newModuleInfos = new LinkedHashSet<>();
             final List<URL> newActiveProjectSourceRoots = new ArrayList<>();
             collectProjectSourceRoots(systemModules, newActiveProjectSourceRoots);
             collectProjectSourceRoots(userModules, newActiveProjectSourceRoots);
@@ -922,9 +922,9 @@ final class ModuleClassPaths {
                             newModuleInfos
                         });
                     setCache(res);
-                    final Collection<File> added = new ArrayList<>(newModuleInfos);
+                    final Collection<File> added = new LinkedHashSet<>(newModuleInfos);
                     added.removeAll(moduleInfos);
-                    final Collection<File> removed = new ArrayList<>(moduleInfos);
+                    final Collection<File> removed = new LinkedHashSet<>(moduleInfos);
                     removed.removeAll(newModuleInfos);
                     removed.stream().forEach((f) -> FileUtil.removeFileChangeListener(this, f));
                     added.stream().forEach((f) -> FileUtil.addFileChangeListener(this, f));

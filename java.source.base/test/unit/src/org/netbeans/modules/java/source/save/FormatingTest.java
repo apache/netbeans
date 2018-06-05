@@ -4463,6 +4463,8 @@ public class FormatingTest extends NbTestCase {
         FileObject testSourceFO = FileUtil.toFileObject(testFile);
         DataObject testSourceDO = DataObject.find(testSourceFO);
         EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        String oldLevel = JavaSourceTest.SourceLevelQueryImpl.sourceLevel;
+        JavaSourceTest.SourceLevelQueryImpl.sourceLevel = "1.10";
         final Document doc = ec.openDocument();
         doc.putProperty(Language.class, JavaTokenId.language());
         String content
@@ -4481,6 +4483,7 @@ public class FormatingTest extends NbTestCase {
                 + "    }\n"
                 + "}\n";
         reformat(doc, content, golden);
+        JavaSourceTest.SourceLevelQueryImpl.sourceLevel = oldLevel;
     }
 
     public void testForVar2() throws Exception {
@@ -4489,6 +4492,8 @@ public class FormatingTest extends NbTestCase {
         FileObject testSourceFO = FileUtil.toFileObject(testFile);
         DataObject testSourceDO = DataObject.find(testSourceFO);
         EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        String oldLevel = JavaSourceTest.SourceLevelQueryImpl.sourceLevel;
+        JavaSourceTest.SourceLevelQueryImpl.sourceLevel = "1.10";
         final Document doc = ec.openDocument();
         doc.putProperty(Language.class, JavaTokenId.language());
         String content
@@ -4507,6 +4512,7 @@ public class FormatingTest extends NbTestCase {
                 + "    }\n"
                 + "}\n";
         reformat(doc, content, golden);
+        JavaSourceTest.SourceLevelQueryImpl.sourceLevel = oldLevel;
     }
 
     private void reformat(Document doc, String content, String golden) throws Exception {

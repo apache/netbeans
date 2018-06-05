@@ -15,8 +15,8 @@
 # limitations under the License.
 
 name: netbeans
-version: "9.0-dev"
-summary: NetBeans Java IDE
+version: "9.0"
+summary: Apache NetBeans IDE
 description: |
   NetBeans IDE lets you quickly and easily develop Java desktop, mobile, and 
   web applications, as well as HTML5 applications with HTML, JavaScript, and

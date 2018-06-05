@@ -17,7 +17,7 @@
 [Desktop Entry]
 Type=Application
 Encoding=UTF-8
-Name=NetBeans Dev
+Name=Apache NetBeans 9.0
 Comment=The Smarter Way to Code
 Exec=netbeans %F
 Categories=Application;Development;Java;IDE

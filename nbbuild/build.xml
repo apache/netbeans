@@ -1559,8 +1559,8 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
           <filterchain>
               <tokenfilter>
                   <filetokenizer />
-                  <replaceregex pattern="(\r?\n)(\r?\n)+"
-                                replace="\1\1"
+                  <replaceregex pattern="(\r?\n)(\r?\n)(\r?\n)+"
+                                replace="\1\1\1"
                                 flags="g" />
              </tokenfilter>
           </filterchain>

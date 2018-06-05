@@ -64,6 +64,7 @@ import org.netbeans.modules.java.api.common.TestJavaPlatform;
 import org.netbeans.modules.java.api.common.TestProject;
 import org.netbeans.modules.java.api.common.project.ProjectProperties;
 import org.netbeans.modules.java.j2seplatform.platformdefinition.Util;
+import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.spi.java.classpath.ClassPathFactory;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
@@ -581,6 +582,25 @@ public class ModuleClassPathsTest extends NbTestCase {
         assertEquals(
                 Collections.singletonList(dist),
                 collectEntries(cp));
+    }
+
+    public void testDuplicateSourceDirsNETBEANS_817() throws Exception {
+        if (systemModules == null) {
+            System.out.println("No jdk 9 home configured.");    //NOI18N
+            return;
+        }
+        assertNotNull(src);
+        final FileObject moduleInfo = createModuleInfo(src, "Modle", "java.logging"); //NOI18N
+        final ClassPath cp = ClassPathFactory.createClassPath(ModuleClassPaths.createModuleInfoBasedPath(
+                systemModules,
+                org.netbeans.spi.java.classpath.support.ClassPathSupport.createProxyClassPath(src, src),
+                systemModules,
+                ClassPath.EMPTY,
+                null,
+                null));
+        final Collection<URL> resURLs = collectEntries(cp);
+        final Collection<URL> expectedURLs = reads(systemModules, NamePredicate.create("java.logging"));  //NOI18N
+        assertEquals(expectedURLs, resURLs);
     }
 
     private static void setSourceLevel(

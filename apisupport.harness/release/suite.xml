@@ -420,7 +420,39 @@ See: http://wiki.netbeans.org/DevFaqHowToReuseModules
               tofile="${dist.dir}/${app.name}.app/Contents/Resources/${app.name}.icns"/>
         
         <delete file="${dist.dir}/${app.name}.app/Contents/MacOS/${app.name}"/>
-        <symlink link="${dist.dir}/${app.name}.app/Contents/MacOS/${app.name}" resource="../Resources/${app.name}/bin/${app.name}"/>
+        <!--TODO: move script to external file-->
+        <echo file="${dist.dir}/${app.name}.app/Contents/MacOS/${app.name}">#!/bin/sh
+#copied from nbexec
+resolve_symlink () {
+    file="$$1"
+    while [ -h "$$file" ]; do
+        ls=`ls -ld "$$file"`
+        link=`expr "$$ls" : '^.*-> \(.*\)$' 2>/dev/null`
+        if expr "$$link" : '^/' 2> /dev/null >/dev/null; then
+            file="$$link"
+        else
+            file=`dirname "$$1"`"/$$link"
+        fi
+    done
+    echo "$file"
+}
+
+absolutize_path () {
+    oldpwd=`pwd`
+    cd "$$1"
+    abspath=`pwd`
+    cd "$${oldpwd}"
+    echo "$$abspath"
+}
+PRG="`resolve_symlink "$$0"`"
+parentDir="`dirname "$$PRG"`"
+parentDir="`absolutize_path "$$parentDir"`"
+#resolve the script path
+scriptPath="$$parentDir/../Resources/${app.name}/bin"
+#run the main executable
+sh -- "$$scriptPath/${app.name}" "$$@"
+</echo>
+        <chmod file="${dist.dir}/${app.name}.app/Contents/MacOS/${app.name}" perm="755"/>
         <chmod file="${dist.dir}/${app.name}.app/Contents/Resources/${app.name}/bin/${app.name}" perm="755"/>
         <chmod dir="${dist.dir}" includes="${app.name}.app/Contents/Resources/${app.name}/platform*/lib/nbexec" perm="755"/>
         

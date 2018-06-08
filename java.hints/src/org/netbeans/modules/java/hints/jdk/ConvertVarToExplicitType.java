@@ -19,12 +19,12 @@
 package org.netbeans.modules.java.hints.jdk;
 
 import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
@@ -151,16 +151,20 @@ public class ConvertVarToExplicitType {
     //filter anonymous class and intersection types
     private static boolean isValidType(HintContext ctx) {
         TreePath treePath = ctx.getPath();
-        TreePath initTreePath = ctx.getVariables().get("$init");  //NOI18N
+        TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
 
-        if (initTreePath.getLeaf().getKind() == Tree.Kind.NEW_CLASS) {
-            NewClassTree nct = ((NewClassTree) initTreePath.getLeaf());
-            if (nct.getClassBody() != null) {
-                return false;
+        if (Utilities.isAnonymousType(variableTypeMirror)) {
+            return false;
+        } else if (variableTypeMirror.getKind() == TypeKind.DECLARED) {
+            DeclaredType dt = (DeclaredType) variableTypeMirror;
+            if (dt.getTypeArguments().size() > 0) {
+                for (TypeMirror paramType : dt.getTypeArguments()) {
+                    if (Utilities.isAnonymousType(paramType)) {
+                        return false;
+                    }
+                }
             }
         }
-
-        TypeMirror variableTypeMirror = ctx.getInfo().getTrees().getElement(treePath).asType();
 
         if (!Utilities.isValidType(variableTypeMirror) ||(variableTypeMirror.getKind() == TypeKind.INTERSECTION)) {
             return false;

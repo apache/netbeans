@@ -91,7 +91,7 @@ public class VarDocSuggestion extends SuggestionRule {
     }
 
     @Override
-    @Messages("VarDocHintDispName=Generate Type Comment For Variable /* @var $myvariable MyClass */")
+    @Messages("VarDocHintDispName=Generate Type Comment For Variable /** @var MyClass $myvariable */")
     public String getDisplayName() {
         return Bundle.VarDocHintDispName();
     }
@@ -196,7 +196,7 @@ public class VarDocSuggestion extends SuggestionRule {
         }
 
         private String getCommentText() {
-            return String.format("%n/* @var %s %s */", vName.getName(), getTypeTemplate()); //NOI18N
+            return String.format("%n/** @var %s %s */", getTypeTemplate(), vName.getName()); //NOI18N
         }
 
         private String getTypeTemplate() {

@@ -1046,6 +1046,11 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     //return createFullSymbol(ASTPHP5Symbols.T_VAR_COMMENT);
 }
 
+<ST_IN_SCRIPTING>"/**"{WHITESPACE}*"@var"{WHITESPACE}{QUALIFIED_LABEL}("[""]")*([|]{QUALIFIED_LABEL}("[""]")*)*{WHITESPACE}("$"){LABEL}("["({LABEL} | "\"" | "'")*"]")*{WHITESPACE}?[^\n\r]*"*/" {
+    comment = yytext();
+    handleVarComment();
+}
+
 <ST_IN_SCRIPTING>"/**" {
 if (!parsePHPDoc()) {
 handleCommentStart();

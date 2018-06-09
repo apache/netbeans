@@ -61,6 +61,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -79,6 +80,7 @@ import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileRenameEvent;
 import org.openide.loaders.DataObject;
 import org.openide.text.DataEditorSupport;
 import org.openide.text.Line;
@@ -87,17 +89,26 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
 
 /**
+ * If this class name is changed, {@link LineBreakpointBeanInfo} class name must
+ * be changed.
  *
  * @author ads
  */
 public class LineBreakpoint extends AbstractBreakpoint {
+
     private static final Logger LOGGER = Logger.getLogger(LineBreakpoint.class.getName());
     private static final RequestProcessor RP = new RequestProcessor(LineBreakpoint.class);
+    public static final String PROP_URL = "url"; // NOI18N
+    public static final String PROP_LINE_NUMBER = "lineNumber"; // NOI18N
+    public static final String PROP_CONDITION = "condition"; // NOI18N
+
     private final Line myLine;
     private final FileRemoveListener myListener;
     private FileChangeListener myWeakListener;
     private final String myFileUrl;
     private final Future<Boolean> isValidFuture;
+    // @GuardedBy("this")
+    private String condition;
 
     public LineBreakpoint(Line line) {
         myLine = line;
@@ -188,6 +199,24 @@ public class LineBreakpoint extends AbstractBreakpoint {
         return myFileUrl;
     }
 
+    public synchronized final String getCondition() {
+        return condition;
+    }
+
+    public synchronized final void setCondition(String condition) {
+        String oldCondition = this.condition;
+        if ((condition != null && condition.equals(oldCondition))
+                || (condition == null && oldCondition == null)) {
+            return;
+        }
+        this.condition = condition;
+        firePropertyChange(PROP_CONDITION, oldCondition, condition);
+    }
+
+    public synchronized final boolean isConditional() {
+        return condition != null && !condition.isEmpty();
+    }
+
     @Override
     public int isTemp() {
         return 0;
@@ -213,6 +242,11 @@ public class LineBreakpoint extends AbstractBreakpoint {
     @Override
     public GroupProperties getGroupProperties() {
         return new PhpGroupProperties();
+    }
+
+    void fireLineNumberChanged() {
+        int lineNumber = getLine().getLineNumber();
+        firePropertyChange(PROP_LINE_NUMBER, null, lineNumber);
     }
 
     //~ Inner classes
@@ -277,6 +311,12 @@ public class LineBreakpoint extends AbstractBreakpoint {
                     LineBreakpoint.this);
         }
 
+        @Override
+        public void fileRenamed(FileRenameEvent fe) {
+            FileObject renamedFo = fe.getFile();
+            firePropertyChange(PROP_URL, myFileUrl, renamedFo.toURL().toString());
+        }
+
     }
 
     private static final class StatementVisitor extends DefaultVisitor {
@@ -291,6 +331,9 @@ public class LineBreakpoint extends AbstractBreakpoint {
 
         @Override
         public void scan(ASTNode node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
             if (node != null) {
                 OffsetRange nodeRange = new OffsetRange(node.getStartOffset(), node.getEndOffset());
                 if (node instanceof Statement && nodeRange.containsInclusive(contentStart) && nodeRange.containsInclusive(contentEnd)) {

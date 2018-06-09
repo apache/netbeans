@@ -55,10 +55,15 @@ import org.openide.text.Line;
  *
  */
 public final class BrkpntCommandBuilder {
+
     private BrkpntCommandBuilder() {
     }
 
     public static BrkpntSetCommand buildLineBreakpoint(SessionId id, String transactionId, FileObject localFile, int lineNumber) {
+        return buildLineBreakpoint(id, transactionId, localFile, lineNumber, null);
+    }
+
+    public static BrkpntSetCommand buildLineBreakpoint(SessionId id, String transactionId, FileObject localFile, int lineNumber, String condition) {
         if (localFile == null) {
             // #251806
             return null;
@@ -71,13 +76,14 @@ public final class BrkpntCommandBuilder {
         command.setType(Types.LINE);
         command.setFile(uri);
         command.setLineNumber(lineNumber);
+        command.setExpression(condition);
         return command;
     }
 
     public static BrkpntSetCommand buildLineBreakpoint(SessionId id, String transactionId, LineBreakpoint breakpoint) {
         Line line = breakpoint.getLine();
         FileObject fileObject = line.getLookup().lookup(FileObject.class);
-        BrkpntSetCommand command = buildLineBreakpoint(id, transactionId, fileObject, line.getLineNumber());
+        BrkpntSetCommand command = buildLineBreakpoint(id, transactionId, fileObject, line.getLineNumber(), breakpoint.getCondition());
         if (command != null) {
             command.setBreakpoint(breakpoint);
         }

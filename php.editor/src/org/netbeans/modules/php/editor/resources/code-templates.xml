@@ -321,7 +321,12 @@ ${cursor}]]>
 <![CDATA[throw new ${Exception};]]>
         </code>
     </codetemplate>
-<codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.vdoc" abbreviation="vdoc" contexts="php-code">
+    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.vdoc" abbreviation="vdoc" contexts="php-code">
+        <code>
+<![CDATA[/** @var ${VAR_TYPE variableFromNextAssignmentType default="ClassName"} $$${VARIABLE variableFromNextAssignmentName default="variable"} */]]>
+        </code>
+    </codetemplate>
+    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.vdocl" abbreviation="vdocl" contexts="php-code">
         <code>
 <![CDATA[/* @var $$${VARIABLE variableFromNextAssignmentName default="variable"} ${VAR_TYPE variableFromNextAssignmentType default="ClassName"} */]]>
         </code>

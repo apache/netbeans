@@ -91,4 +91,58 @@ public class PHPVarCommentParserTest extends PHPTestBase {
         assertEquals(1, varComment.getVariable().getTypes().size());
     }
 
+    public void testArrayForPHPDocPattern_01() throws Exception {
+        String comment = "/** @var TestClass $b['y'] */";
+        PHPVarCommentParser parser = new PHPVarCommentParser();
+        PHPVarComment varComment = parser.parse(0, comment.length(), comment);
+        assertEquals(Comment.Type.TYPE_VARTYPE, varComment.getCommentType());
+        assertEquals("$b", varComment.getVariable().getVariable().getValue());
+        assertEquals(1, varComment.getVariable().getTypes().size());
+    }
+
+    public void testArrayForPHPDocPattern_02() throws Exception {
+        String comment = "/** @var TestClass $b[\"y\"] */";
+        PHPVarCommentParser parser = new PHPVarCommentParser();
+        PHPVarComment varComment = parser.parse(0, comment.length(), comment);
+        assertEquals(Comment.Type.TYPE_VARTYPE, varComment.getCommentType());
+        assertEquals("$b", varComment.getVariable().getVariable().getValue());
+        assertEquals(1, varComment.getVariable().getTypes().size());
+    }
+
+    public void testPHPDocPattern_01() throws Exception {
+        String comment = "/** @var Type	$b */"; // TAB
+        PHPVarCommentParser parser = new PHPVarCommentParser();
+        PHPVarComment varComment = parser.parse(0, comment.length(), comment);
+        assertEquals(Comment.Type.TYPE_VARTYPE, varComment.getCommentType());
+        assertEquals("$b", varComment.getVariable().getVariable().getValue());
+        assertEquals(1, varComment.getVariable().getTypes().size());
+    }
+
+    public void testForPHPDocPattern_02() throws Exception {
+        String comment = "/** @var 	Type	  $b */"; // TAB + space
+        PHPVarCommentParser parser = new PHPVarCommentParser();
+        PHPVarComment varComment = parser.parse(0, comment.length(), comment);
+        assertEquals(Comment.Type.TYPE_VARTYPE, varComment.getCommentType());
+        assertEquals("$b", varComment.getVariable().getVariable().getValue());
+        assertEquals(1, varComment.getVariable().getTypes().size());
+    }
+
+    public void testForPHPDocPattern_03() throws Exception {
+        String comment = "/** @var Type $b Description */";
+        PHPVarCommentParser parser = new PHPVarCommentParser();
+        PHPVarComment varComment = parser.parse(0, comment.length(), comment);
+        assertEquals(Comment.Type.TYPE_VARTYPE, varComment.getCommentType());
+        assertEquals("$b", varComment.getVariable().getVariable().getValue());
+        assertEquals(1, varComment.getVariable().getTypes().size());
+    }
+
+    public void testForPHPDocPattern_04() throws Exception {
+        String comment = "/** @var Type $b Long Description Something.*/";
+        PHPVarCommentParser parser = new PHPVarCommentParser();
+        PHPVarComment varComment = parser.parse(0, comment.length(), comment);
+        assertEquals(Comment.Type.TYPE_VARTYPE, varComment.getCommentType());
+        assertEquals("$b", varComment.getVariable().getVariable().getValue());
+        assertEquals(1, varComment.getVariable().getTypes().size());
+    }
+
 }

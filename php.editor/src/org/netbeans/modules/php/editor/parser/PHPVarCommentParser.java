@@ -51,6 +51,13 @@ import org.netbeans.modules.php.editor.parser.astnodes.PHPDocVarTypeTag;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPVarComment;
 
 /**
+ * PHPVarComment pattern: The first one is the IDE's own pattern. See
+ * {@link https://github.com/php-fig/fig-standards/blob/master/proposed/phpdoc.md}
+ * about the second one.
+ * <pre>
+ * &#47;*  @var $variableName TypeName *&#47;
+ * &#47;** @var TypeName $variableName Description *&#47;
+ * </pre>
  *
  * @author Petr Pisl
  */
@@ -59,6 +66,10 @@ public class PHPVarCommentParser {
     private static final String PHPDOCTAG = "@" + PHPDocTag.Type.VAR.name().toLowerCase(); //NOI18N
 
     PHPVarComment parse(final int startOffset, final int endOffset, final String comment) {
+        boolean isPHPDoc = comment.startsWith("/**"); // NOI18N
+        int variableIndex = isPHPDoc ? 2 : 1;
+        int typeIndex = isPHPDoc ? 1 : 2;
+
         int index = comment.indexOf(PHPDOCTAG);
         if (index > -1) {
             String definition = comment.substring(index);
@@ -69,13 +80,14 @@ public class PHPVarCommentParser {
             int startDocNode;
             int endPosition = 0;
             String[] parts = definition.split("[ \t]+"); //NOI18N
-            if (parts.length == 3 && parts[1].charAt(0) == '$') { //NOI18N
+            if (isExpectedPartsLength(isPHPDoc, parts)
+                    && parts[variableIndex].charAt(0) == '$') { //NOI18N
                 //counting types
-                String[] types = parts[2].split("[|]"); //NOI18N
-                int typePosition = startOffset + comment.indexOf(parts[2]);
+                String[] types = parts[typeIndex].split("[|]"); //NOI18N
+                int typePosition = startOffset + comment.indexOf(parts[typeIndex]);
                 ArrayList<PHPDocTypeNode> typeNodes = new ArrayList<>();
                 for (String type: types) {
-                    startDocNode = typePosition + parts[2].indexOf(type);
+                    startDocNode = typePosition + parts[typeIndex].indexOf(type);
                     index = type.indexOf("::"); //NOI18N
                     boolean isArray = (type.indexOf('[') > 0  && type.indexOf(']') > 0);
                     if (isArray) {
@@ -95,10 +107,10 @@ public class PHPVarCommentParser {
                     typeNodes.add(docType);
                 }
                 // counting variable
-                String variableName = parts[1];
-                int indexOfArrayDimension = parts[1].indexOf("["); //NOI18N
+                String variableName = parts[variableIndex];
+                int indexOfArrayDimension = parts[variableIndex].indexOf("["); //NOI18N
                 if (indexOfArrayDimension != -1) {
-                    variableName = parts[1].substring(0, indexOfArrayDimension);
+                    variableName = parts[variableIndex].substring(0, indexOfArrayDimension);
                 }
                 startDocNode = startOffset + comment.indexOf(variableName);
                 PHPDocNode variableNode = new PHPDocNode(startDocNode, startDocNode + variableName.length(), variableName);
@@ -108,5 +120,12 @@ public class PHPVarCommentParser {
             }
         }
         return null;
+    }
+
+    private boolean isExpectedPartsLength(boolean isPHPDoc, String[] parts) {
+        if (isPHPDoc) {
+            return parts.length >= 3;
+        }
+        return parts.length == 3;
     }
 }

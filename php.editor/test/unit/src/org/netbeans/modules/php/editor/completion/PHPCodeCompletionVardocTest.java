@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright 2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017 Oracle and/or its affiliates. All rights reserved.
  *
  * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
  * Other names may be trademarks of their respective owners.
@@ -36,40 +36,45 @@
  * made subject to such option by the copyright holder.
  *
  * Contributor(s):
- *
- * Portions Copyrighted 2008 Sun Microsystems, Inc.
  */
+package org.netbeans.modules.php.editor.completion;
 
-package org.netbeans.modules.php.editor.parser.astnodes;
-
-/**
- * Represents a single line comment, where user is able to assigna a type to variable
- * <pre> @var $variable type </pre> . It has to be single line comment. Also it can
- * contains mixed type. e.g. <pre> @var $variable type1|type2 </pre>
- *
- * <b>NOTE:</b> There is an order difference.
- * <pre>
- * &#47;*  @var $variableName TypeName *&#47;
- * &#47;** @var TypeName $variableName Description *&#47;
- * </pre>
- * @author Petr Pisl
- */
-public class PHPVarComment extends Comment {
-
-    private final PHPDocVarTypeTag variable;
-
-    public PHPVarComment(int start, int end, PHPDocVarTypeTag  variable) {
-        super(start, end, Comment.Type.TYPE_VARTYPE);
-        this.variable = variable;
-    }
+import java.io.File;
+import java.util.Collections;
+import java.util.Map;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.modules.php.project.api.PhpSourcePath;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 
 
-    public PHPDocVarTypeTag getVariable() {
-        return variable;
+public class PHPCodeCompletionVardocTest extends PHPCodeCompletionTestBase {
+
+    public PHPCodeCompletionVardocTest(String testName) {
+        super(testName);
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
+    protected Map<String, ClassPath> createClassPathsForTest() {
+        return Collections.singletonMap(
+            PhpSourcePath.SOURCE_CP,
+            ClassPathSupport.createClassPath(new FileObject[]{
+                FileUtil.toFileObject(new File(getDataDir(), "/testfiles/completion/lib/vardoc/"))
+            })
+        );
     }
+
+    public void testVariable_01() throws Exception {
+        checkCompletion("testfiles/completion/lib/vardoc/vardoc.php", "$varType->^test(); // CC", false);
+    }
+
+    public void testVariable_02() throws Exception {
+        checkCompletion("testfiles/completion/lib/vardoc/vardoc.php", "    $value->^test(); // CC", false);
+    }
+
+    public void testVarTagType_01() throws Exception {
+        checkCompletion("testfiles/completion/lib/vardoc/vardoc.php", "/** @var ^VarType $varType */", false);
+    }
+
 }

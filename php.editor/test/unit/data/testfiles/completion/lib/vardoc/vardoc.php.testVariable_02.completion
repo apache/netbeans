@@ -1,0 +1,5 @@
+Code completion result for source line:
+$value->|test(); // CC
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     test()                          [PUBLIC]   VarType
+VARIABLE   ? publicField                   [PUBLIC]   VarType

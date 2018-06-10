@@ -54,7 +54,7 @@ import org.netbeans.spi.editor.fold.FoldTypeProvider;
  */
 @MimeRegistration(mimeType = FileUtils.PHP_MIME_TYPE, service = FoldTypeProvider.class, position = 1000)
 public class PHPFoldingProvider implements FoldTypeProvider {
-    private static final Collection<FoldType> TYPES = new ArrayList<>(7);
+    private static final Collection<FoldType> TYPES = new ArrayList<>(8);
 
     static {
         TYPES.add(FoldingScanner.TYPE_CLASS);
@@ -64,6 +64,7 @@ public class PHPFoldingProvider implements FoldTypeProvider {
         TYPES.add(FoldingScanner.TYPE_PHPDOC);
         TYPES.add(FoldingScanner.TYPE_ARRAY);
         TYPES.add(FoldingScanner.TYPE_USE);
+        TYPES.add(FoldingScanner.TYPE_PHPTAG);
     }
 
     @Override

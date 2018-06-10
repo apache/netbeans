@@ -4,7 +4,7 @@ Version: 2.2.6
 Origin: Oracle
 URL: http://jax-ws.java.net/
 License: CDDL-1.1
-Files: jaxws-2.2.6.zip, jaxws-2.2.6-api-doc.zip
+Files: jaxws-api-2.2.6-javadoc.jar, jaxws-rt-2.2.6-1.jar, jaxws-tools-2.2.6-1.jar, mimepull-1.8.jar, policy-2.3.1.jar, saaj-impl-1.3.18.jar, stax-ex-1.7.jar, streambuffer-1.4.jar
 
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
 

@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright 2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017 Oracle and/or its affiliates. All rights reserved.
  *
  * Oracle and Java are registered trademarks of Oracle and/or its affiliates.
  * Other names may be trademarks of their respective owners.
@@ -36,62 +36,30 @@
  * made subject to such option by the copyright holder.
  *
  * Contributor(s):
- *
- * Portions Copyrighted 2010 Sun Microsystems, Inc.
  */
+package org.netbeans.modules.php.editor.csl;
 
-package org.netbeans.modules.php.editor.api.elements;
 
-import java.util.Collection;
-import java.util.Collections;
-import org.netbeans.modules.php.editor.api.AliasedName;
-import org.netbeans.modules.php.editor.api.QualifiedName;
+public class GotoDeclarationMixinTest extends GotoDeclarationTestBase {
 
-/**
- *
- * @author Radek Matous
- */
-public final class AliasedClass extends AliasedType implements ClassElement {
-    public AliasedClass(final AliasedName aliasedName, final ClassElement clz) {
-        super(aliasedName, clz);
+    public GotoDeclarationMixinTest(String testName) {
+        super(testName);
     }
 
-    @Override
-    public QualifiedName getSuperClassName() {
-        return getClassElement().getSuperClassName();
+    public void testMixin_01() throws Exception {
+        checkDeclaration(getTestPath(), " * @mixin \\Mixin\\A\\Mixin^A1", "class ^MixinA1");
     }
 
-    @Override
-    public boolean isFinal() {
-        return getClassElement().isFinal();
+    public void testMixin_02() throws Exception {
+        checkDeclaration(getTestPath(), " * @mixin Mi^xinA2", "class ^MixinA2");
     }
 
-    @Override
-    public boolean isAbstract() {
-        return getClassElement().isAbstract();
+    public void testMixin_03() throws Exception {
+        checkDeclaration(getTestPath(), " * @mixin \\Mixin\\A\\MixinA^2|MixinB1", "class ^MixinA2");
     }
 
-    @Override
-    public boolean isAnonymous() {
-        return getClassElement().isAnonymous();
+    public void testMixin_04() throws Exception {
+        checkDeclaration(getTestPath(), " * @mixin \\Mixin\\A\\MixinA2|Mi^xinB1", "class ^MixinB1");
     }
 
-    private ClassElement getClassElement() {
-        return (ClassElement) element;
-    }
-
-    @Override
-    public Collection<QualifiedName> getPossibleFQSuperClassNames() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public Collection<QualifiedName> getFQMixinClassNames() {
-        return getClassElement().getFQMixinClassNames();
-    }
-
-    @Override
-    public Collection<QualifiedName> getUsedTraits() {
-        return getClassElement().getUsedTraits();
-    }
 }

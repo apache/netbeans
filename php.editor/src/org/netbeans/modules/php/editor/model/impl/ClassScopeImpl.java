@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -89,6 +90,8 @@ import org.openide.util.Union2;
  */
 class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFactory {
     private final Collection<QualifiedName> possibleFQSuperClassNames;
+    // @GuardedBy("this")
+    private final Collection<QualifiedName> mixinClassNames = new LinkedHashSet<>();
     private final Collection<QualifiedName> usedTraits = new HashSet<>();
     private final Set<? super TypeScope> superRecursionDetection = new HashSet<>();
     private final Set<? super TypeScope> subRecursionDetection = new HashSet<>();
@@ -166,6 +169,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
         this.superClass = Union2.<String, List<ClassScopeImpl>>createFirst(superClassName != null ? superClassName.toString() : null);
         this.possibleFQSuperClassNames = indexedClass.getPossibleFQSuperClassNames();
         usedTraits.addAll(indexedClass.getUsedTraits());
+        this.mixinClassNames.addAll(indexedClass.getFQMixinClassNames());
     }
     //old contructors
 
@@ -178,6 +182,20 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
     @Override
     public Collection<QualifiedName> getPossibleFQSuperClassNames() {
         return this.possibleFQSuperClassNames;
+    }
+
+    /**
+     * Add fully qualified names for @mixin tag.
+     *
+     * @param names fully qualified names
+     */
+    synchronized void addFQMixinClassNames(Collection<QualifiedName> names) {
+        mixinClassNames.addAll(names);
+    }
+
+    @Override
+    public synchronized Collection<QualifiedName> getFQMixinClassNames() {
+        return Collections.unmodifiableCollection(mixinClassNames);
     }
 
     @NonNull
@@ -514,6 +532,16 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
         sb.append(Signature.ITEM_DELIMITER);
         sb.append(isDeprecated() ? 1 : 0).append(Signature.ITEM_DELIMITER);
         sb.append(getFilenameUrl()).append(Signature.ITEM_DELIMITER);
+        // mixin
+        StringBuilder mixinSb = new StringBuilder();
+        for (QualifiedName mixinClassName : mixinClassNames) {
+            if (mixinSb.length() > 0) {
+                mixinSb.append(","); // NOI18N
+            }
+            mixinSb.append(mixinClassName.toString());
+        }
+        sb.append(mixinSb);
+        sb.append(Signature.ITEM_DELIMITER);
         return sb.toString();
     }
 
@@ -541,6 +569,8 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
         QualifiedName qualifiedName = namespaceScope.getQualifiedName();
         sb.append(qualifiedName.toString()).append(Signature.ITEM_DELIMITER);
         sb.append(isDeprecated() ? 1 : 0).append(Signature.ITEM_DELIMITER);
+        sb.append(getFilenameUrl()).append(Signature.ITEM_DELIMITER);
+        sb.append(Signature.ITEM_DELIMITER); // mixin
 
         return sb.toString();
 

@@ -72,8 +72,9 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
     public static final String IDX_FIELD = PHPIndexer.FIELD_CLASS;
 
     private final QualifiedName superClass;
-    private Collection<QualifiedName> possibleFQSuperClassNames;
-    private Collection<QualifiedName> usedTraits;
+    private final Collection<QualifiedName> possibleFQSuperClassNames;
+    private final Collection<QualifiedName> fqMixinClassNames;
+    private final Collection<QualifiedName> usedTraits;
 
     private ClassElementImpl(
             final QualifiedName qualifiedName,
@@ -86,11 +87,13 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
             final Collection<QualifiedName> usedTraits,
             final String fileUrl,
             final ElementQuery elementQuery,
-            final boolean isDeprecated) {
+            final boolean isDeprecated,
+            final Collection<QualifiedName> fqMixinClassNames) {
         super(qualifiedName, offset, ifaceNames, fqSuperInterfaces, flags, fileUrl, elementQuery, isDeprecated);
         this.superClass = superClsName;
         this.possibleFQSuperClassNames = possibleFQSuperClassNames;
         this.usedTraits = usedTraits;
+        this.fqMixinClassNames = fqMixinClassNames;
     }
 
     public static Set<ClassElement> fromSignature(final IndexQueryImpl indexScopeQuery, final IndexResult indexResult) {
@@ -120,7 +123,7 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
                     signParser.getSuperClassName(), signParser.getPossibleFQSuperClassName(),
                     signParser.getSuperInterfaces(), signParser.getFQSuperInterfaces(), signParser.getFlags(),
                     signParser.getUsedTraits(), signParser.getFileUrl(), indexScopeQuery,
-                    signParser.isDeprecated());
+                    signParser.isDeprecated(), signParser.getFQMixinClassNames());
         }
         return retval;
     }
@@ -130,11 +133,13 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
         Parameters.notNull("fileQuery", fileQuery);
         ClassDeclarationInfo info = ClassDeclarationInfo.create(node);
         final QualifiedName fullyQualifiedName = namespace != null ? namespace.getFullyQualifiedName() : QualifiedName.createForDefaultNamespaceName();
+        // XXX mixin
         return new ClassElementImpl(
                 fullyQualifiedName.append(info.getName()), info.getRange().getStart(),
                 info.getSuperClassName(), Collections.<QualifiedName>emptySet(), info.getInterfaceNames(),
                 Collections.<QualifiedName>emptySet(), info.getAccessModifiers().toFlags(), info.getUsedTraits(),
-                fileQuery.getURL().toExternalForm(), fileQuery, VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node));
+                fileQuery.getURL().toExternalForm(), fileQuery, VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node),
+                Collections.<QualifiedName>emptySet());
     }
 
     public static ClassElement fromFrameworks(final PhpClass clz, final ElementQuery elementQuery) {
@@ -143,7 +148,8 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
         String fullyQualifiedName = clz.getFullyQualifiedName();
         ClassElementImpl retval = new ClassElementImpl(QualifiedName.create(fullyQualifiedName == null ? clz.getName() : fullyQualifiedName),
                 clz.getOffset(), null, Collections.<QualifiedName>emptySet(), Collections.<QualifiedName>emptySet(),
-                Collections.<QualifiedName>emptySet(), PhpModifiers.NO_FLAGS, Collections.<QualifiedName>emptySet(), null, elementQuery, false);
+                Collections.<QualifiedName>emptySet(), PhpModifiers.NO_FLAGS, Collections.<QualifiedName>emptySet(), null, elementQuery, false,
+                Collections.<QualifiedName>emptySet());
         retval.setFileObject(clz.getFile());
         return retval;
     }
@@ -166,6 +172,11 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
     @Override
     public Collection<QualifiedName> getPossibleFQSuperClassNames() {
         return this.possibleFQSuperClassNames;
+    }
+
+    @Override
+    public Collection<QualifiedName> getFQMixinClassNames() {
+        return Collections.unmodifiableCollection(fqMixinClassNames);
     }
 
     @Override
@@ -214,6 +225,15 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
         sb.append(";"); //NOI18N
         sb.append(isDeprecated() ? 1 : 0).append(";"); //NOI18N
         sb.append(getFilenameUrl()).append(Separator.SEMICOLON);
+        StringBuilder mixinSb = new StringBuilder();
+        fqMixinClassNames.forEach((mixinClassName) -> {
+            if (mixinSb.length() > 0) {
+                mixinSb.append(Separator.COMMA);
+            }
+            mixinSb.append(mixinClassName.toString());
+        });
+        sb.append(mixinSb.toString());
+        sb.append(Separator.SEMICOLON);
         checkClassSignature(sb);
         return sb.toString();
     }
@@ -392,6 +412,16 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
 
         String getFileUrl() {
             return signature.string(9);
+        }
+
+        public Collection<QualifiedName> getFQMixinClassNames() {
+            Collection<QualifiedName> retval = new HashSet<>();
+            String mixins = signature.string(10);
+            final String[] mixinNames = mixins.split(Separator.COMMA.toString());
+            for (String mixinName : mixinNames) {
+                retval.add(QualifiedName.create(mixinName));
+            }
+            return retval;
         }
     }
 }

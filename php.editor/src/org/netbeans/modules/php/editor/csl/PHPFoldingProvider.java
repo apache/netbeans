@@ -45,15 +45,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import org.netbeans.api.editor.fold.FoldType;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.spi.editor.fold.FoldTypeProvider;
 
 /**
  *
  * @author sdedic
  */
-@MimeRegistration(mimeType = "text/x-php5", service = FoldTypeProvider.class, position = 1000)
+@MimeRegistration(mimeType = FileUtils.PHP_MIME_TYPE, service = FoldTypeProvider.class, position = 1000)
 public class PHPFoldingProvider implements FoldTypeProvider {
-    private static final Collection<FoldType> TYPES = new ArrayList<>(6);
+    private static final Collection<FoldType> TYPES = new ArrayList<>(7);
 
     static {
         TYPES.add(FoldingScanner.TYPE_CLASS);
@@ -62,6 +63,7 @@ public class PHPFoldingProvider implements FoldTypeProvider {
         TYPES.add(FoldingScanner.TYPE_COMMENT);
         TYPES.add(FoldingScanner.TYPE_PHPDOC);
         TYPES.add(FoldingScanner.TYPE_ARRAY);
+        TYPES.add(FoldingScanner.TYPE_USE);
     }
 
     @Override

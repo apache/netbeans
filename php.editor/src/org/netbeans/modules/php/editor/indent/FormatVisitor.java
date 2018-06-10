@@ -1713,15 +1713,15 @@ public class FormatVisitor extends DefaultVisitor {
                 formatTokens.add(new FormatToken.IndentToken(ts.offset(), options.indentSize));
                 if (items.isEmpty()) {
                     addFormatToken(formatTokens);
+                    formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_GROUP_USE_LEFT_BRACE, ts.offset() + ts.token().text().length()));
                     break;
                 }
             }
             addFormatToken(formatTokens);
         }
 
-        formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_GROUP_USE_LEFT_BRACE, ts.offset()));
-
         if (!items.isEmpty()) {
+            formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_GROUP_USE_LEFT_BRACE, ts.offset()));
             ts.movePrevious();
             addListOfNodes(items, FormatToken.Kind.WHITESPACE_IN_GROUP_USE_LIST);
         }

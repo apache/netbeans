@@ -75,5 +75,3 @@ foreach ($array as $value)
 {
 
 }
-
-?>

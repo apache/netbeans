@@ -51,9 +51,14 @@ import java.util.Set;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.fold.FoldTemplate;
 import org.netbeans.api.editor.fold.FoldType;
+import org.netbeans.api.lexer.Token;
+import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.php.editor.lexer.LexUtilities;
+import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.FunctionScope;
 import org.netbeans.modules.php.editor.model.GroupUseScope;
@@ -135,6 +140,18 @@ public final class FoldingScanner {
             new FoldTemplate(0, 0, "...") // NOI18N
     );
 
+    /**
+     * PHP tags (&lt;?php...?&gt; blocks).
+     *
+     * <b>NOTE:</b> &lt;?=...?&gt; blocks are not folded.
+     */
+    @NbBundle.Messages("FT_PHPTag=<?php ?> blocks")
+    public static final FoldType TYPE_PHPTAG = FoldType.CODE_BLOCK.derive(
+            "phptag", // NOI18N
+            Bundle.FT_PHPTag(),
+            new FoldTemplate(0, 0, "...") // NOI18N
+    );
+
     private static final String LAST_CORRECT_FOLDING_PROPERTY = "LAST_CORRECT_FOLDING_PROPERY"; //NOI18N
 
     public static FoldingScanner create() {
@@ -175,6 +192,7 @@ public final class FoldingScanner {
             Source source = phpParseResult.getSnapshot().getSource();
             assert source != null : "source was null";
             Document doc = source.getDocument(false);
+            processPHPTags(folds, doc);
             setFoldingProperty(doc, folds);
             return folds;
         }
@@ -215,6 +233,50 @@ public final class FoldingScanner {
                         getRanges(folds, TYPE_COMMENT).add(offsetRange);
                     }
                 }
+            }
+        }
+    }
+
+    private void processPHPTags(Map<String, List<OffsetRange>> folds, Document document) {
+        if (document instanceof BaseDocument) {
+            BaseDocument doc = (BaseDocument) document;
+            doc.readLock();
+            try {
+                TokenSequence<PHPTokenId> ts = LexUtilities.getPHPTokenSequence(doc, 0);
+                if (ts == null) {
+                    return;
+                }
+                ts.move(0);
+                int startOffset = -1;
+                int endOffset = -1;
+                int shortTagBalance = 0; // for <?= ... ?>
+                while (ts.moveNext()) {
+                    Token<PHPTokenId> token = ts.token();
+                    if (token != null) {
+                        PHPTokenId id = token.id();
+                        switch (id) {
+                            case PHP_OPENTAG:
+                                startOffset = ts.offset() + token.length();
+                                break;
+                            case PHP_CLOSETAG:
+                                if (shortTagBalance == 0) {
+                                    assert startOffset != -1;
+                                    endOffset = ts.offset();
+                                    getRanges(folds, TYPE_PHPTAG).add(new OffsetRange(startOffset, endOffset));
+                                } else {
+                                    shortTagBalance--;
+                                }
+                                break;
+                            case T_OPEN_TAG_WITH_ECHO:
+                                shortTagBalance++;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            } finally {
+                doc.readUnlock();
             }
         }
     }

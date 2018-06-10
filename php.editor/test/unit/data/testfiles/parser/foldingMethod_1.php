@@ -24,5 +24,3 @@ trait TraitName
     }
 
 }
-
-?>

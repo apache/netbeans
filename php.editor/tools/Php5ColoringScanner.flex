@@ -275,6 +275,8 @@ PHP_TYPE_BOOL=[b][o][o][l]
 // PHP7.1: These may be used as type names in PHP7.0 or older
 PHP_TYPE_VOID=[v][o][i][d]
 PHP_ITERABLE=[i][t][e][r][a][b][l][e]
+// PHP7.2
+PHP_TYPE_OBJECT=[o][b][j][e][c][t]
 
 
 
@@ -585,6 +587,10 @@ PHP_ITERABLE=[i][t][e][r][a][b][l][e]
 
 <ST_PHP_IN_SCRIPTING>{PHP_TYPE_VOID} {
     return PHPTokenId.PHP_TYPE_VOID;
+}
+
+<ST_PHP_IN_SCRIPTING>{PHP_TYPE_OBJECT} {
+    return PHPTokenId.PHP_TYPE_OBJECT;
 }
 
 <ST_PHP_IN_SCRIPTING>"->" {

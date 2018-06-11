@@ -1029,11 +1029,11 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
    >
     <script language="javascript">
         v = ''
-        i = new java.util.TreeMap(project.properties).entrySet().iterator()
+        i = new Packages.java.util.TreeMap(project.getProperties()).entrySet().iterator()
         while (i.hasNext()) {
             e = i.next()
-            if (e.key.startsWith('tryme.arg.')) {
-                v += ' ' + e.value
+            if (e.getKey().startsWith('tryme.arg.')) {
+                v += ' ' + e.getValue()
             }
         }
         project.setNewProperty('tryme.args', v)

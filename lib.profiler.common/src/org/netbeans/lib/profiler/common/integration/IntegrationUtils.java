@@ -249,6 +249,8 @@ public class IntegrationUtils {
             return PLATFORM_JAVA_90;
         } else if (javaVersionString.equals(CommonConstants.JDK_CVM_STRING)) {
             return PLATFORM_JAVA_CVM;
+        } else if (javaVersionString.equals(CommonConstants.JDK_110_BEYOND_STRING)) {
+            return PLATFORM_JAVA_110_BEYOND;
         }
         return null;
     }

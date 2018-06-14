@@ -1196,9 +1196,15 @@ public class Reformatter implements ReformatTask {
                 } else {
                     if (!insideForTryOrCatch)
                         continuationIndent = true;
-                    if (node.getType() == null || scan(node.getType(), p)) {
-                        if (node.getType() != null) {
+                    if (node.getType() == null || tokens.token().id() == JavaTokenId.VAR || scan(node.getType(), p)) {
+                        if (node.getType() != null && tokens.token().id() != JavaTokenId.VAR) {
                             spaces(1, fieldGroup);
+                        } else {
+                            if (tokens.token().id() == JavaTokenId.VAR) {
+                                //Add space after 'var' token
+                                addDiff(new Diff(tokens.offset() + 3, tokens.offset() + 3, " "));
+                                tokens.moveNext();
+                            }
                         }
                         if (!ERROR.contentEquals(node.getName()))
                             accept(IDENTIFIER, UNDERSCORE);

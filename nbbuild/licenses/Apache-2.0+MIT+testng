@@ -1,11 +1,3 @@
-Name: TestNG
-Version: 6.8.1
-Description: Java testing framework.
-License: Apache-2.0+MIT+testng
-Origin: TestNG
-URL: http://testng.org/doc/download.html
-Files: testng-6.8.1-dist.jar, testng-6.8.1-javadoc.zip
-
 Parts of this work are licensed:
 
 The MIT License (MIT)

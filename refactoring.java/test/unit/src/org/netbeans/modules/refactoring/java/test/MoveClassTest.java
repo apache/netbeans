@@ -80,7 +80,7 @@ public class MoveClassTest extends MoveBase {
                 + "import java.util.List;\n"
                 + "import java.util.function.Function;\n"
                 + "public class A {\n"
-                + "try{String bar = \"foo\";}catch (RuntimeException | AssertionError e){}\n"
+                + "public void v() {try{String bar = \"foo\";}catch (RuntimeException | AssertionError e){}}\n"
                 + "public void breaks(){doStuff(x->x.substring(5));}\n"
                 + "public void doStuff(Function<String, String> stuff){}\n"
                 + "}\n"),
@@ -89,12 +89,12 @@ public class MoveClassTest extends MoveBase {
                 + "/** Class B */\n"
                 + "public class B {\n"
                 + "    public int i = 42;\n"
-                + "    private List lijst;\n"
+                + "    private List list;\n"
                 + "}\n"),
                 new File("a/C.java", "package a;\n"
                 + "import java.util.function.Function;\n"
                 + "public class C {\n"
-                + "try{String bar = \"foo\";}catch (RuntimeException | AssertionError e){}\n"
+                + "public void v() {try{String bar = \"foo\";}catch (RuntimeException | AssertionError e){}}\n"
                 + "public void breaks(){doStuff(x->x.substring(5));}\n"
                 + "public void doStuff(Function<String, String> stuff){}\n"
                 + "}\n"));
@@ -104,7 +104,7 @@ public class MoveClassTest extends MoveBase {
                 + "import java.util.List;\n"
                 + "import java.util.function.Function;\n"
                 + "public class A {\n"
-                + "try{String bar = \"foo\";}catch (RuntimeException | AssertionError e){}\n"
+                + "public void v() {try{String bar = \"foo\";}catch (RuntimeException | AssertionError e){}}\n"
                 + "public void breaks(){doStuff(x->x.substring(5));}\n"
                 + "public void doStuff(Function<String, String> stuff){}\n"
                 + "}\n"),
@@ -112,13 +112,13 @@ public class MoveClassTest extends MoveBase {
                 + "import java.util.List;\n"
                 + "import java.util.function.Function;\n"
                 + "public class C {\n"
-                + "try{String bar = \"foo\";}catch (RuntimeException | AssertionError e){}\n"
+                + "public void v() {try{String bar = \"foo\";}catch (RuntimeException | AssertionError e){}}\n"
                 + "public void breaks(){doStuff(x->x.substring(5));}\n"
                 + "public void doStuff(Function<String, String> stuff){}\n"
                 + "/** Class B */\n"
                 + "public static class B {\n"
                 + "    public int i = 42;\n"
-                + "    private List lijst;\n"
+                + "    private List list;\n"
                 + "}\n"
                 + "}\n"));
     }

@@ -44,13 +44,13 @@
         <file>src/org/netbeans/modules/welcome/resources/picture_frame.png</file>
         <file>src/org/netbeans/modules/welcome/resources/btn_left.png</file>
         <file>src/org/netbeans/modules/welcome/resources/welcome.gif</file>
-        <file>src/org/netbeans/modules/welcome/resources/oracle_logo_dark.png</file>
+        <file>src/org/netbeans/modules/welcome/resources/apache_feather_dark.png</file>
         <file>src/org/netbeans/modules/welcome/resources/startpage.gif</file>
         <file>src/org/netbeans/modules/welcome/resources/sel_btn_center.png</file>
         <file>src/org/netbeans/modules/welcome/resources/tab_selected_dark.png</file>
         <file>src/org/netbeans/modules/welcome/resources/nb_logo_dark.png</file>
         <file>src/org/netbeans/modules/welcome/resources/sel_btn_left.png</file>
-        <file>src/org/netbeans/modules/welcome/resources/oracle_logo.png</file>
+        <file>src/org/netbeans/modules/welcome/resources/apache_feather.png</file>
         <file>src/org/netbeans/modules/welcome/resources/tab_rollover_dark.png</file>
         <file>src/org/netbeans/modules/welcome/resources/tab_selected.png</file>
         <file>src/org/netbeans/modules/welcome/resources/content_banner_dark.png</file>

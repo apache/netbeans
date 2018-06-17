@@ -86,6 +86,7 @@ public class CompletionTestBase extends NbTestCase {
     static {
         JavaCompletionTaskBasicTest.class.getClassLoader().setDefaultAssertionStatus(true);
         SourceUtilsTestUtil2.disableArtificalParameterNames();
+        System.setProperty("org.netbeans.modules.java.source.parsing.JavacParser.no_parameter_names", "true");
     }
 
     static final int FINISH_OUTTIME = 5 * 60 * 1000;
@@ -253,7 +254,9 @@ public class CompletionTestBase extends NbTestCase {
             for (Object item : items) {
                 String itemString = item.toString();
                 if (!(org.openide.util.Utilities.isMac() && itemString.equals("apple") //ignoring 'apple' package
-                        || itemString.equals("jdk"))) { //ignoring 'jdk' package introduced by jdk1.7.0_40
+                        || itemString.equals("jdk")        //ignoring 'jdk' package introduced by jdk1.7.0_40
+                        || itemString.equals("netscape")   //ignoring 'netscape' package present in some JDK builds
+                        || itemString.equals("oracle"))) { //ignoring 'oracle' package present in some JDK builds
                     out.write(itemString);
                     out.write("\n");
                 }

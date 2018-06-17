@@ -146,6 +146,7 @@ public class JavacParser extends Parser {
     private static final int MAX_DUMPS = Integer.getInteger("org.netbeans.modules.java.source.parsing.JavacParser.maxDumps", 255);  //NOI18N
     //Command line switch disabling partial reparse
     private static final boolean DISABLE_PARTIAL_REPARSE = Boolean.getBoolean("org.netbeans.modules.java.source.parsing.JavacParser.no_reparse");   //NOI18N
+    private static final boolean DISABLE_PARAMETER_NAMES_READING = Boolean.getBoolean("org.netbeans.modules.java.source.parsing.JavacParser.no_parameter_names");   //NOI18N
     public static final String LOMBOK_DETECTED = "lombokDetected";
 
     /**
@@ -823,8 +824,10 @@ public class JavacParser extends Parser {
             options.add(validatedSourceLevel.requiredTarget().name);
         }
         options.add("-XDide");   // NOI18N, javac runs inside the IDE
-        options.add("-XDsave-parameter-names");   // NOI18N, javac runs inside the IDE
-        options.add("-parameters");   // NOI18N, save and read parameter names
+        if (!DISABLE_PARAMETER_NAMES_READING) {
+            options.add("-XDsave-parameter-names");   // NOI18N, javac runs inside the IDE
+            options.add("-parameters");   // NOI18N, save and read parameter names
+        }
         options.add("-XDsuppressAbortOnBadClassFile");   // NOI18N, when a class file cannot be read, produce an error type instead of failing with an exception
         options.add("-XDshould-stop.at=GENERATE");   // NOI18N, parsing should not stop in phase where an error is found
         options.add("-g:source"); // NOI18N, Make the compiler to maintian source file info

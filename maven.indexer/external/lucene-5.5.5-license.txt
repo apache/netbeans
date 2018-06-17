@@ -1,34 +1,11 @@
-Name: BIndex
-Version: 2.2
-License: Apache-2.0+MIT-Bindex
-Description: OSGi bundle repository indexer.
-Origin: OSGi
-URL: http://www.osgi.org/Repository/BIndex
-
-Parts of this work are licensed:
-
-Copyright (c) 2002,2003, Stefan Haustein, Oberhausen, Rhld., Germany
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or
-sell copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The  above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-IN THE SOFTWARE.
-
-
-Parts of this work are licensed:
+Name: Apache Lucene
+Description: Java-based indexing and search technology
+Version: 5.5.5
+Origin: Apache Software Foundation
+License: Apache-2.0
+URL: http://lucene.apache.org/
+Source: http://svn.apache.org/repos/asf/lucene/java/trunk
+Files: lucene-analyzers-common-5.5.5.jar lucene-core-5.5.5.jar lucene-highlighter-5.5.5.jar lucene-queryparser-5.5.5.jar
 
                                  Apache License
                            Version 2.0, January 2004

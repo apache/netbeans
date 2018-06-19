@@ -20,6 +20,7 @@
 package org.netbeans.modules.java.completion;
 
 import com.sun.source.tree.*;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.*;
 
 import java.io.IOException;
@@ -4839,7 +4840,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 }
             }
         }
-        return false;
+        return tree.getKind() == Kind.COMPILATION_UNIT;
     }
 
     private static boolean isAnnonInner(ElementHandle<TypeElement> elem) {

@@ -146,7 +146,9 @@ public class MoveClassTransformer extends RefactoringVisitor {
             cut = make.CompilationUnit(cut.getPackageName(), imports, cut.getTypeDecls(), cut.getSourceFile());
         }
         
-        cut = GeneratorUtilities.get(workingCopy).importFQNs(cut);
+        if (!original2Translated.isEmpty()) {
+            cut = GeneratorUtilities.get(workingCopy).importFQNs(cut);
+        }
 
         rewrite(node, cut);
         

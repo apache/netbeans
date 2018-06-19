@@ -1,11 +1,3 @@
-Name: Apache Ant
-Origin: Apache Software Foundation
-Version: 1.10.1
-Files: ant-misc-1.10.1.zip ant-1.10.1.jar ant-antlr-1.10.1.jar ant-apache-bcel-1.10.1.jar ant-apache-bsf-1.10.1.jar ant-apache-log4j-1.10.1.jar ant-apache-oro-1.10.1.jar ant-apache-regexp-1.10.1.jar ant-apache-resolver-1.10.1.jar ant-apache-xalan2-1.10.1.jar ant-commons-logging-1.10.1.jar ant-commons-net-1.10.1.jar ant-jai-1.10.1.jar ant-javamail-1.10.1.jar ant-jdepend-1.10.1.jar ant-jmf-1.10.1.jar ant-jsch-1.10.1.jar ant-junit-1.10.1.jar ant-junit4-1.10.1.jar ant-launcher-1.10.1.jar ant-netrexx-1.10.1.jar ant-swing-1.10.1.jar ant-testutil-1.10.1.jar ant-xz-1.10.1.jar
-Description: Ant build tool.
-License: Apache-2.0-ant
-URL: https://builds.apache.org/view/All/job/Ant_Nightly/lastBuild/
-
 /*
  *                                 Apache License
  *                           Version 2.0, January 2004
@@ -225,7 +217,7 @@ hereby granted, provided that you include the following on ALL copies of the
 software and documentation or portions thereof, including modifications:
 
   1. The full text of this NOTICE in a location viewable to users of the
-     redistributed or derivative work.
+     redistributed or derivative work. 
   2. Any pre-existing intellectual property disclaimers, notices, or terms
      and conditions. If none exist, the W3C Software Short Notice should be
      included (hypertext is preferred, text is permitted) within the body
@@ -233,7 +225,7 @@ software and documentation or portions thereof, including modifications:
   3. Notice of any changes or modifications to the files, including the date
      changes were made. (We recommend you provide URIs to the location from
      which the code is derived.)
-
+     
 THIS SOFTWARE AND DOCUMENTATION IS PROVIDED "AS IS," AND COPYRIGHT HOLDERS MAKE
 NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
 TO, WARRANTIES OF MERCHANTABILITY OR FITNESS FOR ANY PARTICULAR PURPOSE OR THAT
@@ -261,11 +253,11 @@ under the Open Source Definition. Please see our Copyright FAQ for common
 questions about using materials from our site, including specific terms and
 conditions for packages like libwww, Amaya, and Jigsaw. Other questions about
 this notice can be directed to site-policy@w3.org.
-
-Joseph Reagle <site-policy@w3.org>
+ 
+Joseph Reagle <site-policy@w3.org> 
 
 This license came from: http://www.megginson.com/SAX/copying.html
-  However please note future versions of SAX may be covered
+  However please note future versions of SAX may be covered 
   under http://saxproject.org/?selected=pd
 
 SAX2 is Free!
